@@ -361,7 +361,7 @@ mgps_appearance( struct mgastk *ma, int mask )
 
     if (mask & APF_LINEWIDTH)
     {
-	curwidth = ap->linewidth;
+	curwidth = ap->linewidth-1;
 	_mgc->has &= ~HAS_POINT;
     }
 
