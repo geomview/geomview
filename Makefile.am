@@ -2,8 +2,6 @@ SUBDIRS = m4 doc src data
 EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkinstalldirs mkmodulesdir \
              build build.in packbuild packbuild.in
 
-ACLOCAL_AMFLAGS  = -I ./m4
-
 noinst_SCRIPTS = geomview
 
 ACLOCAL_AMFLAGS = -I m4
