@@ -1,5 +1,5 @@
 /* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 
@@ -20,7 +20,7 @@
  */
 
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Geometry Technologies, Inc.";
+Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include <string.h>
 #include <sys/types.h>

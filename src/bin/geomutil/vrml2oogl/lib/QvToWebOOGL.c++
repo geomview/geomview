@@ -78,7 +78,7 @@ OOGLfile(FILE *fout)
 }
 
 static void
-OOGLout(char *text)
+OOGLout(const char *text)
 {
     if (OOGLfout == NULL) return;
 
@@ -104,7 +104,7 @@ OOGLoutindent()
 }
 
 static void
-OOGLoutraw(char *text)
+OOGLoutraw(const char *text)
 {
     if (OOGLfout == NULL) return;
 

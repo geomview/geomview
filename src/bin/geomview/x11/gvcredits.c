@@ -1,5 +1,5 @@
 /* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 
@@ -24,7 +24,7 @@
 #endif
 
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Geometry Technologies, Inc.";
+Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -61,7 +61,7 @@ static char *credits[] = {
   "Celeste Fowler, Charlie Gunn, Nathaniel Thurston", 
   " ",
   "Copyright 1992-1998 The Geometry Center",
-  "Copyright 1998-2000 Geometry Technologies, Inc.",
+  "Copyright 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips",
   "http://www.geomview.org/",
   " ",
   "Geomview is free software; you can redistribute it and/or modify it",

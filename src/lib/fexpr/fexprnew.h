@@ -1,5 +1,5 @@
 /* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 
@@ -18,7 +18,7 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
-/* $Id: fexprnew.h,v 1.1 2000/08/15 16:33:14 mphillips Exp $ */
+/* $Id: fexprnew.h,v 1.2 2000/09/01 22:38:09 mphillips Exp $ */
 /* new fast expression library! wheee! */
 
 #ifndef fexpr_h_included

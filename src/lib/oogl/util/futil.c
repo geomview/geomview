@@ -1,5 +1,5 @@
 /* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 
@@ -22,11 +22,11 @@
 #include "../../../../config.h"
 
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Geometry Technologies, Inc.";
+Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.1 2000/08/15 16:33:25 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.2 2000/09/01 22:38:16 mphillips Exp $ */
 
 /*
  * Geometry object routines

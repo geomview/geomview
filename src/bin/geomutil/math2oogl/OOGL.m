@@ -1,4 +1,4 @@
-(* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/bin/geomutil/math2oogl/OOGL.m,v 1.1 2000/08/15 16:32:42 mphillips Exp $ *)
+(* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/bin/geomutil/math2oogl/OOGL.m,v 1.2 2000/09/01 22:38:05 mphillips Exp $ *)
 
 BeginPackage["OOGL`"]
 
@@ -33,7 +33,7 @@ $GeomRoot = ".";
 (*******************************************************************)
 
 (* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 

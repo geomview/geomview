@@ -1,5 +1,5 @@
 /* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
  *
  * This file is part of Geomview.
  * 
@@ -21,6 +21,7 @@
 #ifndef  _QV_SUB_FIELD_
 #define  _QV_SUB_FIELD_
 
+#include <stdlib.h>
 #include <QvField.h>
 #include <QvInput.h>
 
