@@ -1,8 +1,8 @@
 AC_INIT
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET([])
 # The following vars contain info about the local system:
-#   (AC_CANONICAL_SYSTEM sets them)
+#   (AC_CANONICAL_TARGET([]) sets them)
 #       var		value on RedHat 6.1
 #       ---		-------------------
 #       build           i686-pc-linux-gnu
@@ -22,7 +22,7 @@ AC_CANONICAL_SYSTEM
 #       target_os       linux-gnu
 
 AM_INIT_AUTOMAKE(geomview,1.8.2-alpha)
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])
 
@@ -443,20 +443,15 @@ dnl          AC_DEFINE(__linux__, 1)
           #   AC_PROG_CXX
 	  # Not any more.  C++ is really needed for the vrml2oogl/lib stuff
 	  # on all platforms.   [mbp Thu Oct 12 20:30:42 2000]
-dnl           AC_LANG_CPLUSPLUS
-dnl           AC_TRY_LINK([ #include <streambuf.h>
+dnl           AC_LANG([C++])
+dnl           AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <streambuf.h>
 dnl                         #include <strstream.h>
 dnl                         #include <stdiostream.h>
-dnl                         #include <iostream.h> ],
- 
-dnl                       [ char *mem = 0;
+dnl                         #include <iostream.h> ], [dnl                        char *mem = 0;
 dnl                         int len = 0;
-dnl                         new strstreambuf(mem, len); ],
- 
-dnl                       STRSTREAMLIB=-lstdc++,
-dnl                       STRSTREAMLIB=-liostream
-dnl                      )
-dnl           AC_LANG_C
+dnl                         new strstreambuf(mem, len); ])],[dnl                       STRSTREAMLIB=-lstdc++],[dnl                       STRSTREAMLIB=-liostream
+dnl                      ])
+dnl           AC_LANG([C])
           LINUX=true
           case "$target" in
             *powerpc*) AC_DEFINE(ALISTADDR, [])
@@ -503,26 +498,20 @@ AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 # example).
 # mbp Mon May  8 18:47:33 2000
 AC_MSG_CHECKING([whether we need to link -lm to get math functions])
-AC_TRY_LINK([ #include <math.h> ],
-            [ double s = sin(1.5); ],
-	    [ MATHLIB=""
-	      AC_MSG_RESULT([no]) ],
-	    [ MATHLIB=-lm
-	      AC_MSG_RESULT([yes]) ]
-	   )
+AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <math.h> ], [ double s = sin(1.5); ])],[ MATHLIB=""
+	      AC_MSG_RESULT([no]) ],[ MATHLIB=-lm
+	      AC_MSG_RESULT([yes]) 
+	   ])
 AC_SUBST(MATHLIB)
 # MATHLIB is now "-lm" on systems that need it, or empty on those that don't.
 # So it's safe to put $(MATHLIB) in link commands.
 
 
 AC_MSG_CHECKING([whether we need to link -lsocket to get socket()])
-AC_TRY_LINK([ #include <sys/socket.h> ],
-            [ int s = socket(AF_UNIX, SOCK_STREAM, 0); ],
-            [ SOCKETLIBS=""
-              AC_MSG_RESULT([no]) ],
-            [ SOCKETLIBS=-lsocket
-              AC_MSG_RESULT([yes]) ]
-           )
+AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <sys/socket.h> ], [ int s = socket(AF_UNIX, SOCK_STREAM, 0); ])],[ SOCKETLIBS=""
+              AC_MSG_RESULT([no]) ],[ SOCKETLIBS=-lsocket
+              AC_MSG_RESULT([yes]) 
+           ])
 AC_SUBST(SOCKETLIBS)
 
 
@@ -693,7 +682,7 @@ AC_SUBST(src_bin_module_subdirs)
 AC_CONFIG_SUBDIRS($module_srcdirs)
 
 
-AC_OUTPUT(Makefile
+AC_CONFIG_FILES([Makefile
 	  data/Makefile
 	  doc/Makefile
 	  doc/html/Makefile
@@ -777,7 +766,8 @@ AC_OUTPUT(Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
 	  src/bin/sweep/Makefile
 	  src/bin/togeomview/Makefile
-)
+])
+AC_OUTPUT
 
 #	  src/bin/cplxview/Makefile
 #	  src/bin/maniview/Makefile

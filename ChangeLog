@@ -1,5 +1,14 @@
 2004-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
+	* configure.in: Run autoupdate from autoconf 1.8.
+
+	* m4/lf_local.m4 (LF_LINK_HEADERS): Generate the include symlink
+	farm in $(top_builddir), as $(top_srcdir) may not be writable.
+	Use "mkdir" to make the common include directory.  Newer autoconf
+	no longer provides shell script mkinstalldirs.
+
+	* Makefile.am (EXTRA_DIST): Do not list mkinstalldirs.
+
 	* m4/Makefile.am: Remove.
 	* Makefile.am (m4_files): Distribute the m4/*.m4 files.
 

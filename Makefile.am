@@ -1,5 +1,5 @@
 SUBDIRS = doc src data
-EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkinstalldirs mkmodulesdir \
+EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir \
              build build.in packbuild packbuild.in $(m4_files)
 
 noinst_SCRIPTS = geomview

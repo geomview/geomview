@@ -46,15 +46,15 @@ AC_DEFUN(LF_LINK_HEADERS,[
 
   # Get the directory from the second argument which is optional
   ifelse([$2], ,  
-         [lf_directory="$srcdir/include"] , 
-         [lf_directory="$srcdir/include/$2"])
-  ${srcdir}/mkinstalldirs "$lf_directory"
+         [lf_directory="include"] , 
+         [lf_directory="include/$2"])
+#  ${srcdir}/mkinstalldirs "$lf_directory"
+  mkdir $lf_directory
 
   # Link them
   lf_subdirs="`echo $1`"
   for lf_dir in $lf_subdirs
   do
-    # Otherwise go ahead and link
     echo "linking headers from $srcdir/$lf_dir"
     # Check if the Headers file exists
     if test -f "$srcdir/$lf_dir/Headers"
@@ -108,11 +108,11 @@ AC_DEFUN(LF_SET_INCLUDES,[
   # If the list is not empty then add the subdirectories.
   if test -z "$lf_dirs"
   then
-    default_includes="$default_includes -I\$(top_srcdir)/include"
+    default_includes="$default_includes -I\$(top_builddir)/include"
   else
     for lf_dir in $lf_dirs
     do
-      default_includes="$default_includes -I\$(top_srcdir)/include/$lf_dir"
+      default_includes="$default_includes -I\$(top_builddir)/include/$lf_dir"
     done
   fi
 
