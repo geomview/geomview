@@ -1,7 +1,7 @@
-INCLUDES = $(default_includes) $(FORMSINCLUDE)
+INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
 LDADD = $(OOGLLIBS)  \
-	$(FORMSLIBS) \
+	$(XFORMSLIBS) \
 	$(XLIBS)     \
 	$(SOCKETLIBS) \
 	$(MATHLIB)

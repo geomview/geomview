@@ -1,3 +1,8 @@
+dnl
+dnl
+dnl GEOM_LOG_MSG(MESSAGE)
+define(GEOM_LOG_MSG,
+[echo "configure:__oline__: $1" >&AC_FD_CC])
 dnl 
 dnl GEOM_FIND_L_OPTION(LIB, FUNC, DIRS, OTHERLIBS)
 dnl 
@@ -21,7 +26,7 @@ geom_func=$2
 geom_dirs='$3'
 geom_otherlibs=$4
 geom_saved_LIBS=$LIBS
-AC_MSG_CHECKING([how to link with $geom_lib])
+#AC_MSG_CHECKING([how to link with $geom_lib])
 for geom_z in $geom_dirs ; do
   geom_z=`eval echo $geom_z`
   if test "$geom_z" != "" ; then
@@ -30,6 +35,7 @@ for geom_z in $geom_dirs ; do
     geom_l_option=""
   fi
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
+  GEOM_LOG_MSG([checking for $geom_func with $geom_l_option])
   AC_TRY_LINK_FUNC($geom_func,
 	           [ GEOM_L_OPTION="$geom_l_option"
                      break ],
@@ -37,11 +43,11 @@ for geom_z in $geom_dirs ; do
 	          )
 done
 LIBS=$geom_saved_LIBS
-if test "$GEOM_L_OPTION" != "0" ; then
-  AC_MSG_RESULT([$geom_l_option $geom_lib])
-else
-  AC_MSG_RESULT([not found])
-fi
+#if test "$GEOM_L_OPTION" != "0" ; then
+#  AC_MSG_RESULT([$geom_l_option $geom_lib])
+#else
+#  AC_MSG_RESULT([not found])
+#fi
 ])
 dnl 
 dnl 
@@ -64,7 +70,7 @@ geom_header=$1
 geom_dirs='$2'
 geom_saved_CPPFLAGS=$CPPFLAGS
 GEOM_I_OPTION="0"
-AC_MSG_CHECKING([for $geom_header])
+#AC_MSG_CHECKING([for $geom_header])
 for geom_z in $geom_dirs ; do
   geom_z=`eval echo $geom_z`
   if test "$geom_z" != "" ; then
@@ -72,21 +78,22 @@ for geom_z in $geom_dirs ; do
   else
     CPPFLAGS=""
   fi
+  GEOM_LOG_MSG([checking for $geom_header with CPPFLAGS=$CPPFLAGS])
   AC_TRY_CPP([ #include <$geom_header> ],
 	     [ GEOM_I_OPTION=$CPPFLAGS
                break ]
 	     )
 done
 CPPFLAGS=$geom_saved_CPPFLAGS
-if test "$GEOM_I_OPTION" = "0" ; then
-  AC_MSG_RESULT([not found])
-else
-  if test "$GEOM_I_OPTION" != "" ; then
-    AC_MSG_RESULT($GEOM_I_OPTION)
-  else
-    AC_MSG_RESULT([(found with no -I required)])
-  fi
-fi
+#if test "$GEOM_I_OPTION" = "0" ; then
+#  AC_MSG_RESULT([not found])
+#else
+#  if test "$GEOM_I_OPTION" != "" ; then
+#   AC_MSG_RESULT($GEOM_I_OPTION)
+#  else
+#   AC_MSG_RESULT([(found with no -I required)])
+#  fi
+#fi
 ])
 dnl 
 dnl 
@@ -177,5 +184,48 @@ else
     fi
   fi
 
+fi
+])
+dnl
+dnl
+AC_DEFUN(GEOM_GET_CACHED_VALUE,[
+AC_MSG_CHECKING([for $1])
+AC_CACHE_VAL(ac_cv_$1,[
+AC_MSG_ERROR([
+
+Can't find cached value for $1.  You're not trying to run 'configure'
+from $PACKAGE's source directory, are you?  You should only run
+Geomview's top-level 'configure' script, not this one directly.  See
+the file INSTALL.$PACKAGE for details.
+
+])])
+eval $ac_cv_$1
+AC_MSG_RESULT([done.])
+])
+dnl
+dnl
+AC_DEFUN(GEOM_REQUIRE_XFORMS,[
+AC_MSG_CHECKING([for xforms])
+AC_CACHE_VAL(ac_cv_have_xforms,[:])
+eval $ac_cv_have_xforms
+
+if test "$have_xforms" != "yes" ; then
+  AC_MSG_RESULT([no])
+  AC_MSG_ERROR([
+
+$PACKAGE requires the xforms library, but I can't find it in
+Geomview's top-level config.cache.  Please install an xforms
+distribution appropriate to your machine in the 'xforms' directory
+under the top-level Geomview directory, delete any existing
+'config.cache' file in that directory, and re-run 'configure' in that
+directory.  You should only run Geomview's top-level 'configure'
+script, not this one directly.  See the file INSTALL.$PACKAGE for
+details.
+
+])
+else
+  XFORMSINCLUDE=$ac_xforms_include
+  XFORMSLIBS=$ac_xforms_libs
+  AC_MSG_RESULT([headers '$ac_xforms_include', libraries '$ac_xforms_libs'])
 fi
 ])

@@ -1,3 +1,32 @@
+2000-11-15  Mark Phillips  <mbp@geomtech.com>
+
+	* src/lib/Makefile.am: explicitly mention 'forms' dir
+	  in SUBDIRS now, rather than having it be conditional
+	  based on whether xforms is present, since this dir
+	  only contains a .h file which can be installed even
+	  if xforms isn't present.
+
+	* configure.in: Changed all variables that mention forms
+	  to say 'xforms' instead, for consistency.  Added caching
+	  of many variables so their values can be shared with
+	  other configure scripts.  Changed OOGLLIBS to use
+	  top_geom_builddir instead of top_builddir, so that its
+	  value can be used in other configure scripts.  Added
+	  check to detect subdirs of src/bin having additional
+	  configure.in's, and to call AC_CONFIG_SUBDIRS with them.
+
+	* m4/geom_local.m4: added macros GEOM_LOG_MSG, GEOM_GET_CACHED_VALUE,
+	  and GEOM_REQUIRE_XFORMS.  Removed verbosity from
+	  GEOM_FIND_I_OPTION and GEOM_FIND_L_OPTION so that
+	  whoever calls them can print messages even if the
+	  corresponding values are coming from the cache.
+	
+	* Makefile.am: removed xforms from SUBDIRS
+
+	* removed xforms directory from distribution; re-wrote
+	  configure.in & friends to just notice whether xforms is present
+	  and use it if so, or quietly (with a warning) ignore it if not.
+
 2000-11-09  Mark Phillips  <mbp@geomtech.com>
 
 	* configure.in: improvements to the test for -lgl so that it

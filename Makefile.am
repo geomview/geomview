@@ -1,4 +1,4 @@
-SUBDIRS = m4 doc src xforms data
+SUBDIRS = m4 doc src data
 EXTRA_DIST = reconf boot geomview.sh build INSTALL.Geomview mkinstalldirs mkmodulesdir
 
 noinst_SCRIPTS = geomview

@@ -1,8 +1,8 @@
 EXTRA_DIST = README example.1 panel.fd tutorial.ps tutorial.tex
 
-INCLUDES = $(default_includes) $(FORMSINCLUDE)
+INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(FORMSLIBS) \
+LDADD = $(XFORMSLIBS) \
 	$(XLIBS)     \
 	$(OOGLLIBS)  \
 	$(SOCKETLIBS) \

@@ -8,11 +8,23 @@ sub sys {
     return system($cmd);
 }
 
+# clear out configure's cache
 sys("rm -f config.cache");
+
+# create aclocal.m4, which has our local macros from m4 subdir
+# plus any automake macros from the system
 sys("aclocal -I m4");
+
+# create 'configure' from 'configure.in'
 sys("autoconf");
+
+# make sure the following files are present
 sys("touch README AUTHORS NEWS ChangeLog");
+
+# generate config.h.in by reading acconfig.h and configure.in
 sys("autoheader");
+
+
 #sys("acconfig");
 sys("automake -a");
 #sys("./configure --with-motif=/old/usr/local/lesstif --with-opengl=/usr/local/Mesa --with-forms=/old/home/mbp/gvsrc/Geomview/forms/xforms/FORMS");

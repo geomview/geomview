@@ -1,6 +1,6 @@
-INCLUDES = $(default_includes) $(FORMSINCLUDE)
+INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(FORMSLIBS)	\
+LDADD = $(XFORMSLIBS)	\
 	$(XLIBS)	\
 	-lm
 

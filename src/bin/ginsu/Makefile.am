@@ -1,7 +1,7 @@
-INCLUDES = $(default_includes) $(FORMSINCLUDE)
+INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
 LDADD = $(top_builddir)/src/lib/fexpr/libfexpr.a                    \
-	$(FORMSLIBS)	\
+	$(XFORMSLIBS)	\
 	$(XLIBS)	\
 	-lm
 

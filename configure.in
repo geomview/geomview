@@ -125,6 +125,8 @@ fi
 XLIBS="$X11_L_OPTION -lX11 $Xt_L_OPTION -lXt $Xext_L_OPTION -lXext"
 AC_SUBST(XLIBS)
 
+AC_CACHE_VAL(ac_cv_XLIBS,[ac_cv_XLIBS="XLIBS='$XLIBS'"])
+
 ########################################################################
 
 GEOM_FIND_L_OPTION(-lXmu,
@@ -249,86 +251,114 @@ AC_SUBST(OPENGLLIBS)
 ########################################################################
 
 AC_ARG_WITH(forms,
-	    [--with-forms=DIR      set DIR to forms installation dir],
+	    [--with-forms=DIR      set DIR to xforms installation dir],
 	    [ if test "$withval" = "no" ; then
-                TRY_FORMS=false
+                TRY_XFORMS=false
               else
-                TRY_FORMS=true
-                FORMS_DIR=$withval
+                TRY_XFORMS=true
+                XFORMS_DIR=$withval
               fi ;
             ],
-            [ TRY_FORMS=true ]
+            [ TRY_XFORMS=true ]
            )
 
-if $TRY_FORMS ; then
-    if test "$FORMS_DIR" != "" ; then
-      USER_FORMS_DIR="$FORMS_DIR"
-    else
-      # if we're on a Linux iX86 system, guess the libc version and use the
-      # corresponding version of forms that we distribute in the xforms
-      # subdir
-      case "$target" in
-       *86*linux*) 
-          GEOM_FIND_LIBC_VERSION
-          if test "$GEOM_LIBC_VERSION" = "5" ; then
-            USER_FORMS_DIR="`pwd`/xforms/bxform-089/FORMS"
-          else
-            USER_FORMS_DIR="`pwd`/xforms/bxform-089-glibc2.1/FORMS"
-          fi
-          ;;
-       *)
-          USER_FORMS_DIR=""
-          ;;
-      esac
-    fi
+AC_ARG_WITH(xforms,
+	    [--with-xforms=DIR      same as --with-forms],
+	    [ if test "$withval" = "no" ; then
+                TRY_XFORMS=false
+              else
+                TRY_XFORMS=true
+                XFORMS_DIR=$withval
+              fi ;
+            ],
+            [ TRY_XFORMS=true ]
+           )
 
-    GEOM_FIND_I_OPTION(forms.h, ["$USER_FORMS_DIR" "" "/usr/local/include"])
-    FORMSINCLUDE=$GEOM_I_OPTION
-    AC_SUBST(FORMSINCLUDE)
-    
+########################################################################
+########################################################################
+########################################################################
+AC_MSG_CHECKING([for xforms])
+
+AC_CACHE_VAL(ac_cv_have_xforms,
+[if $TRY_XFORMS ; then
+    if test "$XFORMS_DIR" != "" ; then
+      USER_XFORMS_DIR="$XFORMS_DIR"
+    else
+	# If the 'xforms' directory is present, look for a
+	# subdirectory of it called XFORMS (perhaps more than one level
+	# down).  If found, use that as the XFORMS_DIR directory.  If
+	# there's more than one XFORMS subdir, use the first one found.
+	# (There should never be more than one, but in case there is,
+	# we need a definite behavior to resolve the ambiguity.)
+	if test -d xforms ; then
+	  USER_XFORMS_SUBDIR=`find xforms -name FORMS -print | sed -e '2,$d'`
+	  USER_XFORMS_DIR="`pwd`/$USER_XFORMS_SUBDIR"
+	fi
+    fi
+    GEOM_FIND_I_OPTION(forms.h, ["$USER_XFORMS_DIR" "" "/usr/local/include"])
+    ac_xforms_include=$GEOM_I_OPTION
     GEOM_FIND_L_OPTION(-lforms,
     		   fl_initialize,
-    		   ["$USER_FORMS_DIR" "" "/usr/local/lib"],
+    		   ["$USER_XFORMS_DIR" "" "/usr/local/lib"],
     		   "$XLIBS -lm"
     		  )
     if test "$GEOM_L_OPTION" != "0" ; then
-      FORMS_L_OPTION=$GEOM_L_OPTION
-      FORMSLIBS="$FORMS_L_OPTION -lforms"
-      HAVE_FORMS=true 
-      FORMS_LIB_SUBDIRS="forms"
+      XFORMS_L_OPTION=$GEOM_L_OPTION
+      ac_xforms_libs="$XFORMS_L_OPTION -lforms"
+      ac_have_xforms=yes
     else
-      FORMSLIBS=""
-      FORMS_LIB_SUBDIRS=""
+      ac_xforms_libs=""
+      ac_have_xforms=no
     fi
-
 else
-  FORMSLIBS=""
-  FORMS_LIB_SUBDIRS=""
+  ac_xforms_libs=""
+  ac_have_xforms=no
 fi
+if test "$ac_have_xforms" = "no" ; then
+  ac_cv_have_xforms="have_xforms=no"
+else
+  ac_cv_have_xforms="have_xforms=yes \
+	ac_xforms_include='$ac_xforms_include' ac_xforms_libs='$ac_xforms_libs'"
+fi
+])
+eval $ac_cv_have_xforms
 
-if test "$FORMSLIBS" = "" ; then
+
+
+########################################################################
+########################################################################
+########################################################################
+
+if test "$have_xforms" = "no" ; then
+  AC_MSG_RESULT([no])
   AC_MSG_WARN([
 
-    Configuring without the FORMS library.  Several of Geomview's
-    external modules use the FORMS library, and they will not be
+    Configuring without the XFORMS library.  Several of Geomview's
+    external modules use the XFORMS library, and they will not be
     compiled unless you re-run configure with the argument
-    --with-forms=DIR where DIR is the pathname of the directory
-    containing both the FORMS header file forms.h, and the FORMS
+    --with-xforms=DIR where DIR is the pathname of the directory
+    containing both the XFORMS header file xforms.h, and the XFORMS
     library files (libforms.a, libforms.so, etc).  Geomview itself
-    does not use FORMS, so this is fine if all you want is
+    does not use XFORMS, so this is fine if all you want is
     Geomview.
 
 ])
+else
+  AC_MSG_RESULT([headers $ac_xforms_include, libraries $ac_xforms_libs])
 fi
 
-AC_SUBST(FORMSLIBS)
-AC_SUBST(FORMS_LIB_SUBDIRS)
+XFORMSINCLUDE=$ac_xforms_include
+XFORMSLIBS=$ac_xforms_libs
+
+AC_SUBST(XFORMSLIBS)
+AC_SUBST(XFORMSINCLUDE)
+AC_SUBST(XFORMS_LIB_SUBDIRS)
 
 ########################################################################
 
 OPENGL_LD_LIBRARY_PATH=`expr "$GL_L_OPTION" : '-L\(.*\)'`
 MOTIF_LD_LIBRARY_PATH=`expr "$MOTIF_L_OPTION" : '-L\(.*\)'`
-FORMS_LD_LIBRARY_PATH=`expr "$FORMS_L_OPTION" : '-L\(.*\)'`
+XFORMS_LD_LIBRARY_PATH=`expr "$XFORMS_L_OPTION" : '-L\(.*\)'`
 
 if test "$OPENGL_LD_LIBRARY_PATH" != "0" ; then
   LOCAL_LD_LIBRARY_PATH=$OPENGL_LD_LIBRARY_PATH
@@ -340,11 +370,11 @@ if test "$MOTIF_LD_LIBRARY_PATH" != "0" ; then
     LOCAL_LD_LIBRARY_PATH="$MOTIF_LD_LIBRARY_PATH"
   fi
 fi
-if test "$FORMS_LD_LIBRARY_PATH" != "0" ; then
+if test "$XFORMS_LD_LIBRARY_PATH" != "0" ; then
   if test "$LOCAL_LD_LIBRARY_PATH" != "" ; then
-    LOCAL_LD_LIBRARY_PATH="$LOCAL_LD_LIBRARY_PATH:$FORMS_LD_LIBRARY_PATH"
+    LOCAL_LD_LIBRARY_PATH="$LOCAL_LD_LIBRARY_PATH:$XFORMS_LD_LIBRARY_PATH"
   else
-    LOCAL_LD_LIBRARY_PATH="$FORMS_LD_LIBRARY_PATH"
+    LOCAL_LD_LIBRARY_PATH="$XFORMS_LD_LIBRARY_PATH"
   fi
 fi
 if test "$LOCAL_LD_LIBRARY_PATH" != "" ; then
@@ -439,11 +469,9 @@ AC_DEFINE(BINARY_POPEN_REQUIRES_B, 0)
 
 AC_SUBST(MACHTYPE)
 
-AC_SUBST(STRSTREAMLIB)
-
 AM_CONDITIONAL(HAVE_CXX, test x$HAVE_CXX = xtrue)
 AM_CONDITIONAL(LINUX,         test x$LINUX = xtrue)
-AM_CONDITIONAL(HAVE_FORMS,    test x$HAVE_FORMS = xtrue)
+AM_CONDITIONAL(HAVE_XFORMS,    test x$have_xforms = xyes)
 
 # What this actually checks is whether a program that includes
 # <math.h> and calls 'sin' needs -lm to link properly.  I put this
@@ -505,56 +533,70 @@ AC_SUBST(moduledir)
 geomdatadir="\$(prefix)/data"
 AC_SUBST(geomdatadir)
 
+# cache 'moduledir' and 'geomdatadir' so individual module configure scripts
+# can get them from the cache
+AC_CACHE_VAL(ac_cv_moduledir,[ac_cv_moduledir="moduledir='$moduledir'"])
+AC_CACHE_VAL(ac_cv_geomdatadir,[ac_cv_geomdatadir="geomdatadir='$geomdatadir'"])
+
 ########################################################################
 
-OOGLLIBS_ONCE="\$(top_builddir)/src/lib/oogl/wa/libwa.a                \
-          \$(top_builddir)/src/lib/camera/libcamera.a                  \
-          \$(top_builddir)/src/lib/color/libcolor.a                    \
-          \$(top_builddir)/src/lib/fexpr/libfexpr.a                    \
-          \$(top_builddir)/src/lib/geomutil/bdy/libbdy.a               \
-          \$(top_builddir)/src/lib/geomutil/crayplutil/libcrayplutil.a \
-          \$(top_builddir)/src/lib/geomutil/dim/libdim.a               \
-          \$(top_builddir)/src/lib/geomutil/plutil/libplutil.a         \
-          \$(top_builddir)/src/lib/gprim/bbox/libbbox.a                \
-          \$(top_builddir)/src/lib/gprim/bezier/libbezier.a            \
-          \$(top_builddir)/src/lib/gprim/comment/libcomment.a          \
-          \$(top_builddir)/src/lib/gprim/discgrp/libdg.a               \
-          \$(top_builddir)/src/lib/gprim/geom/libgeom.a                \
-          \$(top_builddir)/src/lib/gprim/inst/libinst.a                \
-          \$(top_builddir)/src/lib/gprim/lincoln/liblincoln.a          \
-          \$(top_builddir)/src/lib/gprim/list/liblist.a                \
-          \$(top_builddir)/src/lib/gprim/mesh/libmesh.a                \
-          \$(top_builddir)/src/lib/gprim/ndmesh/libndmesh.a            \
-          \$(top_builddir)/src/lib/gprim/npolylist/libnpolylist.a      \
-          \$(top_builddir)/src/lib/gprim/polylist/libpolylist.a        \
-          \$(top_builddir)/src/lib/gprim/quad/libquad.a                \
-          \$(top_builddir)/src/lib/gprim/skel/libskel.a                \
-          \$(top_builddir)/src/lib/gprim/sphere/libsphere.a            \
-          \$(top_builddir)/src/lib/gprim/tlist/libtlist.a              \
-          \$(top_builddir)/src/lib/gprim/vect/libvect.a                \
-          \$(top_builddir)/src/lib/mg/buf/liblibmgbuf.a                \
-          \$(top_builddir)/src/lib/mg/common/libmgcommon.a             \
-          \$(top_builddir)/src/lib/mg/opengl/libmgopengl.a             \
-          \$(top_builddir)/src/lib/mg/ps/libmgps.a                     \
-          \$(top_builddir)/src/lib/mg/rib/libmgrib.a                   \
-          \$(top_builddir)/src/lib/mib/libmib.a                        \
-          \$(top_builddir)/src/lib/pointlist/libpointlist.a            \
-          \$(top_builddir)/src/lib/shade/libshade.a                    \
-          \$(top_builddir)/src/lib/window/libwindow.a                  \
-          \$(top_builddir)/src/lib/geometry/cmodel/libcmodel.a         \
-          \$(top_builddir)/src/lib/geometry/hpoint3/libhpoint3.a       \
-          \$(top_builddir)/src/lib/geometry/hpointn/libhpointn.a       \
-          \$(top_builddir)/src/lib/geometry/point3/libpoint3.a         \
-          \$(top_builddir)/src/lib/geometry/transform3/libtransform3.a \
-          \$(top_builddir)/src/lib/geometry/transformn/libtransformn.a \
-          \$(top_builddir)/src/lib/geometry/transobj/libtransobj.a     \
-          \$(top_builddir)/src/lib/oogl/lisp/liblisp.a                 \
-          \$(top_builddir)/src/lib/oogl/refcomm/librefcomm.a           \
-          \$(top_builddir)/src/lib/oogl/util/libooglutil.a"
+top_geom_builddir='$(top_builddir)'
+AC_SUBST(top_geom_builddir)
+
+OOGLLIBS_ONCE="\$(top_geom_builddir)/src/lib/oogl/wa/libwa.a                \
+          \$(top_geom_builddir)/src/lib/camera/libcamera.a                  \
+          \$(top_geom_builddir)/src/lib/color/libcolor.a                    \
+          \$(top_geom_builddir)/src/lib/fexpr/libfexpr.a                    \
+          \$(top_geom_builddir)/src/lib/geomutil/bdy/libbdy.a               \
+          \$(top_geom_builddir)/src/lib/geomutil/crayplutil/libcrayplutil.a \
+          \$(top_geom_builddir)/src/lib/geomutil/dim/libdim.a               \
+          \$(top_geom_builddir)/src/lib/geomutil/plutil/libplutil.a         \
+          \$(top_geom_builddir)/src/lib/gprim/bbox/libbbox.a                \
+          \$(top_geom_builddir)/src/lib/gprim/bezier/libbezier.a            \
+          \$(top_geom_builddir)/src/lib/gprim/comment/libcomment.a          \
+          \$(top_geom_builddir)/src/lib/gprim/discgrp/libdg.a               \
+          \$(top_geom_builddir)/src/lib/gprim/geom/libgeom.a                \
+          \$(top_geom_builddir)/src/lib/gprim/inst/libinst.a                \
+          \$(top_geom_builddir)/src/lib/gprim/lincoln/liblincoln.a          \
+          \$(top_geom_builddir)/src/lib/gprim/list/liblist.a                \
+          \$(top_geom_builddir)/src/lib/gprim/mesh/libmesh.a                \
+          \$(top_geom_builddir)/src/lib/gprim/ndmesh/libndmesh.a            \
+          \$(top_geom_builddir)/src/lib/gprim/npolylist/libnpolylist.a      \
+          \$(top_geom_builddir)/src/lib/gprim/polylist/libpolylist.a        \
+          \$(top_geom_builddir)/src/lib/gprim/quad/libquad.a                \
+          \$(top_geom_builddir)/src/lib/gprim/skel/libskel.a                \
+          \$(top_geom_builddir)/src/lib/gprim/sphere/libsphere.a            \
+          \$(top_geom_builddir)/src/lib/gprim/tlist/libtlist.a              \
+          \$(top_geom_builddir)/src/lib/gprim/vect/libvect.a                \
+          \$(top_geom_builddir)/src/lib/mg/buf/liblibmgbuf.a                \
+          \$(top_geom_builddir)/src/lib/mg/common/libmgcommon.a             \
+          \$(top_geom_builddir)/src/lib/mg/opengl/libmgopengl.a             \
+          \$(top_geom_builddir)/src/lib/mg/ps/libmgps.a                     \
+          \$(top_geom_builddir)/src/lib/mg/rib/libmgrib.a                   \
+          \$(top_geom_builddir)/src/lib/mib/libmib.a                        \
+          \$(top_geom_builddir)/src/lib/pointlist/libpointlist.a            \
+          \$(top_geom_builddir)/src/lib/shade/libshade.a                    \
+          \$(top_geom_builddir)/src/lib/window/libwindow.a                  \
+          \$(top_geom_builddir)/src/lib/geometry/cmodel/libcmodel.a         \
+          \$(top_geom_builddir)/src/lib/geometry/hpoint3/libhpoint3.a       \
+          \$(top_geom_builddir)/src/lib/geometry/hpointn/libhpointn.a       \
+          \$(top_geom_builddir)/src/lib/geometry/point3/libpoint3.a         \
+          \$(top_geom_builddir)/src/lib/geometry/transform3/libtransform3.a \
+          \$(top_geom_builddir)/src/lib/geometry/transformn/libtransformn.a \
+          \$(top_geom_builddir)/src/lib/geometry/transobj/libtransobj.a     \
+          \$(top_geom_builddir)/src/lib/oogl/lisp/liblisp.a                 \
+          \$(top_geom_builddir)/src/lib/oogl/refcomm/librefcomm.a           \
+          \$(top_geom_builddir)/src/lib/oogl/util/libooglutil.a"
 
 AC_SUBST(OOGLLIBS_ONCE)
+AC_CACHE_VAL(ac_cv_OOGLLIBS_ONCE,[ac_cv_OOGLLIBS_ONCE="OOGLLIBS_ONCE='$OOGLLIBS_ONCE'"])
 
-OOGLLIBS="\$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(STRSTREAMLIB)"
+# STRSTREAMLIB was (potentially) set above
+AC_SUBST(STRSTREAMLIB)
+AC_CACHE_VAL(ac_cv_STRSTREAMLIB,[ac_cv_STRSTREAMLIB="STRSTREAMLIB='$STRSTREAMLIB'"])
+
+AC_CACHE_VAL(ac_cv_OOGLLIBS,[ac_cv_OOGLLIBS="OOGLLIBS='\$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(STRSTREAMLIB)'"])
+eval $ac_cv_OOGLLIBS
 AC_SUBST(OOGLLIBS)
 
 STUBLIB="\$(top_builddir)/src/lib/gprim/stub/libstub.a"
@@ -629,8 +671,18 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 		src/lib/forms			\
 	 	src/bin/geomview/common		\
 		)
+
 LF_SET_INCLUDES
- 
+
+
+module_srcdirs=`find src/bin -name 'configure.in' -print | sed -e 's/\/configure.in$//g'`
+module_srcdirs=`echo $module_srcdirs`
+src_bin_module_subdirs=`echo $module_srcdirs | sed -e 's/src\/bin\///g'`
+AC_SUBST(src_bin_module_subdirs)
+
+AC_CONFIG_SUBDIRS($module_srcdirs)
+
+
 AC_OUTPUT(Makefile
 	  m4/Makefile
 	  data/Makefile
@@ -715,14 +767,7 @@ AC_OUTPUT(Makefile
 	  src/bin/geomutil/vrml2oogl/Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
 	  src/bin/sweep/Makefile
-	  xforms/Makefile
-          xforms/bxform-089/Makefile
-          xforms/bxform-089/FORMS/Makefile
-          xforms/bxform-089-glibc/Makefile
-          xforms/bxform-089-glibc/FORMS/Makefile
-          xforms/bxform-089-glibc2.1/Makefile
-          xforms/bxform-089-glibc2.1/FORMS/Makefile
-         )
+)
 
 #	  src/bin/cplxview/Makefile
 #	  src/bin/maniview/Makefile
