@@ -255,8 +255,6 @@ void create_form_InfoForm()
   obj = fl_add_text(FL_NORMAL_TEXT,11.0,154.0,300.0,30.0,"The Geometry Center");
     fl_set_object_lsize(obj,FL_LARGE_FONT);
     fl_set_object_align(obj,FL_ALIGN_CENTER);
-  obj = fl_add_text(FL_NORMAL_TEXT,12.0,54.0,300.0,30.0,"(IP address 128.101.25.35)");
-    fl_set_object_align(obj,FL_ALIGN_CENTER);
   InfoOKButton = obj = fl_add_button(FL_NORMAL_BUTTON,260.0,200.0,50.0,45.0,"OK");
     fl_set_object_lsize(obj,FL_LARGE_FONT);
     fl_set_call_back(obj,InfoOKButtonProc,0);

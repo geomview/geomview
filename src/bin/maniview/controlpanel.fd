@@ -771,21 +771,6 @@ callback:
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 12.000000 54.000000 300.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: (IP address 128.101.25.35)
-name: 
-callback: 
-argument: 
-
---------------------
 class: 11
 type: 0
 box: 260.000000 200.000000 50.000000 45.000000
