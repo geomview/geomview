@@ -149,7 +149,7 @@ va_list a_list;
 	    break;
 
 	default:
-	    if (GeomDecorate (m, &copy, attr, &a_list)) {
+	    if (GeomDecorate (m, &copy, attr, ALISTADDR a_list)) {
 		GeomError (0, "NDMeshCreate: Undefined option: %d", attr);
 		OOGLFree (m);
 		return NULL;

@@ -132,7 +132,7 @@ va_list a_list;
 	    break;
 
 	default:
-	    if (GeomDecorate (mesh, &copy, attr, &a_list)) {
+	    if (GeomDecorate (mesh, &copy, attr, ALISTADDR a_list)) {
 		GeomError (0, "MeshCreate: Undefined option: %d", attr);
 		OOGLFree (mesh);
 		return NULL;

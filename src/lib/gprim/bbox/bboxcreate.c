@@ -80,7 +80,7 @@ va_list a_list;
 	    bbox->geomflags |= VERT_4D;
 	    break;
 	default:
-	    if (GeomDecorate (bbox, &copy, attr, &a_list)) {
+	    if (GeomDecorate (bbox, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
 		OOGLFree (bbox);
 		return NULL;

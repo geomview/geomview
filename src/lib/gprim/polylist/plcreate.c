@@ -152,7 +152,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list a_list)
           break;
 
        default:
-          if (GeomDecorate(pl, &copy, attr, &a_list)) {
+          if (GeomDecorate(pl, &copy, attr, ALISTADDR a_list)) {
              OOGLError(0,"Undefined PolyList option: %d", attr);
              if (!exist) GeomDelete((Geom *)pl);
              return NULL;

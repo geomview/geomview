@@ -171,7 +171,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	default:
-	    if (GeomDecorate (s, &copy, attr, &a_list)) {
+	    if (GeomDecorate (s, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "VectCreate: Undefined option: %d\n", attr);
 		OOGLFree (vect);
 		return NULL;

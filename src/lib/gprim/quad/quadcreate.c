@@ -122,7 +122,7 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	default:
-            if (GeomDecorate(q, &copy, attr, &a_list)) {
+            if (GeomDecorate(q, &copy, attr, ALISTADDR a_list)) {
 	       OOGLError (0, "QuadCreate: Undefined option: %d",attr);
 	       if (!exist) GeomDelete((Geom *)q);
 	       return NULL;

@@ -234,7 +234,7 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 	    list->cdr = l;
 	    break;
 	default:
-	    if (GeomDecorate (list, &copy, attr, &a_list)) {
+	    if (GeomDecorate (list, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "ListCreate: Undefined attribute: %d", attr);
 
 	      fail:

@@ -192,7 +192,7 @@ VectCreate ( Vect *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	default:
-	    if (GeomDecorate (vect, &copy, attr, &a_list)) {
+	    if (GeomDecorate (vect, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "VectCreate: Undefined option: %d\n", attr);
 		OOGLFree (vect);
 		return NULL;

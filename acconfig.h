@@ -34,6 +34,14 @@
 /* D1 debugging? */
 #define D1_DEBUG 0
 
+/* ALISTADDR is a hack to get around the fact that on dpvc's LinuxPPC    */
+/* system, some of the occurences of '&a_list' had to be replaced with   */
+/* 'a_list'.  I'm not sure why this was the case, but to work around it, */
+/* I replaced those occurences of '&a_list' in the source with           */
+/* 'ALISTADDR a_list', so we can define ALISTADDR to be empty on         */
+/* LinuxPPC and '&' otherwise.                                           */
+#define ALISTADDR &
+
 @BOTTOM@
 
 #if D1_DEBUG

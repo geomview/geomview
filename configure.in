@@ -21,7 +21,7 @@ AC_CANONICAL_SYSTEM
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-AM_INIT_AUTOMAKE(geomview,1.7.6)
+AM_INIT_AUTOMAKE(geomview,1.7.7)
 AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
@@ -137,12 +137,16 @@ AC_SUBST(MOTIFINCLUDE)
 
 ########################################################################
 
+if test "$MOTIFLIBS" = "" ; then
+  MOTIFLIBS="-lXm"
+fi
+
 if test "$MOTIF_DIR" != "" ; then
   USER_MOTIF_DIR="$MOTIF_DIR/lib"
 else
   USER_MOTIF_DIR=""
 fi
-GEOM_FIND_L_OPTION(-lXm,
+GEOM_FIND_L_OPTION($MOTIFLIBS,
 		   XmCreateForm,
 		   ["$USER_MOTIF_DIR" "" "$x_libraries"],
 		   $XLIBS
@@ -156,7 +160,7 @@ Can't find Motif libraries.  Geomview requires Motif
 ])
 fi
 MOTIF_L_OPTION=$GEOM_L_OPTION
-MOTIFLIBS="$GEOM_L_OPTION -lXm"
+MOTIFLIBS="$GEOM_L_OPTION $MOTIFLIBS"
 AC_SUBST(MOTIFLIBS)
 
 ########################################################################
@@ -364,6 +368,10 @@ case "$target" in
                          AC_DEFINE(HAVE_SETFPUCW, 1),
                          AC_DEFINE(HAVE_SETFPUCW, 0))
           LINUX=true
+          case "$target" in
+            *powerpc*) AC_DEFINE(ALISTADDR, [])
+                       ;;
+          esac
           ;;
   *irix*) MACHTYPE="sgi"
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE")
@@ -476,6 +484,18 @@ AC_SUBST(OOGLLIBS)
 
 STUBLIB="\$(top_builddir)/src/lib/gprim/stub/libstub.a"
 AC_SUBST(STUBLIB)
+
+########################################################################
+
+### These are here to make sure that the timestamps on these C files,
+### which are included with the distribution, are more recent than
+### the timestamps on the corresponding yacc and lex source files, so
+### that 'make' won't try to run yacc and/or lex to regenerate them.
+### Normal users shouldn't need lex/yacc --- they just need a C compiler
+### to compile these files:
+
+touch src/lib/oogl/wa/wa.yacc.c
+touch src/lib/oogl/wa/wa.lex.c
 
 ########################################################################
 

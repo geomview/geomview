@@ -1,3 +1,10 @@
+1.7.7   August 22, 2000
+
+   Added some of the external modules to the distribution, but haven't
+   actually tested them.  Updated the documentation to reflect the
+   fact that the geomview-users mailing list is now hosted at
+   lists.sourceforge.net.
+
 1.7.6   May 25, 2000
 
    This is the first release of Geomview to use GNU autoconf.  The
@@ -6,4 +13,3 @@
    tweaking to work on them.  Also, note that this release does not
    include the external modules.  If you want any of them, use an
    older release, or wait for a future one.
-

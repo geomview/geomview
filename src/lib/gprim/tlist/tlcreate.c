@@ -140,7 +140,7 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list a_list)
 	    }
 	    break;
 	default:
-	    if(GeomDecorate(tlist, &copy, attr, &a_list)) {
+	    if(GeomDecorate(tlist, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "TlistCreate: undefined option: %d", attr);
 		if (exist == NULL) GeomDelete ((Geom *) tlist);
 		return NULL;

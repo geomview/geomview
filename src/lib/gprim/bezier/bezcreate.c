@@ -141,7 +141,7 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list a_list )
 	    if (color != NULL) for (i=0; i<4; i++) bezier->c[i] = color[i];
 	    break;
 	default:
-	    if (GeomDecorate (bezier, &copy, attr, &a_list)) {
+	    if (GeomDecorate (bezier, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "BezierCreate: undefined option: %d", attr);
 		OOGLFree (bezier);
 		return NULL;

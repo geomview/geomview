@@ -62,9 +62,25 @@ where to find them:
 	    abort with an error if your compiler can't find the
 	    appropriate header files and libraries.
 
-You can also use environment variables to override various defaults
-such as which compiler to use and which options to pass to it.  See
-the file INSTALL for details on this.
+You can use evironment variables to override various default settings
+in 'configure' (such as which compiler to use and which options to
+pass to it).  There are many such variables that are generic to all
+GNU autoconf 'configure' scripts; see the file INSTALL for details on
+this.  In addition to these generic settings, the following
+variables are specific to Geomview:
+
+	MOTIFLIBS
+	    '-l' options to pass to the linker for linking with the
+	    Motif libaraies.  Defaults to "-lXm", but some versions of
+	    Motif apparently need additional libararies, such as
+	    '-lXp'.  To specify this, do
+		MOTIFLIBS='-lXm -lXp' ./configure
+	    Note that MOTIFLIBS should NOT include any -L options to
+	    specify the location of the libraries; use the
+	    --with-motif configure argument for that.  The MOTIFLIBS
+	    variable is just for specifying the list of libraries
+	    themselves.
+
 
 Some of Geomview's external modules use the XForms library
 (http://world.std.com/~xforms).  The Intel Linux binary distribution
@@ -79,3 +95,14 @@ library file).  Geomview itself doesn't use XForms; this is only
 relevant for some of its external modules.  If you just want Geomview
 itself and don't care about the modules, you can forget about this
 step.
+
+Platform Specific Notes:
+
+
+
+LinuxPPC
+--------
+
+On at least one LinuxPPC system with MetroX it was necessary to
+specify -lXp when linking with the Motif libraries
+("MOTIFLIBS='-lXm -lXp' ./configure").

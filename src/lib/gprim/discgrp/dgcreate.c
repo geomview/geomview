@@ -113,7 +113,7 @@ DiscGrpElListCreate (DiscGrpElList *exist, ...)
 	    break;
 
 	default:
-	    if (GeomDecorate (dgellist, &copy, attr, &a_list)) {
+	    if (GeomDecorate (dgellist, &copy, attr, ALISTADDR a_list)) {
 		GeomError (0, "DiscGrpElListCreate: Undefined option: %d", attr);
 		OOGLFree (dgellist);
 		return NULL;
@@ -220,7 +220,7 @@ DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list a_list)
 	    break;
 
 	default:
-	    if (GeomDecorate (discgrp, &copy, attr, &a_list)) {
+	    if (GeomDecorate (discgrp, &copy, attr, ALISTADDR a_list)) {
 		GeomError (0, "DiscGrpCreate: Undefined option: %d", attr);
 		OOGLFree (discgrp);
 		return NULL;

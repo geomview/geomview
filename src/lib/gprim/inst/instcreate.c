@@ -199,7 +199,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	default:
-	    if(GeomDecorate(inst, &copy, attr, &a_list)) {
+	    if(GeomDecorate(inst, &copy, attr, ALISTADDR a_list)) {
 		OOGLError (0, "InstCreate: Undefined option: %d", attr);
 		if(exist == NULL) GeomDelete ((Geom *)inst);
 		return NULL;
