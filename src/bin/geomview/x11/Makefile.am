@@ -24,7 +24,7 @@ $(COMMON_OBJS):
 	exit -1
 
 LDADD = ${COMMON_OBJS} buildinfo.o ${OOGLLIBS} \
-        $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(MATHLIB)
+        $(OPENGLLIBS) $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(MATHLIB)
 
 # $(OPENGLLIBS) 
 
@@ -42,35 +42,17 @@ COMMON_SRCS = \
   ../common/lang.h     ../common/pickfunc.h  ../common/worldio.h	\
   ../common/lights.h   ../common/rman.h
 
-if X11RENDER
-GVX_X11 = gvx.x11
-else
-GVX_X11 = 
-endif
-
-bin_PROGRAMS = gvx $(GVX_X11)
+bin_PROGRAMS = gvx
 
 COMMON_SRCS = \
     gvappear.c	gvcameras.c  gvcolor.c  gvcommands.c      \
     gvcredits.c gvevent.c    gvfiles.c   gvlights.c gvload.c          \
+    gvcamui.c \
     gvmain.c	gvmaterial.c gvmnpanel.c gvsave.c   gvtoolui.c gvui.c \
     clang.h gvui.h
 
 
-gvx_SOURCES = $(COMMON_SRCS) gvcamui-opengl.c
-
-gvcamui-x11.o: gvcamui-x11.c
-	$(COMPILE) -DMGOPENGL=1 gvcamui-x11.c
-
-# gvx_CFLAGS = -DMGOPENGL=1
-
-
-gvx_x11_SOURCES = $(COMMON_SRCS) gvcamui-x11.c
-
-gvcamui-x11.o: gvcamui-x11.c
-	$(COMPILE) -DMGX11=1 gvcamui-x11.c
-
-# gvx_x11_CFLAGS = -DMGX11=1
+gvx_SOURCES = $(COMMON_SRCS) 
 
 .PHONY: _always
 

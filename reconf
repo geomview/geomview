@@ -15,6 +15,9 @@ sys("touch README AUTHORS NEWS ChangeLog");
 sys("autoheader");
 #sys("acconfig");
 sys("automake -a");
-sys("./configure --with-motif=/old/usr/local/lesstif --with-opengl=/usr/local/Mesa --with-forms=/old/home/mbp/gvsrc/Geomview/forms/xforms/FORMS");
+#sys("./configure --with-motif=/old/usr/local/lesstif --with-opengl=/usr/local/Mesa --with-forms=/old/home/mbp/gvsrc/Geomview/forms/xforms/FORMS");
+
+sys("./configure");
+
 #sys("env CFLAGS=\"-Wall -Wno-unused\" ./configure");
 

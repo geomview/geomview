@@ -52,12 +52,13 @@ dnl
 dnl 
 dnl GEOM_FIND_I_OPTION(HEADER, DIRS)
 dnl 
-# Find out what -I argument we need in order to get the Motif header
-# files (<Xm/Xm.h>, etc).  If --with-motif=DIR was specified, first
-# look in DIR/include.  If that fails, or if --with-motif wasn't
-# specified, try with no -I option.  If that fails, try
-# /usr/local/include.  Set MOTIFINCLUDE to whichever option works
-# (including the -I).
+# Find out what -I argument we need in order to get the header file HEADER.
+# DIRS should be a list of strings to use as -I arguments; the empty
+# string corresponds to no -I option at all.  If we're successful, return
+# with GEOM_I_OPTION set to the relevant -I option (including the "-I" itself).
+# Note that this might be the empty string, which corresponds to no -I
+# option at all.  If we don't find HEADER in any of the dirs listed in DIRS,
+# return with GEOM_I_OPTION = "0".
 AC_DEFUN(GEOM_FIND_I_OPTION,[
 geom_header=$1
 geom_dirs='$2'
@@ -84,6 +85,33 @@ else
     AC_MSG_RESULT($GEOM_I_OPTION)
   else
     AC_MSG_RESULT([(found with no -I required)])
+  fi
+fi
+])
+dnl 
+dnl 
+dnl GEOM_FIND_LIBC_VERSION
+dnl 
+dnl Try to figure out which version of the libc library is installed on
+dnl a linux system.  Return with GEOM_LIBC_VERSION set to:
+dnl
+dnl       5	for the old libc (libc.so.5)
+dnl       6	for glibc (i.e., libc.so.6) (RedHat 5.0 and later)
+dnl
+dnl default to 6 if we can't figure it out.  Note that this test is
+dnl not really correct; I think there is yet another version of libc
+dnl that we probably need to distinguish, but I'm not sure and I don't
+dnl know how to detect it, so this'll have to do for now.  If you know
+dnl more about this, please email me at mbp@geomtech.com.
+dnl
+AC_DEFUN(GEOM_FIND_LIBC_VERSION,[
+if test -e "/lib/libc.so.6" ; then
+  GEOM_LIBC_VERSION="6"
+else
+  if test -e "/lib/libc.so.5" ; then
+    GEOM_LIBC_VERSION="5"
+  else
+    GEOM_LIBC_VERSION="6"
   fi
 fi
 ])

@@ -36,7 +36,7 @@ AC_PROG_INSTALL
 ########################################################################
 ########################################################################
 
-# If --with-modif=DIR was specified, set MOTIF_DIR to DIR
+# If --with-motif=DIR was specified, set MOTIF_DIR to DIR
 AC_ARG_WITH(motif,
 	    [--with-motif=DIR      set DIR to motif installation prefix],
 	    MOTIF_DIR=$withval
@@ -185,7 +185,7 @@ AC_ARG_WITH(forms,
               else
                 TRY_FORMS=true
                 FORMS_DIR=$withval
-              fi
+              fi ;
             ],
             [ TRY_FORMS=true ]
            )
@@ -194,18 +194,28 @@ if $TRY_FORMS ; then
     if test "$FORMS_DIR" != "" ; then
       USER_FORMS_DIR="$FORMS_DIR"
     else
-      USER_FORMS_DIR=""
+      # if we're on a Linux iX86 system, guess the libc version and use the
+      # corresponding version of forms that we distribute in the xforms
+      # subdir
+      case "$target" in
+       *86*linux*) 
+          GEOM_FIND_LIBC_VERSION
+          if test "$GEOM_LIBC_VERSION" = "5" ; then
+            USER_FORMS_DIR="`pwd`/xforms/bxform-089/FORMS"
+          else
+            USER_FORMS_DIR="`pwd`/xforms/bxform-089-glibc2.1/FORMS"
+          fi
+          ;;
+       *)
+          USER_FORMS_DIR=""
+          ;;
+      esac
     fi
+
     GEOM_FIND_I_OPTION(forms.h, ["$USER_FORMS_DIR" "" "/usr/local/include"])
     FORMSINCLUDE=$GEOM_I_OPTION
     AC_SUBST(FORMSINCLUDE)
     
-    
-    if test "$FORMS_DIR" != "" ; then
-      USER_FORMS_DIR="$FORMS_DIR"
-    else
-      USER_FORMS_DIR=""
-    fi
     GEOM_FIND_L_OPTION(-lforms,
     		   fl_initialize,
     		   ["$USER_FORMS_DIR" "" "/usr/local/lib"],
@@ -226,8 +236,7 @@ else
   FORMS_LIB_SUBDIRS=""
 fi
 
-
-if test "$FORMSLIB" = "" ; then
+if test "$FORMSLIBS" = "" ; then
   AC_MSG_WARN([
 
     Configuring without the FORMS library.  Several of Geomview's
@@ -246,25 +255,6 @@ AC_SUBST(FORMSLIBS)
 AC_SUBST(FORMS_LIB_SUBDIRS)
 
 ########################################################################
-
-AC_ARG_WITH(forms,
-	    [--with-x11render      compile software-X11 renderer version ],
-	    [ if test "$withval" = "no" ; then
-                X11RENDER=false
-              else
-                X11RENDER=true
-              fi
-            ],
-            [ X11RENDER=false ]
-           )
-AM_CONDITIONAL(X11RENDER, test x$X11RENDER = xtrue)
-AC_LINK_FILES(src/bin/geomview/x11/gvcamui.c,
-	      src/bin/geomview/x11/gvcamui-x11.c)
-AC_LINK_FILES(src/bin/geomview/x11/gvcamui.c,
-	      src/bin/geomview/x11/gvcamui-opengl.c)
-
-########################################################################
-
 
 OPENGL_LD_LIBRARY_PATH=`expr "$GL_L_OPTION" : '-L\(.*\)'`
 MOTIF_LD_LIBRARY_PATH=`expr "$MOTIF_L_OPTION" : '-L\(.*\)'`
@@ -428,7 +418,7 @@ OOGLLIBS_ONCE="\$(top_builddir)/src/lib/oogl/wa/libwa.a                \
           \$(top_builddir)/src/lib/gprim/vect/libvect.a                \
           \$(top_builddir)/src/lib/mg/buf/liblibmgbuf.a                \
           \$(top_builddir)/src/lib/mg/common/libmgcommon.a             \
-          \$(top_builddir)/src/lib/mg/x11/libmgx11.a                   \
+          \$(top_builddir)/src/lib/mg/opengl/libmgopengl.a             \
           \$(top_builddir)/src/lib/mg/ps/libmgps.a                     \
           \$(top_builddir)/src/lib/mg/rib/libmgrib.a                   \
           \$(top_builddir)/src/lib/mib/libmib.a                        \

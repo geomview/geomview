@@ -53,7 +53,8 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
  */
 
 #if !defined(MGGL) && !defined(MGX11) && !defined(MGOPENGL)
-#define MGX11
+/* default to MGOPENGL */
+#define MGOPENGL
 #endif
 
 #include "mg.h"
