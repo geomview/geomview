@@ -9,7 +9,7 @@ dnl
 dnl
 #! /bin/sh
 #
-#  $Revision: 1.1 $
+#  $Id: build.in,v 1.2 2000/11/18 07:15:22 mphillips Exp $
 # 
 # This is the Geomview 'build' script.  Normally you shouldn't
 # use this script --- to configure & compile Geomview see
