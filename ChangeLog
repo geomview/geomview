@@ -1,3 +1,11 @@
+2001-02-17  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* acconfig.h: Close comment above define for HAVE_FMEMOPEN.
+
+	* configure.in: Check endianness and check for header netinet/in.h.
+
+	* doc/Makefile.am: Only build "geomview.pdf" on target "pdf".
+
 2001-02-11  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* m4/geom_local.m4 (GEOM_CHECK_XFORMS): New.  If XFORMS library is

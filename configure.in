@@ -524,6 +524,9 @@ AC_SEARCH_LIBS(fmemopen, c,
 ########################################################################
 
 AC_TYPE_SIZE_T
+AC_C_BIGENDIAN
+
+AC_CHECK_HEADERS(netinet/in.h)
 
 moduledir="\$(exec_prefix)/bin"
 AC_SUBST(moduledir)

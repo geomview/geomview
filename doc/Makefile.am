@@ -10,7 +10,7 @@ EXTRA_DIST = geomview.pdf README gvplot.txt oogltour \
 MAKEINFO = makeinfo --no-validate
 info_TEXINFOS = geomview.texi
 
-all: geomview.pdf
+pdf: geomview.pdf
 
 TEXINPUTS = $(srcdir):
 

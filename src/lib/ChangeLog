@@ -1,3 +1,13 @@
+2001-02-17  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* oogl/util/futil.c: Use WORDS_BIGENDIAN instead of old
+	BIG_ENDIAN; the latter is defined on some linux machines, even
+	little-endian ones.  Clean code a bit to placate "gcc -Wall".
+
+	* oogl/util/glibglue.C: Convert FILE* to istdiostream class from
+	which we obtain the rdbuf structure that can set and seek to
+	marks.
+
 2000-11-05  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* oogl/lisp/Makefile.am (BUILT_SOURCES): Declare clisp.c and

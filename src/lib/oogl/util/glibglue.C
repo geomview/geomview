@@ -8,7 +8,7 @@
 // a marked point in a stream.
 
 struct stdio_mark {
-    stdiobuf *sb;
+    istdiostream* instream;
     streammarker *m;
 };
 
@@ -19,22 +19,25 @@ CC_fmemopen(char *mem, int len)
 }
 
 stdio_mark *
-CC_stdio_setmark(stdio_mark *sm, stdiobuf *f)
+CC_stdio_setmark(stdio_mark *sm, FILE* f)
 {
     if(sm) delete sm->m;
     else   sm = new stdio_mark;
-    sm->sb = f;
-    sm->m = new streammarker(f);
+    sm->instream = new istdiostream(f);
+    sm->m = new streammarker(sm->instream->rdbuf());
     return sm;
 }
 
 int
 CC_stdio_seekmark(struct stdio_mark *sm)
-{ return (*sm->sb).seekmark(*sm->m); }
+{
+    return sm->instream->rdbuf()->seekmark(*sm->m);
+}
 
 void
 CC_stdio_freemark(stdio_mark *sm)
-{  // Don't delete sm->sb -- we were just borrowing it!
+{
+   delete sm->instream;
    delete sm->m;
    delete sm;
 }

@@ -19,14 +19,14 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#include "../../../../config.h"
+#include "config.h"
 
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.4 2000/11/09 20:52:30 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.5 2001/02/21 22:00:41 mphillips Exp $ */
 
 /*
  * Geometry object routines
@@ -150,21 +150,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <ctype.h>
 #include "ooglutil.h"
 
-   /* Speedy binary I/O if the machine is known to be big-endian */
-#if m68k || mc68000 || mips || sparc || __hpux || AIX
-# define BIG_ENDIAN 1
-#endif
 
-#ifndef BIG_ENDIAN
-# if defined(unix) || defined(__unix)
+#ifndef WORDS_BIGENDIAN
+#  ifdef HAVE_NETINET_IN_H
 #  include <netinet/in.h>	/* for ntohl(), etc. */
 # else
 
 int ntohl(unsigned int v) {
-   return ((v>>24)&0xFF | (v>>8)&0xFF00 | (v<<8)&0xFF0000 | (v&0xFF)<<24);
+   return (((v>>24)&0xFF) | ((v>>8)&0xFF00) | ((v<<8)&0xFF0000) | ((v&0xFF)<<24));
 }
 int ntohs(unsigned int s) {
-   return ((s>>8)&0xFF | (s&0xFF)<<8);
+   return (((s>>8)&0xFF) | ((s&0xFF)<<8));
 }
 #define htonl(v)  ntohl(v)
 #define htons(v)  ntohs(v)
@@ -280,14 +276,14 @@ fgetnf(register FILE *f, int maxf, float *fv, int binary)
 	float v;
 	register int c = EOF;
 	register long n;
-	long w;
 	int s, es, nd, any;
 
 	if(binary) {
-#if BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)fv, sizeof(float), maxf, f);
 #else /* not native big-endian IEEE */
+		long w;
 		for(n=0; n<maxf && fread((char *)&w,sizeof(long),1,f) > 0; n++)
 		    *(long *)&fv[n] = ntohl(w);
 		return n;
@@ -364,14 +360,14 @@ fgetni(register FILE *f, int maxi, int *iv, int binary)
 	int ngot;
 	register int c = EOF;
 	register long n;
-	long w;
 	int s, any;
 
 	if(binary) {
-#if BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)iv, sizeof(int), maxi, f);
 #else /* not native big-endian int's */
+		long w;
 		for(n = 0; n < maxi && fread(&w,4,1,f) > 0; n++)
 		    iv[n] = ntohl(w);
 		return n;
@@ -408,14 +404,14 @@ fgetns(register FILE *f, int maxs, short *sv, int binary)
 	int ngot;
 	register int c = EOF;
 	register long n;
-	short w;
 	int s, any;
 
 	if(binary) {
-#if BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)sv, sizeof(short), maxs, f);
 #else /* not native big-endian int's */
+		short w;
 		for(n = 0; n < maxs && fread(&w,2,1,f) > 0; n++)
 		    sv[n] = ntohs(w);
 		return n;
@@ -675,11 +671,11 @@ int
 fputnf(FILE *file, int count, float *v, int binary)
 {
 	register int i;
-	long w;
 	if(binary) {
-#if BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 	  return fwrite(v, sizeof(float), count, file);
 #else
+	  long w;
 	  for(i = 0; i < count; i++) {
 	    w = htonl(*(long *)&v[i]);
 	    fwrite(&w, sizeof(float), 1, file);
@@ -701,7 +697,7 @@ fputtransform(FILE *file, int ntrans, float *trans, int binary)
 	register float *p;
 
 	if(binary) {
-#if BIG_ENDIAN
+#ifdef WORDS_BIGENDIAN
 	    return fwrite(trans, 4*4*sizeof(float), ntrans, file);
 #else
 	OOGLError(1, "fputtransform: need code to handle binary writes for this architecture.");
@@ -844,7 +840,7 @@ fcontext(register FILE *f)
       extern FILE		 *CC_fmemopen__FPci(char *mem, int len);
 #  endif
 #endif
-extern struct stdio_mark *CC_stdio_setmark__FP10stdio_markP8stdiobuf(struct stdio_mark *m, FILE *f);
+extern struct stdio_mark *CC_stdio_setmark__FP10stdio_markP8_IO_FILE(struct stdio_mark *m, FILE *f);
 extern int		  CC_stdio_seekmark__FP10stdio_mark(struct stdio_mark *mark);
 extern void  		  CC_stdio_freemark__FP10stdio_mark(struct stdio_mark *mark); 
 
@@ -852,7 +848,6 @@ extern void  		  CC_stdio_freemark__FP10stdio_mark(struct stdio_mark *mark);
 FILE *fstropen(char *mem, int len, char *mode)
 {
 #if HAVE_FMEMOPEN
-  extern FILE *fmemopen(char *, int, char *);
   return fmemopen(mem, len, mode);
 #else
   return CC_fmemopen__FPci(mem, len);
@@ -861,7 +856,7 @@ FILE *fstropen(char *mem, int len, char *mode)
 #endif
 
 struct stdio_mark *stdio_setmark(struct stdio_mark *m, FILE *f)
-{ return CC_stdio_setmark__FP10stdio_markP8stdiobuf(m, f); }
+{ return CC_stdio_setmark__FP10stdio_markP8_IO_FILE(m, f); }
 
 int stdio_seekmark(struct stdio_mark *mark)
 { return CC_stdio_seekmark__FP10stdio_mark(mark) != EOF; }

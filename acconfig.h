@@ -59,7 +59,7 @@
 /* HAVE_FMEMOPEN is 1 if and only if the function fmemopen() is		 */
 /* available on the system.  This is used in src/lib/oogl/util/futil.c   */
 /* to decide how to implement fstropen().  See also USE_FSTROPEN_1	 */
-/* below.
+/* below. */
 #define HAVE_FMEMOPEN 0
 
 /* USE_FSTROPEN_1 determines whether we forceably use one of our	 */
