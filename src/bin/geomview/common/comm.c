@@ -111,7 +111,7 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
     if((inf = PoolInputFile(p)) == NULL)
       goto done;
 
-    if((c = async_fnextc(inf,0)) == NODATA)
+    if((c = async_fnextc_fd(inf,0,p->infd)) == NODATA)
       return 1;		/* pretend we got something. */
 
     if ((lake=(Lake*)PoolClientData(p)) == NULL) {
@@ -211,7 +211,7 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 	    if(now && ok) {
 		/* Read as much as possible if we need it right now. */
 		while(PoolInputFile(p) != NULL &&
-			(c = async_fnextc(PoolInputFile(p), 0)) != NODATA &&
+			(c = async_fnextc_fd(PoolInputFile(p), 0, p->infd)) != NODATA &&
 			  c != EOF && (*ops->strmin)(p, hp, rp))
 			;
 	    }

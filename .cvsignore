@@ -1,12 +1,14 @@
 Makefile.in Makefile
 aclocal.m4
+autom4te.cache
+build packbuild
 config.cache 
 config.h.in config.h
 config.log 
 config.status 
 configure 
+depcomp
 geomview
 include
 modules
-build packbuild
 stamp-h.in stamp-h

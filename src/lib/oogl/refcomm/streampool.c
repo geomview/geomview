@@ -267,7 +267,9 @@ PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops)
 	    return NULL;
 	}
     }
-    p->inf = p->outf = f;
+    p->inf  = p->outf = f;
+    p->sinf = NULL;
+    p->infd = -1;
     if(f) {
 	switch(rw) {
 	    case 0: p->outf = NULL; break;
@@ -288,6 +290,23 @@ PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops)
 		? 0 : 1;
     p->flags = PF_TEMP;
     p->client_data = NULL;
+
+#if USE_SEEKPIPE
+    if (p->inf) {
+	p->infd = fileno(p->inf);
+	if (!p->seekable && p->infd >= 0) {
+	    /* leave seekable and fake files alone */
+	    extern FILE *seekpipe_open(int fd);
+	    setbuf(p->inf, NULL);
+	    p->sinf = p->inf;
+	    p->inf  = seekpipe_open(p->infd);
+	}
+    }
+#else
+    if (p->inf) {
+	setvbuf(p->inf, NULL, _IOFBF, (1 << 16));
+    }
+#endif
     return p;
 }
 
@@ -303,7 +322,8 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	p = newPool(name);
 	p->ops = ops;
 	p->type = P_STREAM;
-	p->inf = p->outf = NULL;
+	p->inf = p->sinf = p->outf = NULL;
+	p->infd = -1;
 	p->mode = rw;
 	p->handles = NULL;
 	p->resyncing = NULL;
@@ -327,20 +347,27 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	 */
 	p->mode = ((p->mode+1) | (rw+1)) - 1;
 	if(p->inf && rw != 1) {
+	    if(p->sinf) fclose(p->sinf);
 	    if(p->inf != stdin) fclose(p->inf);
-	    p->inf = NULL;
+	    p->inf  = NULL;
+	    p->infd = -1;
 	}
     }
 
     if(f == NULL || f == (FILE *)-1) {
 	if(rw != 1) {
 	    if(strcmp(name, "-") == 0) {
-		p->inf = stdin;
+		p->inf  = stdin;
 	    } else {
 		/* Try opening read/write first in case it's a Linux named pipe */
 
 		int fd;
-#ifdef notdef
+#if 1 || defined(notdef)
+		/* BTW, this is not Linux, but common Unix
+		 * behaviour. Reading from a pipe with no writers will
+		 * just return.
+		 */
+
 		/* Linux 2.0 is said to prefer that someone always has
 		 * a named pipe open for writing as well as reading.
 		 * But if we do that, we seem to lose the ENXIO error given
@@ -382,7 +409,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~FNDELAY);
 # endif
 #endif /*unix*/
-		    p->inf = fdopen(fd, "rb");
+		    p->inf  = fdopen(fd, "rb");
 		}
 	    }
 	}
@@ -410,20 +437,38 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
     p->seekable = 0;
     p->softEOF = 0;
     if(p->inf != NULL) {
-	if(isatty(fileno(p->inf))) {
-	    p->softEOF = 1;
-	} else if(lseek(fileno(p->inf),0,SEEK_CUR) != -1) {
-	    p->seekable = 1;
+	if (p->infd == -1 && p->sinf == NULL) {
+	    p->infd = fileno(p->inf);
 	}
-	if(fstat(fileno(p->inf), &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO)
-	    p->softEOF = 1;
-	p->inf_mtime = st.st_mtime;
-
-	watchfd(fileno(p->inf));
+	if (p->infd != -1) {
+	    if(isatty(p->infd)) {
+		p->softEOF = 1;
+	    } else if(lseek(p->infd,0,SEEK_CUR) != -1) {
+		p->seekable = 1;
+	    }
+	    if(fstat(p->infd, &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO)
+		p->softEOF = 1;
+	    p->inf_mtime = st.st_mtime;
+	    watchfd(p->infd);
+	}
     }
     if(p->level == 0 && p->outf &&
 	  (lseek(fileno(p->outf),0,SEEK_CUR) == -1 || isatty(fileno(p->outf))))
 	p->level = 1;
+#if USE_SEEKPIPE
+    if (p->inf != NULL && p->sinf == NULL && !p->seekable && p->infd >= 0) {
+	/* leave seekable and fake files alone */
+	extern FILE *seekpipe_open(int fd);
+	p->sinf = p->inf;
+	setbuf(p->inf, NULL);
+	p->inf  = seekpipe_open(p->infd);
+	p->infd = fileno(p->sinf);
+    }
+#else
+    if (p->inf) {
+	setvbuf(p->inf, NULL, _IOFBF, (1 << 16));
+    }
+#endif
     return p;
 }
 
@@ -484,6 +529,11 @@ void PoolClose(register Pool *p)
     }
 
     if(p->type == P_STREAM) {
+	if (p->sinf != NULL) {
+	    fclose(p->inf);
+	    p->inf = p->sinf;
+	    p->sinf = NULL;
+	}
 	if(p->inf != NULL) {
 	    unwatchfd(fileno(p->inf));
 	    if(p->inf != stdin) fclose(p->inf);
@@ -529,11 +579,11 @@ static void
 awaken(Pool *p)
 {
     p->flags &= ~PF_ASLEEP;
-    timerclear(&p->awaken);
-    if(p->inf != NULL) {
-	watchfd(fileno(p->inf));
-	if(fhasdata(p->inf) && !FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-	   FD_SET(fileno(p->inf), &poolreadyfds);
+    timerclear(&p->awaken);    
+    if(p->infd >= 0) {
+	watchfd(p->infd);
+	if(fhasdata(p->inf) && !FD_ISSET(p->infd, &poolreadyfds)) {
+	   FD_SET(p->infd, &poolreadyfds);
 	   poolnready++;
 	}
     }
@@ -606,16 +656,16 @@ PoolInAll(register fd_set *fds, int *nfds)
 
     for(p = AllPools; p != NULL; p = nextp) {
 	nextp = p->next;	/* Grab it now, in case we PoolDelete(p) */
-	if(p->type != P_STREAM || p->inf == NULL)
+	if(p->type != P_STREAM || p->inf == NULL || p->infd < 0)
 	    continue;
 
-	if(FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-	    FD_CLR(fileno(p->inf), &poolreadyfds);
+	if(FD_ISSET(p->infd, &poolreadyfds)) {
+	    FD_CLR(p->infd, &poolreadyfds);
 	    poolnready--;
 	    if(PoolIn(p))
 		got++;
-	} else if(FD_ISSET(fileno(p->inf), fds)) {
-	    FD_CLR(fileno(p->inf), fds);
+	} else if(FD_ISSET(p->infd, fds)) {
+	    FD_CLR(p->infd, fds);
 	    (*nfds)--;
 	    if(PoolIn(p))
 		got++;
@@ -652,16 +702,19 @@ static void
 asleep(Pool *p, struct timeval *base, double offset)
 {
     struct timeval until;
+
     base = timeof(base);
     if(p->inf != NULL) {
 	p->flags |= PF_ASLEEP;
 	addtime(base, offset, &until);
 	if(timercmp(&until, &nexttowake, <))
 	    nexttowake = until;
-	unwatchfd(fileno(p->inf));
-	if(FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-	    FD_CLR(fileno(p->inf), &poolreadyfds);
-	    poolnready--;
+	if (p->infd >= 0) {
+	    unwatchfd(p->infd);
+	    if(FD_ISSET(p->infd, &poolreadyfds)) {
+		FD_CLR(p->infd, &poolreadyfds);
+		poolnready--;
+	    }
 	}
     }
 }
@@ -726,7 +779,7 @@ PoolIn(Pool *p)
 	return NULL;		/* No way to read */
 
     if((p->flags & PF_NOPREFETCH) ||
-		((c = async_fnextc(p->inf, 3)) != NODATA && c != EOF)) {
+       ((c = async_fnextc_fd(p->inf, 3, p->infd)) != NODATA && c != EOF)) {
 	/* Kludge.  The interface to TransStreamIn really needs to change. */
 
 	if((*p->ops->strmin)(p, &h,
@@ -760,9 +813,11 @@ PoolIn(Pool *p)
 	    } else if(p->softEOF) {
 		rewind(p->inf);
 	    } else if(p->inf != NULL) {	/* Careful lest already PoolClose()d */
-		if(FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-		    FD_CLR(fileno(p->inf), &poolreadyfds);
-		    poolnready--;
+		if (p->infd >= 0) {
+		    if(FD_ISSET(p->infd, &poolreadyfds)) {
+			FD_CLR(p->infd, &poolreadyfds);
+			poolnready--;
+		    }
 		}
 		PoolClose(p);
 		return NULL;
@@ -771,7 +826,7 @@ PoolIn(Pool *p)
 	if(p->seekable && p->inf != NULL)
 	    c = fnextc(p->inf, 0);	/* Notice EOF if appropriate */
     }
-    if(c == EOF) {
+    if(c == EOF && feof(p->inf)) {
 	if(p->softEOF) {
 	    rewind(p->inf);
 	    PoolSleepFor(p, 1.0);	/* Give us a rest */
@@ -789,19 +844,19 @@ PoolIn(Pool *p)
 	}
     }
 
-    if(p->inf && !(p->flags & PF_ASLEEP)) {
+    if(p->inf && !(p->flags & PF_ASLEEP) && p->infd >= 0) {
 	/*
 	 * Anything left in stdio buffer?  If so,
 	 * remember to try reading next time without waiting for select().
 	 */
 	if(fhasdata(p->inf)) {
-	    if(!FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-		FD_SET(fileno(p->inf), &poolreadyfds);
+	    if(!FD_ISSET(p->infd, &poolreadyfds)) {
+		FD_SET(p->infd, &poolreadyfds);
 		poolnready++;
 	    }
 	} else {
-	    if(FD_ISSET(fileno(p->inf), &poolreadyfds)) {
-		FD_CLR(fileno(p->inf), &poolreadyfds);
+	    if(FD_ISSET(p->infd, &poolreadyfds)) {
+		FD_CLR(p->infd, &poolreadyfds);
 		poolnready--;
 	    }
 	}

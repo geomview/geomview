@@ -43,7 +43,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include <signal.h>
 
-
 HandleOps GeomOps = {
 	"geom",
 	(int ((*)()))GeomStreamIn,
@@ -241,7 +240,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     Appearance *ap = NULL;
     GeomClass *Class;
     void *it;
-    struct stdio_mark *mark = NULL;
     int i, first;
     int empty = 1, braces = 0;
     int defining = 0;
@@ -251,6 +249,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     char *w, *raww, *tail;
     int brack = 0;
     int more;
+    struct stdio_mark *mark = NULL;    
 
     if(p == NULL || (f = PoolInputFile(p)) == NULL)
 	return 0;
@@ -307,7 +306,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    if(c == '<' && (h = HandleByName(w, &GeomOps)) == NULL && w[0] != '/') {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
-		    OOGLSyntax(PoolInputFile(p),
+		    OOGLSyntax(f,
 			"Error reading \"%s\": can't find file \"%s\"",
 			PoolName(p), raww);
 		}
@@ -338,13 +337,13 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    }
 	    if(strcmp(w, "define") == 0) {
 		more = 1;
-		hname = HandleCreate( ftoken(PoolInputFile(p), 0), &GeomOps );
+		hname = HandleCreate( ftoken(f, 0), &GeomOps );
 		defining = 1;
 		break;
 	    }
 	    if(strcmp(w, "appearance") == 0) {
 		more = 1;
-		ap = ApFLoad(ap, PoolInputFile(p), PoolName(p));
+		ap = ApFLoad(ap, f, PoolName(p));
 		break;
 	    }
 
@@ -357,8 +356,8 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	     * First try to guess object type from its file name.
 	     */
 	    empty = 0;
-	    mark = stdio_setmark( NULL, f );
-
+	    mark = stdio_setmark( NULL, p->inf );
+	    
 	    Class = GeomFName2Class( PoolName(p) );
 
 	    g = NULL;
@@ -370,7 +369,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		if(Class->import)
 		    g = (*Class->import)(p);
 		else if(Class->fload)
-		    g = (*Class->fload)(PoolInputFile(p), PoolName(p));
+		    g = (*Class->fload)(f, PoolName(p));
 		first = 0;
 		if(g)
 		    break;
@@ -390,7 +389,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		 */
 		if(!first && !stdio_seekmark(mark)) {
 		    /* No luck.  Might as well give up right now. */
-		    OOGLSyntax(PoolInputFile(p),
+		    OOGLSyntax(f,
 			"Error reading \"%s\": can't seek back far enough (on pipe?)",
 				PoolName(p));
 			break;
@@ -399,7 +398,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		if(Class->import)
 		    g = (*Class->import)(p);
 		else if(Class->fload)
-		    g = (*Class->fload)(PoolInputFile(p), PoolName(p));
+		    g = (*Class->fload)(f, PoolName(p));
 		first = 0;
 	    }
 	    geomtoken = NULL;
@@ -453,8 +452,10 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     } else if(g)		/* Maintain ref count */
 	GeomDelete(g);
 
-    if(mark != NULL)
+    if(mark != NULL) {
 	stdio_freemark(mark);
+    }
+
     return (g != NULL || h != NULL || (empty && braces));
 }
 

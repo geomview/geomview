@@ -29,7 +29,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <stdlib.h>	/* for qsort(), malloc() */
+#include <stdlib.h>	/* for qsort(), malloc(), atof() */
 
 #include <ooglutil.h>	/* variable-length arrays */
 

@@ -89,6 +89,8 @@ struct Pool {
 				 * 1 for tty or named pipe, 0 otherwise.
 				 */
 	FILE	*inf;
+	FILE    *sinf;         /* saved copy of inf */
+	int     infd;
 	FILE	*outf;
 
 	short	flags;		/* Miscellaneous internal flags: */

@@ -11,6 +11,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h> /* for atof() */
 #include <math.h>
 #include "yystype.h"
 #include "y.tab.h"

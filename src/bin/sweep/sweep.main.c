@@ -25,6 +25,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 #include <math.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include "forms.h"
 #include "geom.h"
 #include "point3.h"
@@ -64,7 +65,11 @@ flx_get_input_int(FL_OBJECT *obj)
 float
 flx_get_input_float(FL_OBJECT *obj)
 {
-  return atof(fl_get_input(obj));
+  float foo;
+  const char *str = fl_get_input(obj);
+  foo = atof(str);
+  return foo;
+  
 }
 
 main() {

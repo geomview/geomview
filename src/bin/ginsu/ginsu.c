@@ -28,6 +28,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <signal.h>
 #include "forms.h"
 #include "xforms-compat.h"
 
@@ -206,6 +207,11 @@ main()
  int  editon = 0;
  float ap,bp,cp,dp;
  float M[4][4];
+
+#if 0
+ signal(SIGALRM, SIG_IGN);
+ sleep(300);
+#endif
 
  tmpdir = getenv("TMPDIR");
  if(tmpdir == NULL) tmpdir = "/tmp";

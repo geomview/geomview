@@ -202,6 +202,9 @@ extern char *fcontext(FILE *f);
 extern int async_fnextc(FILE *, int flags);
 extern int async_getc(FILE *);
 
+extern int async_fnextc_fd(FILE *, int flags, int fd);
+extern int async_getc_fd(FILE *, int fd);
+
 extern struct stdio_mark *stdio_setmark(struct stdio_mark *, FILE *);
 extern int		  stdio_seekmark(struct stdio_mark *);
 extern void		  stdio_freemark(struct stdio_mark *);

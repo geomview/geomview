@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.7 2002/10/26 19:23:51 smr99 Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.8 2003/09/10 21:27:53 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -76,12 +76,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  *	  2 : Skip blanks, tabs, and newlines, but stop at #.
  *	  3 : Skip blanks and tabs but stop at # or \n.
  *
- * int async_fnextc(FILE *f, int flags)
+ * int async_fnextc(FILE *f, int flags, int fd)
  *	Like fnextc() above, but guarantees not to block if no data is
  *	immediately available.  It returns either an interesting character,
  *	EOF, or the special code NODATA (== -2).
+ *      if fd == -1, then fileno(f) is used, otherwise fd.
  *
- * int async_getc(FILE *f)
+ * int async_getc(FILE *f, int fd)
  *	Like getc(), but guarantees not to block.  Returns NODATA if
  *	nothing is immediately available.
  *
@@ -148,6 +149,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "ooglutil.h"
 
 
@@ -808,53 +810,84 @@ fcontext(register FILE *f)
     return (cont = strdup(buf));
 }
 
+#if USE_SEEKPIPE
 
-
-#ifdef __linux__
-
-/*
- *  USE_FSTROPEN_1 / HAVE_FMEMOPEN Notes:
- *  
- *  This is an ugly hack to deal with an error that happens on some
- *  Linux systems (Suse 6.4?) and which causes a crash in glibc's
- *  CC_fmemopen__FPci function.  I don't know if the problem is a bug
- *  in that function or a bug somewhere in this code or elsewhere in
- *  Geomview, but here's a temporary fix, until we figure out what's
- *  really going on:
- *    The 'configure' script checks for a function called 'fmemopen'
- *    in the standard C libarary.  If it finds one, then it sets
- *    HAVE_FMEMOPEN in config.h which causes this file to use it in
- *    the implementation of fstropen().  If it doesn't find one, then
- *    we attempt to use CC_fmemopen__FPci, which is what this code did
- *    for years (and worked).  If that doesn't work, you can pass the
- *    flag "--enable-fstropen-1" to the 'configure' script, which will
- *    define USE_FSTROPEN_1 in config.h which forces this file to use
- *    one of the manual fstropen implementations below, rather than
- *    calling CC_fmemopen__FPci.
- *
- *    mbp Wed Nov 1 11:28:59 2000
+/* this one need the fopencookie() stuff from glibc but does _not_ twiddle
+ * with libio interna.
  */
 
-#if !USE_FSTROPEN_1
-#  if !HAVE_FMEMOPEN
-      extern FILE		 *CC_fmemopen__FPci(char *mem, int len);
-#  endif
-#endif
-extern struct stdio_mark *CC_stdio_setmark__FP10stdio_markP8_IO_FILE(struct stdio_mark *m, FILE *f);
-extern int		  CC_stdio_seekmark__FP10stdio_mark(struct stdio_mark *mark);
-extern void  		  CC_stdio_freemark__FP10stdio_mark(struct stdio_mark *mark); 
+struct stdio_mark {
+    FILE   *file;
+    fpos_t pos;
+};
 
-#if !USE_FSTROPEN_1
-FILE *fstropen(char *mem, int len, char *mode)
+struct stdio_mark *stdio_setmark(struct stdio_mark *mark, FILE *file)
 {
-#if HAVE_FMEMOPEN
-  return fmemopen(mem, len, mode);
-#else
-  return CC_fmemopen__FPci(mem, len);
-#endif
+    if (!mark) {
+	mark = malloc(sizeof(struct stdio_mark));
+    }
+    mark->file = file;
+    fgetpos(file, &mark->pos);
+    return mark;
+}
+
+int stdio_seekmark(struct stdio_mark *mark)
+{
+    return fsetpos(mark->file, &mark->pos) == 0;
+}
+
+void stdio_freemark(struct stdio_mark *mark)
+{
+	free(mark);
 }
 #endif
 
+#if USE_IO_MARKER
+/* Using the functions above is a no-no but works. It is left a
+ * compilation option whether these are used (see configure)
+ */
+struct stdio_mark {
+    struct _IO_marker marker;
+};
+
+extern void _IO_init_marker __P ((struct _IO_marker *, _IO_FILE *));
+extern void _IO_remove_marker __P ((struct _IO_marker *));
+extern int _IO_seekmark __P ((_IO_FILE *, struct _IO_marker *, int));
+
+struct stdio_mark *stdio_setmark(struct stdio_mark *mark, FILE *file)
+{
+	if (!mark) {
+		mark = malloc(sizeof(struct stdio_mark));
+	}
+	_IO_init_marker(&mark->marker, file);
+	return mark;
+}
+
+int stdio_seekmark(struct stdio_mark *mark)
+{
+	return _IO_seekmark(mark->marker._sbuf, &mark->marker, 0) == 0;
+}
+void stdio_freemark(struct stdio_mark *mark)
+{
+	_IO_remove_marker(&mark->marker);
+	free(mark);
+}
+#endif
+
+#if HAVE_FMEMOPEN
+FILE *fstropen(char *mem, int len, char *mode)
+{
+  return (FILE *)fmemopen(mem, len, mode);
+}
+#else
+# define USE_FSTROPEN_1 1
+#endif
+
+#if !USE_SEEKPIPE && !USE_IO_MARKER
+
+#if defined(__linux__) 
+
+#if 0 /* really outdated */
 struct stdio_mark *stdio_setmark(struct stdio_mark *m, FILE *f)
 { return CC_stdio_setmark__FP10stdio_markP8_IO_FILE(m, f); }
 
@@ -863,44 +896,72 @@ int stdio_seekmark(struct stdio_mark *mark)
 
 void stdio_freemark(struct stdio_mark *mark)
 { CC_stdio_freemark__FP10stdio_mark(mark); }
+#else
 
+	/* More with vanilla stdio:
+	 * attempt to seek backwards (backtrack) on a stream.
+	 * Use true seeking where possible, otherwise attempt to
+	 * fiddle with the buffer pointers and pray it's still in the buffer
+	 * (sigh).   [GNU libc has real facilities for doing this!]
+	 */
+struct stdio_mark {
+  FILE *f;
+  off_t fpos;
+  FILE fcopy;
+  char fchars[8];
+};
+
+struct stdio_mark *
+stdio_setmark(register struct stdio_mark *mark, register FILE *stream)
+{
+    if(mark == NULL)
+	mark = OOGLNewE(struct stdio_mark, "stdio_setmark mark");
+    mark->f = stream;
+
+    mark->fpos = isatty(fileno(stream)) ? -1 : ftello(stream);
+    mark->fcopy = *stream;
+    memcpy(mark->fchars, mark->f->_IO_read_base, sizeof(mark->fchars));
+    return mark;
+}
+
+int
+stdio_seekmark(register struct stdio_mark *mark)
+{
+     /* Efficient no-op if we're seeking to where we already are */
+    if(memcmp(mark->f, &mark->fcopy, sizeof(*mark->f)) == 0 &&
+	memcmp(mark->fchars, mark->f->_IO_read_base, sizeof(mark->fchars)) == 0) {
+	    return 1;
+    }
+
+    if(mark->fpos == -1 || fseeko(mark->f, mark->fpos, SEEK_SET) == -1) {
+	/* Maybe it's a pipe or socket, so seeks fail.
+	 * Try repositioning inside the stdio buffer.
+	 * This is a stdio-dependent kludge, but might work.
+	 */
+	if(mark->f->_IO_read_base == mark->fcopy._IO_read_base &&
+	   memcmp(mark->fchars,
+		  mark->f->_IO_read_base,
+		  sizeof(mark->fchars)) == 0) {
+		    /* Buffer looks unchanged.  Reset pointers. */
+	    *(mark->f) = mark->fcopy;
+	} else {
+	    return 0;	/* Failed */
+	}
+    }
+    return 1;		/* Succeeded */
+}
+
+void
+stdio_freemark(struct stdio_mark *mark)
+{
+    OOGLFree(mark);
+}
+
+#endif
 
 	/* End Linux (GNU libc, more or less) */
 
-#else   /* Roughly vanilla stdio */
-
-#if defined(AIX) || defined(__osf__) || defined(__hpux) || defined(__FreeBSD__)
-
-#define USE_FSTROPEN_1 1
-
-#else /* Even more nearly vanilla stdio */
-
-/*
- * This one is stdio dependent, but seems to work on a fair variety of
- * implementations.
- */
-FILE *
-fstropen(char *str, int len, char *mode)
-{
-	FILE *f;
-
-	f = fopen("/dev/null", mode);	/* How else do I get a FILE *? */
-	if(f == NULL)
-	    return NULL;
-	setbuf(f, NULL);
-	close(fileno(f));
-
-#ifdef __hpux
-	f->__fileL = f->__fileH = -1;
-#else
-	f->_file = -1;
-#endif
-	f->_cnt = len;
-	f->_ptr = f->_base = (unsigned char *) str;
-	f->_flag &= ~(_IONBF|_IOMYBUF|_IOEOF|_IOERR);
-	return f;
-}
-#endif /* non-AIX, non-OSF stdio */
+#else  /* Roughly vanilla stdio */
 
 	/* More with vanilla stdio:
 	 * attempt to seek backwards (backtrack) on a stream.
@@ -961,6 +1022,47 @@ stdio_freemark(struct stdio_mark *mark)
 
 #endif  /* vanilla stdio */
 
+#endif /* !USE_IO_MARKER && !USE_SEEKPIPE */
+
+/***************************************************************************/
+
+#if !USE_FSTROPEN_1 && !HAVE_FMEMOPEN
+
+#if defined(AIX) || defined(__osf__) || defined(__hpux) || defined(__FreeBSD__
+
+#define USE_FSTROPEN_1 1
+
+#else /* Even more nearly vanilla stdio */
+
+/*
+ * This one is stdio dependent, but seems to work on a fair variety of
+ * implementations.
+ */
+FILE *
+fstropen(char *str, int len, char *mode)
+{
+	FILE *f;
+
+	f = fopen("/dev/null", mode);	/* How else do I get a FILE *? */
+	if(f == NULL)
+	    return NULL;
+	setbuf(f, NULL);
+	close(fileno(f));
+
+#ifdef __hpux
+	f->__fileL = f->__fileH = -1;
+#else
+	f->_file = -1;
+#endif
+	f->_cnt = len;
+	f->_ptr = f->_base = (unsigned char *) str;
+	f->_flag &= ~(_IONBF|_IOMYBUF|_IOEOF|_IOERR);
+	return f;
+}
+#endif /* non-AIX, non-OSF stdio */
+
+#endif /* !USE_FSTROPEN_1 && !HAVE_FMEMOPEN */
+
 /***************************************************************************/
 
 #if USE_FSTROPEN_1
@@ -997,8 +1099,15 @@ fhasdata(FILE *f)
     return F_HASDATA(f);
 }
 
+
 int
 async_getc(register FILE *f)
+{
+    return async_getc_fd(f, -1);
+}
+
+int
+async_getc_fd(register FILE *f, int fd)
 {
 
 #if defined(unix) || defined(__unix)
@@ -1006,11 +1115,17 @@ async_getc(register FILE *f)
     fd_set fds;
     static struct timeval notime = { 0, 0 };
 
+    if (fd < 0) {
+	fd = fileno(f);
+    }
+
     if(F_HASDATA(f))
 	return getc(f);
+    if (fd < 0)
+	return NODATA;
     FD_ZERO(&fds);
-    FD_SET(fileno(f), &fds);
-    if(select(fileno(f)+1, &fds, NULL, NULL, &notime) == 1)
+    FD_SET(fd, &fds);
+    if(select(fd+1, &fds, NULL, NULL, &notime) == 1)
 	return fgetc(f);
     return NODATA;
 #else
@@ -1021,9 +1136,15 @@ async_getc(register FILE *f)
 int
 async_fnextc(register FILE *f, register int flags)
 {
+    return async_fnextc_fd(f, flags, -1);
+}
+
+int
+async_fnextc_fd(register FILE *f, register int flags, int fd)
+{
     register int c;
 
-    c = async_getc(f);
+    c = async_getc_fd(f, fd);
     for(;;) {
 	switch(c) {
 	case EOF:
@@ -1053,7 +1174,7 @@ async_fnextc(register FILE *f, register int flags)
 	    return(c);
 	}
 
-	c = async_getc(f);
+	c = async_getc_fd(f, fd);
     }
 }
 

@@ -1,7 +1,7 @@
 INCLUDES = $(default_includes) $(MOTIFINCLUDE) $(OPENGLINCLUDE) -I..
 SUBDIRS = bitmaps interface
 
-LDADD = ../common/libgvcommon.a buildinfo.o ${OOGLLIBS} \
+gvx_LDADD = ../common/libgvcommon.a buildinfo.o ${OOGLLIBS} \
         $(OPENGLLIBS) $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(SOCKETLIBS) $(MATHLIB)
 
 module_PROGRAMS = gvx
