@@ -1,6 +1,8 @@
-2000-11-19  Mark Phillips  <mbp@geomtech.com>
+2000-11-20  Mark Phillips  <mbp@geomtech.com>
 
         * release 1.8.0  (see NEWS file for summary)
+
+2000-11-19  Mark Phillips  <mbp@geomtech.com>
 
 	* texi2pdf doesn't seem to include figures; for now revert
 	  to dvipdf to generate pdf version of manual
@@ -122,7 +124,7 @@
 	  response to reports of Geomview crashing upon startup, while
 	  reading the default appearance (via a call to fstropen), on some
 	  newer Linux systems.
-            [thanks to Mikhail Tchernychev <mikhail_tchernychev@yahoo.com
+            [thanks to Mikhail Tchernychev <mikhail_tchernychev@yahoo.com>
              and Belinda Marchand <marchand@ecn.purdue.edu>]
 
         * src/lib/oogl/wa/fsaparse.l: removed duplicate rules for "min"
