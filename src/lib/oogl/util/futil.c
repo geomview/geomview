@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.9 2004/03/15 22:05:35 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.10 2004/05/02 17:03:54 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -296,9 +296,14 @@ fgetnf(register FILE *f, int maxf, float *fv, int binary)
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)fv, sizeof(float), maxf, f);
 #else /* not native big-endian IEEE */
-		long w;
-		for(n=0; n<maxf && fread((char *)&w,sizeof(long),1,f) > 0; n++)
-		    *(long *)&fv[n] = ntohl(w);
+		union {
+			int   wi;
+			float wf;
+		} w;
+		for(n=0; n<maxf && fread((char *)&w,sizeof(float),1,f) > 0; n++) {
+			w.wi = ntohl(w.wi);
+			fv[n] = w.wf;
+		}
 		return n;
 #endif /* not native big-endian IEEE */
 	}
@@ -380,7 +385,7 @@ fgetni(register FILE *f, int maxi, int *iv, int binary)
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)iv, sizeof(int), maxi, f);
 #else /* not native big-endian int's */
-		long w;
+		int w;
 		for(n = 0; n < maxi && fread(&w,4,1,f) > 0; n++)
 		    iv[n] = ntohl(w);
 		return n;
