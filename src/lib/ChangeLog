@@ -1,0 +1,12 @@
+2000-11-05  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* oogl/lisp/Makefile.am (BUILT_SOURCES): Declare clisp.c and
+	clisp.h.
+
+2000-10-29  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* oogl/lisp/Makefile.am (clisp.c): 
+	* oogl/wa/Makefile.am (wa.yacc.c, wa.lex.c): 
+	* fexpr/Makefile.am (parse.tab.c): Use $srcdir to refer to files
+	in the source hierarchy.
+

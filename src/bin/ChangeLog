@@ -1,0 +1,61 @@
+2000-11-15  Mark Phillips  <mbp@geomtech.com>
+
+	* Makefile.am: split SUBDIRS into DIST_SUBDIRS and
+	  $(src_bin_module_subdirs), which is now set by
+	  the top-level configure script.
+
+2000-11-05  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomutil/bdy/Makefile.am (drawbdy): Put $(moduledir) on PATH,
+	not $(exec_prefix)/bin.
+	(CLEANFILES): Clean up the generated script.
+
+	* geomview/x11/Makefile.am:
+	* geomview/common/Makefile.am: Removed the complicated
+	cross-directory dependency rules.  Build "clang.c" and "clang.h"
+	in the geomview directory before building either subdirectory.
+	Make "x11/buildinfo.c" depend on $(gvx_OBJECTS), rather than
+	"_always", to prevent recompilation during "make install".  Removed
+	"clang.h" from gvx_SOURCES, since it is no longer built in the
+	"x11" subdirectory.
+
+	* geomutil/ucd/Makefile.am (man_MANS): 
+	* geomutil/plutil/Makefile.am (man_MANS): 
+	* geomutil/clip/Makefile.am (man_MANS): 
+	* geomutil/bdy/Makefile.am (man_MANS): 
+	* geomview/Makefile.am (man_MANS): Install manpages.
+
+	* maniview/Makefile.am (datagroupsdir): Default the value from
+	$geomdatadir.
+
+2000-11-04  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* transformer/Makefile.am: 
+	* tackdown/Makefile.am: 
+	* sweep/Makefile.am: 
+	* stereo/Makefile.am: 
+	* maniview/Makefile.am: 
+	* hinge/Makefile.am: 
+	* graffiti/Makefile.am: 
+	* ginsu/Makefile.am: 
+	* geomutil/bdy/Makefile.am: 
+	* flythrough/Makefile.am: 
+	* example/Makefile.am: 
+	* cplxview/Makefile.am: 
+	* animate/Makefile.am: Install modules into moduledir.  Treat
+	.geomview-* files as data, not scripts.
+
+2000-10-29  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomutil/bdy/Makefile.am (drawbdy): 
+	* geomutil/vrml2oogl/Makefile.am (INCLUDES): 
+	* geomview/x11/Makefile.am (clang): Use $srcdir when referring to
+	directories in source hierarchy.
+
+	* geomview/common/Makefile.am (INCLUDES): Add both ../x11 (for
+	generated `clang.c' file), and $srcdir/../x11 (for `clang.h' file)
+	to include path.
+
+	* geomutil/bdy/Makefile.am (install-geomview-dotfile): 
+	* animate/Makefile.am (install-geomview-dotfile): Refer to script
+	`mkmodulesdir' using $top_srcdir.
