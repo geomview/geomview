@@ -1,6 +1,6 @@
-		      Geomview/OOGL Release 1.7.10
-			   November 1, 2000
-			   ----------------
+		      Geomview/OOGL Release 1.8.0
+			   November 17, 2000
+			   -----------------
 
 CONTENTS
 --------
@@ -24,19 +24,19 @@ CONTENTS
 INTRODUCTION
 ------------
                                    
-This is version 1.7 of Geomview/OOGL.  It runs on many unix-like
-platforms including but not limited to GNU/Linux, Solaris, IRIX, and
-AIX.  It requires X windows, OpenGL, and Motif.  It also works with
-MESA3D and Lesstif, which are free-software counterparts to OpenGL and
-Motif.  See www.geomview.org for more information.
+This is version 1.8 of Geomview/OOGL.  See the file NEWS for a summary
+of changes in this release, and the file ChangeLog for specific
+details.
 
 Geomview is an interactive geometry viewing program.  OOGL, which
-stands for Object Oriented Graphics Library, is the library upon
-which Geomview is built.
+stands for Object Oriented Graphics Library, is the library upon which
+Geomview is built.
 
-NOTE: Please read the file REGISTER.  We (the Geomview developers)
-would like to know how people are using Geomview so that we can
-continue to improve it in ways that are useful.
+Geomview runs on many unix-like platforms including but not limited to
+GNU/Linux, Solaris, IRIX, and AIX.  It requires X windows, OpenGL, and
+Motif (or OpenMotif).  It also works with Mesa, which is a
+free-software replacement to OpenGL.  See www.geomview.org for more
+information.
 
 In addition, if you use geomview please consider joining the
 geomview-users mailing list; send an empty note with 'subscribe' in

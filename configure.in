@@ -151,6 +151,8 @@ AC_SUBST(XMULIBS)
 
 ########################################################################
 
+AC_MSG_CHECKING([for motif])
+
 if test "$MOTIF_DIR" != "" ; then
   USER_MOTIF_DIR="$MOTIF_DIR/include"
 else
@@ -197,8 +199,11 @@ MOTIF_L_OPTION=$GEOM_L_OPTION
 MOTIFLIBS="$GEOM_L_OPTION $MOTIFLIBS"
 AC_SUBST(MOTIFLIBS)
 
+AC_MSG_RESULT([headers $MOTIFINCLUDE, libraries $MOTIFLIBS])
+
 ########################################################################
 
+AC_MSG_CHECKING([for opengl])
 if test "$OPENGL_DIR" != "" ; then
   USER_OPENGL_DIR="$OPENGL_DIR/include"
 else
@@ -248,6 +253,8 @@ fi
 OPENGLLIBS="$GL_L_OPTION -lGL $GLU_L_OPTION -lGLU"
 AC_SUBST(OPENGLLIBS)
 
+AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
+
 ########################################################################
 
 AC_ARG_WITH(forms,
@@ -290,8 +297,8 @@ AC_CACHE_VAL(ac_cv_have_xforms,
 	# there's more than one XFORMS subdir, use the first one found.
 	# (There should never be more than one, but in case there is,
 	# we need a definite behavior to resolve the ambiguity.)
-	if test -d xforms ; then
-	  USER_XFORMS_SUBDIR=`find xforms -name FORMS -print | sed -e '2,$d'`
+	if test -d $srcdir/xforms ; then
+	  USER_XFORMS_SUBDIR=`find $srcdir/xforms -name FORMS -print | sed -e '2,$d'`
 	  USER_XFORMS_DIR="`pwd`/$USER_XFORMS_SUBDIR"
 	fi
     fi
@@ -618,8 +625,8 @@ AC_SUBST(STUBLIB)
 ### dpvc@union.edu when configuring on his LinuxPPC system; they
 ### seem to be necessary on that system.
 
-touch src/lib/oogl/wa/wa.yacc.c
-touch src/lib/oogl/wa/wa.lex.c
+touch $srcdir/src/lib/oogl/wa/wa.yacc.c
+touch $srcdir/src/lib/oogl/wa/wa.lex.c
 
 ########################################################################
 
@@ -675,9 +682,10 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 LF_SET_INCLUDES
 
 
-module_srcdirs=`find src/bin -name 'configure.in' -print | sed -e 's/\/configure.in$//g'`
+module_srcdirs=`( cd $srcdir ; find src/bin -name 'configure.in' -print ) | sed -e 's/\/configure.in$//g'`
 module_srcdirs=`echo $module_srcdirs`
 src_bin_module_subdirs=`echo $module_srcdirs | sed -e 's/src\/bin\///g'`
+
 AC_SUBST(src_bin_module_subdirs)
 
 AC_CONFIG_SUBDIRS($module_srcdirs)
@@ -767,6 +775,7 @@ AC_OUTPUT(Makefile
 	  src/bin/geomutil/vrml2oogl/Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
 	  src/bin/sweep/Makefile
+	  src/bin/togeomview/Makefile
 )
 
 #	  src/bin/cplxview/Makefile

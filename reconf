@@ -5,6 +5,18 @@
 # bootstrap a Geomview tree that has been checked out using CVS, or to
 # reconfigure a tree from scratch.
 
+#
+# usage:
+#
+#    reconf [-n]
+#
+#      -n means don't actually run 'configure' --- just do everything
+#         up to but not including running it
+
+if test "$1" = "-n" ; then
+  configure="no"
+fi
+
 # clear out configure's cache
 rm -f config.cache
 
@@ -24,5 +36,7 @@ autoheader
 # generate Makefile.in's
 automake -a
 
-# configure (you might need to edit this for your local system)
-./configure --with-motif=/usr/local/openmotif
+if test "$configure" != "no" ; then
+  # configure (you might need to edit this for your local system)
+  ./configure --with-motif=/usr/local/openmotif
+fi

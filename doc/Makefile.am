@@ -29,8 +29,8 @@ else
 # 'geomview.pdf' to have to be regenerated in this case --- it really only
 # needs to be regenerated if geomview.texi changes.
 geomview.pdf: $(srcdir)/geomview.texi
-	tex geomview.texi
-	tex geomview.texi
+	tex $(srcdir)/geomview.texi
+	tex $(srcdir)/geomview.texi
 	$(DVIPDF) geomview.dvi geomview.pdf
 
 endif
@@ -39,7 +39,7 @@ endif
 # that.  These rules aren't invoked by anything else in this file; just
 # here for use in development.
 geomview.dvi: $(srcdir)/geomview.texi
-	tex geomview.texi
-	tex geomview.texi
+	tex $(srcdir)/geomview.texi
+	tex $(srcdir)/geomview.texi
 
 MAINTAINERCLEANFILES = geomview.pdf

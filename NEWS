@@ -1,3 +1,66 @@
+1.8.0   November 17, 2000
+
+   The software in this release is essentially the same as in the
+   1.7.* series, but it has an improved configure script and Makefiles
+   that allow for several new things:
+
+   (a) VPATH builds now supported
+
+   (b) Additional external modules can simply be dropped into place in
+       the "src/bin" directory, and Geomview's configure script will
+       notice their presence and configure/build them when you
+       configure/build Geomview.  (This only works with module
+       distributions that have been specifically packed up for this
+       purpose; see http://www.geomview.org/download for more
+       details.)
+
+   (c) The binary Intel/Linux XFORMS distribution is no longer a part
+       of the Geomview source distribution.  Users who want it can
+       download it separately, unpack it into the Geomview source
+       tree, and Geomview's configure script will notice it's there
+       and use it.  (This works with the binary XFORMS distribution
+       for any system, not just Intel/Linux.)
+
+   It also includes a few minor bug fixes; see ChangeLog for details.
+
+
+1.7.10  Nov 1, 2000
+
+   Attempted to fix bug which caused Geomview to crash immediately
+   upon startup on some newer GNU/Linux systems.  The bug has to do
+   with Geomview's use of the 'fmemopen' system function.  This
+   release attempts to autodetect which version of this function to
+   use.  If it still crashes for you, pass the flag
+   "--enable-fstropen-1" to "configure" and try again.  If you still
+   have problems, let me [mbp@geomtech.com] know.
+
+   Misc fixes to allow compilation on wider variety of platforms
+
+
+1.7.9  Oct 20, 2000
+
+   Minor change to allow compilation with Mesa-3.3 (related to how
+   Mesa-3.3 declares prototypes for GL extention functions).  No
+   change in functionality, but this version compiles without errors
+   with Mesa-3.3, which previous versions didn't.
+
+1.7.8  Oct 14, 2000     
+
+   Fixed bug which prevented compressed textures from working on
+   some Linux systems
+        
+   Fixed several compilation/configuration problems.  Now tested on:
+       Linux:  RedHat 6.1, 7.0
+	       Mandrake 7.0
+	       Caldera-2.3
+	       Mandrake-7.0
+	       Slackware-7.0
+       Solaris-2.6 (SunOS 5.6)
+       AIX 4.3.2
+       IRIX 6.3
+
+
+
 1.7.7   August 22, 2000
 
    Added some of the external modules to the distribution, but haven't
