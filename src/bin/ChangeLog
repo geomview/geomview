@@ -1,5 +1,11 @@
 2001-02-28  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
+	* geomutil/math2oogl/Makefile.am (EXTRA_DIST):
+	* geomutil/oogl2rib/Makefile.am (EXTRA_DIST):
+	* geomutil/oogl2vrml/Makefile.am (EXTRA_DIST):
+	* geomutil/plutil/Makefile.am (EXTRA_DIST):
+	* geomutil/vrml2oogl/Makefile.am (EXTRA_DIST): Distribute man_MANS.
+
 	* geomutil/vrml2oogl/vrml2oogl.1: New.
 	* geomutil/vrml2oogl/Makefile.am (man_MANS): Install vrml2oogl.1.
 

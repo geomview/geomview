@@ -7,4 +7,5 @@ math2oogl_SOURCES = math2oogl.c
 
 LDADD = $(SOCKETLIBS)
 
-EXTRA_DIST = BezierPlot.m  OOGL.m Geomview.m
+EXTRA_DIST = BezierPlot.m  OOGL.m Geomview.m $(man_MANS)
+
