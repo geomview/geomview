@@ -450,7 +450,7 @@ main(int argc, char *argv[]) {
   int i;
   int flat = 1;
 
-  FILE *f = stdout;
+  f = stdout;
 
   while (argc > 1 && argv[1][0] == '-' && argv[1][1] != '\0') {
     if (argv[1][1] == 'b') {
