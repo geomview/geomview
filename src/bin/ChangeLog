@@ -1,3 +1,20 @@
+2001-02-28  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomutil/vrml2oogl/vrml2oogl.1: New.
+	* geomutil/vrml2oogl/Makefile.am (man_MANS): Install vrml2oogl.1.
+
+	* geomutil/oogl2vrml/oogl2vrml.1: New.
+	* geomutil/oogl2vrml/Makefile.am (man_MANS): Install oogl2vrml.1.
+
+	* geomutil/oogl2rib/oogl2rib.1: New.
+	* geomutil/oogl2rib/Makefile.am (man_MANS): Install oogl2rib.1.
+
+	* geomutil/math2oogl/math2oogl.1: New.
+	* geomutil/math2oogl/Makefile.am (man_MANS): Install math2oogl.1.
+
+	* geomutil/plutil/bez2mesh.1: New.
+	* geomutil/plutil/Makefile.am (man_MANS): Install bez2mesh.1.
+
 2001-02-22  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* togeomview/togeomview.c: Include config.h.
