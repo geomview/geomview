@@ -101,8 +101,10 @@ consider joining in the @file{geomview-users} mailing list, which is a
 forum in which users of Geomview communicate to answer
 each others' questions and to share news about what they are doing with
 Geomview.  The Geomview authors participate in this list and sometimes
-post answers to questions there.  To join the list, send a note to
-geomview-users-request@@geomview.org.
+post answers to questions there.  To join the list, send an
+empty note with 'subscribe' in the subject line to
+geomview-users-request@@lists.sourceforge.net, or visit the list web page
+at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
 
 If you find a bug in Geomview, please report it to the Geomview
 team by sending a note to software@@geomview.org.
@@ -7610,9 +7612,13 @@ documentation, news about development, and FAQ (Frequently Asked
 Questions) list.
 
 @item
-Send email to the geomview-users@@geomview.org mailing list.  This is a
-mailing list for discussing any issues related to using Geomview; to be
-added to the list send a note to geomview-users-request@@geomview.org.
+Send email to the geomview-users@@lists.sourceforge.net mailing list.  This is a
+mailing list for discussing any issues related to using Geomview.
+To join the list, send an
+empty note with 'subscribe' in the subject line to
+geomview-users-request@@lists.sourceforge.net, or visit the list web page
+at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
+
 
 @item
 Contract with Geometry Technologies for support.  Geometry Technologies

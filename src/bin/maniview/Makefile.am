@@ -16,10 +16,20 @@ datagroups_DATA = 120.dgp 3torus.dgp borrom.dgp borrom2.dgp borrom4.dgp \
                   good_klein_quick.dgp klein_bricks.dgp klein_whole.dgp \
                   notknot.dgp
 
-modules_PROGRAMS = maniview
+bin_PROGRAMS = maniview
 
-modules_DATA = .geomview-maniview
+bin_SCRIPTS = .geomview-maniview
 
 maniview_SOURCES = \
     callbacks.c controlpanel.c maniview.c controlpanel.h gvinit.h \
     maniview.h maniviewhelp.h
+
+noinst_SCRIPTS = install-geomview-dotfile
+
+install-geomview-dotfile: maniview
+	$(top_builddir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Maniview" "$(subdir)/maniview")' > $(top_builddir)/modules/.geomview-maniview
+
+
+.geomview-maniview:
+	echo '(emodule-define "Maniview" "maniview")' > .geomview-maniview

@@ -1,5 +1,7 @@
 INCLUDES = $(default_includes) -I../x11
 
+EXTRA_DIST = Headers
+
 # NOTE: we don't really create the library 'libgvcommon.a'; the result
 # of compilation in this directory is just a collection of .o files.
 # The use of "libgvcommon.a" in this Makefile.am is just because I

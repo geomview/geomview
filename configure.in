@@ -485,7 +485,6 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 		src/lib/mg/buf			\
 		src/lib/mg/common		\
 		src/lib/mg/opengl		\
-		src/lib/mg/x11			\
 		src/lib/mg/ps			\
 		src/lib/mg/rib			\
 		src/lib/mib			\
@@ -549,7 +548,6 @@ AC_OUTPUT(Makefile
 	  src/lib/mg/opengl/Makefile
 	  src/lib/mg/ps/Makefile
 	  src/lib/mg/rib/Makefile
-	  src/lib/mg/x11/Makefile
 	  src/lib/mib/Makefile
 	  src/lib/pointlist/Makefile
 	  src/lib/shade/Makefile
@@ -561,18 +559,14 @@ AC_OUTPUT(Makefile
 	  src/bin/geomview/x11/Makefile
 	  src/bin/geomview/x11/bitmaps/Makefile
 	  src/bin/geomview/x11/interface/Makefile
-	  src/bin/cplxview/Makefile
 	  src/bin/example/Makefile
 	  src/bin/ginsu/Makefile
-	  src/bin/maniview/Makefile
 	  src/bin/tackdown/Makefile
 	  src/bin/animate/Makefile
 	  src/bin/animate/interface/Makefile
-	  src/bin/flythrough/Makefile
 	  src/bin/graffiti/Makefile
 	  src/bin/stereo/Makefile
 	  src/bin/transformer/Makefile
-	  src/bin/hinge/Makefile
 	  src/bin/sweep/Makefile
 	  src/bin/geomutil/Makefile
 	  src/bin/geomutil/clip/Makefile
@@ -585,4 +579,16 @@ AC_OUTPUT(Makefile
 	  src/bin/geomutil/oogl2rib/Makefile
 	  src/bin/geomutil/plutil/Makefile
 	  src/bin/geomutil/ucd/Makefile
+	  xforms/Makefile
+          xforms/bxform-089/Makefile
+          xforms/bxform-089/FORMS/Makefile
+          xforms/bxform-089-glibc/Makefile
+          xforms/bxform-089-glibc/FORMS/Makefile
+          xforms/bxform-089-glibc2.1/Makefile
+          xforms/bxform-089-glibc2.1/FORMS/Makefile
 	  )
+
+#	  src/bin/cplxview/Makefile
+#	  src/bin/maniview/Makefile
+#	  src/bin/flythrough/Makefile
+#	  src/bin/hinge/Makefile

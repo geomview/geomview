@@ -1,0 +1,29 @@
+#! /bin/sh
+
+# usage: mkmodulesdir ROOT
+#   where ROOT is the pathname (can be relative) of the geomview source tree
+
+MODULES="$1/modules"
+
+if test -d $MODULES ; then
+  :
+else
+  mkdir $MODULES
+fi
+
+  cat > $MODULES/README <<EOF
+This directory holds (or will hold) a collection of .geomview-* files
+which tell geomview where to find external modules.  The Makefile for
+each module puts its corresponding .geomview-* file into this directory
+after successfully building the module.
+
+If this directory is empty (other than for this README file), it just
+means that you haven't (successfully) compiled any of Geomview's
+modules.
+
+This directory is only used for running geomview locally in the build
+tree.  If you do 'make install', the modules get installed into
+/usr/local/Geomview/bin and Geomview is configured to look for them
+there, rather than in the source tree.
+
+EOF

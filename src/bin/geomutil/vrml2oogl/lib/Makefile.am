@@ -75,7 +75,7 @@ libQv_a_SOURCES =          \
   QvUnknownNode.c++	   \
   QvWWWAnchor.c++	   \
   QvWWWInline.c++          \
-\\\\\\\\\\\\\\\\\\\\\\\\\\\
+                           \
   QvAsciiText.h		  \
   QvBasic.h		  \
   QvChildList.h		  \

@@ -7,8 +7,18 @@ LDADD = $(OOGLLIBS)  \
 
 EXTRA_DIST = .geomview-sweep panel.fd  sweep.1 sweep.3
 
-modules_PROGRAMS = sweep
+bin_PROGRAMS = sweep
 
-modules_DATA = .geomview-sweep
+bin_SCRIPTS = .geomview-sweep
 
 sweep_SOURCES = sweep.c sweep.main.c panel.c panel.h sweep.h
+
+noinst_SCRIPTS = install-geomview-dotfile
+
+install-geomview-dotfile: sweep
+	$(top_builddir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Sweep" "$(subdir)/sweep")' > $(top_builddir)/modules/.geomview-sweep
+
+
+.geomview-sweep:
+	echo '(emodule-define "Sweep" "sweep")' > .geomview-sweep
