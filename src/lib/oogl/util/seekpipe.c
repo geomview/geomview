@@ -54,6 +54,16 @@
 #include <errno.h>
 #include <fcntl.h>
 
+#define DEBUG 1
+#if DEBUG
+/* we use the environment variable SEEKPIPE_DEBUG to actually switch
+ * on debugging, and SEEKPIPE_DEBUGFILE to control the name of the
+ * file to write to.
+ */
+static const char debugfilename = "/tmp/seekpipe-foo";
+static FILE *debugfile;
+#endif
+
 #define SP_RING_SZ (1 << 16) /* (1 << 20)*/
 
 #define SP_MAGIC  0x50534f4f /* hex for OOPS in LITTLE ENDIAN */
@@ -95,6 +105,10 @@ static ssize_t seekpipe_read(void *cookie, char *buf, size_t sz)
        * conditions
        */
       ret = read(ff->fd, buf, sz);
+#if DEBUG
+      if (debugfile && ret > 0)
+	fwrite(buf, ret, 1, debugfile);
+#endif
 
       if (ret > 0) {
 	/* ok, copy to our cache. This is a ring buffer, we always
@@ -195,6 +209,13 @@ static int seekpipe_close(void *cookie)
 {
   SEEKPIPE *ff = cookie;
 
+#if DEBUG
+  if (debugfile) {
+    fclose(debugfile);
+    debugfile = NULL;
+  }
+#endif
+
   free(ff);
   return 0; /* leave original stream to caller */
 }
@@ -221,6 +242,16 @@ FILE *seekpipe_open(int fd)
   if (ff->self == NULL) {
     free(ff);
   }
+
+#if DEBUG
+  if (getenv("SEEKPIPE_DEBUG")) {
+    if (getenv("SEEKPIPE_DEBUGFILE")) {
+      debugfilename = getenv("SEEKPIPE_DEBUGFILE");
+    }
+    debugfile = fopen(debugfilename, "w");
+  }
+#endif
+
   return ff->self;
 }
 
