@@ -149,10 +149,10 @@ start_gv(char **gvpath, char *pipename, char *toname)
 		 * if it tries to report an error.)
 		 */
 
-#if defined(NeXT) || defined(BSD)
-	setpgrp(0,getpid());
-#else
+#if SETPGRP_VOID
 	setpgrp();
+#else
+	setpgrp(0,getpid());
 #endif
 	execvp(gvpath[0], &args[0]);
 	write(savederr, whynot, sizeof(whynot));

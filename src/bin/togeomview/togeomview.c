@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -63,10 +65,10 @@ start_gv(char **progtorun, char *toname, int asgeom, int usesock)
 
     if(fork() == 0) {
 	close(0);
-#if defined(NeXT) || defined(BSD)
-	setpgrp(0,getpid());
-#else /* SysV style */
+#if SETPGRP_VOID
 	setpgrp();
+#else
+	setpgrp(0,getpid());
 #endif
 	execvp(progtorun[0], &args[0]);
 	execvp("gv", &args[0]);

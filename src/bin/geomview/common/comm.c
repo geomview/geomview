@@ -624,10 +624,10 @@ emodule_run(emodule *em)
 	char envbuf[10240];
 
 	if(otherpgrp) {
-#if defined(NeXT) || (defined(BSD) && !defined(__osf__)) || defined(__alpha__)
-	    setpgrp(0,getpid());
-#else
+#if SETPGRP_VOID
 	    setpgrp();
+#else
+	    setpgrp(0,getpid());
 #endif
 	}
 	if (em->dir) {

@@ -506,27 +506,15 @@ AC_TRY_LINK([ #include <sys/socket.h> ],
 AC_SUBST(SOCKETLIBS)
 
 
-AC_SEARCH_LIBS(fmemopen, c,
-               AC_DEFINE(HAVE_FMEMOPEN, 1),
-               AC_DEFINE(HAVE_FMEMOPEN, 0))
-
-# AC_MSG_CHECKING([whether we have fmemopen()])
-# AC_TRY_LINK([ #include <stdio.h>
-# static char buffer[] = "foobar"; ],
-#             [ (void)fmemopen(buffer, strlen(buffer), "r"); ],
-#             [ AC_DEFINE(HAVE_FMEMOPEN, 1)
-#               AC_MSG_RESULT([yes]) ],
-#             [ AC_DEFINE(HAVE_FMEMOPEN, 0)
-#               AC_MSG_RESULT([no]) ]
-#            )
-
+AC_FUNC_SETPGRP
+AC_CHECK_FUNCS(fmemopen __setfpucw)
 
 ########################################################################
 
 AC_TYPE_SIZE_T
 AC_C_BIGENDIAN
 
-AC_CHECK_HEADERS(netinet/in.h)
+AC_CHECK_HEADERS(fpu_control.h i386/fpu_control.h netinet/in.h)
 
 moduledir="\$(exec_prefix)/bin"
 AC_SUBST(moduledir)

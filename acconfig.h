@@ -24,10 +24,6 @@
 /* another from old Geomview makefile system */
 #undef __linux__
 
-/* On linux, is the function __setfpucw in the standard libary? */
-/* (This is used in gvmain.c) */
-#undef HAVE_SETFPUCW
-
 /* Use experimental motion averaging code? */
 #define EXPERIMENTAL_MOTION_AVERAGING 0
 
@@ -55,12 +51,6 @@
 /* BINARY_POPEN_REQUIRES_B to 1 for those systems.			 */
 /* mbp Tue Sep 12 12:33:38 2000						 */
 #define BINARY_POPEN_REQUIRES_B 0
-
-/* HAVE_FMEMOPEN is 1 if and only if the function fmemopen() is		 */
-/* available on the system.  This is used in src/lib/oogl/util/futil.c   */
-/* to decide how to implement fstropen().  See also USE_FSTROPEN_1	 */
-/* below. */
-#define HAVE_FMEMOPEN 0
 
 /* USE_FSTROPEN_1 determines whether we forceably use one of our	 */
 /* manual implementations of fstropen (in src/lib/oogl/util/futil.c)	 */

@@ -36,8 +36,18 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "gvui.h"
 
 #include "string.h"
-#ifdef __linux__
-#include <fpu_control.h>
+
+/* Floating-point handling strategy lifted from GSL - the GNU
+ * Scientific Library. */
+#if HAVE_FPU_CONTROL_H
+#  include <fpu_control.h>
+/* Apparently _FPU_SETCW was not available in libc5, but __setfpucw() was */
+#  if !defined(_FPU_SETCW) && HAVE___SETFPUCW
+#    if HAVE_i386_FPU_CONTROL_H
+#      include <i386/fpu_control.h>
+#    endif
+#    define _FPU_SETCW(cw) __setfpucw(cw)
+#  endif
 #endif
 
 #include <sys/signal.h>
@@ -64,13 +74,9 @@ char **argv;
   int i;
   CameraStruct  cs;
 
-#ifdef __linux__
-#  if HAVE_SETFPUCW
-     __setfpucw(_FPU_IEEE);
-#  else
+#if defined(_FPU_SETCW)
      fpu_control_t hctrlword = _FPU_IEEE;
      _FPU_SETCW(hctrlword);
-#  endif
 #endif
 
   signal(SIGFPE, SIG_IGN);   /* Ignore e.g. divide-by-zero traps */
