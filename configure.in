@@ -51,6 +51,18 @@ if test "$FIND" = "no"; then
     AC_MSG_ERROR([No find found.  Cannot continue.])
 fi
 
+# Check for availability of /bin/csh for file-name globbing. Try /bin/sh
+# if not found. 
+AC_PATH_PROGS(GLOB_SHELL_PATH, [csh sh], [/bin/csh])
+if echo ${GLOB_SHELL_PATH} | grep csh > /dev/null 2>&1; then
+	GLOB_SHELL="${GLOB_SHELL_PATH} -f -c "
+else
+	GLOB_SHELL="${GLOB_SHELL_PATH} -c "
+fi
+AC_DEFINE_UNQUOTED([GLOB_SHELL], ["${GLOB_SHELL}"],
+	[Define to path and arguments of shell used for file name globbing])
+AC_SUBST([GLOB_SHELL])
+
 AC_PROG_CC
 #GEOM_AC_PROG_CXX
 AC_PROG_CXX
@@ -438,25 +450,7 @@ AC_ARG_ENABLE(motion-averaging,
 case "$target" in
  *linux*) MACHTYPE="linux"
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE")
-dnl          AC_DEFINE(__linux__, 1)
-          # Note: we only need c++ on linux, for src/lib/oogl/util/glibglue.C
-          #   AC_PROG_CXX
-	  # Not any more.  C++ is really needed for the vrml2oogl/lib stuff
-	  # on all platforms.   [mbp Thu Oct 12 20:30:42 2000]
-dnl           AC_LANG([C++])
-dnl           AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <streambuf.h>
-dnl                         #include <strstream.h>
-dnl                         #include <stdiostream.h>
-dnl                         #include <iostream.h> ], [dnl                        char *mem = 0;
-dnl                         int len = 0;
-dnl                         new strstreambuf(mem, len); ])],[dnl                       STRSTREAMLIB=-lstdc++],[dnl                       STRSTREAMLIB=-liostream
-dnl                      ])
-dnl           AC_LANG([C])
           LINUX=true
-          case "$target" in
-            *powerpc*) AC_DEFINE(ALISTADDR, [])
-                       ;;
-          esac
           ;;
   *irix*) MACHTYPE="sgi"
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE")
@@ -516,7 +510,7 @@ AC_SUBST(SOCKETLIBS)
 
 
 AC_FUNC_SETPGRP
-AC_CHECK_FUNCS(fmemopen __setfpucw)
+AC_CHECK_FUNCS([__setfpucw fmemopen])
 
 ########################################################################
 
