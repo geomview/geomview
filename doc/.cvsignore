@@ -1,4 +1,5 @@
+*.log *.aux *.cp *.fn *.vr *.dp *.ky *.pg *.tp *.toc *.fns *.dvi
 Makefile Makefile.in .deps
 geomview geomview-*
-*.log *.aux *.cp *.fn *.vr *.dp *.ky *.pg *.tp *.toc *.fns *.dvi
 geomview.pdf geomview.ps
+texinfo.tex

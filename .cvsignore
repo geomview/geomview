@@ -3,12 +3,17 @@ aclocal.m4
 autom4te.cache
 build packbuild
 config.cache 
+config.guess
 config.h.in config.h
 config.log 
 config.status 
+config.sub
 configure 
 depcomp
 geomview
 include
+install-sh
+missing
+mkinstalldirs
 modules
 stamp-h.in stamp-h
