@@ -5,7 +5,7 @@ EXTRA_DIST = geomview.pdf README gvplot.txt oogltour \
   figs/ap.ps figs/cam.ps figs/color.ps figs/command.ps \
   figs/fig2.ps figs/initial.ps figs/light.ps figs/load.ps figs/main.ps \
   figs/mat.ps figs/myfilelist.ps figs/save.ps figs/secondlinelist.ps \
-  figs/tools.ps figs/trefdodecinter.ps
+  figs/tools.ps figs/trefdodecinter.ps motion.tex motion.pdf
 
 MAKEINFO = makeinfo --no-validate
 info_TEXINFOS = geomview.texi

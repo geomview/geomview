@@ -1,0 +1,71 @@
+\documentclass{article}
+
+\title{Mathematical Formulas for Geomview's Motion Model}
+\author{Mark Phillips \& Nathaniel Thurston}
+\date{Written sometime around 1994}
+
+\begin{document}
+
+\maketitle
+
+$m$ = coord sys of moving object; $[x]_m$ = coords of $x$ in $m$
+
+$c$ = coord sys of center object; $[x]_c$ = coords of $x$ in $c$
+
+$f$ = coord sys of frame object; $[x]_f$ = coords of $x$ in $f$
+
+$U$ = universal coord sys; $[x]_U$ = coords of $x$ in $U$
+
+\smallskip
+
+$T_m$ changes $m$ coords to $U$ coords: $[x]_m \cdot T_m = [x]_U$
+
+$T_c$ changes $c$ coords to $U$ coords: $[x]_c \cdot T_c = [x]_U$
+
+$T_f$ changes $f$ coords to $U$ coords: $[x]_f \cdot T_f = [x]_U$
+
+\begin{description}
+
+\item{1.}
+Let $p = \hbox{origin of } c$: $[p]_c = [0,0,0,1]$.
+Compute coords of $p$ in $f$:
+
+\begin{eqnarray}
+   [p]_f & = & [p]_c \cdot T_c \cdot T_{f}^{-1} \\
+         & = & [p]_U           \cdot T_{f}^{-1}
+\end{eqnarray}
+
+\item{2.}
+Let $f'$ be $f$ translated to have same center as $c$:
+
+\begin{eqnarray}
+   P & = & \hbox{translation taking } [0,0,0,1] \hbox{ to } [p]_f \\
+   T'_f & = & P \cdot T_f \\
+        & = & \hbox{change } f' \hbox{ coords to } U \hbox{ coords: }
+[x]_{f'} \cdot T_{f'} = [x]_U
+\end{eqnarray}
+
+\item{3.}
+$T_R = T_m \cdot T_{f'}^{-1} = $ change $f'$ coords to $m$ coords
+
+\item{4.}
+$T_l = $ local transform
+
+\item{4'.}
+invert $T_l$ if moving object is an ancestor of frame object
+
+\item{5.}
+Compute the transform in $m$:
+
+\begin{eqnarray}
+T & = & T_R \cdot T_l \cdot T_{m}^{-1} \\
+  & = & T_m \cdot T_f^{-1} \cdot P^{-1} \cdot T_l \cdot P \cdot T_f
+        \cdot T_m^{-1}
+\end{eqnarray}
+
+\end{description}
+
+
+\end{document}
+\end
+
