@@ -342,12 +342,11 @@ if test "$have_xforms" = "no" ; then
 
     Configuring without the XFORMS library.  Several of Geomview's
     external modules use the XFORMS library, and they will not be
-    compiled unless you re-run configure with the argument
-    --with-xforms=DIR where DIR is the pathname of the directory
-    containing both the XFORMS header file xforms.h, and the XFORMS
-    library files (libforms.a, libforms.so, etc).  Geomview itself
-    does not use XFORMS, so this is fine if all you want is
-    Geomview.
+    compiled unless you reconfigure Geomview with XFORMS.  See the
+    file INSTALL.Geomview for instructions on doing that (it's easy
+    --- just get a binary XFORMS distribution and unpack it into your
+    Geomview source tree.)  Geomview itself does not use XFORMS, so
+    it's OK to skip XFORMS if all you want is Geomview.
 
 ])
 else

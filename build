@@ -1,53 +1,70 @@
 #! /bin/sh
-
-# This build script is intended for use in situtation where you want
-# to completely automake the process of running `configure' and
-# `make', saving the output to a file called `build.log'.  You don't
-# normally need to use this script; for installation instructions see
-# the file INSTALL.Geomview. If you do use this script, you may need
-# to edit the settings of some of the environment variables given
-# here.  They're currently set for compiling a 64bit binary on an IBM
-# RS6000 running AIX 4.3.2.
-
-CC=xlc
-CFLAGS="-qarch=pwr3 -q64 -O2 -qfloat=hssngl:fltint"
-LDFLAGS=""
-OBJECT_MODE=64
-
-export CC
-export CFLAGS
-export LDFLAGS
-export OBJECT_MODE
-
-echo ""
-echo "Building geomview; all messages are going into 'build.out'..."
-echo ""
-
-( echo "" ;
-  echo "****** begin printenv  ****************************************" ;
-  printenv ;
-  echo "******   end printenv  ****************************************" ;
-  echo "****** begin configure ****************************************" ;
-  ./configure ;
-  echo "****** end configure ******************************************" ;
-  ) > build.out 2>&1
-
-( echo "" ;
-  echo "****** begin  config.log ****************************************" ;
-  cat config.log ;
-  echo "****** end of config.log ****************************************" ;
-  ) >> build.out  2>&1
-
-( echo "" ;
-  echo "****** begin  config.status ****************************************" ;
-  cat config.status ;
-  echo "****** end of config.status ****************************************" ;
-  ) >> build.out  2>&1
-
-( make
-  ) >> build.out 2>&1
+#
+#  $Id: build,v 1.2 2000/11/18 17:40:14 mphillips Exp $
+# 
+# This is the Geomview 'build' script.  Normally you shouldn't
+# use this script --- to configure & compile Geomview see
+# the instructions in the files INSTALL.Geomview and INSTALL.
+# 
+# This script is intended for people who are having problems running
+# Geomview's configure script and/or compiling; it runs configure and
+# attempts to build Geomview, saving all messages and log files into a
+# single file called 'build.out' which you can then email to a more
+# experienced Geomview user who may be able to decipher the contents of
+# 'build.out' and see what is going wrong (and how to fix it).
+# 
+# If you don't know a more experienced Geomview user to send yours to,
+# email it to software@geomview.org and the Geomview authors will try to
+# help.  PLEASE DO NOT send 'build.out' files to the geomview-users
+# mailing list!
 
 
-echo ""
-echo "Done building geomview.  To run it, type './geomview'."
-echo ""
+# To use this script, first decide what arguments, if any, you need to
+# pass to the 'configure' script (see INSTALL.Geomview for details).
+# Edit the setting of 'config_args' a few lines further down in this
+# file to be the value you need.  Also, if you want to pass any
+# environment variable settings to configure (for example to specify a
+# particular value of CC or CFLAGS), put those settings below in lines
+# that start with 'export'.  The run this script (it may take quite a
+# while), and email the resulting 'build.out' file to your chosen
+# Geomview guru.
+
+
+# configure arguments, if any:
+# (for example: config_args="--with-motif=/usr/local/openmotif")
+config_args=""
+
+# environment variable settings, if any:
+# (for example: export CC=xlc)
+
+########################################################################
+
+if test \! -f configure ; then
+  echo "build must be run in the same directory as the 'configure' script"
+  exit
+fi
+
+rm -f configure.out config.log config.cache make.out export.out build.id
+
+echo '$Id: build,v 1.2 2000/11/18 17:40:14 mphillips Exp $' > build.id
+
+trap ./packbuild
+
+export > export.out
+
+(
+  configure_cmd="./configure $config_args"
+  echo "build: $configure_cmd"
+  eval $configure_cmd 
+) | tee configure.out
+
+# make arguments, if any:
+make_args=""
+
+(
+  make_cmd="make $make_args"
+  echo "build: $make_cmd"
+  eval $make_cmd
+) | tee make.out
+
+./packbuild

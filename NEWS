@@ -1,8 +1,8 @@
 1.8.0   November 17, 2000
 
-   The software in this release is essentially the same as in the
-   1.7.* series, but it has an improved configure script and Makefiles
-   that allow for several new things:
+   The software in this release is almost the same as in the 1.7.*
+   series. The main difference is that it has an improved configure
+   script and Makefiles that allow for several new things.
 
    (a) VPATH builds now supported
 
@@ -21,7 +21,12 @@
        and use it.  (This works with the binary XFORMS distribution
        for any system, not just Intel/Linux.)
 
-   It also includes a few minor bug fixes; see ChangeLog for details.
+   (d) 'togeomview' program now included in the release (this program,
+       used to facilitate communication between Geomview and other
+       programs, got temporarily dropped in release 1.7.0, but now is
+       back).
+
+   (e) a few minor bug fixes; see ChangeLog for details
 
 
 1.7.10  Nov 1, 2000
