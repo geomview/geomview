@@ -30,14 +30,6 @@
 /* D1 debugging? */
 #define D1_DEBUG 0
 
-/* ALISTADDR is a hack to get around the fact that on dpvc's LinuxPPC    */
-/* system, some of the occurences of '&a_list' had to be replaced with   */
-/* 'a_list'.  I'm not sure why this was the case, but to work around it, */
-/* I replaced those occurences of '&a_list' in the source with           */
-/* 'ALISTADDR a_list', so we can define ALISTADDR to be empty on         */
-/* LinuxPPC and '&' otherwise.                                           */
-#define ALISTADDR &
-
 /* BINARY_POPEN_REQUIRES_B says whether the system's popen() call needs  */
 /* a 'b' in the 2nd argument when the data coming through its pipe is	 */
 /* binary.  This comes up in mgtexture.c when popen is called to pipe	 */
