@@ -652,7 +652,9 @@ emodule_run(emodule *em)
 	close(pfrom.r);
 	close(pto.w);
 	dup2(pto.r, 0);
+	close(pto.r);
 	dup2(pfrom.w, 1);
+	close(pfrom.w);
 	signal(SIGPIPE, SIG_DFL);
 	signal(SIGCHLD, SIG_DFL);
 	execl("/bin/sh", "sh", "-c", program, NULL);
