@@ -66,7 +66,14 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
                && (ap->flag & APF_TEXTURE)
                && (ap->tex != astk->next->ap.tex) )
        ) {
-        float roughness = (mat->shininess)? 1.0/mat->shininess : 1.0;
+	    /* note: the factor "8.0" is to compensate for some of the
+	     * usual rib shaders, i.e. BMRT, aqsis etc.. Don't know
+	     * why they started this affair, but without the output
+	     * from rendrib or aqsis is just _very_ different from
+	     * that what is displayed on the screen -- cH.
+	     *
+	     */
+        float roughness = (mat->shininess)? 8.0/mat->shininess : 8.0/1.0;
         if(ap->shading == APF_CONSTANT) {
 		mrti(mr_surface, mr_constant, mr_NULL);
 	} else if(ap->shading == APF_FLAT) {
