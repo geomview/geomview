@@ -1,3 +1,8 @@
+2001-01-16  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: removed redundant --with-forms argument; its
+	effects got overwritten by --with-xforms, anyway.
+
 2000-11-23  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* src/Makefile.am (geomview): look for "gvx" in $(moduledir)

@@ -73,12 +73,12 @@ AM_CONDITIONAL(HAVE_TEXI2PDF, test x$TEXI2PDF != x)
 
 # If --with-motif=DIR was specified, set MOTIF_DIR to DIR
 AC_ARG_WITH(motif,
-	    [--with-motif=DIR      set DIR to motif installation prefix],
+	    [  --with-motif=DIR        set DIR to motif installation prefix],
 	    MOTIF_DIR=$withval
            )
 
 AC_ARG_WITH(opengl,
-	    [--with-opengl=DIR      set DIR to opengl installation prefix],
+	    [  --with-opengl=DIR       set DIR to opengl installation prefix],
 	    OPENGL_DIR=$withval
            )
 
@@ -261,7 +261,7 @@ AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
 ########################################################################
 
 AC_ARG_WITH(xforms,
-	    [--with-xforms=DIR      same as --with-forms],
+	    [  --with-xforms=DIR       set DIR to xforms installation dir],
 	    [ if test "$withval" = "no" ; then
                 TRY_XFORMS=false
               else
@@ -384,21 +384,22 @@ fi
 ########################################################################
 
 AC_ARG_ENABLE(fstropen-1,
-	      [--enable-fstropen-1           use manual fstropen rather than fmemopen],
+	      [  --enable-fstropen-1     use manual fstropen rather than fmemopen],
 	      [ if test "$enableval" != "no" ; then
                   AC_DEFINE(USE_FSTROPEN_1, 1)
                 fi ]
               )
 
 AC_ARG_ENABLE(d1debug,
-	      [--enable-d1debug           turn on D1 level debugging output],
+	      [  --enable-d1debug        turn on D1 level debugging output],
 	      [ if test "$enableval" != "no" ; then
                   AC_DEFINE(D1_DEBUG, 1)
                 fi ]
               )
 
 AC_ARG_ENABLE(motion-averaging,
-[--enable-motion-averaging      turn on experimental motion averaging (default is off)],
+[  --enable-motion-averaging      
+                          turn on experimental motion averaging (default is off)],
 	      [ if test "$enableval" = "no" ; then
                   AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0)
                 else
