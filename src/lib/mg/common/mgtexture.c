@@ -109,7 +109,11 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	}
 	*p = '\0';
 	*dopclose = 1;
+#if BINARY_POPEN_REQUIRES_B
 	f = popen(cmd, "rb");
+#else
+	f = popen(cmd, "r");
+#endif
 #endif
     }
     if(f == NULL) {

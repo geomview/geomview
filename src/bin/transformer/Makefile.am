@@ -3,7 +3,7 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 LDADD = $(OOGLLIBS)  \
 	$(FORMSLIBS) \
 	$(XLIBS)     \
-	-lm
+	$(MATHLIB)
 
 EXTRA_DIST = .geomview-transformer panel.fd  transformer.1
 

@@ -21,12 +21,13 @@ AC_CANONICAL_SYSTEM
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-AM_INIT_AUTOMAKE(geomview,1.7.7)
+AM_INIT_AUTOMAKE(geomview,1.7.8)
 AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
 
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_YACC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
@@ -191,7 +192,8 @@ else
 fi
 GEOM_FIND_L_OPTION(-lGL,
 		   glBegin,
-		   ["$USER_OPENGL_DIR" "" "$x_libraries"])
+		   ["$USER_OPENGL_DIR" "" "$x_libraries"],
+		   -lm)
 if test "$GEOM_L_OPTION" = "0" ; then
     AC_MSG_ERROR([
 
@@ -349,7 +351,9 @@ case "$target" in
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE")
           AC_DEFINE(__linux__, 1)
           # Note: we only need c++ on linux, for src/lib/oogl/util/glibglue.C
-          AC_PROG_CXX
+          #   AC_PROG_CXX
+	  # Not any more.  C++ is really needed for the vrml2oogl/lib stuff
+	  # on all platforms.   [mbp Thu Oct 12 20:30:42 2000]
           AC_LANG_CPLUSPLUS
           AC_TRY_LINK([ #include <streambuf.h>
                         #include <strstream.h>
@@ -393,6 +397,8 @@ case "$target" in
           ;;
 esac
 
+AC_DEFINE(BINARY_POPEN_REQUIRES_B, 0)
+
 AC_SUBST(MACHTYPE)
 
 AC_SUBST(STRSTREAMLIB)
@@ -422,6 +428,18 @@ AC_TRY_LINK([ #include <math.h> ],
 AC_SUBST(MATHLIB)
 # MATHLIB is now "-lm" on systems that need it, or empty on those that don't.
 # So it's safe to put $(MATHLIB) in link commands.
+
+
+AC_MSG_CHECKING([whether we need to link -lsocket to get socket()])
+AC_TRY_LINK([ #include <sys/socket.h> ],
+            [ int s = socket(AF_UNIX, SOCK_STREAM, 0); ],
+            [ SOCKETLIBS=""
+              AC_MSG_RESULT([no]) ],
+            [ SOCKETLIBS=-lsocket
+              AC_MSG_RESULT([yes]) ]
+           )
+AC_SUBST(SOCKETLIBS)
+
 
 ########################################################################
 

@@ -1,3 +1,10 @@
+1.7.8  Oct 13, 2000
+    Fixed bug which prevented compressed textures from working on
+    some Linux systems
+	
+    Fixed several compilation/configuration problems for Solaris,
+    RedHat 7, Mandrake 7.
+
 1.7.7   August 22, 2000
    Added some of the external modules to the distribution, but haven't
    actually tested them.

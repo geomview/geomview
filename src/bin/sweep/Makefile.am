@@ -3,7 +3,8 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 LDADD = $(OOGLLIBS)  \
 	$(FORMSLIBS) \
 	$(XLIBS)     \
-	-lm
+	$(SOCKETLIBS) \
+	$(MATHLIB)
 
 EXTRA_DIST = .geomview-sweep panel.fd  sweep.1 sweep.3
 

@@ -4,7 +4,8 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 
 LDADD = $(FORMSLIBS) \
 	$(XLIBS)     \
-	$(OOGLLIBS)
+	$(OOGLLIBS)  \
+        $(MATHLIB)
 
 bin_PROGRAMS = example
 

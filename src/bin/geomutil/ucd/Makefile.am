@@ -1,6 +1,6 @@
 INCLUDES = @default_includes@
 
-LDADD = $(STUBLIB) ${OOGLLIBS} -lm
+LDADD = $(STUBLIB) ${OOGLLIBS} $(SOCKETLIBS) $(MATHLIB)
 
 bin_PROGRAMS = anytoucd ucdtooff
 

@@ -2,7 +2,9 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 
 LDADD = $(OOGLLIBS)  \
 	$(FORMSLIBS) \
-	$(XLIBS)
+	$(XLIBS)     \
+	$(SOCKETLIBS) \
+	$(MATHLIB)
 
 EXTRA_DIST = .geomview-graffiti graffiti.1
 

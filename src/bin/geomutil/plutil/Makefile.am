@@ -1,6 +1,6 @@
 INCLUDES = @default_includes@
 
-LDADD= ${OOGLLIBS} -lm
+LDADD= ${OOGLLIBS} $(SOCKETLIBS) $(MATHLIB)
 
 bin_PROGRAMS = polymerge anytooff bez2mesh offconsol
 

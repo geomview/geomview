@@ -6,9 +6,7 @@ bin_PROGRAMS = clip
 
 clip_SOURCES = clip.c clipoogl.c clipmain.c Clip.h
 
-LDADD = $(STUBLIB)  \
-	$(OOGLLIBS) \
-	-lm
+LDADD = $(STUBLIB) $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)
 
 #	$(top_builddir)/src/lib/geomutil/libgeomutil.a \
 #

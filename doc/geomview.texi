@@ -7691,32 +7691,18 @@ http://www.geomtech.com
      
 @item @strong{make a donation}
 
-If you want to donate money directly to support Geomview, you
-can do so online with a credit card at
+If you want to donate money directly to support Geomview, you can send
+it to Geometry Technologies which will use it to fund Geomview
+development and to help offset other costs associated with maintaining
+Geomview. See their Geomview Contributions web page at
 @ifhtml
-<a href="https://secure.geomtech.com/geomview">
+<a href="http://www.geomtech.com/products/geomview/contributions">
 @end ifhtml
-https://secure.geomtech.com/geomview
+http://www.geomtech.com/products/geomview/contributions
 @ifhtml
 </a>
 @end ifhtml
-.
-You can also send a check via regular mail to
-@example
-Geometry Technologies, Inc.
-608 Humboldt  Ave.
-St. Paul, MN  55107
-USA
-@end example
-Please include the name under which you wish the donation to be
-credited, either your own or the third-party if it is a gift on behalf
-of someone else, and an e-mail address to which we can acknowledge
-receipt.  Geometry Technologies will not release this information to
-anyone else (although they may use it to contact you).  We will send a
-physical receipt by normal mail for any donations of US$100 or more,
-provided you include a return address.  Geometry Technologies is a
-private corporation, so for individuals within the U.S., donations are
-not tax-deductible.
+for details.
 
 @end enumerate
 

@@ -4,4 +4,4 @@ bin_PROGRAMS = oogl2vrml
 
 oogl2vrml_SOURCES = oogl2vrml.c
 
-LDADD = $(STUBLIB) $(OOGLLIBS)
+LDADD = $(STUBLIB) $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)

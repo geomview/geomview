@@ -3,7 +3,8 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 LDADD = $(OOGLLIBS)  \
 	$(FORMSLIBS) \
 	$(XLIBS)     \
-	-lm
+	$(SOCKETLIBS) \
+	$(MATHLIB)
 
 EXTRA_DIST = .geomview-tackdown tackdown.1 panel.fd origin.panel.fd
 

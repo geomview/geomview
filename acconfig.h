@@ -42,6 +42,20 @@
 /* LinuxPPC and '&' otherwise.                                           */
 #define ALISTADDR &
 
+/* BINARY_POPEN_REQUIRES_B says whether the system's popen() call needs  */
+/* a 'b' in the 2nd argument when the data coming through its pipe is	 */
+/* binary.  This comes up in mgtexture.c when popen is called to pipe	 */
+/* a compressed image through gzip.  Initially Stuart wrote the call	 */
+/* with the 2nd arg being "rb", but this didn't work on my Linux	 */
+/* system so I added this switch to allow it to be compiled with just	 */
+/* "r", which does work.  For now, I'm just setting this to 0 to force	 */
+/* "r" on all systems, but it might be necessary to use "rb" on some	 */
+/* systems which treat binary files differently (Windows?), in which	 */
+/* case the configure script should be modified to set			 */
+/* BINARY_POPEN_REQUIRES_B to 1 for those systems.			 */
+/* mbp Tue Sep 12 12:33:38 2000						 */
+#define BINARY_POPEN_REQUIRES_B 0
+
 @BOTTOM@
 
 #if D1_DEBUG

@@ -1,6 +1,6 @@
 INCLUDES = $(default_includes)
 
-LDADD = $(OOGLLIBS)
+LDADD = $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)
 
 EXTRA_DIST = bdy.1 drawbdy.sh
 

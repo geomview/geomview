@@ -21,6 +21,7 @@
 #ifndef  _QV_FIELD_
 #define  _QV_FIELD_
 
+#include <stdlib.h>
 #include <QvString.h>
 
 class QvInput;
