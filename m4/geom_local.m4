@@ -115,3 +115,67 @@ else
   fi
 fi
 ])
+dnl
+dnl GEOM_AC_PROG_CXX (and its internally used GEOM_AC_PROG_CXX_WORKS) is a
+dnl replacement that I wrote for the standard AC_PROG_CXX (and
+dnl AC_PROG_CXX_WORKS).  It differs from the standard one only in that it
+dnl does not abort if a C++ compiler isn't found --- it just sets CXX to
+dnl the empty string.  If anyone knows a better way to test for the
+dnl presense of a C++ compiler without exiting if it isn't found, let me
+dnl know! [mbp@geomtech.com, Sat Oct 14 00:33:38 2000]
+dnl 
+AC_DEFUN(GEOM_AC_PROG_CXX_WORKS,
+[AC_MSG_CHECKING([GEOM whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_TRY_COMPILER([int main(){return(0);}], ac_cv_prog_cxx_works, ac_cv_prog_cxx_cross)
+AC_LANG_RESTORE
+AC_MSG_RESULT($ac_cv_prog_cxx_works)
+AC_MSG_CHECKING([whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) is a cross-compiler])
+AC_MSG_RESULT($ac_cv_prog_cxx_cross)
+cross_compiling=$ac_cv_prog_cxx_cross
+])
+
+AC_DEFUN(GEOM_AC_PROG_CXX,
+[AC_BEFORE([$0], [AC_PROG_CXXCPP])dnl
+AC_CHECK_PROGS(CXX, $CCC c++ g++ gcc CC cxx cc++ cl, gcc)
+
+GEOM_AC_PROG_CXX_WORKS
+
+if test $ac_cv_prog_cxx_works = no; then
+  CXX=
+else
+
+  AC_PROG_CXX_GNU
+
+  if test $ac_cv_prog_gxx = yes; then
+    GXX=yes
+  else
+    GXX=
+  fi
+
+  dnl Check whether -g works, even if CXXFLAGS is set, in case the package
+  dnl plays around with CXXFLAGS (such as to build both debugging and
+  dnl normal versions of a library), tasteless as that idea is.
+  ac_test_CXXFLAGS="${CXXFLAGS+set}"
+  ac_save_CXXFLAGS="$CXXFLAGS"
+  CXXFLAGS=
+  AC_PROG_CXX_G
+  if test "$ac_test_CXXFLAGS" = set; then
+    CXXFLAGS="$ac_save_CXXFLAGS"
+  elif test $ac_cv_prog_cxx_g = yes; then
+    if test "$GXX" = yes; then
+      CXXFLAGS="-g -O2"
+    else
+      CXXFLAGS="-g"
+    fi
+  else
+    if test "$GXX" = yes; then
+      CXXFLAGS="-O2"
+    else
+      CXXFLAGS=
+    fi
+  fi
+
+fi
+])

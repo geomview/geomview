@@ -22,7 +22,7 @@
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
-
+#include "config.h"
 
 /* math2oogl: convert Mathematica graphics object to OOGL format.
    SurfaceGraphics and MeshGraphics => MESH, Graphics3D => OFF,

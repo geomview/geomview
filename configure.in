@@ -27,7 +27,33 @@ AM_CONFIG_HEADER(config.h)
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
 
 AC_PROG_CC
-AC_PROG_CXX
+GEOM_AC_PROG_CXX
+if test "$CXX" = "" ; then
+  GEOM_HAVE_CXX=false
+  case "$target" in
+    *linux*)
+  AC_MSG_ERROR([
+    Cannot find a working C++ compiler.  Geomview requires C++
+    on Linux systems.
+  ])
+    ;;
+    *)
+  AC_MSG_WARN([
+
+    Configuring without a C++ compiler (couldn't find one on
+    your system).  C++ is only used only to compile the vrml->OOGL
+    converter, so your distribution will be compiled without it.
+  ])
+    ;;
+  esac
+else
+  GEOM_HAVE_CXX=true
+fi
+if test x$GEOM_HAVE_CXX = xtrue ; then
+  echo GEOM_HAVE_CXX is true
+else
+  echo GEOM_HAVE_CXX is false
+fi
 AC_PROG_YACC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
@@ -403,8 +429,9 @@ AC_SUBST(MACHTYPE)
 
 AC_SUBST(STRSTREAMLIB)
 
-AM_CONDITIONAL(LINUX, test x$LINUX = xtrue)
-AM_CONDITIONAL(HAVE_FORMS, test x$HAVE_FORMS = xtrue)
+AM_CONDITIONAL(GEOM_HAVE_CXX, test x$GEOM_HAVE_CXX = xtrue)
+AM_CONDITIONAL(LINUX,         test x$LINUX = xtrue)
+AM_CONDITIONAL(HAVE_FORMS,    test x$HAVE_FORMS = xtrue)
 
 # What this actually checks is whether a program that includes
 # <math.h> and calls 'sin' needs -lm to link properly.  I put this
@@ -651,13 +678,13 @@ AC_OUTPUT(Makefile
 	  src/bin/geomutil/plutil/Makefile
 	  src/bin/geomutil/ucd/Makefile
 	  xforms/Makefile
-          xforms/bxform-089/Makefile
-          xforms/bxform-089/FORMS/Makefile
-          xforms/bxform-089-glibc/Makefile
-          xforms/bxform-089-glibc/FORMS/Makefile
-          xforms/bxform-089-glibc2.1/Makefile
-          xforms/bxform-089-glibc2.1/FORMS/Makefile
-	  )
+         xforms/bxform-089/Makefile
+         xforms/bxform-089/FORMS/Makefile
+         xforms/bxform-089-glibc/Makefile
+         xforms/bxform-089-glibc/FORMS/Makefile
+         xforms/bxform-089-glibc2.1/Makefile
+         xforms/bxform-089-glibc2.1/FORMS/Makefile
+         )
 
 #	  src/bin/cplxview/Makefile
 #	  src/bin/maniview/Makefile
