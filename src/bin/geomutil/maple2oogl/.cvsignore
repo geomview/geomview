@@ -1,1 +1,7 @@
 Makefile Makefile.in .deps
+outfd
+savegvplot_MAS.mws
+sinxy.mesh
+steiner.mesh
+tetrahedra.off
+trefoil.vect
