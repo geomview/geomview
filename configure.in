@@ -567,6 +567,7 @@ AC_OUTPUT(Makefile
 	  src/bin/maniview/Makefile
 	  src/bin/tackdown/Makefile
 	  src/bin/animate/Makefile
+	  src/bin/animate/interface/Makefile
 	  src/bin/flythrough/Makefile
 	  src/bin/graffiti/Makefile
 	  src/bin/stereo/Makefile
