@@ -491,11 +491,14 @@ AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 # if/when it comes up (by adding that function to this test, for
 # example).
 # mbp Mon May  8 18:47:33 2000
+ac_save_CFLAGS="${CFLAGS}"
+CFLAGS="-O0"
 AC_MSG_CHECKING([whether we need to link -lm to get math functions])
 AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <math.h> ], [ double s = sin(1.5); ])],[ MATHLIB=""
 	      AC_MSG_RESULT([no]) ],[ MATHLIB=-lm
 	      AC_MSG_RESULT([yes]) 
 	   ])
+CFLAGS="${ac_save_CFLAGS}"
 AC_SUBST(MATHLIB)
 # MATHLIB is now "-lm" on systems that need it, or empty on those that don't.
 # So it's safe to put $(MATHLIB) in link commands.
