@@ -196,7 +196,7 @@ AC_MSG_ERROR([
 Can't find cached value for $1.  You're not trying to run 'configure'
 from $PACKAGE's source directory, are you?  You should only run
 Geomview's top-level 'configure' script, not this one directly.  See
-the file INSTALL.$PACKAGE for details.
+the file INSTALL in $PACKAGE's source directory for details.
 
 ])])
 eval $ac_cv_$1
@@ -219,8 +219,8 @@ distribution appropriate to your machine in the 'xforms' directory
 under the top-level Geomview directory, delete any existing
 'config.cache' file in that directory, and re-run 'configure' in that
 directory.  You should only run Geomview's top-level 'configure'
-script, not this one directly.  See the file INSTALL.$PACKAGE for
-details.
+script, not this one directly.  See the file INSTALL in $PACKAGE's
+source directory for details.
 
 ])
 else

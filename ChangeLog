@@ -1,26 +1,37 @@
 2000-11-15  Mark Phillips  <mbp@geomtech.com>
 
-	* src/lib/Makefile.am: explicitly mention 'forms' dir
-	  in SUBDIRS now, rather than having it be conditional
-	  based on whether xforms is present, since this dir
-	  only contains a .h file which can be installed even
-	  if xforms isn't present.
+	* removed 'stamp-h.in' and 'aclocal.m4' from CVS, since they
+	  are derived files.
 
-	* configure.in: Changed all variables that mention forms
-	  to say 'xforms' instead, for consistency.  Added caching
-	  of many variables so their values can be shared with
-	  other configure scripts.  Changed OOGLLIBS to use
-	  top_geom_builddir instead of top_builddir, so that its
-	  value can be used in other configure scripts.  Added
-	  check to detect subdirs of src/bin having additional
-	  configure.in's, and to call AC_CONFIG_SUBDIRS with them.
+	* cleaned up & documented 'reconf' script, used to bootstrap
+	  a fresh Geomview tree checked out from CVS
 
-	* m4/geom_local.m4: added macros GEOM_LOG_MSG, GEOM_GET_CACHED_VALUE,
-	  and GEOM_REQUIRE_XFORMS.  Removed verbosity from
-	  GEOM_FIND_I_OPTION and GEOM_FIND_L_OPTION so that
-	  whoever calls them can print messages even if the
-	  corresponding values are coming from the cache.
-	
+	* INSTALL.Geomview: re-wrote XFORMS configuration instructions to
+	  reflect the fact that XFORMS (Linux Intel version) is no longer
+	  part of the Geomview distribution; users who want it now
+	  download it separately and unpack it into the top-level Geomview
+	  directory before configuring Geomview.
+
+	* src/lib/Makefile.am: explicitly mention 'forms' dir in SUBDIRS
+	  now, rather than having it be conditional based on whether
+	  xforms is present, since this dir only contains a .h file which
+	  can be installed even if xforms isn't present.
+
+	* configure.in: Changed all variables that mention forms to say
+	  'xforms' instead, for consistency.  Added caching of many
+	  variables so their values can be shared with other configure
+	  scripts.  Changed OOGLLIBS to use top_geom_builddir instead of
+	  top_builddir, so that its value can be used in other configure
+	  scripts.  Added check to detect subdirs of src/bin having
+	  additional configure.in's, and to call AC_CONFIG_SUBDIRS with
+	  them.
+
+	* m4/geom_local.m4: added macros GEOM_LOG_MSG,
+	  GEOM_GET_CACHED_VALUE, and GEOM_REQUIRE_XFORMS.  Removed
+	  verbosity from GEOM_FIND_I_OPTION and GEOM_FIND_L_OPTION so that
+	  whoever calls them can print messages even if the corresponding
+	  values are coming from the cache.
+
 	* Makefile.am: removed xforms from SUBDIRS
 
 	* removed xforms directory from distribution; re-wrote
