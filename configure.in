@@ -40,9 +40,19 @@ done
 ])
 
 
+# Search for necessary programs.
+
+# Search path for "find" executable.  Use "find" unless
+# the bogus MS Windows version is first on the path, in 
+# which case we use the full pathname.  This AC_CHECK_PROG
+# macro is very strange.
+AC_CHECK_PROG([FIND],[find],[find],[no],,[/cygdrive/c/WINNT/system32/find])
+if test "$FIND" = "no"; then
+    AC_MSG_ERROR([No find found.  Cannot continue.])
+fi
+
 AC_PROG_CC
-dnl GEOM_AC_PROG_CXX
-dnl come on, just use the standard one ...
+#GEOM_AC_PROG_CXX
 AC_PROG_CXX
 if test "$CXX" = "" ; then
   HAVE_CXX=false
@@ -270,7 +280,7 @@ AC_CACHE_VAL(ac_cv_have_xforms,
 	# (There should never be more than one, but in case there is,
 	# we need a definite behavior to resolve the ambiguity.)
 	if test -d $srcdir/xforms ; then
-	  USER_XFORMS_SUBDIR=`find $srcdir/xforms -name FORMS -print | sed -e '2,$d'`
+	  USER_XFORMS_SUBDIR=`$FIND $srcdir/xforms -name FORMS -print | sed -e '2,$d'`
 	  USER_XFORMS_DIR="`pwd`/$USER_XFORMS_SUBDIR"
 	fi
     fi
@@ -477,9 +487,9 @@ AC_DEFINE(BINARY_POPEN_REQUIRES_B, 0)
 
 AC_SUBST(MACHTYPE)
 
-AM_CONDITIONAL(HAVE_CXX, test x$HAVE_CXX = xtrue)
-AM_CONDITIONAL(LINUX,         test x$LINUX = xtrue)
-AM_CONDITIONAL(HAVE_XFORMS,    test x$have_xforms = xyes)
+AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
+AM_CONDITIONAL(LINUX,       test x$LINUX = xtrue)
+AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
 # What this actually checks is whether a program that includes
 # <math.h> and calls 'sin' needs -lm to link properly.  I put this
@@ -674,7 +684,7 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 LF_SET_INCLUDES
 
 
-module_srcdirs=`( cd $srcdir ; find src/bin -name 'configure.in' -print ) | sed -e 's/\/configure.in$//g'`
+module_srcdirs=`( cd $srcdir ; $FIND src/bin -name 'configure.in' -print ) | sed -e 's/\/configure.in$//g'`
 module_srcdirs=`echo $module_srcdirs`
 src_bin_module_subdirs=`echo $module_srcdirs | sed -e 's/src\/bin\///g'`
 
@@ -684,7 +694,6 @@ AC_CONFIG_SUBDIRS($module_srcdirs)
 
 
 AC_OUTPUT(Makefile
-	  m4/Makefile
 	  data/Makefile
 	  doc/Makefile
 	  doc/html/Makefile
