@@ -57,7 +57,7 @@ extern GeomClass *InstClass;		/* Public read-only; valid only
 					 * after first call to InstMethods()
 					 */
 
-extern Inst *InstCreate( Inst *exist, GeomClass *Class, va_list attrs );
+extern Inst *InstCreate( Inst *exist, GeomClass *Class, va_list *attrs );
 extern void  InstDelete( Inst * );
 extern Inst *InstCopy( Inst * );
 extern Inst *InstDice( Inst *, int nu, int nv );

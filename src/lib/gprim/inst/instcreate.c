@@ -102,7 +102,7 @@ InstGet( register Inst *inst, int attr, register void *attrp )
 }
 
 Inst *
-InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
+InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 {
     register Inst *inst;
     int attr;
@@ -130,14 +130,14 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	inst = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) {
+    while ((attr = va_arg (*a_list, int))) {
 	switch(attr) {
 	case CR_FLAG:
-	    inst->instflag = va_arg(a_list, int);
+	    inst->instflag = va_arg(*a_list, int);
 	    break;
 
 	case CR_GEOMHANDLE:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref *)h);
 	    if(inst->geomhandle)
 		HandlePDelete(&inst->geomhandle);
@@ -146,7 +146,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_HANDLE_GEOM:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref*)h);
 	    if(inst->geomhandle)
 		HandlePDelete(&inst->geomhandle);
@@ -156,7 +156,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    /* Fall into CR_GEOM case */
 
 	case CR_GEOM:
-	    g = va_arg(a_list, Geom *);
+	    g = va_arg(*a_list, Geom *);
 	    if(copy) RefIncr((Ref *)g);
 	    if(inst->geom)
 		GeomDelete(inst->geom);
@@ -164,12 +164,12 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_AXIS:
-	    t = va_arg(a_list, Transform *);
+	    t = va_arg(*a_list, Transform *);
 	    InstTransformTo(inst, (*t));
 	    break;
 
 	case CR_AXISHANDLE:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref *)h);
 	    if(inst->axishandle)
 		HandlePDelete(&inst->axishandle);
@@ -178,7 +178,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_TLIST:
-	    g = va_arg (a_list, Geom *);
+	    g = va_arg (*a_list, Geom *);
 	    if(copy) RefIncr((Ref *)g);
 	    if(inst->tlist)
 		GeomDelete(inst->tlist);
@@ -186,7 +186,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_TLISTHANDLE:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref *)h);
 	    if(inst->tlisthandle != NULL)
 		HandlePDelete(&inst->tlisthandle);
@@ -195,11 +195,11 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_LOCATION:
-	    inst->location = va_arg(a_list, int);
+	    inst->location = va_arg(*a_list, int);
 	    break;
 
 	default:
-	    if(GeomDecorate(inst, &copy, attr, ALISTADDR a_list)) {
+	    if(GeomDecorate(inst, &copy, attr, a_list)) {
 		OOGLError (0, "InstCreate: Undefined option: %d", attr);
 		if(exist == NULL) GeomDelete ((Geom *)inst);
 		return NULL;

@@ -69,7 +69,7 @@ NDMesh *
 NDMeshCreate (exist, classp, a_list)
 NDMesh *exist;
 GeomClass *classp;
-va_list a_list;
+va_list *a_list;
 {
     register NDMesh *m;
     int		attr, copy = 1, fourd = 0;
@@ -96,13 +96,13 @@ va_list a_list;
 
     npts = ndmeshsize( m );
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    m->flag = va_arg (a_list, int);
+	    m->flag = va_arg (*a_list, int);
 	    break;
 
 	case CR_MESHDIM:
-	    i = va_arg (a_list, int);
+	    i = va_arg (*a_list, int);
 	    if(i <= 0 || i >= 1000) {
 		OOGLError(1, "Incredible NDMesh dimension %d", i);
 		return NULL;
@@ -116,27 +116,27 @@ va_list a_list;
 	    break;
 
 	case CR_MESHSIZE:
-	    memcpy(m->mdim, va_arg (a_list, int *), m->meshd*sizeof(int));
+	    memcpy(m->mdim, va_arg (*a_list, int *), m->meshd*sizeof(int));
 	    tossmesh(m);
 	    npts = ndmeshsize(m);
 	    break;
 
 	case CR_DIM:
-	    m->pdim = va_arg(a_list, int);
+	    m->pdim = va_arg(*a_list, int);
 	    break;
 
 	case CR_POINT:
 	case CR_POINT4:
 	    tosspoints(m);
 	    ndmeshfield(copy, npts*sizeof(HPointN *), (void **)&m->p,
-		(void *)va_arg (a_list, HPointN **), "ND mesh points");
+		(void *)va_arg (*a_list, HPointN **), "ND mesh points");
 	    break;
 
 	case CR_U:
 	    m->flag = (m->flag & ~MESH_U) |
 		(MESH_U & ndmeshfield(copy, npts*sizeof(Point3),
 				(void **)&m->u,
-				(void *)va_arg (a_list, Point3 *),
+				(void *)va_arg (*a_list, Point3 *),
 				"ndmesh texture coords"));
 	    break;
 
@@ -144,12 +144,12 @@ va_list a_list;
 	    m->flag = (m->flag & ~MESH_C) |
 		(MESH_C & ndmeshfield(copy, npts*sizeof(ColorA),
 				(void **)&m->c,
-				(void *)va_arg (a_list, ColorA *),
+				(void *)va_arg (*a_list, ColorA *),
 				"ndmesh colors"));
 	    break;
 
 	default:
-	    if (GeomDecorate (m, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (m, &copy, attr, a_list)) {
 		GeomError (0, "NDMeshCreate: Undefined option: %d", attr);
 		OOGLFree (m);
 		return NULL;

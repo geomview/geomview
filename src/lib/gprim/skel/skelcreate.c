@@ -67,7 +67,7 @@ SkelDelete( register Skel *s )
 }
 
 Skel *
-SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
+SkelCreate ( Skel *exist, GeomClass *classp, va_list *a_list )
 {
     register Skel *s;
     int attr, copy = 1;
@@ -87,26 +87,26 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
     }
 
 #ifdef notyet
-    while (attr = va_arg (a_list, int)) 
+    while (attr = va_arg (*a_list, int)) 
       switch (attr) {
 	case CR_FLAG:
-	    vect->flag = va_arg (a_list, int);
+	    vect->flag = va_arg (*a_list, int);
 	    break;
 
 	case CR_NVECT:
-	    vect->nvec = va_arg (a_list, int);
+	    vect->nvec = va_arg (*a_list, int);
 	    break;
 
 	case CR_NVERT:
-	    vect->nvert = va_arg (a_list, int);
+	    vect->nvert = va_arg (*a_list, int);
 	    break;
 
 	case CR_NCOLR:
-	    vect->ncolor = va_arg (a_list, int);
+	    vect->ncolor = va_arg (*a_list, int);
 	    break;
 
 	case CR_VECTC:
-	    vectcounts = va_arg (a_list, short *);
+	    vectcounts = va_arg (*a_list, short *);
             if (vectcounts == NULL) {
                vect->vnvert = NULL;
                vect->nvert = 0;
@@ -119,7 +119,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_COLRC:
-	    colorcounts = va_arg (a_list, short *);
+	    colorcounts = va_arg (*a_list, short *);
             if (colorcounts == NULL) {
                vect->vncolor = NULL;
                vect->nvert = 0;
@@ -132,7 +132,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_POINT:
-	    v3 = va_arg (a_list, Point3 *);
+	    v3 = va_arg (*a_list, Point3 *);
             if (v3 == NULL) {
                vect->p = NULL;
                vect->nvert = 0;
@@ -145,7 +145,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_POINT4:
-	    v4 = va_arg (a_list, HPoint3 *);
+	    v4 = va_arg (*a_list, HPoint3 *);
             if (v4 == NULL) {
                vect->p = NULL;
                vect->nvert = 0;
@@ -158,7 +158,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	case CR_COLOR:
-	    colors = va_arg (a_list, ColorA *);
+	    colors = va_arg (*a_list, ColorA *);
             if (colors == NULL) {
                vect->c = NULL;
                vect->ncolor = 0;
@@ -171,7 +171,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list a_list )
 	    break;
 
 	default:
-	    if (GeomDecorate (s, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (s, &copy, attr, a_list)) {
 		OOGLError (0, "VectCreate: Undefined option: %d\n", attr);
 		OOGLFree (vect);
 		return NULL;

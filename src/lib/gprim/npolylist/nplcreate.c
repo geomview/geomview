@@ -57,7 +57,7 @@ NPolyListDelete( register NPolyList *np )
 }
 
 NPolyList *
-NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list)
+NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
 {
    register NPolyList *pl;
    int *nvertperpol=NULL, *verts=NULL;
@@ -84,7 +84,7 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list)
    }
 
 
-   while ((attr = va_arg(a_list, int))) 
+   while ((attr = va_arg(*a_list, int))) 
      switch (attr) {
 
        case CR_NOCOPY:
@@ -92,27 +92,27 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list)
           break;
 
        case CR_FLAG:
-          pl->flags = va_arg(a_list, int);
+          pl->flags = va_arg(*a_list, int);
           break;
 
        case CR_NPOLY:
-          pl->n_polys = va_arg(a_list, int);
+          pl->n_polys = va_arg(*a_list, int);
           npolyflag = 1;
           break;
 
        case CR_NVERT:	/* number of verts of each polygon */
-          nvertperpol = va_arg(a_list, int*);
+          nvertperpol = va_arg(*a_list, int*);
           nvertflag = 1;
           break;
 
        case CR_VERT:	/* indices of all verts of all polygons, concatenated */
 			/* verts[] contains sum(nvertperpol[]) elements */
-          verts = va_arg(a_list, int*);
+          verts = va_arg(*a_list, int*);
           vertflag = 1;
           break;
 
 	case CR_DIM:
-	  pl->pdim = va_arg(a_list, int) + 1;
+	  pl->pdim = va_arg(*a_list, int) + 1;
 	  break;
 
 	case CR_POINT4:	   /* CR_POINT4, <points including homog. components> */
@@ -121,13 +121,13 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list)
 
 	case CR_POINT:	   /* CR_POINT, <points without homog. components> */
 	
-          v = va_arg(a_list, float *);
+          v = va_arg(*a_list, float *);
           pointflag = 1;
           break;
 
        case CR_COLOR:	   /* CR_COLOR, <ColorA's, one per vertex */
 	  pl->flags &= ~PL_HASVCOL;
-          vc = va_arg(a_list, ColorA *);
+          vc = va_arg(*a_list, ColorA *);
           if ( vc && (pl->flags & (PL_HASVCOL | PL_HASPCOL)) == 0)
           	pl->flags |= PL_HASVCOL;
 	  colorflag = 1;
@@ -135,12 +135,12 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list)
 
        case CR_POLYCOLOR:
 	  pl->flags &= ~PL_HASPCOL;
-          pc = va_arg(a_list, ColorA *);
+          pc = va_arg(*a_list, ColorA *);
           if(pc) pl->flags |= PL_HASPCOL;
           break;
 
        default:
-          if (GeomDecorate(pl, &copy, attr, ALISTADDR a_list)) {
+          if (GeomDecorate(pl, &copy, attr, a_list)) {
              OOGLError(0,"Undefined PolyList option: %d", attr);
              if (!exist) GeomDelete((Geom *)pl);
              return NULL;

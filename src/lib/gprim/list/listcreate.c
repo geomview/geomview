@@ -149,7 +149,7 @@ ListAppend(Geom *lg, Geom *g)
 }
 
 List *
-ListCreate (List *exist, GeomClass *Classp, va_list a_list )
+ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 {
     register List *list, *l;
     int attr, copy = 1;
@@ -171,13 +171,13 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 	list = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_HANDLE_GEOM:
 	    /*
 	     * Like GeomReplace, but takes a Handle too.
 	     */
-	    h = va_arg(a_list, Handle *);
-	    g = va_arg(a_list, Geom *);
+	    h = va_arg(*a_list, Handle *);
+	    g = va_arg(*a_list, Geom *);
 	    if(g == NULL && h != NULL)
 		g = (Geom *)HandleObject(h);
 	    if(copy) {
@@ -202,7 +202,7 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 		l->cdr = list->cdr;
 		list->cdr = l;
 	    }
-	    list->car = va_arg (a_list, Geom *);
+	    list->car = va_arg (*a_list, Geom *);
 	    if(copy) RefIncr((Ref *)list->car);
 	    break;
 
@@ -214,7 +214,7 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 		l->cdr = list->cdr;
 		list->car = NULL;
 	    }
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref *)h);
 	    HandlePDelete(&list->carhandle);
 	    list->carhandle = h;
@@ -222,7 +222,7 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 	    break;
 
 	case CR_CDR:
-	    l = va_arg (a_list, List *);
+	    l = va_arg (*a_list, List *);
 	    if(l && l->Class != Classp) {
 		OOGLError(0, "ListCreate: CDR %x (magic %x) not a List",
 			l, l->magic);
@@ -234,7 +234,7 @@ ListCreate (List *exist, GeomClass *Classp, va_list a_list )
 	    list->cdr = l;
 	    break;
 	default:
-	    if (GeomDecorate (list, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (list, &copy, attr, a_list)) {
 		OOGLError (0, "ListCreate: Undefined attribute: %d", attr);
 
 	      fail:

@@ -49,7 +49,7 @@ extern GeomClass *CommentClass;		/* Public read-only; valid only
 					 * after first call to CommentMethods()
 					 */
 
-extern Comment *CommentCreate( Comment *exist, GeomClass *Class, va_list attrs );
+extern Comment *CommentCreate( Comment *exist, GeomClass *Class, va_list *attrs );
 extern void  CommentDelete( Comment * );
 extern Comment *CommentCopy( Comment * );
 extern Comment *CommentDice( Comment *, int nu, int nv );

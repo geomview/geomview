@@ -85,7 +85,7 @@ TlistGet( register Tlist *tlist, int attr, register void *attrp )
 }
 	
 Tlist *
-TlistCreate(Tlist *exist, GeomClass *Classp, va_list a_list)
+TlistCreate(Tlist *exist, GeomClass *Classp, va_list *a_list)
 {
     register Tlist *tlist;
     Geom *g;
@@ -108,15 +108,15 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list a_list)
 	tlist = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) switch(attr) {
+    while ((attr = va_arg (*a_list, int))) switch(attr) {
 	case CR_GEOM:
 	case CR_TLIST:
 	    h = NULL;
 	    goto settlist;
 	case CR_HANDLE_GEOM:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	  settlist:
-	    g = va_arg(a_list, Geom *);
+	    g = va_arg(*a_list, Geom *);
 	    if(copy) RefIncr((Ref *)g);
 	    if(tlist->tlist) GeomDelete(tlist->tlist);
 	    tlist->tlist = g;
@@ -126,21 +126,21 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list a_list)
 	    tlist->tlisthandle = h;
 	    break;
 	case CR_TLISTHANDLE:
-	    h = va_arg(a_list, Handle *);
+	    h = va_arg(*a_list, Handle *);
 	    goto sethandle;
 	case CR_ELEM:
-	    elements = va_arg (a_list, Transform *);
+	    elements = va_arg (*a_list, Transform *);
 	    copyel = copy;
 	    break;
 	case CR_NELEM:
-	    tlist->nelements = va_arg (a_list, int);
+	    tlist->nelements = va_arg (*a_list, int);
 	    if (tlist->elements != NULL) {
 		OOGLFree (tlist->elements);
 		tlist->elements = NULL;
 	    }
 	    break;
 	default:
-	    if(GeomDecorate(tlist, &copy, attr, ALISTADDR a_list)) {
+	    if(GeomDecorate(tlist, &copy, attr, a_list)) {
 		OOGLError (0, "TlistCreate: undefined option: %d", attr);
 		if (exist == NULL) GeomDelete ((Geom *) tlist);
 		return NULL;

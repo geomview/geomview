@@ -47,7 +47,7 @@ BBox *
 BBoxCreate (exist, classp, a_list)
 BBox *exist;
 GeomClass *classp;
-va_list a_list;
+va_list *a_list;
 {
     register BBox *bbox;
     int attr, copy = 1, fourd = 0;
@@ -61,26 +61,26 @@ va_list a_list;
 	bbox = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    bbox->flag = va_arg (a_list, int );
+	    bbox->flag = va_arg (*a_list, int );
 	    break;
 	case CR_MIN:
-	    Pt3ToPt4(va_arg(a_list, Point3 *), &bbox->min, 1);
+	    Pt3ToPt4(va_arg(*a_list, Point3 *), &bbox->min, 1);
 	    break;
 	case CR_MAX:
-	    Pt3ToPt4(va_arg(a_list, Point3 *), &bbox->max, 1);
+	    Pt3ToPt4(va_arg(*a_list, Point3 *), &bbox->max, 1);
 	    break;
 	case CR_4MIN:
-	    bbox->min = *va_arg(a_list, HPoint3 *);
+	    bbox->min = *va_arg(*a_list, HPoint3 *);
 	    bbox->geomflags |= VERT_4D;
 	    break;
 	case CR_4MAX:
-	    bbox->max = *va_arg(a_list, HPoint3 *);
+	    bbox->max = *va_arg(*a_list, HPoint3 *);
 	    bbox->geomflags |= VERT_4D;
 	    break;
 	default:
-	    if (GeomDecorate (bbox, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (bbox, &copy, attr, a_list)) {
 		OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
 		OOGLFree (bbox);
 		return NULL;

@@ -29,7 +29,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.2 2000/09/01 22:38:13 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.3 2004/03/15 22:27:56 rotdrop Exp $ */
 
 
 /*
@@ -41,7 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static GeomClass *aNPolyListMethods = NULL;
 extern NPolyList *NPolyListDraw(NPolyList *);
-extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list a_list);
+extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list);
 extern NPolyList *NPolyListCopy(NPolyList *);
 extern NPolyList *NPolyListFSave(NPolyList *, FILE *outf, char *fname);
 extern NPolyList *NPolyListDelete(NPolyList *);

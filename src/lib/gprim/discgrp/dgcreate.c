@@ -113,7 +113,7 @@ DiscGrpElListCreate (DiscGrpElList *exist, ...)
 	    break;
 
 	default:
-	    if (GeomDecorate (dgellist, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (dgellist, &copy, attr, &a_list)) {
 		GeomError (0, "DiscGrpElListCreate: Undefined option: %d", attr);
 		OOGLFree (dgellist);
 		return NULL;
@@ -125,7 +125,7 @@ DiscGrpElListCreate (DiscGrpElList *exist, ...)
 }
 
 DiscGrp *
-DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list a_list)
+DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list *a_list)
 {
     register DiscGrp *discgrp;
     int		attr, copy = 1;
@@ -162,65 +162,65 @@ DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list a_list)
 	discgrp = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case DGCR_NAME:
-	    discgrp->name = va_arg (a_list, char *);
+	    discgrp->name = va_arg (*a_list, char *);
 	    break;
 
 	case DGCR_COMMENT:
-	    discgrp->comment = va_arg (a_list, char *);
+	    discgrp->comment = va_arg (*a_list, char *);
 	    break;
 
 	case DGCR_FLAG:
-	    discgrp->flag = va_arg (a_list, int);
+	    discgrp->flag = va_arg (*a_list, int);
 	    break;
 
 	case DGCR_ATTRIBUTE:
-	    discgrp->attributes = va_arg (a_list, int);
+	    discgrp->attributes = va_arg (*a_list, int);
 	    break;
 
 	case DGCR_GENS:
-	    discgrp->gens = va_arg (a_list, DiscGrpElList *);
+	    discgrp->gens = va_arg (*a_list, DiscGrpElList *);
 	    break;
 
 	case DGCR_BIGLIST:
-	    discgrp->big_list = va_arg (a_list, DiscGrpElList *);
+	    discgrp->big_list = va_arg (*a_list, DiscGrpElList *);
 	    break;
 
 	case DGCR_CPOINT:
 	    {
 	    HPoint3 *cptr;
-	    cptr = va_arg (a_list, HPoint3 *);
+	    cptr = va_arg (*a_list, HPoint3 *);
 	    discgrp->cpoint = *cptr;
 	    }
 	    break;
 
 	case DGCR_ENUMDEPTH:
-	    discgrp->enumdepth = va_arg (a_list, int);
+	    discgrp->enumdepth = va_arg (*a_list, int);
 	    break;
 
 	case DGCR_ENUMDIST:
-	    discgrp->enumdist = ((float) va_arg (a_list, double));
+	    discgrp->enumdist = ((float) va_arg (*a_list, double));
 	    break;
 
 	case DGCR_SCALE:
-	    discgrp->scale = ((float) va_arg (a_list, double));
+	    discgrp->scale = ((float) va_arg (*a_list, double));
 	    break;
 
 	case DGCR_CAMGEOM:
-	    discgrp->camgeom = va_arg (a_list, Geom *);
+	    discgrp->camgeom = va_arg (*a_list, Geom *);
 	    break;
 
 	case DGCR_DDGEOM:
-	    discgrp->ddgeom = va_arg (a_list, Geom *);
+	    discgrp->ddgeom = va_arg (*a_list, Geom *);
 	    break;
 
 	case CR_GEOM:
-	    discgrp->geom = va_arg (a_list, Geom *);
+	    discgrp->geom = va_arg (*a_list, Geom *);
 	    break;
 
 	default:
-	    if (GeomDecorate (discgrp, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (discgrp, &copy, attr, a_list)) {
 		GeomError (0, "DiscGrpCreate: Undefined option: %d", attr);
 		OOGLFree (discgrp);
 		return NULL;

@@ -61,7 +61,7 @@ PolyListDelete( register PolyList *pl )
 }
 
 PolyList *
-PolyListCreate(PolyList *exist, GeomClass *classp, va_list a_list)
+PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
 {
    register PolyList *pl;
    register Vertex *v;
@@ -86,7 +86,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list a_list)
    }
 
 
-   while ((attr = va_arg(a_list, int))) 
+   while ((attr = va_arg(*a_list, int))) 
      switch (attr) {
 
        case CR_NOCOPY:
@@ -94,65 +94,65 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list a_list)
           break;
 
        case CR_FLAG:
-          pl->flags = va_arg(a_list, int);
+          pl->flags = va_arg(*a_list, int);
           break;
 
        case CR_NPOLY:
-          pl->n_polys = va_arg(a_list, int);
+          pl->n_polys = va_arg(*a_list, int);
           npolyflag = 1;
           break;
 
        case CR_NVERT:	/* number of verts of each polygon */
-          nvertperpol = va_arg(a_list, int*);
+          nvertperpol = va_arg(*a_list, int*);
           nvertflag = 1;
           break;
 
        case CR_VERT:	/* indices of all verts of all polygons, concatenated */
 			/* verts[] contains sum(nvertperpol[]) elements */
-          verts = va_arg(a_list, int*);
+          verts = va_arg(*a_list, int*);
           vertflag = 1;
           break;
 
        case CR_POINT:
-          v3 = va_arg(a_list, Point3 *);
+          v3 = va_arg(*a_list, Point3 *);
           pointflag = 1;
 	  dimn = 3;
 	  pl->flags &= ~(PL_HASVN | PL_HASPN);
           break;
 
        case CR_POINT4:
-          v4 = va_arg(a_list, HPoint3 *);
+          v4 = va_arg(*a_list, HPoint3 *);
           pointflag = 1;
 	  dimn = 4;
 	  pl->flags &= ~(PL_HASVN | PL_HASPN);
           break;
 
        case CR_NORMAL:
-          vn = va_arg(a_list, Point3 *);
+          vn = va_arg(*a_list, Point3 *);
 	  /* if no normal bit has been set... */
           if (vn && (pl->flags & (PL_HASVN | PL_HASPN)) == 0)
 		pl->flags |= PL_HASVN;
           break;
 
        case CR_COLOR:
-          vc = va_arg(a_list, ColorA *);
+          vc = va_arg(*a_list, ColorA *);
           if(vc) pl->flags |= PL_HASVCOL;
 	  else pl->flags &= ~PL_HASVCOL;
           break;
 
        case CR_POLYNORMAL:
-          pn = va_arg(a_list, Point3 *);
+          pn = va_arg(*a_list, Point3 *);
           pl->flags |= PL_HASPN;
           break;
 
        case CR_POLYCOLOR:
-          pc = va_arg(a_list, ColorA *);
+          pc = va_arg(*a_list, ColorA *);
           if(pc) pl->flags |= PL_HASPCOL;
 	  else pl->flags &= ~PL_HASPCOL;
           break;
 
        default:
-          if (GeomDecorate(pl, &copy, attr, ALISTADDR a_list)) {
+          if (GeomDecorate(pl, &copy, attr, a_list)) {
              OOGLError(0,"Undefined PolyList option: %d", attr);
              if (!exist) GeomDelete((Geom *)pl);
              return NULL;

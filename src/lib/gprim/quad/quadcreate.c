@@ -34,7 +34,7 @@ Quad *
 QuadCreate (exist, classp, a_list)
     Quad *exist;
     GeomClass *classp;
-    va_list a_list;
+    va_list *a_list;
 {
     register Quad *q;
     QuadP *p = (QuadP *)NULL;
@@ -57,18 +57,18 @@ QuadCreate (exist, classp, a_list)
 	q = exist;
     }
 
-    while ((attr = va_arg(a_list, int)))   /* parse argument list */
+    while ((attr = va_arg(*a_list, int)))   /* parse argument list */
       switch (attr) {
 	case CR_FLAG:
-            q->flag = va_arg(a_list, int);
+            q->flag = va_arg(*a_list, int);
 	    break;
 
 	case CR_NELEM:
-	    q->maxquad = va_arg(a_list, int);
+	    q->maxquad = va_arg(*a_list, int);
 	    break;
 
 	case CR_POINT4:
-	    p = va_arg(a_list, QuadP *);
+	    p = va_arg(*a_list, QuadP *);
             if (exist) OOGLFree(q->p);
             if (p == NULL) {
                q->p = NULL;
@@ -82,7 +82,7 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	case CR_POINT:
-	    p3 = va_arg(a_list, Point3 *);
+	    p3 = va_arg(*a_list, Point3 *);
             if (exist) OOGLFree(q->p);
             if (p3 == NULL) {
                q->p = NULL;
@@ -96,7 +96,7 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	case CR_NORMAL:
-	    n = va_arg(a_list, QuadN *);
+	    n = va_arg(*a_list, QuadN *);
             if (exist && q->n) OOGLFree(q->n);
 	    if (n == NULL) {
 		q->n = NULL;
@@ -109,7 +109,7 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	case CR_COLOR:
-	    c = va_arg(a_list, QuadC *);
+	    c = va_arg(*a_list, QuadC *);
             if (exist && q->c) OOGLFree(q->c);
 	    if (c == NULL) {
                q->c = NULL;
@@ -122,7 +122,7 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	default:
-            if (GeomDecorate(q, &copy, attr, ALISTADDR a_list)) {
+            if (GeomDecorate(q, &copy, attr, a_list)) {
 	       OOGLError (0, "QuadCreate: Undefined option: %d",attr);
 	       if (!exist) GeomDelete((Geom *)q);
 	       return NULL;

@@ -35,7 +35,7 @@ struct List {
     struct List	*cdr;
 };
 
-extern List *ListCreate( List *exist, GeomClass *, va_list );
+extern List *ListCreate( List *exist, GeomClass *, va_list *a_list);
 extern void  ListDelete( List * );
 extern List *ListCopy( List * );
 

@@ -81,7 +81,7 @@ struct Vect {
 
 #define VECT_4D		1
 
-extern Vect *VectCreate( Vect *, GeomClass *, va_list );
+extern Vect *VectCreate( Vect *, GeomClass *, va_list *a_list);
 extern void  VectDelete( Vect * );
 extern Vect *VectCopy( Vect * );
 extern Vect *VectPick( Vect *, Pick *, Appearance *, Transform );

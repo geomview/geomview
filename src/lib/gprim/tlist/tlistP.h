@@ -46,7 +46,7 @@ struct Tlist {
 };
 
 extern char *TlistName( void );
-extern Tlist *TlistCreate( Tlist *existing, GeomClass *Class, va_list args );
+extern Tlist *TlistCreate( Tlist *existing, GeomClass *Class, va_list *args );
 extern Tlist *TlistCopy( Tlist *t);
 extern void TlistDelete( Tlist * );
 extern Geom *TlistImport( Pool *p );

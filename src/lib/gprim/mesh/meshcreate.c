@@ -38,7 +38,7 @@ Mesh *
 MeshCreate (exist, classp, a_list)
 Mesh *exist;
 GeomClass *classp;
-va_list a_list;
+va_list *a_list;
 {
     register Mesh *mesh;
     int		attr, copy = 1, fourd = 0;
@@ -68,50 +68,50 @@ va_list a_list;
 
     npts = mesh->nu * mesh->nv;
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    mesh->flag = va_arg (a_list, int);
+	    mesh->flag = va_arg (*a_list, int);
 	    break;
 	case CR_NU:
-	    mesh->nu = va_arg (a_list, int);
+	    mesh->nu = va_arg (*a_list, int);
 	    tossmesh(mesh);
 	    npts = mesh->nu * mesh->nv;
 	    break;
 	case CR_NV:
-	    mesh->nv = va_arg (a_list, int);
+	    mesh->nv = va_arg (*a_list, int);
 	    tossmesh(mesh);
 	    npts = mesh->nu * mesh->nv;
 	    break;
 	case CR_UMIN:
-	    mesh->umin = va_arg (a_list, int);
+	    mesh->umin = va_arg (*a_list, int);
 	    break;
 	case CR_UMAX:
-	    mesh->umax = va_arg (a_list, int);
+	    mesh->umax = va_arg (*a_list, int);
 	    break;
 	case CR_VMIN:
-	    mesh->vmin = va_arg (a_list, int);
+	    mesh->vmin = va_arg (*a_list, int);
 	    break;
 	case CR_VMAX:
-	    mesh->vmax = va_arg (a_list, int);
+	    mesh->vmax = va_arg (*a_list, int);
 	    break;
 	case CR_POINT:
 	    if(mesh->p) OOGLFree(mesh->p);
 	    mesh->p = OOGLNewNE(HPoint3, npts, "mesh points");
-	    p3 = va_arg(a_list, Point3 *);
+	    p3 = va_arg(*a_list, Point3 *);
 	    Pt3ToPt4(p3, mesh->p, npts);
 	    if(!copy) OOGLFree(p3);
 	    break;
 
 	case CR_POINT4:
 	    meshfield(copy, npts*sizeof(HPoint3), (void **)&mesh->p,
-		(void *)va_arg (a_list, HPoint3 *), "mesh points");
+		(void *)va_arg (*a_list, HPoint3 *), "mesh points");
 	    break;
 
 	case CR_NORMAL:
 	    mesh->flag = (mesh->flag & ~MESH_N) |
 		(MESH_N & meshfield(copy, npts*sizeof(Point3),
 				(void **)&mesh->n,
-				(void *)va_arg (a_list, Point3 *),
+				(void *)va_arg (*a_list, Point3 *),
 				"mesh normals"));
 	    break;
 
@@ -119,7 +119,7 @@ va_list a_list;
 	    mesh->flag = (mesh->flag & ~MESH_U) |
 		(MESH_U & meshfield(copy, npts*sizeof(Point3),
 				(void **)&mesh->u,
-				(void *)va_arg (a_list, Point3 *),
+				(void *)va_arg (*a_list, Point3 *),
 				"mesh texture coords"));
 	    break;
 
@@ -127,12 +127,12 @@ va_list a_list;
 	    mesh->flag = (mesh->flag & ~MESH_C) |
 		(MESH_C & meshfield(copy, npts*sizeof(ColorA),
 				(void **)&mesh->c,
-				(void *)va_arg (a_list, ColorA *),
+				(void *)va_arg (*a_list, ColorA *),
 				"mesh colors"));
 	    break;
 
 	default:
-	    if (GeomDecorate (mesh, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (mesh, &copy, attr, a_list)) {
 		GeomError (0, "MeshCreate: Undefined option: %d", attr);
 		OOGLFree (mesh);
 		return NULL;

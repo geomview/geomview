@@ -69,7 +69,7 @@ CommentCopy( Comment *comment )
 }
 
 Comment *
-CommentCreate ( Comment *exist, GeomClass *classp, va_list a_list )
+CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
 {
     register Comment *comment;
     int attr;
@@ -92,10 +92,10 @@ CommentCreate ( Comment *exist, GeomClass *classp, va_list a_list )
 	comment = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) {
+    while ((attr = va_arg (*a_list, int))) {
 	switch(attr) {
 	default:
-	    if(GeomDecorate(comment, &copy, attr, ALISTADDR a_list)) {
+	    if(GeomDecorate(comment, &copy, attr, a_list)) {
 		OOGLError (0, "CommentCreate: Undefined option: %d", attr);
 		if(exist == NULL) GeomDelete ((Geom *)comment);
 		return NULL;

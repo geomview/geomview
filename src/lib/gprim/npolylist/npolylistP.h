@@ -61,7 +61,7 @@ struct NPolyList
 };
 
 
-extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list a_list);
+extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list *a_list);
 extern NPolyList *NPolyListCopy( NPolyList *poly );
 extern NPolyList *NPolyListDelete( NPolyList *poly );
 extern GeomClass *NPolyListMethods();

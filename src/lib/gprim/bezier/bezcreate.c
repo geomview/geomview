@@ -87,7 +87,7 @@ BezierDelete( Bezier *bezier )
 /* ZZZ: note:  BezierCreate doesn't observe the copy directive: always
 copies pointers */
 Bezier *
-BezierCreate ( Bezier *exist, GeomClass *classp, va_list a_list )
+BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 {
     register Bezier *bezier;
     int attr, copy = 1;
@@ -108,40 +108,40 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list a_list )
 	bezier = exist;
     }
 
-    while ((attr = va_arg (a_list, int))) switch (attr) {
+    while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    bezier->flag = va_arg (a_list, int);
+	    bezier->flag = va_arg (*a_list, int);
 	    break;
 	case CR_DEGU:
-	    bezier->degree_u = va_arg (a_list, int);
+	    bezier->degree_u = va_arg (*a_list, int);
 	    break;
 	case CR_DEGV:
-	    bezier->degree_v = va_arg (a_list, int);
+	    bezier->degree_v = va_arg (*a_list, int);
 	    break;
 	case CR_DIM:
-	    bezier->dimn = va_arg (a_list, int);
+	    bezier->dimn = va_arg (*a_list, int);
 	    break;
 	case CR_NU:
-	    bezier->nu = va_arg (a_list, int);
+	    bezier->nu = va_arg (*a_list, int);
 	    break;
 	case CR_NV:
-	    bezier->nv = va_arg (a_list, int);
+	    bezier->nv = va_arg (*a_list, int);
 	    break;
 	case CR_POINT:
-	    bezier->CtrlPnts = va_arg (a_list, float *);
+	    bezier->CtrlPnts = va_arg (*a_list, float *);
 	    break;
 	case CR_MESH:
-	    bezier->mesh = va_arg (a_list, Mesh *);
+	    bezier->mesh = va_arg (*a_list, Mesh *);
 	    break;
 	case CR_ST:
-	    bezier->STCords = va_arg(a_list, float *);
+	    bezier->STCords = va_arg(*a_list, float *);
 	    break;
 	case CR_COLOR:
-	    color = va_arg (a_list, ColorA *);
+	    color = va_arg (*a_list, ColorA *);
 	    if (color != NULL) for (i=0; i<4; i++) bezier->c[i] = color[i];
 	    break;
 	default:
-	    if (GeomDecorate (bezier, &copy, attr, ALISTADDR a_list)) {
+	    if (GeomDecorate (bezier, &copy, attr, a_list)) {
 		OOGLError (0, "BezierCreate: undefined option: %d", attr);
 		OOGLFree (bezier);
 		return NULL;

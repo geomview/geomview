@@ -43,7 +43,7 @@ struct Bezier {
 /*
  * Hidden routines, not user-callable
  */
-extern Bezier *BezierCreate( Bezier *exist, GeomClass *, va_list attrlist );
+extern Bezier *BezierCreate( Bezier *exist, GeomClass *, va_list *attrlist );
 extern void  BezierDelete( Bezier * );
 extern Bezier *BezierCopy( Bezier * );
 
