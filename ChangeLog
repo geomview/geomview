@@ -1,3 +1,15 @@
+2004-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* m4/Makefile.am: Remove.
+	* Makefile.am (m4_files): Distribute the m4/*.m4 files.
+
+	* configure.in: Take care to avoid using MS Windows "find"
+	command.  Do not create m4/Makefile.
+
+2002-10-26  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: Bump version to 1.8.2.
+
 2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* Makefile.am (ACLOCAL_AMFLAGS): Set to "-I m4" so that the
