@@ -956,7 +956,7 @@ mgrib_newcontext( mgribcontext *ctx )
   ctx->shadepath = NULL;		/* should add context field */
   if(geomdata) {
     char path[512];
-    sprintf(path, "%s:%s/shaders", stdshaderpaths, geomdata);
+    sprintf(path, "%s:%s/shaders:&", stdshaderpaths, geomdata);
     ctx->shadepath = strdup(path);
   }
 
