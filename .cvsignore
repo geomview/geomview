@@ -1,0 +1,12 @@
+Makefile.in Makefile
+aclocal.m4
+config.cache 
+config.h.in config.h
+config.log 
+config.status 
+configure 
+geomview
+include
+modules
+packbuild
+stamp-h.in stamp-h

@@ -1,0 +1,6 @@
+.deps
+Makefile.in Makefile
+aclocal.m4
+config.log
+config.status
+configure
