@@ -125,13 +125,13 @@ to use it.
 If you have previously installed XFORMS elsewhere on your system, or
 for some reason you want to put it someplace other than in Geomview's
 source directory, you can tell Geomview's 'configure' script where to
-look for it via the --with-forms option: if you run "configure
---with-forms=DIR", then 'configure' will look for the XFORMS header
+look for it via the --with-xforms option: if you run "configure
+--with-xforms=DIR", then 'configure' will look for the XFORMS header
 and library files in DIR.  It expects both the header file 'forms.h',
 and the libforms library, to be in the same directory.  In the
 standard XFORMS distribution this corresponds to a subdirectory called
 'FORMS'.  (If you unpacked an XFORMS distribution into your Geomview
-source tree as described above, you shouldn't need the --with-forms
+source tree as described above, you shouldn't need the --with-xforms
 option.)
 
 ========================================================================
