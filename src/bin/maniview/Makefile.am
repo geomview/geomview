@@ -18,20 +18,25 @@ datagroups_DATA = 120.dgp 3torus.dgp borrom.dgp borrom2.dgp borrom4.dgp \
                   good_klein_quick.dgp klein_bricks.dgp klein_whole.dgp \
                   notknot.dgp
 
+if HAVE_XFORMS
 module_PROGRAMS = maniview
+module_DATA = .geomview-maniview
+endif
+
 maniview_SOURCES = \
     callbacks.c controlpanel.c maniview.c controlpanel.h gvinit.h \
     maniview.h maniviewhelp.h
 
-module_DATA = .geomview-maniview
 
 
 .geomview-maniview:
 	echo '(emodule-define "Maniview" "maniview")' > .geomview-maniview
 
+if HAVE_XFORMS
 all-local:
 	$(top_geom_srcdir)/mkmodulesdir $(top_geom_builddir)
 	echo '(emodule-define "Maniview" "src/bin/maniview/maniview")' > $(top_geom_builddir)/modules/.geomview-maniview
+endif
 
 MAINTAINERCLEANFILES = \
   aclocal.m4 config.h.in configure stamp-h.in Makefile.in

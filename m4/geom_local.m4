@@ -229,6 +229,34 @@ else
   AC_MSG_RESULT([headers '$ac_xforms_include', libraries '$ac_xforms_libs'])
 fi
 ])
+
+dnl Less severe version of the above: just check and WARN
+dnl
+AC_DEFUN(GEOM_CHECK_XFORMS,[
+AC_MSG_CHECKING([for xforms])
+AC_CACHE_VAL(ac_cv_have_xforms,[:])
+eval $ac_cv_have_xforms
+
+if test "$have_xforms" != "yes" ; then
+  AC_MSG_RESULT([no])
+  AC_MSG_WARN([
+
+$PACKAGE requires the xforms library, but I can't find it in
+Geomview's top-level config.cache.  Please install an xforms
+distribution appropriate to your machine in the 'xforms' directory
+under the top-level Geomview directory, delete any existing
+'config.cache' file in that directory, and re-run 'configure' in that
+directory.  You should only run Geomview's top-level 'configure'
+script, not this one directly.  See the file INSTALL in $PACKAGE's
+source directory for details.
+
+])
+else
+  XFORMSINCLUDE=$ac_xforms_include
+  XFORMSLIBS=$ac_xforms_libs
+  AC_MSG_RESULT([headers '$ac_xforms_include', libraries '$ac_xforms_libs'])
+fi
+])
 dnl
 dnl GEOM_REQUIRE_GEOMVIEW_VERSION(TOPDIR,MAJOR_OP,MAJOR,MINOR_OP,MINOR_COND)
 dnl                               $1     $2       $3,   $4,      $5

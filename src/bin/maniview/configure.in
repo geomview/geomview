@@ -10,9 +10,10 @@ AC_PROG_INSTALL
 top_geom_builddir=../../..
 AC_SUBST(top_geom_builddir)
 
-GEOM_REQUIRE_XFORMS
+GEOM_CHECK_XFORMS
 AC_SUBST(XFORMSLIBS)
 AC_SUBST(XFORMSINCLUDE)
+AM_CONDITIONAL(HAVE_XFORMS,    test x$have_xforms = xyes)
 
 GEOM_GET_CACHED_VALUE(moduledir)
 AC_SUBST(moduledir)

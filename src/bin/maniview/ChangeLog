@@ -1,3 +1,10 @@
+2001-02-11  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: Make check for XFORMS emit warning only, rather
+	than being a fatal error.  Set conditional HAVE_XFORMS if found.
+
+	* Makefile.am: Only build if HAVE_XFORMS is set.
+
 2000-11-15  Mark Phillips  <mbp@geomtech.com>
 
 	* Set up maniview as a separate package with its own configure.in,
