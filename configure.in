@@ -123,6 +123,15 @@ else
   USER_MOTIF_DIR=""
 fi
 GEOM_FIND_I_OPTION(Xm/Xm.h, ["$USER_MOTIF_DIR" "" "/usr/local/include"])
+if test "$GEOM_I_OPTION" = "0" ; then
+    AC_MSG_ERROR([
+
+Can't find Motif header file Xm/Xm.h.  Geomview requires Motif
+(or Lesstif).  See the file INSTALL.Geomview for details.
+
+])
+fi
+
 MOTIFINCLUDE=$GEOM_I_OPTION
 AC_SUBST(MOTIFINCLUDE)
 
@@ -138,6 +147,14 @@ GEOM_FIND_L_OPTION(-lXm,
 		   ["$USER_MOTIF_DIR" "" "$x_libraries"],
 		   $XLIBS
 		  )
+if test "$GEOM_L_OPTION" = "0" ; then
+    AC_MSG_ERROR([
+
+Can't find Motif libraries.  Geomview requires Motif
+(or Lesstif).  See the file INSTALL.Geomview for details.
+
+])
+fi
 MOTIF_L_OPTION=$GEOM_L_OPTION
 MOTIFLIBS="$GEOM_L_OPTION -lXm"
 AC_SUBST(MOTIFLIBS)
@@ -150,6 +167,14 @@ else
   USER_OPENGL_DIR=""
 fi
 GEOM_FIND_I_OPTION(GL/gl.h, ["$USER_OPENGL_DIR" "" "/usr/local/include"])
+if test "$GEOM_I_OPTION" = "0" ; then
+    AC_MSG_ERROR([
+
+Can't find OpenGL header file GL/gl.h.  Geomview requires OpenGL
+(or Mesa).  See the file INSTALL.Geomview for details.
+
+])
+fi
 OPENGLINCLUDE=$GEOM_I_OPTION
 AC_SUBST(OPENGLINCLUDE)
 
@@ -163,6 +188,14 @@ fi
 GEOM_FIND_L_OPTION(-lGL,
 		   glBegin,
 		   ["$USER_OPENGL_DIR" "" "$x_libraries"])
+if test "$GEOM_L_OPTION" = "0" ; then
+    AC_MSG_ERROR([
+
+Can't find OpenGL libraries.  Geomview requires OpenGL (or Mesa).
+See the file INSTALL.Geomview for details.
+
+])
+fi
 GL_L_OPTION=$GEOM_L_OPTION
 GEOM_FIND_L_OPTION(-lGLU,
 		   gluBeginPolygon,

@@ -1,13 +1,8 @@
 	Instructions for using Geomview's `configure' script
 
-
-Starting with release 1.7.6, Geomview now uses the GNU autoconf
-configuration system.  Release 1.7.6 consists of just the Geomview
-source; the external modules are not included yet.  If you need any of
-them, use an older distribution, or wait for a future one.
-
-Essentially, the way to configure and compile Geomview is the same
-as with any piece of GNU-style software:
+Geomview now (as of release 1.7.6) uses the GNU autoconf configuration
+system.  Essentially, the way to configure and compile Geomview is the
+same as with any piece of GNU-style software:
 
 	./configure
 	make
@@ -28,9 +23,14 @@ option to 'configure'.  'make install' will install files into
 subdirectories of the prefix directory called 'bin', 'info', and
 'data'.
 
-There are certain Geomview-specific options that you can pass to
-`configure' that you may need to use to tell it about particular
-things on your system.  In particular, you can use:
+Geomview requires both Motif and OpenGL; you need to make sure these
+are installed on your system before you can compile (or run) Geomview.
+Both of these are commercial software packages but Geomview will also
+work with their free counterparts Lesstif (www.lesstif.org) and Mesa
+(www.mesa3d.org).  If either of these is installed on your system in a
+directory that your compiler doesn't look in by default, you can use
+the following options to Geomview's configure script to tell Geomview
+where to find them:
 
 	--with-opengl=DIR
 	    You can use this option if the OpenGL header files and
@@ -65,3 +65,17 @@ things on your system.  In particular, you can use:
 You can also use environment variables to override various defaults
 such as which compiler to use and which options to pass to it.  See
 the file INSTALL for details on this.
+
+Some of Geomview's external modules use the XForms library
+(http://world.std.com/~xforms).  The Intel Linux binary distribution
+of XForms is included with the Geomview distribution, so if you're on
+an Intel Linux system, Geomview's configure script will (hopefully)
+notice this and use the correct library.  If you're on a different
+system, you can get your system's binary distribution for XForms from
+http://world.std.com/~xforms, and run Geomview's configure script with
+the "--with-forms=DIR" option, where DIR is the path to the FORMS
+directory (containing both the forms.h header file, and the libforms.a
+library file).  Geomview itself doesn't use XForms; this is only
+relevant for some of its external modules.  If you just want Geomview
+itself and don't care about the modules, you can forget about this
+step.
