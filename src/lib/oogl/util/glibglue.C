@@ -37,8 +37,8 @@ CC_stdio_seekmark(struct stdio_mark *sm)
 void
 CC_stdio_freemark(stdio_mark *sm)
 {
-   delete sm->instream;
    delete sm->m;
+   delete sm->instream;
    delete sm;
 }
 

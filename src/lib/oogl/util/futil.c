@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.5 2001/02/21 22:00:41 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.6 2001/02/23 04:41:31 mphillips Exp $ */
 
 /*
  * Geometry object routines
@@ -152,7 +152,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 
 #ifndef WORDS_BIGENDIAN
-#  ifdef HAVE_NETINET_IN_H
+#  if HAVE_NETINET_IN_H
 #  include <netinet/in.h>	/* for ntohl(), etc. */
 # else
 
@@ -279,7 +279,7 @@ fgetnf(register FILE *f, int maxf, float *fv, int binary)
 	int s, es, nd, any;
 
 	if(binary) {
-#ifdef WORDS_BIGENDIAN
+#if WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)fv, sizeof(float), maxf, f);
 #else /* not native big-endian IEEE */
@@ -363,7 +363,7 @@ fgetni(register FILE *f, int maxi, int *iv, int binary)
 	int s, any;
 
 	if(binary) {
-#ifdef WORDS_BIGENDIAN
+#if WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)iv, sizeof(int), maxi, f);
 #else /* not native big-endian int's */
@@ -407,7 +407,7 @@ fgetns(register FILE *f, int maxs, short *sv, int binary)
 	int s, any;
 
 	if(binary) {
-#ifdef WORDS_BIGENDIAN
+#if WORDS_BIGENDIAN
 		/* Easy -- our native floating point == big-endian IEEE */
 		return fread((char *)sv, sizeof(short), maxs, f);
 #else /* not native big-endian int's */
@@ -672,7 +672,7 @@ fputnf(FILE *file, int count, float *v, int binary)
 {
 	register int i;
 	if(binary) {
-#ifdef WORDS_BIGENDIAN
+#if WORDS_BIGENDIAN
 	  return fwrite(v, sizeof(float), count, file);
 #else
 	  long w;
@@ -697,7 +697,7 @@ fputtransform(FILE *file, int ntrans, float *trans, int binary)
 	register float *p;
 
 	if(binary) {
-#ifdef WORDS_BIGENDIAN
+#if WORDS_BIGENDIAN
 	    return fwrite(trans, 4*4*sizeof(float), ntrans, file);
 #else
 	OOGLError(1, "fputtransform: need code to handle binary writes for this architecture.");
