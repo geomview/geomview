@@ -1,3 +1,8 @@
+2000-11-23  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomview/x11/Makefile.am: install "gvx" in moduledir, not
+	bindir.
+
 2000-11-17  Mark Phillips  <mbp@geomtech.com>
 
 	* added 'togeomview' utility program to distribution

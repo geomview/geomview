@@ -2,11 +2,11 @@ SUBDIRS = lib bin
 
 bin_SCRIPTS = geomview
 
-DISTCLEANFILES = geomview
+CLEANFILES = geomview
 
 geomview: $(top_srcdir)/geomview.sh Makefile
 	sed -e 's|%GEOMROOT%|$(prefix)|g'                                    \
-	    -e 's|%GEOMVIEW_GVX%|$(exec_prefix)/bin/gvx|g'                   \
+	    -e 's|%GEOMVIEW_GVX%|$(moduledir)/gvx|g'                   \
 	    -e 's|%MACHTYPE%|$(MACHTYPE)|g'                                  \
 	    -e 's|%GEOMDATA%|$(geomdatadir)|g'                               \
 	    -e 's|%MODULESDIR%|$(moduledir)|g'                               \

@@ -4,7 +4,7 @@ SUBDIRS = bitmaps interface
 LDADD = ../common/libgvcommon.a buildinfo.o ${OOGLLIBS} \
         $(OPENGLLIBS) $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(SOCKETLIBS) $(MATHLIB)
 
-bin_PROGRAMS = gvx
+module_PROGRAMS = gvx
 
 gvx_SOURCES = \
     gvappear.c	gvcameras.c  gvcolor.c  gvcommands.c      \

@@ -1,3 +1,9 @@
+2000-11-23  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* src/Makefile.am (geomview): look for "gvx" in $(moduledir)
+	rather than $(bindir).
+	(CLEANFILES): clean geomview script.
+
 2000-11-20  Mark Phillips  <mbp@geomtech.com>
 
         * release 1.8.0  (see NEWS file for summary)
