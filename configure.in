@@ -59,7 +59,10 @@ AC_PROG_INSTALL
 
 # Check for ways to generate a PDF file.
 # GNU Texinfo has a texi2pdf, otherwise use a DVI->PDF converter.
-AC_CHECK_PROGS(TEXI2PDF, texi2pdf)
+#   For now don't bother checking for texi2pdf, because it doesn't
+#   include the figures.  Anyone know how to get figures into a pdf
+#   file generated with texi2pdf? [mbp Sun Nov 19 15:33:19 2000]
+#AC_CHECK_PROGS(TEXI2PDF, texi2pdf)
 AC_CHECK_PROGS(DVIPDF, dvipdf)
 
 AM_CONDITIONAL(HAVE_TEXI2PDF, test x$TEXI2PDF != x)

@@ -19,11 +19,11 @@
 @sp 1
 @center @titlefont{Geomview Manual}
 @sp 4
-@center Geomview Version 1.7
+@center Geomview Version 1.8
 @sp 1
 @center for Unix
 @sp 1
-@center February 13, 2000
+@center November 19, 2000
 @sp 2
 @center Mark Phillips et al.
 @sp 4
@@ -72,7 +72,7 @@ Center at the University of Minnesota, starting in 1991.  It can be used
 as a standalone viewer for static objects or as a display engine for
 other programs which produce dynamically changing geometry.  It runs on
 many kinds of Unix computers, including Linux, SGI, Sun, and HP.
-This manual describes Geomview version 1.7. @refill
+This manual describes Geomview version 1.8. @refill
 
 Geomview is free software, available under the terms of the GNU Lesser
 Public License; @xref{Copying} for details.

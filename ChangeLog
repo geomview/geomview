@@ -1,9 +1,14 @@
+2000-11-19  Mark Phillips  <mbp@geomtech.com>
+
+        * release 1.8.0  (see NEWS file for summary)
+
+	* texi2pdf doesn't seem to include figures; for now revert
+	  to dvipdf to generate pdf version of manual
+
 2000-11-17  Mark Phillips  <mbp@geomtech.com>
 
 	* doc/Makefile.am: refer to $(srcdir)/geomview.texi
 	  rather than geomview.texi when invoking tex
-
-        * release 1.8.0  (see NEWS file for summary)
 
 2000-11-15  Mark Phillips  <mbp@geomtech.com>
 
