@@ -65,6 +65,8 @@
 # Incorporates settings from "$RGVOPTS" environment variable.
 
 set -- $RGVOPTS "$@"
+set -x
+RGVSH=${RGVSH:-rsh}
 
 while
   case "$1" in
@@ -111,7 +113,7 @@ case "$inpipe" in
 esac
 
 user=${user+"-l $user"}
-cmd="${host+rsh $host $user}"
+cmd="${host+$RGVSH $host $user}"
 
 if [ -n "$host" ]; then
   redirect=">/dev/null 2>&1"
@@ -123,9 +125,9 @@ after seeing the results, before you get another Maple prompt." >&2
     redirect=""
   fi
   if [ -n "$inpipe" ]; then
-    rsh $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $inpipe $togvargs $redirect\"" <$inpipe
+    $RGVSH $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $inpipe $togvargs $redirect\"" <$inpipe
   else
-    rsh $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $togvargs $redirect\""
+    $RGVSH $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $togvargs $redirect\""
   fi
 else
   case "$1" in

@@ -1,0 +1,71 @@
+HELP FOR: writeoogl, gvplot						
+
+CALLING SEQUENCE:							
+	readlib(gvplot):						
+	writeoogl( "filename", 3dplot_struct );			
+	writeoogl( 3dplot_struct );					
+	gvplot( 3dplot_struct );					
+	gvplot( "geomview_name", 3dplot_struct )			
+
+PARAMETERS:								
+	filename        the file which will contain the Geomview data	
+	3dplot_struct	a Maple PLOT3D data structure			
+	geomview_name	name of the object in the Geomview browser	
+
+SYNOPSIS: 								
+	writeoogl() accepts Maple PLOT3D structures and writes files	
+	readable by Geomview.  gvplot() converts Maple PLOT3D structures
+	and displays them immediately using Geomview, starting a copy of
+	Geomview if necessary.
+
+	Supported data types include the Maple structures MESH, GRID,	
+	CURVES, POINTS, and POLYGONS.	
+	See ?plot3d[structure] for more information on Maple PLOT3D types.
+
+	The Maple MESH and GRID structures are translated into Geomview's
+	MESH and ZMESH objects, respectively, Maple CURVES and POINTS
+	become VECT objects, and Maple POLYGONS becomes an OFF object.
+
+	The Maple TEXT structure is not supported. Color information is
+	supported for all objects.
+
+	The form writeoogl(filename, plot_struct) writes data in OOGL
+	(Geomview) form to the given file; writeoogl(plot) writes to the
+	current output stream as selected by writeto().
+
+	gvplot() normally starts the program "geomview", with no options;
+	to specify something else, set the variable "gvcommand", as in:
+	   gvcommand := "/usr/local/bin/gv -wpos 200x200 -c startup.gv";
+	before invoking gvplot().  Also, if the programs "geomview" or
+	"togeomview" are not on your UNIX search path, set the variable
+	   gvdirectories := "/some/dir/ectory:/some/other/directory";
+	to the appropriate directory (or directories separated by colons).
+
+EXAMPLES:								
+	readlib(gvplot):						
+	my_plot := plot3d(sin(x+y), x=-Pi..Pi, y=-Pi..Pi):		
+	writeoogl( "sinxy.mesh", my_plot );				
+         Saving Maple 3D structs to Geomview file, sinxy.mesh	
+	steiner := plot3d([ sin(2*x)*(cos(y))^2, sin(x)*sin(2*y),	
+	      cos(x)*sin(2*y)], x=-Pi..Pi, y=-Pi..Pi):			
+	writeoogl( "steiner.mesh", steiner);				
+         Saving Maple 3D structs to Geomview file, steiner.mesh
+	# Display it in geomview directly				
+	gvplot( steiner );						
+	# load in the plots package					
+	with(plots):							
+	trefoil := spacecurve([ -2*cos(t)- 1/2*cos(5*t)+ 3*sin(2*t),	
+     -3*cos(2*t)+ 2*sin(t)- 1/2*sin(5*t), 2*cos(3*t), t=0..2*Pi]):
+	writeoogl( "trefoil.vect", trefoil);				
+         Saving Maple 3D structs to Geomview file, trefoil.vect
+	tetrahedra := [[1,0,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,0,1],[0,1,0]], 
+	              [[0,1,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,1,0],[-1,0,0]]:
+	Tplot :=polygonplot3d([tetrahedra]):				
+	writeoogl( "tetrahedra.off", Tplot);				
+         Saving Maple 3D structs to Geomview file, tetrahedra.off
+	# you can even create a single file with multiple objects	
+	all_objs := display3d( {my_plot, steiner, trefoil, Tplot} ):	
+	writeoogl( "all.list", all_objs );				
+         Saving Maple 3D structs to Geomview file, all.list	
+
+SEE ALSO: plot3d[structure]						
