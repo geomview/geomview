@@ -1,4 +1,4 @@
-##########################
+########################### Hey, Emacs, we're -*-maplev-*- mode!
 ##
 ##    Title   :  writeoogl,  a package for converting maple PLOT3D
 ##				objects to Geomview data objects.
@@ -32,11 +32,13 @@
 ## 		writeoogl(`filename`, 3dplot_struct);
 ##		gvplot(3dplot_struct);
 
-geomview:=module()
-export gvdirectories, gvcommand, writeoogl, gvplot, gvsendcmd;
+geomview := module()
+option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. All rights reserved. Heavily based on gvplot, Copyright (C) 1993 by Frederick Wicklin and Stuart Levy, Geometry Center.`;
+description `Geomview interface for MapleV8`;
+export gvdirectories, gvcommand, fwriteoogl, writeoogl, gvplot, gvsendcmd;
 local default_gvdirectories, default_gvcommand, `oogl/lprn`,
-    `oogl/lprnV8`, HSV2RGB, find_colorlist, find_appearance,
-    make_tmpname, print_colorlist;
+    HSV2RGB, find_colorlist, find_appearance,
+    make_tmpname, print_colorlist, find_view, make_localtmpname;
 global `gvplot/User_ID`;
 
 
@@ -67,7 +69,15 @@ global `gvplot/User_ID`;
             `gvplot/User_ID` := (round( rand() * (time()+1) ) mod 9999) + 1;
         fi;
         tmp_fname := `Maple`||(`gvplot/User_ID`);
-    end:
+        return(tmp_fname);
+    end;
+
+    make_localtmpname := proc()
+    local tmp_fname, id;
+        id := (round( rand() * (time()+1) ) mod 9999) + 1;
+        tmp_fname := `/tmp/`||`Maple`||`id`;
+        return(tmp_fname);
+    end;
 
 ### Upon invoking the geomview package, maple creates a global
 ### variable `gvplot/User_ID` which is assigned a "random" number.
@@ -77,49 +87,77 @@ global `gvplot/User_ID`;
 # but all V1 plot objects seem to begin with FUNCTION, so use that fact
 # to detect that we must be careful not to print invalid float constants.
 ##################################################################
-    `oogl/lprn` := `oogl/lprnV8`:
 
     writeoogl := proc()
-#   global  `oogl/lprn`;
-    local header, item, ps, zlist, plist, llist, ppoint, pcolor, appear,
-        i, j, totl, xrange, yrange, nx, ny, savedprintbytes,
-        coloron,colorlist,ccnt, totalverts, tlist, npoints;
-    options `Copyright 1993 by Frederick Wicklin and Stuart Levy, Geometry Center`;
-
+    option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. All rights reserved.`;
+    description `convert a MapleV8 PLOT3d() structure to OOGL`;
+    local outfd, ps;
         if nargs > 2 or nargs = 0 then
             ERROR(`Usage:writeoogl(``filename``,3dplot_struct); OR writeoogl(3dplot_struct);`)
-        fi;
-        ps := args[nargs];
-        if not op(0, ps) = PLOT3D then ERROR(`Invalid plot structure`,ps,
-                                             `; must be of type PLOT3D, as from plot3d(), tubeplot(), spacecurve(), etc.`)
         fi;
         if nargs = 2 and not type(args[1], string) then
             ERROR(`Invalid file name (not string)`, args[1])
         fi;
+        if nargs = 2 then
+            print(`Saving Maple 3D structs to Geomview file`, args[1]);
+            outfd:=fopen(args[1],`WRITE`,`BINARY`);
+        else
+            outfd:=`default`;
+        fi;
+        ps := args[nargs];
+        try
+            fwriteoogl(outfd, ps);
+        finally
+            if outfd <> `default` then
+                fclose(outfd);
+            fi;
+        end try;
+    end; # writeoogl
+
+    fwriteoogl := proc()
+    local header, item, zlist, plist, llist, ppoint, pcolor, appear,
+        i, j, totl, xrange, yrange, nx, ny, savedprintbytes,
+        coloron, colorlist, totalverts, tlist, npoints,
+        view, haveview, clipcmd, clipfd, clipfname, ccnt, outfd, ps;
+    options `Copyright 1993 by Frederick Wicklin and Stuart Levy, Geometry Center`;
+        if nargs <> 2 then
+            ERROR(`Usage:fwriteoogl(file_descriptor,3dplot_struct);`)
+        fi;
+
+        outfd := args[1];
+        ps    := args[2];
+
+        if not op(0, ps) = PLOT3D then ERROR(`Invalid plot structure`,ps,
+                                             `; must be of type PLOT3D, as from plot3d(), tubeplot(), spacecurve(), etc.`)
+        fi;
         if nops(ps) < 1 then ERROR(`Empty 3D plot structure!`) fi;
 
-        ##################################################################
-        # When run in command-line mode, Garbage Collection (GC)         #
-        # messages printed to terminal can interfere with the data flow. #
-        # Therefore suppress GC during writing of GeomView data          #
-        ##################################################################
-        if nargs = 2 then
-            savedprintbytes:=kernelopts( printbytes):
-            kernelopts( printbytes=false):
-            print(`Saving Maple 3D structs to Geomview file`, args[1]);
-            writeto(args[1]);
-        fi;
         xrange := 'xrange';		# nullify this local variable
-        appear := find_appearance(1, ps);
-        printf("{ %s", appear);
+        #
+        # Some things we need to know beforehand.
+        #
+        appear    := find_appearance(1, ps);
+        colorlist := find_colorlist(1, ps);
+        coloron   := op(1,colorlist);
+        view      := find_view(1, ps);
+        haveview  := op(1,view);
 
-        printf("LIST");
+        #
+        # possibly pipe the stuff to clip(1)
+        #
+        if haveview <> FALSE then
+            clipfname:=make_localtmpname();
+            clipfd   :=outfd;
+            outfd    :=fopen(clipfname,WRITE,BINARY);
+        fi;
+        fprintf(outfd, "{ %s", appear);
+
+        fprintf(outfd, "LIST");
 
         ##################################################################
         ### BEGIN main loop over all 3D plots (may be a list of plots) ###
         ##################################################################
         for item in ps do
-            coloron := FALSE;		# default is no color info
             header := op(0,item);
 
             if header = GRID then
@@ -138,24 +176,24 @@ global `gvplot/User_ID`;
                 fi;
                 nx := op(2,[ArrayDims(zlist)][1]); # num x elements
                 ny := op(2,[ArrayDims(zlist)][1]);# num y elements
-                printf("{ INST transform { \n");
-                `oogl/lprn`( [0, (op(2,yrange)-op(1,yrange)) / (ny-1), 0, 0], "\n" );
-                `oogl/lprn`( [(op(2,xrange)-op(1,xrange)) / (nx-1), 0, 0, 0], "\n" );
-                printf("0 0 1 0\n");
-                `oogl/lprn`( [op(1,xrange), op(1,yrange), 0, 1],"\n" );
+                fprintf(outfd, "{ INST transform { \n");
+                `oogl/lprn`(outfd, [0, (op(2,yrange)-op(1,yrange)) / (ny-1), 0, 0], "\n" );
+                `oogl/lprn`(outfd, [(op(2,xrange)-op(1,xrange)) / (nx-1), 0, 0, 0], "\n" );
+                fprintf(outfd, "0 0 1 0\n");
+                `oogl/lprn`(outfd, [op(1,xrange), op(1,yrange), 0, 1],"\n" );
                 if(coloron = FALSE) then
-                    printf("  } geom { ZMESH %d %d\n", ny, nx);  	# gv type
+                    fprintf(outfd, "  } geom { ZMESH %d %d\n", ny, nx);  	# gv type
                 else
-                    printf("  } geom { CZMESH %d %d\n", ny, nx);  	# color gv type
+                    fprintf(outfd, "  } geom { CZMESH %d %d\n", ny, nx);  	# color gv type
                 fi;
                 for j from 1 to ny do
                     for i from 1 to nx do
                         ppoint := zlist[j][i];
-                        `oogl/lprn`(ppoint,"\n");
-                        print_colorlist(coloron, colorlist);
+                        `oogl/lprn`(outfd, ppoint,"\n");
+                        print_colorlist(outfd, coloron, colorlist);
                     od;
                 od;
-                printf( "} }\n");
+                fprintf(outfd,  "} }\n");
 
                 ###########################  MESH   ###########################
                 # EX: plot3d( [x(s,t), y(s,t), z(s,t)], s=smin..smax, t=tmin..tmax]
@@ -168,9 +206,9 @@ global `gvplot/User_ID`;
                     coloron := op(1,colorlist); # either RGB, HUE, or FALSE
                 fi;
                 if(coloron=FALSE) then
-                    printf("{ MESH \n" );  		# gv type
+                    fprintf(outfd, "{ MESH \n" );  		# gv type
                 else
-                    printf("{ CMESH \n" );  		# color gv type
+                    fprintf(outfd, "{ CMESH \n" );  		# color gv type
                 fi;
                 if op(0,llist) = Array then
                     nx := op(2,[ArrayDims(llist)][1]); # num x elements
@@ -179,19 +217,19 @@ global `gvplot/User_ID`;
                     nx := nops(llist);		# maple rows
                     ny := nops(op(1,llist));	# maple cols
                 fi;
-                printf( "%d\n", nx ); 		# num x elements
-                printf( "%d\n", ny );	# num y elements
+                fprintf(outfd,  "%d\n", nx ); 		# num x elements
+                fprintf(outfd,  "%d\n", ny );	# num y elements
                 # Maple store points in row-dominant manner
                 # But geomview want column-dominant, so need to
                 # print out the transpose of the matrix in the plot3d struct
                 for j from 1 to ny do
                     for i from 1 to nx do
                         ppoint := llist[j][i];
-                        `oogl/lprn`(ppoint,"\n");
-                        print_colorlist(coloron, colorlist);
+                        `oogl/lprn`(outfd,ppoint,"\n");
+                        print_colorlist(outfd, coloron, colorlist);
                     od;
                 od;
-                printf(" }\n");
+                fprintf(outfd, " }\n");
 
                 ###########################  CURVES  ##########################
                 # EX: spacecurve( [x(t), y(t), z(t)], t=tmin..tmax]
@@ -203,32 +241,32 @@ global `gvplot/User_ID`;
                     colorlist := find_colorlist(2, item);
                     coloron := op(1,colorlist); # either RGB, HUE, or FALSE
                 fi;
-                printf("{ VECT \n");  		# gv type
+                fprintf(outfd, "{ VECT \n");  		# gv type
                 # Number of polylines, total vertices.
                 totalverts := sum('nops(op(i,llist))', 'i'=1..nops(llist));
-                printf("%d %d ", nops(llist), totalverts);
+                fprintf(outfd, "%d %d ", nops(llist), totalverts);
                 if coloron=FALSE then
-                    printf("1\n");			# One color in all
-                    `oogl/lprn`([seq(nops(op(i,llist)), i=1..nops(llist))],"\n"); # Vertex counts
-                    `oogl/lprn`([1, seq(0, i=2..nops(llist))],"\n");		# Color counts.
+                    fprintf(outfd, "1\n");			# One color in all
+                    `oogl/lprn`(outfd,[seq(nops(op(i,llist)), i=1..nops(llist))],"\n"); # Vertex counts
+                    `oogl/lprn`(outfd,[1, seq(0, i=2..nops(llist))],"\n");		# Color counts.
                 else
-                    printf("%d\n", nops(llist));# Total number of colors, 1 per polyline
-                    `oogl/lprn`([seq(nops(op(i,llist)), i=1..nops(llist))],"\n"); # Vertex counts
-                    `oogl/lprn`([seq(1, i=1..nops(llist))],"\n");		# Color counts.
+                    fprintf(outfd, "%d\n", nops(llist));# Total number of colors, 1 per polyline
+                    `oogl/lprn`(outfd,[seq(nops(op(i,llist)), i=1..nops(llist))],"\n"); # Vertex counts
+                    `oogl/lprn`(outfd,[seq(1, i=1..nops(llist))],"\n");		# Color counts.
                 fi;
                 for plist in llist do
                     for ppoint in plist do     	# print all vertices
-                        `oogl/lprn`(ppoint,"\n");
+                        `oogl/lprn`(outfd,ppoint,"\n");
                     od
                 od;
                 if coloron=FALSE then
-                    printf("1 1 1 1\n");		# color RGBA = white and opaque
+                    fprintf(outfd, "1 1 1 1\n");		# color RGBA = white and opaque
                 else
                     for ccnt from 1 to nops(llist) do
-                        print_colorlist(coloron, colorlist);
+                        print_colorlist(outfd, coloron, colorlist);
                     od;
                 fi;
-                printf(" }\n");
+                fprintf(outfd, " }\n");
 
                 #########################  POLYGONS  ##########################
                 #EX:polygonplot3d([seq([seq([x(s,t),y(s,t),z(s,t)],s=smin..smax],tmin..tmax])):
@@ -236,7 +274,7 @@ global `gvplot/User_ID`;
                 # color.  Leave color alone and let user change color using geomview.
                 ###############################################################
             elif header = POLYGONS then
-                coloron:=FALSE;
+#                coloron:=FALSE;
                 pcolor := i $ i=1..0;	# Empty sequence
                 totl := 0: nx := 0: 	# use nx to count number of polygons
                 if( nops(item)>1 ) then
@@ -250,88 +288,102 @@ global `gvplot/User_ID`;
                     fi
                 od;
 
-                printf("%s\n", find_appearance(1, item));
+                fprintf(outfd, "%s\n", find_appearance(1, item));
 
-                printf("{ OFF \n");  		# gv type
-                printf("%d %d %d\n", totl, nx, 0);	# total verts,polygons,"edges"(not used!)
+                fprintf(outfd, "{ OFF \n");  		# gv type
+                fprintf(outfd, "%d %d %d\n", totl, nx, 0);	# total verts,polygons,"edges"(not used!)
                 for llist in item do
                     if type(llist,list) then
                         for ppoint in llist do
-                            `oogl/lprn`(ppoint,"\n");     	# List of vertices
+                            `oogl/lprn`(outfd,ppoint,"\n");     	# List of vertices
                         od;
                     fi;
                 od;
-                printf("\n");
+                fprintf(outfd, "\n");
                 totl := 0;
                 for llist in item do
                     if type(llist,list) then
                         ## There are only two possibilities for POLYGONS ##
                         ## In both cases, it means entire polygon is same color ##
                         tlist:=[nops(llist), i $ i=totl..totl+nops(llist)-1];
-                        `oogl/lprn`(tlist,"");
-                        print_colorlist(coloron, colorlist);
+                        `oogl/lprn`(outfd,tlist,"");
+                        print_colorlist(outfd, coloron, colorlist);
                         if coloron=FALSE then
-                            printf("\n");
+                            fprintf(outfd, "\n");
                         fi;
                         totl := totl + nops(llist);
                     fi;
                 od;
-                printf( "}\n");
+                fprintf(outfd,  "}\n");
 
                 #########################   POINTS   ##########################
                 #EX:PLOT3D(POINTS([0,0,1],[1,0,0],[0,1,0]));
                 ###############################################################
             elif header = POINTS then
-                    colorlist := find_colorlist(2, item);
+                colorlist := find_colorlist(2, item);
                 coloron := op(1,colorlist); # either RGB, HUE, or FALSE
+                fprintf(outfd, "%s\n", find_appearance(2,item));
                 if coloron=FALSE then
                     npoints := nops(item);
-                    printf("{ VECT %d %d %d\n", npoints, npoints, 0);
+                    fprintf(outfd, "{ VECT %d %d %d\n", npoints, npoints, 0);
                 else
                     npoints := nops(item) - 1;
-                    printf("{ VECT %d %d %d\n", npoints, npoints, npoints);
+                    fprintf(outfd, "{ VECT %d %d %d\n", npoints, npoints, npoints);
                 fi;
-                printf(cat(seq("1\n", i=1..npoints)));
-                printf("\n");
+                fprintf(outfd, cat(seq("1\n", i=1..npoints)));
+                fprintf(outfd, "\n");
                 if coloron=FALSE then
-                    printf(cat(seq("0\n", i=1..npoints)));
+                    fprintf(outfd, cat(seq("0\n", i=1..npoints)));
                 else
-                    printf(cat(seq("1\n", i=1..npoints)));
+                    fprintf(outfd, cat(seq("1\n", i=1..npoints)));
                 fi;
-                    printf("\n");
+                    fprintf(outfd, "\n");
                 for i from 1 to npoints do
                     ppoint := op(i, item);
-                    `oogl/lprn`(ppoint,"\n");
+                    `oogl/lprn`(outfd,ppoint,"\n");
                 od;
                 if coloron<>FALSE then
                     for i from 1 to npoints do
-                        print_colorlist(coloon, colorlist);
+                        print_colorlist(outfd, coloon, colorlist);
                     od;
                 fi;
-                printf("}\n");
+                fprintf(outfd, "}\n");
 
                 ###########################  TEXT  ############################
                 # 3D plots using the "plots" package may include TEXT
                 # This is not supported
                 ###############################################################
             elif header = TEXT then
-                printf(" ");
+                fprintf(outfd, " ");
             fi;
                 od;  # END main for loop
 
-        printf( "}\n");
-        if nargs = 2 then
-            writeto(terminal);
-            kernelopts( printbytes=savedprintbytes):
+        fprintf(outfd,  "}\n");
+        if haveview <> FALSE then
+            if nops(view) = 1 then
+                clipcmd:=sprintf("clip -v 0,0,1 -g %e -l %e %s",
+                                 view[1][1], view[1][2], clipfname);
+            else
+                clipcmd:=sprintf(cat("clip -v 1,0,0 -g %e -l %e %s |",
+                                     "clip -v 0,1,0 -g %e -l %e |",
+                                     "clip -v 0,0,1 -g %e -l %e"),
+                                 view[1][1], view[1][2], clipfname,
+                                 view[2][1], view[2][2],
+                                 view[3][1], view[3][2]);
+            fi;
+            fclose(outfd);
+            outfd:=clipfd;
+            fprintf(outfd, op(2,ssystem(clipcmd)));
+            fremove(clipfname);
         fi;
         NULL;
-    end:
+    end;
 
 
     gvplot := proc()
-    local gvname, gvcmd, gvdirs, ps, savedprintbytes, tmp_fname;
+    local gvname, gvcmd, gvdirs, ps, tmp_fname, outfd;
     options `Copyright 1993 by Frederick Wicklin and Stuart Levy, Geometry Center`;
-        tmp_fname = make_tmpname();
+        tmp_fname := make_tmpname();
 
         ### Let user specify, via "gvcommand" and "gvdirectories" global vars,
         ### which program/args to run when invoking geomview,
@@ -364,16 +416,16 @@ global `gvplot/User_ID`;
                   `try setting the variable "gvdirectories" to the name of the directory where `||
                   `they're installed (or to a colon-separated list of directories).`);
         fi;
-        savedprintbytes:=kernelopts( printbytes):
-        kernelopts( printbytes=false):
-        writeto(`/tmp/geomview/`||tmp_fname);
-        printf("(geometry %s\n", gvname);
-        writeoogl( ps );
-        printf(")\n");
-        writeto(terminal);
-        kernelopts( printbytes=savedprintbytes):
+        outfd:=fopen(`/tmp/geomview/`||tmp_fname,WRITE,BINARY);
+        try
+            fprintf(outfd, "(geometry %s\n", gvname);
+            fwriteoogl( outfd, ps );
+            fprintf(outfd, ")\n");
+        finally
+            fclose(outfd);
+        end try;
         NULL;
-    end:
+    end;
 
     gvsendcmd := proc()
     local gvname, gvcmd, gvdirs, ps, savedprintbytes, tmp_fname;
@@ -408,7 +460,7 @@ global `gvplot/User_ID`;
         writeto(terminal);
         kernelopts( printbytes=savedprintbytes):
         NULL;
-    end:
+    end;
 
 # possible gvplot enhancements:
 #  allow remote display?
@@ -424,7 +476,7 @@ global `gvplot/User_ID`;
 #    lprint(3dplot_struct);
 #    lprint(`>>)`);
 #    writeto(terminal);
-#  end:
+#  end;
 # and writeoogl would read
 # writeoogl := proc()
 #    ...
@@ -433,13 +485,13 @@ global `gvplot/User_ID`;
 #    writeto(`/tmp/geomview/Maple.rawdata`);
 #    lprint(`<<', 3dplot_string, `>>');
 #    writeto(terminal);
-#  end:
+#  end;
 #
 # Here 'togeomview' is actually being used to start 'maple2oogl' rather
 # than geomview itself.  In the first case, maple2oogl -togeomview would
 # invoke code to start a copy of geomview.
 
-    `oogl/lprnV8` := proc(v, terminator)
+    `oogl/lprn` := proc(outfd, v, terminator)
     local i, fmt, n;
     options `Copyright 2003 by Claus-Justus Heine`;
         if type(v, list) then
@@ -451,17 +503,17 @@ global `gvplot/User_ID`;
                     fmt:=cat(fmt, "%e ");
                 fi;
             od;
-            printf(cat(fmt, terminator), seq(v[i], i = 1..nops(v)) );
+            fprintf(outfd, cat(fmt, terminator), seq(v[i], i = 1..nops(v)) );
         elif type(v, hfarray) then
             n := op(2, ArrayDims(v));
             fmt:=cat(seq("%e ", i = 1 .. n));
-            printf(cat(fmt, terminator), seq(v[i], i = 1..n) );
+            fprintf(outfd, cat(fmt, terminator), seq(v[i], i = 1..n) );
         elif type(v, realcons) then
-            printf(cat("%e", terminator), v);
+            fprintf(outfd, cat("%e", terminator), v);
         else
-            printf("0 #\n");
+            fprintf(outfd, "0 #\n");
         fi
-    end:
+    end;
 
 ###############################################################
 ## HSV2RGB converts Maple Hues to RGB colors.
@@ -479,7 +531,7 @@ global `gvplot/User_ID`;
     options `Copyright 1990 by Foley, vanDam, Feiner, Hughes`;
         if (s = 0) then     # color on B/W center line
             if (h<0) then     # There is no hue,ie, hue undefined
-                RETURN( v,v,v );
+                return( v,v,v );
             else
                 ERROR(`Undefined color`);
             fi;
@@ -492,20 +544,20 @@ global `gvplot/User_ID`;
             q  := v*(1-(s*fp));
             t  := v*(1-(s*(1-fp)));
             if (ip=0) then
-                RETURN( v,t,p );
+                return( v,t,p );
             elif (ip=1) then
-                RETURN( q,v,p );
+                return( q,v,p );
             elif (ip=2) then
-                RETURN( p,v,t );
+                return( p,v,t );
             elif (ip=3) then
-                RETURN( p,q,v );
+                return( p,q,v );
             elif (ip=4) then
-                RETURN( t,p,v );
+                return( t,p,v );
             else
-                RETURN( v,p,q );
+                return( v,p,q );
             fi;
         fi;
-    end:
+    end;
 
 
 ########################################################
@@ -519,11 +571,32 @@ global `gvplot/User_ID`;
     options `Copyright 1993 by Frederick Wicklin, Geometry Center`;
         for i from n to nops(item) do
             if type(op(i,item),function) and (op(0,op(i,item))=COLOR or op(0,op(i,item))=COLOUR) then
-                RETURN(op(i,item))
+                return(op(i,item))
             fi;
         od;
-        RETURN([FALSE]);  # no color info found
-    end:
+        return([FALSE]);  # no color info found
+    end;
+
+########################################################
+# find_view
+# input: n       where to start looking for clipping data
+#        item    what list to search
+# output: clipping information in the form [[xmin,xmax],[...]]
+########################################################
+    find_view := proc(n, item)
+    option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. All rights reserved.`;
+    description `Find the viewport definition`;
+    local i, j, clipping, view;
+
+        for i from n to nops(item) do
+            if type(op(i,item),function) and (op(0,op(i,item))=VIEW) then
+                view:=op(i,item);
+                clipping:=[seq([op(1,op(j,view)),op(2,op(j,view))],j = 1..nops(view))];
+                return clipping;
+            fi;
+        od;
+        return([FALSE]);  # no view info found
+    end; # find_view    find_view := proc(n,item)
 
 ########################################################
 # find_appearance
@@ -538,10 +611,12 @@ global `gvplot/User_ID`;
             part := op(i,list);
             if type(part,function) and (op(0,part)=COLOR or op(0,part)=COLOUR) then
                 colortype := op(1,part);
-                if colortype = HUE and nops(part) = 2 then
-                    color := [HSV2RGB(op(2,part), 1, 1)]
-                elif colortype = RGB and nops(part) = 4 then
+                if colortype = HUE then
+                    color := [HSV2RGB(op(2,part), 0.9, 1)]
+                elif colortype = RGB then
                     color := [op(2..4,part)]
+                elif colortype = HSV then
+                    color := [HSV2RGB(op(2,colorlist), op(3,colorlist), op(4,colorlist))];
                 fi
                 # Otherwise, this "color" tag isn't for us
             elif type(part,function) and op(0,part) = STYLE then
@@ -552,17 +627,29 @@ global `gvplot/User_ID`;
                 fi
             elif type(part,function) and op(0,part) = THICKNESS and type(op(1,part),integer) then
                 ap := cat(ap, ` linewidth `, op(1,part));
+            elif type(part,function) and op(0,part) = SYMBOL then
+                ap := cat(ap, ` linewidth `, op(2,part));
             fi
         od;
         if color <> `` then
             color := cat( op(1..3, map(v -> cat(convert(v,string),` `), color) ) );
-            ap := cat(ap, `\n material { edgecolor `, color, `\n  diffuse `, color, `}\n`);
+            # ap := cat(ap, `\n material { edgecolor `, color, `\n  diffuse `, color, `}\n`);
+
+            # leave everything except the edge color to the handlers
+            # for the specific plot-types. Otherwise there are
+            # problems with Geomview and transparency
+            #
+            ap := cat(ap, `\n material { edgecolor `, color, `}\n`);
         fi;
         if ap <> `` then
+            #
+            # "transparent" is here because it cannot be changed
+            # inside Geomview otherwise
+            #
             ap := cat(` appearance { `, ap, `}`)
         fi;
-        RETURN(ap);
-    end:
+        return(ap);
+    end;
 
 
 ########################################################
@@ -589,20 +676,21 @@ global `gvplot/User_ID`;
 # modified forms of ZSHADING.
 #
 ########################################################
-    print_colorlist := proc(coloron, colorlist)
-
+    print_colorlist := proc(outfd, coloron, colorlist)
+    option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. All rights reserved.`;
+    description `Print colorlist in OOGL RGB format.`;
         if coloron = RGB then
-            printf("%e %e %e %e\n",
+            fprintf(outfd, "%e %e %e %e\n",
                    op(2,colorlist),op(3,colorlist),op(4,colorlist), 1);
         elif coloron = HUE then
-            printf("%s %d\n", HSV2RGB(op(2,colorlist), 0.9, 1.0), 1);
+            fprintf(outfd, "%s %d\n", HSV2RGB(op(2,colorlist), 0.9, 1.0), 1);
         elif coloron = HSV then
-            printf("%s %d\n",
+            fprintf(outfd, "%s %d\n",
                    HSV2RGB(op(2,colorlist), op(3,colorlist), op(4,colorlist)),
                    1);
         elif coloron != FALSE then
-            printf("0.666 0.666 0.666 1\n");
+            fprintf(outfd, "0.666 0.666 0.666 1\n");
         fi;
-    end:
+    end; # print_colorlist print_colorlist := proc(outfd, coloron, colorlist)
 
-end module:
+end module: # geomviewgeomview:=module()
