@@ -1,8 +1,23 @@
 #! /bin/sh -x
 
+# This script is intended for use by developers only; it (re)generates
+# all the autoconf/automake derived files from scratch.  Use it to
+# bootstrap a manivew directory that has been checked out using CVS,
+# or to reconfigure a directory from scratch.
+
+# Create aclocal.m4, which has our local macros from m4 subdir
+# plus any automake macros from the system.  We use macros from
+# Geomview's top-level m4 directory.
 aclocal -I ../../../m4
+
+# create 'configure' from 'configure.in'
 autoconf
-autoheader
-touch README AUTHORS NEWS ChangeLog
+
+# make sure the following files are present
+# touch README AUTHORS NEWS ChangeLog
+
+# generate Makefile.in's
 automake -a
+
+# configure (you might need to edit this for your local system)
 ./configure  --with-motif=/usr/local/openmotif --cache-file=../../.././config.cache --srcdir=.

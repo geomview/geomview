@@ -1,0 +1,6 @@
+This is maniview, a Geomview module for viewing 3D manifolds.  It was
+written by Charlie Gunn (gunn@geomview.org) at the University of
+Minnesota Geometry Center.
+
+See the file INSTALL for instructions on configuring, compiling,
+and installing it.

@@ -1,5 +1,10 @@
 2000-11-15  Mark Phillips  <mbp@geomtech.com>
 
+	* src/bin/geomview/x11: removed clang.h from CVS since it's a
+	  derived file (clang.c, also derived, apparently wasn't in CVS).
+	  Also, btw, clang.[ch] are now built in src/bin/geomview not
+	  src/bin/geomview/x11 (see comments from stever below).
+
 	* Makefile.am: split SUBDIRS into DIST_SUBDIRS and
 	  $(src_bin_module_subdirs), which is now set by
 	  the top-level configure script.

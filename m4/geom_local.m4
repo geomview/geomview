@@ -229,3 +229,29 @@ else
   AC_MSG_RESULT([headers '$ac_xforms_include', libraries '$ac_xforms_libs'])
 fi
 ])
+dnl
+dnl GEOM_REQUIRE_GEOMVIEW_VERSION(CONFIGURE_IN,MAJOR,=, MINOR, >=)
+dnl                               $1           $2    $3 $4     $5
+dnl
+define(GEOM_REQUIRE_GEOMVIEW_VERSION,[
+gv_version=`sed -e 's/#.*$//' $1/configure.in | grep AM_INIT_AUTOMAKE | sed -e 's/^.*geomview,//' | sed -e 's/)//'`
+gv_major=`echo $gv_version | sed -e 's/\..*//'`
+changequote(<<, >>)dnl
+gv_rest=`echo $gv_version | sed -e 's/^[^\.]\.//'`
+changequote([,])dnl
+gv_minor=`echo $gv_rest | sed -e 's/\..*//'`
+changequote(<<, >>)dnl
+gv_rev=`echo $gv_rest | sed -e 's/^[^\.]\.//'`
+changequote([,])dnl
+gv_major_ok=`expr $gv_major '$3' $2`
+gv_minor_ok=`expr $gv_minor '$5' $4`
+if test "$gv_major_ok" != "1" -o "$gv_minor_ok" != "1" ; then
+  AC_MSG_ERROR([
+
+$PACKAGE requires Geomview version N.M, where N$3$2 and M$5$4.
+Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
+
+])
+fi
+])
+
