@@ -68,7 +68,7 @@ char **ooglglob(char *s)
   void (*oldsigchld)() = signal(SIGCHLD, SIG_DFL);
 #endif
 
-  sprintf(cmd, "/bin/csh -f -c \"echo %s\" 2>&-", s);
+  sprintf(cmd, GLOB_SHELL"\"echo %s\" 2>&-", s);
   fp = popen(cmd, "r");
 
   VVINIT(vp, char *, INITSIZ);
