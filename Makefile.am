@@ -4,6 +4,8 @@ EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkinstalldirs mkmodulesdir \
 
 noinst_SCRIPTS = geomview
 
+ACLOCAL_AMFLAGS = -I m4
+
 geomview: geomview.sh Makefile
 	echo top_builddir is $(top_builddir)
 	sed -e 's|%GEOMROOT%|$(top_builddir)|g'                              \
