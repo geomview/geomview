@@ -1,0 +1,134 @@
+char Root[] = "\
+TotalWidgets: 7\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 434\n\
+Xmheight: 182\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HideButton\"\n\
+Xmwidth: 49\n\
+Xmheight: 24\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 120\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 380\n\
+XmrightOffset: 5\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DownButton\"\n\
+Xmwidth: 25\n\
+Xmheight: 24\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 120\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 34\n\
+XmrightOffset: 375\n\
+Private-\n\
+label: \"\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"UpButton\"\n\
+Xmwidth: 25\n\
+Xmheight: 24\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 120\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 6\n\
+XmrightOffset: 403\n\
+Private-\n\
+label: \"\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CommandScroll\"\n\
+Xmwidth: 423\n\
+Xmheight: 112\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 64\n\
+XmleftOffset: 6\n\
+XmrightOffset: 5\n\
+Private-\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CommandText\"\n\
+Xmwidth: 422\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 147\n\
+XmbottomOffset: 5\n\
+XmleftOffset: 6\n\
+XmrightOffset: 6\n\
+Private-\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 434\n\
+Xmheight: 182\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

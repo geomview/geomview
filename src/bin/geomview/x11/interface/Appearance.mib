@@ -1,0 +1,598 @@
+char Root[] = "\
+TotalWidgets: 31\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 307\n\
+Xmheight: 367\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TexQToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 188\n\
+XmbottomOffset: 179\n\
+XmleftOffset: 181\n\
+XmrightOffset: 126\n\
+Private-\n\
+label: \"[aq] Tx Quality\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"VectToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 180\n\
+XmbottomOffset: 188\n\
+XmleftOffset: 55\n\
+XmrightOffset: 252\n\
+Private-\n\
+label: \"[aV] Vects\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OverrideToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 8\n\
+XmbottomOffset: 359\n\
+XmleftOffset: 108\n\
+XmrightOffset: 199\n\
+Private-\n\
+label: \"[ao] Override\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FacingNormalsToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 178\n\
+XmbottomOffset: 189\n\
+XmleftOffset: 9\n\
+XmrightOffset: 298\n\
+Private-\n\
+label: \"[av] Facing Normals\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ConcaveToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 201\n\
+XmbottomOffset: 166\n\
+XmleftOffset: 9\n\
+XmrightOffset: 298\n\
+Private-\n\
+label: \"[aC] Concave\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ShadeLineToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 222\n\
+XmbottomOffset: 145\n\
+XmleftOffset: 9\n\
+XmrightOffset: 298\n\
+Private-\n\
+label: \"[al] Shade Lines\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TexToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 164\n\
+XmbottomOffset: 203\n\
+XmleftOffset: 180\n\
+XmrightOffset: 127\n\
+Private-\n\
+label: \"[at] Texture\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 40\n\
+Xmheight: 23\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 40\n\
+XmbottomOffset: 306\n\
+XmleftOffset: 11\n\
+XmrightOffset: 256\n\
+Private-\n\
+label: \"Color:\"\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 47\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 37\n\
+XmbottomOffset: 308\n\
+XmleftOffset: 70\n\
+XmrightOffset: 190\n\
+Private-\n\
+label: \"Show:\"\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HideButton\"\n\
+Xmwidth: 43\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 4\n\
+XmbottomOffset: 333\n\
+XmleftOffset: 260\n\
+XmrightOffset: 4\n\
+Private-\n\
+label: \"Hide\"\n\
+EndWidget.\n\
+Ref: 12\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DiceInput\"\n\
+Xmwidth: 52\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 326\n\
+XmbottomOffset: 11\n\
+XmleftOffset: 7\n\
+XmrightOffset: 248\n\
+Private-\n\
+EndWidget.\n\
+Ref: 13\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"NormInput\"\n\
+Xmwidth: 52\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 289\n\
+XmbottomOffset: 48\n\
+XmleftOffset: 8\n\
+XmrightOffset: 247\n\
+Private-\n\
+EndWidget.\n\
+Ref: 14\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"LineInput\"\n\
+Xmwidth: 52\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 253\n\
+XmbottomOffset: 84\n\
+XmleftOffset: 8\n\
+XmrightOffset: 247\n\
+Private-\n\
+EndWidget.\n\
+Ref: 15\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 125\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 325\n\
+XmbottomOffset: 12\n\
+XmleftOffset: 55\n\
+XmrightOffset: 127\n\
+Private-\n\
+label: \"[ad] Patch Dicing\"\n\
+EndWidget.\n\
+Ref: 16\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 125\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 288\n\
+XmbottomOffset: 49\n\
+XmleftOffset: 61\n\
+XmrightOffset: 121\n\
+Private-\n\
+label: \"[ah] Normal Length\"\n\
+EndWidget.\n\
+Ref: 17\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 125\n\
+Xmheight: 32\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 250\n\
+XmbottomOffset: 85\n\
+XmleftOffset: 50\n\
+XmrightOffset: 132\n\
+Private-\n\
+label: \"[aw] Line Width\"\n\
+EndWidget.\n\
+Ref: 18\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"RevButton\"\n\
+Xmwidth: 78\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 331\n\
+XmleftOffset: 6\n\
+XmrightOffset: 223\n\
+Private-\n\
+label: \"[ax] Revert\"\n\
+EndWidget.\n\
+Ref: 19\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BBoxColor\"\n\
+Xmwidth: 43\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 135\n\
+XmbottomOffset: 210\n\
+XmleftOffset: 7\n\
+XmrightOffset: 257\n\
+Private-\n\
+label: \"[Cb]\"\n\
+EndWidget.\n\
+Ref: 20\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"NormalColor\"\n\
+Xmwidth: 43\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 112\n\
+XmbottomOffset: 233\n\
+XmleftOffset: 7\n\
+XmrightOffset: 257\n\
+Private-\n\
+label: \"[Cn]\"\n\
+EndWidget.\n\
+Ref: 21\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"EdgeColor\"\n\
+Xmwidth: 43\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 88\n\
+XmbottomOffset: 257\n\
+XmleftOffset: 7\n\
+XmrightOffset: 257\n\
+Private-\n\
+label: \"[Ce]\"\n\
+EndWidget.\n\
+Ref: 22\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FaceColor\"\n\
+Xmwidth: 43\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 63\n\
+XmbottomOffset: 282\n\
+XmleftOffset: 7\n\
+XmrightOffset: 257\n\
+Private-\n\
+label: \"[Cf]\"\n\
+EndWidget.\n\
+Ref: 23\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BBoxToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 157\n\
+XmbottomOffset: 210\n\
+XmleftOffset: 55\n\
+XmrightOffset: 252\n\
+Private-\n\
+label: \"[ab] BBoxes\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 24\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"NormalToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 132\n\
+XmbottomOffset: 236\n\
+XmleftOffset: 55\n\
+XmrightOffset: 252\n\
+Private-\n\
+label: \"[an] Normals\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 25\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"EdgeToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 88\n\
+XmbottomOffset: 257\n\
+XmleftOffset: 55\n\
+XmrightOffset: 252\n\
+Private-\n\
+label: \"[ae] Edges\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 26\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FaceToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 63\n\
+XmbottomOffset: 282\n\
+XmleftOffset: 55\n\
+XmrightOffset: 252\n\
+Private-\n\
+label: \"[af] Faces\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 27\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"NormList\"\n\
+Xmwidth: 116\n\
+Xmheight: 79\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 275\n\
+XmbottomOffset: 13\n\
+XmleftOffset: 188\n\
+XmrightOffset: 3\n\
+Private-\n\
+EndWidget.\n\
+Ref: 28\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 18\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 249\n\
+XmbottomOffset: 100\n\
+XmleftOffset: 198\n\
+XmrightOffset: 19\n\
+Private-\n\
+label: \"Normalize\"\n\
+EndWidget.\n\
+Ref: 29\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ShadeList\"\n\
+Xmwidth: 113\n\
+Xmheight: 89\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 68\n\
+XmbottomOffset: 210\n\
+XmleftOffset: 191\n\
+XmrightOffset: 3\n\
+Private-\n\
+EndWidget.\n\
+Ref: 30\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 92\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 41\n\
+XmbottomOffset: 296\n\
+XmleftOffset: 201\n\
+XmrightOffset: 14\n\
+Private-\n\
+label: \"Shading\"\n\
+EndWidget.\n\
+Ref: 31\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 310\n\
+Xmheight: 367\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: -3\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

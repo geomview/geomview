@@ -1,0 +1,53 @@
+#! /bin/sh
+
+# This build script is intended for use in situtation where you want
+# to completely automake the process of running `configure' and
+# `make', saving the output to a file called `build.log'.  You don't
+# normally need to use this script; for installation instructions see
+# the file INSTALL.Geomview. If you do use this script, you may need
+# to edit the settings of some of the environment variables given
+# here.  They're currently set for compiling a 64bit binary on an IBM
+# RS6000 running AIX 4.3.2.
+
+CC=xlc
+CFLAGS="-qarch=pwr3 -q64 -O2 -qfloat=hssngl:fltint"
+LDFLAGS=""
+OBJECT_MODE=64
+
+export CC
+export CFLAGS
+export LDFLAGS
+export OBJECT_MODE
+
+echo ""
+echo "Building geomview; all messages are going into 'build.out'..."
+echo ""
+
+( echo "" ;
+  echo "****** begin printenv  ****************************************" ;
+  printenv ;
+  echo "******   end printenv  ****************************************" ;
+  echo "****** begin configure ****************************************" ;
+  ./configure ;
+  echo "****** end configure ******************************************" ;
+  ) > build.out 2>&1
+
+( echo "" ;
+  echo "****** begin  config.log ****************************************" ;
+  cat config.log ;
+  echo "****** end of config.log ****************************************" ;
+  ) >> build.out  2>&1
+
+( echo "" ;
+  echo "****** begin  config.status ****************************************" ;
+  cat config.status ;
+  echo "****** end of config.status ****************************************" ;
+  ) >> build.out  2>&1
+
+( make
+  ) >> build.out 2>&1
+
+
+echo ""
+echo "Done building geomview.  To run it, type './geomview'."
+echo ""

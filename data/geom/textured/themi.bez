@@ -1,0 +1,17 @@
+appearance {
+    texture {
+      file geologo.pgm.Z
+    }
+}
+#
+# homogeneous biquadratic Bezier patch for a hemisphere
+#
+CBEZ224_ST
+ 1  0  0  1	0  0  1  0	-1  0  0  1	
+ 0  1  0  0 	0  0  0  0 	0 -1  0  0	
+-1  0  0  1	0  0  1  0	1  0  0  1	
+0 0  1 0  0 1  1 1
+
+# RGBA colors for each corner of the hemisphere patch
+.3 1 .3 1			1 .3 .3 1
+.3 .3 1 1			1 .3  1 1

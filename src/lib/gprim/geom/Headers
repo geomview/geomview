@@ -1,0 +1,6 @@
+geom.h
+geomclass.h
+geomclass_sm.h
+pick.h
+pickP.h
+vert.h

@@ -1,0 +1,212 @@
+char Root[] = "\
+TotalWidgets: 11\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 285\n\
+Xmheight: 132\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DeleteButton\"\n\
+Xmwidth: 49\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 93\n\
+XmbottomOffset: 9\n\
+XmleftOffset: 227\n\
+XmrightOffset: 9\n\
+Private-\n\
+label: \"Delete\"\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AddButton\"\n\
+Xmwidth: 49\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 93\n\
+XmbottomOffset: 9\n\
+XmleftOffset: 175\n\
+XmrightOffset: 61\n\
+Private-\n\
+label: \"Add\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ColorButton\"\n\
+Xmwidth: 61\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 93\n\
+XmbottomOffset: 9\n\
+XmleftOffset: 111\n\
+XmrightOffset: 114\n\
+Private-\n\
+label: \"Color\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"IntensityScale\"\n\
+Xmwidth: 166\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 59\n\
+XmbottomOffset: 53\n\
+XmleftOffset: 111\n\
+XmrightOffset: 8\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 55\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 34\n\
+XmbottomOffset: 68\n\
+XmleftOffset: 110\n\
+XmrightOffset: 120\n\
+Private-\n\
+label: \"Intensity\"\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HideButton\"\n\
+Xmwidth: 44\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 97\n\
+XmleftOffset: 236\n\
+XmrightOffset: 5\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"LightsToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 7\n\
+XmbottomOffset: 125\n\
+XmleftOffset: 109\n\
+XmrightOffset: 176\n\
+Private-\n\
+label: \"Show Lights [ls]\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 71\n\
+Xmheight: 18\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 10\n\
+XmbottomOffset: 104\n\
+XmleftOffset: 11\n\
+XmrightOffset: 203\n\
+Private-\n\
+label: \"Lights\"\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"LightsList\"\n\
+Xmwidth: 76\n\
+Xmheight: 92\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 30\n\
+XmbottomOffset: 10\n\
+XmleftOffset: 8\n\
+XmrightOffset: 201\n\
+Private-\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 284\n\
+Xmheight: 132\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

@@ -1,0 +1,379 @@
+char Root[] = "\
+TotalWidgets: 20\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 249\n\
+Xmheight: 269\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TransparentToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 238\n\
+XmbottomOffset: 6\n\
+XmleftOffset: 8\n\
+XmrightOffset: 241\n\
+Private-\n\
+label: \"[aT] Transparent\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"SpecularText\"\n\
+Xmwidth: 70\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 170\n\
+XmbottomOffset: 69\n\
+XmleftOffset: 172\n\
+XmrightOffset: 7\n\
+Private-\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ShininessText\"\n\
+Xmwidth: 70\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 132\n\
+XmbottomOffset: 107\n\
+XmleftOffset: 172\n\
+XmrightOffset: 7\n\
+Private-\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AmbientText\"\n\
+Xmwidth: 70\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 95\n\
+XmbottomOffset: 144\n\
+XmleftOffset: 172\n\
+XmrightOffset: 7\n\
+Private-\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DiffuseText\"\n\
+Xmwidth: 70\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 56\n\
+XmbottomOffset: 183\n\
+XmleftOffset: 172\n\
+XmrightOffset: 7\n\
+Private-\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"SpecularScale\"\n\
+Xmwidth: 162\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 175\n\
+XmbottomOffset: 74\n\
+XmleftOffset: 6\n\
+XmrightOffset: 81\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ShininessScale\"\n\
+Xmwidth: 162\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 137\n\
+XmbottomOffset: 112\n\
+XmleftOffset: 6\n\
+XmrightOffset: 81\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AmbientScale\"\n\
+Xmwidth: 162\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 99\n\
+XmbottomOffset: 150\n\
+XmleftOffset: 6\n\
+XmrightOffset: 81\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DiffuseScale\"\n\
+Xmwidth: 162\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 60\n\
+XmbottomOffset: 189\n\
+XmleftOffset: 6\n\
+XmrightOffset: 81\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 139\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 151\n\
+XmbottomOffset: 88\n\
+XmleftOffset: 4\n\
+XmrightOffset: 106\n\
+Private-\n\
+label: \"Specular Reflectance\"\n\
+EndWidget.\n\
+Ref: 12\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 67\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 114\n\
+XmbottomOffset: 125\n\
+XmleftOffset: 4\n\
+XmrightOffset: 178\n\
+Private-\n\
+label: \"Shininess\"\n\
+EndWidget.\n\
+Ref: 13\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 136\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 75\n\
+XmbottomOffset: 164\n\
+XmleftOffset: 4\n\
+XmrightOffset: 109\n\
+Private-\n\
+label: \"Ambient Reflectance\"\n\
+EndWidget.\n\
+Ref: 14\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 129\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 37\n\
+XmbottomOffset: 202\n\
+XmleftOffset: 4\n\
+XmrightOffset: 116\n\
+Private-\n\
+label: \"Diffuse Reflectance\"\n\
+EndWidget.\n\
+Ref: 15\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HideButton\"\n\
+Xmwidth: 43\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 234\n\
+XmleftOffset: 201\n\
+XmrightOffset: 6\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 16\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 22\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 9\n\
+XmbottomOffset: 238\n\
+XmleftOffset: 78\n\
+XmrightOffset: 81\n\
+Private-\n\
+label: \"Material\"\n\
+EndWidget.\n\
+Ref: 17\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AlphaText\"\n\
+Xmwidth: 70\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 208\n\
+XmbottomOffset: 31\n\
+XmleftOffset: 172\n\
+XmrightOffset: 7\n\
+Private-\n\
+EndWidget.\n\
+Ref: 18\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AlphaScale\"\n\
+Xmwidth: 162\n\
+Xmheight: 20\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 213\n\
+XmbottomOffset: 36\n\
+XmleftOffset: 6\n\
+XmrightOffset: 81\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 19\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 67\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 189\n\
+XmbottomOffset: 50\n\
+XmleftOffset: 3\n\
+XmrightOffset: 179\n\
+Private-\n\
+label: \"Alpha\"\n\
+EndWidget.\n\
+Ref: 20\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 249\n\
+Xmheight: 269\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

@@ -1,0 +1,1272 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 8
+
+=============== FORM ===============
+Name: MainForm
+Width: 250.000000
+Height: 460.000000
+Number of Objects: 11
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 250.000000 460.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 60.000000 400.000000 130.000000 50.000000
+boxtype: 6
+colors: 7 47
+alignment: 2
+style: 4
+size: 20.000000
+lcol: 0
+label: Maniview
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 270.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Save
+name: SaveButton
+callback: SaveButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 230.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Display
+name: DisplayButton
+callback: DisplayButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 70.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Info
+name: InfoButton
+callback: InfoButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 190.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Enumerate
+name: EnumerateButton
+callback: EnumerateButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 150.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Basic Tile
+name: TileFormButton
+callback: TileButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 110.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Help
+name: HelpButton
+callback: HelpButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 30.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Quit
+name: QuitButton
+callback: QuitButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 40.000000 370.000000 170.000000 30.000000
+boxtype: 6
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: A 3-Manifold Viewer
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 310.000000 210.000000 40.000000
+boxtype: 5
+colors: 47 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Load
+name: LoadButton
+callback: LoadButtonProc
+argument: 0
+
+=============== FORM ===============
+Name: DisplayForm
+Width: 320.000000
+Height: 380.000000
+Number of Objects: 13
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 320.000000 380.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 1
+box: 150.000000 170.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: cull
+name: CullzButton
+callback: DisplayProc
+argument: DG_ZCULL
+
+--------------------
+class: 11
+type: 1
+box: 50.000000 230.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: centercam
+name: CentercamButton
+callback: DisplayProc
+argument: DG_CENTERCAM
+
+--------------------
+class: 11
+type: 1
+box: 150.000000 230.000000 110.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: draw dirdom
+name: DirdomButton
+callback: DisplayProc
+argument: DG_DRAWDIRDOM
+
+--------------------
+class: 11
+type: 1
+box: 50.000000 200.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: showcam
+name: ShowcamButton
+callback: DisplayProc
+argument: DG_DRAWCAM
+
+--------------------
+class: 2
+type: 0
+box: 90.000000 260.000000 120.000000 40.000000
+boxtype: 6
+colors: 47 47
+alignment: 2
+style: 4
+size: 20.000000
+lcol: 0
+label: Toggles
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 250.000000 310.000000 50.000000 45.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: DisplayOKButton
+callback: DisplayOKButtonProc
+argument: 0
+
+--------------------
+class: 24
+type: 1
+box: 60.000000 70.000000 230.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: fogfree
+name: Attenuation2Slider
+callback: Attenuation2SliderProc
+argument: 0
+
+--------------------
+class: 1
+type: 6
+box: 10.000000 310.000000 210.000000 50.000000
+boxtype: 6
+colors: 7 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Display Settings
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 24
+type: 1
+box: 60.000000 20.000000 230.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: fog
+name: Attenuation3Slider
+callback: Attenuation3SliderProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 20.000000 170.000000 130.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: software shading
+name: SoftshadeButton
+callback: SoftshadeProc
+argument: 0
+
+--------------------
+class: 24
+type: 1
+box: 60.000000 120.000000 230.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: atten1
+name: Attenuation1Slider
+callback: Attenuation1SliderProc
+argument: 0
+
+--------------------
+class: 11
+type: 1
+box: 150.000000 200.000000 110.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: draw geom
+name: DrawGeomButton
+callback: DisplayProc
+argument: DG_DRAWGEOM
+
+=============== FORM ===============
+Name: EnumForm
+Width: 400.000000
+Height: 250.000000
+Number of Objects: 6
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 400.000000 250.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 25
+type: 0
+box: 160.000000 130.000000 130.000000 40.000000
+boxtype: 1
+colors: 47 4
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: worddepth
+name: WorddepthCounter
+callback: WorddepthProc
+argument: 0
+
+--------------------
+class: 24
+type: 1
+box: 130.000000 80.000000 240.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: tesselation radius
+name: RadiusSlider
+callback: RadiusProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 30.000000 190.000000 220.000000 40.000000
+boxtype: 6
+colors: 7 47
+alignment: 2
+style: 4
+size: 20.000000
+lcol: 0
+label: Enumerate Group
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 330.000000 180.000000 50.000000 45.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: EnumOKButton
+callback: EnumOKButtonProc
+argument: 0
+
+--------------------
+class: 24
+type: 1
+box: 130.000000 30.000000 240.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: draw radius
+name: DrawRadiusSlider
+callback: DrawRadiusProc
+argument: 0
+
+=============== FORM ===============
+Name: TileForm
+Width: 400.000000
+Height: 320.000000
+Number of Objects: 14
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 400.000000 320.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 3
+box: 10.000000 10.000000 380.000000 170.000000
+boxtype: 3
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 22
+type: 1
+box: 310.000000 90.000000 70.000000 70.000000
+boxtype: 4
+colors: 47 37
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: z
+name: DDZDial
+callback: DDZProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 30.000000 140.000000 100.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 137
+label: Center Point
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 40.000000 120.000000 90.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 137
+label: Chooser
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 23
+type: 0
+box: 190.000000 90.000000 80.000000 70.000000
+boxtype: 2
+colors: 47 1
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: (x,y)
+name: DDXYPositioner
+callback: DDXYProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 40.000000 90.000000 90.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Reset
+name: DDResetButton
+callback: DDResetProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 260.000000 130.000000 40.000000
+boxtype: 6
+colors: 7 47
+alignment: 2
+style: 4
+size: 20.000000
+lcol: 0
+label: Basic Tile
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 24
+type: 1
+box: 120.000000 30.000000 240.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: scale factor
+name: DDScaleSlider
+callback: DDScaleProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 330.000000 260.000000 50.000000 45.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: TileOKButton
+callback: TileOKButtonProc
+argument: 0
+
+--------------------
+class: 1
+type: 3
+box: 20.000000 190.000000 360.000000 50.000000
+boxtype: 3
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 30.000000 200.000000 60.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: MODE:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 110.000000 200.000000 120.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Dirichlet domain
+name: DirichletDomainButton
+callback: TileModeProc
+argument: DIRDOM_MODE
+
+--------------------
+class: 11
+type: 0
+box: 260.000000 200.000000 110.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: User geometry
+name: UsergeometryButton
+callback: TileModeProc
+argument: USER_GEOM
+
+=============== FORM ===============
+Name: InfoForm
+Width: 330.000000
+Height: 310.000000
+Number of Objects: 11
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 330.000000 310.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 80.000000 240.000000 150.000000 40.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Maniview
+name: InfoFormLabel
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 11.000000 214.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: by
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 11.000000 184.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Charlie Gunn
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 11.000000 154.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: The Geometry Center
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 12.000000 54.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: (IP address 128.101.25.35)
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 260.000000 200.000000 50.000000 45.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: InfoOKButton
+callback: InfoOKButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 11.000000 108.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Maniview and Geomview are 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 90.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: available from
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 12.000000 72.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: www.geomview.org
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 12.000000 10.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: For usage instructions hit the ``Help'' button.
+name: 
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: LoadForm
+Width: 470.000000
+Height: 200.000000
+Number of Objects: 12
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 470.000000 200.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 10.000000 10.000000 440.000000 40.000000
+boxtype: 2
+colors: 9 9
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: LoadInput
+callback: 
+argument: 0
+
+--------------------
+class: 11
+type: 6
+box: 360.000000 60.000000 95.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: LoadOKButton
+callback: LoadOKButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 250.000000 60.000000 100.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Cancel
+name: LoadCancelButton
+callback: LoadCancelButtonProc
+argument: 0
+
+--------------------
+class: 1
+type: 6
+box: 205.000000 150.000000 160.000000 40.000000
+boxtype: 6
+colors: 7 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Load Panel
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 6
+box: 30.000000 150.000000 160.000000 30.000000
+boxtype: 6
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: LOAD TYPE:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: loadtypegroup
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 30.000000 90.000000 160.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Load Geom
+name: LoadGeomButton
+callback: LoadProc
+argument: LOAD_GEOM
+
+--------------------
+class: 11
+type: 2
+box: 30.000000 60.000000 160.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Load Camera Geom
+name: LoadCameraGeomButton
+callback: LoadProc
+argument: LOAD_CAMGEOM
+
+--------------------
+class: 11
+type: 2
+box: 30.000000 120.000000 160.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Load Group
+name: LoadGroupButton
+callback: LoadProc
+argument: LOAD_GROUP
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 250.000000 105.000000 205.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Show Files
+name: LoadShowBrowser
+callback: LoadShowBrowserProc
+argument: 0
+
+=============== FORM ===============
+Name: HelpForm
+Width: 470.000000
+Height: 350.000000
+Number of Objects: 4
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 470.000000 350.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 290.000000 200.000000 40.000000
+boxtype: 6
+colors: 7 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Maniview Help
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 71
+type: 0
+box: 10.000000 10.000000 450.000000 270.000000
+boxtype: 2
+colors: 47 3
+alignment: 1
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: HelpBrowser
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 410.000000 290.000000 50.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: HelpOKButton
+callback: HelpOKButtonProc
+argument: 0
+
+=============== FORM ===============
+Name: SaveForm
+Width: 490.000000
+Height: 180.000000
+Number of Objects: 10
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 490.000000 180.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 20.000000 440.000000 40.000000
+boxtype: 2
+colors: 9 9
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: SaveInput
+callback: 
+argument: 0
+
+--------------------
+class: 11
+type: 6
+box: 360.000000 70.000000 95.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: SaveOKButton
+callback: SaveOKButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 240.000000 70.000000 100.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Cancel
+name: SaveCancelButton
+callback: SaveCancelButtonProc
+argument: 0
+
+--------------------
+class: 1
+type: 6
+box: 270.000000 125.000000 150.000000 40.000000
+boxtype: 6
+colors: 7 47
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 0
+label: Save Panel
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 6
+box: 40.000000 130.000000 110.000000 30.000000
+boxtype: 6
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Options:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: savetypegroup
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 40.000000 100.000000 110.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Save Geom
+name: SaveGeomButton
+callback: SaveGeomButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 2
+box: 40.000000 70.000000 110.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Save Matrices
+name: SaveGroupButton
+callback: SaveGroupButtonProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

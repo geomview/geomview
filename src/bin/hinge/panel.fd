@@ -1,0 +1,543 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 4
+
+=============== FORM ===============
+Name: MainForm
+Width: 300.000000
+Height: 360.000000
+Number of Objects: 15
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 300.000000 360.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 15.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Quit
+name: QuitButton
+callback: QuitProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 175.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Undo
+name: UndoButton
+callback: UndoButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 215.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: File
+name: FileButton
+callback: FileButtonProc
+argument: 0
+
+--------------------
+class: 31
+type: 0
+box: 156.000000 130.000000 70.000000 40.000000
+boxtype: 2
+colors: 4 6
+alignment: 0
+style: 0
+size: 20.000000
+lcol: 0
+label: 
+name: AngleInput
+callback: AngleInputProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 151.000000 175.000000 80.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: (degrees)
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 150.000000 192.000000 81.000000 34.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Angle
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 150.000000 85.000000 86.250000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Space
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 135.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Help
+name: HelpButton
+callback: HelpButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 95.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Info
+name: InfoButton
+callback: InfoButtonProc
+argument: 0
+
+--------------------
+class: 71
+type: 2
+box: 125.000000 20.000000 140.000000 60.000000
+boxtype: 2
+colors: 47 3
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: 
+name: SpaceBrowser
+callback: SpaceBrowserProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 25.000000 280.000000 265.000000 25.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Click the right mouse button on an edge
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 30.000000 260.000000 245.000000 25.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: to select, then on a face to rotate.
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 15.000000 55.000000 75.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Reset
+name: ResetButton
+callback: ResetButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 310.000000 280.000000 40.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Hinge
+name: MainFormLabel
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: FileForm
+Width: 490.000000
+Height: 110.000000
+Number of Objects: 4
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 490.000000 110.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 20.000000 20.000000 440.000000 40.000000
+boxtype: 2
+colors: 13 6
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: FileInput
+callback: FileInputProc
+argument: 0
+
+--------------------
+class: 11
+type: 6
+box: 355.000000 65.000000 95.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: FileOKButton
+callback: FileOKButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 225.000000 65.000000 100.000000 35.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Cancel
+name: FileCancelButton
+callback: FileCancelButtonProc
+argument: 0
+
+=============== FORM ===============
+Name: InfoForm
+Width: 310.000000
+Height: 295.000000
+Number of Objects: 11
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 310.000000 295.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 250.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Hinge
+name: InfoFormLabel
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 210.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: by
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 180.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Mark Phillips
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 150.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: The Geometry Center
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 6.000000 50.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: (IP address 128.101.25.31)
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 245.000000 240.000000 50.000000 45.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: InfoOKButton
+callback: InfoOKButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 104.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Hinge and Geomview are available to
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 4.000000 86.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: the public from
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 6.000000 68.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: www.geomview.org
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 6.000000 6.000000 300.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: For usage instructions hit the ``Help'' button.
+name: 
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: HelpForm
+Width: 360.000000
+Height: 345.000000
+Number of Objects: 4
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 360.000000 345.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 115.000000 295.000000 125.000000 35.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: Hinge Help
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 71
+type: 0
+box: 10.000000 10.000000 335.000000 275.000000
+boxtype: 2
+colors: 47 3
+alignment: 1
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: HelpBrowser
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 280.000000 290.000000 50.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 20.000000
+lcol: 0
+label: OK
+name: HelpOKButton
+callback: HelpOKButtonProc
+argument: 0
+
+==============================
+create_the_forms

@@ -1,0 +1,6 @@
+This directory contains an example of a program that communicates with
+geomview via a pipe.
+
+A tutorial which explains this example program is in the file
+tutorial.tex, which is a latex source file.  A formatted postscript
+version of this tutorial is in the file tutorial.ps

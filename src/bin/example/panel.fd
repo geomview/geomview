@@ -1,0 +1,60 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 1
+
+=============== FORM ===============
+Name: Example
+Width: 340.000000
+Height: 130.000000
+Number of Objects: 3
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 340.000000 130.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 21
+type: 1
+box: 10.000000 40.000000 320.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 1
+style: 0
+size: 20.000000
+lcol: 0
+label: Velocity
+name: VelocitySlider
+callback: VelocityProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 90.000000 320.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 4
+size: 20.000000
+lcol: 4
+label: EXAMPLE
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

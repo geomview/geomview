@@ -1,0 +1,78 @@
+static char CommRoot[] = "\
+TotalWidgets: 4\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 365\n\
+Xmheight: 64\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TextBox\"\n\
+Xmwidth: 354\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 28\n\
+XmbottomOffset: 6\n\
+XmleftOffset: 5\n\
+XmrightOffset: 6\n\
+Private-\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 23\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 36\n\
+XmleftOffset: 142\n\
+XmrightOffset: 133\n\
+Private-\n\
+label: \"Command\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 364\n\
+Xmheight: 64\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

@@ -1,0 +1,17 @@
+#example of two sided surface
+#should be viewed with backface culling
+
+CQUAD
+
+
+-1 -1 0		1 0 0 1
+1 -1 0		1 0 0 1
+1 1 0		1 0 0 1
+-1 1 0		1 0 0 1
+
+#same points, with orientation reversed (clockwise instead of counterclockwise)
+-1 -1 0		0 1 0 1
+-1 1 0		0 1 0 1
+1 1 0		0 1 0 1
+1 -1 0		0 1 0 1
+

@@ -1,0 +1,114 @@
+@c@b@lStereo
+This module supports these viewing modes:
+   "monoscopic", the normal non-stereo view,
+   "crosseyed", with a pair of left-right eye views arranged horizontally,
+                viewed by crossing the eyes to focus on a plane nearer than
+                the screen,
+   "hardware", which uses the stereo capability available on some Irises,
+                viewed with special polarizing glasses, and
+   "red/cyan", which draws the left eye's view in red, the right in
+		blue-green, viewed using red/blue or red/green glasses.
+
+You can control the sense of depth by adjusting the stereo convergence angle;
+large angles give greater sense of depth.  Convergence angle and window
+size together determine the viewer-to-screen distance (for a geometrically
+correct view) and thus the angular field of view; larger convergence angles
+imply wider field of view.
+
+When parameter changes require the angular field of view to vary,
+this program attempts to maintain roughly similar views of the object of
+interest, using the camera's "focal distance" parameter to indicate
+where this is.  (Geomview defaults to 40-degree field of view and 3 unit
+focal distance; Stereo generally enforces smaller angular field of view
+with correspondingly greater focal length.)
+
+This version of Stereo works only in Euclidean space.
+
+@c@bThe focal plane
+You can specify the object of interest by pressing the "Focal Plane" button,
+then clicking the right mouse on an object in the geomview window.
+The focal plane is redefined to lie at the selected point, i.e. that point
+will appear in the same place in both left and right eye views.
+
+You can also use Geomview's "Look At" button, or choose a point of interest
+with shift-rightmouse-click in the Geomview window, to select the 
+convergence plane.  You may need to press "Look At" more than once.
+
+@c@bField-of-view adjustment
+When the field of view changes, the camera is moved along its Z axis
+(viewing direction) so that objects in the focal plane maintain constant size
+on the screen (though other objects may change dramatically).  (Also,
+the camera's clipping planes are adjusted in the same ratio).
+The "Fixed Camera" button on the "More..." panel suppresses moving the camera.
+
+A side effect of the focal-plane style is that you must take care when
+moving the camera manually: use Focal Plane button (or shift-rightclick)
+after flying to tell the stereo module about the new object of interest.
+
+@c@bOther controls
+The "Eye Swap" button exchanges the left and right eye's images.  May be
+especially handy in hardware stereo mode.
+
+The "More..." panel lets you indicate
+  - which geomview camera window to use,
+  - the true size of the screen (measured horizontally, in inches),
+  - the distance between the viewer's eyes, also in inches, and
+  - whether Stereo should attempt to move the camera to preserve the view.
+The default camera is "focus", the window most recently pointed at.
+The default screen size may be wrong if you've attached a monitor different
+from the standard one, or if you're using a projection system.
+
+@c@bIn typical use, to examine an object in stereo, you might:
+  - Select some stereo mode.
+  - If you have multiple Geomview windows, use the More... panel
+	to specify which camera to use.
+  - Use "Look At" and/or shift-rightmouse to get some view of an object,
+	and make it lie in the stereo convergence plane.
+  - Use "Geom Scale" or "Zoom" or "Fly" to adjust the view.
+  - Adjust convergence angle to change sense of depth.  (Large convergence
+	angles may cause more eyestrain.)
+  
+As a test of stereo perception, try loading "ico.grp" (a stellated icosahedron)
+and "cube".  Select "cube", and scale it to a fairly small size.
+Then using "Translate" mode, try to skewer the cube on a spike of ico.grp.
+
+#
+ 
+Effective stereo viewing involves matching configurations in two spaces:
+"real" space, where the viewer's eyes and the screen live, and
+"virtual" space, where computer-graphical objects live.
+This program describes the stereo configuration in terms of several
+interrelated parameters: interocular separation "o",
+window width "w", stereo convergence angle "c", distance from the
+eyes to the "focal" plane "f", and angular field of view "v".
+
+     |-----o-----|
+ ---eye (L)     eye (R)
+ ||  \           /
+ ||   \         /
+ |f    \       /
+ ||     \     /
+ ||      \   /
+ ||       \ /
+ |-================ "focal plane"
+ s        / \
+ |       /   \
+ |      /     \
+ -- RRRRRRRLLLLLLL  screen plane, showing left & right
+    |--w--||--w--|  eyes' subwindows as for crosseyed view
+
+
+The convergence angle (hard to draw in the diagram above) is the
+angle between the eye axes looking at something centered in the focal plane.
+Eye muscles limit the range of tolerable convergence angles, from approximately
+zero up to 10-15 degrees.
+
+The "focal" plane is defined as that plane where stereo disparity is
+zero:  objects lying in the focal plane appear at the same place in the left
+and right eye subwindows.  The focal plane may or may not coincide (in real
+space) with the plane of the screen.  In crosseyed mode, the left and right
+eye windows are separated, and the focal plane lies between the viewer and
+the screen.  In hardware and red/cyan stereo modes, the eye windows
+coincide on the screen, and the focal plane matches the screen plane.
+
+Field of view is related to convergence angle.  The 

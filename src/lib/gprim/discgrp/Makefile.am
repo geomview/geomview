@@ -1,0 +1,8 @@
+INCLUDES = $(default_includes)
+EXTRA_DIST = Headers
+
+noinst_LIBRARIES = libdg.a
+
+libdg_a_SOURCES = \
+    colormap.c complex.c dgbound.c dgclass.c dgconstraint.c dgcopy.c dgcreate.c dgdelete.c dgdirdom.c dgdraw.c dgenum.c dgevert.c dgmisc.c dgpick.c dgsave.c dgstream.c dgtransform.c dhpoint3.c matlist.c outstack.c polyhedron.c projective.c stack.c util.c weeks_dirdom.c xform.c \
+    complex.h dgflag.h discgrp.h discgrpP.h enum.h extern.h options.h projective.h vec4.h winged_edge.h

@@ -1,0 +1,287 @@
+#! /bin/sh
+
+########################################################################
+
+# usage: lisp2c [-cprefix prefix] -o OUTFILE [ FILE1 ... ]
+#
+# writes OUTFILE.c and OUTFILE.h, if results would differ from
+# existing files of those names.
+#
+# If -cprefix is specified, uses "prefix_" as the prefix for C
+# function names.  Default prefix is "l_".
+#
+#  This script scans the input files, or standard input if no input
+#  files are specified, generating a C interface to each lisp function
+#  defined via the "DEFINE" and "LDECLARE" macros (defined in
+#  geomview's "lispext.h" file).  It assumes usage of the following
+#  form in the input files:
+#  
+#	DEFINE(name, ltype,
+#		docstring)
+#	{
+#	  <local variable declarations and initializations>
+#	  LDECLARE(("lname", LBEGIN,
+#		    <argspec>,
+#		    ...,
+#		    LEND));
+#	   ...
+#	  return L...;
+#	}
+#  
+#  Specifically:
+#  
+#
+#  1. The first line of the call to DEFINE must contain exactly, in
+#     this order:
+#      1.1. the word DEFINE
+#      1.2. a left paren
+#      1.3. a name which is a valid C identifier.  There must be no
+#  	    spaces between the left paren and the name. This name with
+#  	    an "L" prepended becomes the name of the low-level C
+#  	    procedure (the one whose body follows the DEFINE call),
+#  	    and with a "l_" prepended becomes the name of the C
+#  	    interface to the corresponding lisp function (unless an
+#  	    alternate prefix is specified with the -cprefix argument
+#  	    to this script).
+#      1.4  a comma (possibly preceeded and/or followed by spaces or
+#	    tabs)
+#      1.5  a lisp type name (like LINT or LGEOM etc) which indicates
+#	    the type of the lisp object returned by this function.
+#      1.6  a comma (possibly preceeded and/or followed by spaces or
+#	    tabs)
+#  
+#  2. The rest of the DEFINE call consists of the docstring argument,
+#     which must be a single string and may be broken over any number
+#     of lines.
+#
+#  
+#  3. The first line of the call to LDECLARE must contain, in this order:
+#      1.1. the word LDECLARE
+#      1.2. two left parens
+#      1.3. a string which becomes the lisp name of the function
+#      1.4  a comma (possibly preceeded and/or followed by spaces or
+#	    tabs)
+#      1.5  the word LBEGIN
+#      1.6  a comma (possibly preceeded and/or followed by spaces or
+#	    tabs)
+#  
+#  4. Intermediate lines of the LDECLARE call must contain one
+#     <argspec> per line; where <argspec> is either the word LOPTIONAL
+#     or something with the syntax
+#  
+#  	[ modifier, ] ltype, address
+#  
+#     where modifier is one of LHOLD or LLITERAL, ltype is a lisp type
+#     name, and address is the address of a local variable into which
+#     the corresponding argument's value is to be loaded.  Any
+#     arguments following LOPTIONAL are taken to be optional.
+#
+#  5. The last line of the LDECLARE call must contain just the string
+#     "LEND));" possibly preceeded by spaces or tabs.
+#
+# This script generates the C interface (consisting of the function
+# declaration in OUTFILE.h and the function itself in OUTFILE.c) only
+# for functions which use both the DEFINE and LDECLARE macros.  To
+# prevent the generation of a C interface for a particular function,
+# preceed the word LDECLARE by a comment on the same line, as in:
+# 
+#
+# 	/*NOC*/ LDECLARE(("foo, LBEGIN,
+# 
+# The contents of the comment are irrelvant; its purpose is simply
+# to arrange that LDECLARE is not the first thing on its line.
+
+cprefix="l_" ;
+outfile=""
+
+while : ; do
+
+  case $1 in
+    -cprefix)
+	cprefix=$2 ;
+	shift 2 ;
+	;;
+    -o)
+	outfile=$2 ;
+	outstem=`basename $outfile`
+	shift 2 ;
+	;;
+    *)
+	break ;
+	;;
+  esac
+
+done
+
+cfile=/tmp/lisp2c.out.c
+hfile=/tmp/lisp2c.out.h
+
+/bin/rm -f $cfile $hfile
+
+# start with an empty .h file in case the awk script below doesn't
+# output anything to it:
+touch $hfile
+
+cat $* |
+
+# first turn all parens, semicolons, and commas into spaces
+tr '();,' '    ' |
+
+# now let awk do its thing
+awk '
+BEGIN { cprefix="'$cprefix'" ;
+	outfile="'$outfile'" ;
+	outstem="'$outstem'" ;
+	hfile="'$hfile'" ;
+	fcount = 0 ;
+    inldeclare=0 ;
+    type["LINT"]	= "int" ;
+    type["LULONG"]	= "unsigned long" ;
+    type["LFLOAT"]	= "float" ;
+    type["LSTRING"]	= "char *" ;
+    type["LLIST"]	= "LList  *" ;
+    type["LLOBJECT"]    = "LObject *" ;
+    type["LID"]	    	= "int" ;
+    type["LKEYWORD"]	= "int" ;
+    type["LSTRINGS"]	= "char *" ;
+    type["LGEOM"]	= "GeomStruct *" ;
+    type["LCAMERA"]	= "CameraStruct *" ;
+    type["LWINDOW"]	= "WindowStruct *" ;
+    type["LAP"]		= "ApStruct *" ;
+    type["LTRANSFORM"]  = "TransformStruct *" ;
+    type["LTRANSFORMN"] = "TmNStruct *" ;
+    type["LVOID"]       = "void" ;
+    type["LREST"]	= "LList *" ;
+    }
+$1 == "LDEFINE" {
+    fstem = $2 ;		# stem from which function names are built
+    ftype = $3 ;		# functions return type
+    next ;
+    }
+$1 == "LDECLARE" {
+    name = substr($2,2,length($2)-2) ;	# lisp function name
+    inldeclare=1 ;
+    lakearg = 0;
+    argc = 0 ;
+    next
+    }
+$NF == "LEND" || atend == 1 {
+    if (inldeclare) {
+	# remember data for this function
+	++fcount;
+	cname = cprefix fstem ;
+	fstems[fcount] = fstem ;
+	cnames[fcount] = cname ;
+	names[fcount] = name ;
+	# build the declaration
+	dec = sprintf("%s %s(", type[ftype], cname);
+	for (i=1; i<=argc; ++i) {
+	    if (i>1) dec = dec sprintf(", ");
+	    if (arg[i] == "LARRAY") {
+		dec = dec sprintf("%s *a%1d, int a%1dn", type[basetype[i]], i, i);
+	    } else {
+		if (type[arg[i]] != "") dec = dec sprintf("%s ", type[arg[i]]);
+		else dec = dec sprintf("??? ");
+		dec = dec sprintf("a%1d", i);
+	    }
+	}
+	dec = dec sprintf(")");
+	# print the declaration, possibly also in header file
+	printf "%s\n", dec ;
+	if (outfile != "") printf "%s;\n", dec > hfile ;
+	# print the function body
+	printf "{\n" ;
+	printf "  LObject *val = LEvalFunc(\"%s\",\n", name ;
+	for (i=1; i<=argc; ++i) {
+	    if (arg[i] == "LARRAY") {
+		printf "\t\t\t   LARRAY, %s, a%1d, a%1dn,\n", basetype[i], i, i ;
+	    } else {
+		printf "\t\t\t   %s, a%1d,\n", arg[i], i ;
+	    }
+	}
+	printf "\t\t\t   LEND);\n"
+	if (type[ftype] != "void") {
+	    printf "  %s retval;\n", type[ftype] ;
+	    printf "  LFROMOBJ(%s)(val, &retval);\n", ftype ;
+	}
+	printf "  LFree(val);\n"
+	if (type[ftype] != "void") printf "  return retval;\n"
+	printf "}\n\n"
+	inldeclare=0 ;
+	atend = 0;
+	next
+	}
+    }
+{ if (inldeclare) {
+    i = 1;
+    while (i <= NF) {
+	if ($i == "LLAKE") {
+	    lakearg = 1; next;
+	} else if ($i == "LOPTIONAL") {
+	    ++i; continue;
+	} else if ($i == "LHOLD") {
+	    ++i; continue;
+	} else if ($i == "LLITERAL") {
+	    ++i; continue;
+	} else if ($i == "LARRAY") {
+	    ++i;
+	    ++argc ;
+	    arg[argc] = "LARRAY";
+	    basetype[argc] = $i;
+	    next;
+	} else if ($i == "LREST") {
+	    ++argc;
+	    arg[argc] = $i ;
+	    atend = 1;
+	    next ;
+	} else {
+	    ++argc ;
+	    arg[argc] = $i ;
+	    next ;
+	}
+    }
+  }
+}
+END {
+    printf "\n" ;
+    for (i=1; i<=fcount; ++i) {
+	printf "extern LObject *L%s(Lake *, LList *);\n", fstems[i] ;
+    }
+    printf "\n" ;
+    for (i=1; i<=fcount; ++i) {
+	printf "extern char H%s[];\n", fstems[i] ;
+    }
+    printf "\n" ;
+    printf "\nvoid %s_init()\n{\n", outstem ;
+    for (i=1; i<=fcount; ++i) {
+	printf "  LDefun(\"%s\", L%s, H%s);\n", names[i], fstems[i], fstems[i] ;
+    }
+    printf "}\n\n" ;
+}
+' |
+
+# and send output to "outfile.c" if -o specified, otherwise
+# to standard output
+if [ "$outfile" != "" ] ; then
+  cat > $cfile ;
+
+  if [ -f $cfile ] && cmp $cfile $outfile.c 1>&- 2>&- ; then
+    : # no change to $outfile.c
+  else
+    /bin/rm -f $outfile.c ;
+    /bin/mv $cfile $outfile.c
+    echo $outfile.c
+  fi
+
+  if [ -f $hfile ] && cmp $hfile $outfile.h 1>&- 2>&- ; then
+    : # no change to $outfile.h
+  else
+    /bin/rm -f $outfile.h ;
+    /bin/mv $hfile $outfile.h
+    echo $outfile.h
+  fi
+else
+  cat ;
+fi
+
+/bin/rm -f $cfile $hfile

@@ -1,0 +1,39 @@
+.TH sweep 3 "September 22, 1992" "Geometry Center"
+.SH NAME
+TranslationSweep - Routine to create surfaces of extrusion.
+RotationSweep - Routine to create surfaces of rotation.
+.SH SYNOPSIS
+Geom *TranslationSweep(float length, Point3 *p, Geom *g);
+Geom *RotationSweep(float angle, Point3 *end, Point3 *axis,
+		    int divisions, Geom *g);
+.SH DESCRIPTION
+.PP
+TranslationSweep and RotationSweep are used to create polylist objects
+which are the translational sweep (surface of extrusion) or rotational
+sweep (surface of rotation) of the Geom g, which must be a vect. 
+.PP
+TranslationSweep takes as its arguements the length and direction of
+the sweep.  The returned off object will be a representation of the
+Geom g swept length units in the direction of the vector p.
+.PP
+RotationSweep forms a surface by rotating the object g by angle units.
+The angle parameter should be specified in radians.  The rotation is
+about the axis specified by the endpoint end and in the direction
+axis.  The surface of rotation will be divided radially into divisions
+parts.  
+.PP
+If angle is within .01 of 2.0 * pi (as defined in math.h), it
+will be assumed that a full rotation is desired.  In the returned
+polylist object, the ends of the sweep will refer to the same points
+to prevent a crack from appearing due to round off error.
+.PP
+Either routine will print out an error message and return NULL if the
+Geom g is non-NULL and is not of the vect type.  Either routine will
+return NULL (with no error message) if g is NULL.
+.SH SEE ALSO
+sweep(1)
+.SH AUTHOR
+.nf
+Celeste Fowler			email:  fowler@geomview.org
+The Geometry Center
+.fi

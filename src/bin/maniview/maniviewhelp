@@ -1,0 +1,157 @@
+
+Maniview explores three-dimensional manifolds and orbifolds 
+from "within".  You navigate as if you lived inside the
+space. This means, in practice, that you will be within
+a tessellation of hyperbolic, euclidean, or spherical
+space by a discrete groups of motions.  Maniview works
+in cooperation with Geomview.
+
+The application is structured around a main menu
+which accesses several panels.  To begin with,
+use the 'Load' panel to load a discrete group,
+which is the basic data structure used by Maniview.
+
+LOAD
+
+The format for discrete groups is described in
+the man page discgrp(5).  The default is the three
+dimensional torus.  Other files that are provided with
+the release include borrom4.dgp (a hyperbolic orbifold)
+and 120.dgp (the Poincare homology sphere, a spherical
+manifold).
+
+Maniview looks for the entered file first in the
+current directory and then in the $GEOMDATA/groups
+directory.  The 'geomview' script usually sets $GEOMDATA,
+but you can set it by hand if you wish using 'setenv'.
+
+By activating the buttons on the Load panel you can
+choose instead to load geometry to be tessellated by the group
+(depress the 'Load Geom' button); to load a geometry
+file to represent the camera, depress the 'Load Camgeom'
+button.
+
+SAVE 
+
+Use the 'Save' menu option to save the current discrete
+group to a file. Activate the 'Save Geom' button to 
+explicitly save the currently displayed geometry with
+the group; use the 'Save Group' button to save the
+currently displayed list of group elements with the
+group.  
+
+DISPLAY 
+
+You can control display characteristics through the
+Display panel.  The toggles control how the
+discrete group draws itself. To activate a property,
+depress its button by clicking on it.  Deactivation
+works in the inverse manner.
+
+centercam:  toggle controls whether to keep the observer 
+    centered in the central fundamental domain. 
+draw dirdom: will cause the Dirichlet domain geometry to 
+    be displayed (see BASIC TILE panel below for more).  
+drawgeom: will cause any other geometry you have supplied 
+    to be displayed.  (see BASIC TILE panel below for more).
+showcam: will tessellate an image of the camera or observer.
+    The geometry for the camera can be loaded using the LOAD
+    panel (see above).  
+cull: will attempt to ignore group elements which are not 
+    visible.  It is provided as an option as long as it 
+    hasn't been fully debugged. 
+software shading: allows you to toggle between hardware and 
+   software shading.  Hardware shading is correct only 
+   for Euclidean groups. 
+
+Finally, three sliders control the lighting model.
+The first 'atten1' influences the attenuation of light 
+intensity as a function of the distance d of the light source 
+to the object.  For the hyperbolic and spherical case this value
+appears in an expression of the form exp(-atten1 d).
+This is reasonable for hyperbolic geometry and used in
+spherical geometry to provide depth cueing.  In the
+Euclidean case, atten1 appears in an expression of the
+form 1/(d^atten1).  
+
+The other two sliders, 'fogfree' and 'fog', control the presence
+of fog in the lighting model.  'fogfree' specifies a radius around
+the observer which is free of fog.  'fog' is a constant which 
+appears in an expression of the form exp( -fog d') where 
+d' = d - fogfree, where d is the distance from the eye to the
+surface and d' is clamped to zero if it's negative.
+
+ENUMERATE
+
+The 'Enumerate' panel controls how many and which group
+elements are displayed.  'worddepth' is an integer value
+which specifies the maximum length of a string, in the
+generators of the group, which is to be used. (Use the double
+arrows to control this counter, since it must have an 
+integer value.) 'tesselation radius' controls how far away 
+the group element may move the center point (this is controlled
+from the BASIC TILE panel).  These two contraints work as a
+Boolean 'and':  both must be satisfied for a group element to
+be displayed.
+
+BASIC TILE
+
+This panel controls the geometry that is tessellated by
+the discrete group.  There are basically two modes: 
+Dirichlet domain, and user-supplied geometry.  When the
+former button is depressed, the widgets control the computation 
+of a Dirichlet domain.  There are positioning widgets to specify 
+an (x,y,z) point, and a 'Reset' button to return it to the 
+default (0,0,0).  In the current version, a full copy of 
+the Dirichlet domain is displayed in wireframe and a smaller copy 
+with cusps truncated (in the hyperbolic case) is displayed with 
+face-shading.  The amount of scaling of this second copy is 
+controlled by the slider labeled 'scale factor'.  A maximum value of 
+1.0 results in images which completely fill space and hence 
+cannot be seen through or around.  NOTE: The Dirichlet domain
+will be displayed if and only if the 'drawdirdom' button 
+on the DISPLAY panel is depressed.
+
+Operation in 'user geometry' mode is as follows: 
+If other geometry has been provided for display via the LOAD
+panel or in the original data file, the widgets in this panel 
+are interpreted to give a translation and a scale for 
+the supplied geometry, in the obvious way.
+NOTE: This geometry will be displayed if and only if 
+the 'drawgeom' button in the DISPLAY panel is depressed, 
+
+INFO
+
+Brings up a panel saying who wrote this module and how
+you can acquire it.
+
+HELP
+
+shows this panel.
+
+SEE ALSO
+
+There are connections from snappea and eucsyms to maniview.
+See eucsyms(1).
+
+BUGS and NOTES
+
+Sometimes you might need to toggle the 'software shading'
+button on the Display menu, to get geomview synchronized 
+with maniview.  This may be needed particularly after loading
+a discrete group that changes the metric.
+
+Maniview forces the camera to be the target.  This allows
+the user to use 'fly' mode in the desired way when 'centercam'
+mode is active.  In other cases this setting might not be
+expected and you'll need to select the appropriate target
+in geomview to override this.
+
+The use of an (x,y,z) locator for Dirichlet domain is
+appropriate for euclidean and hyperbolic space but really
+ought to be fully 4D for the spherical case.
+
+Because geomview currently doesn't allow the use of finite
+light sources, maniview turns off Geomview lights and creates
+its own fixed lights.  Finite light sources are important 
+since they give good depth cueing.

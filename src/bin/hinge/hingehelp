@@ -1,0 +1,67 @@
+
+Hinge lets you rotate copies of a
+polyhedron around edges of itself to build
+up constructions in space.  It is an
+example of a program that interacts with
+geomview, the Geometry Center's 3D viewing
+program.  Its main purpose is to demonstrate
+some capabilities of geomview.
+
+To move the construction around in the
+graphics window, hold the left mouse button
+down and drag the mouse.  If you let go of
+the button while moving the mouse, the motion
+will continue.  The type of motion is
+determined by the selected icon in the
+"Tools" panel; to change actions just click
+on one of these icons.
+
+Start by clicking the right mouse button on
+an edge to select it.  Then click the right
+mouse button on an adjacent face to rotate
+the object through that face.  You may select
+another edge at any time by clicking the
+right mouse button on it.
+
+You may load an alternate polyheron via the
+"File" button.  Nice objects to try are:
+
+  in Euclidean space      in hyperbolic space
+
+          HingeCube                HingeDodec
+          HingeTetra
+          HingeDiamond
+          HingeTriangle
+          HingeLongcube
+
+NOTES:
+
+Double-clicking the right mouse button sets
+geomview's notion of the current mouse
+target object.  In most cases with Hinge
+you want the current target to be the
+entire world.  If you accidentally move an
+individual object you may reset it by
+hitting the 'w' key, or 'W' to reset
+everything.  Then double-click on the
+background to set the mouse target back to
+the world.
+
+Hinge works with any geomview OFF object.
+You may create your own objects in the OFF
+format as described in oogl(5).  Type
+"man 5 oogl" for details.
+
+BUGS
+
+Because of some limitations in the current
+version of geomview, Hinge sometimes does
+not recognize that you are pointing at a
+certain edge or face.  This usually happens
+with polyhedra having faces which are
+nearly coplanar, or in hyperbolic space as
+you get far away from the origin.  It does
+not work at all with a polyhedron that has
+two or more exactly coplanar faces.  This
+limitation will disappear in a future
+version.

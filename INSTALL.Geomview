@@ -1,0 +1,67 @@
+	Instructions for using Geomview's `configure' script
+
+
+Starting with release 1.7.6, Geomview now uses the GNU autoconf
+configuration system.  Release 1.7.6 consists of just the Geomview
+source; the external modules are not included yet.  If you need any of
+them, use an older distribution, or wait for a future one.
+
+Essentially, the way to configure and compile Geomview is the same
+as with any piece of GNU-style software:
+
+	./configure
+	make
+	make install
+
+Once `make' completes you can run Geomview without doing `make install'
+by running the script `geomview' in the top-level directory.  In
+order for this to work you'll need to be in that directory.
+
+IMPORTANT NOTE: by default 'make install' will install Geomview into
+`/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
+running the script `/usr/local/Geomview/bin/geomview'.  If you want,
+you can copy this script to a directory that's on your PATH.  Or you
+can add /usr/local/Geomview/bin to your PATH.
+
+You can override the default installation directory with the --prefix
+option to 'configure'.  'make install' will install files into
+subdirectories of the prefix directory called 'bin', 'info', and
+'data'.
+
+There are certain Geomview-specific options that you can pass to
+`configure' that you may need to use to tell it about particular
+things on your system.  In particular, you can use:
+
+	--with-opengl=DIR
+	    You can use this option if the OpenGL header files and
+	    libraries on your system are installed in some place that
+	    your compiler doesn't recognize by default.  This option
+	    specifies that OpenGL (or Mesa) is installed on your
+	    system in the directory DIR.  DIR should have a
+	    subdirectory called `include' which has the GL header
+	    files, and a subdirectory called `lib' which has the
+	    library files in it.  You don't need this option if your
+	    compiler can find the OpenGL header files and libraries in
+	    the standard places that it looks.  If you're not sure
+	    about this option, try configuring without it.
+	    'configure' will abort with an error if your compiler
+	    can't find the appropriate header files and libraries.
+
+	--with-motif=DIR
+	    You can use this option if the Motif header files and
+	    libraries on your system are installed in some place that
+	    your compiler doesn't recognize by default.  This option
+	    specifies that Motif is installed on your system in the
+	    directory DIR.  DIR should have a subdirectory called
+	    `include' which has the Motif header files, and a
+	    subdirectory called `lib' which has the library files in
+	    it.  You don't need this option if your compiler can find
+	    the Motif header files and libraries in the standard
+	    places that it looks.  If you're not sure about this
+	    option, try configuring without it.  'configure' will
+	    abort with an error if your compiler can't find the
+	    appropriate header files and libraries.
+
+You can also use environment variables to override various defaults
+such as which compiler to use and which options to pass to it.  See
+the file INSTALL for details on this.

@@ -1,0 +1,97 @@
+static char InfoRoot[] = "\
+TotalWidgets: 5\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 359\n\
+Xmheight: 197\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"TextBig\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TextBig\"\n\
+Xmwidth: 351\n\
+Xmheight: 157\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 36\n\
+XmbottomOffset: 4\n\
+XmleftOffset: 4\n\
+XmrightOffset: 4\n\
+Private-\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Close\"\n\
+Xmwidth: 54\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 4\n\
+XmbottomOffset: 163\n\
+XmleftOffset: 301\n\
+XmrightOffset: 4\n\
+Private-\n\
+label: \"Hide\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Title\"\n\
+Xmwidth: 254\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 162\n\
+XmleftOffset: 40\n\
+XmrightOffset: 65\n\
+Private-\n\
+label: \"Animation Info\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 359\n\
+Xmheight: 197\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: -1\n\
+XmrightOffset: 1\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

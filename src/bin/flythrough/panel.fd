@@ -1,0 +1,681 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 2
+
+=============== FORM ===============
+Name: MainForm
+Width: 245.000000
+Height: 345.000000
+Number of Objects: 36
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 245.000000 345.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 24
+type: 1
+box: 10.000000 10.000000 226.000000 22.000000
+boxtype: 2
+colors: 47 47
+alignment: 0
+style: 1
+size: 11.000000
+lcol: 0
+label: Scale Dodecahedron
+name: DodecScale
+callback: ScaleProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 300.000000 245.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 4
+label: Interactive Hyperbolic Flythrough
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 100.000000 80.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: LAYERS
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 190.000000 230.000000 15.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: PATH
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 190.000000 265.000000 40.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Quit
+name: Quit
+callback: QuitProc
+argument: 0
+
+--------------------
+class: 1
+type: 4
+box: 0.000000 55.000000 245.000000 5.000000
+boxtype: 4
+colors: 4 4
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 4
+box: 0.000000 130.000000 245.000000 5.000000
+boxtype: 4
+colors: 4 4
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 1
+box: 10.000000 265.000000 170.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: What's going on?
+name: Info
+callback: InfoProc
+argument: 0
+
+--------------------
+class: 1
+type: 4
+box: 0.000000 210.000000 245.000000 5.000000
+boxtype: 4
+colors: 4 4
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 1147496041 1852404841
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: PathGroup
+callback: 
+argument: 
+
+--------------------
+class: 13
+type: 2
+box: 125.000000 165.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 223
+label: Direct
+name: Direct
+callback: PathProc
+argument: DIRECT
+
+--------------------
+class: 13
+type: 2
+box: 125.000000 140.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 248
+label: Equidistant
+name: Equi
+callback: PathProc
+argument: EQUI
+
+--------------------
+class: 13
+type: 2
+box: 5.000000 140.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 135
+label: Quarter Turn
+name: Quarter
+callback: PathProc
+argument: QUARTER
+
+--------------------
+class: 13
+type: 2
+box: 5.000000 165.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 135
+label: Full Loop
+name: Loop
+callback: PathProc
+argument: LOOP
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 808464432 540028464
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 60.000000 60.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: STEPS
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 4
+box: 0.000000 92.000000 245.000000 5.000000
+boxtype: 4
+colors: 4 4
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: GoGroup
+callback: 
+argument: 
+
+--------------------
+class: 13
+type: 2
+box: 20.000000 212.000000 55.000000 45.000000
+boxtype: 0
+colors: 7 2
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 2
+label: GO
+name: Go
+callback: GoProc
+argument: 1
+
+--------------------
+class: 13
+type: 2
+box: 110.000000 212.000000 55.000000 45.000000
+boxtype: 0
+colors: 7 1
+alignment: 4
+style: 1
+size: 20.000000
+lcol: 1
+label: STOP
+name: Stop
+callback: GoProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: TileGroup
+callback: 
+argument: 
+
+--------------------
+class: 13
+type: 2
+box: 195.000000 100.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 3
+name: Level3
+callback: TilingProc
+argument: 3
+
+--------------------
+class: 13
+type: 2
+box: 155.000000 100.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 2
+name: Level2
+callback: TilingProc
+argument: 2
+
+--------------------
+class: 13
+type: 2
+box: 115.000000 100.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 1
+name: Level1
+callback: TilingProc
+argument: 1
+
+--------------------
+class: 13
+type: 2
+box: 75.000000 100.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 0
+name: Level0
+callback: TilingProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: SpeedGroup
+callback: 
+argument: 
+
+--------------------
+class: 13
+type: 2
+box: 100.000000 60.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 20
+name: Speed2
+callback: SpeedProc
+argument: 2
+
+--------------------
+class: 13
+type: 2
+box: 145.000000 60.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 40
+name: Speed3
+callback: SpeedProc
+argument: 3
+
+--------------------
+class: 13
+type: 2
+box: 190.000000 60.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 80
+name: Speed4
+callback: SpeedProc
+argument: 4
+
+--------------------
+class: 13
+type: 2
+box: 55.000000 60.000000 30.000000 30.000000
+boxtype: 0
+colors: 7 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 10
+name: Speed1
+callback: SpeedProc
+argument: 1
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 320.000000 240.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 4
+label: Not Knot: The Software
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 4
+box: 0.000000 256.000000 245.000000 5.000000
+boxtype: 4
+colors: 4 4
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: HelpForm
+Width: 530.000000
+Height: 340.000000
+Number of Objects: 8
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 530.000000 340.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 71
+type: 0
+box: 10.000000 30.000000 510.000000 275.000000
+boxtype: 2
+colors: 47 3
+alignment: 1
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: HelpBrowser
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 310.000000 435.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 4
+label: Not Knot: The Software   Interactive Hyperbolic Flythrough
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 455.000000 310.000000 60.000000 20.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Done
+name: Done
+callback: DoneProc
+argument: 0
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: DiagramGroup
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 95.000000 5.000000 140.000000 25.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Euclidean Diagram
+name: EucDiag
+callback: DiagProc
+argument: EUC
+
+--------------------
+class: 11
+type: 2
+box: 305.000000 5.000000 150.000000 25.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Hyperbolic Diagram
+name: HypDiag
+callback: DiagProc
+argument: HYP
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

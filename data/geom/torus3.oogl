@@ -1,0 +1,96 @@
+INST transforms { TLIST # Reflect about X and Z axes
+  1 0 0 0
+  0 1 0 0
+  0 0 1 0
+  0 0 0 1
+
+  1 0 0 0
+  0 1 0 0
+  0 0 -1 0
+  0 0 0 1
+
+  -1 0 0 0
+  0 1 0 0
+  0 0 1 0
+  0 0 0 1
+
+  -1 0 0 0
+  0 1 0 0
+  0 0 -1 0
+  0 0 0 1
+
+ } geom {
+   LIST
+   { INST transform # Semicircular ends of torus
+	1 0 0 0
+	0 1 0 0
+	0 0 1 0
+	4 0 0 1
+
+     geom < pieces/linkA.bez
+   }
+   { INST transforms { TLIST # Joining pieces
+	1 0 0 0
+	0 1 0 0
+	0 0 1 0
+	-4 0 0 1
+
+	1 0 0 0
+	0 -1 0 0
+	0 0 1 0
+	-4 0 0 1
+
+	1 0 0 0
+	0 1 0 0
+	0 0 1 0
+	0 0 0 1
+
+	1 0 0 0
+	0 -1 0 0
+	0 0 1 0
+	0 0 0 1
+
+   } geom { < pieces/linkB.bez }
+  }
+ }
+
+# #! /bin/sh
+# 
+# case "$1" in
+#     [0-9]*) ;;
+#     *)
+# 	echo "Usage:  mktorus   nholes  >torus.oogl
+# Constructs an N-holed torus using Bezier patch pieces in the data directory.
+# setenv GEOM_PATH  <OOGL-directory>/data  when displaying the resulting objects
+# if you're not already in the data directory." >&2
+# 	exit 1
+# 	;;
+# esac
+# 
+# awk '
+#  BEGIN {
+# 	n = '$1';
+# 	xfmt = "\t1 0 0 0\n\t0 %g 0 0\n\t0 0 1 0\n\t%g 0 0 1\n\n";
+# 	print "INST transforms { TLIST # Reflect about X and Z axes";
+# 	print "  1 0 0 0\n  0 1 0 0\n  0 0 1 0\n  0 0 0 1\n";
+# 	print "  1 0 0 0\n  0 1 0 0\n  0 0 -1 0\n  0 0 0 1\n";
+# 	print "  -1 0 0 0\n  0 1 0 0\n  0 0 1 0\n  0 0 0 1\n";
+# 	print "  -1 0 0 0\n  0 1 0 0\n  0 0 -1 0\n  0 0 0 1\n";
+# 	print " } geom {";
+# 	print "   LIST";
+# 	print "   { INST transform # Semicircular ends of torus";
+# 	printf xfmt, 1, 2*(n-1);
+# 	print "     geom < pieces/linkA.bez";
+# 	print "   }";
+# 	if(n > 1) {
+# 	    print "   { INST transforms { TLIST # Joining pieces"
+# 	    for(i = 0; i < n-1; i++) {
+# 		printf xfmt, 1, 4*i - 2*n + 2;
+# 		printf xfmt, -1, 4*i - 2*n + 2;
+# 	    }
+# 	    print "   } geom { < pieces/linkB.bez }";
+# 	    print "  }";
+# 	}
+# 	print " }";
+# 	exit
+#   }'

@@ -1,0 +1,276 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 2
+
+=============== FORM ===============
+Name: MainForm
+Width: 220.000000
+Height: 330.000000
+Number of Objects: 11
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 220.000000 330.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 60.000000 90.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Show Origin
+name: ShowButton
+callback: ShowButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 10.000000 50.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Done
+name: DoneButton
+callback: DoneButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 110.000000 50.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Cancel
+name: CancelButton
+callback: CancelButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 60.000000 10.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Quit
+name: 
+callback: QuitButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 280.000000 220.000000 40.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 4
+size: 20.000000
+lcol: 1
+label: Move Origin
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 250.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str1
+name: Instruc1
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 230.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str2
+name: Instruc2
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 210.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str3
+name: Instruc3
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 10.000000 130.000000 200.000000 30.000000
+boxtype: 2
+colors: 47 47
+alignment: 0
+style: 0
+size: 11.000000
+lcol: 0
+label: Target Object:
+name: TargetInput
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 190.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str3
+name: Instruc4
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: ErrorForm
+Width: 220.000000
+Height: 150.000000
+Number of Objects: 6
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 220.000000 150.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 110.000000 220.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 4
+size: 20.000000
+lcol: 1
+label: Oh No!!!
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 90.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str3
+name: Error1
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 70.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str3
+name: Error2
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 0.000000 50.000000 220.000000 20.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: str3
+name: Error3
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 6
+box: 70.000000 10.000000 90.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Ok
+name: OkButton
+callback: 
+argument: 0
+
+==============================
+create_the_forms

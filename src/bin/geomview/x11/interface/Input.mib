@@ -1,0 +1,97 @@
+char Root[] = "\
+TotalWidgets: 5\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 535\n\
+Xmheight: 85\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OK\"\n\
+Xmwidth: 44\n\
+Xmheight: 27\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 53\n\
+XmleftOffset: 115\n\
+XmrightOffset: 376\n\
+Private-\n\
+label: \"OK\"\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Cancel\"\n\
+Xmwidth: 47\n\
+Xmheight: 27\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 52\n\
+XmleftOffset: 166\n\
+XmrightOffset: 322\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FileBrowser\"\n\
+Xmwidth: 100\n\
+Xmheight: 27\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 53\n\
+XmleftOffset: 5\n\
+XmrightOffset: 430\n\
+Private-\n\
+label: \"File Browser\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FileName\"\n\
+Xmwidth: 520\n\
+Xmheight: 27\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 38\n\
+XmbottomOffset: 15\n\
+XmleftOffset: 6\n\
+XmrightOffset: 9\n\
+Private-\n\
+EndWidget.\n\
+END.\n\
+";

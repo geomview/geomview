@@ -1,0 +1,484 @@
+char Root[] = "\
+TotalWidgets: 25\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 194\n\
+Xmheight: 559\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Singlebuffer\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 107\n\
+XmbottomOffset: 452\n\
+XmleftOffset: 5\n\
+XmrightOffset: 189\n\
+Private-\n\
+label: \"[vs] Single-Buffering\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DitherToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 151\n\
+XmbottomOffset: 412\n\
+XmleftOffset: 5\n\
+XmrightOffset: 189\n\
+Private-\n\
+label: \"[vD] Turn On Dithering\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Menu\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DepthMenu\"\n\
+Xmwidth: 90\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 69\n\
+XmbottomOffset: 463\n\
+XmleftOffset: 7\n\
+XmrightOffset: 20\n\
+Private-\n\
+numitems: 3\n\
+item: \"[0vh] None\"\n\
+item: \"[1vh] Depth Sort\"\n\
+item: \"[2vh] Z-Buffer\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HideButton\"\n\
+Xmwidth: 38\n\
+Xmheight: 28\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 7\n\
+XmbottomOffset: 527\n\
+XmleftOffset: 143\n\
+XmrightOffset: 6\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DrawSphereToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 196\n\
+XmbottomOffset: 367\n\
+XmleftOffset: 5\n\
+XmrightOffset: 189\n\
+Private-\n\
+label: \"[ai]  Draw Unit Sphere\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 18\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 469\n\
+XmbottomOffset: 75\n\
+XmleftOffset: 51\n\
+XmrightOffset: 53\n\
+Private-\n\
+label: \"Space Model\"\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"SpaceModelList\"\n\
+Xmwidth: 154\n\
+Xmheight: 58\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 489\n\
+XmbottomOffset: 12\n\
+XmleftOffset: 20\n\
+XmrightOffset: 20\n\
+Private-\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"LCText\"\n\
+Xmwidth: 60\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 431\n\
+XmbottomOffset: 98\n\
+XmleftOffset: 120\n\
+XmrightOffset: 14\n\
+Private-\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FLText\"\n\
+Xmwidth: 60\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 399\n\
+XmbottomOffset: 130\n\
+XmleftOffset: 120\n\
+XmrightOffset: 14\n\
+Private-\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FOVText\"\n\
+Xmwidth: 60\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 366\n\
+XmbottomOffset: 163\n\
+XmleftOffset: 120\n\
+XmrightOffset: 14\n\
+Private-\n\
+EndWidget.\n\
+Ref: 12\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FCText\"\n\
+Xmwidth: 60\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 332\n\
+XmbottomOffset: 197\n\
+XmleftOffset: 120\n\
+XmrightOffset: 14\n\
+Private-\n\
+EndWidget.\n\
+Ref: 13\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"NCText\"\n\
+Xmwidth: 60\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 299\n\
+XmbottomOffset: 230\n\
+XmleftOffset: 120\n\
+XmrightOffset: 14\n\
+Private-\n\
+EndWidget.\n\
+Ref: 14\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"LCLabel\"\n\
+Xmwidth: 118\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 432\n\
+XmbottomOffset: 101\n\
+XmleftOffset: 3\n\
+XmrightOffset: 77\n\
+Private-\n\
+label: \"Lines Closer [vc]\"\n\
+alignment: 2\n\
+EndWidget.\n\
+Ref: 15\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 108\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 397\n\
+XmbottomOffset: 132\n\
+XmleftOffset: 9\n\
+XmrightOffset: 77\n\
+Private-\n\
+label: \"Focal Length [vl]\"\n\
+alignment: 2\n\
+EndWidget.\n\
+Ref: 16\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 364\n\
+XmbottomOffset: 165\n\
+XmleftOffset: 43\n\
+XmrightOffset: 77\n\
+Private-\n\
+label: \"FOV [vv]\"\n\
+alignment: 2\n\
+EndWidget.\n\
+Ref: 17\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 333\n\
+XmbottomOffset: 200\n\
+XmleftOffset: 35\n\
+XmrightOffset: 77\n\
+Private-\n\
+label: \"Far clip [vf]\"\n\
+alignment: 2\n\
+EndWidget.\n\
+Ref: 18\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 87\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 297\n\
+XmbottomOffset: 232\n\
+XmleftOffset: 30\n\
+XmrightOffset: 77\n\
+Private-\n\
+label: \"Near clip [vn]\"\n\
+alignment: 2\n\
+EndWidget.\n\
+Ref: 19\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ProjectList\"\n\
+Xmwidth: 156\n\
+Xmheight: 42\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 245\n\
+XmbottomOffset: 272\n\
+XmleftOffset: 21\n\
+XmrightOffset: 17\n\
+Private-\n\
+EndWidget.\n\
+Ref: 20\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 90\n\
+Xmheight: 18\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 221\n\
+XmbottomOffset: 320\n\
+XmleftOffset: 51\n\
+XmrightOffset: 53\n\
+Private-\n\
+label: \"Projection\"\n\
+EndWidget.\n\
+Ref: 21\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BackColorButton\"\n\
+Xmwidth: 180\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 40\n\
+XmbottomOffset: 492\n\
+XmleftOffset: 5\n\
+XmrightOffset: 9\n\
+Private-\n\
+label: \"Background Color [CB]\"\n\
+EndWidget.\n\
+Ref: 22\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"SoftShadeButton\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 129\n\
+XmbottomOffset: 430\n\
+XmleftOffset: 5\n\
+XmrightOffset: 189\n\
+Private-\n\
+label: \"[v~] Software Shading\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 23\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DrawCamsButton\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 174\n\
+XmbottomOffset: 387\n\
+XmleftOffset: 5\n\
+XmrightOffset: 189\n\
+Private-\n\
+label: \"[vd] Draw Other Cameras\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 24\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CurrentLabel\"\n\
+Xmwidth: 139\n\
+Xmheight: 25\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 8\n\
+XmbottomOffset: 524\n\
+XmleftOffset: 23\n\
+XmrightOffset: 32\n\
+Private-\n\
+label: \"Current\"\n\
+EndWidget.\n\
+Ref: 25\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 194\n\
+Xmheight: 559\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

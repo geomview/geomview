@@ -1,0 +1,95 @@
+.TH flythrough 1 "January 29, 1993" "Geometry Center"
+.SH NAME
+flythrough \- Geomview external module to fly through Not Knot hyperbolic dodecahedral tesselation
+.SH SYNOPSIS
+flythrough [-t] [-h]
+.SH DESCRIPTION
+.PP 
+Flythrough is a geomview external module that lets you fly through
+the tesselation of hyperbolic space by a right-angled regular
+dodecahedron which appeared in the mathematical animation "Not Knot"
+produced by the Geometry Center. You can either pick a pre-computed
+flight path or fly around interactively. Click on "Not Knot
+Flythrough" in the geomview Applications browser to start the program.
+
+.SH OPTIONS 
+.TP 
+-t
+Turbo mode: send commands off as fast as possible without waiting for
+geomview to catch up.
+.TP
+-h
+Display help window on startup.
+.SH WHAT'S GOING ON
+.PP
+When you hit the "What's Going On?" button (or start up the module
+with the -h option), you get a text help window with most of the
+information in this man page. There is also a 3D diagram of a single
+dodecahedron with color-coded arcs indicating the pre-computed flight
+paths. You can drag the left mouse button in the window to spin this
+diagram around. It's easier to see what's going on in the Euclidean
+diagram, while the hyperbolic version is more similar to what you see
+in the flythrough. 
+
+.SH CONTROL PANEL
+.PP
+You can either choose one of four flight paths through the tesselation
+or stop the automatic flight by hitting the "Stop" button and fly
+around yourself.  For interactive flight, hit the "Cam Fly" button on
+the geomview Tools panel: then dragging the mouse with the middle
+button down moves you forwards or backwards, and dragging with the
+left button down is like turning your head. When you hit "Go", the
+automatic flight will continue.
+.PP
+You can choose one of four tesselation levels: level 0 is a single
+dodecahedron, level 1 adds a layer of 12 dodecahedra (one for each
+face of the original dodecahedron), level 2 tesselates two layers
+deep, and level 3 has three layers. The more layers you have the
+slower the update rate: level 3 is glacially slow, but each frame
+looks pretty impressive. You can change the size of the dodecahedra
+with the "Scale Dodecahedra" slider: at 1.0 they fit together exactly.
+The "Steps" buttons control the smoothness of the flight path: you can
+set the number of steps to 10 (jerky but fast), 20, 40, or 80 (smooth
+but slow).
+.SH FLIGHT PATHS
+.PP
+All 30 edges of the base dodecahedron are white except the three
+pairs of edges colored green, blue and red corresponding to the three
+loops of the Borromean rings. Every face of the dodecahedron has
+exactly one non-white edge, so we can color the face by this color.
+.PP
+All flight paths begin and end at the center of a green face.  There
+are three other green faces: one adjacent to this one, at right
+angles along the green beam; and a pair which border the other green
+beam, on the other side of the dodecahedron.
+.PP
+The light blue "Direct" path is the simplest to understand:
+we go straight through to the green face directly opposite from the
+original face.
+.PP
+The yellow "Quarter Turn" path, which goes to the adjacent green face,
+simply circles around the green axis which the two faces share.
+.PP
+The "Full Loop" path is also yellow: it repeats this quarter turn four
+times so that we start and finish in the same place. The three other
+paths just jump back to the starting place when they reach the end.
+.PP
+The magenta "Equidistant" path, which goes to the other green face
+which doesn't border the original face, is the most interesting.  It
+follows a so-called equidistant curve: in this case, one that is
+equidistant to the red axis that connects the two green faces in
+question. This curve is like a parallel line in Euclidean space: it
+stays a constant distant from the red axis, but it's not a geodesic in
+hyperbolic space.
+
+.SH SEE ALSO
+geomview(1), geomview(5), oogl(5), Not Knot (mathematical animation
+available from Jones and Bartlett publishers, Boston, MA).
+.SH AUTHORS
+.nf
+Charlie Gunn  	(geometry and flight paths)	gunn@geomview.org
+Tamara Munzner	(interactive interface)		munzner@geomview.org
+Stuart Levy	(3D diagram)				levy@geomview.org
+
+Copyright (c) 1993
+The Geometry Center

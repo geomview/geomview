@@ -1,0 +1,921 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 2
+
+=============== FORM ===============
+Name: TransForm
+Width: 340.000000
+Height: 475.000000
+Number of Objects: 59
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 340.000000 475.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 2
+box: 10.000000 130.000000 320.000000 200.000000
+boxtype: 2
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 430.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t00
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 100.000000 430.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t01
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 170.000000 430.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t02
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 240.000000 430.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t03
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 400.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t10
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 100.000000 400.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t11
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 170.000000 400.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t12
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 240.000000 400.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t13
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 370.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t20
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 100.000000 370.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t21
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 170.000000 370.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t22
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 340.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t30
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 100.000000 340.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t31
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 170.000000 340.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t32
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 240.000000 340.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t33
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 10.000000 90.000000 80.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Apply [a ]
+name: ApplyButton
+callback: ApplyProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 90.000000 90.000000 80.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Set [s]
+name: SetButton
+callback: SetProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 170.000000 90.000000 80.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Read [r]
+name: ReadButton
+callback: ReadProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 115.000000 10.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Quit [q]
+name: DoneButton
+callback: DoneProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 250.000000 90.000000 80.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Identity [i]
+name: IdentityButton
+callback: IdentityProc
+argument: 0
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: targetGroup
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 30.000000 50.000000 140.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Act On Geom
+name: actGeom
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 170.000000 50.000000 140.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Act On Camera
+name: actCam
+callback: 
+argument: 
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: TranslateGroup
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 20.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: x
+name: TranslationAxisX
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 120.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: y
+name: TranslationAxisY
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 220.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: z
+name: TranslationAxisZ
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 40.000000 140.000000 100.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: units
+name: TranslationMeasure
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 200.000000 140.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Translate [T]
+name: TranslateButton
+callback: TranslateButtonProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 1835350560 1383036001
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: ModeGroup
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 20.000000 290.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Rotate
+name: RotateModeButton
+callback: RotateMode
+argument: 0
+
+--------------------
+class: 11
+type: 2
+box: 120.000000 290.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Translate
+name: TranslateModeButton
+callback: TranslateMode
+argument: 0
+
+--------------------
+class: 11
+type: 2
+box: 220.000000 290.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Scale
+name: ScaleModeButton
+callback: ScaleMode
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 542273396 1635019119
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 858795568 808464432
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: RotateGroup
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 120.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: About y
+name: RotationAxisY
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 220.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: About z
+name: RotationAxisZ
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 210.000000 140.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Rotate [R]
+name: RotateButton
+callback: RotateButtonProc
+argument: 0
+
+--------------------
+class: 31
+type: 0
+box: 30.000000 140.000000 100.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: degrees
+name: RotationMeasure
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 20.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: About x
+name: RotationAxisX
+callback: 
+argument: 
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 808464432 808460336
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 240.000000 370.000000 70.000000 30.000000
+boxtype: 4
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: t23
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: ScaleGroup
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 40.000000 140.000000 100.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: units
+name: ScaleMeasure
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 200.000000 140.000000 100.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Scale [S]
+name: ScaleButton
+callback: ScaleButtonProc
+argument: 0
+
+--------------------
+class: 12
+type: 1
+box: 20.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: x
+name: ScaleX
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 1
+box: 120.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: y
+name: ScaleY
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 1
+box: 220.000000 180.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: z
+name: ScaleZ
+callback: 
+argument: 
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: CoordSysGroup
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 2
+box: 20.000000 230.000000 110.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Camera [C]
+name: CameraButton
+callback: CoordSysProc
+argument: 0
+
+--------------------
+class: 12
+type: 2
+box: 130.000000 230.000000 90.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Self [E]
+name: SelfButton
+callback: CoordSysProc
+argument: 0
+
+--------------------
+class: 12
+type: 2
+box: 220.000000 230.000000 100.000000 30.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: World [W]
+name: WorldButton
+callback: CoordSysProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 260.000000 315.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: In This Coordinate System:
+name: 
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: fooform
+Width: 430.000000
+Height: 690.000000
+Number of Objects: 1
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 430.000000 690.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

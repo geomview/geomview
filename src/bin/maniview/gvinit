@@ -1,0 +1,22 @@
+ (progn
+  (merge-baseap {
+	lighting {
+		replacelights		
+		attenmult  1		
+		attenmult2  1
+		light {
+		    color 1 1 1
+		    position  0 0 0 1	
+		    location camera	
+		}
+		light {
+		    color .5 1 1
+		    position  .5 .5 0 1
+		    location camera
+		}
+	}
+  })
+  (normalization target none)
+  (soft-shader focus on)
+  )
+  (geometry maniview { : dghandle})

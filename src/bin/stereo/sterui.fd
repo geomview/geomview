@@ -1,0 +1,327 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 3
+
+=============== FORM ===============
+Name: stereo
+Width: 223.000000
+Height: 199.000000
+Number of Objects: 10
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 223.000000 199.000000
+boxtype: 1
+colors: 9 47
+alignment: 0
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 71
+type: 2
+box: 9.000000 112.000000 111.000000 78.000000
+boxtype: 2
+colors: 47 3
+alignment: 1
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: StereoBrowser
+callback: StereoProc
+argument: 0
+
+--------------------
+class: 12
+type: 1
+box: 123.000000 139.000000 93.000000 24.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Eye Swap
+name: SwapButton
+callback: SwapProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 5.000000 14.000000 170.000000 26.000000
+boxtype: 0
+colors: 9 0
+alignment: 4
+style: 1
+size: 25.000000
+lcol: 0
+label: Stereo View 1.0
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 182.000000 3.000000 38.000000 24.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Quit
+name: QuitButton
+callback: QuitProc
+argument: 0
+
+--------------------
+class: 1
+type: 3
+box: 10.000000 69.000000 200.000000 40.000000
+boxtype: 3
+colors: 9 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: BestViewText
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 123.000000 112.000000 93.000000 24.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Focal Plane
+name: FocalButton
+callback: FocalProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 176.000000 168.000000 40.000000 23.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Help
+name: HelpButton
+callback: HelpProc
+argument: 1
+
+--------------------
+class: 24
+type: 5
+box: 8.000000 50.000000 198.000000 21.000000
+boxtype: 2
+colors: 9 11
+alignment: 0
+style: 0
+size: 11.000000
+lcol: 0
+label: Convergence angle
+name: ConvSlider
+callback: ConvProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 124.000000 167.000000 49.000000 24.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: More..
+name: MoreButton
+callback: MoreProc
+argument: 1
+
+=============== FORM ===============
+Name: Help
+Width: 475.000000
+Height: 450.000000
+Number of Objects: 3
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 475.000000 450.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 12.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 71
+type: 0
+box: 10.000000 30.000000 460.000000 410.000000
+boxtype: 2
+colors: 47 3
+alignment: 1
+style: 3
+size: 8.000000
+lcol: 0
+label: 
+name: HelpBrowser
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 0
+box: 425.000000 6.000000 45.000000 24.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Done
+name: DoneButton
+callback: DoneProc
+argument: (long)Help
+
+=============== FORM ===============
+Name: More
+Width: 255.000000
+Height: 140.000000
+Number of Objects: 7
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 255.000000 140.000000
+boxtype: 1
+colors: 9 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 10.000000 102.000000 110.000000 26.000000
+boxtype: 2
+colors: 14 6
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: Ocular Separation
+name: OcularInput
+callback: OcularSepProc
+argument: 0
+
+--------------------
+class: 31
+type: 0
+box: 10.000000 72.000000 110.000000 24.000000
+boxtype: 2
+colors: 14 6
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: Screen Width
+name: ScreenWidthInput
+callback: ScreenWidthProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 204.000000 11.000000 45.000000 24.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Done
+name: DoneButton
+callback: DoneProc
+argument: (long)More
+
+--------------------
+class: 2
+type: 0
+box: 139.000000 92.000000 78.000000 16.000000
+boxtype: 0
+colors: 9 0
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: (in inches)
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 1
+box: 10.000000 10.000000 120.000000 25.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Fixed camera
+name: FixedCamButton
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 10.000000 41.000000 110.000000 24.000000
+boxtype: 2
+colors: 14 6
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: Camera Name
+name: CamNameInput
+callback: CamNameProc
+argument: 0
+
+==============================
+create_the_forms

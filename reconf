@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+
+$| = 1;
+
+sub sys {
+    my $cmd = shift;
+    print "*** $cmd\n";
+    return system($cmd);
+}
+
+sys("rm -f config.cache");
+sys("aclocal -I m4");
+sys("autoconf");
+sys("touch README AUTHORS NEWS ChangeLog");
+sys("autoheader");
+#sys("acconfig");
+sys("automake -a");
+sys("./configure --with-motif=/old/usr/local/lesstif --with-opengl=/usr/local/Mesa --with-forms=/old/home/mbp/gvsrc/Geomview/forms/xforms/FORMS");
+#sys("env CFLAGS=\"-Wall -Wno-unused\" ./configure");
+

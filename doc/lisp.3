@@ -1,0 +1,594 @@
+
+
+
+lisp(3)							  lisp(3)
+
+
+NAME
+       geomview lisp interpreter
+
+NOTE
+       This document describes the geomview 1.3 lisp interpreter.
+       This version is incompatible  with  previous  versions  in
+       several ways.  Since the previous one was used mostly just
+       by Geometry Center staff, I am not going to write a  docu-
+       ment detailing the changes.  The geomview lisp interpreter
+       is not very  well  documented  in  general  because  I  am
+       strongly	 considering phasing it out and replacing it with
+       a real lisp interpreter in a future version  of	geomview.
+       If you have any questions about the current version or how
+       to convert programs from an older version  please  contact
+       me directly [ mbp@geomview.org ].
+
+
+SYNOPSIS
+       #include "lisp.h"
+
+       void	 LInit();
+       Lake *	      LakeDefine(FILE *streamin, FILE *streamout, void *river);
+       void	 LakeFree(Lake *lake);
+       LObject *      LNew(LType *type, LCell *cell);
+       LObject *      LRefIncr(LObject *obj);
+       void	 LRefDecr(LObject *obj);
+       void	 LWrite(FILE *fp, LObject *obj);
+       void	 LFree(LObject *obj);
+       LObject	 *    LCopy(LObject *obj);
+       LObject *      LSexpr(Lake *lake);
+       LObject *      LEval(LObject *obj);
+       LObject * LEvalSexpr(Lake *lake);
+       LList	 *    LListNew();
+       LList	 *    LListAppend(LList *list, LObject *obj);
+       void	 LListFree(LList *list);
+       LList *	      LListCopy(LList *list);
+       LObject *      LListEntry(LList *list, int n);
+       int	 LListLength(LList *list);
+       int	 LParseArgs(char *name, Lake *lake, LList *args, ...);
+       int	 LDefun(char *name, LObjectFunc func, char *help);
+       void	 LListWrite(FILE *fp, LList *list);
+       LInterest *    LInterestList(char *funcname);
+       LObject * LEvalFunc(char *name, ...);
+       int	 LArgClassValid(LType *type);
+       void	 LHelpDef(char *key, char *message);
+
+       LDEFINE(name, ltype, doc)
+
+       LDECLARE((name,	LBEGIN,
+	      ...,
+	      LEND));
+
+
+
+
+
+
+Geometry Center		   Oct 22 1992				1
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+DESCRIPTION
+       Geomview	 contains  a minimal lisp interpreter for parsing
+       and evaluating commands.	 This lisp interpreter is part of
+       the  "-loogutil"	 library and thus any program which links
+       with this library may use the interpreter.  This	 provides
+       a  simple but powerful way to build up a command language.
+
+       This manual page assumes that you are  familiar	with  the
+       syntax  of  lisp.   The first part describes the basics of
+       using the interpreter.  Some gory details that don't  con-
+       cern most users then follow.
+
+       The main steps in using the lisp interpreter are
+
+	 1. call Linit() to initialize the interpreter
+	 2. make calls to LDefun(), one for each lisp function you want the
+	    interpreter to know about
+	 3. define the "i/o lake"
+	 4. parse input with calls to LSexpr() and evaluate the resulting
+	    lisp objects with LEval() (or use LEvalSexpr() to combine both steps).
+
+       For  example  the following code defines a single function
+       "f" and executes commands from standard input:
+
+	   #include "lisp.h"
+	   Lake *lake;
+	   LObject *obj, *val;
+
+	   LInit();
+	   LDefun("f", f, NULL);
+	   lake = LakeDefine(stdin, stdout, NULL);
+	   while (!feof(stdin)) {
+	     obj = LSexpr(lake);
+	     val = LEval(obj);
+	     LFree(obj);
+	     LFree(val);
+	   }
+
+       The second argument to LDefun()	is  a  function	 pointer;
+       LDefun()	 sets  up a correspondence between the string "f"
+       and the function f, which is assumed to have  been  previ-
+       ously  declared.	  The  section FUNCTION DEFINITIONS below
+       gives the expected call syntax and behavior of such  func-
+       tions.	(The third argument to LDefun() is a pointer to a
+       string which documents the function and may be NULL if you
+       don't  care about documentation.)  LakeDefine() defines an
+       i/o lake; this is a generalization of the notion of an i/o
+       stream.	 Most  programs don't need to use the generaliza-
+       tion, though, and can simply pass FILE pointers as LakeDe-
+       fine()'s	 first	two  arguments and NULL as the third one.
+       The section LAKES below gives the details  for  those  who
+       are  interested.	 LSexpr() [which stands for Lisp Symbolic
+       EXPRession] parses a single lisp expression from the lake,
+       returning  a lisp object which represents that expression.
+
+
+
+Geometry Center		   Oct 22 1992				2
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       The lisp object is returned as an LObject  pointer,  which
+       points  to an opaque structure containing a representation
+       of the expression.  LEval() then evaluates the object;  it
+       is  during  the	call  to  LEval()  that the action of the
+       expression takes place.	Note that the last two	lines  of
+       code  in this example could have been replaced by the sin-
+       gle line LEval(LSexpr(lake)) or, more efficiently, by LEv-
+       alSexpr(lake).
+
+
+FUNCTION DEFINITIONS
+       The functions defined by calls to LDefun() are expected to
+       have a certain call syntax; LEval()  calls  them	 when  it
+       encounters a call to the lisp function named with the cor-
+       responding string.  The	macro  LDEFINE	is  provided  for
+       declaring them.	For example:
+
+	   LDEFINE(f, LSTRING, "(f a b) returns a string representing the0um of the integer a with the floating point number b.")
+	   {
+	     int a;
+	     float b;
+	     char buf[20], *s;
+
+	     LDECLARE(("f", LBEGIN,
+		       LINT,   &a,
+		       LFLOAT, &b,
+		       LEND));
+	     sprintf(buf,"%f",a+b);
+	     s = strdup(buf);
+	     return LNew(LSTRING, &s);
+	   }
+
+       The important things about this function are:
+
+	   1. It is declared with the LDEFINE macro, the general syntax
+	      of which is LDEFINE(name, type, helpstr).	 name should be
+	      a valid C identifer and will be used to construct the actual
+	      name of the C function by prepending an 'L' and the name of
+	      the help string by prepending an 'H'.  type should be a lisp
+	      object type identifier (see below) and determines the type
+	      of object that the function returns.  helpstr is a documentation
+	      string.
+
+	   2. The use of the LDECLARE macro.  More about this below.
+
+	   3. It returns an LObject *.	All lisp functions must actually
+	      return a value.  If you don't care what value they return
+	      you can return one of the pre-defined values Lnil or Lt
+	      (and specify LVOID as the type in the LDEFINE header).
+
+       This  particular	 example  is  a	 function which takes two
+       arguments, an int and a float, and returns a string object
+       representing  their  sum.   A  lisp  call to this function
+       might look like "(f 1 3.4)".
+
+
+
+Geometry Center		   Oct 22 1992				3
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       The LDECLARE macro, defined in lisp.h, sets up the  corre-
+       spondence between variables in the C code and arguments in
+       the lisp call to the function.  Note that the arguments to
+       LDECLARE are delimited by *two* pairs of parentheses (this
+       is because C does not allow macros with a variable  number
+       of  arguments;  LDECLARE	 thus actually takes one argument
+       which is a parenthesized list of an  arbitrary  number  of
+       items).	The general usage of LDECLARE is
+
+	   LDECLARE(( name, LBEGIN,
+		      <argspec>,
+		      ...,
+		      LEND ));
+
+       where  name  is	the name of the function (as specified to
+       LDefun()).  <argspec> is an argument specification,  which
+       in  general consists of a lisp type identifier followed by
+       an address.  The identifier indicates the data type of the
+       argument.   The	builtin	 type identifiers are LINT (inte-
+       ger), LFLOAT (float),  LSTRING  (string),  LLOBJECT  (lisp
+       object),	 and  LLIST (lisp list).  Applications may define
+       additional types whose identifiers may also be used  here;
+       see  the	 section  CUSTOM  LISP	TYPES  below for details.
+       There may be any number of <argspec>'s; the last	 must  be
+       followed by the special keyword LEND.
+
+
+STOP HERE
+       Most  users  of the lisp interpreter can stop reading this
+       man page here.  What follows is only used in advanced sit-
+       uations.
+
+
+EVALUATION OF FUNCTION ARGUMENTS
+       Normally the lisp interpreter evaluates function arguments
+       before passing them to the function; to prevent this eval-
+       uation  from  happening	you  can insert the special token
+       LHOLD in an LDECLARE  argument  specification  before  the
+       type keyword.  For example
+
+	   LHOLD, LLIST, &list,
+
+       specifies  an unevalutated list argument.  This feature is
+       really useful only for LLIST, LLOBJECT,	and  array  types
+       (see below) since the other types evalutate to themselves.
+
+
+ARRAYS
+       In general an <argspec> in the LDECLARE call consists of a
+       keyword	followed  by  the  address of a scalar data type.
+       Since it is relatively common to use a lisp list to repre-
+       sent  an	 array	of values, however, the special <argspec>
+       keyword LARRAY is provided for dealing with them.  It  has
+       a  different  syntax: it should be followed by a lisp type
+
+
+
+Geometry Center		   Oct 22 1992				4
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       identifier which specifies the type of the elements of the
+       array  and  then	 by  two  addresses --- the address of an
+       array and the address of an integer count.  Upon entry  to
+       LDECLARE	 the  count  specifies	how  many elements may be
+       written into the array.	LDECLARE then modifies this  num-
+       ber  to	indicate  the  number of entries actually parsed.
+       For example:
+
+	   LDEFINE(myfunc, ...)
+	   {
+	     float f[2];
+	     int fn = 2;
+	     LDECLARE(("myfunc", LEBGIN
+		       LHOLD, LARRAY, f, &fn,
+		       LEND));
+	     /* at this point the value of fn has been modified to
+		be the number of entries actually appearing in the
+		list argument; and this number of values have been
+		written into the array f. */
+	     ...
+	   }
+
+       defines a function "myfunc" which takes a list of up to	2
+       floats  as  its	only  argument.	  Valid calls to "myfunc"
+       would be "(myfunc ())", "(myfunc (7))",	and  "(myfunc  (7
+       8))".
+
+       Note the use of LHOLD; this is necessary because otherwise
+       the lisp system would attempt to evaluate the  list  as	a
+       function call before passing it off to myfunc.
+
+
+OPTIONAL ARGUMENTS
+       Normally	 the lisp interpreter will generate (to stderr) a
+       reasonable error message if  a  function	 is  called  with
+       fewer  arguments	 than  were  specified in LDECLARE.  Some
+       functions, however,  may	 have  some  arguments	that  are
+       optional.   You can define a function which takes optional
+       arguments by putting the keyword LOPTIONAL after the  last
+       required	 argument  in  the  LDECLARE call.  Any arguments
+       specified in the list after that are considered	optional;
+       the interpreter doesn't complain if they are not supplied.
+       Note that all  optional	arguments  must	 come  after  all
+       required arguments.
+
+       Normally	 excess	 arguments  also elicit an error message.
+       The LREST keyword allows control over this situation.   If
+       LREST  is  followed  by	a pointer to an LList * variable,
+       then trailing  arguments	 are  parsed,  evaluated  (unless
+       LHOLD  was  used),  and	the list of them is stored in the
+       given variable.	(Note that the value is an LList, not  an
+       LObject of type LLIST -- if there are no excess arguments,
+       the value is NULL, not an empty LLIST.)	If LREST is  fol-
+       lowed  by  a  NULL  pointer, excess arguments are silently
+
+
+
+Geometry Center		   Oct 22 1992				5
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       ignored.	 LREST might be useful when a function's argument
+       types  are  not known.  It's not necessary to specify LEND
+       after LREST.
+
+
+LISP OBJECTS
+       The basic data type of the lisp interpreter  is	the  lisp
+       object;	it  is	represented  by an LObject pointer, which
+       points to an opaque data	 structure.   The  functions  for
+       manipulating lisp objects (i.e. the object's methods) are:
+
+	   LNew(): creates a new lisp object of the given type with
+	       the given value.	 The "type" argument is one of the
+	       values LSTRING or LLIST, or a type pointer defining
+	       a custom object type (see CUSTOM OBJECT TYPES
+	       below).
+	   LRefIncr(): increments the reference count of a lisp
+	       object.	The lisp interpreter uses the convention
+	       that when a procedure returns a lisp object, the
+	       caller owns the object and thus has responsibility
+	       for freeing it.	LRefIncr() can be used to increment
+	       the reference count of an existing object about to
+	       be returned.  New objects created by LNew() have
+	       their reference count initialized to 1 and hence do
+	       not need to be LRefIncr()'ed.
+	   LRefDecr(): decrements the reference count of a lisp
+	       object.	This should probably not be called by
+	       application programs; it is used internally.
+	   LWrite(): writes a formatted string representation of a
+	       lisp object to a stream.
+	   LFree(): free the space assoicated with a lisp object
+	   LCopy(): construct a copy of a lisp object
+
+
+CUSTOM OBJECT TYPES
+       In addition to the predefined lisp object  types	 you  may
+       define  your own custom types.  This is done by construct-
+       ing a structure containing various function  pointers  for
+       manipulating  objects  of  your	new type.  The address of
+       this structure is then the type identifier for  this  type
+       and  may	 be  used  in  LDECLARE <argspec>'s and in LNew()
+       calls.  (The  type  names  LINT,	 LSTRING  and  the  other
+       builtin	types  are actually pointers to predefined struc-
+       tures.)	The structure is of  type  LType  as  defined  in
+       lisp.h:
+
+       struct LType {
+
+	 /* name of type */
+	 char *name;
+
+	 /* size of corresponding C type */
+	 int size;
+
+
+
+
+Geometry Center		   Oct 22 1992				6
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+	 /* extract cell value from obj */
+	 int (*fromobj)(/* LObject *obj, void *x */);
+
+	 /* create a new LObject of this type */
+	 LObject *(*toobj)(/* void *x */);
+
+	 /* free a cell of this type */
+	 void (*free)(/* void *x */);
+
+	 /* write a cell value to a stream */
+	 void (*write)(/* FILE *fp, void *x */);
+
+	 /* test equality of two cells of this type */
+	 int (*match)(/* void *a, void *b */);
+
+	 /* pull a cell value from a va_list */
+	 void (*pull)(/* va_list *a_list, void *x */);
+
+	 /* parse an object of this type */
+	 LObject *(*parse)(/* Lake *lake */);
+
+	 /* magic number; always set to LTypeMagic */
+	 int magic;
+
+       };
+
+       The  void  * pointers in the above point to objects of the
+       type you are defining.  For examples of how to define  new
+       types  see  the code in lisp.c that defines the string and
+       list types.  See also  the  file	 TYPES.DOC  in	the  lisp
+       source code directory for further details.
+
+
+LISTS
+       The  LList  pointer  is	used  to refer to objects of type
+       LLIST, which implement a linked list.  The  operations  on
+       these objects are LListNew(), LListLength(), LListEntry(),
+       LListAppend(), LListCopy(), and	LListFree().   These  are
+       mostly  used  internally by the lisp system but are avail-
+       able for outside use.  Maybe I'll write more documentation
+       for them later if it seems necessary.
+
+
+LAKES  The Lake structure is a generalization of an input stream.
+       It  contains  three  members:  an   input   FILE	  pointer
+       ("streamin"), an output FILE pointer ("streamout"), and an
+       arbitrary pointer ("river").  The input	FILE  pointer  is
+       required; the lisp interpreter assumes that every lake has
+       a valid input file pointer.  The output	FILE  pointer  is
+       required	 if  you  do  any  operations  that result in the
+       intepreter producing any output.	 The  third  pointer  may
+       point  to  whatever you want.  The lisp interpreter itself
+       does not directly refer to this pointer.	 It may	 be  used
+       by  the	parser	that  you supply when defining a new lisp
+
+
+
+Geometry Center		   Oct 22 1992				7
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       object type.
+
+       The term "Lake" is supposed to connote something more gen-
+       eral  than a stream; it also seemed particularly appropri-
+       ate since this interpreter was  written	in  the	 City  of
+       Lakes.
+
+
+HIDDEN LAKE ARGUMENTS AND OTHER WET THINGS
+       This  section  is  X  rated.  Don't read it unless you are
+       really serious.
+
+
+       The lisp interpreter works by first parsing (LSexpr())  an
+       expression  then	 evaluating  it	 (LEval()).  The LDECLARE
+       macro is a mechanism which allows  both	the  syntax  (for
+       parsing)	 and the semantics (for evaluation) of an expres-
+       sion to be specified in the same convenient place  ---  at
+       the  top	 of the C function which implements the function.
+       The call syntax of all such C functions is
+
+	   LObject *func(Lake *lake, LList *args)
+
+       When parsing a call to the  corresponding  lisp	function,
+       LSexpr()	 calls func with that lake pointer, and with args
+       pointing to the head of the list in the parse tree  corre-
+       sponding to this function call.	LDECLARE parses the argu-
+       ments in the call (by reading  them  from  the  lake)  and
+       appends	them  to this list.  (Note: the head of this list
+       is the function itself,	so  the	 first	argument  becomes
+       entry #2 in the list.)
+
+
+       When evaluating the function call, LEval() calls func with
+       lake=NULL and with args pointing to  the	 call's	 argument
+       list.   (In  this  case the first entry of the list is the
+       first argument.)	 LDECLARE then converts the arguments  in
+       the  list into the appropriate C data types, writing their
+       values into the addresses in the <argspec>s.
+
+
+
+       One side-effect of using lake=NULL as the signal to evalu-
+       ate  rather  than  to  parse is that the value of the lake
+       pointer is not available at evaluation time.   Some  func-
+       tions,  however,	 may  want  to do something with the lake
+       they were parsed from. For example, the	"write"	 function
+       in  geomview  writes  data to the output stream associated
+       with its input stream.  (In geomview these streams are all
+       stored  in a general "Pool" structure which is retained as
+       the "river" member of the lake.)	 The special token  LLAKE
+       may  be	used to cause the lake pointer to be saved in the
+       args list at parse time and written  into  a  variable  at
+       evaluation  time.   It  is  used	 exactly  like	the other
+
+
+
+Geometry Center		   Oct 22 1992				8
+
+
+
+
+
+lisp(3)							  lisp(3)
+
+
+       (scalar) argument keywords:
+
+	   LObject *func(Lake *lake, LList *args)
+	   Lake *mylake;
+	   LDECLARE(("myfunc", LBEGIN
+		     LARG_LAKE, &mylake,
+		     ...
+		     LARG_END));
+
+       At evaluation time LDECLARE will set mylake  to	have  the
+       value that lake had at parse time.  This looks just like a
+       specification for an argument to the lisp function but  it
+       is  not	--- it is just a way to tell LDECLARE to remember
+       the lake pointer between parse- and evaluation-time.
+
+
+BUGS
+       The documentation is incomplete.
+
+
+AUTHOR
+       The lisp interpreter was written mostly by  Mark	 Phillips
+       with  lots of input and moral support from Stuart Levy and
+       Tamara Munzner.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Geometry Center		   Oct 22 1992				9
+
+

@@ -1,0 +1,37 @@
+.TH tackdown 1 "November 12 1992" "Geometry Center"
+.SH NAME
+tackdown \- External module for permanently transforming Geomview
+objects.
+.SH SYNOPSIS
+tackdown
+.SH DESCRIPTION
+.PP
+Tackdown is a tool to permanently transform objects in Geomview.
+Tackdown first reads the target geometry from Geomview.  It then reads
+the transform of the target geometry, and applies the transform to the
+object.  The old target geometry is replaced by the transformed
+version.  Once tackdown has been run on an object, centering it will
+cause it to go back to the last place it was tacked down. 
+.PP
+Make sure the normalization is off - otherwise, Geomview will
+renormalize the object and it will return to the origin.
+.PP
+The user may select the desired coordinate system using the buttons at
+the bottom of the panel.  Note that tacking an object down in the
+universe coordinate system when the transform of the world object is
+not the identity may cause the object to appear to thave changed
+position.  This is because the world transform is incorporated into
+the universe transform.  When the new object appears, the world
+transfrom will be applied to it twice:  once via the transform that
+was permanently applied to it by tackdown and once by Geomview when
+the object was drawn.  To get the object to reappear where you
+expected it to be, set the transform of the world to the identity
+matrix.
+.SH BUGS
+Tackdown may not be run on the world geometry.
+.SH AUTHOR
+.nf
+Celeste Fowler                  email:  fowler@geomview.org
+The Geometry Center
+
+

@@ -1,0 +1,110 @@
+			MG context attributes
+
+		    mbp  Tue Sep 17 21:39:28 1991
+
+
+Attribute		Set Value		Get Value
+---------		---------		---------
+
+
+MG_SHOW			int visible		int *visible
+-------			-----------		------------
+Set: visible = 1 means the context's window should be made visible if
+     it is not already, and visible = 0 means the window should be
+     made to disappear.  When a context is created, the default value
+     for MG_SHOW is 1, which causes the window to appear in the call
+     to mgctxcreate.  To prevent this, you must explicity set MG_SHOW
+     to 0, and then use mgctxset to set MG_SHOW to 1 when you want the
+     window to appear.
+Get: visible = 1 means window is currently visible; 0 means it is
+     currently not visible.
+
+
+MG_APPEAR		Appearance *ap		Appearance **ap
+---------		--------------		--------------
+Set: app is a pointer to an Appearance structure as returned by
+     ApCreate.  app is copied into the current context and becomes the
+     current appearance.  This is a deep copy.  This is equivalent to
+     	mgsetappearance(ap, MG_SET).
+Get: *ap is set to point to the current appearance.  This should NOT
+     be modified in any way!
+
+
+MG_ApSet		<attribute-list>	NA
+---------		----------------	--
+Set: <attribute-list> is a list of AP_ attribute-value pairs, as
+     to ApSet(), terminated by AP_END. These attributes are merged into
+     the current appearance.  This is equivalent to
+	ap = ApCreate( <attribute-list> );
+	mgsetappearance(ap, MG_MERGE);
+	ApDelete(ap);
+Get: Not gettable.
+
+
+MG_WINDOW		WnWindow *win		WnWindow **win
+---------		-------------		--------------
+Set: win is a pointer to a WnWindow structure as returned by
+     WnCreate().  This window becomes the context's window.
+Get: *win is set to point to the context's window structure.
+
+
+MG_WinSet		<attribute-list>	NA
+---------		----------------	--
+Set: <attribute-list> is a list of WN_ attribute-value pairs, as to
+     WnSet(), terminated by WN_END.  These attributes are applied to
+     the context's window.  This is equivalent to calling WnSet(win,
+     <attribute-list>), where win is a pointer to the context's
+     window.
+Get: Not gettable.
+
+
+MG_CAMERA		Camera *cam		Camera **cam
+---------		-----------		------------
+Set: cam is a pointer to Camera structure as returned by CamCreate().
+     This camera becomes the context's camera.
+Get: *cam is set to point to the context's camera structure.
+
+
+MG_CamSet		<attribute-list>	NA
+---------		----------------	--
+Set: <attribute-list> is a list of CAM_ attribute-value pairs, as to
+     CamSet(), terminated by CAM_END.  These attributes are applied to
+     the context's camera.  This is equivalent to calling CamSet(cam,
+     <attribute-list>), where cam is a pointer to the context's
+     camera.
+Get: Not gettable.
+
+
+MG_PARENT		mgcontext *ctx		mgcontext **ctx
+---------		--------------		---------------
+Set: ctx is the ctx of the parent window.  May be used in some heirarchal
+     window systems.
+Get: *ctx is set to point to the ctx of the parent window.
+
+
+MG_SETOPTIONS		int optionmask		int *optionmask
+-------------		--------------		---------------
+Set: optionmask should be a bitwise "or" (|) of any the following:
+       MGO_DOUBLEBUFFER
+       MGO_HIDDEN
+       MGO_BACKFACECULL
+       MGO_INHIBITBACKGROUND
+       MGO_INHIBITCLEAR
+       MGO_INHIBITSWAP
+     The corresponding options are turned on.
+Get: *optionmask is set to a bitwise "or" (|) of all currently enabled
+     options.
+
+
+MG_UNSETOPTIONS		int optionmask		int *optionmask
+---------------		--------------		---------------
+Set: exactly analogous to MG_SETOPTIONS, except that the options in
+     optionmask are turned off.
+Get: (same as with MG_SETOPTIONS)
+
+
+MG_BACKGROUND		ColorA *color		ColorA *color
+-------------		-------------		-------------
+Set: *color becomes the context's background color.  A private
+     internal copy of *color is kept.
+Get: The context's background color is copied to *color.

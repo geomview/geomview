@@ -1,0 +1,41 @@
+.TH sweep 1 "September 22, 1992" "Geometry Center"
+.SH NAME
+sweep \- Geomview external module for creating surfaces of extrusion
+and rotation.
+.SH SYNOPSIS
+sweep
+.SH DESCRIPTION
+.PP
+Sweep is a tool used to make surfaces of extrusion and rotation out of
+geomview vect objects.  Sweep is intended to run as a geomview
+external module.  It uses the target object, which must be a vect, to
+create the surfaces.  To create the surface, press the button marked
+"Make Sweep" at the bottom of the panel.  The program will create the
+surface and automatically send it to geomview as a new object named
+"sweep." 
+.PP
+The two buttons at the top of the sweep panel control the type of
+sweep.  If the button marked "Translational Sweep" is pressed, the
+target object will be used to make a surface of extrusion.  The fields
+marked "Length of sweep" and "Direction of sweep" are
+used to control the attributes of the surface.
+.PP
+If the button at the top of the panel marked "Rotational Sweep" is 
+pressed, the surface formed will be the surface of the rotation of the
+vect.  The box in the middle of the panel will be replaced by a box with
+controls for the attributes of the surface of rotation.
+Note that the sweep may be of an arbitrary length around an
+arbitrary vector.  The field marked "Arc length" controls the
+length of the sweep in degrees or radians.  The fields marked "End of
+axis" and "Direction axis" are used to specify the
+axis around which the vect will be rotated.  The field marked
+"Divisions" is used to specify the number of pieces into which the
+sweep will be radially divided.  A higher number will give a smoother
+appearance.
+.SH SEE ALSO
+sweep(3)
+.SH AUTHOR
+.nf
+Celeste Fowler			email:  fowler@geomview.org
+The Geometry Center
+.fi

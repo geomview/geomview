@@ -1,0 +1,35 @@
+This directory contains the Geomview manual and various other pieces
+of documentation.
+
+geomview.pdf	Manual in PDF format.
+
+html/		Manual in HTML format.
+
+geomview	Manual in GNU info format.
+geomview-*
+
+geomview.texi	Texinfo source code for manual.
+
+example1.c	Example external modules; these are mentioned
+example3.c	in the manual; they're included here so you
+example2.c	don't have to type them in if you want to play
+example4.tcl	with them.
+
+oogltour	A gentle introduction to the OOGL file format
+		(OOGL is the data file format that Geomview
+		understands).
+
+newsletter_article.txt
+		An article that appeared in an issue of the Geometry
+		Center newsletter announcing the first release of
+		Geomview, in January of 1992.
+
+figs/		This directory contains Postscript versions of
+		all the images in the manul; it's only used in
+		creating the pdf version of the manual.  It isn't
+		relevant if all you're doing is reading the
+		manual.
+
+*.{1,3,5*}	Various man pages, possibly out-of-date.  The Geomview
+		manual contains the same information as these, but is
+		more current.

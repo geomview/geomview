@@ -1,0 +1,14 @@
+INCLUDES = $(default_includes)
+
+EXTRA_DIST = clip.1
+
+bin_PROGRAMS = clip
+
+clip_SOURCES = clip.c clipoogl.c clipmain.c Clip.h
+
+LDADD = $(STUBLIB)  \
+	$(OOGLLIBS) \
+	-lm
+
+#	$(top_builddir)/src/lib/geomutil/libgeomutil.a \
+#

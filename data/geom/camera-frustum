@@ -1,0 +1,32 @@
+#
+# After loading this file, cameras are drawn (when selected with
+# "Draw other cameras" on the Cameras panel) with their viewing pyramids
+# shown: small and large white rectangles for the near and far planes,
+# connected by pale blue lines marking the edges of the viewing pyramid.
+#
+(camera-prop {
+VECT
+6 16 3
+
+-4  -4  2 2 2 2
+1  1  1 0 0 0
+
+	-1 -1 -1.0
+	 1 -1 -1.0
+	 1  1 -1.0
+	-1  1 -1.0
+
+	-1 -1  1.0
+	 1 -1  1.0
+	 1  1  1.0
+	-1  1  1.0
+
+	-1 -1 -1.0  -1 -1  1.0
+	-1  1 -1.0  -1  1  1.0
+	 1  1 -1.0   1  1  1.0
+	 1 -1 -1.0   1 -1  1.0
+
+.3 .3 .5 1
+.1 .1 .8 1
+1 1 1 1
+} projective)

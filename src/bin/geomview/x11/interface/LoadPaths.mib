@@ -1,0 +1,78 @@
+char Root[] = "\
+TotalWidgets: 4\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 248\n\
+Xmheight: 94\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 107\n\
+Xmheight: 15\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 75\n\
+XmleftOffset: 7\n\
+XmrightOffset: 134\n\
+Private-\n\
+label: \"Path List\"\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"PathList\"\n\
+Xmwidth: 237\n\
+Xmheight: 65\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 23\n\
+XmbottomOffset: 8\n\
+XmleftOffset: 6\n\
+XmrightOffset: 5\n\
+Private-\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 248\n\
+Xmheight: 94\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

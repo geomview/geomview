@@ -1,0 +1,165 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 1
+
+=============== FORM ===============
+Name: MainForm
+Width: 300.000000
+Height: 240.000000
+Number of Objects: 10
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 300.000000 240.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 190.000000 280.000000 40.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 4
+size: 20.000000
+lcol: 1
+label: Tack Down
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 170.000000 280.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Click button to fix target object in its current
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 12
+type: 0
+box: 10.000000 50.000000 130.000000 40.000000
+boxtype: 1
+colors: 39 3
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Tack Down
+name: TransButton
+callback: TransButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 160.000000 50.000000 130.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Quit
+name: 
+callback: QuitButtonProc
+argument: 0
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 150.000000 280.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: location in the selected coordinate system
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 0.000000 0.000000 150.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: World Coordinates
+name: worldButton
+callback: 
+argument: 0
+
+--------------------
+class: 11
+type: 2
+box: 150.000000 0.000000 150.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Universe Coordinates
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 120.000000 280.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: For best results, make sure normalization
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 10.000000 100.000000 280.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: is off and the target object is not the world.
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

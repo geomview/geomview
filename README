@@ -1,0 +1,266 @@
+		      Geomview/OOGL Release 1.7
+			  February 13, 2000
+			  -----------------
+
+        This release of Geomview is essentially the same as the
+        1.6.1p9 version released in August of 1998.  The code hasn't
+        changed at all since then.  What has changed is that the
+        Geometry Cener, where Geomview was developed, is now closed,
+        and Geomview has a new home at www.geomview.org.  This
+        release includes updated documentation which reflects this
+        fact.
+
+
+CONTENTS
+--------
+
+        Introduction
+        Installation
+        More about Geomview
+        External Modules
+        Auxiliary Programs
+        Documentation
+        Geomview Support
+        History
+        Miscellaneous
+        Known Bugs
+        Improvements/Wish list
+        Bug Reports and Comments
+
+
+
+INTRODUCTION
+------------
+                                   
+This is version 1.7 of Geomview/OOGL.  It runs on many UNIX workstations
+using X/Motif, including Silicon Graphics, Sun, Linux, HP-UX, DEC Alpha,
+and RS/6000, using plain Xlib graphics, Open GL if available, or GL (on SGIs).
+A version also runs on NextStep 3.1 or later using Quick Renderman graphics.
+
+Geomview is an interactive geometry viewing program.  OOGL, which
+stands for Object Oriented Graphics Library, is the library upon
+which Geomview is built.
+
+NOTE: Please read the file REGISTER.  We (the Geomview developers)
+would like to know how people are using Geomview so that we can
+continue to improve it in ways that are useful.
+
+In addition, if you use geomview please send an email note to
+geomview-users-request@geomview.org requesting to be added to the
+geomview-users mailing list; this list is for announcements regarding
+geomview and for geomview users to communicate with each other.  See
+the details in the GEOMVIEW E-MAIL section below.
+
+
+INSTALLATION
+------------
+
+If you got a binary distribution, see the file INSTALL-BINARY for
+installation instructions.  If you have the source, see file file
+INSTALL.Geomview for instructions on configuring and compiling.
+
+Disk space required:
+    geomview-hpux.tar.Z, untarred			  23 MB
+    geomview-linux.tar.Z, untarred			  22 MB
+    geomview-sgi.tar.Z, untarred			  23 MB
+    geomview-solaris.tar.Z, untarred			  21 MB
+
+    geomview-src.tar.Z, assuming you've installed XForms and Tcl/Tk
+	"Compiled for" values are peak sizes, after "make install"
+		and before "make clean", and compiling with -O and not -g.
+	source only, untarred				  15 MB
+	source, compiled for SGI			  72 MB
+	source, compiled for Sun (Solaris Sparc)	  51 MB
+	source, compiled for Linux 'x86			  49 MB
+	source, compiled for HP-UX			  53 MB
+
+
+MORE ABOUT GEOMVIEW
+-------------------
+
+Geomview is the product of an effort at the Geometry Center at the
+University of Minnesota to provide interactive geometry software which
+is particularly appropriate for mathematics research and education.
+In particular, geomview can display things in hyperbolic and spherical
+space as well as Euclidean space.
+
+Geomview allows multiple independently controllable objects and
+cameras.  It provides interactive control for motion, appearances
+(including lighting, shading, and materials), picking on an
+object, edge or vertex level, snapshots in SGI image file or
+Renderman RIB format, and adding or deleting objects is provided
+through direct mouse manipulation, control panels, and keyboard
+shortcuts.  External programs can drive desired aspects of the
+viewer (such as continually loading changing geometry or
+controlling the motion of certain objects) while allowing
+interactive control of everything else.
+
+Geomview supports the following simple data types: polyhedra with
+shared vertices (.off), quadrilaterals, rectangular meshes,
+vectors, and Bezier surface patches of arbitrary degree including
+rational patches.  Object hierarchies can be constructed with
+lists of objects and instances of object(s) transformed by one or
+many 4x4 matrices.  Arbitrary portions of changing hierarchies
+may be transmitted by creating named references.
+
+Geomview can display Mathematica and Maple 3-D graphics output; for
+information on this see the files OOGL.m.doc and gvplot.doc, respectively,
+in the "doc" subdirectory.
+
+
+EXTERNAL MODULES
+----------------
+
+Geomview comes with several "external modules" --- programs that
+communicate with geomview through a command language.  The list
+of currently installed modules appears in the "Modules" browser
+on geomview's main panel.  To invoke a module, click the mouse on
+the appropriate line in this browser.  The modules in this
+distribution are:
+
+MODULE	   PLATFORMS	DESCRIPTION
+
+addbbox:	SNX	create a wireframe box around an object
+animate:	SNX	flip through a sequence of objects
+clipboard:	SX	cut, copy and paste geometric objects
+cplxview:	SX	complex-function viewer, using geomview N-D projection
+crayola:	SNX	interactively color objects
+drawbdy:	SNX	compute and draw the boundary of an object
+example:	SX	generic FORMS example external module
+flythrough:	SX	interactive version of "Not Knot" hyperbolic flythrough
+ginsu:		SX	interactively slice objects (see "clip")
+graffiti:	SNX	draw line segments on objects
+gvclock:	SNX	3D clock, demonstrates real-time motion
+hinge:		SX	hinge copies of a polyhedron around its edges
+labeler:	X	turn text into geometric objects
+maniview:	SX	3-manifold viewer
+NDview:		SX	N-dimensional viewing controls
+NDdemo:		SX	N-dimensional viewing demonstration
+nose:		SNX	demonstrates picking
+stereo:		SX	hardware, crosseyed, red/cyan stereo
+sweep:		SN	generate objects of rotation from line segments
+tackdown:	SX	redefine an object's "home" position
+transformer:	SX	explicitly control an object's transformation matrix
+trigrp:		S	explore triangle symmetry groups
+
+(S means SGI version exists, N means NeXTStep version exists,
+X means X version exists.)
+
+									
+AUXILIARY PROGRAMS
+------------------
+
+PROGRAM	    PLATFORMS	DESCRIPTION
+
+anytooff:	SNX	convert any OOGL object into OFF format
+anytoucd:	SNX	convert any OOGL object into UCD format
+bdy:		SNX  	compute the boundary edges of a geom as a VECT file
+bez2mesh:	SNX	convert Bezier object to MESH
+clip:		SNX	clip OOGL objects against planes or other surfaces
+hvectext:	SNX	produce VECT text from Ghostscript Hershey fonts
+math2oogl:	SNX	convert Mathematica graphics object to OOGL format
+offconsol:	SNX  	consolidate duplicate vertices in an OFF file
+oogl2rib	SNX	convert OOGL to RenderMan RIB (see OOGL.m.doc)
+polymerge:	SNX	merge vertices, edges, and faces in an OFF file
+togeomview:	SNX	pipe GCL commands or geometry to a copy of geomview,
+		    	  invoking geomview if necessary
+ucdtooff:	SNX	convert UCD format file into an OFF OOGL file
+
+(S means SGI version exists, N means NeXTStep version exists,
+X means X version exists)
+
+
+DOCUMENTATION
+-------------
+
+A comprehensive manual is in the "doc" subdirectory.  You can also
+read or download the manual from the Geomview web site,
+www.geomview.org.
+
+The file doc/oogltour gives an introduction to the OOGL file
+format, which is the format of geometry files that geomview
+reads.  More details are in the manual.
+
+Further documentation is in the "man" directory, which contains
+Unix manual pages in both nroff source and formatted form.  Each
+external module, as well as geomview itself, has a manual
+page.  Of particular interest are:
+
+	man/cat1/geomview.1	geomview man page
+	man/cat5/geomview.5	geomview command language reference
+	man/cat5/oogl.5		OOGL file format reference
+	doc/OOGL.m.doc		documentation for interface to Mathematica
+	doc/gvplot.doc		documentation for interface to Maple
+
+
+GEOMVIEW E-MAIL
+---------------
+
+There are three electronic mail addresses for communication
+regarding geomview:
+
+geomview-users@geomview.org
+
+    This is a mailing list of people using geomview and can be used
+    for communication between users regarding geomview problems,
+    questions, experiences, etc.  The geomview authors are also a part
+    of this list and sometimes respond to questions posted to it.  We also
+    use this list to make announcements about new releases and other
+    things of interest to users.  To be added to or removed from the
+    geomview-users list, send a note to geomview-users-request@geomview.org.
+
+software@geomview.org
+
+    This is the "official" bug-reporting address.  Please send notes
+    about any bugs you find to this address.
+
+register@geomview.org
+
+    Use this address to tell us what you are doing with Geomview.  If
+    you use Geomview in your work please send us a note at this
+    address telling us what you are doing with it.  We're always
+    interested to hear about new applications of Geomview, and we may
+    include a link on www.geomview.org to your work (but we'll check
+    with you first before doing this).
+
+
+HISTORY
+-------
+
+This project began in the summer of 1988 at the University of
+Minnesota's Geometry Center with the work of Pat Hanrahan on a viewing
+program called MinneView.  Shortly thereafter Charlie Gunn begin
+developing OOGL in conjunction with MinneView.  In 1991 a team of
+programmers headed by Mark Phillips, Stuart Levy, and Tamara Munzner
+set about developing a revised version of OOGL and a new viewer which
+they named Geomview.  In the time since then, many people have
+contributed, including (in alphabetical order): Steve Anderson,
+Celeste Fowler, Todd Kaplan, Daniel Krech, Mario Lopez, Daeron Meyer,
+Mark Meuer , Timothy Rowley, Nathaniel Thurston, Scott Wisdom, and
+others.
+
+
+MISCELLANEOUS
+-------------
+
+For a list of changes between versions, see the file CHANGES.
+
+Geomview is distributed under the terms of the GNU Lesser Public
+License (LGPL); see the file COPYING for details.
+    
+The file MANIFEST contains a list of the files in this distribution.
+
+
+KNOWN BUGS
+----------
+
+(S refers to a SGI bug, N refers to a NeXTStep bug, and X refers
+to a X bug)
+
+Picking can fail if any part of any object is behind the camera plane. (SNX)
+
+BUG REPORTS AND COMMENTS
+------------------------
+
+Please send bug reports and comments about this version to
+software@geomview.org.

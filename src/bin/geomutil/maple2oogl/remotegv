@@ -1,0 +1,135 @@
+#! /bin/sh
+
+# Invoke geomview possibly remotely.
+# For use within Maple, install this remotegv script somewhere in users'
+# search paths (e.g. in /usr/local/bin).
+# This script attempts to guess which machine to invoke geomview on by
+# examining the DISPLAY environment variable.  If DISPLAY isn't set or
+# if geomview should run on a different machine, use the -h host option.
+#
+# The script also assumes that geomview should display on the machine where
+# it is invoked, so for that copy of geomview, it sets DISPLAY to ":0".
+# If the display should appear elsewhere (on an X terminal, say),
+# use the -display option.
+#
+# We use "rsh" (remote shell) to pass data to the other computer, so 
+# the remote computer must allow this -- either with an entry in
+# /etc/hosts.equiv, or in a .rhosts file in the user's home directory
+# on the machine where geomview will run.  The account name on the other
+# machine is assumed to be the same as on this machine; if different,
+# use the -l username or -h username@othermachine options.
+#
+# In case permissions are not set up correctly, the symptom
+# is liable to be a "Permission denied." message followed by the
+# immediate termination of the Maple process -- so if you're using it for
+# the first time, check it out before doing much else in your Maple session!
+# Sorry, but MapleV3 is just not very good at connecting to other programs.
+#
+# Note that togeomview and geomview MUST BE IN THE USER'S DEFAULT SEARCH PATH
+# on the remote machine.
+#
+# To use this script within Maple, you'd say:
+#    readlib(gvplot);
+# then
+#    gvcommand := `remotegv`;
+# or e.g.
+#    gvcommand := `remotegv -h othermachine -display myxterm:0`;
+# or, if the account on the other machine is different from yours,
+#    gvcommand := `remotegv -l otheraccount`;
+# or
+#    gvcommand := `remotegv -h otheraccount@othermachine`;
+# Following any remotegv options, you can add the command to be invoked as
+# geomview, possibly including options, as in:
+#    gvcommand := `remotegv -l person /u/person/bin/gv -wpos 300x200`;
+#
+# Then use gvplot() as usual.
+#
+# Normally, error messages reporting problems on the other machine (for
+# example, being unable to run geomview) are suppressed; this is unfortunately
+# necessary, or you'd never get another Maple prompt until quitting from
+# geomview.  There's a test mode to aid in tracing problems; use it as in
+#    gvcommand := `remotegv -test -h othermachine`;
+# i.e. add "-test" to whatever other options you'd give to remotegv.
+# 
+# Option summary:
+# -l user  or  -l user@host
+# -h host  or  -h user@host
+# -display host:number		(set display on remote end)
+# -test
+# also accepts togeomview's options (-g, -M[c][g][p][s]).
+
+# Invokes rsh to specified machine, invokes togeomview there by default.
+#
+# By default, we assume DISPLAY points to the machine where we'd like to be;
+#   -h {host-portion-of-DISPLAY} -display :0
+# Incorporates settings from "$RGVOPTS" environment variable.
+
+set -- $RGVOPTS "$@"
+
+while
+  case "$1" in
+  -l)
+	case "$2" in
+	*@*) user="`expr match "$2" '\([^@]*\)'`"
+	     host="`expr match "$2" '.*@\(.*\)'`" ;;
+	*) user="$2" ;;
+	esac
+	shift 2 ;;
+
+  -h)   case "$2" in
+	*@*) user="`expr match "$2" '\([^@]*\)'`"
+	     host="`expr match "$2" '.*@\(.*\)'`" ;;
+	*) host="$2" ;;
+	esac
+	shift 2 ;;
+
+  -test) testopt=-test; shift ;;
+  -display) rdisplay="$2"; shift 2 ;;
+  -M*) togvopts="$togvopts $1";
+	 inpipe="$2"
+	 shift 2 ;;
+  -g)  gopt=-g; shift ;;
+  "") test ;;
+  *) togvargs="$togvargs $1"; shift ;;
+  esac
+do :
+done
+
+# Apply defaults
+
+if [ -z "$host" ]; then
+  host="`expr match "$DISPLAY" '\([^:]*\)'`"
+fi
+
+if [ -z "$rdisplay" ]; then
+  rdisplay=":0.0"
+fi
+
+case "$inpipe" in
+  /*) ;;
+  ?*) inpipe=/tmp/geomview/$inpipe ;;
+esac
+
+user=${user+"-l $user"}
+cmd="${host+rsh $host $user}"
+
+if [ -n "$host" ]; then
+  redirect=">/dev/null 2>&1"
+  if [ -n "$testopt" ]; then
+    echo "Testing setup to $host.  If geomview or togeomview can't be started
+there, you should see messages explaining why.  Unfortunately this command
+may not finish on its own -- you may need to interrupt (perhaps with control-C)
+after seeing the results, before you get another Maple prompt." >&2
+    redirect=""
+  fi
+  if [ -n "$inpipe" ]; then
+    rsh $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $inpipe $togvargs $redirect\"" <$inpipe
+  else
+    rsh $host $user sh -c "\"DISPLAY=$rdisplay togeomview $gopt ${togvopts} $togvargs $redirect\""
+  fi
+else
+  case "$1" in
+    ""|-*) DISPLAY=$rdisplay geomview ${togvopts} $togvargs ;;
+    *) DISPLAY=$rdisplay ${togvopts} $togvargs;;
+  esac
+fi

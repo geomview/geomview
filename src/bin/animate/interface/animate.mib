@@ -1,0 +1,384 @@
+static char AnimRoot[] = "\
+TotalWidgets: 20\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 272\n\
+Xmheight: 319\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Once\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 259\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 95\n\
+XmrightOffset: 177\n\
+Private-\n\
+label: \"Once\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Bounce\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 259\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 179\n\
+XmrightOffset: 20\n\
+Private-\n\
+label: \"Bounce\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Range\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 259\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 8\n\
+XmrightOffset: 264\n\
+Private-\n\
+label: \"Range\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AnimateTitle\"\n\
+Xmwidth: 125\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 284\n\
+XmleftOffset: 73\n\
+XmrightOffset: 74\n\
+Private-\n\
+label: \"Animator\"\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Script\"\n\
+Xmwidth: 44\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 221\n\
+XmbottomOffset: 68\n\
+XmleftOffset: 219\n\
+XmrightOffset: 9\n\
+Private-\n\
+label: \"Script\"\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CommandButton\"\n\
+Xmwidth: 164\n\
+Xmheight: 23\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 233\n\
+XmbottomOffset: 63\n\
+XmleftOffset: 4\n\
+XmrightOffset: 104\n\
+Private-\n\
+label: \"Command\"\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Load\"\n\
+Xmwidth: 41\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 221\n\
+XmbottomOffset: 68\n\
+XmleftOffset: 176\n\
+XmrightOffset: 55\n\
+Private-\n\
+label: \"Load\"\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"EtchedInFrame\"\n\
+Xmwidth: 96\n\
+Xmheight: 40\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 216\n\
+XmbottomOffset: 63\n\
+XmleftOffset: 172\n\
+XmrightOffset: 4\n\
+Private-\n\
+shadowtype: 2\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Stop\"\n\
+Xmwidth: 81\n\
+Xmheight: 27\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 204\n\
+XmbottomOffset: 88\n\
+XmleftOffset: 87\n\
+XmrightOffset: 104\n\
+Private-\n\
+label: \"Stop\"\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Play\"\n\
+Xmwidth: 81\n\
+Xmheight: 27\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 204\n\
+XmbottomOffset: 88\n\
+XmleftOffset: 4\n\
+XmrightOffset: 187\n\
+Private-\n\
+label: \"Play\"\n\
+EndWidget.\n\
+Ref: 12\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BStep\"\n\
+Xmwidth: 81\n\
+Xmheight: 27\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 175\n\
+XmbottomOffset: 117\n\
+XmleftOffset: 4\n\
+XmrightOffset: 187\n\
+Private-\n\
+label: \"< Step\"\n\
+EndWidget.\n\
+Ref: 13\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FStep\"\n\
+Xmwidth: 81\n\
+Xmheight: 27\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 175\n\
+XmbottomOffset: 117\n\
+XmleftOffset: 87\n\
+XmrightOffset: 104\n\
+Private-\n\
+label: \"Step >\"\n\
+EndWidget.\n\
+Ref: 14\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"SpeedScale\"\n\
+Xmwidth: 96\n\
+Xmheight: 19\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 194\n\
+XmbottomOffset: 106\n\
+XmleftOffset: 172\n\
+XmrightOffset: 4\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 15\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 53\n\
+Xmheight: 18\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 175\n\
+XmbottomOffset: 126\n\
+XmleftOffset: 192\n\
+XmrightOffset: 27\n\
+Private-\n\
+label: \"Speed\"\n\
+EndWidget.\n\
+Ref: 16\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"FileText\"\n\
+Xmwidth: 264\n\
+Xmheight: 30\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 283\n\
+XmbottomOffset: 6\n\
+XmleftOffset: 4\n\
+XmrightOffset: 4\n\
+Private-\n\
+EndWidget.\n\
+Ref: 17\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"AnimList\"\n\
+Xmwidth: 264\n\
+Xmheight: 137\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 36\n\
+XmbottomOffset: 146\n\
+XmleftOffset: 4\n\
+XmrightOffset: 4\n\
+Private-\n\
+EndWidget.\n\
+Ref: 18\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CloseButton\"\n\
+Xmwidth: 59\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 4\n\
+XmbottomOffset: 285\n\
+XmleftOffset: 209\n\
+XmrightOffset: 4\n\
+Private-\n\
+label: \"Exit\"\n\
+EndWidget.\n\
+Ref: 19\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"InfoButton\"\n\
+Xmwidth: 59\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 4\n\
+XmbottomOffset: 285\n\
+XmleftOffset: 4\n\
+XmrightOffset: 209\n\
+Private-\n\
+label: \"Info\"\n\
+EndWidget.\n\
+Ref: 20\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 272\n\
+Xmheight: 318\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 1\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

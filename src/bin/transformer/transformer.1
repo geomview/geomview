@@ -1,0 +1,64 @@
+.TH transformer 1 "August 16 1992" "Geometry Center"
+.SH NAME
+transformer \- Tool for manipulating geomview transforms.
+.SH SYNOPSIS
+transformer
+.SH DESCRIPTION
+.PP
+Transformer is a tool to manipulate the wrap transforms of
+geomview objects.  When transformer is started, it will read in
+the wrap transform of the target object.  The transform will
+be displayed at the top of the panel.  
+.PP
+The displayed transform may at any time be set to the wrap 
+transform of the geomview target object by pressing the "Read"
+button at the bottom of the panel.  Note that the transform
+does not automatically update whenever the target object moves.
+The transform may also be set to the identity by pressing the 
+"Identity" button at the bottom of the panel.  
+.PP
+The transform may also be applied to the geomview target object
+by pressing the "Apply" or "Set" button.  The "Apply" button will
+cause the current wrap transform of the current target object to
+be postmultiplied by the displayed transform.  The "Set" button
+will cause the wrap transform of the target to be replaced by the 
+transform.  Note that the transform of the geomview target is
+not updated automatically when the transform displayed in the panel
+changes.
+.PP
+The displayed transform may be modified directly by changing the 
+numbers in the matrix.  In addition, a rotation, translation, or
+scale may be applied to the object.  To rotate the object, 
+enter the appropriate number of degrees or radians in the input
+field next to the "Degrees" buttons and press the "Rotate" button.
+The displayed transform will then be postmultiplied by a rotation
+matrix of the requested amount about the specified axis.  In a similar
+fashion, the translate and scale sections of the panel may be used to
+update the transform.
+.PP
+All operations are Euclidean.
+.PP
+The following keyboard shortcuts apply:
+.nf
+	R		Rotate
+	T		Translate
+	S		Scale
+	a or Space	Apply
+	Return		Set
+	r		Read
+	i		Identity
+	q		Quit
+.SH BUGS
+.PP
+The transform is read from the current target when the program begins
+or the read button is pressed.  The transform of the current target is 
+modified by or set to the displayed transform when the "Apply" or "Set"
+button is pressed.  There is no check that the user has not changed the 
+geomview target between these two operations.  Although the results of such
+an operation will be correct according to the specifications in this man
+page, the results may be unexpected.
+.SH AUTHOR
+.nf
+Celeste Fowler			email:  fowler@geomview.org
+The Geometry Center
+

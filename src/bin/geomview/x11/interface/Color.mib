@@ -1,0 +1,304 @@
+char Root[] = "\
+TotalWidgets: 16\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 204\n\
+Xmheight: 175\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ColorModel\"\n\
+Xmwidth: 40\n\
+Xmheight: 29\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 140\n\
+XmleftOffset: 86\n\
+XmrightOffset: 78\n\
+Private-\n\
+label: \"RGB\"\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 45\n\
+Xmheight: 24\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 141\n\
+XmbottomOffset: 10\n\
+XmleftOffset: 6\n\
+XmrightOffset: 153\n\
+Private-\n\
+label: \"HSV\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 43\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 108\n\
+XmbottomOffset: 37\n\
+XmleftOffset: 5\n\
+XmrightOffset: 156\n\
+Private-\n\
+label: \"RGB\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"HSVText\"\n\
+Xmwidth: 150\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 140\n\
+XmbottomOffset: 6\n\
+XmleftOffset: 52\n\
+XmrightOffset: 6\n\
+Private-\n\
+EndWidget.\n\
+Ref: 6\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BLabel\"\n\
+Xmwidth: 19\n\
+Xmheight: 23\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 82\n\
+XmbottomOffset: 70\n\
+XmleftOffset: 4\n\
+XmrightOffset: 181\n\
+Private-\n\
+label: \"B\"\n\
+EndWidget.\n\
+Ref: 7\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"GLabel\"\n\
+Xmwidth: 19\n\
+Xmheight: 23\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 60\n\
+XmbottomOffset: 92\n\
+XmleftOffset: 4\n\
+XmrightOffset: 181\n\
+Private-\n\
+label: \"G\"\n\
+EndWidget.\n\
+Ref: 8\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"RLabel\"\n\
+Xmwidth: 19\n\
+Xmheight: 23\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 38\n\
+XmbottomOffset: 114\n\
+XmleftOffset: 4\n\
+XmrightOffset: 181\n\
+Private-\n\
+label: \"R\"\n\
+EndWidget.\n\
+Ref: 9\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"RGBText\"\n\
+Xmwidth: 151\n\
+Xmheight: 31\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 106\n\
+XmbottomOffset: 38\n\
+XmleftOffset: 51\n\
+XmrightOffset: 6\n\
+Private-\n\
+EndWidget.\n\
+Ref: 10\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CancelButton\"\n\
+Xmwidth: 56\n\
+Xmheight: 30\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 140\n\
+XmleftOffset: 5\n\
+XmrightOffset: 143\n\
+Private-\n\
+label: \"Cancel\"\n\
+EndWidget.\n\
+Ref: 11\n\
+Widget: \"Button\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"DoneButton\"\n\
+Xmwidth: 52\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 6\n\
+XmbottomOffset: 140\n\
+XmleftOffset: 151\n\
+XmrightOffset: 6\n\
+Private-\n\
+label: \"Done\"\n\
+EndWidget.\n\
+Ref: 12\n\
+Widget: \"DrawingArea\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ColorTest\"\n\
+Xmwidth: 62\n\
+Xmheight: 64\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 38\n\
+XmbottomOffset: 73\n\
+XmleftOffset: 139\n\
+XmrightOffset: 6\n\
+Private-\n\
+EndWidget.\n\
+Ref: 13\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"BScale\"\n\
+Xmwidth: 110\n\
+Xmheight: 19\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 82\n\
+XmbottomOffset: 74\n\
+XmleftOffset: 25\n\
+XmrightOffset: 69\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 14\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"GScale\"\n\
+Xmwidth: 110\n\
+Xmheight: 19\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 60\n\
+XmbottomOffset: 96\n\
+XmleftOffset: 25\n\
+XmrightOffset: 69\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 15\n\
+Widget: \"Scale\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"RScale\"\n\
+Xmwidth: 110\n\
+Xmheight: 19\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 38\n\
+XmbottomOffset: 118\n\
+XmleftOffset: 25\n\
+XmrightOffset: 69\n\
+Private-\n\
+orientation: 1\n\
+EndWidget.\n\
+Ref: 16\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 209\n\
+Xmheight: 174\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 1\n\
+XmbottomOffset: 1\n\
+XmleftOffset: 1\n\
+XmrightOffset: 1\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

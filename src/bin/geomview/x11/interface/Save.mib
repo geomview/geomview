@@ -1,0 +1,111 @@
+char Root[] = "\
+TotalWidgets: 5\n\
+Ref: 1\n\
+Widget: \"RootForm\"\n\
+Children: 2 3 4 5\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Root\"\n\
+Xmwidth: 249\n\
+Xmheight: 85\n\
+XmtopAttachment: 1\n\
+XmbottomAttachment: 1\n\
+XmleftAttachment: 1\n\
+XmrightAttachment: 1\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+EndWidget.\n\
+Ref: 2\n\
+Widget: \"TextBox\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Object\"\n\
+Xmwidth: 140\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 44\n\
+XmbottomOffset: 11\n\
+XmleftOffset: 69\n\
+XmrightOffset: 40\n\
+Private-\n\
+EndWidget.\n\
+Ref: 3\n\
+Widget: \"Label\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"Label\"\n\
+Xmwidth: 41\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 43\n\
+XmbottomOffset: 12\n\
+XmleftOffset: 26\n\
+XmrightOffset: 182\n\
+Private-\n\
+label: \"For:\"\n\
+EndWidget.\n\
+Ref: 4\n\
+Widget: \"Menu\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"ObjectMenu\"\n\
+Xmwidth: 90\n\
+Xmheight: 30\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 4\n\
+XmbottomOffset: 37\n\
+XmleftOffset: 20\n\
+XmrightOffset: 20\n\
+Private-\n\
+numitems: 14\n\
+item: \"Commands\"\n\
+item: \"Geometry Alone\"\n\
+item: \"Geometry [in world]\"\n\
+item: \"Geometry [in universe]\"\n\
+item: \"RMan [->tiff]\"\n\
+item: \"RMan [->frame]\"\n\
+item: \"SGI Screen snapshot\"\n\
+item: \"PPM Screen snapshot\"\n\
+item: \"PPM software snapshot\"\n\
+item: \"PostScript snapshot\"\n\
+item: \"Camera\"\n\
+item: \"Transform [to world]\"\n\
+item: \"Transform [to universe]\"\n\
+item: \"Window\"\n\
+EndWidget.\n\
+Ref: 5\n\
+Widget: \"Frame\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"OutFrame\"\n\
+Xmwidth: 249\n\
+Xmheight: 85\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 0\n\
+XmbottomOffset: 0\n\
+XmleftOffset: 0\n\
+XmrightOffset: 0\n\
+Private-\n\
+shadowtype: 1\n\
+EndWidget.\n\
+END.\n\
+";

@@ -1,0 +1,531 @@
+Magic: 12321
+
+Internal Form Definition File
+    (do not change)
+
+Number of forms: 2
+
+=============== FORM ===============
+Name: MainForm
+Width: 360.000000
+Height: 370.000000
+Number of Objects: 33
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 360.000000 370.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 6
+box: 20.000000 20.000000 160.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Make Sweep
+name: 
+callback: GoButtonProc
+argument: 0
+
+--------------------
+class: 11
+type: 0
+box: 180.000000 20.000000 160.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Quit
+name: 
+callback: QuitButtonProc
+argument: 0
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: RotGroup
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 6
+box: 20.000000 70.000000 320.000000 230.000000
+boxtype: 6
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 260.000000 90.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: Arc length:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 260.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: Rotlength
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 190.000000 260.000000 70.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Degrees
+name: DegButton
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 260.000000 260.000000 70.000000 30.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: Radians
+name: RadButton
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 220.000000 90.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: End of axis:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 280.000000 200.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: z:
+name: Rotendz
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 200.000000 200.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: y:
+name: Rotendy
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 200.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: x:
+name: Rotendx
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 160.000000 130.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: Direction of axis:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 280.000000 130.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: z:
+name: Rotdirz
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 200.000000 130.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: y:
+name: Rotdiry
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 130.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: x:
+name: Rotdirx
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 80.000000 90.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: Divisions:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 80.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: Rotdivisions
+callback: 
+argument: 
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: TransGroup
+callback: 
+argument: 
+
+--------------------
+class: 1
+type: 6
+box: 20.000000 70.000000 320.000000 230.000000
+boxtype: 6
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 240.000000 130.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: Length of sweep:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 2
+type: 0
+box: 20.000000 140.000000 160.000000 30.000000
+boxtype: 0
+colors: 47 47
+alignment: 2
+style: 1
+size: 11.000000
+lcol: 0
+label: Direction of sweep:
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 210.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 3
+style: 0
+size: 11.000000
+lcol: 0
+label: Units
+name: Translength
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 120.000000 110.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: x:
+name: Transxdir
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 200.000000 110.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: y:
+name: Transydir
+callback: 
+argument: 
+
+--------------------
+class: 31
+type: 0
+box: 280.000000 110.000000 50.000000 30.000000
+boxtype: 2
+colors: 15 15
+alignment: 2
+style: 0
+size: 11.000000
+lcol: 0
+label: z:
+name: Transzdir
+callback: 
+argument: 
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+--------------------
+class: 10000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: TypeGroup
+callback: 
+argument: 
+
+--------------------
+class: 11
+type: 2
+box: 180.000000 310.000000 160.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Rotational Sweep
+name: RotSweep
+callback: RotSweepProc
+argument: 0
+
+--------------------
+class: 11
+type: 2
+box: 20.000000 310.000000 160.000000 40.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 1
+size: 11.000000
+lcol: 0
+label: Translational Sweep
+name: TransSweep
+callback: TransSweepProc
+argument: 0
+
+--------------------
+class: 20000
+type: 0
+box: 0.000000 0.000000 0.000000 0.000000
+boxtype: 0
+colors: 0 0
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+=============== FORM ===============
+Name: FooForm
+Width: 500.000000
+Height: 610.000000
+Number of Objects: 1
+
+--------------------
+class: 1
+type: 1
+box: 0.000000 0.000000 500.000000 610.000000
+boxtype: 1
+colors: 47 47
+alignment: 4
+style: 0
+size: 11.000000
+lcol: 0
+label: 
+name: 
+callback: 
+argument: 
+
+==============================
+create_the_forms

@@ -1,0 +1,53 @@
+LIST
+
+# A couple copies of the colored square (csquare.quad), included literally here.
+
+{ =
+   GROUP
+	1 0 0 0
+	0 1 0 0
+	0 0 -1 0
+	0 0 0 1
+
+	1 0 0 0
+	0 0 2 0
+	0 -2 0 0
+	1 0 0 1
+   unit
+     {
+	=
+	CQUAD
+-1 -1 0 1 0 0 1
+1 -1 0  0 1 0 1
+1 1 0   0 1 0 1
+-1 1 0  1 0 0 1
+      }
+}
+
+
+# Include Olaf's dodecahedron
+
+{ < dodec.quad }
+			# Any GeomReference can be enclosed in { }'s
+			# But { }'s are only really needed for geom's,
+			# where the trailing closebrace acts as an end-marker
+			# for the various Load routines.
+
+# Finally an INST for a small skewed cube plus a set of axes
+
+{ = INST
+	transform
+	.5 -.1 0 0
+	0 .5 .1 0
+	0 .1 .5 0
+	0 0 0 1
+
+	unit
+	{ =
+	   LIST
+	   < pieces/cube1.off
+	   < xyz.vect
+	}
+}
+	   
+	

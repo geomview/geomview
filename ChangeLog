@@ -1,0 +1,1203 @@
+1.7.6   May 25, 2000
+   Converted source tree (geomview only; no external modules yet)
+   to use GNU autoconf
+   
+   gv_rawevent now actually is passed an 'unsigned long' (which
+   is what it expected all along, but previous was passed an
+   'int') for the time value.  This had been causing mouse
+   motions to fail on 64bit RS6000 running AIX 4.3.2.
+   	
+   Many function prototypes fixed, and other warnings turned up
+   by 'gcc -Wall' fixed.  (Most of them had to do with functions
+   that were implictly declared to return an int not returning
+   a value).
+   	
+   Changed Geomview's X application name from "gv" to "geomview",
+   to avoid possible conflicts with other applications named "gv,
+   such as ghostview.  This affects the name used for X resources
+   that apply to Geomview.  If you want to force Geomview to use
+   the old "gv" name for backward compatability, set the environment
+   variable GEOMVIEW_X_NAME=gv in the "geomview" shell script (be
+   sure to 'export' this variable too).
+
+1.7 February 13, 2000
+   This version of the software is the same as 1.6.1p9d; the only
+   difference is in the documentation, which has been substantially
+   changed to reflect the fact that the Geometry Center is now closed
+   and that the new home for Geomview is http://www.geomview.org.
+
+1.6.1p9d  August 18, 1998
+
+   Fixed coloring of N-D OFF objects noted by James Lawrence.
+
+   Fixes to many obscure bugs and great wads of lint, suggested by
+   David Kaelbling of SGI.
+
+1.6.1p8  March 13, 1998
+
+   Fixes to compile with GNU glibc, and on Linux under non-x86 machines.
+
+   Geomview panels: don't limit FOV < 180 if in orthographic mode.
+
+   Fix more bugs in anytooff: convert VECTs even if appearance suppresses
+	faces and edges; preserve edgecolor property in vects.
+
+   Fix togeomview "Bad address" error: execvp() with no trailing NULL!
+
+1.6.1p7  November 20, 1997
+
+   Geomview:
+     Fix egregious vertex-picking bug, present in all earlier 1.6.1 versions,
+     where the returned vertex index was wrong (it returned one of the
+     adjacent vertices instead).
+
+     Include lighting properly in saved .rib files.
+
+     Use OpenGL texture_object extension if available; this improves
+	multiple-texture performance dramatically on some systems.
+
+     Automated making multiple gvx binary versions (MESA, native, etc.).
+
+   Distribute MapleV4 version of gvplot as well as earlier ones.
+   Thanks to Loris Renggli, loris@math.fsu.edu, for supplying a patch.
+   Repaired  geomview/x11/geomview-x11 script so its Makefile can
+   customize it properly again (broken in 1.6.1p6).
+
+   Fix togeomview, which sometimes could fail spuriously with "Bad address".
+
+1.6.1p6  August 29, 1997
+
+   Geomview:
+	Now seems to work, more or less, with lesstif.
+	Avoid crashing in X11 renderer: work around DEC Alpha cc and gcc bugs.
+	Don't draw into iconified windows, even if told to redraw via GCL.
+	Postscript-save mode produces postscript which doesn't fail
+	    when invoked with non-empty Postscript stack.
+	New "ppmmesa" snapshot type.  If compiled with MESA OpenGL-like
+	    library, allow arbitrary-res off-screen rendering using
+	    (snapshot CAMID FILENAME ppmmesa ...)
+	 Presence of this indicated by "(MESA)" in (geomview-version) string.
+	Allow control over texture-mapping quality (interpolated or not).
+	Try to produce usable display colors (not all black) on 8-bit Indigos.
+	 I'm told this still doesn't work, though.
+	   
+	geomview script accepts "-opengl", "-mesa", "-x11" etc. flags,
+	    and selects alternate gvx.{OGL,MESA,X11} binaries if installed.
+
+   anytooff handles "dice" appearance tag for Bezier & Sphere objects,
+	and gets the right color for colored VECTs.
+
+   emodule_wish.sh script sets tcl/tk envariables, making it easier
+     for emodules to use "wish".
+
+   Make math2oogl really, really turn off non-blocking mode on its named pipe.
+
+   vrml2oogl now invokes gzip to read compressed files,
+	passes color into OOGL edgecolor as well as surface color, and
+	handles text by invoking "hvectext".
+
+   OOGL library changes:
+     prototypes at last for geometry functions.
+     new cleaner way to organize mg lights; they're now shared and refcounted.
+     
+   
+1.6.1	 December 10, 1996
+
+   Source distribution no longer uses GL-based FORMS library.
+   Geomview's X/Motif interface is now the primary version,
+   which the manual now describes.  Many modules rewritten
+   by Nils McCarthy, Tim Rowley, and others using Tcl/Tk.  Many FORMS-based
+   external modules adapted to use XForms (object libraries available from
+   ftp://laue.phys.uwm.edu/pub/Xforms; see INSTALL).
+
+   This release finally supports the extensions needed for Tamara Munzner's
+   weboogl package.
+
+  Known problems:
+
+   Many changes aren't mentioned in this CHANGES file (though I think the
+   significant ones are).
+
+  Porting:
+
+   Should now work under FreeBSD, and HP-UX 10.x.
+   Has been tried in some new environments, including Sun UltraSparc with
+   Creator3D card under Open GL, and Mesa Open-GL-like clone under Linux and
+   HP-UX.  Various portability problems fixed in the source code.
+
+  Modules:
+
+   Some modules from earlier releases are omitted here:
+
+     PS Snapshot's functionality is superceded by Geomview's PS Save mode.
+     4dview is superceded by NDview, and in any case it depends on some
+	GL-based FORMS code which hasn't been ported.
+     Crayola, Warp, and parts of NDview depend on old FORMS code.
+
+   Some new modules are added:
+
+     Crayola, NDview, NDdemo, and Labeler are now in Tcl/Tk.
+	You'll need to install Tcl/Tk in order to compile them; see INSTALL.
+
+     Also in Tcl/Tk are some new N-dimensional utilities by Brian Luense:
+	3D-Snapshot (save a projected copy of the current N-D object),
+	Colormap (interactive N-D colormap controls), and
+	Slicer (N-dimensional clipping).
+
+    FORMS modules were only minimally ported to X-Forms.  You can't use
+	the new Forms designer to change their interfaces, since the new
+	designer writes .c files in an incompatible (though superior) way.
+	The FORMS section in the Geomview manual needs to be updated.
+
+  Applications:
+
+    New "vrml2oogl" and "oogl2vrml" converters, written by Daeron Meyer
+    and Tamara Munzner respectively.  "vrml2oogl" uses the C++ QvLib library,
+    included here; if you use GNU g++ to compile it, it seems to require 2.7.2.
+
+    "anytooff" now more efficient on large data sets, and preserves
+    appearance information where possible.
+
+    Maple graphics now pay attention to color, and can now be displayed on
+    remote computers; see doc/gvplot.doc.
+
+    New command-line text generator "hvectext" uses Hershey stroke fonts.
+
+    Benchmarks for various platforms, with a Makefile to run your own,
+	are in data/speedtests.
+
+
+  Geomview graphics:
+
+   Supports Open GL as well as GL and X renderers.  Future development will
+   most likely focus on Open GL.
+
+   Texture mapping available in GL and Open GL (but not plain X11) renderers.
+   Texture coordinate must be explicitly specified.  Images may be sgi,
+   ppm/pgm/pbm, or tiff or gif if netpbm toolkit installed.
+   See data/geom/textured/* for some examples.
+
+   New built-in PostScript renderer by Tim Rowley replaces PS Snapshot
+   module -- respects appearances, but still uses only painter's algorithm
+   for hidden-surface removal.
+
+   New in-memory renderer (related to X renderer) writes arbitrary-size
+   PPM images of geomview scenes.
+
+   Single/double-buffered switching works in Motif version too.
+
+   You can specify an image as a window background.
+
+   X11 renderer on 8-bit colormapped displays defaults to 5x5x5 color cube,
+   to leave more color-table slots available.  New GEOMVIEW_COLORLEVELS
+   environment variable may be set to "6" to get the old 6x6x6 behavior.
+
+   Some binary distributions include two geomview binaries, both
+   bin/*/gvx with X11 renderer, and bin/*/gvx.OGL, with Mesa OpenGL-clone
+   libraries.  "geomview -opengl" invokes the Open GL version.
+
+  OOGL data formats:
+
+   More-robust geometry parser never backtracks on valid input,
+   and should now reliably read data from pipes (rather than almost-reliably
+   as before).  "Lincoln" objects no longer supported.
+
+   New "origin" and "location" fields in INSTs allow fixing objects in
+   screen or camera or etc. coordinates, e.g. to paste text or UI elements
+   onto objects or onto the screen.  (No built-in geomview text yet, though.)
+
+   "input-translator" command allows specifying an external program to
+   translate a file beginning with a particular string into OOGL format.
+   This hack lets us read ASCII VRML files directly using vrml2oogl.
+
+   New appearance attributes for texture-mapping, concave polygons,
+   shaded lines, back-face culling, Bezier patch dicing.
+
+  Geomview command language:
+
+   (snapshot ...) commands -- except SGI format -- allow piping PPM or
+   PostScript data to a shell command as well as writing to a file.
+   PPM images may be arbitrary size.
+
+   (background-image ...) puts an image up as a window background.
+
+   (pick-invisible ...) lets picking depend on appearance
+   (though the default is still to ignore appearances).
+
+  Geomview UI:
+
+   Keyboard shortcuts work in Motif panels!
+   Single ESC no longer exits from geomview; use ESC ESC.
+   Motif panels are now resizable.
+
+   GL/FORMS user interface is no longer available in this release.
+
+   Now terminates cleanly, notifying any running modules,
+   if sent interrupt/hangup/terminate signals.
+
+  Geomview documentation:
+
+    Manual now included in HTML form (see doc/geomview_toc.html)
+    as well as Texinfo and (in binary packages) Postscript.
+
+    Manual updated to describe the Motif user interface.
+    It also includes a Tcl/Tk sample module, though without commentary.
+    The commentary for modules using the FORMS library is no longer accurate,
+    though probably still somewhat useful.
+
+
+
+1.5	October 21, 1994
+
+   Source distribution now includes support for generic X/Motif
+	(Sun, HP-UX, Linux, probably other systems) as well as SGI
+	and NeXT graphics.
+
+   Geomview motions:
+
+     INCOMPATIBLE bug fix in the GCL command language:
+	Motions defined with respect to the object itself, e.g.
+	 (transform world world world translate 0 0 1)
+	had been interpreted with the wrong sign.  This is now fixed.
+	Application programs which depended on this bug (including gvclock
+	and stereo) need to change accordingly.
+
+     Documentation fix: GCL rotations (transform/transform-incr/transform-set)
+	are given in radians, not degrees.
+
+     New motion-animation commands:
+	The (transform ...) command now allows a simple form of animation.
+	If given an amount of time, it arranges to move by exactly that amount
+	during approximately that many seconds, either at constant speed
+	or with smooth start and stop.
+
+     Scaling now happens with respect to the selected "center" object,
+	not the object's own origin.  There's a new (transform ... scale ...)
+	subcommand.
+
+   Keyboard input:
+     New (event-keys) and (event-pick) commands can suppress geomview
+	interpreting keyboard input as commands and rightmouse-clicks as
+	picking, in graphics windows.  Useful for modules which want to impose
+	their own interpretations on events.
+
+   Non-Euclidean spaces:
+     Newly created cameras now correctly live in the current (possibly
+	non-Euclidean) space.   They had been always Euclidean,
+	despite misleading window titles.
+	
+   N-D projection:
+     New "nOFF" object is a collection of 0-, 1- or 2-dimensional polygons
+	in N-dimensional space.
+     N-D coloring projection axes can be with respect to any coordinate system.
+
+   Two-sided surface coloring:
+     The "backdiffuse" material field, if defined, is interpreted as the
+	reverse-side's diffuse color.  Works whenever software shading
+	is enabled (i.e. always on generic-X systems); also works on those
+	SGI systems whose hardware supports two-sided GL lighting.  There's
+	no control panel for this feature yet but GCL commands can, e.g.
+	(merge-ap world { material { backdiffuse .7 .5 0 } })
+
+
+   There were a number of portability improvements in the X version,
+	fixing bugs for Sun/Solaris, HP-UX, Linux, DEC OSF, AIX.
+
+   Code is now more careful to avoid floating-point exceptions, which
+	cause trouble on some machines.
+
+   Yacc and lex, which were needed for one library, are no longer essential.
+
+
+
+   Substantial improvements to the 3D graphics in the X11 version of Geomview:
+	- Uses X Shared Memory extension (when available) for
+		quick rendering of polygons and lines to X11 framebuffer
+	- Support for 1, 8, or 24 bit deep X displays added
+	- Optional dithering for 8 bit displays
+	- Dithers 1 bit displays
+	- Optional zbuffering (for hidden line/surface removal) added
+	- Smooth shading added
+	- Support for line thickness > 1 added
+	- Clipping planes added
+
+   Numerous fixes/additions to the X11 Geomview Motif interface:
+	- Window positioning commands work (under most window managers)
+		except for the Load and Save panels
+	- fixed edit menu
+	- added ability to type in RGB values in color panel
+	- added numeric displays for sliders on material panel
+	- added option menu on camera panel for choosing
+		hidden surface removal method
+	- added toggle button on camera panel for activating/deactivating
+		dithering of colors (only shows up in 8 bit mode)
+
+   Unlike the beta-release X graphics, the new version transmits complete
+	images, not polygons, to the X server.  It's faster for local
+	displays; can be slow when the display-to-geomview connection
+	traverses a slow network link.
+
+   New associated packages:
+
+    gvplot/writeoogl, a Maple package for displaying Maple 3-D graphics
+	objects in Geomview or saving them as OOGL files.  See doc/gvplot.doc.
+
+    clip, a new command-line program based on Ginsu.  Allows clipping
+	OOGL objects against spheres and cylinders as well as planes.
+
+
+1.4.3   July 24, 1994
+
+   Most changes since 1.4.2 were to fix minor bugs & improve portability.
+
+Documentation
+   Documented the OOGL "COMMENT" object.  Clarified explanation of transparency.
+
+Geomview
+   New ui-freeze command (effective on SGI only) allows suspending/resuming
+     updates to UI panels, for decent performance when lots of things are
+     changing.
+
+   Portability mods: ensure FNDELAY is defined; pass the proper
+     argument type to wait3/waitpid (union wait vs int).
+
+   Fix ``normalization'' command; it had failed on "all" and "keep".
+
+   Fix ``ND-xform-get'' command; it had returned the inverse of the
+     correct matrix.
+
+   Make ``set-conformal-refine'' command process its arguments properly.
+
+   Call proper version of setpgrp() when spawning external modules;
+     ensures we can properly kill them when exiting.
+   Work around lost SIGCHLD signals when we kill an e-module invoked with
+     ``(emodule-run exec program ...)''; this caused geomview to hang when
+     trying to quit while such a module was running.
+   Erase comm link (named pipe/socket) if it already exists but is of the
+     wrong type (-M option).  ["togeomview" and "math2oogl" fixed similarly.]
+
+
+OOGL libraries
+   COMMENT objects can't be picked.  (Due to bugs fixed here, scenes with
+	COMMENTs could sometimes yield totally spurious pick results.)
+
+   Compute bounding spheres of 3-D objects properly, even when not normalized
+     to w=1.  Affects geomview's Look command.
+
+   Draw N-D SKEL objects even when not in N-D mode.
+   Maintain mg drawing flags correctly, so driver applies proper colors, etc.,
+     when drawing SKEL and VECT objects.
+
+   Draw SPHERE objects with degenerate corner at x=1, so the Bezier normals
+     come out right.
+
+   Allow binding an appearance to a reference to a handle, e.g.
+     { appearance { +edge } : fred }, by inserting an INST to hold the handle.
+
+   Concentrate all stdio dependencies in src/lib/oogl/util/futil.c.
+     Handle Linux 1.0.
+
+   Implement acosh() correctly!
+
+X graphics
+    Allow drawing into subregions of the graphics window; needed for stereo.
+
+
+External modules
+
+ PSSnap
+   Make isolated points visible.
+   Ensure lightness values don't exceed 1.0.
+
+ mgexample
+   Handle lighting properly.  Allow giving data file on command line.
+
+Configuration
+   New "make clobber" rule cleans and removes targets (except libraries).
+    Handy for saving space after building & installing the source distribution.
+
+   "all" is now the sole first target in Makerules.src, to avoid confusing
+	RS/6000 make.
+
+   Expect Motif include files in /usr/include/X11/Xm/... on HP-UX.
+   Define default settings for CPLUSPLUS (compiler name) for SGI and RS/6000.
+
+   Compile on RS/6000 with "-ma" flag to allow unrestricted use of alloca().
+
+   SunOS 4.x: set "BSD" flag, initially for choosing version of setpgrp().
+
+   Finish incorporating SYSLIBS, etc. macros into makefiles.
+
+   Omit -lXt when linking with mgexample, to avoid spurious link errors on Sun.
+
+
+
+1.4.2  April 20, 1994
+
+Beta X11 source distribution supports HP PA-RISC, DEC Alpha, RS/6000,
+    Solaris, and Linux (0.99), in addition to SunOS 4.x.
+
+New external modules:
+    SGI version:
+	Maniview	  (3-manifold viewer),
+	NDview and NDdemo (N-dimensional viewer and demonstration program)
+
+    X11 version now includes Animate and PS Snapshot modules.
+
+Configuration
+
+   Make SYSLIBS, SYSXLIBS, etc. settings -- set in makefiles/mk.* files --
+       be used when compiling all programs.  Ditto for ALLOOGLLIBS,
+       so new OOGL libraries can be added in one place.
+
+Geomview
+
+   Picking now works in X11 Geomview.
+
+   Maintain reference counts better, avoiding memory leaks.
+   Fix various cases that caused core dumps:
+	- (interest ...) command entered in the Command panel
+	- sending message to an external module started with -start option.
+	- (echo (ND-xform ...))
+
+   Make RIB snapshotting work in conformal and N-D viewing modes.
+   (dimension) command now returns the correct setting, and
+	(dimension N) does nothing if we're already in that dimension.
+   Correctly choose a new current camera when the "focus" camera is deleted.
+   Don't crash when sending messages to an external module started with -start
+	command-line option.
+
+   Make a crude estimate of bounding-box size for N-D objects, so "Look At"
+       can begin to work.  It's only roughly right, and that only for objects
+       roughly centered on the origin.
+   Automatically switch all cameras into N-D mode when (dimension) is set,
+	if (ND-axes) have not yet been specified.
+   New (ND-xform-get) command returns N-D transform between two objects.
+   More documentation on ND-axes, ND-xform, ND-color commands.
+
+SGI Geomview (actually FORMS library)
+   Add X copy/paste facility to FORMS text input fields.
+       [Source for FORMS changes is available from ftp.geomview.org
+	in pub/forms-2.0+.all.tar.gz]
+
+NeXT Geomview
+   Deactivate color panel while changing its color -- don't be fooled into
+       thinking the user selected a new color.
+
+PS Snapshot
+   Make isolated points visible.
+   Draw uncolored points and lines in black; default had been nearly white,
+	almost invisible.
+
+Mathematica -> OOGL converter
+   Add an XDisplay option, allowing mathematica to run on one machine,
+	geomview on another, and send geomview's X display to a third machine.
+   Handle escaped newlines in Mathematica's output, preventing strange
+	parsing errors.
+
+OOGL libraries
+   New N-dimensional OOGL object types: nSKEL and nMESH.
+   pick.h now correctly describes interpretation of pick arguments, and
+	gives brief usage example.
+   Waste less memory when loading Quads.  malloc(big)/realloc(small) can lose!
+   GL graphics: leave mixed-model GL/X windows alone.
+   Next graphics: allow setting window depth; allow lights to live in other
+	coordinate systems.
+   New "keepcolor" appearance keyword tags objects as being immune to N-D
+	recoloring.
+   OOGL objects containing an appearance attached to a handle/file reference
+	now work correctly, rather than modifying the handle;
+	the reference is silently wrapped in an INST.
+   Various minor bug & portability fixes.
+
+
+1.4.1  November 9, 1993
+
+Distribution includes both NeXT and SGI versions.
+
+    New modules included:
+	crayola  (SGI and NeXT) coloring program
+	warp	 (SGI and NeXT)	interactive object warping
+	ndviewer (SGI only)	N-dimensional viewer (currently only 4D objects)
+	cplxview (SGI only)	graphs of complex functions
+	clipboard (SGI only)	cut, copy and paste objects
+	drawbdy	   (SGI and NeXT) find and draw the boundary of an object
+	flythrough (SGI only)	Not Knot hyperbolic 
+	gvclock   (SGI and NeXT) 3D clock, demonstrates real-time motion
+	maniview  (SGI only)	3-manifold viewer
+	trigrp	  (SGI only)    explore triangle symmetry groups
+    plus source for all the existing modules.
+
+
+Documentation:
+    New manual!  doc/geomview.tex (TeX version) and doc/geomview-*
+	(GNU texinfo version) explain Geomview in far more detail than
+	previous documentation.  They strictly describe Geomview on the Iris,
+	but much also applies to the Next.
+		
+Configuration:
+    SITE makefile variable selects one of several site-specific
+	configuration settings, namely installation directories for binaries
+	(BINDIR), manual pages (MANDIR), and Mathematica scripts
+	(MMAPACKAGEDIR).  Settings stored in
+	makefiles/mk.site.{default,private,public}.  ``make instprivate''
+	and ``make instpublic'' are ``make install'' variants that use the
+	latter two.
+
+    Prevent 'make' from failing if C++ compiler isn't present; just don't
+    compile the C++ programs.
+
+
+Geomview, General:
+
+    Extend implementation of conformal transformations.
+	Conformal mode, which had been allowed only in hyperbolic space,
+	is now also meaningful in Euclidean space, where it amounts to
+	inversion in the unit sphere, and spherical space, where it's
+	a stereographic projection from the 3-sphere into Euclidean 3-space.
+	New command (set-conformal-refine).
+
+    Read both ~/.geomview and ./.geomview, in that order.
+
+    New -noinit command-line option suppress reading all .geomview files.
+
+    Implement Olaf Holt's design for N-D viewing by projection.
+	New commands (ND-axes) (ND-xform) (ND-color).
+	(Invoked by ndviewer and cplxview modules.)
+
+    Keep track correctly of which window the mouse is in.
+	Had sometimes gotten confused if a window was uncovered.
+
+    Allow disabling "override" status.  New Override button & (ap-override)
+	command selects whether appearance controls should suppress
+	objects' own settings, or just provide default values.
+
+    New (camera-prop) command allows setting the object used to show cameras
+	when "Draw Other Cameras" selected (e.g. see file "camera-frustum").
+
+    Mention Next variants to mouse usage (alt + left = middle, etc.)
+	in Help message.
+
+SGI Interface:
+    Add transparency controls to materials panel.
+	(No transparency supported on NeXT.)
+
+    Color picker has numeric RGB input.
+
+    Buttons for motion controls (Obscure) and Override control (Appearance).
+
+    Add focal length and software shading controls to camera panel.
+	"vl" keyboard shortcut sets camera focal length.
+
+    Limit picked projected Z values to -1 .. +1, so we can only pick things
+        that lie between the clipping planes!
+
+
+Motions:
+    Really stop motions of objects when we reset them.
+
+    Controllable inertia, constrained motion, own-coordinate-frame motion
+	('ui', 'uc', 'uo' key sequences).
+
+    Make more use of the ``focal plane''.  Look At button sets focal distance.
+	Shift-rightmouse-click selects a focal point; also becomes center of
+	rotation.  Translations are interpreted as at the focal plane,
+	so objects at the focal distance should move with the mouse.
+
+    Use ordinary, no longer scaled, translations.
+        Let the scaling be based on the frame camera's focal length,
+        set e.g. by Look or etc. operations.
+
+    Pay attention to window aspect ratio and camera focal length when moving.
+
+    Add more parameters to (look-encompass-size ...) indicating desired margins
+	for setting near and far clipping planes.
+
+
+Geomview, Graphics:
+    Pay proper attention to override bits in Next and RenderMan drawing
+	libraries; ensures that objects will be the color chosen on the panel.
+
+    Position SGI windows in exactly the specified place.
+
+    Draw degenerate polylist (OFF) objects correctly for Next and RenderMan:
+	use points and lines where they have 1- or 2-vertex "faces".
+
+    Correctly handle lights whose positions don't lie within the model space
+	(as the default lights are) in hyperbolic & spherical shaders.
+
+
+Geomview, Saving:
+    Save window positions when saving cameras in command form.
+    Use a unique name when saving geom objects as commands; avoids the problem
+	of saving as object X and having it automatically renamed X<n> in case
+	of conflict, making further commands ineffective.
+
+Geomview, RenderMan:
+    Include both NeXT and SGI (etc) standard shader directories; we don't
+        know where .rib files will be rendered.
+    RenderMan saving no longer enforces adding four-digit numeric suffix.
+
+Geomview, Communications:
+    GCL command files containing multiple commands now work sensibly:
+	geomview always reads entire contents, one command per display loop.
+	(Use (progn ... ) to swallow all at once.)
+
+    emodule-run command: all e-module directories are appended to $PATH
+	when the program is started, so emodule-run may mention module programs
+	without requiring full pathnames.
+
+    Both SGI and NeXT versions can read from either named pipes or UNIX-domain
+	sockets; -M[gc][sp] command-line option specifies data type and
+	communications mechanism.
+
+
+    Software shading now implements fog; density set by lighting attenconst.
+
+    External-module programs are invoked by their full path names when possible.
+
+    Allow L)ooking at cameras.
+
+    Allow reading either geometry or commands from either UNIX-domain sockets
+	or named pipes, using '-M[gc][sp] name' command-line option.
+    (camera-prop) command specifies how to draw other cameras.
+    (cursor) command (for SGI) controls GL cursor and/or loads from .pbm file.
+    (setenv) command allows setting environment of e.g. external modules.
+
+    Assorted bug fixes.
+
+
+Utility programs:
+
+    New programs ucdtooff, anytoucd convert AVS "UCD" format to/from OOGL.
+
+    Anytooff accepts (multiple) arguments, and combines their contents.
+
+
+Mathematica to OOGL software:
+    Improve installation document; be more robust about locating math2oogl,
+	geomview, etc. executables, and warning the user if we can't.
+	Allow specifying user name when displaying on remote host.
+    Don't fail if graphics contain complex values (just plot real part).
+    New BezierPlot[] in BezierPlot.m allows plotting Bezier patches directly.
+
+
+FORMS:
+    Include FORMS-2.0-PATCHES, all differences from FORMS 2.0 release.
+	Change summary:
+
+  FORMS Library:
+    New color-picker module.
+
+    New fouraxis module, derived from positioner.c.
+    Allows specifying a direction in 4-space.
+
+    Be more intelligent about frozen forms: only redraw if
+    some object changed while the form was frozen.
+    Use the sign bit of the form->frozen field to tell.
+
+    Add '@I' prefix to embed FL_ICON_STYLE (symbol font) items in a browser.
+
+    Tie mouse (x,y) position to all mouse clicks.  Use this to ensure that we
+    always register a mouse click in its correct position, not the place where
+    the mouse lies when we get a chance to read it!
+    Click position is fed to the next caller to ask for the mouse position
+    after a click; later calls read the live mouse position.  Seems to work.
+
+    Cache stuff as much as possible.  Don't load fonts or read color map unless
+    (until) we actually need them.  Might allow programs to start up at
+    a reasonable speed, since the SGI font manager is slower in 4.0.x than 3.3.
+
+    Handle Icon font usefully -- use the Symbol font, and allow it to be scaled.
+    Accommodate new font-sizing rule in IRIX 4.0.5: fonts are now
+    scaled to constant real size rather than constant size in pixels.
+    On IRIX 4.0.5 or greater, we discover the error this will cause and
+    scale all font sizes by its reciprocal (!).
+
+    Optimize drawing bitmaps.  Cache fl_getmcolor() values; use pointers to
+    scan input & output pixel arrays.  ~sixfold speedup.  Save 64K data size.
+
+  FORMS designer:
+    Add fdesign2c, batch-mode translator from *.fd to *.{c,h}.
+    Added colorwheel and fouraxis objects.
+
+
+1.3.2	March 1, 1993
+
+	Fix RenderMan file saving bug.
+	New OOGL classes: discrete groups and spheres.
+	Underlying support for stereo added.
+	Fix replace world bug.
+	Rotate about CENTERID, not the target geom, in orbit mode.
+	Add slow-motion controls (invoked with Shift key).
+	Scaled translation procedures now take world size into account, 
+	  not distance from target object. Use this mode in fly and orbit.
+        Add "emodule-defined" command: returns the given emodule's
+	  shell command (& tests whether any such is defined).
+	Add cull-backface as a command.
+
+1.3.1	January 31, 1993
+
+	IMPORTANT: the "pick" command has changed completely and is
+	incompatible with previous versions.  If you have an external
+	module that uses the "pick" command you should change it to
+	use the new "interest" command instead.
+
+	Change the way system-dependent information is specified;
+	everything is now specified in the "geomview" shell script
+	which sets environment variables and then invokes the binary.
+	Nothing that is system-dependent (e.g. pathnames) are compiled
+	in; not even default values.
+
+	External modules now appear in alphabetical order in the
+	applications browser.  Geomview finds out about them via files
+	named .geomview-* in the modules directory, rather than in the
+	system-wide .geomview file.  So there is no need to edit the
+	system-wide .geomview when installing a module now.  See
+	man/cat1/geomview.1 for more information on how to install a
+	module.
+
+	The space browser is now on the main panel.
+
+	Different models of hyperbolic space are now available: virtual
+	(the insider's view of the projective model), projective (outsider's
+	view), and conformal-ball.  The conformal-ball model is only partially
+	implemented; it works only for polylist (OFF) objects and only in
+	constant-color and smooth-shading modes (not in flat-shading mode).
+	The model is per-camera attribute and is settable via a browser in
+	the camera panel.
+
+	The camera, when drawn, now fits inside the unit sphere.
+
+	Fixed RenderMan saving bug: file is now opened properly.
+	
+	"Fly" mode now uses scaled z-translation.
+
+	A color wheel replaces the RGB sliders for picking colors.
+
+	Several "look" functions added for positioning a camera to look at
+	an object.  "Look At [L]" button added to tools panel positions
+	the current camera to place the target object nicely in the view.
+	Look At and look-encompass compute and use a bounding sphere for the
+	object rather than using its bounding box.
+
+	Add "Orbit [o]" mode.  Like fly mode, but rotates the camera
+	about the center of the selected object.
+
+	Better error reporting; syntax errors in input files are now reported
+	with messages including the input line where the error was detected.
+
+	Picking code improved; picking now works in more cases than before.
+	Still broken if any part of any object is behind the camera plane.
+
+	Null geoms now allowed, denoted { }.
+
+	Added "interest" command which allows external modules to
+	express interest in a command; the module is then notified
+	whenever geomview executes the command.  Useful for modules
+	that need to know when things in geomview happen.
+
+	Reduced sensitivity to accidental mouse twitches -- it's now
+	easier to make an object stop moving.
+
+	Motion now proceeds wrt real elapsed time.  transform-incr
+	allows specifying rate of motion.
+	
+	Control over when commands are executed: sleep-for, sleep-until,
+	clock, set-clock, time-interest commands.
+
+	A "load" command simplifies reading files.
+
+	Added stereo viewing support: hardware, crosseyed, red/cyan modes.
+	(An external module is needed to control it.)
+
+	Lights may be specified (from command language only) in camera or
+	object coordinates, as well as world coordinates.  Allows depth cueing.
+
+	"emodule-transmit" command allows sending messages to running modules.
+
+	"real-id" gives an object's canonical name.
+
+	"all" gives a list of all items (geometry, emodules, ...) of a kind.
+
+	"soft-shader" selects whether to use new software shading.
+	New "v~" keyboard shortcut does, too.
+
+	"echo" can be used to print results of evaluating lisp expressions.
+
+	Now reads all commands from command files; used to sometimes read
+	only the first command.
+
+	Modules may continue sending messages after being killed.
+	Modules receive SIGHUP signal when killed.
+
+
+1.2.3	October 22, 1992
+
+   Geomview:
+	Add outside-hyperbolic space mode ("mo" keyboard shortcut).
+	"mh" still selects a view inside hyperbolic space.
+
+	A "spherical" language keyword ``(space spherical)'' is now recognized.
+	Implementation of spherical motion is improved.
+
+	Do a better job of adjusting camera setup when switching spaces.
+
+	The first directory in the "Files" browser is initially selected,
+	so its files are visible when the panel is first displayed.
+	(This directory is the first one given to "load-path", by default ".").
+
+	A new "Vects" button and "aV" keyboard shortcut select whether
+	vect objects (lines and points) are visible; they're now controlled
+	separately from polygon edges.
+
+	Make hyperbolic translation behave better when the center-of-motion
+	is literally "target" (the default); such translations are now along
+	an axis through the origin, avoiding spurious rotation.
+	If "center" is anything else, it's taken at face value.
+
+	Use color to indicate status of Appearance-panel buttons:
+	highlighted yellow when true, gray when false.
+	Buttons lie flat on the panel if they've never been changed,
+	and depressed if they have been.  (The "Revert [ax]" button restores
+	the never-set status, and shows objects as they naturally appear.)
+
+	Add half-baked transparency: "aT" keyboard sequence.
+
+	Fix supersensitive behavior of Applications browser;
+	running modules now appear in boldface red.
+
+	Add "-nopanels" command-line option.
+
+    trigrp:
+	Switch between euclidean and hyperbolic space when changing groups.
+
+    FORMS library:
+	Adapt to new IRIX 4.0.5 font manager's sizing behavior.
+	Since FORMS panels are fixed in pixel units, we rescale fonts
+	to be constant pixel size rather than 4.0.5's constant real size.
+	[Still works on older systems.]
+
+    External modules in general:
+	A list of all external-module definitions is now kept in
+	"data/.geomview-modules"; it's automatically updated when
+	new modules are installed in the geomview binary directory.
+	It's also safe to edit this file by hand.
+
+    General distribution:
+	Distributed files are now writable by the owner, to make it
+	easier to apply upgrades.  Once this 1.2.3 distribution package
+	is installed, it should be possible to install future distributions
+	without being the superuser, since "tar" will be able to overwrite
+	the old files.
+
+
+1.2.2	October 3, 1992
+
+   Geomview:
+	Repaired ANSI C incompatibilities -- this version compiles
+	    under Irix 4.0.4.
+	Several memory leaks were fixed.
+	Don't corrupt memory when new-geometry command is used.
+	Avoid crashing when a camera is deleted.
+	Bezier patch dicing level is now properly recorded and
+	    applied to newly loaded Bezier objects.
+	Bezier's saved in RenderMan format are written as true patches,
+	    not polygonal meshes.   Texture coordinates also saved for STBBP's.
+	Don't lose commands sent by external modules just before they die.
+	Don't continuously redraw the display when camera drawing is on.
+	Make hyperbolic translation, which was approximately correct, exact.
+	Repair "position", "position-at", "position-toward" commands.
+	Fix -b (background color) command-line option.
+	Added performance metering (control-T keyboard character).
+
+    Libraries:
+	New libformsx.a library has some handy FORMS-related functions:
+	  enabling/disabling objects, reading numbers from input fields, etc.
+	
+	Maximum Bezier degree is now 12 rather than 6.
+	Bounding boxes of Bezier patches now at least fairly meaningful.
+
+	Avoid crashing when encountering erroneous OFF files.
+
+	Invert the sense of QUAD normals to be consistent with other objects.
+
+    Makefile configuration:
+	Removed "make lib" warning in multiple-source library directories.
+	Ensured that the FORMS library is installed by the time it's needed.
+	
+	
+1.2.1	September 17, 1992
+
+	Fixed a problem with src/lib/forms/Makefile which prevented
+	successful compilation on systems that don't already have the
+	FORMS library installed.
+
+	1.2.1 is not really a new release --- it's just a re-packing
+	of the tar file with a new src/lib/forms/Makefile.
+
+	[ Details of the problem: modified src/lib/forms/Makefile so
+	  that it installs libforms.a in bin/sgi upon "make all"
+	  rather than just "make install".  This is now consistent
+	  with the way the other .a files are installed, and fixes a
+	  problem which prevented successful makes on systems that
+	  don't already have FORMS installed.  In previous releases
+	  libforms.a was installed by geomview/gl/O.sgi/Makefile
+	  before it attempted to link geomview; in 1.2, however, the
+	  "example" program links with libforms.a but doesn't install
+	  it first.  Since "e" comes before "g", "example" is compiled
+	  by "make all" before geomview, with the result that the
+	  compilation fails since libforms.a is not yet in place.
+
+	  I created geomview-1.2.1.tar.Z by unpacking the 1.2 tar file
+	  into a fresh dir, replacing the files ./src/lib/forms/Makefile
+	  and ./CHANGES (this file), and re-packing.  ]
+
+
+1.2	September 4, 1992
+
+Panels
+------
+
+New iconic tool panel replaces parts of old main panel. 
+
+"Zoom" now changes camera field of view: add "scale" to change size of
+geometry. (Can also change apparent size by z-translating object or
+camera.)
+
+Reorganized panels. Camera panel has camera-related things, appearance
+panel has geometry-related things. Obscure panel now only has
+normalization and space things.
+
+Add save panel. Now through user interface can save: Renderman or .sgi
+snapshot, text file of commands, geometry, cameras, transforms,
+windows for any (or all) objects, and position information for all panels. 
+
+Appearance controls now override all lower levels (before if lower
+level had appearance of its own it was left unchanged). Added revert
+button to appearance panel.
+
+New "?" button on main panel same as "?" keyboard shortcut (dumps
+keyboard shortcut summary to tty).
+
+Add "CSmooth" mode to shading browser of appearance panel.
+This is a constant-shaded style (shading depends only on vertex colors, 
+not on lighting) but with smooth interpolation where colors vary across
+a face.
+
+
+
+Keyboard Shortcuts
+------------------
+
+Lines-closer shortcut "ac" now also "vc" since it's a per-camera
+option at the moment.
+
+Add backface culling (only accessible through keyboard toggle "vb"). 
+
+"g" keyboard prefix now picks world not most recently picked geometry.
+
+"." new prefix for target object, i.e. "self". 
+
+"P*" keyboard shortcut to bring up panels. 
+
+"[se|sh]" shortcut changed to "[me|mh|ms]". (m for metric since s for
+space got taken over by "scale"). 
+
+"TV" toggles NTSC video mode.
+
+"vs" toggles single vs. double-buffered windows.
+
+
+Commands
+-------------
+
+Add complete help messages for all command language functions and new
+commands "?" and "??".
+
+The syntax of the write command has changed. See geomview.5.
+
+Added position, position-at, position-toward commands. 
+
+Added rawevent, winenter, freeze commands (intended for development
+not for general use.)
+
+External module command name changes:
+emodule-define is the new name for ui-emotion-program.
+emodule-start is the new name for ui-emotion-run.
+emodule-run is the new name for "|".
+
+Eliminated ui-emotion-modename: awkward event-shipping to external
+modules.  More useful access to functionality that is presently hidden
+internally is under development now.
+
+
+Motion
+-------
+
+Totally new motion paradigm. Most old functions are mimicked. New
+functionality added. Can now specify a center of motion (orbit mode
+used to be camera around center of world: now can be any object
+orbiting any other object. See "ui-center" command.). Can specify
+rotations and translations in x, y, z instead of a raw 4x4 matrix (see
+"transform*" commands).
+
+Fly mode changed yet again: now left mouse rotates camera, middle
+mouse flies camera forward/backward.
+
+Flight Sim mode eliminated.
+
+
+
+External Modules
+----------------
+
+Distributing external modules separately from geomview proper, except
+for a few examples.
+
+Added example external module with accompanying tutorial document.
+
+Improved handling of external modules; can now run multiple concurrent
+modules and can finally terminate them. See command language changes above. 
+
+External modules MUST now run in the foreground, lest geomview think they've
+died.  FORMS/GL modules need to call foreground().  See emodule-run
+documentation in geomview(5).
+
+Do a better job of killing off external modules when geomview exits
+and suspending them when geomview is suspended.
+
+Can now invoke external modules from geomview's command line and can
+pass (globbed) parameters through to their command lines.
+
+
+
+Geomview general
+----------------
+
+Better Renderman support, especially for automated generation of movie
+frames. Can specify whether to render directly to framebuffer or to a
+tiff disk file. Can give file prefix which is then autoincremented on
+each Renderman snapshot. Tiff file name is constructed from rib file
+name (used to always be called "image.tiff").
+
+Snapshot pops window to prevent obscuration, and redraws in singlebuffered
+mode to minimize dithering artifacts, and to avoid a "scrsave" bug which
+sometimes caused the previous image to be saved.
+
+In hyperbolic mode the camera starts out inside the sphere instead of
+outside the sphere, and the bounding sphere is not automatically drawn. 
+
+Add spherical space mode.
+
+Add new special id's: self, universe, primitive (for coordinate systems).
+
+Pick data can be written in any of several coordinate systems.
+
+Make picking work on views with dedicated scenes.
+
+Better camera geometry for default camera drawn. (Development feature
+that may change in the future: uses "cam.oogl" file instead if it
+exists.)
+
+Number new objects according to their id, so camera c2 == "Camera<2>",
+etc.
+
+
+
+OOGL
+----
+
+Better error detection and recovery in OOGL loading rountines.
+
+Added method extension mechanism for geom objects.
+
+Various internal reorganizations --- renaming variables, etc.
+
+Added support for variable-length arrays (vvec's).
+
+Added geom transform methods.
+
+Print a useful error message if a camera file can't be found.
+
+Fixed binary mesh loading bug; binary meshes now load properly.
+
+Fixed bug which caused sometimes-wrong screen z computation associated
+   with picking.
+
+Fixed picking of closed VECT object.
+
+Don't draw VECTs when edge drawing is off.
+
+Objects loaded from files are no longer tied to the contents of those files;
+the sequence "load object, change file, load other object from same file"
+now yields two distinct objects, not two identical copies of the new version.
+
+General
+-------
+
+Made source code more ANSI-compliant.
+
+Many optimizations; code runs faster.
+
+Fixed bugs assocaited with communication via pipes; close them
+
+Fixed bugs associated with reference counting and memory
+   allocation and freeing.
+
+New configuration setup; more robust
+
+Overhaul Makefile structure; rely more on common Makefiles
+   referenced via "include"
+
+Completely new lisp interpreter; much more general and easier to
+  use than previous version.  See the man page man/cat3/lisp.3 for
+  details.
+
+Fixed various minor bugs.
+
+
+
+Known problems:
+---------------
+Spherical mode doesn't work on VGXes.
+
+Zoom and Scale have no inertia.
+
+Constrained motion (to X or Y axis) no longer works.
+
+Sometimes core dumps on bad input files.
+
+-------------------------------------------------------------------------------
+1.1	May 27 1992
+
+    Slightly better documentation; lang.doc renamed geomview.5.
+    Four more sample external modules added.
+    Control panel settings override objects' own appearances.
+
+    Object vertex/edge/face picking (rightmouse), w/command-language feedback.
+    New flight-simulator motion mode.
+    More state-saving operations, 'write' and 'snapshot' language commands.
+    Command-language control over windows & panels (placement, visibility).
+    Can save scenes in RenderMan .rib format.
+
+    Many bug fixes including:
+      Memory should now be freed properly when objects are deleted.
+      Code now compiles under IRIX 4.0.1 ANSI C.
+      Input panels now accept input properly under 4.0 (input focus bug fixed).
+
+    Known problems:
+      IRIX 4.0 remote display (DGL) doesn't work; geomview must run on the
+	machine where it's displaying.
+
+-------------------------------------------------------------------------------
+1.0.1	February 25 1992:	
+
+    Miscellaneous minor bug fixes
+    Slightly better documentation
+
+-------------------------------------------------------------------------------
+1.0	January 31 1992
+
+    initial release
+

@@ -1,0 +1,9 @@
+1.7.6   May 25, 2000
+
+   This is the first release of Geomview to use GNU autoconf.  The
+   autoconf script has been tested on Linux (RedHat 6.1), IRIX 6.3,
+   and AIX 4.3.2.  It's untested on other platforms and may need
+   tweaking to work on them.  Also, note that this release does not
+   include the external modules.  If you want any of them, use an
+   older release, or wait for a future one.
+

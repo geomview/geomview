@@ -1,0 +1,8 @@
+MGRdolines.h
+MGRline.h
+MGRpolyscan.h
+mgbuf.h
+mgbufP.h
+mgbufrender.h
+mgbufrender24.h
+mgbufwindows.h
