@@ -1,3 +1,8 @@
+2001-03-24  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: Do not add -XSVR4 and -common to CFLAGS when
+	configuring with IRIX cc.
+
 2001-03-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* doc/Makefile.am (EXTRA_DIST): Remove motion.pdf.

@@ -21,6 +21,9 @@ your PATH, and use it to invoke Geomview (it refers to things in the
 place if you do this).  Or you can add /usr/local/Geomview/bin to your
 PATH.
 
+PARALLEL MAKE: don't bother.  The Makefile dependencies are not
+yet complete.
+
 You can override the default installation directory with the --prefix
 option to 'configure'.  For example, to install into
 /opt/soft/Geomview instead of /usr/local/Geomview, do "./configure
@@ -135,20 +138,10 @@ option.)
 
 PLATFORM SPECIFIC NOTES:
 
-Linux
------
-1. Geomview seems to have problems working on some GNU/Linux systems with
-   some recent versions of Lesstif (perhaps all versions after 0.89.4?).
-   The solution, at least for the moment, is to use OpenMotif instead of
-   Lesstif.  An OpenMotif binary release suitable for use on Linux is
-   available from the Geomview download page at
-   http://www.geomview.org/download.  Full source and binary releases of
-   OpenMotif are available from http://www.openmotif.org or
-   http://www.opengroup.org/motif.
-
 
 LinuxPPC
 --------
+
 On at least one LinuxPPC system with MetroX it was necessary to
 specify -lXp when linking with the Motif libraries
 ("MOTIFLIBS='-lXm -lXp' ./configure").
@@ -156,6 +149,7 @@ specify -lXp when linking with the Motif libraries
 
 Solaris
 -------
+
 On the Solaris 2.6 system that I tested, the 'example' external module
 in 'src/bin/example' failed to link because of an error of the form
     ld: warning: relocation error: R_SPARC_32: file main.o: symbol .LLC1:
@@ -173,8 +167,13 @@ The only thing you'll be missing is this one external module, which
 isn't necessary for Geomview itself.  If you find a way to fix this
 problem, let me [mbp@geomtech.com] know.
 
+
 IRIX
 ----
+
+Older IRIX systems may require compiling with -XSVR4.  This flag
+had disappeared by IRIX 5.3, so you're unlikely to run into this.
+
 On the IRIX 6.3 system that I tested (using CC=cc), the linker crashed
 when trying to link several of the external modules.  I suspect it may
 be due to a broken compiler installation on that particular machine,

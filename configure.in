@@ -422,7 +422,7 @@ case "$target" in
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE")
 	  AC_DEFINE(sgi, 1)
           if test "$CC" = "cc" ; then
-            CFLAGS="$CFLAGS -float -XSVR4 -common"
+            CFLAGS="$CFLAGS -float"
             LIBS="$LIBS -lmalloc"
           fi
           ;;
