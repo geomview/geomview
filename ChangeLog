@@ -1,3 +1,76 @@
+2004-04-27  rotdrop  <rotdrop@gloin>
+
+	* /cvsroot/geomview/geomview/src/bin/geomutil/oogl2vrml/Makefile.am, /cvsroot/geomview/geomview/src/bin/geomutil/oogl2vrml/oogl2vrml2.c:
+	Use oogl2vrml to create an oogl->VRML 2.0 converter. Most modern
+	viewers do not understand VRML 1.0.
+
+2004-03-15  rotdrop  <rotdrop@gloin>
+
+	* /cvsroot/geomview/geomview/src/lib/gprim/skel/skelP.h, /cvsroot/geomview/geomview/src/lib/gprim/skel/skelcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/tlist/tlcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/tlist/tlistP.h, /cvsroot/geomview/geomview/src/lib/gprim/vect/vectP.h, /cvsroot/geomview/geomview/src/lib/gprim/vect/vectcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/list/listcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/mesh/meshcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/ndmesh/ndmeshcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/npolylist/nplclass.c, /cvsroot/geomview/geomview/src/lib/gprim/npolylist/nplcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/npolylist/npolylistP.h, /cvsroot/geomview/geomview/src/lib/gprim/polylist/plcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/polylist/polylistP.h, /cvsroot/geomview/geomview/src/lib/gprim/quad/quadcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/bbox/bboxcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/bezier/bezcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/bezier/bezierP.h, /cvsroot/geomview/geomview/src/lib/gprim/comment/commentP.h, /cvsroot/geomview/geomview/src/lib/gprim/comment/commentcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/discgrp/dgcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/inst/instP.h, /cvsroot/geomview/geomview/src/lib/gprim/inst/instcreate.c, /cvsroot/geomview/geomview/src/lib/gprim/list/listP.h:
+	See
+
+	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=14557
+
+	The problem is that va_list is not only opaque, but ReallyOpaque
+	(maybe (tm)??). va_list may even be an array_type. Then in the context
+	of
+
+	foo(va_list foo)
+	{}
+
+	already is not of type "va_list" _BUT_ of type "&va_list[0]". So:
+
+	foo(va_list foo)
+	{
+		bar(&foo);
+	}
+
+	passes _NOT_ the base address of va_list to "bar()" _BUT_ the address
+	of the piece of storage which holds the parameter "foo" which is _NOT_
+	what we want (think about it!! This is JAIOCABD
+	(JustAnotherInstanceOfCArrayBrainDamegedness) Oops.
+
+	I did all this to make Geomview work on AMD64 with Linux. Actually, I
+	DO NOT like the libc implementation of va_list, but we have to cope
+	with it. Also, the changes _should_ not break archs/compilers where
+	va_list is a structure and not of array-type.
+
+	Hope this will be portable (_should_ be, but FIXME if not).
+
+	* /cvsroot/geomview/geomview/configure.in:
+	Remove ALISTADDR and add check for /bin/csh versus /bin/sh.
+
+	* /cvsroot/geomview/geomview/acconfig.h:
+	Remove ALISTADDR (was a BUG!). See notes for the big bunch of the
+	other changed files.
+
+	* /cvsroot/geomview/geomview/src/lib/oogl/wa/wa.yacc.c: Auto-generated.
+
+	* /cvsroot/geomview/geomview/src/lib/oogl/util/glob.c:
+	Resort to /bin/sh if /bin/csh is not found. At least _I_ don't have
+	csh installed (don't like it, but that's OT). Default is to use
+	/bin/csh as before.
+
+	* /cvsroot/geomview/geomview/src/lib/oogl/util/futil.c:
+	fmemopen() is a GNU-stuff (AFAIK). So define _GNU_SOURCE to get the
+	proper proto-type (makes a _MAJOR_ difference on 64-bit
+	systems!!!!!!!!!!)
+
+2004-02-22  smr99  <smr99@gloin>
+
+	* /cvsroot/geomview/geomview/m4/lf_local.m4, /cvsroot/geomview/geomview/Makefile.am, /cvsroot/geomview/geomview/configure.in, /cvsroot/geomview/geomview/ChangeLog:
+	*** empty log message ***
+
+	* /cvsroot/geomview/geomview/ChangeLog:
+	entries for previous configure and Makefile change.
+
+	* /cvsroot/geomview/geomview/Makefile.am, /cvsroot/geomview/geomview/configure.in, /cvsroot/geomview/geomview/m4/Makefile.am:
+		* m4/Makefile.am: Remove.
+		* Makefile.am (m4_files): Distribute the m4/*.m4 files.
+
+		* configure.in: Take care to avoid using MS Windows "find"
+		command.  Do not create m4/Makefile.
+
 2004-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* configure.in: Run autoupdate from autoconf 1.8.
