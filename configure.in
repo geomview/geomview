@@ -260,18 +260,6 @@ AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
 
 ########################################################################
 
-AC_ARG_WITH(forms,
-	    [--with-forms=DIR      set DIR to xforms installation dir],
-	    [ if test "$withval" = "no" ; then
-                TRY_XFORMS=false
-              else
-                TRY_XFORMS=true
-                XFORMS_DIR=$withval
-              fi ;
-            ],
-            [ TRY_XFORMS=true ]
-           )
-
 AC_ARG_WITH(xforms,
 	    [--with-xforms=DIR      same as --with-forms],
 	    [ if test "$withval" = "no" ; then
