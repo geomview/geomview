@@ -19,6 +19,7 @@
  * USA, or visit http://www.gnu.org.
  */
 
+
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
 #include "config.h"
 #endif
@@ -443,7 +444,8 @@ mib_Widget *mib_load_public(mib_Widget *root, mib_Widget *this, mib_Buffer *fin)
   Arg	args[20];
   int	mynum, n;
   int   rubberroot = 0;
- 
+
+
   got_line = 1;
   done = 0;
 
@@ -587,8 +589,14 @@ mib_Widget *mib_load_public(mib_Widget *root, mib_Widget *this, mib_Buffer *fin)
     }
   }
 
-  XtSetArg (args[n], XmNwidth, this->width); n++;
-  XtSetArg (args[n], XmNheight, this->height); n++;
+  /* Do not set the width or height, if zero.
+     The core widget will compute appropriately. */
+  if ( this->width ) {
+      XtSetArg (args[n], XmNwidth, this->width); n++;
+  }
+  if ( this->height ) {
+      XtSetArg (args[n], XmNheight, this->height); n++;
+  }
 
   XtSetValues(this->me, args, n);
 
@@ -783,8 +791,15 @@ void mib_reset_size(mib_Widget *temp)
   if (temp->mib_class_num != MIB_NULL)
   {
     n = 0;
-    XtSetArg (args[n], XmNwidth, temp->width); n++;
-    XtSetArg (args[n], XmNheight, temp->height); n++;
+
+    /* Do not set the width or height, if zero.
+       The core widget will compute appropriately. */
+    if (temp->width) {
+	XtSetArg (args[n], XmNwidth, temp->width); n++;
+    }
+    if (temp->height) {
+	XtSetArg (args[n], XmNheight, temp->height); n++;
+    }
 
     XtSetValues(temp->me, args, n);
   }

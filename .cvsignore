@@ -8,5 +8,5 @@ configure
 geomview
 include
 modules
-packbuild
+build packbuild
 stamp-h.in stamp-h

@@ -1,3 +1,12 @@
+2001-03-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* doc/Makefile.am (EXTRA_DIST): Remove motion.pdf.
+
+	* configure.in: Set revision to 1.8.1.
+
+	* m4/geom_local.m4 (GEOM_FIND_I_OPTION): Respect prior setting of
+	$CPPFLAGS while probing.
+
 2001-03-19  Mark Phillips  <mbp@geomtech.com>
 
 	* doc/motion.tex: new file added to release; documents the

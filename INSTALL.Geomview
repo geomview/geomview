@@ -146,12 +146,6 @@ Linux
    OpenMotif are available from http://www.openmotif.org or
    http://www.opengroup.org/motif.
 
-2. If Geomview crashes with a 'Segmentation Fault' on your Linux
-   system immediately when you start it, first make sure you've
-   got a Geomview distribution >= 1.7.10, and if it still crashes,
-   try passing the flag "--enable-fstropen-1" to "configure".  If
-   you still have problems, let me [mbp@geomtech.com] know.
-
 
 LinuxPPC
 --------

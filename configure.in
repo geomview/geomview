@@ -21,7 +21,7 @@ AC_CANONICAL_SYSTEM
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-AM_INIT_AUTOMAKE(geomview,1.8.0)
+AM_INIT_AUTOMAKE(geomview,1.8.1)
 AM_CONFIG_HEADER(config.h)
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])

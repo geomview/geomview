@@ -27,20 +27,18 @@ geom_dirs='$3'
 geom_otherlibs=$4
 geom_saved_LIBS=$LIBS
 #AC_MSG_CHECKING([how to link with $geom_lib])
+
+GEOM_L_OPTION=0
 for geom_z in $geom_dirs ; do
   geom_z=`eval echo $geom_z`
-  if test "$geom_z" != "" ; then
-    geom_l_option="-L$geom_z"
-  else
-    geom_l_option=""
-  fi
+  geom_l_option=
+  test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
   GEOM_LOG_MSG([checking for $geom_func with $geom_l_option])
   AC_TRY_LINK_FUNC($geom_func,
 	           [ GEOM_L_OPTION="$geom_l_option"
-                     break ],
-	           [ GEOM_L_OPTION="0" ]
-	          )
+                     break ]
+		   )
 done
 LIBS=$geom_saved_LIBS
 #if test "$GEOM_L_OPTION" != "0" ; then
@@ -73,14 +71,12 @@ GEOM_I_OPTION="0"
 #AC_MSG_CHECKING([for $geom_header])
 for geom_z in $geom_dirs ; do
   geom_z=`eval echo $geom_z`
-  if test "$geom_z" != "" ; then
-    CPPFLAGS="-I$geom_z"
-  else
-    CPPFLAGS=""
-  fi
-  GEOM_LOG_MSG([checking for $geom_header with CPPFLAGS=$CPPFLAGS])
+  geom_i_option=
+  test -n "$geom_z" && geom_i_option="-I$geom_z"
+  CPPFLAGS="$geom_i_option $geom_saved_CPPFLAGS"
+  GEOM_LOG_MSG([checking for $geom_header with $geom_i_option])
   AC_TRY_CPP([ #include <$geom_header> ],
-	     [ GEOM_I_OPTION=$CPPFLAGS
+	     [ GEOM_I_OPTION="$geom_i_option"
                break ]
 	     )
 done

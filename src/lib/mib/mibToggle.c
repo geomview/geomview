@@ -65,8 +65,8 @@ mib_Widget *mib_create_Toggle(mib_Widget *parent, char *name, char *label,
   temp->mib_class = (char *)malloc(7);
   sprintf(temp->mib_class,"Toggle");
   temp->mib_class_num = MIB_TOGGLE;
-  temp->width = 0 /*width*/;
-  temp->height = 0 /*height*/;
+  temp->width = width;
+  temp->height = height;
   temp->topOffset = posy;
   temp->leftOffset = posx;
   temp->bottomOffset = 0;
@@ -106,8 +106,14 @@ mib_Widget *mib_create_Toggle(mib_Widget *parent, char *name, char *label,
     XtSetArg (args[n], XmNheight, height); n++;*/
   }
 
-  XtSetArg (args[n], XmNwidth, width); n++;
-  XtSetArg (args[n], XmNheight, height); n++;
+  /* Do not set the width or height, if zero.
+     The core widget will compute appropriately. */
+  if ( width ) {
+      XtSetArg (args[n], XmNwidth, width); n++;
+  }
+  if ( height ) {
+      XtSetArg (args[n], XmNheight, height); n++;
+  }
   XtSetArg (args[n], XmNspacing, 4); n++;
   XtSetArg (args[n], XmNhighlightThickness, 0); n++;
   XtSetArg (args[n], XmNrubberPositioning, False); n++;
@@ -174,10 +180,15 @@ int mib_load_Toggle(mib_Widget *this, mib_Buffer *fin)
 
     n = 0;
     XtSetArg (args[n], XmNlabelString, label_text); n++;
-    this->width = 0;
-    this->height = 0;
-    XtSetArg (args[n], XmNwidth, this->width); n++;
-    XtSetArg (args[n], XmNheight, this->height); n++;
+
+    /* Do not set the width or height, if zero.
+       The core widget will compute appropriately. */
+    if ( this->width ) {
+	XtSetArg (args[n], XmNwidth, this->width); n++;
+    }
+    if ( this->height ) {
+	XtSetArg (args[n], XmNheight, this->height); n++;
+    }
     XtSetValues(this->me, args, n);
     XmStringFree(label_text);
 

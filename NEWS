@@ -1,3 +1,11 @@
+1.8.1	March, 2001
+
+   This is a bugfix release.
+
+   * No segfaults at startup on linux.
+   * Toggle buttons are visible again.
+   * Binary I/O on linux works.
+
 1.8.0   November 17, 2000
 
    The software in this release is almost the same as in the 1.7.*
