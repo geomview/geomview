@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.3 2000/11/02 05:53:24 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.4 2000/11/09 20:52:30 mphillips Exp $ */
 
 /*
  * Geometry object routines
@@ -876,7 +876,7 @@ void stdio_freemark(struct stdio_mark *mark)
 
 #if defined(AIX) || defined(__osf__) || defined(__hpux) || defined(__FreeBSD__)
 
-#define USE_FSTROPEN_1
+#define USE_FSTROPEN_1 1
 
 #else /* Even more nearly vanilla stdio */
 

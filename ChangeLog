@@ -1,3 +1,16 @@
+2000-11-09  Mark Phillips  <mbp@geomtech.com>
+
+	* configure.in: improvements to the test for -lgl so that it
+	  gives a false negative less often; added message to output
+	  saying what geomview version is being configured, to aid in
+	  deciphering other people's 'configure' output
+
+	* src/bin/geomutil/vrml2oogl/Makefile.am: added -lm to vrml2oogl
+	  link line where necessary
+
+	* src/lib/oogl/util/futil.c: corrected USE_FSTROPEN_1 definition
+	  for AIX/__osf__/__hpux/__FreeBSD__ case
+
 1.7.10  Nov 1, 2000
 	Summary of changes:
 	  - Attempted to fix bug which caused Geomview to crash immediately

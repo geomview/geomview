@@ -24,6 +24,8 @@ AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE(geomview,1.7.10)
 AM_CONFIG_HEADER(config.h)
 
+AC_MSG_RESULT([configuring $PACKAGE $VERSION])
+
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
 
 AC_PROG_CC
@@ -215,7 +217,7 @@ fi
 GEOM_FIND_L_OPTION(-lGL,
 		   glBegin,
 		   ["$USER_OPENGL_DIR" "" "$x_libraries"],
-		   -lm)
+		   "$XLIBS -lm")
 if test "$GEOM_L_OPTION" = "0" ; then
     AC_MSG_ERROR([
 
@@ -228,7 +230,7 @@ GL_L_OPTION=$GEOM_L_OPTION
 GEOM_FIND_L_OPTION(-lGLU,
 		   gluBeginPolygon,
 		   ["$USER_OPENGL_DIR" "" "$x_libraries"],
-		   "$GL_L_OPTION -lGL")
+		   "$GL_L_OPTION -lGL $XLIBS -lm")
 if test "$GEOM_L_OPTION" != "$GL_L_OPTION" ; then
   GLU_L_OPTION=$GEOM_L_OPTION
 else
