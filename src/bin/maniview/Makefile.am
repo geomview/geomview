@@ -1,14 +1,16 @@
-INCLUDES = $(default_includes) $(FORMSINCLUDE)
+top_geom_srcdir = $(top_srcdir)/../../..
 
-LDADD = $(OOGLLIBS)  \
-	$(FORMSLIBS) \
+INCLUDES = -I$(top_srcdir)/../../../include $(default_includes) $(XFORMSINCLUDE)
+
+LDADD = $(OOGLLIBS)  $(OOGLLIBS)   \
+	$(XFORMSLIBS) \
 	$(XLIBS)     \
 	-lm
 
 EXTRA_DIST = .geomview-maniview \
    spaceshipSpace.geom wholecube.geom        \
    borrom4.wa controlpanel.fd dodec.vect gvinit hook.off \
-   maniview.1 maniviewhelp
+   maniview.1 maniviewhelp $(datagroups_DATA)
 
 datagroupsdir = $(geomdatadir)/groups
 
@@ -28,5 +30,8 @@ module_DATA = .geomview-maniview
 	echo '(emodule-define "Maniview" "maniview")' > .geomview-maniview
 
 all-local:
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Maniview" "$(subdir)/maniview")' > $(top_builddir)/modules/.geomview-maniview
+	$(top_geom_srcdir)/mkmodulesdir $(top_geom_builddir)
+	echo '(emodule-define "Maniview" "src/bin/maniview/maniview")' > $(top_geom_builddir)/modules/.geomview-maniview
+
+MAINTAINERCLEANFILES = \
+  aclocal.m4 config.h.in configure stamp-h.in Makefile.in

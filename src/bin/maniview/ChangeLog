@@ -1,0 +1,5 @@
+2000-11-15  Mark Phillips  <mbp@geomtech.com>
+
+	* Set up maniview as a separate package with its own configure.in,
+	  Makefile.am, etc, to be insertable into an existing Geomview
+	  source tree.

@@ -1,0 +1,8 @@
+#! /bin/sh -x
+
+aclocal -I ../../../m4
+autoconf
+autoheader
+touch README AUTHORS NEWS ChangeLog
+automake -a
+./configure  --with-motif=/usr/local/openmotif --cache-file=../../.././config.cache --srcdir=.
