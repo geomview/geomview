@@ -33,7 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <unistd.h>
 #endif
 /*#include <sys/fcntl.h>*/
-#include <sys/signal.h>
+#include <signal.h>
 #include <string.h>
 #include <ctype.h>
 #include <math.h>

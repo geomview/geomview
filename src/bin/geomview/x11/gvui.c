@@ -43,7 +43,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/signal.h>
+#include <signal.h>
 #include "X11/IntrinsicP.h" /* for XtMoveWidget */
 
 #include "mibload.h"

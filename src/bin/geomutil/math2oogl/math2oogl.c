@@ -51,7 +51,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <sys/types.h>
 #include <sys/stat.h>
 #if defined(unix) || defined(__unix) || defined(__unix__)
-#include <sys/signal.h>
+#include <signal.h>
 #include <sys/file.h>
 #include <sys/socket.h>
 #include <sys/un.h>

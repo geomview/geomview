@@ -50,7 +50,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #  endif
 #endif
 
-#include <sys/signal.h>
+#include <signal.h>
 
 /* xgv main - global variables */
 /*****************************************************************************/

@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.6 2001/02/23 04:41:31 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.7 2002/10/26 19:23:51 smr99 Exp $ */
 
 /*
  * Geometry object routines
@@ -173,7 +173,7 @@ int ntohs(unsigned int s) {
 #define _cnt __cnt
 #endif 
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__CYGWIN__)
 #define _base _bf._base
 #define _ptr _p
 #define _cnt _r

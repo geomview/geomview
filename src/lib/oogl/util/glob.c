@@ -26,15 +26,14 @@
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
+#if defined(unix) || defined(__unix) || defined(__unix__) /* Don't try to compile for Windows */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ooglutil.h"
-#if defined(unix) || defined(__unix) || defined(__unix__)
-#include <sys/signal.h>
-#endif /*unix*/
+#include <signal.h>
 
-#if defined(unix) || defined(__unix) || defined(__unix__) /* Don't try to compile for Windows */
 
 #define FBUFSIZ 1024
 #define INITSIZ 10

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/signal.h>
+#include <signal.h>
 #include <sys/file.h>
 #ifdef AIX
 #define _BSD  1		/* Get FNDELAY from fcntl.h */

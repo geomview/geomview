@@ -38,7 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/signal.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <string.h>
 #include <ctype.h>

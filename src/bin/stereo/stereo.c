@@ -51,7 +51,7 @@ extern void unqdevice(int);
 #include <window.h>
 #include <lisp.h>
 
-#include <sys/signal.h>
+#include <signal.h>
 
 #include "sterui.h"
 

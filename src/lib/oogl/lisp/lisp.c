@@ -2110,7 +2110,7 @@ static void ulongpull(a_list, x)
     va_list *a_list;
     unsigned long *x;
 {
-  *x = va_arg(*a_list, ulong);
+  *x = va_arg(*a_list, unsigned long);
 }
 
 LObject *ulongparse(Lake *lake)

@@ -102,7 +102,7 @@ void OOGLWarn(char *fmt, ...)
 const char *
 sperrno(unsigned int err)
 {
-#if !defined(__FreeBSD__) && !defined(__GLIBC__)
+#if !defined(__FreeBSD__) && !defined(__GLIBC__) && !defined(__CYGWIN__)
   extern int sys_nerr;
   extern char *sys_errlist[];
 #endif

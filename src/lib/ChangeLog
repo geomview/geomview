@@ -1,3 +1,14 @@
+2002-10-26  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* oogl/util/futil.c: Add defined(__CYGWIN__) to __FreeBSD__ version of
+	stdio buffer fields.
+
+	* oogl/util/error.c (sperrno): Add !defined(__CYGWIN__) to list of
+	conditions.
+
+	* oogl/lisp/lisp.c (ulongpull): Use "unsigned long" (not ulong) as
+	second argument.
+
 2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* mg/opengl/mgopenglshade.c: Update the declarations for

@@ -39,7 +39,7 @@ static char sccsid[] = "@(#)glob.c	5.7 (Berkeley) 12/14/88";
 #include <errno.h>
 #include <pwd.h>
 
-#if !defined(dirfd) && !defined(__GLIBC__) && !defined(__linux__) && !defined(__FreeBSD__)
+#if !defined(dirfd) && !defined(__GLIBC__) && !defined(__linux__) && !defined(__FreeBSD__) && !defined(__CYGWIN__)
 #define dirfd(dirp)  ((dirp)->dd_fd)
 #endif
 

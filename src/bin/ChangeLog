@@ -1,3 +1,19 @@
+2002-10-26  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* animate/glob.c: Add !defined(__CYGWIN__) to condition.
+
+	* bin/geomutil/math2oogl/math2oogl.c:
+	* bin/geomview/common/comm.c:
+	* bin/geomview/common/lang.c:
+	* bin/geomview/x11/gvcamui.c:
+	* bin/geomview/x11/gvevent.c:
+	* bin/geomview/x11/gvmain.c:
+	* bin/geomview/x11/gvui.c:
+	* bin/stereo/stereo.c:
+	* bin/togeomview/togeomview.c:
+	* lib/oogl/util/glob.c: Include <signal.h> rather than
+	<sys/signal.h> to get SIG_DFL defines.
+
 2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* geomutil/math2oogl/math2oogl.c: Add __unix__ to list of CPP

@@ -859,7 +859,7 @@ int ui_ppmmesasnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition 
 }
 #endif /*MESA -- ppmmesasnapshot*/
 
-#include <sys/signal.h>
+#include <signal.h>
 int ui_sgisnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 {
   int pid, wpid, unset;
