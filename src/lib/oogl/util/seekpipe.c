@@ -60,7 +60,7 @@
  * on debugging, and SEEKPIPE_DEBUGFILE to control the name of the
  * file to write to.
  */
-static const char debugfilename = "/tmp/seekpipe-foo";
+static const char *debugfilename = "/tmp/seekpipe-foo";
 static FILE *debugfile;
 #endif
 
