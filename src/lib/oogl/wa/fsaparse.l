@@ -45,8 +45,6 @@ SIGN	[+-]
 "atable"	{ return(ATABLE);	}
 "inverses"	{ return(INVERSES);	}
 "inv"		{ return(INV);		}
-"bfs"		{ return(BFS);		}
-"min"		{ return(MIN);		}
 
 "{"		{ return(LEFT_BRACE);	}
 "}"		{ return(RIGHT_BRACE);	}

@@ -31,9 +31,11 @@ subdirectories of the prefix directory called 'bin', 'info', and
 Geomview requires both Motif and OpenGL; you need to make sure these
 are installed on your system before you can compile (or run) Geomview.
 Both of these are commercial software packages but Geomview will also
-work with their free counterparts Lesstif (www.lesstif.org) and Mesa
-(www.mesa3d.org).  If either of these is installed on your system in a
-directory that your compiler doesn't look in by default, you can use
+work with their free counterparts Lesstif or OpenMotif
+(www.lesstif.org or www.openmotif.org) and Mesa (www.mesa3d.org) [But
+Linux users see the comments in the 'Linux' section below about
+Lesstif/OpenMotif.]  If either of these is installed on your system in
+a directory that your compiler doesn't look in by default, you can use
 the following options to Geomview's configure script to tell Geomview
 where to find them:
 
@@ -104,6 +106,24 @@ step.
 ========================================================================
 
 PLATFORM SPECIFIC NOTES:
+
+Linux
+-----
+1. Geomview seems to have problems working on some GNU/Linux systems with
+   some recent versions of Lesstif (perhaps all versions after 0.89.4?).
+   The solution, at least for the moment, is to use OpenMotif instead of
+   Lesstif.  An OpenMotif binary release suitable for use on Linux is
+   available from the Geomview download page at
+   http://www.geomview.org/download.  Full source and binary releases of
+   OpenMotif are available from http://www.openmotif.org or
+   http://www.opengroup.org/motif.
+
+2. If Geomview crashes with a 'Segmentation Fault' on your Linux
+   system immediately when you start it, first make sure you've
+   got a Geomview distribution >= 1.7.10, and if it still crashes,
+   try passing the flag "--enable-fstropen-1" to "configure".  If
+   you still have problems, let me know.
+
 
 LinuxPPC
 --------

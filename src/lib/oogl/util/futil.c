@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.2 2000/09/01 22:38:16 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.3 2000/11/02 05:53:24 mphillips Exp $ */
 
 /*
  * Geometry object routines
@@ -813,15 +813,52 @@ fcontext(register FILE *f)
 }
 
 
+
 #ifdef __linux__
 
-extern FILE		 *CC_fmemopen__FPci(char *mem, int len);
+/*
+ *  USE_FSTROPEN_1 / HAVE_FMEMOPEN Notes:
+ *  
+ *  This is an ugly hack to deal with an error that happens on some
+ *  Linux systems (Suse 6.4?) and which causes a crash in glibc's
+ *  CC_fmemopen__FPci function.  I don't know if the problem is a bug
+ *  in that function or a bug somewhere in this code or elsewhere in
+ *  Geomview, but here's a temporary fix, until we figure out what's
+ *  really going on:
+ *    The 'configure' script checks for a function called 'fmemopen'
+ *    in the standard C libarary.  If it finds one, then it sets
+ *    HAVE_FMEMOPEN in config.h which causes this file to use it in
+ *    the implementation of fstropen().  If it doesn't find one, then
+ *    we attempt to use CC_fmemopen__FPci, which is what this code did
+ *    for years (and worked).  If that doesn't work, you can pass the
+ *    flag "--enable-fstropen-1" to the 'configure' script, which will
+ *    define USE_FSTROPEN_1 in config.h which forces this file to use
+ *    one of the manual fstropen implementations below, rather than
+ *    calling CC_fmemopen__FPci.
+ *
+ *    mbp Wed Nov 1 11:28:59 2000
+ */
+
+#if !USE_FSTROPEN_1
+#  if !HAVE_FMEMOPEN
+      extern FILE		 *CC_fmemopen__FPci(char *mem, int len);
+#  endif
+#endif
 extern struct stdio_mark *CC_stdio_setmark__FP10stdio_markP8stdiobuf(struct stdio_mark *m, FILE *f);
 extern int		  CC_stdio_seekmark__FP10stdio_mark(struct stdio_mark *mark);
 extern void  		  CC_stdio_freemark__FP10stdio_mark(struct stdio_mark *mark); 
 
+#if !USE_FSTROPEN_1
 FILE *fstropen(char *mem, int len, char *mode)
-{ return CC_fmemopen__FPci(mem, len); }
+{
+#if HAVE_FMEMOPEN
+  extern FILE *fmemopen(char *, int, char *);
+  return fmemopen(mem, len, mode);
+#else
+  return CC_fmemopen__FPci(mem, len);
+#endif
+}
+#endif
 
 struct stdio_mark *stdio_setmark(struct stdio_mark *m, FILE *f)
 { return CC_stdio_setmark__FP10stdio_markP8stdiobuf(m, f); }
@@ -839,27 +876,7 @@ void stdio_freemark(struct stdio_mark *mark)
 
 #if defined(AIX) || defined(__osf__) || defined(__hpux) || defined(__FreeBSD__)
 
-/* The stdio-buf-hacking code below doesn't work on some systems, so
- * just ship the data through a pipe.  Small (8K?) size limit.
- */
-FILE *fstropen(char *str, int len, char *mode)
-{
-   int pfd[2];
-   if(pipe(pfd) < 0)
-    return NULL;
-   if(mode[0] == 'w') {
-	OOGLError(0, "fstropen(..., %d, \"%s\"): Sorry, can't handle write mode",
-		len, mode);
-	return fdopen(dup(2), "wb");
-   }
-   if(len >= 8192) {
-	OOGLError(0, "fstropen(\"%.32s...\", %d, \"%s\"): Sorry, can't deal with more than 8192-byte strings");
-	len = 4096;
-   }
-   write(pfd[1], str, len);
-   close(pfd[1]);
-   return fdopen(pfd[0], "rb");
-}
+#define USE_FSTROPEN_1
 
 #else /* Even more nearly vanilla stdio */
 
@@ -889,8 +906,6 @@ fstropen(char *str, int len, char *mode)
 	return f;
 }
 #endif /* non-AIX, non-OSF stdio */
-
-
 
 	/* More with vanilla stdio:
 	 * attempt to seek backwards (backtrack) on a stream.
@@ -950,6 +965,34 @@ stdio_freemark(struct stdio_mark *mark)
 }
 
 #endif  /* vanilla stdio */
+
+/***************************************************************************/
+
+#if USE_FSTROPEN_1
+
+/* The stdio-buf-hacking code below doesn't work on some systems, so
+ * just ship the data through a pipe.  Small (8K?) size limit.
+ */
+FILE *fstropen(char *str, int len, char *mode)
+{
+   int pfd[2];
+   if(pipe(pfd) < 0)
+    return NULL;
+   if(mode[0] == 'w') {
+	OOGLError(0, "fstropen(..., %d, \"%s\"): Sorry, can't handle write mode",
+		len, mode);
+	return fdopen(dup(2), "wb");
+   }
+   if(len >= 8192) {
+	OOGLError(0, "fstropen(\"%.32s...\", %d, \"%s\"): Sorry, can't deal with more than 8192-byte strings");
+	len = 4096;
+   }
+   write(pfd[1], str, len);
+   close(pfd[1]);
+   return fdopen(pfd[0], "rb");
+}
+
+#endif
 
 /***************************************************************************/
 

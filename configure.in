@@ -21,7 +21,7 @@ AC_CANONICAL_SYSTEM
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-AM_INIT_AUTOMAKE(geomview,1.7.9)
+AM_INIT_AUTOMAKE(geomview,1.7.10)
 AM_CONFIG_HEADER(config.h)
 
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
@@ -145,7 +145,7 @@ if test "$MOTIF_DIR" != "" ; then
 else
   USER_MOTIF_DIR=""
 fi
-GEOM_FIND_I_OPTION(Xm/Xm.h, ["$USER_MOTIF_DIR" "" "/usr/local/include"])
+GEOM_FIND_I_OPTION(Xm/Xm.h, ["$USER_MOTIF_DIR" "" "$x_includes" "/usr/local/include"])
 if test "$GEOM_I_OPTION" = "0" ; then
     AC_MSG_ERROR([
 
@@ -347,6 +347,13 @@ fi
 ########################################################################
 ########################################################################
 
+AC_ARG_ENABLE(fstropen-1,
+	      [--enable-fstropen-1           use manual fstropen rather than fmemopen],
+	      [ if test "$enableval" != "no" ; then
+                  AC_DEFINE(USE_FSTROPEN_1, 1)
+                fi ]
+              )
+
 AC_ARG_ENABLE(d1debug,
 	      [--enable-d1debug           turn on D1 level debugging output],
 	      [ if test "$enableval" != "no" ; then
@@ -440,7 +447,7 @@ AM_CONDITIONAL(HAVE_FORMS,    test x$HAVE_FORMS = xtrue)
 # if/when it comes up (by adding that function to this test, for
 # example).
 # mbp Mon May  8 18:47:33 2000
-AC_MSG_CHECKING([whether programs that include <math.h> really need -lm])
+AC_MSG_CHECKING([whether we need to link -lm to get math functions])
 AC_TRY_LINK([ #include <math.h> ],
             [ double s = sin(1.5); ],
 	    [ MATHLIB=""
@@ -462,6 +469,21 @@ AC_TRY_LINK([ #include <sys/socket.h> ],
               AC_MSG_RESULT([yes]) ]
            )
 AC_SUBST(SOCKETLIBS)
+
+
+AC_SEARCH_LIBS(fmemopen, c,
+               AC_DEFINE(HAVE_FMEMOPEN, 1),
+               AC_DEFINE(HAVE_FMEMOPEN, 0))
+
+# AC_MSG_CHECKING([whether we have fmemopen()])
+# AC_TRY_LINK([ #include <stdio.h>
+# static char buffer[] = "foobar"; ],
+#             [ (void)fmemopen(buffer, strlen(buffer), "r"); ],
+#             [ AC_DEFINE(HAVE_FMEMOPEN, 1)
+#               AC_MSG_RESULT([yes]) ],
+#             [ AC_DEFINE(HAVE_FMEMOPEN, 0)
+#               AC_MSG_RESULT([no]) ]
+#            )
 
 
 ########################################################################

@@ -1,3 +1,37 @@
+1.7.10  Nov 1, 2000
+	Summary of changes:
+	  - Attempted to fix bug which caused Geomview to crash immediately
+	    upon startup on some newer GNU/Linux systems.  The bug has to
+	    do with Geomview's use of the 'fmemopen' system function.
+	    This release attempts to autodetect which version of this
+	    function to use.  If it still crashes for you, pass the flag
+	    "--enable-fstropen-1" to "configure" and try again.  If you
+	    still have problems, let me [mbp@geomtech.com] know.
+	  - Misc fixes to allow compilation on wider variety of platforms
+
+2000-11-01  Mark Phillips  <mbp@geomview.org>
+	* src/lib/oogl/util/futil.c: Added tests to 'configure' to decide
+	whether to use fmemopen() instead of CC_fmemopen__FPci() on linux
+	systems in the implementation of fstropen.  Also added
+	"--enable-fstropen-1" flag to 'configure' to allow forced use of
+	manual implementation of fstropen.  These changes are in response
+	to reports of Geomview crashing upon startup, while reading the
+	default appearance (via a call to fstropen), on some newer Linux
+	systems.
+            [thanks to Mikhail Tchernychev <mikhail_tchernychev@yahoo.com
+             and Belinda Marchand <marchand@ecn.purdue.edu>]
+
+	* src/lib/oogl/wa/fsaparse.l: removed duplicate rules for "min" and "bfs"
+	    [sent by Steve Robbins  <steve@nyongwa.montreal.qc.ca>]
+
+	* src/bin/geomview/common/comm.c: added preprocessor condition
+	to allow compilation on the Alpha
+	  [sent by Tamara Munzner <tmm@pa.dec.com>]
+
+2000-10-29  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+	* configure.in: also try $x_includes when searching for Xm/Xm.h
+	
+
 1.7.9  Oct 20, 2000
     Minor change to allow compilation with Mesa-3.3 (related to how
     Mesa-3.3 declares prototypes for GL extention functions).  No

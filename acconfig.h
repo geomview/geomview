@@ -56,6 +56,24 @@
 /* mbp Tue Sep 12 12:33:38 2000						 */
 #define BINARY_POPEN_REQUIRES_B 0
 
+/* HAVE_FMEMOPEN is 1 if and only if the function fmemopen() is		 */
+/* available on the system.  This is used in src/lib/oogl/util/futil.c   */
+/* to decide how to implement fstropen().  See also USE_FSTROPEN_1	 */
+/* below.
+#define HAVE_FMEMOPEN 0
+
+/* USE_FSTROPEN_1 determines whether we forceably use one of our	 */
+/* manual implementations of fstropen (in src/lib/oogl/util/futil.c)	 */
+/* rather than calling fmemopen or CC_fmemopen__FPci.  This is		 */
+/* relevant only on Linux systems.  Normally you shouldn't have to set	 */
+/* this at all; futil.c will use HAVE_FMEMOPEN, defined above, to	 */
+/* decide what to do.  If this doesn't work for you (the symptom is	 */
+/* that Geomview crashes upon startup while trying to read the initial	 */
+/* appearance string), then try configuring with			 */
+/* "--enable-fstropen-1", which sets USE_FSTROPEN_1.			 */
+/* See the comments in in src/lib/oogl/util/futil.c for details.         */
+#define USE_FSTROPEN_1 0
+
 @BOTTOM@
 
 #if D1_DEBUG

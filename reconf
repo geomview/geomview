@@ -17,7 +17,7 @@ sys("autoheader");
 sys("automake -a");
 #sys("./configure --with-motif=/old/usr/local/lesstif --with-opengl=/usr/local/Mesa --with-forms=/old/home/mbp/gvsrc/Geomview/forms/xforms/FORMS");
 
-sys("./configure");
+sys("./configure --with-motif=/usr/local/openmotif");
 
 #sys("env CFLAGS=\"-Wall -Wno-unused\" ./configure");
 
