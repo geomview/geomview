@@ -27,6 +27,7 @@
 /*
  * Communications -- Private definitions for Pools and Handles.
  */
+#include <sys/time.h>
 #include "ooglutil.h"
 #include "streampool.h"
 /*#include "sm.h"*/

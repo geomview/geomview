@@ -30,11 +30,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdlib.h>
 #include <string.h>
 #include "ooglutil.h"
-#if defined(unix) || defined(__unix)
+#if defined(unix) || defined(__unix) || defined(__unix__)
 #include <sys/signal.h>
 #endif /*unix*/
 
-#if defined(unix) || defined(__unix) /* Don't try to compile for Windows */
+#if defined(unix) || defined(__unix) || defined(__unix__) /* Don't try to compile for Windows */
 
 #define FBUFSIZ 1024
 #define INITSIZ 10

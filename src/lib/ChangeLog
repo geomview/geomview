@@ -1,3 +1,17 @@
+2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* fexpr/real.c: Use variables to compute 0/0.
+
+	* gprim/geom/geomstream.c:
+	* mg/common/mgtexture.c:
+	* oogl/util/findfile.c:
+	* oogl/util/glob.c: Add __unix__ to list of CPP symbols used to detect
+	unix systems.
+
+	* oogl/refcomm/handleP.h: Include <sys/time.h>.
+
+	* shade/appearance.c: Bugfix; variable 'c' was used uninitialized.
+
 2001-03-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* mib/mibToggle.c (mib_create_Toggle, mib_load_Toggle): 

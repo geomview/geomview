@@ -35,7 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "streampool.h"
 #include "handleP.h"
 
-#if defined(unix) || defined(__unix)
+#if defined(unix) || defined(__unix) || defined(__unix__)
 # include <unistd.h>
 #else	/* _WIN32 */
 # include <io.h>

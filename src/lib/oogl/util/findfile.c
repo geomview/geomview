@@ -28,14 +28,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.2 2000/09/01 22:38:16 mphillips Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.3 2002/04/13 23:24:06 smr99 Exp $ */
 
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include "ooglutil.h"
 
-#if defined(unix) || defined(__unix)
+#if defined(unix) || defined(__unix) || defined(__unix__)
 # ifdef NeXT
 #  include <fcntl.h>
 # else

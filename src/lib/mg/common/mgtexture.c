@@ -29,7 +29,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#if defined(unix) || defined(__unix)
+#if defined(unix) || defined(__unix) || defined(__unix__)
 # include <unistd.h>
 #elif defined(_WIN32) || defined(WIN32)
 # include <io.h>
@@ -545,7 +545,7 @@ mg_inhaletexture(Texture *tx, int rgba)
 
     wantchans = tx->channels;
 
-#if defined(unix) || defined(__unix)
+#if defined(unix) || defined(__unix) || defined(__unix__)
     oldsigchld = (void ((*)()))signal(SIGCHLD, SIG_DFL);
 #endif
     f = gimme(tx->filename, &dopclose, &size);

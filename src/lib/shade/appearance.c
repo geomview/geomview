@@ -1400,7 +1400,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
     float val[16];
     struct txkw *kw;
     char *w, *raww;
-    int i, c, k;
+    int i, k;
     int any = 0;
     int brack = 0;
     int empty = 1, braces = 0;
@@ -1426,7 +1426,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
              * Do this before calling HandleReferringTo()
              * to prevent spurious error messages.
 	     */
-	    if(c == '<' && (h = HandleByName(w, &TextureOps)) == NULL && w[0] != '/') {
+	    if(i == '<' && (h = HandleByName(w, &TextureOps)) == NULL && w[0] != '/') {
 		w = findfile(fname, raww = w);
 		if(w == NULL) {
 		    OOGLSyntax(PoolInputFile(p),
@@ -1434,7 +1434,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 			fname, raww);
 		}
 	    }
-	    h = HandleReferringTo(c, w, &TextureOps, NULL);
+	    h = HandleReferringTo(i, w, &TextureOps, NULL);
 	    if(h != NULL) {
 		tx = (Texture *)HandleObject(h);
 		RefIncr((Ref*)tx);

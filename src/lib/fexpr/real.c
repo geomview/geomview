@@ -56,10 +56,14 @@ double freal_im(double a)
 
 double freal_monstub(double a)
 {
-  return 0.0/0.0;
+  double b = 0.0;
+  double c = 0.0;
+  return b/c;
 }
 
 double freal_binstub(double a1, double a2)
 {
-  return 0.0/0.0;
+  double a = 0.0;
+  double b = 0.0;
+  return a/b;
 }

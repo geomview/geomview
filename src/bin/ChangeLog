@@ -1,3 +1,8 @@
+2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomutil/math2oogl/math2oogl.c: Add __unix__ to list of CPP
+	symbols used to detect unix systems.
+
 2001-06-04  Mark Phillips  <mbp@geomtech.com>
 
 	* geomutil/oogl2vrml/oogl2vrml.c: fixed segmentation fault bug
