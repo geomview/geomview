@@ -1,5 +1,8 @@
 2002-04-13  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
+	* mg/opengl/mgopenglshade.c: Update the declarations for
+	glBindTextureEXT and glDeleteTexturesEXT.
+
 	* fexpr/real.c: Use variables to compute 0/0.
 
 	* gprim/geom/geomstream.c:

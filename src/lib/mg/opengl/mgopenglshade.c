@@ -388,7 +388,7 @@ mgopengl_lightmodeldef(int lightmodel, LmLighting *lgt, int mask, struct mgastk 
 # ifndef GL_EXT_texture_object
    /* If <GL/gl.h> doesn't know about glBindTextureEXT etc., declare here. */
    extern void glBindTextureEXT (GLenum target, GLuint texture);
-   extern void glDeleteTexturesEXT (int n, GLuint *textures);
+   extern void glDeleteTexturesEXT (GLsizei n, GLuint *textures);
 # endif
 
     /* If the library knows about it, does the X display also support the
@@ -408,8 +408,8 @@ static int has_texture_object(void) {
 
   /* Stub for non-existent glBindTextureEXT() etc. functions. */
 static int has_texture_object(void) { return 0; }
-static void glBindTextureEXT(int kind, GLuint id) { }
-static void glDeleteTexturesEXT(int n, GLuint *textures) { }
+static void glBindTextureEXT(GLenum target, GLuint id) { }
+static void glDeleteTexturesEXT(GLsizei n, GLuint *textures) { }
 
 #endif
 
