@@ -4,3 +4,6 @@ aclocal.m4
 config.log
 config.status
 configure
+stamp-h.in stamp-h
+config.h.in config.h
+maniview
