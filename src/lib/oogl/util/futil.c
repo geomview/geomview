@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.8 2003/09/10 21:27:53 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.9 2004/03/15 22:05:35 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -133,6 +133,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  *	fclose() should be used to free the FILE after use.
  */
 
+#if HAVE_FMEMOPEN
+/*
+ * fmemopen is GNU stuff, AFAIK. _AND_, PLEASE NOTE NOTE NOTE it makes
+ * a _MAJOR_ difference on 64bit-systems whether a functions returns
+ * int or "long int" _AND_ which bit-lengths its arguments have.
+ *
+ * Also, defining _GNU_SOURCE should not do any harm on non-GNU
+ * systems :)
+ */
+# define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <sys/types.h>
 
