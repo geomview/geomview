@@ -52,10 +52,17 @@ else
   HAVE_CXX=true
 fi
 
+AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_RANLIB
 AC_PROG_INSTALL
 
+# Check for ways to generate a PDF file.
+# GNU Texinfo has a texi2pdf, otherwise use a DVI->PDF converter.
+AC_CHECK_PROGS(TEXI2PDF, texi2pdf)
+AC_CHECK_PROGS(DVIPDF, dvipdf)
+
+AM_CONDITIONAL(HAVE_TEXI2PDF, test x$TEXI2PDF != x)
 
 ########################################################################
 ########################################################################
@@ -492,8 +499,11 @@ AC_SEARCH_LIBS(fmemopen, c,
 
 AC_TYPE_SIZE_T
 
-modulesdir="\$(exec_prefix)/modules"
-AC_SUBST(modulesdir)
+moduledir="\$(exec_prefix)/bin"
+AC_SUBST(moduledir)
+
+geomdatadir="\$(prefix)/data"
+AC_SUBST(geomdatadir)
 
 ########################################################################
 
@@ -557,7 +567,14 @@ AC_SUBST(STUBLIB)
 ### the timestamps on the corresponding yacc and lex source files, so
 ### that 'make' won't try to run yacc and/or lex to regenerate them.
 ### Normal users shouldn't need lex/yacc --- they just need a C compiler
-### to compile these files:
+### to compile these files.
+###
+### Note: These 'touch' commands SHOULDN'T be necessary, since
+### running 'make dist' after 'make' leaves the timestamps on the
+### .c files newer than the source .y and .l files.  However, we
+### leave them here anyway because of some problems reported by
+### dpvc@union.edu when configuring on his LinuxPPC system; they
+### seem to be necessary on that system.
 
 touch src/lib/oogl/wa/wa.yacc.c
 touch src/lib/oogl/wa/wa.lex.c
@@ -616,14 +633,19 @@ LF_SET_INCLUDES
  
 AC_OUTPUT(Makefile
 	  m4/Makefile
+	  data/Makefile
 	  doc/Makefile
 	  doc/html/Makefile
 	  src/Makefile
+	  src/lib/Makefile
+	  src/lib/camera/Makefile
+	  src/lib/color/Makefile
+	  src/lib/fexpr/Makefile
+	  src/lib/oogl/Makefile
 	  src/lib/oogl/lisp/Makefile
 	  src/lib/oogl/refcomm/Makefile
 	  src/lib/oogl/util/Makefile
 	  src/lib/oogl/wa/Makefile
-	  src/lib/oogl/Makefile
 	  src/lib/geometry/Makefile
 	  src/lib/geometry/cmodel/Makefile
 	  src/lib/geometry/hpoint3/Makefile
@@ -632,15 +654,11 @@ AC_OUTPUT(Makefile
 	  src/lib/geometry/transform3/Makefile
 	  src/lib/geometry/transformn/Makefile
 	  src/lib/geometry/transobj/Makefile
-	  src/lib/Makefile
-	  src/lib/camera/Makefile
-	  src/lib/color/Makefile
-	  src/lib/fexpr/Makefile
+	  src/lib/geomutil/Makefile
 	  src/lib/geomutil/bdy/Makefile
 	  src/lib/geomutil/crayplutil/Makefile
 	  src/lib/geomutil/dim/Makefile
 	  src/lib/geomutil/plutil/Makefile
-	  src/lib/geomutil/Makefile
 	  src/lib/gprim/Makefile
 	  src/lib/gprim/bbox/Makefile
 	  src/lib/gprim/bezier/Makefile
@@ -683,27 +701,27 @@ AC_OUTPUT(Makefile
 	  src/bin/animate/Makefile
 	  src/bin/animate/interface/Makefile
 	  src/bin/graffiti/Makefile
-	  src/bin/stereo/Makefile
 	  src/bin/transformer/Makefile
-	  src/bin/sweep/Makefile
+	  src/bin/stereo/Makefile
 	  src/bin/geomutil/Makefile
-	  src/bin/geomutil/clip/Makefile
-	  src/bin/geomutil/math2oogl/Makefile
-	  src/bin/geomutil/oogl2vrml/Makefile
-	  src/bin/geomutil/vrml2oogl/Makefile
-	  src/bin/geomutil/vrml2oogl/lib/Makefile
 	  src/bin/geomutil/bdy/Makefile
+	  src/bin/geomutil/clip/Makefile
 	  src/bin/geomutil/maple2oogl/Makefile
+	  src/bin/geomutil/math2oogl/Makefile
 	  src/bin/geomutil/oogl2rib/Makefile
+	  src/bin/geomutil/oogl2vrml/Makefile
 	  src/bin/geomutil/plutil/Makefile
 	  src/bin/geomutil/ucd/Makefile
+	  src/bin/geomutil/vrml2oogl/Makefile
+	  src/bin/geomutil/vrml2oogl/lib/Makefile
+	  src/bin/sweep/Makefile
 	  xforms/Makefile
-         xforms/bxform-089/Makefile
-         xforms/bxform-089/FORMS/Makefile
-         xforms/bxform-089-glibc/Makefile
-         xforms/bxform-089-glibc/FORMS/Makefile
-         xforms/bxform-089-glibc2.1/Makefile
-         xforms/bxform-089-glibc2.1/FORMS/Makefile
+          xforms/bxform-089/Makefile
+          xforms/bxform-089/FORMS/Makefile
+          xforms/bxform-089-glibc/Makefile
+          xforms/bxform-089-glibc/FORMS/Makefile
+          xforms/bxform-089-glibc2.1/Makefile
+          xforms/bxform-089-glibc2.1/FORMS/Makefile
          )
 
 #	  src/bin/cplxview/Makefile

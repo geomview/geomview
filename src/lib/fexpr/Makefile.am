@@ -8,4 +8,4 @@ libfexpr_a_SOURCES = \
     fexpr.h parse.tab.h
 
 parse.tab.c: parse.tab.c-saved
-	cp parse.tab.c-saved parse.tab.c
+	cp $(srcdir)/parse.tab.c-saved parse.tab.c

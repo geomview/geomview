@@ -2,6 +2,8 @@ INCLUDES = @default_includes@
 
 LDADD = $(STUBLIB) ${OOGLLIBS} $(SOCKETLIBS) $(MATHLIB)
 
+man_MANS = anytoucd.1 ucdtooff.1
+
 bin_PROGRAMS = anytoucd ucdtooff
 
 anytoucd_SOURCES = anytoucd.c make_frame.c stack.c vec4.h

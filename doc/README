@@ -25,7 +25,7 @@ newsletter_article.txt
 		Geomview, in January of 1992.
 
 figs/		This directory contains Postscript versions of
-		all the images in the manul; it's only used in
+		all the images in the manual; it's only used in
 		creating the pdf version of the manual.  It isn't
 		relevant if all you're doing is reading the
 		manual.

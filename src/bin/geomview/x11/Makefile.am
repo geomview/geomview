@@ -1,68 +1,24 @@
-INCLUDES = $(default_includes) $(MOTIFINCLUDE) $(OPENGLINCLUDE)
+INCLUDES = $(default_includes) $(MOTIFINCLUDE) $(OPENGLINCLUDE) -I..
 SUBDIRS = bitmaps interface
 
-COMMON_OBJS = \
-  ../common/comm.o     ../common/main.o      ../common/space.o     	\
-  ../common/drawer.o   ../common/motion.o    ../common/transform.o 	\
-  ../common/event.o    ../common/mouse.o     ../common/ui.o	   	\
-  ../common/lang.o     ../common/ndshade.o   ../common/worldio.o	\
-  ../common/lights.o   ../common/rman.o				   	\
-  ../common/lispext.o  ../common/shaders.o
-
-# The following rule prevents make from attempting to compile the
-# .c files from ../common in this directory; it's triggered if you
-# do a 'make' in this directory before doing it in ../common:
-$(COMMON_OBJS):
-	@echo  ""
-	@echo "You need to run 'make' manually in ../common to build"
-	@echo "  .o files there before continuing.  Or better yet, always"
-	@echo "  build geomview by issuing 'make' from the parent of this"
-	@echo "  directory (.../src/bin/geomview); that takes care of"
-	@echo "  building both the common/ and x11/ directories in the"
-	@echo "  correct order."
-	@echo  ""
-	exit -1
-
-LDADD = ${COMMON_OBJS} buildinfo.o ${OOGLLIBS} \
+LDADD = ../common/libgvcommon.a buildinfo.o ${OOGLLIBS} \
         $(OPENGLLIBS) $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(SOCKETLIBS) $(MATHLIB)
-
-# $(OPENGLLIBS) 
-
-COMMON_SRCS = \
-  ../common/comm.c     ../common/main.c      ../common/space.c     	\
-  ../common/drawer.c   ../common/motion.c    ../common/transform.c 	\
-  ../common/event.c    ../common/mouse.c     ../common/ui.c	   	\
-  ../common/lang.c     ../common/ndshade.c   ../common/worldio.c	\
-  ../common/lights.c   ../common/rman.c				   	\
-  ../common/lispext.c  ../common/shaders.c			   	\
-  ../common/comm.h     ../common/lispext.h   ../common/space.h	   	\
-  ../common/common.h   ../common/main.h      ../common/transform.h 	\
-  ../common/drawer.h   ../common/motion.h    ../common/ui.h	   	\
-  ../common/event.h    ../common/mouse.h     ../common/version.h	\
-  ../common/lang.h     ../common/pickfunc.h  ../common/worldio.h	\
-  ../common/lights.h   ../common/rman.h
 
 bin_PROGRAMS = gvx
 
-COMMON_SRCS = \
+gvx_SOURCES = \
     gvappear.c	gvcameras.c  gvcolor.c  gvcommands.c      \
     gvcredits.c gvevent.c    gvfiles.c   gvlights.c gvload.c          \
     gvcamui.c \
     gvmain.c	gvmaterial.c gvmnpanel.c gvsave.c   gvtoolui.c gvui.c \
-    clang.h gvui.h
+    gvui.h
 
 
-gvx_SOURCES = $(COMMON_SRCS) 
-
-.PHONY: _always
-
-_always:
-
-clang:	_always
-	$(top_srcdir)/src/lib/oogl/lisp/lisp2c -cprefix "gv_" -o clang *.c ../common/*.c
-
-buildinfo.c:	_always
+buildinfo.c: $(gvx_OBJECTS) ../common/libgvcommon.a
 	(echo 'char builddate[] = "'"`date +%y%m%d%H%M`"'";'; \
 	 echo 'char buildinfo1[] = "'"  By `whoami`@`hostname`[`uname -r`]"'";'; \
 	 echo 'char buildinfo2[] = "'"  On `date`"'";'; \
 	) > buildinfo.c
+
+../clang.c ../clang.h:
+	cd .. && $(MAKE) $(AM_MAKEFLAGS) clang

@@ -10,26 +10,23 @@ EXTRA_DIST = .geomview-maniview \
    borrom4.wa controlpanel.fd dodec.vect gvinit hook.off \
    maniview.1 maniviewhelp
 
-datagroupsdir = $(prefix)/data/groups
+datagroupsdir = $(geomdatadir)/groups
 
 datagroups_DATA = 120.dgp 3torus.dgp borrom.dgp borrom2.dgp borrom4.dgp \
                   good_klein_quick.dgp klein_bricks.dgp klein_whole.dgp \
                   notknot.dgp
 
-bin_PROGRAMS = maniview
-
-bin_SCRIPTS = .geomview-maniview
-
+module_PROGRAMS = maniview
 maniview_SOURCES = \
     callbacks.c controlpanel.c maniview.c controlpanel.h gvinit.h \
     maniview.h maniviewhelp.h
 
-noinst_SCRIPTS = install-geomview-dotfile
-
-install-geomview-dotfile: maniview
-	$(top_builddir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Maniview" "$(subdir)/maniview")' > $(top_builddir)/modules/.geomview-maniview
+module_DATA = .geomview-maniview
 
 
 .geomview-maniview:
 	echo '(emodule-define "Maniview" "maniview")' > .geomview-maniview
+
+all-local:
+	$(top_srcdir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Maniview" "$(subdir)/maniview")' > $(top_builddir)/modules/.geomview-maniview

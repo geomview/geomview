@@ -1,4 +1,4 @@
-INCLUDES = @default_includes@ -I./lib
+INCLUDES = @default_includes@ -I$(srcdir)/lib
 
 SUBDIRS = lib
 

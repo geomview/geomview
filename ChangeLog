@@ -11,6 +11,52 @@
 	* src/lib/oogl/util/futil.c: corrected USE_FSTROPEN_1 definition
 	  for AIX/__osf__/__hpux/__FreeBSD__ case
 
+2000-11-05  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* Makefile.am (distclean-local): Remove "include" directory.
+
+	* doc/html/Makefile.am (EXTRA_DIST): 
+	* doc/Makefile.am (EXTRA_DIST): List files explicitly, to avoid
+	distributing CVS directory.
+
+	* configure.in: Check for either "texi2pdf" or "dvipdf".
+
+	* doc/Makefile.am (.texi.pdf): Build PDF files using "texi2pdf" (from
+	GNU Texinfo package), if available.
+
+	* data/Makefile.am (geomdata_DATA): List data files to install.
+
+	* configure.in: Set geomdatadir variable, allowing easy overriding
+	at configure time.	
+
+	* src/Makefile.am (geomview): 
+	* Makefile.am (geomview): 
+	* geomview.sh (GEOMVIEW_LOAD_PATH): Do not assume data lives
+	in a subdirectory of $GEOMROOT.
+
+2000-11-04  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* src/Makefile.am (geomview): 
+	* Makefile.am (geomview): 
+	* geomview.sh (GEOMVIEW_EMODULE_PATH): Do not assume that modules live
+	in a subdirectory of $GEOMROOT.
+
+	* configure.in: Change "modulesdir" to "moduledir",
+	so that "module_PROGRAMS"
+
+2000-11-02  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* doc/html/Makefile.am (geomview_toc.html): Use $srcdir to refer
+	to a file in the sources.
+
+	* Makefile.am (geomview): 
+	* src/Makefile.am (geomview): Refer to `geomview.sh' using
+        $top_srcdir.
+
+	* configure.in: The macro AC_OUTPUT will only create a single
+	directory level at a time, so we must list the files in directory
+	`a/b' before those in directory `a/b/c'.
+
 1.7.10  Nov 1, 2000
 	Summary of changes:
 	  - Attempted to fix bug which caused Geomview to crash immediately
@@ -42,6 +88,7 @@
 	  [sent by Tamara Munzner <tmm@pa.dec.com>]
 
 2000-10-29  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
 	* configure.in: also try $x_includes when searching for Xm/Xm.h
 	
 

@@ -7,13 +7,13 @@ libwa_a_SOURCES = \
     wa.lex.c wa.yacc.c \
     wa.h y.tab.h yystype.h
 
-wa.yacc.c: fsaparse.y
+wa.yacc.c: $(srcdir)/fsaparse.y
 	rm -f y.tab.h y.tab.c $@
-	(yacc -d fsaparse.y; \
+	(yacc -d $(srcdir)/fsaparse.y; \
 	sed -e '/^\#include/!s/yy/wafsa/g' -e '/#ident/d' y.tab.c) >$@
 
-wa.lex.c: fsaparse.l
+wa.lex.c: $(srcdir)/fsaparse.l
 	rm -f lex.yy.c $@
-	(lex fsaparse.l; \
+	(lex $(srcdir)/fsaparse.l; \
 	 sed -e '/^\#include/!s/yy/wafsa/g' \
 	     -e 's/YYSTYPE wafsalval/extern &/' -e '/#ident/d' lex.yy.c) >$@

@@ -7,18 +7,14 @@ LDADD = $(top_builddir)/src/lib/fexpr/libfexpr.a                    \
 
 EXTRA_DIST = .geomview-ginsu ginsu.1 ginsuF.fd
 
-bin_PROGRAMS = ginsu
-
-bin_SCRIPTS = .geomview-ginsu
-
+module_PROGRAMS = ginsu
 ginsu_SOURCES = ginsu.c ginsuF.c ginsuF.h
 
-noinst_SCRIPTS = install-geomview-dotfile
-
-install-geomview-dotfile: ginsu
-	$(top_builddir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Ginsu" "$(subdir)/ginsu")' > $(top_builddir)/modules/.geomview-ginsu
-
+module_DATA = .geomview-ginsu
 
 .geomview-ginsu:
 	echo '(emodule-define "Ginsu" "ginsu")' > .geomview-ginsu
+
+all-local:
+	$(top_srcdir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Ginsu" "$(subdir)/ginsu")' > $(top_builddir)/modules/.geomview-ginsu

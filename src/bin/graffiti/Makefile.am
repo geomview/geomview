@@ -8,18 +8,14 @@ LDADD = $(OOGLLIBS)  \
 
 EXTRA_DIST = .geomview-graffiti graffiti.1
 
-bin_PROGRAMS = graffiti
-
-bin_SCRIPTS = .geomview-graffiti
-
+module_PROGRAMS = graffiti
 graffiti_SOURCES = graffiti.c gui.c lang.h panel.h graffiti.h lang.c panel.c
 
-noinst_SCRIPTS = install-geomview-dotfile
-
-install-geomview-dotfile: graffiti
-	$(top_builddir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Graffiti" "$(subdir)/graffiti")' > $(top_builddir)/modules/.geomview-graffiti
-
+module_DATA = .geomview-graffiti
 
 .geomview-graffiti:
 	echo '(emodule-define "Graffiti" "graffiti")' > .geomview-graffiti
+
+all-local:
+	$(top_srcdir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Graffiti" "$(subdir)/graffiti")' > $(top_builddir)/modules/.geomview-graffiti

@@ -2,6 +2,8 @@ INCLUDES = @default_includes@
 
 LDADD= ${OOGLLIBS} $(SOCKETLIBS) $(MATHLIB)
 
+man_MANS = anytooff.1 polymerge.1 offconsol.1
+
 bin_PROGRAMS = polymerge anytooff bez2mesh offconsol
 
 polymerge_SOURCES = polymerge.c
