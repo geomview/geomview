@@ -1,3 +1,9 @@
+2001-03-19  Mark Phillips  <mbp@geomtech.com>
+
+	* doc/motion.tex: new file added to release; documents the
+	  mathematics behind Geomview's motion model.  For use by
+	  developers (not needed by regular users).
+
 2001-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* configure.in: Add AC_FUNC_SETPGRP.

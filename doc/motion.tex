@@ -1,71 +1,90 @@
-\documentclass{article}
+\magnification=\magstep2
 
-\title{Mathematical Formulas for Geomview's Motion Model}
-\author{Mark Phillips \& Nathaniel Thurston}
-\date{Written sometime around 1994}
+\centerline{Mathematical Formulas for Geomview's Motion Model}
+\centerline{Mark Phillips \& Nathaniel Thurston}
+\smallskip
+\centerline{Originally written sometime around late 1992}
+\centerline{Updated in March 2001}
 
-\begin{document}
+\bigskip
 
-\maketitle
+The model that Geomview uses for object motions involves 3 objects
+for each motion: a {\it moving} object, a {\it center} object,
+and a {\it frame} object.  As the name suggests, the {\it moving}
+object is the one that actually moves.  The motion happens in
+an imaginary coordinate system obtained by (parallel) translating
+the coordinate system of the {\it frame} object to the origin
+of the {\it center} object coordinate system.
 
-$m$ = coord sys of moving object; $[x]_m$ = coords of $x$ in $m$
+To compute and apply a motion, we think of it as happening in
+this imaginary coordinate system (e.g. a ``rotation of 10 degrees around
+the X axis'').  But we want to apply it to the {\it moving} object,
+which we have in its own coordinate system.  This note explains
+how to do this.
 
-$c$ = coord sys of center object; $[x]_c$ = coords of $x$ in $c$
+First, some notation.
+Think of a Geomview world as a copy of ${\bf R}^3$
+with many different coordinate system representations.  If $S$ is a
+coordinate system and $x \in {\bf R}^3$ is a point, we write $[x]_S$
+to denote the coordinates of $x$ in $S$.  Also, if $V: {\bf R}^3
+\rightarrow {\bf R}^3$ is a projective transformation of ${\bf R}^3$,
+write $[V]_S$ to denote the ($4 \times 4$) matrix that represents
+$V$ in $S$.  Let
 
-$f$ = coord sys of frame object; $[x]_f$ = coords of $x$ in $f$
+\smallskip
+\halign{\indent\indent#&#&#\hfil\cr
+$m$  & = & coord sys of moving object\cr
+$c$  & = & coord sys of center object\cr
+$f$  & = & coord sys of frame object\cr
+$f'$ & = & $f$ translated to origin of $c$\cr
+$U$  & = & universal coord sys\cr
+}
+\smallskip
 
-$U$ = universal coord sys; $[x]_U$ = coords of $x$ in $U$
+With this notation we can now precisely state the problem: If $V$ is a
+transformation, express $[V]_m$ in terms of $[V]_{f'}$.  (We know
+$[V]_{f'}$ and need to compute $[V]_m$.)
+
+To do the computation we will need several change-of-coordinate
+matrices.  If $S$ is a coordinate system, let $T_S$ be the matrix
+which changes $S$ coordinates into $U$ (universal) coordinates.  So:
+
+\smallskip
+\halign{\indent\indent#&#&#&#\cr
+$[x]_U$ &= & $[x]_m$    & $\cdot \quad T_m$\cr
+$[x]_U$ &= & $[x]_c$    & $\cdot \quad T_c$\cr
+$[x]_U$ &= & $[x]_f$    & $\cdot \quad T_f$\cr
+$[x]_U$ &= & $[x]_{f'}$ & $\cdot \quad T_{f'}$\cr
+}
+\smallskip
+
+\noindent
+$T_m$, $T_c$, and $T_f$ can easily be computed from the position
+of $m$, $c$, and $f$ in the world heirarchy.  $T_{f'}$ can
+be computed as follows.
+Let $p$ be the origin of $c$; so $[p]_c = [0, 0, 0, 1]$.
+The coordinates of $p$ in $f$ are
+
+\smallskip
+\halign{\indent\indent#&#&#&#\hfil\cr
+$[p]_f$ &= & $[p]_c     $ & $\cdot T_c \cdot T_{f}^{-1}$\cr
+        &= & $[0, 0, 0, 1] $ & $\cdot T_c \cdot T_{f}^{-1}$\cr
+}
+\smallskip
+
+\noindent
+If $P$ is the translation that takes the origin of $f$ to $p$, then
+$[P]_f$ is the matrix whose bottom row is $[p]_f$.  Then $T_{f'} =
+[P]_f \cdot T_f$.  (Another way to think of this is that $[P]_f$ is
+the matrix which changes $f'$ coordinates into $f$ coordinates.)
+$[V]_m$ can now be computed in terms of $[V]_{f'}$ as follows:
 
 \smallskip
 
-$T_m$ changes $m$ coords to $U$ coords: $[x]_m \cdot T_m = [x]_U$
+\halign{\indent\indent#&#&#&#&#&#&#\hfill\cr
+$[V]_m$ & = & $T_m \cdot$ & $T_{f'}^{-1}$                 & $\cdot [V]_{f'}$ & $\cdot T_{f'}$          & $\cdot T_m^{-1}$\cr
+$[V]_m$ & = & $T_m \cdot$ & $T_f^{-1} \cdot {[P]_f}^{-1}$ & $\cdot [V]_{f'}$ & $\cdot [P]_f \cdot T_f$ & $\cdot T_m^{-1}$\cr
+}
 
-$T_c$ changes $c$ coords to $U$ coords: $[x]_c \cdot T_c = [x]_U$
-
-$T_f$ changes $f$ coords to $U$ coords: $[x]_f \cdot T_f = [x]_U$
-
-\begin{description}
-
-\item{1.}
-Let $p = \hbox{origin of } c$: $[p]_c = [0,0,0,1]$.
-Compute coords of $p$ in $f$:
-
-\begin{eqnarray}
-   [p]_f & = & [p]_c \cdot T_c \cdot T_{f}^{-1} \\
-         & = & [p]_U           \cdot T_{f}^{-1}
-\end{eqnarray}
-
-\item{2.}
-Let $f'$ be $f$ translated to have same center as $c$:
-
-\begin{eqnarray}
-   P & = & \hbox{translation taking } [0,0,0,1] \hbox{ to } [p]_f \\
-   T'_f & = & P \cdot T_f \\
-        & = & \hbox{change } f' \hbox{ coords to } U \hbox{ coords: }
-[x]_{f'} \cdot T_{f'} = [x]_U
-\end{eqnarray}
-
-\item{3.}
-$T_R = T_m \cdot T_{f'}^{-1} = $ change $f'$ coords to $m$ coords
-
-\item{4.}
-$T_l = $ local transform
-
-\item{4'.}
-invert $T_l$ if moving object is an ancestor of frame object
-
-\item{5.}
-Compute the transform in $m$:
-
-\begin{eqnarray}
-T & = & T_R \cdot T_l \cdot T_{m}^{-1} \\
-  & = & T_m \cdot T_f^{-1} \cdot P^{-1} \cdot T_l \cdot P \cdot T_f
-        \cdot T_m^{-1}
-\end{eqnarray}
-
-\end{description}
-
-
-\end{document}
 \end
 
