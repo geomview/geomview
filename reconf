@@ -38,5 +38,6 @@ automake -a
 
 if test "$configure" != "no" ; then
   # configure (you might need to edit this for your local system)
-  ./configure --with-motif=/usr/local/openmotif
+  #  ./configure --with-motif=/usr/local/openmotif
+  ./configure
 fi
