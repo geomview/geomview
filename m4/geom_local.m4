@@ -125,7 +125,7 @@ dnl presense of a C++ compiler without exiting if it isn't found, let me
 dnl know! [mbp@geomtech.com, Sat Oct 14 00:33:38 2000]
 dnl 
 AC_DEFUN(GEOM_AC_PROG_CXX_WORKS,
-[AC_MSG_CHECKING([GEOM whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
+[AC_MSG_CHECKING([whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_TRY_COMPILER([int main(){return(0);}], ac_cv_prog_cxx_works, ac_cv_prog_cxx_cross)

@@ -242,9 +242,17 @@ else
   fi
 fi
 ])
-
+dnl
+dnl GEOM_AC_PROG_CXX (and its internally used GEOM_AC_PROG_CXX_WORKS) is a
+dnl replacement that I wrote for the standard AC_PROG_CXX (and
+dnl AC_PROG_CXX_WORKS).  It differs from the standard one only in that it
+dnl does not abort if a C++ compiler isn't found --- it just sets CXX to
+dnl the empty string.  If anyone knows a better way to test for the
+dnl presense of a C++ compiler without exiting if it isn't found, let me
+dnl know! [mbp@geomtech.com, Sat Oct 14 00:33:38 2000]
+dnl 
 AC_DEFUN(GEOM_AC_PROG_CXX_WORKS,
-[AC_MSG_CHECKING([GEOM whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
+[AC_MSG_CHECKING([whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_TRY_COMPILER([int main(){return(0);}], ac_cv_prog_cxx_works, ac_cv_prog_cxx_cross)

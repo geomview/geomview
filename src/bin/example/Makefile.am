@@ -5,6 +5,7 @@ INCLUDES = $(default_includes) $(FORMSINCLUDE)
 LDADD = $(FORMSLIBS) \
 	$(XLIBS)     \
 	$(OOGLLIBS)  \
+	$(SOCKETLIBS) \
         $(MATHLIB)
 
 bin_PROGRAMS = example

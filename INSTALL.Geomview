@@ -1,8 +1,8 @@
 	Instructions for using Geomview's `configure' script
 
-Geomview now (as of release 1.7.6) uses the GNU autoconf configuration
-system.  Essentially, the way to configure and compile Geomview is the
-same as with any piece of GNU-style software:
+Geomview uses the GNU autoconf configuration system.  The way to
+configure and compile Geomview is the same as with any piece of
+GNU-style software:
 
 	./configure
 	make
@@ -15,11 +15,16 @@ order for this to work you'll need to be in that directory.
 IMPORTANT NOTE: by default 'make install' will install Geomview into
 `/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
 running the script `/usr/local/Geomview/bin/geomview'.  If you want,
-you can copy this script to a directory that's on your PATH.  Or you
-can add /usr/local/Geomview/bin to your PATH.
+you can copy /usr/local/Geomview/bin/geomview to a directory that's on
+your PATH, and use it to invoke Geomview (it refers to things in the
+/usr/local/Geomview directory, so be sure to leave this directory in
+place if you do this).  Or you can add /usr/local/Geomview/bin to your
+PATH.
 
 You can override the default installation directory with the --prefix
-option to 'configure'.  'make install' will install files into
+option to 'configure'.  For example, to install into
+/opt/soft/Geomview instead of /usr/local/Geomview, do "./configure
+--prefix=/opt/soft/Geomview".  'make install' will install files into
 subdirectories of the prefix directory called 'bin', 'info', and
 'data'.
 
@@ -96,13 +101,42 @@ relevant for some of its external modules.  If you just want Geomview
 itself and don't care about the modules, you can forget about this
 step.
 
-Platform Specific Notes:
+========================================================================
 
-
+PLATFORM SPECIFIC NOTES:
 
 LinuxPPC
 --------
-
 On at least one LinuxPPC system with MetroX it was necessary to
 specify -lXp when linking with the Motif libraries
 ("MOTIFLIBS='-lXm -lXp' ./configure").
+
+
+Solaris
+-------
+On the Solaris 2.6 system that I tested, the 'example' external module
+in 'src/bin/example' failed to link because of an error of the form
+    ld: warning: relocation error: R_SPARC_32: file main.o: symbol .LLC1:
+	external symbolic relocation against non-allocatable section .stab;
+	cannot be processed at runtime: relocation ignored
+    Undefined                       first referenced
+     symbol                             in file
+    .LLC1                               main.o
+This was when using GNU gcc to compile and Sun's ld to link, and I
+believe this error may be due to an incompatibility between these two
+programs, or at least the versions that were on this system.  If
+this happens to you, you can build with "make -k" to force "make" to
+continue building the rest of the distribution in spite of this error.
+The only thing you'll be missing is this one external module, which
+isn't necessary for Geomview itself.  If you find a way to fix this
+problem, let me [mbp@geomtech.com] know.
+
+IRIX
+----
+On the IRIX 6.3 system that I tested (using CC=cc), the linker crashed
+when trying to link several of the external modules.  I suspect it may
+be due to a broken compiler installation on that particular machine,
+but I'm not sure.  I'll try to get access to a more recent IRIX
+installation soon and will check it out more.  In the meantime, if you
+compile Geomview on IRIX and run into any problems, please let me
+[mbp@geomtech.com] know.

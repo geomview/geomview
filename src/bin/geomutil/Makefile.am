@@ -1,4 +1,4 @@
-if GEOM_HAVE_CXX
+if HAVE_CXX
 VRML2OOGL = vrml2oogl
 else
 VRML2OOGL =

@@ -35,6 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #ifdef GLUT
 # include <GL/glut.h>
 #else
+#define GL_GLEXT_PROTOTYPES
 # include <GL/gl.h>
 # include <GL/glu.h>
 # include <GL/glx.h>
