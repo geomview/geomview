@@ -28,6 +28,18 @@ AC_MSG_RESULT([configuring $PACKAGE $VERSION])
 
 AC_PREFIX_DEFAULT(/usr/local/Geomview)
 
+
+dnl Add extra include or link directories
+AC_ARG_WITH(build-path,[
+  --with-build-path[=DIR] use DIR/include DIR/lib
+],[
+for d in `echo $withval | tr : ' '`; do
+    test -d $d/include && CPPFLAGS="$CPPFLAGS -I$d/include"
+    test -d $d/lib && LDFLAGS="$LDFLAGS -L$d/lib"
+done
+])
+
+
 AC_PROG_CC
 GEOM_AC_PROG_CXX
 if test "$CXX" = "" ; then
@@ -63,6 +75,7 @@ AC_PROG_INSTALL
 #   include the figures.  Anyone know how to get figures into a pdf
 #   file generated with texi2pdf? [mbp Sun Nov 19 15:33:19 2000]
 #AC_CHECK_PROGS(TEXI2PDF, texi2pdf)
+
 AC_CHECK_PROGS(DVIPDF, dvipdf)
 
 AM_CONDITIONAL(HAVE_TEXI2PDF, test x$TEXI2PDF != x)
@@ -85,72 +98,36 @@ AC_ARG_WITH(opengl,
 ########################################################################
 
 #
-# AC_PATH_X sets $x_libraries and $x_includes
+# Store X library link line in XLIBS
 #
-AC_PATH_X
+AC_PATH_XTRA
 
-#
-# If $x_includes is nonempty, remember it in XINCLUDES
-#
-if test "$x_includes" != "" ; then
-  XINCLUDES=-I$x_includes
-else
-  XINCLUDES=
-fi
-AC_SUBST(XINCLUDES)
-
-#
-# Find out how to link with the various X libraries we need
-#
-GEOM_FIND_L_OPTION(-lX11,
-		   XOpenDisplay,
-		   ["" "$x_libraries" "$MOTIF_DIR/lib"])
-X11_L_OPTION=$GEOM_L_OPTION
-GEOM_FIND_L_OPTION(-lXt,
-		   XtCreateManagedWidget,
-		   ["" "$x_libraries" "$MOTIF_DIR/lib"])
-if test "$GEOM_L_OPTION" != "$X11_L_OPTION" ; then
-  Xt_L_OPTION=$GEOM_L_OPTION
-else
-  Xt_L_OPTION=""
-fi
-GEOM_FIND_L_OPTION(-lXext,
-		   XextCreateExtension,
-		   ["" "$x_libraries" "$MOTIF_DIR/lib"])
-if test "$GEOM_L_OPTION" != "$X11_L_OPTION"  \
-     -a "$GEOM_L_OPTION" != "$Xt_L_OPTION"  ; then
-  Xext_L_OPTION=$GEOM_L_OPTION
-else
-  Xext_L_OPTION=""
-fi
-
-# Store the whole shebang in $XLIBS:
-XLIBS="$X11_L_OPTION -lX11 $Xt_L_OPTION -lXt $Xext_L_OPTION -lXext"
+XLIBS="$X_LIBS $X_PRE_LIBS -lXt -lXext -lX11 $X_EXTRA_LIBS"
 AC_SUBST(XLIBS)
 
 AC_CACHE_VAL(ac_cv_XLIBS,[ac_cv_XLIBS="XLIBS='$XLIBS'"])
 
 ########################################################################
 
+AC_MSG_CHECKING([for Xmu])
+
+result="no"
 GEOM_FIND_L_OPTION(-lXmu,
 		   XmuLookupStandardColormap,
                    ["" "$x_libraries" "$MOTIF_DIR/lib"],
 		   $XLIBS)
 if test "$GEOM_L_OPTION" != "0" ; then
-  HAVE_XMU=1
+  result="yes"
+  AC_DEFINE(HAVE_XMU)
   if test "$GEOM_L_OPTION" != "" ; then
     XMULIBS="$GEOM_L_OPTION -lXmu"
   else 
     XMULIBS="-lXmu"
   fi
-else
-  HAVE_XMU=0
 fi
 
-if test "$HAVE_XMU" = "1" ; then
-  AC_DEFINE(HAVE_XMU)
-fi
 AC_SUBST(XMULIBS)
+AC_MSG_RESULT([$result])
 
 ########################################################################
 
@@ -187,7 +164,7 @@ else
 fi
 GEOM_FIND_L_OPTION($MOTIFLIBS,
 		   XmCreateForm,
-		   ["$USER_MOTIF_DIR" "" "$x_libraries"],
+		   ["$USER_MOTIF_DIR" "" "$x_libraries" "/usr/local/lib"],
 		   $XLIBS
 		  )
 if test "$GEOM_L_OPTION" = "0" ; then
@@ -233,7 +210,7 @@ else
 fi
 GEOM_FIND_L_OPTION(-lGL,
 		   glBegin,
-		   ["$USER_OPENGL_DIR" "" "$x_libraries"],
+		   ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
 		   "$XLIBS -lm")
 if test "$GEOM_L_OPTION" = "0" ; then
     AC_MSG_ERROR([
@@ -246,7 +223,7 @@ fi
 GL_L_OPTION=$GEOM_L_OPTION
 GEOM_FIND_L_OPTION(-lGLU,
 		   gluBeginPolygon,
-		   ["$USER_OPENGL_DIR" "" "$x_libraries"],
+		   ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
 		   "$GL_L_OPTION -lGL $XLIBS -lm")
 if test "$GEOM_L_OPTION" != "$GL_L_OPTION" ; then
   GLU_L_OPTION=$GEOM_L_OPTION
@@ -293,22 +270,24 @@ AC_CACHE_VAL(ac_cv_have_xforms,
 	  USER_XFORMS_DIR="`pwd`/$USER_XFORMS_SUBDIR"
 	fi
     fi
-    GEOM_FIND_I_OPTION(forms.h, ["$USER_XFORMS_DIR" "" "/usr/local/include"])
+    GEOM_FIND_I_OPTION(forms.h, ["$USER_XFORMS_DIR" "" "$x_includes" "$x_includes/X11" "/usr/local/include"])
     ac_xforms_include=$GEOM_I_OPTION
     GEOM_FIND_L_OPTION(-lforms,
     		   fl_initialize,
-    		   ["$USER_XFORMS_DIR" "" "/usr/local/lib"],
+    		   ["$USER_XFORMS_DIR" "" "$x_libraries" "/usr/local/lib"],
     		   "$XLIBS -lm"
     		  )
-    if test "$GEOM_L_OPTION" != "0" ; then
+    if test "$ac_xforms_include" != 0 -a "$GEOM_L_OPTION" != "0" ; then
       XFORMS_L_OPTION=$GEOM_L_OPTION
       ac_xforms_libs="$XFORMS_L_OPTION -lforms"
       ac_have_xforms=yes
     else
+      ac_xforms_include=
       ac_xforms_libs=""
       ac_have_xforms=no
     fi
 else
+  ac_xforms_include=
   ac_xforms_libs=""
   ac_have_xforms=no
 fi
@@ -347,9 +326,8 @@ fi
 XFORMSINCLUDE=$ac_xforms_include
 XFORMSLIBS=$ac_xforms_libs
 
-AC_SUBST(XFORMSLIBS)
 AC_SUBST(XFORMSINCLUDE)
-AC_SUBST(XFORMS_LIB_SUBDIRS)
+AC_SUBST(XFORMSLIBS)
 
 ########################################################################
 
@@ -434,9 +412,6 @@ case "$target" in
                       STRSTREAMLIB=-liostream
                      )
           AC_LANG_C
-          AC_SEARCH_LIBS(__setfpucw, c,
-                         AC_DEFINE(HAVE_SETFPUCW, 1),
-                         AC_DEFINE(HAVE_SETFPUCW, 0))
           LINUX=true
           case "$target" in
             *powerpc*) AC_DEFINE(ALISTADDR, [])

@@ -1,3 +1,16 @@
+2001-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: Add AC_FUNC_SETPGRP.
+
+2001-02-18  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.in: Add option --with-build-path.  Use AC_PATH_XTRA.
+	Correct the X library link order.  Make sure to check
+	/usr/local/lib for all libraries that check /usr/local/include.
+	Check for <forms.h> in $x_includes and $x_includes/X11.  Make sure
+	both the includes and the libs are correct before using FORMS.
+	Announce whether Xmu is found.  General tidying up.
+
 2001-02-17  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* acconfig.h: Close comment above define for HAVE_FMEMOPEN.

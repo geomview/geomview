@@ -1,3 +1,13 @@
+2001-02-22  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* togeomview/togeomview.c: Include config.h.
+
+2001-02-21  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomview/common/comm.c (emodule_run): 
+	* togeomview/togeomview.c (start_gv): 
+	* geomutil/math2oogl/math2oogl.c (start_gv): Use SETPGRP_VOID.
+
 2000-11-23  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* geomview/x11/Makefile.am: install "gvx" in moduledir, not
