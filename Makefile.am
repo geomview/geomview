@@ -7,10 +7,11 @@ noinst_SCRIPTS = geomview
 ACLOCAL_AMFLAGS = -I m4
 m4_files = \
 	m4/geom_local.m4 \
-	m4/lf_local.m4 \
-	m4/smr_OPTIONAL_LIB.m4 \
-	m4/smr_REQUIRED_LIB.m4 \
-	m4/smr_WITH_BUILD_PATH.m4
+	m4/lf_local.m4
+
+#	m4/smr_OPTIONAL_LIB.m4 \
+#	m4/smr_REQUIRED_LIB.m4 \
+#	m4/smr_WITH_BUILD_PATH.m4
 
 
 geomview: geomview.sh Makefile
