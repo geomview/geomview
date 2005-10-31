@@ -38,7 +38,7 @@ typedef GeomClass   *GeomMethodsFunc( Geom *object );
 typedef Geom *GeomMessageFunc( Geom *, int ac, char *av[] );
 
 typedef Geom *GeomCopyFunc( Geom *object );
-typedef Geom *GeomCreateFunc( Geom *existing, GeomClass *Class, va_list args );
+typedef Geom *GeomCreateFunc( Geom *existing, GeomClass *Class, va_list *args );
 typedef int   GeomGetFunc( Geom *g, int attribute, void *attrp );
 typedef int   GeomDeleteFunc( Geom *object );
 typedef Geom *GeomReplaceFunc( Geom *object, Geom *newchild );

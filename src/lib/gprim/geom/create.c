@@ -47,7 +47,7 @@ GeomCreate(char *type, ...)
     }
 
     if (Class->create)
-        newgeom = (Geom *) (*Class->create)(NULL, Class, a_list);
+        newgeom = (Geom *) (*Class->create)(NULL, Class, &a_list);
     /* need error check here */
 
     va_end (a_list);
@@ -63,7 +63,7 @@ GeomSet(Geom *g, ...)
     va_start (a_list, g);
 
     if (g && g->Class && g->Class->create)
-        if((*g->Class->create)(g, g->Class, a_list))
+        if((*g->Class->create)(g, g->Class, &a_list))
 	    ok = 1;
 
     va_end (a_list);
@@ -104,7 +104,7 @@ GeomCCreate(Geom *g, GeomClass *c, ...)
 	Class = newgeom->Class;
 
     if (Class && Class->create)
-        newgeom = (Geom *) (*Class->create)(newgeom, Class, a_list);
+        newgeom = (Geom *) (*Class->create)(newgeom, Class, &a_list);
     /* need error check here */
 
     va_end (a_list);
