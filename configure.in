@@ -301,11 +301,11 @@ AC_CACHE_VAL(ac_cv_have_xforms,
     GEOM_FIND_L_OPTION(-lforms,
     		   fl_initialize,
     		   ["$USER_XFORMS_DIR" "" "$x_libraries" "/usr/local/lib"],
-    		   "$XLIBS -lm"
+    		   "$XLIBS -lXpm -lm"
     		  )
     if test "$ac_xforms_include" != 0 -a "$GEOM_L_OPTION" != "0" ; then
       XFORMS_L_OPTION=$GEOM_L_OPTION
-      ac_xforms_libs="$XFORMS_L_OPTION -lforms"
+      ac_xforms_libs="$XFORMS_L_OPTION -lforms -lXpm"
       ac_have_xforms=yes
     else
       ac_xforms_include=
