@@ -1,0 +1,19 @@
+#! /bin/sh
+#$Id: configure,v 1.1 2006/06/23 13:17:59 lloydwood Exp $
+
+echo
+echo "You are attempting to configure a pristine snapshot of Geomview that"
+echo "was taken from the Geomview CVS repository."
+echo
+echo "The configure files and Makefiles are not stored in CVS. Instead, they"
+echo "are generated for releases by running the reconf script, in the same"
+echo "geomview directory as this configure placeholder. reconf uses autoconf"
+echo "and automake to replace this configure message file with a real"
+echo "configure script and to create all Makefiles throughout the geomview tree."
+echo "reconf then runs configure, leaving you to run make afterwards."
+echo
+echo "reconf need only be run here once. Afterwards, configure and make will"
+echo "work as you would expect."
+echo
+echo "Before running reconf, ensure that the configure script generating this"
+echo "message is writable by you and can be overwritten by reconf."
