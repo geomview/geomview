@@ -1,3 +1,6 @@
+
+$Id: INSTALL.Geomview,v 1.10 2006/06/23 17:33:46 lloydwood Exp $
+
 	Instructions for using Geomview's `configure' script
 
 Geomview uses the GNU autoconf configuration system.  The way to
@@ -11,6 +14,13 @@ GNU-style software:
 Once `make' completes you can run Geomview without doing `make install'
 by running the script `geomview' in the top-level directory.  In
 order for this to work you'll need to be in that directory.
+
+The `reconf' script in the top-level directory will regenerate the
+`configure' script, using autoconf, before running that `configure'
+script. This is useful if no useful `configure' script is already
+present, which is normal only for copies of Geomview that have been
+taken directly from developer CVS. `reconf -n' will regenerate the 
+`configure' script, but will stop before beginning configuration.
 
 IMPORTANT NOTE: by default 'make install' will install Geomview into
 `/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
