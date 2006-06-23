@@ -20,6 +20,9 @@ fi
 # clear out configure's cache
 rm -f config.cache
 
+# move existing configure file out of the way
+mv -f configure configure-old
+
 # create aclocal.m4, which has our local macros from m4 subdir
 # plus any automake macros from the system
 aclocal -I m4
