@@ -1,5 +1,5 @@
 #! /bin/sh
-#$Id: configure,v 1.1 2006/06/23 13:17:59 lloydwood Exp $
+#$Id: configure,v 1.2 2006/06/23 15:47:41 lloydwood Exp $
 
 echo
 echo "You are attempting to configure a pristine snapshot of Geomview that"
@@ -17,3 +17,7 @@ echo "work as you would expect."
 echo
 echo "Before running reconf, ensure that the configure script generating this"
 echo "message is writable by you and can be overwritten by reconf."
+echo
+echo "You may want to use the installed autoreconf command instead of this"
+echo "reconf script. If standard libraries are not found by make, experiment"
+echo "with automake vs automake -a."
