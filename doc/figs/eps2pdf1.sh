@@ -9,25 +9,37 @@
 
 for i in *.ps
 do
+
+base=`basename $i .ps`
+
 echo $i
 
 rm -f t.eps t1.eps
 ps2epsi $i t.eps	
 
-gawk -v file=$i '$1=="%%BoundingBox:"{ \
+if test x`which epstopdf` = x
+then
+    gawk -v file=$i '$1=="%%BoundingBox:"{ \
 	print $1, 0, 0, $4-$2, $5-$3; \
 	print -1*$2, -1*$3, "translate";\
 	}\
 	$1!="%%BoundingBox:" {print $0;}' t.eps  > t1.eps
 
-gscall=`gawk -v file=$i '$1=="%%BoundingBox:" { 
+    gscall=`gawk -v file=$i '$1=="%%BoundingBox:" { 
 	outfile=file;
 	gsub(".ps",".pdf", outfile); \
 	printf "gs -g%dx%d -sDEVICE=pdfwrite -sOutputFile=%s -dBATCH %s\n", \
 	10*$(NF-1), 10*($NF), outfile, FILENAME; exit; }' t1.eps`
-echo $gscall
+    echo $gscall
 
-$gscall
+    $gscall
+
+else
+
+    epstopdf t.eps
+    mv t.pdf $base.pdf
+
+fi
 
 
 done 
