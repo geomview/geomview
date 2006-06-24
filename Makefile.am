@@ -29,4 +29,8 @@ DISTCLEANFILES = geomview
 
 distclean-local:
 	rm -rf include modules
+	find . -name "*~" -exec rm -f \{\} \;
 
+MAINTAINERCLEANFILES = \
+ configure config.guess config.h.in config.sub depcomp geomview*.tar.* \
+ install-sh missing INSTALL aclocal.m4
