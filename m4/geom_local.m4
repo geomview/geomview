@@ -20,7 +20,7 @@ dnl
 dnl    * If linking didn't work with any of the dirs in DIRS, then
 dnl      GEOM_L_OPTION is 0.
 dnl 
-AC_DEFUN(GEOM_FIND_L_OPTION,[
+AC_DEFUN([GEOM_FIND_L_OPTION],[
 geom_lib=$1
 geom_func=$2
 geom_dirs='$3'
@@ -63,7 +63,7 @@ dnl
 # Note that this might be the empty string, which corresponds to no -I
 # option at all.  If we don't find HEADER in any of the dirs listed in DIRS,
 # return with GEOM_I_OPTION = "0".
-AC_DEFUN(GEOM_FIND_I_OPTION,[
+AC_DEFUN([GEOM_FIND_I_OPTION],[
 geom_header=$1
 geom_dirs='$2'
 geom_saved_CPPFLAGS=$CPPFLAGS
@@ -107,7 +107,7 @@ dnl that we probably need to distinguish, but I'm not sure and I don't
 dnl know how to detect it, so this'll have to do for now.  If you know
 dnl more about this, please email me at mbp@geomtech.com.
 dnl
-AC_DEFUN(GEOM_FIND_LIBC_VERSION,[
+AC_DEFUN([GEOM_FIND_LIBC_VERSION],[
 if test -e "/lib/libc.so.6" ; then
   GEOM_LIBC_VERSION="6"
 else
@@ -127,7 +127,7 @@ dnl the empty string.  If anyone knows a better way to test for the
 dnl presense of a C++ compiler without exiting if it isn't found, let me
 dnl know! [mbp@geomtech.com, Sat Oct 14 00:33:38 2000]
 dnl 
-AC_DEFUN(GEOM_AC_PROG_CXX_WORKS,
+AC_DEFUN([GEOM_AC_PROG_CXX_WORKS],
 [AC_MSG_CHECKING([whether the C++ compiler ($CXX $CXXFLAGS $LDFLAGS) works])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -139,7 +139,7 @@ AC_MSG_RESULT($ac_cv_prog_cxx_cross)
 cross_compiling=$ac_cv_prog_cxx_cross
 ])
 
-AC_DEFUN(GEOM_AC_PROG_CXX,
+AC_DEFUN([GEOM_AC_PROG_CXX],
 [AC_BEFORE([$0], [AC_PROG_CXXCPP])dnl
 AC_CHECK_PROGS(CXX, $CCC c++ g++ gcc CC cxx cc++ cl, gcc)
 
@@ -184,7 +184,7 @@ fi
 ])
 dnl
 dnl
-AC_DEFUN(GEOM_GET_CACHED_VALUE,[
+AC_DEFUN([GEOM_GET_CACHED_VALUE],[
 AC_MSG_CHECKING([for $1])
 AC_CACHE_VAL(ac_cv_$1,[
 AC_MSG_ERROR([
@@ -200,7 +200,7 @@ AC_MSG_RESULT([done.])
 ])
 dnl
 dnl
-AC_DEFUN(GEOM_REQUIRE_XFORMS,[
+AC_DEFUN([GEOM_REQUIRE_XFORMS],[
 AC_MSG_CHECKING([for xforms])
 AC_CACHE_VAL(ac_cv_have_xforms,[:])
 eval $ac_cv_have_xforms
@@ -228,7 +228,7 @@ fi
 
 dnl Less severe version of the above: just check and WARN
 dnl
-AC_DEFUN(GEOM_CHECK_XFORMS,[
+AC_DEFUN([GEOM_CHECK_XFORMS],[
 AC_MSG_CHECKING([for xforms])
 AC_CACHE_VAL(ac_cv_have_xforms,[:])
 eval $ac_cv_have_xforms

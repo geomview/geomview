@@ -30,7 +30,7 @@ dnl distribution terms that you use for the rest of that program.
 # WARNING: This macro will do  --> rm -rf include
 # ------------------------------------------------------------------------
 
-AC_DEFUN(LF_LINK_HEADERS,[
+AC_DEFUN([LF_LINK_HEADERS],[
   # Find out how to link files if we haven't already
   if test -z "$LN_S"
   then
@@ -82,7 +82,7 @@ AC_DEFUN(LF_LINK_HEADERS,[
 # or /usr
 # --------------------------------------------------------------------------
 
-AC_DEFUN(LF_SET_INCLUDES,[
+AC_DEFUN([LF_SET_INCLUDES],[
   # See whether to put an entry for the prefix
   if test "$prefix" = "/usr" || test "$prefix" = "/usr/local"
   then
