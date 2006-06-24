@@ -12,6 +12,7 @@ configure
 depcomp
 geomview
 geomview*.tar.*
+geomview-1*
 include
 install-sh
 missing
