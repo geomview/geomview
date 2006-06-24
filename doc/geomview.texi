@@ -1,13 +1,11 @@
 %%% -*-texinfo-*-
-\def\figure#1{\vskip 2.0truein
-	      \special{psfile=#1 hscale=30.0 vscale=30.0
-	      voffset=-50 hoffset=90}}
 \tolerance=2000
-\def\caption#1{\centerline{{\bf{#1}}}}
-\input psfig.sty
 \input texinfo
+@letterpaper
 @setfilename geomview
 @settitle Geomview Manual
+
+@include version.texi
 
 @dircategory Graphics Applications
 @direntry
@@ -75,7 +73,7 @@ many kinds of Unix computers, including Linux, SGI, Sun, and HP.
 This manual describes Geomview version 1.8. @refill
 
 Geomview is free software, available under the terms of the GNU Lesser
-Public License; @xref{Copying} for details.
+Public License; @pxref{Copying} for details.
 
 Geomview and this manual are available for download from
 @ifhtml
@@ -822,7 +820,7 @@ before the Center shut down.
 
 If you would like to see a version of Geomview for Windows, 
 you can contribute to its development in several ways.
-@xref{Contributing} for details.
+@pxref{Contributing} for details.
 
 There is also no version of Geomview for Macintosh.
 
@@ -857,7 +855,7 @@ Please send the letter via email to @code{register@@geomview.org}.
 
 If you are interested in contributing to the development of Geomview,
 there are several things you can do.
-@xref{Contributing} for details.
+@pxref{Contributing} for details.
 
 @comment
 @comment @node node-name, next, previous, up
@@ -938,20 +936,12 @@ geomview tetra dodec @key{Enter}
 
 This command starts up Geomview and loads two example objects, a
 tetrahedron and a dodecahedron.  After a few seconds three windows
-should appear as shown in Figure 1.
-@ifinfo
-(The figures in this document appear only in the hardcopy version,
-not the Info version.)
-@end ifinfo
-@ifhtml
-<CENTER><IMG SRC="pix/initial.gif"><P>Initial Geomview display</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/initial.ps}}
-\caption{Figure 1: Initial Geomview display}
-}\endinsert
-@end tex
+should appear as shown in Figure @xref{fig:initial}.
+
+@float Figure,fig:initial
+@image{figs/initial}
+@caption{Initial Geomview display.}
+@end float
 
 The panel on the left is Geomview's main control panel; it's called
 the @emph{Main} panel.  The skinny panel in the middle is the
@@ -1019,20 +1009,15 @@ should see the dodecahedron in the middle of the window and maybe part
 of the tetrahedron off to one side.  Go back to the @emph{Targets}
 browser in the @emph{Main} panel and click on "World" to select the
 whole world again.  Now click on the @emph{Look At} button in the
-@emph{Tools} panel.  You should see something like Figure 2 --- the
-dodecahedron and the tetrahedron in the middle of the window next
-to each other.  The @emph{Look At} button positions the camera in
-such a way that the target object is centered in the window.
-@ifhtml
-<CENTER><IMG SRC="pix/world.gif"><P>Figure 2: Looking at the World</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/fig2.ps}}
-\caption{Figure 2: Looking at the world}
-}\endinsert
-@end tex
-
+@emph{Tools} panel.  You should see something like Figure
+@pxref{fig:lookatworld} --- the dodecahedron and the tetrahedron in the
+middle of the window next to each other.  The @emph{Look At} button
+positions the camera in such a way that the target object is centered in
+the window.
+@float Figure,fig:lookatworld
+@image{figs/fig2}
+@caption{Looking at the world.}
+@end float
 Now put the cursor over the middle of the dodecahedron and double-click
 the right mouse button.  This means click it down-and-up two times in
 rapid succession.  Notice that the dodecahedron becomes the target
@@ -1040,20 +1025,15 @@ object; you can see this in the @emph{Targets} browser in the
 @emph{Main} panel.  Double-clicking the right mouse button on an object
 is another way to make it the target object.
 
+@float Figure,fig:appearance
+@image{figs/ap}
+@caption{The Appearance Panel.}
+@end float
 Go to the @emph{Inspect} menu at the top of the @emph{Main} panel and select
 @emph{Appearance}.  This brings up the @emph{Appearance}
 panel.  When it appears, if it partially obscures another Geomview window
 you can move it off to one side by dragging its frame with the middle
 mouse button down.
-@ifhtml
-<CENTER><IMG SRC="pix/ap.gif"><P>Figure 3: The Appearance Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/ap.ps}}
-\caption{Figure 3: The Appearance Panel}
-}\endinsert
-@end tex
 
 The @emph{Appearance} panel lets you control various things about the
 way Geomview draws objects.  Note the buttons labeled @emph{[af] Faces} and
@@ -1066,16 +1046,11 @@ on and off.  Click the button again to turn them back on.
 
 Now click on the @emph{[Cf] Faces} button under the word
 @emph{COLOR}.   A color chooser panel like the one in Figure
-4 should appear.
-@ifhtml
-<CENTER><IMG SRC="pix/color.gif"><P>Figure 4: Color Chooser Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/color.ps}}
-\caption{Figure 4: Color Chooser Panel}
-}\endinsert
-@end tex
+@pxref{fig:colorchooser} should appear.
+@float Figure,fig:colorchooser
+@image{figs/color}
+@caption{Color Chooser Panel.}
+@end float
 
 @ifset forms
 Put the cursor in the color hexagon in this panel and hold down the left
@@ -1126,38 +1101,25 @@ tetrahedron should disappear.  This is how you get rid of an object.
 You can also load objects from within Geomview.  Click on the @emph{File}
 menu in the @emph{Main} panel and choose @emph{Open}.
 The @emph{Files} panel will appear.
-@ifhtml
-<CENTER><IMG SRC="pix/secondlinelist.gif"><P>Figure 5: The Files Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/secondlinelist.ps}}
-\caption{Figure 5: The Files Panel}
-}\endinsert
-@end tex
+@c
 Below the middle of this panel is a browser with three lines in it; the
-second line is a directory with lots of Geomview example files
-in it.  Click on that second line.  Your @emph{Files} panel should
-then look something like Figure 5.  Scroll down in the list of files
-until you see @file{tref.off}.  Click on that line, and then click
-on the @emph{Add} button.  A large trefoil-shaped tube will appear
-in your window.  Click the @emph{Done} button in the @emph{Files}
-panel to dismiss the panel.
+second line is a directory with lots of Geomview example files in it.
+Click on that second line.  Your @emph{Files} panel should then look
+something like Figure @xref{fig:filespanel}.  Scroll down in the list of
+files until you see @file{tref.off}.  Click on that line, and then click
+on the @emph{Add} button.  A large trefoil-shaped tube will appear in
+your window.  Click the @emph{Done} button in the @emph{Files} panel to
+dismiss the panel.
 
-@ifhtml
-<CENTER><IMG SRC="pix/trefdodecinter.gif"><P>Figure 6: Trefoil and Dodecahedron</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/trefdodecinter.ps}}
-\caption{Figure 6: Trefoil and Dodecahedron}
-}\endinsert
-@end tex
+@float Figure,fig:filespanel
+@image{figs/secondlinelist}
+@caption{The Files Panel.}
+@end float
 
 Now click on the @emph{Reset} button in the @emph{Tools} panel.  This
 causes everything to return to its home position.  You should see
-something like Figure 6 at this point: a dodecahedron and a
-trefoil knot.
+something like Figure @pxref{fig:trefdodec} at this point: a
+dodecahedron and a trefoil knot.
 
 Play around with the trefoil knot and the dodecahedron.  Experiment with
 some of the other buttons in the @emph{Tools} panel.  Try coloring the
@@ -1167,6 +1129,10 @@ For a tutorial on how to create your own objects to load into Geomview,
 see file @file{doc/oogltour} distributed with Geomview.  The things in
 that file will be incorporated into a future version of this manual.
 
+@float Figure,fig:trefdodec
+@image{figs/trefdodecinter}
+@caption{Trefoil and Dodecahedron.}
+@end float
 
 @comment ****************************************************************
 @node Interaction,Starting Geomview,Tutorial,Top
@@ -1283,17 +1249,12 @@ Geomview has many other windows but most things can be done with these
 three and so by default the others do not appear.  This section of the
 manual introduces some basic concepts that are used throughout the rest
 of the manual and describes the @emph{Main} panel.
-
-@ifhtml
-<CENTER><IMG SRC="pix/main.gif"><P>The Main Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/main.ps}}
-\caption{The Main Panel}
-}\endinsert
-@end tex
-
+@c
+@float Figure,fig:mainpanel
+@image{figs/main}
+@caption{The Main Panel}
+@end float
+@c
 Geomview can display an arbitrary number of objects simultaneously.  The
 @emph{Targets} browser in the @emph{Main} panel displays a list of all
 the objects that Geomview currently knows about.  This browser has a
@@ -1438,15 +1399,10 @@ There are several ways to load an object into Geomview.
 If you click the @emph{Load} button in Geomview's @emph{Main} panel,
 the @emph{Files} panel will appear. 
 
-@ifhtml
-<CENTER><IMG SRC="pix/myfilelist.gif"><P>The Files Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/myfilelist.ps}}
-\caption{The Files Panel}
-}\endinsert
-@end tex
+@float Figure,fig:myfilelist
+@image{figs/myfilelist}
+@caption{The Files Panel.}
+@end float
 This panel lets you select a file from a variety of directories.
 The top of the panel is a standard Motif file browser.  Below this is
 a list of directories on geomview's standard search path; click on one
@@ -1496,15 +1452,10 @@ load the file as if you had loaded it with the @emph{Add} button in
 the @emph{Files} panel.  If, after bringing up the small load panel
 with @kbd{<}, you decide you want to use the larger @emph{Files} panel
 after all, press the @emph{File Browser} button.
-@ifhtml
-<CENTER><IMG SRC="pix/load.gif"><P>The Load Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/load.ps}}
-\caption{The Load Panel}
-}\endinsert
-@end tex
+@float Figure,fig:loadpanel
+@image{figs/load}
+@caption{The Load Panel.}
+@end float
 
 @item geometry loading commands:
 The @code{load}, @code{geometry}, @code{new-geometry}, and @code{read}
@@ -1528,17 +1479,10 @@ select these through the @emph{Motion Mode} browser on the
 This section describes basic mouse interaction.  For details,
 @pxref{Commands}.
 
-@ifhtml
-<CENTER><IMG SRC="pix/tools.gif"><P>The Tools Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert
-\vbox{
-\centerline{\psfig{file=figs/tools.ps}}
-\caption{The Tools Panel}
-}
-\endinsert
-@end tex
+@float Figure,fig:tools
+@image{figs/tools}
+@caption{The Tools Panel.}
+@end float
 
 Each of the motion modes uses a common paradigm for how the motion is
 applied.  In particular, each depends on the current @emph{target}
@@ -1828,15 +1772,10 @@ Geomview has three panels which let you modify appearances.
 
 The @emph{Appearance} panel lets you change most common appearance
 properties of the target object.
-@ifhtml
-<CENTER><IMG SRC="pix/ap.gif"><P>The Appearance Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/ap.ps}}
-\caption{The Appearance Panel}
-}\endinsert
-@end tex
+@float Figure,fig:ap
+@image{figs/ap}
+@caption{The Appearance Panel.}
+@end float
 If the target is an individual geom, then changes you make in the
 appearance panel apply to that geom's appearance.  If the target is the
 World, then appearance panel changes apply to the World appearance
@@ -1874,15 +1813,10 @@ The four buttons under @emph{Color} labeled @emph{Faces}, @emph{Edges},
 @emph{Normals}, and @emph{BBox} let you specify the color of
 the corresponding aspect of the target geom.  Clicking on one
 of them brings up a color chooser panel.
-@ifhtml
-<CENTER><IMG SRC="pix/color.gif"><P>Color Chooser Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/color.ps}}
-\caption{Color Chooser Panel}
-}\endinsert
-@end tex
+@float Figure,fig:colorchooserpanel
+@image{figs/color}
+@caption{Color Chooser Panel.}
+@end float
 This panel offers two sets of sliders: H(ue) S(aturation) V(alue), or
 R(ed) G(reen) B(lue), each in the range 0 through 1.  The square
 shows the current color, which is given numerically in both HSV and RGB systems
@@ -1989,15 +1923,10 @@ and to all appearance-related panels.
 The @emph{Materials} panel controls material properties of surfaces.
 It works with the target object in the same way that the
 @emph{Appearance} panel does.
-@ifhtml
-<CENTER><IMG SRC="pix/mat.gif"><P>The Materials Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/mat.ps}}
-\caption{The Materials Panel}
-}\endinsert
-@end tex
+@float Figure,fig:matpanel
+@image{figs/mat}
+@caption{The Materials Panel.}
+@end float
 
 @table @emph
 
@@ -2042,15 +1971,10 @@ This button dismisses the @emph{Materials} panel.
 
 The @emph{Lighting} panel controls the number, position, and color of
 the light sources used in shading.
-@ifhtml
-<CENTER><IMG SRC="pix/light.gif"><P>The Lighting Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/light.ps}}
-\caption{The Lighting Panel}
-}\endinsert
-@end tex
+@float
+@image{figs/light}
+@caption{The Lighting Panel.}
+@end float
 
 The @emph{Lighting} panel is different from the @emph{Appearance} and
 @emph{Material} panels in that it always works with the base
@@ -2114,15 +2038,10 @@ A camera in Geomview is the object that corresponds to a camera window.
 By default there is only one camera, but it is possible to have as many
 as you want.  You can control certain aspects of the way the world is
 drawn in each camera window via the @emph{Cameras} panel.
-@ifhtml
-<CENTER><IMG SRC="pix/cam.gif"><P>The Cameras Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/cam.ps}}
-\caption{The Cameras Panel}
-}\endinsert
-@end tex
+@float Figure,fig:camerapanel
+@image{figs/cam}
+@caption{The Cameras Panel.}
+@end float
 If the target object is a camera, the @emph{Cameras} panel affects that
 camera.  If the target object is not a camera, the @emph{Cameras} panel
 affects the @dfn{current camera}.  The current camera is the camera of
@@ -2256,15 +2175,10 @@ This button dismisses the @emph{Cameras} panel.
 Geomview's @emph{Save} panel lets you store Geomview objects and other
 information in files that you can read back into Geomview or other
 programs.
-@ifhtml
-<CENTER><IMG SRC="pix/save.gif"><P>The Save Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/save.ps}}
-\caption{The Save Panel}
-}\endinsert
-@end tex
+@float Figure,fig:savepanel
+@image{figs/save}
+@caption{The Save Panel.}
+@end float
 To use the @emph{Save} panel you select the desired format in the
 browser next to the word @emph{Save}, enter the name of the object you
 want to save in the text field next to the word @emph{for}, and enter
@@ -2378,15 +2292,10 @@ text and hit @kbd{@key{Enter}} as many times as you like, in general,
 whenever you hit @kbd{@key{Enter}} with the cursor in the @emph{Commands}
 panel, Geomview tries to interpret whatever text you have typed in the
 text field as a command.
-@ifhtml
-<CENTER><IMG SRC="pix/command.gif"><P>The Commands Panel</CENTER>
-@end ifhtml
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/command.ps}}
-\caption{The Commands Panel}
-}\endinsert
-@end tex
+@float Figure,fig:commandpanel
+@image{figs/command}
+@caption{The Commands Panel.}
+@end float
 
 @ifset forms
 The @emph{Obscure} panel is for relatively obscure things that don't
@@ -2394,12 +2303,10 @@ really belong on any of the other panels.  In the present version of
 Geomview, the @emph{Obscure} panel includes the @emph{NORMALIZE GEOMETRY}
 browser, which controls the kind of geometry normalization that Geomview does,
 and several buttons affecting motion style.
-@tex
-\midinsert\vbox{
-\centerline{\psfig{file=figs/obscure.ps}}
-\caption{The Obscure Panel}
-}\endinsert
-@end tex
+@float Figure,fig:obscurepanel
+@image{figs/obscure}
+@caption{The Obscure Panel.}
+@end float
 @end ifset
 [Move this.]
 Normalization is a kind of scaling; Geomview can scale an object so that
@@ -4510,7 +4417,7 @@ This tells Geomview to create a geom called @code{example} which is an
 instance of the handle @code{foo}.  @emph{Handles} are a part of the
 OOGL file format which allow you to name a piece of geometry whose value
 can be specified elsewhere (and in this case updated many times); for
-more information on handles, @xref{OOGL File Formats} In this case,
+more information on handles, @xref{OOGL File Formats}. In this case,
 @code{example} is the title by which the user will see the object in
 Geomview's object browser, and @code{foo} is the internal name of the
 handle that the object is a reference to.
@@ -7210,7 +7117,7 @@ machine.@refill
 In addition to knowing the name of the machine you want to run Geomview
 on, @code{Geomview} needs to know the type of that machine (the setting
 of the CPU variable that corresponds to the machine;
-@xref{Source Code Installation}).
+@pxref{Source Code Installation}).
 By default, @code{Geomview} assumes that it is the same kind of
 computer as the one you are running Mathematica on.  The @code{MachType}
 option lets you explicitly specify the type of the @code{DisplayHost}
@@ -7719,5 +7626,9 @@ Thank you.
 @comment ****************************************************************
 
 @contents
+
+@node List of Figures
+@unnumbered List of Figures
+@listoffloats Figure
 
 @bye

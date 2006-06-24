@@ -3,7 +3,7 @@ of documentation.
 
 geomview.pdf	Manual in PDF format.
 
-html/		Manual in HTML format.
+geomview.html/	Manual in HTML format.
 
 geomview	Manual in GNU info format.
 geomview-*

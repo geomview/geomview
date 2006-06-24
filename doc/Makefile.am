@@ -1,45 +1,45 @@
-SUBDIRS = html
-EXTRA_DIST = README gvplot.txt oogltour \
+PSIMAGES = figs/ap.ps figs/command.ps figs/light.ps figs/mat.ps\
+ figs/secondlinelist.ps figs/cam.ps figs/fig2.ps figs/load.ps\
+ figs/myfilelist.ps figs/tools.ps figs/color.ps figs/initial.ps\
+ figs/main.ps figs/save.ps figs/trefdodecinter.ps
+EPSIMAGES = $(PSIMAGES:.ps=.eps)
+PDFIMAGES = $(PSIMAGES:.ps=.pdf)
+PNGIMAGES = $(PSIMAGES:.ps=.png)
+
+EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
   example1.c example2.c example3.c example4.tcl \
   geomview.1 geomview.5 geomview.5.man lisp.3 oogl.5 oogl.5.man OOGL.m.txt \
-  figs/ap.ps figs/cam.ps figs/color.ps figs/command.ps \
-  figs/fig2.ps figs/initial.ps figs/light.ps figs/load.ps figs/main.ps \
-  figs/mat.ps figs/myfilelist.ps figs/save.ps figs/secondlinelist.ps \
-  figs/tools.ps figs/trefdodecinter.ps motion.tex
+  motion.tex \
+  $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)
 
-MAKEINFO = makeinfo --no-validate
+AM_MAKEINFOFLAGS = --no-validate
 info_TEXINFOS = geomview.texi
 
-pdf: geomview.pdf
+geomview.pdf:  $(PDFIMAGES)
+geomview.ps:   $(EPSIMAGES)
+geomview.dvi:  $(EPSIMAGES)
+geomview.html: $(PNGIMAGES)
 
 TEXINPUTS = $(srcdir):
 
-SUFFIXES = .pdf
+figs/%.eps: figs/%.ps
+	$(PS2EPSI) $< $@
 
-if HAVE_TEXI2PDF
+figs/%.pdf: figs/%.eps
+	$(EPSTOPDF) $<
 
-.texi.pdf:
-	TEXINPUTS=.:$$TEXINPUTS \
-	  MAKEINFO='$(MAKEINFO) -I $(srcdir)' $(TEXI2PDF) $<
+figs/%.png: figs/%.pdf
+	$(PDFIMAGESPROG) $< $(<:.pdf=)
+	$(CONVERT) $(<:.pdf=-000.ppm) $@
+	-rm -f $(<:.pdf=-000.ppm)
 
-else
+html-local: $(PNGIMAGES)
+	-mkdir -p geomview.html/figs/
+	-cp $(PNGIMAGES) geomview.html/figs/
 
-# We make geomview.pdf depend on geomview.texi rather than on geomview.dvi,
-# because 'make clean' removes geomview.dvi and we don't want to force
-# 'geomview.pdf' to have to be regenerated in this case --- it really only
-# needs to be regenerated if geomview.texi changes.
-geomview.pdf: $(srcdir)/geomview.texi
-	tex $(srcdir)/geomview.texi
-	tex $(srcdir)/geomview.texi
-	$(DVIPDF) geomview.dvi geomview.pdf
+dist-local: html pdf ps
 
-endif
+CLEANFILES = geomview.dvi
 
-# Provide rules for building geomview.dvi directly in case we want to do
-# that.  These rules aren't invoked by anything else in this file; just
-# here for use in development.
-geomview.dvi: $(srcdir)/geomview.texi
-	tex $(srcdir)/geomview.texi
-	tex $(srcdir)/geomview.texi
-
-MAINTAINERCLEANFILES = geomview.pdf
+MAINTAINERCLEANFILES = \
+ $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.html geomview.pdf geomview.ps

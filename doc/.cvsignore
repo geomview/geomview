@@ -1,5 +1,9 @@
 *.log *.aux *.cp *.fn *.vr *.dp *.ky *.pg *.tp *.toc *.fns *.dvi
 Makefile Makefile.in .deps
 geomview geomview-*
+geomview.html
 geomview.pdf geomview.ps
+mdate-sh
+stamp-vti
 texinfo.tex
+version.texi
