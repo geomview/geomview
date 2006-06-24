@@ -29,4 +29,6 @@ typedef union stackunion {
 
 extern YYSTYPE yylval;
 
+#define YYSTYPE_IS_DECLARED 1
+
 #endif
