@@ -27,3 +27,5 @@ all-local:
 # install-geomview-dotfile: example
 # 	$(top_builddir)/mkmodulesdir $(top_builddir)
 # 	echo '(emodule-define "Example" "$(subdir)/example")' > $(top_builddir)/modules/.geomview-example
+
+DISTCLEANFILES = .geomview-example

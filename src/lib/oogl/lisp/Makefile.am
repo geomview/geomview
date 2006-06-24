@@ -1,5 +1,5 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers lisp2c $(BUILT_SOURCES)
+EXTRA_DIST = Headers lisp2c # $(BUILT_SOURCES)
 
 noinst_LIBRARIES = liblisp.a
 
@@ -13,3 +13,5 @@ all-local: clisp
 
 clisp.c clisp.h clisp: lisp.c
 	$(srcdir)/lisp2c -o clisp $(srcdir)/lisp.c
+
+DISTCLEANFILES = $(BUILT_SOURCES)

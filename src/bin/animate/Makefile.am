@@ -22,3 +22,5 @@ all-local:
 # install-geomview-dotfile: animate
 # 	$(top_builddir)/mkmodulesdir $(top_builddir)
 # 	echo '(emodule-define "Animator" "$(subdir)/animate")' > $(top_builddir)/modules/.geomview-animate
+
+DISTCLEANFILES = .geomview-animate

@@ -22,3 +22,5 @@ buildinfo.c: $(gvx_OBJECTS) ../common/libgvcommon.a
 
 ../clang.c ../clang.h:
 	cd .. && $(MAKE) $(AM_MAKEFLAGS) clang
+
+DISTCLEANFILES = buildinfo.c clang.c clang.h

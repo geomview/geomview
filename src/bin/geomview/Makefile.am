@@ -9,4 +9,4 @@ all-local: clang
 clang.c clang.h clang:
 	$(top_srcdir)/src/lib/oogl/lisp/lisp2c -cprefix "gv_" -o clang $(srcdir)/common/*.c $(srcdir)/x11/*.c
 
-MAINTAINERCLEANFILES = clang.c clang.h
+DISTCLEANFILES = clang.c clang.h

@@ -30,3 +30,4 @@ all-local:
 # 	$(top_builddir)/mkmodulesdir $(top_builddir)
 # 	echo '(emodule-define "Draw Boundary" "$(subdir)/drawbdy")' > $(top_builddir)/modules/.geomview-drawbdy
 
+DISTCLEANFILES = .geomview-drawbdy
