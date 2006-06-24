@@ -1,3 +1,18 @@
+1.8.2   June, 2006
+
+   Bugfix release by cH <Claus.Heine@Mathematik.Uni-Freiburg.DE>:
+
+   * I/O with release <= 1.8.1 was just broken, they used internals of
+     opaque data-types (e.g. the FILE handle of the stdio library)
+   * Maple V8 interface
+   * VRML2 interface
+   * build-system fixes (ported to recent automake/autoconf combo)
+   * seek'able pipes on GLIBC-system, using its fopencookie framework.
+   * variable argument fixes, was also broken in <= 1.8.1 releases.
+   * Documentation can be regenerated with recent texinfo releases.
+
+   Otherwise no real changes.
+
 1.8.1	March, 2001
 
    This is a bugfix release.
