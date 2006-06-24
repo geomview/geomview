@@ -39,6 +39,14 @@ html-local: $(PNGIMAGES)
 
 dist-hook: html pdf ps
 
+install-info: installinfolocal
+
+installinfolocal: $(PNGIMAGES)
+	-$(mkdir_p) "$(DESTDIR)$(infodir)/figs"
+	for file in $(PNGIMAGES); do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(infodir)/$$file"; \
+	done
+
 CLEANFILES = geomview.dvi
 
 MAINTAINERCLEANFILES = \
