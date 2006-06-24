@@ -37,7 +37,7 @@ html-local: $(PNGIMAGES)
 	-mkdir -p geomview.html/figs/
 	-cp $(PNGIMAGES) geomview.html/figs/
 
-dist-local: html pdf ps
+dist-hook: html pdf ps
 
 CLEANFILES = geomview.dvi
 
