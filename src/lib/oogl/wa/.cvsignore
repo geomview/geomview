@@ -1,1 +1,6 @@
 Makefile Makefile.in .deps
+lex.yy.c
+wa.lex.c
+wa.yacc.c
+y.tab.c
+y.tab.h
