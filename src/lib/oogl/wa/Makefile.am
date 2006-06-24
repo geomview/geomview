@@ -1,19 +1,23 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers fsaparse.3 fsaparse.y fsaparse.l
+EXTRA_DIST = Headers fsaparse.3 fsaparse.y fsaparse.l $(BUILT_SOURCES)
 
 noinst_LIBRARIES = libwa.a
+
+BUILT_SOURCES = wa.lex.c wa.yacc.c y.tab.h y.tab.c lex.yy.c
 
 libwa_a_SOURCES = \
     wa.lex.c wa.yacc.c \
     wa.h y.tab.h yystype.h
 
-wa.yacc.c: $(srcdir)/fsaparse.y
+y.tab.h wa.yacc.c: $(srcdir)/fsaparse.y
 	rm -f y.tab.h y.tab.c $@
-	(yacc -d $(srcdir)/fsaparse.y; \
+	($(YACC) -d $(srcdir)/fsaparse.y; \
 	sed -e '/^\#include/!s/yy/wafsa/g' -e '/#ident/d' y.tab.c) >$@
 
 wa.lex.c: $(srcdir)/fsaparse.l
 	rm -f lex.yy.c $@
-	(lex $(srcdir)/fsaparse.l; \
+	($(LEX) $(srcdir)/fsaparse.l; \
 	 sed -e '/^\#include/!s/yy/wafsa/g' \
 	     -e 's/YYSTYPE wafsalval/extern &/' -e '/#ident/d' lex.yy.c) >$@
+
+MAINTAINERCLEANFILES = $(BUILT_SOURCES)
