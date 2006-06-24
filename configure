@@ -1,0 +1,26 @@
+#! /bin/sh
+#$Id: configure,v 1.4 2006/06/24 19:08:29 rotdrop Exp $
+
+echo
+echo "You are attempting to configure a pristine snapshot of Geomview that"
+echo "was taken from the Geomview CVS repository."
+echo
+echo "The configure files and Makefiles are not stored in CVS. Instead, they"
+echo "are generated for releases by running the reconf script, in the same"
+echo "geomview directory as this configure placeholder."
+echo
+echo "To generate the real configure script and all the makefile templates"
+echo "you have to run"
+echo
+echo "autoreconf -i"
+echo
+echo "After that, make sure to read through the file \"INSTALL\"; it contains"
+echo "detailed general intallation instructions."
+echo
+echo "Make sure that you have write permission for this \"configure\" script,"
+echo "otherwise \"autoreconf\" will not be able to overwrite it."
+echo
+echo "If standard libraries are not found by make, experiment"
+echo "with automake with \"automake -a\"."
+
+
