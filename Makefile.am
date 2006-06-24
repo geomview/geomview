@@ -1,6 +1,6 @@
 SUBDIRS = doc src data
 EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir \
-             build build.in packbuild packbuild.in $(m4_files)
+             $(m4_files)
 
 noinst_SCRIPTS = geomview
 
@@ -30,15 +30,3 @@ DISTCLEANFILES = geomview
 distclean-local:
 	rm -rf include modules
 
-build: build.in
-	m4 build.in > build
-	chmod +x build
-
-packbuild: packbuild.in
-	m4 packbuild.in > packbuild
-	chmod +x packbuild
-
-buildscripts: build packbuild
-
-#dist-hook:
-#	cp -r $(srcdir)/xforms $(distdir)
