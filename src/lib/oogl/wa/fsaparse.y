@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "wa.h"
 #include "yystype.h"
 #include "y.tab.h"
