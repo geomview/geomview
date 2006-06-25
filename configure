@@ -1,5 +1,5 @@
 #! /bin/sh
-#$Id: configure,v 1.5 2006/06/25 16:46:14 lloydwood Exp $
+#$Id: configure,v 1.6 2006/06/25 16:48:18 lloydwood Exp $
 
 echo
 echo "You are attempting to configure a pristine snapshot of Geomview that"
@@ -20,6 +20,6 @@ echo
 echo "If standard libraries are not found by make, experiment"
 echo "with automake with \"automake -a\"."
 echo
-echo "Make sure that you also read through the textfiles \"INSTALL.geomview\""
+echo "Make sure that you also read through the textfiles \"INSTALL.Geomview\""
 echo "and \"INSTALL\", which contain detailed general installation instructions."
 
