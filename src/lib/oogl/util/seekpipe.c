@@ -53,6 +53,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <string.h>
+#include <unistd.h>
 
 #define DEBUG 1
 #if DEBUG
@@ -64,7 +66,7 @@ static const char *debugfilename = "/tmp/seekpipe-foo";
 static FILE *debugfile;
 #endif
 
-#define SP_RING_SZ (1 << 16) /* (1 << 20)*/
+#define SP_RING_SZ (1 << 20) /* (1 << 20)*/
 
 #define SP_MAGIC  0x50534f4f /* hex for OOPS in LITTLE ENDIAN */
 
@@ -88,11 +90,10 @@ typedef struct {
 static ssize_t seekpipe_read(void *cookie, char *buf, size_t sz)
 {
   SEEKPIPE *ff = cookie;
-  size_t ret, cp, bufflen, buffpos, rd = 0;
+  size_t cp, bufflen, buffpos, rd = 0;
+  ssize_t ret;
   long amount;
   off64_t buffoff;
-  int c;
-  void *bufbak = buf;
 
   while (sz > 0) {
     if (rd > 0) { /* if we have just something, return that */
@@ -171,6 +172,7 @@ static ssize_t seekpipe_read(void *cookie, char *buf, size_t sz)
       }
     }
   }
+  return rd;
 }
 
 static int seekpipe_seek(void *cookie, off64_t *pos, int whence)
@@ -189,12 +191,17 @@ static int seekpipe_seek(void *cookie, off64_t *pos, int whence)
   case SEEK_SET:
     new_pos = *pos;
     break;
+  default:
+    abort();
   }
 
   bufflen = ff->wrap ? SP_RING_SZ : ff->buff_wrap;
   buffoff = ff->file_len - bufflen;
 
   if (new_pos > ff->file_len || new_pos < buffoff) {
+    fprintf(stderr, "*pos: %Ld, bufflen: %d, new_pos: %Ld, file_len: %Ld, buffoff: %Ld, whence: %d\n",
+	    *pos, bufflen, new_pos, ff->file_len, buffoff, whence);
+    *pos = ff->file_pos;
     errno = ESPIPE;
     return -1;
   }
@@ -230,7 +237,6 @@ cookie_io_functions_t ff_iof = {
 FILE *seekpipe_open(int fd)
 {
   SEEKPIPE *ff;
-  fpos_t    pos;
 
   ff = calloc(1, sizeof(*ff));
 
@@ -273,21 +279,22 @@ int main(int argc, char *argv[])
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
   ungetc('a', fake);
   memset(&pos, 0, sizeof(pos));
+  memset(&pos1, 0, sizeof(pos));
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
   if (fgetpos(fake, &pos1)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos1);
+  else printf("File position: %Ld\n", *(off64_t *)&pos1);
 
   if (fsetpos(fake, &pos)) perror("fsetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
@@ -295,7 +302,7 @@ int main(int argc, char *argv[])
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
 
   if (fsetpos(fake, &pos)) perror("fsetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
@@ -303,10 +310,10 @@ int main(int argc, char *argv[])
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
 
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   if (fsetpos(fake, &pos1)) perror("fsetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos1);
+  else printf("File position: %Ld\n", *(off64_t *)&pos1);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
@@ -314,32 +321,32 @@ int main(int argc, char *argv[])
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
 
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   fflush(fake);
   if (fseek(fake, -1, SEEK_END)) perror("fseek");
 
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   for (i = 0; i < 8192/64; i++)
     fread(buf, 64, 1, fake);
 
   if (fgetpos(fake, &pos)) perror("fgetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
    
   if (fsetpos(fake, &pos1)) perror("fsetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos1);
+  else printf("File position: %Ld\n", *(off64_t *)&pos1);
 
   if (fsetpos(fake, &pos)) perror("fsetpos");
-  else printf("File position: %d\n", *(off64_t *)&pos);
+  else printf("File position: %Ld\n", *(off64_t *)&pos);
 
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
   memset(buf, 0, 16); 
   fread(buf, 16, 1, fake); buf[16] = '\0'; printf("READ: %s\n", buf);
 
-  close(fake);
+  fclose(fake);
 
   exit(0);
 }
