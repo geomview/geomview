@@ -164,7 +164,7 @@ printf("this is tmpdu0\n");
     bmn = m.n;
     bmt = m.u;
     for (u=0; u<nu; ++u) {
-      float txs0, txds, txt0, txdt, tu;
+      float txs0 = 0, txds = 0, txt0 = 0, txdt = 0, tu;
 
       for (v=0; v<degree_v+1; v++)
         memcpy(tmpp1+v*dimn, tmpp0 + (u + v*nu)*dimn, dimn*sizeof(float));

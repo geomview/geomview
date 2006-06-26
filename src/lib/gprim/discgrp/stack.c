@@ -27,6 +27,7 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include <stdio.h>
+#include <unistd.h>
 #include "enum.h"
 #include "ooglutil.h"
 #define CHUNKSIZE 10000

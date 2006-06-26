@@ -111,7 +111,7 @@ static int
 process(DiscGrpEl *dgel, int stacking)
 {
 	Transform mat;
-	register int is_ok;
+	register int is_ok = 0;
 
     	if (have_matrices)    	{
             is_ok = is_big_and_new(dgel);

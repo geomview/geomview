@@ -55,8 +55,8 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
 {
     HPointN *h = HPtNCreate(5, NULL);
     HPoint3 *p, *op, *np, *newp;
-    ColorA *lastcolor, *c, *newc;
-    int i, nc, colored = 0;
+    ColorA *lastcolor = NULL, *c, *newc;
+    int i, nc = 0, colored = 0;
 
     newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
     newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));

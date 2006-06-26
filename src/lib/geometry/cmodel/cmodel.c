@@ -172,7 +172,7 @@ void cm_draw_mesh(Mesh *m)
 {
    HPoint3 *pt, *newpt, *ppt;
    Point3 *n, *newn, *pn;
-   ColorA *c, *newc = NULL, *pc;
+   ColorA *c = NULL, *newc = NULL, *pc = NULL;
    mgshadefunc shader = _mgc->astk->shader;
    int i, npt;
    Transform T;

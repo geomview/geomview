@@ -60,7 +60,7 @@ static Transform reflections[] = {
 Sphere *SphereCreate(exist, classp, a_list) 
 Geom *exist;
 GeomClass *classp;
-va_list a_list;
+va_list *a_list;
 {
   Geom *quadrant;
   Geom *unitsphere;
@@ -86,27 +86,27 @@ va_list a_list;
     HPt3From(&(sphere->center), 0.0, 0.0, 0.0, 1.0);
   } else sphere = (Sphere *)exist;
 
-  while ((attr = va_arg (a_list, int))) switch (attr) {
+  while ((attr = va_arg (*a_list, int))) switch (attr) {
   case CR_FLAG:
-    sphere->instflag = va_arg(a_list, int );
+    sphere->instflag = va_arg(*a_list, int );
     break;
   case CR_CENTER:
-    sphere->center = *va_arg(a_list, HPoint3 *);
+    sphere->center = *va_arg(*a_list, HPoint3 *);
     break;
   case CR_RADIUS:
-    sphere->radius = va_arg(a_list, double);
+    sphere->radius = va_arg(*a_list, double);
     break;
   case CR_SPACE:
-    sphere->space = va_arg(a_list, int);
+    sphere->space = va_arg(*a_list, int);
     break;
   case CR_ENCOMPASS_POINTS:
-    encompass_points = va_arg(a_list, HPoint3 *);
+    encompass_points = va_arg(*a_list, HPoint3 *);
     break;
   case CR_NENCOMPASS_POINTS:
-    nencompass_points = va_arg(a_list, int);
+    nencompass_points = va_arg(*a_list, int);
     break;
   case CR_AXIS:
-    axis = va_arg(a_list, Transform *);
+    axis = va_arg(*a_list, Transform *);
     break;
   default:
     OOGLError (0, "SphereCreate: Undefined option: %d",attr);

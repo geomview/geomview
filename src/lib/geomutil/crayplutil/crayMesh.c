@@ -33,15 +33,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static char msg[] = "crayMesh.c";
 
-void *cray_mesh_HasVColor(int sel, Geom *geom, va_list args);
-void *cray_mesh_UseVColor(int sel, Geom *geom, va_list args);
-void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list args);
-void *cray_mesh_SetColorAll(int sel, Geom *geom, va_list args);
-void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list args);
-void *cray_mesh_SetColorAtF(int sel, Geom *geom, va_list args);
-void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list args);
-void *cray_mesh_GetColorAt(int sel, Geom *geom, va_list args);
-void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list args);
+void *cray_mesh_HasVColor(int sel, Geom *geom, va_list *args);
+void *cray_mesh_UseVColor(int sel, Geom *geom, va_list *args);
+void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list *args);
+void *cray_mesh_SetColorAll(int sel, Geom *geom, va_list *args);
+void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_mesh_SetColorAtF(int sel, Geom *geom, va_list *args);
+void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list *args);
+void *cray_mesh_GetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 11
 
@@ -65,19 +65,19 @@ cray_mesh_init() {
   return 0;
 }
 
-void *cray_mesh_HasVColor(int sel, Geom *geom, va_list args) {
+void *cray_mesh_HasVColor(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   return (void *)(m->flag & MESH_C);
 }
 
-void *cray_mesh_UseVColor(int sel, Geom *geom, va_list args) {
+void *cray_mesh_UseVColor(int sel, Geom *geom, va_list *args) {
   int i;
   Mesh *m = (Mesh *)geom;
   ColorA *def;
 
   if (crayHasVColor(geom, NULL)) return 0;
 
-  def = va_arg(args, ColorA *);
+  def = va_arg(*args, ColorA *);
 
   m->c = OOGLNewNE(ColorA, m->nu * m->nv, msg);
   for (i = 0; i < m->nu * m->nv; i++) {
@@ -90,7 +90,7 @@ void *cray_mesh_UseVColor(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list args) {
+void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   
   if (!crayHasColor(geom, NULL)) return 0;
@@ -101,35 +101,35 @@ void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_mesh_SetColorAll(int sel, Geom *geom, va_list args) {
+void *cray_mesh_SetColorAll(int sel, Geom *geom, va_list *args) {
   int i;
   Mesh *m = (Mesh *)geom;
   ColorA *color;
  
   if (!crayHasVColor(geom, NULL)) return NULL;
-  color = va_arg(args, ColorA *);
+  color = va_arg(*args, ColorA *);
   for (i = 0; i < m->nu * m->nv; i++) m->c[i] = *color;
   return (void *)geom;
 }
 
-void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
   int vindex, findex;
-  color = va_arg(args, ColorA *);
-  vindex = va_arg(args, int);
-  findex = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  vindex = va_arg(*args, int);
+  findex = va_arg(*args, int);
   if (vindex != -1) 
     return (void *)craySetColorAtV(geom, color, vindex, NULL, NULL);
   return (void *)craySetColorAtF(geom, color, findex, NULL);
 }
 
-void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list args) {
+void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   ColorA *color;
   int index;
 
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (!crayHasVColor(geom, NULL) || index == -1) return 0;
   m->c[index].r = color->r;
   m->c[index].g = color->g;
@@ -138,13 +138,13 @@ void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list args) {
   return (void *)color;
 }
 
-void *cray_mesh_SetColorAtF(int sel, Geom *geom, va_list args) {
+void *cray_mesh_SetColorAtF(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   ColorA *color;
   int index, u, v;
 
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (!crayHasColor(geom, NULL) || index == -1) return 0;
 
   u = index % m->nu;
@@ -157,21 +157,21 @@ void *cray_mesh_SetColorAtF(int sel, Geom *geom, va_list args) {
   return (void *)m;
 }
 
-void *cray_mesh_GetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_mesh_GetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
   int i;
-  color = va_arg(args, ColorA *);
-  i = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  i = va_arg(*args, int);
   return (void *)crayGetColorAtV(geom, color, i, NULL, NULL);
 }
      
-void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list args) {
+void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list *args) {
  ColorA *color;
  int i;
  Mesh *m = (Mesh *)geom;
  if (!crayHasVColor(geom, NULL)) return 0;
- color = va_arg(args, ColorA *);
- i = va_arg(args, int);
+ color = va_arg(*args, ColorA *);
+ i = va_arg(*args, int);
  color->r = m->c[i].r;
  color->g = m->c[i].g;
  color->b = m->c[i].b;

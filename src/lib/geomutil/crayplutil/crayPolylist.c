@@ -31,23 +31,23 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 #include "crayolaP.h"
 
-void *cray_polylist_HasColor(int sel, Geom *geom, va_list args);
-void *cray_polylist_HasVColor(int sel, Geom *geom, va_list args);
-void *cray_polylist_HasFColor(int sel, Geom *geom, va_list args);
+void *cray_polylist_HasColor(int sel, Geom *geom, va_list *args);
+void *cray_polylist_HasVColor(int sel, Geom *geom, va_list *args);
+void *cray_polylist_HasFColor(int sel, Geom *geom, va_list *args);
 
-void *cray_polylist_UseVColor(int sel, Geom *geom, va_list args);
-void *cray_polylist_UseFColor(int sel, Geom *geom, va_list args);
+void *cray_polylist_UseVColor(int sel, Geom *geom, va_list *args);
+void *cray_polylist_UseFColor(int sel, Geom *geom, va_list *args);
 
-void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list args);
+void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list *args);
 
-void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list args);
-void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list args);
-void *cray_polylist_SetColorAtV(int sel, Geom *geom, va_list args);
-void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list args);
+void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list *args);
+void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_polylist_SetColorAtV(int sel, Geom *geom, va_list *args);
+void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list *args);
 
-void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list args);
-void *cray_polylist_GetColorAtV(int sel, Geom *geom, va_list args);
-void *cray_polylist_GetColorAtF(int sel, Geom *geom, va_list args);
+void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_polylist_GetColorAtV(int sel, Geom *geom, va_list *args);
+void *cray_polylist_GetColorAtF(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 15
 
@@ -80,26 +80,26 @@ cray_polylist_init() {
   return 0;
 }
 
-void *cray_polylist_HasColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_HasColor(int sel, Geom *geom, va_list *args) {
   return (void *)(crayHasVColor(geom, NULL) || crayHasFColor(geom, NULL));
 }
 
-void *cray_polylist_HasVColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_HasVColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   return (void *)(p->flags & PL_HASVCOL);
 }
 
-void *cray_polylist_HasFColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_HasFColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   return (void *)(p->flags & PL_HASPCOL);
 }
 
-void *cray_polylist_UseVColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_UseVColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *def;
   int i, j;
 
-  def = va_arg(args, ColorA *);
+  def = va_arg(*args, ColorA *);
   for (i = 0; i < p->n_verts; i++) p->vl[i].vcol = *def;
 
   if (p->flags & PL_HASPCOL) {
@@ -113,12 +113,12 @@ void *cray_polylist_UseVColor(int sel, Geom *geom, va_list args) {
   return (void *)p;
 }
 
-void *cray_polylist_UseFColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_UseFColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *def;
   int i;
 
-  def = va_arg(args, ColorA *);
+  def = va_arg(*args, ColorA *);
   for (i = 0; i < p->n_polys; i++) p->p[i].pcol = *def;
   if (p->flags & PL_HASVCOL) {
     for (i = 0; i < p->n_polys; i++) 
@@ -130,7 +130,7 @@ void *cray_polylist_UseFColor(int sel, Geom *geom, va_list args) {
   return (void *)p;
 }
 
-void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list args) {
+void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   if (!crayHasColor(geom, NULL)) return 0;
   p->flags &= ~PL_HASVCOL;
@@ -138,47 +138,47 @@ void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list args) {
   return (void *)p;
 }
 
-void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list args) {
+void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list *args) {
   int i;
   PolyList *p = (PolyList *)geom;
-  ColorA *color = va_arg(args, ColorA *);
+  ColorA *color = va_arg(*args, ColorA *);
 
   for (i = 0; i < p->n_verts; i++) p->vl[i].vcol = *color;
   for (i = 0; i < p->n_polys; i++) p->p[i].pcol = *color;
   return (void *)crayHasColor(geom, NULL);
 }
 
-void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
   int vindex, findex;
-  color = va_arg(args, ColorA *);
-  vindex = va_arg(args, int);
-  findex = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  vindex = va_arg(*args, int);
+  findex = va_arg(*args, int);
   if (crayHasVColor(geom, NULL) && vindex != -1) 
     return (void *)craySetColorAtV(geom, color, vindex, NULL, NULL);
   return (void *)craySetColorAtF(geom, color, findex, NULL);
 }
 
-void *cray_polylist_SetColorAtV(int sel, Geom *geom, va_list args) {
+void *cray_polylist_SetColorAtV(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *color;
   int index;
 
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (!crayHasVColor(geom, NULL) || index == -1) return (void *)0;
   p->vl[index].vcol = *color;
   return (void *)geom;
 }
 
-void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list args) {
+void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list *args) {
   int i;
   PolyList *p = (PolyList *)geom;
   ColorA *color;
   int index;
 
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (index == -1) return (void *)0;
   if (crayHasFColor(geom, NULL)) p->p[index].pcol = *color;
   else if (crayHasVColor(geom, NULL)) 
@@ -187,14 +187,14 @@ void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list *args) {
   PolyList *polylist = (PolyList *)geom;
   ColorA *color;
   int vindex, findex;
 
-  color = va_arg(args, ColorA *);
-  vindex = va_arg(args, int);
-  findex = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  vindex = va_arg(*args, int);
+  findex = va_arg(*args, int);
   if (crayHasVColor(geom, NULL))
     return (void *)crayGetColorAtV(geom, color, vindex, NULL, NULL);
   if (crayHasFColor(geom, NULL))
@@ -202,25 +202,25 @@ void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list args) {
   return NULL;
 }
 
-void *cray_polylist_GetColorAtV(int sel, Geom *geom, va_list args) {
+void *cray_polylist_GetColorAtV(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *color;
   int index;
   
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (!crayHasVColor(geom, NULL) || index == -1) return (void *)0;
   *color = p->vl[index].vcol;
   return (void *)geom;
 }
 
-void *cray_polylist_GetColorAtF(int sel, Geom *geom, va_list args) {
+void *cray_polylist_GetColorAtF(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *color;
   int index;
   
-  color = va_arg(args, ColorA *);
-  index = va_arg(args, int);
+  color = va_arg(*args, ColorA *);
+  index = va_arg(*args, int);
   if (!crayHasFColor(geom, NULL) || index == -1) return (void *)0;
   *color = p->p[index].pcol;
   return (void *)geom;

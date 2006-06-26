@@ -45,31 +45,31 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "dim.h"
 
-static void *dimdefault(int sel, Geom *g, va_list args) {
+static void *dimdefault(int sel, Geom *g, va_list *args) {
     return (void *)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
 }
 
-static void *dimSkel(int sel, Geom *g, va_list args) {
+static void *dimSkel(int sel, Geom *g, va_list *args) {
     return (void *)(((Skel *)g)->dim - 1);
 }
 
-static void *dimNDMesh(int sel, Geom *g, va_list args) {
+static void *dimNDMesh(int sel, Geom *g, va_list *args) {
     return (void *)(((NDMesh *)g)->pdim);
 }
 
-static void *dimNPolyList(int sel, Geom *g, va_list args) {
+static void *dimNPolyList(int sel, Geom *g, va_list *args) {
     return (void *)(((NPolyList *)g)->pdim-1);
 }
 
-static void *dimQuad(int sel, Geom *g, va_list args) {
+static void *dimQuad(int sel, Geom *g, va_list *args) {
     return (void *)(((Quad *)g)->flag & QUAD_4D ? 4 : 3);
 }
 
-static void *dimMesh(int sel, Geom *g, va_list args) {
+static void *dimMesh(int sel, Geom *g, va_list *args) {
     return (void *)(((Mesh *)g)->flag & MESH_4D ? 4 : 3);
 }
 
-static void *dimList(int sel, Geom *g, va_list args) {
+static void *dimList(int sel, Geom *g, va_list *args) {
     int dim, maxdim = 3;
     List *l;
     for(l = (List *)g; l != NULL; l = l->cdr) {
@@ -79,7 +79,7 @@ static void *dimList(int sel, Geom *g, va_list args) {
     return (void *)maxdim;
 }
 
-static void *dimInst(int sel, Geom *g, va_list args) {
+static void *dimInst(int sel, Geom *g, va_list *args) {
     return (void *)GeomDimension(((Inst *)g)->geom);
 }
 

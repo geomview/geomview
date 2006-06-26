@@ -1205,9 +1205,9 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
 	} else if (argclass == LARRAY) {
 	  /* special case for this because it takes 3 args: the base type,
 	     the array itself, and a count */
-	    va_arg(a_list, LType *);
-	    va_arg(a_list, void *);
-	    va_arg(a_list, int *);
+	    (void)va_arg(a_list, LType *);
+	    (void)va_arg(a_list, void *);
+	    (void)va_arg(a_list, int *);
 
 	    ++argspecs;
 	    if (LakeMore(lake,c)) {
@@ -1230,11 +1230,11 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
 	    moreargspecs = 0;
 	}
     } else if(argclass == LLAKE) {
-	va_arg(a_list, Lake **);
+	(void)va_arg(a_list, Lake **);
 	LListAppend(args, LTOOBJ(LLAKE)(&lake));
     } else {
       ++argspecs;
-      va_arg(a_list, void *);
+      (void)va_arg(a_list, void *);
       if (LakeMore(lake,c)) {
 	LObject *arg;
 
@@ -1359,8 +1359,8 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
 	    args = args->cdr;
 	    hold = 0;
 	  } else {
-	    va_arg(a_list, void *);
-	    va_arg(a_list, void *);
+	    (void)va_arg(a_list, void *);
+	    (void)va_arg(a_list, void *);
 	  }
 	} else if(argtype == LREST) {
 	    LList **restp = va_arg(a_list, LList **);
@@ -1389,7 +1389,7 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
 	args = args->cdr;
 	hold = 0;
       } else
-	va_arg(a_list, void *);
+	(void)va_arg(a_list, void *);
     }
   }
   if (argsrequired<0) argsrequired = argspecs;

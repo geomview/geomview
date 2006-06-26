@@ -58,7 +58,7 @@ TlistImport( Pool *p )
     int binary = 0;
     int sawheader = 1;
     float *tp;
-    float preread;
+    float preread = 0;
     int got_preread = 0;
     FILE *file;
     Transform TT[100];

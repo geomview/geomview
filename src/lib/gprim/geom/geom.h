@@ -88,7 +88,7 @@ extern Geom    *GeomDraw( Geom *obj );	/* Using current mg context */
 	 *   result = GeomCall( sel, geom, ... );
 	 */
 
-typedef  void *GeomExtFunc( int sel, Geom *geom, va_list args );
+typedef  void *GeomExtFunc( int sel, Geom *geom, va_list *args );
 
 extern int   GeomMethodSel( char *name );	/* name -> selector, or 0 */
 extern char *GeomMethodName( int sel );		/* selector -> name or NULL */
@@ -96,7 +96,7 @@ extern int   GeomNewMethod( char *name, GeomExtFunc *defaultfunc );/* -> selecto
 GeomExtFunc *GeomSpecifyMethod( int sel, GeomClass *Class, GeomExtFunc *func );
 
 extern void *GeomCall( int sel, Geom *geom, ... );
-extern void *GeomCallV( int sel, Geom *geom, va_list args );
+extern void *GeomCallV( int sel, Geom *geom, va_list *args );
 
     /* Notes:
      * GeomMethodSel() returns the selector for a given extension; 0 = unknown.

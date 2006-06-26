@@ -186,9 +186,9 @@ DiscGrpClosestGroupEl(register DiscGrp *discgrp, HPoint3 *poi)
 {
     int count, i, closeri;
     int metric;
-    float min, d;
+    float min = 0, d;
     HPoint3 pt0, pt1;
-    DiscGrpEl *closer, *closest = OOGLNew(DiscGrpEl);
+    DiscGrpEl *closer = NULL, *closest = OOGLNew(DiscGrpEl);
     Transform cinv;
 
     TmIdentity(closest->tform);

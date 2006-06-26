@@ -40,7 +40,7 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap, Transform T)
   Point3 plist[4];
   int i, nu, nv, maxnu, maxnv, maxpt;
   int foundu, foundv;
-  unsigned int apflag;
+  unsigned int apflag = 0;
 
   HPt3Coord xa, xb, xc, xd;
 

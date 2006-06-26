@@ -1010,13 +1010,13 @@ WEface			*new_face;
 	int			zero_count,
 				count,
 				count1,
-				count3;
+				count3 = 0;
 	double		d0, d1;
 	WEvertex	*v01, *v23;
 	WEedge		*edge,
 				*next_edge,
 				*new_edge,
-				*e0, *e1, *e2, *e3;
+				*e0 = NULL, *e1 = NULL, *e2 = NULL, *e3 = NULL;
 	WEface		*f_list,
 				*face;
 

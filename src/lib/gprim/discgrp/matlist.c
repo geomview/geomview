@@ -96,7 +96,7 @@ insert_or_match_mat(mat, mode)
 Transform mat;
 int mode;	/* insert or match? */
 {
-	register struct node *n, *p; 
+	register struct node *n = NULL, *p; 
 	register int i, j;
 	float d;
 	struct node tnode;

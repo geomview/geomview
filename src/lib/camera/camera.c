@@ -98,7 +98,7 @@ _CamSet(Camera *cam, int attr, register va_list *alist)
 {
   TransformPtr tt;
   int sethalffield = 0, setaspect = 0, setstereogeom = 0;
-  double halffield, v;
+  double halffield = 0, v;
   Handle *h;
   int bit, unbit;
   char **ablock = NULL;

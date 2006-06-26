@@ -26,7 +26,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.10 2004/05/02 17:03:54 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.11 2006/06/26 15:41:16 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -286,7 +286,7 @@ int
 fgetnf(register FILE *f, int maxf, float *fv, int binary)
 {
 	int ngot;
-	float v;
+	float v = 0;
 	register int c = EOF;
 	register long n;
 	int s, es, nd, any;

@@ -37,13 +37,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define FUDGE .1
 #endif
 
-void *cray_bezier_HasVColor(int sel, Geom *geom, va_list args);
-void *cray_bezier_UseVColor(int sel, Geom *geom, va_list args);
-void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list args);
-void *cray_bezier_SetColorAll(int sel, Geom *geom, va_list args);
-void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list args);
-void *cray_bezier_SetColorAtF(int sel, Geom *geom, va_list args);
-void *cray_bezier_GetColorAt(int sel, Geom *geom, va_list args);
+void *cray_bezier_HasVColor(int sel, Geom *geom, va_list *args);
+void *cray_bezier_UseVColor(int sel, Geom *geom, va_list *args);
+void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list *args);
+void *cray_bezier_SetColorAll(int sel, Geom *geom, va_list *args);
+void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_bezier_SetColorAtF(int sel, Geom *geom, va_list *args);
+void *cray_bezier_GetColorAt(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 10
 
@@ -66,19 +66,19 @@ cray_bezier_init() {
   return 0;
 }
 
-void *cray_bezier_HasVColor(int sel, Geom *geom, va_list args) {
+void *cray_bezier_HasVColor(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
   return (void *)(b->flag & BEZ_C);
 }
 
-void *cray_bezier_UseVColor(int sel, Geom *geom, va_list args) {
+void *cray_bezier_UseVColor(int sel, Geom *geom, va_list *args) {
   int i;
   Bezier *b = (Bezier *)geom;
   ColorA *def;
 
   if (crayHasColor(geom, NULL)) return 0;
 
-  def = va_arg(args, ColorA *);
+  def = va_arg(*args, ColorA *);
   for (i = 0; i < 4; i++) b->c[i] = *def; 
 
   b->flag |= BEZ_C;
@@ -86,7 +86,7 @@ void *cray_bezier_UseVColor(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list args) {
+void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
 
   if (!crayHasColor(geom, NULL)) return NULL;
@@ -94,13 +94,13 @@ void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_bezier_SetColorAll(int sel, Geom *geom, va_list args) {
+void *cray_bezier_SetColorAll(int sel, Geom *geom, va_list *args) {
   int i;
   Bezier *b = (Bezier *)geom;
   ColorA *color;
 
   if (!crayHasColor(geom, NULL)) return NULL;
-  color = va_arg(args, ColorA *);
+  color = va_arg(*args, ColorA *);
   for (i = 0; i < 4; i++) b->c[i] = *color;
   return (void *)geom;
 }
@@ -168,18 +168,18 @@ static int WhichCorner(Bezier *b, int vindex, HPoint3 *pt) {
   return index;
 }
 
-void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
   ColorA *color;
   int vindex, index;
   HPoint3 *pt;
 
-  color = va_arg(args, ColorA *);
-  vindex = va_arg(args, int);
-  va_arg(args, int);			/* findex */
-  va_arg(args, int *);			/* edge */
-  va_arg(args, int *);			/* gpath */
-  pt = va_arg(args, HPoint3 *);
+  color = va_arg(*args, ColorA *);
+  vindex = va_arg(*args, int);
+  va_arg(*args, int);			/* findex */
+  va_arg(*args, int *);			/* edge */
+  va_arg(*args, int *);			/* gpath */
+  pt = va_arg(*args, HPoint3 *);
 
   index = WhichCorner(b, vindex, pt);
   if (index < 0) return (void *)craySetColorAtF(geom, color, 0, NULL);
@@ -188,29 +188,29 @@ void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list args) {
   return (void *)geom;
 }
 
-void *cray_bezier_SetColorAtF(int sel, Geom *geom, va_list args) {
+void *cray_bezier_SetColorAtF(int sel, Geom *geom, va_list *args) {
   int i;
   Bezier *b = (Bezier *)geom;
   ColorA *color;
   if (!crayHasColor(geom, NULL)) return NULL;
-  color = va_arg(args, ColorA *);
+  color = va_arg(*args, ColorA *);
   for (i = 0; i < 4; i++) b->c[i] = *color;
   return (void *)geom;
 }
 
-void *cray_bezier_GetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_bezier_GetColorAt(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
   ColorA *color;
   int vindex, index;
   HPoint3 *pt;
 
   if (!crayHasColor(geom, NULL)) return NULL;
-  color = va_arg(args, ColorA *);
-  vindex = va_arg(args, int);
-  va_arg(args, int);                    /* findex */
-  va_arg(args, int *);                  /* edge */
-  va_arg(args, int *);                  /* gpath */
-  pt = va_arg(args, HPoint3 *);
+  color = va_arg(*args, ColorA *);
+  vindex = va_arg(*args, int);
+  va_arg(*args, int);                    /* findex */
+  va_arg(*args, int *);                  /* edge */
+  va_arg(*args, int *);                  /* gpath */
+  pt = va_arg(*args, HPoint3 *);
 
   index = WhichCorner(b, vindex, pt);
   if (index < 0) index = 0;

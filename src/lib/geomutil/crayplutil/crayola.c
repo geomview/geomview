@@ -126,10 +126,10 @@ int crayGetColorAtF(Geom *geom, ColorA *color, int index, int *gpath) {
   return (int)GeomCall(sel[14], geom, color, index, gpath);
 }
 
-void *crayTrue(int sel, Geom *geom, va_list args) {
+void *crayTrue(int sel, Geom *geom, va_list *args) {
   return (void *)1;
 }
 
-void *crayFalse(int sel, Geom *geom, va_list args) {
+void *crayFalse(int sel, Geom *geom, va_list *args) {
   return (void *)0;
 }

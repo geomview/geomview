@@ -44,8 +44,8 @@ typedef struct {
 
 void crayInitSpec(craySpecFunc *specfunc, int n_func, GeomClass *class);
 
-void *crayTrue(int sel, Geom *geom, va_list args);
-void *crayFalse(int sel, Geom *geom, va_list args);
+void *crayTrue(int sel, Geom *geom, va_list *args);
+void *crayFalse(int sel, Geom *geom, va_list *args);
 
 int cray_bezier_init();
 int cray_inst_init();

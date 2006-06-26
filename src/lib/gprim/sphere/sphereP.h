@@ -37,7 +37,7 @@ struct Sphere {
 #define SPHEREMAGIC	GeomMagic('s', 1)
 
 extern GeomClass *SphereMethods();
-extern Sphere *SphereCreate(Geom *, GeomClass *, va_list a_list );
+extern Sphere *SphereCreate(Geom *, GeomClass *, va_list *a_list );
 extern Sphere *SphereFLoad(FILE *, char *);
 extern Sphere *SphereSave(Sphere *, char *);
 extern Sphere *SphereFSave(Sphere *, FILE *, char *);

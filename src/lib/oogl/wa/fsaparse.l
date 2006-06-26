@@ -64,7 +64,7 @@ SIGN	[+-]
 
 %%  /* SUBPROGRAMS SECTION */
 
-yywrap()
+int yywrap()
 {
   return(1);
 }

@@ -30,26 +30,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 #include "crayolaP.h"
 
-void *cray_inst_HasColor(int sel, Geom *geom, va_list args);
-void *cray_inst_HasVColor(int sel, Geom *geom, va_list args);
-void *cray_inst_HasFColor(int sel, Geom *geom, va_list args);
+void *cray_inst_HasColor(int sel, Geom *geom, va_list *args);
+void *cray_inst_HasVColor(int sel, Geom *geom, va_list *args);
+void *cray_inst_HasFColor(int sel, Geom *geom, va_list *args);
 
-void *cray_inst_CanUseVColor(int sel, Geom *geom, va_list args);
-void *cray_inst_CanUseFColor(int sel, Geom *geom, va_list args);
+void *cray_inst_CanUseVColor(int sel, Geom *geom, va_list *args);
+void *cray_inst_CanUseFColor(int sel, Geom *geom, va_list *args);
 
-void *cray_inst_UseVColor(int sel, Geom *geom, va_list args);
-void *cray_inst_UseFColor(int sel, Geom *geom, va_list args);
+void *cray_inst_UseVColor(int sel, Geom *geom, va_list *args);
+void *cray_inst_UseFColor(int sel, Geom *geom, va_list *args);
 
-void *cray_inst_EliminateColor(int sel, Geom *geom, va_list args);
+void *cray_inst_EliminateColor(int sel, Geom *geom, va_list *args);
 
-void *cray_inst_SetColorAll(int sel, Geom *geom, va_list args);
-void *cray_inst_SetColorAt(int sel, Geom *geom, va_list args);
-void *cray_inst_SetColorAtV(int sel, Geom *geom, va_list args);
-void *cray_inst_SetColorAtF(int sel, Geom *geom, va_list args);
+void *cray_inst_SetColorAll(int sel, Geom *geom, va_list *args);
+void *cray_inst_SetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_inst_SetColorAtV(int sel, Geom *geom, va_list *args);
+void *cray_inst_SetColorAtF(int sel, Geom *geom, va_list *args);
 
-void *cray_inst_GetColorAt(int sel, Geom *geom, va_list args);
-void *cray_inst_GetColorAtV(int sel, Geom *geom, va_list args);
-void *cray_inst_GetColorAtF(int sel, Geom *geom, va_list args);
+void *cray_inst_GetColorAt(int sel, Geom *geom, va_list *args);
+void *cray_inst_GetColorAtV(int sel, Geom *geom, va_list *args);
+void *cray_inst_GetColorAtF(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 14
 
@@ -82,113 +82,113 @@ cray_inst_init() {
   return 0;
 }
 
-void *cray_inst_HasColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_HasColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayHasColor(((Inst *)geom)->geom, 
 			       gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_HasVColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_HasVColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayHasVColor(((Inst *)geom)->geom, 
 				gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_HasFColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_HasFColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayHasFColor(((Inst *)geom)->geom, 
 				gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_CanUseVColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_CanUseVColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayCanUseVColor(((Inst *)geom)->geom, 
 				   gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_CanUseFColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_CanUseFColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayCanUseFColor(((Inst *)geom)->geom,
 				   gpath == NULL ? NULL : gpath + 1));
 }
   
 
-void *cray_inst_UseVColor(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int *gpath = va_arg(args, int *);
+void *cray_inst_UseVColor(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayUseVColor(((Inst *)geom)->geom, c, 
 				gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_UseFColor(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int *gpath = va_arg(args, int *);
+void *cray_inst_UseFColor(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayUseFColor(((Inst *)geom)->geom, c, 
 				gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_EliminateColor(int sel, Geom *geom, va_list args) {
-  int *gpath = va_arg(args, int *);
+void *cray_inst_EliminateColor(int sel, Geom *geom, va_list *args) {
+  int *gpath = va_arg(*args, int *);
   return (void *)(crayEliminateColor(((Inst *)geom)->geom, 
 				     gpath == NULL ? NULL : gpath + 1));
 }
 
-void *cray_inst_SetColorAll(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int *gpath = va_arg(args, int *);
+void *cray_inst_SetColorAll(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int *gpath = va_arg(*args, int *);
   return (void *)(craySetColorAll(((Inst *)geom)->geom, c, 
 				  gpath == NULL ? NULL : gpath + 1));
 }
      
-void *cray_inst_SetColorAt(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int vindex = va_arg(args, int), findex = va_arg(args, int), 
-  *edge = va_arg(args, int *), *gpath = va_arg(args, int *);
-  HPoint3 *pt = va_arg(args, HPoint3 *);
+void *cray_inst_SetColorAt(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int vindex = va_arg(*args, int), findex = va_arg(*args, int), 
+  *edge = va_arg(*args, int *), *gpath = va_arg(*args, int *);
+  HPoint3 *pt = va_arg(*args, HPoint3 *);
   return (void *)(craySetColorAt(((Inst *)geom)->geom, c, vindex, 
 				 findex, edge, 
 				 gpath == NULL ? NULL : gpath + 1, pt));
 }
 
-void *cray_inst_SetColorAtV(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int index = va_arg(args, int), *gpath = va_arg(args, int *);
-  HPoint3 *pt = va_arg(args, HPoint3 *);
+void *cray_inst_SetColorAtV(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int index = va_arg(*args, int), *gpath = va_arg(*args, int *);
+  HPoint3 *pt = va_arg(*args, HPoint3 *);
   return (void *)(craySetColorAtV(((Inst *)geom)->geom, c, index, 
 				  gpath == NULL ? NULL : gpath + 1,
 				  pt));
 
 }
 
-void *cray_inst_SetColorAtF(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int index = va_arg(args, int), *gpath = va_arg(args, int *);
+void *cray_inst_SetColorAtF(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int index = va_arg(*args, int), *gpath = va_arg(*args, int *);
   return (void *)(craySetColorAtF(((Inst *)geom)->geom, c, index, 
 				  gpath == NULL ? NULL : gpath + 1));
 
 }
 
-void *cray_inst_GetColorAt(int sel, Geom *geom, va_list args) {
+void *cray_inst_GetColorAt(int sel, Geom *geom, va_list *args) {
   Geom *newgeom = ((Inst *)geom)->geom;
-  ColorA *c = va_arg(args, ColorA *);
-  int vindex = va_arg(args, int), findex = va_arg(args, int), 
-  *edge = va_arg(args, int *), *gpath = va_arg(args, int *);
-  HPoint3 *pt = va_arg(args, HPoint3 *);
+  ColorA *c = va_arg(*args, ColorA *);
+  int vindex = va_arg(*args, int), findex = va_arg(*args, int), 
+  *edge = va_arg(*args, int *), *gpath = va_arg(*args, int *);
+  HPoint3 *pt = va_arg(*args, HPoint3 *);
   return (void *)(crayGetColorAt(newgeom, c, vindex, findex, edge, 
 				 gpath == NULL ? NULL : gpath + 1, pt));
 }
 
-void *cray_inst_GetColorAtV(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int index = va_arg(args, int), *gpath = va_arg(args, int *);
-  HPoint3 *pt = va_arg(args, HPoint3 *);
+void *cray_inst_GetColorAtV(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int index = va_arg(*args, int), *gpath = va_arg(*args, int *);
+  HPoint3 *pt = va_arg(*args, HPoint3 *);
   return (void *)(crayGetColorAtV(((Inst *)geom)->geom, c, index, 
 				  gpath == NULL ? NULL : gpath + 1, pt));
 }
 
-void *cray_inst_GetColorAtF(int sel, Geom *geom, va_list args) {
-  ColorA *c = va_arg(args, ColorA *);
-  int index = va_arg(args, int), *gpath = va_arg(args, int *);
+void *cray_inst_GetColorAtF(int sel, Geom *geom, va_list *args) {
+  ColorA *c = va_arg(*args, ColorA *);
+  int index = va_arg(*args, int), *gpath = va_arg(*args, int *);
   return (void *)(crayGetColorAtF(((Inst *)geom)->geom, c, index, 
 				  gpath == NULL ? NULL : gpath + 1));
 }

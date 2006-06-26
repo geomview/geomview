@@ -68,7 +68,7 @@ void *bezier_PointList_get(int sel, Geom *geom, va_list args) {
 }
 
 void *bezier_PointList_fillin(int sel, Geom *geom, va_list args) {
-  int i;
+  int i = 0;
   TransformPtr t;
   HPoint3 *pt;
   Bezier *b = (Bezier *)geom;

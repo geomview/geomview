@@ -201,7 +201,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 int
 readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char *fname)
 {
-    int val, bit, i, j, k, c, row;
+    int val, bit, i = 0, j, k, c, row;
     int stride = tx->channels;
     char *pix;
 

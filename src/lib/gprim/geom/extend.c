@@ -142,7 +142,7 @@ GeomCall(int sel, Geom *geom, ...)
 }
 
 void *
-GeomCallV(int sel, Geom *geom, va_list args)
+GeomCallV(int sel, Geom *geom, va_list *args)
 {
     register GeomClass *C;
     register GeomExtFunc *ext = NULL;

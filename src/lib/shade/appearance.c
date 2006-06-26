@@ -1400,7 +1400,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
     float val[16];
     struct txkw *kw;
     char *w, *raww;
-    int i, k;
+    int i, k = 0;
     int any = 0;
     int brack = 0;
     int empty = 1, braces = 0;
@@ -1501,7 +1501,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 
 	    empty++;
 
-	    switch(kw->aval) {
+	    switch((int)kw->aval) {
 		case -1:
 		    mine = more = 1;
 		    empty--;

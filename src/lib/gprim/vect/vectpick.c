@@ -44,7 +44,7 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
   Point3 plist[2];
   int i, j, k, which, ok[2];
   int found;
-  unsigned int apflag;
+  unsigned int apflag = 0;
 
   /* Make sure that the edges do not register as visible - otherwise 
    * they could really mess things up */

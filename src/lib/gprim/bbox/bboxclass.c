@@ -38,7 +38,7 @@ int BBoxPresent = 1;
 static char bboxName[] = "bbox";
 
 extern BBox *BBoxCopy ( BBox * );
-extern Geom *BBoxCreate ( va_list );
+extern Geom *BBoxCreate ( va_list *);
 extern BBox *BBoxDelete ( BBox * );
 
 extern BBox *BBoxFSave( BBox *, FILE *, char * );

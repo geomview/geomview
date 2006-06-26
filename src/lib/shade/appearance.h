@@ -264,7 +264,7 @@ extern HandleOps  TextureOps;
 
 Appearance *	ApCreate( int attr, ... );
 Appearance *	ApSet( Appearance *ap, int attr, ... );
-Appearance *	_ApSet(Appearance *ap, int attr1, register va_list *alist);
+Appearance *	_ApSet(Appearance *ap, int attr1, va_list *alist);
 int		ApGet( Appearance *ap, int attr, void *valuep );
 void		ApDelete( Appearance *ap );
 Appearance *	ApDefault( Appearance *ap );
@@ -272,7 +272,7 @@ Appearance *	ApCopy( Appearance *from, Appearance *into );
 Appearance *	ApMerge( Appearance *src, Appearance *dst, int inplace );
 Appearance *	ApFLoad( Appearance *into, FILE *f, char *stream );
 Appearance *	ApLoad( Appearance *into, char *stream );
-Appearance *    ApCopyShared( Appearance *ap, register Appearance *into );
+Appearance *    ApCopyShared( Appearance *ap, Appearance *into );
 
 
 		/* Force 'override' bits on (for all valid fields)
