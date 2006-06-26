@@ -1,4 +1,4 @@
-AC_INIT(geomview, [1.8.2-beta], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.8.2-rc1], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_CANONICAL_TARGET([])
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADERS([config.h])
