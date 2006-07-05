@@ -101,7 +101,6 @@ mgrib_polygon(int nv,  HPoint3 *V,
 
     /* Supply Transparency */
     if(nc>0 && flag & APF_TRANSP && !(matover & MTF_ALPHA)) {
-	mrti(mr_Os, mr_buildarray, nv*3, mr_NULL);
 	for(i = 0; i < nv; i++) {
 	    float opacity[3];
 	    if(nc>1) c4 = &C[i]; else c4 = C;
@@ -313,7 +312,11 @@ void mgrib_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 	mrti(mr_attributebegin, mr_surface, mr_constant, mr_NULL);
 	if(nc==0) mrti(mr_color, mr_parray, 3,
 	    &_mgc->astk->mat.edgecolor, mr_NULL);
-	if(nc==1) mrti(mr_color, mr_parray, 3, c, mr_NULL);
+	if(nc==1) {
+		mrti(mr_color, mr_parray, 3, c, mr_NULL);
+		if (_mgc->astk->ap.flag & APF_TRANSP && !(_mgc->astk->mat.override & MTF_ALPHA))
+			mrti(mr_opacity, mr_array, 3, c->a, c->a, c->a, mr_NULL);
+	}
 	if(nv == 1) {
 		mgrib_drawpoint(v);
 	}
