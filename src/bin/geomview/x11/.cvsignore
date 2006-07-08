@@ -1,3 +1,4 @@
+.gdbinit
 Makefile Makefile.in .deps
 buildinfo.c
 gvx

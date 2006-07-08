@@ -2,6 +2,7 @@ INSTALL
 Makefile.in Makefile
 aclocal.m4
 autom4te.cache
+blah
 config.cache 
 config.guess
 config.h.in config.h
@@ -9,7 +10,9 @@ config.log
 config.status 
 config.sub
 configure 
+copyright-if0.sh
 depcomp
+foolist
 geomview
 geomview*.tar.*
 geomview-1*
