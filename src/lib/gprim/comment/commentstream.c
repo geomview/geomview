@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /*
@@ -68,7 +70,6 @@ CommentImport( Pool *p )
     register Comment *comment =
 	(Comment *)GeomCCreate(NULL, CommentMethods(), NULL);
     FILE *file;
-    char *expect;
 
     if(p == NULL || (file = p->inf) == NULL)
 	return NULL;

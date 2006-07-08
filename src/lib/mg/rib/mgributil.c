@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgribP.h"
@@ -44,8 +46,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 mgrib_printmatrix(Transform T)
 {
-   int i;
-   
    mrti(mr_concattransform, mr_parray, 16, T, mr_NULL);
 }
 

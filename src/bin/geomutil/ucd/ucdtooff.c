@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* File:	anytoucd.c:
@@ -35,6 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 #include "plutil.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include "time.h"
 
 /*
@@ -93,7 +96,8 @@ int num_cells;
 	if (p[i].id == id) return(index);
     return(-1);
 }
-main(argc, argv)	int argc; char **argv;
+
+int main(int argc, char **argv)
 {
     FILE *fp = stdin;
     int num_nodes, 
@@ -103,8 +107,7 @@ main(argc, argv)	int argc; char **argv;
 	num_cell_data_comp,
 	num_model_data,
 	*cell_data_comp = NULL,
-	buff[5], 
-	sum, offset,
+	offset,
 	i,j,k,id,index,n, plflags = 0,
 	num_faces = 0, num_vertinds = 0;
     float *ncdptrs[256], tt;
@@ -115,7 +118,6 @@ main(argc, argv)	int argc; char **argv;
     ucdvert *ucdv;
     ucdpoly *ucdp;
     char str[UCD_NUMDATAFIELDS][32], label[UCD_NUMDATAFIELDS][32];
-    PolyList *mypl;
 
     {
     char *timestring;
@@ -198,7 +200,7 @@ main(argc, argv)	int argc; char **argv;
     for (nvi=0, vi=0, i=0; i<num_cells; ++i)	{
 	int n = ucdp[i].n;
 	int k;
-	int *inds, indsperface;
+	int *inds = NULL, indsperface = 0;
 	switch(ucdp[i].faces) {
 	    case 1: inds = plain;  indsperface = n; break;
 	    case 4: inds = tet;    indsperface = 3; break;

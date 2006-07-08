@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -361,12 +363,10 @@ LDEFINE(ND_xform, LTRANSFORMN,
 	Note that all cameras in a camera-cluster have the same N-D transform.\n")
 {
   int id;
-  LObject *objname = NULL;
   DObject *obj;
   TmNStruct *ts = NULL;
   TransformN *T = NULL;
   NDcam *cl = NULL;
-  int c;
 
   LDECLARE(("ND-xform", LBEGIN,
 	LID, &id,

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips,
@@ -41,11 +43,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Quad *
 QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T)
 {
-  Point3 plist[4], *p, got, ep;
-  int i, v, e, maxpt;
-  float closest;
+  Point3 plist[4];
+  int i;
   int found;
-  unsigned int apflag;
+  unsigned int apflag = 0;
   HPt3Coord xa, xb, xc, xd;
 
   found = -1;

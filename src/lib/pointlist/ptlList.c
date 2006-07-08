@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
@@ -32,10 +34,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pointlistP.h"
 
 
-void *list_PointList_get(int sel, Geom *geom, va_list args);
-void *list_PointList_fillin(int sel, Geom *geom, va_list args);
-void *list_PointList_set(int sel, Geom *geom, va_list args);
-void *list_PointList_length(int sel, Geom *geom, va_list args);
+void *list_PointList_get(int sel, Geom *geom, va_list *args);
+void *list_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *list_PointList_set(int sel, Geom *geom, va_list *args);
+void *list_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -53,29 +55,28 @@ ptlList_init() {
   pointlist_initspec(methods, MAX_METHODS, GeomClassLookup("list"));
 }
 
-void *list_PointList_get(int sel, Geom *geom, va_list args) {
-  List *l = (List *)geom;
+void *list_PointList_get(int sel, Geom *geom, va_list *args) {
   HPoint3 *plist;
   TransformPtr t;
   
   plist = OOGLNewNE(HPoint3, 
 		    (int)GeomCall(GeomMethodSel("PointList_length"), geom), 
 		     msg);
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
 
   return(GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, plist));
 
 }
 
-void *list_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *list_PointList_fillin(int sel, Geom *geom, va_list *args) {
   TransformPtr t;
   int n_points1;
   HPoint3 *plist;
   List *l = (List *)geom;
 
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
 
   n_points1 = (int)GeomCall(GeomMethodSel("PointList_length"), l->car);
 
@@ -86,13 +87,13 @@ void *list_PointList_fillin(int sel, Geom *geom, va_list args) {
 }
 
 
-void *list_PointList_set(int sel, Geom *geom, va_list args) {
+void *list_PointList_set(int sel, Geom *geom, va_list *args) {
   HPoint3 *pt1;
   int n_points1, coordsys;
   List *l = (List *)geom;
 
-  coordsys = va_arg(args, int);
-  pt1 = va_arg(args, HPoint3 *);
+  coordsys = va_arg(*args, int);
+  pt1 = va_arg(*args, HPoint3 *);
   n_points1 = (int)GeomCall(GeomMethodSel("PointList_length"), l->car);
 
   GeomCall(GeomMethodSel("PointList_set"), l->car, coordsys, pt1);
@@ -102,7 +103,7 @@ void *list_PointList_set(int sel, Geom *geom, va_list args) {
   return geom;
 }
 
-void *list_PointList_length(int sel, Geom *geom, va_list args) {
+void *list_PointList_length(int sel, Geom *geom, va_list *args) {
   List *l = (List *)geom;
   return  (void *)
     ((int)GeomCall(GeomMethodSel("PointList_length"), l->car) + 

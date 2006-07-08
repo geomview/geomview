@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -280,7 +282,7 @@ static void build_light_rack(LmLighting *lgt)
   lightno = 1;
   LM_FOR_ALL_LIGHTS(lgt, i,lp) {
     light = *lp;
-    axis = *(Point3*)(&(light->position));
+    axis = *(Point3*)(void *)(&(light->position));
     lr.lights[lightno] = light;
     lr.lightgeoms[lightno] = make_light(axis, &(light->color));
     lr.list = ListAppend(lr.list, lr.lightgeoms[lightno]);
@@ -586,5 +588,5 @@ Rotation(double dx, double dy, Transform rot, int *target)
 
   mouse2world(&axis, *target);
 
-  TmRotate( rot, ang, (Point3 *)&axis );
+  TmRotate( rot, ang, (Point3 *)(void *)&axis );
 }

@@ -19,16 +19,17 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "polylistP.h"
 	static int BlockSize, array_size;
 	static Poly *mystack, *stackptr;
    	static int count = 0, debug = 0;
 
-int
-initstack()
+int initstack(void)
 {
     	array_size = 1;
     	BlockSize = 1024;
@@ -60,7 +61,7 @@ Poly *pp;
 }
     
 int
-getsize()
+getsize(void)
 {
     return(count);
 }

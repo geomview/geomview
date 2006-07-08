@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* OOGL to VRML converter 
  * by Tamara Munzner
@@ -57,18 +59,41 @@ struct linkap *toplap;
 static void doap(Appearance *a);
 
 static int indent = 0;
-void fprintfind(FILE *f, int ind, char *fmt, ...)
+
+void fprintfindent(FILE *f, char *fmt, ...)
 {
   va_list ap;
 
-  fprintf(f, "%*s", ind, "");
+  fprintf(f, "%*s", indent, "");
   va_start(ap, fmt);
   vfprintf(f, fmt, ap);
   va_end(ap);
 }
-#define INDENT(f, ...) fprintfind(f, indent, __VA_ARGS__)
-#define INDENTINC(f, ...) { INDENT(f, __VA_ARGS__); indent += 2; }
-#define INDENTDEC(f, ...) { indent -= 2; INDENT(f, __VA_ARGS__); }
+
+void fprintfindentinc(FILE *f, char *fmt, ...)
+{
+  va_list ap;
+
+  fprintf(f, "%*s", indent, "");
+  va_start(ap, fmt);
+  vfprintf(f, fmt, ap);
+  va_end(ap);
+  indent += 2;
+}
+
+void fprintfdecindent(FILE *f, char *fmt, ...)
+{
+  va_list ap;
+
+  indent -= 2;
+  fprintf(f, "%*s", indent, "");
+  va_start(ap, fmt);
+  vfprintf(f, fmt, ap);
+  va_end(ap);
+  indent += 2;
+}
+
+#define PRINT_PADDING(f, padding) fprintf((f), "%*s", indent + (padding), "")
 
 void
 faceindex(PolyList *plist) {
@@ -84,7 +109,7 @@ faceindex(PolyList *plist) {
       fprintf(f, ",");
       if (i & 1) {
 	fprintf(f, "\n");
-	fprintfind(f, indent + strlen("coordIndex ["), "");
+	PRINT_PADDING(f, strlen("coordIndex ["));
       }
     }
   }
@@ -96,41 +121,41 @@ plisttoindface(Geom *pgeom)
   PolyList *plist = (PolyList *)pgeom;
   Poly *pl = NULL;
   Vertex *v = NULL;
-  int i,j;
+  int i;
   int shading = toplap->ap->shading;
 
   /* Appearance */
   doap(toplap->ap);
 
   /* Geometry */
-  INDENTINC(f, "geometry IndexedFaceSet {\n");
-  INDENT(f, "solid FALSE\n"); /* 'cause we don't know */
-  INDENT(f, "ccw TRUE\n");
-  INDENT(f, "convex TRUE\n"); /* is this true? */
-  INDENT(f, "normalPerVertex %s\n",
-	 shading == APF_FLAT ? "FALSE" : "TRUE");
-  INDENT(f, "colorPerVertex %s\n",
+  fprintfindentinc(f, "geometry IndexedFaceSet {\n");
+  fprintfindent(f, "solid FALSE\n"); /* 'cause we don't know */
+  fprintfindent(f, "ccw TRUE\n");
+  fprintfindent(f, "convex TRUE\n"); /* is this true? */
+  fprintfindent(f, "normalPerVertex %s\n",
+		    shading == APF_FLAT ? "FALSE" : "TRUE");
+  fprintfindent(f, "colorPerVertex %s\n",
 	 plist->flags & PL_HASVCOL ? "TRUE" : "FALSE");
 
   /* Vertices */
-  INDENTINC(f, "coord Coordinate {\n");
-  INDENT(f, "point [");
+  fprintfindentinc(f, "coord Coordinate {\n");
+  fprintfindent(f, "point [");
   for (i = 0, v = plist->vl; i < plist->n_verts; i++, v++) {
     fprintf(f, " %g %g %g", v->pt.x, v->pt.y, v->pt.z);
     if (i != plist->n_verts-1) {
       fprintf(f, ",");
       if (i & 1) {
 	fprintf(f, "\n");
-	fprintfind(f, indent + strlen("point ["), "");
+	PRINT_PADDING(f, strlen("point ["));
       }
     }
   }
-  INDENT(f, "]\n");
-  INDENTDEC(f, "}\n");
+  fprintfindent(f, "]\n");
+  fprintfdecindent(f, "}\n");
 
   /* Normals */
-  INDENTINC(f, "normal Normal {\n");
-  INDENT(f, "vector [");
+  fprintfindentinc(f, "normal Normal {\n");
+  fprintfindent(f, "vector [");
   if (shading == APF_FLAT) {
     PolyListComputeNormals(plist);
     for (i = 0, pl= plist->p; i < plist->n_polys; i++, pl++) {
@@ -139,7 +164,7 @@ plisttoindface(Geom *pgeom)
 	fprintf(f, ",");
 	if (i & 1) {
 	  fprintf(f, "\n");
-	  fprintfind(f, indent + strlen("vector ["), "");
+	  PRINT_PADDING(f, strlen("vector ["));
 	}
       }
     }
@@ -151,13 +176,13 @@ plisttoindface(Geom *pgeom)
 	fprintf(f, ",");
 	if (i & 1) {
 	  fprintf(f, "\n");
-	  fprintfind(f, indent + strlen("vector ["), "");
+	  PRINT_PADDING(f, strlen("vector ["));
 	}
       }
     }
   }
   fprintf(f, " ]");
-  INDENTDEC(f, "}\n");
+  fprintfdecindent(f, "}\n");
 
   /* Colors */
   if (plist->flags & PL_HASVCOL && plist->flags & PL_HASPCOL) {
@@ -175,45 +200,45 @@ plisttoindface(Geom *pgeom)
   }
 
   if (plist->flags & PL_HASPCOL) {
-    INDENTINC(f, "color Color {\n");
-    INDENT(f, "RGB [");
+    fprintfindentinc(f, "color Color {\n");
+    fprintfindent(f, "RGB [");
     for (i = 0, pl= plist->p; i < plist->n_polys; i++, pl++) {
       fprintf(f, " %g %g %g", pl->pcol.r, pl->pcol.g, pl->pcol.b);
       if (i != plist->n_polys-1) {
 	fprintf(f, ",");
 	if (i & 1) {
 	  printf("\n");
-	  fprintfind(f, indent + strlen("RGB ["), "");
+	  PRINT_PADDING(f, strlen("RGB ["));
 	}
       }
     }
     fprintf(f, " ]\n");
-    INDENTDEC(f, "}\n");
+    fprintfdecindent(f, "}\n");
   } else if (plist->flags & PL_HASVCOL) {
-    INDENTINC(f, "color Color {\n");
-    INDENT(f, "RGB [");
+    fprintfindentinc(f, "color Color {\n");
+    fprintfindent(f, "RGB [");
     for (i = 0, v = plist->vl; i < plist->n_verts; i++, v++) {
       fprintf(f, " %g %g %g", v->vcol.r, v->vcol.g, v->vcol.b);
       if (i != plist->n_verts-1) {
 	fprintf(f, ",");
 	if (i & 1) {
 	  printf("\n");
-	  fprintfind(f, indent + strlen("RGB ["), "");
+	  PRINT_PADDING(f, strlen("RGB ["));
 	}
       }
     }
-    INDENT(f, "]\n");
-    INDENTDEC(f, "}\n");
+    fprintfindent(f, "]\n");
+    fprintfdecindent(f, "}\n");
   }
 
   /* Connectivity, VRML 2 does not need extra-indices for colors and
      normals, it is able to use the vertex indices.
    */
   
-  INDENT(f, "coordIndex [");
+  fprintfindent(f, "coordIndex [");
   faceindex(plist);
-  INDENT(f, " ] # end coordIndex\n");
-  INDENTDEC(f, "} # end IndexedFaceSet\n"); 
+  fprintfindent(f, " ] # end coordIndex\n");
+  fprintfdecindent(f, "} # end IndexedFaceSet\n"); 
 }
 
 void lineindex(Vect *pline) 
@@ -239,54 +264,54 @@ void
   doap(toplap->ap);
 
   /* Vertices */
-  INDENTINC(f, "geometry IndexedLineSet {\n");
+  fprintfindentinc(f, "geometry IndexedLineSet {\n");
   
-  INDENTINC(f, "coord Coordinate {\n");
-  INDENT(f, "point [\n");
+  fprintfindentinc(f, "coord Coordinate {\n");
+  fprintfindent(f, "point [\n");
   for (i = 0, v = pline->p; i < pline->nvert; i++, v++) {
     fprintf(f, " %g %g %g", v->x, v->y, v->z);
     if (i != pline->nvert-1) {
       fprintf(f, ",");
       if (i & 1) {
 	fprintf(f,"\n");
-	fprintfind(f, indent + strlen("point ["), "");
+	PRINT_PADDING(f, strlen("point ["));
       }
     }
   }
-  INDENT(f, "\n");
-  INDENTDEC(f, "}\n");
+  fprintfindent(f, "\n");
+  fprintfdecindent(f, "}\n");
   
   /* Colors */
   if (toplap->ap->mat && toplap->ap->mat->valid & MTF_EDGECOLOR)
     pline->ncolor = 0;  
   if (pline->ncolor >= 1) {
     if (pline->ncolor > 1)
-      INDENT(f, "colorPerVertex TRUE\n");
+      fprintfindent(f, "colorPerVertex TRUE\n");
     else
-      INDENT(f, "colorPerVertex FALSE\n");
-    INDENTINC(f, "color Color {\n");
-    INDENT(f, "RGB [");
+      fprintfindent(f, "colorPerVertex FALSE\n");
+    fprintfindentinc(f, "color Color {\n");
+    fprintfindent(f, "RGB [");
     for (i = 0; i < pline->ncolor; i++) {
       fprintf(f, " %g %g %g", pline->c[i].r, pline->c[i].g, pline->c[i].b);
       if (i != pline->ncolor-1) {
 	fprintf(f, ",");
 	if (i & 1) {
 	  printf("\n");
-	  fprintfind(f, indent + strlen("RGB ["), "");
+	  PRINT_PADDING(f, strlen("RGB ["));
 	}
       }
     }
     fprintf(f, " ]\n");
-    INDENTDEC(f, "}\n");
+    fprintfdecindent(f, "}\n");
   }
 
   /* Connectivity */
-  INDENT(f, "coordIndex [ \n");
+  fprintfindent(f, "coordIndex [ \n");
   lineindex(pline);
-  INDENT(f, " ] # end coordIndex \n "); 
+  fprintfindent(f, " ] # end coordIndex \n "); 
   /* appearance edgecolor overrides per-vertex colors */
   if (pline->ncolor > 1) {
-    INDENT(f, "colorIndex [\n");
+    fprintfindent(f, "colorIndex [\n");
     n = -1;
     for (i = 0; i < pline->nvec; i++) {
       if (pline->vncolor[i] == 1) n++;
@@ -296,9 +321,9 @@ void
       }
       fprintf(f, " -1,\n ");
     }
-    INDENT(f, "] # end materialIndex \n ");   
+    fprintfindent(f, "] # end materialIndex \n ");   
   }
-  INDENTDEC(f, "} # end IndexedLineSet \n "); 
+  fprintfdecindent(f, "} # end IndexedLineSet \n "); 
 }
 
 static double det(double (*T)[3])
@@ -403,10 +428,10 @@ void  printxform(Transform T)
       }
     }
     angle = getaxis(mat, axis);
-    INDENT(f, "scale %g %g %g\n", scale, scale, scale);
-    INDENT(f, "rotation %g %g %g %g\n",
+    fprintfindent(f, "scale %g %g %g\n", scale, scale, scale);
+    fprintfindent(f, "rotation %g %g %g %g\n",
 	   axis[0], axis[1], axis[2], angle);
-    INDENT(f, "translation %g %g %g\n",
+    fprintfindent(f, "translation %g %g %g\n",
 	   T[3][0], T[3][1], T[3][2]);
   }
 }
@@ -419,28 +444,29 @@ static void doap(Appearance *a)
     ka = (m->valid & MTF_Ka) ? m->ka : 1.0;
     kd = (m->valid & MTF_Kd) ? m->kd : 1.0;
     ks = (m->valid & MTF_Ks) ? m->ks : 1.0;
-    INDENTINC(f, "appearance Appearance {\n");
-    INDENTINC(f, "material Material {\n");
+    fprintfindentinc(f, "appearance Appearance {\n");
+    fprintfindentinc(f, "material Material {\n");
     if (m->valid & MTF_AMBIENT) 
-      INDENT(f, "ambientIntensity %g\n", ka);
+      fprintfindent(f, "ambientIntensity %g\n", ka);
     if (m->valid & MTF_DIFFUSE) 
-      INDENT(f, "diffuseColor %g %g %g\n", 
+      fprintfindent(f, "diffuseColor %g %g %g\n", 
 	      kd*m->diffuse.r, kd*m->diffuse.g, kd*m->diffuse.b);
     if (m->valid & MTF_EMISSION) 
-      INDENT(f, "emissiveColor %g %g %g\n", 
+      fprintfindent(f, "emissiveColor %g %g %g\n", 
 	      m->emission.r, m->emission.g, m->emission.b);
     if (m->valid & MTF_SPECULAR) 
-      INDENT(f, "specularColor %g %g %g\n", 
+      fprintfindent(f, "specularColor %g %g %g\n", 
 	      ks*m->specular.r, ks*m->specular.g, ks*m->specular.b);
     if (m->valid & MTF_SHININESS) 
-      INDENT(f, "shininess %g\n", m->shininess/128.0);
+      fprintfindent(f, "shininess %g\n", m->shininess/128.0);
     if (m->valid & MTF_ALPHA) 
-      INDENT(f, "transparency %g\n", 1.0 - m->diffuse.a);
-    INDENTDEC(f, "} #end Material \n");
-    INDENTDEC(f, "} # end Appearance\n");
+      fprintfindent(f, "transparency %g\n", 1.0 - m->diffuse.a);
+    fprintfdecindent(f, "} #end Material \n");
+    fprintfdecindent(f, "} # end Appearance\n");
   }
 }
 
+#if 0
 static void dolight(Appearance *a)
 {
   if (a->lighting) {
@@ -448,19 +474,20 @@ static void dolight(Appearance *a)
     int i;
     LM_FOR_ALL_LIGHTS(a->lighting, i,lp) {
       l = *lp;
-      INDENTINC(f, "PointLight {\n");
-      INDENT(f, "on TRUE\n");
-      INDENT(f, "color %g %g %g\n", 
+      fprintfindentinc(f, "PointLight {\n");
+      fprintfindent(f, "on TRUE\n");
+      fprintfindent(f, "color %g %g %g\n", 
 	     l->color.r,
 	     l->color.g,
 	     l->color.b);
-      INDENT(f, "intensity %g\n", l->intensity);
-      INDENT(f, "location %g %g %g\n",
+      fprintfindent(f, "intensity %g\n", l->intensity);
+      fprintfindent(f, "location %g %g %g\n",
 	     l->position.x,l->position.y,l->position.z);
-      INDENTDEC(f, "}\n");
+      fprintfdecindent(f, "}\n");
     }
   }
 }
+#endif
 
 void
 pushap(Appearance *nap)
@@ -511,23 +538,23 @@ static void
   if (!strcmp(name, "polylist")) {
 
     /* Might have internal Materials, isolate with Separator */
-    INDENTINC(f, "Shape {\n");
+    fprintfindentinc(f, "Shape {\n");
     plisttoindface(where);
-    INDENTDEC(f, "} # end Shape\n");  
+    fprintfdecindent(f, "} # end Shape\n");  
 
   } else if (!strcmp(name, "vect")) {
 
     /* Might have internal Materials, isolate with Separator */
-    INDENTINC(f, "Shape {\n");
+    fprintfindentinc(f, "Shape {\n");
     plinetoindline(where);
-    INDENTDEC(f, " } # end Shape \n");  
+    fprintfdecindent(f, " } # end Shape \n");  
 
   } else if (!strcmp(name, "sphere")) {
-    INDENT(f, " Sphere { radius %g }\n", SphereRadius( (Sphere *)where));
+    fprintfindent(f, " Sphere { radius %g }\n", SphereRadius( (Sphere *)where));
 
   } else if (!strcmp(name, "comment")) {
     if (!strcmp(((Comment *)where)->type, "WWWInline")) {
-      INDENT(f, "Inline { url \"%s\" bboxSize 0 0 0 bboxCenter 0 0 0 }\n",
+      fprintfindent(f, "Inline { url \"%s\" bboxSize 0 0 0 bboxCenter 0 0 0 }\n",
 	      ((Comment *)where)->data);
 
     } else if (!strcmp(((Comment *)where)->type, "HREF")) {
@@ -553,7 +580,7 @@ static void
       newname = GeomName(child);
       if (newname && !strcmp(newname, "comment") && 
 	  !strcmp( ((Comment *)child)->type, "HREF")) {
-	INDENTINC(f, "Anchor { url \"%s\"\n", ((Comment *)child)->data);
+	fprintfindentinc(f, "Anchor { url \"%s\"\n", ((Comment *)child)->data);
 	anchor = 1;
       }
       GeomGet(new, CR_CDR, &child);
@@ -568,7 +595,7 @@ static void
       GeomGet(new, CR_CDR, &child);
       new = child;
     }
-    if (anchor) INDENTDEC(f, " } # end Anchor \n");
+    if (anchor) fprintfdecindent(f, " } # end Anchor \n");
 
   } else if (!strcmp(name, "inst")) {
     GeomGet(where, CR_GEOM, &new);
@@ -577,13 +604,13 @@ static void
     if (!tlist) {
 
       /* a single xform */
-      INDENTINC(f, "Transform {\n");
+      fprintfindentinc(f, "Transform {\n");
       GeomGet(where, CR_AXIS, &T);
       printxform(T);
-      INDENTINC(f, "children [\n");
+      fprintfindentinc(f, "children [\n");
       traverse(new);
-      INDENTDEC(f, "] # children\n");
-      INDENTDEC(f, "} # Transform\n");
+      fprintfdecindent(f, "] # children\n");
+      fprintfdecindent(f, "} # Transform\n");
 
     } else {
 
@@ -596,19 +623,19 @@ static void
 
       GeomIter *it = GeomIterate( (Geom *)tlist, DEEP );
       NextTransform( it, T );
-      INDENTINC(f, "Transform {\n");
+      fprintfindentinc(f, "Transform {\n");
       printxform(T);
       sprintf(usename, "instgeom%d", ++unique);
-      INDENT(f, "children DEF %s Group { ", usename);
+      fprintfindent(f, "children DEF %s Group { ", usename);
       traverse(new);
-      INDENTDEC(f, "} #end Group DEF\n");
-      INDENTDEC(f, "} #end Transform \n");
+      fprintfdecindent(f, "} #end Group DEF\n");
+      fprintfdecindent(f, "} #end Transform \n");
 
       while(NextTransform( it, T )) {
-	INDENTINC(f, "Transform {\n");
+	fprintfindentinc(f, "Transform {\n");
 	printxform(T);
-	INDENT(f, "children USE %s\n", usename);
-	INDENTDEC(f, "} # Transform\n");
+	fprintfindent(f, "children USE %s\n", usename);
+	fprintfdecindent(f, "} # Transform\n");
       }
     }
 
@@ -618,9 +645,9 @@ static void
     /* Convert to all other geometric primitives to OFF. */
     new = AnyToPL(where, TM_IDENTITY);
     /* Might have internal Materials, isolate with Separator */
-    INDENTINC(f, "Shape {\n");
+    fprintfindentinc(f, "Shape {\n");
     plisttoindface(new);
-    INDENTDEC(f, "} # end Shape\n");  
+    fprintfdecindent(f, "} # end Shape\n");  
   }
 
   if (a) {
@@ -629,9 +656,8 @@ static void
 }
 
 
-main(int argc, char *argv[]) {
-  Geom *g, *gpl, *pl = NULL;
-  int i;
+int main(int argc, char *argv[]) {
+  Geom *g;
   int flat = 1;
 
   f = stdout;
@@ -658,10 +684,12 @@ Writes to standard output.  Reads from stdin if no file specified.\n",
   }
   g = strcmp(argv[1], "-") ? 
     GeomLoad(argv[1]) : GeomFLoad(stdin, "standard input");
-  INDENT(f, "#VRML V2.0 utf8\n\n");
-  INDENTINC(f, "Group {\n");
-  INDENTINC(f, "children [\n");
+  fprintfindent(f, "#VRML V2.0 utf8\n\n");
+  fprintfindentinc(f, "Group {\n");
+  fprintfindentinc(f, "children [\n");
   traverse(g);
-  INDENTDEC(f, "] # children\n");
-  INDENTDEC(f, "} # Group\n");
+  fprintfdecindent(f, "] # children\n");
+  fprintfdecindent(f, "} # Group\n");
+
+  return 0;
 }

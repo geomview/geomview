@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -66,7 +68,7 @@ SkelBound(s, T)
 	HPt3TransPt3(T, (HPoint3 *)p, (Point3 *)&min);
 	max = min;
 	while(--n >= 0) {
-		HPt3TransPt3(T, ++hp, (Point3 *)&p0);
+		HPt3TransPt3(T, ++hp, (Point3 *)(void *)&p0);
 		if(min.x > p0.x) min.x = p0.x;
 		else if(max.x < p0.x) max.x = p0.x;
 		if(min.y > p0.y) min.y = p0.y;

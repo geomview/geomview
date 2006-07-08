@@ -19,10 +19,14 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include "forms.h"
 #include "xforms-compat.h"
 
@@ -57,6 +61,7 @@ extern void unqdevice(int);
 
 extern HandleOps CamOps, WindowOps;
 static void monitor(int mode);
+static void request_camwin(void);
 
 #define	CURRENT		0
 #define	ST_MONO		1
@@ -107,7 +112,7 @@ float	screenwidth;
     /* Warmware parameter? */
 float	ocularsep = 1.15;	/* 2*ocularsep inches between human eyes */
 
-current_mode()
+int current_mode(void)
 {
     if(cam == NULL || win == NULL) {
 	fprintf(stderr, "Hey? -- stereo sleeping...\n");
@@ -135,7 +140,7 @@ set_mode(int mode, int why)
     int stereo = 1;
     int gap = 0;
     int dx, hvpwidth;
-    float halfxfield, newxfield, newyfield, newfocallen, newaspect, focalscale;
+    float halfxfield, newxfield = 0.0, newyfield = 0.0, newfocallen, focalscale;
     int got;
     char winstuff[80];
     char camstuff[80];
@@ -349,7 +354,6 @@ static char simplepick[] = "(pick %s nil * nil nil nil nil nil nil nil)";
 
 LDEFINE(pick, LVOID, "")
 {
-    float z;
     HPoint3 pt;
     char *me, *it;
     int npt = 4;
@@ -381,13 +385,13 @@ LDEFINE(pick, LVOID, "")
     return Lt;
 }
 
-static char simplemerge[] = "(merge camera %s *)";
+/*static char simplemerge[] = "(merge camera %s *)";*/
 
 LDEFINE(merge, LVOID,
        "(merge camera CAM-ID  { CAMERA ... } )")
 {
   char *opsname = NULL;
-  int c, id;
+  int c;
   LObject *kw = NULL, *idarg = NULL;
   float newfocallen = focallen;
 
@@ -411,7 +415,7 @@ LDEFINE(merge, LVOID,
 
 
   cam = NULL;
-  if(CamOps.strmin(POOL(lake), NULL, (Ref **)&cam) == 0) {
+  if(CamOps.strmin(POOL(lake), NULL, (Ref **)(void *)&cam) == 0) {
     OOGLSyntax(stdin, "\"merge\": error reading camera");
     goto parsefail;
   }
@@ -428,7 +432,7 @@ LDEFINE(merge, LVOID,
   return Lt;
 }
 
-request_camwin()
+static void request_camwin(void)
 {
     printf("\
 (progn (echo (stereowin %s)) (echo \"(camwin \") (write camera - %s) (write window - %s) (echo \"\\n)\\n\") )\n",
@@ -555,7 +559,7 @@ DoneProc(FL_OBJECT *obj, long arg)
    fl_hide_form(obj->form);
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int i, c;
 
@@ -652,6 +656,7 @@ main(int argc, char *argv[])
 #endif
 
     }
+    return 0;
 }
 
 #ifdef XFORMS

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips, 
@@ -55,7 +57,7 @@ int PickFace(int n_verts, Point3 *verts, Pick *pick, Appearance *ap)
 
 int PickFillIn(Pick *pick, int n_verts, Point3 *got, int vertex, int edge, Appearance *ap)
 {
-  int i, found = 0;
+  int found = 0;
 
   pick->got = *got;
 

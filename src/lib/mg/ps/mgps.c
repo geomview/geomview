@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgps.h"
@@ -172,7 +174,6 @@ void
 _mgps_ctxset(int a1, va_list *alist)
 {
   int attr;
-  WnWindow *owin;
   char **ablock = NULL;
 
 #define NEXT(type) OOGL_VA_ARG(type, alist, ablock)
@@ -338,12 +339,7 @@ _mgps_ctxset(int a1, va_list *alist)
 int
 mgps_setwindow( WnWindow *win, int final )
 {
-  WnPosition wp;
-  WnPosition pos, vp;
-  int xsize, ysize, flag, reconstrain;
-  int positioned = 0;
-  int zmin;
-  char *name, *oname;
+  int xsize, ysize;
 
   if (win == NULL)
    return 0;
@@ -779,9 +775,6 @@ mgps_sync( void )
 void
 mgps_worldbegin( void )
 {
-  Transform S;
-  WnPosition vp;
-  float aspect;
 
   mg_worldbegin();
 
@@ -792,9 +785,6 @@ mgps_worldbegin( void )
 void
 mgps_worldend( void )
 {
-    int i, size;
-    FILE *file;
-
     if (_mgpsc->file == NULL)
 	return;
     mgps_sortdisplaylist();

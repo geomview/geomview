@@ -108,7 +108,7 @@ typedef struct clip {
     vertex_list polyvertex;
     int side;	/* side to cut... 0 -- less than   1 -- greater than */
     int dim;	/* Are we working in N Dimensions. */
-    float	surf[MAXDIM];	/* Surface parameters.
+    float	surf[MAXDIM];	/* Surface parameters. */
 				/* For a plane, the plane normal vector */
 				/* (or, other parameters for non-planar clip) */
 

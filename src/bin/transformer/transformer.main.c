@@ -19,10 +19,13 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <math.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "transform.h"
 #include "transform3.h"
@@ -42,7 +45,7 @@ FL_OBJECT *t[4][4];
 void set_input_float(FL_OBJECT *obj, float val);
 float get_input_float(FL_OBJECT *obj);
 
-main() {
+int main(int argc, char *argv[]) {
 #ifdef XFORMS
   FL_INITIALIZE("Transformer");
 #else

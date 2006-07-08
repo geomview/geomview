@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mg.h"
 #include "../common/drawer.h"
@@ -223,7 +225,7 @@ char **argv;
 			       x_application_name,
 			       NULL,
 			       0,
-			       &argc,
+			       (int *)&argc,
 			       argv,
 			       fallbacks,
 			       args,
@@ -257,7 +259,7 @@ char **argv;
   ui_find_visual();
 
   geomicon = XCreatePixmapFromBitmapData(dpy, DefaultRootWindow(dpy),
-		oogl_bits, oogl_width, oogl_height,
+		(char *)oogl_bits, oogl_width, oogl_height,
 		WhitePixel(dpy, DefaultScreen(dpy)),
 		BlackPixel(dpy, DefaultScreen(dpy)),
 		DefaultDepth(dpy, DefaultScreen(dpy)));
@@ -489,11 +491,11 @@ LDEFINE(ui_center, LVOID,
 void ui_pickcolor(int val)
 {
   DView      *dv;
-  Color      *old;
-  char       *name;
+  Color      *old = NULL;
+  char       *name = NULL;
   Appearance *ap;
   DGeom      *dg;
-  int         index;
+  int         index = 0;
 
 
   ap = drawer_get_ap(GEOMID(uistate.targetgeom));
@@ -511,7 +513,7 @@ void ui_pickcolor(int val)
 
     case DRAWER_DIFFUSE:
 	name = "Faces"; index = FACEINDEX;
-	old = (Color *)&ap->mat->diffuse;
+	old = (Color *)(void *)&ap->mat->diffuse;
 	break;
 
     case DRAWER_EDGECOLOR:

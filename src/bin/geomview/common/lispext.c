@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * geomview custom lisp object types
@@ -121,7 +123,7 @@ LObject *camparse(Lake *lake)
   CameraStruct *new = OOGLNew(CameraStruct);
   new->h = NULL; new->cam = NULL;
   if (CamOps.strmin(POOL(lake), (Handle **)&(new->h),
-                                 (Ref **)&(new->cam)) == 0) {
+		    (Ref **)(void *)&(new->cam)) == 0) {
     return Lnil;
   } else
     return LNew( LCAMERA, &new );
@@ -211,7 +213,7 @@ LObject *wnparse(Lake *lake)
   WindowStruct *new = OOGLNew(WindowStruct);
   new->h = NULL; new->wn = NULL;
   if (WindowOps.strmin(POOL(lake),(Handle **)&(new->h),
-  			       (Ref **)&(new->wn)) == 0) {
+		       (Ref **)(void *)&(new->wn)) == 0) {
     return Lnil;
   } else
     return LNew( LWINDOW, &new );
@@ -297,7 +299,7 @@ LObject *geomparse(Lake *lake)
   GeomStruct *new = OOGLNew(GeomStruct);
   new->h = NULL; new->geom = NULL;
   if (GeomOps.strmin(POOL(lake), (Handle **)&(new->h), 
-  			    (Ref **)&(new->geom)) == 0) {
+		     (Ref **)(void *)&(new->geom)) == 0) {
     return Lnil;
   } else {
     /* the following line should appear in all our parse routines.
@@ -480,7 +482,7 @@ LObject *tmparse(Lake *lake)
 {
   TransformStruct *new = OOGLNew(TransformStruct);
   new->h = NULL;
-  if (TransOps.strmin(POOL(lake), (Handle **)&(new->h), (Ref **)&(new->tm)) == 0) {
+  if (TransOps.strmin(POOL(lake), (Handle **)&(new->h), (Ref **)(void *)&(new->tm)) == 0) {
     return Lnil;
   } else
     return LNew( LTRANSFORM, &new );

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -70,7 +72,6 @@ Skel *
 SkelCreate ( Skel *exist, GeomClass *classp, va_list *a_list )
 {
     register Skel *s;
-    int attr, copy = 1;
 
     if (exist == NULL) {
 	s = OOGLNewE(Skel, "new skel");
@@ -196,8 +197,6 @@ SkelSane(Skel *s)
 {
 	register int i;
 	Skline *l;
-	register int vleft, cleft;
-	register short *p, *c;
 
 	if(s == NULL || s->vi==NULL || s->p==NULL || s->nlines < 0 ||
 			s->nvert < 0 || s->nc < 0 || (s->nc>0 && s->c==NULL))

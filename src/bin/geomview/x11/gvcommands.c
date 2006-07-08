@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -51,16 +53,15 @@ static void command_down(Widget, XtPointer, XmAnyCallbackStruct *);
 static Widget shell;
 static int num_items;
 static int loaded = 0;
-static int pos_later = 0, posx = 0, posy = 0;
-static char geometry[40];
+/*static int pos_later = 0, posx = 0, posy = 0;
+  static char geometry[40];*/
 
 
 /*****************************************************************************/
 
 void ui_load_commandspanel()
 {
-  Arg	     args[20];
-  int	     n, depth;
+  int	     depth;
   Widget     commandsform,
 	     commscroll,
 	     commtext,
@@ -70,7 +71,6 @@ void ui_load_commandspanel()
   Pixel      fg, bg;
   Pixmap     button_pix;
   mib_Widget *commandsload;
-  Atom       AProtocol;
   static char Commands[] = "Commands";
 
 /*****************************************************************************/

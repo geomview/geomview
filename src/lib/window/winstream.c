@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -130,8 +132,8 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 		break;
 	    case 2:				/* size */
 		err = "xsize ysize";
-		if(fgetni(inf, 1, (int *)&win->xsize, 0) <= 0 ||
-		   fgetni(inf, 1, (int *)&win->ysize, 0) <= 0)
+		if(fgetni(inf, 1, (int *)(void *)&win->xsize, 0) <= 0 ||
+		   fgetni(inf, 1, (int *)(void *)&win->ysize, 0) <= 0)
 		    goto expect;
 		break;
 	    case 3:				/* position */

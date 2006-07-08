@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * anytooff.main.c
@@ -29,6 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "appearance.h"
 #include "transform.h"
@@ -46,7 +49,7 @@ Produces the union of all file(s) if several are specified.  Options:\n\
   -non No normals.  Omit them even if input objects had them.\n\
   -noc No colors.   Omit them even if input objects had them.\n";
 
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   Geom *g;
   PLData *pd;
   int i;

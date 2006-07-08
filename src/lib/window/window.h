@@ -51,6 +51,7 @@ extern WnWindow *_WnSet(WnWindow *win, int firstattr, va_list *alist);
 
 
 extern int WnStreamOut( Pool *, Handle *, WnWindow * );
+extern int WnStreamIn( Pool *p, Handle **hp, WnWindow **wp );
 
 /*
  * Attributes for WnCreate(), WnSet(), WnGet().

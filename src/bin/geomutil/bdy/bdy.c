@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * bdy.c
@@ -29,10 +31,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "geom.h"
 #include "bdy.h"
 
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   Geom *o, *v;
   float p;
 
@@ -52,5 +56,4 @@ main(int argc, char *argv[]) {
   fclose(stdin);
   fclose(stdout);
   exit(0);
-
 }

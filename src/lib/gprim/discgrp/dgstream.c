@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -188,7 +190,6 @@ FILE *fp;
 static void
 parse_group_name(char *gname)
 {
-    char *gptr = gname;
 
     cgroup.attributes = DG_GENERAL | DG_REAL;	/* type of entry */
     cgroup.dimn = 4;		/* dimension of matrices */
@@ -266,7 +267,6 @@ DiscGrpImport(Pool *p)
 	char *name, *fname, t;
 	char keyword[DG_KEYWORDSIZE];
 	DiscGrp *discgrp;
-	int i;
 	FILE *wafp, *fp;
 	char *expect;
 

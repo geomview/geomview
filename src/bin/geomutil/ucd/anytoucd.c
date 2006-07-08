@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* File:	anytoucd.c:
    Author:	Charlie Gunn originally
@@ -43,10 +45,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 extern int push(Poly *PP);	/* From stack.c */
 extern Poly *getstack();
+extern int make_tform(HPoint3 *p1, HPoint3 *p2, HPoint3 *p3, Transform m);
+extern int initstack(void);
+extern int getsize(void);
 
 #define CAVE	1
 #define	VEX	0
-    static int debug = 0;
+static int debug = 0;
 
 #define INSIDE(line, point)	\
 	((line.a*(point)->x + line.b*(point)->y + line.c) <= 0)
@@ -86,11 +91,10 @@ chopup (pp, PP)
 polygon *pp;
 Poly *PP;
 {
-    int oc, nc, n, i ;
-    int cutcount = 0, convex, orient;
+    int n, i ;
+    int convex, orient;
     line edges[MAXV];
-    Transform m;
-    double tt, dangle, sum;
+    double dangle, sum;
     polygon *newpoly; 
 
     if (debug){
@@ -121,7 +125,7 @@ Poly *PP;
     {
     /* need to work in the x,y plane, so compute approp. tforms */
     for (i=0; i<n; ++i)	/* may need to hunt for independent vectors */
-	if (make_tform(&pp->vlist[i]->pt, &pp->vlist[(i+1)%n]->pt, &pp->vlist[(i+2)%n]->pt, pp->to_xy) >= 0) break;;
+	    if (make_tform(&pp->vlist[i]->pt, &pp->vlist[(i+1)%n]->pt, &pp->vlist[(i+2)%n]->pt, pp->to_xy) >= 0) break;;
     TmInvert(pp->to_xy, pp->to_xy);
 
     for (i=0; i<pp->nv; ++i)
@@ -179,9 +183,8 @@ Poly *PP;
     /* next look for triangles to chop off */
     {
     line cutcorner;
-    double a,b,c,angle, dx, dy;	
+    double dx, dy;	
     int cutoff, j, jj,ni, pi, oc, nc;
-    double d0, d1, d2;
 
     for (nc = 0, oc=0; oc<pp->nv-1; ++oc, ++nc)
 	{
@@ -283,14 +286,12 @@ Poly *PP;
   }
 }
 
-    Poly *CP, thisPoly;
+Poly *CP, thisPoly;
 
-main(argc, argv)	int argc; char **argv;
+int main(int argc, char **argv)
 {
-    register polygon *ncp, *cp, thispolygon;
-    int i, nv, pcountold, pcountnew;
-    char type[64];
-    HPoint3 vd;
+    register polygon *ncp, *cp;
+    int pcountold;
     Geom *thisgeom;
     PolyList *thispl, *newpl;
     Vertex *vlist[4];
@@ -311,7 +312,7 @@ main(argc, argv)	int argc; char **argv;
 	myconvert(&thispl->p[pcountold], cp);
 	*CP = thispl->p[pcountold];
         CP->v = vlist;
-	OOGLNew(polygon);
+	(void)OOGLNew(polygon);
    	while ( (ncp = chopup(cp, CP)) != NULL ) 
 	    {
         if (debug)
@@ -337,7 +338,7 @@ main(argc, argv)	int argc; char **argv;
 	total_node_comp = 0,
 	total_cell_comp = 0,
 	cell_data_comp[2],
-	i,j,n;
+	i,n;
     Poly *p;
     Vertex *v, **vp;
 
@@ -402,7 +403,7 @@ main(argc, argv)	int argc; char **argv;
 	else if (n==3)  fprintf(fp,"tri ");
 	else if (n==4) fprintf(fp, "quad ");
 	/* else signal error */
-	else return;
+	else return 1;
         for(vp = p->v; --n >= 0; vp++)
                 fprintf(fp, "%d ", (*vp) - thispl->vl + 1);
 	fprintf(fp,"\n");
@@ -463,6 +464,8 @@ main(argc, argv)	int argc; char **argv;
         }
       }
     }
+
+    return 0;
 }
 
 

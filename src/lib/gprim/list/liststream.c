@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -42,7 +44,7 @@ ListImport( Pool *p )
 {
     List *list = NULL;
     List *new, **tailp = &list;
-    int c, prevc;
+    int c, prevc = 0;
     int brack = 0;
     int any = 0;
     FILE *file;
@@ -82,7 +84,7 @@ ListImport( Pool *p )
 		tailp = &new->cdr;
 		if(new->carhandle)
 		    HandleRegister(&new->carhandle, (Ref *)new,
-			       (Ref **)&new->car, HandleUpdRef);
+				   (Ref **)(void *)&new->car, HandleUpdRef);
 	    } else {
 		OOGLSyntax(file,
 		 "Couldn't read LIST in \"%s\": error reading embedded object",

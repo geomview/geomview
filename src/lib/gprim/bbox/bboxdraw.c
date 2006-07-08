@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -36,7 +38,7 @@ BBox *
 BBoxDraw(bbox)
      register BBox *bbox;
 {
-    register int i, k, numvert;
+    register int i, numvert;
     int dimn;
     HPoint3 vert[16];
     ColorA edgecolor;
@@ -63,7 +65,7 @@ BBoxDraw(bbox)
 
     /* turn on the edge color to draw the bbox */
 
-    *(Color *)&edgecolor = ap->mat->edgecolor;
+    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
     edgecolor.a = 1;
     for(i = 0; i < numvert; i++) {
 	int j, incr;

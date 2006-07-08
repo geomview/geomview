@@ -23,18 +23,20 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
 #include "polylistP.h"
 #include "pointlistP.h"
 
-void *polylist_PointList_get(int sel, Geom *geom, va_list args);
-void *polylist_PointList_fillin(int sel, Geom *geom, va_list args);
-void *polylist_PointList_set(int sel, Geom *geom, va_list args);
-void *polylist_PointList_length(int sel, Geom *geom, va_list args);
+void *polylist_PointList_get(int sel, Geom *geom, va_list *args);
+void *polylist_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *polylist_PointList_set(int sel, Geom *geom, va_list *args);
+void *polylist_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -53,26 +55,26 @@ ptlPolylist_init() {
 }
 
 
-void *polylist_PointList_get(int sel, Geom *geom, va_list args) {
+void *polylist_PointList_get(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   HPoint3 *plist;
   TransformPtr t;
   
   plist = OOGLNewNE(HPoint3, p->n_verts, msg);
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
   return GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, plist);
 }
 
 
-void *polylist_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *polylist_PointList_fillin(int sel, Geom *geom, va_list *args) {
   int i;
   PolyList *p = (PolyList *)geom;
   TransformPtr t;
   HPoint3 *plist;
 
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
 
   for (i = 0; i < p->n_verts; i++)
     HPt3Transform(t, &p->vl[i].pt, &plist[i]);
@@ -80,19 +82,19 @@ void *polylist_PointList_fillin(int sel, Geom *geom, va_list args) {
   return((void *)plist);
 }
 
-void *polylist_PointList_set(int sel, Geom *geom, va_list args) {
+void *polylist_PointList_set(int sel, Geom *geom, va_list *args) {
   int i;
   PolyList *p = (PolyList *)geom;
   HPoint3 *plist;
 
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
   for (i = 0; i < p->n_verts; i++) HPt3Copy(&plist[i], &p->vl[i].pt);
   return((void *)p);
 }
 
 
-void *polylist_PointList_length(int sel, Geom *geom, va_list args) {
+void *polylist_PointList_length(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   return((void *)p->n_verts);
 }

@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* oogl.c */
 /* geomview communication code */
@@ -32,9 +34,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "meshflag.h"
 
 FILE *f = NULL;
-static char *getline(char *s);
+/*static char *getline(char *s);*/
 
-Begin_OOGL()
+void Begin_OOGL(void)
 {
   if (f==NULL) { f = stdout; }
   fprintf(f, "(geometry example { : exhandle })\n");
@@ -42,10 +44,8 @@ Begin_OOGL()
   fflush(f);
 }
 
-UpdateOOGL(x_size, y_size, gridunit, data)
-     int x_size, y_size;
-     float gridunit;
-     float data[];
+void
+UpdateOOGL(int x_size, int y_size, float gridunit, float data[])
 {
         register int    x,y,k;
         Point3  *points;
@@ -55,7 +55,7 @@ UpdateOOGL(x_size, y_size, gridunit, data)
 
 	if (f==NULL) { f = stdout; }
 
-	if (caughtup = fgets(line, 10, stdin)) {
+	if ((caughtup = fgets(line, 10, stdin))) {
 	  points = OOGLNewN(Point3, x_size*y_size);
 	  
 	  
@@ -85,7 +85,7 @@ UpdateOOGL(x_size, y_size, gridunit, data)
 	}
 }
 
-
+#if 0
 
 /* Stolen from Mark Phillips' Hinge module */
 static char *getline(char *s)
@@ -107,3 +107,5 @@ static char *getline(char *s)
   }
   return NULL;
 }
+
+#endif

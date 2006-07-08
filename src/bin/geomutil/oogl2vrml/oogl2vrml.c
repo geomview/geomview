@@ -19,14 +19,17 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* OOGL to VRML converter 
  * by Tamara Munzner
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "transform.h"
 #include "polylistP.h"
@@ -72,7 +75,7 @@ plisttoindface(Geom *pgeom)
   PolyList *plist = (PolyList *)pgeom;
   Poly *pl = NULL;
   Vertex *v = NULL;
-  int i,j;
+  int i;
   int shading = toplap->ap->shading;
   
   /* Vertices */
@@ -445,9 +448,9 @@ static void
 }
 
 
-main(int argc, char *argv[]) {
-  Geom *g, *gpl, *pl = NULL;
-  int i;
+int main(int argc, char *argv[])
+{
+  Geom *g;
   int flat = 1;
 
   f = stdout;
@@ -479,4 +482,6 @@ Writes to standard output.  Reads from stdin if no file specified.\n",
   fprintf(f, " ShapeHints {vertexOrdering COUNTERCLOCKWISE faceType CONVEX}\n");
   traverse(g);
   fprintf(f, "} # end final Separator\n");
+
+  return 0;
 }

@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Scott Wisdom, Tamara Munzner */
 
@@ -37,6 +39,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bbox.h"
 #include "color.h"
 #include <string.h>
+#include <getopt.h>
 
 ColorA white = {1, 1, 1, 1};
 ColorA black = {0, 0, 0, 1};
@@ -65,9 +68,8 @@ ColorA background = {0, 0, 0, 1}; /* black */
         draw to framebuffer, not as tiff file. 
 */
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-    int i,j;
     float cx,cy,cz,cs,dx,dy,dz;
     HPoint3 min,max;
     Geom *bbox = NULL;
@@ -292,4 +294,5 @@ Default: create complete rib file containing default camera, lights, etc.\n\
         /* end up with a newline so that rib file can easily be appended to */
         fprintf(outfileFD, "\n");
         fflush(outfileFD);
+	return 0;
 }

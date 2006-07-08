@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* conformal model graphics for geomview */
 
@@ -128,19 +130,19 @@ void make_new_quad(Transform T, HPoint3 *p, ColorA *c)
    tp.w = 1.;
    if (c) { /* vertex colors defined */
       for (i = 0; i < 4; i++) {
-         projective_to_conformal(curv, p++, T, (Point3 *)&tp);
+	      projective_to_conformal(curv, p++, T, (Point3 *)(void *)&tp);
          v[i] = simple_new_vertex(&tp, c++);
          }
       }
    else {  /* no vertex colors so get color from appearance stack */
       c = (ColorA*)&_mgc->astk->ap.mat->diffuse;
       for (i = 0; i < 4; i++) {
-         projective_to_conformal(curv, p++, T, (Point3 *)&tp);
+         projective_to_conformal(curv, p++, T, (Point3 *)(void *)&tp);
          v[i] = simple_new_vertex(&tp, c);
          }
       }
-   triangle_polar_point(curv, (Point3 *)&v[0]->V.pt, (Point3 *)&v[1]->V.pt,
-                        (Point3 *)&v[2]->V.pt, &polar);
+   triangle_polar_point(curv, (Point3 *)(void *)&v[0]->V.pt, (Point3 *)(void *)&v[1]->V.pt,
+                        (Point3 *)(void *)&v[2]->V.pt, &polar);
    for (i=0; i<4; i++)
       v[i]->polar = polar;
 
@@ -209,7 +211,7 @@ void cm_read_vect(Vect *v)
 {
    int i, nv, nc;
    HPoint3 pt, *p = v->p;
-   ColorA *c = v->c, *col = (ColorA *)&_mgc->astk->mat.edgecolor;
+   ColorA *c = v->c, *col = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
    struct vertex *v0, *v1, *v2;
    struct edge *e;
    Transform T;
@@ -222,7 +224,7 @@ void cm_read_vect(Vect *v)
       nc = v->vncolor[i];
 
       /* get position, color and make a new vertex */
-      projective_to_conformal(curv, p++, T, (Point3 *)&pt);
+      projective_to_conformal(curv, p++, T, (Point3 *)(void *)&pt);
       if (nc > 0) {nc--; col = c++;}
       v0 = v1 = simple_new_vertex(&pt, col);
 
@@ -234,7 +236,7 @@ void cm_read_vect(Vect *v)
       do { /* copy polyline */
 
          /* get position, color and make a new vertex */
-         projective_to_conformal(curv, p++, T, (Point3 *)&pt);
+         projective_to_conformal(curv, p++, T, (Point3 *)(void *)&pt);
          if (nc > 0) {nc--; col = c++;}
 	 v2 = simple_new_vertex(&pt, col);
 
@@ -330,7 +332,7 @@ void make_new_triangle(HPoint3 *a, HPoint3 *b, HPoint3 *c, ColorA *col,
 struct edge *new_edge_p(struct vertex *v1, struct vertex *v2)
 {
     HPoint3 polar;
-    edge_polar_point(curv,(Point3 *)&v1->V.pt,(Point3 *)&v2->V.pt, &polar);
+    edge_polar_point(curv,(Point3 *)(void *)&v1->V.pt,(Point3 *)(void *)&v2->V.pt, &polar);
     return new_edge(v1,v2,&polar);
 }
 
@@ -352,8 +354,8 @@ void cmodel_draw(int plflags)
    struct vertex *vp;
    ColorA col[2];
    HPoint3 pts[2];
-   Vertex *Vertp, *verts;
-   Poly *Polyp, *polys;
+   Vertex *Vertp = NULL, *verts = NULL;
+   Poly *Polyp = NULL, *polys = NULL;
    int npolys, keepflags, nverts, facecolors, vertcolors, useshader, shading;
    mgshadefunc shader;
 
@@ -406,7 +408,7 @@ void cmodel_draw(int plflags)
            col[1] = ep->v2->V.vcol;
 	   mgpolyline(2, pts, 2, col, 0);
         } else 
-	   *(Color *)&col[0] = _mgc->astk->ap.mat->edgecolor;
+		*(Color *)(void *)&col[0] = _mgc->astk->ap.mat->edgecolor;
 	   col[0].a = 1;
 	   mgpolyline(2, pts, 1, &col[0], 0);
 	}

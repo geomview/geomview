@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 
@@ -2246,7 +2248,7 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
 
 	/* Install default window position if not already set */
   if(drawerstate.defview.win == NULL)
-      comm_object(windefault, &WindowOps, NULL, (Ref **)&drawerstate.defview.win,
+	  comm_object(windefault, &WindowOps, NULL, (Ref **)(void *)&drawerstate.defview.win,
 	COMM_NOW);
   drawerstate.defview.backcolor = initial_defaultbackcolor;
   if(drawerstate.defview.cam == NULL)
@@ -2385,7 +2387,7 @@ new_dgeom(char *from, int citizenship)
   int i;
 
   if(from != NULL)
-      (void) comm_object(from, &GeomOps, &h, (Ref **)&g, COMM_LATER);
+	  (void) comm_object(from, &GeomOps, &h, (Ref **)(void *)&g, COMM_LATER);
 
   for (i=0; i<dgeom_max && dgeom[i]!=NULL; ++i);
   if (i==dgeom_max) {
@@ -2748,11 +2750,9 @@ really_draw_view(DView *dv)
     if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
 	NDcam *cluster = dv->cluster;
 	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-	int cdim;
 	struct ndstuff nds;
-	TransformN *NDT = NULL, *W2C = NULL, *O2C = NULL, *O2G = NULL;
+	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
 	TransformN *Tc = NULL, *W2G = NULL;
-	TransformN *Txc = NULL;
 	HPointN *caxis = NULL;
 	Transform T3d;
 
@@ -3423,11 +3423,12 @@ static void
   }
 }
 
-
+#if 0
 static void 
   drawer_write_comments(char *fname, int id, int *pickpath, int pn)
 {
 }
+#endif
 
 LDEFINE(write_comments, LVOID,
 "(write-comments FILENAME GEOMID PICKPATH)\n\
@@ -3460,7 +3461,6 @@ LDEFINE(write_comments, LVOID,
   char *fname;
   Pool *p, *op;
   Geom *where;
-  char *name;
   int count, temppool = 0;
   int curpath[40];
   Lake *brownie;

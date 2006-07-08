@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
@@ -32,10 +34,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pointlistP.h"
 
 
-void *mesh_PointList_get(int sel, Geom *geom, va_list args);
-void *mesh_PointList_fillin(int sel, Geom *geom, va_list args);
-void *mesh_PointList_set(int sel, Geom *geom, va_list args);
-void *mesh_PointList_length(int sel, Geom *geom, va_list args);
+void *mesh_PointList_get(int sel, Geom *geom, va_list *args);
+void *mesh_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *mesh_PointList_set(int sel, Geom *geom, va_list *args);
+void *mesh_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -53,23 +55,23 @@ ptlMesh_init() {
   pointlist_initspec(methods, MAX_METHODS, GeomClassLookup("mesh"));
 }
 
-void *mesh_PointList_get(int sel, Geom *geom, va_list args) {
+void *mesh_PointList_get(int sel, Geom *geom, va_list *args) {
   HPoint3 *pt;
   Mesh *m = (Mesh *)geom;
   TransformPtr t;
   pt = OOGLNewNE(HPoint3, m->nu * m->nv, msg);
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
   return GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, pt);
 }
 
-void *mesh_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *mesh_PointList_fillin(int sel, Geom *geom, va_list *args) {
   HPoint3 *pt;
   TransformPtr t;
   Mesh *m = (Mesh *)geom;
 
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);
-  pt = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);
+  pt = va_arg(*args, HPoint3 *);
 
   memcpy(pt, m->p, m->nu * m->nv * sizeof(HPoint3));
   HPt3TransformN(t, pt, pt, m->nu * m->nv);
@@ -77,7 +79,7 @@ void *mesh_PointList_fillin(int sel, Geom *geom, va_list args) {
   return pt;
 }
 
-void *mesh_PointList_set(int sel, Geom *geom, va_list args) {
+void *mesh_PointList_set(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   HPoint3 *plist;
 
@@ -85,13 +87,13 @@ void *mesh_PointList_set(int sel, Geom *geom, va_list args) {
    * is desirable although we may regret it later */
   m->flag &= ~MESH_Z;
 
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
   memcpy(m->p, plist, m->nu * m->nv * sizeof(HPoint3));
   return geom;
 }
 
-void *mesh_PointList_length(int sel, Geom *geom, va_list args) {
+void *mesh_PointList_length(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
   return((void *)(m->nu * m->nv));
 }

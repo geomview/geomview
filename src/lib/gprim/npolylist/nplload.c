@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -151,8 +153,7 @@ NPolyListFLoad(FILE *file, char *fname)
     pl->p = OOGLNewNE(NPoly, pl->n_polys, "NPolyListFLoad polygons");
     for(i = 0; i < pl->n_polys; ) {
 	register NPoly *p;
-	register int k,index,m;
-	float rgba[4];
+	register int k,index;
 
 	p = &pl->p[i];
 	if(fgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {

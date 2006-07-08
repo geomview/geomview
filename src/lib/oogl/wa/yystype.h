@@ -31,4 +31,6 @@ extern YYSTYPE yylval;
 
 #define YYSTYPE_IS_DECLARED 1
 
+void wfsaerror(char *s);
+
 #endif

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgbuf.h"
@@ -181,7 +183,6 @@ void
 _mgbuf_ctxset(int a1, va_list *alist)
 {
   int attr;
-  WnWindow *owin;
   char **ablock = NULL;
 
 #define NEXT(type) OOGL_VA_ARG(type, alist, ablock)
@@ -347,12 +348,14 @@ _mgbuf_ctxset(int a1, va_list *alist)
 int
 mgbuf_setwindow( WnWindow *win, int final )
 {
-  WnPosition wp;
-  WnPosition pos, vp;
-  int xsize, ysize, flag, reconstrain;
+  /*WnPosition wp;
+    WnPosition pos, vp;*/
+  int xsize, ysize;
+  /*
+  int flag, reconstrain;
   int positioned = 0;
   int zmin;
-  char *name, *oname;
+  char *name, *oname;*/
 
   if (win == NULL)
    return 0;

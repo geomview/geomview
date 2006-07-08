@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * Clipping routine.
@@ -129,7 +131,6 @@ void pcinterp(Clip *clip, float *result, float *p1, float *p2, Color *cresult, C
 int clip_each_vertex(Clip *clip, polyvtx_list *me, vertex_list *vtxl, vertex **vertex_set)
 {
   pvtx *temp, *next, *last;
-  double t,t1,t2;
   float intersect[MAXDIM];
 
   Color c, *c1, *c2;
@@ -278,10 +279,10 @@ void clip_init(Clip *clip)
 
 void clip_destroy(Clip *clip)
 {
+#ifdef notyet
     poly *po, *nextpo;
     vertex *v, *nextv;
 
-#ifdef notyet
     for(po = clip->polyhedron.head; po != NULL; po = nextpo) {
 	nextpo = po->next;
 	free(po);

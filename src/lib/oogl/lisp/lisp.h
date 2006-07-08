@@ -213,7 +213,7 @@ void	  	LInit();
 Lake *    	LakeDefine(FILE *streamin, FILE *streamout, void *river);
 void	  	LakeFree(Lake *lake);
 LObject * 	_LNew(LType *type, LCell *cell);
-#define   	LNew(type,cell) _LNew(type,(LCell*)cell)
+#define   	LNew(type,cell) _LNew(type,(LCell*)(void *)cell)
 LObject * 	LRefIncr(LObject *obj);
 void	  	LRefDecr(LObject *obj);
 void	  	LWrite(FILE *fp, LObject *obj);

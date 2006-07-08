@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "geom.h"
 #include "listP.h"
@@ -167,7 +169,6 @@ void *cray_list_EliminateColor(int sel, Geom *geom, va_list *args) {
 }
 
 void *cray_list_SetColorAll(int sel, Geom *geom, va_list *args) {
-  List *l = (List *)geom;
   ColorA *c = va_arg(*args, ColorA *);
   int *gpath = va_arg(*args, int *);
 

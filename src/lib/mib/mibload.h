@@ -107,7 +107,7 @@ int mib_load_mib_class(mib_Widget **, mib_Widget *, char *, char *,
 int mib_load_private(mib_Widget *, mib_Buffer *);
 void mib_reset_size(mib_Widget *);
 int mib_read_line(mib_Buffer *, char *, char *);
-void mib_set_eventhandlers(void *, void *, void *);
+void mib_set_eventhandlers(void (*a)(), void (*b)(), void (*c)());
 void mib_apply_eventhandlers(Widget, mib_Widget *);
 
 void mib_add_backward(mib_Widget *this, mib_Widget *parent);

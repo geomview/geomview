@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgpsP.h"
@@ -171,7 +173,6 @@ void mgps_line( HPoint3 *p1, HPoint3 *p2 )
  */
 void mgps_fatpoint(register HPoint3 *v)
 {
-  int i;
   HPoint3 a;
   register HPoint3 *p, *q;
   float vw;
@@ -294,7 +295,6 @@ void mgps_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
   register int		i, j;
   register Poly		*p;
   register Vertex 	**v, *vp, **vh;
-  register Point3	*n;
   struct mgastk *ma = _mgc->astk;
   int plflags = pl_flags;
   int flag, shading;
@@ -592,16 +592,13 @@ void mgpspolymeshrow(int wrap, int has, int off, int count, HPoint3 *P,
 void mgpssubmesh(int wrap, int nu, int nv, int umin, int umax, int vmin,
 		int vmax, HPoint3 *meshP, Point3 *meshN, ColorA *meshC)
 {
-  register int u, v;
-  int ucnt, vcnt;
+  register int v;
+  int ucnt;
   register HPoint3 *P;
   register Point3 *N;
   register ColorA *C;
   register int prev;
   int du;
-  int douwrap;
-  HPoint3  tp;
-  Point3 tn;
   int i;
   int has;
   Appearance *ap;
@@ -735,7 +732,7 @@ mgps_drawnormal(register HPoint3 *p, Point3 *n)
   if (p->w <= 0.0) return;
   if (p->w != 1) {
     HPt3ToPt3(p, &tp);
-    p = (HPoint3 *)&tp;
+    p = (HPoint3 *)(void *)&tp;
   }
 
   scale = _mgc->astk->ap.nscale;

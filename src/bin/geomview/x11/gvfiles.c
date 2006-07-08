@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include <Xm/DialogS.h>
@@ -41,7 +43,7 @@ extern Widget TopLevel;
 static void load_selection(Widget, XtPointer,
 			XmFileSelectionBoxCallbackStruct *);
 static void select_path(Widget, XtPointer, XmListCallbackStruct *);
-static void ui_update_filespanel();
+/*static void ui_update_filespanel();*/
 static Widget shell, pathlist, filesform;
 static char **dirp;
 
@@ -53,7 +55,6 @@ void ui_load_filespanel()
 	     temp;
 
   mib_Widget *pathload;
-  Atom       AProtocol;
   XmString   xname;
   static char Files[] = "Files";
 

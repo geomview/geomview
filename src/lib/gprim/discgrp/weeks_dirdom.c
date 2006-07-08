@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Comments on numerical issues:  Dirichlet() uses two constants,
 namely VERTEX_EPSILON and MATRIX_EPSILON, to decide when two
@@ -121,9 +123,9 @@ way to prove that the edge angles must add up correctly.)
 typedef double vector[4];
 
 
-static void		convert_generators(sl2c_matrix *m, proj_matrix **mm, int foo);
+/*static void		convert_generators(sl2c_matrix *m, proj_matrix **mm, int foo);*/
 static void		make_cube(WEpolyhedron *poly);
-static void		make_hypercube(WEpolyhedron *poly);
+/*static void		make_hypercube(WEpolyhedron *poly);*/
 static void		initialize_polyhedron(WEpolyhedron *poly, proj_matrix *m, int n);
 static int		find_Dirichlet_domain(WEpolyhedron *poly);
 static int		check_face(WEpolyhedron *poly, WEface *face);
@@ -139,16 +141,16 @@ static void		remove_dead_edges(WEpolyhedron *poly);
 static void		remove_dead_vertices(WEpolyhedron *poly);
 
 static void		number_faces(WEpolyhedron *poly);
-static void		read_vertices(WEface *face, double (*foo)[3]);
-static void		print_statistics(WEpolyhedron *poly);
+/*static void		read_vertices(WEface *face, double (*foo)[3]);*/
+/*static void		print_statistics(WEpolyhedron *poly);*/
 static void		print_poly(WEpolyhedron *poly);
 static void		print_vef(WEpolyhedron *poly);
-static void		print_vertex_distances(WEpolyhedron *poly);
+/*static void		print_vertex_distances(WEpolyhedron *poly);*/
 static void		print_vertices(WEpolyhedron *poly);
-static void		print_edge_lengths(WEpolyhedron *poly);
-static void		print_face_distances(WEpolyhedron *poly);
-static void		saveOOGL(WEpolyhedron *poly);
-static void		free_polyhedron(WEpolyhedron *poly);
+/*static void		print_edge_lengths(WEpolyhedron *poly);*/
+/*static void		print_face_distances(WEpolyhedron *poly);*/
+/*static void		saveOOGL(WEpolyhedron *poly);*/
+/*static void		free_polyhedron(WEpolyhedron *poly);*/
 static void		roundoff_message(char *message);
 
 static int	matrix_epsilon_message_given,
@@ -237,6 +239,7 @@ WEpolyhedron *poly;
 
 }
 
+#if 0
 static void convert_generators(sl2c_generators, proj_generators_ptr, num_generators)
 sl2c_matrix	*sl2c_generators;
 proj_matrix	**proj_generators_ptr;
@@ -251,15 +254,16 @@ int			num_generators;
 
 	return;
 }
+#endif
 
-
+#if 0
 static void make_hypercube(polyhedron)
 WEpolyhedron	*polyhedron;
 {
 	int			i;
-	WEvertex	*initial_vertices[16], *vt;
-	WEedge		*initial_edges[24], *et;
-	WEface		*initial_faces[12], *ft;
+	WEvertex	*initial_vertices[16];
+	WEedge		*initial_edges[24];
+	WEface		*initial_faces[12];
 	static int	edata[24][8] = {
 	{0, 4,  8,  4,  9,  6, 1,0},
 	{2, 6,  4, 16,  6, 11, 0,8},
@@ -369,6 +373,7 @@ WEpolyhedron	*polyhedron;
 
 	return;
 }
+#endif
 
 static void make_cube(polyhedron)
 WEpolyhedron	*polyhedron;
@@ -540,8 +545,7 @@ WEface			*face;
 			(*gamma)[4];
 	vector		planne;
 	proj_matrix	alphabeta;
-	int		i,
-			alphabeta_found;
+	int             alphabeta_found;
 	point		gorigin;
 
 	/* If the given face doesn't have an active matching face	*/
@@ -840,7 +844,6 @@ WEpolyhedron	*polyhedron;
 proj_matrix		matrix;
 WEface			*new_face;
 {
-	int			i;
 	vector		planne, gorigin;
 	WEvertex	*vertex;
 	int			face_is_needed;
@@ -1009,7 +1012,7 @@ WEface			*new_face;
 {
 	int			zero_count,
 				count,
-				count1,
+				count1 = 0,
 				count3 = 0;
 	double		d0, d1;
 	WEvertex	*v01, *v23;
@@ -1295,7 +1298,7 @@ WEpolyhedron *polyhedron;
 	return;
 }
 
-
+#if 0
 static void read_vertices(face, v)
 WEface	*face;
 double	(*v)[3];
@@ -1322,7 +1325,7 @@ double	(*v)[3];
 
 	return;
 }
-
+#endif
 
 static void print_poly(polyhedron)
 WEpolyhedron *polyhedron;
@@ -1331,6 +1334,7 @@ WEpolyhedron *polyhedron;
 	print_vertices(polyhedron);
 }
 
+#if 0
 static void print_statistics(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1340,7 +1344,7 @@ WEpolyhedron *polyhedron;
 	print_face_distances(polyhedron);
 	return;
 }
-
+#endif
 
 static void print_vef(polyhedron)
 WEpolyhedron *polyhedron;
@@ -1358,6 +1362,7 @@ WEpolyhedron *polyhedron;
 	return;
 }
 
+#if 0
 static void saveOOGL(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1365,6 +1370,7 @@ WEpolyhedron *polyhedron;
 	GeomFSave(WEPolyhedronToPolyList(polyhedron), fp, "/tmp/test.off");
 	fclose(fp);
 }
+#endif
 
 static void print_vertices(polyhedron)
 WEpolyhedron *polyhedron;
@@ -1375,6 +1381,7 @@ WEpolyhedron *polyhedron;
 	    fprintf(stderr, "%f\t%f\t%f\t%f\n",vertex->x[0], vertex->x[1], vertex->x[2], vertex->x[3]);
 }
 
+#if 0
 static void print_vertex_distances(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1433,11 +1440,12 @@ WEpolyhedron *polyhedron;
 	}
 	return;
 }
-
+#endif
 
 /* Note:  print_edge_lengths() assumes print_vertex_distances()	*/
 /* has already been called to normalize the vertices.			*/
 
+#if 0
 static void print_edge_lengths(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1479,8 +1487,9 @@ WEpolyhedron *polyhedron;
 	
 	return;
 }
+#endif
 
-
+#if 0
 static void print_face_distances(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1503,8 +1512,9 @@ WEpolyhedron *polyhedron;
 
 	return;
 }
+#endif
 
-
+#if 0
 static void free_polyhedron(polyhedron)
 WEpolyhedron *polyhedron;
 {
@@ -1532,7 +1542,7 @@ WEpolyhedron *polyhedron;
 
 	return;
 }
-
+#endif
 
 static void roundoff_message(epsilon_name)
 char *epsilon_name;

@@ -61,11 +61,10 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 {
     char cmd[2048];
     char *suf, *p, *q;
-    int i, c, len, slen, maxval;
+    int i, c, len, slen;
     char *prefix = NULL;
     char *msg = NULL;
     FILE *f = NULL;
-    int xy[2];
     static char *suffixes[] = {
 	"\0zcat ", "Z",
 	"\0gzip -dc ", "z", "gz",
@@ -201,9 +200,8 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 int
 readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char *fname)
 {
-    int val, bit, i = 0, j, k, c, row;
+    int val, bit, i = 0, j, k;
     int stride = tx->channels;
-    char *pix;
 
     if(size->xsize <= 0 || size->ysize <= 0)
 	return 0;
@@ -230,7 +228,7 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		int row = (yup ? i : size->ysize-i-1);
 		char *pix = tx->data + offset + k + rowsize * row;
 		int foff = size->rleoff[k*size->ysize + row];
-		int len = size->rleoff[(k+size->channels)*size->ysize + row];
+		/*int len = size->rleoff[(k+size->channels)*size->ysize + row];*/
 		int count;
 		j = size->xsize;
 		if(size->rledata)
@@ -263,7 +261,6 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		j = fread(row, size->channels, size->xsize, f);
 	    } else {
 		register char *pix = row;
-		int vals[3];
 		j = size->xsize;
 		switch(size->format) {
 		case TF_BYTE:
@@ -462,7 +459,6 @@ mg_same_file(char *fname1, char *fname2)
 int
 mg_same_texture(Texture *tx1, Texture *tx2)
 {
-    struct stat st;
     if(tx1 == tx2)
 	return 1;
     if(tx1 == NULL || tx2 == NULL)
@@ -530,7 +526,7 @@ mg_inhaletexture(Texture *tx, int rgba)
     char *failfile;
     struct xyc size, alphasize;
     int dopclose, alphapclose;
-    int pixels, i, j, rowsize, ok, wantchans;
+    int pixels, i, rowsize, ok, wantchans;
     void (*oldsigchld)();
 
     if(tx == NULL)
@@ -599,18 +595,18 @@ mg_inhaletexture(Texture *tx, int rgba)
     if(size.channels + alphasize.channels != tx->channels) {
 	if(tx->channels == 4) {
 	    for(i = 0; i < size.ysize; i++) {
-		register int t;
 		int k = size.xsize;
-		register char *p = tx->data + rowsize*i;
+		register unsigned char *p =
+			(unsigned char *)tx->data + rowsize*i;
 		switch(size.channels) {
 		case 1:
 		    do { p[1] = p[0]; p[2] = p[0];
-			 if(alphasize.channels == 0) p[3] = 255;
+			 if(alphasize.channels == 0) p[3] = 0xff;
 			 p += 4;
 		    } while(--k > 0);
 		    break;
 		case 3:
-		    do { p[3] = 255; p += 4; } while(--k > 0);
+		    do { p[3] = 0xff; p += 4; } while(--k > 0);
 		    break;
 		}
 	    }

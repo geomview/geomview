@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * NOTES:
@@ -228,14 +230,13 @@ void ascii_token(int token, va_list *alist)
 {
 int i;
 int count, number;
-int subsize;
 static int arraysize;
 static int expectSubArray=0;
 static char astring[128];
 double nextfloat; /* va_arg converts floats to doubles */
 float *floatptr;
 char *s;
-int len, add;
+int len;
 
     do {
     
@@ -555,7 +556,6 @@ float *floatptr;
     case mr_array:
     {
         unsigned char arraycount;
-	unsigned char *p;
 	float f;
     	arraycount = (unsigned char)va_arg(*alist, int);
 	check_buffer(2+4*arraycount);

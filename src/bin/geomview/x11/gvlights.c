@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -57,8 +59,8 @@ static Widget  shell,
 	       lintensity,
 	       lightslist;
 static char   *lights[MAXLIGHTS+1];
-static int    pos_later = 0, posx = 0, posy = 0;
-static char   geometry[40];
+/*static int    pos_later = 0, posx = 0, posy = 0;
+  static char   geometry[40];*/
 
 
 /*****************************************************************************/
@@ -74,7 +76,6 @@ void ui_load_lightspanel()
   char	     buf[100];
 
   mib_Widget *lightsload;
-  Atom       AProtocol;
   static char Lights[] = "Lights";
 
 /*****************************************************************************/

@@ -18,6 +18,8 @@ wa.lex.c: $(srcdir)/fsaparse.l
 	rm -f lex.yy.c $@
 	($(LEX) $(srcdir)/fsaparse.l; \
 	 sed -e '/^\#include/!s/yy/wafsa/g' \
-	     -e 's/YYSTYPE wafsalval/extern &/' -e '/#ident/d' lex.yy.c) >$@
+	     -e 's/YYSTYPE wafsalval/extern &/' \
+             -e '/#ident/d' \
+             -e 's/lex.wafsa.c/wa.lex.c/g' lex.yy.c) >$@
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <time.h>
@@ -45,7 +47,7 @@ static FILE *psout;
 
 static void smoothLine(CPoint3 *p0, CPoint3 *p1);
 static void smoothTriangle(CPoint3 *p0, CPoint3 *p1, CPoint3 *p2);
-static double triArea(double *p0, double *p1, double *p2);
+/*static double triArea(double *p0, double *p1, double *p2);*/
 static double cdelta(double *p0, double *p1);
 static void subdivtri(double *v0, double *v1, double *v2);
 static void plerp(double *v0, double *v1, double *l);
@@ -316,6 +318,7 @@ static double cdelta(double *p0, double *p1)
     return max(max(dr,dg),db);
 }
 
+#if 0
 static double triArea(double *p0, double *p1, double *p2)
 {
     double a, b, c, s;
@@ -331,6 +334,7 @@ static double triArea(double *p0, double *p1, double *p2)
     s = (a+b+c)/2.0;
     return sqrt(s*(s-a)*(s-b)*(s-c));
 }
+#endif
 
 #define NONE	0x0
 #define D0	0x1

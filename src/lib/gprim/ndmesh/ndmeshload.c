@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -58,7 +60,7 @@ getmeshvert(FILE *file, int flag, int pdim, int u, int v, HPointN **p,
 static int
 getheader(FILE *file, int *dimp)
 {
-	int c, i, flag, dim;
+	int i, flag;
 	char *token;
 	static char keys[] = "UCN4HUuv";
 	static short bit[] =
@@ -98,7 +100,6 @@ NDMeshFLoad(file, fname)
 {
 	NDMesh	m;
 	int	n;
-	Point3	*p3;
 	int i, u, v;
 	int size[2];
 	int binary;

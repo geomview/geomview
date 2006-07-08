@@ -24,8 +24,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "mibwidgets.h"
@@ -129,8 +131,6 @@ void mib_add_backward(mib_Widget *this, mib_Widget *parent)
 
 void mib_remove_mib_Widget(mib_Widget *this)
 {
-  int		 count;
-  mib_Widget	*pnt;
 
   XtVaSetValues(mib_root_Widget->me, XmNresizePolicy, XmRESIZE_NONE, NULL);
   XtDestroyWidget(this->me);
@@ -231,7 +231,7 @@ Widget
 BuildMenu(Widget parent, int menu_type, char *menu_title, char menu_mnemonic,
 		 MenuItem *items)
 {
-    Widget menu, cascade, widget;
+    Widget menu, cascade = NULL, widget;
     int i;
     XmString str;
 
@@ -401,7 +401,7 @@ mib_Widget *mib_load_interface(Widget parent, char *from, int file_type)
 int mib_load_mib_class(mib_Widget **this, mib_Widget *parent, char *name,
 		char *iname, mib_Buffer *fin )
 {
-  int namelen, editstate, count, set;
+  int namelen, editstate, count;
 
   if ((fin->buf_type == MI_EDITFROMFILE) ||
 	(fin->buf_type == MI_EDITFROMSTRING))
@@ -443,8 +443,6 @@ mib_Widget *mib_load_public(mib_Widget *root, mib_Widget *this, mib_Buffer *fin)
   char	valcp[MI_MAXSTRLEN];
   Arg	args[20];
   int	mynum, n;
-  int   rubberroot = 0;
-
 
   got_line = 1;
   done = 0;
@@ -626,12 +624,11 @@ int mib_load_Root(Widget parent, mib_Widget **this, mib_Buffer *fin)
 
   char		res[MI_MAXSTRLEN];
   char		val[MI_MAXSTRLEN];
-  char		name[MI_MAXSTRLEN];
   int		num_widgets, count, n, got_line;
   Arg		args[20];
   XGCValues     gcvals;
   XtGCMask      val_mask;
-  mib_Widget   *temp;
+  mib_Widget   *temp = NULL;
   int		rubberPositioning = False;
 
   got_line = mib_read_line(fin, res, val);
@@ -763,7 +760,12 @@ int mib_read_line(mib_Buffer *bufin, char *res, char *val)
   if (mark == 0)
   {
     sprintf(res,"%s",inbuf);
-    sprintf(val,"\0");
+#if 0
+    sprintf(val,"\0"); /* ???? */
+#else
+    val[0] = '\0';
+    val[1] = '\0';
+#endif
   }
   else
   {
@@ -773,7 +775,14 @@ int mib_read_line(mib_Buffer *bufin, char *res, char *val)
     if (strlen(inbuf)-mark > 1)
       sprintf(val,"%s",&(inbuf[mark+2]));
     else
+#if 0
       sprintf(val,"\0");
+#else
+    {
+	    val[0] = '\0';
+	    val[1] = '\0';
+    }
+#endif
   }
 
   return 1;
@@ -814,7 +823,7 @@ void mib_reset_size(mib_Widget *temp)
 
 /*****************************************************************************/
 
-void mib_set_eventhandlers(void *a, void *b, void *c)
+void mib_set_eventhandlers(void (*a)(), void (*b)(), void (*c)())
 {
   mib_events.mib_pick_mib_Widget = (void (*)())a;
   mib_events.mib_move_mib_Widget = (void (*)())b;

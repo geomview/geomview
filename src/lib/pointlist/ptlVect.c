@@ -23,18 +23,20 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
 #include "vectP.h"
 #include "pointlistP.h"
 
-void *vect_PointList_get(int sel, Geom *geom, va_list args);
-void *vect_PointList_fillin(int sel, Geom *geom, va_list args);
-void *vect_PointList_set(int sel, Geom *geom, va_list args);
-void *vect_PointList_length(int sel, Geom *geom, va_list args);
+void *vect_PointList_get(int sel, Geom *geom, va_list *args);
+void *vect_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *vect_PointList_set(int sel, Geom *geom, va_list *args);
+void *vect_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -52,41 +54,41 @@ ptlVect_init() {
   pointlist_initspec(methods, MAX_METHODS, GeomClassLookup("vect"));
 }
 
-void *vect_PointList_get(int sel, Geom *geom, va_list args) {
+void *vect_PointList_get(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
   HPoint3 *plist;
   TransformPtr t;
 
   plist = OOGLNewNE(HPoint3, v->nvert, msg);
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
   return GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, plist);
 }
 
-void *vect_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *vect_PointList_fillin(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
   TransformPtr t;
   HPoint3 *plist;
 
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
   memcpy(plist, v->p, v->nvert * sizeof(HPoint3));
   HPt3TransformN(t, plist, plist, v->nvert);
   return((void *)plist);
 }
 
-void *vect_PointList_set(int sel, Geom *geom, va_list args) {
+void *vect_PointList_set(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
   HPoint3 *plist;
   
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
   memcpy(v->p, plist, v->nvert * sizeof(HPoint3));
   return((void *)v);
 }
 
 
-void *vect_PointList_length(int sel, Geom *geom, va_list args) {
+void *vect_PointList_length(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
   
   return((void *)v->nvert);

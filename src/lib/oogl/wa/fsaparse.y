@@ -25,12 +25,16 @@
 #define MAXSTATES 100
 #define MAXGENS 128
 
+#if 0
 static char copyright[] =
   "Copyright (C) 1991 Mark B. Phillips, The Geometry Center";
+#endif
 
 static int adj[MAXSTATES];
 static int adj_index = 0;
-static int install_adjacency();
+static void install_adjacency();
+static void yyerror(char *s);
+extern int yylex(void);
 
 static wa *fsa;
 
@@ -162,13 +166,12 @@ adjacency	: INT
 
 %%
 
-yyerror(s)
-char *s;
+static void yyerror(char *s)
 {
   printf("yyerror: %s\n", s);
 }
 
-static int
+static void
   install_adjacency(n)
 int n;
 {
@@ -178,6 +181,7 @@ int n;
     fsa->action[n][i+1] = adj[i];
 }
 
+void
 parse_init(f)
      wa *f;
 {

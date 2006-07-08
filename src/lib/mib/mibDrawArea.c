@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "mibwidgets.h"
@@ -40,7 +42,6 @@ mib_Widget *mib_create_DrawingArea(mib_Widget *parent, char *name, char *label,
 {
   mib_Widget		*temp;
   mib_DrawingArea	*myres;
-  Widget		 wtemp;
   Arg			 args[20];
   int			 n;
 

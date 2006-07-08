@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips,
@@ -519,8 +521,6 @@ LDEFINE(set_emodule_path, LVOID,
 	so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.")
 {
 #define MAXDIRS 100
-  char *dirs[MAXDIRS];
-  int i;
   LList *list;
   LDECLARE(("set-emodule-path", LBEGIN,
 	    LLITERAL, LLIST, &list,
@@ -774,7 +774,6 @@ general_snapshot(char *fname, int id, DView *view,
     WnPosition vp;
     int mgspace;
     int failed;
-    float pixaspect, frameaspect;
 
     f = (fname[0] == '|') ? popen(fname+1, "wb") : fopen(fname, "wb");
     if(f == NULL)

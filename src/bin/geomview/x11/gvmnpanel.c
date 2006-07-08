@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -102,6 +104,7 @@ static MenuItem inspect_menu[] = {
   { NULL, NULL }
 };
 
+#if 0
 static MenuItem space_menu[] = {
   { "Euclidean",   &xmPushButtonGadgetClass, 'E', NULL, "[me]",
 	choose_space, (XtPointer)EUCLIDEAN, (MenuItem *)NULL},
@@ -111,6 +114,7 @@ static MenuItem space_menu[] = {
 	choose_space, (XtPointer)SPHERICAL, (MenuItem *)NULL},
   { NULL, NULL }
 };
+#endif
 
 static MenuItem motion_menu[] = {
   { "Tools", &xmPushButtonGadgetClass, 'T', "Ctrl<Key>T", "[Pt]",
@@ -157,7 +161,7 @@ void ui_refresh_mainpanel(int id)
 
 static void motion_menu_callbacks(Widget widget, char *text)
 {
-  int val;
+  int val = 0;
 
   switch (text[0])
   {
@@ -219,7 +223,7 @@ void ui_load_mainpanel()
 	     mainform,
 	     cascade,
 	     space,
-	     inspect,
+	  /*inspect,*/
 	     motion,
 	     title,
 	     HideButton;
@@ -228,7 +232,6 @@ void ui_load_mainpanel()
   static char gvtitle[100];
   XmString    GVtitle;
   mib_Widget *mainload;
-  Atom       AProtocol;
   XmString   str[3];
   XFontStruct *font;
   XmFontList   fontlist;
@@ -485,7 +488,6 @@ ui_keyboard(int ch)
 {
   static char kybd[12];
   static int nextc = 0;
-  XmString str;
   if(ch <= 0) {
     ui_keyboard(']');
     if(ch < 0) ui_keyboard('?');
@@ -595,7 +597,6 @@ static void
 BuildBrowserMenu()
 {
   XmString *menulist;
-  register int i;
 
   XmListDeleteAllItems(ObjectList);
 

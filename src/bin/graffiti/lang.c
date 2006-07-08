@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -164,8 +166,7 @@ LangInit(FILE *fp)
 }
 
 
-void
-Input()
+void Input(void)
 {
   LObject *lit, *val;
   lit = LSexpr(lake);
@@ -174,7 +175,7 @@ Input()
   LFree(val);
 }
 
-Geometry()
+void Geometry(void)
 {
   Geom *g;
   short dummy = 0;
@@ -265,12 +266,12 @@ ShowHeadAt(Point3 *p, Point3 *prev)
 			 */
   Transform R,T,S;
 
-  Pt3Sub(p, prev, (Point3 *)&dir);
-  if (Pt3Length((Point3 *)&dir) == 0.0) {
+  Pt3Sub(p, prev, (Point3 *)(void *)&dir);
+  if (Pt3Length((Point3 *)(void *)&dir) == 0.0) {
     dir.x = dir.y = 0;
     dir.z = 1;
   } else {
-    Pt3Unit((Point3 *)&dir);
+    Pt3Unit((Point3 *)(void *)&dir);
   }
 
   TmRotateTowardZ(R, &dir);
@@ -289,7 +290,7 @@ EraseHeadTail(char *xformname)
   fprintf(outf,  "(read geometry { define %s { LIST } } )\n", xformname);
 }
 
-void EraseHead()
+void EraseHead(void)
 {
   EraseHeadTail(headxformname);
 }
@@ -299,7 +300,7 @@ void EraseTail()
   EraseHeadTail(tailxformname);
 }
 
-void EraseHeadAndTail()
+void EraseHeadAndTail(void)
 {
   progn();
   EraseHead();
@@ -307,7 +308,7 @@ void EraseHeadAndTail()
   endprogn();
 }
 
-void DeleteHeadAndTail()
+void DeleteHeadAndTail(void)
 {
   progn();
   fprintf(outf, "(delete %s)\n", headname);
@@ -318,7 +319,7 @@ void DeleteHeadAndTail()
 /* Rename the old vector (so that different vectors can have different
    appearances) */
 
-void StartNewVector()
+void StartNewVector(void)
 {
   static int which = 0;
   progn();
@@ -326,12 +327,12 @@ void StartNewVector()
   endprogn();
 }
 
-progn()
+void progn(void)
 {
   fprintf(outf, "(progn\n");
 }
 
-endprogn()
+void endprogn(void)
 {
   fprintf(outf,")\n");
   fflush(outf);

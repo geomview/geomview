@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -167,7 +169,6 @@ void
 _mgopengl_ctxset(int a1, va_list *alist)
 {
   int attr;
-  WnWindow *owin;
   char **ablock = NULL;
 
 #define NEXT(type) OOGL_VA_ARG(type,alist,ablock)
@@ -611,7 +612,7 @@ void
 mgopengl_sync( void )
 { glFlush(); }
 
-static int glut_initted = 0;
+/*static int glut_initted = 0;*/
 
 static void
 mgopengl_makewin(int which)
@@ -620,9 +621,9 @@ mgopengl_makewin(int which)
 #define dpy (_mgopenglc->GLXdisplay)
 
   int xsize, ysize;
+#ifdef GLUT
   WnPosition wp;
 
-#ifdef GLUT
   if(!glut_initted) {
     static int unargc = 1;
     static char *unargv[] = { "mg_glut", NULL };
@@ -770,11 +771,7 @@ mgopengl_setviewport()
 static void
 mgopengl_initwin()
 {
-  WnPosition pos, vp;
-  int xsize, ysize, flag;
   GLdouble zrange[2];
-  char *name;
-  char gver[80];
   int i;
   LtLight **lp;
 
@@ -827,7 +824,7 @@ mgopengl_initwin()
 void
 mgopengl_worldbegin( void )
 {
-  Transform V, S;
+  Transform V;
   int which = (_mgc->opts & MGO_DOUBLEBUFFER) ? DBL : SGL;
 
   mg_worldbegin();	/* Initialize W2C, C2W, W2S, S2W, etc. */
@@ -969,7 +966,6 @@ mgopengl_worldend( void )
 void
 mgopengl_reshapeviewport( void )
 {
-  long w, h;
   float pixasp = 1;
   WnPosition vp;
 
@@ -1249,7 +1245,6 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
 
         /* Ensure that, at least, we don't have the *wrong* texture bound. */
     if(ap->tex) {
-        static int dbgtex;
         if(_mgopenglc->tevbound)
             mgopengl_notexture();
     }
@@ -1302,11 +1297,6 @@ mgopengl_setcamera( Camera* cam )
 int
 mgopengl_setwindow( WnWindow *win, int final )
 {
-  WnPosition pos, vp;
-  int xsize, ysize, flag, reconstrain;
-  int positioned = 0;
-  char *name, *oname;
-
   if(win == NULL)
     return 0;
 

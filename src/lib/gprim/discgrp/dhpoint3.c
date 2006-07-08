@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include "vec4.h" 
@@ -102,7 +104,6 @@ DHPt3PerpBisect(point4 p0, point4 p1, point4 result, int metric)
       case  DG_EUCLIDEAN:
 	{
 	point4 tmp;
-	double t;
 	VSUB3(p1, p0, result)
 	VADD3(p0, p1, tmp)
 	VSCALE3(tmp, .5, tmp)

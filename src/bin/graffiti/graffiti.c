@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -39,19 +41,26 @@ char *headxformname = "graffiti-head-xform";
 char *tailxformname = "graffiti-tail-xform";
 char *graffitiname = "graffiti";
 
-main(int argc, char *argv[])
-{
-  Initialize();
-  gui_init();
-  gui_main_loop();
-}
+extern void Input(void);
+extern void EraseHeadAndTail(void);
+extern void EraseHeadTail(char *xformname);
+extern void EraseHead(void);
+extern void StartNewVector(void);
+extern void LangInit(FILE *fp);
+extern void progn(void);
+extern void ShowTailAt(Point3 *p);
+extern void ShowHeadAt(Point3 *p, Point3 *prev);
+extern void Geometry(void);
+extern void endprogn(void);
+extern void gui_init(void);
+extern void gui_main_loop(void);
 
-NewPLine()
+void NewPLine(void)
 {
   nverts = 0;
 }
 
-NewLine()
+void NewLine(void)
 {
   if (!newvect) {
     EraseHeadAndTail();
@@ -62,7 +71,7 @@ NewLine()
   }
 }
 
-Initialize()
+void Initialize(void)
 {
   LangInit(stdout);
   NewPLine();
@@ -89,7 +98,7 @@ AddVertex(Point3 *p)
   endprogn();
 }
 
-RemoveVertex()
+void RemoveVertex(void)
 {
   if (!nverts) return;
   --nverts;
@@ -106,8 +115,17 @@ RemoveVertex()
   endprogn();
 }
 
-Close()
+void Close(void)
 {
   wrap = 1;
   Geometry();
 }
+
+int main(int argc, char *argv[])
+{
+  Initialize();
+  gui_init();
+  gui_main_loop();
+  return 0;
+}
+

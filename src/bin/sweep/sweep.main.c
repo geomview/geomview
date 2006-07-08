@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -72,7 +74,7 @@ flx_get_input_float(FL_OBJECT *obj)
   
 }
 
-main() {
+int main(int argc, char *argv[]) {
 
 #ifdef XFORMS
   FL_INITIALIZE("Sweep");
@@ -103,6 +105,8 @@ main() {
 
   fl_show_form(MainForm, FL_PLACE_SIZE, TRUE, "Sweep");
   while(1) fl_do_forms();
+
+  return 0;
 }
 
 

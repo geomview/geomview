@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +31,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <sys/types.h>
 #include <sys/time.h>
 #include <signal.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include "forms.h"
 #include "xforms-compat.h"
 
@@ -104,9 +108,6 @@ void update_transform(int skip)
   float T[4][4];
   float x[3],y[3],z[3];
   float av,bv,cv,dv;
-  static struct timeval notime = {0, 0};
-  static struct timeval timeout = {0, 200000};
-  FILE *in = stdin;
   char c = ' ';
   int   count=0;
 
@@ -196,14 +197,14 @@ void set_info(FL_OBJECT *myinfo)
   fl_add_browser_line(myinfo, inf[i]);
 }
 
-main()
+int main(int argc, char *argv[])
 {
  FL_OBJECT *retobj = NULL;
  int c = ' ';
  const char *targ;
  char str[1024], tfname[100], *tmpdir;
  int  update_count=0;
- int  count, xc, yc;
+ int  xc, yc;
  int  editon = 0;
  float ap,bp,cp,dp;
  float M[4][4];
@@ -348,4 +349,5 @@ main()
    update_count=0;
   }
  }
+ return 0;
 }

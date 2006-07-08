@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -41,8 +43,7 @@ GeomClass *classp;
 va_list *a_list;
 {
     register Mesh *mesh;
-    int		attr, copy = 1, fourd = 0;
-    int		i;
+    int		attr, copy = 1;
     int		npts;
     HPoint3	*p;
     Point3 	*n, *u, *p3;
@@ -103,14 +104,14 @@ va_list *a_list;
 	    break;
 
 	case CR_POINT4:
-	    meshfield(copy, npts*sizeof(HPoint3), (void **)&mesh->p,
+		meshfield(copy, npts*sizeof(HPoint3), (void **)(void *)&mesh->p,
 		(void *)va_arg (*a_list, HPoint3 *), "mesh points");
 	    break;
 
 	case CR_NORMAL:
 	    mesh->flag = (mesh->flag & ~MESH_N) |
 		(MESH_N & meshfield(copy, npts*sizeof(Point3),
-				(void **)&mesh->n,
+				    (void **)(void *)&mesh->n,
 				(void *)va_arg (*a_list, Point3 *),
 				"mesh normals"));
 	    break;
@@ -118,7 +119,7 @@ va_list *a_list;
 	case CR_U:
 	    mesh->flag = (mesh->flag & ~MESH_U) |
 		(MESH_U & meshfield(copy, npts*sizeof(Point3),
-				(void **)&mesh->u,
+				    (void **)(void *)&mesh->u,
 				(void *)va_arg (*a_list, Point3 *),
 				"mesh texture coords"));
 	    break;
@@ -126,7 +127,7 @@ va_list *a_list;
 	case CR_COLOR:
 	    mesh->flag = (mesh->flag & ~MESH_C) |
 		(MESH_C & meshfield(copy, npts*sizeof(ColorA),
-				(void **)&mesh->c,
+				    (void **)(void *)&mesh->c,
 				(void *)va_arg (*a_list, ColorA *),
 				"mesh colors"));
 	    break;

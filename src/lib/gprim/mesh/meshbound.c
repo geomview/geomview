@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -55,13 +57,13 @@ MeshBound(mesh, T)
 	if(n <= 0)
 		return NULL;	/* No finite elements! */
 	min = *p;
-	HPt3TransPt3(T, p, (Point3 *)&min);
+	HPt3TransPt3(T, p, (Point3 *)(void *)&min);
 	min.w = 1.;
 	max = min;
 	while(--n >= 0) {
 		p++;
             	if (T != TM_IDENTITY)
-			HPt3TransPt3(T, p, (Point3 *)&p0);
+			HPt3TransPt3(T, p, (Point3 *)(void *)&p0);
 		else if(p->w == 1.)
 			p0 = *p;
 		else

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 typedef	double  point4[4];
 typedef	double  plane4[4];
@@ -35,7 +37,7 @@ matvecmul4(m,v1,v2)
 matrix4 m;
 point4 v1,v2;
 {
-    register int i,j,k;
+    register int i,j;
     double tmp[4], *tv1, *tv2;
  
     tv1 = (double *) v1; 
@@ -52,7 +54,7 @@ vecmatmul4(v1,m,v2)
 matrix4 m;
 point4 v1,v2;
 {
-    register int i,j,k;
+    register int i,j;
     double tmp[4], *tv1, *tv2;
  
     tv1 = (double *) v1; 

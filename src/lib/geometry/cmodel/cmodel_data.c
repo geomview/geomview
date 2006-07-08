@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -105,7 +107,7 @@ struct vertex *new_vertex(Point3 *pt, struct vertex *v1, struct vertex *v2)
    vx_count++;
    
    /* now initialize n_vertex */
-   Pt3Copy(pt, (Point3 *)&n_vertex->V.pt);
+   Pt3Copy(pt, (Point3 *)(void *)&n_vertex->V.pt);
    n_vertex->V.pt.w = 1.;
    /* interpolate between two vertex colors */
    if (v2 != NULL) {

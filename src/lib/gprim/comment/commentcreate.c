@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips,
@@ -73,12 +75,7 @@ CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
 {
     register Comment *comment;
     int attr;
-    int fourd = 0;
     int copy = 1;
-    float *f;
-    Transform *t;
-    Geom *g;
-    Handle *h;
 
     if (exist == NULL) {
 	comment = OOGLNewE(Comment, "CommentCreate comment");

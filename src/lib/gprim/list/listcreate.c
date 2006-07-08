@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -38,7 +40,6 @@ ListReplace( list, geom )
     List *list;
     Geom *geom;
 {
-    register List *l;
     Geom *g;
 
     if(list == NULL)
@@ -61,7 +62,7 @@ ListRemove( Geom *list, Geom *g )
 	OOGLError(1, "ListRemove: %x is a %s not a List!", list, GeomName(list));
 	return NULL;
     }
-    for(prev = (List **)&list; (l = *prev) != NULL; prev = &l->cdr) {
+    for(prev = (List **)(void *)&list; (l = *prev) != NULL; prev = &l->cdr) {
 	if(l->car == g) {
 	    *prev = l->cdr;
 	    l->cdr = NULL;

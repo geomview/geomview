@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <math.h>
 #include <stdio.h>
@@ -28,9 +30,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "hpoint3.h"
 #include "vec4.h"
 
-make_tform(p1, p2, p3, m)
-HPoint3 *p1, *p2, *p3;
-Transform m;
+int make_rotation(HPoint3 *v1, HPoint3 *v2, Transform m);
+
+int make_tform(HPoint3 *p1, HPoint3 *p2, HPoint3 *p3, Transform m)
 /* 	Generate a Euclidean isometry which moves (0,0,0) -> p1.
    Furthermore, 
 	the vector (1,0,0) will go a vector tx based at p1 and ending at p2.
@@ -39,7 +41,6 @@ Transform m;
 	the vector (0,0,1) will go a vector tz based at p1, perpendicular to tx and ty.
 	The rotational part is computed by make_rotation. See comments there */
 {
-    register int i;
     HPoint3 nv1, nv2;
     Transform trans;
 
@@ -65,11 +66,10 @@ Transform m;
 /* make rotation that takes (1,0,0) to v1; and (0,1,0) to the orthog. proj of v2 onto
    the perpendicular subspace of v1.  Return (0) if v1 and v2 are collinear. 
 */
-make_rotation(v1, v2, m)
+int make_rotation(v1, v2, m)
 HPoint3 *v1, *v2;
 Transform m;
 {
-    int i;
     double a;
     HPoint3  t1, t2;
 

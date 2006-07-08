@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -69,10 +71,9 @@ void SphereSwitchSpace(Sphere *sphere, int space) {
 }
 
 Sphere *SphereUnion3(Sphere *a, Sphere *b, Sphere *dest) {
-  Sphere *sphere;
   int space;
   HPoint3 center, diff;
-  float radius, mag_diff;
+  float radius = 0.0;
 
   if (a == NULL && b == NULL) return NULL;
   space = (a != NULL) ? a->space : b->space;
@@ -102,7 +103,7 @@ Sphere *SphereUnion3(Sphere *a, Sphere *b, Sphere *dest) {
 		"Euclidean space.");
     
     HPt3Sub(&b->center, &a->center, &diff);
-    Pt3Unit((Point3*)&diff);
+    Pt3Unit((Point3*)(void *)&diff);
     center.x = b->center.x + diff.x*b->radius;
     center.y = b->center.y + diff.y*b->radius;
     center.z = b->center.z + diff.z*b->radius;
@@ -147,7 +148,6 @@ void SphereEncompassBounds(Sphere *sphere, HPoint3 *points) {
 int SphereAddHPt3(Sphere *sphere, HPoint3 *point, Transform T)
 {
   float radius, old_to_p, old_to_new;
-  Point3 direction;
   HPoint3 center, newpoint;
 
   HPt3Transform(T, point, &newpoint);

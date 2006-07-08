@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
 #include "config.h"
@@ -91,8 +93,6 @@ void UIloadinterface()
   int		n, oldstderr;
   int		argcblah = 1;
   char 	       *argvblah[1] = { "Animate" };
-
-  unsigned char *item;
 
   mib_Widget   *MainForm, *InfoForm, *CommandForm;
   String	fallbacks[] = {
@@ -581,7 +581,6 @@ static void speed_callback(	Widget w,
 				XtPointer data,
 				XmScaleCallbackStruct *cbs)
 {
-  int val = cbs->value;
   int rmv = 0;
 
   if (lasttime != NULL_XtIntervalId)		/* get rid of old timeout */

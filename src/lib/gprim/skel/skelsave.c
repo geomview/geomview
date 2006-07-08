@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -47,7 +49,6 @@ SkelFSave(Skel *s, FILE *f)
 	float *p;
 	int *vp;
 	Skline *l;
-	register ColorA *c;
 
 	/* This one just saves in ASCII format */
 

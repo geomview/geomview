@@ -21,8 +21,10 @@
 
 #include "../../../../config.h"
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -227,12 +229,10 @@ void cam_winchange(mgcontext *mgc, void *data, int why, ...)
 {
     va_list args;
     WnWindow *win;
-    int dblbuf;
     int n, changed;
     int id = (int) data;
     struct camwins *cw;
     Widget w;
-    Window xwinid;
     char *title = "gvwin";
 
     if((w = camshellof(id, &cw)) == NULL)
@@ -275,8 +275,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   struct camwins *cw;
   Atom   AProtocol;
   Widget shell, camform, camdraw[2] = { NULL, NULL };
-  WnPosition prefpos;
-  int i, any, haspref;
+  int i;
   XSetWindowAttributes xswa;
   Window cmw[32];
   int cmwneeded;
@@ -663,7 +662,7 @@ static int snapsetup(DView *dv)
 		 * we might not even get an Expose event if we're already
 		 * unobscured.  Sigh. -slevy
 		 */
-    select(0,NULL,NULL,NULL,(struct timeval *)delay);
+    select(0,NULL,NULL,NULL,(struct timeval *)(void *)delay);
     gv_draw(dv->id);	/* draw window now */
 
 #ifdef MGGL
@@ -680,9 +679,8 @@ static int snapsetup(DView *dv)
 int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 {
     FILE *f;
-    int opts;
     char *data;
-    int unset, xsize, ysize, row, i, j;
+    int unset, xsize, ysize, row, i;
     int failed = 1;
 
     unset = snapsetup(dv);

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -97,10 +99,9 @@ Transform mat;
 int mode;	/* insert or match? */
 {
 	register struct node *n = NULL, *p; 
-	register int i, j;
 	float d;
 	struct node tnode;
-	double getnorm(), norm;
+	double getnorm();
 
 	if (debug == 4)	traverse_list(head);
 
@@ -215,8 +216,6 @@ int
 is_new(t)
 Transform t;
 {
-    int i, num;
-    struct node *p = head;
     if ( insert_or_match_mat(t, MATCH) )
 	    {
 	    return(0);

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* routines for making sure matrix is orthogonal in Minkowski metric */
 #include "3d.h"
@@ -33,9 +35,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 tuneup(Transform m1, int metric)
 {
-    int i,j,k;
-    float d; 
-    HPoint3 pt0;
 
     HPt3SpaceNormalize((HPoint3 *)m1[0], metric);
 
@@ -57,7 +56,7 @@ tuneup(Transform m1, int metric)
 int
 needstuneup(Transform m1)
 {
-    int i,j,k;
+    int i,j;
     float d;
 
     for (i=0; i<4; ++i)

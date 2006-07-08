@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -59,10 +61,10 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
     HPointN *h = HPtNCreate(s->dim, NULL);
     float *hdata = h->v;
     float *op;
-    HPoint3 *p, *np, *newp;
+    HPoint3 *np, *newp;
     Skline *l;
     ColorA *c, *lastcolor, *newc;
-    int i, nc, colored = 0;
+    int i, colored = 0;
     HPoint3 tv[MAXPLINE];
     ColorA tc[MAXPLINE];
 
@@ -75,7 +77,7 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
     }
     if(!hascolor) colored = 0;
 
-    lastcolor = (ColorA *)&_mgc->astk->mat.edgecolor;
+    lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
     for(i = 0, l = s->l, c = colored ? newc : s->c; i < s->nlines; i++, l++) {
 	int nleft = l->nv;
 	int *vleft = &s->vi[l->v0];
@@ -119,8 +121,7 @@ Skel *
 SkelDraw(s)
      register Skel *s;
 {
-    ColorA edgecolor;
-    int i, n, hascolor, nc;
+    int i, hascolor;
     Skline *l;
     int flags, penultimate;
     ColorA *lastcolor=NULL;
@@ -157,7 +158,7 @@ SkelDraw(s)
 	return s;
     }
 
-    lastcolor = (ColorA *)&_mgc->astk->mat.edgecolor;
+    lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
     for(i = 0, l = s->l; i < s->nlines; i++, l++) {
 	int nleft = l->nv;
 	int *vleft = &s->vi[l->v0];

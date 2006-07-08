@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -43,8 +45,6 @@ getmeshvert(file, flag, u, v, p, n, c, t)
 	ColorA	*c;
 	Point3	*t;		/* actually u, the texture parameter */
 {
-	float	inputs[4];
-	Point3  p3;
 	register int binary = flag&MESH_BINARY;
 
 	if (flag & MESH_Z) {
@@ -74,13 +74,13 @@ getmeshvert(file, flag, u, v, p, n, c, t)
 	return 1;
 }
 
-static char oldbinary;	/* Old binary format -- has 3-component colors */
+/* static char oldbinary; *//* Old binary format -- has 3-component colors */
 
 static int
 getheader(file)
 	FILE	*file;
 {
-	register int c, i, flag;
+	int i, flag;
 	char *token;
 	static char keys[] = "UCNZ4Uuv";
 	static short bit[] =
@@ -116,7 +116,6 @@ MeshFLoad(file, fname)
 {
 	Mesh	m;
 	int	n;
-	Point3	*p3;
 	register int i, u, v;
 	int binary;
 

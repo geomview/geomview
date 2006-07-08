@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -207,6 +209,7 @@ STRANSLATION(int action, int center, int frame, float dx, float dy, Point3 *mot)
   return constrain(mot, frame);
 }
 
+#if 0
 static int
 SCALING(int action, int center, int frame, float dx, float dy, Point3 *mot)
 {
@@ -219,6 +222,7 @@ SCALING(int action, int center, int frame, float dx, float dy, Point3 *mot)
   }
   return uistate.ownmotion ? SELF : frame;
 }
+#endif
 
 /*
 Kludge to make mouse-driven hyperbolic translations work correctly.

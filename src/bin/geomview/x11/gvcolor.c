@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "mibwidgets.h"
@@ -56,7 +58,7 @@ static void tog_cmodel(Widget, XtPointer, XmAnyCallbackStruct *);
 static void show_settings(int changed);
 static void set_rgbtest();
 static Widget shell,
-	      temp,
+/*temp,*/
 	      RGBText,
 	      HSVText,
 	      CModelButton,
@@ -83,15 +85,13 @@ static int   myindex, myval, colortarget, loaded = 0;
 
 void ui_load_colorpanel()
 {
-  int		n, decor, menu;
-  Arg		args[20];
+	int		n;
 
   Widget     colorform,
 	     DoneButton,
 	     CancelButton;
 
-  mib_Widget *colorload, *cmodelmib;
-  mib_Menu   *cmodelmenu;
+  mib_Widget *colorload;
   static char Colors[] = "Color";
 
 /*****************************************************************************/
@@ -279,7 +279,6 @@ static void set_rgb_sliders(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 
 static void rgb_sliders(Widget w, XtPointer data, XmScaleCallbackStruct *cbs)
 {
-  int component = (int)data;
   float *cmc = (colormodel == CM_RGB) ? &rgb.r : &hsv.r;
 
   /* Set {rgb,hsv}.{r,g,b} according to current color model and callback-data */

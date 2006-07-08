@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -118,7 +120,7 @@ Inst *
 InstDraw( Inst *inst )
 {
     GeomIter *it;
-    Transform T, tT;
+    Transform T, tT, Tl2o;
 
     it = GeomIterate((Geom *)inst, DEEP);
     while(NextTransform(it, T)) {
@@ -133,9 +135,8 @@ InstDraw( Inst *inst )
 
 	/* Compute origin *before* changing mg tfm */
 	if(inst->origin != L_NONE) {
-	    Point3 originpt, originwas, delta;
+	    Point3 originwas, delta;
 	    TmCoord (*l2o)[4], (*o2W)[4];
-	    Transform To2W, Tl2o, Tl2W;
 	    static HPoint3 zero = { 0, 0, 0, 1 };
 
 	    /* We have location2W, origin2W.

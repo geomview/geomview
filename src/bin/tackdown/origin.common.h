@@ -20,7 +20,6 @@
  */
 #ifndef ORIGIN_COMMON_H
 #define ORIGIN_COMMON_H
-
 /*
  * Routines beginning with "internals" are found in the common code.
  */
@@ -41,9 +40,9 @@ void uiDisableShow();
 void uiEnableShow();
 
 /* Disable the Done and Cancel buttons */
-void uiDisableDoneCanel();
+void uiDisableDoneCancel();
 /* Enable the Done and Cancel buttons */
-void uiEnableDoneCanel();
+void uiEnableDoneCancel();
 
 /* Put str1, str2, and str3 as the new instructions */
 void uiSetInstructions(char *str1, char *str2, char *str3, char *str4);
@@ -55,5 +54,4 @@ void uiSetTargetname(char *name);
 
 /* Display an error message (up to 3 lines long) */
 void uiError(char *str1, char *str2, char *str3);
-
 #endif

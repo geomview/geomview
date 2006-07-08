@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "geom.h"
 #include "pointlistP.h"
@@ -34,7 +36,7 @@ static char methods[][POINTLIST_MAXNAME] =
   POINTLIST_METHNAMES
 };
 
-void *pointlist_default(int sel, Geom *geom, va_list args);
+void *pointlist_default(int sel, Geom *geom, va_list *args);
 
 void pointlist_init() {
   int i;
@@ -62,7 +64,7 @@ void pointlist_initspec(SpecFunc *specfunc, int n_func, GeomClass *class) {
 		     specfunc[i].func);
 }
 
-void *pointlist_default(int sel, Geom *geom, va_list args) {
+void *pointlist_default(int sel, Geom *geom, va_list *args) {
   return NULL;
 }
 

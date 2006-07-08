@@ -23,18 +23,20 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
 #include "quadP.h"
 #include "pointlistP.h"
 
-void *quad_PointList_get(int sel, Geom *geom, va_list args);
-void *quad_PointList_fillin(int sel, Geom *geom, va_list args);
-void *quad_PointList_set(int sel, Geom *geom, va_list args);
-void *quad_PointList_length(int sel, Geom *geom, va_list args);
+void *quad_PointList_get(int sel, Geom *geom, va_list *args);
+void *quad_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *quad_PointList_set(int sel, Geom *geom, va_list *args);
+void *quad_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -53,26 +55,26 @@ ptlQuad_init() {
 }
 
 
-void *quad_PointList_get(int sel, Geom *geom, va_list args) {
+void *quad_PointList_get(int sel, Geom *geom, va_list *args) {
   HPoint3 *plist;
   Quad *q = (Quad *)geom;
   TransformPtr t;
 
   plist = OOGLNewNE(HPoint3, q->maxquad * 4, msg);
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
   return GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, plist);
 }
 
 
-void *quad_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *quad_PointList_fillin(int sel, Geom *geom, va_list *args) {
   int i;
   Quad *q = (Quad *)geom;
   TransformPtr t;
   HPoint3 *plist;
   
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
 
   for (i = 0; i < q->maxquad; i++)
     memcpy(&plist[i * 4], q->p[i], 4 * sizeof(HPoint3));
@@ -80,20 +82,20 @@ void *quad_PointList_fillin(int sel, Geom *geom, va_list args) {
   return plist;
 }
 
-void *quad_PointList_set(int sel, Geom *geom, va_list args) {
+void *quad_PointList_set(int sel, Geom *geom, va_list *args) {
   int i;
   HPoint3 *plist;
   Quad *q = (Quad *)geom;
   
-  va_arg(args, int);
-  plist = va_arg(args, HPoint3 *);
+  (void)va_arg(*args, int);
+  plist = va_arg(*args, HPoint3 *);
   for (i = 0; i < q->maxquad; i++)
     memcpy(q->p[i], &plist[i * 4], 4 * sizeof(HPoint3));
   return((void *)q);
 }
 
 
-void *quad_PointList_length(int sel, Geom *geom, va_list args) {
+void *quad_PointList_length(int sel, Geom *geom, va_list *args) {
   Quad *q = (Quad *)geom;
   return((void *)(q->maxquad * 4));
 }

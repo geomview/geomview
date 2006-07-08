@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * anytopl.c
@@ -706,10 +708,9 @@ PLaddseg(PLData *PL, int v0, int v1, ColorA *c)
 {
   Face *fp = VVAPPEND(PL->faces, Face);
   Material *mat = PL->ap->mat;
-  int has = PL_HASPC;
   if(mat && (mat->valid & MTF_EDGECOLOR)) {
     if(c == NULL || mat->override & MTF_EDGECOLOR) {
-	*(Color *)&fp->fcolor = mat->edgecolor;
+	    *(Color *)(void *)&fp->fcolor = mat->edgecolor;
 	fp->fcolor.a = mat->diffuse.a;
 	PL->some |= PL_HASPC;
     } else if(c) {
@@ -734,7 +735,6 @@ PLaddvect(PLData *PL, int nv, int verts[], ColorA *c)
   Material *mat;
   ColorA edgec;
   Face *fp;
-  int i;
 
   if(nv <= 0)
     return;
@@ -755,7 +755,7 @@ PLaddvect(PLData *PL, int nv, int verts[], ColorA *c)
     if(mat->override & MTF_EDGECOLOR)
 	c = NULL;
     if((mat->valid & MTF_EDGECOLOR) && c == NULL) {
-	*(Color *)&edgec = mat->edgecolor;
+	    *(Color *)(void *)&edgec = mat->edgecolor;
 	edgec.a = mat->diffuse.a;
 	c = &edgec;
     }
@@ -789,7 +789,7 @@ PLData *AnyGeomToPLData(Geom *g, Transform T, TransformN *Tn, Appearance *pap,
 			PLData *PL)
 {
   Transform Told;
-  TransformN *Tnold;
+  TransformN *Tnold = NULL;
   Appearance *apold = NULL;
 
   if(g == NULL)

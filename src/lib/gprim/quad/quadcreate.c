@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -42,8 +44,7 @@ QuadCreate (exist, classp, a_list)
     QuadN *n = (QuadN *)NULL;
     QuadC *c = (QuadC *)NULL;
     int attr;
-    int copy = 1, fourd = 0;
-    int i,j;
+    int copy = 1;
 
     if (exist == NULL) {
 	q = OOGLNewE(Quad, "QuadCreate: new Quad");

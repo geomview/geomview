@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * int ppopen(char *pgm,  FILE **frompgm, FILE **topgm)
@@ -64,7 +66,7 @@ int
 ppopen(char *cmd, FILE **frompgm, FILE **topgm)
 {
   struct pipe { int r, w; } pfrom, pto;
-  int i, pid;
+  int pid;
   
 
   /* create the communication pipes */

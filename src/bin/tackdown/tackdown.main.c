@@ -19,12 +19,16 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "streampool.h"
+#include "transobj.h"
 #include "forms.h"
 
 #include "xforms-compat.h"
@@ -32,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static Pool *standardIn, *standardOut;
 
-main() {
+int main(int argc, char *argv[]) {
 
 #ifdef XFORMS
   FL_INITIALIZE("Tackdown");
@@ -53,7 +57,6 @@ main() {
 
 
 void TransButtonProc(FL_OBJECT *o, long val) {
-  char buf[256];
   Geom *g;
   Transform t;
 

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips,
@@ -77,7 +79,7 @@ InstPick(Inst *inst, Pick *p, Appearance *ap, Transform T)
     TmTranslate( tT, p->x0, p->y0, 0. );
     TmConcat( T, tT, T );
     if(inst->origin > L_LOCAL) {
-	Point3 originpt, originwas, delta;
+	Point3 originwas, delta;
 	TmCoord (*l2o)[4], (*o2N)[4];
 	Transform Tl2o;
 	static HPoint3 zero = { 0, 0, 0, 1 };

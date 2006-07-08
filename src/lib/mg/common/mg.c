@@ -23,13 +23,15 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.2 2000/09/01 22:38:14 mphillips Exp $
+ * $Id: mg.c,v 1.3 2006/07/08 20:28:20 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -730,7 +732,6 @@ void mg_makepoint()
 void
 mg_findcam()
 {
-  Transform inv;
   HPoint3 camZ;
   /*
    * Figure out where the camera is in the current coordinate system
@@ -742,7 +743,7 @@ mg_findcam()
   /* XXX assumes left multiplication: we take C2W[3] as a point! */
   HPt3TransPt3(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[3][0], &_mgc->cpos);
   HPt3Transform(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[2][0], &camZ);
-  camZ.w = Pt3Length((Point3 *)&camZ);
+  camZ.w = Pt3Length((Point3 *)(void *)&camZ);
   HPt3ToPt3(&camZ, &_mgc->camZ);
   _mgc->has |= HAS_CPOS;
 }

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -63,8 +65,6 @@ mgopenglsubmesh( int wrap, int nu, int nv,
   register int prev;
   int du;
   int douwrap;
-  HPoint3  tp;
-  Point3 tn;
   int i;
   int has;
   Appearance *ap;

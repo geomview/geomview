@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "geom.h"
 #include "list.h"
@@ -29,6 +31,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 
 Clip clip;
+
+extern int span_vertices(Clip *clip, float *minp, float *maxp);
 
 static char Usage[] = "\
 Usage: clip [-v axisx,y,z,...] [-g value] [-l value] [-s nslices[,fraction]]\n\
@@ -70,7 +74,6 @@ setclipat(Clip *clip, char *pstr, int dim, float *surf, void (*prepfunc)())
     float point[MAXDIM];
     float level;
     int n;
-    char *p;
 
     n = parsevector(pstr, point, dim);
 
@@ -185,14 +188,12 @@ static void squared_normalized(Clip *clip)
 }
 
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     Geom *g, *clipped;
     float surf[MAXDIM];
-    char *p;
     float (*func)() = NULL;
     void (*prepfunc)() = NULL;
-    int i;
     char *lestr = NULL, *gestr = NULL;
     char *type;
     int slices = 0;
@@ -339,7 +340,7 @@ main(int argc, char *argv[])
     if(slices > 0) {
 	float min, max, v, step;
 	int i;
-	Geom *piece, *whole;
+	Geom *piece, *whole = NULL;
 	char lim[64];
 
 	setGeom(&clip, g);

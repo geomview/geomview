@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* do the actual geometric computation parts of the "cmodel" program */
 
@@ -46,21 +48,22 @@ void projective_to_conformal(int curv, HPoint3 *proj, Transform T, Point3 *conf)
    }
    else
        scale = -norm/pt.w;
-   Pt3Mul(1 / scale, (Point3 *)&pt, conf);
+   Pt3Mul(1 / scale, (Point3 *)(void *)&pt, conf);
    return;
    }
 
 void TgtTransform(Transform T, HPoint3 *p, Point3 *v, HPoint3 *tp, Point3 *tv)
 {
-   HPoint3 hv, thp, thv;
+   HPoint3 hv, thv;
    
-   Pt3Copy(v, (Point3 *)&hv);
+   Pt3Copy(v, (Point3 *)(void *)&hv);
    hv.w = 0;
    
    HPt3Transform(T, p, tp);
    HPt3Transform(T, &hv, &thv);
    
-   Pt3Comb(1/tp->w, (Point3 *)&thv, -thv.w/tp->w/tp->w, (Point3 *)tp, tv);
+   Pt3Comb(1/tp->w, (Point3 *)(void *)&thv,
+	   -thv.w/tp->w/tp->w, (Point3 *)(void *)tp, tv);
    
    return;
    }
@@ -87,7 +90,7 @@ void projective_vector_to_conformal(int curv, HPoint3 *pt,  Point3 *v,
    else
        scale = -norm/tp.w;
 
-   Pt3Mul(1 / scale, (Point3 *)&tp, ppt);
+   Pt3Mul(1 / scale, (Point3 *)(void *)&tp, ppt);
    if (curv)
        Pt3Comb(norm/scale, &tv, Pt3Dot(ppt, &tv), ppt, pv);
    else
@@ -148,14 +151,14 @@ struct vertex *edge_split(struct edge *e, double cosmaxbend)
    Point3 m, mp, x, y, *a, *b, p;
    double aa,ab,bb,ma,mb;
 
-   a = (Point3 *)&e->v1->V.pt;
-   b = (Point3 *)&e->v2->V.pt;
+   a = (Point3 *)(void *)&e->v1->V.pt;
+   b = (Point3 *)(void *)&e->v2->V.pt;
    w = e->polar.w;
 
  /*fprintf(stderr,"In edge_split\n");*/
    if (w < .001) return NULL;
    
-   Pt3Mul(1./w, (Point3 *)&e->polar, &p);
+   Pt3Mul(1./w, (Point3 *)(void *)&e->polar, &p);
    
    Pt3Sub(a, &p, &x);
    Pt3Sub(b, &p, &y);

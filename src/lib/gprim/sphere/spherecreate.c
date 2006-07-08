@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <math.h>
 #include "geom.h"
@@ -65,9 +67,9 @@ va_list *a_list;
   Geom *quadrant;
   Geom *unitsphere;
   Sphere *sphere;
-  int space, nencompass_points = 0;
+  int nencompass_points = 0;
   int attr;
-  Transform T, *axis = NULL;
+  Transform *axis = NULL;
   HPoint3 *encompass_points = NULL;
 
   if (exist == NULL) {

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgribP.h"
@@ -172,9 +174,9 @@ void
 mgrib_drawPline(HPoint3 *p1, HPoint3 *p2)
 {
     Transform V;
-    Transform P2S,O2S, O2P, P2O, S2O;
+    Transform P2S,O2S, O2P, S2O;
     int xsize, ysize;
-    HPoint3 pnts[4], pnts2[4];
+    HPoint3 pnts[4];
     Point3 s1, s2;
     int i;
     float dx,dy,k, len;
@@ -236,7 +238,7 @@ void
 mgrib_drawCline(HPoint3 *p1, HPoint3 *p2)
 {
   Pt3Coord angle,length;
-  Point3 t,xn,yn,axis;
+  Point3 t,axis;
   Point3 start, end;
   HPoint3 Hstart, Hend;
   static float unitz[3] = {0.0, 0.0, 1.0};
@@ -259,9 +261,9 @@ mgrib_drawCline(HPoint3 *p1, HPoint3 *p2)
 	size = radius*_mgc->astk->ap.linewidth;
 	Pt3Sub(&end,&start,&t);
 	length = Pt3Length(&t);
-	Pt3Cross((Point3*)unitz,&t,&axis);
+	Pt3Cross((Point3*)(void *)unitz,&t,&axis);
 	Pt3Unit(&t);
-	angle = Pt3Dot((Point3*)unitz,&t);
+	angle = Pt3Dot((Point3*)(void *)unitz,&t);
 	angle = acos(angle);
 	mrti(mr_transformbegin, mr_NULL);
 	if (bounded(&start))
@@ -378,12 +380,9 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
   register int i,j;
   register Poly *p;
   register Vertex **v, *vp;
-  register Point3 *n;
   HPoint3 hpt;
   int flag,shading,matover;
   Color *color;
-  ColorA *colorA;
-  
   
   flag = _mgc->astk->ap.flag;
   shading = _mgc->astk->ap.shading;

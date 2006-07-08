@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -99,7 +101,7 @@ VectDraw(v)
 	register ColorA *c;
 	ColorA edgecolor;
 	register int n, hascolor, nc;
-	int flags, penultimate, softshadelines = 0;
+	int flags, penultimate;
 	ColorA *lastcolor=NULL;
 	register Appearance *ap = mggetappearance();
 
@@ -121,7 +123,7 @@ VectDraw(v)
 		!(ap->mat && (ap->mat->override & MTF_EDGECOLOR));
 
 	if (!hascolor && ap->mat) {
-	  *(Color *)&edgecolor = ap->mat->edgecolor;
+		*(Color *)(void *)&edgecolor = ap->mat->edgecolor;
 	  edgecolor.a = 1;
 	  c = &edgecolor;
 	  nc = 1;

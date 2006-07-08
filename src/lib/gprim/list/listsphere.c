@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "geom.h"
 #include "create.h"
@@ -36,7 +38,7 @@ Geom *ListBoundSphere(list, T, space)
      Transform T;
      int space;
 {
-  Geom *carsphere = NULL, *newsphere = NULL, *sphere = NULL;
+  Geom *carsphere = NULL, *sphere = NULL;
   register List *l;
   for (l = list; l != NULL; l = l->cdr) {
     carsphere = GeomBoundSphere(l->car, T, space);

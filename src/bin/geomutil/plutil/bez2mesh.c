@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <geomclass.h>
 #include <bezierP.h>
@@ -28,7 +30,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <listP.h>
 #include <stdlib.h>
 
-transpose(void *src, void *dst, int nu, int nv, int elsize)
+static void transpose(void *src, void *dst, int nu, int nv, int elsize)
 {
     char *tmp = (src == dst) ? malloc(nu*nv*elsize) : dst;
     char *p = src;
@@ -46,11 +48,10 @@ transpose(void *src, void *dst, int nu, int nv, int elsize)
     }
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     Geom *g;
     List *l;
-    Mesh *m;
     Bezier *b;
     char *fname;
     int t;

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include "geom.h"
@@ -188,7 +190,6 @@ void *cray_polylist_SetColorAtF(int sel, Geom *geom, va_list *args) {
 }
 
 void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list *args) {
-  PolyList *polylist = (PolyList *)geom;
   ColorA *color;
   int vindex, findex;
 

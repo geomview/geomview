@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -526,7 +528,7 @@ int emodule_running_index(char *modname)
 {
   char *name;
   emodule *em;
-  int i, n, len;
+  int i, len;
 
   if (modname == NULL) return -1;
   len = strlen(modname);
@@ -1158,7 +1160,6 @@ LDEFINE(hdefine, LVOID,
 {
   HandleOps *ops = NULL;
   LType *ltype;
-  Handle *h = NULL;
   char *hname;
   char *opsname = NULL;
   Ref *obj;
@@ -1366,7 +1367,6 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
 	 */
 	s = makesocket(pipename);
 	if(s >= 0) {
-	    FILE *f = fdopen(s, "rb");
 	    Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
 	    if(p) PoolSetClientData(p, ops);
 	    p->flags |= PF_NOPREFETCH;

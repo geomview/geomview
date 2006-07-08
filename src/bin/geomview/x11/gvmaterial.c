@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -76,7 +78,6 @@ void ui_load_materialpanel()
 	     HideButton;
 
   mib_Widget *mattload;
-  Atom       AProtocol;
   static char Material[] = "Material";
 
 /*****************************************************************************/

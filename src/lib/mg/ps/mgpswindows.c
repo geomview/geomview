@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <limits.h>
 #include "mg.h"
@@ -190,7 +192,6 @@ void mgps_add(int primtype, int numdata, void *data, void *cdata)
     case MGX_CVERTEX:
 	for (i=0; i<numdata; i++)
 	{
-	    float w;
             vts = &(VVEC(_mgpsc->mysort->pverts, CPoint3)[_mgpsc->mysort->cvert]);
 	    HPt3Transform(_mgc->O2S, &(vt[i]), (HPoint3 *) vts);
 	    vts->drawnext = 1;
@@ -295,12 +296,11 @@ void mgps_sortdisplaylist(void)
 */
 void mgps_showdisplaylist(FILE *outf)
 {
-    CPoint3 *vts, *vt;
-    int ref, i, vloc, *primp;
+    CPoint3 *vts;
+    int ref, *primp;
     mgpsprim *prim, *prim2;
     static int width;
     static int height;
-    int color[3];
 
     WnGet(_mgc->win, WN_XSIZE, &width);
     WnGet(_mgc->win, WN_YSIZE, &height);

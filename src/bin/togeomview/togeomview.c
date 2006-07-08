@@ -1,6 +1,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,6 +37,8 @@ char *prog;
 
 char timedout[] = "Couldn't start geomview\n";
 
+static void usage(void);
+
 static void
 interrupt(int sig) { 
     write(2, timedout, sizeof(timedout));
@@ -45,7 +48,7 @@ interrupt(int sig) {
 /*
  * We've determined that no copy of geomview is running, so start one.
  */
-start_gv(char **progtorun, char *toname, int asgeom, int usesock)
+static void start_gv(char **progtorun, char *toname, int asgeom, int usesock)
 {
     char *args[1024];
     int i;
@@ -82,7 +85,7 @@ start_gv(char **progtorun, char *toname, int asgeom, int usesock)
  * Pipe fitting for linking Mathematica to geomview.
  * Starts geomview if not already running.
  */
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int usesock;
     int n, fd = -1;
@@ -189,7 +192,7 @@ main(int argc, char *argv[])
     exit(0);
 }
 
-usage()
+static void usage()
 {
 	char buf[BUFSIZ];
 	setbuf(stderr, buf);

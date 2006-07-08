@@ -23,13 +23,16 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips,
  * Celeste Fowler */
 
+#include <stdlib.h> /* for abs() */
 #include "vectP.h"
 #include "pickP.h"
 #include "appearance.h"

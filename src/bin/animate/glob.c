@@ -15,9 +15,11 @@
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+#if 0
 #ifndef lint
 static char sccsid[] = "@(#)glob.c	5.7 (Berkeley) 12/14/88";
 #endif /* not lint */
+#endif
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
 #include "config.h"
@@ -34,7 +36,7 @@ static char sccsid[] = "@(#)glob.c	5.7 (Berkeley) 12/14/88";
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-
+#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 #include <pwd.h>
@@ -73,7 +75,7 @@ static  int  Gmatch(register char *, char *);
 static  void Gcat(register char *, char *);
 static  void addpath(char);
 static  void fatal(char *);
-static  void scan(register char **, int ());
+/*static  void scan(register char **, int ());*/
 char	*globerr;
 char	*home;
 struct	passwd *getpwnam();

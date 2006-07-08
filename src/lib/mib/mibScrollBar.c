@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "mibwidgets.h"
@@ -138,7 +140,6 @@ void mib_save_ScrollBar(mib_Widget *this, FILE *fout)
 int mib_load_ScrollBar(mib_Widget *this, mib_Buffer *fin)
 {
   mib_ScrollBar *myres;
-  unsigned char *label_text;
   char          res[MI_MAXSTRLEN];
   char          val[MI_MAXSTRLEN];
   Arg           args[5];

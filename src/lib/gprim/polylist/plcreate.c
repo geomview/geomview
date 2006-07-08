@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -81,7 +83,6 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
       pl->flags = pl->n_polys = pl->n_verts = 0;
       pl->p = (Poly *)NULL; pl->vl = (Vertex *)NULL;
    } else {
-   int j,k=0;
       pl = exist;
    }
 
@@ -188,7 +189,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
 	i = pl->n_verts;
 	if (dimn == 3) {
 	    while(--i >= 0) {
-		*(Point3 *)&(v->pt) = *v3++;
+		    *(Point3 *)(void *)&(v->pt) = *v3++;
 		v->pt.w = 1.0;
 		v++;
 	    }

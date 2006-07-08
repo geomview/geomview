@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -38,27 +40,27 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "discgrpP.h"
 
 
-        static DiscGrp *mydg;
-    	static ColorA white = {1,1,1,.75};
-    	static DiscGrpEl grpel;
-	static Transform mlist[128];
-	static int (*constraintfn)();
-	int check_big = 1, 	/* this is currently never non-zero */
-		check_new = 1, 	/* ditto */
-		have_matrices = 1,
-		metric = DG_HYPERBOLIC,
-		stringent = 0;
-	int 
-		long_cnt = 0,
-		same_cnt = 0,
-		far_cnt = 0, 
-		print_cnt = 0, 
-		store_cnt = 0;
-	static int numchunks = 1;
-	static int ngens = 0;
-	int debug = 0;
-	static char symbollist[64];
-    static void get_matrices();
+static DiscGrp *mydg;
+static ColorA white = {1,1,1,.75};
+/*static DiscGrpEl grpel;*/
+static Transform mlist[128];
+static int (*constraintfn)();
+int check_big = 1, 	/* this is currently never non-zero */
+	check_new = 1, 	/* ditto */
+	have_matrices = 1,
+	metric = DG_HYPERBOLIC,
+	stringent = 0;
+int 
+long_cnt = 0,
+	same_cnt = 0,
+	far_cnt = 0, 
+	print_cnt = 0, 
+	store_cnt = 0;
+/*static int numchunks = 1;*/
+static int ngens = 0;
+int debug = 0;
+static char symbollist[64];
+static void get_matrices();
 
 int
 getindex(c)
@@ -75,7 +77,7 @@ word_to_mat(word, mat1)
 char *word;
 Transform mat1;
 {
-    int length, i, index;
+    int i, index;
     /*printf("# %s\n",word); */
     TmIdentity(mat1);
 
@@ -110,7 +112,6 @@ is_big_and_new(DiscGrpEl *dgel)
 static int
 process(DiscGrpEl *dgel, int stacking)
 {
-	Transform mat;
 	register int is_ok = 0;
 
     	if (have_matrices)    	{
@@ -136,8 +137,6 @@ static int
 enumerate(int state, int depth, DiscGrpEl *dgel)
 {
 	register int i, newstate, pval;
-	Transform mat;
-	char wword[64];
 
 	if ( ! ((pval = process(dgel, 0)) & DG_CONSTRAINT_STORE)) return 0;
 	if (pval & DG_CONSTRAINT_MAXLEN)	return 0;
@@ -160,9 +159,8 @@ enumerate(int state, int depth, DiscGrpEl *dgel)
 static int
 dumb_enumerate(int depth, DiscGrpEl *dgel)
 {
-	register int i, j, l, stacking;
-	Transform mat;
-	char *word, wword[64];
+	register int i, j;
+	char *word;
 	extern char  *pop_old_stack();
 
 	init_stack();
@@ -186,7 +184,7 @@ dumb_enumerate(int depth, DiscGrpEl *dgel)
 	return 1;
 }	
  
-	static char emptyword[64] = "";
+/*static char emptyword[64] = "";*/
 /* 
  * hack together an enumerate routine
  */

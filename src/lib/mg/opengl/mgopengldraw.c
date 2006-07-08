@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -137,11 +139,9 @@ void
 mgopengl_quads(int count,  HPoint3 *V, Point3 *N, ColorA *C)
 {
   int i;	
-  register int k;
   register HPoint3 *v;
   register Point3 *n;
   register ColorA *c;
-  ColorA cs[4];
   int flag;
 
 #define QUAD(stuff)  { \
@@ -231,7 +231,6 @@ void mgopengl_line( HPoint3 *p1, HPoint3 *p2 )
 
 void mgopengl_point(register HPoint3 *v)
 {
-  int i;
   HPoint3 a;
   register HPoint3 *p, *q;
   float vw;
@@ -274,7 +273,6 @@ void mgopengl_point(register HPoint3 *v)
 
 void mgopengl_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 {
-  int remain;
 
   DONT_LIGHT();
 
@@ -332,7 +330,7 @@ static int
 mgopengl_trickypolygon( Poly *p, int plflags ) 
 {
   int i;
-  Vertex *vprev, *vp, *vnext;
+  Vertex *vprev, *vp;
   Point3 e, eprev, cross;
   int cw = 0, ccw = 0;
   float orient;
@@ -398,7 +396,6 @@ void mgopengl_polylist( int np, Poly *_p, int nv, Vertex *V, int plflags )
   register int i,j;
   register Poly *p;
   register Vertex **v, *vp;
-  register Point3 *n;
   struct mgastk *ma = _mgc->astk;
   int flag,shading;
   int nonsurf = -1;
@@ -593,7 +590,7 @@ mgopengl_drawnormal(register HPoint3 *p, Point3 *n)
   if (p->w <= 0.0) return;
   if(p->w != 1) {
     HPt3ToPt3(p, &tp);
-    p = (HPoint3 *)&tp;
+    p = (HPoint3 *)(void *)&tp;
   }
 
   scale = _mgc->astk->ap.nscale;

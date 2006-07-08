@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
 #include <math.h>
@@ -382,7 +384,7 @@ void apply_motion(Motion *motion, float dt)
   if (motion->timeunit < .00001) {
     if (motion->timeunit) 
       fprintf(stderr, "motion->timeunit = %x\n", 
-      				*(unsigned *)&motion->timeunit);
+	      *(unsigned *)(void *)&motion->timeunit);
     motion->timeunit = 0.0;
   } 
   tscale = (motion->timeunit != 0.) ? dt / motion->timeunit : 1.0;
@@ -1077,7 +1079,6 @@ LDEFINE(look_encompass, LVOID,
 {
   int i;
   Sphere *sphere;
-  int space = drawerstate.space;
   int objID = WORLDGEOM, camID = CAMID(uistate.targetcam);
   DView *dv;
   Transform w2c;
@@ -1085,7 +1086,6 @@ LDEFINE(look_encompass, LVOID,
   int perspective;
   HPoint3 center, fromcam;
   float radius, effradius, zrange, newzrange, newfar, newnear;
-  float zdelta;
 
   LDECLARE(("look-encompass", LBEGIN,
 	    LOPTIONAL,
@@ -1207,7 +1207,6 @@ LDEFINE(look_toward, LVOID,
 {
   int objID = WORLDGEOM, camID = CAMID(uistate.targetcam);
   char *center = NULL;
-  int usebbox = 1;
 
   LDECLARE(("look-toward", LBEGIN,
 	    LOPTIONAL,

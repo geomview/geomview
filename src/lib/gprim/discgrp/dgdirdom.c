@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "geom.h"
 #include "polylistP.h"
@@ -103,7 +105,7 @@ void
 DiscGrpAddInverses(register DiscGrp *discgrp)
 {
     int i, j, found = 0;
-    Transform product, inverse;
+    Transform product;
     DiscGrpElList *newgens;
     
     /* remove all identity matrices */
@@ -241,7 +243,6 @@ DiscGrpElList *
 DiscGrpExtractNhbrs( WEpolyhedron *wepoly )
 {
     register int 	i,j,k;
-    int 		flag = 0, wl;
     WEface 		*fptr;	
     DiscGrpElList	*mylist;
     ColorA		GetCmapEntry();
@@ -280,7 +281,6 @@ DiscGrpExtractNhbrs( WEpolyhedron *wepoly )
 static void
 DiscGrpScalePolyList(DiscGrp *dg, PolyList *dirdom,  HPoint3 *pt0, float scale)
 {
-    PolyList *copy;
     int i, metric;
     HPoint3 tmp1, tmp2, tpt0, tpt1;
     HPt3Copy(pt0, &tpt0);
@@ -314,13 +314,12 @@ DiscGrpScalePolyList(DiscGrp *dg, PolyList *dirdom,  HPoint3 *pt0, float scale)
 	}
 }
 
-    Geom *small_dd, *large_dd;
+Geom *small_dd, *large_dd;
 Geom *
 DiscGrpDirDom(register DiscGrp *dg)
 {
     Geom *oogldirdom;
     WEpolyhedron *dd;
-    HPoint3 pt1;
     extern Geom             *WEPolyhedronToPolyList();
     Geom *mylist, *smlist;
 
@@ -361,8 +360,6 @@ WEpolyhedron *
 DiscGrpMakeDirdom(DiscGrp *gamma, HPoint3 *poi, int slice)
 {
 	int i, j, k;
-	WEvertex	*vptr;
-	Transform tr;
 	proj_matrix *gen_list;
     	point origin;
 	int metric, transp;

@@ -23,12 +23,14 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.3 2002/04/13 23:24:06 smr99 Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.4 2006/07/08 20:28:21 rotdrop Exp $ */
 
 #include <stdio.h>
 #include <string.h>

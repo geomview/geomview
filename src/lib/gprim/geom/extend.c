@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -56,7 +58,6 @@ GeomMethodSel(char *methodname)
 int
 GeomNewMethod(char *methodname, GeomExtFunc *defaultfunc)
 {
-    register struct extmethod *m;
     register int sel;
     int oldmax = max_extmethods;
 
@@ -81,8 +82,6 @@ GeomNewMethod(char *methodname, GeomExtFunc *defaultfunc)
 char *
 GeomMethodName(int sel)
 {
-    struct extmethods *m;
-
     return (sel <= 0 || sel >= n_extmethods)
 	? NULL : extmethods[sel].methodname;
 }
@@ -135,7 +134,7 @@ GeomCall(int sel, Geom *geom, ...)
     }
     if(ext) {
 	va_start(args, geom);
-	result = (*ext)(sel, geom, args);
+	result = (*ext)(sel, geom, &args);
 	va_end(args);
     }
     return result;

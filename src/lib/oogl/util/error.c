@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -102,16 +104,20 @@ void OOGLWarn(char *fmt, ...)
 const char *
 sperrno(unsigned int err)
 {
-#if !defined(__FreeBSD__) && !defined(__GLIBC__) && !defined(__CYGWIN__)
+#if HAVE_STRERROR
+  return strerror((int)err);
+#else
+# if !defined(__FreeBSD__) && !defined(__GLIBC__) && !defined(__CYGWIN__)
   extern int sys_nerr;
   extern char *sys_errlist[];
-#endif
+# endif
   static char errstr[16];
   
   if(err < sys_nerr)
     return(sys_errlist[err]);
   sprintf(errstr, "Error %d", err & 0xffff);
   return(errstr);
+#endif
 }
 
 const char *

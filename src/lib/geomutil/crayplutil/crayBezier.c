@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "point3.h"
@@ -176,9 +178,9 @@ void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list *args) {
 
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  va_arg(*args, int);			/* findex */
-  va_arg(*args, int *);			/* edge */
-  va_arg(*args, int *);			/* gpath */
+  (void)va_arg(*args, int);		/* findex */
+  (void)va_arg(*args, int *);		/* edge */
+  (void)va_arg(*args, int *);		/* gpath */
   pt = va_arg(*args, HPoint3 *);
 
   index = WhichCorner(b, vindex, pt);
@@ -207,9 +209,9 @@ void *cray_bezier_GetColorAt(int sel, Geom *geom, va_list *args) {
   if (!crayHasColor(geom, NULL)) return NULL;
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  va_arg(*args, int);                    /* findex */
-  va_arg(*args, int *);                  /* edge */
-  va_arg(*args, int *);                  /* gpath */
+  (void)va_arg(*args, int);                    /* findex */
+  (void)va_arg(*args, int *);                  /* edge */
+  (void)va_arg(*args, int *);                  /* gpath */
   pt = va_arg(*args, HPoint3 *);
 
   index = WhichCorner(b, vindex, pt);

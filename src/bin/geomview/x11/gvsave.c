@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "mibwidgets.h"
@@ -94,7 +96,7 @@ extern snap_entry snapshot_table[];
 
 void ui_load_savepanel()
 {
-  int	     n, i;
+  int	     n;
   Widget     savetypeform,
 	     temp;
 
@@ -102,7 +104,6 @@ void ui_load_savepanel()
 	     *m_saveobj;
   mib_Menu   *objectmenu;
   XmString   label_text;
-  Atom       AProtocol;
   XmString   xname;
   static char Save[] = "Save";
 

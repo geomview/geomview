@@ -39,11 +39,6 @@ AH_BOTTOM([#if D1_DEBUG
 
 #endif /* CONFIG_H_INCLUDED */
 ])
-AC_DEFINE(ACCEPT_ARG3_TYPE, [int],
-          [ACCEPT_ARG3_TYPE should be the datatype of the
-3rd arg to the 'accept' system call.  It's 'int' on some systems,
-'unsigned long' on some, and could be something else on others.
-Default to int])
 AC_DEFINE(USE_FSTROPEN_1, 0,
 [USE_FSTROPEN_1 determines whether we forceably use one of our	
 manual implementations of fstropen (in src/lib/oogl/util/futil.c)	
@@ -486,11 +481,34 @@ AC_ARG_ENABLE(motion-averaging,
 ########################################################################
 ########################################################################
 
+# Check for some additional functions.
+
+AC_CHECK_FUNCS([strerror])
+
+########################################################################
+########################################################################
+########################################################################
+
 case "$target" in
  *linux*) MACHTYPE="linux"
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
                              [Define to the machine type])
           LINUX=true
+	  AC_CHECK_HEADERS([sys/socket.h])
+          AC_CHECK_TYPES([socklen_t],[
+AC_DEFINE(ACCEPT_ARG3_TYPE, [socklen_t],
+                    [ACCEPT_ARG3_TYPE should be the datatype of the
+3rd arg to the 'accept' system call.  It's 'int' on some systems,
+'unsigned long' on some, and could be something else on others.
+Default to int])],[
+AC_DEFINE(ACCEPT_ARG3_TYPE, [unsigned int],
+                    [ACCEPT_ARG3_TYPE should be the datatype of the
+3rd arg to the 'accept' system call.  It's 'int' on some systems,
+'unsigned long' on some, and could be something else on others.
+Default to int])],[#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+])
           ;;
   *irix*) MACHTYPE="sgi"
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
@@ -517,6 +535,11 @@ Default to int])
        *) MACHTYPE=$target_os
 	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
                              [Define to the machine type])
+	  AC_DEFINE(ACCEPT_ARG3_TYPE, [int],
+	          [ACCEPT_ARG3_TYPE should be the datatype of the
+3rd arg to the 'accept' system call.  It's 'int' on some systems,
+'unsigned long' on some, and could be something else on others.
+Default to int])
           ;;
 esac
 

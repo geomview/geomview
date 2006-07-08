@@ -30,4 +30,6 @@ typedef struct {
   int **action;
 } wa;
 
+void wfsaerror(char *s);
+
 #endif

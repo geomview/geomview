@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgribP.h"
@@ -104,7 +106,6 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 void
 mgrib_lighting(struct mgastk *astk, int mask)
 {
-  LtLight *light;
   LmLighting *lm = &astk->lighting;
 
   if (lm->valid & mask & LMF_AMBIENT) {

@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * OOGL PolyList and NPolyList wrappers for clipping routine.
@@ -71,7 +73,7 @@ void readVerts(Clip *clip, vertex_list *pv, Geom *g, int isnd)
 void readNDPoly(poly *p, NPolyList *pl, int polyNum)
 {
   int i;
-  pvtx *corner;
+  pvtx *corner = NULL;
   polyvtx_list *pv = (polyvtx_list *)malloc(sizeof(polyvtx_list));
   pvtx **prevp = &pv->head;
   NPoly *np = &pl->p[polyNum];
@@ -87,7 +89,7 @@ void readNDPoly(poly *p, NPolyList *pl, int polyNum)
   *prevp = pv->head;
   pv->point = corner;
   
-  p->c = *(Color *)&np->pcol;
+  p->c = *(Color *)(void *)&np->pcol;
 }
    
   
@@ -120,7 +122,7 @@ void readPoly(poly *p, PolyList *pl, int polyNum)
   p->me = (polyvtx_list *)malloc(sizeof(polyvtx_list));
   readPolyvtx(p->me, p->numvtx, pl, polyNum);	/* read each vertex ref number. */
 
-  p->c = *(Color *)&pl->p[polyNum].pcol;
+  p->c = *(Color *)(void *)&pl->p[polyNum].pcol;
 }
 
 void readPolys(Clip *clip, poly_list *ph, Geom *g, int isnd)
@@ -204,7 +206,6 @@ void *getGeom(Clip *clip)
   vertex *vert;
   poly *point;
   int total = 0;
-  char *objtype;
   Geom *aGeom=NULL;
   int dim = clip->dim;
   int hdim = (dim == 3 || dim == 4) ? 4 : dim+1;

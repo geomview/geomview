@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * Software shaders.
@@ -59,10 +61,12 @@ cotransform(register Transform Tinv, register Point3 *in, Point3 *out)
 static float euck1 = 1.0;		/* inverse power falloff */
 static float euck2 = 0.0;		/* safety zone around light */
 static float fog = 0.0;			/* fog control */
+#if 0
 static float hypk1 = .5;		/* controls exponential falloff */
 static float hypk2 = .0;		/* controls exponential falloff */
 static float sphk1 = .5;		/* controls exponential falloff */
 static float sphk2 = 0.0;		/* safety zone around light */
+#endif
 
 /*
  * Euclidean shader
@@ -134,7 +138,7 @@ int mg_eucshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 		 * as the back-side material color.
 		 */
 	    if(ma->mat.valid & MTF_EMISSION)
-		thiscolor = (ColorA*)&ma->mat.emission;
+		    thiscolor = (ColorA*)(void *)&ma->mat.emission;
 	}
 
 	N.x *= s;  N.y *= s;  N.z *= s;
@@ -151,7 +155,7 @@ int mg_eucshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 					/* Diffuse term */
 	    bright = l->intensity;
 	    if(l->globalposition.w == 0) {
-		L = (Point3 *)&l->globalposition;
+		    L = (Point3 *)(void *)&l->globalposition;
 		ll = DOT(*L,*L);
 	    } else {
 		HPt3SubPt3(&l->globalposition, &V, &Lt);

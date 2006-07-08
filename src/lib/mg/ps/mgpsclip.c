@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgpsP.h"
@@ -221,8 +223,6 @@ primtemp = prim2; prim2 = prim1; prim1 = primtemp; \
 			vertex list, then we need to copy it back to the
 			global vertex list */
   {
-    CPoint3 *vtfrom, *vtto;
-
     prim2->numvts = prim1->numvts;
 /*
     for (n=0; n < aprim->numvts; n++)

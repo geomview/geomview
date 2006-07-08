@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -81,10 +83,9 @@ DiscGrp *
 DiscGrpDraw(register DiscGrp *discgrp)
 {
 	static HPoint3 origin = {0,0,0,1}, cpos;
-	Transform h, hprime, c2wprime;
-	Transform invtlate, tmp, tlate;
+	Transform c2wprime;
 	DiscGrpEl *nhbr;
-	int i, metric;
+	int metric;
 
     /* set up the viewing system dependent matrices, etc */
     if (discgrp->predraw)    (*discgrp->predraw)(discgrp);
@@ -95,16 +96,15 @@ DiscGrpDraw(register DiscGrp *discgrp)
      *	is a bit suspiciously topheavy  */
     if (discgrp->geom == NULL || discgrp->flag & DG_NEWDIRDOM ||
 	(discgrp->flag & DG_DRAWDIRDOM && discgrp->ddgeom == NULL)) {
-      	Appearance *ap;
-      	float scale;
+
       	discgrp->ddgeom = DiscGrpDirDom(discgrp);
 	if (discgrp->geom == NULL ) discgrp->geom = discgrp->ddgeom;
         /* turn off the alarm */
 	discgrp->flag &= ~DG_NEWDIRDOM;
 	if (!discgrp->ddgeom)	{
 	    OOGLError(1,"DiscGrpDraw: Unable to create dirichlet domain\n");
-	    }
-        }
+	}
+    }
 
     /* be sure we have some group elements */
     if (discgrp->big_list == NULL ) {
@@ -153,13 +153,15 @@ DiscGrpDraw(register DiscGrp *discgrp)
     {
     int viscnt = 0; 
     float ratio = 1.0;
-    HPoint3 image, image2;
+    HPoint3 image;
     int vis;
-    float dx, dy, d;
+    float d;
     Transform tile2c;
+#ifdef UNNECESSARY
     extern Geom *large_dd, *small_dd;	/*very ugly but appearances
 		don't work correctly when pushed down into a list */
-    Transform Tnew, T2;
+#endif
+    Transform Tnew;
     GeomIter *it;
 
     it = GeomIterate( (Geom *)discgrp, DEEP );

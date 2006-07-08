@@ -19,14 +19,17 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "plutil.h"
 
-main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   float prec = 0.0;
   if (argc > 1) sscanf(argv[1], "%f", &prec);
   GeomFSave(PLConsol(GeomFLoad(stdin, NULL), prec), stdout, NULL);

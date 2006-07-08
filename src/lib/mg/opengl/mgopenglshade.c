@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -46,7 +48,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* materialno, lightmodelno, and lightno between 1 and 65535 are
  * legal. p 9-9 GL PROG GUIDE (munzner 9/17/91)
  */
-static int lightno = 1;
+/*static int lightno = 1;*/
 static float kd = 1.0;
 
 void
@@ -162,7 +164,9 @@ mgopengl_material(register struct mgastk *astk, int mask)
 {
     GLfloat f[4];
     Material *mat = &astk->mat;
+#ifdef TRUE_EMISSION
     static float lmnull = (float) 0; /* LMNULL */
+#endif
 
     mask &= mat->valid;
     if (mask & MTF_Kd)
@@ -251,7 +255,6 @@ mgopengl_setshader(mgshadefunc shader)
 
 void mgopengl_lighting(struct mgastk *astk, int mask)
 {
-  LtLight *light;
   LmLighting *lm = &astk->lighting;
 
   if (lm->valid) {
@@ -269,7 +272,7 @@ void mgopengl_lighting(struct mgastk *astk, int mask)
 void
 mgopengl_lights( LmLighting *lm, struct mgastk *astk )
 {
-    int i, lightsused, tmp;
+    int i, lightsused;
     LtLight *light, **lp;
     int baselight = -1;
     GLint maxlights;
@@ -533,7 +536,7 @@ mgopengl_needtexture()
   Texture *wanttx = _mgc->astk->ap.tex;
   int apflag = _mgc->astk->ap.flag;
   TxUser *tu;
-  int id, max = 0, count = 0, mustload = 0;
+  int id, mustload = 0;
   int adequate;
 
   static GLint formats[] =
@@ -643,8 +646,8 @@ mgopengl_needtexture()
 			        (unsigned long *)wanttx->data);
     } else {
 
-	if ((wanttx->xsize & (wanttx->xsize - 1) != 0) ||
-	   (wanttx->ysize & (wanttx->ysize - 1) != 0)) {
+	if (((wanttx->xsize & (wanttx->xsize - 1)) != 0) ||
+	    ((wanttx->ysize & (wanttx->ysize - 1)) != 0)) {
 
 	  GLint newx = 4, newy = 4;
 	  unsigned long *tempdata = (unsigned long *) wanttx->data;

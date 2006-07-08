@@ -19,9 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
-
+#endif
 
 /*  A Bison parser, made from ../parse.y with Bison version GNU Bison version 1.24
   */
@@ -44,6 +45,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 extern void fparse_yyerror(char *);
 extern int fparse_yyparse();
 extern int fparse_yyrestart(void *);
+extern void expr_lex_reset_input(char *buf);
+extern int fparse_yylex(void);
 
 #define YYDEBUG 1
 

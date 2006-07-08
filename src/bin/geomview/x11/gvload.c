@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -42,10 +44,9 @@ extern Widget TopLevel;
 
 static Widget shell, loadform;
 static Widget FileBrowserButton, HideButton, OKButton, TextField;
-static int loaded = 0, shown = 0;
-static char **dirp;
-static int    pos_later = 0, posx = 0, posy = 0;
-static char geometry[40];
+static int loaded = 0;
+/*static int    pos_later = 0, posx = 0, posy = 0;
+  static char geometry[40];*/
 
 static void do_load(Widget w, XtPointer data, XmAnyCallbackStruct *cbs);
 static void action_load(Widget, XEvent *, String *, Cardinal *);
@@ -55,8 +56,6 @@ static String loadtransl = "<KeyPress>Return: GVLoad()";
 
 void ui_load_loadpanel()
 {
-  Arg	     args[20];
-  int	     n;
   mib_Widget *loadload;
   XtTranslations LoadTransl;
   static char Load[] = "Load";
@@ -102,9 +101,8 @@ void ui_load_loadpanel()
 
 void ui_show_loadpanel()
 {
-  char *str;
   Window root, child;
-  int x, y, wx, wy, posx, posy;
+  int x, y, wx, wy, posx = 0, posy = 0;
   unsigned int mask;
 
   XtManageChild(loadform);

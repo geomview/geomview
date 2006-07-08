@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  *      file:   main.c:   
@@ -45,6 +47,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 float dt;
 
+extern void Begin_OOGL(void);
+extern void UpdateOOGL(int x_size, int y_size, float gridunit, float data[]);
+
 
 /* replace this with your favorite function */
 float
@@ -56,8 +61,7 @@ myfunc(x,y,t)
         return(sin(r + t)*sqrt(r));
 }
 
-main(argc, argv)        
-     char **argv;
+int main(int argc, char **argv)
 {
         int xdim, ydim, i, j;
         float xmin, xmax, ymin, ymax, xsize, ysize, dx, dy, x, y, t, zscale;

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -215,7 +217,6 @@ void watchfd(int fd)
 static
 void unwatchfd(int fd)
 {
-    register Pool *p;
     register int i;
 
     if(fd < 0 || fd >= FD_SETSIZE)
@@ -651,8 +652,6 @@ PoolInAll(register fd_set *fds, int *nfds)
 {
     register Pool *p, *nextp;
     int got = 0;
-    struct timeval now;
-    int gotnow = 0;
 
     for(p = AllPools; p != NULL; p = nextp) {
 	nextp = p->next;	/* Grab it now, in case we PoolDelete(p) */
@@ -755,11 +754,12 @@ PoolAwaken(Pool *p)
 	awaken_until(&nexttowake);
 }
 
+#if 0
 static void
 poolresync(Pool *p, int (*resync)())
 { /* XXX implement this */
 }
-
+#endif
 
 #define	CBRA	'{'
 #define	CKET	'}'
@@ -768,10 +768,8 @@ Handle *
 PoolIn(Pool *p)
 {
     register int c = 0;
-    int fd;
     Handle *h = NULL;
     Ref *r = NULL;
-    int ok;
 
     if(p->type != P_STREAM)
 	return NULL;		/* Do shared memory here someday XXX */

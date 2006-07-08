@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -52,8 +54,6 @@ static void tosspoints(NDMesh *m)
 
 static void tossmesh(register NDMesh *m)
 {
-    int n;
-    HPointN **p;
 
     tosspoints(m);
     if(m->p) OOGLFree(m->p);
@@ -72,7 +72,7 @@ GeomClass *classp;
 va_list *a_list;
 {
     register NDMesh *m;
-    int		attr, copy = 1, fourd = 0;
+    int		attr, copy = 1;
     int		i;
     int		npts;
     HPoint3	*p;
@@ -128,14 +128,14 @@ va_list *a_list;
 	case CR_POINT:
 	case CR_POINT4:
 	    tosspoints(m);
-	    ndmeshfield(copy, npts*sizeof(HPointN *), (void **)&m->p,
+	    ndmeshfield(copy, npts*sizeof(HPointN *), (void **)(void *)&m->p,
 		(void *)va_arg (*a_list, HPointN **), "ND mesh points");
 	    break;
 
 	case CR_U:
 	    m->flag = (m->flag & ~MESH_U) |
 		(MESH_U & ndmeshfield(copy, npts*sizeof(Point3),
-				(void **)&m->u,
+				      (void **)(void *)&m->u,
 				(void *)va_arg (*a_list, Point3 *),
 				"ndmesh texture coords"));
 	    break;
@@ -143,7 +143,7 @@ va_list *a_list;
 	case CR_COLOR:
 	    m->flag = (m->flag & ~MESH_C) |
 		(MESH_C & ndmeshfield(copy, npts*sizeof(ColorA),
-				(void **)&m->c,
+				      (void **)(void *)&m->c,
 				(void *)va_arg (*a_list, ColorA *),
 				"ndmesh colors"));
 	    break;

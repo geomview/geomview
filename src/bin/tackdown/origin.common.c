@@ -19,12 +19,16 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "geom.h"
 #include "streampool.h"
+#include "transobj.h"
 #include "origin.common.h"
 
 static char targetname[255];

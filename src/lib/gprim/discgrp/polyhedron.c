@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* 
  *	polyhedron.c:	routines which operate on the polyhedron data structure
@@ -48,7 +50,7 @@ HPoint3 origin;
     int i, k, ii, jj;
     Geom *orbit;
     HPoint3 gorigin;
-    static HPoint3 origin2 = {0,0,0,1};
+    /*static HPoint3 origin2 = {0,0,0,1};*/
     WEface *fptr;
     Transform T;
     short *vnvert;
@@ -89,7 +91,7 @@ HPoint3 origin;
 				CR_END);
     return(orbit);
 }
-static ColorA white = {1,1,1,1};
+/*static ColorA white = {1,1,1,1};*/
 
 Geom *
   WEPolyhedronToPolyList(poly)

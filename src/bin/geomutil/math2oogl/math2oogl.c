@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "config.h"
 
@@ -59,6 +61,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <sys/errno.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #ifdef AIX
 #define _BSD 1		/* Get FNDELAY from <fcntl.h> */
@@ -116,7 +119,7 @@ static void interrupt(int sig) {
     exit(1);
 }
 
-start_gv(char **gvpath, char *pipename, char *toname)
+void start_gv(char **gvpath, char *pipename, char *toname)
 {
     char *args[1024];
     int i = 0;
@@ -136,7 +139,6 @@ start_gv(char **gvpath, char *pipename, char *toname)
 
     if(fork() == 0) {
 	int savederr = dup(2);
-	char myname[1024];
 	static char whynot[] = "Geomview graphics: math2oogl: Couldn't find ";
 
 	fcntl(savederr, F_SETFD, FD_CLOEXEC);	/* close this on exec */
@@ -168,7 +170,7 @@ start_gv(char **gvpath, char *pipename, char *toname)
     }
 }
 
-startgv(char **gvpath)
+void startgv(char **gvpath)
 {
     int usesock;
     int n, fd = -1;
@@ -289,7 +291,7 @@ int main(int ac,char **av)
   int numnums=0;
   int numcols=0;
   enum st state=IGNORE;
-  Color **colors;
+  Color **colors = NULL;
   int i,j,q,ok;
   float xincr, yincr;
   int complex = 0, toss = 0;
@@ -401,7 +403,7 @@ int main(int ac,char **av)
 	ok = 0;
       if (!ok) {
 	fprintf(stderr, "can't read mesh dimensions!\n");
-	return;
+	return 1;
       }
       if (globline->token == MESHRANGE) {
 	globline=globline->next;
@@ -413,7 +415,7 @@ int main(int ac,char **av)
       } else ok = 0;
       if (!ok) {
 	fprintf(stderr, "can't read mesh range!\n");
-	return;
+	return 1;
       }
       
       /* 
@@ -451,7 +453,7 @@ int main(int ac,char **av)
 	}
 	if (!ok) {
 	  fprintf(stderr, "can't read mesh color array!\n");
-	  return;
+	  return 1;
 	}
       }
       /* Each number we get is just the z coordinate. 
@@ -490,7 +492,7 @@ int main(int ac,char **av)
       }
       if (!ok) {
 	fprintf(stderr, "can't read mesh points array!\n");
-	return;
+	return 1;
       } else 
 	printf("} #end of MESH\n"); 
       break;
@@ -506,7 +508,7 @@ int main(int ac,char **av)
 	ok = 0;
       if (!ok) {
 	fprintf(stderr, "can't read mesh dimensions!\n");
-	return;
+	return 1;
       }
       
       /* 
@@ -544,7 +546,7 @@ int main(int ac,char **av)
 	}
 	if (!ok) {
 	  fprintf(stderr, "can't read mesh color array!\n");
-	  return;
+	  return 1;
 	}
       }
       /* Each number we get is just the x,y or z coordinate. 
@@ -588,7 +590,7 @@ int main(int ac,char **av)
       }
       if (!ok) {
 	fprintf(stderr, "can't read mesh points array!\n");
-	return;
+	return 1;
       } else 
 	printf("} #end of MESH\n"); 
     break;
@@ -604,7 +606,7 @@ int main(int ac,char **av)
 	ok = 0;
       if (!ok) {
 	fprintf(stderr, "can't read Bezier patch dimensions!\n");
-	return;
+	return 1;
       }
       
       /* 
@@ -640,7 +642,7 @@ int main(int ac,char **av)
 	}
 	if (!ok) {
 	  fprintf(stderr, "can't read mesh color array!\n");
-	  return;
+	  return 1;
 	}
       }
       /* Each number we get is just the x,y or z coordinate.  */
@@ -677,7 +679,7 @@ int main(int ac,char **av)
       }
       if (!ok) {
 	fprintf(stderr, "can't read control points array!\n");
-	return;
+	return 1;
       } else 
 	printf("} #end of BEZ\n"); 
     break;
@@ -874,7 +876,9 @@ int main(int ac,char **av)
       }
       globline = curline;
     break;
-    default: fprintf(stderr, "math2oogl: unexpected data: %s\n", globline->data); return;
+    default:
+	    fprintf(stderr, "math2oogl: unexpected data: %s\n", globline->data);
+	    return 1;
     } /* end switch (globline->token) */
  }
   printf ("\n} #end of LIST\n");

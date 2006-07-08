@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -49,15 +51,13 @@ static void norm();
  */
 
 static Color black = { 0.0, 0.0, 0.0 };
-static LtLight *freelights = NULL;
+/* static LtLight *freelights = NULL; */
 
 LtLight *
 _LtSet(LtLight *light, int a1, va_list *alist)
 {
     
     int attr;
-    Color *co;
-    Point *pt;
 
 #define NEXT(type) va_arg(*alist, type)
     
@@ -242,7 +242,7 @@ LtFLoad(lite, f, fname)
     char *fname;	/* Used for error msgs, may be NULL */
 {
   char *w;
-  register int i,j;
+  register int i;
   float v[4];
   int brack = 0;
   static char *lkeys[] = {
@@ -281,10 +281,10 @@ LtFLoad(lite, f, fname)
 	return NULL;
       }
       switch(i) {
-      case 0: l.ambient = *(Color *)v; break;
-      case 1: l.color = *(Color *)v; 
+      case 0: l.ambient = *(Color *)(void *)v; break;
+      case 1: l.color = *(Color *)(void *)v; 
 	norm( &l.color, &l.intensity ); break;
-      case 2: l.position = *(HPoint3 *)v; break;
+      case 2: l.position = *(HPoint3 *)(void *)v; break;
       case 3: break;
       default: l.location = ~largs[i]; break;
       }
@@ -327,9 +327,6 @@ LmLighting *
 _LmSet(LmLighting *lgt, int a1, register va_list *alist)
 {
     int attr;
-    Color *co;
-    LtLight *la;
-    int v, mask;
 
 #define NEXT(type) va_arg(*alist, type)
 
@@ -554,8 +551,6 @@ LmDefault( LmLighting *l )
 void
 LmDelete(LmLighting *lm)
 {
-    register LtLight *l, *nl;
-
     if(lm == NULL || RefDecr((Ref *)lm) > 0)
 	return;
     if(lm->magic != LIGHTINGMAGIC) {
@@ -572,7 +567,7 @@ void
 LmRemoveLight(LmLighting *lm, LtLight *lt)
 {
     LtLight **lp;
-    LtLight **found = NULL, **last;
+    LtLight **found = NULL, **last = NULL;
     int i;
     LM_FOR_ALL_LIGHTS(lm, i,lp) {
 	if(*lp == lt)
@@ -677,7 +672,6 @@ LmFLoad(LmLighting *lgt, FILE *f, char *fname)
     };
   int got;
   LmLighting l;
-  LtLight lite;
 
   if(lgt == NULL)
     lgt = LmCreate(LM_END);
@@ -720,7 +714,7 @@ LmFLoad(LmLighting *lgt, FILE *f, char *fname)
 	lgt->valid |= lbits[i];
 	if(over) lgt->override |= lbits[i];
 	switch(i) {
-	case 0: lgt->ambient = *(Color *)v; break;
+	case 0: lgt->ambient = *(Color *)(void *)v; break;
 	case 1: lgt->localviewer = v[0]; break;
 	case 2: lgt->attenconst = v[0]; break;
 	case 3: lgt->attenmult = v[0]; break;

@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
 #include "config.h"
@@ -30,6 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <unistd.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <string.h>
 #include "glob.h"
 #include "animate.h"
 #include "xanimate.h"

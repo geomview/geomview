@@ -29,6 +29,7 @@
 #define NULL 0
 #endif
 
+#include <stdlib.h> /* abs() */
 #include	"bbox.h"
 
 #define	VECT_MAGIC	0x4ac95203	/* For binary external format */

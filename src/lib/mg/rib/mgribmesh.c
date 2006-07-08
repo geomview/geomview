@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mgP.h"
 #include "mgribP.h"
@@ -48,11 +50,10 @@ mgrib_mesh( wrap, nu, nv, P, N, C)
     ColorA *C;
 {
     register Appearance *ap;
-    ColorA	*c;
     Color   *c3;
     Point3  *n;
     HPoint3 *p;
-    int u,v;
+    int u;
 
     ap = &_mgc->astk->ap;
 
@@ -85,15 +86,13 @@ mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
 {
     register Appearance *ap;
     char    *uwrap,*vwrap;
-    int     shading;
     int     i;
     register HPoint3 *p;
     register Point3  *n;
     register ColorA	*c;
     int     nunv;
-    int     viflag; /* used to insert \n into RIB file so lines */
+    int     viflag = 0; /* used to insert \n into RIB file so lines */
 		    /* won't be too long for 'vi' to work well   */
-    float   alpha;
 
     nunv = nu * nv;
     p = P;

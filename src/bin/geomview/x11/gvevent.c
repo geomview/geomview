@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "../common/drawer.h"
 #include "../common/ui.h"
@@ -99,7 +101,6 @@ void main_loop()
   fd_set thesefds;
   int nwatch = 0;
   int queuefd;
-  XEvent xev;
   XtInputMask xim;
 
   queuefd = ConnectionNumber(dpy);

@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -71,7 +73,7 @@ static int pickon = 1;
 static int prefixid = NOID;
 static float getreal(float defaultvalue);
 static int getint(int defaultvalue);
-static int toggle(int val);
+/*static int toggle(int val);*/
 static void tog_ap_flag(int id, int flagbit);
 static int retarget(int defaultid);
 
@@ -747,11 +749,13 @@ getint(int defaultvalue)
    return number.has ? number.val*number.has : defaultvalue;
 }
 
+#if 0
 static int
 toggle(int val)
 {
   return number.has ? (number.has = number.expon = 0, number.val) : !val;
 }
+#endif
 
 static void
 tog_ap_flag( int id, int flagbit )
@@ -779,7 +783,7 @@ tog_ap_flag( int id, int flagbit )
 static int
 view_pick( DView *dv, int x, int y, Pick *pick )
 {
-  Transform V, T, Tnet, Tt, Tmodel, Tnorm, oldTw, Tworld, Tc2w;
+  Transform V, T, Tnet, Tt, Tmodel, Tnorm, oldTw, Tworld;
   register int i;
   int chosen = NOID;
   float xpick, ypick;
@@ -997,7 +1001,7 @@ emit_pick(int pickedid, Pick *pick)
     Transform T;
     float got[4];
     HPoint3 v, e[2];
-    HPoint3 pgot, *f;
+    HPoint3 *f;
     int gn, vn, vi, en, ei[2], ein, coordsysid, fn, fi;
 
     /* extract the coord system to use from the interest filter;
@@ -1034,7 +1038,7 @@ emit_pick(int pickedid, Pick *pick)
       }
 
       if (pickedid != NOID) {
-	Pt3Transform(T, &pick->got, (Point3 *)got);
+	      Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
 	got[3] = 1;
 	gn = 4;
       } else

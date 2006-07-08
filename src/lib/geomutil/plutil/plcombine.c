@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * plcombine.c
@@ -55,7 +57,6 @@ Geom *PLCombine(Geom *a1, Geom *b1)
   ColorA *color, *polycolor;
   Point3 *normal, *polynormal;
   int *vert, nvertices, *nvert;
-  Vertex *maxverta = NULL, *maxvertb = NULL;
   Geom *new;
   int flags, fourd = 0;
 

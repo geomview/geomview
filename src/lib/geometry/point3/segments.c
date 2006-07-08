@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -224,7 +226,7 @@ static float SgPtDistance(Point3 *p, Point3 *a1, Point3 *a2, Point3 *dir)
 {
   HPoint3 pl;
   Point3 min;
-  float d,t;
+  float d;
 
   PtNormalPlane(p, dir, &pl);
   SgPlMinPoint(&pl, a1, a2, dir, &min);

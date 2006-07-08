@@ -19,10 +19,13 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <math.h>
@@ -35,7 +38,21 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "graffiti.h"
 
-gui_init()
+extern void Input(void);
+extern void EraseHeadAndTail(void);
+extern void EraseHeadTail(char *xformname);
+extern void EraseHead(void);
+extern void StartNewVector(void);
+extern void LangInit(FILE *fp);
+extern void progn(void);
+extern void ShowTailAt(Point3 *p);
+extern void ShowHeadAt(Point3 *p, Point3 *prev);
+extern void Geometry(void);
+extern void endprogn(void);
+extern void gui_init(void);
+extern void gui_main_loop(void);
+
+void gui_init(void)
 {
 #ifdef XFORMS
   FL_INITIALIZE("Stereo");
@@ -48,7 +65,7 @@ gui_init()
   fl_show_form(MainForm, FL_PLACE_SIZE, TRUE, "Graffiti");
 }
 
-gui_main_loop()
+void gui_main_loop(void)
 {
   fd_set fdmask;
   struct timeval timeout;
@@ -88,17 +105,17 @@ void VertexButtonProc(FL_OBJECT *obj, long val)
   onlyverts = fl_get_button(obj);
 }
 
-PushDrawButtonUp()
+void PushDrawButtonUp(void)
 {
   fl_set_button(DrawButton, FALSE);
 }
 
-PushDrawButtonDown()
+void PushDrawButtonDown(void)
 {
   fl_set_button(DrawButton, TRUE);
 }
 
-DisplayPickInfoPanel()
+void DisplayPickInfoPanel(void)
 {
   fl_show_form(PickInfoForm, FL_PLACE_MOUSE, TRUE, "Graffiti Info");
 }

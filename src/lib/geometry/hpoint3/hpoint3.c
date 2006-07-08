@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -93,7 +95,6 @@ HPt3Coord
 HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
 {
     HPoint3 tp;
-    register HPt3Coord w;
 
     HPt3Transform( T, pin, &tp );
     if(tp.w != 1.0 && tp.w != 0.0) {
@@ -101,7 +102,7 @@ HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
 	pout->y = tp.y / tp.w;
 	pout->z = tp.z / tp.w;
     } else {
-	*pout = *(Point3 *)&tp;
+	*pout = *(Point3 *)(void *)&tp;
     }
     return tp.w;
 }

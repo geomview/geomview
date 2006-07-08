@@ -27,5 +27,23 @@ extern int newvect;
 extern int wrap;
 extern short nverts;
 extern Point3 verts[];
+extern void Input(void);
+extern void Close(void);
+extern void DisplayPickInfoPanel(void);
+extern void RemoveVertex(void);
+extern void NewLine(void);
+extern void DeleteHeadAndTail(void);
+extern void EraseHeadAndTail(void);
+extern void EraseHeadTail(char *xformname);
+extern void EraseHead(void);
+extern void StartNewVector(void);
+extern void LangInit(FILE *fp);
+extern void progn(void);
+extern void ShowTailAt(Point3 *p);
+extern void ShowHeadAt(Point3 *p, Point3 *prev);
+extern void Geometry(void);
+extern void endprogn(void);
+extern void gui_init(void);
+extern void gui_main_loop(void);
 
 

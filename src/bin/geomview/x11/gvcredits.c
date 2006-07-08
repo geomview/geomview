@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mibload.h"
 #include "../common/drawer.h"
@@ -43,7 +45,7 @@ extern Pixmap geomicon;
 
 static void add_text(Widget, char *[]);
 static Widget shell;
-static char geometry[40];
+/*static char geometry[40];*/
 
 static char *credits[] = {
   NULL,
@@ -82,14 +84,11 @@ static char *credits[] = {
 
 void ui_load_creditspanel()
 {
-  Arg	     args[20];
-  int	     n;
   Widget     creditsform,
 	     creditslist,
 	     HideButton;
 
   mib_Widget *creditsload;
-  Atom       AProtocol;
   static char Credits[] = "Credits";
 
 /*****************************************************************************/

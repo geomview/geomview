@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "mg.h"
 #include "mgP.h"
@@ -208,7 +210,7 @@ _mgrib_ctxset(int a1, va_list *alist)
       break;
     case MG_ZNUDGE:
       /* for now, read nothing */
-      va_arg(*alist, double);
+      (void)va_arg(*alist, double);
       break;
 
     case MG_SPACE:   _mgc->space = va_arg(*alist, int); break;
@@ -398,10 +400,7 @@ WnWindow *
 mgribwindow(WnWindow *win)
 {
   WnPosition wp;
-  int xsize, ysize, flag, reconstrain;
-  char *name;
-  char gver[80];
-  double pxloc, pyloc, pxsize, pysize;
+  int xsize, ysize;
   char fullscene[280], fullcreator[280], fullfor[280], fulldate[280];
 
     /* RIB 1.0 structure comments */
@@ -552,10 +551,6 @@ mgrib_worldbegin( void )
   static Transform cam2ri = {{1, 0,0,0}, {0,1,0,0}, {0,0,-1,0},{0,0,0,1}};
   int persp;
   float halfxfield, halfyfield, aspect, cnear, cfar, fov;
-  WnWindow *win;
-  int xsize, ysize;
-  Transform T;
-  WnPosition wp;
   char str[256];
   float focallen;
   HPoint3 look;
@@ -678,7 +673,6 @@ mgrib_worldbegin( void )
 void
 mgrib_worldend( void )
 {
-    unsigned char *buffer = tokenbuffer;
     mrti(mr_worldend, mr_nl, mr_NULL);
     mrti(mr_frameend, mr_nl, mr_NULL);
     /* now flush the buffer, if appropriate */
@@ -861,7 +855,6 @@ mgrib_setappearance( Appearance* ap, int mergeflag )
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
   Appearance *ma;
-  static float nullarray[] = { 0.0 };
 
   ma = &(mastk->ap);
 

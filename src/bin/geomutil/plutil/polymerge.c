@@ -19,8 +19,10 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /*
  * Squeeze OFF files.
@@ -30,6 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>	/* for qsort(), malloc(), atof() */
+#include <getopt.h>
 
 #include <ooglutil.h>	/* variable-length arrays */
 
@@ -123,16 +126,26 @@ static int debug = 0;
 static int vdim = 3;
 vvec geods;				/* List of geodesics to be traced */
 
-Fe *fedge( F *f, V *v0, V *v1 );
+static Fe *fedge( F *f, V *v0, V *v1 );
+static void vmerge(void);
+static void trace_geodesic(Geod *g);
+static E *advance_geodesic(Geod *g, E *avoid);
+static void add_geodesic(Geod *g, char *str);
+static void reflectline(P *axis, P *vector, P *result);
+static void rotation(P *va, P *vb, float T[3][3]);
+static int vcmp(V **p, V **q);
+static void deface(F *f);
+static void normal_ize(F *f);
+/*static E *echeck(int v0, int v1);*/
+/*static void fecheck(Fe *fe);*/
+static void femerge(Fe *fe1, Fe *fe2);
+static void unfedge(Fe *fe);
+static Fe *fedge(F *f, V *v0, V *v1);
 
 #define	New(t)		(t *) malloc(sizeof(t))
 #define NewN(t, N)	(t *) malloc((N)*sizeof(t))
 
-void add_geodesic(Geod *g, char *str);
-void trace_geodesic(Geod *g);
-
-main(argc, argv)
-    char *argv[];
+int main(int argc, char *argv[])
 {
     register int i;
     int tnv, tne, any;
@@ -314,7 +327,8 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	     */
 	    fp->fedges = NULL;
 	    tossedf++;
-	    debug && printf("# Face %d degenerate already\n", i);
+	    if (debug)
+		    printf("# Face %d degenerate already\n", i);
 	} else {
 	    head.prev->next = fp->fedges = head.next;
 	}
@@ -387,7 +401,8 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	      another: ;
 	    }
 	}
-	debug && printf("# %d faces merged this pass.\n", any);
+	if (debug)
+		printf("# %d faces merged this pass.\n", any);
       } while(any);
     }
 
@@ -421,7 +436,7 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
     if(VVCOUNT(geods) > 0) {
 	/* Emit all geodesics as a VECT object. */
 	/* Don't emit anything else. */
-	int i, j, totv, totpl;
+	int i, j, totv = 0, totpl = 0;
 	Geod *g;
 
 	for(i = 0; i < VVCOUNT(geods); i++) {
@@ -463,7 +478,6 @@ if (flags & F_EVOLVER) /* Produce Brakke's evolver .fe format */
     printf("vertices\n");
     for(i = 0; i < nv; i++) {
 	register V *v = &Vs[i];
-	int k;
 	if(v->ref || !(flags & 1)) {
 	    v->index = ++j;
 	    printf("%d\t%#g %#g %#g", v->index, v->p.x, v->p.y, v->p.z);
@@ -547,8 +561,7 @@ else    /* Produce OFF format */
 /*
  * Add a new faceedge
  */
-Fe *
-fedge(F *f, V *v0, V *v1)
+static Fe *fedge(F *f, V *v0, V *v1)
 {
     Fe *fe;
     E *e;
@@ -585,8 +598,8 @@ fedge(F *f, V *v0, V *v1)
     if(r != 0) {
 	r = 1/sqrt(r);
 	e->to.x *= r;  e->to.y *= r;  e->to.z *= r;
-    } else 
-	debug && printf("# Coincident: %d == %d [%g %g %g]\n", v0->index, v1->index, v0->p.x,v0->p.y,v0->p.z);
+    } else if (debug)
+	printf("# Coincident: %d == %d [%g %g %g]\n", v0->index, v1->index, v0->p.x,v0->p.y,v0->p.z);
     e->link = ehash[t];
     ehash[t] = e;
  gotit:
@@ -599,8 +612,7 @@ fedge(F *f, V *v0, V *v1)
 /*
  * Remove a faceedge from its edge list
  */
-unfedge(fe)
-    register Fe *fe;
+static void unfedge(Fe *fe)
 {
     register Fe **fepp;
     
@@ -617,15 +629,15 @@ unfedge(fe)
  * Merge two faces
  * We delete these face-edges from both faces
  */
-femerge(fe1, fe2)
-    register Fe *fe1, *fe2;
+static void femerge(Fe *fe1, Fe *fe2)
 {
     F *f1, *f2;
     register Fe *tfe;
 
     if(fe1->face == fe2->face) {
-	debug && printf("# Merging two edges of face %d -- tossing it.\n",
-		fe1->face - Fs);
+	if (debug)
+		printf("# Merging two edges of face %d -- tossing it.\n",
+		       fe1->face - Fs);
 	deface(fe1->face);
 	return;
     }
@@ -681,19 +693,17 @@ femerge(fe1, fe2)
 
 #define PRETTY(x)  ((int)(x) - 0x10000000)
 
-fecheck(fe)
-    Fe *fe;
+#if 0
+static void fecheck(Fe *fe)
 {
     register Fe *fee;
-    int ne;
-    int onface = 0;
     register F *f;
     register E *e;
 
     if(fe == NULL)
 	return;
     f = fe->face;
-    fprintf(stderr,"0x%x: on face %d (%x); ", fe, f - Fs, f);
+    fprintf(stderr,"0x%p: on face %d (%p); ", (void *)fe, f - Fs, (void *)f);
     fee = fe;
     do {
 	fprintf(stderr," %s%x[%d%s%d] ", (f->fedges == fee) ? "*" : "",
@@ -703,8 +713,8 @@ fecheck(fe)
 		fee->edge->v[1]->index);
 
 	if(fee->face != f)
-	    fprintf(stderr," Fe %x: face %d (%x) != %x\n",
-		PRETTY(fee), fee->face - Fs, fee->face, f);
+	    fprintf(stderr," Fe %p: face %d (%p) != %p\n",
+		    (void *)PRETTY(fee), fee->face - Fs, (void *)fee->face, (void *)f);
 	if(fee->next->prev != fee)
 	    fprintf(stderr," Fe %x: next %x next->prev %x\n",
 		PRETTY(fee), PRETTY(fee->next), PRETTY(fee->next->prev));
@@ -713,10 +723,10 @@ fecheck(fe)
     } while(fee != fe);
     fprintf(stderr, "\n");
 }
+#endif
 
-E *
-echeck(v0, v1)
-    register int v0, v1;
+#if 0
+static E *echeck(int v0, int v1)
 {
     register E *e;
 
@@ -726,8 +736,8 @@ echeck(v0, v1)
     for(e = ehash[t]; e != NULL; e = e->link) {
 	if(e->v[0] == &Vs[v0] && e->v[1] == &Vs[v1]) {
 	    register Fe *fe;
-	    fprintf(stderr, "E 0x%x %d-%d (%d-%d)  %x...\n",
-		e, v0,v1, e->v[0]->index, e->v[1]->index, PRETTY(e->feds));
+	    fprintf(stderr, "E 0x%p %d-%d (%d-%d)  %p...\n",
+		    (void *)e, v0,v1, e->v[0]->index, e->v[1]->index, (void *)PRETTY(e->feds));
 	    for(fe = e->feds; fe != NULL; fe = fe->elink) {
 		fecheck(fe);
 	    }
@@ -736,11 +746,9 @@ echeck(v0, v1)
     
     return e;
 }
+#endif
 
-
-
-normal_ize(f)
-   F *f;
+static void normal_ize(F *f)
 {
     register Fe *fe;
 
@@ -748,7 +756,8 @@ normal_ize(f)
     if(fe == NULL)
 	return;
     if(fe->prev == fe->next) {
-	debug && printf("# Face %d already degenerate -- tossing it.\n", f - Fs);
+	if (debug)
+	    printf("# Face %d already degenerate -- tossing it.\n", f - Fs);
 	deface(f);
 	return;
     }
@@ -784,7 +793,8 @@ normal_ize(f)
 		/*
 		 * This face became degenerate -- toss it.
 		 */
-		debug && printf("# degenerate face %d\n", f - Fs);
+		if (debug)
+		    printf("# degenerate face %d\n", f - Fs);
 		deface(f);
 		return;
 	    }
@@ -792,7 +802,7 @@ normal_ize(f)
 	}
 
 	r = 1/sqrt(r);
-	if(n.x < 0 ||  (n.x == 0 && n.y < 0 || (n.y == 0 && n.z < 0)))
+	if(n.x < 0 ||  (n.x == 0 && n.y < 0) || (n.y == 0 && n.z < 0))
 	    r = -r;		/* Canonicalize */
 	fe->n.x = n.x*r;  fe->n.y = n.y*r;  fe->n.z = n.z*r;
     } while((fe = fe->next) != f->fedges);
@@ -801,8 +811,7 @@ normal_ize(f)
 /*
  * Delete a face, erasing all edges.
  */
-deface(f)
-    F *f;
+static void deface(F *f)
 {
     register Fe *fe, *fee;
 
@@ -819,8 +828,7 @@ deface(f)
     tossedf++;
 }
 
-vcmp(p, q)
-    V **p, **q;
+static int vcmp(V **p, V **q)
 {
     register V *vp, *vq;
     register float d;
@@ -840,7 +848,7 @@ vcmp(p, q)
     return(vp->p.w < vq->p.w ? -1 : 1);
 }
 
-vmerge()
+static void vmerge(void)
 {
     V **vp;
     int i, j;
@@ -872,7 +880,8 @@ vmerge()
 	    if(fabs(a->p.y - b->p.y) < EPS_POINT
 			&& fabs(a->p.z - b->p.z) < EPS_POINT
 			&& (vdim == 3 || fabs(a->p.w - b->p.w) < EPS_POINT)) {
-		debug && printf("# Vtx %d->%d\n", b->index, a->index);
+		if (debug)
+		    printf("# Vtx %d->%d\n", b->index, a->index);
 		b->index = a->index;
 		b->ref++;
 	    } else if(!nexti)
@@ -885,8 +894,7 @@ vmerge()
 /*
  * Add a geodesic, described by a string.
  */
-void
-add_geodesic(Geod *g, char *str)
+static void add_geodesic(Geod *g, char *str)
 {
     int ok;
     float r;
@@ -913,7 +921,7 @@ and faceno is the integer index of the face on which the base-point lies.\n");
 /* Generate 3x3 rotation matrix which takes va -> vb
  * Assumes va and vb both unit vectors.
  */
-rotation(P *va, P *vb, float T[3][3])
+static void rotation(P *va, P *vb, float T[3][3])
 {
     float adotb = VDOT(va, vb);
     float ab_1 = adotb - 1;
@@ -925,7 +933,6 @@ rotation(P *va, P *vb, float T[3][3])
     apb2 = VDOT(&aperpb, &aperpb);
     if(apb2 == 0) {
 	float dot;
-	P t;
 	if(adotb >= 0) {
 	    /* Either some vector is zero, or they're identical.  No rot'n. */
 	    memset(T, 0, 9*sizeof(float));
@@ -956,7 +963,7 @@ rotation(P *va, P *vb, float T[3][3])
 /*
  * result = vector reflected in axis
  */
-reflectline(P *axis, P *vector, P *result)
+static void reflectline(P *axis, P *vector, P *result)
 {
     float mag = VDOT(axis, axis);
     float along = VDOT(axis, vector);
@@ -976,13 +983,13 @@ reflectline(P *axis, P *vector, P *result)
  *
  * Return a pointer to the edge we found the intersection with, NULL if none.
  */
-E *
+static E *
 advance_geodesic(Geod *g, E *avoid)
 {
     Fe *fed, *bestfed = NULL;
     E *edge;
     P n;
-    P lb, bestbase, bestdir;
+    P lb, bestbase = { 0, }, bestdir = { 0, };
     float r, u, t, bestt;
     int i;
     struct point2 {
@@ -1098,7 +1105,7 @@ advance_geodesic(Geod *g, E *avoid)
 		dir[i]  = bestdir.x*T[0][i] + bestdir.y*T[1][i]
 			+ bestdir.z*T[2][i];
 	    }
-	    g->dir = *(P *)dir;
+	    g->dir = *(P *)(void *)dir;
 	} else {
 	    /* There's no neighboring face.  Must have reached a boundary. */
 	    g->face = NULL;
@@ -1119,11 +1126,10 @@ advance_geodesic(Geod *g, E *avoid)
     }
 }
    
-void
+static void
 trace_geodesic(Geod *g)
 {
     E *edge, *nextedge;
-    int nsteps;
     int maxsteps = 1000000;
     float maxlength = 1e10;
 

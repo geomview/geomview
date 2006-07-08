@@ -76,7 +76,7 @@ typedef struct {
   off64_t        file_pos;  /* offset inside the file */
   off64_t        file_len;  /* how much is in the buffer */
   size_t         buff_wrap; /* "meeting" point */
-  int            wrap:1;    /* has wrapped */
+  int            wrap;      /* has wrapped */
   unsigned long  magic1;
   char           buffer[SP_RING_SZ];
   unsigned long  magic2;
@@ -199,8 +199,8 @@ static int seekpipe_seek(void *cookie, off64_t *pos, int whence)
   buffoff = ff->file_len - bufflen;
 
   if (new_pos > ff->file_len || new_pos < buffoff) {
-    fprintf(stderr, "*pos: %Ld, bufflen: %d, new_pos: %Ld, file_len: %Ld, buffoff: %Ld, whence: %d\n",
-	    *pos, bufflen, new_pos, ff->file_len, buffoff, whence);
+    /* fprintf(stderr, "*pos: %Ld, bufflen: %d, new_pos: %Ld, file_len: %Ld, buffoff: %Ld, whence: %d\n",
+     *pos, bufflen, new_pos, ff->file_len, buffoff, whence); */
     *pos = ff->file_pos;
     errno = ESPIPE;
     return -1;
@@ -228,10 +228,10 @@ static int seekpipe_close(void *cookie)
 }
 
 cookie_io_functions_t ff_iof = {
-  read: seekpipe_read,
-  write: NULL,
-  seek: seekpipe_seek,
-  close: seekpipe_close,
+  .read = seekpipe_read,
+  .write = NULL,
+  .seek = seekpipe_seek,
+  .close = seekpipe_close,
 };
 
 FILE *seekpipe_open(int fd)

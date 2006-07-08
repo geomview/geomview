@@ -23,18 +23,20 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "ooglutil.h"
 #include "geom.h"
 #include "bezierP.h"
 #include "pointlistP.h"
 
-void *bezier_PointList_get(int sel, Geom *geom, va_list args);
-void *bezier_PointList_fillin(int sel, Geom *geom, va_list args);
-void *bezier_PointList_set(int sel, Geom *geom, va_list args);
-void *bezier_PointList_length(int sel, Geom *geom, va_list args);
+void *bezier_PointList_get(int sel, Geom *geom, va_list *args);
+void *bezier_PointList_fillin(int sel, Geom *geom, va_list *args);
+void *bezier_PointList_set(int sel, Geom *geom, va_list *args);
+void *bezier_PointList_length(int sel, Geom *geom, va_list *args);
 
 #define MAX_METHODS 4
 
@@ -52,13 +54,12 @@ ptlBezier_init() {
   pointlist_initspec(methods, MAX_METHODS, GeomClassLookup("bezier"));
 }
 
-void *bezier_PointList_get(int sel, Geom *geom, va_list args) {
+void *bezier_PointList_get(int sel, Geom *geom, va_list *args) {
   HPoint3 *pt;
   TransformPtr t;
   int n_points;
-  Bezier *b = (Bezier *)geom;
 
-  t = va_arg(args, TransformPtr);
+  t = va_arg(*args, TransformPtr);
 
   n_points = (int)GeomCall(GeomMethodSel("PointList_length"), geom);
   pt = OOGLNewNE(HPoint3, n_points, msg);
@@ -67,15 +68,15 @@ void *bezier_PointList_get(int sel, Geom *geom, va_list args) {
 
 }
 
-void *bezier_PointList_fillin(int sel, Geom *geom, va_list args) {
+void *bezier_PointList_fillin(int sel, Geom *geom, va_list *args) {
   int i = 0;
   TransformPtr t;
   HPoint3 *pt;
   Bezier *b = (Bezier *)geom;
 
-  t = va_arg(args, TransformPtr);
-  va_arg(args, int);      
-  pt = va_arg(args, HPoint3 *);
+  t = va_arg(*args, TransformPtr);
+  (void)va_arg(*args, int);      
+  pt = va_arg(*args, HPoint3 *);
 
   if (b->CtrlPnts != NULL) {
     if (b->dimn == 3) {
@@ -110,13 +111,13 @@ void *bezier_PointList_fillin(int sel, Geom *geom, va_list args) {
 }
 
 
-void *bezier_PointList_set(int sel, Geom *geom, va_list args) {
+void *bezier_PointList_set(int sel, Geom *geom, va_list *args) {
   int i;
   HPoint3 *pt;
   Bezier *b = (Bezier *)geom;
 
-  va_arg(args, int);
-  pt = va_arg(args, HPoint3 *);
+  (void)va_arg(*args, int);
+  pt = va_arg(*args, HPoint3 *);
   i = 0;
   if (b->CtrlPnts != NULL) {
     if (b->dimn == 3) {
@@ -159,7 +160,7 @@ void *bezier_PointList_set(int sel, Geom *geom, va_list args) {
   return geom;
 }
 
-void *bezier_PointList_length(int sel, Geom *geom, va_list args) {
+void *bezier_PointList_length(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
   return ((void *)((b->degree_u + 1) * (b->degree_v + 1)
 #ifdef DONT_DO_THIS

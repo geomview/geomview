@@ -23,11 +23,14 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include "fexpr.h"
 #include <stdlib.h>
+#include <string.h>
 
 expr_var expr_create_variable(struct expression *e, char *name, double val)
 {

@@ -21,8 +21,10 @@
 
 #include "../../../../config.h"
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -1223,6 +1225,8 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
 	     */
 	    LList **restp = va_arg(a_list, LList **);
 
+	    (void)restp;
+
 	    while(LakeMore(lake,c)) {
 		arg = hold||literal ? LSexpr(lake) : LEvalSexpr(lake);
 		LListAppend(args, arg);	/* Stash args for AssignArgs to grab */
@@ -1812,7 +1816,7 @@ static void InterestOutput(char *name, LList *args, LInterest *interest)
   LList *filter = interest->filter;
   char *suffix = NULL;
   int filterflag;
-  float now;
+  float now = 0.0;
 
   if (!outf) return;
 

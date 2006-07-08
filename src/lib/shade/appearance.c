@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -46,7 +48,6 @@ Appearance *
 _ApSet(Appearance *ap, int attr1, register va_list *alist)
 {
     long mask;
-    Color *co;
     int attr;
 
 #define NEXT(type) va_arg(*alist, type)
@@ -272,9 +273,9 @@ Appearance *
 ApMerge( register Appearance *src, register Appearance *dst, int mergeflags )
 {
     int mask;
-    Material *mt, *oldmt, *bmt, *oldbmt;
-    LmLighting *lts, *oldlts;
-    Texture *tex, *oldtex;
+    Material *mt, *bmt;
+    LmLighting *lts;
+    Texture *tex;
  
 
     if(dst == NULL)
@@ -374,7 +375,6 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
     register Appearance *ap;
     char *w;
     int i;
-    int any = 0;
     int brack = 0;
     int over, not, value;
     int mask, flagmask;
@@ -590,8 +590,6 @@ ApSave(Appearance *ap, char *fname)
 Material *
 _MtSet(Material *mat, int attr1, va_list *alist)
 {
-    Color *co;
-    long mask;
     int attr;
 
 #define NEXT(type) va_arg(*alist, type)
@@ -611,7 +609,7 @@ _MtSet(Material *mat, int attr1, va_list *alist)
 	mat->valid |= MTF_AMBIENT;
 	break;
       case MT_DIFFUSE:
-	*(Color *)&mat->diffuse = *NEXT(Color *);
+	*(Color *)(void *)&mat->diffuse = *NEXT(Color *);
 	mat->valid |= MTF_DIFFUSE;
 	break;
       case MT_SPECULAR:
@@ -705,7 +703,7 @@ MtGet(register Material *mat, int attr, void * value)
 	*(Color *) value = mat->ambient;
 	break;
       case MT_DIFFUSE:
-	*(Color *) value = *(Color *)&mat->diffuse;
+	*(Color *) value = *(Color *)(void *)&mat->diffuse;
 	break;
       case MT_SPECULAR:
 	*(Color *) value = mat->specular;
@@ -793,6 +791,7 @@ MtCopy( Material *src, Material *dst )
 
 #define max(a,b) (a)>(b)?(a):(b)
 
+#if 0
 static void
 norm( color, coeff )
     Color *color;
@@ -807,6 +806,7 @@ norm( color, coeff )
 	color->b /= *coeff;
     }
 }
+#endif
 
 Material *
 MtLoad(mat, name)
@@ -906,12 +906,12 @@ MtFLoad(mat, f, fname)
 		case 2: m.kd = v[0]; break;
 		case 3: m.ks = v[0]; break;
 		case 4: m.diffuse.a = v[0]; break;
-		case 5: case 6: m.emission = *(Color *)v; break;
-		case 7: m.ambient = *(Color *)v; break;
-		case 8: *(Color *)&m.diffuse = *(Color *)v; break;
-		case 9: m.specular = *(Color *)v; break;
-		case 10: m.edgecolor = *(Color *)v; break;
-		case 11: m.normalcolor = *(Color *)v; break;
+		case 5: case 6: m.emission = *(Color *)(void *)v; break;
+		case 7: m.ambient = *(Color *)(void *)v; break;
+		case 8: *(Color *)(void *)&m.diffuse = *(Color *)(void *)v; break;
+		case 9: m.specular = *(Color *)(void *)v; break;
+		case 10: m.edgecolor = *(Color *)(void *)v; break;
+		case 11: m.normalcolor = *(Color *)(void *)v; break;
 		}
 		m.valid |= mt_flags[i];
 		if(over) m.override |= mt_flags[i];
@@ -1022,7 +1022,7 @@ MtFSave(mat,f)
 	    fprintf(f, "%f\n", v);
 	    break;
 
-	    case MTF_DIFFUSE: c = (Color *)&mat->diffuse; goto pcolor;
+	    case MTF_DIFFUSE: c = (Color *)(void *)&mat->diffuse; goto pcolor;
 	    case MTF_AMBIENT: c = &mat->ambient; goto pcolor;
 	    case MTF_EMISSION: c = &mat->emission; goto pcolor;
 	    case MTF_SPECULAR: c = &mat->specular; goto pcolor;
@@ -1140,7 +1140,6 @@ _TxSet(Texture *tx, int attr1, register va_list *alist)
     float *f;
     int attr;
     char *str;
-    int ok = 1;
 
 #define NEXT(type) va_arg(*alist, type)
 	
@@ -1395,17 +1394,14 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
     FILE *stream;
     char *fname;
     Handle *h = NULL;
-    Handle *hname = NULL;
     register Texture *tx = NULL;
     float val[16];
     struct txkw *kw;
     char *w, *raww;
     int i, k = 0;
-    int any = 0;
     int brack = 0;
     int empty = 1, braces = 0;
     int plus = 0;
-    int mask;
     int more;
     int mine = 1;	/* Questionable -- we'll report all errors */
 

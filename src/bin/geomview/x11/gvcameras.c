@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 #include <X11/X.h>
 #include "mibload.h"
@@ -81,22 +83,20 @@ static int    depth_state = 0;
 static float  keepfov;
 static char   lastcamname[255];
 static char   store[255];
-static char   geometry[40];
-static int    pos_later = 0, posx = 0, posy = 0;
+/*static char   geometry[40];*/
+/*static int    pos_later = 0, posx = 0, posy = 0;*/
 
 
 /*****************************************************************************/
 
 void ui_load_cameraspanel()
 {
-  Arg	     args[20];
-  int	     n, i, menu, decor;
+  int	     i;
   Widget     camerasform,
 	     HideButton,
 	     TempWidget;
 
   mib_Widget *camerasload;
-  Atom       AProtocol;
   static char Cameras[] = "Cameras";
 
 /*****************************************************************************/
@@ -402,7 +402,7 @@ void   ui_target_cameraspanel(int id)
   XmString xname;
   DView   *dv;
   float    f;
-  int      persp, depth, dither, bitdepth, opts, exists = 0;
+  int      persp, opts, exists = 0;
   extern   int id_exists(int);
   extern   int real_id(int);
 

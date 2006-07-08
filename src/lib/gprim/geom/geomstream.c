@@ -23,8 +23,10 @@
 #include "config.h"
 #endif
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+#endif
 
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -146,7 +148,6 @@ static char *geomtoken;
 char *
 GeomToken(FILE *f)
 {
-    char *s;
     if(geomtoken)
 	return geomtoken;
     geomtoken = fdelimtok("{}()<:@=", f, 0);
@@ -246,7 +247,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     Geom **tgp;
     Handle **thp;
     int c;
-    char *w, *raww, *tail;
+    char *w, *raww;
     int brack = 0;
     int more;
     struct stdio_mark *mark = NULL;    
