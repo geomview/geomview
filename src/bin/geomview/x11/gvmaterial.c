@@ -103,13 +103,13 @@ void ui_load_materialpanel()
     s->sliderw = mib_find_name(mattload, s->slidername)->me;
     s->textw = mib_find_name(mattload, s->textname)->me;
     XtAddCallback(s->sliderw, XmNdragCallback,
-		(XtCallbackProc) matt_sliders, (XtPointer) i);
+		(XtCallbackProc) matt_sliders, (XtPointer)(long) i);
     XtAddCallback(s->sliderw, XmNvalueChangedCallback,
-		(XtCallbackProc) matt_sliders, (XtPointer) i);
+		(XtCallbackProc) matt_sliders, (XtPointer)(long) i);
     XtAddCallback(s->textw, XmNactivateCallback,
-		(XtCallbackProc) matt_entries, (XtPointer) i);
+		(XtCallbackProc) matt_entries, (XtPointer)(long) i);
     XtAddCallback(s->textw, XmNlosingFocusCallback,
-		(XtCallbackProc) matt_entries, (XtPointer) i);
+		(XtCallbackProc) matt_entries, (XtPointer)(long) i);
   }
   XtAddCallback(TransparentToggle, XmNvalueChangedCallback,
 		  (XtCallbackProc) ap_toggle,
@@ -122,7 +122,7 @@ void ui_load_materialpanel()
 
 static void matt_sliders(Widget w, XtPointer data, XmScaleCallbackStruct *cbs)
 {
-  struct _slider *s = &(sliders[(int)data]);
+  struct _slider *s = &(sliders[(int)(long)data]);
   float val = (float)cbs->value;
   float conv = ((s->max - s->min)/100.0)*val + s->min;
 
@@ -133,7 +133,7 @@ static void matt_sliders(Widget w, XtPointer data, XmScaleCallbackStruct *cbs)
 
 static void matt_entries(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 {
-  struct _slider *s = &sliders[(int)data];
+  struct _slider *s = &sliders[(int)(long)data];
   char *str = XmTextFieldGetString(s->textw);
   char *estr;
   float val = strtod(str, &estr);

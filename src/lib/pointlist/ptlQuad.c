@@ -97,6 +97,6 @@ void *quad_PointList_set(int sel, Geom *geom, va_list *args) {
 
 void *quad_PointList_length(int sel, Geom *geom, va_list *args) {
   Quad *q = (Quad *)geom;
-  return((void *)(q->maxquad * 4));
+  return((void *)(long)(q->maxquad * 4));
 }
 

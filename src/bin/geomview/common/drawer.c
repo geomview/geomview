@@ -597,7 +597,7 @@ drawer_idbyname(char *name)
 {
   int id;
 
-  switch (id=(int)fsa_parse(name_fsa, name)) {
+  switch (id=(int)(long)fsa_parse(name_fsa, name)) {
   case TARGETID:
     id = uistate.targetid;
     break;
@@ -616,7 +616,7 @@ drawer_idbyname(char *name)
 int
 drawer_name2metaid(char *name)
 {
-  return (int)fsa_parse(name_fsa, name);
+  return (int)(long)fsa_parse(name_fsa, name);
 }
 
 
@@ -1259,7 +1259,7 @@ LDEFINE(delete, LVOID,
     if(obj->id == WORLDGEOM || obj->id == DEFAULTCAMID) continue;
     if (obj->name[0]) fsa_install( name_fsa, obj->name[0], NOID );
     if (obj->name[1]) fsa_install( name_fsa, obj->name[1], NOID );
-    HandleUnregisterAll((Ref *)obj, (void *)(int)obj->seqno, object_changed);
+    HandleUnregisterAll((Ref *)obj, (void *)(long)(int)obj->seqno, object_changed);
     stop_motions(obj->id);
     switch(TYPEOF(obj->id)) {
     case T_GEOM: delete_geometry((DGeom *)obj); break;
@@ -2520,7 +2520,7 @@ _name_object(DObject *obj, int ni, char *name)
     OOGLError(0,"warning: attempt to use existing first name: \"%s\"\n\
   using \"%s\" instead", tail, obj->name[ni]);
   }
-  fsa_install( name_fsa, obj->name[ni], (void *)obj->id );
+  fsa_install( name_fsa, obj->name[ni], (void *)(long)obj->id );
   return obj->name[ni];
 }
 
@@ -2921,7 +2921,7 @@ object_changed(Handle **hp, DObject *obj, void *seqno)
 static int
 object_register(Handle **hp, Ref *thing, DObject *o)
 {
-    HandleRegister(hp, (Ref *)o, (void *)(int)o->seqno, object_changed);
+    HandleRegister(hp, (Ref *)o, (void *)(long)(int)o->seqno, object_changed);
     return 0;
 }
 
@@ -2937,7 +2937,7 @@ update_dgeom(register DGeom *dg)
     return;
   if(dg->changed/* & CH_GEOMETRY*/) {
     dg->bboxvalid = 0;
-    HandleUnregisterAll((Ref *)dg, (void *)(int)dg->seqno, object_changed);
+    HandleUnregisterAll((Ref *)dg, (void *)(long)(int)dg->seqno, object_changed);
     dg->seqno++;
     /*
      * Find all Handles in this DGeom, and register a callback for each.

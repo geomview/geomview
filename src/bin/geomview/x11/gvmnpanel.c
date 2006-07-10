@@ -423,7 +423,7 @@ static void edit_menu_callbacks(Widget widget, char *text)
 
 static void inspect_menu_callbacks(Widget widget, XtPointer code)
 {
-  ui_showpanel((int)code, 1);
+  ui_showpanel((int)(long)code, 1);
 }
 
 /*****************************************************************************/

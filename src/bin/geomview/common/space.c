@@ -100,7 +100,7 @@ our_space_dir(char *dirname)
     if((sname = spacename(spaceof(WORLDGEOM))) == NULL)
 	return 0;
     sprintf(sub, "%.3s", sname);
-    return (int)strstr(dirname, sub);
+    return (int)(long)strstr(dirname, sub);
 }
     
 

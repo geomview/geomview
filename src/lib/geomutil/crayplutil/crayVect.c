@@ -82,17 +82,17 @@ cray_vect_init() {
 
 void *cray_vect_HasColor(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
-  return (void *)(v->ncolor);
+  return (void *)(long)(v->ncolor);
 }
 
 void *cray_vect_HasFColor(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
-  return (void *)((v->ncolor == v->nvec) ? 1 : 0);
+  return (void *)(long)((v->ncolor == v->nvec) ? 1 : 0);
 }
 
 void *cray_vect_HasVColor(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
-  return (void *)((v->ncolor == v->nvert) ? 1 : 0);
+  return (void *)(long)((v->ncolor == v->nvert) ? 1 : 0);
 }
 
 void *cray_vect_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -232,8 +232,8 @@ void *cray_vect_GetColorAt(int sel, Geom *geom, va_list *args) {
   findex = va_arg(*args, int);
   eindex = va_arg(*args, int *);
   if (vindex != -1) 
-    return (void *)crayGetColorAtV(geom, color, vindex, NULL, NULL);
-  else return (void *)crayGetColorAtV(geom, color, eindex[0], NULL, NULL);
+    return (void *)(long)crayGetColorAtV(geom, color, vindex, NULL, NULL);
+  else return (void *)(long)crayGetColorAtV(geom, color, eindex[0], NULL, NULL);
 }
 
 void *cray_vect_GetColorAtV(int sel, Geom *geom, va_list *args) {

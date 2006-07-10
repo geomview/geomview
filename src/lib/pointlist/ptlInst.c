@@ -60,7 +60,7 @@ void *inst_PointList_get(int sel, Geom *geom, va_list *args) {
   TransformPtr t;
   int coordsys;
 
-  n_points = (int)GeomCall(GeomMethodSel("PointList_length"), geom);
+  n_points = (int)(long)GeomCall(GeomMethodSel("PointList_length"), geom);
   plist = OOGLNewNE(HPoint3, n_points, msg);
 
   t = va_arg(*args, TransformPtr);
@@ -84,7 +84,7 @@ void *inst_PointList_fillin(int sel, Geom *geom, va_list *args) {
   coordsys = va_arg(*args, int);
   plist = va_arg(*args, HPoint3 *);
 
-  n_points = (int)GeomCall(GeomMethodSel("PointList_length"), inst->geom);
+  n_points = (int)(long)GeomCall(GeomMethodSel("PointList_length"), inst->geom);
 
   it = GeomIterate(geom, DEEP);
   for (i = 0; NextTransform(it, Tnew); i += n_points) 
@@ -121,7 +121,7 @@ void *inst_PointList_set(int sel, Geom *geom, va_list *args) {
   if (NextTransform(it, T) && coordsys == POINTLIST_SELF) {
     Tm3Invert(T, TInv);
     HPt3TransformN( TInv, plist, plist, 
-	       (int)GeomCall(GeomMethodSel("PointList_length"), inst->geom) );
+	       (int)(long)GeomCall(GeomMethodSel("PointList_length"), inst->geom) );
   }
   GeomCall(GeomMethodSel("PointList_set"), inst->geom, coordsys, plist);
   return NULL;
@@ -136,9 +136,9 @@ void *inst_PointList_length(int sel, Geom *geom, va_list *args) {
   GeomIter *it;
 
   n_points = 
-    (int)GeomCall(GeomMethodSel("PointList_length"), inst->geom);
+    (int)(long)GeomCall(GeomMethodSel("PointList_length"), inst->geom);
   it = GeomIterate(geom, DEEP);
   for (i = 0; NextTransform(it, T); i += n_points);
-  return (void *)i;
+  return (void *)(long)i;
 
 }

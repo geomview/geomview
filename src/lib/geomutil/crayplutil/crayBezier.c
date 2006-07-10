@@ -70,7 +70,7 @@ cray_bezier_init() {
 
 void *cray_bezier_HasVColor(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
-  return (void *)(b->flag & BEZ_C);
+  return (void *)(long)(b->flag & BEZ_C);
 }
 
 void *cray_bezier_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -184,7 +184,7 @@ void *cray_bezier_SetColorAt(int sel, Geom *geom, va_list *args) {
   pt = va_arg(*args, HPoint3 *);
 
   index = WhichCorner(b, vindex, pt);
-  if (index < 0) return (void *)craySetColorAtF(geom, color, 0, NULL);
+  if (index < 0) return (void *)(long)craySetColorAtF(geom, color, 0, NULL);
 
   b->c[index] = *color;
   return (void *)geom;

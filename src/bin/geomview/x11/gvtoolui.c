@@ -171,7 +171,7 @@ static void modetool_callback(Widget w, XtPointer data,
 static void action_callback(Widget w, XtPointer data,
 				XmPushButtonCallbackStruct *cbs)
 {
-  int val = (int) data;
+  int val = (int)(long) data;
   int id = uistate.targetid;
 
   switch (val)

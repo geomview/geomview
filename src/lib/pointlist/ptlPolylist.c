@@ -96,5 +96,5 @@ void *polylist_PointList_set(int sel, Geom *geom, va_list *args) {
 
 void *polylist_PointList_length(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
-  return((void *)p->n_verts);
+  return((void *)(long)p->n_verts);
 }

@@ -671,7 +671,7 @@ int keywordfromobj(obj, x)
     int *x;
 {
   if (obj->type == LSTRING) {
-    *x = (int)fsa_parse(lang_fsa, LSTRINGVAL(obj));
+    *x = (int)(long)fsa_parse(lang_fsa, LSTRINGVAL(obj));
     if (*x == REJECT) return 0;
   } else if (obj->type == LKEYWORD) {
     *x = LKEYWORDVAL(obj);
@@ -713,7 +713,7 @@ LObject *keywordparse(Lake *lake)
   LObject *obj = LSexpr(lake);
   int key;
   if (obj->type == LSTRING) {
-    key  = (int)fsa_parse(lang_fsa, LSTRINGVAL(obj));
+    key  = (int)(long)fsa_parse(lang_fsa, LSTRINGVAL(obj));
     if (key == REJECT) return Lnil;
     OOGLFree(LSTRINGVAL(obj));
     obj->type = LKEYWORD;
@@ -801,11 +801,11 @@ void lispext_init()
 
 void define_keyword(char *word, int value)
 {
-  fsa_install(lang_fsa, word, (void*)value);
+  fsa_install(lang_fsa, word, (void*)(long)value);
 }
 
 /* returns < 0 if asked to parse something that isn't a keyword. */
 int parse_keyword(char *word)
 {
-  return (int)fsa_parse(lang_fsa, word);
+  return (int)(long)fsa_parse(lang_fsa, word);
 }

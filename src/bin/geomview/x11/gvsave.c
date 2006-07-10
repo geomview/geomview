@@ -154,7 +154,7 @@ void ui_load_savepanel()
   for (n = 0; n < objectmenu->numitems; n++)
   {
     XtAddCallback(objectmenu->items[n], XmNactivateCallback,
-			(XtCallbackProc) select_type, (XtPointer) n);
+			(XtCallbackProc) select_type, (XtPointer)(long) n);
     /* If this is a possibly-absent snapshot item, check whether it's
      * really supported.
      */
@@ -209,7 +209,7 @@ static int suitable_id(int savetype, char **namep)
 
 static void select_type(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 {
-  savechoice = (int)data;
+  savechoice = (int)(long)data;
 }
 
 /*****************************************************************************/

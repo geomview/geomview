@@ -61,7 +61,7 @@ void *bezier_PointList_get(int sel, Geom *geom, va_list *args) {
 
   t = va_arg(*args, TransformPtr);
 
-  n_points = (int)GeomCall(GeomMethodSel("PointList_length"), geom);
+  n_points = (int)(long)GeomCall(GeomMethodSel("PointList_length"), geom);
   pt = OOGLNewNE(HPoint3, n_points, msg);
 
   return (GeomCall(GeomMethodSel("PointList_fillin"), geom, t, 0, pt));
@@ -162,7 +162,7 @@ void *bezier_PointList_set(int sel, Geom *geom, va_list *args) {
 
 void *bezier_PointList_length(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
-  return ((void *)((b->degree_u + 1) * (b->degree_v + 1)
+  return ((void *)(long)((b->degree_u + 1) * (b->degree_v + 1)
 #ifdef DONT_DO_THIS
 	+ (b->flag & BEZ_ST ? 2 : 0)
 #endif 

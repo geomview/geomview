@@ -120,7 +120,7 @@ void ui_load_colorpanel()
     cs->slider = mib_find_name(colorload, cs->slidername)->me;
     cs->label = mib_find_name(colorload, cs->labelname)->me;
     XtAddCallback(cs->slider, XmNdragCallback, (XtCallbackProc) rgb_sliders,
-			(XtPointer) n);
+			(XtPointer)(long)n);
     XtVaSetValues(cs->slider, XmNmaximum, 255, NULL);
   }
 
@@ -259,7 +259,7 @@ static void set_rgb_sliders(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
   if (3 == sscanf(str,"%f %f %f", &c.r, &c.g, &c.b))
   {
     ok = 1;
-    switch((int)data) {
+    switch((int)(long)data) {
     case CM_RGB:
 	rgb = c;
 	rgb2hsv(&rgb, &hsv);
@@ -282,7 +282,7 @@ static void rgb_sliders(Widget w, XtPointer data, XmScaleCallbackStruct *cbs)
   float *cmc = (colormodel == CM_RGB) ? &rgb.r : &hsv.r;
 
   /* Set {rgb,hsv}.{r,g,b} according to current color model and callback-data */
-  cmc[(int)data] = ((float)cbs->value)/255.0;
+  cmc[(int)(long)data] = ((float)cbs->value)/255.0;
   if(colormodel == CM_RGB)
     rgb2hsv(&rgb, &hsv);
   else

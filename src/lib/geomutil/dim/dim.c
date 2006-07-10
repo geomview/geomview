@@ -48,27 +48,27 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "dim.h"
 
 static void *dimdefault(int sel, Geom *g, va_list *args) {
-    return (void *)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
+    return (void *)(long)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
 }
 
 static void *dimSkel(int sel, Geom *g, va_list *args) {
-    return (void *)(((Skel *)g)->dim - 1);
+    return (void *)(long)(((Skel *)g)->dim - 1);
 }
 
 static void *dimNDMesh(int sel, Geom *g, va_list *args) {
-    return (void *)(((NDMesh *)g)->pdim);
+    return (void *)(long)(((NDMesh *)g)->pdim);
 }
 
 static void *dimNPolyList(int sel, Geom *g, va_list *args) {
-    return (void *)(((NPolyList *)g)->pdim-1);
+    return (void *)(long)(((NPolyList *)g)->pdim-1);
 }
 
 static void *dimQuad(int sel, Geom *g, va_list *args) {
-    return (void *)(((Quad *)g)->flag & QUAD_4D ? 4 : 3);
+    return (void *)(long)(((Quad *)g)->flag & QUAD_4D ? 4 : 3);
 }
 
 static void *dimMesh(int sel, Geom *g, va_list *args) {
-    return (void *)(((Mesh *)g)->flag & MESH_4D ? 4 : 3);
+    return (void *)(long)(((Mesh *)g)->flag & MESH_4D ? 4 : 3);
 }
 
 static void *dimList(int sel, Geom *g, va_list *args) {
@@ -78,11 +78,11 @@ static void *dimList(int sel, Geom *g, va_list *args) {
 	dim = GeomDimension(l->car);
 	if(maxdim < dim) maxdim = dim;
     }
-    return (void *)maxdim;
+    return (void *)(long)maxdim;
 }
 
 static void *dimInst(int sel, Geom *g, va_list *args) {
-    return (void *)GeomDimension(((Inst *)g)->geom);
+    return (void *)(long)GeomDimension(((Inst *)g)->geom);
 }
 
 static int DimSel = 0;
@@ -101,5 +101,5 @@ GeomDimension(Geom *g)
 	GeomSpecifyMethod(DimSel, QuadMethods(), dimQuad);
 	GeomSpecifyMethod(DimSel, MeshMethods(), dimMesh);
     }
-    return (int)GeomCall( DimSel, g );
+    return (int)(long)GeomCall( DimSel, g );
 }

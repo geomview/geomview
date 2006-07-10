@@ -64,68 +64,68 @@ void crayInitSpec(craySpecFunc *specfunc, int n_func, GeomClass *class) {
 }
 
 int crayHasColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[0], geom, gpath);
+  return (int)(long)GeomCall(sel[0], geom, gpath);
 }
 
 int crayHasVColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[1], geom, gpath);
+  return (int)(long)GeomCall(sel[1], geom, gpath);
 }
 
 int crayHasFColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[2], geom, gpath);
+  return (int)(long)GeomCall(sel[2], geom, gpath);
 }
 
 int crayCanUseVColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[3], geom, gpath);
+  return (int)(long)GeomCall(sel[3], geom, gpath);
 }
 
 int crayCanUseFColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[4], geom, gpath);
+  return (int)(long)GeomCall(sel[4], geom, gpath);
 }
 
 int crayUseVColor(Geom *geom, ColorA *color, int *gpath) {
-  return (int)GeomCall(sel[5], geom, color, gpath);
+  return (int)(long)GeomCall(sel[5], geom, color, gpath);
 }
 
 int crayUseFColor(Geom *geom, ColorA *color, int *gpath) {
-  return (int)GeomCall(sel[6], geom, color, gpath);
+  return (int)(long)GeomCall(sel[6], geom, color, gpath);
 }
 
 int crayEliminateColor(Geom *geom, int *gpath) {
-  return (int)GeomCall(sel[7], geom, gpath);
+  return (int)(long)GeomCall(sel[7], geom, gpath);
 }
 
 int craySetColorAll(Geom *geom, ColorA *color, int *gpath) {
-  return (int)GeomCall(sel[8], geom, color, gpath);
+  return (int)(long)GeomCall(sel[8], geom, color, gpath);
 }
 
 int craySetColorAt(Geom *geom, ColorA *color, int vindex, int findex, 
 		   int *edge, int *gpath, HPoint3 *pt) {
-  return (int)GeomCall(sel[9], geom, color, vindex, findex, edge, gpath, 
+  return (int)(long)GeomCall(sel[9], geom, color, vindex, findex, edge, gpath, 
 		       pt);
 }
 
 int craySetColorAtV(Geom *geom, ColorA *color, int index, int *gpath,
 		    HPoint3 *pt) {
-  return (int)GeomCall(sel[10], geom, color, index, gpath, pt);
+  return (int)(long)GeomCall(sel[10], geom, color, index, gpath, pt);
 }
 
 int craySetColorAtF(Geom *geom, ColorA *color, int index, int *gpath) {
-  return (int)GeomCall(sel[11], geom, color, index, gpath);
+  return (int)(long)GeomCall(sel[11], geom, color, index, gpath);
 }
 
 int crayGetColorAt(Geom *geom, ColorA *color, int vindex, int findex,
 		   int *edge, int *gpath, HPoint3 *pt) {
-  return (int)GeomCall(sel[12], geom, color, vindex, findex, edge, gpath, pt);
+  return (int)(long)GeomCall(sel[12], geom, color, vindex, findex, edge, gpath, pt);
 }
 
 int crayGetColorAtV(Geom *geom, ColorA *color, int index, int *gpath,
 		    HPoint3 *pt) {
-  return (int)GeomCall(sel[13], geom, color, index, gpath, pt);
+  return (int)(long)GeomCall(sel[13], geom, color, index, gpath, pt);
 }
 
 int crayGetColorAtF(Geom *geom, ColorA *color, int index, int *gpath) {
-  return (int)GeomCall(sel[14], geom, color, index, gpath);
+  return (int)(long)GeomCall(sel[14], geom, color, index, gpath);
 }
 
 void *crayTrue(int sel, Geom *geom, va_list *args) {

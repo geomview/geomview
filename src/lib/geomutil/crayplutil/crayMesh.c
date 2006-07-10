@@ -69,7 +69,7 @@ cray_mesh_init() {
 
 void *cray_mesh_HasVColor(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
-  return (void *)(m->flag & MESH_C);
+  return (void *)(long)(m->flag & MESH_C);
 }
 
 void *cray_mesh_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -121,8 +121,8 @@ void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list *args) {
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
   if (vindex != -1) 
-    return (void *)craySetColorAtV(geom, color, vindex, NULL, NULL);
-  return (void *)craySetColorAtF(geom, color, findex, NULL);
+    return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
 void *cray_mesh_SetColorAtV(int sel, Geom *geom, va_list *args) {
@@ -164,7 +164,7 @@ void *cray_mesh_GetColorAt(int sel, Geom *geom, va_list *args) {
   int i;
   color = va_arg(*args, ColorA *);
   i = va_arg(*args, int);
-  return (void *)crayGetColorAtV(geom, color, i, NULL, NULL);
+  return (void *)(long)crayGetColorAtV(geom, color, i, NULL, NULL);
 }
      
 void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list *args) {

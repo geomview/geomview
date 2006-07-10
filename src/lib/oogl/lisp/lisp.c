@@ -1146,7 +1146,7 @@ int LDefun(char *name, LObjectFunc func, char *help)
   lfunction->fptr = func;
   lfunction->name = strdup(name);
   lfunction->interested = NULL;
-  fsa_install( func_fsa, name, (void *)index );
+  fsa_install( func_fsa, name, (void *)(long)index );
   if (help) LHelpDef(name, help);
   return 1;
 }
@@ -1164,7 +1164,7 @@ int LDefun(char *name, LObjectFunc func, char *help)
 
 static int funcindex(char *name)
 {
-  return (int)fsa_parse( func_fsa, name );
+  return (int)(long)fsa_parse( func_fsa, name );
 }
 
 /*

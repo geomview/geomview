@@ -230,7 +230,7 @@ void cam_winchange(mgcontext *mgc, void *data, int why, ...)
     va_list args;
     WnWindow *win;
     int n, changed;
-    int id = (int) data;
+    int id = (int)(long) data;
     struct camwins *cw;
     Widget w;
     char *title = "gvwin";
@@ -497,7 +497,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   AProtocol = XmInternAtom(dpy, "WM_DELETE_WINDOW", False);
   XmAddWMProtocolCallback(shell, AProtocol,
 			(XtCallbackProc) ui_delete_camera,
-			(XtPointer)id);
+			(XtPointer)(long)id);
 
   /* Even if this event handler isn't called for normal button- and keypress-
    * events, the "StructureNotifyMask" below means we hear about unmapping
@@ -508,37 +508,37 @@ D1PRINT(("XtAddEventHandler(... panel_input [0] ...)\n"));
 	    KeyPressMask|ButtonPressMask|ButtonReleaseMask|ButtonMotionMask
 		|StructureNotifyMask|ExposureMask,
 	    False,
-	    (XtEventHandler) panel_input, (XtPointer) id);
+	    (XtEventHandler) panel_input, (XtPointer)(long) id);
 
   for(i = SGL; i <= DBL; i++) {
     if(camdraw[i]) {
 
 	XtAddCallback(camdraw[i], XmNexposeCallback,
-			(XtCallbackProc) cam_expose, (XtPointer) id);
+			(XtCallbackProc) cam_expose, (XtPointer)(long) id);
 	XtAddCallback(camdraw[i], XmNresizeCallback,
-			(XtCallbackProc) cam_resize, (XtPointer) id);
+			(XtCallbackProc) cam_resize, (XtPointer)(long) id);
 
 D1PRINT(("XtAddEventHandler(... cam_expose ...)\n"));
 	XtAddEventHandler(camdraw[i],
 	    ExposureMask|StructureNotifyMask,
-	    False, (XtEventHandler) cam_expose, (XtPointer) id);
+	    False, (XtEventHandler) cam_expose, (XtPointer)(long) id);
 
 D1PRINT(("XtAddEventHandler(... panel_input [1] ...)\n"));
 	XtAddEventHandler(camdraw[i],
 	    KeyPressMask|ButtonPressMask|ButtonReleaseMask,
-	    False, (XtEventHandler) panel_input, (XtPointer) id);
+	    False, (XtEventHandler) panel_input, (XtPointer)(long) id);
 
 D1PRINT(("XtAddEventHandler(... cam_mouse ...)\n"));
 	XtAddEventHandler(camdraw[i], ButtonMotionMask, False,
-		(XtEventHandler) cam_mouse, (XtPointer) id);
+		(XtEventHandler) cam_mouse, (XtPointer)(long) id);
 
 D1PRINT(("XtAddEventHandler(... cam_mousecross ...)\n"));
 	XtAddEventHandler(camdraw[i], EnterWindowMask, False,
-		(XtEventHandler) cam_mousecross, (XtPointer) id);
+		(XtEventHandler) cam_mousecross, (XtPointer)(long) id);
     }
   }
 
-  mgctxset(MG_WINCHANGE, cam_winchange, MG_WINCHANGEDATA, (void *)id,
+  mgctxset(MG_WINCHANGE, cam_winchange, MG_WINCHANGEDATA, (void *)(long)id,
 	MG_END);
   return shell;
 }
@@ -602,13 +602,13 @@ static void ui_delete_camera(Widget w, XtPointer data,
 {
   extern int real_id(int);
 
-  gv_delete((int)data);
+  gv_delete((int)(long)data);
   uistate.targetcam = INDEXOF(FOCUSID);
   ui_target_cameraspanel(real_id(FOCUSID));
 
   if(w) {
     struct camwins *cw = NULL;
-    if(camshellof((int)data, &cw) != NULL && cw!=NULL) {
+    if(camshellof((int)(long)data, &cw) != NULL && cw!=NULL) {
 #ifdef MGOPENGL
 	if(cw->wins[SGL]) XtUnregister_window(dpy, cw->wins[SGL], w);
 	if(cw->wins[DBL]) XtUnregister_window(dpy, cw->wins[DBL], w);
@@ -1002,7 +1002,7 @@ Pixel ui_RGB(Colormap cm, int permanent, float r, float g, float b)
  */
 void cam_expose(Widget w, XtPointer data, XEvent *ev, Boolean *cont)
 {
-  int id = (int) data;
+  int id = (int)(long) data;
   DView *dv = (DView *)drawer_get_object(id);
 
   if(!ISCAM(id) || dv == NULL || dv->mgctx == NULL)
@@ -1023,7 +1023,7 @@ void cam_resize(Widget w, XtPointer id, XmDrawingAreaCallbackStruct *cbs)
   /* Do the work the GLwDrawA widget would have done: resize our subwindows */
   struct camwins *cw;
 
-  if(camshellof((int)id, &cw) != NULL)
+  if(camshellof((int)(long)id, &cw) != NULL)
     fitwins(w, cw);
 #endif
 }

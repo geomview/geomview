@@ -91,7 +91,7 @@ void *vect_PointList_set(int sel, Geom *geom, va_list *args) {
 void *vect_PointList_length(int sel, Geom *geom, va_list *args) {
   Vect *v = (Vect *)geom;
   
-  return((void *)v->nvert);
+  return((void *)(long)v->nvert);
 }
 
 

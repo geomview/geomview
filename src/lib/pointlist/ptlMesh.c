@@ -95,5 +95,5 @@ void *mesh_PointList_set(int sel, Geom *geom, va_list *args) {
 
 void *mesh_PointList_length(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
-  return((void *)(m->nu * m->nv));
+  return((void *)(long)(m->nu * m->nv));
 }

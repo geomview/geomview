@@ -243,13 +243,13 @@ void panel_input(Widget w, XtPointer data, XEvent *event, Boolean *cont)
   {
     case UnmapNotify:		/* Window iconified or otherwise temporarily gone */
 D1PRINT(("panel_input: case UnmapNotify\n"));
-      gv_freeze( (int)data, 1 );	/* Hard-frozen; prevent gv_redraw from working until we say so */
+      gv_freeze( (int)(long)data, 1 );	/* Hard-frozen; prevent gv_redraw from working until we say so */
       break;
 
     case MapNotify:
 D1PRINT(("panel_input: case MapNotify\n"));
-      gv_freeze( (int)data, 0 );	/* Permit thawing. */
-      gv_redraw( (int)data );		/* Thaw it now, in case Expose arrived before MapNotify */
+      gv_freeze( (int)(long)data, 0 );	/* Permit thawing. */
+      gv_redraw( (int)(long)data );		/* Thaw it now, in case Expose arrived before MapNotify */
       break;
 
     case MotionNotify:
@@ -385,7 +385,7 @@ D1PRINT(("cam_mouse: at 2\n"));
 void cam_mousecross(Widget w, XtPointer data, XEnterWindowEvent *event,
 	Boolean *cont)
 {
-  int id = (int)data;
+  int id = (int)(long)data;
 
   gv_winenter(id);
 }

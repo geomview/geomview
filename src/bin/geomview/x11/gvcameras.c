@@ -178,7 +178,7 @@ void ui_load_cameraspanel()
   for (i=0; i<3; i++)
       XtAddCallback(((mib_Menu *)DepthMenu->myres)->items[i], 
 		    XmNactivateCallback, (XtCallbackProc) depth_callbacks,
-		    (XtPointer) i);
+		    (XtPointer)(long) i);
 		    
 /*****************************************************************************/
 
@@ -306,7 +306,7 @@ static void text_callbacks( Widget		  w,
 			    XtPointer		  data,
 			    XmAnyCallbackStruct *cbs )
 {
-  int val = (int)data;
+  int val = (int)(long)data;
   char *str;
   DView *dv;
   int persp = 0;
@@ -352,7 +352,7 @@ static void list_callbacks( Widget		  w,
 			    XtPointer		  data,
 			    XmListCallbackStruct *cbs )
 {
-  int id, val = (int)data;
+  int id, val = (int)(long)data;
 
   if (!val)
   {
@@ -382,7 +382,7 @@ static void depth_callbacks( Widget		  w,
 			    XmAnyCallbackStruct *cbs )
 {
     DView *dv;
-    int type = (int) data;
+    int type = (int)(long)data;
 
     depth_state = type;
 

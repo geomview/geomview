@@ -256,7 +256,7 @@ PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops)
     register Pool *p;
     char dummy[12];
 
-    if(name==NULL) sprintf(name=dummy, "_p%x", (unsigned int)f);
+    if(name==NULL) sprintf(name=dummy, "_p%x", (unsigned long)f);
     p = newPool(name);
     p->ops = ops;
     p->type = P_STREAM;

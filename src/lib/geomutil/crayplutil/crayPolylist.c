@@ -83,17 +83,17 @@ cray_polylist_init() {
 }
 
 void *cray_polylist_HasColor(int sel, Geom *geom, va_list *args) {
-  return (void *)(crayHasVColor(geom, NULL) || crayHasFColor(geom, NULL));
+  return (void *)(long)(crayHasVColor(geom, NULL) || crayHasFColor(geom, NULL));
 }
 
 void *cray_polylist_HasVColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
-  return (void *)(p->flags & PL_HASVCOL);
+  return (void *)(long)(p->flags & PL_HASVCOL);
 }
 
 void *cray_polylist_HasFColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
-  return (void *)(p->flags & PL_HASPCOL);
+  return (void *)(long)(p->flags & PL_HASPCOL);
 }
 
 void *cray_polylist_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -147,7 +147,7 @@ void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list *args) {
 
   for (i = 0; i < p->n_verts; i++) p->vl[i].vcol = *color;
   for (i = 0; i < p->n_polys; i++) p->p[i].pcol = *color;
-  return (void *)crayHasColor(geom, NULL);
+  return (void *)(long)crayHasColor(geom, NULL);
 }
 
 void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args) {
@@ -157,8 +157,8 @@ void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args) {
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
   if (crayHasVColor(geom, NULL) && vindex != -1) 
-    return (void *)craySetColorAtV(geom, color, vindex, NULL, NULL);
-  return (void *)craySetColorAtF(geom, color, findex, NULL);
+    return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
 void *cray_polylist_SetColorAtV(int sel, Geom *geom, va_list *args) {
@@ -197,9 +197,9 @@ void *cray_polylist_GetColorAt(int sel, Geom *geom, va_list *args) {
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
   if (crayHasVColor(geom, NULL))
-    return (void *)crayGetColorAtV(geom, color, vindex, NULL, NULL);
+    return (void *)(long)crayGetColorAtV(geom, color, vindex, NULL, NULL);
   if (crayHasFColor(geom, NULL))
-    return (void *)crayGetColorAtF(geom, color, findex, NULL);
+    return (void *)(long)crayGetColorAtF(geom, color, findex, NULL);
   return NULL;
 }
 

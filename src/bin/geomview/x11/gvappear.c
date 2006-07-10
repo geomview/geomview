@@ -176,7 +176,7 @@ static void revert_appearance(Widget w, XtPointer data,
 
 static void ap_color(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 {
-  ui_pickcolor((int)data);
+  ui_pickcolor((int)(long)data);
 }
 
 /*****************************************************************************/
@@ -184,7 +184,7 @@ static void ap_color(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 void ap_toggle(Widget w, XtPointer data,
 		XmToggleButtonCallbackStruct *cbs)
 {
-  drawer_int(GEOMID(uistate.targetgeom), (int)data, cbs->set);
+  drawer_int(GEOMID(uistate.targetgeom), (int)(long)data, cbs->set);
 }
 
 /*****************************************************************************/
@@ -260,7 +260,7 @@ void ui_target_appearancepanel(int id)
 
 static void list_callbacks(Widget w, XtPointer data, XmListCallbackStruct *cbs)
 {
-  int val = (int) data;
+  int val = (int)(long)data;
   int offset = 0;
 
   switch (val)
@@ -335,7 +335,7 @@ static void ui_int(char *str, int key, int id, int min, int max)
 
 static void text_callbacks(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 {
-  int val = (int)data;
+  int val = (int)(long)data;
   char *str;
   str = XmTextFieldGetString(w);
   XmTextFieldSetInsertionPosition(w, (XmTextPosition) 0);

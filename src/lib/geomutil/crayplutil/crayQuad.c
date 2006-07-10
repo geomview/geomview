@@ -79,7 +79,7 @@ cray_quad_init() {
 
 void *cray_quad_HasVColor(int sel, Geom *geom, va_list *args) {
   Quad *q = (Quad *)geom;
-  return (void *)(q->flag & QUAD_C);
+  return (void *)(long)(q->flag & QUAD_C);
 }
 
 void *cray_quad_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -127,8 +127,8 @@ void *cray_quad_SetColorAt(int sel, Geom *geom, va_list *args) {
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
   if (vindex != -1) 
-    return (void *)craySetColorAtV(geom, color, vindex, NULL, NULL);
-  return (void *)craySetColorAtF(geom, color, findex, NULL);
+    return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
 void *cray_quad_SetColorAtV(int sel, Geom *geom, va_list *args) {
@@ -170,8 +170,8 @@ void *cray_quad_GetColorAt(int sel, Geom *geom, va_list *args) {
   findex = va_arg(*args, int);
   if (!crayHasVColor(geom, NULL)) return 0;
   if (vindex != -1) 
-    return (void *)crayGetColorAtV(geom, color, vindex, NULL, NULL);
-  return (void *)crayGetColorAtF(geom, color, findex, NULL);
+    return (void *)(long)crayGetColorAtV(geom, color, vindex, NULL, NULL);
+  return (void *)(long)crayGetColorAtF(geom, color, findex, NULL);
 }
 
 void *cray_quad_GetColorAtV(int sel, Geom *geom, va_list *args) {

@@ -86,7 +86,7 @@ void PointList_set(Geom *geom, int CoordSystem, HPoint3 *plist)
 }
 
 int PointList_length(Geom *geom) {
-  return (int)GeomCall(GeomMethodSel("PointList_length"), geom);
+  return (int)(long)GeomCall(GeomMethodSel("PointList_length"), geom);
 }
  
 
