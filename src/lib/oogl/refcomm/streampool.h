@@ -26,7 +26,7 @@
 #define	_STREAMPOOL_
 
 #if defined(HAVE_CONFIG_H) && ! defined(CONFIG_H_INCLUDED)
-#include "config.h"
+# include "config.h"
 #endif
 
 #ifdef AIX

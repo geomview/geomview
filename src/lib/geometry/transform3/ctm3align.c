@@ -19,8 +19,8 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 #if 0

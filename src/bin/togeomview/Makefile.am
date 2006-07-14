@@ -9,5 +9,3 @@ man_MANS = togeomview.1
 bin_PROGRAMS = togeomview
 togeomview_SOURCES = togeomview.c
 
-
-# LDADD = $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)

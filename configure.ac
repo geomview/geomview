@@ -93,7 +93,7 @@ AC_CHECK_PROGS(CONVERT, convert)
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
-#AC_CHECK_LIB([m], [main])
+AC_CHECK_LIB([m], [main])
 
 # Checks for header files.
 AC_PATH_XTRA
@@ -101,7 +101,7 @@ AC_FUNC_ALLOCA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h])
+AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -110,6 +110,19 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
 AC_STRUCT_TM
+AC_LANG_PUSH([C])
+AC_MSG_CHECKING([for M_PI])
+AC_COMPILE_IFELSE(
+  [AC_LANG_PROGRAM(
+[#if HAVE_MATH_H
+# include <math.h>
+#endif
+],
+[double blah = M_PI;])],
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_M_PI, 1, [Define to 1 if M_PI is defined])],
+[AC_MSG_RESULT([no])])
+AC_LANG_POP([C])
 
 # Checks for library functions
 AC_CONFIG_LIBOBJ_DIR([src/lib/aclib])
@@ -128,6 +141,7 @@ AC_FUNC_WAIT3
 AC_CHECK_FUNCS([fmemopen],
   [AC_CHECK_DECLS([fmemopen])],
   [AC_LIBOBJ([fmemopen])])
+AC_REPLACE_FUNCS([putenv strdup popen strncasecmp strcasecmp acosh])
 AC_FUNC_SELECT_ARGTYPES
 AC_CHECK_FUNC([select],
   [AC_DEFINE(HAVE_SELECT, 1, [Define to 1 if you have the `select' function.])
@@ -148,7 +162,7 @@ AC_CHECK_DECLS([errno],[],[],[
 #if HAVE_ERRNO_H
 # include <errno.h>
 #endif])
-AC_CHECK_FUNCS([alarm bzero dup2 floor fcntl gethostname gettimeofday isascii memset mkdir pow putenv rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3])
+AC_CHECK_FUNCS([alarm bzero bcopy dup2 floor fcntl finite gethostname gettimeofday isascii memset mkdir pow rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3])
 
 #
 # End autoscan stuff.
@@ -560,48 +574,27 @@ ACCEPT_ARG3_TYPE should be the datatype of the
 'unsigned long' on some, and could be something else on others.
 Default to int])
 
-AC_DEFINE(BINARY_POPEN_REQUIRES_B, 0,
-[BINARY_POPEN_REQUIRES_B says whether the system's popen() call needs 
-a 'b' in the 2nd argument when the data coming through its pipe is	
-binary.  This comes up in mgtexture.c when popen is called to pipe	
-a compressed image through gzip.  Initially Stuart wrote the call	
-with the 2nd arg being "rb", but this didn't work on my Linux	
-system so I added this switch to allow it to be compiled with just	
-"r", which does work.  For now, I'm just setting this to 0 to force	
-"r" on all systems, but it might be necessary to use "rb" on some	
-systems which treat binary files differently (Windows?), in which	
-case the configure script should be modified to set			
-BINARY_POPEN_REQUIRES_B to 1 for those systems.			
-mbp Tue Sep 12 12:33:38 2000])
+AC_LANG_PUSH([C])
+AC_MSG_CHECKING(
+[whether popen(CMD, MODE) needs/accepts MODE = "rb" for binary files])
+AC_RUN_IFELSE(
+  [AC_LANG_PROGRAM(
+[#include <stdio.h>
+],
+[FILE *pipe = popen("${SHELL}", "rb");
+if (pipe == NULL)
+  return 1;
+else
+  return 0;])],[AC_MSG_RESULT([yes])
+AC_DEFINE(POPEN_ACCEPTS_RB, 1,
+[Define to 1 if popen(CMD, MODE) accepts "rb" for MODE])],
+[AC_MSG_RESULT([no])])
+AC_LANG_POP([C])
 
 AC_SUBST(MACHTYPE)
 
 AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
 AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
-
-# What this actually checks is whether a program that includes
-# <math.h> and calls 'sin' needs -lm to link properly.  I put this
-# test here because on my linux system, -lm seems unnecessary
-# (<math.h> seems to define everything with inline code).  Perhaps it
-# would be harmless to just give -lm in all cases, but what the heck;
-# might as well check for it since we can.  It's possible that this
-# could cause problems if on some system <math.h> deals with sin() but
-# not with some other function that we call, but we'll deal with that
-# if/when it comes up (by adding that function to this test, for
-# example).
-# mbp Mon May  8 18:47:33 2000
-ac_save_CFLAGS="${CFLAGS}"
-CFLAGS="-O0"
-AC_MSG_CHECKING([whether we need to link -lm to get math functions])
-AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <math.h> ], [ double s = sin(1.5); ])],[ MATHLIB=""
-	      AC_MSG_RESULT([no]) ],[ MATHLIB=-lm
-	      AC_MSG_RESULT([yes]) 
-	   ])
-CFLAGS="${ac_save_CFLAGS}"
-AC_SUBST(MATHLIB)
-# MATHLIB is now "-lm" on systems that need it, or empty on those that don't.
-# So it's safe to put $(MATHLIB) in link commands.
-
 
 AC_MSG_CHECKING([whether we need to link -lsocket to get socket()])
 AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <sys/socket.h> ], [ int s = socket(AF_UNIX, SOCK_STREAM, 0); ])],[ SOCKETLIBS=""

@@ -15,6 +15,8 @@ EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
 AM_MAKEINFOFLAGS = --no-validate
 info_TEXINFOS = geomview.texi
 
+DOCDIR = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
+
 geomview.pdf:  $(PDFIMAGES)
 geomview.ps:   $(EPSIMAGES)
 geomview.dvi:  $(EPSIMAGES)
@@ -34,18 +36,38 @@ figs/%.png: figs/%.pdf
 	-rm -f $(<:.pdf=-000.ppm)
 
 html-local: $(PNGIMAGES)
-	-mkdir -p geomview.html/figs/
+	-$(mkdir_p) geomview.html/figs/
 	-cp $(PNGIMAGES) geomview.html/figs/
 
 dist-hook: html pdf ps
 
-install-info: installinfolocal
-
-installinfolocal: $(PNGIMAGES)
+install-info-hook: $(PNGIMAGES)
 	-$(mkdir_p) "$(DESTDIR)$(infodir)/figs"
 	for file in $(PNGIMAGES); do \
 		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(infodir)/$$file"; \
 	done
+
+install-data-local: html pdf
+	-$(mkdir_p) "$(DESTDIR)$(DOCDIR)/html/figs"
+	for file in $(PNGIMAGES); do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(DOCDIR)/html/$$file"; \
+	done
+	cd geomview.html ; \
+	for file in *.html; do \
+		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(DOCDIR)/html/"; \
+	done
+	$(INSTALL_DATA) geomview.pdf "$(DESTDIR)$(DOCDIR)/"
+
+uninstall-local: html pdf
+	-$(mkdir_p) "$(DESTDIR)$(DOCDIR)/html/figs"
+	for file in $(PNGIMAGES); do \
+		rm -f "$(DESTDIR)$(DOCDIR)/html/$$file"; \
+	done
+	cd geomview.html ; \
+	for file in *.html; do \
+		rm -f "$(DESTDIR)$(DOCDIR)/html/$$file"; \
+	done
+	rm -f "$(DESTDIR)$(DOCDIR)/geomview.pdf"
 
 CLEANFILES = geomview.dvi
 

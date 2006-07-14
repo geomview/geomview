@@ -468,7 +468,7 @@ ac_includes_default="\
 
 ac_config_libobj_dir=src/lib/aclib
 ac_subdirs_all="$ac_subdirs_all $module_srcdirs"
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CC CFLAGS ac_ct_CC CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP LEX LEXLIB LEX_OUTPUT_ROOT YACC EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL FIND GLOB_SHELL_PATH GLOB_SHELL PS2EPSI EPSTOPDF PDFIMAGESPROG CONVERT X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS ALLOCA LIBOBJS POW_LIB XLIBS XMULIBS MOTIFINCLUDE MOTIFLIBS OPENGLLIBS OPENGLINCLUDE MGOPENGL_TRUE MGOPENGL_FALSE MGX11_TRUE MGX11_FALSE XFORMSINCLUDE XFORMSLIBS LD_LIBRARY_PATH_SETTINGS MACHTYPE HAVE_CXX_TRUE HAVE_CXX_FALSE HAVE_XFORMS_TRUE HAVE_XFORMS_FALSE MATHLIB SOCKETLIBS moduledir geomdatadir top_geom_builddir OOGLLIBS OOGLLIB MOTIFUILIB STUBLIB default_includes src_bin_module_subdirs subdirs LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS MAINTAINER_MODE_TRUE MAINTAINER_MODE_FALSE MAINT build build_cpu build_vendor build_os host host_cpu host_vendor host_os target target_cpu target_vendor target_os INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA CYGPATH_W PACKAGE VERSION ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO install_sh STRIP ac_ct_STRIP INSTALL_STRIP_PROGRAM mkdir_p AWK SET_MAKE am__leading_dot AMTAR am__tar am__untar CXX CXXFLAGS LDFLAGS CPPFLAGS ac_ct_CXX EXEEXT OBJEXT DEPDIR am__include am__quote AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH CXXDEPMODE am__fastdepCXX_TRUE am__fastdepCXX_FALSE CC CFLAGS ac_ct_CC CCDEPMODE am__fastdepCC_TRUE am__fastdepCC_FALSE CPP LEX LEXLIB LEX_OUTPUT_ROOT YACC EGREP LN_S ECHO AR ac_ct_AR RANLIB ac_ct_RANLIB CXXCPP F77 FFLAGS ac_ct_F77 LIBTOOL FIND GLOB_SHELL_PATH GLOB_SHELL PS2EPSI EPSTOPDF PDFIMAGESPROG CONVERT X_CFLAGS X_PRE_LIBS X_LIBS X_EXTRA_LIBS ALLOCA LIBOBJS POW_LIB XLIBS XMULIBS MOTIFINCLUDE MOTIFLIBS OPENGLLIBS OPENGLINCLUDE MGOPENGL_TRUE MGOPENGL_FALSE MGX11_TRUE MGX11_FALSE XFORMSINCLUDE XFORMSLIBS LD_LIBRARY_PATH_SETTINGS MACHTYPE HAVE_CXX_TRUE HAVE_CXX_FALSE HAVE_XFORMS_TRUE HAVE_XFORMS_FALSE SOCKETLIBS moduledir geomdatadir top_geom_builddir OOGLLIBS OOGLLIB MOTIFUILIB STUBLIB default_includes src_bin_module_subdirs subdirs LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -19546,7 +19546,74 @@ done
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
-#AC_CHECK_LIB([m], [main])
+
+echo "$as_me:$LINENO: checking for main in -lm" >&5
+echo $ECHO_N "checking for main in -lm... $ECHO_C" >&6
+if test "${ac_cv_lib_m_main+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lm  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+main ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_m_main=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_lib_m_main=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:$LINENO: result: $ac_cv_lib_m_main" >&5
+echo "${ECHO_T}$ac_cv_lib_m_main" >&6
+if test $ac_cv_lib_m_main = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_LIBM 1
+_ACEOF
+
+  LIBS="-lm $LIBS"
+
+fi
+
 
 # Checks for header files.
 echo "$as_me:$LINENO: checking for X" >&5
@@ -21880,7 +21947,9 @@ fi
 
 
 
-for ac_header in errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h
+
+
+for ac_header in errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
 if eval "test \"\${$as_ac_Header+set}\" = set"; then
@@ -22560,6 +22629,75 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
 
 fi
+
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+echo "$as_me:$LINENO: checking for M_PI" >&5
+echo $ECHO_N "checking for M_PI... $ECHO_C" >&6
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#if HAVE_MATH_H
+# include <math.h>
+#endif
+
+int
+main ()
+{
+double blah = M_PI;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_M_PI 1
+_ACEOF
+
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 # Checks for library functions
@@ -24431,6 +24569,123 @@ done
 
 
 
+
+
+
+
+for ac_func in putenv strdup popen strncasecmp strcasecmp acosh
+do
+as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
+echo "$as_me:$LINENO: checking for $ac_func" >&5
+echo $ECHO_N "checking for $ac_func... $ECHO_C" >&6
+if eval "test \"\${$as_ac_var+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+/* Define $ac_func to an innocuous variant, in case <limits.h> declares $ac_func.
+   For example, HP-UX 11i <limits.h> declares gettimeofday.  */
+#define $ac_func innocuous_$ac_func
+
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char $ac_func (); below.
+    Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
+    <limits.h> exists even on freestanding compilers.  */
+
+#ifdef __STDC__
+# include <limits.h>
+#else
+# include <assert.h>
+#endif
+
+#undef $ac_func
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char $ac_func ();
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
+choke me
+#else
+char (*f) () = $ac_func;
+#endif
+#ifdef __cplusplus
+}
+#endif
+
+int
+main ()
+{
+return f != $ac_func;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval "$as_ac_var=yes"
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+eval "$as_ac_var=no"
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:$LINENO: result: `eval echo '${'$as_ac_var'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$as_ac_var'}'`" >&6
+if test `eval echo '${'$as_ac_var'}'` = yes; then
+  cat >>confdefs.h <<_ACEOF
+#define `echo "HAVE_$ac_func" | $as_tr_cpp` 1
+_ACEOF
+
+else
+  case $LIBOBJS in
+    "$ac_func.$ac_objext"   | \
+  *" $ac_func.$ac_objext"   | \
+    "$ac_func.$ac_objext "* | \
+  *" $ac_func.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS $ac_func.$ac_objext" ;;
+esac
+
+fi
+done
+
+
+
+
 for ac_header in sys/select.h sys/socket.h
 do
 as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -24959,7 +25214,8 @@ fi
 
 
 
-for ac_func in alarm bzero dup2 floor fcntl gethostname gettimeofday isascii memset mkdir pow putenv rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3
+
+for ac_func in alarm bzero bcopy dup2 floor fcntl finite gethostname gettimeofday isascii memset mkdir pow rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3
 do
 as_ac_var=`echo "ac_cv_func_$ac_func" | $as_tr_sh`
 echo "$as_me:$LINENO: checking for $ac_func" >&5
@@ -26311,7 +26567,7 @@ for geom_z in $geom_dirs ; do
   geom_l_option=
   test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
-  echo "configure:26314: checking for $geom_func with $geom_l_option" >&5
+  echo "configure:26570: checking for $geom_func with $geom_l_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26413,7 +26669,7 @@ for geom_z in $geom_dirs ; do
   geom_i_option=
   test -n "$geom_z" && geom_i_option="-I$geom_z"
   CPPFLAGS="$geom_i_option $geom_saved_CPPFLAGS"
-  echo "configure:26416: checking for $geom_header with $geom_i_option" >&5
+  echo "configure:26672: checking for $geom_header with $geom_i_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26507,7 +26763,7 @@ for geom_z in $geom_dirs ; do
   geom_l_option=
   test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
-  echo "configure:26510: checking for $geom_func with $geom_l_option" >&5
+  echo "configure:26766: checking for $geom_func with $geom_l_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26614,7 +26870,7 @@ for geom_z in $geom_dirs ; do
   geom_i_option=
   test -n "$geom_z" && geom_i_option="-I$geom_z"
   CPPFLAGS="$geom_i_option $geom_saved_CPPFLAGS"
-  echo "configure:26617: checking for $geom_header with $geom_i_option" >&5
+  echo "configure:26873: checking for $geom_header with $geom_i_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26699,7 +26955,7 @@ for geom_z in $geom_dirs ; do
   geom_l_option=
   test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
-  echo "configure:26702: checking for $geom_func with $geom_l_option" >&5
+  echo "configure:26958: checking for $geom_func with $geom_l_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26789,7 +27045,7 @@ for geom_z in $geom_dirs ; do
   geom_l_option=
   test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
-  echo "configure:26792: checking for $geom_func with $geom_l_option" >&5
+  echo "configure:27048: checking for $geom_func with $geom_l_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -26965,7 +27221,7 @@ for geom_z in $geom_dirs ; do
   geom_i_option=
   test -n "$geom_z" && geom_i_option="-I$geom_z"
   CPPFLAGS="$geom_i_option $geom_saved_CPPFLAGS"
-  echo "configure:26968: checking for $geom_header with $geom_i_option" >&5
+  echo "configure:27224: checking for $geom_header with $geom_i_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -27030,7 +27286,7 @@ for geom_z in $geom_dirs ; do
   geom_l_option=
   test -n "$geom_z" && geom_l_option="-L$geom_z"
   LIBS="$geom_l_option $geom_lib $geom_otherlibs"
-  echo "configure:27033: checking for $geom_func with $geom_l_option" >&5
+  echo "configure:27289: checking for $geom_func with $geom_l_option" >&5
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
@@ -27462,10 +27718,75 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+echo "$as_me:$LINENO: checking whether popen(CMD, MODE) needs/accepts MODE = \"rb\" for binary files" >&5
+echo $ECHO_N "checking whether popen(CMD, MODE) needs/accepts MODE = \"rb\" for binary files... $ECHO_C" >&6
+if test "$cross_compiling" = yes; then
+  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&5
+echo "$as_me: error: cannot run test program while cross compiling
+See \`config.log' for more details." >&2;}
+   { (exit 1); exit 1; }; }
+else
+  cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <stdio.h>
+
+int
+main ()
+{
+FILE *pipe = popen("${SHELL}", "rb");
+if (pipe == NULL)
+  return 1;
+else
+  return 0;
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  echo "$as_me:$LINENO: result: yes" >&5
+echo "${ECHO_T}yes" >&6
 
 cat >>confdefs.h <<\_ACEOF
-#define BINARY_POPEN_REQUIRES_B 0
+#define POPEN_ACCEPTS_RB 1
 _ACEOF
+
+else
+  echo "$as_me: program exited with status $ac_status" >&5
+echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+( exit $ac_status )
+echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6
+fi
+rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+fi
+ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
@@ -27489,78 +27810,6 @@ else
   HAVE_XFORMS_TRUE='#'
   HAVE_XFORMS_FALSE=
 fi
-
-
-# What this actually checks is whether a program that includes
-# <math.h> and calls 'sin' needs -lm to link properly.  I put this
-# test here because on my linux system, -lm seems unnecessary
-# (<math.h> seems to define everything with inline code).  Perhaps it
-# would be harmless to just give -lm in all cases, but what the heck;
-# might as well check for it since we can.  It's possible that this
-# could cause problems if on some system <math.h> deals with sin() but
-# not with some other function that we call, but we'll deal with that
-# if/when it comes up (by adding that function to this test, for
-# example).
-# mbp Mon May  8 18:47:33 2000
-ac_save_CFLAGS="${CFLAGS}"
-CFLAGS="-O0"
-echo "$as_me:$LINENO: checking whether we need to link -lm to get math functions" >&5
-echo $ECHO_N "checking whether we need to link -lm to get math functions... $ECHO_C" >&6
-cat >conftest.$ac_ext <<_ACEOF
-/* confdefs.h.  */
-_ACEOF
-cat confdefs.h >>conftest.$ac_ext
-cat >>conftest.$ac_ext <<_ACEOF
-/* end confdefs.h.  */
- #include <math.h>
-int
-main ()
-{
- double s = sin(1.5);
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
-  (eval $ac_link) 2>conftest.er1
-  ac_status=$?
-  grep -v '^ *+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-	 { ac_try='test -z "$ac_c_werror_flag"
-			 || test ! -s conftest.err'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
-	 { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-   MATHLIB=""
-	      echo "$as_me:$LINENO: result: no" >&5
-echo "${ECHO_T}no" >&6
-else
-  echo "$as_me: failed program was:" >&5
-sed 's/^/| /' conftest.$ac_ext >&5
-
- MATHLIB=-lm
-	      echo "$as_me:$LINENO: result: yes" >&5
-echo "${ECHO_T}yes" >&6
-
-fi
-rm -f conftest.err conftest.$ac_objext \
-      conftest$ac_exeext conftest.$ac_ext
-CFLAGS="${ac_save_CFLAGS}"
-
-# MATHLIB is now "-lm" on systems that need it, or empty on those that don't.
-# So it's safe to put $(MATHLIB) in link commands.
 
 
 echo "$as_me:$LINENO: checking whether we need to link -lsocket to get socket()" >&5
@@ -29202,7 +29451,6 @@ s,@HAVE_CXX_TRUE@,$HAVE_CXX_TRUE,;t t
 s,@HAVE_CXX_FALSE@,$HAVE_CXX_FALSE,;t t
 s,@HAVE_XFORMS_TRUE@,$HAVE_XFORMS_TRUE,;t t
 s,@HAVE_XFORMS_FALSE@,$HAVE_XFORMS_FALSE,;t t
-s,@MATHLIB@,$MATHLIB,;t t
 s,@SOCKETLIBS@,$SOCKETLIBS,;t t
 s,@moduledir@,$moduledir,;t t
 s,@geomdatadir@,$geomdatadir,;t t

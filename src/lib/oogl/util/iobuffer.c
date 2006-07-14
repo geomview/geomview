@@ -36,7 +36,10 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-#if HAVE_FCNTL_H
+
+/*#undef HAVE_FCNTL*/
+
+#if HAVE_FCNTL_H && HAVE_FCNTL
 # include <fcntl.h>
 
 static const int o_nonblock =
@@ -97,6 +100,7 @@ struct IOBFILE
   IOBLIST  ioblist;
   IOBLIST  ioblist_mark;
   size_t   mark_pos;
+  size_t   read_count;
 #if HAVE_FCNTL
   int      fflags;
 #endif
@@ -179,9 +183,9 @@ IOBFILE *iobfileopen(FILE *istream)
 #endif
 #if HAVE_FCNTL
     iobf->fflags = fcntl(fileno(istream), F_GETFL);
-#endif
   } else {
     iobf->fflags = -1;
+#endif
   }
 
   iob_init_buffer(&iobf->ioblist);
@@ -372,6 +376,7 @@ iobfread_buffer(void *ptr, size_t size, IOBFILE *iobf)
     ++buf;
     ++rd_sz;
     --rq_sz;
+    --iobf->read_count;
   }
 
   while (rq_sz) {
@@ -471,7 +476,9 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
   size_t rq_size = size * nmemb, rd_size, rd_tot;
   size_t tail_rd;
   char *buf = ptr;
+#if HAVE_FCNTL
   int first = 1;
+#endif
 
   if (size*nmemb == 0) {
     return 0;
@@ -490,26 +497,32 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
       tail_space = BUFFER_SIZE - ioblist->tail_size;
 #if HAVE_FCNTL
       if (!iobf->can_seek &&
-	  (!first || iobf->fflags != -1 ||
+	  (!first || iobf->fflags == -1 ||
 	   fcntl(fileno(iobf->istream),
-		 F_SETFL, iobf->fflags | o_nonblock) >= 0)) {
+		 F_SETFL, iobf->fflags | o_nonblock) < 0)) {
 	tail_space = min(tail_space, rq_size);
+	first = 0;
       }
 #else
-      tail_space = min(tail_space, rq_size);
+      if (!iobf->can_seek)
+	  tail_space = min(tail_space, rq_size);
 #endif
       tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
 		      1, tail_space, iobf->istream);
+      ioblist->tail_size += tail_rd;
+      ioblist->tot_size  += tail_rd;
 #if HAVE_FCNTL
       if (!iobf->can_seek && first && iobf->fflags != -1) {
 	fcntl(fileno(iobf->istream), F_SETFL, iobf->fflags);
 	first = 0;
+	if (tail_rd == 0 && rq_size) {
+	  tail_rd = ~0; /* retry with blocking IO */
+	}
       }
 #endif
-      ioblist->tail_size += tail_rd;
-      ioblist->tot_size  += tail_rd;
     }
   } while (tail_rd && rq_size);
+  iobf->read_count += rd_tot;
   return rd_tot / size;
 }
 

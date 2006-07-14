@@ -19,8 +19,8 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 #if 0
@@ -37,13 +37,20 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "streampool.h"
 #include "handleP.h"
 
-#if defined(unix) || defined(__unix) || defined(__unix__)
+#if HAVE_UNISTD_H
 # include <unistd.h>
-#else	/* _WIN32 */
-# include <io.h>
+#endif
+#if HAVE_IO_H
+# include <io.h> /* _WIN32 */
 #endif
 
 #include <signal.h>
+
+#if POPEN_ACCEPTS_RB
+# define POPEN_RB "rb"
+#else
+# define POPEN_RB "r"
+#endif
 
 HandleOps GeomOps = {
 	"geom",
@@ -216,7 +223,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     close(0);
     dup(iobfileno(pf));
     oldchld = signal(SIGCHLD, SIG_DFL);
-    tf = iobfileopen(popen(cmd, "r"));
+    tf = iobfileopen(popen(cmd, POPEN_RB));
     close(0);
     if(oldstdin > 0) {
 	dup(oldstdin);

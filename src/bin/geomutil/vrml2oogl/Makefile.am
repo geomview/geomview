@@ -8,4 +8,4 @@ EXTRA_DIST = $(man_MANS)
 
 vrml2oogl_SOURCES = vrml2oogl.C
 
-LDADD = ./lib/libQv.a ${MATHLIB}
+LDADD = ./lib/libQv.a

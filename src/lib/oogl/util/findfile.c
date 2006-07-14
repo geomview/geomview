@@ -19,8 +19,8 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 #if 0
@@ -30,7 +30,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.4 2006/07/08 20:28:21 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.5 2006/07/14 17:47:21 rotdrop Exp $ */
 
 #include <stdio.h>
 #include <string.h>

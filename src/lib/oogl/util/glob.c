@@ -19,8 +19,8 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 #if 0
@@ -36,6 +36,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ooglutil.h"
 #include <signal.h>
 
+#if POPEN_ACCEPTS_RB
+# define POPEN_RB "rb"
+#else
+# define POPEN_RB "r"
+#endif
 
 #define FBUFSIZ 1024
 #define INITSIZ 10
@@ -71,7 +76,7 @@ char **ooglglob(char *s)
 #endif
 
   sprintf(cmd, GLOB_SHELL"\"echo %s\" 2>&-", s);
-  fp = popen(cmd, "r");
+  fp = popen(cmd, POPEN_RB);
   
   if (fp == NULL) {
     OOGLError(1, "Could not popen(\"%s\", \"r\"): %s\n", cmd, sperror());

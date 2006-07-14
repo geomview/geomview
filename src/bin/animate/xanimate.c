@@ -24,8 +24,8 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 #include <unistd.h>

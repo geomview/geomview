@@ -19,8 +19,8 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#if defined(HAVE_CONFIG_H) && !defined(CONFIG_H_INCLUDED)
-#include "config.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
@@ -29,9 +29,11 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#if defined(unix) || defined(__unix) || defined(__unix__)
+#if HAVE_UNISTD_H
 # include <unistd.h>
-#elif defined(_WIN32) || defined(WIN32)
+#endif
+
+#if defined(_WIN32) || defined(WIN32)
 # include <io.h>
 # define R_OK  4	/* sigh, no Windows include-file defines R_OK! */
 # define pclose fclose
@@ -41,6 +43,12 @@
 #include <signal.h>
 #include <sys/stat.h>
 #include <string.h>
+
+#if POPEN_ACCEPTS_RB
+# define POPEN_RB "rb"
+#else
+# define POPEN_RB "r"
+#endif
 
 struct xyc {
     int xsize, ysize, channels;
@@ -108,11 +116,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	}
 	*p = '\0';
 	*dopclose = 1;
-#if BINARY_POPEN_REQUIRES_B
-	f = iobpopen(cmd, "rb");
-#else
-	f = iobpopen(cmd, "r");
-#endif
+	f = iobpopen(cmd, POPEN_RB);
 #endif
     }
     if(f == NULL) {

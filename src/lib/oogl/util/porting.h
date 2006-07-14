@@ -19,7 +19,6 @@
  * USA, or visit http://www.gnu.org.
  */
 
-
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
@@ -27,9 +26,61 @@
  *
  *  ooglutil.h includes this file
  */
+#ifndef GV_PORTING_H
+#define GV_PORTING_H
 
-#ifdef NeXT
-extern char *strdup(const char *);
-extern putenv(register char *name);
-
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
+
+#if !HAVE_M_PI
+# define M_PI 3.14159265358979323846	/* pi */
+#endif
+
+#if !HAVE_BCOPY
+static inline void bcopy(char *src, char *dst, int len)
+{
+  memcpy(dst, src, len);
+}
+#endif
+
+#if !HAVE_BZERO
+static inline void bzero(char *mem, int len)
+{
+  memset(mem, 0, len);
+}
+#endif
+
+#if !HAVE_FINITE
+static inline int finite(double v)
+{
+  return (! (v <= 0.0 || v > 0.0));
+}
+#endif
+
+#if !HAVE_STRCASECMP
+extern int strcasecmp(char *s1, char *s2);
+#endif
+
+#if !HAVE_STRCASECMP
+extern int strncasecmp(char *a, char *b, int n);
+#endif
+
+#if !HAVE_ACOSH
+double acosh(double c);
+#endif
+
+#if !HAVE_STRDUP
+extern char *strdup(const char *);
+#endif
+
+#if !HAVE_PUTENV
+extern putenv(register char *name);
+#endif
+
+/* supply missing declaration for fmemopen */
+#if !HAVE_DECL_FMEMOPEN
+extern FILE *fmemopen(void *buf, size_t buflen, char *mode);
+#endif
+
+#endif /* GV_PORTING_H */
