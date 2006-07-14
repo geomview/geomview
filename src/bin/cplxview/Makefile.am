@@ -1,14 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(top_builddir)/src/lib/fexpr/libfexpr.a                    \
-	$(XFORMSLIBS)	\
-	$(XLIBS)	\
-	-lm
+LDADD =	$(XFORMSLIBS) \
+	$(XLIBS)      \
+	$(OOGLLIB) 
 
 EXTRA_DIST = .geomview-cplxview cplxhelp.txt cplxpanels2.fd cplxview.1
 
 module_PROGRAMS = cplxview
 cplxview_SOURCES = computegraph.c cplxpanels2.c cplxpanels2.h cplxview.c
+cplxview_DEPENDENCIES = $(OOGLLIB)
+cplxview_LDFLAGS = -rpath $(libdir)
 
 
 module_DATA = .geomview-cplxview

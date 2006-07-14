@@ -70,8 +70,9 @@ If N negative, everts each patch.\n", argv[0]);
     if(n < 0)
 	evert = 1;
 
-    g = (argc > 2 && strcmp(argv[2],"-")) ?
-		GeomLoad(fname = argv[2]) : GeomFLoad(stdin, fname = "stdin");
+    g = (argc > 2 && strcmp(argv[2],"-"))
+      ? GeomLoad(fname = argv[2])
+      : GeomFLoad(iobfileopen(stdin), fname = "stdin");
 
     if(g == NULL) {
 	fprintf(stderr, "%s: Couldn't read geometry from %s\n", argv[0], fname);

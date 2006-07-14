@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 oogl2rib
+*.lo
+*.la
+.libs

@@ -34,7 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bboxP.h"
 
 BBox *
-BBoxFLoad(FILE *f, char *fname)
+BBoxFLoad(IOBFILE *f, char *fname)
 {
     BBox b;
     BBox *bbox;
@@ -49,8 +49,8 @@ BBoxFLoad(FILE *f, char *fname)
 	return NULL;
 
     b.min.w = b.max.w = 1.0;
-    if(fgetnf(f, dim, &b.min.x, 0) != dim ||
-       fgetnf(f, dim, &b.max.x, 0) != dim) {
+    if(iobfgetnf(f, dim, &b.min.x, 0) != dim ||
+       iobfgetnf(f, dim, &b.max.x, 0) != dim) {
       OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
 		 fname, dim * 2);
       return NULL;

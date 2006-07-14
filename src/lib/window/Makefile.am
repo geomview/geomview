@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libwindow.a
+noinst_LTLIBRARIES = libwindow.la
 
-libwindow_a_SOURCES = \
+libwindow_la_SOURCES = \
     window.c winstream.c \
     window.h windowP.h

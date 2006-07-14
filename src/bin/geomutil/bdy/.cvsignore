@@ -1,3 +1,7 @@
 .geomview-drawbdy
+.libs
 Makefile Makefile.in .deps
 bdy drawbdy
+*.lo
+*.la
+.libs

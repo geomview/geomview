@@ -1,3 +1,7 @@
+
+.libs
 Makefile Makefile.in .deps
 transformer
-
+*.lo
+*.la
+.libs

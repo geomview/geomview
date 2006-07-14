@@ -142,9 +142,9 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 
 
 void
-LangInit(FILE *fp)
+LangInit(IOBFILE *inf, FILE *fp)
 {
-  lake = LakeDefine(stdin, stdout, NULL);
+  lake = LakeDefine(inf, fp, NULL);
 
   LInit();
   LDefun("pick", Lpick, Hpick);

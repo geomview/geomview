@@ -1,6 +1,8 @@
 INCLUDES = @default_includes@
 
-LDADD = $(STUBLIB) ${OOGLLIBS} $(SOCKETLIBS) $(MATHLIB)
+LDADD = $(STUBLIB) ${OOGLLIB}
+DEPENDENCIES = $(STUBLIB) ${OOGLLIB}
+AM_LDFLAGS = -rpath $(libdir)
 
 man_MANS = anytoucd.1 ucdtooff.1
 

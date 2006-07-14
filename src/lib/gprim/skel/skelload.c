@@ -43,12 +43,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include "skelP.h"
 
-Skel *
-SkelFLoad(file, fname)
-	FILE *file;
-	char *fname;
+Skel *SkelFLoad(IOBFILE *file, char *fname)
 {
-    register Skel *s;
+    Skel *s;
     int	 binary = 0;
     int geomflags = 0, nd = 0, dim = 3;
     char *token;
@@ -75,7 +72,7 @@ SkelFLoad(file, fname)
 	return NULL;
 
     if(nd) {
-	if(fgetni(file, 1, &dim, 0) <= 0) {
+	if(iobfgetni(file, 1, &dim, 0) <= 0) {
 	    OOGLSyntax(file, "Reading nSKEL from \"%s\": Expected dimension", fname);
 	    return NULL;
 	}
@@ -92,8 +89,8 @@ SkelFLoad(file, fname)
     s->vi = NULL;
     s->nvi = s->nc = 0;
 
-    if(fgetni(file, 1, &s->nvert, binary) <= 0 ||
-       fgetni(file, 1, &s->nlines, binary) <= 0) {
+    if(iobfgetni(file, 1, &s->nvert, binary) <= 0 ||
+       iobfgetni(file, 1, &s->nlines, binary) <= 0) {
 	OOGLSyntax(file, "Reading SKEL from \"%s\": expected nvertices, nlines");
 	goto bogus;
     }
@@ -107,7 +104,7 @@ SkelFLoad(file, fname)
     k = (geomflags & SKEL_4D) ? s->dim : s->dim - 1;
     for(i = 0, vp = s->p; i < s->nvert; i++, vp += s->dim) {
 	vp[s->dim - 1] = 1.0;			/* homogeneous component */
-	if(fgetnf(file, k, vp, binary) < k) {
+	if(iobfgetnf(file, k, vp, binary) < k) {
 	    OOGLSyntax(file, "Reading SKEL from \"%s\": error reading vertex %d of %d", fname, i, s->nvert);
 	    goto bogus;
 	}
@@ -116,7 +113,7 @@ SkelFLoad(file, fname)
     for(i = 0, v0=0, lp = s->l; i < s->nlines; i++, lp++) {
 	/* Read one polyline
 	 */
-	if(fgetni(file, 1, &lp->nv, binary) <= 0 || lp->nv <= 0) {
+	if(iobfgetni(file, 1, &lp->nv, binary) <= 0 || lp->nv <= 0) {
 	    OOGLSyntax(file, "Reading SKEL from \"%s\": expected vertex count on polyline %d of %d", fname, i, s->nlines);
 	    goto bogus;
 	}
@@ -125,7 +122,7 @@ SkelFLoad(file, fname)
 	lp->v0 = k = VVCOUNT(verts);
 	VVCOUNT(verts) += lp->nv;
 	vvneeds(&verts, VVCOUNT(verts));
-	if(fgetni(file, lp->nv, VVEC(verts, int) + k, binary) < lp->nv) {
+	if(iobfgetni(file, lp->nv, VVEC(verts, int) + k, binary) < lp->nv) {
 	    OOGLSyntax(file, "Reading SKEL from \"%s\": expected %d vertex indices on polyline %d of %d", fname, lp->nv, i, s->nlines);
 	    goto bogus;
 	}
@@ -134,8 +131,8 @@ SkelFLoad(file, fname)
 	vvneeds(&colors, VVCOUNT(colors)+1);
 	cp = &VVEC(colors, ColorA)[VVCOUNT(colors)];
 	*cp = black;
-	for(k = 0; k < 4 && fnextc(file, 1) != '\n'; k++) {
-	    if(fgetnf(file, 1, ((float *)cp)+k, 0) < 1) {
+	for(k = 0; k < 4 && iobfnextc(file, 1) != '\n'; k++) {
+	    if(iobfgetnf(file, 1, ((float *)cp)+k, 0) < 1) {
 		OOGLSyntax(file, "Reading SKEL from \"%s\": polyline %d of %d: expected color component",
 		    fname, i, s->nlines);
 		goto bogus;

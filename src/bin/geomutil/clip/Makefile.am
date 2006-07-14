@@ -7,8 +7,10 @@ man_MANS = clip.1
 bin_PROGRAMS = clip
 
 clip_SOURCES = clip.c clipoogl.c clipmain.c Clip.h
+clip_DEPENDENCIES = $(OOGLLIB)
+clip_LDFLAGS = -rpath $(libdir)
 
-LDADD = $(STUBLIB) $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)
+LDADD = $(STUBLIB) $(OOGLLIB)
 
 #	$(top_builddir)/src/lib/geomutil/libgeomutil.a \
 #

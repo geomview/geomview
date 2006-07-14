@@ -39,22 +39,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "streampool.h"
 #include "handleP.h"
 
-char *
-fbalanced(FILE *file)
+static char *
+fbalanced(IOBFILE *file)
 {
     int depth = 1;
     int bufsize = 10240;
-    char fmt[20];
     char *buf = OOGLNewNE(char, bufsize, "Comment data");
     char *bufp = buf;
-    if (fexpectstr(file, "{")) return NULL;
+    if (iobfexpectstr(file, "{")) return NULL;
     do {
+	int c = EOF;
+
 	if (bufp - buf >= bufsize - 2)
 	    buf = OOGLRenewNE(char, buf, bufsize += 10240, "Comment data");
-	sprintf(fmt, "%%%d[^{}]", bufsize - (bufp - buf) - 2);
-	if (fscanf(file, fmt, bufp) > 0)
-	    bufp += strlen(bufp);
-	switch(*bufp++ = fgetc(file)) {
+	while (bufp - buf < bufsize - 2) {
+	  *bufp++ = c = iobfgetc(file);
+	  if (c == '{' || c == '}') {
+	    break;
+	  }
+	}
+	switch(c) {
 	    case '}': depth--; break;
 	    case '{': depth++; break;
 	}
@@ -69,28 +73,28 @@ CommentImport( Pool *p )
     char *str;
     register Comment *comment =
 	(Comment *)GeomCCreate(NULL, CommentMethods(), NULL);
-    FILE *file;
+    IOBFILE *file;
 
-    if(p == NULL || (file = p->inf) == NULL)
+    if(p == NULL || (file = PoolInputFile(p)) == NULL)
 	return NULL;
 
     if(strcmp(GeomToken(file), "COMMENT"))
 	return NULL;
 
-    if ((str = ftoken(file, 0)) == NULL) return NULL;
+    if ((str = iobftoken(file, 0)) == NULL) return NULL;
     comment->name = OOGLNewNE(char, strlen(str)+1, "Comment name");
     strcpy(comment->name, str);
-    if ((str = ftoken(file, 0)) == NULL) return NULL;
+    if ((str = iobftoken(file, 0)) == NULL) return NULL;
     comment->type = OOGLNewNE(char, strlen(str)+1, "Comment type");
     strcpy(comment->type, str);
-    if (fnextc(file, 0) == '{' ) {
+    if (iobfnextc(file, 0) == '{' ) {
       comment->data = fbalanced(file); /* read until '}' */
     } else {
-	if (fgetni(file, 1, &comment->length, 0) != 1) return NULL;
+	if (iobfgetni(file, 1, &comment->length, 0) != 1) return NULL;
 	if (comment->length == 0) return NULL;
-	if (fexpectstr(file, " ")) return NULL;
+	if (iobfexpectstr(file, " ")) return NULL;
 	comment->data = OOGLNewNE(char, comment->length, "Comment data");
-	if (fread(comment->data, comment->length, 1, file) != 1) return NULL;
+	if (iobfread(comment->data, comment->length, 1, file) != 1) return NULL;
     }
     return (Geom *)comment;
 }

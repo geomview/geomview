@@ -1,6 +1,6 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libcmodel.a
+noinst_LTLIBRARIES = libcmodel.la
 
-libcmodel_a_SOURCES = cm_geometry.c cmodel.c cmodel_data.c cmodel.h cmodelP.h 
+libcmodel_la_SOURCES = cm_geometry.c cmodel.c cmodel_data.c cmodel.h cmodelP.h 

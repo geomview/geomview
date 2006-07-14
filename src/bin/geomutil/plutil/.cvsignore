@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 polymerge anytooff bez2mesh offconsol
+*.lo
+*.la
+.libs

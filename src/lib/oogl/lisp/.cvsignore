@@ -2,3 +2,6 @@ Makefile Makefile.in .deps
 clisp.c
 clisp.h
 
+*.lo
+*.la
+.libs

@@ -45,8 +45,8 @@ int main(int argc, char *argv[]) {
   foreground();
 #endif
 
-  standardIn = PoolStreamTemp(NULL, stdin, 0, NULL);
-  standardOut = PoolStreamTemp(NULL, stdout, 1, NULL);
+  standardIn = PoolStreamTemp(NULL, iobfileopen(stdin), NULL, 0, NULL);
+  standardOut = PoolStreamTemp(NULL, NULL, stdout, 1, NULL);
 
   create_the_forms();
   fl_set_button(worldButton, 1);
@@ -65,7 +65,7 @@ void TransButtonProc(FL_OBJECT *o, long val) {
 	 fl_get_button(worldButton) ? "world" : "universe");
   fflush(stdout);
   
-  g = GeomFLoad(stdin, NULL);
+  g = GeomFLoad(PoolInputFile(standardIn), NULL);
  
   TransStreamIn(standardIn, NULL, t);
 

@@ -43,9 +43,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "vectP.h"
 
 Vect *
-VectFLoad(file, fname)
-    FILE *file;
-    char *fname;
+VectFLoad(IOBFILE *file, char *fname)
 {
     register Vect *v;
     int	 binary = 0, dimn = 3;
@@ -64,12 +62,12 @@ VectFLoad(file, fname)
     if(strcmp(token, "VECT"))
 	return NULL;
 
-    if(fnextc(file, 1) == 'B') {
-	if(fexpectstr(file, "BINARY"))
+    if(iobfnextc(file, 1) == 'B') {
+	if(iobfexpectstr(file, "BINARY"))
 	    return NULL;
 	binary = 1;
-	if(fnextc(file, 1) == '\n')
-	    (void) fgetc(file);		/* Toss \n */
+	if(iobfnextc(file, 1) == '\n')
+	    (void) iobfgetc(file);		/* Toss \n */
     }
 
     v = OOGLNewE(Vect, "VectFLoad: Vect");
@@ -81,9 +79,9 @@ VectFLoad(file, fname)
     v->p = NULL;
     v->c = NULL;
 
-    if(fgetni(file, 1, &v->nvec, binary) <= 0 ||
-       fgetni(file, 1, &v->nvert, binary) <= 0 ||
-       fgetni(file, 1, &v->ncolor, binary) <= 0) {
+    if(iobfgetni(file, 1, &v->nvec, binary) <= 0 ||
+       iobfgetni(file, 1, &v->nvert, binary) <= 0 ||
+       iobfgetni(file, 1, &v->ncolor, binary) <= 0) {
 	OOGLSyntax(file, "Reading VECT from \"%s\": can't read header counts", fname);
 	goto bogus;
     }
@@ -100,13 +98,13 @@ VectFLoad(file, fname)
 
     v->vncolor = v->vnvert + v->nvec;
 
-    if((i = fgetns(file, v->nvec, v->vnvert, binary)) < v->nvec) {
+    if((i = iobfgetns(file, v->nvec, v->vnvert, binary)) < v->nvec) {
 	OOGLSyntax(file,
 	 "Reading VECT from \"%s\": bad vertex count in %d'th polyline (of %d)",
 		fname, i, v->nvec);
 	goto bogus; 
     }
-    if((i = fgetns(file, v->nvec, v->vncolor, binary)) < v->nvec) {
+    if((i = iobfgetns(file, v->nvec, v->vncolor, binary)) < v->nvec) {
 	OOGLSyntax(file,
 	 "Reading VECT from \"%s\": bad color count in %d'th polyline (of %d)",
 		fname, i, v->nvec);
@@ -118,7 +116,7 @@ VectFLoad(file, fname)
 	register HPoint3 *p;
 
 	for(i = v->nvert, p = v->p; --i >= 0; p++) {
-	    if (fgetnf(file, 3, (float *)p, binary) < 3) {
+	    if (iobfgetnf(file, 3, (float *)p, binary) < 3) {
 		OOGLSyntax(file, badvert, fname, v->nvert - i, v->nvert);
 		goto bogus;
 	    }
@@ -126,14 +124,14 @@ VectFLoad(file, fname)
 	  }
 	}
     else {
-	i = fgetnf(file, 4*v->nvert, (float *)v->p, binary);
+	i = iobfgetnf(file, 4*v->nvert, (float *)v->p, binary);
 	if(i < 4*v->nvert) {
 	    OOGLSyntax(file, badvert, fname, i/4, v->nvert);
 	    goto bogus;
 	}
       }
     if (v->ncolor > 0 &&
-	(i = fgetnf(file, 4*v->ncolor, (float *)v->c, binary)) < 4*v->ncolor) {
+	(i = iobfgetnf(file, 4*v->ncolor, (float *)v->c, binary)) < 4*v->ncolor) {
 	    OOGLSyntax(file, "Reading VECT from \"%s\": bad %dth color (of %d)",
 		fname, i/4, v->ncolor);
 	    goto bogus;

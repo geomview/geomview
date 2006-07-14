@@ -4,7 +4,8 @@ EXTRA_DIST = animate.1
 
 module_PROGRAMS = animate
 animate_SOURCES = animate.c xanimate.c glob.c animate.h glob.h xanimate.h
-LDADD = ../../lib/mib/libmib.a $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(MATHLIB)
+animate_LDADD = $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(XLIBS)
+animate_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-animate
 

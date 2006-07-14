@@ -94,8 +94,8 @@ struct LObject {
   LCell cell;
 };
 
-typedef struct {
-  FILE *streamin;
+typedef struct Lake {
+  IOBFILE *streamin;
   FILE *streamout;
   Pool *river;
   int   timing_interests;	/* Are we time-stamping interest reports? */
@@ -105,7 +105,7 @@ typedef struct {
 } Lake;
 
 
-#define LakeMore(lake,c) ((c=fnextc(lake->streamin,0)) != ')' && c != EOF)
+#define LakeMore(lake,c) ((c=iobfnextc(lake->streamin,0)) != ')' && c != EOF)
 #define POOL(lake)  ((lake)->river)
 
 typedef struct LList {
@@ -210,7 +210,7 @@ extern LType Lrest;
 
 void 	RemoveLakeInterests(Lake *lake);
 void	  	LInit();
-Lake *    	LakeDefine(FILE *streamin, FILE *streamout, void *river);
+Lake *    	LakeDefine(IOBFILE *streamin, FILE *streamout, void *river);
 void	  	LakeFree(Lake *lake);
 LObject * 	_LNew(LType *type, LCell *cell);
 #define   	LNew(type,cell) _LNew(type,(LCell*)(void *)cell)

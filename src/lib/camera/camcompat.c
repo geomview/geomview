@@ -42,12 +42,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 extern HandleOps CamOps;
 
 Camera *
-CamFLoad(Camera *proto, FILE *inf, char *fname)
+CamFLoad(Camera *proto, IOBFILE *inf, char *fname)
 {
     Pool *p;
     Camera *cam = NULL;
 
-    p = PoolStreamTemp(fname, inf, 0, &CamOps);
+    p = PoolStreamTemp(fname, inf, NULL, 0, &CamOps);
     if(p == NULL)
 	return NULL;
     if(proto != NULL)
@@ -60,7 +60,7 @@ CamFLoad(Camera *proto, FILE *inf, char *fname)
 void
 CamFSave(Camera *cam, FILE *outf, char *fname)
 {
-    Pool *p = PoolStreamTemp(fname, outf, 1, &CamOps);
+    Pool *p = PoolStreamTemp(fname, NULL, outf, 1, &CamOps);
     if(p == NULL)
 	return;
     (void) CamStreamOut(p, NULL, cam);
@@ -70,14 +70,14 @@ CamFSave(Camera *cam, FILE *outf, char *fname)
 Camera *
 CamLoad(Camera *cam, char *name)
 {
-  FILE *f;
+  IOBFILE *f;
   
-  if((f = fopen(name,"r")) == NULL) {
+  if((f = iobfopen(name,"r")) == NULL) {
     perror(name);
     return NULL;
   }
   cam = CamFLoad(cam, f, name);
-  fclose(f);
+  iobfclose(f);
   return cam;
 }
 

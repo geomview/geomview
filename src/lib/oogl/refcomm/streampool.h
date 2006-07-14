@@ -67,7 +67,8 @@ extern Pool *PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops);
 	 * Uses stream f if != NULL, otherwise opens the named file.
 	 * The name is not required -- it may be NULL.
 	 */
-extern Pool *PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops);
+extern Pool *PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw,
+			    HandleOps *ops);
 
 	/*
 	 * Return the set of file descriptors pool file descriptors we'd like
@@ -112,7 +113,7 @@ extern void PoolDelete(Pool *p);
 #define	  PO_HANDLES	1	/*   - use handles wherever possible, avoid data */
 #define	  PO_DATA	2	/*   - data, no external refs */
 
-extern FILE *PoolInputFile(Pool *);
+extern IOBFILE *PoolInputFile(Pool *);
 extern FILE *PoolOutputFile(Pool *);
 extern void  PoolDoReread(Pool *);
 extern void PoolClose(register Pool *p);
@@ -128,5 +129,9 @@ extern double PoolTimeAt(Pool *, struct timeval *at_this_time);
 extern void PoolAwaken(Pool *);
 
 extern int PoolIncLevel(Pool *p, int incr);
+
+extern int PoolSetMark(Pool *p);
+extern int PoolSeekMark(Pool *p);
+extern int PoolClearMark(Pool *p);
 
 #endif /*_STREAMPOOL_*/

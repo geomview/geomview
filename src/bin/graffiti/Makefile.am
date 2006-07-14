@@ -1,15 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(OOGLLIBS)  \
-	$(XFORMSLIBS) \
+LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
-	$(SOCKETLIBS) \
-	$(MATHLIB)
+	$(OOGLLIB)
 
 EXTRA_DIST = .geomview-graffiti graffiti.1
 
 module_PROGRAMS = graffiti
 graffiti_SOURCES = graffiti.c gui.c lang.h panel.h graffiti.h lang.c panel.c
+graffiti_DEPENDENCIES = $(OOGLLIB)
+graffiti_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-graffiti
 

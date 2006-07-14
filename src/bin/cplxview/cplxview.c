@@ -48,6 +48,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 extern int ok_expr, ok_sexpr, ok_texpr;
 extern struct expression *e, *es, *et;
+extern void initcompute(void);
+extern void computegraph(void);
 
 int debug = 0;
 int nodefault = 0;
@@ -72,8 +74,7 @@ void setexpression(const char *str);
 void setsexpression(const char *str);
 void settexpression(const char *str);
 
-main( argc, argv )
-int argc; char ** argv;
+int main(int argc, char ** argv)
 {
 	char s[80];
 
@@ -119,10 +120,10 @@ int argc; char ** argv;
 
     winid = fl_show_form(cplxmainpanel,FL_PLACE_SIZE,TRUE,"cplx function viewer");
     winset(winid);
-    winpop();
+    (void)winpop();
 
 
-	initcompute();
+    initcompute();
 
 	printf("(load NDview/cplxview/scripts/4d.colorcplx)\n");
 
@@ -141,13 +142,15 @@ int argc; char ** argv;
 	}
 
 	while(1) {  fl_do_forms(); }
+
+	return 0;
 }
 
 void rangelabelcallback(FL_OBJECT *obj, long i)
 {
     winid = fl_show_form(rangelabelpanel,FL_PLACE_POSITION,TRUE,"Range");
     winset(winid);
-    winpop();
+    (void)winpop();
 }
 
 void rangelabelhidecallback(FL_OBJECT *obj, long i)
@@ -159,7 +162,7 @@ void meshlabelcallback(FL_OBJECT *obj, long i)
 {
     winid = fl_show_form(meshlabelpanel,FL_PLACE_POSITION,TRUE,"mesh size");
     winset(winid);
-    winpop();
+    (void)winpop();
 }
 
 void meshlabelhidecallback(FL_OBJECT *obj, long i)
@@ -171,7 +174,7 @@ void sliderscallback(FL_OBJECT *obj, long i)
 {
     winid = fl_show_form(sliderspanel,FL_PLACE_POSITION,TRUE,"function parameters");
     winset(winid);
-    winpop();
+    (void)winpop();
 }
 
 void slidershidecallback(FL_OBJECT *obj, long i)
@@ -183,7 +186,7 @@ void coordtypecallback(FL_OBJECT *obj, long i)
 {
     winid = fl_show_form(coordtypepanel,FL_PLACE_POSITION,TRUE,"domain definition");
     winset(winid);
-    winpop();
+    (void)winpop();
 }
 
 void coordtypehidecallback(FL_OBJECT *obj, long i)
@@ -235,7 +238,7 @@ void coordcallback(FL_OBJECT *obj, long i)
 		COORDTYPEFLAG = USERCOORD;
 	    winid = fl_show_form(usercoordpanel,FL_PLACE_POSITION,TRUE,"user defined coordinates");
 	    winset(winid);
-	    winpop();
+	    (void)winpop();
 		usercoordpanelisopen = 1;
 		usercoordcallback(NULL, 0);
 		fl_freeze_form(cplxmainpanel);
@@ -287,7 +290,7 @@ void helpcallback(FL_OBJECT *obj, long i)
 {
     winid = fl_show_form(cplxhelppanel,FL_PLACE_POSITION,TRUE,"cplxviewerhelp");
     winset(winid);
-    winpop();
+    (void)winpop();
 }
 
 void quitcallback(FL_OBJECT *obj, long i)
@@ -327,7 +330,6 @@ void slidercallback(FL_OBJECT *obj, long i)
 
 void domaincallback(FL_OBJECT *obj, long i)
 {
-	char str[80];
 	int errflag = 0;
 	double x0, x1, y0, y1;
 
@@ -520,7 +522,7 @@ void setexpression(const char *str)
 {
   char *s;
   char errmsg[80];
-  if (s=expr_parse(e,(char *)str)) {
+  if ((s=expr_parse(e,(char *)str))) {
 /*    printf("Expression parsing error: %s\n",str);  */
       if( sprintf(errmsg,"Expression parsing error: %s",str) == 0)
         fprintf(stderr,"please check source: #234789\n");
@@ -535,7 +537,7 @@ void setsexpression(const char *str)
 {
   char *s;
   char errmsg[80];
-  if (s=expr_parse(es,(char *)str)) {
+  if ((s=expr_parse(es,(char *)str))) {
 /*    printf("Expression parsing error: %s\n",str);  */
       if( sprintf(errmsg,"Expression s parsing error: %s",str) == 0)
         fprintf(stderr,"please check source: #134783\n");
@@ -550,7 +552,7 @@ void settexpression(const char *str)
 {
   char *s;
   char errmsg[80];
-  if (s=expr_parse(et,(char *)str)) {
+  if ((s=expr_parse(et,(char *)str))) {
 /*    printf("Expression parsing error: %s\n",str);  */
       if( sprintf(errmsg,"Expression t parsing error: %s",str) == 0)
         fprintf(stderr,"please check source: #934389\n");

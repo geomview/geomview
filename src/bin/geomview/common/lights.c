@@ -99,9 +99,9 @@ void clight_init()
 {
   Appearance *ap = drawerstate.ap;
   LmLighting *lgt;
-  FILE *f;
+  IOBFILE *f;
 
-  f = fstropen(raytxt, strlen(raytxt), "rb");
+  f = iobfileopen(fmemopen(raytxt, strlen(raytxt), "rb"));
   if (f) {
     ray = GeomFLoad(f, "built-in light ray");
     if (! ray)
@@ -109,7 +109,7 @@ void clight_init()
   }
   else
     printf("can't fstropen\n");
-  fclose(f);
+  iobfclose(f);
 
   lr.lights = NULL;
   lr.lightgeoms = NULL;

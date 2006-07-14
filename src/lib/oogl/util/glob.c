@@ -72,6 +72,11 @@ char **ooglglob(char *s)
 
   sprintf(cmd, GLOB_SHELL"\"echo %s\" 2>&-", s);
   fp = popen(cmd, "r");
+  
+  if (fp == NULL) {
+    OOGLError(1, "Could not popen(\"%s\", \"r\"): %s\n", cmd, sperror());
+    return NULL;
+  }
 
   VVINIT(vp, char *, INITSIZ);
   while (!feof(fp))

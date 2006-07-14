@@ -1,11 +1,11 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers lisp2c # $(BUILT_SOURCES)
 
-noinst_LIBRARIES = liblisp.a
+noinst_LTLIBRARIES = liblisp.la
 
 BUILT_SOURCES = clisp.c clisp.h
 
-liblisp_a_SOURCES = \
+liblisp_la_SOURCES = \
     lisp.c \
     clisp.h lisp2.h lisp.h
 

@@ -104,7 +104,7 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
     int c;
     int more = 0;
     int brack = 0;
-    FILE *inf;
+    IOBFILE *inf;
 
     if(p == NULL || (inf = PoolInputFile(p)) == NULL)
 	return 0;
@@ -112,26 +112,26 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 
     do {
 	more = 0;
-	switch(c = fnextc(inf, 0)) {
-	case '{': brack++; fgetc(inf); break;
-	case '}': if(brack--) fgetc(inf); break;
+	switch(c = iobfnextc(inf, 0)) {
+	case '{': brack++; iobfgetc(inf); break;
+	case '}': if(brack--) iobfgetc(inf); break;
 	case 't':
-	    if(fexpectstr(inf, "transform"))
+	    if(iobfexpectstr(inf, "transform"))
 		return 0;
 	    more = 1;
 	    break;
 
 	case 'd':
-	    if(fexpectstr(inf, "define"))
+	    if(iobfexpectstr(inf, "define"))
 		return 0;
-	    hname = HandleAssign(ftoken(inf, 0), &TransOps, NULL);
+	    hname = HandleAssign(iobftoken(inf, 0), &TransOps, NULL);
 	    break;
 
 	case '<':
 	case ':':
 	case '@':
-	    fgetc(inf);
-	    w = fdelimtok("{}()", inf, 0);
+	    iobfgetc(inf);
+	    w = iobfdelimtok("{}()", inf, 0);
 	    if(c == '<' && HandleByName(w, &TransOps) == NULL) {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
@@ -150,7 +150,7 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 	     */
 	    if(tobj == NULL)
 		tobj = TransCreate( TMNULL );
-	    if(fgettransform(inf, 1, &tobj->T[0][0], 0) <= 0)
+	    if(iobfgettransform(inf, 1, &tobj->T[0][0], 0) <= 0)
 		return 0;
 	}
     } while(brack || more);
@@ -201,3 +201,9 @@ TransStreamOut( Pool *p, Handle *h, Transform T )
     fputs("}\n", outf);
     return !ferror(outf);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

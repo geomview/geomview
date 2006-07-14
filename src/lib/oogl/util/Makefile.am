@@ -1,20 +1,10 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libooglutil.a
+noinst_LTLIBRARIES = libooglutil.la
 
-if LINUX
-GLIBGLUE = # glibglue.C
-else
-GLUE =
-endif
+libooglutil_la_SOURCES = \
+    error.c findfile.c fsa.c futil.c glob.c mallocp.c porting.c ppopen.c vvec.c\
+    create.h fsa.h ooglutil.h porting.h ray.h surf.h \
+    iobuffer.c iobuffer.h iobfutil.c
 
-if SEEKPIPE
-ADDON = seekpipe.c 
-endif
-
-libooglutil_a_SOURCES = \
-    error.c findfile.c fsa.c futil.c glob.c mallocp.c porting.c ppopen.c vvec.c \
-    create.h fsa.h ooglutil.h porting.h ray.h surf.h $(GLIBGLUE) $(ADDON)
-
-EXTRA_libooglutil_a_SOURCES = glibglue.C seekpipe.c

@@ -2232,17 +2232,17 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
 {
   int i;
   register DGeom *dg;
-  FILE *f;
+  IOBFILE *f;
 
   ts_identity.h = NULL;
   TmCopy(TM_IDENTITY, ts_identity.tm);
 
-  f = fstropen(apdefault, strlen(apdefault), "rb");
+  f = iobfileopen(fmemopen(apdefault, strlen(apdefault), "rb"));
   if(f)
     drawerstate.ap =
       base_defaultap =
 	ApFLoad(NULL, f, "built-in appearance");
-  fclose(f);
+  iobfclose(f);
   RefIncr((Ref *)drawerstate.ap);
   drawerstate.apseq++;
 
@@ -2342,9 +2342,9 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   drawerstate.universe = GeomCreate("list", CR_GEOM, drawerstate.world, CR_END);
   drawerstate.defview.Item = drawerstate.universe;
   GeomDice(dg->Item, dg->bezdice, dg->bezdice);
-  f = fstropen(defaultcam, strlen(defaultcam), "rb");
+  f = iobfileopen(fmemopen(defaultcam, strlen(defaultcam), "rb"));
   drawerstate.camgeom = GeomFLoad(f, "built-in camera geometry");
-  fclose(f);
+  iobfclose(f);
   drawerstate.camproj = 0;
 
 #ifdef MANIFOLD
@@ -3480,11 +3480,11 @@ LDEFINE(write_comments, LVOID,
     if (PoolOutputFile(p)) {
       op = p;
     } else {
-      op = PoolStreamTemp(fname, stdout, 1, &GeomOps);
+      op = PoolStreamTemp(fname, NULL, stdout, 1, &GeomOps);
       temppool = 1;
     }
   } else {
-    op = PoolStreamTemp(fname, NULL, 1, &GeomOps);
+    op = PoolStreamTemp(fname, NULL, NULL, 1, &GeomOps);
     temppool = 1;
   }
   if(op == NULL || PoolOutputFile(op) == NULL) {

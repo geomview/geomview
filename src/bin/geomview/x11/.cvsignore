@@ -1,4 +1,8 @@
 .gdbinit
+.libs
 Makefile Makefile.in .deps
 buildinfo.c
 gvx
+*.lo
+*.la
+.libs

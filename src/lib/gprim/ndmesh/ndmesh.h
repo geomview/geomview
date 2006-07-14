@@ -43,7 +43,7 @@ typedef struct NDMesh NDMesh;
 
 extern GeomClass *NDMeshMethods( void );
 extern char	*NDMeshName( void );
-extern NDMesh	*NDMeshFLoad( FILE *, char * );
+extern NDMesh	*NDMeshFLoad( IOBFILE *, char * );
 extern NDMesh	*NDMeshLoad( char * );
 extern NDMesh	*NDMeshSave( NDMesh *, char * );
 extern NDMesh	*NDMeshFSave( NDMesh *, FILE * );

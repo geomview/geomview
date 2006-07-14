@@ -1,3 +1,7 @@
 .deps
+.libs
 Makefile.in Makefile
 togeomview
+*.lo
+*.la
+.libs

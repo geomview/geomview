@@ -41,13 +41,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "time.h"
 
 /*
-#define DEBUG
+  #define DEBUG
 */
 
 typedef struct {
     int id;
     HPoint3 v;
-    }  ucdvert;
+}  ucdvert;
 
 typedef struct {
     int id;
@@ -55,7 +55,7 @@ typedef struct {
     int n;
     int faces;
     int vlist[8];
-    }  ucdpoly;
+}  ucdpoly;
 
 #define UCD_NORMAL	1
 #define UCD_RGBA	2
@@ -65,7 +65,7 @@ typedef struct {
 
 int 
 gettype(str)
-char *str;
+     char *str;
 {
     if (strcmp(str, "normal") == 0) return UCD_NORMAL; 
     else if (strcmp(str, "rgba") == 0) return UCD_RGBA; 
@@ -75,9 +75,9 @@ char *str;
 
 int
 nodeidtoindex(id, v, num_nodes)
-int id;
-ucdvert *v;
-int num_nodes;
+     int id;
+     ucdvert *v;
+     int num_nodes;
 {
     int i;
     for (i=0; i<num_nodes; ++i)	
@@ -87,9 +87,9 @@ int num_nodes;
 
 int
 cellidtoindex(id, p, num_cells)
-int id;
-ucdpoly *p;
-int num_cells;
+     int id;
+     ucdpoly *p;
+     int num_cells;
 {
     int i, index;
     for (i=0, index=0; i<num_cells; index += p[i].faces, ++i)	
@@ -120,22 +120,22 @@ int main(int argc, char **argv)
     char str[UCD_NUMDATAFIELDS][32], label[UCD_NUMDATAFIELDS][32];
 
     {
-    char *timestring;
-    time_t mytime;
-    time(&mytime);
-    timestring = ctime(&mytime);
-    fprintf(fp,"#  Created by ucdtooff on %s \n",timestring);
+	char *timestring;
+	time_t mytime;
+	time(&mytime);
+	timestring = ctime(&mytime);
+	printf("#  Created by ucdtooff on %s \n",timestring);
     }
 
     {
-    int buff[5];
-    /* get the header; fgetni skips ucd comments  */
-    fgetni(fp,5,buff,0);
-    num_nodes = buff[0];
-    num_cells = buff[1];
-    num_node_data_comp = buff[2];
-    num_cell_data_comp = buff[3];
-    num_model_data = buff[4];
+	int buff[5];
+	/* get the header; fgetni skips ucd comments  */
+	fgetni(fp,5,buff,0);
+	num_nodes = buff[0];
+	num_cells = buff[1];
+	num_node_data_comp = buff[2];
+	num_cell_data_comp = buff[3];
+	num_model_data = buff[4];
     }
 
     ucdv  = OOGLNewN(ucdvert, num_nodes); 
@@ -149,15 +149,15 @@ int main(int argc, char **argv)
     /* read the vertices */
     for (i=0; i<num_nodes; ++i)
  	{
-	fscanf(fp,"%d%g%g%g",&ucdv[i].id,&ucdv[i].v.x,&ucdv[i].v.y,&ucdv[i].v.z);
-	ucdv[i].v.w = 1.0;
+	    fscanf(fp,"%d%g%g%g",&ucdv[i].id,&ucdv[i].v.x,&ucdv[i].v.y,&ucdv[i].v.z);
+	    ucdv[i].v.w = 1.0;
 	}
     /* translate the id's into indices */
     for (i=0; i<num_nodes; ++i)	{
 	index = nodeidtoindex(id = ucdv[i].id, ucdv, num_nodes); 
 	if (index < 0) OOGLError(1,"Bad node id %d in ucdtooff\n",id);
 	verts[index] = ucdv[i].v;
-	}
+    }
 
     /* read the faces */
     num_faces = 0;
@@ -170,49 +170,49 @@ int main(int argc, char **argv)
 	fscanf(fp,"%s",str);
 	ucdp[i].faces = 1;
 	if (strcmp(str,"line") == 0)
-		n = 2, num_vertinds += 2;
+	    n = 2, num_vertinds += 2;
 	else if (strcmp(str,"tri") == 0)
-		n = 3, num_vertinds += 3;
+	    n = 3, num_vertinds += 3;
 	else if (strcmp(str,"quad") == 0)
-		n = 4, num_vertinds += 4;
+	    n = 4, num_vertinds += 4;
 	else if (strcmp(str,"hex") == 0) 
-		n = 8, num_vertinds += 24, ucdp[i].faces = 6;
+	    n = 8, num_vertinds += 24, ucdp[i].faces = 6;
 	else if (strncmp(str,"tet",3) == 0)
-		n = 4, num_vertinds += 12, ucdp[i].faces = 4;
+	    n = 4, num_vertinds += 12, ucdp[i].faces = 4;
 	else
 	    exit(fprintf(stderr,"Illegal cell type %s in ucdtooff\n",str));
 	num_faces += ucdp[i].faces;
 	ucdp[i].n = n;
         if(fgetni(fp, n, &ucdp[i].vlist[0], 0) != n)
 	    fprintf(stderr, "Couldn't read %d vert indices for UCD cell %d\n",
-		n, ucdp[i].id);
-	}
+		    n, ucdp[i].id);
+    }
 
     nverts = OOGLNewNE(int, num_faces, "vert counts"); 
     vertlist = OOGLNewNE(int, num_vertinds, "vert indices");
     /* translate the id's into indices */
     {
-    int nvi, vi;
-    static int plain[] = {0,1,2,3};
-    static int hex[] = {7,6,5,4, 0,1,2,3, 5,1,0,4, 2,6,7,3, 0,3,7,4, 2,1,5,6};
-    static int tet[] = {0,1,2, 1,0,3, 2,1,3, 3,0,2};
+	int nvi, vi;
+	static int plain[] = {0,1,2,3};
+	static int hex[] = {7,6,5,4, 0,1,2,3, 5,1,0,4, 2,6,7,3, 0,3,7,4, 2,1,5,6};
+	static int tet[] = {0,1,2, 1,0,3, 2,1,3, 3,0,2};
 
-    for (nvi=0, vi=0, i=0; i<num_cells; ++i)	{
-	int n = ucdp[i].n;
-	int k;
-	int *inds = NULL, indsperface = 0;
-	switch(ucdp[i].faces) {
+	for (nvi=0, vi=0, i=0; i<num_cells; ++i)	{
+	    int n = ucdp[i].n;
+	    int k;
+	    int *inds = NULL, indsperface = 0;
+	    switch(ucdp[i].faces) {
 	    case 1: inds = plain;  indsperface = n; break;
 	    case 4: inds = tet;    indsperface = 3; break;
 	    case 6: inds = hex;    indsperface = 4; break;
 	    }
-	for(k = 0; k < ucdp[i].faces; k++) {
-	    nverts[vi++] = indsperface;
-	    for(j = 0; j < indsperface; j++) {
-		id = ucdp[i].vlist[*inds++];
-		index = nodeidtoindex(id, ucdv, num_nodes); 
-		if (index < 0) OOGLError(1,"Bad node id %d in ucdtooff\n",id);
-		vertlist[nvi++] = index;
+	    for(k = 0; k < ucdp[i].faces; k++) {
+		nverts[vi++] = indsperface;
+		for(j = 0; j < indsperface; j++) {
+		    id = ucdp[i].vlist[*inds++];
+		    index = nodeidtoindex(id, ucdv, num_nodes); 
+		    if (index < 0) OOGLError(1,"Bad node id %d in ucdtooff\n",id);
+		    vertlist[nvi++] = index;
 		}
 	    }
 	}
@@ -221,25 +221,25 @@ int main(int argc, char **argv)
     /* theoretically, we could get a reasonable polylist at this point */
 	
     /* get the node data descriptor */
-  if (num_node_data_comp != 0)  {
-    fscanf(fp,"%d", &num_node_data_comp);
-    for (i=0; i<num_node_data_comp; ++i)
-	{
-        fscanf(fp,"%d", &node_data_comp[i]);
+    if (num_node_data_comp != 0)  {
+	fscanf(fp,"%d", &num_node_data_comp);
+	for (i=0; i<num_node_data_comp; ++i)
+	    {
+		fscanf(fp,"%d", &node_data_comp[i]);
+	    }
+
+	/* get the node labels */
+	for (i=0; i<num_node_data_comp; ++i)	{
+	    fscanf(fp,"%31s",str[i]);
+	    fscanf(fp,"%31s",label[i]);	/* this is ignored */
 	}
 
-    /* get the node labels */
-    for (i=0; i<num_node_data_comp; ++i)	{
-	fscanf(fp,"%31s",str[i]);
-	fscanf(fp,"%31s",label[i]);	/* this is ignored */
-	}
-
-    /* get the node data */
-    for (i=0; i<num_node_data_comp; ++i)	{
-	n = strlen(str[i]);
-	/* get rid of commas */
-  	if (str[i][n-1] == ',')  str[i][n-1] = '\0';
-	switch (gettype(str[i]))	{
+	/* get the node data */
+	for (i=0; i<num_node_data_comp; ++i)	{
+	    n = strlen(str[i]);
+	    /* get rid of commas */
+	    if (str[i][n-1] == ',')  str[i][n-1] = '\0';
+	    switch (gettype(str[i]))	{
 	    case UCD_NORMAL:
 		if (node_data_comp[i] != 3)
 		    OOGLError(1,"ucdtooff: bad normal descriptor\n");
@@ -282,38 +282,38 @@ int main(int argc, char **argv)
 		    for (k = 0; k < node_data_comp[i]; ++k)
 	    		fscanf(fp,"%g", ncdptrs[i] + offset + k);
 		    if (gettype(str[i]) == UCD_RGB) ncdptrs[i][offset + 3] = 1.0;
-	 	    }
+		}
 		else	{
 		    for (k = 0; k < node_data_comp[i]; ++k)
 	    		fscanf(fp,"%g", &tt);
-		    }
-	 	}
+		}
 	    }
+	}
     }
 
     /* get the cell data descriptor */
-  if (num_cell_data_comp != 0)  {
-    fscanf(fp,"%d", &num_cell_data_comp);
-    for (i=0; i<num_cell_data_comp; ++i)
-        fscanf(fp,"%d", &cell_data_comp[i]);
+    if (num_cell_data_comp != 0)  {
+	fscanf(fp,"%d", &num_cell_data_comp);
+	for (i=0; i<num_cell_data_comp; ++i)
+	    fscanf(fp,"%d", &cell_data_comp[i]);
 
-    /* get the cell labels */
-    for (i=0; i<num_cell_data_comp; ++i)	{
-	fscanf(fp,"%31s",str[i]);
-	fscanf(fp,"%31s",label[i]);	/* this is ignored */
+	/* get the cell labels */
+	for (i=0; i<num_cell_data_comp; ++i)	{
+	    fscanf(fp,"%31s",str[i]);
+	    fscanf(fp,"%31s",label[i]);	/* this is ignored */
 	}
 
-    /* get the cell data */
-    for (i=0; i<num_cell_data_comp; ++i)	{
-	n = strlen(str[i]);
-	/* get rid of commas */
-  	if (str[i][n-1] == ',')  str[i][n-1] = '\0';
-	switch (gettype(str[i]))	{
+	/* get the cell data */
+	for (i=0; i<num_cell_data_comp; ++i)	{
+	    n = strlen(str[i]);
+	    /* get rid of commas */
+	    if (str[i][n-1] == ',')  str[i][n-1] = '\0';
+	    switch (gettype(str[i]))	{
 	    case UCD_NORMAL:
 		if (cell_data_comp[i] != 3)
 		    OOGLError(1,"ucdtooff: bad normal descriptor\n");
 		plflags |= PL_HASPN;
-		 normal = OOGLNewN(Point3, num_faces);	
+		normal = OOGLNewN(Point3, num_faces);	
 		ncdptrs[i] = (float *) normal;
 		break;
 
@@ -356,19 +356,19 @@ int main(int argc, char **argv)
 			memcpy( ncdptrs[i] + offset + incr*k,
 			        ncdptrs[i] + offset,
 				incr * sizeof(float)); 
-	 	    }
+		}
 		else	{
 		    for (k = 0; k < cell_data_comp[i]; ++k)
 	    		fscanf(fp,"%g", &tt);
-		    }
-	 	}
+		}
 	    }
+	}
     }
 
     printf("%s%sOFF\n%d %d 0\n\n",
-		plflags&PL_HASVCOL ? "C":"",
-		plflags&PL_HASVN ? "N":"",
-		num_nodes, num_faces);
+	   plflags&PL_HASVCOL ? "C":"",
+	   plflags&PL_HASVN ? "N":"",
+	   num_nodes, num_faces);
     for(i = 0; i < num_nodes; i++) {
 	printf("%g %g %g", verts[i].x, verts[i].y, verts[i].z);
 	if(plflags & PL_HASVN)

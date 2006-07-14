@@ -153,6 +153,7 @@ int main(int argc, char *argv[])
     char *C = "", *N = "", *four = "";
     extern int optind;
     extern char *optarg;
+    IOBFILE *iobf;
 
     VVINIT(geods, Geod, 5);
     vvzero(&geods);
@@ -196,9 +197,11 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
     if(VVCOUNT(geods) > 0)
 	flags |= F_EDGE;
 
+    iobf = iobfileopen(stdin);
+
     vdim = 3;
     for(;;) {
-	switch( fnextc(stdin, 0) ) {
+	switch( iobfnextc(iobf, 0) ) {
 	case 'N': N = "N"; vertsize += 3; goto swallow;
 	case 'C': C = "C"; vertsize += 4; goto swallow;
 	case '4':
@@ -207,13 +210,13 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 		flags &= ~(F_EDGE|F_FACE);
 		goto swallow;
       swallow:
-	case '{': case '=': fgetc(stdin); break;
+	case '{': case '=': iobfgetc(iobf); break;
 	case 'a':	/* Appearance?  Silently swallow keyword */
-	    fexpectstr(stdin, "appearance");
-	    if(fnextc(stdin, 0) == '{') {
+	    iobfexpectstr(iobf, "appearance");
+	    if(iobfnextc(iobf, 0) == '{') {
 		int c, brack = 0;
 		do {
-		    if((c = fgetc(stdin)) == '{') brack++;
+		    if((c = iobfgetc(iobf)) == '{') brack++;
 		    else if(c == '}') brack--;
 		} while(brack > 0 && c != EOF);
 	    }
@@ -223,16 +226,16 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	}
     }
   done:
-    fexpecttoken(stdin, "OFF");	/* swallow optional OFF prefix */
-    if(fexpecttoken(stdin, "BINARY") == 0) {
+    iobfexpecttoken(iobf, "OFF");	/* swallow optional OFF prefix */
+    if(iobfexpecttoken(iobf, "BINARY") == 0) {
 	binary = 1;
-	fnextc(stdin, 1);
-	fgetc(stdin);
+	iobfnextc(iobf, 1);
+	iobfgetc(iobf);
     }
 
-    if(fgetni(stdin, 1, &nv, 0) <= 0 ||
-	fgetni(stdin, 1, &nf, 0) <= 0 ||
-	fgetni(stdin, 1, &nhash, 0) <= 0 || nv <= 0 || nf <= 0) {
+    if(iobfgetni(iobf, 1, &nv, 0) <= 0 ||
+	iobfgetni(iobf, 1, &nf, 0) <= 0 ||
+	iobfgetni(iobf, 1, &nhash, 0) <= 0 || nv <= 0 || nf <= 0) {
 	   fprintf(stderr, "polymerge: Input not an OFF file.\n");
 	   exit(1);
     }
@@ -250,14 +253,14 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	V *vp = &Vs[i];
 	
 	vp->p.w = 1;
-	if(fgetnf(stdin, vdim, (float *)&vp->p, binary) < vdim) {
+	if(iobfgetnf(iobf, vdim, (float *)&vp->p, binary) < vdim) {
 	  badvert:
 	    fprintf(stderr, "polymerge: error reading vertex %d/%d\n", i,nv);
 	    exit(1);
 	}
 	if(vertsize) {
 	    Vs[i].more = NewN(float, vertsize);
-	    if(fgetnf(stdin, vertsize, Vs[i].more, binary) < vertsize)
+	    if(iobfgetnf(iobf, vertsize, Vs[i].more, binary) < vertsize)
 		goto badvert;
 	}
 	Vs[i].ref = 0;
@@ -286,21 +289,21 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	char *cp;
 	char aff[512];
 
-	if(fgetni(stdin, 1, &nfv, binary) <= 0 || nfv <= 0) {
+	if(iobfgetni(iobf, 1, &nfv, binary) <= 0 || nfv <= 0) {
 	    fprintf(stderr, "polymerge: error reading face %d/%d\n",
 		i, nf);
 	    exit(1);
 	}
 	head.prev = head.next = &head;
 	fp->fedges = &head;
-	fgetni(stdin, 1, &v, binary);
+	iobfgetni(iobf, 1, &v, binary);
 	if(v < 0 || v >= nv) {
 	    fprintf(stderr, "polymerge: bad vertex %d on face %d\n", v, i);
 	    exit(1);
 	}
 	v0 = ov = Vs[v].index;		/* Use common vertex if merged */
 	for(k = 1; k < nfv; k++, ov = v) {
-	    fgetni(stdin, 1, &v, binary);
+	    iobfgetni(iobf, 1, &v, binary);
 	    if(v < 0 || v >= nv) {
 		fprintf(stderr, "polymerge: bad vertex %d on face %d\n", v, i);
 		exit(1);
@@ -336,18 +339,18 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	if(binary) {
 	    int nfc;
 	    float c;
-	    fgetni(stdin, 1, &nfc, binary);
+	    iobfgetni(iobf, 1, &nfc, binary);
 	    if(nfc > 4) {
 		fprintf(stderr, "Bad face color count 0x%x", nfc);
 		exit(1);
 	    }
 	    for(cp = aff; --nfc >= 0; cp += strlen(cp)) {
-		fgetnf(stdin, 1, &c, binary);
+		iobfgetnf(iobf, 1, &c, binary);
 		sprintf(cp, " %g", c);
 	    }
 	} else {
-	    (void) fnextc(stdin, 1);
-	    for(cp = aff; (c = getc(stdin)) != EOF && c != '\n' && cp < &aff[511]; )
+	    (void) iobfnextc(iobf, 1);
+	    for(cp = aff; (c = iobfgetc(iobf)) != EOF && c != '\n' && cp < &aff[511]; )
 		*cp++ = c;
 	}
 	*cp = '\0';

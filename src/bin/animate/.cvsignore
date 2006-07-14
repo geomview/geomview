@@ -1,3 +1,7 @@
 .geomview-animate
+.libs
 Makefile Makefile.in .deps
 animate
+*.lo
+*.la
+.libs

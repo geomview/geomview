@@ -35,12 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "quadP.h"
 
 static int
-getquads( file, pquad, off, binary, dimn )
-    FILE	*file;
-    register Quad *pquad;
-    int		off;
-    int		binary;
-    int 	dimn;
+getquads(IOBFILE *file, register Quad *pquad, int off, int binary, int dimn)
 {
     HPoint3 *p;
     Point3 *n;
@@ -51,18 +46,18 @@ getquads( file, pquad, off, binary, dimn )
     n = (pquad->flag & QUAD_N) ? &pquad->n[off][0] : NULL;
     c = (pquad->flag & QUAD_C) ? &pquad->c[off][0] : NULL;
     for(k = 4 * (pquad->maxquad - off); --k >= 0; ) {
-	if(fgetnf(file, dimn, (float *)p, binary) < dimn)
+	if(iobfgetnf(file, dimn, (float *)p, binary) < dimn)
 	    break;
 	/* set the w-coordinate if the points are 3 dim'nal */
 	if (dimn == 3) p->w = 1.0;
 	p++;
 	if(n != NULL) {
-	    if(fgetnf(file, 3, (float *)n, binary) < 3)
+	    if(iobfgetnf(file, 3, (float *)n, binary) < 3)
 		return -1;
 	    n++;
 	}
 	if(c != NULL) {
-	    if(fgetnf(file, 4, (float *)c, binary) < 4)
+	    if(iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return -1;
 	    c++;
 	}
@@ -75,7 +70,7 @@ getquads( file, pquad, off, binary, dimn )
 
 
 Quad *
-QuadFLoad( FILE *file, char *fname )
+QuadFLoad( IOBFILE *file, char *fname )
 {
     Quad q;
     int binary = 0;
@@ -110,13 +105,13 @@ QuadFLoad( FILE *file, char *fname )
 	return NULL;
     }
     /* Got valid header, now read the file. */
-    if(fnextc(file, 1) == 'B' && fexpectstr(file, "BINARY") == 0) {
+    if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
 	binary = 1;
-	if(fnextc(file, 1) != '\n') {	/* Expect \n after BINARY */
+	if(iobfnextc(file, 1) != '\n') {	/* Expect \n after BINARY */
             OOGLSyntax(file,"QuadFLoad: bad QUAD file header on %s", fname);
 	    return NULL;
         }
-	(void) getc(file);		/* Toss \n */
+	(void) iobfgetc(file);		/* Toss \n */
     }
 
     if(binary) {
@@ -125,7 +120,7 @@ QuadFLoad( FILE *file, char *fname )
 	 * Read the q count, then the P, N and C arrays.
 	 * Error if we get less than the q count promised.
 	 */
-	if(fgetni(file, 1, &q.maxquad, 1) <= 0) 
+	if(iobfgetni(file, 1, &q.maxquad, 1) <= 0) 
 	    return NULL;
 	if(q.maxquad <= 0 || q.maxquad > 10000000) {
 	    OOGLError(0, "Reading QUAD BINARY from \"%s\": incredible q count 0x%x",

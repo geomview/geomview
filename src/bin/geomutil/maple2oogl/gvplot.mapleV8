@@ -410,7 +410,7 @@ global `gvplot/User_ID`;
                   `; must be of type PLOT3D, as from plot3d(), tubeplot(), spacecurve(), etc.`)
         fi;
         # start geomview reading from stdin
-        if system( `PATH=` || gvdirs || `:$PATH togeomview -Mcp `||tmp_fname||` `||gvcmd||`</dev/null ` ) <> 0 then
+        if system( `PATH=` || gvdirs || `:$PATH togeomview -cp `||tmp_fname||` `||gvcmd||`</dev/null ` ) <> 0 then
             ERROR(`gvplot: togeomview: Can't start a copy of geomview.  `||
                   `If "togeomview" or "geomview" were not found `||
                   `try setting the variable "gvdirectories" to the name of the directory where `||

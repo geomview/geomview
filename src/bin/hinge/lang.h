@@ -25,6 +25,7 @@
 
 void handle_pick(char *name, HPoint3 *got,
 		 int vert, HPoint3 *v, int edge, HPoint3 e[]);
-extern void Input ( void );
+extern void Input (void);
+extern void LangInit(IOBFILE *fromgv);
 
 #endif /* ! _LANG_H_ */

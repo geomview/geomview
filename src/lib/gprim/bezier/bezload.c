@@ -40,9 +40,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 */
 
 static int
-bezierheader( file, bezier )
-    register FILE *file;
-    register Bezier *bezier;
+bezierheader(IOBFILE *file, Bezier *bezier)
 {
     int binary = 0;
     char *token;
@@ -79,9 +77,9 @@ bezierheader( file, bezier )
 	}
 	if(!haveuvn) {
 		/* [C]BEZ[_ST] u v n -- expect u, v, n as separate numbers */
-	    if(fgetni(file, 1, &bezier->degree_u, 0) <= 0 ||
-		    fgetni(file, 1, &bezier->degree_v, 0) <= 0 ||
-		    fgetni(file, 1, &bezier->dimn, 0) <= 0)
+	    if(iobfgetni(file, 1, &bezier->degree_u, 0) <= 0 ||
+		    iobfgetni(file, 1, &bezier->degree_v, 0) <= 0 ||
+		    iobfgetni(file, 1, &bezier->dimn, 0) <= 0)
 		return -1;
 	}
 	if(bezier->degree_u <= 0 || bezier->degree_u > MAX_BEZ_DEGREE ||
@@ -93,12 +91,12 @@ bezierheader( file, bezier )
     }
     GeomAcceptToken();
 
-    if(fnextc(file, 1) == 'B') {
-	if(fexpectstr(file, "BINARY"))
+    if(iobfnextc(file, 1) == 'B') {
+	if(iobfexpectstr(file, "BINARY"))
 	    return -1;
 	binary = 1;
-	if(fnextc(file, 1) == '\n')
-	    (void) fgetc(file);		/* Toss \n */
+	if(iobfnextc(file, 1) == '\n')
+	  (void) iobfgetc(file);		/* Toss \n */
     }
 
     bezier->CtrlPnts = NULL;
@@ -109,9 +107,7 @@ bezierheader( file, bezier )
 
 
 List *
-BezierListFLoad( file, fname )
-    FILE *file;
-    char *fname;
+BezierListFLoad(IOBFILE *file, char *fname)
 {
     Geom 	*bezierlist;
     Bezier 	proto, bez;
@@ -136,7 +132,7 @@ BezierListFLoad( file, fname )
 	totalfloats = (proto.degree_u+1)*(proto.degree_v+1)*proto.dimn;
 	bez.CtrlPnts = OOGLNewNE(float,totalfloats, "Bezier control pnts");
 
-	nf = fgetnf(file, totalfloats, bez.CtrlPnts, binary);
+	nf = iobfgetnf(file, totalfloats, bez.CtrlPnts, binary);
 	if(nf < totalfloats) {
 	    if(nf != 0)
 		break;	/* Incomplete array of control points -> error */
@@ -148,7 +144,7 @@ BezierListFLoad( file, fname )
 			 * test, we might consume e.g. a close-brace which
 			 * doesn't belong to us.
 			 */
-	    c = fnextc(file, 0);
+	    c = iobfnextc(file, 0);
 	    if((isascii(c) && isalpha(c)) &&
 			(binary = bezierheader( file, &proto )) >= 0)
 		continue;	
@@ -163,12 +159,12 @@ BezierListFLoad( file, fname )
 
 	if (bez.flag & BEZ_ST) {
 	    bez.STCords = OOGLNewNE(float,8, "Bez ST coords");
-	    if(fgetnf(file, 8, bez.STCords, binary) != 8)
+	    if(iobfgetnf(file, 8, bez.STCords, binary) != 8)
 		break;
 	}
 	if (bez.flag & BEZ_C) {
 	    /* Load 4 colors, for the 4 corners of the patch, v-major order. */
-	    if(fgetnf(file, 16, (float *)bez.c, binary) != 16)
+	    if(iobfgetnf(file, 16, (float *)bez.c, binary) != 16)
 		break;
 	}
 

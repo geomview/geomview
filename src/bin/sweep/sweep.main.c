@@ -123,12 +123,15 @@ void TransSweepProc(FL_OBJECT *obj, long val) {
 
 
 void GoButtonProc(FL_OBJECT *obj, long val) {
+  IOBFILE *iobf;
   Geom *g, *s;
   Point3 pt1, pt2;
 
   printf("(write geometry - targetgeom bare)");
   fflush(stdout);
-  g = GeomFLoad(stdin, NULL);
+  iobf = iobfileopen(stdin);
+  g = GeomFLoad(iobf, NULL);
+  iobfileclose(iobf);
 
   if (fl_get_button(RotSweep)) {
     pt1.x = flx_get_input_float(Rotendx);

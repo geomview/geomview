@@ -37,7 +37,7 @@ extern BBox	*PolyListBound( PolyList *, Transform );
 extern Geom 	*PolyListSphere( PolyList *, Transform, int );
 extern PolyList *PolyListEvert( PolyList * );
 extern PolyList *PolyListLoad( char * );	/* Loads "off" files */
-extern PolyList *PolyListFLoad( FILE *, char *fname );
+extern PolyList *PolyListFLoad( IOBFILE *, char *fname );
 extern char    *PolyListName( void );
 extern PolyList *PolyListSave( PolyList *, char * );
 extern PolyList *PolyListFSave( PolyList *, FILE *, char * );

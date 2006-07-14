@@ -54,7 +54,7 @@ extern Skel *SkelCreate( Skel *, GeomClass *, va_list *a_list);
 extern void  SkelDelete( Skel * );
 extern Skel *SkelCopy( Skel * );
 extern Skel *SkelPick( Skel *, Pick *, Appearance *, Transform );
-extern Skel *SkelFLoad( FILE *f, char *fname );
+extern Skel *SkelFLoad( IOBFILE *f, char *fname );
 extern Skel *SkelFSave( Skel *, FILE * );
 extern BBox *SkelBound( Skel *, Transform );
 extern Skel *SkelDraw( Skel * );

@@ -46,17 +46,18 @@ static ColorA	*colormap;
 static void
 LoadCmap(char *file)
 {
-    FILE *fp;
+    IOBFILE *fp;
+
     colormap = OOGLNewNE(ColorA, 256, "PolyList colormap");
     if((file = findfile(NULL, file)) != NULL &&
-			   (fp = fopen(file,"r")) != NULL) {
-	fgetnf(fp, SIZEOF_CMAP*4, (float *)colormap, 0);
-	fclose(fp);
+       (fp = iobfopen(file,"r")) != NULL) {
+	iobfgetnf(fp, SIZEOF_CMAP*4, (float *)colormap, 0);
+	iobfclose(fp);
     }
 }
 
 PolyList *
-PolyListFLoad(FILE *file, char *fname)
+PolyListFLoad(IOBFILE *file, char *fname)
 {
     register PolyList *pl;
     int edges;
@@ -98,11 +99,11 @@ PolyListFLoad(FILE *file, char *fname)
     }
     if(strcmp(token, "OFF") == 0) {
 	headerseen = 1;
-	if(fnextc(file, 1) == 'B' && fexpectstr(file, "BINARY") == 0) {
+	if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
 	    binary = 1;
-	    if(fnextc(file, 1) != '\n')	/* Expect \n after BINARY */
+	    if(iobfnextc(file, 1) != '\n')	/* Expect \n after BINARY */
 		return NULL;
-	    (void) getc(file);		/* Toss \n */
+	    (void) iobfgetc(file);		/* Toss \n */
 	}
     } else {			/* Hack, in case first token was a number */
 	if(dimn == 4)
@@ -124,9 +125,9 @@ PolyListFLoad(FILE *file, char *fname)
     pl->flags = flags;
     pl->geomflags = (dimn == 4) ? VERT_4D : 0;
 
-    if((!preread && fgetni(file, 1, &pl->n_verts, binary) <= 0) ||
-       fgetni(file, 1, &pl->n_polys, binary) <= 0 ||
-       fgetni(file, 1, &edges, binary) <= 0) {
+    if((!preread && iobfgetni(file, 1, &pl->n_verts, binary) <= 0) ||
+       iobfgetni(file, 1, &pl->n_polys, binary) <= 0 ||
+       iobfgetni(file, 1, &edges, binary) <= 0) {
 		if(headerseen)
 		    OOGLSyntax(file, "PolyList %s: Bad vertex/face/edge counts", fname);
 		goto bogus;
@@ -135,13 +136,13 @@ PolyListFLoad(FILE *file, char *fname)
     pl->vl = OOGLNewNE(Vertex, pl->n_verts, "PolyListFLoad vertices");
 
     for(v = pl->vl, i = 0; i < pl->n_verts; v++, i++) {
-	if((fgetnf(file, dimn, (float *)&v->pt, binary) < dimn)
+	if((iobfgetnf(file, dimn, (float *)&v->pt, binary) < dimn)
 	   ||
-	   (flags & PL_HASVN && fgetnf(file, 3, (float *)&v->vn, binary) < 3)
+	   (flags & PL_HASVN && iobfgetnf(file, 3, (float *)&v->vn, binary) < 3)
 	   ||
-	   (flags & PL_HASVCOL && fgetnf(file, 4, (float *)&v->vcol, binary) < 4)
+	   (flags & PL_HASVCOL && iobfgetnf(file, 4, (float *)&v->vcol, binary) < 4)
 	   ||
-	   (flags & PL_HASST && fgetnf(file, 2, &v->st[0], binary) < 2)
+	   (flags & PL_HASST && iobfgetnf(file, 2, &v->st[0], binary) < 2)
 	   ) {
 		OOGLSyntax(file, "PolyList %s: Bad vertex %d (of %d)", fname, i, pl->n_verts);
 		goto bogus;
@@ -155,7 +156,7 @@ PolyListFLoad(FILE *file, char *fname)
 	register int k,index;
 
 	p = &pl->p[i];
-	if(fgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {
+	if(iobfgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {
 	   OOGLSyntax(file, "PolyList %s: bad %d'th polygon (of %d)",
 		fname, i, pl->n_polys);
 	   goto bogus_face;
@@ -166,7 +167,7 @@ PolyListFLoad(FILE *file, char *fname)
 	for(k = 0; k < p->n_vertices; k++) {
 	    int index;
 
-	    if(fgetni(file, 1, &index, binary) <= 0 ||
+	    if(iobfgetni(file, 1, &index, binary) <= 0 ||
 	       index < 0 || index >= pl->n_verts) {
 		    OOGLSyntax(file, "PolyList: %s: bad index %d on %d'th polygon (of %d)", 
 			fname, index, i, p->n_vertices);
@@ -183,15 +184,15 @@ PolyListFLoad(FILE *file, char *fname)
 	if(binary) {
 	    int ncol;
 
-	    if(fgetni(file, 1, &ncol, 1) <= 0
-	       || fgetnf(file, ncol, (float *)&p->pcol, 1) < ncol)
+	    if(iobfgetni(file, 1, &ncol, 1) <= 0
+	       || iobfgetnf(file, ncol, (float *)&p->pcol, 1) < ncol)
 		goto bogus_face_color;
 	    k = ncol;
 	} else {
 	    int c;
 	    for(k = 0; k < 4 &&
-		    (c = fnextc(file, 1)) != '\n' && c!='}' && c!=EOF; k++) {
-		if(fgetnf(file, 1, ((float *)(&p->pcol))+k, 0) < 1) {
+		    (c = iobfnextc(file, 1)) != '\n' && c!='}' && c!=EOF; k++) {
+		if(iobfgetnf(file, 1, ((float *)(&p->pcol))+k, 0) < 1) {
 		    goto bogus_face_color;
 		}
 	    }

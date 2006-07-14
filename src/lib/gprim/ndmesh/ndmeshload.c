@@ -35,7 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ndmeshP.h"
 
 static int
-getmeshvert(FILE *file, int flag, int pdim, int u, int v, HPointN **p,
+getmeshvert(IOBFILE *file, int flag, int pdim, int u, int v, HPointN **p,
 		ColorA *c, Point3 *t)
 {
 	float	inputs[128];
@@ -43,22 +43,22 @@ getmeshvert(FILE *file, int flag, int pdim, int u, int v, HPointN **p,
 	int binary = flag&MESH_BINARY;
 
 	inputs[pdim] = 1.0;
-	if (fgetnf(file, readdim, inputs, binary) < readdim)
+	if (iobfgetnf(file, readdim, inputs, binary) < readdim)
 	    return 0;
 
 	*p = HPtNCreate(pdim+1, inputs);
 
-	if (flag & MESH_C && fgetnf(file, 4, (float *)c, binary) < 4)
+	if (flag & MESH_C && iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return 0;
 
-	if (flag & MESH_U && fgetnf(file, 3, (float *)t, binary) < 3)
+	if (flag & MESH_U && iobfgetnf(file, 3, (float *)t, binary) < 3)
 		return 0;
 
 	return 1;
 }
 
 static int
-getheader(FILE *file, int *dimp)
+getheader(IOBFILE *file, int *dimp)
 {
 	int i, flag;
 	char *token;
@@ -79,24 +79,22 @@ getheader(FILE *file, int *dimp)
 	if(strcmp(token, "nMESH"))
 	    return(-1);
 
-	if(fgetni(file, 1, dimp, 0) <= 0)
+	if(iobfgetni(file, 1, dimp, 0) <= 0)
 	    return -1;
 
-	if(fnextc(file, 1) == 'B') {
-	    if(fexpectstr(file, "BINARY"))
+	if(iobfnextc(file, 1) == 'B') {
+	    if(iobfexpectstr(file, "BINARY"))
 		return(-1);
 	    flag |= MESH_BINARY;
-	    if(fnextc(file, 1) == '\n')
-		(void) fgetc(file);	/* Toss \n */
+	    if(iobfnextc(file, 1) == '\n')
+		(void) iobfgetc(file);	/* Toss \n */
 	}
 	return(flag);
 }
 
 
 NDMesh *
-NDMeshFLoad(file, fname)
-	FILE *file;
-	char *fname;
+NDMeshFLoad(IOBFILE *file, char *fname)
 {
 	NDMesh	m;
 	int	n;
@@ -114,7 +112,7 @@ NDMeshFLoad(file, fname)
 
 	binary = m.flag & MESH_BINARY;
 
-	if (fgetni(file, m.meshd, size, binary) < 2) {
+	if (iobfgetni(file, m.meshd, size, binary) < 2) {
 	    OOGLSyntax(file,"Reading nMESH from \"%s\": expected mesh grid size", fname);
 	    return NULL;
 	}

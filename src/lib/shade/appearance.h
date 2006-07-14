@@ -270,7 +270,7 @@ void		ApDelete( Appearance *ap );
 Appearance *	ApDefault( Appearance *ap );
 Appearance *	ApCopy( Appearance *from, Appearance *into );
 Appearance *	ApMerge( Appearance *src, Appearance *dst, int inplace );
-Appearance *	ApFLoad( Appearance *into, FILE *f, char *stream );
+Appearance *	ApFLoad( Appearance *into, IOBFILE *f, char *stream );
 Appearance *	ApLoad( Appearance *into, char *stream );
 Appearance *    ApCopyShared( Appearance *ap, Appearance *into );
 
@@ -290,7 +290,7 @@ int	TxStreamIn( Pool *, Handle **, Texture ** );
 int	TxStreamOut( Pool *, Handle *, Texture * );
 void	TxDelete( Texture * );
 
-Texture * TxFLoad( FILE *inf, char *fname );
+Texture * TxFLoad( IOBFILE *inf, char *fname );
 Texture * TxSet( Texture *, int attr, ... );
 Texture * TxCreate( int attr, ... );
 Texture * TxCopy( Texture *src, Texture *dst );
@@ -311,7 +311,7 @@ Material *	MtDefault( Material * );
 Material *	MtLoad( Material *, char *filename );
 Material *	MtCopy( Material *from, Material *into );
 Material *	MtMerge( Material *src, Material *dst, int inplace );
-Material *	MtFLoad( Material *into, FILE *stream, char *filename );
+Material *	MtFLoad( Material *into, IOBFILE *stream, char *filename );
 int		MtSave( Material *, char *filename );
 int		MtFSave( Material *mat, FILE *stream );
 void		MtPrint( Material * );
@@ -327,7 +327,7 @@ LtLight *	LtCopy( LtLight *, LtLight * );
 LtLight *	LtMerge( LtLight *, LtLight * );
 LtLight *	LtDefault( LtLight * );
 void 		LtProperties( LtLight *, float, Color *, Point * );
-LtLight *     	LtFLoad( LtLight *, FILE *, char *filename);
+LtLight *     	LtFLoad( LtLight *, IOBFILE *, char *filename);
 
 #define	LTMAGIC	OOGLMagic('l', 2)
 
@@ -340,7 +340,7 @@ void 		LmDelete( LmLighting * );
 void 		LmDelete( LmLighting * );
 void 		LmDefault( LmLighting * );
 LmLighting *	LmLoad( LmLighting *, char *filename );
-LmLighting *	LmFLoad( LmLighting *, FILE *, char *filename );
+LmLighting *	LmFLoad( LmLighting *, IOBFILE *, char *filename );
 void 		LmSave( LmLighting *, char *filename );
 void 		LmFSave( LmLighting *, FILE *, char *filename );
 LmLighting *	LmMerge( LmLighting *src, LmLighting *dst, int inplace );

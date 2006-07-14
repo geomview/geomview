@@ -18,6 +18,8 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
+
+#include <ooglutil.h>
 #include "3d.h"
 
 extern int onlyverts;
@@ -37,13 +39,13 @@ extern void EraseHeadAndTail(void);
 extern void EraseHeadTail(char *xformname);
 extern void EraseHead(void);
 extern void StartNewVector(void);
-extern void LangInit(FILE *fp);
+extern void LangInit(IOBFILE *inf, FILE *fp);
 extern void progn(void);
 extern void ShowTailAt(Point3 *p);
 extern void ShowHeadAt(Point3 *p, Point3 *prev);
 extern void Geometry(void);
 extern void endprogn(void);
 extern void gui_init(void);
-extern void gui_main_loop(void);
+extern void gui_main_loop(IOBFILE *inf);
 
 

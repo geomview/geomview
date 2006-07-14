@@ -96,7 +96,11 @@ int main(int argc, char *argv[]) {
 
   pd = NULL;
   for(i = 1; i < argc; i++) {
-    g = strcmp(argv[i], "-") ? GeomLoad(argv[i]) : GeomFLoad(stdin, "standard input");
+    if (strcmp(argv[i], "-") == 0) {
+      g = GeomFLoad(iobfileopen(stdin), "standard input");
+    } else {
+      g = GeomLoad(argv[i]);
+    }
     pd = AnyGeomToPLData(g, TM_IDENTITY, NULL, NULL, pd);
   }
 

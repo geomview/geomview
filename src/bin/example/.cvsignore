@@ -1,4 +1,8 @@
 
 .geomview-example
+.libs
 Makefile Makefile.in .deps
 example
+*.lo
+*.la
+.libs

@@ -57,7 +57,7 @@ HandleOps GeomOps = {
 Geom *
 GeomLoad(char *fname)
 {
-    FILE *inf = fopen(fname, "rb");
+    IOBFILE *inf = iobfopen(fname, "rb");
     Geom *g;
 
     if(inf == NULL) {
@@ -65,29 +65,29 @@ GeomLoad(char *fname)
 	return NULL;
     }
     g = GeomFLoad(inf, fname);
-    fclose(inf);
+    iobfclose(inf);
     return g;
 }
 
 Geom *
-GeomFLoad(FILE *inf, char *fname)
+GeomFLoad(IOBFILE *inf, char *fname)
 {
     Pool *p;
     Geom *g = NULL;
 
-    p = PoolStreamTemp(fname, inf, 0, NULL);
+    p = PoolStreamTemp(fname, inf, NULL, 0, NULL);
     GeomStreamIn(p, NULL, &g);
     PoolDelete(p);
     return g;
 }
 
 int
-GeomFLoadEmbedded( Geom **gp, Handle **hp, FILE *inf, char *fname )
+GeomFLoadEmbedded( Geom **gp, Handle **hp, IOBFILE *inf, char *fname )
 {
     Pool *p;
     int nope;
 
-    p = PoolStreamTemp(fname, inf, 0, NULL);
+    p = PoolStreamTemp(fname, inf, NULL, 0, NULL);
     nope = GeomStreamIn(p, hp, gp);
     PoolDelete(p);
     return !nope;
@@ -98,8 +98,13 @@ GeomSave(Geom *g, char *fname)
 {
     Pool *p;
     int ok;
+    FILE *outf;
 
-    p = PoolStreamTemp(fname, NULL, 1, &GeomOps);
+    if ((outf = fopen(fname, "wb")) == NULL) {
+	OOGLError(0, "GeomSave: Can't open %s: %s", fname, sperror());
+	return NULL;
+    }
+    p = PoolStreamTemp(fname, NULL, outf, 1, &GeomOps);
     if(p == NULL) {
 	OOGLError(0, "GeomSave: Can't open %s: %s", fname, sperror());
 	return NULL;
@@ -117,7 +122,7 @@ GeomFSave(Geom *g, FILE *outf, char *fname)
     Pool *p;
     int ok;
 
-    p = PoolStreamTemp(fname, outf, 1, NULL);
+    p = PoolStreamTemp(fname, NULL, outf, 1, NULL);
     PoolSetOType(p, PO_DATA);
     PoolIncLevel(p,1);
     ok = GeomStreamOut(p, NULL, g);
@@ -131,7 +136,7 @@ GeomFSaveEmbedded( Geom *g, Handle *handle, FILE *outf, char *fname )
     Pool *p;
     int ok;
 
-    p = PoolStreamTemp(fname, outf, 1, NULL);
+    p = PoolStreamTemp(fname, NULL, outf, 1, NULL);
     PoolSetOType(p, PO_HANDLES);
     PoolIncLevel(p, 1);		/* Enforce level > 0 to get { braces } */
     ok = GeomStreamOut(p, handle, g);
@@ -146,11 +151,11 @@ GeomEmbedPrefix(int c)
 static char *geomtoken;
 
 char *
-GeomToken(FILE *f)
+GeomToken(IOBFILE *f)
 {
     if(geomtoken)
 	return geomtoken;
-    geomtoken = fdelimtok("{}()<:@=", f, 0);
+    geomtoken = iobfdelimtok("{}()<:@=", f, 0);
     return geomtoken ? geomtoken : "";
 }
 
@@ -195,34 +200,35 @@ GeomAddTranslator(char *prefix, char *cmd)
 int
 GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
 {
-    FILE *tf, *pf = PoolInputFile(p);
-    long pos = ftell(pf) - strlen(prefix);
+    IOBFILE *tf, *pf = PoolInputFile(p);
+    long pos = iobftell(pf) - strlen(prefix);
     int ok, oldstdin;
     Pool *tp;
     void (*oldchld)();
 
 #if defined(unix) || defined(__unix)
     /* Rewind file descriptor to previous position */
-    if(lseek(fileno(pf), pos, 0) < 0) {
+    if(iobfseek(pf, pos, SEEK_SET) < 0) {
 	OOGLError(1, "%s: can only use external format-translators on disk files", PoolName(p));
 	return 0;
     }
     oldstdin = dup(0);
     close(0);
-    dup(fileno(pf));
+    dup(iobfileno(pf));
     oldchld = signal(SIGCHLD, SIG_DFL);
-    tf = popen(cmd, "r");
+    tf = iobfileopen(popen(cmd, "r"));
     close(0);
     if(oldstdin > 0) {
 	dup(oldstdin);
 	close(oldstdin);
     }
-    tp = PoolStreamTemp(PoolName(p), tf, 0, &GeomOps);
+    tp = PoolStreamTemp(PoolName(p), tf, NULL, 0, &GeomOps);
     ok = GeomStreamIn(tp, hp, gp);
-    pclose(tf);
+    pclose(iobfile(tf));
+    iobfileclose(tf);
     PoolClose(tp);
     signal(SIGCHLD, oldchld);
-    fseek(pf, 0, 2);  /* Seek input to EOF to avoid confusion */
+    iobfseek(pf, 0, SEEK_END);  /* Seek input to EOF to avoid confusion */
     return ok;
 #else
    /* non-unix -- give up */
@@ -233,7 +239,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
 int
 GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 {
-    FILE *f;
+    IOBFILE *f;
     Handle *h = NULL;
     Handle *hname = NULL;
     Geom *g = NULL;
@@ -250,7 +256,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     char *w, *raww;
     int brack = 0;
     int more;
-    struct stdio_mark *mark = NULL;    
 
     if(p == NULL || (f = PoolInputFile(p)) == NULL)
 	return 0;
@@ -264,9 +269,9 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     if(comment_translators) {
 	struct GeomTranslator *gt;
 	char prefix[256];
-	if((c = getc(f)) == '#') {
+	if((c = iobfgetc(f)) == '#') {
 	    prefix[0] = '#';
-	    fgets(prefix+1, sizeof(prefix)-1, f);
+	    iobfgets(prefix+1, sizeof(prefix)-1, f);
 	    gt = VVEC(geomtransl, struct GeomTranslator);
 	    for(i = VVCOUNT(geomtransl); --i >= 0; gt++) {
 		if(strncmp(gt->prefix, prefix, gt->prefixlen) == 0) {
@@ -277,16 +282,16 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	     * in case the prefix[] buffer didn't hold it all.
 	     */
 	    if(strchr(prefix, '\n') == NULL)
-		while((c = fgetc(f)) != '\n' && c != EOF)
+		while((c = iobfgetc(f)) != '\n' && c != EOF)
 		    ;
 	} else if(c != EOF)
-	    ungetc(c, f);
+	    iobfungetc(c, f);
     }
 
     /* Skip a semicolon if it's the first thing we see -- 'stuff' compatibility.
      */
-    if(fnextc(f, 0) == ';')
-	fgetc(f);
+    if(iobfnextc(f, 0) == ';')
+	iobfgetc(f);
 
     do {
 	more = 0;
@@ -298,7 +303,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	case '<':
 	case ':':
 	case '@':
-	    w = fdelimtok("{}()", f, 0);
+	    w = iobfdelimtok("{}()", f, 0);
 	    /*
 	     * Consider doing a path search.
 	     * Do this before calling HandleReferringTo()
@@ -324,7 +329,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    break;
 	case '}':
 	    if(brack--) braces = 1;
-	    else ungetc(c, f);
+	    else iobfungetc(c, f);
 	    break;
 
 	case '=':
@@ -338,7 +343,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    }
 	    if(strcmp(w, "define") == 0) {
 		more = 1;
-		hname = HandleCreate( ftoken(f, 0), &GeomOps );
+		hname = HandleCreate( iobftoken(f, 0), &GeomOps );
 		defining = 1;
 		break;
 	    }
@@ -357,8 +362,8 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	     * First try to guess object type from its file name.
 	     */
 	    empty = 0;
-	    mark = stdio_setmark( NULL, p->inf );
-	    
+	    PoolSetMark(p);
+
 	    Class = GeomFName2Class( PoolName(p) );
 
 	    g = NULL;
@@ -388,7 +393,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		/*
 		 * Try to seek back to our initial position.
 		 */
-		if(!first && !stdio_seekmark(mark)) {
+		if(!first && !PoolSeekMark(p)) {
 		    /* No luck.  Might as well give up right now. */
 		    OOGLSyntax(f,
 			"Error reading \"%s\": can't seek back far enough (on pipe?)",
@@ -404,7 +409,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    }
 	    geomtoken = NULL;
 	    if(g == NULL) {
-		stdio_freemark(mark);
+		PoolClearMark(p);
 		return 0;
 	    }
 	}
@@ -453,9 +458,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     } else if(g)		/* Maintain ref count */
 	GeomDelete(g);
 
-    if(mark != NULL) {
-	stdio_freemark(mark);
-    }
+    PoolClearMark(p);
 
     return (g != NULL || h != NULL || (empty && braces));
 }

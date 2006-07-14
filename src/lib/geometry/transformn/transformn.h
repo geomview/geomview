@@ -28,6 +28,7 @@
 #include "hpointn.h"	/* Defines HPointN and TransformN */
 #include "transform.h"
 #include <stdio.h>
+#include "iobuffer.h"
 
 /*
  * Space & model flags; used to specify what space we're in, and
@@ -101,7 +102,7 @@ extern int TmNGetSize(const TransformN *T, int *idim, int *odim);
 extern void TmNPrint(FILE *f, const TransformN *T);
 
 	/* Get a TransformN, given a file pointer */
-extern TransformN *TmNRead(FILE *f);
+extern TransformN *TmNRead(IOBFILE *f);
 
 	/* scale all elements of "upper left" of matrix by a scalar */
 extern TransformN *CtmNScale( HPtNCoord s, TransformN *in, TransformN *out);

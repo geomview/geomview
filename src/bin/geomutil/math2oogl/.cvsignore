@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 math2oogl
+*.lo
+*.la
+.libs

@@ -683,7 +683,7 @@ Writes to standard output.  Reads from stdin if no file specified.\n",
     argv[1] = "-";
   }
   g = strcmp(argv[1], "-") ? 
-    GeomLoad(argv[1]) : GeomFLoad(stdin, "standard input");
+    GeomLoad(argv[1]) : GeomFLoad(iobfileopen(stdin), "standard input");
   fprintfindent(f, "#VRML V2.0 utf8\n\n");
   fprintfindentinc(f, "Group {\n");
   fprintfindentinc(f, "children [\n");

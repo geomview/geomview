@@ -19,7 +19,9 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#include "../../../../config.h"
+#if HAVE_CONFIG_
+# include "config.h"
+#endif
 
 #if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
@@ -53,27 +55,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * All compile-time dependencies on graphics type (X11/GL/OPENGL)
  * reside in this file.
  */
-
 #if !defined(MGGL) && !defined(MGX11) && !defined(MGOPENGL)
 /* default to MGOPENGL */
-#define MGOPENGL
+#define MGOPENGL 1
 #endif
 
 #include "mg.h"
 
-#ifdef MGX11
+#if MGX11
 #include "mgx11.h"
 char *buildinfographics = "X11";
 #endif
 
-#ifdef MGGL
+#if MGGL
 #include "mggl.h"
 #  include <gl/gl.h>
 #  include <X11/Xirisw/GlxMDraw.h>
 char *buildinfographics = "IrisGL";
 #endif
 
-#ifdef MGOPENGL
+#if MGOPENGL
 #  include "mgopengl.h"
 #define GL_GLEXT_PROTOTYPES
 #  include <GL/gl.h>
@@ -124,7 +125,7 @@ struct camwins {
    int curs;
 };
 
-#ifdef MGOPENGL
+#if MGOPENGL
 static Colormap oglcmap[2];
 #endif
 
@@ -132,15 +133,15 @@ static Colormap oglcmap[2];
 
 void cam_mgdevice()
 {
-#ifdef MGX11
+#if MGX11
   mgdevice_X11();
 #endif
 
-#ifdef MGGL
+#if MGGL
   mgdevice_GL();
 #endif
 
-#ifdef MGOPENGL
+#if MGOPENGL
   mgdevice_OPENGL();
 #endif
 }
@@ -281,7 +282,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   int cmwneeded;
 
 
-#ifdef MGOPENGL
+#if MGOPENGL
   struct oglstuff {
     int setGLXwin, setGLXctx;
     int *attribs;
@@ -304,7 +305,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
 #endif
 
-#ifdef MGGL
+#if MGGL
   static GLXconfig db_rgb_desc[] = {
    { GLX_NORMAL, GLX_VISUAL, GLX_NONE },
    { GLX_NORMAL, GLX_COLORMAP, GLX_NONE },
@@ -340,7 +341,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   n = setwinargs(args, n, dv->win, ~0, size, &title, NULL);
 
 
-#if defined(MGGL) || defined(MGX11)
+#if MGGL || MGX11
   XtSetArg(args[n], XmNvisual, gvvisual); n++;
   XtSetArg(args[n], XmNdepth, gvbitdepth); n++;
   XtSetArg(args[n], XmNcolormap, gvcolormap); n++;
@@ -374,7 +375,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
   n = 0;
 
-#if defined(MGX11) || defined(MGOPENGL)
+#if MGX11 || MGOPENGL
   XtSetArg(args[n], XmNtitle, title); n++;
   XtSetArg(args[n], XmNrubberPositioning, False); n++;
 #endif
@@ -384,7 +385,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   XtSetArg(args[n], XmNwidth, size[0]); n++;
   XtSetArg(args[n], XmNheight, size[1]); n++;
 
-#if defined(MGX11)
+#if MGX11
   camdraw[SGL] = NULL;
   camdraw[DBL] = XtCreateManagedWidget("camdraw",
 		    xmDrawingAreaWidgetClass, camform, args, n);
@@ -402,7 +403,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
 #endif
 
-#ifdef MGOPENGL
+#if MGOPENGL
   /* In case we're not the first GLX context in town, find another so we can
    * share our display lists promiscuously.
    */
@@ -476,7 +477,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
 #endif /*MGOPENGL*/
 
-#ifdef MGGL
+#if MGGL
   XtSetArg (args[n], GlxNglxConfig, db_rgb_desc); n++;
 
   camdraw[DBL] = XtCreateManagedWidget("camdrawdbl",
@@ -545,7 +546,7 @@ D1PRINT(("XtAddEventHandler(... cam_mousecross ...)\n"));
 
 /*****************************************************************************/
 
-#ifdef MGOPENGL
+#if MGOPENGL
 static Colormap
 getcmapfor(XVisualInfo *vi)
 {
@@ -609,7 +610,7 @@ static void ui_delete_camera(Widget w, XtPointer data,
   if(w) {
     struct camwins *cw = NULL;
     if(camshellof((int)(long)data, &cw) != NULL && cw!=NULL) {
-#ifdef MGOPENGL
+#if MGOPENGL
 	if(cw->wins[SGL]) XtUnregister_window(dpy, cw->wins[SGL], w);
 	if(cw->wins[DBL]) XtUnregister_window(dpy, cw->wins[DBL], w);
 #endif
@@ -621,7 +622,7 @@ static void ui_delete_camera(Widget w, XtPointer data,
 
 /*****************************************************************************/
 
-#if defined(MGGL) || defined(MGOPENGL)
+#if MGGL || MGOPENGL
 
 static int snapsetup(DView *dv)
 {
@@ -629,7 +630,7 @@ static int snapsetup(DView *dv)
     int unset = 0;
     struct camwins *cw;
     static int delay[2] = { 0, 200000 };	/* 0.2 second */
-#ifdef MGOPENGL
+#if MGOPENGL
     GLint bitsdeep;
 #endif
 
@@ -640,14 +641,14 @@ static int snapsetup(DView *dv)
 
     mgctxselect(dv->mgctx);
     mgctxget(MG_SETOPTIONS, &opts);
-#ifdef MGOPENGL
+#if MGOPENGL
     glGetIntegerv(GL_RED_BITS, &bitsdeep);
     if((opts & MGO_DOUBLEBUFFER) && bitsdeep < 8) {
 	mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
 	unset = MGO_DOUBLEBUFFER;
     }
 #endif
-#ifdef MGGL
+#if MGGL
     if((opts & MGO_DOUBLEBUFFER) && (getgdesc(GD_BITS_NORM_DBL_RED) < 8)) {
 	mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
 	unset = MGO_DOUBLEBUFFER;
@@ -665,10 +666,10 @@ static int snapsetup(DView *dv)
     select(0,NULL,NULL,NULL,(struct timeval *)(void *)delay);
     gv_draw(dv->id);	/* draw window now */
 
-#ifdef MGGL
+#if MGGL
     finish();
 #endif
-#ifdef MGOPENGL
+#if MGOPENGL
     glFinish();
 #endif
 
@@ -700,7 +701,7 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
 
     fprintf(f, "P6\n# Geomview Snapshot of %s\n%d %d\n255\n",
 	dv->name[1], xsize, ysize);
-#ifdef MGOPENGL
+#if MGOPENGL
     row = xsize*3;
     data = OOGLNewNE(char, row*ysize, "snapshot data");
     glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -710,7 +711,7 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
 	    break;
     }
 #endif /*MGOPENGL*/
-#ifdef MGGL
+#if MGGL
     row = xsize*4;
     data = OOGLNewNE(char, row*ysize, "snapshot data");
     readdisplay(wp->xmin, wp->ymin, wp->xmax, wp->ymax, (unsigned long *)data, 0);
@@ -738,7 +739,7 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
     return failed;
 }
 
-#if defined(MESA) && defined(MGOPENGL)
+#if defined(MESA) && MGOPENGL
 
 #include <GL/osmesa.h>
 
@@ -973,7 +974,7 @@ Pixel ui_RGB(Colormap cm, int permanent, float r, float g, float b)
 	XFreeColors(dpy, cm, &tcol.pixel, 1, 0);
 	wasalloced = 0;
     }
-#ifdef MGX11
+#if MGX11
   if(vis->class == PseudoColor)
     return mgx11_setRGB((int)(255.0 * r), (int)(255.0 * g), (int)(255.0 * b));
 #endif
@@ -1008,7 +1009,7 @@ void cam_expose(Widget w, XtPointer data, XEvent *ev, Boolean *cont)
   if(!ISCAM(id) || dv == NULL || dv->mgctx == NULL)
     return;
 
-#ifdef MGX11
+#if MGX11
   mgctxselect(dv->mgctx);
   mgctxset(MG_X11EXPOSE, MG_END);
 #endif
@@ -1019,7 +1020,7 @@ void cam_expose(Widget w, XtPointer data, XEvent *ev, Boolean *cont)
 
 void cam_resize(Widget w, XtPointer id, XmDrawingAreaCallbackStruct *cbs)
 {
-#ifdef MGOPENGL
+#if MGOPENGL
   /* Do the work the GLwDrawA widget would have done: resize our subwindows */
   struct camwins *cw;
 
@@ -1033,7 +1034,7 @@ void cam_resize(Widget w, XtPointer id, XmDrawingAreaCallbackStruct *cbs)
 
 void ui_find_visual()
 {
-#ifndef MGX11
+#if !MGX11
   gvvisual = DefaultVisual(dpy, DefaultScreen(dpy));
   gvcolormap = DefaultColormap(dpy, DefaultScreen(dpy));
   gvbitdepth = DefaultDepth(dpy, DefaultScreen(dpy));
@@ -1078,7 +1079,7 @@ LDEFINE(bgimagefile, LSTRING,
 	LSTRING, &fname,
 	LEND));
 
-#if defined(MGOPENGL) || defined(MGGL)
+#if MGOPENGL || MGGL
   dv = (DView *)drawer_get_object(camid);
   if(dv == NULL || !ISCAM(dv->id) || dv->mgctx == NULL)
     return Lnil;

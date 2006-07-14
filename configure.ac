@@ -1,12 +1,160 @@
-AC_INIT(geomview, [1.8.2-rc1], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_PREREQ(2.59)
+AC_INIT(geomview, [1.8.2-rc3], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AM_MAINTAINER_MODE
 AC_CANONICAL_TARGET([])
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADER([config.h])
 AC_PREFIX_DEFAULT([/usr/local/Geomview])
 
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])
+
+## Autoheader stuff.
+AH_TOP([#ifndef CONFIG_H_INCLUDED
+#define CONFIG_H_INCLUDED])
+AH_BOTTOM([#if D1_DEBUG
+#define D1PRINT(args) printf args
+#else
+#define D1PRINT(args)
+#endif
+#if !HAVE_WORKING_FORK
+# error FIXME! We need fork()
+#endif
+
+/* AIX requires this to be the first thing in the file.  */
+#ifndef __GNUC__
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+#pragma alloca
+#  else
+#   ifndef alloca /* predefined by HP cc +Olibcalls */
+char *alloca ();
+#   endif
+#  endif
+# endif
+#endif
+
+#endif /* CONFIG_H_INCLUDED */
+])
+
+################################################################################
+#
+# What follows was originally output from autoscan.
+#
+
+# Checks for programs.
+AC_PROG_CXX
+if test "$CXX" = "" ; then
+  HAVE_CXX=false
+  AC_MSG_WARN([
+    Configuring without a C++ compiler (couldn't find one on
+    your system).  C++ is only used only to compile the vrml->OOGL
+    converter, so your distribution will be compiled without it.
+  ])
+else
+  HAVE_CXX=true
+fi
+AC_PROG_CC
+AC_PROG_AWK
+AC_PROG_INSTALL
+AC_PROG_CPP
+AC_PROG_LEX
+#AC_PROG_RANLIB
+AC_PROG_YACC
+AC_PROG_LIBTOOL
+# Search path for "find" executable.  Use "find" unless
+# the bogus MS Windows version is first on the path, in 
+# which case we use the full pathname.  This AC_CHECK_PROG
+# macro is very strange.
+AC_CHECK_PROG([FIND],[find],[find],[no],,[/cygdrive/c/WINNT/system32/find])
+if test "$FIND" = "no"; then
+    AC_MSG_ERROR([No find found.  Cannot continue.])
+fi
+# Check for availability of /bin/csh for file-name globbing. Try /bin/sh
+# if not found. 
+AC_PATH_PROGS(GLOB_SHELL_PATH, [csh sh], [/bin/csh])
+if echo ${GLOB_SHELL_PATH} | grep csh > /dev/null 2>&1; then
+	GLOB_SHELL="${GLOB_SHELL_PATH} -f -c "
+else
+	GLOB_SHELL="${GLOB_SHELL_PATH} -c "
+fi
+AC_DEFINE_UNQUOTED([GLOB_SHELL], ["${GLOB_SHELL}"],
+	[Define to path and arguments of shell used for file name globbing])
+AC_SUBST([GLOB_SHELL])
+#
+AC_CHECK_PROGS(PS2EPSI, ps2epsi)
+AC_CHECK_PROGS(EPSTOPDF, epstopdf)
+AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
+AC_CHECK_PROGS(CONVERT, convert)
+
+
+# Checks for libraries.
+# FIXME: Replace `main' with a function in `-lm':
+#AC_CHECK_LIB([m], [main])
+
+# Checks for header files.
+AC_PATH_XTRA
+AC_FUNC_ALLOCA
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_HEADER_SYS_WAIT
+AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_HEADER_STDBOOL
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+AC_STRUCT_TM
+
+# Checks for library functions
+AC_CONFIG_LIBOBJ_DIR([src/lib/aclib])
+AC_FUNC_CLOSEDIR_VOID
+AC_FUNC_FORK
+AC_FUNC_MEMCMP
+#AC_FUNC_MALLOC  It is ok when malloc(0) returns NULL. Why not?
+#AC_FUNC_REALLOC It is ok when realloc(0, 0) returns NULL. Why not?
+AC_FUNC_SETPGRP
+AC_FUNC_SETVBUF_REVERSED
+AC_TYPE_SIGNAL
+AC_FUNC_STAT
+AC_FUNC_STRTOD
+AC_FUNC_VPRINTF
+AC_FUNC_WAIT3
+AC_CHECK_FUNCS([fmemopen],
+  [AC_CHECK_DECLS([fmemopen])],
+  [AC_LIBOBJ([fmemopen])])
+AC_FUNC_SELECT_ARGTYPES
+AC_CHECK_FUNC([select],
+  [AC_DEFINE(HAVE_SELECT, 1, [Define to 1 if you have the `select' function.])
+AC_CHECK_DECLS([select],[],[],[
+#if HAVE_SYS_SELECT_H
+# include <sys/select.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+#if HAVE_SYS_TIME_H
+# include <sys/time.h>
+#endif
+#if HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif])])
+AC_CHECK_DECLS([errno],[],[],[
+#if HAVE_ERRNO_H
+# include <errno.h>
+#endif])
+AC_CHECK_FUNCS([alarm bzero dup2 floor fcntl gethostname gettimeofday isascii memset mkdir pow putenv rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3])
+
+#
+# End autoscan stuff.
+#
+################################################################################
+
 
 # The following vars contain info about the local system:
 #   (AC_CANONICAL_TARGET([]) sets them)
@@ -28,29 +176,6 @@ AC_MSG_RESULT([configuring $PACKAGE $VERSION])
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-## Autoheader stuff.
-AH_TOP([#ifndef CONFIG_H_INCLUDED
-#define CONFIG_H_INCLUDED])
-AH_BOTTOM([#if D1_DEBUG
-#define D1PRINT(args) printf args
-#else
-#define D1PRINT(args)
-#endif
-
-#endif /* CONFIG_H_INCLUDED */
-])
-AC_DEFINE(USE_FSTROPEN_1, 0,
-[USE_FSTROPEN_1 determines whether we forceably use one of our	
-manual implementations of fstropen (in src/lib/oogl/util/futil.c)	
-rather than calling fmemopen or CC_fmemopen__FPci.  This is		
-relevant only on Linux systems.  Normally you shouldn't have to set	
-this at all; futil.c will use HAVE_FMEMOPEN, defined above, to	
-decide what to do.  If this doesn't work for you (the symptom is	
-that Geomview crashes upon startup while trying to read the initial	
-appearance string), then try configuring with			
-"--enable-fstropen-1", which sets USE_FSTROPEN_1.			
-See the comments in in src/lib/oogl/util/futil.c for details.])
-
 dnl Add extra include or link directories
 AC_ARG_WITH(build-path,[
   --with-build-path[=DIR] use DIR/include DIR/lib
@@ -62,79 +187,6 @@ done
 ])
 
 # Search for necessary programs.
-
-# Search path for "find" executable.  Use "find" unless
-# the bogus MS Windows version is first on the path, in 
-# which case we use the full pathname.  This AC_CHECK_PROG
-# macro is very strange.
-AC_CHECK_PROG([FIND],[find],[find],[no],,[/cygdrive/c/WINNT/system32/find])
-if test "$FIND" = "no"; then
-    AC_MSG_ERROR([No find found.  Cannot continue.])
-fi
-
-# Check for availability of /bin/csh for file-name globbing. Try /bin/sh
-# if not found. 
-AC_PATH_PROGS(GLOB_SHELL_PATH, [csh sh], [/bin/csh])
-if echo ${GLOB_SHELL_PATH} | grep csh > /dev/null 2>&1; then
-	GLOB_SHELL="${GLOB_SHELL_PATH} -f -c "
-else
-	GLOB_SHELL="${GLOB_SHELL_PATH} -c "
-fi
-AC_DEFINE_UNQUOTED([GLOB_SHELL], ["${GLOB_SHELL}"],
-	[Define to path and arguments of shell used for file name globbing])
-AC_SUBST([GLOB_SHELL])
-
-AC_PROG_CC
-#GEOM_AC_PROG_CXX
-AC_PROG_CXX
-if test "$CXX" = "" ; then
-  HAVE_CXX=false
-  case "$target" in
-    *linux*)
-  AC_MSG_ERROR([
-    Cannot find a working C++ compiler.  Geomview requires C++
-    on Linux systems.
-  ])
-    ;;
-    *)
-  AC_MSG_WARN([
-
-    Configuring without a C++ compiler (couldn't find one on
-    your system).  C++ is only used only to compile the vrml->OOGL
-    converter, so your distribution will be compiled without it.
-  ])
-    ;;
-  esac
-else
-  HAVE_CXX=true
-fi
-
-AM_PROG_LEX
-AC_PROG_YACC
-AC_PROG_RANLIB
-AC_PROG_INSTALL
-
-# Check for ways to generate a PDF file.
-# GNU Texinfo has a texi2pdf, otherwise use a DVI->PDF converter.
-#   For now don't bother checking for texi2pdf, because it doesn't
-#   include the figures.  Anyone know how to get figures into a pdf
-#   file generated with texi2pdf? [mbp Sun Nov 19 15:33:19 2000]
-#AC_CHECK_PROGS(TEXI2PDF, texi2pdf)
-AM_CONDITIONAL(HAVE_TEXI2PDF, test x$TEXI2PDF != x)
-
-AC_CHECK_PROGS(DVIPDF, dvipdfm dvipdf)
-AM_CONDITIONAL(HAVE_DVIPDF, ! test x${DVIPDF} = x)
-
-AC_CHECK_PROGS(TEX, tex)
-AM_CONDITIONAL(HAVE_TEX, ! test x${TEX} = x)
-
-AC_CHECK_PROGS(PDFTEX, pdftex)
-AM_CONDITIONAL(HAVE_PDFTEX, ! test x${PDFTEX} = x)
-
-AC_CHECK_PROGS(PS2EPSI, ps2epsi)
-AC_CHECK_PROGS(EPSTOPDF, epstopdf)
-AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
-AC_CHECK_PROGS(CONVERT, convert)
 
 ########################################################################
 ########################################################################
@@ -151,15 +203,12 @@ AC_ARG_WITH(opengl,
 	    OPENGL_DIR=$withval
            )
 
-
-
 ########################################################################
 
 #
 # Store X library link line in XLIBS
 #
 AC_PATH_XTRA
-
 XLIBS="$X_LIBS $X_PRE_LIBS -lXt -lXext -lX11 $X_EXTRA_LIBS"
 AC_SUBST(XLIBS)
 
@@ -241,57 +290,82 @@ AC_MSG_RESULT([headers $MOTIFINCLUDE, libraries $MOTIFLIBS])
 
 ########################################################################
 
-AC_MSG_CHECKING([for opengl])
-if test "$OPENGL_DIR" != "" ; then
-  USER_OPENGL_DIR="$OPENGL_DIR/include"
-else
-  USER_OPENGL_DIR=""
-fi
-GEOM_FIND_I_OPTION(GL/gl.h, ["$USER_OPENGL_DIR" "" "/usr/local/include"])
-if test "$GEOM_I_OPTION" = "0" ; then
-    AC_MSG_ERROR([
+if test "z${OPENGL_DIR}" != "zno"; then
 
-Can't find OpenGL header file GL/gl.h.  Geomview requires OpenGL
-(or Mesa).  See the file INSTALL.Geomview for details.
-
+  AC_MSG_CHECKING([for opengl])
+  if test "$OPENGL_DIR" != "" ; then
+    USER_OPENGL_DIR="$OPENGL_DIR/include"
+  else
+    USER_OPENGL_DIR=""
+  fi
+  GEOM_FIND_I_OPTION(GL/gl.h, ["$USER_OPENGL_DIR" "" "/usr/local/include"])
+  if test "$GEOM_I_OPTION" = "0" ; then
+    AC_MSG_WARN([
+Can't find OpenGL header file GL/gl.h.  Geomview does not require OpenGL
+but you will have to live without hardware accellerated rendering.
+See the file INSTALL.Geomview for details.
 ])
-fi
-OPENGLINCLUDE=$GEOM_I_OPTION
-AC_SUBST(OPENGLINCLUDE)
+  fi
+  GL_I_OPTION=$GEOM_I_OPTION
+  OPENGLINCLUDE=$GEOM_I_OPTION
 
 ########################################################################
 
-if test "$OPENGL_DIR" != "" ; then
-  USER_OPENGL_DIR="$OPENGL_DIR/lib"
-else
-  USER_OPENGL_DIR=""
-fi
-GEOM_FIND_L_OPTION(-lGL,
-		   glBegin,
-		   ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
-		   "$XLIBS -lm")
-if test "$GEOM_L_OPTION" = "0" ; then
-    AC_MSG_ERROR([
-
-Can't find OpenGL libraries.  Geomview requires OpenGL (or Mesa).
+  if test "$OPENGL_DIR" != "" ; then
+    USER_OPENGL_DIR="$OPENGL_DIR/lib"
+  else
+    USER_OPENGL_DIR=""
+  fi
+  GEOM_FIND_L_OPTION(-lGL,
+	  	     glBegin,
+		     ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
+		     "$XLIBS -lm")
+  if test "$GEOM_L_OPTION" = "0" ; then
+    AC_MSG_WARN([
+Can't find OpenGL header file GL/gl.h.  Geomview does not require OpenGL
+but you will have to live without hardware accellerated rendering.
 See the file INSTALL.Geomview for details.
-
 ])
-fi
-GL_L_OPTION=$GEOM_L_OPTION
-GEOM_FIND_L_OPTION(-lGLU,
-		   gluBeginPolygon,
-		   ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
-		   "$GL_L_OPTION -lGL $XLIBS -lm")
-if test "$GEOM_L_OPTION" != "$GL_L_OPTION" ; then
-  GLU_L_OPTION=$GEOM_L_OPTION
-else
-  GLU_L_OPTION=""
-fi
-OPENGLLIBS="$GL_L_OPTION -lGL $GLU_L_OPTION -lGLU"
-AC_SUBST(OPENGLLIBS)
+  fi
+  GL_L_OPTION=$GEOM_L_OPTION
+  GEOM_FIND_L_OPTION(-lGLU,
+	 	     gluBeginPolygon,
+		     ["$USER_OPENGL_DIR" "" "$x_libraries" "/usr/local/lib"],
+		     "$GL_L_OPTION -lGL $XLIBS -lm")
+  if test "$GEOM_L_OPTION" != "$GL_L_OPTION" ; then
+    GLU_L_OPTION=$GEOM_L_OPTION
+  else
+    GLU_L_OPTION=""
+  fi
+  OPENGLLIBS="$GL_L_OPTION -lGL $GLU_L_OPTION -lGLU"
 
-AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
+  AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
+
+fi # without-opengl
+
+#
+# substitute, even if empty
+#
+AC_SUBST(OPENGLLIBS)
+AC_SUBST(OPENGLINCLUDE)
+
+if test "z${GL_I_OPTION}" != "z0" && \
+   test "z${GL_L_OPTION}" != "z0" && \
+   test "z${OPENGL_DIR}" != "zno"; then
+  MGOPENGL=1
+  MGX11=0
+else
+  MGOPENGL=0
+  MGX11=1
+fi
+
+AM_CONDITIONAL([MGOPENGL],[test "${MGOPENGL}" = 1])
+AC_DEFINE_UNQUOTED([MGOPENGL],${MGOPENGL},
+  [Define to 1 if OpenGL (or Mesa or anything equivalent) is available and should be used for rendering])
+
+AM_CONDITIONAL([MGX11],[test "${MGX11}" = 1])
+AC_DEFINE_UNQUOTED([MGX11],${MGX11},
+  [Define to 1 if all rendering should be performed through the X library (i.e. no accelerated 3D rendering)])
 
 ########################################################################
 
@@ -419,44 +493,6 @@ fi
 ########################################################################
 ########################################################################
 
-AC_ARG_ENABLE(seekpipe,
-[  --disable-seekpipe      don't try to use GLIBC's open-cookie extension
-                          to implement seekable pipes (default: autodetect).],
-[case "$enableval" in
-	yes) USE_SEEKPIPE=1 ;;
-	no)  USE_SEEKPIPE=0 ;;
-esac],
-[USE_SEEKPIPE=true])
-if test "$USE_SEEKPIPE" = "true"; then
-	AC_CHECK_FUNCS([fopencookie],[USE_SEEKPIPE=1],[USE_SEEKPIPE=0])
-fi
-AM_CONDITIONAL(SEEKPIPE, test "$USE_SEEKPIPE" = "1")
-AC_DEFINE_UNQUOTED(USE_SEEKPIPE, $USE_SEEKPIPE,
-		[define set/getpos() with pipes, using fopencookie()])
-
-AC_ARG_ENABLE(iomarker,
-[  --enable-iomarker       try to use GLIBC's internal IO-marker stuff.
-                          This is generally a bad idea, but works nicely.],
-[case "$enableval" in
-	yes) USE_IO_MARKER=1 ;;
-	no)  USE_IO_MARKER=0 ;;
-esac],
-[USE_IO_MARKER=false])
-if test "$USE_IO_MARKER" = "1" -a "$USE_SEEKPIPE" = "0"; then
-	AC_CHECK_FUNCS([_IO_init_marker _IO_remove_marker _IO_seekmark],
-			[USE_IO_MARKER=1],[USE_IO_MARKER=0])
-fi
-AM_CONDITIONAL(IO_MARKER, test "$USE_IO_MARKER" = "1")
-AC_DEFINE_UNQUOTED(USE_IO_MARKER, $USE_IO_MARKER,
-		[twiddle with GLIBC internal I/O-markers.])
-
-AC_ARG_ENABLE(fstropen-1,
-	      [  --enable-fstropen-1     use manual fstropen rather than fmemopen],
-	      [ if test "$enableval" != "no" ; then
-                  AC_DEFINE(USE_FSTROPEN_1, 1)
-                fi ]
-              )
-
 AC_ARG_ENABLE(d1debug,
 	      [  --enable-d1debug        turn on D1 level debugging output],
 	      [ if test "$enableval" != "no" ; then
@@ -488,31 +524,19 @@ AC_CHECK_FUNCS([strerror])
 ########################################################################
 ########################################################################
 ########################################################################
+ACCEPT_ARG3_TYPE=int
 
 case "$target" in
  *linux*) MACHTYPE="linux"
-	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
-                             [Define to the machine type])
-          LINUX=true
-	  AC_CHECK_HEADERS([sys/socket.h])
-          AC_CHECK_TYPES([socklen_t],[
-AC_DEFINE(ACCEPT_ARG3_TYPE, [socklen_t],
-                    [ACCEPT_ARG3_TYPE should be the datatype of the
-3rd arg to the 'accept' system call.  It's 'int' on some systems,
-'unsigned long' on some, and could be something else on others.
-Default to int])],[
-AC_DEFINE(ACCEPT_ARG3_TYPE, [unsigned int],
-                    [ACCEPT_ARG3_TYPE should be the datatype of the
-3rd arg to the 'accept' system call.  It's 'int' on some systems,
-'unsigned long' on some, and could be something else on others.
-Default to int])],[#if HAVE_SYS_SOCKET_H
+          AC_CHECK_TYPES([socklen_t],
+                         [ACCEPT_ARG3_TYPE=socklen_t],
+                         [ACCEPT_ARG3_TYPE="unsigned int"],[
+#if HAVE_SYS_SOCKET_H
 # include <sys/socket.h>
 #endif
 ])
           ;;
   *irix*) MACHTYPE="sgi"
-	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
-                             [Define to the machine type])
 	  AC_DEFINE(sgi, 1, [Define to 1 if we are compiling for sgi])
           if test "$CC" = "cc" ; then
             CFLAGS="$CFLAGS -float"
@@ -520,28 +544,21 @@ Default to int])],[#if HAVE_SYS_SOCKET_H
           fi
           ;;
 *rs6000*) MACHTYPE="rs6000"
-	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
-                             [Define to the machine type])
           AC_DEFINE(AIX, 1, [Define to 1if we are compiling for AIX])
-	  AC_DEFINE(ACCEPT_ARG3_TYPE, [unsigned long],
-                    [ACCEPT_ARG3_TYPE should be the datatype of the
-3rd arg to the 'accept' system call.  It's 'int' on some systems,
-'unsigned long' on some, and could be something else on others.
-Default to int])
+	  ACCEPT_ARG3_TYPE="unsigned long"
           AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
-          AC_DEFINE(alloca, __alloca,
-                    [Define to the name of alloca (if alloca is not alloca)])
 	  ;;
        *) MACHTYPE=$target_os
-	  AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",
-                             [Define to the machine type])
-	  AC_DEFINE(ACCEPT_ARG3_TYPE, [int],
-	          [ACCEPT_ARG3_TYPE should be the datatype of the
+	  ACCEPT_ARG3_TYPE=int
+          ;;
+esac
+
+AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",[Define to the machine type])
+AC_DEFINE_UNQUOTED(ACCEPT_ARG3_TYPE, $ACCEPT_ARG3_TYPE,[
+ACCEPT_ARG3_TYPE should be the datatype of the
 3rd arg to the 'accept' system call.  It's 'int' on some systems,
 'unsigned long' on some, and could be something else on others.
 Default to int])
-          ;;
-esac
 
 AC_DEFINE(BINARY_POPEN_REQUIRES_B, 0,
 [BINARY_POPEN_REQUIRES_B says whether the system's popen() call needs 
@@ -560,7 +577,6 @@ mbp Tue Sep 12 12:33:38 2000])
 AC_SUBST(MACHTYPE)
 
 AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
-AM_CONDITIONAL(LINUX,       test x$LINUX = xtrue)
 AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
 # What this actually checks is whether a program that includes
@@ -594,16 +610,12 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <sys/socket.h> ], [ int s = socket(AF
            ])
 AC_SUBST(SOCKETLIBS)
 
-
-AC_FUNC_SETPGRP
-AC_CHECK_FUNCS([__setfpucw fmemopen])
-
 ########################################################################
 
 AC_TYPE_SIZE_T
 AC_C_BIGENDIAN
 
-AC_CHECK_HEADERS(fpu_control.h i386/fpu_control.h netinet/in.h)
+AC_CHECK_HEADERS([netinet/in.h])
 
 moduledir="\$(exec_prefix)/bin"
 AC_SUBST(moduledir)
@@ -621,63 +633,69 @@ AC_CACHE_VAL(ac_cv_geomdatadir,[ac_cv_geomdatadir="geomdatadir='$geomdatadir'"])
 top_geom_builddir='$(top_builddir)'
 AC_SUBST(top_geom_builddir)
 
-OOGLLIBS_ONCE="\$(top_geom_builddir)/src/lib/oogl/wa/libwa.a                \
-          \$(top_geom_builddir)/src/lib/camera/libcamera.a                  \
-          \$(top_geom_builddir)/src/lib/color/libcolor.a                    \
-          \$(top_geom_builddir)/src/lib/fexpr/libfexpr.a                    \
-          \$(top_geom_builddir)/src/lib/geomutil/bdy/libbdy.a               \
-          \$(top_geom_builddir)/src/lib/geomutil/crayplutil/libcrayplutil.a \
-          \$(top_geom_builddir)/src/lib/geomutil/dim/libdim.a               \
-          \$(top_geom_builddir)/src/lib/geomutil/plutil/libplutil.a         \
-          \$(top_geom_builddir)/src/lib/gprim/bbox/libbbox.a                \
-          \$(top_geom_builddir)/src/lib/gprim/bezier/libbezier.a            \
-          \$(top_geom_builddir)/src/lib/gprim/comment/libcomment.a          \
-          \$(top_geom_builddir)/src/lib/gprim/discgrp/libdg.a               \
-          \$(top_geom_builddir)/src/lib/gprim/geom/libgeom.a                \
-          \$(top_geom_builddir)/src/lib/gprim/inst/libinst.a                \
-          \$(top_geom_builddir)/src/lib/gprim/lincoln/liblincoln.a          \
-          \$(top_geom_builddir)/src/lib/gprim/list/liblist.a                \
-          \$(top_geom_builddir)/src/lib/gprim/mesh/libmesh.a                \
-          \$(top_geom_builddir)/src/lib/gprim/ndmesh/libndmesh.a            \
-          \$(top_geom_builddir)/src/lib/gprim/npolylist/libnpolylist.a      \
-          \$(top_geom_builddir)/src/lib/gprim/polylist/libpolylist.a        \
-          \$(top_geom_builddir)/src/lib/gprim/quad/libquad.a                \
-          \$(top_geom_builddir)/src/lib/gprim/skel/libskel.a                \
-          \$(top_geom_builddir)/src/lib/gprim/sphere/libsphere.a            \
-          \$(top_geom_builddir)/src/lib/gprim/tlist/libtlist.a              \
-          \$(top_geom_builddir)/src/lib/gprim/vect/libvect.a                \
-          \$(top_geom_builddir)/src/lib/mg/buf/liblibmgbuf.a                \
-          \$(top_geom_builddir)/src/lib/mg/common/libmgcommon.a             \
-          \$(top_geom_builddir)/src/lib/mg/opengl/libmgopengl.a             \
-          \$(top_geom_builddir)/src/lib/mg/ps/libmgps.a                     \
-          \$(top_geom_builddir)/src/lib/mg/rib/libmgrib.a                   \
-          \$(top_geom_builddir)/src/lib/mib/libmib.a                        \
-          \$(top_geom_builddir)/src/lib/pointlist/libpointlist.a            \
-          \$(top_geom_builddir)/src/lib/shade/libshade.a                    \
-          \$(top_geom_builddir)/src/lib/window/libwindow.a                  \
-          \$(top_geom_builddir)/src/lib/geometry/cmodel/libcmodel.a         \
-          \$(top_geom_builddir)/src/lib/geometry/hpoint3/libhpoint3.a       \
-          \$(top_geom_builddir)/src/lib/geometry/hpointn/libhpointn.a       \
-          \$(top_geom_builddir)/src/lib/geometry/point3/libpoint3.a         \
-          \$(top_geom_builddir)/src/lib/geometry/transform3/libtransform3.a \
-          \$(top_geom_builddir)/src/lib/geometry/transformn/libtransformn.a \
-          \$(top_geom_builddir)/src/lib/geometry/transobj/libtransobj.a     \
-          \$(top_geom_builddir)/src/lib/oogl/lisp/liblisp.a                 \
-          \$(top_geom_builddir)/src/lib/oogl/refcomm/librefcomm.a           \
-          \$(top_geom_builddir)/src/lib/oogl/util/libooglutil.a"
+OOGLLIBS="\$(top_geom_builddir)/src/lib/oogl/wa/libwa.la                     \
+          \$(top_geom_builddir)/src/lib/camera/libcamera.la                  \
+          \$(top_geom_builddir)/src/lib/color/libcolor.la                    \
+          \$(top_geom_builddir)/src/lib/fexpr/libfexpr.la                    \
+          \$(top_geom_builddir)/src/lib/geomutil/bdy/libbdy.la               \
+          \$(top_geom_builddir)/src/lib/geomutil/crayplutil/libcrayplutil.la \
+          \$(top_geom_builddir)/src/lib/geomutil/dim/libdim.la               \
+          \$(top_geom_builddir)/src/lib/geomutil/plutil/libplutil.la         \
+          \$(top_geom_builddir)/src/lib/gprim/bbox/libbbox.la                \
+          \$(top_geom_builddir)/src/lib/gprim/bezier/libbezier.la            \
+          \$(top_geom_builddir)/src/lib/gprim/comment/libcomment.la          \
+          \$(top_geom_builddir)/src/lib/gprim/discgrp/libdg.la               \
+          \$(top_geom_builddir)/src/lib/gprim/geom/libgeom.la                \
+          \$(top_geom_builddir)/src/lib/gprim/inst/libinst.la                \
+          \$(top_geom_builddir)/src/lib/gprim/lincoln/liblincoln.la          \
+          \$(top_geom_builddir)/src/lib/gprim/list/liblist.la                \
+          \$(top_geom_builddir)/src/lib/gprim/mesh/libmesh.la                \
+          \$(top_geom_builddir)/src/lib/gprim/ndmesh/libndmesh.la            \
+          \$(top_geom_builddir)/src/lib/gprim/npolylist/libnpolylist.la      \
+          \$(top_geom_builddir)/src/lib/gprim/polylist/libpolylist.la        \
+          \$(top_geom_builddir)/src/lib/gprim/quad/libquad.la                \
+          \$(top_geom_builddir)/src/lib/gprim/skel/libskel.la                \
+          \$(top_geom_builddir)/src/lib/gprim/sphere/libsphere.la            \
+          \$(top_geom_builddir)/src/lib/gprim/tlist/libtlist.la              \
+          \$(top_geom_builddir)/src/lib/gprim/vect/libvect.la                \
+          \$(top_geom_builddir)/src/lib/mg/buf/liblibmgbuf.la                \
+          \$(top_geom_builddir)/src/lib/mg/common/libmgcommon.la             \
+          \$(top_geom_builddir)/src/lib/mg/ps/libmgps.la                     \
+          \$(top_geom_builddir)/src/lib/mg/rib/libmgrib.la                   \
+          \$(top_geom_builddir)/src/lib/pointlist/libpointlist.la            \
+          \$(top_geom_builddir)/src/lib/shade/libshade.la                    \
+          \$(top_geom_builddir)/src/lib/window/libwindow.la                  \
+          \$(top_geom_builddir)/src/lib/geometry/cmodel/libcmodel.la         \
+          \$(top_geom_builddir)/src/lib/geometry/hpoint3/libhpoint3.la       \
+          \$(top_geom_builddir)/src/lib/geometry/hpointn/libhpointn.la       \
+          \$(top_geom_builddir)/src/lib/geometry/point3/libpoint3.la         \
+          \$(top_geom_builddir)/src/lib/geometry/transform3/libtransform3.la \
+          \$(top_geom_builddir)/src/lib/geometry/transformn/libtransformn.la \
+          \$(top_geom_builddir)/src/lib/geometry/transobj/libtransobj.la     \
+          \$(top_geom_builddir)/src/lib/oogl/lisp/liblisp.la                 \
+          \$(top_geom_builddir)/src/lib/oogl/refcomm/librefcomm.la           \
+          \$(top_geom_builddir)/src/lib/oogl/util/libooglutil.la             \
+          \$(top_geom_builddir)/src/lib/aclib/libacgeomview.la"
 
-AC_SUBST(OOGLLIBS_ONCE)
-AC_CACHE_VAL(ac_cv_OOGLLIBS_ONCE,[ac_cv_OOGLLIBS_ONCE="OOGLLIBS_ONCE='$OOGLLIBS_ONCE'"])
+if test "z${MGOPENGL}" = "z1"; then
+  OOGLLIBS="${OOGLLIBS} \$(top_geom_builddir)/src/lib/mg/opengl/libmgopengl.la"
+fi
+if test "z${MGX11}" = "z1"; then
+  OOGLLIBS="${OOGLLIBS} \$(top_geom_builddir)/src/lib/mg/x11/libmgx11.la"
+fi
 
-# STRSTREAMLIB was (potentially) set above
-AC_SUBST(STRSTREAMLIB)
-AC_CACHE_VAL(ac_cv_STRSTREAMLIB,[ac_cv_STRSTREAMLIB="STRSTREAMLIB='$STRSTREAMLIB'"])
-
-AC_CACHE_VAL(ac_cv_OOGLLIBS,[ac_cv_OOGLLIBS="OOGLLIBS='\$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(OOGLLIBS_ONCE) \$(STRSTREAMLIB)'"])
-eval $ac_cv_OOGLLIBS
+AC_CACHE_VAL(ac_cv_OOGLLIBS,[ac_cv_OOGLLIBS="OOGLLIBS='$OOGLLIBS'"])
 AC_SUBST(OOGLLIBS)
 
-STUBLIB="\$(top_builddir)/src/lib/gprim/stub/libstub.a"
+OOGLLIB='$(top_geom_builddir)/src/lib/libgeomview.la'
+AC_CACHE_VAL(ac_cv_OOGLLIB, [ac_cv_OOGLLIB="OOGLLIB='$OOGLLIB'"])
+AC_SUBST(OOGLLIB)
+
+MOTIFUILIB='$(top_geom_builddir)/src/lib/mib/libmib.a'
+AC_CACHE_VAL(ac_cv_MOTIFUILIB, [ac_cv_MOTIFUILIB="MOTIFUILIB='$MOTIFUILIB'"])
+AC_SUBST(MOTIFUILIB)
+
+STUBLIB="\$(top_builddir)/src/lib/gprim/stub/libstub.la"
 AC_SUBST(STUBLIB)
 
 ########################################################################
@@ -721,6 +739,7 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 		src/lib/mg/buf			\
 		src/lib/mg/common		\
 		src/lib/mg/opengl		\
+		src/lib/mg/x11			\
 		src/lib/mg/ps			\
 		src/lib/mg/rib			\
 		src/lib/mib			\
@@ -748,6 +767,7 @@ AC_CONFIG_FILES([Makefile
 	  doc/Makefile
 	  src/Makefile
 	  src/lib/Makefile
+	  src/lib/aclib/Makefile
 	  src/lib/camera/Makefile
 	  src/lib/color/Makefile
 	  src/lib/fexpr/Makefile
@@ -792,6 +812,7 @@ AC_CONFIG_FILES([Makefile
 	  src/lib/mg/buf/Makefile
 	  src/lib/mg/common/Makefile
 	  src/lib/mg/opengl/Makefile
+	  src/lib/mg/x11/Makefile
 	  src/lib/mg/ps/Makefile
 	  src/lib/mg/rib/Makefile
 	  src/lib/mib/Makefile
@@ -825,11 +846,10 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomutil/vrml2oogl/Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
 	  src/bin/sweep/Makefile
+	  src/bin/hinge/Makefile
+	  src/bin/flythrough/Makefile
+	  src/bin/cplxview/Makefile
 	  src/bin/togeomview/Makefile
 ])
 AC_OUTPUT
 
-#	  src/bin/cplxview/Makefile
-#	  src/bin/maniview/Makefile
-#	  src/bin/flythrough/Makefile
-#	  src/bin/hinge/Makefile

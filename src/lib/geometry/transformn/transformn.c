@@ -868,32 +868,32 @@ TmNPrint(FILE *f, const TransformN *T)
 }
 
 TransformN *
-TmNRead(FILE *f)
+TmNRead(IOBFILE *f)
 {
     HPtNCoord *a;
     int got, n, brack = 0;
     int idim, odim;
 
-    fexpecttoken(f, "ntransform");
+    iobfexpecttoken(f, "ntransform");
 
-    if(fnextc(f,0) == '{')
-	brack = fgetc(f);
+    if(iobfnextc(f,0) == '{')
+	brack = iobfgetc(f);
 
-    if(fgetni(f,1,&idim, 0) <= 0 || fgetni(f, 1, &odim, 0) <= 0 || idim <= 0 || odim <= 0) {
+    if(iobfgetni(f,1,&idim, 0) <= 0 || iobfgetni(f, 1, &odim, 0) <= 0 || idim <= 0 || odim <= 0) {
 	OOGLSyntax(f, "Expected dimensions of N-D transform");
 	return NULL;
     }
     n = idim*odim;
     a = OOGLNewNE(HPtNCoord, n, "new TransformN data");
 
-    got = fgetnf(f, n, a, 0);
+    got = iobfgetnf(f, n, a, 0);
     if(got < n) {
 	OOGLSyntax(f, "N-D transform: error reading %d'th of %d values.", got, n);
 	return NULL;
     }
 
     if(brack)
-	fexpecttoken(f, "}");
+	iobfexpecttoken(f, "}");
 
     return TmNCreate(idim,odim,a);
 }

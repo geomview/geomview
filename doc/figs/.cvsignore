@@ -15,3 +15,6 @@ save.pdf
 secondlinelist.pdf
 tools.pdf
 trefdodecinter.pdf
+*.lo
+*.la
+.libs

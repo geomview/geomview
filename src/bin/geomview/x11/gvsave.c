@@ -248,7 +248,8 @@ static void save_selection(Widget w, XtPointer data,
   sp = &save[savechoice];
   switch(sp->special) {
   case SAVE_WIO:
-    p = PoolStreamTemp(fname, (!strcmp(fname,"-"))?stdout:NULL, 1, sp->ops);
+    p = PoolStreamTemp(fname,
+		       NULL, (!strcmp(fname,"-"))?stdout:NULL, 1, sp->ops);
     if(p == NULL) {
         OOGLError(1, "Can't open output: %s: %s", fname, sperror());
         return;

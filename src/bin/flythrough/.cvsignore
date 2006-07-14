@@ -1,1 +1,6 @@
+.libs
 Makefile Makefile.in .deps
+flythrough
+*.lo
+*.la
+.libs

@@ -1,13 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(XFORMSLIBS)	\
-	$(XLIBS)	\
-	-lm
+LDADD =	$(XFORMSLIBS) \
+	$(XLIBS)     \
+	$(OOGLLIB) 
 
 EXTRA_DIST = .geomview-flythrough flyhelp flythrough.1 panel.fd
 
 module_PROGRAMS = flythrough
 flythrough_SOURCES = main.c flyhelp.h panel.c panel.h
+flythrough_DEPENDENCIES = $(OOGLLIB)
+flythrough_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-flythrough
 

@@ -46,7 +46,7 @@ char flyhelpstr[] =
 
 static char *getline(char *s);
 
-init()
+void init(void)
 {
 
 #ifdef XFORMS
@@ -90,7 +90,7 @@ init()
 
 void TilingProc(FL_OBJECT *obj, long val) 
 {
-  printf("(read geometry {define tile { < br4.%1d.tlist}})\n",val);
+  printf("(read geometry {define tile { < br4.%1d.tlist}})\n", (int)val);
   fflush(stdout);
 }
 
@@ -115,7 +115,7 @@ void ScaleProc(FL_OBJECT *obj, long val)
 
 void PathProc(FL_OBJECT *obj, long val)
 {
-  char *first;
+  char *first = NULL;
   char *name;
   char path[512];
 
@@ -158,11 +158,10 @@ static char todemogv[] = "togeomview -c flythrough  geomview -nopanels -wpos 200
 void InfoProc(FL_OBJECT *obj, long val) 
 {
   FILE *hf = fopen("flyhelp", "r");
-  int winid;
   char gvstr[256];
 
   if (hf == NULL) {
-    char *line, *delims = "\n";
+    char *line;
     line = getline(flyhelpstr);
     while (line) {
       fl_add_browser_line( HelpBrowser, line );
@@ -179,7 +178,7 @@ void InfoProc(FL_OBJECT *obj, long val)
   fl_set_form_position(HelpForm,8, 393);
   helpwinid = fl_show_form(HelpForm, FL_PLACE_POSITION, TRUE, "Flythrough Help");
   if (helpwinid) winset(helpwinid);
-  winpop();
+  (void)winpop();
   winset(mainwinid);
   /* OK, so this is probably not the most elegant way to do this.
      It does work though...
@@ -212,7 +211,7 @@ void QuitProc(FL_OBJECT *obj, long val)
   exit(0);
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   char line[80];
   char *more, *caughtup;
@@ -244,6 +243,7 @@ main(int argc, char *argv[])
       fflush(stdout);
     }
   }
+  return 0;
 }
 
 /* Stolen from Mark Phillips' Hinge module */

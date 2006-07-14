@@ -38,7 +38,7 @@ struct Sphere {
 
 extern GeomClass *SphereMethods();
 extern Sphere *SphereCreate(Geom *, GeomClass *, va_list *a_list );
-extern Sphere *SphereFLoad(FILE *, char *);
+extern Sphere *SphereFLoad(IOBFILE *, char *);
 extern Sphere *SphereSave(Sphere *, char *);
 extern Sphere *SphereFSave(Sphere *, FILE *, char *);
 

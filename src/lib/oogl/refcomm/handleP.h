@@ -88,8 +88,7 @@ struct Pool {
 	char	softEOF;	/* Can we hope to read more after EOF?
 				 * 1 for tty or named pipe, 0 otherwise.
 				 */
-	FILE	*inf;
-	FILE    *sinf;         /* saved copy of inf */
+	IOBFILE	*inf;
 	int     infd;
 	FILE	*outf;
 

@@ -1,5 +1,17 @@
+*.la
+*.lo
+.libs
+.libs
+0.04884150-3.oogl
 0.36507-4-6.off
 Makefile Makefile.in .deps
+bar.wrl
+foo.cmd
+foo.geom
+foo.oogl
 foo.wrl
+foobar.wrl
+freewrl_tmp
+nistlogo.wrl
 oogl2vrml
 oogl2vrml2

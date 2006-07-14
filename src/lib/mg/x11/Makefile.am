@@ -2,9 +2,9 @@ INCLUDES = $(default_includes)
 
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libmgx11.a
+noinst_LTLIBRARIES = libmgx11.la
 
-libmgx11_a_SOURCES = 		\
+libmgx11_la_SOURCES = 		\
 	mgx11.c			\
 	mgx11clip.c		\
 	mgx11dither.c		\
@@ -15,7 +15,6 @@ libmgx11_a_SOURCES = 		\
 	mgx11shade.c		\
 	mgx11visual.c		\
 	mgx11windows.c		\
-				\
 	mgx11.h			\
 	mgx11P.h		\
 	mgx11render1.h		\

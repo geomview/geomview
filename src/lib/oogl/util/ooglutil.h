@@ -28,6 +28,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "iobuffer.h"
+
 #ifdef _WIN32
 # define M_PI 3.14159265358979323
 extern int finite(double v);
@@ -141,7 +143,7 @@ extern void vvinit(vvec *v, int elsize, int minelems);
 extern void vvuse(vvec *v, void *buf, int allocated);
 extern void vvtrim(vvec *v);		/* Trim allocated but unused data */
 extern void vvfree(vvec *v);		/* Free all malloced data */
-extern void vvneeds(register vvec *v, int needed);
+extern void vvneeds(vvec *v, int needed);
 extern void *vvindex(vvec *v, int index);
 extern void vvzero(vvec *v);
 extern void vvcopy(vvec *src, vvec *dest);
@@ -163,54 +165,22 @@ extern const char *sperror(void);
 
 extern int _OOGLError(int, char *fmt, ...);
 
-extern void OOGLSyntax(FILE *, char *fmt, ...); 
+extern void OOGLSyntax(IOBFILE *, char *fmt, ...); 
 
 	/* Bit fields in error codes */
 #define	OE_VERBOSE	0x1
 #define	OE_FATAL	0x2
 
+/* supply missing declaration for fmemopen */
+#if !HAVE_DECL_FMEMOPEN
+extern FILE *fmemopen(void *buf, size_t buflen, char *mode);
+#endif
 
 /*
  * File-I/O utility routines
  */
-extern int fnextc(FILE *, int flags);
-extern int fexpectstr(FILE *, char *string);
-extern int fexpecttoken(FILE *, char *string);
-extern char *ftoken(FILE *, int fnextc_flags);
-extern char *fdelimtok(char *delims, FILE *f, int flags);
-
-extern int fgetnf(FILE *, int nfloats, float *floatp, int binary);
-extern int fputnf(FILE *, int nfloats, float *floatp, int binary);
-extern int fgetni(FILE *, int nints, int *intp, int binary);
-extern int fgetns(FILE *, int nshorts, short *shortp, int binary);
-extern int fgettransform(FILE *, int ntrans, float *transforms, int binary);
-extern int fputtransform(FILE *, int ntrans, float *transforms, int binary);
-extern FILE *fstropen(char *buf, int buflen, char *mode);
-extern int fhasdata(FILE *);
-
 /*
- * fcontext(f) returns a string indicating the current position of file f,
- * or the empty string if no data are available.
- */
-extern char *fcontext(FILE *f);
-
-
-#define	NODATA	-2	/* async_fnextc() and async_getc() return NODATA if
-			 * none is immediately available
-			 */
-
-extern int async_fnextc(FILE *, int flags);
-extern int async_getc(FILE *);
-
-extern int async_fnextc_fd(FILE *, int flags, int fd);
-extern int async_getc_fd(FILE *, int fd);
-
-extern struct stdio_mark *stdio_setmark(struct stdio_mark *, FILE *);
-extern int		  stdio_seekmark(struct stdio_mark *);
-extern void		  stdio_freemark(struct stdio_mark *);
-
-/*
- * int fnextc(FILE *f, int flags)
+ * int iobfnextc(IOBFILE *f, int flags)
  *	Advances f to the next "interesting" character and
  *	returns it.  The returned char is ungetc'ed so the next getc()
  *	will yield the same value.
@@ -222,20 +192,20 @@ extern void		  stdio_freemark(struct stdio_mark *);
  *	  3 : Skip blanks and tabs but stop at # or \n.
  *
  * int
- * fexpectstr(FILE *file, char *string)
+ * iobfexpectstr(IOBFILE *file, char *string)
  *	Expect the given string to appear immediately on file.
  *	Return 0 if the complete string is found,
  *	else the offset+1 of the last matched char within string.
  *	The first unmatched char is ungetc'd.
  *
  * int
- * fexpecttoken(FILE *file, char *string)
+ * iobfexpecttoken(IOBFILE *file, char *string)
  *	Expect the given string to appear on the file, possibly after
  *	skipping some white space and comments.
  *	Return 0 if found, else the offset+1 of last matched char in string.
  *	The first unmatched char is ungetc'd.
  *
- * char *ftoken(FILE *f, int flags)
+ * char *iobftoken(IOBFILE *f, int flags)
  *	Skips uninteresting characters with fnextc(f, flags),
  *	then returns a "token" - string of consecutive interesting characters.
  *	Returns NULL if EOF is reached with no token, or if
@@ -243,25 +213,30 @@ extern void		  stdio_freemark(struct stdio_mark *);
  *	no token found.
  *	The token is effectively statically allocated and will be
  *	overwritten by the next ftoken() call.
- */
-/*
- * int fgetnf(file, nfloats, floatp, binary)
+ *
+ * int iobfgetnd(file, ndouble, doublep, binary)
+ *	Read an array of doubles from a file in "ascii" or "binary" format.
+ *	Returns number of doubles successfully read, should = nfloats.
+ *	"Binary" means "Bit-Endian IEEE 64-bit floating-point" format.
+ *
+ * int iobfgetnf(file, nfloats, floatp, binary)
  *	Read an array of floats from a file in "ascii" or "binary" format.
  *	Returns number of floats successfully read, should = nfloats.
- *	"Binary" means "IEEE 32-bit floating-point" format.
+ *	"Binary" means "Big-Endian IEEE 32-bit floating-point" format.
  *
- * int fgetni(FILE *file, int nints, int *intsp, int binary)
+ * int iobfgetni(IOBFILE *file, int nints, int *intsp, int binary)
  *	Read an array of ints from a file in "ascii" or "binary" format.
  *	Returns number of ints successfully read, should = nints.
  *	"Binary" means "32-bit big-endian" integer format.
  *
- * int fgetns(FILE *file, int nshorts, short *intsp, int binary)
+ * int iobfgetns(IOBFILE *file, int nshorts, short *intsp, int binary)
  *	Read an array of shorts from a file in "ascii" or "binary" format.
  *	Returns number of shorts successfully read, should = nints.
  *	"Binary" means "16-bit big-endian" integer format.
  *
- * int fgettransform(FILE *f, int ntransforms, float *transforms, int binary)
- *	Reads 4x4 matrices from FILE.  Returns the number of matrices found,
+ * int iobfgettransform(IOBFILE *f,
+ *                      int ntransforms, float *transforms, int binary)
+ *	Reads 4x4 matrices from IOBFILE.  Returns the number of matrices found,
  *	up to ntransforms.  Returns 0 if no numbers are found.
  *	On finding incomplete matrices (not a multiple of 16 floats)
  *	returns -1, regardless of whether any whole matrices were found.
@@ -273,13 +248,41 @@ extern void		  stdio_freemark(struct stdio_mark *);
  *	Writes 4x4 matrices to FILE.  Returns the number written, i.e.
  *	ntransforms unless an error occurs.  See fgettransform() for format.
  *
- * FILE *fstropen(str, len, mode)
- *	Opens a string (buffer) as a "file".
- *	Mode is the usual "r", "w", etc. stuff.
- *	Reads should return EOF on encountering end-of-string,
- *	writes past end-of-string should also yield an error return.
- *	fclose() should be used to free the FILE after use.
  */
+
+#define	NODATA	-2	/* async_fnextc() and async_getc() return NODATA if
+			 * none is immediately available
+			 */
+
+extern int async_iobfgetc(IOBFILE *f);
+extern int async_iobfnextc(IOBFILE *f, int flags);
+extern char *iobfcontext(IOBFILE *f);
+extern char *iobfdelimtok(char *delims, IOBFILE *iobf, int flags);
+extern int iobfescape(IOBFILE *f);
+extern int iobfexpectstr(IOBFILE *iobf, char *str);
+extern int iobfexpecttoken(IOBFILE *iobf, char *str);
+extern int iobfgetnd(IOBFILE *f, int maxd, double *dv, int binary);
+extern int iobfgetnf(IOBFILE *f, int maxf, float *fv, int binary);
+extern int iobfgetni(IOBFILE *f, int maxi, int *iv, int binary);
+extern int iobfgetns(IOBFILE *f, int maxs, short *sv, int binary);
+extern int iobfgettransform(IOBFILE *iobf, int ntrans, float *trans, int bin);
+extern int iobfhasdata(IOBFILE *f);
+extern int iobfnextc(IOBFILE *f, int flags);
+extern char *iobftoken(IOBFILE *iobf, int flags);
+
+extern char *fdelimtok(char *delims, FILE *f, int flags);
+extern int fescape(FILE *f);
+extern int fexpectstr(FILE *f, char *str);
+extern int fexpecttoken(FILE *f, char *str);
+extern int fgetnd(FILE *f, int maxd, double *dv, int binary);
+extern int fgetnf(FILE *f, int maxf, float *fv, int binary);
+extern int fgetni(FILE *f, int maxi, int *iv, int binary);
+extern int fgetns(FILE *f, int maxs, short *sv, int binary);
+extern int fgettransform(FILE *f, int ntrans, float *trans, int bin);
+extern int fnextc(FILE *f, int flags);
+extern char *ftoken(FILE *f, int flags);
+extern int fputnf(FILE *, int nfloats, float *floatp, int binary);
+extern int fputtransform(FILE *, int ntrans, float *transforms, int binary);
 
 extern char *findfile(char *superfile, char *file);
 extern void filedirs(char *dirs[]);

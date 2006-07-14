@@ -300,8 +300,8 @@ PLDataDelete(PLData *PL)
   }
 }
 
-static void *beziertoPL(int sel, Bezier *bez, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *beziertoPL(int sel, Bezier *bez, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   if(PL->ap && (PL->ap->flag & APF_DICE))
     BezierDice( bez, PL->ap->dice[0], PL->ap->dice[1] );
   if(bez->mesh == NULL || bez->flag & BEZ_REMESH)
@@ -309,9 +309,9 @@ static void *beziertoPL(int sel, Bezier *bez, va_list args) {
   return GeomCall(sel, (Geom *)bez->mesh, PL);
 }
 
-static void *discgrptoPL(int sel, DiscGrp *dg, va_list args) {
+static void *discgrptoPL(int sel, DiscGrp *dg, va_list *args) {
   Geom *geom = NULL;
-  PLData *PL = va_arg(args, PLData *);
+  PLData *PL = va_arg(*args, PLData *);
   int i;
 
   if(dg->big_list == NULL || dg->big_list->el_list == NULL)
@@ -328,10 +328,10 @@ static void *discgrptoPL(int sel, DiscGrp *dg, va_list args) {
   return PL;
 }
 
-static void *insttoPL(int sel, Inst *inst, va_list args) {
+static void *insttoPL(int sel, Inst *inst, va_list *args) {
   GeomIter *it;
   Transform T;
-  PLData *PL = va_arg(args, PLData *);
+  PLData *PL = va_arg(*args, PLData *);
 
   it = GeomIterate((Geom *)inst, DEEP);
   while(NextTransform(it, T)) {
@@ -340,9 +340,9 @@ static void *insttoPL(int sel, Inst *inst, va_list args) {
   return PL;
 }
 
-static void *listtoPL(int sel, List *list, va_list args) {
+static void *listtoPL(int sel, List *list, va_list *args) {
   List *l;
-  PLData *PL = va_arg(args, PLData *);
+  PLData *PL = va_arg(*args, PLData *);
 
   for(l = list; l != NULL; l = l->cdr) {
     GeomCall(sel, l->car, PL);
@@ -390,20 +390,20 @@ static void putmesh(PLData *PL, int base, int nu, int nv, int uwrap, int vwrap) 
 }
 
 
-static void *meshtoPL(int sel, Mesh *m, va_list args) {
+static void *meshtoPL(int sel, Mesh *m, va_list *args) {
   int base;
-  PLData *PL = va_arg(args, PLData *);
+  PLData *PL = va_arg(*args, PLData *);
 
   base = PLaddverts(PL, m->nu*m->nv, m->p, m->c, m->n);
   putmesh(PL, base, m->nu, m->nv, m->flag & MESH_UWRAP, m->flag & MESH_VWRAP);
   return PL;
 }
 
-static void *ndmeshtoPL(int sel, NDMesh *ndm, va_list args) {
+static void *ndmeshtoPL(int sel, NDMesh *ndm, va_list *args) {
   int nu = ndm->mdim[0];
   int nv = ndm->meshd > 1 ? ndm->mdim[1] : 1;
   int u, v, base = -1;
-  PLData *PL = va_arg(args, PLData *);
+  PLData *PL = va_arg(*args, PLData *);
   HPointN **pp = ndm->p;
   ColorA *c = ndm->c;
 
@@ -421,8 +421,8 @@ static void *ndmeshtoPL(int sel, NDMesh *ndm, va_list args) {
 }
 
 
-static void *npolylisttoPL(int sel, NPolyList *npl, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *npolylisttoPL(int sel, NPolyList *npl, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   int base;
   NPoly *p;
   int i, vi;
@@ -448,8 +448,8 @@ static void *npolylisttoPL(int sel, NPolyList *npl, va_list args) {
   return PL;
 }
 
-static void *polylisttoPL(int sel, PolyList *pl, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *polylisttoPL(int sel, PolyList *pl, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   Poly *p;
   Vertex *v = pl->vl;
   int base, i, vi;
@@ -476,8 +476,8 @@ static void *polylisttoPL(int sel, PolyList *pl, va_list args) {
   return PL;
 }
 
-static void *quadtoPL(int sel, Quad *q, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *quadtoPL(int sel, Quad *q, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   int base, v, i;
 
   base = PLaddverts(PL, q->maxquad*4, *q->p, *q->c, *q->n);
@@ -492,8 +492,8 @@ static void *quadtoPL(int sel, Quad *q, va_list args) {
   return PL;
 }
 
-static void *skeltoPL(int sel, Skel *s, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *skeltoPL(int sel, Skel *s, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   int base, i;
   int vert, edge[2];
   Skline *l = s->l;
@@ -527,8 +527,8 @@ static void *skeltoPL(int sel, Skel *s, va_list args) {
   return PL;
 }
 
-static void *vecttoPL(int sel, Vect *v, va_list args) {
-  PLData *PL = va_arg(args, PLData *);
+static void *vecttoPL(int sel, Vect *v, va_list *args) {
+  PLData *PL = va_arg(*args, PLData *);
   int base, i, vno;
   short *vip, *cip;
   HPoint3 *vp;

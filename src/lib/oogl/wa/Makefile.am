@@ -1,11 +1,11 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers fsaparse.3 fsaparse.y fsaparse.l $(BUILT_SOURCES)
 
-noinst_LIBRARIES = libwa.a
+noinst_LTLIBRARIES = libwa.la
 
 BUILT_SOURCES = wa.lex.c wa.yacc.c y.tab.h y.tab.c lex.yy.c
 
-libwa_a_SOURCES = \
+libwa_la_SOURCES = \
     wa.lex.c wa.yacc.c \
     wa.h y.tab.h yystype.h
 

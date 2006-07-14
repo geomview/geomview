@@ -1,14 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(OOGLLIBS)  \
-	$(XFORMSLIBS) \
+LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
-	$(MATHLIB)
+	$(OOGLLIB) 
 
 EXTRA_DIST = .geomview-transformer panel.fd  transformer.1
 
 module_PROGRAMS = transformer
 transformer_SOURCES = transformer.main.c panel.c panel.h
+transformer_DEPENDENCIES = $(OOGLLIB)
+transformer_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-transformer
 

@@ -403,20 +403,20 @@ LDEFINE(merge, LVOID,
   /* parse first arg [ops]: */
   if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
       !LFROMOBJ(LSTRING)(kw, &opsname) || strcmp(opsname, "camera") != 0) {
-    OOGLSyntax(stdin, "merge: expected \"camera\", got \"%s\"", opsname);
+    OOGLSyntax(lake->streamin, "merge: expected \"camera\", got \"%s\"", opsname);
     goto parsefail;
   }
 
   /* parse 2nd arg; it's a string (id) */
   if (! LakeMore(lake,c) || (idarg = LEvalSexpr(lake)) == Lnil) {
-    OOGLSyntax(stdin,"\"merge\": expected CAM-ID");
+    OOGLSyntax(lake->streamin,"\"merge\": expected CAM-ID");
     goto parsefail;
   }
 
 
   cam = NULL;
   if(CamOps.strmin(POOL(lake), NULL, (Ref **)(void *)&cam) == 0) {
-    OOGLSyntax(stdin, "\"merge\": error reading camera");
+    OOGLSyntax(lake->streamin, "\"merge\": error reading camera");
     goto parsefail;
   }
 
@@ -445,11 +445,11 @@ LDEFINE(camwin, LVOID, "")
     if(lake == NULL) return Lt;
     camwinseq++;
     if(CamStreamIn(POOL(lake), NULL, &cam) <= 0) {
-	OOGLSyntax(stdin, "stereo: couldn't read camera");
+	OOGLSyntax(lake->streamin, "stereo: couldn't read camera");
 	return Lnil;
     }
     if(WnStreamIn(POOL(lake), NULL, &win) <= 0) {
-	OOGLSyntax(stdin, "stereo: couldn't read window");
+	OOGLSyntax(lake->streamin, "stereo: couldn't read window");
 	return Lnil;
     }
     return Lt;
@@ -565,7 +565,7 @@ int main(int argc, char *argv[])
 
     io = PoolStreamOpen("stdio", stdin, 0, &CamOps);
     PoolStreamOpen("stdio", stdout, 1, &CamOps);
-    lake = LakeDefine(stdin, stdout, io);
+    lake = LakeDefine(iobfileopen(stdin), stdout, io);
 
     LInit();
     LDefun("pick", Lpick, Hpick);
@@ -626,7 +626,7 @@ int main(int argc, char *argv[])
     }
 
     for(;;) {
-	if((c = async_fnextc(stdin, 0)) == NODATA) {
+	if((c = async_iobfnextc(lake->streamin, 0)) == NODATA) {
 	    static struct timeval tenth = { 0, 100000 }; /* 0.1 sec */
 	    select(0, NULL, NULL, NULL, &tenth);
 	} else {

@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libdim.a
+noinst_LTLIBRARIES = libdim.la
 
-libdim_a_SOURCES = \
+libdim_la_SOURCES = \
     dim.c \
     dim.h

@@ -200,6 +200,7 @@ int main(int argc, char *argv[])
     int nonlinear = 0;
     int extent = 0;
     float slicev[2];
+    IOBFILE *inf = iobfileopen(stdin);
 
 
     if(argc <= 1) {
@@ -297,7 +298,7 @@ int main(int argc, char *argv[])
 	g = GeomLoad(argv[1]);
     } else {
 	argv[1] = "standard input";
-	g = GeomFLoad(stdin, "stdin");
+	g = GeomFLoad(inf, "stdin");
     }
 
     type = GeomName(g);

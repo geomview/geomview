@@ -48,7 +48,7 @@ char hingehelpstr[] =
 
 static char *getline(char *s);
 
-hui_init()
+void hui_init(void)
 {
   char buf[120];
 
@@ -85,7 +85,7 @@ hui_init()
     FILE *hf = fopen("hingehelp", "r");
 
     if (hf == NULL) {
-      char *line, *delims = "\n";
+      char *line;
       line = getline(hingehelpstr);
       while (line) {
 	fl_add_browser_line( HelpBrowser, line );
@@ -103,7 +103,7 @@ hui_init()
   }
 }
 
-hui_main_loop()
+void hui_main_loop(IOBFILE *inf)
 {
   fd_set fdmask;
   static struct timeval timeout0 = {0, 200000};
@@ -134,11 +134,11 @@ hui_main_loop()
   while (1) {
 
     FD_ZERO(&fdmask);
-    FD_SET(fileno(stdin), &fdmask);
+    FD_SET(iobfileno(inf), &fdmask);
     timeout = timeout0;
-    select(fileno(stdin)+1, &fdmask, NULL, NULL, &timeout);
+    select(iobfileno(inf)+1, &fdmask, NULL, NULL, &timeout);
 
-    if (async_fnextc(stdin,0) != NODATA) {
+    if (async_iobfnextc(inf, 0) != NODATA) {
       Input();
     }
     fl_check_forms();

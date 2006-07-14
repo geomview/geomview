@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libtransformn.a
+noinst_LTLIBRARIES = libtransformn.la
 
-libtransformn_a_SOURCES = \
+libtransformn_la_SOURCES = \
     transformn.c \
     transformn.h

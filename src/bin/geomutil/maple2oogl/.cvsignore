@@ -5,3 +5,6 @@ sinxy.mesh
 steiner.mesh
 tetrahedra.off
 trefoil.vect
+*.lo
+*.la
+.libs

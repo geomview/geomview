@@ -216,14 +216,14 @@ LtProperties( LtLight *light, float intensity, Color *color, Point *position )
 LtLight *
   LtLoad(LtLight *li, char *name)
 {
-  FILE *f;
-  
-  if(name == NULL || (f = fopen(name, "r")) == NULL) {
+  IOBFILE *f;
+
+  if(name == NULL || (f = iobfopen(name, "r")) == NULL) {
     OOGLError(1, "Can't find light file %s: %s", name, sperror());
     return NULL;
   }
   li = LtFLoad(li, f, name);
-  fclose(f);
+  iobfclose(f);
   return li;
 }
 
@@ -236,10 +236,7 @@ LtLight *
  */
 
 LtLight *
-LtFLoad(lite, f, fname)
-    LtLight *lite;
-    FILE *f;
-    char *fname;	/* Used for error msgs, may be NULL */
+LtFLoad(LtLight *lite, IOBFILE *f, char *fname)
 {
   char *w;
   register int i;
@@ -255,16 +252,16 @@ LtFLoad(lite, f, fname)
   LtDefault(&l);
   
   for(;;) {
-    switch(fnextc(f, 0)) {
+    switch(iobfnextc(f, 0)) {
     case '<':
-      fgetc(f);
-      if(LtLoad(&l, fdelimtok("(){}", f, 0)) == NULL) return NULL;
+      iobfgetc(f);
+      if(LtLoad(&l, iobfdelimtok("(){}", f, 0)) == NULL) return NULL;
       if(!brack) goto done;
       break;
-    case '{': brack++; fgetc(f); break;
-    case '}': if(brack) { fgetc(f); } goto done;
+    case '{': brack++; iobfgetc(f); break;
+    case '}': if(brack) { iobfgetc(f); } goto done;
     default:
-      w = ftoken(f, 0);
+      w = iobftoken(f, 0);
       if(w == NULL)
 	goto done;
       
@@ -275,7 +272,7 @@ LtFLoad(lite, f, fname)
       if( i < 0) {
 	OOGLSyntax(f, "Reading light from %s: unknown keyword %s",fname,w);
 	return NULL;
-      } else if( largs[i] > 0 && (got=fgetnf(f, largs[i], v, 0)) != largs[i] ) {
+      } else if( largs[i] > 0 && (got=iobfgetnf(f, largs[i], v, 0)) != largs[i] ) {
 	OOGLSyntax(f, "Reading light from %s: \"%s\" expects %d values, got %d",
 		  fname, w, largs[i], got);
 	return NULL;
@@ -645,17 +642,17 @@ norm( color, coeff )
 LmLighting *
 LmLoad(LmLighting *lgt, char *fname)
 {
-  FILE *f = fopen(fname, "r");
+  IOBFILE *f = iobfopen(fname, "r");
   
   if(f == NULL)
     return NULL;
   lgt = LmFLoad(lgt, f, fname);
-  fclose(f);
+  iobfclose(f);
   return lgt;
 }
 
 LmLighting *
-LmFLoad(LmLighting *lgt, FILE *f, char *fname)
+LmFLoad(LmLighting *lgt, IOBFILE *f, char *fname)
 {
   char *w;
   register int i;
@@ -679,18 +676,18 @@ LmFLoad(LmLighting *lgt, FILE *f, char *fname)
   over = not = 0;
 
   for(;;) {
-    switch(fnextc(f, 0)) {
+    switch(iobfnextc(f, 0)) {
     case '<':
-      fgetc(f);
-      if(LmLoad(&l, ftoken(f, 0)) == NULL) return NULL;
+      iobfgetc(f);
+      if(LmLoad(&l, iobftoken(f, 0)) == NULL) return NULL;
       if(!brack) goto done;
       break;
-    case '{': brack++; fgetc(f); break;
-    case '}': if(brack) { fgetc(f); } goto done;
-    case '*': over = 1; fgetc(f); break;		/* 'override' prefix */
-    case '!': not = 1; fgetc(f); break;
+    case '{': brack++; iobfgetc(f); break;
+    case '}': if(brack) { iobfgetc(f); } goto done;
+    case '*': over = 1; iobfgetc(f); break;		/* 'override' prefix */
+    case '!': not = 1; iobfgetc(f); break;
     default:
-      w = ftoken(f, 0);
+      w = iobftoken(f, 0);
       if(w == NULL)
 	return lgt;
 
@@ -701,7 +698,7 @@ LmFLoad(LmLighting *lgt, FILE *f, char *fname)
       if( i < 0) {
 	OOGLError(1, "LmFLoad: %s: unknown lighting keyword %s",fname,w);
 	return NULL;
-      } else if( !not && (got=fgetnf(f, largs[i], v, 0)) != largs[i] ) {
+      } else if( !not && (got=iobfgetnf(f, largs[i], v, 0)) != largs[i] ) {
 	OOGLError(1, "LmFLoad: %s: \"%s\" expects %d values, got %d",
 		  fname, w, largs[i], got);
 	return NULL;

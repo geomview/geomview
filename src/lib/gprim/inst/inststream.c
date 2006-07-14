@@ -60,55 +60,55 @@ Geom *
 InstImport( Pool *p )
 {
     register Inst *inst = NULL;
-    FILE *file;
+    IOBFILE *file;
     char *expect = NULL;
     int c;
 
-    if(p == NULL || (file = p->inf) == NULL)
+    if(p == NULL || (file = PoolInputFile(p)) == NULL)
 	return 0;
 
     if(strcmp(GeomToken(file), "INST"))
 	return 0;
 
     for(;;) {
-	switch((c = fnextc(file, 0))) {
+	switch((c = iobfnextc(file, 0))) {
 	case EOF:
 	case CKET:
 	    goto done;
 
 	case 'l':
-	    if(fexpectstr(file, expect = "location"))
+	    if(iobfexpectstr(file, expect = "location"))
 		goto syntax;
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
-	    inst->location = getlocation( fdelimtok("(){}", file, 0) );
+	    inst->location = getlocation( iobfdelimtok("(){}", file, 0) );
 	    expect = "location [local|global|camera|ndc|screen]";
 	    if(inst->location < 0)
 		goto syntax;
 	    break;
 
 	case 'o':
-	    if(fexpectstr(file, expect = "origin"))
+	    if(iobfexpectstr(file, expect = "origin"))
 		goto syntax;
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
 
 	    expect = "origin [local|global|camera|ndc|screen] X Y Z";
-	    inst->origin = getlocation( fdelimtok("(){}", file, 0) );
+	    inst->origin = getlocation( iobfdelimtok("(){}", file, 0) );
 	    if(inst->origin < 0)
 		goto syntax;
-	    if(fgetnf(file, 3, &inst->originpt.x, 0) < 3)
+	    if(iobfgetnf(file, 3, &inst->originpt.x, 0) < 3)
 		goto syntax;
 	    break;
 	    
 	    
 	case 'u':
-	    if(fexpectstr(file, expect = "unit"))
+	    if(iobfexpectstr(file, expect = "unit"))
 		goto syntax;
 	    goto geom;
 
 	case 'g':
-	    if(fexpectstr(file, expect = "geom"))
+	    if(iobfexpectstr(file, expect = "geom"))
 		goto syntax;
 
 	  geom:
@@ -125,10 +125,10 @@ InstImport( Pool *p )
 	case 't':		/* tlist ... or transform ... */
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
-	    fgetc(file);
-	    switch((c = fgetc(file))) {
+	    iobfgetc(file);
+	    switch((c = iobfgetc(file))) {
 	    case 'l':
-		if(fexpectstr(file, (expect = "tlist")+2)) 	/* "tlist" */
+		if(iobfexpectstr(file, (expect = "tlist")+2)) 	/* "tlist" */
 		    goto syntax;
 	     transforms:
 		if(inst == NULL)
@@ -142,9 +142,9 @@ InstImport( Pool *p )
 		break;
 
 	    case 'r':
-		if(fexpectstr(file, (expect = "transform")+2))		/* "transform" */
+		if(iobfexpectstr(file, (expect = "transform")+2))		/* "transform" */
 		    goto syntax;
-		if(fexpectstr(file, "s") == 0)	/* transforms = tlist */
+		if(iobfexpectstr(file, "s") == 0)	/* transforms = tlist */
 		    goto transforms;
 		if(inst == NULL)
 		    inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);

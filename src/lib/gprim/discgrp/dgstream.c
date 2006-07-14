@@ -135,12 +135,9 @@ token_from_string(char *s, keytokenpair *kl, int n)
 /* following gets the next %keyword from file.
    returns 0 if EOF, otherwise 1 */
 static int
-get_keyword(fp, keyword, fname)
-FILE *fp;
-char keyword[];
-char *fname;
+get_keyword(IOBFILE *fp, char keyword[], char *fname)
 {
-	switch(fnextc(fp, 0)) {
+	switch(iobfnextc(fp, 0)) {
 	case EOF:
 	    return 0;
 
@@ -148,8 +145,8 @@ char *fname;
 	    return 0;
 
 	case '(':
-	    fgetc(fp);
-	    sprintf(keyword, "%.31s", fdelimtok(delims, fp, 0));
+	    iobfgetc(fp);
+	    sprintf(keyword, "%.31s", iobfdelimtok(delims, fp, 0));
 	    return 1;
 
 	default:
@@ -160,27 +157,26 @@ char *fname;
 }
 
 static int
-get_matching_parenthesis(FILE *fp, char *fname)
+get_matching_parenthesis(IOBFILE *fp, char *fname)
 {
-	int t = fnextc(fp, 0);
+	int t = iobfnextc(fp, 0);
 	if (t == EOF) return(0);
 	if (t != ')')	{
 	        OOGLSyntax(fp,"Reading discrete group from \"%s\": expected matching )", fname);
 	        return(0);
 		}
-	getc(fp);
+	iobfgetc(fp);
 	return(1);
 }
 
-static FILE *
-included_file(fp)
-FILE *fp;
+static IOBFILE *
+included_file(IOBFILE *fp)
 {
 	char *name;
 
-	if (fnextc(fp, 0) == '<') /* read from file */
+	if (iobfnextc(fp, 0) == '<') /* read from file */
 	    {
-	    name = fdelimtok(delims, fp, 0);
+	    name = iobfdelimtok(delims, fp, 0);
 	    OOGLError(1,"Discrete groups: including files not implemented");
 	    return(NULL);
 	    }
@@ -200,7 +196,7 @@ parse_group_name(char *gname)
     static ColorA white = {1,1,1,.75};
 
 static void
-get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, FILE *fp, char *fname)
+get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, IOBFILE *fp, char *fname)
 {
 	int i;
 	char *name, c;
@@ -213,11 +209,11 @@ get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, FILE *fp, char *fname)
 	    dgellist->el_list[i].attributes = 0;
 	    dgellist->el_list[i].color = white;
 	    dgellist->el_list[i].inverse = NULL;
-            c = fnextc(fp, 0);
+            c = iobfnextc(fp, 0);
             /* get the name if it's alphabetic */
             if ( c >= 'A' && c <= 'z' )
         	{
-    	    	        name = fdelimtok(delims, fp, 0);
+    	    	        name = iobfdelimtok(delims, fp, 0);
                 if (strlen(name) > DG_WORDLENGTH) {
         	    OOGLSyntax(fp,"Reading discrete group from \"%s\": Words limited to length %d", fname, DG_WORDLENGTH);
          	    return;
@@ -240,8 +236,10 @@ get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, FILE *fp, char *fname)
 		    sl2c_matrix mylf;
 		    proj_matrix mypm;
 		    int k,m;
- 		    for (k=0; k<2; ++k) for (m=0; m<2; ++m)
-		        fscanf(fp,"%lf%lf",&mylf[k][m].real, &mylf[k][m].imag);
+ 		    for (k=0; k<2; ++k) for (m=0; m<2; ++m) {
+		      iobfgetnd(fp, 1, &mylf[k][m].real, 0);
+		      iobfgetnd(fp, 1, &mylf[k][m].imag, 0);
+		    }
 		    sl2c_to_proj(mylf, mypm);
  		    for (k=0; k<4; ++k) for (m=0; m<4; ++m)
 			dgellist->el_list[i].tform[k][m] = mypm[k][m];
@@ -249,7 +247,7 @@ get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, FILE *fp, char *fname)
     	            break;
 
                 default:
-                    if (fgettransform(fp,1,(float *)dgellist->el_list[i].tform,0) != 1) {
+                    if (iobfgettransform(fp,1,(float *)dgellist->el_list[i].tform,0) != 1) {
         	        OOGLSyntax(fp,errfmt,fname,"Error reading generator");
         	        return;
         		}
@@ -267,10 +265,11 @@ DiscGrpImport(Pool *p)
 	char *name, *fname, t;
 	char keyword[DG_KEYWORDSIZE];
 	DiscGrp *discgrp;
-	FILE *wafp, *fp;
+	IOBFILE *fp;
+	FILE *wafp;
 	char *expect;
 
-    	if(p == NULL || (fp = p->inf) == NULL)
+    	if(p == NULL || (fp = PoolInputFile(p)) == NULL)
         	return 0;
 
 	/* check for 'DISCGRP' at head of file */
@@ -278,7 +277,7 @@ DiscGrpImport(Pool *p)
 		return(NULL);
 
 	/* now the parentheses begin */
-	if ((t = fnextc(fp, 0)) != '(')
+	if ((t = iobfnextc(fp, 0)) != '(')
 	    return(NULL);
 
 	discgrp = (DiscGrp*)GeomCreate("discgrp",CR_END);
@@ -288,7 +287,7 @@ DiscGrpImport(Pool *p)
 	    switch ( token_from_string(keyword, keytokenlist,sizeof(keytokenlist)/sizeof(keytokenpair) ))	{
 
 		case DG_WAFILE:
-		    name = fdelimtok(delims, fp, 0);
+		    name = iobfdelimtok(delims, fp, 0);
 		    fname = findfile(PoolName(p), name);
 		    if(fname == NULL || (wafp = fopen(fname, "rb")) == NULL) {
 			OOGLSyntax(fp,
@@ -302,26 +301,26 @@ DiscGrpImport(Pool *p)
 		    break;
 
 		case DG_DSPYATTR:
-		    name = fdelimtok(delims, fp, 0);
+		    name = iobfdelimtok(delims, fp, 0);
 		    discgrp->flag |= token_from_string(name, dspyattr_list,sizeof(dspyattr_list)/sizeof(keytokenpair));
 		    break;
 
 		case DG_ATTRIBUTE:
 		case DG_MODEL:
-		    name = fdelimtok(delims, fp, 0);
+		    name = iobfdelimtok(delims, fp, 0);
 		    discgrp->attributes |= token_from_string(name, attr_list,sizeof(attr_list)/sizeof(keytokenpair));
 		    break;
 
 		case DG_COMMENT:
-		    discgrp->comment = strdup(fdelimtok(delims, fp, 0));
+		    discgrp->comment = strdup(iobfdelimtok(delims, fp, 0));
 		    break;
 
 		case DG_MATRIXGROUP:
-		    parse_group_name(fdelimtok(delims, fp, 0));
+		    parse_group_name(iobfdelimtok(delims, fp, 0));
 		    break;
 
 		case DG_SCALE:
-		    if(fgetnf(fp, 1, &discgrp->scale, 0) <= 0) {
+		    if(iobfgetnf(fp, 1, &discgrp->scale, 0) <= 0) {
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid scale");
 			return(NULL);
 			}
@@ -330,35 +329,35 @@ DiscGrpImport(Pool *p)
 
  		case DG_C2M:
 		    discgrp->c2m = (float (*)[4])OOGLNewNE(float, 16, "Transform");
-                    if (fgettransform(fp,1,(float *)discgrp->c2m,0) != 1) {
+                    if (iobfgettransform(fp,1,(float *)discgrp->c2m,0) != 1) {
         	        OOGLSyntax(fp,errfmt,p->poolname,"Error reading cam2model");
         	        return(NULL);
 			}
 		    break;
 
 		case DG_ENUMDEPTH:
-		    if(fgetni(fp, 1, &discgrp->enumdepth, 0) <= 0) {
+		    if(iobfgetni(fp, 1, &discgrp->enumdepth, 0) <= 0) {
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid enumdepth");
 			return(NULL);
 			}
 		    break;
 
 		case DG_ENUMDIST:
-		    if(fgetnf(fp, 1, &discgrp->enumdist, 0) <= 0) {
+		    if(iobfgetnf(fp, 1, &discgrp->enumdist, 0) <= 0) {
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid enumdist");
 			return(NULL);
 			}
 		    break;
 
 		case DG_DRAWDIST:
-		    if(fgetnf(fp, 1, &discgrp->drawdist, 0) <= 0) {
+		    if(iobfgetnf(fp, 1, &discgrp->drawdist, 0) <= 0) {
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid drawdist");
 			return(NULL);
 			}
 		    break;
 
 		case DG_CPOINT:
-		    if(fgetnf(fp, 4, (float *)&discgrp->cpoint, 0) <= 0) {
+		    if(iobfgetnf(fp, 4, (float *)&discgrp->cpoint, 0) <= 0) {
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid Cpoint");
 			return(NULL);
 			}
@@ -381,7 +380,7 @@ DiscGrpImport(Pool *p)
 	     	    break;
 
 		case DG_GROUPNAME:
-		    discgrp->name = strdup(fdelimtok(delims, fp, 0));
+		    discgrp->name = strdup(iobfdelimtok(delims, fp, 0));
 		    break;
 
 		case DG_GENS:
@@ -412,7 +411,7 @@ DiscGrpImport(Pool *p)
 		    break;
 
 		case DG_DIMN:
-		    if(fgetni(fp, 1, &discgrp->dimn, 0) <= 0 ||
+		    if(iobfgetni(fp, 1, &discgrp->dimn, 0) <= 0 ||
 						    discgrp->dimn > 4) 	{
 			OOGLSyntax(fp,errfmt, p->poolname, "Invalid Dimension");
 			return(NULL);
@@ -423,7 +422,7 @@ DiscGrpImport(Pool *p)
 		case DG_NGENS:
 		    {
 		    int ngens;
-		    if(fgetni(fp, 1, &ngens, 0) <= 0 || ngens <= 0) {
+		    if(iobfgetni(fp, 1, &ngens, 0) <= 0 || ngens <= 0) {
 			OOGLSyntax(fp,errfmt,p->poolname, "Invalid generator count");
 			return(NULL);
 			}
@@ -437,7 +436,7 @@ DiscGrpImport(Pool *p)
 		case DG_NELS:
 		    {
 		    int nels;
-		    if(fgetni(fp, 1, &nels, 0) <= 0 || nels <= 0) {
+		    if(iobfgetni(fp, 1, &nels, 0) <= 0 || nels <= 0) {
 			OOGLSyntax(fp,errfmt,p->poolname, "Invalid generator count");
 			return(NULL);
 			}

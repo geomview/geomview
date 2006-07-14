@@ -136,7 +136,7 @@ void    CamFSave(Camera *, FILE *, char *);
 
 /* Load from file */
 Camera  *CamLoad(Camera *, char *);
-Camera  *CamFLoad(Camera *, FILE *, char *);
+Camera  *CamFLoad(Camera *, IOBFILE *, char *);
 
 /************************************************************************
  * The following procedures are on death row; they will be taken out    *

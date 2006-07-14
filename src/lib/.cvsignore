@@ -1,1 +1,7 @@
+.dirstamp
+.libs
 Makefile Makefile.in .deps
+libgeomview.la
+*.lo
+*.la
+.libs

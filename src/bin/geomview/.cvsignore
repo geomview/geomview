@@ -1,2 +1,5 @@
 Makefile Makefile.in .deps
 clang.c clang.h
+*.lo
+*.la
+.libs

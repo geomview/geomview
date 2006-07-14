@@ -46,14 +46,14 @@ extern void EraseHeadAndTail(void);
 extern void EraseHeadTail(char *xformname);
 extern void EraseHead(void);
 extern void StartNewVector(void);
-extern void LangInit(FILE *fp);
+extern void LangInit(IOBFILE *inf, FILE *outf);
 extern void progn(void);
 extern void ShowTailAt(Point3 *p);
 extern void ShowHeadAt(Point3 *p, Point3 *prev);
 extern void Geometry(void);
 extern void endprogn(void);
 extern void gui_init(void);
-extern void gui_main_loop(void);
+extern void gui_main_loop(IOBFILE *inf);
 
 void NewPLine(void)
 {
@@ -71,10 +71,14 @@ void NewLine(void)
   }
 }
 
-void Initialize(void)
+IOBFILE *Initialize(void)
 {
-  LangInit(stdout);
+  IOBFILE *iobf = iobfileopen(stdin);
+
+  LangInit(iobf, stdout);
   NewPLine();
+
+  return iobf;
 }
 
 void
@@ -123,9 +127,11 @@ void Close(void)
 
 int main(int argc, char *argv[])
 {
-  Initialize();
+  IOBFILE *iobf;
+  
+  iobf = Initialize();
   gui_init();
-  gui_main_loop();
+  gui_main_loop(iobf);
   return 0;
 }
 

@@ -24,8 +24,7 @@
 #include <math.h>
 
 typedef struct {
-	double	real,
-			imag;
+	double real, imag;
 } complex;
 
 typedef complex sl2c_matrix[2][2];

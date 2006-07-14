@@ -1,6 +1,6 @@
 INCLUDES = $(default_includes)
 
-LDADD = $(OOGLLIBS) $(SOCKETLIBS) $(MATHLIB)
+LDADD = $(OOGLLIB)
 
 EXTRA_DIST = bdy.1 drawbdy.sh
 
@@ -8,6 +8,8 @@ man_MANS = bdy.1
 
 bin_PROGRAMS = bdy
 bdy_SOURCES = bdy.c
+bdy_DEPENDENCIES = $(OOGLLIB)
+bdy_LDFLAGS = -rpath $(libdir)
 
 module_SCRIPTS = drawbdy
 module_DATA = .geomview-drawbdy

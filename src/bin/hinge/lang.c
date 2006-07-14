@@ -119,9 +119,9 @@ handle_pick(char *name, HPoint3 *got,
 }
 
 
-LangInit()
+void LangInit(IOBFILE *fromgv)
 {
-  inlake = LakeDefine(stdin, stdout, NULL);
+  inlake = LakeDefine(fromgv, stdout, NULL);
 
   LInit();
   LDefun("pick",  Lpick, Hpick);

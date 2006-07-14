@@ -1,15 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(OOGLLIBS) 	\
-	$(XFORMSLIBS)	\
+LDADD =	$(XFORMSLIBS)	\
 	$(XLIBS)	\
-	$(SOCKETLIBS) \
-	$(MATHLIB)
+	$(OOGLLIB)
 
 EXTRA_DIST = .geomview-stereo help.txt sterui.fd
 
 module_PROGRAMS = stereo
 stereo_SOURCES = stereo.c sterui.c sterui.h help.h
+stereo_DEPENDENCIES = $(OOGLLIB)
+stereo_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-stereo
 

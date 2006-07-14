@@ -42,8 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 
 PolyList *
-LincolnFLoad(inf)
-	FILE *inf;
+LincolnFLoad(IOBFILE *inf)
 {	
 	struct data	header;
 	struct vertex	*vertex_list;
@@ -57,18 +56,18 @@ LincolnFLoad(inf)
 	Vertex	*v_list;
 	PolyList *new;
 
-	if(fnextc(inf,0) != '\0')	/* Demand null title string */
+	if(iobfnextc(inf,0) != '\0')	/* Demand null title string */
 	    return NULL;
-	if(fread(&header,sizeof(struct data),1,inf) <= 0)
+	if(iobfread(&header,sizeof(struct data),1,inf) <= 0)
 		return NULL;
 
 	vertex_list = OOGLNewNE(struct vertex, header.nvertices, "Lincoln vertices");
 	edge_list = OOGLNewNE(struct edge, header.nedges, "Lincoln edges");
 	face_list = OOGLNewNE(struct face, header.nfaces, "Lincoln faces");
 
-	if(fread(vertex_list,sizeof(struct vertex),header.nvertices,inf) <= 0
-	  || fread(edge_list,sizeof(struct edge),header.nedges,inf) <= 0
-	  || fread(face_list,sizeof(struct face),header.nfaces,inf) <= 0)
+	if(iobfread(vertex_list,sizeof(struct vertex),header.nvertices,inf) <= 0
+	  || iobfread(edge_list,sizeof(struct edge),header.nedges,inf) <= 0
+	  || iobfread(face_list,sizeof(struct face),header.nfaces,inf) <= 0)
 		return NULL;
 
 	for (vp = vertex_list; vp<vertex_list+header.nvertices; vp++) {

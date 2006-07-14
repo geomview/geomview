@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = liblist.a
+noinst_LTLIBRARIES = liblist.la
 
-liblist_a_SOURCES = \
+liblist_la_SOURCES = \
     listclass.c listcreate.c listdraw.c listmisc.c listpick.c listsphere.c liststream.c \
     list.h listP.h

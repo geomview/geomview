@@ -1,0 +1,17 @@
+To create the missing files when pulling geomview directly from CVS
+you have to install a recent autoconf/automake-combo. The
+following versions will do, but other _might_ do as well:
+
+autoconf-2.59
+automake-1.9
+libtool-1.5.22
+
+If you have to upgrade to a more recent autoconf/automake version then
+you can install autoconf _and_ automake (both of them) locally. Then
+just change to the top-level source directory and issue the command:
+
+autoreconf --install
+
+That's all.
+
+cH

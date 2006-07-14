@@ -28,7 +28,7 @@ void ShowTailAt(Point3 *p);
 void EraseHeadAndTail();
 void DeleteHeadAndTail();
 void StartNewVector();
-void LangInit(FILE *fp);
+void LangInit(IOBFILE *inf, FILE *fp);
 void Input();
 
 #endif /* ! _LANG_H_ */

@@ -13,6 +13,8 @@ endif
 # with the main Geomview distribution, though, so we define
 # DIST_SUBDIRS without $(src_bin_module_subdirs).
 
-DIST_SUBDIRS = geomview togeomview geomutil animate $(XFORMS_SUBDIRS)
+DIST_SUBDIRS = geomview \
+ togeomview geomutil animate hinge flythrough cplxview \
+ $(XFORMS_SUBDIRS)
 
 SUBDIRS = $(DIST_SUBDIRS) $(src_bin_module_subdirs)

@@ -45,17 +45,17 @@ static ColorA	*colormap;
 static void
 LoadCmap(char *file)
 {
-    FILE *fp;
+    IOBFILE *fp;
     colormap = OOGLNewNE(ColorA, 256, "PolyList colormap");
     if((file = findfile(NULL, file)) != NULL &&
-			   (fp = fopen(file,"r")) != NULL) {
-	fgetnf(fp, SIZEOF_CMAP*4, (float *)colormap, 0);
-	fclose(fp);
+       (fp = iobfopen(file,"r")) != NULL) {
+	iobfgetnf(fp, SIZEOF_CMAP*4, (float *)colormap, 0);
+	iobfclose(fp);
     }
 }
 
 NPolyList *
-NPolyListFLoad(FILE *file, char *fname)
+NPolyListFLoad(IOBFILE *file, char *fname)
 {
     register NPolyList *pl;
     int edges;
@@ -92,15 +92,15 @@ NPolyListFLoad(FILE *file, char *fname)
     }
     if(strcmp(token, "nOFF") == 0) {
 	headerseen = 1;
-	if(fgetni(file, 1, &pdim, binary) == 0) {
+	if(iobfgetni(file, 1, &pdim, binary) == 0) {
 	    OOGLSyntax(file, "nOFF %s: expected dimension", fname);
 	    return NULL;
 	}
-	if(fnextc(file, 1) == 'B' && fexpectstr(file, "BINARY") == 0) {
+	if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
 	    binary = 1;
-	    if(fnextc(file, 1) != '\n')	/* Expect \n after BINARY */
+	    if(iobfnextc(file, 1) != '\n')	/* Expect \n after BINARY */
 		return NULL;
-	    (void) getc(file);		/* Toss \n */
+	    (void) iobfgetc(file);		/* Toss \n */
 	}
     } else {
 	return NULL;
@@ -121,9 +121,9 @@ NPolyListFLoad(FILE *file, char *fname)
     pl->pdim = pdim + (dimn == 4 ? 0 : 1);
 
 
-    if(fgetni(file, 1, &pl->n_verts, binary) <= 0 ||
-       fgetni(file, 1, &pl->n_polys, binary) <= 0 ||
-       fgetni(file, 1, &edges, binary) <= 0) {
+    if(iobfgetni(file, 1, &pl->n_verts, binary) <= 0 ||
+       iobfgetni(file, 1, &pl->n_polys, binary) <= 0 ||
+       iobfgetni(file, 1, &edges, binary) <= 0) {
 		if(headerseen)
 		    OOGLSyntax(file, "PolyList %s: Bad vertex/face/edge counts", fname);
 		goto bogus;
@@ -137,11 +137,11 @@ NPolyListFLoad(FILE *file, char *fname)
 	pl->st = OOGLNewNE(float, 2*pl->n_verts, "NPolyListFLoad texture coords");
 
     for(v = pl->v, i = 0; i < pl->n_verts; v += pl->pdim, i++) {
-	if(fgetnf(file, pdim, v, binary) < pdim ||
+	if(iobfgetnf(file, pdim, v, binary) < pdim ||
 	   ((flags & PL_HASVCOL) &&
-		fgetnf(file, 4, (float *)&pl->vcol[i], binary) < 4) ||
+		iobfgetnf(file, 4, (float *)&pl->vcol[i], binary) < 4) ||
 	   ((flags & PL_HASST) &&
-		fgetnf(file, 2, (float *)&pl->st[2*i], binary) < 2))
+		iobfgetnf(file, 2, (float *)&pl->st[2*i], binary) < 2))
 	{
 		OOGLSyntax(file, "nOFF %s: Bad vertex %d (of %d)",
 			fname, i, pl->n_verts);
@@ -156,7 +156,7 @@ NPolyListFLoad(FILE *file, char *fname)
 	register int k,index;
 
 	p = &pl->p[i];
-	if(fgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {
+	if(iobfgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {
 	   OOGLSyntax(file, "PolyList %s: bad %d'th polygon (of %d)",
 		fname, i, pl->n_polys);
 	   goto bogus_face;
@@ -169,7 +169,7 @@ NPolyListFLoad(FILE *file, char *fname)
 	for(k = 0; k < p->n_vertices; k++) {
 	    int index;
 
-	    if(fgetni(file, 1, &index, binary) <= 0 ||
+	    if(iobfgetni(file, 1, &index, binary) <= 0 ||
 	       index < 0 || index >= pl->n_verts) {
 		    OOGLSyntax(file, "PolyList: %s: bad index %d on %d'th polygon (of %d)", 
 			fname, index, i, p->n_vertices);
@@ -185,13 +185,13 @@ NPolyListFLoad(FILE *file, char *fname)
 	if(binary) {
 	    int ncol;
 
-	    if(fgetni(file, 1, &ncol, 1) <= 0
-	       || fgetnf(file, ncol, (float *)&p->pcol, 1) < ncol)
+	    if(iobfgetni(file, 1, &ncol, 1) <= 0
+	       || iobfgetnf(file, ncol, (float *)&p->pcol, 1) < ncol)
 		goto bogus_face_color;
 	    k = ncol;
 	} else {
-	    for(k = 0; k < 4 && fnextc(file, 1) != '\n'; k++) {
-		if(fgetnf(file, 1, ((float *)(&p->pcol))+k, 0) < 1)
+	    for(k = 0; k < 4 && iobfnextc(file, 1) != '\n'; k++) {
+		if(iobfgetnf(file, 1, ((float *)(&p->pcol))+k, 0) < 1)
 		    goto bogus_face_color;
 	    }
 	}
@@ -240,3 +240,9 @@ NPolyListFLoad(FILE *file, char *fname)
     GeomDelete((Geom *)pl);
     return NULL;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4
+ * End: ***
+ */

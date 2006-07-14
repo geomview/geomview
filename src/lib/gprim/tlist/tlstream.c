@@ -60,7 +60,7 @@ TlistImport( Pool *p )
     float *tp;
     float preread = 0;
     int got_preread = 0;
-    FILE *file;
+    IOBFILE *file;
     Transform TT[100];
 
 
@@ -80,20 +80,20 @@ TlistImport( Pool *p )
 	got_preread = 1;
     }
     VVINIT(vinst, Geom *, 7);
-    if (sawheader && (fnextc(file, 1) == 'B')) {
-	if(fexpectstr(file, "BINARY")) return NULL;
-	if(fnextc(file, 1) == '\n') (void) fgetc(file);
+    if (sawheader && (iobfnextc(file, 1) == 'B')) {
+	if(iobfexpectstr(file, "BINARY")) return NULL;
+	if(iobfnextc(file, 1) == '\n') (void) iobfgetc(file);
 
 	/*
 	 * TLIST BINARY ... \n
 	 * <number of tlist elements as a 32-bit int>
 	 * <that many 4x4 matrices>
 	 */
-	if(fgetni(file, 1, &nel, binary) != 1 || nel < 0 || nel > 9999999)
+	if(iobfgetni(file, 1, &nel, binary) != 1 || nel < 0 || nel > 9999999)
 	    return NULL;
 	VVINIT(v, Transform, 1);
 	vvneeds(&v, nel);
-	if((VVCOUNT(v) = fgettransform(file, nel,
+	if((VVCOUNT(v) = iobfgettransform(file, nel,
 				(float *)VVEC(v,Transform), 1)) < nel) {
 	    vvfree(&v);
 	    OOGLError(0, "Reading binary TLIST from \"%s\": got only %d of %d transforms expected",
@@ -106,7 +106,7 @@ TlistImport( Pool *p )
     }
 
     for(;;) {
-	switch(fnextc(file, 0)) {
+	switch(iobfnextc(file, 0)) {
 	case ':': case '<': case '@': case 'd':
 	tfmobject:
 	    if(TransStreamIn(p, &tfmhandle, tfm)) {
@@ -115,10 +115,10 @@ TlistImport( Pool *p )
 	    }
 	    break;
 
-	case CBRA: fgetc(file); brack++; break;
+	case CBRA: iobfgetc(file); brack++; break;
 	case CKET:
 	    if(--brack >= 0) {
-		fgetc(file);
+		iobfgetc(file);
 		break;
 	    }
 	    /* If brackets matched, fall into... */
@@ -127,10 +127,10 @@ TlistImport( Pool *p )
 		goto done;
 
 	case 't':
-	    fgetc(file);
-	    if(fexpectstr(file, /*t*/"ransform") == 0)
+	    iobfgetc(file);
+	    if(iobfexpectstr(file, /*t*/"ransform") == 0)
 		goto tfmobject;
-	    if(fexpecttoken(file, /*t*/"list"))
+	    if(iobfexpecttoken(file, /*t*/"list"))
 		goto syntax;
 	    if(!GeomStreamIn(p, &subtlisthandle, &subtlist)) {
 		OOGLSyntax(file, errfmt, PoolName(p), "failed reading 'tlist'");
@@ -140,7 +140,7 @@ TlistImport( Pool *p )
 
 	case 'u':
 	case 'g':
-	    if(fexpecttoken(file, "unit") && fexpecttoken(file, "geom"))
+	    if(iobfexpecttoken(file, "unit") && iobfexpecttoken(file, "geom"))
 		goto syntax;
 	    /*
 	     * "GROUP" Compatibility mode -- create an Inst comprising our
@@ -158,10 +158,10 @@ TlistImport( Pool *p )
 	    if(got_preread) {
 		got_preread = 0;
 		*tp++ = preread;
-		if(fgetnf(file, 15, tp, 0) == 15)
+		if(iobfgetnf(file, 15, tp, 0) == 15)
 		    break;
 	    } else {
-		if(fgettransform(file, 1, tp, 0) > 0)
+		if(iobfgettransform(file, 1, tp, 0) > 0)
 		    break;
 	    }
 	    /* Else fall into... */

@@ -718,11 +718,11 @@ LDEFINE(write, LVOID,
     if (PoolOutputFile(p)) {
       op = p;
     } else {
-      op = PoolStreamTemp(fname, stdout, 1, &CommandOps);
+      op = PoolStreamTemp(fname, NULL,  stdout, 1, &CommandOps);
       temppool = 1;
     }
   } else {
-    op = PoolStreamTemp(fname, NULL, 1, &CommandOps);
+    op = PoolStreamTemp(fname, NULL, NULL, 1, &CommandOps);
     temppool = 1;
   }
 

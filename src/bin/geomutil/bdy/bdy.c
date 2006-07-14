@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
   if (argc > 1) sscanf(argv[1], "%f", &p);
   else p = 0.0;
 
-  o = GeomFLoad(stdin, NULL);
+  o = GeomFLoad(iobfileopen(stdin), NULL);
   v = Bdy(o, p);
 
   GeomFSave(v, stdout, NULL);

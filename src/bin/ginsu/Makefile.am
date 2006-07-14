@@ -1,14 +1,15 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(top_builddir)/src/lib/fexpr/libfexpr.a                    \
-	$(XFORMSLIBS)	\
+LDADD = $(XFORMSLIBS)	\
 	$(XLIBS)	\
-	-lm
+	$(OOGLLIB)
 
 EXTRA_DIST = .geomview-ginsu ginsu.1 ginsuF.fd
 
 module_PROGRAMS = ginsu
 ginsu_SOURCES = ginsu.c ginsuF.c ginsuF.h
+ginsu_DEPENDENCIES = $(OOGLLIB)
+ginsu_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-ginsu
 

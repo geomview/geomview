@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.11 2006/06/25 16:46:14 lloydwood Exp $
+$Id: INSTALL.Geomview,v 1.12 2006/07/14 09:57:52 rotdrop Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -40,10 +40,10 @@ option to 'configure'.  For example, to install into
 subdirectories of the prefix directory called 'bin', 'info', and
 'data'.
 
-Geomview requires both Motif and OpenGL; you need to make sure these
-are installed on your system before you can compile (or run) Geomview.
-Both of these are commercial software packages but Geomview will also
-work with their free counterparts Lesstif or OpenMotif
+Geomview requires Motif and benefits from OpenGL; you need to make
+sure Motif is installed on your system before you can compile (or run)
+Geomview.  Both of these are commercial software packages but Geomview
+will also work with their free counterparts Lesstif or OpenMotif
 (www.lesstif.org or www.openmotif.org) and Mesa (www.mesa3d.org) [But
 Linux users see the comments in the 'Linux' section below about
 Lesstif/OpenMotif.]  If either of these is installed on your system in
@@ -65,6 +65,8 @@ where to find them:
 	    about this option, try configuring without it.
 	    'configure' will abort with an error if your compiler
 	    can't find the appropriate header files and libraries.
+            You can use `--without-opengl' or `--with-opengl=no' to
+            disable the use of OpenGL.
 
 	--with-motif=DIR
 	    You can use this option if the Motif header files and

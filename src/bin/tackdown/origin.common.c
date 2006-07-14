@@ -64,7 +64,7 @@ static void NonNeutralState() {
 void internalsInit() {
   uiSetTargetname("targetgeom");
 
-  infile = PoolStreamTemp(NULL, stdin, 0, NULL); 
+  infile = PoolStreamTemp(NULL, iobfileopen(stdin), NULL, 0, NULL); 
 
   NeutralState();
 }
@@ -104,7 +104,7 @@ static void DeleteAxes() {
 void internalsDone() {
   Geom *g;
   Transform w2axes, w2target, axes2w, axes2target;
- 
+
   printf("(echo \"{ \")");
   printf("(write transform - axes.%s world)", targetname);
   printf("(echo } )");
@@ -120,7 +120,7 @@ void internalsDone() {
   printf("(write geometry - %s self)", targetname);
   printf("(echo } )");
   fflush(stdout);
-  g = GeomFLoad(stdin, NULL);
+  g = GeomFLoad(PoolInputFile(infile), NULL);
   if (g == NULL) 
     uiError("Unable to find", "target object.  Perhaps", 
 	    "it has been deleted.");

@@ -47,26 +47,26 @@ ListImport( Pool *p )
     int c, prevc = 0;
     int brack = 0;
     int any = 0;
-    FILE *file;
+    IOBFILE *file;
 
-    if(p == NULL || (file = p->inf) == NULL)
+    if(p == NULL || (file = PoolInputFile(p)) == NULL)
 	return NULL;
 
     if(strcmp(GeomToken(file), "LIST") != 0)
 	return NULL;
 
-    while((c = fnextc(file, 0)) != EOF) {
+    while((c = iobfnextc(file, 0)) != EOF) {
 	switch(c) {
 	case ';':
 	case ')':
 	    goto done;
 	case CBRA:
 	    brack++;
-	    fgetc(file);
+	    iobfgetc(file);
 	    continue;
 	case CKET:
 	    if(--brack < 0) goto done;
-	    fgetc(file);
+	    iobfgetc(file);
 	    if(prevc == CBRA) {
 		/* Interpret "{ }" as a NULL entry in a list.  Leave it
 		 * there as a placeholder -- could be deliberate.

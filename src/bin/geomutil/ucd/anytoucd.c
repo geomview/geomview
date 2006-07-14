@@ -298,7 +298,7 @@ int main(int argc, char **argv)
     Transform id;
 
     TmIdentity(id);
-    thisgeom = GeomFLoad(stdin,NULL);
+    thisgeom = GeomFLoad(iobfileopen(stdin), NULL);
     thispl = (PolyList *)AnyToPL(thisgeom, id);
     newpl = (PolyList *)GeomCopy((Geom *)thispl);
     if (initstack() == 0) 

@@ -36,7 +36,7 @@ extern NPolyList *NPolyListDraw( NPolyList * );
 extern BBox	*NPolyListBound( NPolyList *, Transform );
 extern NPolyList *NPolyListEvert( NPolyList * );
 extern NPolyList *NPolyListLoad( char * );	/* Loads "off" files */
-extern NPolyList *NPolyListFLoad( FILE *, char *fname );
+extern NPolyList *NPolyListFLoad( IOBFILE *, char *fname );
 extern char    *NPolyListName( void );
 extern NPolyList *NPolyListFSave( NPolyList *, FILE *, char * );
 

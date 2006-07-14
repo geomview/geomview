@@ -57,7 +57,7 @@ int
 CamStreamIn(Pool *p, Handle **hp, Camera **camp)
 {
   char *w, *raww;
-  FILE *f;
+  IOBFILE *f;
   Handle *h = NULL;
   Handle *hname = NULL;
   Camera *cam = NULL;
@@ -96,12 +96,12 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
     return 0;
 
   for(;;) {
-    switch(i = fnextc(f, 0)) {
+    switch(i = iobfnextc(f, 0)) {
     case '<':
     case ':':
     case '@':
-	fgetc(f);
-	w = fdelimtok("(){}", f, 0);
+      iobfgetc(f);
+	w = iobfdelimtok("(){}", f, 0);
 	if(i == '<' && HandleByName(w, &CamOps) == NULL) {
 	    w = findfile(PoolName(p), raww = w);
 	    if(w == NULL) {
@@ -115,14 +115,14 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
 	if(!brack) goto done;
 	break;
 
-    case '{': brack++; fgetc(f); break;
+    case '{': brack++; iobfgetc(f); break;
     case '}':
-	if(brack > 0) { fgetc(f); braces = 1; }
+	if(brack > 0) { iobfgetc(f); braces = 1; }
 	if(--brack <= 0) goto done;
 	/* Otherwise, fall through into... */
     default:
       empty = 0;
-      w = fdelimtok("(){}", f, 0);
+      w = iobfdelimtok("(){}", f, 0);
       if(w == NULL)
 	goto done;
       
@@ -136,7 +136,7 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
 			PoolName(p), w);
 	if(cam) CamDelete(cam);
 	return 0;
-      } else if( (got=fgetnf(f, kw[i].args, &v, 0)) != kw[i].args ) {
+      } else if( (got= iobfgetnf(f, kw[i].args, &v, 0)) != kw[i].args ) {
 	OOGLSyntax(f, "Reading camera from \"%s\": \"%s\" expects %d values, got %d",
 		  PoolName(p), w, kw[i].args, got);
 	return 0;
@@ -174,7 +174,7 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
 	    break;
       case 11: cam->whicheye = (int)v; break;
       case 12: /* "define" */
-	    hname = HandleCreate( fdelimtok("(){}", f, 0), &CamOps );
+	    hname = HandleCreate( iobfdelimtok("(){}", f, 0), &CamOps );
 	    break;
       case 13: /* "camera" */ break;
 
@@ -302,3 +302,9 @@ CamTransUpdate( Handle **hp, Camera *cam, Transform T )
   else if(hp == &cam->w2chandle)
     TmInvert( cam->worldtocam, cam->camtoworld );
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

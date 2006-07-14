@@ -43,7 +43,7 @@ typedef struct Mesh Mesh;
 
 extern GeomClass *MeshMethods( void );
 extern char	*MeshName( void );
-extern Mesh	*MeshFLoad( FILE *, char * );
+extern Mesh	*MeshFLoad( IOBFILE *, char * );
 extern Mesh	*MeshLoad( char * );
 extern Mesh	*MeshSave( Mesh *, char * );
 extern Mesh	*MeshFSave( Mesh *, FILE * );

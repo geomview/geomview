@@ -1,1 +1,9 @@
+.libs
 Makefile Makefile.in .deps
+camcompat.lo
+camera.lo
+camstream.lo
+libcamera.la
+*.lo
+*.la
+.libs

@@ -476,7 +476,7 @@ Writes to standard output.  Reads from stdin if no file specified.\n",
     argv[1] = "-";
   }
   g = strcmp(argv[1], "-") ? 
-    GeomLoad(argv[1]) : GeomFLoad(stdin, "standard input");
+    GeomLoad(argv[1]) : GeomFLoad(iobfileopen(stdin), "standard input");
   fprintf(f, "#VRML V1.0 ascii\n");
   fprintf(f, "Separator {\n");
   fprintf(f, " ShapeHints {vertexOrdering COUNTERCLOCKWISE faceType CONVEX}\n");

@@ -47,8 +47,8 @@ extern Geom    *GeomCreate( char *classname, ... );
 extern Geom    *GeomCCreate( Geom *existing_value, GeomClass *Class, ... );
 extern void	GeomDelete( Geom *obj );
 extern Geom    *GeomLoad( char *name );
-extern Geom    *GeomFLoad( FILE *inf, char *fname ); /* name for errs & type-guessing, may be NULL */
-extern int	GeomFLoadEmbedded( Geom **obj, Handle **handlep, FILE *inf, char *fname );
+extern Geom    *GeomFLoad( IOBFILE *inf, char *fname ); /* name for errs & type-guessing, may be NULL */
+extern int	GeomFLoadEmbedded( Geom **obj, Handle **handlep, IOBFILE *inf, char *fname );
 extern int	GeomStreamIn( Pool *, Handle **handlep, Geom **geomp );
 extern int	GeomStreamOut( Pool *, Handle *h, Geom *g );
 extern Geom    *GeomSave( Geom *obj, char *name );

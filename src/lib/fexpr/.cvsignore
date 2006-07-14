@@ -1,3 +1,6 @@
 Makefile Makefile.in .deps
 parse.tab.c
 
+*.lo
+*.la
+.libs

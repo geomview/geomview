@@ -40,7 +40,7 @@ char	*_GFILE;	/* Name of file where error is found */
 int	_GLINE;		/* Line number in file where error is found */
 int	OOGL_Errorcode;	/* Unique integer error code */
 
-int _OOGLError(int errorcode,char* fmt,...)
+int _OOGLError(int errorcode, char* fmt,...)
 {
    va_list args;
    va_start(args, fmt);
@@ -55,31 +55,28 @@ int _OOGLError(int errorcode,char* fmt,...)
    return 0;
 }
 
-/*
+/*\
  * Report syntax error
  */
-void OOGLSyntax(FILE *f, char *fmt, ...)
+void OOGLSyntax(IOBFILE *f, char *fmt, ...)
 {
-   static FILE *oldf;
-   static FILE oldfile;
+   static IOBFILE *oldf;
    static char oldtext[32];
    char *context;
 
    va_list args;
    va_start(args, fmt);
    vfprintf(stderr, fmt, args);
-   context = fcontext(f);
-   if(f == oldf && memcmp(f, &oldfile, sizeof(FILE)) == 0 &&
-			strcmp(context, oldtext) == 0) {
-	fprintf(stderr, " [ditto]\n");
+   context = iobfcontext(f);
+   if(f == oldf && strcmp(context, oldtext) == 0) {
+       fprintf(stderr, " [ditto]\n");
    } else {
-	fprintf(stderr,
-	    context[0] != '\0' ? ":\n%s" : " [no text available]\n",
-	    context);
-	oldf = f;
-	oldfile = *f;
-	memcpy(oldtext, context, sizeof(oldtext));
-	oldtext[sizeof(oldtext)-1] = '\0';
+       fprintf(stderr,
+	       context[0] != '\0' ? ":\n%s" : " [no text available]\n",
+	       context);
+       oldf = f;
+       memcpy(oldtext, context, sizeof(oldtext));
+       oldtext[sizeof(oldtext)-1] = '\0';
    }
    va_end(args);
 }
@@ -123,7 +120,9 @@ sperrno(unsigned int err)
 const char *
 sperror(void)
 {
+#ifndef HAVE_DECL_ERRNO
 	extern int errno;
+#endif
 
 	return sperrno(errno);
 }

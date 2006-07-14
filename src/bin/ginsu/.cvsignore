@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 ginsu
+*.lo
+*.la
+.libs

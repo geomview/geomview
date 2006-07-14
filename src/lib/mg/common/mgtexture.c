@@ -56,7 +56,7 @@ struct xyc {
     char *rledata;	/* For TF_SGIRLE: all data (don't fseek so we can read from pipe)*/
 };
 
-static FILE *
+static IOBFILE *
 gimme(char *fname, int *dopclose, struct xyc *size)
 {
     char cmd[2048];
@@ -64,7 +64,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
     int i, c, len, slen;
     char *prefix = NULL;
     char *msg = NULL;
-    FILE *f = NULL;
+    IOBFILE *f = NULL;
     static char *suffixes[] = {
 	"\0zcat ", "Z",
 	"\0gzip -dc ", "z", "gz",
@@ -97,7 +97,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
     }
     if(prefix == NULL || prefix[0] == '\0') {
 	*dopclose = 0;
-	f = fopen(fname, "rb");
+	f = iobfopen(fname, "rb");
 #if defined(unix) || defined(__unix)
     } else {
 	strcpy(cmd, prefix);
@@ -109,9 +109,9 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	*p = '\0';
 	*dopclose = 1;
 #if BINARY_POPEN_REQUIRES_B
-	f = popen(cmd, "rb");
+	f = iobpopen(cmd, "rb");
 #else
-	f = popen(cmd, "r");
+	f = iobpopen(cmd, "r");
 #endif
 #endif
     }
@@ -120,23 +120,23 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 			*dopclose ? "invoke" : "open", cmd, sperror());
 	goto nope;
     }
-    c = fgetc(f);
-    if(c == 0x01 && (c = fgetc(f)) == 0xDA) {
+    c = iobfgetc(f);
+    if(c == 0x01 && (c = iobfgetc(f)) == 0xDA) {
 	/* SGI image file */
 	short shorts[3];
-	int storage = fgetc(f);
-	int bpp = fgetc(f);
+	int storage = iobfgetc(f);
+	int bpp = iobfgetc(f);
 	if(bpp != 1) {
 	    msg = "%s: must have 8-bit image values";
 	    goto nope;
 	}
-	fgetc(f); fgetc(f);		/* Skip "dimension" */
-	fgetns(f, 3, shorts, 1);	/* Read big-endian 16-bit values */
+	iobfgetc(f); iobfgetc(f);		/* Skip "dimension" */
+	iobfgetns(f, 3, shorts, 1);	/* Read big-endian 16-bit values */
 	size->xsize = shorts[0];
 	size->ysize = shorts[1];
 	size->channels = shorts[2];
 	for(i = 0; i < 4+4+492; i++)	/* Skip min, max, pad data */
-	    getc(f);
+	    iobfgetc(f);
 	size->format = (storage==0x01) ? TF_SGIRLE : TF_SGIRAW;
 	if(size->format == TF_SGIRLE) {
 	    /* Inhale offset&length table */
@@ -144,32 +144,32 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	    int max = 0;
 	    size->rleoff = OOGLNewNE(int, n*2, "TF_SGIRLE offsets");
 	    msg = "%s: can't read RLE offsets";
-	    if(fgetni(f, n*2, size->rleoff, 1) != n*2)
+	    if(iobfgetni(f, n*2, size->rleoff, 1) != n*2)
 		goto nope;
-	    if(ftell(f) < 0) {
+	    if(iobftell(f) < 0) {
 		for(i = 0; i < n; i++)
 		    if(max < size->rleoff[i])
 			max = size->rleoff[i] + size->rleoff[i+n];
 		size->rledata = OOGLNewNE(char, max+1, "TF_SGIRLE data");
-		if(fread(size->rledata, max, 1, f) <= 0)
+		if(iobfread(size->rledata, max, 1, f) <= 0)
 		    goto nope;
 	    }
 	}
-    } else if(c == 'P' && (c = fgetc(f)) >= '1' && c <= '6') {
+    } else if(c == 'P' && (c = iobfgetc(f)) >= '1' && c <= '6') {
 	msg = "%s: Bad header on PNM image";
 	size->channels = (c == '3' || c == '6') ? 3 : 1;
-	if(fgetni(f, 2, &size->xsize, 0) != 2)
+	if(iobfgetni(f, 2, &size->xsize, 0) != 2)
 	    goto nope;
 	size->maxval = 1;
 	if(c != '1' && c != '4')
-	    if(fgetni(f, 1, &size->maxval, 0) <= 0)
+	    if(iobfgetni(f, 1, &size->maxval, 0) <= 0)
 		goto nope;
 	switch(c) {
 	case '1': case '2': case '3':	size->format = TF_ASCII; break;
 	case '4':			size->format = TF_BIT; break;
 	case '5': case '6':		size->format = TF_BYTE; break;
 	}
-	while((c = fgetc(f)) != '\n' && c != EOF)
+	while((c = iobfgetc(f)) != '\n' && c != EOF)
 	    ;
     } else {
 	msg = "%s: Unknown texture image file format";
@@ -182,10 +182,10 @@ gimme(char *fname, int *dopclose, struct xyc *size)
     if (f) {
 #if defined(unix) || defined(__unix)
       if (*dopclose) {
-	pclose(f);
+	iobpclose(f);
       } else {
 #endif
-	fclose(f);
+	iobfclose(f);
 #if defined(unix) || defined(__unix)
       }
 #endif
@@ -198,7 +198,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 }
 
 int
-readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char *fname)
+readimage(Texture *tx, int offset, int rowsize, struct xyc *size, IOBFILE *f, char *fname)
 {
     int val, bit, i = 0, j, k;
     int stride = tx->channels;
@@ -212,11 +212,11 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		char *pix = tx->data + offset + k + rowsize * i;
 		j = size->xsize;
 		do {
-		    *pix = getc(f);
+		    *pix = iobfgetc(f);
 		    pix += stride;
 		} while(--j > 0);
 	    }
-	    if(feof(f))
+	    if(iobfeof(f))
 		goto nope;
 	}
     } else if(size->format == TF_SGIRLE) {
@@ -234,23 +234,23 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		if(size->rledata)
 		    rle = size->rledata + foff - rlebase;
 		else
-		    fseek(f, foff, SEEK_SET);
-		while((count = rle ? *rle++ : getc(f)) > 0) {
+		    iobfseek(f, foff, SEEK_SET);
+		while((count = rle ? *rle++ : iobfgetc(f)) > 0) {
 		    if(count & 0x80) {
 			count &= 0x7F;
 			do {
-			    *pix = rle ? *rle++ : getc(f);
+			    *pix = rle ? *rle++ : iobfgetc(f);
 			    pix += stride;
 			} while(--count > 0);
 		    } else {
-			int val = rle ? *rle++ : getc(f);
+			int val = rle ? *rle++ : iobfgetc(f);
 			do {
 			    *pix = val;
 			    pix += stride;
 			} while(--count > 0);
 		    }
 		}
-		if(feof(f))
+		if(iobfeof(f))
 		    goto nope;
 	    }
 	}
@@ -258,18 +258,18 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 	for(i = 0; i < size->ysize; i++) {
 	    char *row = tx->data + rowsize * (size->ysize - i - 1) + offset;
 	    if(tx->channels == size->channels && size->format == TF_BYTE) {
-		j = fread(row, size->channels, size->xsize, f);
+		j = iobfread(row, size->channels, size->xsize, f);
 	    } else {
 		register char *pix = row;
 		j = size->xsize;
 		switch(size->format) {
 		case TF_BYTE:
 		    switch(size->channels) {
-		    case 1: do { *pix = getc(f); pix += stride; } while(--j); break;
+		    case 1: do { *pix = iobfgetc(f); pix += stride; } while(--j); break;
 		    case 3: do {
-			      pix[0] = getc(f);
-			      pix[1] = getc(f);
-			      pix[2] = getc(f);
+			      pix[0] = iobfgetc(f);
+			      pix[1] = iobfgetc(f);
+			      pix[2] = iobfgetc(f);
 			      pix += stride;
 			    } while(--j);
 			    break;
@@ -280,7 +280,7 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		    do {
 			if(--bit < 0) {
 			    bit = 7;
-			    k = getc(f);
+			    k = iobfgetc(f);
 			}
 			*pix = (k >> bit) & 1;
 			pix += stride;
@@ -289,7 +289,7 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		case TF_ASCII:
 		    do {
 			for(k = 0; k < size->channels; k++) {
-			    fgetni(f, 1, &val, 0);
+			    iobfgetni(f, 1, &val, 0);
 			    pix[k] = val * 255 / size->maxval;
 			}
 			pix += stride;
@@ -299,7 +299,7 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, FILE *f, char 
 		  break;
 		}
 	    }
-	    if(feof(f))
+	    if(iobfeof(f))
 		break;
 	}
     }
@@ -522,7 +522,7 @@ mg_find_free_shared_texture_id(int type)
 int
 mg_inhaletexture(Texture *tx, int rgba)
 {
-    FILE *f = NULL, *alphaf = NULL;
+    IOBFILE *f = NULL, *alphaf = NULL;
     char *failfile;
     struct xyc size, alphasize;
     int dopclose, alphapclose;
@@ -651,12 +651,12 @@ mg_inhaletexture(Texture *tx, int rgba)
 	tx->flags |= TXF_RGBA;
     }
     if(f) {
-	if(dopclose) pclose(f);
-	else fclose(f);
+	if(dopclose) iobpclose(f);
+	else iobfclose(f);
     }
     if(alphaf) {
-	if(alphapclose) pclose(alphaf);
-	else fclose(alphaf);
+	if(alphapclose) iobpclose(alphaf);
+	else iobfclose(alphaf);
     }
 #ifdef SIGCHLD
     signal(SIGCHLD, oldsigchld);

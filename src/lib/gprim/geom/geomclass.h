@@ -44,7 +44,7 @@ typedef int   GeomDeleteFunc( Geom *object );
 typedef Geom *GeomReplaceFunc( Geom *object, Geom *newchild );
 typedef Geom *GeomIterateFunc( GeomIter *iter, int op );  /* What should the interface be? */
 typedef Geom *GeomLoadFunc( char *name );
-typedef Geom *GeomFLoadFunc( FILE *file, char *name );
+typedef Geom *GeomFLoadFunc( IOBFILE *file, char *name );
 typedef Geom *GeomSaveFunc( Geom *object, char *name );
 typedef Geom *GeomFSaveFunc( Geom *object, FILE *file, char *name );
 
@@ -130,7 +130,7 @@ extern GeomClass *GeomFName2Class( char *fname );
 extern Geom	 *GeomBoundSphereFromBBox(Geom *, Transform, int space);
 
 /* internal routine used by file-reading routines */
-extern char *GeomToken(FILE *f);
+extern char *GeomToken(IOBFILE *f);
 
 /* This is the "common" geom stuff which starts every geom */
 #define GEOMFIELDS	\

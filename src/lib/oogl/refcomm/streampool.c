@@ -69,35 +69,22 @@ void gettimeofday(struct timeval *tv, struct timezone *tz)
 }
 #endif /*_WIN32*/
 
-
-
-
 #include <errno.h>
 
-#ifndef O_NONBLOCK
-# ifdef FNONBLK
-#  define O_NONBLOCK FNONBLK
-# else
-#  ifdef O_NDELAY
-#   define O_NONBLOCK O_NDELAY
-#  else
-#   define O_NONBLOCK 0
-#  endif
-# endif
+static const int o_nonblock =
+#ifdef O_NONBLOCK
+    O_NONBLOCK |
 #endif
-
-#ifndef O_NDELAY
-#define O_NDELAY O_NONBLOCK
+#ifdef O_NDELAY
+    O_NDELAY |
 #endif
-
-#ifndef FNONBLK
-#define FNONBLK O_NONBLOCK
+#ifdef FNONBLK
+    FNONBLK |
 #endif
-
-#ifndef FNDELAY
-#define FNDELAY O_NDELAY
+#ifdef FNDELAY
+    FNDELAY |
 #endif
-
+    0;
 
 static Pool *AllPools = NULL;
 static Pool *FreePools = NULL;
@@ -251,40 +238,69 @@ newPool(char *name)
 }
     
 Pool *
-PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops)
+PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
 {
-    register Pool *p;
+    Pool *p;
     char dummy[12];
+    FILE *f = NULL;
+    
+    if(name==NULL) sprintf(name=dummy, "_p%p",
+			   (void *)inf ? (void *)inf : (void *)outf);
 
-    if(name==NULL) sprintf(name=dummy, "_p%x", (unsigned long)f);
-    p = newPool(name);
-    p->ops = ops;
-    p->type = P_STREAM;
-    if(f == NULL && name != NULL) {
+    if(inf == NULL && outf == NULL && name != NULL) {
 	f = fopen(name, rw ? (rw>1 ? "w+b":"wb") : "rb");
 	if(f == NULL) {
 	    OOGLError(0, "Can't open %s: %s", name, sperror());
-	    OOGLFree(p);
 	    return NULL;
 	}
+    } 
+
+    if (f == NULL && inf == NULL && outf == NULL) {
+	OOGLError(0, "PoolStreamTemp(%s): file == NULL\n", name);
+	return NULL;
     }
-    p->inf  = p->outf = f;
-    p->sinf = NULL;
-    p->infd = -1;
-    if(f) {
+
+    if (f) {
 	switch(rw) {
-	    case 0: p->outf = NULL; break;
-	    case 1: p->inf = NULL; break;
-	    case 2: p->outf = fdopen(dup(fileno(f)), "wb");
+	case 0:
+	    inf  = iobfileopen(f);
+	    outf = NULL;
+	    break;
+	case 1:
+	    outf = f;
+	    inf  = NULL;
+	    break;
+	case 2:
+	    inf  = iobfileopen(f);
+	    outf = fdopen(dup(fileno(f)), "wb");
+	    break;
 	}
+    } else if (rw != 1 && inf == NULL) {
+	inf  = iobfileopen(fdopen(dup(fileno(outf)), "rb")); 
+    } else if (rw != 0 && outf == NULL) {
+	outf = fdopen(dup(iobfileno(inf)), "wb");
     }
+
+    if ((rw != 1 && inf == NULL) || (rw != 0 && outf == NULL)) {
+	OOGLError(0, "PoolStreamTemp(%s): file == NULL\n", name);
+	return NULL;
+    }
+    
+    p = newPool(name);
+    p->ops = ops;
+    p->type = P_STREAM;
+
+    p->outf = outf;
+    p->inf  = inf;
+    p->infd = p->inf ? iobfileno(p->inf) : -1;
+
     p->handles = NULL;
     p->resyncing = NULL;
     p->otype = PO_ALL;
     p->next = NULL;
-    p->mode = rw;
-    p->seekable = (p->inf && lseek(fileno(p->inf),0,SEEK_CUR) != -1 &&
-			!isatty(fileno(p->inf)));
+    p->mode = inf && outf ? 2 : (outf ? 1 : 0);
+    p->seekable = (p->inf && lseek(iobfileno(p->inf),0,SEEK_CUR) != -1 &&
+		   !isatty(iobfileno(p->inf)));
     p->softEOF = !p->seekable;
     p->level = (p->outf && lseek(fileno(p->outf),0,SEEK_CUR) != -1 &&
 			!isatty(fileno(p->outf)))
@@ -292,22 +308,16 @@ PoolStreamTemp(char *name, FILE *f, int rw, HandleOps *ops)
     p->flags = PF_TEMP;
     p->client_data = NULL;
 
-#if USE_SEEKPIPE
-    if (p->inf) {
-	p->infd = fileno(p->inf);
-	if (!p->seekable && p->infd >= 0) {
-	    /* leave seekable and fake files alone */
-	    extern FILE *seekpipe_open(int fd);
-	    setbuf(p->inf, NULL);
-	    p->sinf = p->inf;
-	    p->inf  = seekpipe_open(p->infd);
-	}
+#if HAVE_FCNTL
+    if (p->inf && p->inf >= 0) {
+	fcntl(p->infd, F_SETFL, fcntl(p->infd, F_GETFL) & ~o_nonblock);
     }
-#else
-    if (p->inf) {
-	setvbuf(p->inf, NULL, _IOFBF, (1 << 16));
+    if (p->outf && fileno(p->outf) >= 0) {
+	int fd = fileno(p->outf);
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~o_nonblock);
     }
-#endif
+#endif /*unix*/
+
     return p;
 }
 
@@ -323,8 +333,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	p = newPool(name);
 	p->ops = ops;
 	p->type = P_STREAM;
-	p->inf = p->sinf = p->outf = NULL;
+	p->inf  = NULL;
 	p->infd = -1;
+	p->outf = NULL;
 	p->mode = rw;
 	p->handles = NULL;
 	p->resyncing = NULL;
@@ -339,7 +350,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		&& (p->flags & PF_REREAD) == 0
 		&& stat(name, &st) == 0
 		&& st.st_mtime == p->inf_mtime) {
-	    rewind(p->inf);
+	    iobfrewind(p->inf);
 	    return p;
 	}
 
@@ -348,22 +359,22 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	 */
 	p->mode = ((p->mode+1) | (rw+1)) - 1;
 	if(p->inf && rw != 1) {
-	    if(p->sinf) fclose(p->sinf);
-	    if(p->inf != stdin) fclose(p->inf);
+	    if (iobfile(p->inf) == stdin) {
+		iobfileclose(p->inf); /* leaves stdin open */
+	    } else {
+		iobfclose(p->inf);
+	    }
 	    p->inf  = NULL;
-	    p->infd = -1;
 	}
     }
 
     if(f == NULL || f == (FILE *)-1) {
 	if(rw != 1) {
 	    if(strcmp(name, "-") == 0) {
-		p->inf  = stdin;
+		f = stdin;
 	    } else {
 		/* Try opening read/write first in case it's a Linux named pipe */
-
 		int fd;
-#if 1 || defined(notdef)
 		/* BTW, this is not Linux, but common Unix
 		 * behaviour. Reading from a pipe with no writers will
 		 * just return.
@@ -382,7 +393,6 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 
 		/* Read-only file, or named pipe which doesn't allow RDWR? */
 		if(fd < 0)
-#endif
 		    fd = open(name, O_RDONLY | O_NDELAY);
 
 
@@ -401,18 +411,12 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 #endif /*unix*/
 
 		if(fd < 0)
-		    OOGLError(0, "Cannot open file \"%s\": %s", name, sperror());
-		else {
-#if defined(unix) || defined(__unix)
-# ifdef FNONBLK
-		    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~(FNDELAY|FNONBLK));
-# else
-		    fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~FNDELAY);
-# endif
-#endif /*unix*/
-		    p->inf  = fdopen(fd, "rb");
-		}
+ 		    OOGLError(0, "Cannot open file \"%s\": %s",
+			      name, sperror());
+		else
+		    f  = fdopen(fd, "rb");	    
 	    }
+	    p->inf = iobfileopen(f);
 	}
 	if(rw > 0) {
 	    if(strcmp(name, "-") == 0)
@@ -421,8 +425,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		OOGLError(0, "Cannot create \"%s\": %s", name, sperror());
 	}
     } else {
-	if(rw != 1)
-	    p->inf = f;
+	if (rw != 1) {
+	    p->inf = iobfileopen(f);
+	}
 	if(rw > 0)
 	    p->outf = (rw == 2) ? fdopen(dup(fileno(f)), "wb") : f;
     }
@@ -438,8 +443,8 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
     p->seekable = 0;
     p->softEOF = 0;
     if(p->inf != NULL) {
-	if (p->infd == -1 && p->sinf == NULL) {
-	    p->infd = fileno(p->inf);
+	if (p->infd == -1) {
+	    p->infd = iobfileno(p->inf);
 	}
 	if (p->infd != -1) {
 	    if(isatty(p->infd)) {
@@ -451,26 +456,40 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		p->softEOF = 1;
 	    p->inf_mtime = st.st_mtime;
 	    watchfd(p->infd);
+#if HAVE_FCNTL
+	    fcntl(p->infd, F_SETFL, fcntl(p->infd, F_GETFL) & ~o_nonblock);
+#endif /*unix*/
 	}
     }
+#if HAVE_FCNTL
+    if (p->outf && fileno(p->outf) >= 0) {
+	int fd = fileno(p->outf);
+	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~o_nonblock);
+    }
+#endif /*unix*/
     if(p->level == 0 && p->outf &&
 	  (lseek(fileno(p->outf),0,SEEK_CUR) == -1 || isatty(fileno(p->outf))))
 	p->level = 1;
-#if USE_SEEKPIPE
-    if (p->inf != NULL && p->sinf == NULL && !p->seekable && p->infd >= 0) {
-	/* leave seekable and fake files alone */
-	extern FILE *seekpipe_open(int fd);
-	p->sinf = p->inf;
-	setbuf(p->inf, NULL);
-	p->inf  = seekpipe_open(p->infd);
-	p->infd = fileno(p->sinf);
-    }
-#else
-    if (p->inf) {
-	setvbuf(p->inf, NULL, _IOFBF, (1 << 16));
-    }
-#endif
+
     return p;
+}
+
+/* Return "true" if succesful */
+int PoolSetMark(Pool *p)
+{
+    return iobfsetmark(PoolInputFile(p)) == 0;
+}
+
+/* Return "true" if succesful */
+int PoolSeekMark(Pool *p)
+{
+    return iobfseekmark(PoolInputFile(p)) == 0;
+}
+
+/* Return "true" if succesful. BUT WHO CARES. Grin. */
+int PoolClearMark(Pool *p)
+{
+    return iobfclearmark(PoolInputFile(p)) == 0;
 }
 
 int
@@ -491,7 +510,7 @@ PoolSetOType(Pool *p, int otype)
     p->otype = otype;
 }
 
-FILE *
+IOBFILE *
 PoolInputFile(Pool *p)
 {
     return (p && p->type == P_STREAM) ? p->inf : NULL;
@@ -530,14 +549,13 @@ void PoolClose(register Pool *p)
     }
 
     if(p->type == P_STREAM) {
-	if (p->sinf != NULL) {
-	    fclose(p->inf);
-	    p->inf = p->sinf;
-	    p->sinf = NULL;
-	}
 	if(p->inf != NULL) {
-	    unwatchfd(fileno(p->inf));
-	    if(p->inf != stdin) fclose(p->inf);
+	    unwatchfd(iobfileno(p->inf));
+	    if (iobfile(p->inf) == stdin) {
+		iobfileclose(p->inf);
+	    } else {
+		iobfclose(p->inf);
+	    }
 	    p->inf = NULL;
 	}
 	if(p->outf != NULL) {
@@ -583,7 +601,7 @@ awaken(Pool *p)
     timerclear(&p->awaken);    
     if(p->infd >= 0) {
 	watchfd(p->infd);
-	if(fhasdata(p->inf) && !FD_ISSET(p->infd, &poolreadyfds)) {
+	if(iobfhasdata(p->inf) && !FD_ISSET(p->infd, &poolreadyfds)) {
 	   FD_SET(p->infd, &poolreadyfds);
 	   poolnready++;
 	}
@@ -777,7 +795,7 @@ PoolIn(Pool *p)
 	return NULL;		/* No way to read */
 
     if((p->flags & PF_NOPREFETCH) ||
-       ((c = async_fnextc_fd(p->inf, 3, p->infd)) != NODATA && c != EOF)) {
+       ((c = async_iobfnextc(p->inf, 3)) != NODATA && c != EOF)) {
 	/* Kludge.  The interface to TransStreamIn really needs to change. */
 
 	if((*p->ops->strmin)(p, &h,
@@ -809,7 +827,7 @@ PoolIn(Pool *p)
 	    if(p->ops->resync) {
 		(*p->ops->resync)(p);
 	    } else if(p->softEOF) {
-		rewind(p->inf);
+		iobfrewind(p->inf);
 	    } else if(p->inf != NULL) {	/* Careful lest already PoolClose()d */
 		if (p->infd >= 0) {
 		    if(FD_ISSET(p->infd, &poolreadyfds)) {
@@ -822,11 +840,11 @@ PoolIn(Pool *p)
 	    }
 	}
 	if(p->seekable && p->inf != NULL)
-	    c = fnextc(p->inf, 0);	/* Notice EOF if appropriate */
+	    c = iobfnextc(p->inf, 0);	/* Notice EOF if appropriate */
     }
-    if(c == EOF && feof(p->inf)) {
+    if(c == EOF && iobfeof(p->inf)) {
 	if(p->softEOF) {
-	    rewind(p->inf);
+	    iobfrewind(p->inf);
 	    PoolSleepFor(p, 1.0);	/* Give us a rest */
 		/* SVR4 poll() doesn't allow us to
 		 * wait quietly when the sender closes a named pipe;
@@ -847,7 +865,7 @@ PoolIn(Pool *p)
 	 * Anything left in stdio buffer?  If so,
 	 * remember to try reading next time without waiting for select().
 	 */
-	if(fhasdata(p->inf)) {
+	if(iobfhasdata(p->inf)) {
 	    if(!FD_ISSET(p->infd, &poolreadyfds)) {
 		FD_SET(p->infd, &poolreadyfds);
 		poolnready++;
@@ -890,3 +908,9 @@ PoolStreamOutHandle(Pool *p, Handle *h, int havedata)
     }
     return ((p->otype & (PO_DATA|PO_HANDLES)) == PO_ALL);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

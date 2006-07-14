@@ -31,8 +31,8 @@ extern PolyList *pl;
 extern TransformPtr TT[];
 extern float epsilon;
 
-extern FILE *togv, *fromgv;
-
+extern FILE *togv;
+extern IOBFILE *fromgv;
 #define HYPERBOLIC	1
 #define EUCLIDEAN	2
 #define SPHERICAL	3

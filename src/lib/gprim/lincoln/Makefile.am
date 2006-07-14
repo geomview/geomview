@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = liblincoln.a
+noinst_LTLIBRARIES = liblincoln.la
 
-liblincoln_a_SOURCES = \
+liblincoln_la_SOURCES = \
     lincolnclass.c lincolnload.c \
     lincolndefs.h lincoln.h

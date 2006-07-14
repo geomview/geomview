@@ -32,6 +32,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 int main(int argc, char *argv[]) {
   float prec = 0.0;
   if (argc > 1) sscanf(argv[1], "%f", &prec);
-  GeomFSave(PLConsol(GeomFLoad(stdin, NULL), prec), stdout, NULL);
+  GeomFSave(PLConsol(GeomFLoad(iobfileopen(stdin), NULL), prec), stdout, NULL);
   exit(0);
 }

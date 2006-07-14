@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 sweep
+*.lo
+*.la
+.libs

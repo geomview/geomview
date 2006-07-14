@@ -128,5 +128,6 @@ case "$1" in
   -edge) GEOMVIEW_DEBUG=1 exec edge $GEOMVIEW_GVX ;;
   -gdb) GEOMVIEW_DEBUG=1 exec gdb $GEOMVIEW_GVX ;;
   -xdb) GEOMVIEW_DEBUG=1 exec xdb $GEOMVIEW_GVX ;;
+  -ddd) GEOMVIEW_DEBUG=1 exec ddd $GEOMVIEW_GVX ;;
   *) exec $GEOMVIEW_GVX ${1+"$@"} ;;
 esac

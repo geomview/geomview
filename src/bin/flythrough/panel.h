@@ -21,7 +21,6 @@
 /* Header file generated with fdesign. */
 
 /**** Callback routines ****/
-
 extern void ScaleProc(FL_OBJECT *, long);
 extern void QuitProc(FL_OBJECT *, long);
 extern void InfoProc(FL_OBJECT *, long);

@@ -43,14 +43,14 @@ extern void EraseHeadAndTail(void);
 extern void EraseHeadTail(char *xformname);
 extern void EraseHead(void);
 extern void StartNewVector(void);
-extern void LangInit(FILE *fp);
+extern void LangInit(IOBFILE *inf, FILE *fp);
 extern void progn(void);
 extern void ShowTailAt(Point3 *p);
 extern void ShowHeadAt(Point3 *p, Point3 *prev);
 extern void Geometry(void);
 extern void endprogn(void);
 extern void gui_init(void);
-extern void gui_main_loop(void);
+extern void gui_main_loop(IOBFILE *inf);
 
 void gui_init(void)
 {
@@ -65,7 +65,7 @@ void gui_init(void)
   fl_show_form(MainForm, FL_PLACE_SIZE, TRUE, "Graffiti");
 }
 
-void gui_main_loop(void)
+void gui_main_loop(IOBFILE *inf)
 {
   fd_set fdmask;
   struct timeval timeout;
@@ -73,11 +73,11 @@ void gui_main_loop(void)
   while (1) {
 
     FD_ZERO(&fdmask);
-    FD_SET(fileno(stdin), &fdmask);
+    FD_SET(iobfileno(inf), &fdmask);
     timeout.tv_sec = 0;  timeout.tv_usec = 200000;
-    select(fileno(stdin)+1, &fdmask, NULL, NULL, &timeout);
+    select(iobfileno(inf)+1, &fdmask, NULL, NULL, &timeout);
 
-    if (async_fnextc(stdin,0) != NODATA) {
+    if (async_iobfnextc(inf, 0) != NODATA) {
       Input();
     }
     fl_check_forms();

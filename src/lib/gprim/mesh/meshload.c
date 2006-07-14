@@ -34,41 +34,35 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <ctype.h>
 #include "meshP.h"
 
+/* actually u, the texture parameter */
 static int
-getmeshvert(file, flag, u, v, p, n, c, t)
-	FILE	*file;
-	register int	flag;
-	int	u;
-	int	v;
-	register HPoint3	*p;
-	Point3	*n;
-	ColorA	*c;
-	Point3	*t;		/* actually u, the texture parameter */
+getmeshvert(IOBFILE *file, int flag, int u, int v, HPoint3 *p,
+	    Point3 *n, ColorA *c, Point3 *t)
 {
-	register int binary = flag&MESH_BINARY;
+	int binary = flag&MESH_BINARY;
 
 	if (flag & MESH_Z) {
 		p->x = (float) u;
 		p->y = (float) v;
 		p->w = 1.0;
-		if (fgetnf(file, 1, &p->z, binary) <= 0)
+		if (iobfgetnf(file, 1, &p->z, binary) <= 0)
 			return 0;
 	} else if (flag & MESH_4D) {
-		if (fgetnf(file, 4, (float *)p, binary) < 4)
+		if (iobfgetnf(file, 4, (float *)p, binary) < 4)
 			return 0;
 	} else 			{
-		if (fgetnf(file, 3, (float *)p, binary) < 3)
+		if (iobfgetnf(file, 3, (float *)p, binary) < 3)
 			return 0;
 		p->w = 1.0;
 	}
 
-	if (flag & MESH_N && fgetnf(file, 3, (float *)n, binary) < 3)
+	if (flag & MESH_N && iobfgetnf(file, 3, (float *)n, binary) < 3)
 		return 0;
 
-	if (flag & MESH_C && fgetnf(file, 4, (float *)c, binary) < 4)
+	if (flag & MESH_C && iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return 0;
 
-	if (flag & MESH_U && fgetnf(file, 3, (float *)t, binary) < 3)
+	if (flag & MESH_U && iobfgetnf(file, 3, (float *)t, binary) < 3)
 		return 0;
 
 	return 1;
@@ -77,8 +71,7 @@ getmeshvert(file, flag, u, v, p, n, c, t)
 /* static char oldbinary; *//* Old binary format -- has 3-component colors */
 
 static int
-getheader(file)
-	FILE	*file;
+getheader(IOBFILE *file)
 {
 	int i, flag;
 	char *token;
@@ -98,21 +91,19 @@ getheader(file)
 	if(strcmp(token, "MESH") != 0)
 	    return(-1);
 
-	if(fnextc(file, 1) == 'B') {
-	    if(fexpectstr(file, "BINARY"))
+	if(iobfnextc(file, 1) == 'B') {
+	    if(iobfexpectstr(file, "BINARY"))
 		return(-1);
 	    flag |= MESH_BINARY;
-	    if(fnextc(file, 1) == '\n')
-		(void) fgetc(file);	/* Toss \n */
+	    if(iobfnextc(file, 1) == '\n')
+		(void) iobfgetc(file);	/* Toss \n */
 	}
 	return(flag);
 }
 
 
 Mesh *
-MeshFLoad(file, fname)
-	FILE *file;
-	char *fname;
+MeshFLoad(IOBFILE *file, char *fname)
 {
 	Mesh	m;
 	int	n;
@@ -127,8 +118,8 @@ MeshFLoad(file, fname)
 
 	binary = m.flag & MESH_BINARY;
 
-	if (fgetni(file, 1, &m.nu, binary) <= 0 ||
-	    fgetni(file, 1, &m.nv, binary) <= 0) {
+	if (iobfgetni(file, 1, &m.nu, binary) <= 0 ||
+	    iobfgetni(file, 1, &m.nv, binary) <= 0) {
 	    OOGLSyntax(file,"Reading MESH from \"%s\": expected mesh grid size", fname);
 	    return NULL;
 	}
@@ -170,3 +161,9 @@ MeshFLoad(file, fname)
 		CR_NV, m.nv, CR_POINT4, m.p, CR_COLOR, m.c, CR_NORMAL, m.n,
 		CR_U, m.u, NULL);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 8 ***
+ * End: ***
+ */

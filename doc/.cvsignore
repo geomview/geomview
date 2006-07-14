@@ -8,3 +8,6 @@ stamp-vti
 texinfo.tex
 version.texi
 html/*
+*.lo
+*.la
+.libs

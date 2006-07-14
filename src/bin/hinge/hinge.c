@@ -52,7 +52,8 @@ TransformPtr TT[MAXTHINGS];
 float epsilon = .005;
 
 /* pipes to and from geomview */
-FILE *togv, *fromgv;
+FILE *togv;
+IOBFILE *fromgv;
 
 char hingedatastring[] =
 #include "hingedata.h"
@@ -87,10 +88,11 @@ int filepos[2];
 char *file = NULL;
 
 static void space_alignZ(Point *a, Point *b, Transform T);
+static IOBFILE *Initialize(void);
 
 #define NEXTARG ++argv; --argc
 
-usage()
+void usage(void)
 {
   fprintf(stderr, "hinge [OPTIONS] [FILE]\n\
     OPTIONS:\n\
@@ -110,9 +112,7 @@ void die(int sig)
   QuitProc(NULL,0);
 }
 
-main(argc, argv)
-     int argc;
-     char *argv[];
+int main(int argc, char *argv[])
 {
   signal(SIGHUP,	die);
   signal(SIGINT,	die);
@@ -188,19 +188,21 @@ main(argc, argv)
   }
   
   hui_init();
-  Initialize();
-  hui_main_loop();
+  hui_main_loop(Initialize());
+ 
+  return 0;
 }
 
-Initialize()
+static IOBFILE *Initialize(void)
 {
   int i;
 
-  LangInit();
+  fromgv = iobfileopen(stdin);  
+
+  LangInit(fromgv);
 
   for (i=0; i<MAXTHINGS; ++i) TT[i] = NULL;
   togv = stdout;
-  fromgv = stdin;
   TmCopy(TM_IDENTITY, BaseT);
   NewInst(0.0);
   fprintf(togv, "(progn\n\
@@ -230,9 +232,9 @@ Initialize()
 
   {
     Geom *g = NULL;
-    FILE *fp = fopen("hingedata", "r");
+    IOBFILE *fp = iobfopen("hingedata", "r");
     if (fp == NULL)
-      fp = fstropen(hingedatastring, sizeof(hingedatastring), "r");
+      fp = iobfileopen(fmemopen(hingedatastring, sizeof(hingedatastring), "r"));
     if (fp == NULL) {
       OOGLError(0,"can't find the file \"hingedata\"; it must be\n\
 in the current directory.  This will be fixed soon. [mbp]");
@@ -240,7 +242,7 @@ in the current directory.  This will be fixed soon. [mbp]");
     }
     if (fp != NULL) {
       g = GeomFLoad(fp, "hinge data");
-      fclose(fp);
+      iobfclose(fp);
     }
     if (g != NULL) {
       DefinePick(g);
@@ -252,6 +254,8 @@ in the current directory.  This will be fixed soon. [mbp]");
 
   fprintf(togv, "(interest (pick world))\n");
   fflush(togv);
+
+  return fromgv;
 }
 
 int WhichFace(HPoint3 *p, Transform T, PolyList *pl)
@@ -464,7 +468,6 @@ void WritePolyListInfo(PolyList *pl)
 int
 HingeLoad(char *file)
 {
-  FILE *f;
   Geom *g;
 
   if (strlen(file)<=0) return 0;
@@ -626,8 +629,8 @@ Reset()
 void
   ShowAxis()
 {
-  Transform Ta, TaInv, R, Tloc, Tsize, Tnet;
-  Point3 a, b, b1;
+  Transform Tloc, Tsize, Tnet;
+  Point3 b1;
   float b1halflen, radius;
   
   if (haveaxis) {

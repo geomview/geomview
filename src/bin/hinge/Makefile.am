@@ -1,9 +1,8 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD = $(OOGLLIBS)  \
-	$(XFORMSLIBS) \
+LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
-        -lm
+	$(OOGLLIB)
 
 EXTRA_DIST = \
     HingeCube HingeTetra HingeDiamond HingeTriangle HingeDodec HingeLongcube \
@@ -12,6 +11,8 @@ EXTRA_DIST = \
 module_PROGRAMS = hinge
 hinge_SOURCES = hui.c panel.c hingedata.h hui.h hinge.c lang.c panel.h \
     hinge.h hingehelp.h lang.h version.h
+hinge_DEPENDENCIES = $(OOGLLIB)
+hinge_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-hinge
 

@@ -370,7 +370,7 @@ static struct {
 };
 
 Appearance *
-ApFLoad( Appearance *into, FILE *stream, char *fname )
+ApFLoad( Appearance *into, IOBFILE *stream, char *fname )
 {
     register Appearance *ap;
     char *w;
@@ -386,13 +386,13 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
     over = not = 0;  value = ~0;
     more = 0;
     do {
-	(void) fnextc(stream, 0);
+	(void) iobfnextc(stream, 0);
 
-	switch(i = fgetc(stream)) {
-	case '<': ap = ApLoad(ap, fdelimtok("{}()", stream, 0)); break;
+	switch(i = iobfgetc(stream)) {
+	case '<': ap = ApLoad(ap, iobfdelimtok("{}()", stream, 0)); break;
 	case EOF: brack = 0; break;
 	case '{': brack++; break;
-	case '}': if(brack-- <= 0) { ungetc(i, stream); } break;
+	case '}': if(brack-- <= 0) { iobfungetc(i, stream); } break;
 	case '+': value = ~0; break;
 	case '-': value = 0; break;
 	case '!': not = 1; break;
@@ -400,8 +400,8 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
 
 	default:
 	    more = 0;
-	    ungetc(i, stream);
-	    w = fdelimtok("{}()", stream, 0);
+	    iobfungetc(i, stream);
+	    w = iobfdelimtok("{}()", stream, 0);
 	    if(w == NULL)
 		break;
 	    for(i = sizeof(ap_kw)/sizeof(ap_kw[0]); --i >= 0; )
@@ -432,14 +432,14 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
 		switch(ap_kw[i].aval) {
 		case 0: break;
 		case 1: mine = more = 1; break;
-		case 2: fgetni(stream, 1, &ap->shading, 0); break;
+		case 2: iobfgetni(stream, 1, &ap->shading, 0); break;
 		case 3:
-		    if(fgetnf(stream, 1, &ap->nscale, 0) <= 0)
+		    if(iobfgetnf(stream, 1, &ap->nscale, 0) <= 0)
 			OOGLError(1,"ApFLoad: %s: \"normscale\": value expected",
 				fname);
 		    break;
 		case 4:
-		    if(fgetni(stream, 1, &ap->linewidth, 0) <= 0)
+		    if(iobfgetni(stream, 1, &ap->linewidth, 0) <= 0)
 			OOGLSyntax(stream, "%s \"linewidth\": value expected",
 				fname);
 		    break;
@@ -465,7 +465,7 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
 			OOGLError(1, "%s: Can't read texture", fname);
 		    break;
 		case 9:
-		    if(fgetns(stream, 2, ap->dice, 0) < 2)
+		    if(iobfgetns(stream, 2, ap->dice, 0) < 2)
 			OOGLSyntax(stream,
 			 "%s \"patchdice\": expected integer u- and v- dicing values",
 			  fname);
@@ -490,7 +490,7 @@ ApFLoad( Appearance *into, FILE *stream, char *fname )
 Appearance *
 ApLoad(Appearance *into, char *fname)
 {
-    FILE *f = fopen(fname, "rb");
+    IOBFILE *f = iobfopen(fname, "rb");
     Appearance *a;
 
     if(f == NULL) {
@@ -498,7 +498,7 @@ ApLoad(Appearance *into, char *fname)
 	return NULL;
     }
     a = ApFLoad(into, f, fname);
-    fclose(f);
+    iobfclose(f);
     return a;
 }
 
@@ -567,7 +567,7 @@ void ApFSave( Appearance *ap, Handle *aphandle, FILE *f, char *fname )
 	fprintf(f, "  }\n");
     }
     if(ap->tex) {
-	p = PoolStreamTemp(fname, f, 1, &TextureOps);
+        p = PoolStreamTemp(fname, NULL, f, 1, &TextureOps);
 	TxStreamOut(p, NULL, ap->tex);
 	PoolDelete(p);
     }
@@ -808,19 +808,17 @@ norm( color, coeff )
 }
 #endif
 
-Material *
-MtLoad(mat, name)
-    Material *mat;
-    char *name;
+Material *MtLoad(Material *mat, char *name)
 {
-    FILE *f = fopen(name,"rb");
+    IOBFILE *f = iobfopen(name,"rb");
 
     if(f == NULL) {
 	OOGLError(0, "MtLoad: can't open %s: %s", name, sperror());
 	return NULL;
     }
+
     mat = MtFLoad(mat, f, name);
-    fclose(f);
+    iobfclose(f);
     return mat;
 }
 
@@ -849,11 +847,9 @@ static unsigned short mt_flags[] = {
 };
 static char mt_args[] = { 1,1,1,1,1,  3,3,3,3,3,3,3, 0 };
 
+/* fname used for error msgs, may be NULL */
 Material *
-MtFLoad(mat, f, fname)
-    Material *mat;
-    FILE *f;
-    char *fname;	/* Used for error msgs, may be NULL */
+MtFLoad(Material *mat, IOBFILE *f, char *fname)
 {
     char *w;
     register int i;
@@ -867,18 +863,18 @@ MtFLoad(mat, f, fname)
 
     over = not = 0;
     for(;;) {
-	switch(fnextc(f, 0)) {
+	switch(iobfnextc(f, 0)) {
 	case '<':
-	    fgetc(f);
-	    if(MtLoad(&m, fdelimtok("{}()", f, 0)) == NULL) return NULL;
+	    iobfgetc(f);
+	    if(MtLoad(&m, iobfdelimtok("{}()", f, 0)) == NULL) return NULL;
 	    if(!brack) goto done;
 	    break;
-	case '{': brack++; fgetc(f); break;
-	case '}': if(brack) { fgetc(f); } goto done;
-	case '*': over = 1; fgetc(f); break;		/* 'override' prefix */
-	case '!': not = 1; fgetc(f); break;
+	case '{': brack++; iobfgetc(f); break;
+	case '}': if(brack) { iobfgetc(f); } goto done;
+	case '*': over = 1; iobfgetc(f); break;		/* 'override' prefix */
+	case '!': not = 1; iobfgetc(f); break;
 	default:
-	    w = fdelimtok("{}()", f, 0);
+	    w = iobfdelimtok("{}()", f, 0);
 	    if(w == NULL)
 		return MtCopy(&m, mat);
 		/* break;	*/				/* done */
@@ -890,7 +886,7 @@ MtFLoad(mat, f, fname)
 	    if( i < 0) {
 		OOGLError(1, "MtFLoad: %s: unknown material keyword %s",fname,w);
 		return NULL;
-	    } else if( !not && (got=fgetnf(f, mt_args[i], v, 0)) != mt_args[i] ) {
+	    } else if( !not && (got=iobfgetnf(f, mt_args[i], v, 0)) != mt_args[i] ) {
 		OOGLError(1, "MtFLoad: %s: \"%s\" expects %d values, got %d",
 		    fname, w, mt_args[i], got);
 		return NULL;
@@ -1097,7 +1093,7 @@ void ApLetPropagate(register Appearance *src, register Appearance *dst)
 Texture *
 TxLoad(Texture *into, char *fname)
 {
-    FILE *f = fopen(fname, "rb");
+    IOBFILE *f = iobfopen(fname, "rb");
     Texture *t;
 
     if(f == NULL) {
@@ -1105,17 +1101,17 @@ TxLoad(Texture *into, char *fname)
 	return NULL;
     }
     t = TxFLoad(f, fname);
-    fclose(f);
+    iobfclose(f);
     return t;
 }
 
 
 Texture *
-TxFLoad(FILE *inf, char *fname)
+TxFLoad(IOBFILE *inf, char *fname)
 {
     Pool *p;
     Texture *tx = NULL;
-    p = PoolStreamTemp(fname, inf, 0, &TextureOps);
+    p = PoolStreamTemp(fname, inf, NULL, 0, &TextureOps);
     TxStreamIn(p, NULL, &tx);
     PoolDelete(p);
     return tx;
@@ -1391,7 +1387,7 @@ static struct txkw {
 int
 TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 {
-    FILE *stream;
+    IOBFILE *stream;
     char *fname;
     Handle *h = NULL;
     register Texture *tx = NULL;
@@ -1411,12 +1407,12 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 
     more = 0;
     do {
-	fnextc(stream, 0);
+	iobfnextc(stream, 0);
 
-	switch(i = fgetc(stream)) {
+	switch(i = iobfgetc(stream)) {
 	case ':':
 	case '<':
-            w = fdelimtok("{}()", stream, 0);
+            w = iobfdelimtok("{}()", stream, 0);
             /*
              * Consider doing a path search.
              * Do this before calling HandleReferringTo()
@@ -1441,7 +1437,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 	case '{': brack++; braces++; break;
 	case '}':
 		if(brack-- <= 0) {
-		    ungetc(i, stream);
+		    iobfungetc(i, stream);
 		}
 		break;
 	case '-':
@@ -1455,8 +1451,8 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 
 	default:
 	    more = 0;
-	    ungetc(i, stream);
-	    w = fdelimtok("{}()", stream, 0);
+	    iobfungetc(i, stream);
+	    w = iobfdelimtok("{}()", stream, 0);
 	    if(w == NULL)
 		break;
 	    for(i = sizeof(tx_kw)/sizeof(tx_kw[0]), kw = tx_kw; --i >= 0; kw++)
@@ -1474,7 +1470,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 
 	    if(kw->args < 0) {
 		char allowed[256], *tail = allowed;
-		w = fdelimtok("{}()", stream, 0);
+		w = iobfdelimtok("{}()", stream, 0);
 		if(w == NULL) w = "";
 		allowed[0] = '\0';
 		for(k = 1; strcmp((kw+k)->word, w); k++) {
@@ -1487,7 +1483,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 		    }
 		}
 	    } else if(kw->args > 0) {
-		int n = fgetnf(stream, kw->args, val, 0);
+		int n = iobfgetnf(stream, kw->args, val, 0);
 		if(n != kw->args) {
 		    OOGLSyntax(stream, "%s: %s expected %d numeric values",
 			fname, w, kw->args);
@@ -1509,7 +1505,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
 
 		case TX_FILE:
 		case TX_ALPHAFILE:
-			raww = fdelimtok("{}()", stream, 0);
+			raww = iobfdelimtok("{}()", stream, 0);
 			w = findfile(fname, raww);
 			if(w == NULL) {
 			    OOGLSyntax(stream,

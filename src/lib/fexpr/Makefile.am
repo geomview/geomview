@@ -1,9 +1,9 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers parse.tab.c-saved
 
-noinst_LIBRARIES = libfexpr.a
+noinst_LTLIBRARIES = libfexpr.la
 
-libfexpr_a_SOURCES = \
+libfexpr_la_SOURCES = \
     binfuncs.c complex.c evaluate.c exprs.c lex.yy.c monfuncs.c parse.tab.c real.c vars.c \
     fexpr.h parse.tab.h
 

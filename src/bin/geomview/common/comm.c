@@ -107,13 +107,13 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
     char *w, *raww;
     int c;
     int ok = 0;
-    FILE *inf;
+    IOBFILE *inf;
     Lake *lake;
 
     if((inf = PoolInputFile(p)) == NULL)
       goto done;
 
-    if((c = async_fnextc_fd(inf,0,p->infd)) == NODATA)
+    if((c = async_iobfnextc(inf,0)) == NODATA)
       return 1;		/* pretend we got something. */
 
     if ((lake=(Lake*)PoolClientData(p)) == NULL) {
@@ -126,8 +126,8 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
 
     switch(c) {
     case '<':
-	fgetc(inf);
-	w = fdelimtok("()", inf, 0);
+	iobfgetc(inf);
+	w = iobfdelimtok("()", inf, 0);
 	if(w == NULL)
 	  goto done;
 	if(strcmp(w, "-") && (w = findfile(PoolName(p), raww = w)) == NULL) {
@@ -136,7 +136,7 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
 	    goto done;
 	}
 	p = PoolStreamOpen(w, NULL, 0, &CommandOps);
-	if (PoolInputFile(p) == stdin && ! PoolOutputFile(p))
+	if (iobfile(PoolInputFile(p)) == stdin && !PoolOutputFile(p))
 	  p = PoolStreamOpen(PoolName(p), stdout, 1, &CommandOps);
 	if(p != NULL && inf != NULL)
 	  ok = comm_object(w, &CommandOps, NULL, NULL, COMM_LATER);
@@ -213,38 +213,41 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 	    if(now && ok) {
 		/* Read as much as possible if we need it right now. */
 		while(PoolInputFile(p) != NULL &&
-			(c = async_fnextc_fd(PoolInputFile(p), 0, p->infd)) != NODATA &&
-			  c != EOF && (*ops->strmin)(p, hp, rp))
-			;
+		      (c = async_iobfnextc(PoolInputFile(p), 0)) != NODATA &&
+		      c != EOF && (*ops->strmin)(p, hp, rp))
+		  ;
 	    }
 	    PoolClose(p);
 	    MyPoolDelete(p);
-	} else if (PoolInputFile(p) == stdin && PoolOutputFile(p) == NULL)
+	} else if (iobfile(PoolInputFile(p)) == stdin
+		   && PoolOutputFile(p) == NULL)
 	  p = PoolStreamOpen(PoolName(p), stdout, 1, ops);
 	return ok;
     } else if(strpbrk(str, "({ \t\n")) {
 	static Pool *pcache;	/* Cache a pool for handling strings */
 	static int inuse = 0;	/* Use cached pool unless already in use */
-	FILE *inf = fstropen(str, strlen(str), "rb");
+	IOBFILE *inf = iobfileopen(fmemopen(str, strlen(str), "rb"));
 		    /* Caching implies this first pool has a long lifetime;
 		     * suitable for expressing (interest (...)) 
 		     */
 	if(!inuse) {
 	    if((p = pcache) == NULL)
-		p = pcache = PoolStreamTemp(str, inf, 0, ops);
+		p = pcache = PoolStreamTemp(str, inf, NULL, 0, ops);
 	    inuse = 1;
 	} else {
-	    p = PoolStreamTemp(str, inf, 0, ops);
+	    p = PoolStreamTemp(str, inf, NULL, 0, ops);
 	}
 	if(p == NULL)
 	    return 0;		/* Failed */
 	p->inf = inf;
 	p->outf = stdout;	/* Attach default output stream */
-	while(fnextc(inf, 0) != EOF)
+	while(iobfnextc(inf, 0) != EOF)
 	    ok = (*ops->strmin)(p, hp, rp);
 	PoolClose(p);
-	if(p == pcache) inuse = 0;
-	else MyPoolDelete(p);	/* Delete temp pool unless it's our cached one */
+	if(p == pcache)
+	    inuse = 0;
+	else
+	    MyPoolDelete(p); /* Delete temp pool unless it's our cached one */
     } else {
 	/* Print the "No such file..." error left by access() */
 	fprintf(stderr, "%s: %s\n", str, sperror());
@@ -317,12 +320,14 @@ In this implementation, only prefixes beginning with # are recognized.")
 static void
 comm_sigchld(int sig)
 {
-#ifdef NeXT  			/* BSD-ish */
-  union wait status;
-  int pid = wait3(&status, WNOHANG|WUNTRACED, NULL);
-#else	     			/* POSIX/SysV-ish, including SGI, Sun, Linux */
+#if HAVE_WAITPID
   int status;
   int pid = waitpid(-1, &status, WNOHANG);
+#elif HAVE_WAIT3
+  union wait status;
+  int pid = wait3(&status, WNOHANG|WUNTRACED, NULL);
+#else
+# error FIXME
 #endif
 
   if(WIFEXITED(status) || WIFSIGNALED(status)) {
@@ -1274,13 +1279,12 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
     ACCEPT_ARG3_TYPE len = sizeof(un);
     char conname[10240];
     int i, ds;
-    FILE *f;
     Pool *p;
     HandleOps *ops = (HandleOps *)PoolClientData(listenp);
 
     if((ds =
 	accept(
-	       fileno(listenp->inf),
+	       iobfileno(listenp->inf),
 	       (struct sockaddr *)&un,
 	       &len)
 	) < 0) {
@@ -1293,7 +1297,6 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
 	if(PoolByName(conname) == NULL)
 	    break;
     }
-    f = fdopen(ds, "rb");
     p = PoolStreamOpen(conname, fdopen(ds, "rb"), 0, ops);
     /*
      * Reply on the same pipe's return stream.

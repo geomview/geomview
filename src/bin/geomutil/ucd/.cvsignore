@@ -1,2 +1,6 @@
+.libs
 Makefile Makefile.in .deps
 anytoucd ucdtooff
+*.lo
+*.la
+.libs

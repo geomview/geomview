@@ -255,7 +255,7 @@ Default: create complete rib file containing default camera, lights, etc.\n\
 			MG_END);
 	}
 
-	ageom = GeomFLoad(infileFD, infile);
+	ageom = GeomFLoad(iobfileopen(infileFD), infile);
 
 	if(flag==world) { 
 	    mgworldbegin();

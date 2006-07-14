@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libtransobj.a
+noinst_LTLIBRARIES = libtransobj.la
 
-libtransobj_a_SOURCES = \
+libtransobj_la_SOURCES = \
     transobj.c \
     transobj.h

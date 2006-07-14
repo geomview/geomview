@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libvect.a
+noinst_LTLIBRARIES = libvect.la
 
-libvect_a_SOURCES = \
+libvect_la_SOURCES = \
     vectbound.c vectclass.c vectcreate.c vectdraw.c vectload.c vectpick.c vectsave.c vectsphere.c vecttransform.c \
     vect.h vectP.h

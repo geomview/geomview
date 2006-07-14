@@ -24,9 +24,12 @@
 #include "forms.h"
 #include "xforms-compat.h"
 #include "panel.h"
+#include "lang.h"
 
 extern void hui_message(char *s);
-void HingeIt(int dir);
+extern void HingeIt(int dir);
+extern void hui_main_loop(IOBFILE *inf);
+extern void hui_init(void);
 
 extern int mainplacement;
 extern int helpplacement;

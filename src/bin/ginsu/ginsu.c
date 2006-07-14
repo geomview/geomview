@@ -330,6 +330,8 @@ int main(int argc, char *argv[])
 	fflush(stdout);
     } else {
 	fprintf(stderr, "ginsu: Couldn't clip!  Is \"clip\" installed on your UNIX search path?");
+	fprintf(stderr, "cmd: \"%s\"\n", str);
+	exit(1);
 	sprintf(str, "%s-", tfname);  unlink(str);
 	sprintf(str, "%s+", tfname);  unlink(str);
     }

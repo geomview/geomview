@@ -75,7 +75,7 @@ static int obj2array(LObject *obj, LType *type, char *x, int *n);
 LObject *LMakeArray(LType *basetype, char *array, int count);
 
 static char *delims = "()";
-#define NEXTTOKEN(tok,fp) tok = fdelimtok( delims, fp, 0 )
+#define NEXTTOKEN(tok,fp) tok = iobfdelimtok( delims, fp, 0 )
 
 	/* Use -1 as the item size of special type markers
 	 * for quick detection in LParseArgs()/AssignArgs().
@@ -557,7 +557,7 @@ LType LObjectp = {
  * Lake implementation
  */
 
-Lake *LakeDefine(FILE *streamin, FILE *streamout, void *river)
+Lake *LakeDefine(IOBFILE *streamin, FILE *streamout, void *river)
 {
   Lake *lake = OOGLNewE(Lake, "new Lake");
   lake->streamin = streamin;

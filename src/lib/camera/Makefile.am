@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libcamera.a
+noinst_LTLIBRARIES = libcamera.la
 
-libcamera_a_SOURCES = \
+libcamera_la_SOURCES = \
     camcompat.c camera.c camstream.c \
     camera.h cameraP.h

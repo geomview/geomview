@@ -1,1 +1,6 @@
+.libs
 Makefile Makefile.in .deps
+cplxview
+*.lo
+*.la
+.libs

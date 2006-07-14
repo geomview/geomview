@@ -35,9 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transform.h"
 #include "sphereP.h"
 
-Sphere *SphereFLoad(file, fname) 
-     FILE *file;
-     char *fname;
+Sphere *SphereFLoad(IOBFILE *file, char *fname)
 {
   HPoint3 center;
   float radius;
@@ -63,7 +61,7 @@ Sphere *SphereFLoad(file, fname)
   if(strcmp(token, "SPHERE") != 0)
     return NULL;
 
-  if ( fgetnf(file, 1, &radius, 0) != 1 || fgetnf(file, 3, &center.x, 0) != 3 ) {
+  if ( iobfgetnf(file, 1, &radius, 0) != 1 || iobfgetnf(file, 3, &center.x, 0) != 3 ) {
     OOGLSyntax(file, "%s: SPHERE: expected radius, then x y z", fname);
     return NULL;
   }

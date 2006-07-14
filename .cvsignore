@@ -1,3 +1,4 @@
+.dirstamp
 INSTALL
 Makefile.in Makefile
 aclocal.m4
@@ -18,8 +19,13 @@ geomview*.tar.*
 geomview-1*
 include
 install-sh
+libtool
+ltmain.sh
 missing
 mkinstalldirs
 modules
 stamp-h.in stamp-h
 stamp-h1
+*.lo
+*.la
+.libs

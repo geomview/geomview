@@ -56,9 +56,9 @@ expr_var u1var, u2var, v1var, v2var, ivar, zvar;
 expr_var pivar, evar;
 int ok_expr = 0, ok_sexpr = 0, ok_texpr = 0;
   
-void initcompute()
+void initcompute(void)
 {
-	fcomplex in;
+  fcomplex in;
 
   e = expr_new(FCOMPLEX);
   es = expr_new(FCOMPLEX);
@@ -98,13 +98,13 @@ void initcompute()
   expr_set_variable_complex(e,ivar,&in);
 }
 
-void computegraph(int ac, char **av)
+void computegraph(void)
 {
   int i, j;
   register double xval, yval, newxval, newyval;
   fcomplex zval;
-  double x0,x1, y0, y1;
-  int m1, m2;
+  double x0 = 0, x1 = 0, y0 = 0, y1 = 0;
+  int m1 = 0, m2 = 0;
 
   if (!ok_expr) return;
 

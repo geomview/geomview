@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 EXTRA_DIST = Headers
 
-noinst_LIBRARIES = libshade.a
+noinst_LTLIBRARIES = libshade.la
 
-libshade_a_SOURCES = \
+libshade_la_SOURCES = \
     appearance.c apstream.c light.c \
     appearance.h

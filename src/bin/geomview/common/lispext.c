@@ -190,11 +190,9 @@ int wnmatch(a, b)
   return 0;
 }
 
-void wnwrite(fp, x)
-    FILE *fp;
-    WindowStruct * *x;
+void wnwrite(FILE *fp, WindowStruct * *x)
 {
-  Pool *p = PoolStreamTemp("", fp, 1, &WindowOps);
+  Pool *p = PoolStreamTemp("", NULL, fp, 1, &WindowOps);
   if(p == NULL)
     return;
   (void) WnStreamOut(p, (*x)->h, (*x)->wn);
@@ -764,7 +762,7 @@ static LObject *stringsparse(Lake *lake)
 
   *VVINDEX(svv, char, 0) = '\0';
   while ( LakeMore(lake,c) ) {
-    tok = fdelimtok( delims, lake->streamin, 0 );
+    tok = iobfdelimtok( delims, lake->streamin, 0 );
     toklen = strlen(tok);
     vvneeds(&svv, strlen(VVEC(svv,char))+toklen+2);
     if (!first) strcat(VVEC(svv,char), " ");

@@ -68,7 +68,7 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
     Handle *h = NULL;
     Handle *hname = NULL;
     register WnWindow *win = NULL;
-    FILE *inf;
+    IOBFILE *inf;
     char *w, *raww, *err, *title;
     int i, c;
     int more, unset;
@@ -82,15 +82,15 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 
     do {
 	more = unset = 0;
-	switch(c = fnextc(inf, 0)) {
-	case '{': brack++; fgetc(inf); break;
-	case '}': if(brack--) fgetc(inf); break;
+	switch(c = iobfnextc(inf, 0)) {
+	case '{': brack++; iobfgetc(inf); break;
+	case '}': if(brack--) iobfgetc(inf); break;
 
 	case '<':
 	case ':':
 	case '@':
-	    fgetc(inf);
-	    w = fdelimtok("{}()", inf, 0);
+	    iobfgetc(inf);
+	    w = iobfdelimtok("{}()", inf, 0);
 	    if(c == '<' && HandleByName(w, &WindowOps) == NULL) {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
@@ -105,10 +105,10 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 	    break;
 
 	case '-':
-	    fgetc(inf); unset = 1;	/* and fall into... */
+	    iobfgetc(inf); unset = 1;	/* and fall into... */
 
 	default:
-	    w = fdelimtok("{}()", inf, 0);
+	    w = iobfdelimtok("{}()", inf, 0);
 	    if(w == NULL) goto error;
 	    for(i = sizeof(wn_kw)/sizeof(wn_kw[0]); strcmp(w, wn_kw[--i].kw); )
 		if(i == 0) {
@@ -127,18 +127,18 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 	    switch(i) {
 	    case 0: more = 1; break;		/* window */
 	    case 1:				/* define */
-		hname = HandleAssign(ftoken(inf, 0), &WindowOps, NULL);
+		hname = HandleAssign(iobftoken(inf, 0), &WindowOps, NULL);
 		more = 1;
 		break;
 	    case 2:				/* size */
 		err = "xsize ysize";
-		if(fgetni(inf, 1, (int *)(void *)&win->xsize, 0) <= 0 ||
-		   fgetni(inf, 1, (int *)(void *)&win->ysize, 0) <= 0)
+		if(iobfgetni(inf, 1, (int *)(void *)&win->xsize, 0) <= 0 ||
+		   iobfgetni(inf, 1, (int *)(void *)&win->ysize, 0) <= 0)
 		    goto expect;
 		break;
 	    case 3:				/* position */
 		err = poserr;
-		if(fgetni(inf, 4, (int *)&win->pref, 0) != 4)
+		if(iobfgetni(inf, 4, (int *)&win->pref, 0) != 4)
 		    goto expect;
 		break;
 
@@ -149,22 +149,22 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 		break;
 	    case 6:				/* pixelaspect */
 		err = "pixel-aspect-ratio(X/Y)";
-		if(fgetnf(inf, 1, &win->pixaspect, 0) <= 0)
+		if(iobfgetnf(inf, 1, &win->pixaspect, 0) <= 0)
 		    goto expect;
 		break;
 	    case 8:				/* curpos */
 		err = poserr;
-		if(fgetni(inf, 4, (int *)&win->cur, 0) != 4)
+		if(iobfgetni(inf, 4, (int *)&win->cur, 0) != 4)
 		    goto expect;
 		break;
 	    case 9:				/* viewport */
 		err = poserr;
-		if(fgetni(inf, 4, (int *)&win->viewport, 0) != 4)
+		if(iobfgetni(inf, 4, (int *)&win->viewport, 0) != 4)
 		    goto expect;
 		break;
 	    case 10:
 		err = "window title string";
-		title = fdelimtok("{}()", inf, 0);
+		title = iobfdelimtok("{}()", inf, 0);
 		if(title == NULL)
 		    goto expect;
 		WnSet(win, WN_NAME, title, WN_END);
