@@ -49,7 +49,7 @@ mgrib_mesh( wrap, nu, nv, P, N, C)
     Point3 *N;
     ColorA *C;
 {
-    register Appearance *ap;
+    Appearance *ap;
     Color   *c3;
     Point3  *n;
     HPoint3 *p;
@@ -84,12 +84,12 @@ mgrib_mesh( wrap, nu, nv, P, N, C)
 static void
 mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
 {
-    register Appearance *ap;
+    Appearance *ap;
     char    *uwrap,*vwrap;
     int     i;
-    register HPoint3 *p;
-    register Point3  *n;
-    register ColorA	*c;
+    HPoint3 *p;
+    Point3  *n;
+    ColorA	*c;
     int     nunv;
     int     viflag = 0; /* used to insert \n into RIB file so lines */
 		    /* won't be too long for 'vi' to work well   */

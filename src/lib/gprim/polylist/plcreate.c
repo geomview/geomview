@@ -43,10 +43,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 
 PolyList *
-PolyListDelete( register PolyList *pl )
+PolyListDelete( PolyList *pl )
 {
-    register int i;
-    register Poly *p;
+    int i;
+    Poly *p;
     
     if (pl == NULL)
 	return NULL;
@@ -65,8 +65,8 @@ PolyListDelete( register PolyList *pl )
 PolyList *
 PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
 {
-   register PolyList *pl;
-   register Vertex *v;
+   PolyList *pl;
+   Vertex *v;
    int *nvertperpol=NULL, *verts=NULL;
    int npolyflag=0, nvertflag=0, vertflag=0, pointflag=0;
    HPoint3 *v4 = NULL;
@@ -74,7 +74,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
    ColorA *vc = NULL, *pc = NULL;
    int attr, copy=1;
    int numentries=0, numvertices=0;
-   register int i;
+   int i;
    int j,k=0, dimn = 3;
 
    if (exist == NULL) {

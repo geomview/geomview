@@ -32,7 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/geom/knownclass.c,v 1.4 2006/07/14 17:47:15 rotdrop Exp $
+ * $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/geom/knownclass.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $
  */
 
 #include <string.h>
@@ -136,7 +136,7 @@ static struct knownclass {
 void
 GeomKnownClassInit()
 {
-	register struct knownclass *k;
+	struct knownclass *k;
 	static char done = 0;
 
 	if(!done) {
@@ -155,8 +155,8 @@ GeomClass *
 GeomFName2Class(str)
 	char *str;
 {
-	register char *p;
-	register struct knownclass *k;
+	char *p;
+	struct knownclass *k;
 
 	if(str == NULL || (p = strrchr(str, '.')) == NULL)
 		return NULL;

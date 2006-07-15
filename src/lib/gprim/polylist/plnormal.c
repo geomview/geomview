@@ -41,12 +41,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 PolyList *
 PolyListComputeNormals( PolyList *polylist )
 {
-	register int	i, n;
+	int	i, n;
 	float           len;
-	register Poly	*p;
+	Poly	*p;
 	Vertex		**vp;
-	register Vertex	*v, *v2, *v3;
-	register float	x, y, z;
+	Vertex	*v, *v2, *v3;
+	float	x, y, z;
 
 	if (!polylist) return NULL;
 

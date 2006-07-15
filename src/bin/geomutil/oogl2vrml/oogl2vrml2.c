@@ -93,7 +93,8 @@ void fprintfdecindent(FILE *f, char *fmt, ...)
   indent += 2;
 }
 
-#define PRINT_PADDING(f, padding) fprintf((f), "%*s", indent + (padding), "")
+#define PRINT_PADDING(f, padding) \
+	fprintf((f), "%*s", (int)(indent + (padding)), "")
 
 void
 faceindex(PolyList *plist) {

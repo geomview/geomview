@@ -47,8 +47,8 @@ float
 Tm3Invert(m, mi)
 Transform3 m, mi;
 {
-	register int i, j;
-	register int k;
+	int i, j;
+	int k;
 	float x;
 	Transform3 t;
 	float f;

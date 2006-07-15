@@ -574,8 +574,8 @@ mgx11_pushappearance()
 int
 mgx11_popappearance()
 {
-  register struct mgastk *mastk = _mgc->astk;
-  register struct mgastk *mastk_next;
+  struct mgastk *mastk = _mgc->astk;
+  struct mgastk *mastk_next;
 
   if (!(mastk_next = mastk->next))
   {
@@ -963,7 +963,7 @@ mgx11window(WnWindow *win)
 mgcontext *
 mgx11_findctx( Window winid )
 {
-  register struct mgcontext *mgc;
+  struct mgcontext *mgc;
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_X11 && ((mgx11context *)mgc)->myxwin->window == winid)

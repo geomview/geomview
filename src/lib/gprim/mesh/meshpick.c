@@ -52,7 +52,7 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap, Transform T)
   maxnv = mesh->nv;
   maxpt = maxnu * maxnv;
 
-  /* Make sure that vects do not register as visible - otherwise they
+  /* Make sure that vects do not as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */
   if (ap != NULL) {
     apflag = ap->flag;

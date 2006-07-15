@@ -101,7 +101,7 @@ void initcompute(void)
 void computegraph(void)
 {
   int i, j;
-  register double xval, yval, newxval, newyval;
+  double xval, yval, newxval, newyval;
   fcomplex zval;
   double x0 = 0, x1 = 0, y0 = 0, y1 = 0;
   int m1 = 0, m2 = 0;

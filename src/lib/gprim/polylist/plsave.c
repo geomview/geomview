@@ -39,13 +39,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 PolyList *
 PolyListFSave(polylist, outf, fname)
-	register PolyList *polylist;	/* Thing to save */
+	PolyList *polylist;	/* Thing to save */
 	FILE *outf;			/* Stream to save it on */
 	char *fname;			/* File name for error msgs */
 {
-	register int i, n;
-	register Poly *p;
-	register Vertex **vp, *v;
+	int i, n;
+	Poly *p;
+	Vertex **vp, *v;
 
 	/* We don't really know the number of edges and it's a pain to count.
 	 * Assume Euler number 2.
@@ -77,7 +77,7 @@ PolyListFSave(polylist, outf, fname)
 	    n = p->n_vertices;
 	    fprintf(outf, "\n%d	", n);
 	    for(vp = p->v; --n >= 0; vp++)
-		fprintf(outf, " %d", (*vp) - polylist->vl);
+		    fprintf(outf, " %d", (int)((*vp) - polylist->vl));
 	    if((polylist->flags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
 		fprintf(outf, "\t%g %g %g %g",
 			p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);

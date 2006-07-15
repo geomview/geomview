@@ -784,7 +784,7 @@ static int
 view_pick( DView *dv, int x, int y, Pick *pick )
 {
   Transform V, T, Tnet, Tt, Tmodel, Tnorm, oldTw, Tworld;
-  register int i;
+  int i;
   int chosen = NOID;
   float xpick, ypick;
   DGeom *dg;

@@ -182,7 +182,7 @@ static float ParSgSgDistance(Point3 *a1, Point3 *a2, Point3 *adir,
 {
   Point3 b1p,b2p;
   HPoint3 b1plane, b2plane;
-  float d,t1,t2;
+  float d,t1 = 0.0 ,t2 = 0.0;
 
   Pt3Sub(a2,a1,adir);
   PtNormalPlane(b1, adir, &b1plane);
@@ -250,7 +250,7 @@ static float SgPtDistance(Point3 *p, Point3 *a1, Point3 *a2, Point3 *dir)
 static void SgPlMinPoint(HPoint3 *pl, Point3 *a, Point3 *b,
 			 Point3 *dir, Point3 *ans)
 {
-  float t;
+  float t = 0.0;
 
   LnPlIntersect(pl, a, dir, &t);
   if (t <= 0)
@@ -291,7 +291,7 @@ static void TComb(Point3 *a, float t, Point3 *dir, Point3 *b)
  */
 static int LnPlIntersect(HPoint3 *pl, Point3 *a, Point3 *dir, float *t)
 {
-  register float d;
+  float d;
 
   d = pl->x*dir->x + pl->y*dir->y + pl->z*dir->z;
   if (d == 0) return 0;

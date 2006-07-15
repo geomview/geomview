@@ -57,9 +57,9 @@ LoadCmap(char *file)
 NPolyList *
 NPolyListFLoad(IOBFILE *file, char *fname)
 {
-    register NPolyList *pl;
+    NPolyList *pl;
     int edges;
-    register int i;
+    int i;
     float *v;
     int binary = 0;
     int headerseen = 0;
@@ -152,8 +152,8 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 
     pl->p = OOGLNewNE(NPoly, pl->n_polys, "NPolyListFLoad polygons");
     for(i = 0; i < pl->n_polys; ) {
-	register NPoly *p;
-	register int k,index;
+	NPoly *p;
+	int k,index;
 
 	p = &pl->p[i];
 	if(iobfgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {

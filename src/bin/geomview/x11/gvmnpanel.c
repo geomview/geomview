@@ -540,9 +540,9 @@ static int id2menuindex(int id)
 
 static XmString *BuildObjectMenuList( int **menuindex, int *count )
 {
-  register int i;
+  int i;
   int n, camcount;
-  register DObject *obj, **objs;
+  DObject *obj, **objs;
   char buf[150];
   XmString *menulist;
 

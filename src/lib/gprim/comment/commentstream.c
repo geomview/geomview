@@ -71,7 +71,7 @@ Geom *
 CommentImport( Pool *p )
 {
     char *str;
-    register Comment *comment =
+    Comment *comment =
 	(Comment *)GeomCCreate(NULL, CommentMethods(), NULL);
     IOBFILE *file;
 

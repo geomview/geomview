@@ -43,7 +43,7 @@ BBoxUnion(BBox *bbox1, BBox *bbox2)
 }
 
 BBox *
-BBoxUnion3(register BBox *bbox1, register BBox *bbox2, register BBox *result)
+BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 {
 	HPoint3	min, max;
 

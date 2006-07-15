@@ -96,7 +96,7 @@ vvfree(vvec *v)
 }
 
 void
-vvneeds(register vvec *v, int needed)
+vvneeds(vvec *v, int needed)
 {
     if(needed > v->allocated) {
 	int had = v->allocated;

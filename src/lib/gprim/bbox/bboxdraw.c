@@ -36,9 +36,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *
 BBoxDraw(bbox)
-     register BBox *bbox;
+     BBox *bbox;
 {
-    register int i, numvert;
+    int i, numvert;
     int dimn;
     HPoint3 vert[16];
     ColorA edgecolor;

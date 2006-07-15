@@ -439,7 +439,7 @@ setapath(LList *list, vvec *vvpath, void (*setfunc)(char **))
 }
 
 static void
-set_vvpath(register vvec *vv, char **ents)
+set_vvpath(vvec *vv, char **ents)
 {
   int i;
   for(i = VVCOUNT(*vv); --i >= 0; )

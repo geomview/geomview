@@ -45,7 +45,7 @@ GeomClassLookup( name )
     char *name;
 {
     static char done = 0;
-    register struct classtable *cp;
+    struct classtable *cp;
 
     if(!done) {
 	done = 1;
@@ -62,7 +62,7 @@ GeomClassInstall( name, Class )
     char *name;
     GeomClass *Class;
 {
-    register struct classtable *cp;
+    struct classtable *cp;
 
     cp = OOGLNewE(struct classtable, "GeomClass table");
     cp->next = table;
@@ -116,7 +116,7 @@ GeomClassIterate( )
 
 GeomClass *
 GeomNextClass( it )
-    register void *it;
+    void *it;
 {
     GeomClass *c;
 #define  iter  ((struct classtable **)it)

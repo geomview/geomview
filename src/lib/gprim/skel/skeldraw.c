@@ -119,7 +119,7 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
 
 Skel *
 SkelDraw(s)
-     register Skel *s;
+     Skel *s;
 {
     int i, hascolor;
     Skline *l;

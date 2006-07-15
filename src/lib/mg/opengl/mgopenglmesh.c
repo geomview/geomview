@@ -56,13 +56,13 @@ mgopenglsubmesh( int wrap, int nu, int nv,
 		 HPoint3 *meshP, Point3 *meshN,
 		 ColorA *meshC, Point3 *meshSTR)
 {
-  register int u, v;
+  int u, v;
   int ucnt, vcnt;
-  register HPoint3 *P;
-  register Point3 *N;
-  register ColorA *C;
+  HPoint3 *P;
+  Point3 *N;
+  ColorA *C;
   Point3 *STR;
-  register int prev;
+  int prev;
   int du;
   int douwrap;
   int i;

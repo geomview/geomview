@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 MergeIn( ColorA *f, ColorA *b,ColorA * t )
 {
-    register float a = b->a;
+    float a = b->a;
 
     t->r = a * f->r;
     t->g = a * f->g;
@@ -47,7 +47,7 @@ MergeIn( ColorA *f, ColorA *b,ColorA * t )
 void
 MergeInN( ColorA *f,ColorA * b,ColorA * t,int n )
 {
-    register float a;
+    float a;
     
     while( n-- ) {
         a = b->a;

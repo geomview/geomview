@@ -575,7 +575,7 @@ static void *vecttoPL(int sel, Vect *v, va_list *args) {
 static int
 PLaddverts(PLData *PL, int nv, HPoint3 *v, ColorA *c, Point3 *n)
 {
-  register Vert *vp;
+  Vert *vp;
   Material *mat;
   int i;
   int base = PLnextvert(PL);
@@ -616,7 +616,7 @@ PLaddverts(PLData *PL, int nv, HPoint3 *v, ColorA *c, Point3 *n)
 static int
 PLaddNDverts(PLData *PL, int nv, int hdim, float *v, ColorA *c)
 {
-  register Vert *vp;
+  Vert *vp;
   Material *mat;
   int i;
   int base = PLnextvert(PL);

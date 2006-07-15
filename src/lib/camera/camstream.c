@@ -62,7 +62,7 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
   Handle *hname = NULL;
   Camera *cam = NULL;
   int credible = 0;
-  register int i;
+  int i;
   int got;
   float v;
   int brack = 0;

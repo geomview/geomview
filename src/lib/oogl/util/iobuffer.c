@@ -28,7 +28,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-# include <config.h>
+# include "config.h"
 #endif
 
 #include <stdio.h>
@@ -37,7 +37,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-/*#undef HAVE_FCNTL*/
+/*#undef HAVE_FCNTL */
 
 #if HAVE_FCNTL_H && HAVE_FCNTL
 # include <fcntl.h>
@@ -95,6 +95,7 @@ struct IOBFILE
   int      mark_wrap:1; /**< Set when the buffer no longer covers the
 			     position of the mark. */
   int      mark_set:1;
+  int      eof:2;
   int      ungetc;
   fpos_t   stdiomark;
   IOBLIST  ioblist;
@@ -105,6 +106,15 @@ struct IOBFILE
   int      fflags;
 #endif
 };
+
+static int n_total_buffers;
+static int max_total_buffers;
+static int n_fopen;
+static int max_fopen;
+static int n_fileopen;
+static int max_fileopen;
+static int n_popen;
+static int max_popen;
 
 static void iob_release_buffer(IOBLIST *ioblist)
 {
@@ -117,6 +127,7 @@ static void iob_release_buffer(IOBLIST *ioblist)
     prev = iob;
     iob  = iob->next;
     free(prev);
+n_total_buffers --;
   }
   memset(ioblist, 0, sizeof(*ioblist));
 }
@@ -124,6 +135,11 @@ static void iob_release_buffer(IOBLIST *ioblist)
 static void iob_init_buffer(IOBLIST *ioblist)
 {
   ioblist->buf_head       = malloc(sizeof(IOBuffer));
+  n_total_buffers ++;
+  if (n_total_buffers > max_total_buffers) {
+    max_total_buffers = n_total_buffers;
+    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+  }
   ioblist->buf_head->next = ioblist->buf_head;
 
   ioblist->buf_ptr  = ioblist->buf_head;
@@ -146,6 +162,11 @@ static void iob_copy_buffer(IOBLIST *to, IOBLIST *from)
     }
     memcpy(to->buf_tail->buffer, iob->buffer, BUFFER_SIZE);
     to->buf_tail->next = malloc(sizeof(IOBuffer));
+  n_total_buffers ++;
+  if (n_total_buffers > max_total_buffers) {
+    max_total_buffers = n_total_buffers;
+    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+  }
     to->buf_tail = to->buf_tail->next;
     to->buf_tail->next = to->buf_head;
   }
@@ -191,6 +212,12 @@ IOBFILE *iobfileopen(FILE *istream)
   iob_init_buffer(&iobf->ioblist);
 
   iobf->ungetc    = EOF;
+
+  n_fileopen++;
+  if (n_fileopen > max_fileopen) {
+    max_fileopen = n_fileopen;
+    fprintf(stderr, "max fileopen: %d\n", max_fileopen);
+  }
   
   return iobf;
 }
@@ -206,20 +233,13 @@ IOBFILE *iobfopen(const char *name, const char *mode)
   stream = fopen(name, mode);
   if (stream == NULL)
     return NULL;
-  return iobfileopen(stream);
-}
 
-IOBFILE *iobpopen(const char *cmd, const char *mode)
-{
-  FILE *stream;
-
-  if (strchr(mode, 'a') != NULL || strchr(mode, 'w') != NULL) {
-    fprintf(stderr, "iobfopen(): Write mode is unsupported\n");
-    return NULL;
+  n_fopen++;
+  if (n_fopen > max_fopen) {
+    max_fopen = n_fopen;
+    fprintf(stderr, "max fopen: %d\n", max_fopen);
   }
-  stream = popen(cmd, mode);
-  if (stream == NULL)
-    return NULL;
+
   return iobfileopen(stream);
 }
 
@@ -230,6 +250,8 @@ int iobfileclose(IOBFILE *iobf)
     iob_release_buffer(&iobf->ioblist_mark);
   }
   free(iobf);
+
+  n_fileopen--;
 
   return 0;
 }
@@ -242,7 +264,30 @@ int iobfclose(IOBFILE *iobf)
 
   (void)iobfileclose(iobf);
 
+  n_fopen--;
+
   return result;
+}
+
+#if HAVE_POPEN
+IOBFILE *iobpopen(const char *cmd, const char *mode)
+{
+  FILE *stream;
+
+  if (strchr(mode, 'a') != NULL || strchr(mode, 'w') != NULL) {
+    fprintf(stderr, "iobfopen(): Write mode is unsupported\n");
+    return NULL;
+  }
+  stream = popen(cmd, mode);
+  if (stream == NULL)
+    return NULL;
+
+  n_popen++;
+  if (n_popen > max_popen) {
+    max_popen = n_popen;
+    fprintf(stderr, "max popen: %d\n", max_popen);
+  }
+  return iobfileopen(stream);
 }
 
 int iobpclose(IOBFILE *iobf)
@@ -253,8 +298,11 @@ int iobpclose(IOBFILE *iobf)
 
   (void)iobfileclose(iobf);
 
+  n_popen--;
+
   return result;
 }
+#endif
 
 long iobftell(IOBFILE *iobf)
 {
@@ -387,7 +435,8 @@ iobfread_buffer(void *ptr, size_t size, IOBFILE *iobf)
     buf           += rq_sz_pos;
     rd_sz         += rq_sz_pos;
     rq_sz         -= rq_sz_pos;
-    if (rq_sz && ioblist->buf_pos == BUFFER_SIZE) {
+    if (ioblist->buf_pos == BUFFER_SIZE &&
+	ioblist->buf_ptr != ioblist->buf_tail) {
       /* advance to next buffer */
       ioblist->buf_ptr = ioblist->buf_ptr->next;
       ioblist->buf_pos = 0;
@@ -396,6 +445,7 @@ iobfread_buffer(void *ptr, size_t size, IOBFILE *iobf)
 	/* Release buffers no longer needed. */
 	ioblist->buf_tail->next = ioblist->buf_head->next;
 	free(ioblist->buf_head);
+n_total_buffers --;
 	ioblist->buf_head  = ioblist->buf_tail->next;
 	ioblist->tot_pos  -= BUFFER_SIZE;
 	ioblist->tot_size -= BUFFER_SIZE;
@@ -419,6 +469,11 @@ static void iob_check_space(IOBFILE *iobf)
      * needed for files without seek capabilities.
      */
     ioblist->buf_tail->next = malloc(sizeof(IOBuffer));
+  n_total_buffers ++;
+  if (n_total_buffers > max_total_buffers) {
+    max_total_buffers = n_total_buffers;
+    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+  }
     ioblist->buf_tail       = ioblist->buf_tail->next;
     ioblist->buf_tail->next = ioblist->buf_head;
     ioblist->tail_size      = 0;
@@ -442,9 +497,35 @@ static void iob_flush_buffer(IOBLIST *ioblist)
   while (ioblist->buf_head != ioblist->buf_ptr) {
     ioblist->buf_tail->next = ioblist->buf_head->next;
     free(ioblist->buf_head);
+n_total_buffers --;
     ioblist->buf_head = ioblist->buf_tail->next;
     ioblist->tot_pos  -= BUFFER_SIZE;
     ioblist->tot_size -= BUFFER_SIZE;
+  }
+  /* Check for the special case where we have one and only one buffer
+   * and tot_pos points to the very end of it. In this case, discard
+   * this buffer, too. The other possibility would be to allocate a
+   * second buffer.
+   */
+  if (ioblist->buf_head == ioblist->buf_head->next &&
+      ioblist->tot_pos == BUFFER_SIZE) {
+#if 1
+    ioblist->tot_pos =
+      ioblist->tot_size  =
+      ioblist->buf_pos   =
+      ioblist->tail_size = 0;
+#else
+    ioblist->buf_tail->next = malloc(sizeof(IOBuffer));
+  n_total_buffers ++;
+  if (n_total_buffers > max_total_buffers) {
+    max_total_buffers = n_total_buffers;
+    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+  }
+    ioblist->buf_tail       = ioblist->buf_tail->next;
+    ioblist->buf_tail->next = ioblist->buf_head;
+    ioblist->tail_size =
+      ioblist->buf_pos = 0;      
+#endif
   }
 }
 
@@ -467,7 +548,10 @@ void iobfrewind(IOBFILE *iobf)
   iobf->mark_wrap = 0;
   iobf->mark_pos  = ~0;
   memset(&iobf->stdiomark, ~0, sizeof(iobf->stdiomark));
-  iobf->ungetc    = EOF;
+
+  /* Clear status flags */
+  iobf->ungetc = EOF;
+  iobf->eof = 0;
 }  
 
 size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
@@ -490,7 +574,12 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
     rd_size = iobfread_buffer(buf, rq_size, iobf);
     rq_size -= rd_size;
     rd_tot  += rd_size;
-    if (tail_rd && rq_size) {
+    buf     += rd_size;
+    if (iobf->eof && rq_size) {
+      iobf->eof = -1;
+      break;
+    }
+    if (tail_rd && rq_size && !iobf->eof) {
       size_t tail_space;
       
       iob_check_space(iobf);
@@ -511,6 +600,9 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 		      1, tail_space, iobf->istream);
       ioblist->tail_size += tail_rd;
       ioblist->tot_size  += tail_rd;
+      if (tail_rd < tail_space && feof(iobf->istream)) {
+	iobf->eof = 1;
+      }
 #if HAVE_FCNTL
       if (!iobf->can_seek && first && iobf->fflags != -1) {
 	fcntl(fileno(iobf->istream), F_SETFL, iobf->fflags);
@@ -531,7 +623,7 @@ int iobfgetc(IOBFILE *iobf)
   int c = EOF;
   unsigned char c_char;
 
-  if (iobfread(&c_char, 1, 1, iobf) == 1) {
+  if (iobf->eof != -1 && iobfread(&c_char, 1, 1, iobf) == 1) {
     c = c_char;
   }
 
@@ -543,7 +635,9 @@ int iobfsetmark(IOBFILE *iobf)
   IOBLIST *ioblist = &iobf->ioblist;
   int result = 0;
 
-  iobf->ungetc    = EOF;
+  /* FIXME: generate error if EOF condition is set? */
+  if (iobf->eof == -1)
+    return -1;
 
   iob_flush_buffer(ioblist);
   
@@ -581,8 +675,12 @@ int iobfseekmark(IOBFILE *iobf)
   ioblist->buf_ptr = ioblist->buf_head;
   ioblist->tot_pos = iobf->mark_pos;
   ioblist->buf_pos = iobf->mark_pos % BUFFER_SIZE;
-  iobf->ungetc = EOF;
 
+  /* Clear status flags on success */
+  iobf->ungetc = EOF;
+  if (iobf->eof == -1) {
+    iobf->eof = 1;
+  }
   return 0;
 }
 
@@ -604,10 +702,13 @@ int iobfclearmark(IOBFILE *iobf)
 
 int iobfungetc(int c, IOBFILE *iobf)
 {
-  if (c == EOF) {
+  if (c == EOF) { /* ??? */
     iobf->ungetc = EOF;
   } else {
     iobf->ungetc = c & 0xff;
+    if (iobf->eof == -1){
+      iobf->eof = 1;
+    }
   }
   return c;
 }
@@ -618,8 +719,14 @@ int iobfeof(IOBFILE *iobf)
     return 0;
   } else if (iobf->ioblist.tot_pos < iobf->ioblist.tot_size) {
     return 0;
+  } else if (iobf->eof == -1) {
+    if (feof(iobfile(iobf))) {
+      return 1;
+    }
+    iobf->eof = 0;
+    return 0;
   } else {
-    return feof(iobfile(iobf));
+    return 0;
   }
 }
 

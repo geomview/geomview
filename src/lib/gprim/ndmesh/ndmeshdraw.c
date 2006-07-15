@@ -70,7 +70,7 @@ draw_projected_ndmesh(mgmapfunc NDmap, void *NDinfo, NDMesh *mesh)
 }
 
 NDMesh *
-NDMeshDraw(register NDMesh *mesh)
+NDMeshDraw(NDMesh *mesh)
 {
   Transform T;
   float focallen;

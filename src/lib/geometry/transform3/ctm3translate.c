@@ -44,8 +44,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 Ctm3Translate( Transform3 T, float tx, float ty, float tz )
 {
-    register Tm3Coord *aptr;
-    register int cnt;
+    Tm3Coord *aptr;
+    int cnt;
 
     aptr=T[0];
     cnt=4;

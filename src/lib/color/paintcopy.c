@@ -35,10 +35,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void
 PaintCopy( f, b, t, m )
-    register ColorA *f, *b, *t;
-    register float *m;
+    ColorA *f, *b, *t;
+    float *m;
 {
-    register float a = 1.0 - *m;
+    float a = 1.0 - *m;
 
     t->r = *m * f->r + a * b->r;
     t->g = *m * f->g + a * b->g;
@@ -48,11 +48,11 @@ PaintCopy( f, b, t, m )
 
 void
 PaintCopyN( f, b, t, m, n )
-    register ColorA *f, *b, *t;
-    register float *m;
-    register int n;
+    ColorA *f, *b, *t;
+    float *m;
+    int n;
 {
-    register float a;
+    float a;
     
     while( n-- ) {
 	a = 1.0 - *m;

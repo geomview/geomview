@@ -52,9 +52,9 @@ void create_form_MainForm()
     fl_set_object_lsize(obj,FL_LARGE_FONT);
     fl_set_object_align(obj,FL_ALIGN_CENTER);
     fl_set_call_back(obj,SpaceBrowserProc,0);
-  obj = fl_add_text(FL_NORMAL_TEXT,25.0,280.0,265.0,25.0,"Click the right mouse button on an edge");
+  obj = fl_add_text(FL_NORMAL_TEXT,25.0,280.0,245.0,25.0,"Click the right mouse button on an edge");
     fl_set_object_align(obj,FL_ALIGN_CENTER);
-  obj = fl_add_text(FL_NORMAL_TEXT,30.0,260.0,245.0,25.0,"to select, then on a face to rotate.");
+  obj = fl_add_text(FL_NORMAL_TEXT,30.0,260.0,265.0,25.0,"to select, then on a face to rotate.");
     fl_set_object_align(obj,FL_ALIGN_CENTER);
   ResetButton = obj = fl_add_button(FL_NORMAL_BUTTON,15.0,55.0,75.0,40.0,"Reset");
     fl_set_object_lsize(obj,FL_LARGE_FONT);

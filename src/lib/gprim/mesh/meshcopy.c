@@ -37,9 +37,9 @@ Mesh *
 MeshCopy(obj)
     Mesh *obj;
 {
-	register Mesh  *m;
-	register Mesh  *om = obj;
-	register int    n;
+	Mesh  *m;
+	Mesh  *om = obj;
+	int    n;
 
 	if (om == NULL) return (NULL);
 

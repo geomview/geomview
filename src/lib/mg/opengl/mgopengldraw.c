@@ -80,10 +80,10 @@ mgopengl_polygon(int nv,  HPoint3 *V,
 	     int nn,  Point3 *N, 
 	     int nc,  ColorA *C)
 {
-  register int i;	
-  register HPoint3 *v;
-  register Point3 *n;
-  register ColorA *c;
+  int i;	
+  HPoint3 *v;
+  Point3 *n;
+  ColorA *c;
   int cinc, ninc;
   int flag;
 
@@ -139,13 +139,13 @@ void
 mgopengl_quads(int count,  HPoint3 *V, Point3 *N, ColorA *C)
 {
   int i;	
-  register HPoint3 *v;
-  register Point3 *n;
-  register ColorA *c;
+  HPoint3 *v;
+  Point3 *n;
+  ColorA *c;
   int flag;
 
 #define QUAD(stuff)  { \
-		register int k = 4;		\
+		int k = 4;		\
 		glBegin(GL_POLYGON);			\
 		do { stuff; } while(--k > 0);	\
 		glEnd();			\
@@ -201,7 +201,7 @@ mgopengl_quads(int count,  HPoint3 *V, Point3 *N, ColorA *C)
 	glColor3fv((float *)&_mgc->astk->ap.mat->edgecolor);
 	i = count; v = V;
 	do {
-	    register int k = 4;
+	    int k = 4;
 	    glBegin(GL_LINE_LOOP);
 	    do { mgopengl_v4ffunc(v++); } while(--k > 0);
 	    glEnd();
@@ -229,10 +229,10 @@ void mgopengl_line( HPoint3 *p1, HPoint3 *p2 )
   glEnd();
 }
 
-void mgopengl_point(register HPoint3 *v)
+void mgopengl_point(HPoint3 *v)
 {
   HPoint3 a;
-  register HPoint3 *p, *q;
+  HPoint3 *p, *q;
   float vw;
 
   DONT_LIGHT();
@@ -393,9 +393,9 @@ mgopengl_trickypolygon( Poly *p, int plflags )
  */
 void mgopengl_polylist( int np, Poly *_p, int nv, Vertex *V, int plflags )
 {
-  register int i,j;
-  register Poly *p;
-  register Vertex **v, *vp;
+  int i,j;
+  Poly *p;
+  Vertex **v, *vp;
   struct mgastk *ma = _mgc->astk;
   int flag,shading;
   int nonsurf = -1;
@@ -548,7 +548,7 @@ void mgopengl_polylist( int np, Poly *_p, int nv, Vertex *V, int plflags )
 void
 mgopengl_init_zrange()
 {
-  register struct mgopenglcontext *gl = _mgopenglc;
+  struct mgopenglcontext *gl = _mgopenglc;
 
   gl->znudge = (double) _mgc->zfnudge * (gl->zmax - gl->zmin);
 
@@ -582,7 +582,7 @@ come to think of it, what is the correct interpretation of the
 normal vector when the points live in 4-d?
 */
 void
-mgopengl_drawnormal(register HPoint3 *p, Point3 *n)
+mgopengl_drawnormal(HPoint3 *p, Point3 *n)
 {
   Point3 end, tp;
   float scale;
@@ -595,7 +595,7 @@ mgopengl_drawnormal(register HPoint3 *p, Point3 *n)
 
   scale = _mgc->astk->ap.nscale;
   if(_mgc->astk->ap.flag & APF_EVERT) {
-    register Point3 *cp = &_mgc->cpos;
+    Point3 *cp = &_mgc->cpos;
     if(!(_mgc->has & HAS_CPOS))
 	mg_findcam();
     if((p->x-cp->x) * n->x + (p->y-cp->y) * n->y + (p->z-cp->z) * n->z > 0)

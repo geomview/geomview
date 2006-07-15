@@ -119,7 +119,7 @@ GeomCCreate(Geom *g, GeomClass *c, ...)
 void
 GGeomInit(g, Class, magic, ap)
     int magic;
-    register Geom *g;
+    Geom *g;
     GeomClass *Class;
     Appearance *ap;
 {
@@ -139,9 +139,9 @@ GGeomInit(g, Class, magic, ap)
 int
 GeomDecorate(g, copyp, feature, ap)
     Geom *g;
-    register int *copyp;/* Flag: "copy" parameters passed by reference? */
+    int *copyp;/* Flag: "copy" parameters passed by reference? */
     int feature;	/* Attribute -- value already va_arg'ed by caller */
-    register va_list *ap;
+    va_list *ap;
 {
     Appearance *nap;
     int val;

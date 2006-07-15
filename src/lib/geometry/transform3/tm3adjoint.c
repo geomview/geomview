@@ -43,8 +43,8 @@ cofactor( T, x, y )
     int x, y;
 {
     static Tm3Coord mat3x3[3][3];
-    register Tm3Coord *dst = mat3x3[0];
-    register Tm3Coord *src = T[0];
+    Tm3Coord *dst = mat3x3[0];
+    Tm3Coord *src = T[0];
     int i;
 
     for( i=0; i<4; i++, src += 4 ) {
@@ -66,7 +66,7 @@ void
 adjoint( T, Tadj )
     Transform3 T, Tadj;
 {
-    register int x, y;
+    int x, y;
     float cof;
 
     for( x=0; x<4; x++ )

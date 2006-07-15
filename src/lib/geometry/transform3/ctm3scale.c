@@ -43,7 +43,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 Ctm3Scale( Transform3 T, float sx, float sy, float sz )
 {
-    register Tm3Coord *aptr;
+    Tm3Coord *aptr;
 
     aptr=T[0];
 

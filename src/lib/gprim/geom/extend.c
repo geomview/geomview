@@ -45,8 +45,8 @@ static int n_extmethods = 1, max_extmethods = 0;
 int
 GeomMethodSel(char *methodname)
 {
-    register struct extmethods *m;
-    register int i;
+    struct extmethods *m;
+    int i;
 
     for(i = 1; i < n_extmethods; i++)
       if((m = &extmethods[i])->methodname != NULL &&
@@ -58,7 +58,7 @@ GeomMethodSel(char *methodname)
 int
 GeomNewMethod(char *methodname, GeomExtFunc *defaultfunc)
 {
-    register int sel;
+    int sel;
     int oldmax = max_extmethods;
 
     sel = GeomMethodSel(methodname);
@@ -117,8 +117,8 @@ GeomSpecifyMethod( int sel, GeomClass *Class, GeomExtFunc *func )
 void *
 GeomCall(int sel, Geom *geom, ...)
 {
-    register GeomClass *C;
-    register GeomExtFunc *ext = NULL;
+    GeomClass *C;
+    GeomExtFunc *ext = NULL;
     void *result = NULL;
     va_list args;
 
@@ -143,8 +143,8 @@ GeomCall(int sel, Geom *geom, ...)
 void *
 GeomCallV(int sel, Geom *geom, va_list *args)
 {
-    register GeomClass *C;
-    register GeomExtFunc *ext = NULL;
+    GeomClass *C;
+    GeomExtFunc *ext = NULL;
 
     if(geom == NULL || sel <= 0 || sel >= n_extmethods)
 	return NULL;

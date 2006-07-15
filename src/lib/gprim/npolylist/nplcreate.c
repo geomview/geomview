@@ -43,7 +43,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "npolylistP.h"
 
 NPolyList *
-NPolyListDelete( register NPolyList *np )
+NPolyListDelete( NPolyList *np )
 {
     if (np == NULL)
 	return NULL;
@@ -58,14 +58,14 @@ NPolyListDelete( register NPolyList *np )
 NPolyList *
 NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
 {
-   register NPolyList *pl;
+   NPolyList *pl;
    int *nvertperpol=NULL, *verts=NULL;
    int npolyflag=0, nvertflag=0, vertflag=0, pointflag=0, pointhomog = 0, colorflag = 0;
    float *v = NULL;
    ColorA *vc = NULL, *pc = NULL;
    int attr, copy=1;
    int numentries=0, numvertices=0;
-   register int i;
+   int i;
    int j,k=0, pdim = 4;
 
    if (exist == NULL) {

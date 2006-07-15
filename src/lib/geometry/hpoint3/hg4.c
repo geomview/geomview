@@ -89,7 +89,7 @@ void
 Hg4Add( p1, p2, p3)
     Hg4Tensor1 p1, p2, p3;
 {
-    register int i;
+    int i;
     for (i=0; i<4; ++i)
 	p3[i] = p1[i] + p2[i];
 } 
@@ -207,10 +207,10 @@ Hg4Transform( T, p1, p2)
     Transform3 T;
     Hg4Tensor1 p1, p2;
 {
-    register Tm3Coord *aptr;
-    register Hg4Coord *pptr;
+    Tm3Coord *aptr;
+    Hg4Coord *pptr;
     Hg4Coord x, y, z, w;
-    int register cnt;
+    int cnt;
 
     x = p1[TMX];
     y = p1[TMY];

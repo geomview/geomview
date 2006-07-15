@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 void
-RefInit(register Ref *ref, long magic)
+RefInit(Ref *ref, long magic)
 {
     ref->ref_count = 1;
     ref->magic = magic;

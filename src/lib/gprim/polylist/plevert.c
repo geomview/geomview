@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.4 2006/07/14 17:47:18 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
 /* $Source: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v $ */
 
 
@@ -42,11 +42,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include	"polylistP.h"
 
 PolyList *
-PolyListEvert( register PolyList *polylist )
+PolyListEvert( PolyList *polylist )
 {
-	register Poly	*p;
-	register Vertex	*v;
-	register int	i;
+	Poly	*p;
+	Vertex	*v;
+	int	i;
 
 	polylist->flags ^= PL_EVNORM;
 

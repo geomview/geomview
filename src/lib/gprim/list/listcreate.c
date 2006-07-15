@@ -52,8 +52,8 @@ ListReplace( list, geom )
 Geom *
 ListRemove( Geom *list, Geom *g )
 {
-    register List *l;
-    register List **prev;
+    List *l;
+    List **prev;
 
     if(list == NULL)
 	return NULL;
@@ -79,7 +79,7 @@ ListRemove( Geom *list, Geom *g )
  * someone else might have pointers to them.
  */
 void
-ListDelete(register List *l)
+ListDelete(List *l)
 {
     if(l->cdr) GeomDelete((Geom *)l->cdr);
     if(l->car) GeomDelete(l->car);
@@ -89,7 +89,7 @@ ListDelete(register List *l)
 List *
 ListCopy( List *list )
 {
-    register List *l, *nl;
+    List *l, *nl;
     Geom *newcar;
     List *newlist;
     List **tailp = &newlist;
@@ -111,7 +111,7 @@ ListCopy( List *list )
 
 
 int
-ListGet(register List *l, int attr, register void *attrp)
+ListGet(List *l, int attr, void *attrp)
 {
     switch(attr) {
     case CR_GEOM: *(Geom **)attrp = l->car; break;
@@ -126,7 +126,7 @@ Geom *
 ListAppend(Geom *lg, Geom *g)
 {
   List *new = OOGLNewE(List, "ListAppend: List");
-  register List *l = (List*)lg;
+  List *l = (List*)lg;
 
   if(l && l->Class->Delete != (GeomDeleteFunc *)ListDelete) {
     OOGLError(0, "ListAppend: attempt to append to a %s, not a List",
@@ -152,7 +152,7 @@ ListAppend(Geom *lg, Geom *g)
 List *
 ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 {
-    register List *list, *l;
+    List *list, *l;
     int attr, copy = 1;
     Handle *h;
     Geom *g;

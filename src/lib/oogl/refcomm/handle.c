@@ -40,7 +40,7 @@ Handle *AllHandles = NULL;
 void
 HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
 {
-    register Handle *h;
+    Handle *h;
 
     if((h = *hp) != NULL && objp != NULL && h->object != *objp) {
 	if(h->ops->Delete) {
@@ -53,9 +53,9 @@ HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
 	    
 void HandleUnregister(Handle **hp)
 {
-    register Handle *h;
-    register HRef *rp;
-    register int i;
+    Handle *h;
+    HRef *rp;
+    int i;
 
     if(hp == NULL || (h = *hp) == NULL)
 	return;
@@ -68,9 +68,9 @@ void HandleUnregister(Handle **hp)
 
 void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    register Handle *h;
-    register HRef *rp;
-    register int i;
+    Handle *h;
+    HRef *rp;
+    int i;
 
     if(hp == NULL || (h = *hp) == NULL)
 	return;
@@ -91,9 +91,9 @@ void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((H
  */
 void HandleUnregisterAll(Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    register Handle *h;
-    register HRef *rp;
-    register int i;
+    Handle *h;
+    HRef *rp;
+    int i;
 
     for(h = AllHandles; h != NULL; h = h->next) {
 	for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
@@ -108,7 +108,7 @@ void HandleUnregisterAll(Ref *obj, void *info, void (*update) P((Handle **, Ref 
 }
 
 static
-void handleupdate(Handle *h, register HRef *rp)
+void handleupdate(Handle *h, HRef *rp)
 {
     if(rp->update && h == *rp->hp)
 	(*rp->update)(rp->hp, rp->parentobj, rp->info);
@@ -122,9 +122,9 @@ void handleupdate(Handle *h, register HRef *rp)
 
 int HandleRegister(Handle **hp, Ref *parentobj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    register Handle *h;
-    register HRef *rp;
-    register int i;
+    Handle *h;
+    HRef *rp;
+    int i;
 
     if(hp == NULL || (h = *hp) == NULL)
 	return 0;
@@ -159,7 +159,7 @@ HandleName(Handle *h)
 Handle *
 HandleByName(char *name, HandleOps *ops)
 {
-    register Handle *h;
+    Handle *h;
 
     for(h = AllHandles; h != NULL; h = h->next) {
 	if(h->ops == ops && strcmp(h->name, name) == 0)
@@ -171,7 +171,7 @@ HandleByName(char *name, HandleOps *ops)
 static Handle *
 handlecreate(char *name, HandleOps *ops)
 {
-    register Handle *h;
+    Handle *h;
 
     h = OOGLNewE(Handle, "new Handle");
     RefInit((Ref *)h, HANDLEMAGIC);
@@ -192,9 +192,9 @@ handlecreate(char *name, HandleOps *ops)
  * Assign a new object to a Handle.
  */
 int
-HandleSetObject(register Handle *h, Ref *object)
+HandleSetObject(Handle *h, Ref *object)
 {
-    register int i;
+    int i;
     Ref *oldobj;
 
     if(h == NULL)
@@ -225,7 +225,7 @@ HandleSetObject(register Handle *h, Ref *object)
 Handle *
 HandleCreate(char *name, HandleOps *ops)
 {
-    register Handle *h;
+    Handle *h;
 
     h = HandleByName(name, ops);
     if(h == NULL) h = handlecreate(name, ops);
@@ -238,7 +238,7 @@ HandleCreate(char *name, HandleOps *ops)
 Handle *
 HandleAssign(char *name, HandleOps *ops, Ref *object)
 {
-    register Handle *h;
+    Handle *h;
 
     h = HandleByName(name, ops);
     if(h == NULL)
@@ -264,7 +264,7 @@ void HandlePDelete(Handle **hp)
 
 void HandleDelete(Handle *h)
 {
-  register Handle **hp;
+  Handle **hp;
 
   if(h == NULL)
     return;

@@ -54,7 +54,7 @@ CommentDelete( comment )
 Comment *
 CommentCopy( Comment *comment ) 
 {
-  register Comment *nc;
+  Comment *nc;
   int datalength = comment->length;
 
   if (datalength == 0) datalength = strlen(comment->data)+1;
@@ -73,7 +73,7 @@ CommentCopy( Comment *comment )
 Comment *
 CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
 {
-    register Comment *comment;
+    Comment *comment;
     int attr;
     int copy = 1;
 

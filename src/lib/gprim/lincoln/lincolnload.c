@@ -48,9 +48,9 @@ LincolnFLoad(IOBFILE *inf)
 	struct vertex	*vertex_list;
 	struct edge	*edge_list;
 	struct face	*face_list;
-	register struct vertex *vp;
-	register struct edge *ep;
-	register struct face *fp;
+	struct vertex *vp;
+	struct edge *ep;
+	struct face *fp;
 	int i,j;
 
 	Vertex	*v_list;
@@ -101,7 +101,7 @@ LincolnFLoad(IOBFILE *inf)
 	v_list = new->vl;
 
 	for (i = 0; i < header.nfaces; i++) {
-		register Poly *p;
+		Poly *p;
 
 		fp = face_list + i;
 		ep = fp->e;
@@ -120,7 +120,7 @@ LincolnFLoad(IOBFILE *inf)
 				: 1.0;
 
 		for (j = 0; j < fp->order; j++) {
-			register Vertex *v = &v_list[vp - vertex_list];
+			Vertex *v = &v_list[vp - vertex_list];
 
 			p->v[j]= v;
 			v->pt.x = vp->pos.x;

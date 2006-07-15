@@ -46,7 +46,7 @@ Skel *SkelPick(Skel *s, Pick *p, Appearance *ap, Transform T)
 Vect *
 VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
 {
-  register HPoint3 *hp, *hp0, *hp1;
+  HPoint3 *hp, *hp0, *hp1;
   Point3 pt0, pt1, pv;
   int picked = -1;
   float w0, w1;

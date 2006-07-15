@@ -716,7 +716,7 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
     data = OOGLNewNE(char, row*ysize, "snapshot data");
     readdisplay(wp->xmin, wp->ymin, wp->xmax, wp->ymax, (unsigned long *)data, 0);
     for(i = ysize; --i >= 0; ) {
-	register char *p = data + i*row;
+	char *p = data + i*row;
 	j = xsize;
 	do {
 	    putc(p[3], f);
@@ -965,7 +965,7 @@ Pixel ui_RGB(Colormap cm, int permanent, float r, float g, float b)
   static XColor	tcol;
   static int wasalloced = 0;
   XColor pcol;
-  register XColor *col = permanent ? &pcol : &tcol;
+  XColor *col = permanent ? &pcol : &tcol;
   Visual *vis = ((cm == gvcolormap) ?	/* Guess which visual it's on! */
 			gvvisual : DefaultVisual(dpy, DefaultScreen(dpy)));
 

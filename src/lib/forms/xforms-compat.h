@@ -62,7 +62,7 @@
     }
 
 extern inline void flx_end_form() {
-  register FL_OBJECT *obj = NULL;
+  FL_OBJECT *obj = NULL;
   if(fl_current_form)
     obj = fl_current_form->first;
   for( ; obj; obj = obj->next) {

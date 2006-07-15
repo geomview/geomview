@@ -38,7 +38,7 @@ Geom *InstBoundSphere(inst, T, space)
      Transform T;
      int space;
 {
-  register Sphere *geomsphere, *sphere;
+  Sphere *geomsphere, *sphere;
   Transform Tnew;
   GeomIter *it;
 

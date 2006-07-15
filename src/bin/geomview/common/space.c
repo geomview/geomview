@@ -111,18 +111,18 @@ Geom *unitsphere(int n, ColorA *color);
 Geom *
 unitsphere(int n, ColorA *color)
 {
-    register int i, j;
+    int i, j;
     float si[N+1], ci[N+1], sj[N+1], cj[N+1];
     Point3 verts[(N-2 + N)*N];
     short vcounts[N-2 + N/2];
     short ccounts[N-2 + N/2];
-    register Point3 *p;
-    register short *vc;
+    Point3 *p;
+    short *vc;
     Geom *g;
     float excess = 1. / cos(M_PI / n);
  
     for(i = 0; i <= n; i++) {
-	register float t = i * 2*M_PI / n;
+	float t = i * 2*M_PI / n;
 	sj[i] = sin(t) * excess;
 	cj[i] = cos(t) * excess;
 	t = i * M_PI / n;
@@ -137,8 +137,8 @@ unitsphere(int n, ColorA *color)
     p = verts;
     vc = vcounts;
     for(i = 1; i < n-1; i++) {
-	register float y = ci[i];
-	register float r = si[i];
+	float y = ci[i];
+	float r = si[i];
 
 	*vc++ = -n;		/* Closed line with n vertices */
 	for(j = 0; j < n; j++) {
@@ -150,8 +150,8 @@ unitsphere(int n, ColorA *color)
     }
     /* Construct n/2 meridians, each a full circle */
     for(j = 0; j < n/2; j++) {
-	register float s = sj[j];
-	register float c = cj[j];
+	float s = sj[j];
+	float c = cj[j];
 
 	*vc++ = -2*n;
 	for(i = 0; i < n; i++) {

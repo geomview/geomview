@@ -168,7 +168,7 @@ LtDelete(LtLight *l)
 }
 
 LtLight *
-LtCopy( register LtLight *l1, register LtLight *l2 )
+LtCopy( LtLight *l1, LtLight *l2 )
 {
     if(l2 == NULL)
 	l2 = NewLtLight();
@@ -239,7 +239,7 @@ LtLight *
 LtFLoad(LtLight *lite, IOBFILE *f, char *fname)
 {
   char *w;
-  register int i;
+  int i;
   float v[4];
   int brack = 0;
   static char *lkeys[] = {
@@ -321,7 +321,7 @@ LtFSave( LtLight *l, FILE *f )
  * Create a list of lights and a lighting model.
  */
 LmLighting *
-_LmSet(LmLighting *lgt, int a1, register va_list *alist)
+_LmSet(LmLighting *lgt, int a1, va_list *alist)
 {
     int attr;
 
@@ -520,8 +520,8 @@ LmCopy(LmLighting *from, LmLighting *to)
 void
 LmCopyLights(LmLighting *from, LmLighting *to)
 {
-    register int i;
-    register LtLight **lp;
+    int i;
+    LtLight **lp;
     LM_FOR_ALL_LIGHTS(from, i, lp) {
 	LmAddLight(to, *lp);
     }
@@ -579,7 +579,7 @@ LmRemoveLight(LmLighting *lm, LtLight *lt)
 void
 LmAddLight(LmLighting *lm, LtLight *lt)
 {
-  register LtLight **lp;
+  LtLight **lp;
   int i;
   if(lt == NULL)
     return;
@@ -601,8 +601,8 @@ LmAddLight(LmLighting *lm, LtLight *lt)
 void
 LmDeleteLights(LmLighting *lm)
 {
-    register LtLight **lp;
-    register int i;
+    LtLight **lp;
+    int i;
     LM_FOR_ALL_LIGHTS(lm, i,lp) {
 	LtDelete(*lp);
 	*lp = NULL;
@@ -655,7 +655,7 @@ LmLighting *
 LmFLoad(LmLighting *lgt, IOBFILE *f, char *fname)
 {
   char *w;
-  register int i;
+  int i;
   float v[3];
   int brack = 0;
   int over, not;
@@ -736,7 +736,7 @@ LmFLoad(LmLighting *lgt, IOBFILE *f, char *fname)
 void
 LmFSave(LmLighting *li, FILE *f, char *fname)
 {
-    register LtLight **lp;
+    LtLight **lp;
     int i;
 
     fprintf(f,"\tambient %g %g %g\n", 

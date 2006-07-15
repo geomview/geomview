@@ -39,7 +39,7 @@ Geom *ListBoundSphere(list, T, space)
      int space;
 {
   Geom *carsphere = NULL, *sphere = NULL;
-  register List *l;
+  List *l;
   for (l = list; l != NULL; l = l->cdr) {
     carsphere = GeomBoundSphere(l->car, T, space);
     if (carsphere == NULL) continue;

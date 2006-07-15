@@ -39,10 +39,10 @@ Mesh           *m;
 FILE           *outf;
 {
 	int             i, j;
-	register HPoint3 *p = m->p;
-	register Point3 *n = m->n;
-	register ColorA *c = m->c;
-	register Point3 *u = m->u;
+	HPoint3 *p = m->p;
+	Point3 *n = m->n;
+	ColorA *c = m->c;
+	Point3 *u = m->u;
 
 	if (!outf || !m)
 		return NULL;

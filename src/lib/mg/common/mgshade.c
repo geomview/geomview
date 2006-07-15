@@ -51,7 +51,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Transform a vector covariantly
  */
 static void
-cotransform(register Transform Tinv, register Point3 *in, Point3 *out)
+cotransform(Transform Tinv, Point3 *in, Point3 *out)
 {
     out->x = Tinv[0][0]*in->x + Tinv[0][1]*in->y + Tinv[0][2]*in->z;
     out->y = Tinv[1][0]*in->x + Tinv[1][1]*in->y + Tinv[1][2]*in->z;
@@ -148,7 +148,7 @@ int mg_eucshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 
 	lp = &ma->lighting.lights[0];
 	for(lno = 0; lno<AP_MAXLIGHTS && (l = *lp) != NULL; lno++, lp++) {
-	    register Point3 *L;
+	    Point3 *L;
 	    Point3 Lt;
 	    float bright, ls, ll, ln, power;
 

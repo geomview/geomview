@@ -75,7 +75,7 @@ TmNSetSpace( TransformN *T, int space );
 TransformN * 
 TmNInvert( const TransformN *T, TransformN *Tinv )
 {
-	register int i, j, k;
+	int i, j, k;
 	HPtNCoord x;
 	HPtNCoord f;
 	short dim = T->idim; 
@@ -146,7 +146,7 @@ TmNInvert( const TransformN *T, TransformN *Tinv )
 TransformN *
 TmNTranspose( const TransformN *from, TransformN *to )
 {
-	register int i,j;
+	int i,j;
 	short idim = from->idim, odim = from->odim;
 	HPtNCoord t;
 
@@ -189,7 +189,7 @@ TmNTranspose( const TransformN *from, TransformN *to )
 TransformN *
 TmNConcat( const TransformN *A, const TransformN *B, TransformN *result )
 {
-	register int i,j,k;
+	int i,j,k;
 	short dim1 = A->idim, dim2 = A->odim, dim3 = B->odim;
 
 #define MAKEPRODUCT(T,A,B)											\
@@ -322,7 +322,7 @@ TmNTranslateOrigin( TransformN *T, const HPointN *p )
 TransformN * 
 TmNTranslate( TransformN *T, const HPointN *pt )
 {
-	register int i;
+	int i;
 	HPointN *newpt;
 	short dim = pt->dim;
 
@@ -647,9 +647,9 @@ TmNScale( TransformN *T, const HPointN *amount )
 TransformN *
 TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward )
 {
-	register int i,j,k;
+	int i,j,k;
 	short dim = from->dim;
-	register HPtNCoord len, proj, cosA, sinA;
+	HPtNCoord len, proj, cosA, sinA;
 	HPtNCoord *planebasis1, *planebasis2; /* not homogeneous coords!*/
 	HPtNCoord planecoord1, planecoord2;
 
@@ -795,7 +795,7 @@ TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward )
 TransformN *
 TmNApplyDN( TransformN *mat, int *perm, Transform3 delta)
 {
-	register HPtNCoord sum;
+	HPtNCoord sum;
 	short n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
 	short nprime = mat->odim;
 	HPtNCoord *tmp;

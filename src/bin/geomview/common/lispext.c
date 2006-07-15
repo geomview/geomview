@@ -537,7 +537,7 @@ void tmnfree(TmNStruct **x)
   OOGLFree(*x);
 }
 
-int tmnmatch(register TmNStruct **a, register TmNStruct **b)
+int tmnmatch(TmNStruct **a, TmNStruct **b)
 { 
   if ((*a)->h && ((*a)->h == (*b)->h)) return 1;
   if ((*a)->tm && ((*a)->tm == (*b)->tm)) return 1;

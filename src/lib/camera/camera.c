@@ -43,14 +43,14 @@ Camera * _CamSet(Camera *cam, int attr, va_list *a_list);
 
 #define GETFLAG(flag, bit)	( (flag & bit) != 0 )
 
-static float GetHalfField( register Camera *cam );
-static void SetHalfField( register Camera *cam, float halffield );
-static void CamStereoCompute( register Camera *cam );
+static float GetHalfField( Camera *cam );
+static void SetHalfField( Camera *cam, float halffield );
+static void CamStereoCompute( Camera *cam );
 
 Camera *
 CamCreate(int a1, ...)
 {
-  register Camera *thiscam;
+  Camera *thiscam;
   va_list a_list;
 
   thiscam = OOGLNewE(Camera, "CamCreate: unable to allocate camera\n");
@@ -96,7 +96,7 @@ CamSet(Camera *cam, int a1, ...)
 }
 
 Camera *
-_CamSet(Camera *cam, int attr, register va_list *alist)
+_CamSet(Camera *cam, int attr, va_list *alist)
 {
   TransformPtr tt;
   int sethalffield = 0, setaspect = 0, setstereogeom = 0;
@@ -277,7 +277,7 @@ _CamSet(Camera *cam, int attr, register va_list *alist)
  *		in the future.
  */
 int
-CamGet(register Camera *cam, int attr, void *value)
+CamGet(Camera *cam, int attr, void *value)
 {
 #define VALUE(type) ((type*)value)
 
@@ -379,7 +379,7 @@ CamGet(register Camera *cam, int attr, void *value)
 }
 
 void
-CamDelete( register Camera *cam )
+CamDelete( Camera *cam )
 {
     if(cam == NULL)
 	return;
@@ -399,7 +399,7 @@ CamDelete( register Camera *cam )
 }
 
 Camera *
-CamCopy( Camera *src, register Camera *dst )
+CamCopy( Camera *src, Camera *dst )
 {
     if(src == NULL)
 	return NULL;
@@ -414,7 +414,7 @@ CamCopy( Camera *src, register Camera *dst )
 }
 
 void
-CamReset( register Camera *cam )
+CamReset( Camera *cam )
 {
   Transform T;
   int persp;
@@ -460,7 +460,7 @@ CamReset( register Camera *cam )
  * See CamView below for the range of the projection.
  */
 void
-CamViewProjection( register Camera *cam, register Transform proj )
+CamViewProjection( Camera *cam, Transform proj )
 {
     float y;
     float x;
@@ -486,7 +486,7 @@ CamViewProjection( register Camera *cam, register Transform proj )
  * with Z = -1 at the near plane and Z = +1 at the far plane.
  */
 void
-CamView( register Camera *cam, Transform T )
+CamView( Camera *cam, Transform T )
 {
     Transform t;
 
@@ -499,21 +499,21 @@ CamView( register Camera *cam, Transform T )
 }
 
 void
-CamRotateX( register Camera *cam, float angle )
+CamRotateX( Camera *cam, float angle )
 {
     CtmRotateX( cam->camtoworld, angle );
     cam->flag |= CAMF_NEWC2W;
 }
 
 void
-CamRotateY( register Camera *cam, float angle )
+CamRotateY( Camera *cam, float angle )
 {
     CtmRotateY( cam->camtoworld, angle );
     cam->flag |= CAMF_NEWC2W;
 }
 
 void
-CamRotateZ( register Camera *cam, float angle )
+CamRotateZ( Camera *cam, float angle )
 {
     CtmRotateZ( cam->camtoworld, angle );
     cam->flag |= CAMF_NEWC2W;
@@ -522,7 +522,7 @@ CamRotateZ( register Camera *cam, float angle )
 /* translate the camera, using the camera's notion of what space it
    is in */
 void
-CamTranslate( register Camera *cam, float tx, float ty, float tz )
+CamTranslate( Camera *cam, float tx, float ty, float tz )
 {
   Transform T;
 
@@ -533,7 +533,7 @@ CamTranslate( register Camera *cam, float tx, float ty, float tz )
 
 /* CamScale is a noop if the camera is not in Euclidean space */
 void
-CamScale( register Camera *cam, float sx, float sy, float sz )
+CamScale( Camera *cam, float sx, float sy, float sz )
 {
   if (cam->space == TM_EUCLIDEAN) {
     CtmScale( cam->camtoworld, sx, sy, sz );
@@ -542,7 +542,7 @@ CamScale( register Camera *cam, float sx, float sy, float sz )
 }
 
 void
-CamAlignZ( register Camera *cam, float x, float y, float z )
+CamAlignZ( Camera *cam, float x, float y, float z )
 {
     Point3 axis;
 
@@ -557,14 +557,14 @@ CamAlignZ( register Camera *cam, float x, float y, float z )
  * Apply T to camera as seen by world (== T^-1 to world, as seen by camera)
  */
 void
-CamTransform( register Camera *cam, Transform T )
+CamTransform( Camera *cam, Transform T )
 {
     TmConcat(T, cam->camtoworld, cam->camtoworld);
     cam->flag |= CAMF_NEWC2W;
 }
 
 static void
-CamStereoCompute( register Camera *cam )
+CamStereoCompute( Camera *cam )
 {
     float tanconv = tan(cam->stereo_angle);
     TmTranslate( cam->stereyes[CAM_RIGHT], cam->stereo_sep, 0., 0. );
@@ -587,7 +587,7 @@ CamStereoCompute( register Camera *cam )
  *		camera's current aspect ratio.
  */
 static void
-SetHalfField( register Camera *cam, float halffield )
+SetHalfField( Camera *cam, float halffield )
 {
   cam->halfyfield =
     (cam->frameaspect < 1 && cam->frameaspect > 0)
@@ -610,7 +610,7 @@ SetHalfField( register Camera *cam, float halffield )
  *		ratio is < 1, this is the horizontal half-width.
  */
 static float
-GetHalfField( register Camera *cam )
+GetHalfField( Camera *cam )
 {
   float v = cam->halfyfield;
   if(cam->frameaspect < 1) v *= cam->frameaspect;
@@ -622,7 +622,7 @@ GetHalfField( register Camera *cam )
  * Merge one Camera's changed values into another Camera
  */
 Camera *
-CamMerge(register Camera *src, register Camera *dst)
+CamMerge(Camera *src, Camera *dst)
 {
   int chg;
   float fov;

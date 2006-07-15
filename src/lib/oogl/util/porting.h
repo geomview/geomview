@@ -33,6 +33,13 @@
 # include "config.h"
 #endif
 
+#if HAVE_SYS_TYPE_H
+# include <sys/types.h>
+#endif
+#if HAVE_STDIO_H
+# include <stdio.h>
+#endif
+
 #if !HAVE_M_PI
 # define M_PI 3.14159265358979323846	/* pi */
 #endif
@@ -75,7 +82,7 @@ extern char *strdup(const char *);
 #endif
 
 #if !HAVE_PUTENV
-extern putenv(register char *name);
+extern putenv(char *name);
 #endif
 
 /* supply missing declaration for fmemopen */

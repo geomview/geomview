@@ -53,7 +53,7 @@ InstDelete( inst )
 Inst *
 InstCopy( Inst *inst ) 
 {
-  register Inst *ni;
+  Inst *ni;
 
   ni = OOGLNewE(Inst, "InstCopy: Inst");
   GGeomInit(ni, inst->Class, inst->magic, NULL);
@@ -72,9 +72,9 @@ InstCopy( Inst *inst )
 }
 
 Geom *
-InstReplace( register Inst *inst, register Geom *geom )
+InstReplace( Inst *inst, Geom *geom )
 {
-    register Geom *old;
+    Geom *old;
 
     if(inst == NULL)
 	return NULL;
@@ -85,7 +85,7 @@ InstReplace( register Inst *inst, register Geom *geom )
 }
 
 int
-InstGet( register Inst *inst, int attr, register void *attrp )
+InstGet( Inst *inst, int attr, void *attrp )
 {
     switch(attr) {
     case CR_GEOM: *(Geom **)attrp = inst->geom; break;
@@ -106,7 +106,7 @@ InstGet( register Inst *inst, int attr, register void *attrp )
 Inst *
 InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 {
-    register Inst *inst;
+    Inst *inst;
     int attr;
     int copy = 1;
     Transform *t;

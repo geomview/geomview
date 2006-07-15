@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 
 void
-TlistDelete( register Tlist *tlist )
+TlistDelete( Tlist *tlist )
 {
     if(tlist) {
 	if(tlist->tlist != NULL) GeomDelete(tlist->tlist);
@@ -48,7 +48,7 @@ TlistDelete( register Tlist *tlist )
 Tlist *
 TlistCopy( Tlist *t) 
 {
-  register Tlist *nt;
+  Tlist *nt;
   int i;
 
   nt = OOGLNewE(Tlist, "TlistCopy: Tlist");
@@ -64,9 +64,9 @@ TlistCopy( Tlist *t)
 }
 
 Geom *
-TlistReplace( register Tlist *tlist, Geom *geom )
+TlistReplace( Tlist *tlist, Geom *geom )
 {
-    register Geom *old;
+    Geom *old;
 
     if(tlist == NULL)
 	return NULL;
@@ -77,7 +77,7 @@ TlistReplace( register Tlist *tlist, Geom *geom )
 }
 
 int
-TlistGet( register Tlist *tlist, int attr, register void *attrp )
+TlistGet( Tlist *tlist, int attr, void *attrp )
 {
     switch(attr) {
 	case CR_GEOM: *(Geom **)attrp = (Geom *)tlist->tlist; break;
@@ -89,13 +89,13 @@ TlistGet( register Tlist *tlist, int attr, register void *attrp )
 Tlist *
 TlistCreate(Tlist *exist, GeomClass *Classp, va_list *a_list)
 {
-    register Tlist *tlist;
+    Tlist *tlist;
     Geom *g;
     Handle *h;
     int copy = 1;
     int copyel = 0;
     int attr;
-    register int i;
+    int i;
     Transform *elements = (Transform *) NULL;
 
     if (exist == NULL) {

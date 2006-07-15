@@ -79,7 +79,7 @@ draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
 }
 
 Mesh *
-MeshDraw(register Mesh *mesh)
+MeshDraw(Mesh *mesh)
 {
   /* We pass mesh->flag verbatim to mgmesh() -- MESH_[UV]WRAP == MM_[UV]WRAP */
 

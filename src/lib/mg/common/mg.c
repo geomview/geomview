@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.4 2006/07/14 17:47:20 rotdrop Exp $
+ * $Id: mg.c,v 1.5 2006/07/15 19:05:59 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -98,7 +98,7 @@ mgdevice_NULL()
  */
 mgcontext *
 mg_newcontext(mgc)
-    register mgcontext *mgc;
+    mgcontext *mgc;
 {
     memset((char *)mgc, 0, sizeof(*mgc));
     RefInit((Ref *)mgc, MGCONTEXTMAGIC);
@@ -110,7 +110,7 @@ mg_newcontext(mgc)
     mgc->background.b = 0.0;
     mgc->background.a = 1.0;
     {
-	register struct mgastk *ma;
+	struct mgastk *ma;
 
 	mgc->astk = ma = OOGLNewE(struct mgastk, "mg appearance stack");
 	memset((char *)ma, 0, sizeof(*ma)); /* Sets next = NULL, *_seq = 0 */
@@ -121,7 +121,7 @@ mg_newcontext(mgc)
 	ma->ap.lighting = &(ma->lighting);
     }
     {
-	register struct mgxstk *mx;
+	struct mgxstk *mx;
 
 	mgc->xstk = mx = OOGLNewE(struct mgxstk, "mg transform stack");
 	mx->next = NULL;
@@ -155,7 +155,7 @@ mg_newcontext(mgc)
 int
 mg_appearancebits( Appearance *ap, int mergeflag, int *valid, int *flag )
 {
-  register Appearance *dst;
+  Appearance *dst;
 
   if (!_mgc->astk) {
     OOGLError(0,"mg_appearanceflags: no global context");
@@ -282,7 +282,7 @@ mg_transform( Transform T )
 int
 mg_pushappearance()
 {
-    register struct mgastk *ma;
+    struct mgastk *ma;
 
     if(mgafree) ma = mgafree, mgafree = ma->next;
     else ma = OOGLNew(struct mgastk);
@@ -307,8 +307,8 @@ mg_pushappearance()
 int
 mg_popappearance()
 {
-    register struct mgastk *mp;
-    register struct mgcontext *ms = _mgc;
+    struct mgastk *mp;
+    struct mgcontext *ms = _mgc;
 
     mp = ms->astk->next;
     if(mp == NULL)
@@ -377,8 +377,8 @@ mg_globallights( LmLighting *lm, int worldbegin )
 Appearance *
 mg_setappearance( Appearance *ap, int mergeflag )
 {
-    register Appearance *nap;
-    register struct mgastk *ma = _mgc->astk;
+    Appearance *nap;
+    struct mgastk *ma = _mgc->astk;
 
     if(mergeflag == MG_MERGE) {
 	nap = ApMerge(ap, &ma->ap, 1);	/* Merge, in place */
@@ -523,7 +523,7 @@ mg_ctxcreate( int a1, ... )
 void
 mg_ctxdelete( mgcontext *ctx )
 {
-    register struct mgcontext **mp;
+    struct mgcontext **mp;
     struct mgastk *astk, *nextastk;
     struct mgxstk *xstk, *nextxstk;
 
@@ -597,7 +597,7 @@ mg_ctxselect( mgcontext *ctx )
 int
 mg_pushtransform( void )
 {
-  register struct mgxstk *xfm;
+  struct mgxstk *xfm;
   if(mgxfree) xfm = mgxfree, mgxfree = xfm->next;
   else xfm = OOGLNewE(struct mgxstk, "mgpushtransform");
   *xfm = *MGC->xstk;
@@ -616,7 +616,7 @@ mg_pushtransform( void )
  */
 int
 mg_poptransform( void )
-{ register struct mgxstk *xfm = MGC->xstk;
+{ struct mgxstk *xfm = MGC->xstk;
   if(xfm->next == NULL)
     return -1;
   MGC->xstk = xfm->next;
@@ -708,7 +708,7 @@ void mg_makepoint()
 {
   int i, n;
   float t, r, c, s;
-  register HPoint3 *p;
+  HPoint3 *p;
   static float nsides = 3.0;
 
   if(!(_mgc->has & HAS_S2O))

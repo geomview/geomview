@@ -188,7 +188,7 @@ static inline int htonl(unsigned int v) {
 
 int iobfnextc(IOBFILE *f, int flags)
 {
-  register int c;
+  int c;
 
   c = iobfgetc(f);
   for(;;) {
@@ -226,12 +226,12 @@ int iobfnextc(IOBFILE *f, int flags)
 /* Read an array of white-space-separated floats from file 'f' in
  * ASCII, fast.  Returns the number successfully read.
  */
-int iobfgetnf(register IOBFILE *f, int maxf, float *fv, int binary)
+int iobfgetnf(IOBFILE *f, int maxf, float *fv, int binary)
 {
   int ngot;
   float v = 0;
-  register int c = EOF;
-  register long n;
+  int c = EOF;
+  long n;
   int s, es, nd, any;
 
   if(binary) {
@@ -321,8 +321,8 @@ int iobfgetnd(IOBFILE *f, int maxd, double *dv, int binary)
 {
   int ngot;
   double v = 0;
-  register int c = EOF;
-  register long n;
+  int c = EOF;
+  long n;
   int s, es, nd, any;
 
   if(binary) {
@@ -409,11 +409,11 @@ int iobfgetnd(IOBFILE *f, int maxd, double *dv, int binary)
 }
 
 int
-iobfgetni(register IOBFILE *f, int maxi, int *iv, int binary)
+iobfgetni(IOBFILE *f, int maxi, int *iv, int binary)
 {
   int ngot;
-  register int c = EOF;
-  register long n;
+  int c = EOF;
+  long n;
   int s, any;
 
   if(binary) {
@@ -453,11 +453,11 @@ iobfgetni(register IOBFILE *f, int maxi, int *iv, int binary)
 }
 
 int
-iobfgetns(register IOBFILE *f, int maxs, short *sv, int binary)
+iobfgetns(IOBFILE *f, int maxs, short *sv, int binary)
 {
   int ngot;
-  register int c = EOF;
-  register long n;
+  int c = EOF;
+  long n;
   int s, any;
 
   if(binary) {
@@ -501,10 +501,10 @@ iobfgetns(register IOBFILE *f, int maxs, short *sv, int binary)
  * and iobfungetc the failed char so the caller can see it.
  */
 int
-iobfexpectstr(register IOBFILE *iobf, char *str)
+iobfexpectstr(IOBFILE *iobf, char *str)
 {
-  register char *p = str;
-  register int c;
+  char *p = str;
+  int c;
 
   while(*p != '\0') {
     if((c = iobfgetc(iobf)) != *p++) {
@@ -520,7 +520,7 @@ iobfexpectstr(register IOBFILE *iobf, char *str)
  * Check for a string on a iobf, skipping leading blanks.
  */
 int
-iobfexpecttoken(register IOBFILE *iobf, char *str)
+iobfexpecttoken(IOBFILE *iobf, char *str)
 {
   (void) iobfnextc(iobf, 0);
   return iobfexpectstr(iobf, str);
@@ -560,9 +560,9 @@ iobftoken(IOBFILE *iobf, int flags)
 {
   static char *token = NULL;
   static int troom = 0;
-  register int c;
-  register char *p;
-  register int term;
+  int c;
+  char *p;
+  int term;
 
   if((term = iobfnextc(iobf, flags)) == EOF)
     return NULL;
@@ -628,10 +628,10 @@ iobfdelimtok(char *delims, IOBFILE *iobf, int flags)
 {
   static char *token = NULL;
   static int troom = 0;
-  register int c;
-  register char *p;
-  register char *q;
-  register int term;
+  int c;
+  char *p;
+  char *q;
+  int term;
 
   if((term = iobfnextc(iobf, flags)) == EOF)
     return NULL;
@@ -702,7 +702,7 @@ iobfdelimtok(char *delims, IOBFILE *iobf, int flags)
 int
 iobfgettransform(IOBFILE *iobf, int ntrans, float *trans /* float trans[ntrans][4][4] */, int binary)
 {
-  register float *T;
+  float *T;
   int nt;
 
   for(nt = 0; nt < ntrans; nt++) {
@@ -725,17 +725,19 @@ iobfgettransform(IOBFILE *iobf, int ntrans, float *trans /* float trans[ntrans][
  * Given a file pointer, return a string attempting to show the context
  * of its current position.  If no data is available, returns the empty string.
  */
+#define CONTEXT_SIZE 256
+
 char *
-iobfcontext(register IOBFILE *f)
+iobfcontext(IOBFILE *f)
 {
   static char *cont = NULL;
   static char dflt[] = "";
   char buf[1024];
   int npre, npost, nlpre, nlpost, tab, len;
   int predots = 4, postdots = 4;
-  register char *p, *q;
+  char *p, *q;
   char *lastline, *lastnonblank;
-  char base[128], *ptr;
+  char base[CONTEXT_SIZE], *ptr;
   int cnt;
 
   if(f == NULL)
@@ -750,7 +752,7 @@ iobfcontext(register IOBFILE *f)
 
   ptr = base + sizeof(base);
   p = ptr;
-  for(npre = nlpre = 0; --p >= base && npre < 128; npre++) {
+  for(npre = nlpre = 0; --p >= base && npre < CONTEXT_SIZE; npre++) {
     if(*p == '\n') {
       if(++nlpre > 2 || npre > 60) {
 	predots = 0;
@@ -772,7 +774,7 @@ iobfcontext(register IOBFILE *f)
   len = npre;
   npost = nlpost = 0;
   lastline = lastnonblank = q;
-  for(p = ptr;  p < ptr + cnt && len < 128;  len++, q++) {
+  for(p = ptr;  p < ptr + cnt && len < CONTEXT_SIZE;  len++, q++) {
     *q = *p++;
     if(*q == '\n') {
       if(nlpost == 0) {
@@ -813,7 +815,7 @@ iobfhasdata(IOBFILE *f)
 }
 
 int
-async_iobfgetc(register IOBFILE *f)
+async_iobfgetc(IOBFILE *f)
 {
 #if HAVE_SELECT
   fd_set fds;
@@ -837,9 +839,9 @@ async_iobfgetc(register IOBFILE *f)
 }
 
 int
-async_iobfnextc(register IOBFILE *f, register int flags)
+async_iobfnextc(IOBFILE *f, int flags)
 {
-  register int c;
+  int c;
 
   c = async_iobfgetc(f);
   for(;;) {

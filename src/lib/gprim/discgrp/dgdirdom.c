@@ -45,7 +45,7 @@ extern void do_weeks_code();
 static int
 is_id(Transform t)
 {
-      register int i,j;
+      int i,j;
 
       for (i=0; i<4; ++i)
         for (j=0; j<4; ++j)
@@ -58,7 +58,7 @@ is_id(Transform t)
    point to be the center of gravity of the orbit by the generators 
 */
 void
-DiscGrpCheckCPoint(register DiscGrp *dg)
+DiscGrpCheckCPoint(DiscGrp *dg)
 {
     int i, cnt, fixed;
     HPoint3 tmp, out;
@@ -102,7 +102,7 @@ DiscGrpCheckCPoint(register DiscGrp *dg)
 }
 
 void
-DiscGrpAddInverses(register DiscGrp *discgrp)
+DiscGrpAddInverses(DiscGrp *discgrp)
 {
     int i, j, found = 0;
     Transform product;
@@ -167,7 +167,7 @@ DiscGrpAddInverses(register DiscGrp *discgrp)
 }
 
 void
-DiscGrpSetupDirdom(register DiscGrp *discgrp)
+DiscGrpSetupDirdom(DiscGrp *discgrp)
 {
     WEpolyhedron *dd;
 
@@ -184,7 +184,7 @@ DiscGrpSetupDirdom(register DiscGrp *discgrp)
 
 /* find the group element whose 'center point' is closest to the point poi */
 DiscGrpEl *
-DiscGrpClosestGroupEl(register DiscGrp *discgrp, HPoint3 *poi)
+DiscGrpClosestGroupEl(DiscGrp *discgrp, HPoint3 *poi)
 {
     int count, i, closeri;
     int metric;
@@ -242,7 +242,7 @@ DiscGrpClosestGroupEl(register DiscGrp *discgrp, HPoint3 *poi)
 DiscGrpElList *
 DiscGrpExtractNhbrs( WEpolyhedron *wepoly )
 {
-    register int 	i,j,k;
+    int 	i,j,k;
     WEface 		*fptr;	
     DiscGrpElList	*mylist;
     ColorA		GetCmapEntry();
@@ -316,7 +316,7 @@ DiscGrpScalePolyList(DiscGrp *dg, PolyList *dirdom,  HPoint3 *pt0, float scale)
 
 Geom *small_dd, *large_dd;
 Geom *
-DiscGrpDirDom(register DiscGrp *dg)
+DiscGrpDirDom(DiscGrp *dg)
 {
     Geom *oogldirdom;
     WEpolyhedron *dd;

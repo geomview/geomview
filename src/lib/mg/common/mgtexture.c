@@ -36,7 +36,7 @@
 #if defined(_WIN32) || defined(WIN32)
 # include <io.h>
 # define R_OK  4	/* sigh, no Windows include-file defines R_OK! */
-# define pclose fclose
+# define iobpclose iobfclose
 #endif
 
 #include <fcntl.h>
@@ -106,7 +106,7 @@ gimme(char *fname, int *dopclose, struct xyc *size)
     if(prefix == NULL || prefix[0] == '\0') {
 	*dopclose = 0;
 	f = iobfopen(fname, "rb");
-#if defined(unix) || defined(__unix)
+#if HAVE_POPEN
     } else {
 	strcpy(cmd, prefix);
 	for(p = cmd+strlen(cmd), q = fname; *q && p < &cmd[sizeof(cmd)-10]; ) {
@@ -184,13 +184,13 @@ gimme(char *fname, int *dopclose, struct xyc *size)
   nope:
     size->xsize = size->ysize = size->channels = 0;
     if (f) {
-#if defined(unix) || defined(__unix)
+#if HAVE_POPEN
       if (*dopclose) {
 	iobpclose(f);
       } else {
 #endif
 	iobfclose(f);
-#if defined(unix) || defined(__unix)
+#if HAVE_POPEN
       }
 #endif
     }
@@ -264,7 +264,7 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, IOBFILE *f, ch
 	    if(tx->channels == size->channels && size->format == TF_BYTE) {
 		j = iobfread(row, size->channels, size->xsize, f);
 	    } else {
-		register char *pix = row;
+		char *pix = row;
 		j = size->xsize;
 		switch(size->format) {
 		case TF_BYTE:
@@ -396,7 +396,7 @@ mg_reassign_shared_textures(mgcontext *ctx, int mgdtype)
 {
     mgcontext *another;
     Texture *tx;
-    register TxUser *tu, **tup;
+    TxUser *tu, **tup;
     for(another = _mgclist; another != NULL; another = another->next) {
 	if(another != ctx && another->devno == mgdtype)
 	    break;
@@ -600,7 +600,7 @@ mg_inhaletexture(Texture *tx, int rgba)
 	if(tx->channels == 4) {
 	    for(i = 0; i < size.ysize; i++) {
 		int k = size.xsize;
-		register unsigned char *p =
+		unsigned char *p =
 			(unsigned char *)tx->data + rowsize*i;
 		switch(size.channels) {
 		case 1:
@@ -627,9 +627,9 @@ mg_inhaletexture(Texture *tx, int rgba)
 	     * Maybe the decision on whether this is needed
 	     * should be an option to mg_inhaletexture().
 	     */
-	    register int t;
+	    int t;
 	    int k = size.xsize;
-	    register char *p = tx->data + rowsize*i;
+	    char *p = tx->data + rowsize*i;
 	    switch(tx->channels) {
 	    case 2:
 		do {

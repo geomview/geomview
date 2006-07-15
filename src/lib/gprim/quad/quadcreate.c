@@ -38,7 +38,7 @@ QuadCreate (exist, classp, a_list)
     GeomClass *classp;
     va_list *a_list;
 {
-    register Quad *q;
+    Quad *q;
     QuadP *p = (QuadP *)NULL;
     Point3 *p3;
     QuadN *n = (QuadN *)NULL;

@@ -45,7 +45,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Vect *
 VectFLoad(IOBFILE *file, char *fname)
 {
-    register Vect *v;
+    Vect *v;
     int	 binary = 0, dimn = 3;
     char *token;
     int i;
@@ -113,7 +113,7 @@ VectFLoad(IOBFILE *file, char *fname)
     /* if the points are 3D points, we have to convert them to the native
 	4D data structure */
     if (dimn == 3)	{
-	register HPoint3 *p;
+	HPoint3 *p;
 
 	for(i = v->nvert, p = v->p; --i >= 0; p++) {
 	    if (iobfgetnf(file, 3, (float *)p, binary) < 3) {

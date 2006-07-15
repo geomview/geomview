@@ -67,7 +67,7 @@ mgx11_appearance( struct mgastk *ma, int mask )
 void
 mgx11_setshader(mgshadefunc shader)
 {
-    register struct mgastk *ma = _mgc->astk;
+    struct mgastk *ma = _mgc->astk;
     int wasusing = ma->useshader;
 
     ma->shader = shader;

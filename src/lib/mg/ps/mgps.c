@@ -455,8 +455,8 @@ mgps_pushappearance()
 int
 mgps_popappearance()
 {
-  register struct mgastk *mastk = _mgc->astk;
-  register struct mgastk *mastk_next;
+  struct mgastk *mastk = _mgc->astk;
+  struct mgastk *mastk_next;
 
   if (!(mastk_next = mastk->next))
   {

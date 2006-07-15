@@ -41,7 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * from somewhere else.
  */
 void
-DiscGrpStandardPreDraw(register DiscGrp *discgrp)
+DiscGrpStandardPreDraw(DiscGrp *discgrp)
 {
 	float halfy, aspect, halfx;
 	static float magic_scale = 1.2;
@@ -80,7 +80,7 @@ DiscGrpStandardPreDraw(register DiscGrp *discgrp)
 
     static float visd1 = 2.0;	/* for debugging */
 DiscGrp *
-DiscGrpDraw(register DiscGrp *discgrp)
+DiscGrpDraw(DiscGrp *discgrp)
 {
 	static HPoint3 origin = {0,0,0,1}, cpos;
 	Transform c2wprime;

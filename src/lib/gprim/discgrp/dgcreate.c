@@ -129,7 +129,7 @@ DiscGrpElListCreate (DiscGrpElList *exist, ...)
 DiscGrp *
 DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list *a_list)
 {
-    register DiscGrp *discgrp;
+    DiscGrp *discgrp;
     int		attr, copy = 1;
 
     if (exist == NULL) {

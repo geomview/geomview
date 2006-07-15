@@ -1124,8 +1124,8 @@ mgopengl_pushappearance( void )
 int
 mgopengl_popappearance( void )
 {
-  register struct mgastk *mastk = _mgc->astk;
-  register struct mgastk *mastk_next;
+  struct mgastk *mastk = _mgc->astk;
+  struct mgastk *mastk_next;
 
   if (! (mastk_next=mastk->next)) {
     OOGLError(0, "mgopengl_popappearance: appearance stack has only 1 entry.");
@@ -1370,7 +1370,7 @@ mgopengl_newcontext( mgopenglcontext *ctx )
 mgcontext *
 mgopengl_findctx( int winid )
 {
-  register struct mgcontext *mgc;
+  struct mgcontext *mgc;
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_OPENGL && ((mgopenglcontext *)mgc)->win == winid)

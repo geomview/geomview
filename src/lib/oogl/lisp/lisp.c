@@ -50,8 +50,8 @@ typedef struct _pattern {
     int len[MAXPAT];
 } pattern;
 
-static int match(char *str, register pattern *p);
-static void compile(char *str, register pattern *p);
+static int match(char *str, pattern *p);
+static void compile(char *str, pattern *p);
 static int LCompare(char *name, LObject *expr1, LObject *expr2);
 
 typedef struct Help {
@@ -884,7 +884,7 @@ LObject *_LNew(LType *type, LCell *cell)
   obj->ref = 1;
   if (!cell) obj->cell.p = NULL;
   else if(sizeof(int) < sizeof(void *))	{ /* Really want "alignof(int)" */
-    register int *unalignedcell = (int *)cell;
+    int *unalignedcell = (int *)cell;
     memcpy((void *)&obj->cell, unalignedcell, sizeof(LCell));
   } else
     obj->cell = *(LCell *)cell;
@@ -1895,7 +1895,7 @@ LDEFINE(regtable, LVOID,
 }
 
 
-static void compile(char *str, register pattern *p)
+static void compile(char *str, pattern *p)
 {
     int n;
     char *rest, *tail;
@@ -1913,7 +1913,7 @@ static void compile(char *str, register pattern *p)
     p->n = n;
 }
 
-static int match(char *str, register pattern *p)
+static int match(char *str, pattern *p)
 {
     int i;
     char *rest;
@@ -1987,8 +1987,9 @@ LDEFINE(help, LVOID,
   case 0: fprintf(outf, nomatch, pat); break;
   case 1:
 	nl = strchr(last->message, '\n');
-	fprintf(outf, "%.*s\n", nl && last->message[0]=='('
-			? nl - last->message  : 9999,  last->message);
+	fprintf(outf, "%.*s\n", (int)(nl && last->message[0]=='('
+				      ? nl - last->message  : 9999),
+		last->message);
 	break;
   }
   fflush(outf);

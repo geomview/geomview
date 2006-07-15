@@ -112,7 +112,7 @@ is_big_and_new(DiscGrpEl *dgel)
 static int
 process(DiscGrpEl *dgel, int stacking)
 {
-	register int is_ok = 0;
+	int is_ok = 0;
 
     	if (have_matrices)    	{
             is_ok = is_big_and_new(dgel);
@@ -136,7 +136,7 @@ process(DiscGrpEl *dgel, int stacking)
 static int
 enumerate(int state, int depth, DiscGrpEl *dgel)
 {
-	register int i, newstate, pval;
+	int i, newstate, pval;
 
 	if ( ! ((pval = process(dgel, 0)) & DG_CONSTRAINT_STORE)) return 0;
 	if (pval & DG_CONSTRAINT_MAXLEN)	return 0;
@@ -159,7 +159,7 @@ enumerate(int state, int depth, DiscGrpEl *dgel)
 static int
 dumb_enumerate(int depth, DiscGrpEl *dgel)
 {
-	register int i, j;
+	int i, j;
 	char *word;
 	extern char  *pop_old_stack();
 

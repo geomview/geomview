@@ -35,11 +35,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *
 BezierBound( bezier, T )
-    register Bezier *bezier;
+    Bezier *bezier;
     Transform T;
 {
-    register float *p;
-    register int v, n;
+    float *p;
+    int v, n;
     HPoint3 min, max;
 
     /* only support 3 and 4 dimn patches */

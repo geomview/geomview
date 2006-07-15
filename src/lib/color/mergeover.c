@@ -35,9 +35,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void
 MergeOver( f, b, t )
-    register ColorA *f, *b, *t;
+    ColorA *f, *b, *t;
 {
-    register float a = 1.0 - f->a;
+    float a = 1.0 - f->a;
 
     t->r = f->r + a * b->r;
     t->g = f->g + a * b->g;
@@ -47,10 +47,10 @@ MergeOver( f, b, t )
 
 void
 MergeOverN( f, b, t, n )
-    register ColorA *f, *b, *t;
-    register int n;
+    ColorA *f, *b, *t;
+    int n;
 {
-    register float a;
+    float a;
     
     while( n-- ) {
 	a = 1.0 - f->a;

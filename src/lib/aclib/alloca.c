@@ -162,7 +162,7 @@ PTR
 C_alloca (size_t size)
 {
   auto char probe;		/* Probes stack depth: */
-  register char *depth = ADDRESS_FUNCTION (probe);
+  char *depth = ADDRESS_FUNCTION (probe);
 
 #if STACK_DIRECTION == 0
   if (STACK_DIR == 0)		/* Unknown growth direction.  */
@@ -173,13 +173,13 @@ C_alloca (size_t size)
      was allocated from deeper in the stack than currently.  */
 
   {
-    register header *hp;	/* Traverses linked list.  */
+    header *hp;	/* Traverses linked list.  */
 
     for (hp = last_alloca_header; hp != NULL;)
       if ((STACK_DIR > 0 && hp->h.deep > depth)
 	  || (STACK_DIR < 0 && hp->h.deep < depth))
 	{
-	  register header *np = hp->h.next;
+	  header *np = hp->h.next;
 
 	  free ((PTR) hp);	/* Collect garbage.  */
 
@@ -197,7 +197,7 @@ C_alloca (size_t size)
   /* Allocate combined header + user data storage.  */
 
   {
-    register void *new_storage = XNEWVEC (char, sizeof (header) + size);
+    void *new_storage = XNEWVEC (char, sizeof (header) + size);
     /* Address of header.  */
 
     if (new_storage == 0)
@@ -236,7 +236,7 @@ struct stack_control_header
    the high-address end of a stack segment.  (The stack
    grows from low addresses to high addresses.)  The initial
    part of the stack segment linkage control information is
-   0200 (octal) words.  This provides for register storage
+   0200 (octal) words.  This provides for storage
    for the routine which overflows the stack.  */
 
 struct stack_segment_linkage

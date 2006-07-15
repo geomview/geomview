@@ -46,7 +46,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 Ctm3RotateX( Transform3 T, float angle )
 {
-    register int i;
+    int i;
     double t,s,c;
 
     s=sin(angle);
@@ -69,7 +69,7 @@ Ctm3RotateX( Transform3 T, float angle )
 void
 Ctm3RotateY( Transform3 T, float angle )
 {
-    register int i;
+    int i;
     double t,s,c;
 
     s=sin(angle);
@@ -92,7 +92,7 @@ Ctm3RotateY( Transform3 T, float angle )
 void
 Ctm3RotateZ( Transform3 T, float angle )
 {
-    register int i;
+    int i;
     double t,s,c;
 
     s=sin(angle);

@@ -39,7 +39,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 NPolyList *
 NPolyListFSave(pl, outf, fname)
-	register NPolyList *pl;	/* Thing to save */
+	NPolyList *pl;	/* Thing to save */
 	FILE *outf;			/* Stream to save it on */
 	char *fname;			/* File name for error msgs */
 {

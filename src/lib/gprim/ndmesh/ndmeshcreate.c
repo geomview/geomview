@@ -52,7 +52,7 @@ static void tosspoints(NDMesh *m)
     }
 }
 
-static void tossmesh(register NDMesh *m)
+static void tossmesh(NDMesh *m)
 {
 
     tosspoints(m);
@@ -71,7 +71,7 @@ NDMesh *exist;
 GeomClass *classp;
 va_list *a_list;
 {
-    register NDMesh *m;
+    NDMesh *m;
     int		attr, copy = 1;
     int		i;
     int		npts;

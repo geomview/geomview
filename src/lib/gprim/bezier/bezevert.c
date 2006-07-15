@@ -43,7 +43,7 @@ BezierEvert( bezier )
 Bezier *bezier;
 {
 #ifdef FOO
-    register int index0, index1, i,j,k;
+    int index0, index1, i,j,k;
 
     /* index0 will be linear index of control point... */
     for( i = 0; i< bezier->degree+1; ++i)

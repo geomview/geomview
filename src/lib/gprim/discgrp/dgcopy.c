@@ -37,8 +37,8 @@ DiscGrp *
 DiscGrpCopy(obj)
     DiscGrp *obj;
 {
-	register DiscGrp  *m;
-	register DiscGrp  *om = obj;
+	DiscGrp  *m;
+	DiscGrp  *om = obj;
 
 	if (om == NULL) return (NULL);
 

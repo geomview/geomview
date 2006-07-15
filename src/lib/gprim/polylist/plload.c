@@ -59,11 +59,11 @@ LoadCmap(char *file)
 PolyList *
 PolyListFLoad(IOBFILE *file, char *fname)
 {
-    register PolyList *pl;
+    PolyList *pl;
     int edges;
-    register int i;
+    int i;
     char *token;
-    register Vertex *v;
+    Vertex *v;
     int binary = 0;
     int preread = 0;
     int headerseen = 0;
@@ -152,8 +152,8 @@ PolyListFLoad(IOBFILE *file, char *fname)
 
     pl->p = OOGLNewNE(Poly, pl->n_polys, "PolyListFLoad polygons");
     for(i = 0; i < pl->n_polys; ) {
-	register Poly *p;
-	register int k,index;
+	Poly *p;
+	int k,index;
 
 	p = &pl->p[i];
 	if(iobfgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {

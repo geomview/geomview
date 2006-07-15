@@ -47,11 +47,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *
 VectBound(v, T)
-	register Vect *v;
+	Vect *v;
 	Transform T;
 {
-	register int n;
-	register HPoint3 *p;
+	int n;
+	HPoint3 *p;
 	HPoint3 min, max;
 	HPoint3	*raw, *clean, p0, p1;
 

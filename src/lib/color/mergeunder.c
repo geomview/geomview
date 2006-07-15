@@ -35,9 +35,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void
 MergeUnder( f, b, t )
-    register ColorA *f, *b, *t;
+    ColorA *f, *b, *t;
 {
-    register float a = 1.0 - b->a;
+    float a = 1.0 - b->a;
 
     t->r = a * f->r + b->r;
     t->g = a * f->g + b->g;
@@ -47,10 +47,10 @@ MergeUnder( f, b, t )
 
 void
 MergeUnderN( f, b, t, n )
-    register ColorA *f, *b, *t;
-    register int n;
+    ColorA *f, *b, *t;
+    int n;
 {
-    register float a;
+    float a;
     
     while( n-- ) {
 	a = 1.0 - b->a;

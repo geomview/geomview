@@ -146,7 +146,7 @@ D1PRINT(("ui_install_mode: name=%s, proc=%x\n", name, proc));
 
 void ui_uninstall_mode(char *name)
 {
-  register int i = ui_mode_index(name);
+  int i = ui_mode_index(name);
 
   if (i<0) return;
   --uistate.mode_count;
@@ -161,9 +161,9 @@ void ui_uninstall_mode(char *name)
 /* 
  * Match names
  */
-int ui_mode_index(register char *name)
+int ui_mode_index(char *name)
 {
-  register int i;
+  int i;
 
   for (i=0; i<uistate.mode_count; ++i) {
     if(!strcasecmp(name, uistate.modenames[i]))
@@ -318,7 +318,7 @@ void print_emodtable()
 LDEFINE(cursor_still, LVOID,
 	"(cursor-still [INT])\n\
 	Sets the number of microseconds for which the cursor must not\n\
-	move to register as holding still.  If INT is not specified,\n\
+	move to as holding still.  If INT is not specified,\n\
 	the value will be reset to the default.")
 {
   uistate.cursor_still = UI_CURSOR_STILL;
@@ -332,7 +332,7 @@ LDEFINE(cursor_still, LVOID,
 LDEFINE(cursor_twitch, LVOID,
 	"(cursor-twitch	[INT])\n\
 	Sets the distance which the cursor must not move (in x or\n\
-	y) to register as holding still.  If INT is not specified,\n\
+	y) to as holding still.  If INT is not specified,\n\
 	the value will be reset to the default.")
 {
   uistate.cursor_twitch = UI_CURSOR_TWITCH;

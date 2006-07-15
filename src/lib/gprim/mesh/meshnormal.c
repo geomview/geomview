@@ -37,7 +37,7 @@ static void mnorm();
 Mesh *
 MeshComputeNormals(Mesh *m)
 {
-	register HPoint3 *normp = NULL, *normptr, *pptr;
+	HPoint3 *normp = NULL, *normptr, *pptr;
 	int i;
 	if(m->n) {
 		GeomFree(m->n);
@@ -68,9 +68,9 @@ mnorm(ap, an, nu, nv, uwrap, vwrap, evert)
 	int	uwrap, vwrap;
 	int	evert;
 {
-	register HPoint3 *prev, *next;
-	register Point3 *n;
-	register int k;
+	HPoint3 *prev, *next;
+	Point3 *n;
+	int k;
 	int u, v;
 	float x,y,z, norm;
 	float unit;
@@ -158,7 +158,7 @@ mnorm(ap, an, nu, nv, uwrap, vwrap, evert)
 		    }
 		    if(n->x == 0.0 && n->y == 0.0 && n->z == 0.0) {
 			/* Do likewise in E-W direction. */
-			register HPoint3 *cur = &ap[nu*(v+1) - k];
+			HPoint3 *cur = &ap[nu*(v+1) - k];
 
 			if(k == 1) cur--;
 			else if(k == nu) cur++;

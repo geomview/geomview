@@ -133,10 +133,10 @@ proj_matrix	a,
 			b,
 			product;
 {
-	register int	i,
+	int	i,
 					j,
 					k;
-	register double	sum;
+	double	sum;
 	proj_matrix		temp;
 
 	for (i=0; i<4; i++)
@@ -159,7 +159,7 @@ void proj_copy(a, b)
 proj_matrix	a,
 			b;
 {
-	register int	i,
+	int	i,
 					j;
 
 	for (i=0; i<4; i++)

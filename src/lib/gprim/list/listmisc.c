@@ -48,7 +48,7 @@ ListHandleScan( List *list, int (*func)(), void *arg )
 List *
 ListDice( List *list, int nu, int nv )
 {
-    register List *l;
+    List *l;
     for(l = list; l != NULL; l = l->cdr)
 	GeomDice(l->car, nu, nv);
     return list;
@@ -57,7 +57,7 @@ ListDice( List *list, int nu, int nv )
 List *
 ListEvert( List *list )
 {
-    register List *l;
+    List *l;
 
     for(l = list; l != NULL; l = l->cdr)
 	GeomEvert( l->car );
@@ -72,7 +72,7 @@ ListBound( list, T )
 {
     Geom *carbox = NULL;
     BBox *bbox = NULL;
-    register List *l;
+    List *l;
 
     for(l = list; l != NULL; l = l->cdr) {
 	carbox = GeomBound( l->car, T );
@@ -93,7 +93,7 @@ ListTransform( list, T )
     List *list;
     Transform T;
 {
-    register List *l;
+    List *l;
 
     for(l = list; l != NULL; l = l->cdr)
 	GeomTransform( l->car, T );

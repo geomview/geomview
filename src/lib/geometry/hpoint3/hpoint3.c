@@ -68,9 +68,9 @@ HPt3Normalize( HPoint3 *pt1, HPoint3 *pt2 )
  * pt2 = pt1 * T
  */
 void
-HPt3Transform( register Transform3 T, HPoint3 *pt1, HPoint3 *pt2 )
+HPt3Transform( Transform3 T, HPoint3 *pt1, HPoint3 *pt2 )
 {
-    register float x = pt1->x, y = pt1->y, z = pt1->z, w = pt1->w;
+    float x = pt1->x, y = pt1->y, z = pt1->z, w = pt1->w;
 
     pt2->x = x*T[0][0] + y*T[1][0] + z*T[2][0] + w*T[3][0];
     pt2->y = x*T[0][1] + y*T[1][1] + z*T[2][1] + w*T[3][1];
@@ -117,7 +117,7 @@ HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
 void
 Pt3ToPt4( Point3 *v3, HPoint3 *v4, int n )
 {
-  register int i;
+  int i;
   for (i = 0; i<n; ++i)	{
     *(Point3 *)&v4[i] = v3[i];
     v4[i].w = 1.0;
@@ -154,7 +154,7 @@ HPt3Dehomogenize( HPoint3 *hp1, HPoint3 *hp2 )
 }
 
 void
-HPt3SubPt3(register HPoint3 *p1, register HPoint3 *p2, register Point3 *v)
+HPt3SubPt3(HPoint3 *p1, HPoint3 *p2, Point3 *v)
 {
     if(p1->w == p2->w) {
 	v->x = p1->x - p2->x; v->y = p1->y - p2->y; v->z = p1->z - p2->z;

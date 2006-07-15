@@ -35,11 +35,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox           *
 BBoxTransform(bbox, T)
-	register BBox	*bbox;
+	BBox	*bbox;
 	Transform T;
 {
-	register int i;
-	register HPoint3 *p;
+	int i;
+	HPoint3 *p;
 	HPoint3 vert[8];
 
 	for(i = 0, p = &vert[0]; i < 8; i++, p++) {

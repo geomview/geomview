@@ -187,7 +187,7 @@ int hypshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 		
 
 	for(lno = ncached; --lno >= 0; ) {
-	    register HPoint3 *L;
+	    HPoint3 *L;
 	    HPoint3 Lt;
 	    float bright, ll, ln, light_intensity, d;
 
@@ -279,7 +279,7 @@ int sphshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
     /* for now, move lights to be inside spherical space */
     if(ma->light_seq != cached_light_seq) {
 	float d;
-	register HPoint3 *L;
+	HPoint3 *L;
 	LtLight **lp;
 
 	for(i = 0; i < ncached; i++)
@@ -332,7 +332,7 @@ int sphshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 	    }
 		
 	for(lno = ncached; --lno >= 0; ) {
-	    register HPoint3 *L;
+	    HPoint3 *L;
 	    HPoint3 Lt;
 	    float bright, ln, d, radius, light_intensity;
 

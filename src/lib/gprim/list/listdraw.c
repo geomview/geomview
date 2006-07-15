@@ -38,7 +38,7 @@ List *
 ListDraw( list )
      List *list;
 {
-    register List *l;
+    List *l;
 
     for(l = list; l != NULL; l = l->cdr) {
 	GeomDraw( l->car );

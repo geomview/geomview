@@ -88,7 +88,7 @@ void
 dithermap(int levels, double gamma, int rgbmap[][3])
 {
     double N;
-    register int i;
+    int i;
     int levelsq, levelsc;
     int gammamap[256];
     
@@ -144,7 +144,7 @@ void
 bwdithermap(int levels, double gamma, int bwmap[])
 {
     double N;
-    register int i;
+    int i;
     int gammamap[256];
     
     for ( i = 0; i < 256; i++ )
@@ -188,7 +188,7 @@ bwdithermap(int levels, double gamma, int bwmap[])
 void
 make_square(double N)
 {
-    register int i, j, k, l;
+    int i, j, k, l;
     double magicfact;
 
     for ( i = 0; i < 256; i++ )

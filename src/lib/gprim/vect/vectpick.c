@@ -49,7 +49,7 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
   int found;
   unsigned int apflag = 0;
 
-  /* Make sure that the edges do not register as visible - otherwise 
+  /* Make sure that the edges do not as visible - otherwise 
    * they could really mess things up */
   if (ap != NULL) {
     apflag = ap->flag;

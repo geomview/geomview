@@ -109,14 +109,14 @@ extern Handle *HandleAssign( char *name, HandleOps *ops, Ref *obj );
 extern int HandleRegister( Handle **hp, Ref *parent, void *info, void (*update)());
 
 	/*
-	 * Unregister (all callbacks on) a reference to a Handle's value.
+	 * Un(all callbacks on) a reference to a Handle's value.
 	 * It's important to do this when deleting an object,
 	 * lest dangling pointers cause trouble.
 	 * It's harmless to remove a reference which was never registered.
 	 */
 extern void HandleUnregister(Handle **hp);
 
-	/* Unregister just one callback on a reference to a Handle's value.
+	/* Unjust one callback on a reference to a Handle's value.
 	 * HandleUnregister() is the one to use when deleting an object.
 	 * The viewer needs this to keep track of callbacks it plants
 	 * throughout Geom trees, which trigger e.g. BBox recomputation.
@@ -124,7 +124,7 @@ extern void HandleUnregister(Handle **hp);
 extern void HandleUnregisterJust(Handle **hp, Ref *par, void *info, void (*upd)());
 
 	/*
-	 * Unregister all callbacks matching a given pattern, no matter
+	 * Unall callbacks matching a given pattern, no matter
 	 * which Handle they're associated with.  Another routine needed
 	 * for the viewer, called whenever a Geom tree is replaced.
 	 */

@@ -87,7 +87,7 @@ HandleOps TransOps = {
 void
 TransUpdate( Handle **hp, Ref *ignored, Transform Tfixme )
 {
-    register Handle *h = *hp;
+    Handle *h = *hp;
 
     if(h != NULL && h->object != NULL)
 	TmCopy( ((TransObj *)(h->object))->T, Tfixme );
@@ -99,7 +99,7 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 {
     Handle *h = NULL;
     Handle *hname = NULL;
-    register TransObj *tobj = NULL;
+    TransObj *tobj = NULL;
     char *w, *raww;
     int c;
     int more = 0;

@@ -41,7 +41,7 @@ QuadEvert( q )
     Quad *q;
 {
     int i;
-    register Point3 *np;
+    Point3 *np;
 
     if(q != NULL && (np = &q->n[0][0]) != NULL) {
         for(i = 4 * q->maxquad; --i >= 0; np++) {

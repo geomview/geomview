@@ -55,9 +55,9 @@ BezierListFSave(bezierlist, f)
     FILE *f;
 {
     List *bl;
-    register Bezier *bez;
-    register float *p;
-    register int u, v;
+    Bezier *bez;
+    float *p;
+    int u, v;
     int dimwas = -1, uwas = -1, vwas = -1, flagwas = -1;
 
     for(bl = bezierlist; bl != NULL; bl = bl->cdr) {

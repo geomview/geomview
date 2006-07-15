@@ -141,8 +141,8 @@ static int trivial_visibility = 0;
 int
 drawer_geom_count()
 {
-  register int i, n;
-  register DGeom *dg;
+  int i, n;
+  DGeom *dg;
 
   n = 1;
   LOOPSOMEGEOMS(i,dg,ORDINARY) ++n;
@@ -152,8 +152,8 @@ drawer_geom_count()
 int
 drawer_cam_count()
 {
-  register int i, n;
-  register DView *dv;
+  int i, n;
+  DView *dv;
 
   n = 0;
   LOOPVIEWS(i,dv) ++n;
@@ -163,8 +163,8 @@ drawer_cam_count()
 int
 drawer_idbyctx( mgcontext *ctx )
 {
-  register int i;
-  register DView *dv;
+  int i;
+  DView *dv;
 
   LOOPVIEWS(i,dv) {
     if(dv->mgctx == ctx)
@@ -474,9 +474,9 @@ drawer_id2name( int id )
 DObject *
 drawer_next_object( int id, int *indexp, int type )
 {
-  register int index = *indexp;
+  int index = *indexp;
   int limit;
-  register DObject **objs;
+  DObject **objs;
 
   if(id == DEFAULTCAMID && type != T_GEOM)
     return index > 0 ? NULL : (DObject *)&drawerstate.defview;
@@ -514,7 +514,7 @@ drawer_next_object( int id, int *indexp, int type )
 DObject *
 drawer_next_bcast( int id, int *indexp, int type )
 {
-  register DObject *obj;
+  DObject *obj;
 
   if(INDEXOF(id) < 0 && INDEXOF(id) != ALLINDEX)
     id = real_id(real_id(id));
@@ -536,8 +536,8 @@ drawer_next_bcast( int id, int *indexp, int type )
 Appearance *
 drawer_get_ap( int id )
 {
-    register DGeom *dg;
-    register Appearance *ap, *nap;
+    DGeom *dg;
+    Appearance *ap, *nap;
 
     ap = drawerstate.ap;
     nap = worldap;
@@ -564,8 +564,8 @@ drawer_get_ap( int id )
 int
 drawer_moving()
 {
-    register int i;
-    register DObject *o;
+    int i;
+    DObject *o;
 
     if (motions_exist())
       return 1;
@@ -811,7 +811,7 @@ LDEFINE(xform_set, LVOID,
 	Overwrite the current object transform with TRANSFORM (set\n\
 	object ID's transform to TRANSFORM).")
 {
-  register DObject *obj;
+  DObject *obj;
   int index;
   TransformStruct *ts;
   int id;
@@ -852,7 +852,7 @@ LDEFINE(xform, LVOID,
 {
   int id;
   TransformStruct *ts;
-  register DObject *obj;
+  DObject *obj;
   int index;
 
   LDECLARE(("xform", LBEGIN,
@@ -880,7 +880,7 @@ LDEFINE(xform_incr, LVOID,
 	transform of the object every refresh (set object ID's\n\
 	incremental transform to TRANSFORM).")
 {
-  register DObject *obj;
+  DObject *obj;
   int index;
   TransformStruct *ts;
   int id;
@@ -1707,7 +1707,7 @@ LDEFINE(normalization, LVOID,
 void
 drawer_int(int id, DrawerKeyword key, int ival)
 {
-  register DObject *obj;
+  DObject *obj;
   int index;
   int flag, override;
   ApStruct as;
@@ -1868,7 +1868,7 @@ LDEFINE(lines_closer, LVOID,
 void
 drawer_float(int id, DrawerKeyword key, float fval)
 {
-  register DObject *obj;
+  DObject *obj;
   ApStruct as;
   int index;
   int attr, over;
@@ -1969,7 +1969,7 @@ drawer_color(int id, DrawerKeyword key, Color *col)
 {
   int index;
   ApStruct as;
-  register DObject *obj;
+  DObject *obj;
   
   switch (key) {
 
@@ -2033,7 +2033,7 @@ LDEFINE(window, LVOID,
 	\"new-camera\").")
 {
   int index;
-  register DView *dv;
+  DView *dv;
   int id;
   WindowStruct *ws;
 
@@ -2231,7 +2231,7 @@ void
 drawer_init(char *apdefault, char *defaultcam, char *windefault)
 {
   int i;
-  register DGeom *dg;
+  DGeom *dg;
   IOBFILE *f;
 
   ts_identity.h = NULL;
@@ -2381,7 +2381,7 @@ nonidentity(Transform T)
 static DGeom *
 new_dgeom(char *from, int citizenship)
 {
-  register DGeom *dg;
+  DGeom *dg;
   Geom *g = NULL;
   Handle *h = NULL;
   int i;
@@ -2527,7 +2527,7 @@ _name_object(DObject *obj, int ni, char *name)
 static DView *
 new_dview()
 {
-  register DView *dv;
+  DView *dv;
   char window_name[64], *view_name;
   int i;
   WnPosition wp;
@@ -2597,9 +2597,9 @@ new_dview()
 static void
 updateit(float dt)
 {
-  register int i;
-  register DView *dv;
-  register DGeom *dg;
+  int i;
+  DView *dv;
+  DGeom *dg;
   Geom *g;
 
   do_motion(dt);
@@ -2622,7 +2622,7 @@ updateit(float dt)
 }
 
 static void
-draw_view(register DView *dv)
+draw_view(DView *dv)
 {
 	/* Colors for red/cyan stereo */
   static int lefteyemask = MGO_NOGREEN|MGO_NOBLUE;	/* Red */
@@ -2678,7 +2678,7 @@ draw_view(register DView *dv)
  * Reconfigure view.  Assumes the proper window is already selected.
  */
 static void
-reconfigure_view(register DView *dv)
+reconfigure_view(DView *dv)
 {
   WnWindow *win = NULL;
   WnPosition wp, gap;
@@ -2931,7 +2931,7 @@ object_register(Handle **hp, Ref *thing, DObject *o)
  * In any case, scan for Handles.
  */
 static void
-update_dgeom(register DGeom *dg)
+update_dgeom(DGeom *dg)
 {
   if(dg->id == WORLDGEOM)
     return;
@@ -2940,7 +2940,7 @@ update_dgeom(register DGeom *dg)
     HandleUnregisterAll((Ref *)dg, (void *)(long)(int)dg->seqno, object_changed);
     dg->seqno++;
     /*
-     * Find all Handles in this DGeom, and register a callback for each.
+     * Find all Handles in this DGeom, and a callback for each.
      */
     GeomHandleScan(dg->Item, object_register, dg);
   }
@@ -2953,7 +2953,7 @@ update_dgeom(register DGeom *dg)
 }
 
 static void
-update_view(register DView *v)
+update_view(DView *v)
 {
   v->seqno++;
   if(v->Item != drawerstate.universe)
@@ -2962,7 +2962,7 @@ update_view(register DView *v)
 }
 
 static void
-normalize(register DGeom *dg, int normalization)
+normalize(DGeom *dg, int normalization)
 {
   float cx,cy,cz,cs,r,dx,dy,dz;
   HPoint3 min,max;
@@ -3132,8 +3132,8 @@ visible(Transform T, HPoint3 *v, int n)
 {
 #define MIN -2
 #define MAX  2
-  register float x,y,z;
-  register float
+  float x,y,z;
+  float
     xmin = MAX,
     xmax = MIN,
     ymin = MAX,

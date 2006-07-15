@@ -227,7 +227,7 @@ Pt3Perpendicular( const Point3 *v1, const Point3 *v2 )
 void
 Pt3Transform( Transform3 T, Point3 *p1, Point3 *p2 )
 {
-    register Pt3Coord x, y, z, w;
+    Pt3Coord x, y, z, w;
 
     x = p1->x;
     y = p1->y;

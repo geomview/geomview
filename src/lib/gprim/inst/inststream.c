@@ -59,7 +59,7 @@ static int getlocation(char *name)
 Geom *
 InstImport( Pool *p )
 {
-    register Inst *inst = NULL;
+    Inst *inst = NULL;
     IOBFILE *file;
     char *expect = NULL;
     int c;
@@ -165,8 +165,8 @@ InstImport( Pool *p )
 
 	default:
 	syntax:
-	  OOGLSyntax(file, "Couldn't read INST in \"%s\": syntax error, expected %s",
-			p->poolname, expect);
+	  OOGLSyntax(file, "Couldn't read INST in \"%s\": syntax error, expected %s, got char %c",
+		     p->poolname, expect, c);
 	  goto bogus;
 
 	failed:

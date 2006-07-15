@@ -67,7 +67,7 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 {
     Handle *h = NULL;
     Handle *hname = NULL;
-    register WnWindow *win = NULL;
+    WnWindow *win = NULL;
     IOBFILE *inf;
     char *w, *raww, *err, *title;
     int i, c;
@@ -212,7 +212,7 @@ int
 WnStreamOut( Pool *p, Handle *h, WnWindow *win )
 {
     int i;
-    register WnPosition *wp;
+    WnPosition *wp;
     FILE *f;
 
     if((f = PoolOutputFile(p)) == NULL)

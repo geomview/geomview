@@ -51,12 +51,12 @@ NAME (unsigned char *buf, float *zbuf, int zwidth, int width,
 		int height, int miny, int maxy, int *color, endPoint *mug)
 {
 #ifdef PTR_INIT
-    register PTR_TYPE *ptr;           /* pixel pointers   */
+    PTR_TYPE *ptr;           /* pixel pointers   */
 #endif
-    register int i, x2;           /* dithering junk   */
+    int i, x2;           /* dithering junk   */
     int y, x1;                          /* current line     */
 #ifdef ZBUFFER
-    register float *zptr;                 /* zbuff pointers   */
+    float *zptr;                 /* zbuff pointers   */
     double z, z2, zdelta;              /* z-buffer stuff   */
 #endif
 #if defined(ZBUFFER) || defined(GOURAUD)

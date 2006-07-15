@@ -37,9 +37,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 
 Vect *
-VectCopy(register Vect *ov)
+VectCopy(Vect *ov)
 {
-	register Vect  *v;
+	Vect  *v;
 
 	if (ov == NULL) return (NULL);
 
@@ -60,7 +60,7 @@ VectCopy(register Vect *ov)
 }
 
 void
-VectDelete( register Vect *v )
+VectDelete( Vect *v )
 {
     if (v) {
 	if(v->p != NULL) OOGLFree(v->p);
@@ -72,7 +72,7 @@ VectDelete( register Vect *v )
 Vect *
 VectCreate ( Vect *exist, GeomClass *classp, va_list *a_list )
 {
-    register Vect *vect;
+    Vect *vect;
     int attr, copy = 1;
     int police = 1;	/* by default, check the input to see it's good */
 
@@ -226,11 +226,11 @@ VectCreate ( Vect *exist, GeomClass *classp, va_list *a_list )
 
 int
 VectSane(vect)
-	register Vect *vect;
+	Vect *vect;
 {
-	register int i;
-	register int vleft, cleft;
-	register short *p, *c;
+	int i;
+	int vleft, cleft;
+	short *p, *c;
 
 	if(!vSane(vect))
 		return(0);

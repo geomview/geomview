@@ -70,7 +70,7 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
     }
 
     for(i = 0, p = newp, c = colored ? newc : v->c; i < v->nvec; i++) {
-	register int nv;
+	int nv;
 
 	nv = vcount(v->vnvert[i]);
 	if(colored) nc = nv;
@@ -95,15 +95,15 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
 
 Vect *
 VectDraw(v)
-     register Vect *v;
+     Vect *v;
 {
-	register HPoint3 *p;
-	register ColorA *c;
+	HPoint3 *p;
+	ColorA *c;
 	ColorA edgecolor;
-	register int n, hascolor, nc;
+	int n, hascolor, nc;
 	int flags, penultimate;
 	ColorA *lastcolor=NULL;
-	register Appearance *ap = mggetappearance();
+	Appearance *ap = mggetappearance();
 
 	/* Don't draw if vect-drawing is off. */
 	if (v == NULL || (ap->flag & APF_VECTDRAW) == 0)
@@ -178,7 +178,7 @@ VectDraw(v)
 
 
 	for(n = 0; n < v->nvec; n++) {
-	    register int nv;
+	    int nv;
 
 	    nv = vcount(v->vnvert[n]);
 	    if (hascolor) nc = v->vncolor[n];

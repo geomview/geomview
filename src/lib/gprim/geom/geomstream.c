@@ -183,7 +183,7 @@ struct GeomTranslator {
 void
 GeomAddTranslator(char *prefix, char *cmd)
 {
-    register struct GeomTranslator *gt;
+    struct GeomTranslator *gt;
     int i;
     if(VVCOUNT(geomtransl) == 0)
 	VVINIT(geomtransl, struct GeomTranslator, 4);
@@ -223,7 +223,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     close(0);
     dup(iobfileno(pf));
     oldchld = signal(SIGCHLD, SIG_DFL);
-    tf = iobfileopen(popen(cmd, POPEN_RB));
+    tf = iobpopen(cmd, POPEN_RB);
     close(0);
     if(oldstdin > 0) {
 	dup(oldstdin);
@@ -231,7 +231,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     }
     tp = PoolStreamTemp(PoolName(p), tf, NULL, 0, &GeomOps);
     ok = GeomStreamIn(tp, hp, gp);
-    pclose(iobfile(tf));
+    iobpclose(tf);
     iobfileclose(tf);
     PoolClose(tp);
     signal(SIGCHLD, oldchld);

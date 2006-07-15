@@ -36,9 +36,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *
 QuadBound( Quad *q, Transform T )
 {
-    register int v;
+    int v;
     HPoint3 min, max;
-    register HPoint3 *p;
+    HPoint3 *p;
     Point3 p0;
 
     p = q->p[0];

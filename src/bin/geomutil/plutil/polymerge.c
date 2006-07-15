@@ -147,7 +147,7 @@ static Fe *fedge(F *f, V *v0, V *v1);
 
 int main(int argc, char *argv[])
 {
-    register int i;
+    int i;
     int tnv, tne, any;
     int binary = 0, vertsize = 0;
     char *C = "", *N = "", *four = "";
@@ -281,8 +281,8 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 
     tossedf = 0;
     for(i = 0; i < nf; i++) {
-	register F *fp = &Fs[i];
-	register Fe *fe;
+	F *fp = &Fs[i];
+	Fe *fe;
 	int nfv, k, c;
 	int v, ov, v0;
 	Fe head;
@@ -384,11 +384,11 @@ Merges coincident vertices, collinear edges, coplanar faces of an OFF object.\n\
 	    E *e;
 
 	    for(e = ehash[i]; e != NULL; e = e->link) {
-		register Fe *fe, *fee;
+		Fe *fe, *fee;
 
 		for(fe = e->feds; fe != NULL; fe = fe->elink) {
 		    for(fee = fe->elink; fee != NULL; fee = fee->elink) {
-			register float dn;
+			float dn;
 
 			dn = VDOT(&fe->n, &fee->n);
 			if(fabs(1 - dn*dn) < EPS_NORMAL) {
@@ -480,7 +480,7 @@ if (flags & F_EVOLVER) /* Produce Brakke's evolver .fe format */
     if (vdim == 4) printf("space_dimension 4\n");
     printf("vertices\n");
     for(i = 0; i < nv; i++) {
-	register V *v = &Vs[i];
+	V *v = &Vs[i];
 	if(v->ref || !(flags & 1)) {
 	    v->index = ++j;
 	    printf("%d\t%#g %#g %#g", v->index, v->p.x, v->p.y, v->p.z);
@@ -499,7 +499,7 @@ if (flags & F_EVOLVER) /* Produce Brakke's evolver .fe format */
     printf("\nfaces\n");
     j=0;
     for(i=0; i<nf; i++) {
-	register Fe *fe, *fee;
+	Fe *fe, *fee;
 	int k, nfv;
 
 	fe = Fs[i].fedges;
@@ -519,7 +519,7 @@ else    /* Produce OFF format */
 {
     printf("%s%s%sOFF\n%d %d %d\n", C, N, four, tnv, nf - tossedf, tne);
     for(i = 0; i < nv; i++) {
-	register V *v = &Vs[i];
+	V *v = &Vs[i];
 	int k;
 	if(v->ref || !(flags & F_VERT)) {
 	    printf("%#g %#g %#g", v->p.x, v->p.y, v->p.z);
@@ -537,7 +537,7 @@ else    /* Produce OFF format */
     printf("\n");
     /* ho hum */
     for(i=0; i<nf; i++) {
-	register Fe *fe, *fee;
+	Fe *fe, *fee;
 	int k, nfv;
 
 	fe = Fs[i].fedges;
@@ -553,7 +553,7 @@ else    /* Produce OFF format */
 	if(debug) {
 	    printf(" #");
 	    for(fee = fe, k = nfv; --k >= 0; fee = fee->next)
-		printf(" %d", fee->edge->v[fee->sign] - Vs);
+		    printf(" %d", (int)(fee->edge->v[fee->sign] - Vs));
 	}
 	printf("\n");
     }
@@ -617,7 +617,7 @@ static Fe *fedge(F *f, V *v0, V *v1)
  */
 static void unfedge(Fe *fe)
 {
-    register Fe **fepp;
+    Fe **fepp;
     
     for(fepp = &fe->edge->feds; *fepp != NULL; fepp = &(*fepp)->elink) {
 	if(*fepp == fe) {
@@ -635,12 +635,12 @@ static void unfedge(Fe *fe)
 static void femerge(Fe *fe1, Fe *fe2)
 {
     F *f1, *f2;
-    register Fe *tfe;
+    Fe *tfe;
 
     if(fe1->face == fe2->face) {
 	if (debug)
 		printf("# Merging two edges of face %d -- tossing it.\n",
-		       fe1->face - Fs);
+		       (int)(fe1->face - Fs));
 	deface(fe1->face);
 	return;
     }
@@ -671,10 +671,10 @@ static void femerge(Fe *fe1, Fe *fe2)
 	f1->fedges = fe2->next;
 	if(debug)
 	    printf("# Merged face %d into %d (vertices %d %d) n1.n2 %g\n",
-		f2-Fs, f1-Fs,
-		fe1->edge->v[fe1->sign]->index,
-		fe1->edge->v[1 - fe1->sign]->index,
-		VDOT(&fe1->n, &fe2->n));
+		   (int)(f2-Fs), (int)(f1-Fs),
+		   fe1->edge->v[fe1->sign]->index,
+		   fe1->edge->v[1 - fe1->sign]->index,
+		   VDOT(&fe1->n, &fe2->n));
     tfe = fe2->next;
     if(tfe == NULL) {
 	fprintf(stderr, "polymerge: face f2 already deleted?\n");
@@ -699,9 +699,9 @@ static void femerge(Fe *fe1, Fe *fe2)
 #if 0
 static void fecheck(Fe *fe)
 {
-    register Fe *fee;
-    register F *f;
-    register E *e;
+    Fe *fee;
+    F *f;
+    E *e;
 
     if(fe == NULL)
 	return;
@@ -731,14 +731,14 @@ static void fecheck(Fe *fe)
 #if 0
 static E *echeck(int v0, int v1)
 {
-    register E *e;
+    E *e;
 
     int t = (v0 + v1 + v0*v1) % nhash;
 					/* Symmetric hash function */
     if(v0 > v1) v0 ^= v1, v1 ^= v0, v0 ^= v1;
     for(e = ehash[t]; e != NULL; e = e->link) {
 	if(e->v[0] == &Vs[v0] && e->v[1] == &Vs[v1]) {
-	    register Fe *fe;
+	    Fe *fe;
 	    fprintf(stderr, "E 0x%p %d-%d (%d-%d)  %p...\n",
 		    (void *)e, v0,v1, e->v[0]->index, e->v[1]->index, (void *)PRETTY(e->feds));
 	    for(fe = e->feds; fe != NULL; fe = fe->elink) {
@@ -753,14 +753,15 @@ static E *echeck(int v0, int v1)
 
 static void normal_ize(F *f)
 {
-    register Fe *fe;
+    Fe *fe;
 
     fe = f->fedges;
     if(fe == NULL)
 	return;
     if(fe->prev == fe->next) {
 	if (debug)
-	    printf("# Face %d already degenerate -- tossing it.\n", f - Fs);
+	    printf("# Face %d already degenerate -- tossing it.\n",
+		   (int)(f - Fs));
 	deface(f);
 	return;
     }
@@ -770,8 +771,8 @@ static void normal_ize(F *f)
 	float r;
 
 	for(;;) {
-	    register Fe *fn, *fee;
-	    register P *pp, *qp;
+	    Fe *fn, *fee;
+	    P *pp, *qp;
 
 	    pp = &fe->edge->to;
 	    fee = fe->next;
@@ -797,7 +798,7 @@ static void normal_ize(F *f)
 		 * This face became degenerate -- toss it.
 		 */
 		if (debug)
-		    printf("# degenerate face %d\n", f - Fs);
+			printf("# degenerate face %d\n", (int)(f - Fs));
 		deface(f);
 		return;
 	    }
@@ -816,7 +817,7 @@ static void normal_ize(F *f)
  */
 static void deface(F *f)
 {
-    register Fe *fe, *fee;
+    Fe *fe, *fee;
 
     fe = f->fedges;
     if(fe == NULL)
@@ -833,8 +834,8 @@ static void deface(F *f)
 
 static int vcmp(V **p, V **q)
 {
-    register V *vp, *vq;
-    register float d;
+    V *vp, *vq;
+    float d;
 
     vp = *p;
     vq = *q;
@@ -855,7 +856,7 @@ static void vmerge(void)
 {
     V **vp;
     int i, j;
-    register V *a, *b;
+    V *a, *b;
     int nexti;
 
     vp = NewN(V *, nv);

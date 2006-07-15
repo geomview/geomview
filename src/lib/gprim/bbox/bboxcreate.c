@@ -51,7 +51,7 @@ BBox *exist;
 GeomClass *classp;
 va_list *a_list;
 {
-    register BBox *bbox;
+    BBox *bbox;
     int attr, copy = 1;
 
     if (exist == NULL) {

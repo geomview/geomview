@@ -35,12 +35,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "quadP.h"
 
 static int
-getquads(IOBFILE *file, register Quad *pquad, int off, int binary, int dimn)
+getquads(IOBFILE *file, Quad *pquad, int off, int binary, int dimn)
 {
     HPoint3 *p;
     Point3 *n;
     ColorA *c;
-    register int k;
+    int k;
 
     p = &pquad->p[off][0];
     n = (pquad->flag & QUAD_N) ? &pquad->n[off][0] : NULL;

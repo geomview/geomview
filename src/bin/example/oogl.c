@@ -47,7 +47,7 @@ void Begin_OOGL(void)
 void
 UpdateOOGL(int x_size, int y_size, float gridunit, float data[])
 {
-        register int    x,y,k;
+        int    x,y,k;
         Point3  *points;
         Geom *mesh;
 	char line[80];

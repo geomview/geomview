@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 Comment *
 CommentFSave( comment, file, fname )
-    register Comment *comment;
+    Comment *comment;
     FILE *file;
     char *fname;
 {
@@ -62,7 +62,7 @@ CommentFSave( comment, file, fname )
 
 Comment *
 CommentSave( comment, name )
-    register Comment *comment;
+    Comment *comment;
     char *name;
 {
     FILE *file;

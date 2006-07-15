@@ -208,7 +208,7 @@ HPtNComb(HPtNCoord u, const HPointN *pu, HPtNCoord v, const HPointN *pv, HPointN
 HPointN *
 HPtNUnit(const HPointN *from, HPointN *to)
 {
-	register HPtNCoord len = 0;
+	HPtNCoord len = 0;
 	short dim = from->dim;
 	int i;
 
@@ -236,7 +236,7 @@ HPtNCoord
 HPtNDehomogenize(const HPointN *from, HPointN *to)
 {
 	short dim = from->dim;
-	register HPtNCoord inv = 1.0 / from->v[dim-1];
+	HPtNCoord inv = 1.0 / from->v[dim-1];
 	int i;
 
 	
@@ -308,7 +308,7 @@ HPtNCoord
 HPtNDot( const HPointN *p1, const HPointN *p2)
 {
 	HPtNCoord result;
-	register int i;
+	int i;
 	short dim = p1->dim;
 
 	if (p2->dim < dim) {

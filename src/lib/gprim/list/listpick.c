@@ -40,7 +40,7 @@ Geom *
 ListPick(List *list, Pick *p, Appearance *ap, Transform T)
 {
   int elem = 0, pathInd;
-  register List *l;
+  List *l;
   Geom *v = NULL;
   
   pathInd = VVCOUNT(p->gcur);

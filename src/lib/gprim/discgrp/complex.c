@@ -206,9 +206,9 @@ sl2c_matrix a,
 double sl2c_norm_squared(a)
 sl2c_matrix a;
 {
-	register int	i;
-	register double	*p;
-	register double	sum;
+	int	i;
+	double	*p;
+	double	sum;
 
 	p = (double *) a;
 	sum = 0.0;

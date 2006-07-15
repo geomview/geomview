@@ -30,7 +30,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.5 2006/07/14 17:47:21 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/findfile.c,v 1.6 2006/07/15 19:06:00 rotdrop Exp $ */
 
 #include <stdio.h>
 #include <string.h>
@@ -142,7 +142,7 @@ char *
 findfile(char *superfile, char *file)
 {
   static char *path = NULL;
-  register char **dirp;
+  char **dirp;
   char pbuf[1024];
 
   if (path) {
@@ -192,7 +192,7 @@ findfile(char *superfile, char *file)
 static void
 dirprefix(char *path, char *dir)
 {
-  register char *end;
+  char *end;
 
   strcpy(dir, path);
   end = dir + strlen(dir) - 1;

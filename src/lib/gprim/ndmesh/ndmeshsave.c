@@ -37,9 +37,9 @@ NDMesh *
 NDMeshFSave(NDMesh *m, FILE *outf)
 {
 	int  i, j, k, wdim;
-	register HPointN **p = m->p;
-	register ColorA *c = m->c;
-	register Point3 *u = m->u;
+	HPointN **p = m->p;
+	ColorA *c = m->c;
+	Point3 *u = m->u;
 
 	if (!outf || !m)
 		return NULL;

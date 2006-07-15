@@ -65,11 +65,11 @@ extern HandleOps CamOps, GeomOps, TransOps, CommandOps, WindowOps;
 
 int gv_debug = 0;
 
-int commandimport(Pool *, Handle **, Ref **);
-int commandclose(Pool *);
-int emodule_commandclose(Pool *);
-int listenimport(Pool *, Handle **, Ref **);
-void useconnection( char *name, HandleOps *ops, Handle *h, Ref *obj, int unique );
+static int commandimport(Pool *, Handle **, Ref **);
+static int commandclose(Pool *);
+static int emodule_commandclose(Pool *);
+static int listenimport(Pool *, Handle **, Ref **);
+static void useconnection( char *name, HandleOps *ops, Handle *h, Ref *obj, int unique );
 
 static void MyPoolDelete(Pool *p);
 
@@ -83,7 +83,7 @@ HandleOps CommandOps = {
 	commandclose
 };
 
-HandleOps emoduleCommandOps = {
+static HandleOps emoduleCommandOps = {
 	"command_language",
 	commandimport,
 	NULL,
@@ -92,7 +92,8 @@ HandleOps emoduleCommandOps = {
 	emodule_commandclose,
 };
 
-HandleOps listenOps = {	/* "Ops" structure for listening sockets */
+#if HAVE_UNIX_SOCKETS
+static HandleOps listenOps = {	/* "Ops" structure for listening sockets */
 	"socket_listener",
 	listenimport,	/* "read" routine really spawns a new connection's data socket */
 	NULL,
@@ -100,8 +101,9 @@ HandleOps listenOps = {	/* "Ops" structure for listening sockets */
 	NULL,
 	NULL
 };
+#endif
 
-int 
+static int 
 commandimport(Pool *p, Handle **unused, Ref **unused_too )
 {
     char *w, *raww;
@@ -164,7 +166,7 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
  *   0 : is a plain file
  *   1 : is something else, probably a named pipe or tty
  */
-int
+static int
 ispipe(char *fname)
 {
     struct stat st;
@@ -259,7 +261,7 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 /*
  * Arrange that later attempts to read the same file will actually re-read it.
  */
-int
+static int
 commandclose(Pool *p)
 {
     PoolDoReread(p);
@@ -431,7 +433,7 @@ comm_route( char *str )
 }
 
 
-int
+static int
 emodule_commandclose(Pool *p)
 {
   int i;
@@ -1244,10 +1246,20 @@ LDEFINE(hdefine, LVOID,
 
 /*****************************************************************************/
 
+#if HAVE_UNIX_SOCKETS
+
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+
+#if !HAVE_DECL_ACCEPT
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+#endif
+
 /*
  * makesocket(name) makes a UNIX-domain listening socket and returns its fd.
  */
-int
+static int
 makesocket(char *name)
 {
     struct sockaddr_un un;
@@ -1308,6 +1320,7 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
     return 1;
 }
 
+#endif
 
 /*
  * usepipe(dir, suffix, type)
@@ -1364,6 +1377,7 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
 	    chmod(pipename, 0666);
 	}
 	loadfile(pipename, ops, 0);
+#if HAVE_UNIX_SOCKETS
     } else {
 	/* Establish UNIX-domain listener socket.
 	 * When we get connections to it, expect data of type 'ops'.
@@ -1374,6 +1388,7 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
 	    if(p) PoolSetClientData(p, ops);
 	    p->flags |= PF_NOPREFETCH;
 	}
+#endif
     }
 }
 

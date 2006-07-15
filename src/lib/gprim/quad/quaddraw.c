@@ -69,7 +69,7 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
 }
 
 Quad *
-QuadDraw(register Quad *q)
+QuadDraw(Quad *q)
 {
 
     if (q == NULL)
@@ -92,7 +92,7 @@ QuadDraw(register Quad *q)
     } else {
 
       if ((((Quad *)q)->flag & VERT_N) == 0) {
-    	register Appearance *ap = mggetappearance();
+    	Appearance *ap = mggetappearance();
 
 	if(ap->valid & APF_NORMSCALE ||
 		(ap->flag & APF_FACEDRAW && ap->shading != APF_CONSTANT)) {

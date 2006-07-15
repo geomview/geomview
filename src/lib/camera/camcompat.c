@@ -103,7 +103,7 @@ CamSave(Camera *cam, char *name)
    commenting this procedure out.  -- mbp Fri Aug  9 00:32:36 1991 */
 #ifdef notdef
 int
-CamCurrentStereo( register Camera *cam, Transform leye, Transform reye )
+CamCurrentStereo( Camera *cam, Transform leye, Transform reye )
 {
     if(leye != TMNULL) TmCopy(cam->stereyes[0], leye);
     if(reye != TMNULL) TmCopy(cam->stereyes[1], reye);
@@ -117,7 +117,7 @@ CamCurrentStereo( register Camera *cam, Transform leye, Transform reye )
  ************************************************************************/
 
 void
-CamCurrentPosition( register Camera *cam, Transform T )
+CamCurrentPosition( Camera *cam, Transform T )
 {
     TmCopy( cam->camtoworld, T );
 }
@@ -127,7 +127,7 @@ CamCurrentPosition( register Camera *cam, Transform T )
  * Note this is the inverse of the transform given by CamCurrentPosition().
  */
 void
-CamViewWorld( register Camera *cam, Transform T )
+CamViewWorld( Camera *cam, Transform T )
 {
     if (cam->flag & CAMF_NEWC2W ) {
 	TmInvert( cam->camtoworld, cam->worldtocam );
@@ -139,19 +139,19 @@ CamViewWorld( register Camera *cam, Transform T )
 
 
 void
-CamFocus( register Camera *cam, float focus )
+CamFocus( Camera *cam, float focus )
 {
     cam->focus = focus;
 }
 
 float
-CamCurrentFocus( register Camera *cam )
+CamCurrentFocus( Camera *cam )
 {
     return cam->focus;
 }
 
 float
-CamCurrentAspect( register Camera *cam )
+CamCurrentAspect( Camera *cam )
 {
     return cam->frameaspect;
 }
@@ -160,13 +160,13 @@ CamCurrentAspect( register Camera *cam )
  * Set aspect ratio; preserve minimum field-of-view.
  */
 void
-CamFrameAspect( register Camera *cam, float aspect )
+CamFrameAspect( Camera *cam, float aspect )
 {
     cam->frameaspect = aspect;
 }
 
 void
-CamTransformTo( register Camera *cam, Transform T )
+CamTransformTo( Camera *cam, Transform T )
 {
     TmCopy( T, cam->camtoworld );
     cam->flag |= CAMF_NEWC2W;
@@ -177,54 +177,54 @@ CamTransformTo( register Camera *cam, Transform T )
  */
 /* incorporate into CamSet & remove: */
 void
-CamStereoEye( register Camera *cam, int whicheye )
+CamStereoEye( Camera *cam, int whicheye )
 {
     if(whicheye > 1) whicheye = 1;
     cam->whicheye = whicheye;
 }
 
 void
-CamClipping( register Camera *cam, float cnear, float cfar )
+CamClipping( Camera *cam, float cnear, float cfar )
 {
     cam->cnear = cnear;
     cam->cfar = cfar;
 }
 
 void
-CamCurrentClipping( register Camera *cam, float *cnear, float *cfar )
+CamCurrentClipping( Camera *cam, float *cnear, float *cfar )
 {
     *cnear = cam->cnear;
     *cfar = cam->cfar;
 }
 
 void
-CamHalfYField( register Camera *cam, float halfyfov )
+CamHalfYField( Camera *cam, float halfyfov )
 {
     cam->halfyfield = halfyfov;
 }
 
 float
-CamCurrentHalfYField( register Camera *cam )
+CamCurrentHalfYField( Camera *cam )
 {
     return cam->halfyfield;
 }
 
 float
-CamCurrentHalfField( register Camera *cam )
+CamCurrentHalfField( Camera *cam )
 {
     return cam->frameaspect > 1 ?
 		cam->halfyfield : cam->halfyfield * cam->frameaspect;
 }
 
 void
-CamPerspective( register Camera *cam, int persp )
+CamPerspective( Camera *cam, int persp )
 {
     if (persp)  cam->flag |= CAMF_PERSP;
     else	cam->flag &= ~CAMF_PERSP;
 }
 
 int
-CamIsPerspective( register Camera *cam )
+CamIsPerspective( Camera *cam )
 {
     return ((cam->flag & CAMF_PERSP) != 0);
 }

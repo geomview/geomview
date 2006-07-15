@@ -40,21 +40,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 void *OOG_CurSM		= NULL;
 
-#if defined(sgi) || AIX
 void *(*OOG_NewP)(size_t)		= malloc;
 void  (*OOGLFree)(void *)		= free;
 void *(*OOG_RenewP)(void *, size_t)	= realloc;
-#else
-void *(*OOG_NewP)(size_t)		= malloc;
-void  (*OOGLFree)(void *)		= free;
-void *(*OOG_RenewP)(void *,size_t)	= realloc;
-#endif
-
 
 void *
 OOG_NewE(int n, char *msg)
 {
-    register void *p;
+    void *p;
 
     p = (*OOG_NewP)(n);
     if(p == NULL && n != 0) {

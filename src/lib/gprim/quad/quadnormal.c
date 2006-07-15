@@ -39,8 +39,8 @@ QuadComputeNormals( Quad *q )
     int i;
     Point3 nor;
     float len;
-    register HPoint3 *p;
-    register Point3 *n;
+    HPoint3 *p;
+    Point3 *n;
 
     /*
      * Only compute if not present!

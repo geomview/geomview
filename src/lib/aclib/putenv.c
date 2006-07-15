@@ -39,12 +39,12 @@ static char sccsid[] = "@(#)getenv.c	5.5 (Berkeley) 6/27/88";
  */
 static char *
 _findenv(name, offset)
-	register char *name;
+	char *name;
 	int *offset;
 {
 	extern char **environ;
-	register int len;
-	register char **P, *C;
+	int len;
+	char **P, *C;
 
 	for (C = name, len = 0; *C && *C != '='; ++C, ++len);
 	for (P = environ; *P; ++P)
@@ -66,12 +66,12 @@ _findenv(name, offset)
  *	Put a string of the form "name=value" into the environment.
  *	[Adapted from BSD routine setenv(name, value, rewrite).]
  */
-putenv(register char *name)
+putenv(char *name)
 {
 	extern char **environ;
 	static int alloced;			/* if allocated space before */
-	register char *value;
-	register char *C;
+	char *value;
+	char *C;
 	int l_value, offset;
 
 	value = strchr(name, '=');
@@ -84,8 +84,8 @@ putenv(register char *name)
 		}
 	}
 	else {					/* create new slot */
-		register int	cnt;
-		register char	**P;
+		int	cnt;
+		char	**P;
 
 		for (P = environ, cnt = 0; *P; ++P, ++cnt);
 		if (alloced) {			/* just increase size */

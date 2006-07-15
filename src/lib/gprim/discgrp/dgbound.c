@@ -39,7 +39,7 @@ DiscGrpBound(discgrp, T)
 	DiscGrp	*discgrp;
 	Transform T;
 {
-    register BBox *geombbox;
+    BBox *geombbox;
     Transform Tnew;
     GeomIter *it;
 #ifdef BADVELOCITY	/* strange flying mode velocity comps require this */
@@ -66,7 +66,7 @@ DiscGrpBound(discgrp, T)
 #endif
 
     while(NextTransform(it, Tnew) > 0) {
-	register BBox *box;
+	BBox *box;
 
 	TmConcat( Tnew,  T, Tnew );
 	if((box = (BBox *)GeomBound( discgrp->geom, Tnew )) != NULL) {

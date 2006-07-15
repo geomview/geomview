@@ -64,9 +64,9 @@ mgx11_polygon(int nv,  HPoint3 *V,
 	     int nn,  Point3 *N, 
 	     int nc,  ColorA *C)
 {
-  register int		count;
-  register HPoint3     *v;
-  register Point3      *n;
+  int		count;
+  HPoint3     *v;
+  Point3      *n;
   int			flag, cinc, ninc, smooth;
 
 /*  fprintf(stderr,"X11: draw a polygon\n"); */
@@ -171,11 +171,11 @@ void mgx11_line( HPoint3 *p1, HPoint3 *p2 )
  * Notes:	See mg.doc.
  *
  */
-void mgx11_fatpoint(register HPoint3 *v)
+void mgx11_fatpoint(HPoint3 *v)
 {
   int i;
   HPoint3 a;
-  register HPoint3 *p, *q;
+  HPoint3 *p, *q;
   float vw;
 
 /*  fprintf(stderr,"X11: make a fat-point\n"); */
@@ -293,10 +293,10 @@ void mgx11_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
  */
 void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
 {
-  register int		i, j;
-  register Poly		*p;
-  register Vertex 	**v, *vp, **vh;
-  register Point3	*n;
+  int		i, j;
+  Poly		*p;
+  Vertex 	**v, *vp, **vh;
+  Point3	*n;
   struct mgastk *ma = _mgc->astk;
   int plflags = pl_flags;
   int flag, shading;
@@ -594,12 +594,12 @@ void mgx11polymeshrow(int wrap, int has, int off, int count, HPoint3 *P,
 void mgx11submesh(int wrap, int nu, int nv, int umin, int umax, int vmin,
 		int vmax, HPoint3 *meshP, Point3 *meshN, ColorA *meshC)
 {
-  register int u, v;
+  int u, v;
   int ucnt, vcnt;
-  register HPoint3 *P;
-  register Point3 *N;
-  register ColorA *C;
-  register int prev;
+  HPoint3 *P;
+  Point3 *N;
+  ColorA *C;
+  int prev;
   int du;
   int douwrap;
   HPoint3  tp;
@@ -725,7 +725,7 @@ come to think of it, what is the correct interpretation of the
 normal vector when the points live in 4-d?
 */
 void
-mgx11_drawnormal(register HPoint3 *p, Point3 *n)
+mgx11_drawnormal(HPoint3 *p, Point3 *n)
 {
   Point3 tp;
   HPoint3 end;
@@ -741,7 +741,7 @@ mgx11_drawnormal(register HPoint3 *p, Point3 *n)
   scale = _mgc->astk->ap.nscale;
   if (_mgc->astk->ap.flag & APF_EVERT)
   {
-    register Point3 *cp = &_mgc->cpos;
+    Point3 *cp = &_mgc->cpos;
     if (!(_mgc->has & HAS_CPOS))
       mg_findcam();
     if ((p->x - cp->x) * n->x + (p->y - cp->y) * n->y +

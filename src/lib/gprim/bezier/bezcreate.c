@@ -36,10 +36,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Bezier creation, deletion and editing.
  */
 Bezier *
-BezierCopy( register Bezier *ob )
+BezierCopy( Bezier *ob )
 {
-	register Bezier *b;
-	register int n;
+	Bezier *b;
+	int n;
 
 	if(ob == NULL) return NULL;
 
@@ -91,7 +91,7 @@ copies pointers */
 Bezier *
 BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 {
-    register Bezier *bezier;
+    Bezier *bezier;
     int attr, copy = 1;
     ColorA *color = NULL;
     int i;

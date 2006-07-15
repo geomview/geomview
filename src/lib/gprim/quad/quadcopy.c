@@ -35,9 +35,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 Quad *
 QuadCopy(oq)
-	register Quad *oq;
+	Quad *oq;
 {
-	register Quad *q;
+	Quad *q;
 
         if (!oq) return NULL;
         q = OOGLNewE(Quad, "new Quad");

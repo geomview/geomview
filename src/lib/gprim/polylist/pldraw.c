@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.4 2006/07/14 17:47:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -109,7 +109,7 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
 }
 
 PolyList *
-PolyListDraw( register PolyList *pl )
+PolyListDraw( PolyList *pl )
 {
     if (pl == NULL)
       return NULL;
@@ -136,7 +136,7 @@ PolyListDraw( register PolyList *pl )
      * we force it to be computed.
      */
     if((pl->flags & (PL_HASVN|PL_HASPN)) != (PL_HASVN|PL_HASPN)) {
-	register Appearance *ap = mggetappearance();
+	Appearance *ap = mggetappearance();
 	if((ap->shading != APF_CONSTANT && ap->flag & APF_FACEDRAW)
 			|| ap->flag & APF_NORMALDRAW)
 	    PolyListComputeNormals(pl);

@@ -98,7 +98,7 @@ insert_or_match_mat(mat, mode)
 Transform mat;
 int mode;	/* insert or match? */
 {
-	register struct node *n = NULL, *p; 
+	struct node *n = NULL, *p; 
 	float d;
 	struct node tnode;
 	double getnorm();
@@ -176,7 +176,7 @@ int
 is_same(t0, t1)
 Transform t0, t1;
 {
-    register int i, j, same = 1;
+    int i, j, same = 1;
 
     if (stringent)	{
 	float factor, fepsilon;

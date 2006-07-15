@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.13 2006/07/14 09:57:57 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.14 2006/07/15 19:06:00 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -158,7 +158,7 @@ static inline int htonl(unsigned int v) {
 int
 fputnf(FILE *file, int count, float *v, int binary)
 {
-	register int i;
+	int i;
 	if(binary) {
 #if WORDS_BIGENDIAN
 	  return fwrite(v, sizeof(float), count, file);
@@ -181,8 +181,8 @@ fputnf(FILE *file, int count, float *v, int binary)
 int
 fputtransform(FILE *file, int ntrans, float *trans, int binary)
 {
-	register int i, j, n;
-	register float *p;
+	int i, j, n;
+	float *p;
 
 	if(binary) {
 #if WORDS_BIGENDIAN
@@ -223,7 +223,7 @@ fputtransform(FILE *file, int ntrans, float *trans, int binary)
 int
 fnextc(FILE *f, int flags)
 {
-	register int c;
+	int c;
 
 	c = getc(f);
 	for(;;) {
@@ -265,8 +265,8 @@ int fgetnd(FILE *f, int maxd, double *dv, int binary)
 {
   int ngot;
   double v = 0;
-  register int c = EOF;
-  register long n;
+  int c = EOF;
+  long n;
   int s, es, nd, any;
 
   if(binary) {
@@ -357,12 +357,12 @@ int fgetnd(FILE *f, int maxd, double *dv, int binary)
  * Returns the number successfully read.
  */
 int
-fgetnf(register FILE *f, int maxf, float *fv, int binary)
+fgetnf(FILE *f, int maxf, float *fv, int binary)
 {
 	int ngot;
 	float v = 0;
-	register int c = EOF;
-	register long n;
+	int c = EOF;
+	long n;
 	int s, es, nd, any;
 
 	if(binary) {
@@ -447,11 +447,11 @@ fgetnf(register FILE *f, int maxf, float *fv, int binary)
 
 
 int
-fgetni(register FILE *f, int maxi, int *iv, int binary)
+fgetni(FILE *f, int maxi, int *iv, int binary)
 {
 	int ngot;
-	register int c = EOF;
-	register long n;
+	int c = EOF;
+	long n;
 	int s, any;
 
 	if(binary) {
@@ -491,11 +491,11 @@ fgetni(register FILE *f, int maxi, int *iv, int binary)
 }
 
 int
-fgetns(register FILE *f, int maxs, short *sv, int binary)
+fgetns(FILE *f, int maxs, short *sv, int binary)
 {
 	int ngot;
-	register int c = EOF;
-	register long n;
+	int c = EOF;
+	long n;
 	int s, any;
 
 	if(binary) {
@@ -539,10 +539,10 @@ fgetns(register FILE *f, int maxs, short *sv, int binary)
  * and ungetc the failed char so the caller can see it.
  */
 int
-fexpectstr(register FILE *file, char *str)
+fexpectstr(FILE *file, char *str)
 {
-	register char *p = str;
-	register int c;
+	char *p = str;
+	int c;
 
 	while(*p != '\0') {
 	    if((c = getc(file)) != *p++) {
@@ -558,7 +558,7 @@ fexpectstr(register FILE *file, char *str)
  * Check for a string on a file, skipping leading blanks.
  */
 int
-fexpecttoken(register FILE *file, char *str)
+fexpecttoken(FILE *file, char *str)
 {
 	(void) fnextc(file, 0);
 	return fexpectstr(file, str);
@@ -598,9 +598,9 @@ ftoken(FILE *file, int flags)
 {
 	static char *token = NULL;
 	static int troom = 0;
-	register int c;
-	register char *p;
-	register int term;
+	int c;
+	char *p;
+	int term;
 
 	if((term = fnextc(file, flags)) == EOF)
 	    return NULL;
@@ -666,10 +666,10 @@ fdelimtok(char *delims, FILE *file, int flags)
 {
 	static char *token = NULL;
 	static int troom = 0;
-	register int c;
-	register char *p;
-	register char *q;
-	register int term;
+	int c;
+	char *p;
+	char *q;
+	int term;
 
 	if((term = fnextc(file, flags)) == EOF)
 	    return NULL;
@@ -740,7 +740,7 @@ fdelimtok(char *delims, FILE *file, int flags)
 int
 fgettransform(FILE *file, int ntrans, float *trans /* float trans[ntrans][4][4] */, int binary)
 {
-	register float *T;
+	float *T;
 	int nt;
 
 	for(nt = 0; nt < ntrans; nt++) {

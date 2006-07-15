@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plcopy.c,v 1.4 2006/07/14 17:47:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plcopy.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -44,13 +44,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 PolyList *
 PolyListCopy(polylist)
-	register PolyList *polylist;
+	PolyList *polylist;
 {
 	PolyList *newpl;
 	Poly *newp;
 	Vertex *newvl;
-	register int i, j;
-	register Poly *op, *np;
+	int i, j;
+	Poly *op, *np;
 
 	if(polylist == NULL) return NULL;
 

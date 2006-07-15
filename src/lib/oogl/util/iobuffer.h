@@ -43,11 +43,13 @@ typedef struct IOBFILE IOBFILE;
  */
 
 extern IOBFILE *iobfileopen(FILE *istream);
-extern IOBFILE *iobfopen(const char *name, const char *mode);
-extern IOBFILE *iobpopen(const char *name, const char *mode);
 extern int iobfileclose(IOBFILE *iobf);
+extern IOBFILE *iobfopen(const char *name, const char *mode);
 extern int iobfclose(IOBFILE *iobf);
+#if HAVE_POPEN
+extern IOBFILE *iobpopen(const char *name, const char *mode);
 extern int iobpclose(IOBFILE *iobf);
+#endif
 extern FILE *iobfile(IOBFILE *iobf);
 extern size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf);
 extern int iobfgetc(IOBFILE *iobf);

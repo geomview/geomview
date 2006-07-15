@@ -828,8 +828,8 @@ mgrib_pushappearance( void )
 int
 mgrib_popappearance( void )
 {
-  register struct mgastk *mastk = _mgc->astk;
-  register struct mgastk *mastk_next;
+  struct mgastk *mastk = _mgc->astk;
+  struct mgastk *mastk_next;
 
   if (! (mastk_next=mastk->next)) {
     OOGLError(0, "mggl_popappearance: appearance stack has only 1 entry.\n");
@@ -974,7 +974,7 @@ mgrib_newcontext( mgribcontext *ctx )
 mgcontext *
 mgrib_findctx( long winid )
 {
-  register struct mgcontext *mgc;
+  struct mgcontext *mgc;
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_RIB && ((mgribcontext *)mgc)->win == winid)

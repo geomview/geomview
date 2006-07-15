@@ -100,7 +100,7 @@ void
 ooglblkfree(av0)
      char **av0;
 {
-  register char **av = av0;
+  char **av = av0;
   while (*av)
     free(*av++);
 }

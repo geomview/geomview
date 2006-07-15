@@ -160,7 +160,7 @@ mgopengl_appearance( struct mgastk *ma, int mask )
  * 		correct drawing color.
  */
 void
-mgopengl_material(register struct mgastk *astk, int mask)
+mgopengl_material(struct mgastk *astk, int mask)
 {
     GLfloat f[4];
     Material *mat = &astk->mat;
@@ -244,7 +244,7 @@ mgopengl_material(register struct mgastk *astk, int mask)
 void
 mgopengl_setshader(mgshadefunc shader)
 {
-    register struct mgastk *ma = _mgc->astk;
+    struct mgastk *ma = _mgc->astk;
     int wasusing = ma->useshader;
 
     ma->shader = shader;
@@ -718,10 +718,10 @@ mgopengl_d4f(c)
 
 
 void
-mgopengl_n3fevert(register Point3 *n, register HPoint3 *p)
+mgopengl_n3fevert(Point3 *n, HPoint3 *p)
 {
     Point3 tn;
-    register Point3 *cp;
+    Point3 *cp;
 
     if(!(_mgc->has & HAS_CPOS))
 	mg_findcam();
@@ -741,7 +741,7 @@ void
 mgopengl_v4fcloser(HPoint3 *p)
 {
     HPoint3 tp;
-    register Point3 *cp = &_mgc->cpos;
+    Point3 *cp = &_mgc->cpos;
     float wn = p->w * _mgc->zfnudge;
     
     if(!(_mgc->has & HAS_CPOS))

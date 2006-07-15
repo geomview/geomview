@@ -77,7 +77,7 @@ typedef struct {
   int   cursor_on;			/* cursor visible? */
   int	clamp_cursor;			/* cursor clamped to center of window */
   int 	cursor_still;			/* microseconds in which cursor must
-					   not move to register as holding
+					   not move to as holding
 					   still */
   int	cursor_twitch;			/* distance cursor must not move 
 					   (in either x or y) to register

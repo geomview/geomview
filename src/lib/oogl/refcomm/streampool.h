@@ -116,7 +116,7 @@ extern void PoolDelete(Pool *p);
 extern IOBFILE *PoolInputFile(Pool *);
 extern FILE *PoolOutputFile(Pool *);
 extern void  PoolDoReread(Pool *);
-extern void PoolClose(register Pool *p);
+extern void PoolClose(Pool *p);
 extern int   PoolOType(Pool *, int otype);
 extern void  PoolSetOType(Pool *, int otype);
 extern Pool *PoolByName(char *name);

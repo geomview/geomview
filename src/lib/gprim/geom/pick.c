@@ -168,7 +168,7 @@ PickDelete(Pick *p)
 }
 
 Pick *
-PickSet(register Pick *p, int attr, ...)
+PickSet(Pick *p, int attr, ...)
 {
     va_list al;
     int a;
@@ -231,7 +231,7 @@ PickSet(register Pick *p, int attr, ...)
 }
 
 int
-PickGet(register Pick *p, int attr, void *attrp)
+PickGet(Pick *p, int attr, void *attrp)
 {
     if(p == NULL)
 	return -1;

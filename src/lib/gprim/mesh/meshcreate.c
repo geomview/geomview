@@ -42,7 +42,7 @@ Mesh *exist;
 GeomClass *classp;
 va_list *a_list;
 {
-    register Mesh *mesh;
+    Mesh *mesh;
     int		attr, copy = 1;
     int		npts;
     HPoint3	*p;
@@ -149,7 +149,7 @@ va_list *a_list;
 }
 
 static int
-tossmesh(register Mesh *m)
+tossmesh(Mesh *m)
 {
     if(m->p) OOGLFree(m->p);
     if(m->n) OOGLFree(m->n);

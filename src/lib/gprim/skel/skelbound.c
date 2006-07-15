@@ -46,10 +46,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *
 SkelBound(s, T)
-	register Skel *s;
+	Skel *s;
 	Transform T;
 {
-    register int n;
+    int n;
     Point3 min, max;
     float *p;
     HPoint3 p0;

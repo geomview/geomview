@@ -82,7 +82,7 @@ GeomIterate(g, flags)
     int flags;
 {
     GeomIter *it;
-    register struct istate *is;
+    struct istate *is;
 
     NewIter(it);
     it->flags = (flags & 15) | VALID;
@@ -110,7 +110,7 @@ NextTransform(it, T)
     GeomIter *it;
     Transform T;
 {
-    register struct istate *is;
+    struct istate *is;
     Geom *g;
 
     if(it == NULL)
@@ -151,7 +151,7 @@ NextTransform(it, T)
 	    goto isLIST;
 	}
 	if(g->Class == InstClass || g->Class == SphereClass) {
-	    register Inst *inst = (Inst *)g;
+	    Inst *inst = (Inst *)g;
 
 	    if(inst->magic != INSTMAGIC && inst->magic != SPHEREMAGIC) {
 		GeomError(0,"NextTransform: Surprise Inst %x", g);
@@ -186,8 +186,8 @@ NextTransform(it, T)
     case TLIST:
       isTLIST:
       {
-	register Tlist *TL = (Tlist *)g;
-	register TransformPtr Tp;	/* ought to be ``Transform *Tp'' */
+	Tlist *TL = (Tlist *)g;
+	TransformPtr Tp;	/* ought to be ``Transform *Tp'' */
 
 	if(is->seq >= TL->nelements)
 	    goto pop;
@@ -214,8 +214,8 @@ NextTransform(it, T)
     case DISCGRP:
       isDISCGRP:
       {
-	register DiscGrp *dg = (DiscGrp *)g;
-	register TransformPtr Tp;	/* ought to be ``Transform *Tp'' */
+	DiscGrp *dg = (DiscGrp *)g;
+	TransformPtr Tp;	/* ought to be ``Transform *Tp'' */
 
 	if(is->seq >= dg->big_list->num_el)
 	    goto pop;
@@ -248,7 +248,7 @@ NextTransform(it, T)
 	 * gets fancier -- if we have one List object which contains a
 	 * bundle of Geom's.
 	 */
-	register List *L = (List *)g;
+	List *L = (List *)g;
 
 	if(L == NULL)
 		goto pop;

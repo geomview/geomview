@@ -38,10 +38,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *
 InstBound( inst, T )
-    register Inst *inst;
+    Inst *inst;
     Transform T;
 {
-    register BBox *geombbox;
+    BBox *geombbox;
     Transform Tnew;
     GeomIter *it;
 
@@ -57,7 +57,7 @@ InstBound( inst, T )
     it = GeomIterate( (Geom *)inst, DEEP );
     geombbox = NULL;
     while(NextTransform(it, Tnew) > 0) {
-	register BBox *box;
+	BBox *box;
 
 	TmConcat( Tnew, T, Tnew );
 	if((box = (BBox *)GeomBound( inst->geom, Tnew )) != NULL) {

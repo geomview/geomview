@@ -47,7 +47,7 @@ void
 Tm3Transpose( T, Ttrans )
     Transform3 T, Ttrans;
 {
-    register int i, j;
+    int i, j;
     double t;
 
     if( T != Ttrans ) {

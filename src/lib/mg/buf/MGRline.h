@@ -63,7 +63,7 @@ WIDENAME (unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #endif
 	  int lwidth, int *color)
 {
-    register int d, x, y, ax, ay, sx, dx, dy;
+    int d, x, y, ax, ay, sx, dx, dy;
     int i, end;
 #ifdef ZBUFFER
     double delta=0, z;
@@ -78,7 +78,7 @@ WIDENAME (unsigned char *buf, float *zbuf, int zwidth, int width, int height,
     int total;
 #endif
 #ifdef PTR_INIT
-    register PTR_TYPE *ptr = (PTR_TYPE *)buf;
+    PTR_TYPE *ptr = (PTR_TYPE *)buf;
     int ptrIncr = PTR_INCR;
 #endif
 #ifdef VARIABLES
@@ -178,10 +178,10 @@ void
 NAME (unsigned char *buf, float *zbuf, int zwidth, 
       int width, int height, CPoint3 *p1, CPoint3 *p2, int lwidth, int *color)
 {
-    register int d, x, y, ax, ay, sx, dx, dy;
+    int d, x, y, ax, ay, sx, dx, dy;
     int x1, y1, x2, y2;
 #ifdef PTR_INIT
-    register PTR_TYPE *ptr;
+    PTR_TYPE *ptr;
     int ptrIncr = PTR_INCR;
 #endif
 #ifdef ZBUFFER

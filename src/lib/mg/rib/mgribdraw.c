@@ -62,11 +62,11 @@ mgrib_polygon(int nv,  HPoint3 *V,
 	     int nn,  Point3 *N, 
 	     int nc,  ColorA *C)
 {
-  register int i;	
-  register HPoint3 *v;
-  register Point3 *n;
-  register Color *c;
-  register ColorA *c4;
+  int i;	
+  HPoint3 *v;
+  Point3 *n;
+  Color *c;
+  ColorA *c4;
   HPoint3 hpt;
   int flag;
   int shading;
@@ -377,9 +377,9 @@ mgrib_drawpoint(HPoint3 *p)
  */
 void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 {
-  register int i,j;
-  register Poly *p;
-  register Vertex **v, *vp;
+  int i,j;
+  Poly *p;
+  Vertex **v, *vp;
   HPoint3 hpt;
   int flag,shading,matover;
   Color *color;

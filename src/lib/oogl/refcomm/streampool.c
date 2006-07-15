@@ -181,7 +181,7 @@ PoolName(Pool *p)
 Pool *
 PoolByName(char *fname)
 {
-    register Pool *p;
+    Pool *p;
 
     for(p = AllPools; p != NULL; p = p->next)
 	if(strcmp(fname, p->poolname) == 0)
@@ -204,7 +204,7 @@ void watchfd(int fd)
 static
 void unwatchfd(int fd)
 {
-    register int i;
+    int i;
 
     if(fd < 0 || fd >= FD_SETSIZE)
 	return;
@@ -226,7 +226,7 @@ void unwatchfd(int fd)
 static Pool *
 newPool(char *name)
 {
-    register Pool *p;
+    Pool *p;
 
     if((p = FreePools) != NULL)
 	FreePools = p->next;
@@ -309,7 +309,7 @@ PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
     p->client_data = NULL;
 
 #if HAVE_FCNTL
-    if (p->inf && p->inf >= 0) {
+    if (p->inf && p->infd >= 0) {
 	fcntl(p->infd, F_SETFL, fcntl(p->infd, F_GETFL) & ~o_nonblock);
     }
     if (p->outf && fileno(p->outf) >= 0) {
@@ -324,7 +324,7 @@ PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
 Pool *
 PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 {
-    register Pool *p;
+    Pool *p;
     struct stat st;
 
     p = PoolByName(name);
@@ -540,7 +540,7 @@ PoolDoReread(Pool *p)
     p->flags |= PF_REREAD;	/* Reread when asked */
 }
 
-void PoolClose(register Pool *p)
+void PoolClose(Pool *p)
 {
     if(p->ops->close && !(p->flags & PF_CLOSING)) {
 	p->flags |= PF_CLOSING;
@@ -567,8 +567,8 @@ void PoolClose(register Pool *p)
 
 void PoolDelete(Pool *p)
 {
-    register Pool **pp;
-    register Handle *h;
+    Pool **pp;
+    Handle *h;
 
     if(p == NULL || p->flags & PF_DELETED) return;
     p->flags |= PF_DELETED;
@@ -611,7 +611,7 @@ awaken(Pool *p)
 static void
 awaken_until(struct timeval *until)
 {
-    register Pool *p;
+    Pool *p;
 
     nexttowake.tv_sec = FOREVER;
     for(p = AllPools; p; p = p->next) {
@@ -666,9 +666,9 @@ PoolInputFDs(fd_set *fds, int *maxfd)
  * The return value is 1 if anything was read from any pool, 0 otherwise.
  */
 int
-PoolInAll(register fd_set *fds, int *nfds)
+PoolInAll(fd_set *fds, int *nfds)
 {
-    register Pool *p, *nextp;
+    Pool *p, *nextp;
     int got = 0;
 
     for(p = AllPools; p != NULL; p = nextp) {
@@ -785,7 +785,7 @@ poolresync(Pool *p, int (*resync)())
 Handle *
 PoolIn(Pool *p)
 {
-    register int c = 0;
+    int c = 0;
     Handle *h = NULL;
     Ref *r = NULL;
 

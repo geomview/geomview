@@ -47,9 +47,9 @@ VectFSave(v, f)
 	Vect *v;
 	FILE *f;
 {
-	register int i;
-	register HPoint3 *p;
-	register ColorA *c;
+	int i;
+	HPoint3 *p;
+	ColorA *c;
 
 	/* This one just saves in ASCII format */
 

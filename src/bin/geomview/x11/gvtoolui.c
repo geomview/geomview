@@ -145,7 +145,7 @@ void ui_load_toolpanel()
 
 void ui_event_mode(char *mode)
 {
-  register struct toolbutton *tb;
+  struct toolbutton *tb;
   int i;
 
   for(i = 0, tb = toolbuttons; i < COUNT(toolbuttons); i++, tb++) {
@@ -198,7 +198,7 @@ static void load_tool_bitmaps(mib_Widget *toolload)
 {
   int    depth;
   Pixel  blue, red, white;
-  register struct toolbutton *tb;
+  struct toolbutton *tb;
   int i;
   Colormap cm;
   Screen *s = DefaultScreenOfDisplay(dpy);

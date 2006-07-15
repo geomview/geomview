@@ -50,7 +50,7 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T)
   Poly *poly;
   unsigned int apflag = 0;
 
-  /* Make sure that vects do not register as visible - otherwise they
+  /* Make sure that vects do not as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */
   if (ap != NULL) {
     apflag = ap->flag;

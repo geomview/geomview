@@ -22,7 +22,7 @@
 #define POINTLIST_H
 
 /* 
- * Call this to register pointlist routines.
+ * Call this to pointlist routines.
  */
 void pointlist_init();
 

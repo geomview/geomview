@@ -95,9 +95,9 @@ Tm3Concat instead.\n");
  */
 void
 Tm3Concat( Ta, Tb, Tprod )
-  register Transform3 Ta, Tb, Tprod;
+  Transform3 Ta, Tb, Tprod;
 {
-  register int i;
+  int i;
   
 #define MAKEPRODUCT(T)				\
     for( i=0; i<4; i++ ) {			\

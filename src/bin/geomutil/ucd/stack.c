@@ -43,7 +43,7 @@ int
 push(pp)
 Poly *pp;
 {
-    register int i;
+    int i;
     if (stackptr >= &mystack[BlockSize*array_size])	{ 
 	if (debug) 
 	    fprintf(stderr,"allocating again: size is now %d\n",array_size*BlockSize);

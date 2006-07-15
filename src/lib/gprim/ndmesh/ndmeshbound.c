@@ -40,7 +40,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *
 NDMeshBound(NDMesh *m, Transform T)
 {
-	register HPointN **p;
+	HPointN **p;
 	int i, n;
 	BBox *b = NULL;
 

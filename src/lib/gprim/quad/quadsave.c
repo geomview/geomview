@@ -34,9 +34,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "quadP.h"
 
 Quad *
-QuadFSave(register Quad *q, FILE *f, char *fname)
+QuadFSave(Quad *q, FILE *f, char *fname)
 {
-	register int i;
+	int i;
 	HPoint3 *p;
 	Point3 *n;
 	ColorA *c;

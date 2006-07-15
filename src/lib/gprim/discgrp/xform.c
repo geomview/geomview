@@ -37,7 +37,7 @@ matvecmul4(m,v1,v2)
 matrix4 m;
 point4 v1,v2;
 {
-    register int i,j;
+    int i,j;
     double tmp[4], *tv1, *tv2;
  
     tv1 = (double *) v1; 
@@ -54,7 +54,7 @@ vecmatmul4(v1,m,v2)
 matrix4 m;
 point4 v1,v2;
 {
-    register int i,j;
+    int i,j;
     double tmp[4], *tv1, *tv2;
  
     tv1 = (double *) v1; 
@@ -71,7 +71,7 @@ matmatmul4 (mat1, mat2, mat3)
 matrix4 mat1, mat2, mat3;
 
 {
-    register int i, j, k;
+    int i, j, k;
     double tmp[4];
 
     for (i = 0; i < 4; i++) {

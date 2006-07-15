@@ -120,7 +120,7 @@ InstTransform( inst, T )
     Inst *inst;
     Transform T;
 {
-    register Tlist *tl;
+    Tlist *tl;
 
     if(inst->tlist == NULL && inst->tlisthandle == NULL) {
 	TmConcat( inst->axis, T, inst->axis );

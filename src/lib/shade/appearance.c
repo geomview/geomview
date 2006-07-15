@@ -45,7 +45,7 @@ int Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f);
 
 
 Appearance *
-_ApSet(Appearance *ap, int attr1, register va_list *alist)
+_ApSet(Appearance *ap, int attr1, va_list *alist)
 {
     long mask;
     int attr;
@@ -199,7 +199,7 @@ ApDelete(Appearance *ap)
  * incremented.  The caller MUST either RefIncr() or reassign mat and lighting.
  */
 Appearance *
-ApCopyShallow( Appearance *ap, register Appearance *into )
+ApCopyShallow( Appearance *ap, Appearance *into )
 {
     if(ap == NULL)
 	return NULL;
@@ -225,7 +225,7 @@ ApCopyShallow( Appearance *ap, register Appearance *into )
 }
     
 Appearance *
-ApCopy( Appearance *ap, register Appearance *into )
+ApCopy( Appearance *ap, Appearance *into )
 {
     if (ap == NULL) return into;
     into = ApCopyShallow( ap, into );
@@ -237,7 +237,7 @@ ApCopy( Appearance *ap, register Appearance *into )
 }
 
 Appearance *
-ApCopyShared( Appearance *ap, register Appearance *into )
+ApCopyShared( Appearance *ap, Appearance *into )
 {
     if (ap == NULL) return into;
     into = ApCopyShallow( ap, into );
@@ -270,7 +270,7 @@ ApCopyShared( Appearance *ap, register Appearance *into )
  * when finished with it.
  */
 Appearance *
-ApMerge( register Appearance *src, register Appearance *dst, int mergeflags )
+ApMerge( Appearance *src, Appearance *dst, int mergeflags )
 {
     int mask;
     Material *mt, *bmt;
@@ -372,7 +372,7 @@ static struct {
 Appearance *
 ApFLoad( Appearance *into, IOBFILE *stream, char *fname )
 {
-    register Appearance *ap;
+    Appearance *ap;
     char *w;
     int i;
     int brack = 0;
@@ -507,7 +507,7 @@ void ApFSave( Appearance *ap, Handle *aphandle, FILE *f, char *fname )
 {
     int valid;
     int mask;
-    register int i;
+    int i;
     Pool *p;
 
     if(ap == NULL)
@@ -693,7 +693,7 @@ MtSet(Material *mat, int attr, ... )
 }
 
 int
-MtGet(register Material *mat, int attr, void * value)
+MtGet(Material *mat, int attr, void * value)
 {
     if (mat == NULL)
 	return -1;
@@ -852,7 +852,7 @@ Material *
 MtFLoad(Material *mat, IOBFILE *f, char *fname)
 {
     char *w;
-    register int i;
+    int i;
     float v[3];
     int brack = 0;
     int over, not;
@@ -930,7 +930,7 @@ MtFLoad(Material *mat, IOBFILE *f, char *fname)
 Material *
 MtMerge(Material *src, Material *dst, int mergeflags)
 {
-    register int mask;
+    int mask;
 
     if(dst == NULL)
 	return MtCopy(src, NULL);
@@ -999,10 +999,10 @@ Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f)
 
 int
 MtFSave(mat,f)
-    register Material *mat;
+    Material *mat;
     FILE *f;
 {
-    register int i;
+    int i;
     float v;
     Color *c;
 
@@ -1068,7 +1068,7 @@ void ApUseOverrides(Appearance *ap, int use_overrides)
  * Erase all settings in dst that are defined in src,
  * so that src's settings can propagate to (the children of) dst.
  */
-void ApLetPropagate(register Appearance *src, register Appearance *dst)
+void ApLetPropagate(Appearance *src, Appearance *dst)
 {
   if(src == NULL || dst == NULL) return;
   dst->valid &= ~src->valid;
@@ -1128,7 +1128,7 @@ TxDefault(Texture *tx)
 
 
 Texture *
-_TxSet(Texture *tx, int attr1, register va_list *alist)
+_TxSet(Texture *tx, int attr1, va_list *alist)
 {
     long mask;
     ColorA *co;
@@ -1390,7 +1390,7 @@ TxStreamIn( Pool *p, Handle **hp, Texture **txp )
     IOBFILE *stream;
     char *fname;
     Handle *h = NULL;
-    register Texture *tx = NULL;
+    Texture *tx = NULL;
     float val[16];
     struct txkw *kw;
     char *w, *raww;

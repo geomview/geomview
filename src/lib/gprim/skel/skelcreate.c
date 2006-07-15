@@ -37,9 +37,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 
 Skel *
-SkelCopy(register Skel *os)
+SkelCopy(Skel *os)
 {
-	register Skel  *s;
+	Skel  *s;
 
 	if (os == NULL) return (NULL);
 
@@ -59,7 +59,7 @@ SkelCopy(register Skel *os)
 }
 
 void
-SkelDelete( register Skel *s )
+SkelDelete( Skel *s )
 {
     if (s) {
 	if(s->p != NULL) OOGLFree(s->p);
@@ -71,7 +71,7 @@ SkelDelete( register Skel *s )
 Skel *
 SkelCreate ( Skel *exist, GeomClass *classp, va_list *a_list )
 {
-    register Skel *s;
+    Skel *s;
 
     if (exist == NULL) {
 	s = OOGLNewE(Skel, "new skel");
@@ -195,7 +195,7 @@ SkelCreate ( Skel *exist, GeomClass *classp, va_list *a_list )
 int
 SkelSane(Skel *s)
 {
-	register int i;
+	int i;
 	Skline *l;
 
 	if(s == NULL || s->vi==NULL || s->p==NULL || s->nlines < 0 ||

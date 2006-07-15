@@ -107,7 +107,7 @@ MeshFLoad(IOBFILE *file, char *fname)
 {
 	Mesh	m;
 	int	n;
-	register int i, u, v;
+	int i, u, v;
 	int binary;
 
 	if (!file)

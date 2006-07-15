@@ -39,8 +39,8 @@ MeshBound(mesh, T)
 	Mesh	*mesh;
 	Transform T;
 {
-	register int	n;
-	register HPoint3 *p;
+	int	n;
+	HPoint3 *p;
 	HPoint3	min, max;
 	HPoint3	p0;
 

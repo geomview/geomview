@@ -290,7 +290,7 @@ Poly *CP, thisPoly;
 
 int main(int argc, char **argv)
 {
-    register polygon *ncp, *cp;
+    polygon *ncp, *cp;
     int pcountold;
     Geom *thisgeom;
     PolyList *thispl, *newpl;
@@ -405,7 +405,7 @@ int main(int argc, char **argv)
 	/* else signal error */
 	else return 1;
         for(vp = p->v; --n >= 0; vp++)
-                fprintf(fp, "%d ", (*vp) - thispl->vl + 1);
+                fprintf(fp, "%d ", (int)((*vp) - thispl->vl + 1));
 	fprintf(fp,"\n");
 	}
 	

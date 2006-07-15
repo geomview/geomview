@@ -46,7 +46,7 @@ static void WnSetName(WnWindow *win, char *name);
 WnWindow *
 WnCreate(int firstattr, ...)
 {
-    register WnWindow *win;
+    WnWindow *win;
     va_list a_list;
 
     win = OOGLNewE ( WnWindow, "WnCreate WnWindow" );
@@ -71,7 +71,7 @@ WnSetName(WnWindow *win, char *name)
 }
 
 WnWindow *
-WnSet(register WnWindow *win, int firstattr, ...)
+WnSet(WnWindow *win, int firstattr, ...)
 {
     va_list a_list;
 
@@ -82,11 +82,11 @@ WnSet(register WnWindow *win, int firstattr, ...)
 }
 
 WnWindow *
-_WnSet(register WnWindow *win, int firstattr, register va_list *alist)
+_WnSet(WnWindow *win, int firstattr, va_list *alist)
 {
     int attr;
-    register WnPosition *pos;
-    register int oldflag;
+    WnPosition *pos;
+    int oldflag;
     char *name;
     char **ablock = NULL;
 
@@ -195,9 +195,9 @@ _WnSet(register WnWindow *win, int firstattr, register va_list *alist)
  * Returns -1 for invalid attribute, 0 if no value set, 1 if valid value.
  */
 int
-WnGet(register WnWindow *win, int attr, void *valp)
+WnGet(WnWindow *win, int attr, void *valp)
 {
-    register int bit;
+    int bit;
 
 #define WnPos  WnPosition
 
@@ -289,7 +289,7 @@ WnCopy(WnWindow *win)
 }
 
 WnWindow *
-WnMerge(register WnWindow *src, register WnWindow *dst)
+WnMerge(WnWindow *src, WnWindow *dst)
 {
     int chg;
 

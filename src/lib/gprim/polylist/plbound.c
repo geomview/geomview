@@ -48,8 +48,8 @@ PolyListBound(polylist, T)
      PolyList       *polylist;
      Transform	T;
 {
-	register int n;
-	register Vertex	*v;
+	int n;
+	Vertex	*v;
 	HPoint3	min, max;
 	HPoint3	*raw, *clean, p0, p1;
 
