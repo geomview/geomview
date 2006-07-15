@@ -257,10 +257,25 @@ dnl
 dnl GEOM_REQUIRE_GEOMVIEW_VERSION(TOPDIR,MAJOR_OP,MAJOR,MINOR_OP,MINOR_COND)
 dnl                               $1     $2       $3,   $4,      $5
 dnl
-define(GEOM_REQUIRE_GEOMVIEW_VERSION,[
-gv_version=`sed -e 's/#.*$//' $1/configure.in | grep AM_INIT_AUTOMAKE | sed -e 's/^.*geomview,//' | sed -e 's/)//'`
-gv_major=`echo $gv_version | sed -e 's/\..*//'`
+AC_DEFUN([GEOM_REQUIRE_GEOMVIEW_VERSION],[
+if test -f "$1/configure.in"; then
+	GVCFGFILE="$1/configure.in"
+else test -f "$1/configure.ac"
+	GVCFGFILE="$1/configure.ac"
+fi
+if test "z${GVCFGFILE}" = "z"; then
+	AC_MSG_ERROR([Geomview configure file not found ("$1/configure.in/ac")])
+fi
 changequote(<<, >>)dnl
+if test "z${GVCFGFILE}" = "zconfigure.in"; then
+	gv_version=`sed -e 's/#.*$//' ${GVCFGFILE} | grep AM_INIT_AUTOMAKE | sed -e 's/^.*geomview,//' | sed -e 's/)//'`
+else
+	gv_version=`grep <<AC_INIT>> ${GVCFGFILE}|cut -d ',' -f 2| sed -e 's/[][]//g'`
+changequote([,])dnl
+AC_MSG_NOTICE(version: $gv_version)
+changequote(<<, >>)dnl
+fi
+gv_major=`echo $gv_version | sed -e 's/\..*//'`
 gv_rest=`echo $gv_version | sed -e 's/^[^\.]\.//'`
 gv_minor=`echo $gv_rest | sed -e 's/\..*//'`
 gv_rev=`echo $gv_rest | sed -e 's/^[^\.]\.//'`
