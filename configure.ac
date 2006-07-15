@@ -1,14 +1,24 @@
 AC_PREREQ(2.59)
 AC_INIT(geomview, [1.8.2-rc3], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 AM_MAINTAINER_MODE
 AC_CANONICAL_TARGET([])
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
 AC_PREFIX_DEFAULT([/usr/local/Geomview])
 
-AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])
+
+dnl Add extra include or link directories
+AC_ARG_WITH(build-path,[
+  --with-build-path[=DIR] use DIR/include DIR/lib
+],[
+for d in `echo $withval | tr : ' '`; do
+    test -d $d/include && CPPFLAGS="$CPPFLAGS -I$d/include"
+    test -d $d/lib && LDFLAGS="$LDFLAGS -L$d/lib"
+done
+])
 
 ## Autoheader stuff.
 AH_TOP([#ifndef CONFIG_H_INCLUDED
@@ -42,7 +52,9 @@ char *alloca ();
 
 ################################################################################
 #
-# What follows was originally output from autoscan.
+# What follows was originally output from autoscan. We do some generic
+# checking before overiding specific stuff (ACCEPT_ARG3_TYPE) for
+# certain known systems.
 #
 
 # Checks for programs.
@@ -101,9 +113,13 @@ AC_FUNC_ALLOCA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h])
+
+AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h \
+ netinet/in.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h \
+ sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
 AC_C_CONST
 AC_HEADER_STDBOOL
 AC_C_INLINE
@@ -162,7 +178,93 @@ AC_CHECK_DECLS([errno],[],[],[
 #if HAVE_ERRNO_H
 # include <errno.h>
 #endif])
-AC_CHECK_FUNCS([alarm bzero bcopy dup2 floor fcntl finite gethostname gettimeofday isascii memset mkdir pow rint select socket sqrt strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo waitpid wait3])
+AC_CHECK_FUNCS([alarm bzero bcopy dup2 floor fcntl finite gethostname \
+  gettimeofday isascii memset mkdir pow rint select sqrt strcasecmp strchr \
+  strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo \
+  waitpid wait3])
+
+#
+# we can use AC_COMPILE, because we check later for the existence of
+# socket()
+#
+AC_MSG_CHECKING([for Unix domain sockets])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+  ],[int s = socket(AF_UNIX, SOCK_STREAM, 0); ])
+],[
+  HAVE_UNIX_SOCKETS=yes
+  AC_MSG_RESULT([yes])
+],[
+  HAVE_UNIX_SOCKETS=no
+  AC_MSG_RESULT([no])])
+
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
+
+#
+# Try to figure out how to get at the "socket()" function
+#
+  AC_MSG_NOTICE([Checking whether we need to link -lsocket to get socket() ...])
+  AC_CHECK_FUNCS([socket],[
+    AC_DEFINE([HAVE_SOCKET],1,[Define to 1 if you have socket()])
+    SOCKETLIBS=
+    AC_MSG_RESULT([-lsocket not needed])
+  ],[
+    AC_CHECK_LIB([socket],[socket],[
+      AC_DEFINE([HAVE_SOCKET],1,[Define to 1 if you have socket()])
+      SOCKETLIBS=-lsocket
+      AC_MSG_RESULT([-lsocket is needed])
+    ],[
+      SOCKETLIBS=
+      HAVE_UNIX_SOCKETS=no
+      AC_MSG_RESULT([socket() not available])
+    ])
+  ])
+fi
+
+ac_save_LIBS="${LIBS}"
+LIBS="${SOCKETLIBS} ${LIBS}"
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
+
+  AC_CHECK_FUNCS([accept bind connect listen socket],[],[
+    SOCKETLIBS=
+    HAVE_UNIX_SOCKETS=no])
+fi
+LIBS="${ac_save_LIBS}"
+
+
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
+#
+# Try to figure out what the 3rd argument of accept should be. The
+# third argument is an integer type, ideally it is "socklent_t". As
+# the third argument is a pointer, we cannot just check for a
+# declaration of accept() and leave the rest to the comiler: the size
+# of the type should match. On little-endian machines we could just
+# choose the largest integer type available, on big-endian machines
+# this would not work. Gnah.
+#
+  AC_CHECK_DECLS([accept],[],[],[
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+  ])
+  AC_CHECK_TYPES([socklen_t],[
+    ACCEPT_ARG3_TYPE=socklen_t
+  ],[
+    ACCEPT_ARG3_TYPE=int
+  ],[
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+  ])
+fi # HAVE_UNIX_SOCKETS=yes
+
+AC_SUBST(SOCKETLIBS)
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
+ AC_DEFINE([HAVE_UNIX_SOCKETS],1,
+  [Define to 1 if Unix domain sockets are available])
+fi
 
 #
 # End autoscan stuff.
@@ -190,15 +292,33 @@ AC_CHECK_FUNCS([alarm bzero bcopy dup2 floor fcntl finite gethostname gettimeofd
 #       target_vendor   pc
 #       target_os       linux-gnu
 
-dnl Add extra include or link directories
-AC_ARG_WITH(build-path,[
-  --with-build-path[=DIR] use DIR/include DIR/lib
-],[
-for d in `echo $withval | tr : ' '`; do
-    test -d $d/include && CPPFLAGS="$CPPFLAGS -I$d/include"
-    test -d $d/lib && LDFLAGS="$LDFLAGS -L$d/lib"
-done
-])
+case "$target" in
+ *linux*) MACHTYPE="linux"
+          ;;
+  *irix*) MACHTYPE="sgi"
+	  AC_DEFINE(sgi, 1, [Define to 1 if we are compiling for sgi])
+          if test "$CC" = "cc" ; then
+            CFLAGS="$CFLAGS -float"
+            LIBS="$LIBS -lmalloc"
+          fi
+          ;;
+*rs6000*) MACHTYPE="rs6000"
+          AC_DEFINE(AIX, 1, [Define to 1if we are compiling for AIX])
+	  ACCEPT_ARG3_TYPE="unsigned long"
+          AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
+	  ;;
+       *) MACHTYPE=$target_os
+          ;;
+esac
+
+AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",[Define to the machine type])
+AC_SUBST(MACHTYPE)
+
+AC_DEFINE_UNQUOTED(ACCEPT_ARG3_TYPE, $ACCEPT_ARG3_TYPE,[
+ACCEPT_ARG3_TYPE should be the datatype of the
+3rd arg to the 'accept' system call.  It's 'int' on some systems,
+'unsigned long' on some, and could be something else on others.
+Default to int])
 
 # Search for necessary programs.
 
@@ -538,41 +658,6 @@ AC_CHECK_FUNCS([strerror])
 ########################################################################
 ########################################################################
 ########################################################################
-ACCEPT_ARG3_TYPE=int
-
-case "$target" in
- *linux*) MACHTYPE="linux"
-          AC_CHECK_TYPES([socklen_t],
-                         [ACCEPT_ARG3_TYPE=socklen_t],
-                         [ACCEPT_ARG3_TYPE="unsigned int"],[
-#if HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
-#endif
-])
-          ;;
-  *irix*) MACHTYPE="sgi"
-	  AC_DEFINE(sgi, 1, [Define to 1 if we are compiling for sgi])
-          if test "$CC" = "cc" ; then
-            CFLAGS="$CFLAGS -float"
-            LIBS="$LIBS -lmalloc"
-          fi
-          ;;
-*rs6000*) MACHTYPE="rs6000"
-          AC_DEFINE(AIX, 1, [Define to 1if we are compiling for AIX])
-	  ACCEPT_ARG3_TYPE="unsigned long"
-          AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
-	  ;;
-       *) MACHTYPE=$target_os
-	  ACCEPT_ARG3_TYPE=int
-          ;;
-esac
-
-AC_DEFINE_UNQUOTED(MACHTYPE, "$MACHTYPE",[Define to the machine type])
-AC_DEFINE_UNQUOTED(ACCEPT_ARG3_TYPE, $ACCEPT_ARG3_TYPE,[
-ACCEPT_ARG3_TYPE should be the datatype of the
-3rd arg to the 'accept' system call.  It's 'int' on some systems,
-'unsigned long' on some, and could be something else on others.
-Default to int])
 
 AC_LANG_PUSH([C])
 AC_MSG_CHECKING(
@@ -591,24 +676,10 @@ AC_DEFINE(POPEN_ACCEPTS_RB, 1,
 [AC_MSG_RESULT([no])])
 AC_LANG_POP([C])
 
-AC_SUBST(MACHTYPE)
-
 AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
 AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
-AC_MSG_CHECKING([whether we need to link -lsocket to get socket()])
-AC_LINK_IFELSE([AC_LANG_PROGRAM([ #include <sys/socket.h> ], [ int s = socket(AF_UNIX, SOCK_STREAM, 0); ])],[ SOCKETLIBS=""
-              AC_MSG_RESULT([no]) ],[ SOCKETLIBS=-lsocket
-              AC_MSG_RESULT([yes]) 
-           ])
-AC_SUBST(SOCKETLIBS)
-
 ########################################################################
-
-AC_TYPE_SIZE_T
-AC_C_BIGENDIAN
-
-AC_CHECK_HEADERS([netinet/in.h])
 
 moduledir="\$(exec_prefix)/bin"
 AC_SUBST(moduledir)
@@ -746,7 +817,7 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 LF_SET_INCLUDES
 
 
-module_srcdirs=`( cd $srcdir ; $FIND src/bin -name 'configure.in' -o -name 'configure.ac' -print ) | sed -e 's/\/configure.in$//g' | sed -e 's/\/configure.ac$//g'`
+module_srcdirs=`( cd $srcdir ; $FIND src/bin \( -name 'configure.in' -o -name 'configure.ac' \) -a -print ) | sed -e 's/\/configure.in$//g' -e 's/\/configure.ac$//g'`
 module_srcdirs=`echo $module_srcdirs`
 src_bin_module_subdirs=`echo $module_srcdirs | sed -e 's/src\/bin\///g'`
 
