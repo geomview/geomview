@@ -35,6 +35,8 @@ figs/%.png: figs/%.pdf
 	$(CONVERT) $(<:.pdf=-000.ppm) $@
 	-rm -f $(<:.pdf=-000.ppm)
 
+all-local: html pdf
+
 html-local: $(PNGIMAGES)
 	-$(mkdir_p) geomview.html/figs/
 	-cp $(PNGIMAGES) geomview.html/figs/
@@ -69,7 +71,18 @@ uninstall-local: html pdf
 	done
 	rm -f "$(DESTDIR)$(DOCDIR)/geomview.pdf"
 
-CLEANFILES = geomview.dvi
-
 MAINTAINERCLEANFILES = \
- $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.html geomview.pdf geomview.ps
+ $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
+
+maintainerclean-local:
+	-rm -rf geomview.html
+
+#
+# override to disable deletion of .pdf, .html by the user.
+#
+mostlyclean-aminfo:
+	-rm -rf geomview.aux geomview.cp geomview.cps geomview.fn geomview.fns \
+	  geomview.ky geomview.kys geomview.log geomview.pg \
+	  geomview.pgs geomview.tmp geomview.toc geomview.tp \
+	  geomview.tps geomview.vr geomview.vrs geomview.dvi \
+	  geomview.ps
