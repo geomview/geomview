@@ -6,7 +6,7 @@ LDADD =	$(XFORMSLIBS) \
 
 EXTRA_DIST = \
     HingeCube HingeTetra HingeDiamond HingeTriangle HingeDodec HingeLongcube \
-    hingedata hinge.1 hingehelp panel.fd
+    hingedata hinge.1 hingehelp panel.fd .geomview-hinge
 
 module_PROGRAMS = hinge
 hinge_SOURCES = hui.c panel.c hingedata.h hui.h hinge.c lang.c panel.h \

@@ -47,6 +47,36 @@ char *alloca ();
 # endif
 #endif
 
+#if 0
+#undef malloc
+#undef free
+#undef realloc
+#undef calloc
+
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+extern void *malloc_record(size_t size,
+                           const char *file, const char *func, int line);
+extern void *realloc_record(void *ptr, size_t size,
+			    const char *file, const char *func, int line);
+extern void *calloc_record(size_t nmemb, size_t size,
+	 		   const char *file, const char *func, int line);
+extern void free_record(void *ptr);
+
+#define malloc(size) malloc_record(size, __FILE__, __FUNCTION__, __LINE__)
+#define realloc(ptr, size) realloc_record(ptr, size, __FILE__, __FUNCTION__, __LINE__)
+#define calloc(nmemb, size) calloc_record(nmemb, size, __FILE__, __FUNCTION__, __LINE__)
+#define free(ptr) free_record(ptr)
+
+#define OOG_NewE(size, blah)      malloc(size)
+#define OOG_RenewE(p, size, blah) realloc(p, size)
+#define OOGLFree(p)               free(p)
+#endif
+
 #endif /* CONFIG_H_INCLUDED */
 ])
 

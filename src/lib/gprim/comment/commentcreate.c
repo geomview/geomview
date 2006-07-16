@@ -77,6 +77,8 @@ CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
     int attr;
     int copy = 1;
 
+    return NULL;
+
     if (exist == NULL) {
 	comment = OOGLNewE(Comment, "CommentCreate comment");
 	GGeomInit (comment, classp, COMMENTMAGIC, NULL);

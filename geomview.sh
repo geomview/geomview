@@ -3,7 +3,11 @@
 # geomview shell script driver
 
 GEOMROOT=%GEOMROOT%
-GEOMVIEW_GVX=%GEOMVIEW_GVX%
+if test -x %GEOMVIEW_LTGVX%; then
+    GEOMVIEW_GVX=%GEOMVIEW_LTGVX%
+else
+    GEOMVIEW_GVX=%GEOMVIEW_GVX%
+fi
 
 ########################################################################
 #

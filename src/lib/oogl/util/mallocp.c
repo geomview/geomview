@@ -34,6 +34,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdlib.h>	/* Declare malloc() */
 #include "ooglutil.h"	/* Declare OOGLError */
 
+#undef malloc
+#undef free
+#undef realloc
+#undef calloc
+#undef OOG_NewE
+#undef OOG_RenewE
+#undef OOGLFree
+
 /*
  * Pointers needed for OOGLNew(), etc.  Placed in a separate module so
  * non-shared-memory users needn't link with that code.

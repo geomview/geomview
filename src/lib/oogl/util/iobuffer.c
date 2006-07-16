@@ -37,7 +37,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-/*#undef HAVE_FCNTL */
+#undef HAVE_FCNTL /* Needs more work, named pipes must not be run in
+		     non-blocking mode. */
 
 #if HAVE_FCNTL_H && HAVE_FCNTL
 # include <fcntl.h>
@@ -634,6 +635,10 @@ int iobfsetmark(IOBFILE *iobf)
 {
   IOBLIST *ioblist = &iobf->ioblist;
   int result = 0;
+
+  if (iobf->mark_set) {
+    iobfclearmark(iobf);
+  }
 
   /* FIXME: generate error if EOF condition is set? */
   if (iobf->eof == -1)

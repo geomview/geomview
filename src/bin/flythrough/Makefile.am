@@ -7,7 +7,7 @@ LDADD =	$(XFORMSLIBS) \
 EXTRA_DIST = .geomview-flythrough flyhelp flythrough.1 panel.fd
 
 module_PROGRAMS = flythrough
-flythrough_SOURCES = main.c flyhelp.h panel.c panel.h
+flythrough_SOURCES = main.c flyhelp.h panel.c panel.h flythrough.h
 flythrough_DEPENDENCIES = $(OOGLLIB)
 flythrough_LDFLAGS = -rpath $(libdir)
 

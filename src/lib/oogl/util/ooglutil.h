@@ -67,9 +67,15 @@ extern void *(*OOG_NewP)(size_t);
 extern void *(*OOG_RenewP)(void *, size_t);
 #endif
 
+#ifndef OOGLFree
 extern void (*OOGLFree)(void *);
+#endif
+#ifndef OOG_NewE
 extern void *OOG_NewE(int, char *);
+#endif
+#ifndef OOG_RenewE
 extern void *OOG_RenewE(void *, int, char *);
+#endif
 
 #define	OOGLNew(t)		(t *)(*OOG_NewP)(sizeof(t))
 #define	OOGLNewN(t,N)		(t *)(*OOG_NewP)(sizeof(t)*(N))

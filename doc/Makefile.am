@@ -24,6 +24,9 @@ geomview.html: $(PNGIMAGES)
 
 TEXINPUTS = $(srcdir):
 
+all-local: html pdf
+
+if MAINTAINER_MODE
 figs/%.eps: figs/%.ps
 	$(PS2EPSI) $< $@
 
@@ -35,41 +38,37 @@ figs/%.png: figs/%.pdf
 	$(CONVERT) $(<:.pdf=-000.ppm) $@
 	-rm -f $(<:.pdf=-000.ppm)
 
-all-local: html pdf
-
 html-local: $(PNGIMAGES)
 	-$(mkdir_p) geomview.html/figs/
-	-cp $(PNGIMAGES) geomview.html/figs/
+	-for file in $(PNGIMAGES); do \
+		if ! test -f "geomview.html/$$file"; then \
+			$(INSTALL_DATA) "$$file" "geomview.html/$$file"; \
+		fi; \
+	done
+
+endif
 
 dist-hook: html pdf ps
 
 install-info-hook: $(PNGIMAGES)
 	-$(mkdir_p) "$(DESTDIR)$(infodir)/figs"
 	for file in $(PNGIMAGES); do \
-		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(infodir)/$$file"; \
+		$(INSTALL_DATA) "$(srcdir)/$$file" "$(DESTDIR)$(infodir)/$$file"; \
 	done
 
 install-data-local: html pdf
 	-$(mkdir_p) "$(DESTDIR)$(DOCDIR)/html/figs"
 	for file in $(PNGIMAGES); do \
-		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(DOCDIR)/html/$$file"; \
+		$(INSTALL_DATA) "$(srcdir)/geomview.html/$$file" "$(DESTDIR)$(DOCDIR)/html/$$file"; \
 	done
-	cd geomview.html ; \
-	for file in *.html; do \
+	-for file in $(srcdir)/geomview.html/*.html; do \
 		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(DOCDIR)/html/"; \
 	done
-	$(INSTALL_DATA) geomview.pdf "$(DESTDIR)$(DOCDIR)/"
+	$(INSTALL_DATA) $(srcdir)/geomview.pdf "$(DESTDIR)$(DOCDIR)/"
 
-uninstall-local: html pdf
-	-$(mkdir_p) "$(DESTDIR)$(DOCDIR)/html/figs"
-	for file in $(PNGIMAGES); do \
-		rm -f "$(DESTDIR)$(DOCDIR)/html/$$file"; \
-	done
-	cd geomview.html ; \
-	for file in *.html; do \
-		rm -f "$(DESTDIR)$(DOCDIR)/html/$$file"; \
-	done
-	rm -f "$(DESTDIR)$(DOCDIR)/geomview.pdf"
+uninstall-local:
+	-rm -rf "$(DESTDIR)$(DOCDIR)/html/"
+	-rm -f "$(DESTDIR)$(DOCDIR)/geomview.pdf"
 
 MAINTAINERCLEANFILES = \
  $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
