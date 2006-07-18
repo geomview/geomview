@@ -393,11 +393,14 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		 * actually block. Using O_RDONLY, however, seems to
 		 * render the select stuff unusable.
 		 *
+		 * cH: update: at least on Linux, O_RDWR means that we
+		 * always have a writer for this pipe (ourselves). It
+		 * is probably more poratble to use a second file
+		 * descriptor in write mode. However, leave it as is
+		 * for now.
 		 */
-#if 1
 		fd = open(name, O_RDWR | o_nonblock);
 		if (fd < 0)
-#endif
 		    fd = open(name, O_RDONLY | o_nonblock);
 
 #if defined(unix) || defined(__unix)
@@ -456,8 +459,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	    } else if(lseek(p->infd,0,SEEK_CUR) != -1) {
 		p->seekable = 1;
 	    }
-	    if(fstat(p->infd, &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO)
+	    if(fstat(p->infd, &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO) {
 		p->softEOF = 1;
+	    }
 	    p->inf_mtime = st.st_mtime;
 	    watchfd(p->infd);
 #if HAVE_FCNTL
