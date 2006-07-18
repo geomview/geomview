@@ -375,11 +375,6 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	    } else {
 		/* Try opening read/write first in case it's a Linux named pipe */
 		int fd;
-		/* BTW, this is not Linux, but common Unix
-		 * behaviour. Reading from a pipe with no writers will
-		 * just return.
-		 */
-
 		/* Linux 2.0 is said to prefer that someone always has
 		 * a named pipe open for writing as well as reading.
 		 * But if we do that, we seem to lose the ENXIO error given
@@ -389,12 +384,21 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		 * of pipes which claim to have data ready, but actually don't;
 		 * I think that's what O_RDWR mode is intended to fix.
 		 */
-		fd = open(name, O_RDWR | O_NDELAY);
-
-		/* Read-only file, or named pipe which doesn't allow RDWR? */
-		if(fd < 0)
-		    fd = open(name, O_RDONLY | O_NDELAY);
-
+		/* BTW, this is not Linux, but common Unix
+		 * behaviour. Reading from a pipe with no writers will
+		 * just return.
+		 *
+		 * cH: In principle we would want to avoid that
+		 * O_NONBLOCK; but then the call to open() may
+		 * actually block. Using O_RDONLY, however, seems to
+		 * render the select stuff unusable.
+		 *
+		 */
+#if 1
+		fd = open(name, O_RDWR | o_nonblock);
+		if (fd < 0)
+#endif
+		    fd = open(name, O_RDONLY | o_nonblock);
 
 #if defined(unix) || defined(__unix)
 		/* Unix-domain socket? */
