@@ -36,9 +36,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#undef HAVE_FCNTL /* Needs more work, named pipes must not be run in
-		     non-blocking mode. */
+#include <errno.h>
 
 #if HAVE_FCNTL_H && HAVE_FCNTL
 # include <fcntl.h>
@@ -205,6 +203,13 @@ IOBFILE *iobfileopen(FILE *istream)
 #endif
 #if HAVE_FCNTL
     iobf->fflags = fcntl(fileno(istream), F_GETFL);
+    if (iobf->fflags != -1 && (iobf->fflags & o_nonblock)) {
+      iobf->fflags &= ~o_nonblock;
+      if (fcntl(fileno(istream), F_SETFL, iobf->fflags) < 0) {
+	fprintf(stderr, "iobfileopen(): unable to clear O_NONBLOCK: \"%s\"\n",
+		strerror(errno));
+      }
+    }
   } else {
     iobf->fflags = -1;
 #endif
@@ -559,11 +564,13 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 {
   IOBLIST *ioblist = &iobf->ioblist;
   size_t rq_size = size * nmemb, rd_size, rd_tot;
-  size_t tail_rd;
+  size_t tail_rd, o_tail_rd;
   char *buf = ptr;
 #if HAVE_FCNTL
   int first = 1;
+  int fcntl_err = 0;
 #endif
+  int cnt, was_here;
 
   if (size*nmemb == 0) {
     return 0;
@@ -571,7 +578,10 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 
   rd_tot  =  0;
   tail_rd = ~0;
+  cnt = 0;
+  was_here = 0;
   do {
+    ++cnt;
     rd_size = iobfread_buffer(buf, rq_size, iobf);
     rq_size -= rd_size;
     rd_tot  += rd_size;
@@ -586,12 +596,14 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
       iob_check_space(iobf);
       tail_space = BUFFER_SIZE - ioblist->tail_size;
 #if HAVE_FCNTL
-      if (!iobf->can_seek &&
-	  (!first || iobf->fflags == -1 ||
-	   fcntl(fileno(iobf->istream),
-		 F_SETFL, iobf->fflags | o_nonblock) < 0)) {
-	tail_space = min(tail_space, rq_size);
-	first = 0;
+      if (!iobf->can_seek) {
+	if (first && iobf->fflags != -1) {
+	  fcntl_err = fcntl(fileno(iobf->istream),
+			    F_SETFL, iobf->fflags | o_nonblock);
+	}
+	if (!first || iobf->fflags == -1 || fcntl_err) {
+	  tail_space = min(tail_space, rq_size);
+	}
       }
 #else
       if (!iobf->can_seek)
@@ -599,17 +611,24 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 #endif
       tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
 		      1, tail_space, iobf->istream);
+      o_tail_rd = tail_rd;
       ioblist->tail_size += tail_rd;
       ioblist->tot_size  += tail_rd;
       if (tail_rd < tail_space && feof(iobf->istream)) {
 	iobf->eof = 1;
       }
 #if HAVE_FCNTL
-      if (!iobf->can_seek && first && iobf->fflags != -1) {
-	fcntl(fileno(iobf->istream), F_SETFL, iobf->fflags);
+      if (!iobf->can_seek && first && iobf->fflags != -1 && !fcntl_err) {
 	first = 0;
+	clearerr(iobf->istream);
+	if ((fcntl_err = fcntl(fileno(iobf->istream), F_SETFL, iobf->fflags))
+	    < 0) {
+	  fprintf(stderr, "iobfread(): unable to clear O_NONBLOCK: \"%s\"\n",
+		  strerror(errno));
+	}
 	if (tail_rd == 0 && rq_size) {
 	  tail_rd = ~0; /* retry with blocking IO */
+	  iobf->eof = 0;
 	}
       }
 #endif
@@ -686,6 +705,7 @@ int iobfseekmark(IOBFILE *iobf)
   if (iobf->eof == -1) {
     iobf->eof = 1;
   }
+  iobf->read_count = ioblist->tot_pos;
   return 0;
 }
 
