@@ -1,3 +1,4 @@
+# $Id: Makefile.am,v 1.17 2006/07/19 20:29:44 rotdrop Exp $
 SUBDIRS = doc src data
 EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir \
              $(m4_files)
