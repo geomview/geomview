@@ -853,7 +853,10 @@ PoolIn(Pool *p)
     if(c == EOF && iobfeof(p->inf)) {
 	if(p->softEOF) {
 	    iobfrewind(p->inf);
-	    PoolSleepFor(p, 1.0);	/* Give us a rest */
+	    /* cH: opening O_RDWR should fix this, as this leaves one
+	     * active writer attached to the FIFO: ourselves.
+	     */
+	    /*PoolSleepFor(p, 1.0);*/	/* Give us a rest */
 		/* SVR4 poll() doesn't allow us to
 		 * wait quietly when the sender closes a named pipe;
 		 * any poll() for reading returns immediately with POLLHUP.
