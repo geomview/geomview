@@ -100,12 +100,15 @@ struct IOBFILE
   IOBLIST  ioblist;
   IOBLIST  ioblist_mark;
   size_t   mark_pos;
-  size_t   read_count;
 #if HAVE_FCNTL
   int      fflags;
 #endif
+#if DEBUG
+  size_t   read_count;
+#endif
 };
 
+#if DEBUG
 static int n_total_buffers;
 static int max_total_buffers;
 static int n_fopen;
@@ -114,6 +117,7 @@ static int n_fileopen;
 static int max_fileopen;
 static int n_popen;
 static int max_popen;
+#endif
 
 static void iob_release_buffer(IOBLIST *ioblist)
 {
@@ -126,7 +130,9 @@ static void iob_release_buffer(IOBLIST *ioblist)
     prev = iob;
     iob  = iob->next;
     free(prev);
-n_total_buffers --;
+#if DEBUG
+    n_total_buffers --;
+#endif
   }
   memset(ioblist, 0, sizeof(*ioblist));
 }
@@ -134,11 +140,13 @@ n_total_buffers --;
 static void iob_init_buffer(IOBLIST *ioblist)
 {
   ioblist->buf_head       = malloc(sizeof(IOBuffer));
+#if DEBUG
   n_total_buffers ++;
   if (n_total_buffers > max_total_buffers) {
     max_total_buffers = n_total_buffers;
     fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
   }
+#endif
   ioblist->buf_head->next = ioblist->buf_head;
 
   ioblist->buf_ptr  = ioblist->buf_head;
@@ -161,11 +169,13 @@ static void iob_copy_buffer(IOBLIST *to, IOBLIST *from)
     }
     memcpy(to->buf_tail->buffer, iob->buffer, BUFFER_SIZE);
     to->buf_tail->next = malloc(sizeof(IOBuffer));
-  n_total_buffers ++;
-  if (n_total_buffers > max_total_buffers) {
-    max_total_buffers = n_total_buffers;
-    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
-  }
+#if DEBUG
+    n_total_buffers ++;
+    if (n_total_buffers > max_total_buffers) {
+      max_total_buffers = n_total_buffers;
+      fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+    }
+#endif
     to->buf_tail = to->buf_tail->next;
     to->buf_tail->next = to->buf_head;
   }
@@ -219,11 +229,13 @@ IOBFILE *iobfileopen(FILE *istream)
 
   iobf->ungetc    = EOF;
 
+#if DEBUG
   n_fileopen++;
   if (n_fileopen > max_fileopen) {
     max_fileopen = n_fileopen;
     fprintf(stderr, "max fileopen: %d\n", max_fileopen);
   }
+#endif
   
   return iobf;
 }
@@ -240,11 +252,13 @@ IOBFILE *iobfopen(const char *name, const char *mode)
   if (stream == NULL)
     return NULL;
 
+#if DEBUG
   n_fopen++;
   if (n_fopen > max_fopen) {
     max_fopen = n_fopen;
     fprintf(stderr, "max fopen: %d\n", max_fopen);
   }
+#endif
 
   return iobfileopen(stream);
 }
@@ -257,7 +271,9 @@ int iobfileclose(IOBFILE *iobf)
   }
   free(iobf);
 
+#if DEBUG
   n_fileopen--;
+#endif
 
   return 0;
 }
@@ -270,7 +286,9 @@ int iobfclose(IOBFILE *iobf)
 
   (void)iobfileclose(iobf);
 
+#if DEBUG
   n_fopen--;
+#endif
 
   return result;
 }
@@ -288,11 +306,14 @@ IOBFILE *iobpopen(const char *cmd, const char *mode)
   if (stream == NULL)
     return NULL;
 
+#if DEBUG
   n_popen++;
   if (n_popen > max_popen) {
     max_popen = n_popen;
     fprintf(stderr, "max popen: %d\n", max_popen);
   }
+#endif
+
   return iobfileopen(stream);
 }
 
@@ -304,7 +325,9 @@ int iobpclose(IOBFILE *iobf)
 
   (void)iobfileclose(iobf);
 
+#if DEBUG
   n_popen--;
+#endif
 
   return result;
 }
@@ -430,7 +453,9 @@ iobfread_buffer(void *ptr, size_t size, IOBFILE *iobf)
     ++buf;
     ++rd_sz;
     --rq_sz;
+#if DEBUG
     --iobf->read_count;
+#endif
   }
 
   while (rq_sz) {
@@ -451,7 +476,9 @@ iobfread_buffer(void *ptr, size_t size, IOBFILE *iobf)
 	/* Release buffers no longer needed. */
 	ioblist->buf_tail->next = ioblist->buf_head->next;
 	free(ioblist->buf_head);
-n_total_buffers --;
+#if DEBUG
+	n_total_buffers --;
+#endif
 	ioblist->buf_head  = ioblist->buf_tail->next;
 	ioblist->tot_pos  -= BUFFER_SIZE;
 	ioblist->tot_size -= BUFFER_SIZE;
@@ -475,11 +502,13 @@ static void iob_check_space(IOBFILE *iobf)
      * needed for files without seek capabilities.
      */
     ioblist->buf_tail->next = malloc(sizeof(IOBuffer));
-  n_total_buffers ++;
-  if (n_total_buffers > max_total_buffers) {
-    max_total_buffers = n_total_buffers;
-    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
-  }
+#if DEBUG
+    n_total_buffers ++;
+    if (n_total_buffers > max_total_buffers) {
+      max_total_buffers = n_total_buffers;
+      fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+    }
+#endif
     ioblist->buf_tail       = ioblist->buf_tail->next;
     ioblist->buf_tail->next = ioblist->buf_head;
     ioblist->tail_size      = 0;
@@ -503,7 +532,9 @@ static void iob_flush_buffer(IOBLIST *ioblist)
   while (ioblist->buf_head != ioblist->buf_ptr) {
     ioblist->buf_tail->next = ioblist->buf_head->next;
     free(ioblist->buf_head);
-n_total_buffers --;
+#if DEBUG
+    n_total_buffers --;
+#endif
     ioblist->buf_head = ioblist->buf_tail->next;
     ioblist->tot_pos  -= BUFFER_SIZE;
     ioblist->tot_size -= BUFFER_SIZE;
@@ -522,11 +553,13 @@ n_total_buffers --;
       ioblist->tail_size = 0;
 #else
     ioblist->buf_tail->next = malloc(sizeof(IOBuffer));
-  n_total_buffers ++;
-  if (n_total_buffers > max_total_buffers) {
-    max_total_buffers = n_total_buffers;
-    fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
-  }
+#if DEBUG
+    n_total_buffers ++;
+    if (n_total_buffers > max_total_buffers) {
+      max_total_buffers = n_total_buffers;
+      fprintf(stderr, "MAX BUFFERS: %d\n", max_total_buffers);
+    }
+#endif
     ioblist->buf_tail       = ioblist->buf_tail->next;
     ioblist->buf_tail->next = ioblist->buf_head;
     ioblist->tail_size =
@@ -634,7 +667,9 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 #endif
     }
   } while (tail_rd && rq_size);
+#if DEBUG
   iobf->read_count += rd_tot;
+#endif
   return rd_tot / size;
 }
 
@@ -705,7 +740,9 @@ int iobfseekmark(IOBFILE *iobf)
   if (iobf->eof == -1) {
     iobf->eof = 1;
   }
+#if DEBUG
   iobf->read_count = ioblist->tot_pos;
+#endif
   return 0;
 }
 
