@@ -328,7 +328,7 @@ int iobfgetnd(IOBFILE *f, int maxd, double *dv, int binary)
   if(binary) {
 #if WORDS_BIGENDIAN
     /* Easy -- our native floating point == big-endian IEEE */
-    return iobfread((char *)dv, sizeof(double), maxf, f);
+    return iobfread((char *)dv, sizeof(double), maxd, f);
 #else /* not native big-endian IEEE */
     union {
       int    wi[2];

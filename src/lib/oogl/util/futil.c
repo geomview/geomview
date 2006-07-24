@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.14 2006/07/15 19:06:00 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.15 2006/07/24 19:22:15 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -272,7 +272,7 @@ int fgetnd(FILE *f, int maxd, double *dv, int binary)
   if(binary) {
 #if WORDS_BIGENDIAN
     /* Easy -- our native floating point == big-endian IEEE */
-    return fread((char *)dv, sizeof(double), maxf, f);
+    return fread((char *)dv, sizeof(double), maxd, f);
 #else /* not native big-endian IEEE */
     union {
       int    wi[2];
