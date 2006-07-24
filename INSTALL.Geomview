@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.12 2006/07/14 09:57:52 rotdrop Exp $
+$Id: INSTALL.Geomview,v 1.13 2006/07/24 14:38:31 rotdrop Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -107,43 +107,26 @@ variables are specific to Geomview:
 
 XFORMS:
 
-Some of Geomview's external modules use the XFORMS GUI library
-(http://world.std.com/~xforms).  Geomview itself does not use XFORMS,
+Some of Geomview's external modules use the XFORMS GUI library (now at
+http://savannah.nongnu.org/projects/xforms/, formerly at
+http://world.std.com/~xforms). Geomview itself does not use XFORMS,
 but you need to have XFORMS in order to use many of its modules.
 
-The Intel Linux binary distribution of XFORMS is available from the
-download page on Geomview's web site
-(http://www.geomview.org/download), and XFORMS distributions for many
-other platforms are available from the XFORMS web site at
-http://world.std.com/~xforms.  Source code for XFORMS is not
-available; just binary.  For Intel Linux systems there are three
-different binary distributions, each one corresponding to a different
-version of libc (the system's standard C library).  For all recent
-Linux distributions you want the one corresponding to glibc2.1
-(bxform-089-glibc2.1.tgz).
+For the case that your system does not have XFORMS already installed
+we suggest that you fetch the source-code release from 
 
-If you want to configure your Geomview source tree with XFORMS,
-download the binary XFORMS distribution appropriate for your system,
-and unpack it into the top level directory of your Geomview
-distribution.  This should create a subdirectory called 'xforms' in
-the top-level Geomview directory (the directory containing
-'INSTALL.Geomview' and 'configure').  Do this before running
-Geomview's 'configure' script.  When you run Geomview's 'configure',
-it will notice the presence of the xforms directory and will arrange
-to use it.
+http://savannah.nongnu.org/projects/xforms/
 
+The XFORMS package comes with the usual GNU configure/automake
+environment.
 
-If you have previously installed XFORMS elsewhere on your system, or
-for some reason you want to put it someplace other than in Geomview's
-source directory, you can tell Geomview's 'configure' script where to
-look for it via the --with-xforms option: if you run "configure
---with-xforms=DIR", then 'configure' will look for the XFORMS header
-and library files in DIR.  It expects both the header file 'forms.h',
-and the libforms library, to be in the same directory.  In the
-standard XFORMS distribution this corresponds to a subdirectory called
-'FORMS'.  (If you unpacked an XFORMS distribution into your Geomview
-source tree as described above, you shouldn't need the --with-xforms
-option.)
+If you install the XFORMS in a strange place on your system
+(i.e. outside of the standard library and header-file search paths),
+you can tell Geomview's 'configure' script where to look for it via
+the --with-xforms option: if you run "configure --with-xforms=DIR",
+then 'configure' will look for the XFORMS header and library files in
+DIR.  It expects both the header file 'forms.h', and the libforms
+library, to be in the same directory.
 
 ========================================================================
 
