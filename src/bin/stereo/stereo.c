@@ -565,7 +565,7 @@ int main(int argc, char *argv[])
 
     io = PoolStreamOpen("stdio", stdin, 0, &CamOps);
     PoolStreamOpen("stdio", stdout, 1, &CamOps);
-    lake = LakeDefine(iobfileopen(stdin), stdout, io);
+    lake = LakeDefine(PoolInputFile(io), stdout, io);
 
     LInit();
     LDefun("pick", Lpick, Hpick);
