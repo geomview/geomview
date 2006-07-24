@@ -1,8 +1,8 @@
 AC_PREREQ(2.59)
 AC_INIT(geomview, [1.8.2-rc4], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 AM_MAINTAINER_MODE
-AC_CANONICAL_TARGET([])
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
 AC_PREFIX_DEFAULT([/usr/local/Geomview])
@@ -130,7 +130,7 @@ AC_SUBST([GLOB_SHELL])
 AC_CHECK_PROGS(PS2EPSI, ps2epsi)
 AC_CHECK_PROGS(EPSTOPDF, epstopdf)
 AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
-AC_CHECK_PROGS(CONVERT, convert)
+AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
 
 
 # Checks for libraries.
@@ -554,17 +554,6 @@ AC_CACHE_VAL(ac_cv_have_xforms,
 [if $TRY_XFORMS ; then
     if test "$XFORMS_DIR" != "" ; then
       USER_XFORMS_DIR="$XFORMS_DIR"
-    else
-	# If the 'xforms' directory is present, look for a
-	# subdirectory of it called XFORMS (perhaps more than one level
-	# down).  If found, use that as the XFORMS_DIR directory.  If
-	# there's more than one XFORMS subdir, use the first one found.
-	# (There should never be more than one, but in case there is,
-	# we need a definite behavior to resolve the ambiguity.)
-	if test -d $srcdir/xforms ; then
-	  USER_XFORMS_SUBDIR=`$FIND $srcdir/xforms -name FORMS -print | sed -e '2,$d'`
-	  USER_XFORMS_DIR="`pwd`/$USER_XFORMS_SUBDIR"
-	fi
     fi
     GEOM_FIND_I_OPTION(forms.h, ["$USER_XFORMS_DIR" "" "$x_includes" "$x_includes/X11" "/usr/local/include"])
     ac_xforms_include=$GEOM_I_OPTION
