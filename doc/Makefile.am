@@ -48,7 +48,7 @@ html-local: $(PNGIMAGES)
 
 endif
 
-dist-hook: html pdf ps
+dist-hook: html pdf
 
 install-info-hook: $(PNGIMAGES)
 	-$(mkdir_p) "$(DESTDIR)$(infodir)/figs"
