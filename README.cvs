@@ -12,6 +12,19 @@ just change to the top-level source directory and issue the command:
 
 autoreconf --install
 
+Additionally, you need the following tools to rebuild the
+documentation:
+
+epstopdf  (from the ghostscript package)
+ps2epsi   (from the ghostscript package)
+pdfimages (from the xpdf package)
+pbmtopng  (from the netpbm package)
+pdftex    (e.g. from the teTeX distribution)
+texinfo   (use a recent texinfo release).
+
+I managed to rebuild Geomview from CVS on a recent Cygwin and on a
+recent Gentoo distribution without problems.
+
 That's all.
 
 cH
