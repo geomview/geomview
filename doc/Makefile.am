@@ -35,7 +35,7 @@ figs/%.pdf: figs/%.eps
 
 figs/%.png: figs/%.pdf
 	$(PDFIMAGESPROG) $< $(<:.pdf=)
-	$(PNMTOPNG) $(<:.pdf=-000.ppm) $@
+	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
 	-rm -f $(<:.pdf=-000.ppm)
 
 html-local: $(PNGIMAGES)
