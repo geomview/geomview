@@ -1,6 +1,335 @@
-2004-04-27  rotdrop  <rotdrop@gloin>
+2006-07-24  rotdrop  <rotdrop@anaxagoras>
 
-	* /cvsroot/geomview/geomview/src/bin/geomutil/oogl2vrml/Makefile.am, /cvsroot/geomview/geomview/src/bin/geomutil/oogl2vrml/oogl2vrml2.c:
+	* configure.ac: Forgot to apply BE patch, bump version to rc5.
+
+	* src/lib/oogl/util/futil.c, src/lib/oogl/util/iobfutil.c:
+	Finally apply _AND_ commit (!) Rex Dieter's patch.
+
+	* src/bin/stereo/stereo.c:
+	Use PoolInputFile() instead of calling iobfileopen(stdin) a second time.
+
+	* doc/Makefile.am: Fix pnm->png target.
+
+	* src/lib/oogl/wa/Makefile.am: Fix dependencies.
+
+	* doc/Makefile.am:
+	Do not use convert, doesn't work on Cygwin (at least not for me). Use
+	pnmtopng from the netpbm package.
+
+	* configure.ac: Do not search for xforms dir in source/build directory.
+
+	* configure: Do not keep it in CVS.
+
+	* README.cvs: A list of tools needed to rebuild the documentation.
+
+	* INSTALL.Geomview: Update xforms notice.
+
+2006-07-22  rotdrop  <rotdrop@anaxagoras>
+
+	* configure.ac: Bump version to rc4.
+
+2006-07-20  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/aclib/Makefile.am: Should use LTLIBOBJS, not LIBOBJS.
+
+2006-07-19  rotdrop  <rotdrop@anaxagoras>
+
+	* Makefile.am: *** empty log message ***
+
+	* Makefile.am: Blah
+
+	* src/lib/oogl/util/iobuffer.c: Remove debugging statements.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	Open named pipes RDWR to always leave one active writer,
+	PoolSleepFor() is no longer necessary then.
+
+2006-07-18  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/refcomm/streampool.c:
+	Additional comments about why better opening a pipe in read-write
+	mode; opening O_RDWR leaves at least one writer on the pipe:
+	ourselves. This way select may work as usual ...
+
+	* src/lib/oogl/refcomm/streampool.c:
+	I'm still a little bit puzzled w.r.t. to named pipes and select and
+	blocking/non-blocking IO.
+
+	* src/lib/oogl/util/iobuffer.c:
+	Correct handling of O_NONBLOCK if HAVE_FCNTL (for efficiency, if
+	iobuffer.c is still broken, we have to force HAVE_FCNTL to 0).
+
+2006-07-16  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/util/iobuffer.c, src/lib/oogl/util/malloc-debug.c, src/lib/oogl/util/mallocp.c, src/lib/oogl/util/ooglutil.h, Makefile.am, configure, configure.ac, doc/Makefile.am, geomview.sh, src/bin/flythrough/Makefile.am, src/bin/hinge/Makefile.am, src/lib/fexpr/Makefile.am, src/lib/gprim/comment/commentcreate.c, src/lib/oogl/util/Makefile.am:
+	Slight changes; named pipes must not be run in non-blocking mode, I think.
+
+2006-07-15  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/refcomm/streampool.h, src/lib/oogl/util/findfile.c, src/lib/oogl/util/futil.c, src/lib/oogl/util/glob.c, src/lib/oogl/util/iobfutil.c, src/lib/oogl/util/iobuffer.c, src/lib/oogl/util/iobuffer.h, src/lib/oogl/util/mallocp.c, src/lib/oogl/util/porting.h, src/lib/oogl/util/vvec.c, src/lib/pointlist/pointlist.h, src/lib/shade/appearance.c, src/lib/shade/light.c, src/lib/window/window.c, src/lib/window/winstream.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plnormal.c, src/lib/gprim/polylist/plpick.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/quad/quadcopy.c, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadevert.c, src/lib/gprim/quad/quadload.c, src/lib/gprim/quad/quadnormal.c, src/lib/gprim/quad/quadsave.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelpick.c, src/lib/gprim/tlist/tlcreate.c, src/lib/gprim/tlist/tltransform.c, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectload.c, src/lib/gprim/vect/vectpick.c, src/lib/gprim/vect/vectsave.c, src/lib/mg/buf/MGRdolines.h, src/lib/mg/buf/MGRline.h, src/lib/mg/buf/mgbuf.c, src/lib/mg/buf/mgbufdraw.c, src/lib/mg/common/mg.c, src/lib/mg/common/mgshade.c, src/lib/mg/common/mgtexture.c, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/ps/mgps.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11dither.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11shade.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/handle.h, src/lib/oogl/refcomm/reference.c, src/lib/oogl/refcomm/streampool.c, src/lib/gprim/bezier/bezsave.c, src/lib/gprim/comment/commentcreate.c, src/lib/gprim/comment/commentsave.c, src/lib/gprim/comment/commentstream.c, src/lib/gprim/discgrp/complex.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/dgcopy.c, src/lib/gprim/discgrp/dgcreate.c, src/lib/gprim/discgrp/dgdirdom.c, src/lib/gprim/discgrp/dgdraw.c, src/lib/gprim/discgrp/dgenum.c, src/lib/gprim/discgrp/matlist.c, src/lib/gprim/discgrp/projective.c, src/lib/gprim/discgrp/xform.c, src/lib/gprim/geom/class.c, src/lib/gprim/geom/create.c, src/lib/gprim/geom/extend.c, src/lib/gprim/geom/geomstream.c, src/lib/gprim/geom/iterate.c, src/lib/gprim/geom/knownclass.c, src/lib/gprim/geom/pick.c, src/lib/gprim/inst/instbound.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/instsphere.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/lincoln/lincolnload.c, src/lib/gprim/list/listcreate.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/list/listmisc.c, src/lib/gprim/list/listpick.c, src/lib/gprim/list/listsphere.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/mesh/meshcopy.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/mesh/meshload.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshpick.c, src/lib/gprim/mesh/meshsave.c, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plcopy.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/polylist/plevert.c, src/bin/geomutil/oogl2vrml/oogl2vrml2.c, src/bin/geomutil/plutil/polymerge.c, src/bin/geomutil/ucd/anytoucd.c, src/bin/geomutil/ucd/stack.c, src/bin/geomview/common/comm.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/event.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/shaders.c, src/bin/geomview/common/space.c, src/bin/geomview/common/ui.c, src/bin/geomview/common/ui.h, src/bin/geomview/common/worldio.c, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvtoolui.c, src/bin/hinge/panel.c, src/lib/aclib/alloca.c, src/lib/aclib/putenv.c, src/lib/camera/camcompat.c, src/lib/camera/camera.c, src/lib/camera/camstream.c, src/lib/color/mergein.c, src/lib/color/mergeout.c, src/lib/color/mergeover.c, src/lib/color/mergeunder.c, src/lib/color/paintcopy.c, src/lib/color/paintover.c, src/lib/fexpr/lex.yy.c, src/lib/forms/xforms-compat.h, src/lib/geometry/hpoint3/hg4.c, src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpointn/hpointnb.c, src/lib/geometry/point3/point3.c, src/lib/geometry/point3/segments.c, src/lib/geometry/transform3/ctm3rotate.c, src/lib/geometry/transform3/ctm3scale.c, src/lib/geometry/transform3/ctm3translate.c, src/lib/geometry/transform3/tm3adjoint.c, src/lib/geometry/transform3/tm3concat.c, src/lib/geometry/transform3/tm3invert.c, src/lib/geometry/transform3/tm3transpose.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transobj/transobj.c, src/lib/geomutil/plutil/anytopl.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezevert.c, src/bin/animate/glob.c, src/bin/animate/glob.h, src/bin/cplxview/computegraph.c, src/bin/example/oogl.c:
+	Do not use the "register" keyword. Modern compilers do this kind of
+	stuff themselves.
+
+	* configure.ac: Unix domain socket stuff (listen, accept, socket etc)
+
+	* m4/geom_local.m4: configure.in -> configure.ac
+
+	* doc/Makefile.am: Do not delete html and pdf with "make clean".
+
+	* src/lib/oogl/util/glibglue.C, src/lib/oogl/util/seekpipe.c:
+	No longer needed.
+
+2006-07-14  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/aclib/strcasecmp.c, src/lib/aclib/strdup.c, src/lib/aclib/strncasecmp.c, src/lib/aclib/acosh.c, src/lib/aclib/popen.c, src/lib/aclib/putenv.c:
+	Initial revision, copied here from "porting.c"
+
+	* src/lib/oogl/util/ppopen.c, src/lib/oogl/util/vvec.c, src/lib/pointlist/pointlist.c, src/lib/pointlist/ptlBezier.c, src/lib/pointlist/ptlInst.c, src/lib/pointlist/ptlList.c, src/lib/pointlist/ptlMesh.c, src/lib/pointlist/ptlPolylist.c, src/lib/pointlist/ptlQuad.c, src/lib/pointlist/ptlVect.c, src/lib/shade/appearance.c, src/lib/shade/apstream.c, src/lib/shade/light.c, src/lib/window/window.c, src/lib/window/winstream.c, src/lib/mib/mibDrawArea.c, src/lib/mib/mibFrame.c, src/lib/mib/mibLabel.c, src/lib/mib/mibList.c, src/lib/mib/mibMenu.c, src/lib/mib/mibRadioBox.c, src/lib/mib/mibScale.c, src/lib/mib/mibScrollBar.c, src/lib/mib/mibTextBig.c, src/lib/mib/mibTextBox.c, src/lib/mib/mibToggle.c, src/lib/mib/mibload.c, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/reference.c, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h, src/lib/oogl/util/Makefile.am, src/lib/oogl/util/error.c, src/lib/oogl/util/findfile.c, src/lib/oogl/util/fsa.c, src/lib/oogl/util/glob.c, src/lib/oogl/util/iobuffer.c, src/lib/oogl/util/mallocp.c, src/lib/oogl/util/porting.c, src/lib/oogl/util/porting.h, src/lib/mg/buf/mgbufrender.c, src/lib/mg/buf/mgbufrender24.c, src/lib/mg/common/mg.c, src/lib/mg/common/mgshade.c, src/lib/mg/common/mgtexture.c, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/ps/mgps.c, src/lib/mg/ps/mgpsclip.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/ps/mgpstri.c, src/lib/mg/ps/mgpswindows.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgributil.c, src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11clip.c, src/lib/mg/x11/mgx11dither.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11render1.c, src/lib/mg/x11/mgx11render16.c, src/lib/mg/x11/mgx11render8.c, src/lib/mg/x11/mgx11shade.c, src/lib/mg/x11/mgx11visual.c, src/lib/mg/x11/mgx11windows.c, src/lib/mib/mibButton.c, src/lib/gprim/stub/inst.c, src/lib/gprim/stub/lincoln.c, src/lib/gprim/stub/list.c, src/lib/gprim/stub/mesh.c, src/lib/gprim/stub/ndmesh.c, src/lib/gprim/stub/npolylist.c, src/lib/gprim/stub/polylist.c, src/lib/gprim/stub/quad.c, src/lib/gprim/stub/skel.c, src/lib/gprim/stub/sphere.c, src/lib/gprim/stub/stub.c, src/lib/gprim/stub/stubdraw.c, src/lib/gprim/stub/tlist.c, src/lib/gprim/stub/vect.c, src/lib/gprim/tlist/tlclass.c, src/lib/gprim/tlist/tlcreate.c, src/lib/gprim/tlist/tlstream.c, src/lib/gprim/tlist/tltransform.c, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectclass.c, src/lib/gprim/vect/vectcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectload.c, src/lib/gprim/vect/vectpick.c, src/lib/gprim/vect/vectsave.c, src/lib/gprim/vect/vectsphere.c, src/lib/gprim/vect/vecttransform.c, src/lib/mg/buf/mgbuf.c, src/lib/mg/buf/mgbufclip.c, src/lib/mg/buf/mgbufdraw.c, src/lib/gprim/polylist/plevert.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plnormal.c, src/lib/gprim/polylist/plpick.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/polylist/plsphere.c, src/lib/gprim/polylist/pltransform.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/quad/quadclass.c, src/lib/gprim/quad/quadcopy.c, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/quad/quaddelete.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadevert.c, src/lib/gprim/quad/quadload.c, src/lib/gprim/quad/quadnormal.c, src/lib/gprim/quad/quadpick.c, src/lib/gprim/quad/quadsave.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/quad/quadtransform.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelclass.c, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skelpick.c, src/lib/gprim/skel/skelsave.c, src/lib/gprim/skel/skeltransform.c, src/lib/gprim/sphere/sphereclass.c, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/sphere/sphereload.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/sphere/spheresave.c, src/lib/gprim/stub/bbox.c, src/lib/gprim/stub/bezier.c, src/lib/gprim/stub/bezierlist.c, src/lib/gprim/stub/comment.c, src/lib/gprim/stub/discgrp.c, src/lib/gprim/mesh/meshevert.c, src/lib/gprim/mesh/meshload.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshpick.c, src/lib/gprim/mesh/meshsave.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/npolylist/nplcopy.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plclass.c, src/lib/gprim/polylist/plcopy.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/inst/instclass.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/instpick.c, src/lib/gprim/inst/instsphere.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/lincoln/lincolnclass.c, src/lib/gprim/lincoln/lincolnload.c, src/lib/gprim/list/listclass.c, src/lib/gprim/list/listcreate.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/list/listmisc.c, src/lib/gprim/list/listpick.c, src/lib/gprim/list/listsphere.c, src/lib/gprim/list/liststream.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/mesh/meshclass.c, src/lib/gprim/mesh/meshcopy.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshdelete.c, src/lib/gprim/mesh/meshdice.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/discgrp/dgpick.c, src/lib/gprim/discgrp/dgsave.c, src/lib/gprim/discgrp/dgstream.c, src/lib/gprim/discgrp/dgtransform.c, src/lib/gprim/discgrp/dhpoint3.c, src/lib/gprim/discgrp/matlist.c, src/lib/gprim/discgrp/outstack.c, src/lib/gprim/discgrp/polyhedron.c, src/lib/gprim/discgrp/projective.c, src/lib/gprim/discgrp/stack.c, src/lib/gprim/discgrp/util.c, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/discgrp/xform.c, src/lib/gprim/geom/bound.c, src/lib/gprim/geom/boundsphere.c, src/lib/gprim/geom/class.c, src/lib/gprim/geom/copy.c, src/lib/gprim/geom/create.c, src/lib/gprim/geom/delete.c, src/lib/gprim/geom/dice.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/evert.c, src/lib/gprim/geom/extend.c, src/lib/gprim/geom/geomstream.c, src/lib/gprim/geom/handlescan.c, src/lib/gprim/geom/iterate.c, src/lib/gprim/geom/knownclass.c, src/lib/gprim/geom/message.c, src/lib/gprim/geom/name.c, src/lib/gprim/geom/pick.c, src/lib/gprim/geom/replace.c, src/lib/gprim/geom/transform.c, src/lib/gprim/inst/instbound.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezclass.c, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/bezier/bezdraw.c, src/lib/gprim/bezier/bezevert.c, src/lib/gprim/bezier/bezload.c, src/lib/gprim/bezier/bezpick.c, src/lib/gprim/bezier/bezsave.c, src/lib/gprim/bezier/bezsphere.c, src/lib/gprim/bezier/beztransform.c, src/lib/gprim/comment/commentclass.c, src/lib/gprim/comment/commentcreate.c, src/lib/gprim/comment/commentsave.c, src/lib/gprim/comment/commentstream.c, src/lib/gprim/discgrp/colormap.c, src/lib/gprim/discgrp/complex.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/dgclass.c, src/lib/gprim/discgrp/dgconstraint.c, src/lib/gprim/discgrp/dgcopy.c, src/lib/gprim/discgrp/dgcreate.c, src/lib/gprim/discgrp/dgdelete.c, src/lib/gprim/discgrp/dgdirdom.c, src/lib/gprim/discgrp/dgdraw.c, src/lib/gprim/discgrp/dgenum.c, src/lib/gprim/discgrp/dgevert.c, src/lib/gprim/discgrp/dgmisc.c, src/lib/geometry/transform3/tm3stack.c, src/lib/geometry/transform3/tm3tetrad.c, src/lib/geometry/transform3/tm3translate.c, src/lib/geometry/transform3/tm3transpose.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transobj/transobj.c, src/lib/geomutil/bdy/bdy.c, src/lib/geomutil/crayplutil/crayBezier.c, src/lib/geomutil/crayplutil/crayInst.c, src/lib/geomutil/crayplutil/crayList.c, src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c, src/lib/geomutil/crayplutil/crayVect.c, src/lib/geomutil/crayplutil/crayola.c, src/lib/geomutil/dim/dim.c, src/lib/geomutil/plutil/anytopl.c, src/lib/geomutil/plutil/plcombine.c, src/lib/geomutil/plutil/plconsol.c, src/lib/gprim/bbox/bboxbound.c, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxcopy.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/geometry/hpoint3/hpoint3b.c, src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointnb.c, src/lib/geometry/point3/point3.c, src/lib/geometry/point3/polyint.c, src/lib/geometry/point3/segments.c, src/lib/geometry/transform3/ctm3align.c, src/lib/geometry/transform3/ctm3ortho.c, src/lib/geometry/transform3/ctm3persp.c, src/lib/geometry/transform3/ctm3perspfov.c, src/lib/geometry/transform3/ctm3rotate.c, src/lib/geometry/transform3/ctm3scale.c, src/lib/geometry/transform3/ctm3tetrad.c, src/lib/geometry/transform3/ctm3translate.c, src/lib/geometry/transform3/tm3adjoint.c, src/lib/geometry/transform3/tm3align.c, src/lib/geometry/transform3/tm3concat.c, src/lib/geometry/transform3/tm3conjugate.c, src/lib/geometry/transform3/tm3copy.c, src/lib/geometry/transform3/tm3dual.c, src/lib/geometry/transform3/tm3identity.c, src/lib/geometry/transform3/tm3invert.c, src/lib/geometry/transform3/tm3ortho.c, src/lib/geometry/transform3/tm3persp.c, src/lib/geometry/transform3/tm3perspfov.c, src/lib/geometry/transform3/tm3print.c, src/lib/geometry/transform3/tm3rotate.c, src/lib/geometry/transform3/tm3scale.c, src/lib/color/color.c, src/lib/color/mergein.c, src/lib/color/mergeout.c, src/lib/color/mergeover.c, src/lib/color/mergeplus.c, src/lib/color/mergeunder.c, src/lib/color/paintcopy.c, src/lib/color/paintover.c, src/lib/fexpr/binfuncs.c, src/lib/fexpr/complex.c, src/lib/fexpr/evaluate.c, src/lib/fexpr/exprs.c, src/lib/fexpr/lex.yy.c, src/lib/fexpr/monfuncs.c, src/lib/fexpr/real.c, src/lib/fexpr/vars.c, src/lib/geometry/cmodel/cm_geometry.c, src/lib/geometry/cmodel/cmodel.c, src/lib/geometry/cmodel/cmodel_data.c, src/lib/geometry/hpoint3/hg4.c, src/lib/geometry/hpoint3/hline3.c, src/lib/geometry/hpoint3/hplane3.c, src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpoint3/hpoint3a.c, src/bin/geomview/x11/gvappear.c, src/bin/geomview/x11/gvcameras.c, src/bin/geomview/x11/gvcolor.c, src/bin/geomview/x11/gvcommands.c, src/bin/geomview/x11/gvcredits.c, src/bin/geomview/x11/gvevent.c, src/bin/geomview/x11/gvfiles.c, src/bin/geomview/x11/gvlights.c, src/bin/geomview/x11/gvload.c, src/bin/geomview/x11/gvmain.c, src/bin/geomview/x11/gvmaterial.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/gvtoolui.c, src/bin/geomview/x11/gvui.c, src/bin/togeomview/Makefile.am, src/bin/togeomview/togeomview.c, src/lib/Makefile.am, src/lib/camera/camcompat.c, src/lib/camera/camera.c, src/lib/camera/camstream.c, src/bin/geomview/common/ndshade.c, src/bin/geomview/common/rman.c, src/bin/geomview/common/shaders.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/ui.c, src/bin/geomview/common/version.h, src/bin/geomview/common/worldio.c, src/bin/geomview/common/mouse.c, src/bin/animate/glob.c, src/bin/animate/xanimate.c, src/bin/geomutil/math2oogl/math2oogl.c, src/bin/geomutil/vrml2oogl/Makefile.am, src/bin/geomview/common/comm.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/event.c, src/bin/geomview/common/lang.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/main.c, src/bin/geomview/common/motion.c, configure, configure.ac, doc/Makefile.am, src/bin/animate/animate.c:
+	Mostly cosmetic changes, still something wrong ...
+
+	* src/lib/oogl/util/Makefile.am, src/lib/oogl/util/error.c, src/lib/oogl/util/futil.c, src/lib/oogl/util/glob.c, src/lib/oogl/util/iobfutil.c, src/lib/oogl/util/iobuffer.c, src/lib/oogl/util/iobuffer.h, src/lib/oogl/util/ooglutil.h, src/lib/oogl/wa/.cvsignore, src/lib/oogl/wa/Makefile.am, src/lib/pointlist/.cvsignore, src/lib/pointlist/Makefile.am, src/lib/shade/.cvsignore, src/lib/shade/Makefile.am, src/lib/shade/appearance.c, src/lib/shade/appearance.h, src/lib/shade/light.c, src/lib/window/.cvsignore, src/lib/window/Makefile.am, src/lib/window/winstream.c, src/lib/gprim/npolylist/Makefile.am, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/npolylist.h, src/lib/gprim/polylist/.cvsignore, src/lib/gprim/polylist/Makefile.am, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/polylist.h, src/lib/gprim/quad/.cvsignore, src/lib/gprim/quad/Makefile.am, src/lib/gprim/quad/quad.h, src/lib/gprim/quad/quadload.c, src/lib/gprim/skel/.cvsignore, src/lib/gprim/skel/Makefile.am, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelload.c, src/lib/gprim/sphere/.cvsignore, src/lib/gprim/sphere/Makefile.am, src/lib/gprim/sphere/sphereP.h, src/lib/gprim/sphere/sphereload.c, src/lib/gprim/stub/.cvsignore, src/lib/gprim/stub/Makefile.am, src/lib/gprim/tlist/.cvsignore, src/lib/gprim/tlist/Makefile.am, src/lib/gprim/tlist/tlstream.c, src/lib/gprim/vect/.cvsignore, src/lib/gprim/vect/Makefile.am, src/lib/gprim/vect/vectload.c, src/lib/mg/.cvsignore, src/lib/mg/Makefile.am, src/lib/mg/buf/.cvsignore, src/lib/mg/buf/Makefile.am, src/lib/mg/common/.cvsignore, src/lib/mg/common/Makefile.am, src/lib/mg/common/mgtexture.c, src/lib/mg/opengl/.cvsignore, src/lib/mg/opengl/Makefile.am, src/lib/mg/ps/.cvsignore, src/lib/mg/ps/Makefile.am, src/lib/mg/rib/.cvsignore, src/lib/mg/rib/Makefile.am, src/lib/mg/x11/.cvsignore, src/lib/mg/x11/Makefile.am, src/lib/mib/.cvsignore, src/lib/oogl/.cvsignore, src/lib/oogl/Makefile.am, src/lib/oogl/lisp/.cvsignore, src/lib/oogl/lisp/Makefile.am, src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h, src/lib/oogl/refcomm/.cvsignore, src/lib/oogl/refcomm/Makefile.am, src/lib/oogl/refcomm/handleP.h, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h, src/lib/oogl/util/.cvsignore, src/lib/oogl/util/Headers, src/lib/geometry/transobj/transobj.c, src/lib/geomutil/.cvsignore, src/lib/geomutil/bdy/.cvsignore, src/lib/geomutil/bdy/Makefile.am, src/lib/geomutil/crayplutil/.cvsignore, src/lib/geomutil/crayplutil/Makefile.am, src/lib/geomutil/dim/.cvsignore, src/lib/geomutil/dim/Makefile.am, src/lib/geomutil/plutil/.cvsignore, src/lib/geomutil/plutil/Makefile.am, src/lib/geomutil/plutil/anytopl.c, src/lib/gprim/.cvsignore, src/lib/gprim/bbox/.cvsignore, src/lib/gprim/bbox/Makefile.am, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bezier/.cvsignore, src/lib/gprim/bezier/Makefile.am, src/lib/gprim/bezier/bezload.c, src/lib/gprim/comment/.cvsignore, src/lib/gprim/comment/Makefile.am, src/lib/gprim/comment/commentstream.c, src/lib/gprim/discgrp/.cvsignore, src/lib/gprim/discgrp/Makefile.am, src/lib/gprim/discgrp/complex.h, src/lib/gprim/discgrp/dgstream.c, src/lib/gprim/geom/.cvsignore, src/lib/gprim/geom/Makefile.am, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomclass.h, src/lib/gprim/geom/geomstream.c, src/lib/gprim/inst/.cvsignore, src/lib/gprim/inst/Makefile.am, src/lib/gprim/inst/inststream.c, src/lib/gprim/lincoln/.cvsignore, src/lib/gprim/lincoln/Makefile.am, src/lib/gprim/lincoln/lincolnload.c, src/lib/gprim/list/.cvsignore, src/lib/gprim/list/Makefile.am, src/lib/gprim/list/liststream.c, src/lib/gprim/mesh/.cvsignore, src/lib/gprim/mesh/Makefile.am, src/lib/gprim/mesh/mesh.h, src/lib/gprim/mesh/meshload.c, src/lib/gprim/ndmesh/.cvsignore, src/lib/gprim/ndmesh/Makefile.am, src/lib/gprim/ndmesh/ndmesh.h, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/npolylist/.cvsignore, src/bin/graffiti/graffiti.h, src/bin/graffiti/gui.c, src/bin/graffiti/lang.c, src/bin/graffiti/lang.h, src/bin/hinge/.cvsignore, src/bin/hinge/Makefile.am, src/bin/hinge/hinge.c, src/bin/hinge/hinge.h, src/bin/hinge/hui.c, src/bin/hinge/hui.h, src/bin/hinge/lang.c, src/bin/hinge/lang.h, src/bin/stereo/.cvsignore, src/bin/stereo/Makefile.am, src/bin/stereo/stereo.c, src/bin/sweep/.cvsignore, src/bin/sweep/Makefile.am, src/bin/sweep/sweep.main.c, src/bin/tackdown/.cvsignore, src/bin/tackdown/Makefile.am, src/bin/tackdown/origin.common.c, src/bin/tackdown/tackdown.main.c, src/bin/togeomview/.cvsignore, src/bin/transformer/.cvsignore, src/bin/transformer/Makefile.am, src/lib/.cvsignore, src/lib/Makefile.am, src/lib/aclib/.cvsignore, src/lib/camera/.cvsignore, src/lib/camera/Makefile.am, src/lib/camera/camcompat.c, src/lib/camera/camera.h, src/lib/camera/camstream.c, src/lib/color/.cvsignore, src/lib/color/Makefile.am, src/lib/fexpr/.cvsignore, src/lib/fexpr/Makefile.am, src/lib/forms/.cvsignore, src/lib/geometry/.cvsignore, src/lib/geometry/cmodel/.cvsignore, src/lib/geometry/cmodel/Makefile.am, src/lib/geometry/hpoint3/.cvsignore, src/lib/geometry/hpoint3/Makefile.am, src/lib/geometry/hpointn/.cvsignore, src/lib/geometry/hpointn/Makefile.am, src/lib/geometry/point3/.cvsignore, src/lib/geometry/point3/Makefile.am, src/lib/geometry/transform3/.cvsignore, src/lib/geometry/transform3/Makefile.am, src/lib/geometry/transformn/.cvsignore, src/lib/geometry/transformn/Makefile.am, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transformn/transformn.h, src/lib/geometry/transobj/.cvsignore, src/lib/geometry/transobj/Makefile.am, src/bin/flythrough/data/.cvsignore, src/bin/flythrough/main.c, src/bin/flythrough/panel.h, src/bin/geomutil/.cvsignore, src/bin/geomutil/bdy/.cvsignore, src/bin/geomutil/bdy/Makefile.am, src/bin/geomutil/bdy/bdy.c, src/bin/geomutil/clip/.cvsignore, src/bin/geomutil/clip/Makefile.am, src/bin/geomutil/clip/clipmain.c, src/bin/geomutil/maple2oogl/.cvsignore, src/bin/geomutil/maple2oogl/gvplot.mapleV8, src/bin/geomutil/maple2oogl/gvplot.mws, src/bin/geomutil/maple2oogl/savegvplot.mws, src/bin/geomutil/math2oogl/.cvsignore, src/bin/geomutil/oogl2rib/.cvsignore, src/bin/geomutil/oogl2rib/Makefile.am, src/bin/geomutil/oogl2rib/oogl2rib.c, src/bin/geomutil/oogl2vrml/.cvsignore, src/bin/geomutil/oogl2vrml/Makefile.am, src/bin/geomutil/oogl2vrml/oogl2vrml.c, src/bin/geomutil/oogl2vrml/oogl2vrml2.c, src/bin/geomutil/plutil/.cvsignore, src/bin/geomutil/plutil/Makefile.am, src/bin/geomutil/plutil/anytooff.main.c, src/bin/geomutil/plutil/bez2mesh.c, src/bin/geomutil/plutil/offconsol.main.c, src/bin/geomutil/plutil/polymerge.c, src/bin/geomutil/ucd/.cvsignore, src/bin/geomutil/ucd/Makefile.am, src/bin/geomutil/ucd/anytoucd.c, src/bin/geomutil/ucd/ucdtooff.c, src/bin/geomutil/vrml2oogl/.cvsignore, src/bin/geomutil/vrml2oogl/lib/.cvsignore, src/bin/geomview/.cvsignore, src/bin/geomview/common/.cvsignore, src/bin/geomview/common/comm.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/worldio.c, src/bin/geomview/x11/.cvsignore, src/bin/geomview/x11/Makefile.am, src/bin/geomview/x11/bitmaps/.cvsignore, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/interface/.cvsignore, src/bin/ginsu/.cvsignore, src/bin/ginsu/Makefile.am, src/bin/ginsu/ginsu.c, src/bin/graffiti/.cvsignore, src/bin/graffiti/Makefile.am, src/bin/graffiti/graffiti.c, .cvsignore, INSTALL.Geomview, README.cvs, configure, configure.ac, data/.cvsignore, data/geom/.cvsignore, data/geom/pieces/.cvsignore, data/geom/polyhedra/.cvsignore, data/geom/spherical/.cvsignore, data/geom/textured/.cvsignore, doc/.cvsignore, doc/figs/.cvsignore, geomview.sh, m4/.cvsignore, src/.cvsignore, src/bin/.cvsignore, src/bin/Makefile.am, src/bin/animate/.cvsignore, src/bin/animate/Makefile.am, src/bin/animate/interface/.cvsignore, src/bin/cplxview/.cvsignore, src/bin/cplxview/Makefile.am, src/bin/cplxview/computegraph.c, src/bin/cplxview/cplxview.c, src/bin/example/.cvsignore, src/bin/example/Makefile.am, src/bin/flythrough/.cvsignore, src/bin/flythrough/Makefile.am:
+	* use one shared library (i.e. libgeomview.so)
+	* do not use undocumented stdio internals
+	* src/lib/aclib/fmemopen.c -- fmemopen replacement
+	* src/lib/oogl/utilt/iobuffer.[ch] -- totally buffered input, with seekback (pipes)
+	* a bunch of autoconf changes
+	* OpenGL is optional again
+	* reenable hinge module
+	* reenable flythrough module
+	* reenable cplxview module
+
+	* src/lib/aclib/Makefile.am, src/lib/aclib/alloca.c, src/lib/aclib/fmemopen.c, src/lib/aclib/lstat.c, src/lib/aclib/memcmp.c, src/lib/aclib/stat.c, src/lib/aclib/strtod.c:
+	Initial revision.
+
+2006-07-11  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/util/iobuffer.c: Initial revision, not working yet.
+
+2006-07-10  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/pointlist/ptlInst.c, src/lib/pointlist/ptlList.c, src/lib/pointlist/ptlMesh.c, src/lib/pointlist/ptlPolylist.c, src/lib/pointlist/ptlQuad.c, src/lib/pointlist/ptlVect.c, src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c, src/lib/geomutil/crayplutil/crayVect.c, src/lib/geomutil/crayplutil/crayola.c, src/lib/geomutil/dim/dim.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/refcomm/streampool.c, src/lib/pointlist/pointlist.c, src/lib/pointlist/ptlBezier.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/space.c, src/bin/geomview/x11/gvappear.c, src/bin/geomview/x11/gvcameras.c, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvcolor.c, src/bin/geomview/x11/gvevent.c, src/bin/geomview/x11/gvmaterial.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/gvtoolui.c, src/lib/geomutil/crayplutil/crayBezier.c, src/lib/geomutil/crayplutil/crayInst.c, src/lib/geomutil/crayplutil/crayList.c:
+	Remove a couple of "cast from pointer to integer of different size"
+	warnings (and vice versa).
+
+2006-07-08  rotdrop  <rotdrop@anaxagoras>
+
+	* .cvsignore, doc/.cvsignore, src/bin/.cvsignore, src/bin/animate/.cvsignore, src/bin/example/.cvsignore, src/bin/geomutil/bdy/.cvsignore, src/bin/geomutil/oogl2vrml/.cvsignore, src/bin/geomview/x11/.cvsignore, src/lib/geometry/cmodel/.cvsignore:
+	Ignore some stuff.
+
+	* src/lib/mib/mibTextBox.c, src/lib/mib/mibToggle.c, src/lib/mib/mibload.c, src/lib/mib/mibload.h, src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/reference.c, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/util/error.c, src/lib/oogl/util/findfile.c, src/lib/oogl/util/fsa.c, src/lib/oogl/util/futil.c, src/lib/oogl/util/glob.c, src/lib/oogl/util/mallocp.c, src/lib/oogl/util/porting.c, src/lib/oogl/util/ppopen.c, src/lib/oogl/util/seekpipe.c, src/lib/oogl/util/vvec.c, src/lib/oogl/wa/Makefile.am, src/lib/oogl/wa/fsaparse.y, src/lib/oogl/wa/wa.h, src/lib/oogl/wa/yystype.h, src/lib/pointlist/pointlist.c, src/lib/pointlist/ptlBezier.c, src/lib/pointlist/ptlInst.c, src/lib/pointlist/ptlList.c, src/lib/pointlist/ptlMesh.c, src/lib/pointlist/ptlPolylist.c, src/lib/pointlist/ptlQuad.c, src/lib/pointlist/ptlVect.c, src/lib/shade/appearance.c, src/lib/shade/apstream.c, src/lib/shade/light.c, src/lib/window/window.c, src/lib/window/window.h, src/lib/window/winstream.c, src/lib/gprim/stub/vect.c, src/lib/gprim/tlist/tlclass.c, src/lib/gprim/tlist/tlcreate.c, src/lib/gprim/tlist/tlstream.c, src/lib/gprim/tlist/tltransform.c, src/lib/gprim/vect/vect.h, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectclass.c, src/lib/gprim/vect/vectcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectload.c, src/lib/gprim/vect/vectpick.c, src/lib/gprim/vect/vectsave.c, src/lib/gprim/vect/vectsphere.c, src/lib/gprim/vect/vecttransform.c, src/lib/mg/buf/mgbuf.c, src/lib/mg/buf/mgbufclip.c, src/lib/mg/buf/mgbufdraw.c, src/lib/mg/buf/mgbufrender.c, src/lib/mg/buf/mgbufrender24.c, src/lib/mg/common/mg.c, src/lib/mg/common/mgshade.c, src/lib/mg/common/mgtexture.c, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/ps/mgps.c, src/lib/mg/ps/mgpsclip.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/ps/mgpstri.c, src/lib/mg/ps/mgpswindows.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgributil.c, src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11clip.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11render1.c, src/lib/mg/x11/mgx11render16.c, src/lib/mg/x11/mgx11render8.c, src/lib/mg/x11/mgx11shade.c, src/lib/mg/x11/mgx11visual.c, src/lib/mg/x11/mgx11windows.c, src/lib/mib/mibButton.c, src/lib/mib/mibDrawArea.c, src/lib/mib/mibFrame.c, src/lib/mib/mibLabel.c, src/lib/mib/mibList.c, src/lib/mib/mibMenu.c, src/lib/mib/mibRadioBox.c, src/lib/mib/mibScale.c, src/lib/mib/mibScrollBar.c, src/lib/mib/mibTextBig.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/npolylist/nplcopy.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plclass.c, src/lib/gprim/polylist/plcopy.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/polylist/plevert.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plnormal.c, src/lib/gprim/polylist/plpick.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/polylist/plsphere.c, src/lib/gprim/polylist/pltransform.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/quad/quadclass.c, src/lib/gprim/quad/quadcopy.c, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/quad/quaddelete.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadevert.c, src/lib/gprim/quad/quadload.c, src/lib/gprim/quad/quadnormal.c, src/lib/gprim/quad/quadpick.c, src/lib/gprim/quad/quadsave.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/quad/quadtransform.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelclass.c, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skelpick.c, src/lib/gprim/skel/skelsave.c, src/lib/gprim/skel/skeltransform.c, src/lib/gprim/sphere/sphereclass.c, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/sphere/sphereload.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/sphere/spheresave.c, src/lib/gprim/stub/bbox.c, src/lib/gprim/stub/bezier.c, src/lib/gprim/stub/bezierlist.c, src/lib/gprim/stub/comment.c, src/lib/gprim/stub/discgrp.c, src/lib/gprim/stub/inst.c, src/lib/gprim/stub/lincoln.c, src/lib/gprim/stub/list.c, src/lib/gprim/stub/mesh.c, src/lib/gprim/stub/ndmesh.c, src/lib/gprim/stub/npolylist.c, src/lib/gprim/stub/polylist.c, src/lib/gprim/stub/quad.c, src/lib/gprim/stub/skel.c, src/lib/gprim/stub/sphere.c, src/lib/gprim/stub/stub.c, src/lib/gprim/stub/stubdraw.c, src/lib/gprim/stub/tlist.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/evert.c, src/lib/gprim/geom/extend.c, src/lib/gprim/geom/geomstream.c, src/lib/gprim/geom/handlescan.c, src/lib/gprim/geom/iterate.c, src/lib/gprim/geom/knownclass.c, src/lib/gprim/geom/message.c, src/lib/gprim/geom/name.c, src/lib/gprim/geom/pick.c, src/lib/gprim/geom/replace.c, src/lib/gprim/geom/transform.c, src/lib/gprim/inst/instbound.c, src/lib/gprim/inst/instclass.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/instpick.c, src/lib/gprim/inst/instsphere.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/lincoln/lincolnclass.c, src/lib/gprim/lincoln/lincolnload.c, src/lib/gprim/list/listclass.c, src/lib/gprim/list/listcreate.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/list/listmisc.c, src/lib/gprim/list/listpick.c, src/lib/gprim/list/listsphere.c, src/lib/gprim/list/liststream.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/mesh/meshclass.c, src/lib/gprim/mesh/meshcopy.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshdelete.c, src/lib/gprim/mesh/meshdice.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/mesh/meshevert.c, src/lib/gprim/mesh/meshload.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshpick.c, src/lib/gprim/mesh/meshsave.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxcopy.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezclass.c, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/bezier/bezdraw.c, src/lib/gprim/bezier/bezevert.c, src/lib/gprim/bezier/bezload.c, src/lib/gprim/bezier/bezpick.c, src/lib/gprim/bezier/bezsave.c, src/lib/gprim/bezier/bezsphere.c, src/lib/gprim/bezier/beztransform.c, src/lib/gprim/comment/commentclass.c, src/lib/gprim/comment/commentcreate.c, src/lib/gprim/comment/commentsave.c, src/lib/gprim/comment/commentstream.c, src/lib/gprim/discgrp/colormap.c, src/lib/gprim/discgrp/complex.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/dgclass.c, src/lib/gprim/discgrp/dgconstraint.c, src/lib/gprim/discgrp/dgcopy.c, src/lib/gprim/discgrp/dgcreate.c, src/lib/gprim/discgrp/dgdelete.c, src/lib/gprim/discgrp/dgdirdom.c, src/lib/gprim/discgrp/dgdraw.c, src/lib/gprim/discgrp/dgenum.c, src/lib/gprim/discgrp/dgevert.c, src/lib/gprim/discgrp/dgmisc.c, src/lib/gprim/discgrp/dgpick.c, src/lib/gprim/discgrp/dgsave.c, src/lib/gprim/discgrp/dgstream.c, src/lib/gprim/discgrp/dgtransform.c, src/lib/gprim/discgrp/dhpoint3.c, src/lib/gprim/discgrp/matlist.c, src/lib/gprim/discgrp/outstack.c, src/lib/gprim/discgrp/polyhedron.c, src/lib/gprim/discgrp/projective.c, src/lib/gprim/discgrp/stack.c, src/lib/gprim/discgrp/util.c, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/discgrp/xform.c, src/lib/gprim/geom/bound.c, src/lib/gprim/geom/boundsphere.c, src/lib/gprim/geom/class.c, src/lib/gprim/geom/copy.c, src/lib/gprim/geom/create.c, src/lib/gprim/geom/delete.c, src/lib/gprim/geom/dice.c, src/lib/fexpr/real.c, src/lib/fexpr/vars.c, src/lib/forms/xforms-compat.h, src/lib/geometry/cmodel/cm_geometry.c, src/lib/geometry/cmodel/cmodel.c, src/lib/geometry/cmodel/cmodel_data.c, src/lib/geometry/hpoint3/hg4.c, src/lib/geometry/hpoint3/hline3.c, src/lib/geometry/hpoint3/hplane3.c, src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpoint3/hpoint3a.c, src/lib/geometry/hpoint3/hpoint3b.c, src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointnb.c, src/lib/geometry/point3/point3.c, src/lib/geometry/point3/polyint.c, src/lib/geometry/point3/segments.c, src/lib/geometry/transform3/ctm3align.c, src/lib/geometry/transform3/ctm3ortho.c, src/lib/geometry/transform3/ctm3persp.c, src/lib/geometry/transform3/ctm3perspfov.c, src/lib/geometry/transform3/ctm3rotate.c, src/lib/geometry/transform3/ctm3scale.c, src/lib/geometry/transform3/ctm3tetrad.c, src/lib/geometry/transform3/ctm3translate.c, src/lib/geometry/transform3/tm3adjoint.c, src/lib/geometry/transform3/tm3align.c, src/lib/geometry/transform3/tm3concat.c, src/lib/geometry/transform3/tm3conjugate.c, src/lib/geometry/transform3/tm3copy.c, src/lib/geometry/transform3/tm3dual.c, src/lib/geometry/transform3/tm3identity.c, src/lib/geometry/transform3/tm3invert.c, src/lib/geometry/transform3/tm3ortho.c, src/lib/geometry/transform3/tm3persp.c, src/lib/geometry/transform3/tm3perspfov.c, src/lib/geometry/transform3/tm3print.c, src/lib/geometry/transform3/tm3rotate.c, src/lib/geometry/transform3/tm3scale.c, src/lib/geometry/transform3/tm3stack.c, src/lib/geometry/transform3/tm3tetrad.c, src/lib/geometry/transform3/tm3translate.c, src/lib/geometry/transform3/tm3transpose.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transobj/transobj.c, src/lib/geomutil/bdy/bdy.c, src/lib/geomutil/crayplutil/crayBezier.c, src/lib/geomutil/crayplutil/crayInst.c, src/lib/geomutil/crayplutil/crayList.c, src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c, src/lib/geomutil/crayplutil/crayVect.c, src/lib/geomutil/crayplutil/crayola.c, src/lib/geomutil/dim/dim.c, src/lib/geomutil/plutil/anytopl.c, src/lib/geomutil/plutil/plcombine.c, src/lib/geomutil/plutil/plconsol.c, src/lib/gprim/bbox/bboxbound.c, src/bin/geomview/common/ui.c, src/bin/geomview/common/worldio.c, src/bin/geomview/x11/bitmaps/icon, src/bin/geomview/x11/gvappear.c, src/bin/geomview/x11/gvcameras.c, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvcolor.c, src/bin/geomview/x11/gvcommands.c, src/bin/geomview/x11/gvcredits.c, src/bin/geomview/x11/gvevent.c, src/bin/geomview/x11/gvfiles.c, src/bin/geomview/x11/gvlights.c, src/bin/geomview/x11/gvload.c, src/bin/geomview/x11/gvmain.c, src/bin/geomview/x11/gvmaterial.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/gvtoolui.c, src/bin/geomview/x11/gvui.c, src/bin/ginsu/ginsu.c, src/bin/graffiti/graffiti.c, src/bin/graffiti/graffiti.h, src/bin/graffiti/gui.c, src/bin/graffiti/lang.c, src/bin/hinge/hinge.c, src/bin/hinge/hui.c, src/bin/hinge/lang.c, src/bin/stereo/stereo.c, src/bin/stereo/sterui.c, src/bin/sweep/sweep.c, src/bin/sweep/sweep.main.c, src/bin/tackdown/origin.common.c, src/bin/tackdown/origin.common.h, src/bin/tackdown/origin.main.c, src/bin/tackdown/tackdown.main.c, src/bin/togeomview/togeomview.c, src/bin/transformer/transformer.main.c, src/lib/camera/camcompat.c, src/lib/camera/camera.c, src/lib/camera/camstream.c, src/lib/color/color.c, src/lib/color/mergein.c, src/lib/color/mergeout.c, src/lib/color/mergeover.c, src/lib/color/mergeplus.c, src/lib/color/mergeunder.c, src/lib/color/paintcopy.c, src/lib/color/paintover.c, src/lib/fexpr/binfuncs.c, src/lib/fexpr/complex.c, src/lib/fexpr/evaluate.c, src/lib/fexpr/exprs.c, src/lib/fexpr/lex.yy.c, src/lib/fexpr/monfuncs.c, src/lib/fexpr/parse.tab.c-saved, src/bin/animate/xanimate.c, src/bin/cplxview/computegraph.c, src/bin/cplxview/cplxview.c, src/bin/example/callbacks.c, src/bin/example/main.c, src/bin/example/oogl.c, src/bin/flythrough/main.c, src/bin/geomutil/bdy/bdy.c, src/bin/geomutil/clip/Clip.h, src/bin/geomutil/clip/clip.c, src/bin/geomutil/clip/clipmain.c, src/bin/geomutil/clip/clipoogl.c, src/bin/geomutil/math2oogl/math2oogl.c, src/bin/geomutil/oogl2rib/oogl2rib.c, src/bin/geomutil/oogl2vrml/oogl2vrml.c, src/bin/geomutil/oogl2vrml/oogl2vrml2.c, src/bin/geomutil/plutil/anytooff.main.c, src/bin/geomutil/plutil/bez2mesh.c, src/bin/geomutil/plutil/offconsol.main.c, src/bin/geomutil/plutil/polymerge.c, src/bin/geomutil/ucd/anytoucd.c, src/bin/geomutil/ucd/make_frame.c, src/bin/geomutil/ucd/stack.c, src/bin/geomutil/ucd/ucdtooff.c, src/bin/geomview/common/comm.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/event.c, src/bin/geomview/common/lang.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/main.c, src/bin/geomview/common/motion.c, src/bin/geomview/common/mouse.c, src/bin/geomview/common/ndshade.c, src/bin/geomview/common/rman.c, src/bin/geomview/common/shaders.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, configure.ac, src/bin/animate/animate.c, src/bin/animate/glob.c:
+	This is the big "no warnings" patch. Warnings that remain: length of
+	string constants, and some unput() functions in the two scanners,
+	those are defined but not used.
+
+2006-07-05  lloydwood  <lloydwood@anaxagoras>
+
+	* src/lib/mg/rib/mgribdraw.c: Checking in rendering transparency patch:
+	http://sourceforge.net/tracker/index.php?func=detail&aid=1231146&group_id=9736&atid=309736
+	provided by Chun-Chung Chen - cjj.
+
+2006-06-26  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/util/seekpipe.c:
+	seekpipe_read() was severely broken (end of function reached without
+	return statement. Gnah.
+
+	* src/lib/camera/camera.c, src/lib/geometry/cmodel/cmodel.c, src/lib/geomutil/crayplutil/crayBezier.c, src/lib/geomutil/crayplutil/crayInst.c, src/lib/geomutil/crayplutil/crayList.c, src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c, src/lib/geomutil/crayplutil/crayola.c, src/lib/geomutil/crayplutil/crayolaP.h, src/lib/geomutil/dim/dim.c, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/discgrp/dgdirdom.c, src/lib/gprim/discgrp/dgenum.c, src/lib/gprim/discgrp/matlist.c, src/lib/gprim/discgrp/stack.c, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/geom/extend.c, src/lib/gprim/geom/geom.h, src/lib/gprim/mesh/meshpick.c, src/lib/gprim/sphere/sphereP.h, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/tlist/tlstream.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectpick.c, src/lib/mg/common/mgtexture.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/util/futil.c, src/lib/oogl/wa/Makefile.am, src/lib/oogl/wa/fsaparse.l, src/lib/pointlist/ptlBezier.c, src/lib/shade/appearance.c, src/lib/shade/appearance.h:
+	va_args issues, sphere command works again.
+
+	* configure.ac: Bump version to 1.8.2-rc1
+
+2006-06-25  lloydwood  <lloydwood@anaxagoras>
+
+	* configure: It's INSTALL.Geomview with a capital G.
+
+	* INSTALL.Geomview, configure:
+	Updating text of documentation referring to reconf to reflect recent
+	changes by rotdrop. (It's still a good idea to direct users to the reconf
+	script, rather than just autoreconf -i, in case the reconf script needs to
+	do anything else in future.)
+
+2006-06-24  rotdrop  <rotdrop@anaxagoras>
+
+	* doc/Makefile.am:
+	Install png figures in info directory (although at least _MY_
+	emacs/xemacs cannot handle them).
+
+	* src/lib/oogl/wa/.cvsignore, doc/figs/.cvsignore:
+	Ignore some more auto-generated files.
+
+	* doc/Makefile.am: It is "dist-hook", not "distlocal".
+
+	* .cvsignore: Add geomview dist directory (created during "make dist").
+
+	* Makefile.am: Remove almost everything with "make maintainer-clean".
+
+	* .cvsignore: Ignore INSTALL (auto-generated).
+
+	* .cvsignore: Remove build/packbuild.
+
+	* acconfig.h: use new autoheader interface.
+
+	* INSTALL: Auto-generated.
+
+	* configure: Resurrect dummy configure script.
+
+	* NEWS: Update, add 1.8.2 release note (for future use).
+
+	* Makefile.am: Remove traces of old build-system.
+
+	* reconf: Just redirect to "autoreconf -i" as should be.
+
+	* build.in, packbuild.in:
+	People should use the normal "configure && make" stuff.
+
+	* .cvsignore: Ignore the tar-balls generated by "make dist".
+
+	* configure:
+	Don't keep auto-generated files in CVS. Use 'autoreconf -i' instead.
+
+	* configure.in: Renamed to configure.ac.
+
+	* configure.ac: Renamed.
+
+	* src/lib/oogl/wa/yystype.h:
+	Define YYSTYPE_IS_DECLARD, otherwise recent flex/bison combo's define
+	it to int, which is not what we want.
+
+	* src/lib/oogl/wa/fsaparse.l, src/lib/oogl/wa/fsaparse.y:
+	Include string.h (missing prototype issue).
+
+	* src/lib/oogl/wa/Makefile.am:
+	Include "BUILT_SOURCES", i.e. wa.lex.c etc into the distro. Remove stuff with "make maintainer-clean".
+
+	* src/lib/oogl/wa/wa.lex.c, src/lib/oogl/wa/y.tab.h, src/lib/oogl/lisp/clisp.h, src/bin/example/.geomview-example, src/bin/animate/.geomview-animate:
+	Not in CVS, because the maintainers can generate them.
+
+	* src/bin/geomutil/bdy/Makefile.am, src/bin/geomview/Makefile.am, src/bin/geomview/x11/Makefile.am, src/lib/oogl/lisp/Makefile.am, src/bin/animate/Makefile.am, src/bin/example/Makefile.am:
+	Make sure "make distclean" deletes everything which is not included in
+	the distributions, because that is what distclean is for.
+
+	* src/bin/geomutil/oogl2vrml/.cvsignore: Ignore oogl2vrml2
+
+	* src/bin/geomutil/bdy/.geomview-drawbdy: Generated during "make".
+
+	* m4/geom_local.m4, m4/lf_local.m4: Fix "underquoted" AC_DEFUN's
+
+	* doc/.cvsignore, doc/Makefile.am, doc/README, doc/geomview.texi:
+	Move to a recent TeXinfo release, this simplifies things a lot, even
+	support for HTML is now built into makeinfo.
+
+	* doc/figs/.cvsignore: Ignore .png, .eps, .pdf
+
+	* doc/figs/eps2pdf1.sh: Use epstopdf, if available.
+
+	* doc/figs/trefdodecinter.pdf, doc/figs/tools.pdf, doc/figs/initial.pdf, doc/figs/light.pdf, doc/figs/load.pdf, doc/figs/main.pdf, doc/figs/mat.pdf, doc/figs/myfilelist.pdf, doc/figs/save.pdf, doc/figs/secondlinelist.pdf, doc/figs/cam.pdf, doc/figs/color.pdf, doc/figs/command.pdf, doc/figs/fig2.pdf, doc/figs/ap.pdf:
+	Only keep the original PS files, everything else can be generated.
+
+	* doc/figs/color.ps, doc/figs/command.ps, doc/figs/initial.ps, doc/figs/light.ps, doc/figs/load.ps, doc/figs/main.ps:
+	Those files were in Landscape mode, unluckily. Back-converted to portrait,
+	kept care to do this pixel-wise, so the pictures should be unchanged.
+
+2006-06-23  rotdrop  <rotdrop@anaxagoras>
+
+	* configure.in: Explicitly link with -lXpm, at least I need it.
+
+2006-06-23  lloydwood  <lloydwood@anaxagoras>
+
+	* INSTALL.Geomview: Adding explanatory note about reconf use.
+
+	* reconf: Indicate revision of reconf script.
+
+	* configure: Adding some hints concerning autoreconf and automake.
+
+	* reconf:
+	autoconf presumes that any existing configure file is a good configure file.
+	So moving any existing file to configure-old first to allow a new one to be
+	created.
+
+	* configure:
+	Adding placeholder configure file as hint to new CVS users to run reconf to
+	autoconf/automake configure and Makefiles.
+
+2005-10-31  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/gprim/geom/create.c, src/lib/gprim/geom/geomclass.h:
+	Some more va_list stuff; actually, my previous patch was incomplete
+	(submitted over 18 months ago ...). Here comes the fix; the cvs
+	version should work again with with patch, even on x86 and not only on
+	x86_64 ...
+
+	See
+
+	http://gcc.gnu.org/bugzilla/show_bug.cgi?id=14557
+
+	The problem is that va_list is not only opaque, but ReallyOpaque
+	(maybe (tm)??). va_list may even be an array_type. Then in the context
+	of
+
+	foo(va_list foo)
+	{}
+
+	already is not of type "va_list" _BUT_ of type "&va_list[0]". So:
+
+	foo(va_list foo)
+	{
+		bar(&foo);
+	}
+
+	passes _NOT_ the base address of va_list to "bar()" _BUT_ the address
+	of the piece of storage which holds the parameter "foo" which is _NOT_
+	what we want (think about it!! This is JAIOCABD
+	(JustAnotherInstanceOfCArrayBrainDamegedness) Oops.
+
+	I did all this to make Geomview work on AMD64 with Linux. Actually, I
+	DO NOT like the libc implementation of va_list, but we have to cope
+	with it. Also, the changes _should_ not break archs/compilers where
+	va_list is a structure and not of array-type.
+
+	Hope this will be portable (_should_ be, but FIXME if not).
+
+	* Makefile.am:
+	Don't try to include stuff into the distro which is not there, the
+	smr_SOMETHING macros are still missing in m4/
+
+2005-02-21  mphillips  <mphillips@anaxagoras>
+
+	* reconf:
+	remove system-specific '--with-motif' option when ./configure is run
+
+2004-05-02  rotdrop  <rotdrop@anaxagoras>
+
+	* src/lib/oogl/util/seekpipe.c:
+	My previous commit did not even compile, I _very_ deeply apologize.
+
+	* src/lib/oogl/util/futil.c:
+	Binary formats where severely broken w.r.t. little-endian 64-bit
+	archs. Keep the following in mind: _NEVER_ use "long" if you mean
+	"32-bit wide". Either use bit-types defined by the OS (libc
+	header-files), or assume that int's are 32-bits (maybe wrong) and that
+	you do not have any knowledge about the size of long's.
+
+	* src/lib/oogl/util/seekpipe.c:
+	Add debugging code. To actually switch on debugging, the environment
+	variable SEEKPIPE_DEBUG has to be set (to whatever value). The name of
+	the output-file is controlled via SEEKPIPE_DEBUGFILE. The default is
+	/tmp/seekpipe-foo.
+
+	If set the data-stream will be copied to SEEKPIPE_DEBUGFILE.
+
+	* src/bin/geomview/common/comm.c:
+	On the client: Close the pipe-fd's after duping them to stdin and
+	stdout, they are no longer needed.
+
+2004-04-27  rotdrop  <rotdrop@anaxagoras>
+
+	* configure.in:
+	Set CFLAGS to -O0 when checking for math-lib, some compilers already
+	inline math-functions when used with -O2.
+
+	* ChangeLog: Update.
+
+	* src/bin/geomutil/oogl2vrml/Makefile.am, src/bin/geomutil/oogl2vrml/oogl2vrml2.c:
 	Use oogl2vrml to create an oogl->VRML 2.0 converter. Most modern
 	viewers do not understand VRML 1.0.
 
