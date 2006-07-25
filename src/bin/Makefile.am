@@ -1,5 +1,6 @@
 if HAVE_XFORMS
-XFORMS_SUBDIRS = example ginsu graffiti stereo sweep tackdown transformer
+XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti hinge \
+ stereo sweep tackdown transformer
 else
 XFORMS_SUBDIRS = 
 endif
@@ -14,7 +15,7 @@ endif
 # DIST_SUBDIRS without $(src_bin_module_subdirs).
 
 DIST_SUBDIRS = geomview \
- togeomview geomutil animate hinge flythrough cplxview \
+ togeomview geomutil animate \
  $(XFORMS_SUBDIRS)
 
 SUBDIRS = $(DIST_SUBDIRS) $(src_bin_module_subdirs)
