@@ -1,4 +1,40 @@
+2006-07-25  rotdrop  <rotdrop@anaxagoras>
+
+	* src/bin/Makefile.am:
+	hinge, cplxview and flythrough need xforms, disable when xforms is not found.
+
 2006-07-24  rotdrop  <rotdrop@anaxagoras>
+
+	* doc/Makefile.am:
+	Don't include the PS version of the manual in the distro.
+
+	* ChangeLog: Update.
+
+	* configure.ac: Fogot to apply BE patch, bump version to rc5.
+
+	* src/lib/oogl/util/futil.c, src/lib/oogl/util/iobfutil.c:
+	Finally apply _AND_ commit (!) Rex Dieter's patch.
+
+	* src/bin/stereo/stereo.c:
+	Use PoolInputFile() instead of calling iobfileopen(stdin) a second time.
+
+	* doc/Makefile.am: Fix pnm->png target.
+
+	* src/lib/oogl/wa/Makefile.am: Fix dependencies.
+
+	* doc/Makefile.am:
+	Do not use convert, doesn't work on Cygwin (at least not for me). Use
+	pnmtopng from the netpbm package.
+
+	* configure.ac: Do not search for xforms dir in source/build directory.
+
+	* configure: Do not keep it in CVS.
+
+	* README.cvs: A list of tools needed to rebuild the documentation.
+
+	* INSTALL.Geomview: Update xforms notice.
+
+c2006-07-24  rotdrop  <rotdrop@anaxagoras>
 
 	* configure.ac: Forgot to apply BE patch, bump version to rc5.
 
