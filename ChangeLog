@@ -1,5 +1,12 @@
 2006-07-25  rotdrop  <rotdrop@anaxagoras>
 
+	* configure.ac: Bump version to 1.8.2-rc6
+
+	* src/bin/Makefile.am:
+	hinge, cplxview and flythrough need xforms, disable when xforms is not found.
+
+2006-07-25  rotdrop  <rotdrop@anaxagoras>
+
 	* src/bin/Makefile.am:
 	hinge, cplxview and flythrough need xforms, disable when xforms is not found.
 
