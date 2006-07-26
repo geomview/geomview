@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.13 2006/07/24 14:38:31 rotdrop Exp $
+$Id: INSTALL.Geomview,v 1.14 2006/07/26 10:44:01 lloydwood Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -19,7 +19,8 @@ The `reconf' script in the top-level directory will regenerate the
 `configure' script, using autoreconf, part of the autoconf system.
 This is useful if no useful `configure' script is already present,
 which is normal only for copies of Geomview that have been taken
-directly from developer CVS.
+directly from developer CVS. 'reconf' requires that autoconf,
+automake, and libtool are already installed on your system.
 
 IMPORTANT NOTE: by default 'make install' will install Geomview into
 `/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
