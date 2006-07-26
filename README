@@ -1,6 +1,6 @@
-		      Geomview/OOGL Release 1.8.0
-			   November 17, 2000
-			   -----------------
+		      Geomview/OOGL Release 1.8.2
+			   July 2006
+			   ---------
 
 CONTENTS
 --------
@@ -24,7 +24,7 @@ CONTENTS
 INTRODUCTION
 ------------
                                    
-This is version 1.8 of Geomview/OOGL.  See the file NEWS for a summary
+This is version 1.8.2 of Geomview/OOGL.  See the file NEWS for a summary
 of changes in this release, and the file ChangeLog for specific
 details.
 
@@ -97,9 +97,8 @@ many 4x4 matrices.  Arbitrary portions of changing hierarchies
 may be transmitted by creating named references.
 
 Geomview can display Mathematica and Maple 3-D graphics output; for
-information on this see the files OOGL.m.doc and gvplot.doc, respectively,
+information on this see the files OOGL.m.txt and gvplot.txt, respectively,
 in the "doc" subdirectory.
-
 
 EXTERNAL MODULES
 ----------------
@@ -114,10 +113,14 @@ distribution are:
 MODULE	   	DESCRIPTION
 
 animate:	flip through a sequence of objects
+cplxview:       visualize the graphs of complex functions
 example:	generic FORMS example external module
+flythrough:     "Not Knot" visualisation
 ginsu:		interactively slice objects (see "clip")
 graffiti:	draw line segments on objects
+hinge:          "	copy-rotate" a polyhedron around edges of itself
 sweep:		generate objects of rotation from line segments
+stereo:         stereo vision module
 tackdown:	redefine an object's "home" position
 transformer:	explicitly control an object's transformation matrix
 
@@ -136,11 +139,19 @@ clip:		clip OOGL objects against planes or other surfaces
 hvectext:	produce VECT text from Ghostscript Hershey fonts
 math2oogl:	convert Mathematica graphics object to OOGL format
 offconsol:	consolidate duplicate vertices in an OFF file
-oogl2rib	convert OOGL to RenderMan RIB (see OOGL.m.doc)
+oogl2rib:	convert OOGL to RenderMan RIB (see doc/OOGL.m.txt)
+oogl2vrml:      convert OOGL to VRML version 1
+oogl2vrml2:     convert OOGL to VRML version 2
 polymerge:	merge vertices, edges, and faces in an OFF file
 togeomview:	pipe GCL commands or geometry to a copy of geomview,
 		  invoking geomview if necessary
 ucdtooff:	convert UCD format file into an OFF OOGL file
+
+
+COMPUTER ALGEBRA INTERFACES
+---------------------------
+gvplot.mapleVx: plot interface to Maple (tm). `x' is in {3, 4, 8}.
+math2oogl:	convert Mathematica graphics object to OOGL format
 
 
 DOCUMENTATION
@@ -162,8 +173,8 @@ page.  Of particular interest are:
 	man/cat1/geomview.1	geomview man page
 	man/cat5/geomview.5	geomview command language reference
 	man/cat5/oogl.5		OOGL file format reference
-	doc/OOGL.m.doc		documentation for interface to Mathematica
-	doc/gvplot.doc		documentation for interface to Maple
+	doc/OOGL.m.txt		documentation for interface to Mathematica
+	doc/gvplot.txt		documentation for interface to Maple
 
 
 GEOMVIEW E-MAIL
@@ -212,7 +223,7 @@ they named Geomview.  In the time since then, many people have
 contributed, including (in alphabetical order): Steve Anderson,
 Rex Dieter, Celeste Fowler, Claus-Justus Heine, Todd Kaplan, Daniel Krech,
 Mario Lopez, Daeron Meyer, Mark Meuer, Steve Robbins, Timothy Rowley,
-Nathaniel Thurston, Scott Wisdom, and others.
+Nathaniel Thurston, Scott Wisdom, Lloyd Wood and others.
 
 
 MISCELLANEOUS
@@ -235,12 +246,19 @@ BUG REPORTS AND COMMENTS
 ------------------------
 
 Please send bug reports and comments about Geomview to
-software@geomview.org.
+geomview-users@sourceforge.net.
 
 
 ========================================================================
+This release packed up by:
+    Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+Original notice:
+
 This release packed up by:
     Mark Phillips @ Geometry Technologies, Inc.
     Suite 550, 413 Wacouta St., St. Paul, MN 55101
     Phone: 651-223-2884  Fax: 651-292-0014
     mbp@geomtech.com       http://www.geomtech.com
+
+
