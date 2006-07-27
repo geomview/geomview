@@ -27,7 +27,7 @@
 @sp 4
 @vskip 0pt plus 1filll
 @center Copyright @copyright{} 1992-1998 The Geometry Center
-@center Copyright @copyright{} 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+@center Copyright @copyright{} 1998-2006 Stuart Levy, Tamara Munzner, Mark Phillips
 
 @end titlepage
 @page
@@ -46,7 +46,6 @@ Geomview, the interactive 3D viewing program.
 * Authors::		The Authors of Geomview.
 * Platforms::		Supported Platforms.
 * Pronunciation::	How to Pronounce ``Geomview''.
-* Register::		Let Us Hear From You.
 * Overview::		Overview of Geomview.
 * Tutorial::		Introductory Tutorial.
 * Interaction::		Interacting with Geomview.
@@ -83,14 +82,6 @@ http://www.geomview.org
 @ifhtml
 </a>
 @end ifhtml
-or
-@ifhtml
-<a href="ftp://ftp.geomview.org">
-@end ifhtml
-ftp://ftp.geomview.org
-@ifhtml
-</a>
-@end ifhtml
 
 Permission is granted to make copies of this manual.
 
@@ -99,14 +90,8 @@ consider joining in the @file{geomview-users} mailing list, which is a
 forum in which users of Geomview communicate to answer
 each others' questions and to share news about what they are doing with
 Geomview.  The Geomview authors participate in this list and sometimes
-post answers to questions there.  To join the list, send an
-empty note with 'subscribe' in the subject line to
-geomview-users-request@@lists.sourceforge.net, or visit the list web page
+post answers to questions there.  To join the list, visit the list web page
 at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
-
-If you find a bug in Geomview, please report it to the Geomview
-team by sending a note to software@@geomview.org.
-
 
 @node Distrib, Copying, Top, Top
 @unnumbered Distribution
@@ -125,8 +110,7 @@ appears following this section.
 One way to get a copy of Geomview is from someone else who has it.  You
 need not ask for our permission to do so, or tell any one else; just
 copy it.  If you have access to the Internet, you can get the latest
-distribution version of Geomview by anonymous FTP from ftp.geomview.org,
-or through your web browser at 
+distribution version of Geomview at 
 @ifhtml
 <a href="http://www.geomview.org">
 @end ifhtml
@@ -824,7 +808,7 @@ you can contribute to its development in several ways.
 
 There is also no version of Geomview for Macintosh.
 
-@node Pronunciation,Register,Platforms,Top
+@node Pronunciation,Overview,Platforms,Top
 @unnumbered How to Pronounce ``Geomview``
 
 The word 'Geomview' is a combination of the first syllable of the word
@@ -841,28 +825,12 @@ invented the name, prefer the accent-on-first-syllable
 pronunciation.
 
 
-@node Register,Overview,Pronunciation,Top
-@unnumbered Let Us Hear From You
-
-The developers of Geomview would like to find out how you are using
-Geomview.  We use this information in deciding what features to focus
-on, and in finding ways to continue to support its development.  If
-you find Geomview useful, please send us a letter telling us what you
-are doing with it.  We may include a link to your work on the
-geomview.org web site (but we'll ask you about this before doing so).
-
-Please send the letter via email to @code{register@@geomview.org}.
-
-If you are interested in contributing to the development of Geomview,
-there are several things you can do.
-@pxref{Contributing} for details.
-
 @comment
 @comment @node node-name, next, previous, up
 @comment
 
 @comment ****************************************************************
-@node Overview,Tutorial,Register,Top
+@node Overview,Tutorial,Pronunciation,Top
 @chapter Overview
 
 Geomview's main purpose is to display objects whose geometry is given,
@@ -7530,9 +7498,8 @@ at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
 @item
 Contract with Geometry Technologies for support.  Geometry Technologies
 is a contract support and programming company that emerged from the
-Geometry Center, where Geomview was written.  For more information, send
-email to info@@geomtech.com, or visit the Geometry Technologies web site
-at
+Geometry Center, where Geomview was written.  For more information
+visit the Geometry Technologies web site at
 @ifhtml
 <a href="http://www.geomtech.com">
 @end ifhtml
@@ -7554,17 +7521,11 @@ there are several things you can do:
 
 @item @strong{Volunteer programming work}.
 
-If you are a programmer and make an improvement to Geomview, contact the
-Geomview team by emailing software@@geomview.org.  In general, if you
-intend to work on Geomview very much please contact us so that we can
-coordinate your work with other development work.
+If you are a programmer and make an improvement to Geomview, contact
+the other geomview authors by sending a note to the
+@file{geomview-users} mailing list (see
+http://lists.sourceforge.net/mailman/listinfo/geomview-users).
 
-@item @strong{Volunteer documentation work}.
-
-Geomview also needs updated documentation; if you use Geomview a lot and
-are familiar with it, you can help by working on revised documentation.
-For information on this, email software@@geomview.org.
-     
 @item @strong{Contract with Geometry Technologies}.
 
 Geometry Technologies, Inc. is a consulting firm that provides contract
@@ -7594,22 +7555,8 @@ http://www.geomtech.com
 @ifhtml
 </a>
 @end ifhtml
-, or email info@@geomtech.com.
+.
      
-@item @strong{make a donation}
-
-If you want to donate money directly to support Geomview, you can send
-it to Geometry Technologies which will use it to fund Geomview
-development and to help offset other costs associated with maintaining
-Geomview. See their Geomview Contributions web page at
-@ifhtml
-<a href="http://www.geomtech.com/products/geomview/contributions">
-@end ifhtml
-http://www.geomtech.com/products/geomview/contributions
-@ifhtml
-</a>
-@end ifhtml
-for details.
 
 @end enumerate
 

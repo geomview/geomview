@@ -642,7 +642,7 @@ c2006-07-24  rotdrop  <rotdrop@anaxagoras>
         directory level at a time, so we must list the files in directory
         `a/b' before those in directory `a/b/c'.
 
-2000-11-01  Mark Phillips  <mbp@geomview.org>
+2000-11-01  Mark Phillips  <mbp@geomtech.com>
 
         * release 1.7.10 (see NEWS file for summary)
         
@@ -1163,8 +1163,6 @@ Geomview
 
 SGI Geomview (actually FORMS library)
    Add X copy/paste facility to FORMS text input fields.
-       [Source for FORMS changes is available from ftp.geomview.org
-        in pub/forms-2.0+.all.tar.gz]
 
 NeXT Geomview
    Deactivate color panel while changing its color -- don't be fooled into

@@ -1046,9 +1046,7 @@ void ui_find_visual()
   if (result == MG_X11VISFAIL) {
      OOGLError(0,
              "X-Geomview currently supports only 24, 16, 8, and 1 bit\n"
-             "\tdeep displays.  No supported display depth was found.\n"
-             "\tPlease mail the output of \"xdpyinfo\" to\n"
-             "\tsoftware@geomview.org");
+             "\tdeep displays.  No supported display depth was found.);
      exit(1);
    }
    else

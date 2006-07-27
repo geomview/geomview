@@ -1,3 +1,11 @@
+ >>  Note: This is a copy of an article announcing the initial  <<
+ >>  release of Geomview that appeared in the Geometry Center   <<
+ >>  newsletter around 1993.  It is included in the Geomview    <<
+ >>  distribution for historical purposes.  The email and ftp   <<
+ >>  addresses listed in the article are no longer valid; all   <<
+ >>  Geomview material is now available from the Geomview web   <<
+ >>  site at http://www.geomview.org.                           <<
+
 The staff of the Geometry Center is proud to announce release 1.3 of
 geomview, an interactive viewer for 3- and 4-D geometric objects built
 on OOGL, an object-oriented geometry library.  Geomview is loosely a

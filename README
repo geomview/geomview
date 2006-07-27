@@ -1,6 +1,6 @@
-		      Geomview/OOGL Release 1.8.2
-			   July 2006
-			   ---------
+		     Geomview/OOGL Release 1.8.2
+			      July 2006
+			      ---------
 
 CONTENTS
 --------
@@ -48,18 +48,11 @@ http://lists.sourceforge.net/mailman/listinfo/geomview-users.
 NOTE TO USERS OF PREVIOUS GEOMVIEW VERSIONS
 -------------------------------------------
 
-If you used an older version of Geomview (in the 1.6 or earlier
-release series, from the Geometry Center) you may notice that this
-release is missing some things that were in previous releases.  In
-particular several of the external modules that used to come with
-Geomview are not in this release.  That's simply because they haven't
-been ported to the new GNU-autoconf Makefile system.  You can still
-download previous Geomview releases from
-ftp://ftp.geom.umn.edu/pub/software/geomview, and with some of these
-modules it may be a simple matter to port them.  If you port one to
-the new Makefile system, contact me [mbp@geomtech.com] and I'll
-include it in a future Geomview release.
-
+If you're a user of a really old (version 1.6 or earlier) version of
+Geomview and you're looking for some of the external modules that were
+included in the older versions but that are not present in this
+release, you can still download the old versions of Geomview from
+http://www.geom.uiuc.edu/software/download/geomview.html.
 
 INSTALLATION
 ------------
@@ -177,11 +170,8 @@ page.  Of particular interest are:
 	doc/gvplot.txt		documentation for interface to Maple
 
 
-GEOMVIEW E-MAIL
----------------
-
-There are three electronic mail addresses for communication
-regarding geomview:
+GEOMVIEW MAILING LIST
+---------------------
 
 geomview-users@lists@sourceforge.net
 
@@ -190,25 +180,13 @@ geomview-users@lists@sourceforge.net
     questions, experiences, etc.  The geomview authors are also a part
     of this list and sometimes respond to questions posted to it.  We
     also use this list to make announcements about new releases and
-    other things of interest to users.  To join the list, send an
-    empty note with 'subscribe' in the subject line to
-    geomview-users-request@lists.sourceforge.net, or visit the list
+    other things of interest to users.  To join the list, go the list
     web page at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
 
-software@geomview.org
+GEOMVIEW WEB SITE
+-----------------
 
-    This is the "official" bug-reporting address.  Please send notes
-    about any bugs you find to this address.
-
-register@geomview.org
-
-    Use this address to tell us what you are doing with Geomview.  If
-    you use Geomview in your work please send us a note at this
-    address telling us what you are doing with it.  We're always
-    interested to hear about new applications of Geomview, and we may
-    include a link on www.geomview.org to your work (but we'll check
-    with you first before doing this).
-
+The geomview web site is http://www.geomview.org.
 
 HISTORY
 -------
@@ -252,13 +230,3 @@ geomview-users@sourceforge.net.
 ========================================================================
 This release packed up by:
     Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>
-
-Original notice:
-
-This release packed up by:
-    Mark Phillips @ Geometry Technologies, Inc.
-    Suite 550, 413 Wacouta St., St. Paul, MN 55101
-    Phone: 651-223-2884  Fax: 651-292-0014
-    mbp@geomtech.com       http://www.geomtech.com
-
-

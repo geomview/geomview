@@ -2186,8 +2186,7 @@ static void delete_geometry(DGeom *dg)
   case ALIEN:
     if (ListRemove(drawerstate.universe, dg->Item) != drawerstate.universe) {
       OOGLError(0, "\
-head of the universe changed --- this shouldn't happen; please send email\n\
-to software@geomview.org notifying us of this problem!");
+head of the universe changed --- this shouldn't happen; please report this bug!");
     }
     break;
   default: ; /* This should never happen */

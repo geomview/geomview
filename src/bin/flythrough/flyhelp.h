@@ -86,9 +86,9 @@ but slow).\n\
 \n\
 \n\
 Authors:	\n\
-Charlie Gunn  	(geometry and flight paths)	gunn@geomview.org\n\
-Tamara Munzner	(interactive interface)		munzner@geomview.org\n\
-Stuart Levy	(3D diagram)				levy@geomview.org\n\
+Charlie Gunn  	(geometry and flight paths)\n\
+Tamara Munzner	(interactive interface)\n\
+Stuart Levy	(3D diagram)\n\
 \n\
 Copyright (c) 1992\n\
 The Geometry Center\n\
