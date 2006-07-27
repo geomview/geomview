@@ -5,7 +5,7 @@ AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
-AC_PREFIX_DEFAULT([/usr/local/Geomview])
+#AC_PREFIX_DEFAULT([/usr/local/Geomview])
 
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])
@@ -358,14 +358,24 @@ Default to int])
 
 # If --with-motif=DIR was specified, set MOTIF_DIR to DIR
 AC_ARG_WITH(motif,
-	    [  --with-motif=DIR        set DIR to motif installation prefix],
-	    MOTIF_DIR=$withval
-           )
+  AC_HELP_STRING([--with-motif=DIR], [set DIR to motif installation prefix]),
+  [MOTIF_DIR=$withval])
 
 AC_ARG_WITH(opengl,
-	    [  --with-opengl=DIR       set DIR to opengl installation prefix],
-	    OPENGL_DIR=$withval
-           )
+  AC_HELP_STRING([--with-opengl=DIR], [set DIR to opengl installation prefix]),
+  [OPENGL_DIR=$withval])
+
+AC_ARG_WITH(xforms,
+  AC_HELP_STRING([--with-xforms=DIR], [set DIR to xforms installation dir]),
+  [
+if test "$withval" = "no" ; then
+    TRY_XFORMS=false
+else
+    TRY_XFORMS=true
+    XFORMS_DIR=$withval
+fi
+  ],
+  [TRY_XFORMS=true])
 
 ########################################################################
 
@@ -533,21 +543,6 @@ AC_DEFINE_UNQUOTED([MGX11],${MGX11},
 
 ########################################################################
 
-AC_ARG_WITH(xforms,
-	    [  --with-xforms=DIR       set DIR to xforms installation dir],
-	    [ if test "$withval" = "no" ; then
-                TRY_XFORMS=false
-              else
-                TRY_XFORMS=true
-                XFORMS_DIR=$withval
-              fi ;
-            ],
-            [ TRY_XFORMS=true ]
-           )
-
-########################################################################
-########################################################################
-########################################################################
 AC_MSG_CHECKING([for xforms])
 
 AC_CACHE_VAL(ac_cv_have_xforms,
@@ -613,6 +608,15 @@ XFORMSLIBS=$ac_xforms_libs
 
 AC_SUBST(XFORMSINCLUDE)
 AC_SUBST(XFORMSLIBS)
+
+########################################################################
+
+# Check for Tcl/Tk with new CHECK_PACKAGE macro:
+
+GEOMVIEW_CHECK_PACKAGE(tcl, tcl, ${x_libraries}, ${XLIBS}, tcl.h, , ,optional)
+GEOMVIEW_CHECK_PACKAGE(tk, tk, ${x_libraries}, ${XLIBS}, tk.h, , ,optional)
+
+AM_CONDITIONAL(HAVE_TCLTK, [test -n TCL_LIB && test -n TK_LIB])
 
 ########################################################################
 
@@ -700,10 +704,10 @@ AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
 ########################################################################
 
-moduledir="\$(exec_prefix)/bin"
+moduledir="\$(libexecdir)/geomview"
 AC_SUBST(moduledir)
 
-geomdatadir="\$(prefix)/data"
+geomdatadir="\$(pkgdatadir)/data"
 AC_SUBST(geomdatadir)
 
 # cache 'moduledir' and 'geomdatadir' so individual module configure scripts
@@ -909,8 +913,12 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomview/x11/Makefile
 	  src/bin/geomview/x11/bitmaps/Makefile
 	  src/bin/geomview/x11/interface/Makefile
+	  src/bin/crayola/Makefile
 	  src/bin/example/Makefile
 	  src/bin/ginsu/Makefile
+	  src/bin/gvclock/gvclock
+	  src/bin/gvclock/Makefile
+	  src/bin/labeler/Makefile
 	  src/bin/tackdown/Makefile
 	  src/bin/animate/Makefile
 	  src/bin/animate/interface/Makefile
@@ -920,6 +928,8 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomutil/Makefile
 	  src/bin/geomutil/bdy/Makefile
 	  src/bin/geomutil/clip/Makefile
+	  src/bin/geomutil/hvectext/Makefile
+	  src/bin/geomutil/hvectext/hvectext
 	  src/bin/geomutil/maple2oogl/Makefile
 	  src/bin/geomutil/math2oogl/Makefile
 	  src/bin/geomutil/oogl2rib/Makefile

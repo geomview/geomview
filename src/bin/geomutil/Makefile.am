@@ -5,4 +5,4 @@ VRML2OOGL =
 endif
 
 SUBDIRS = bdy maple2oogl oogl2rib plutil $(VRML2OOGL) \
-	  clip math2oogl oogl2vrml ucd
+	  clip math2oogl oogl2vrml ucd hvectext

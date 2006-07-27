@@ -12,5 +12,3 @@ clip_LDFLAGS = -rpath $(libdir)
 
 LDADD = $(STUBLIB) $(OOGLLIB)
 
-#	$(top_builddir)/src/lib/geomutil/libgeomutil.a \
-#

@@ -4,6 +4,8 @@ LDADD = $(XFORMSLIBS)	\
 	$(XLIBS)	\
 	$(OOGLLIB)
 
+man_MANS = ginsu.1
+
 EXTRA_DIST = .geomview-ginsu ginsu.1 ginsuF.fd
 
 module_PROGRAMS = ginsu

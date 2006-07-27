@@ -1,5 +1,7 @@
-XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti hinge \
+XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti gvclock hinge \
  stereo sweep tackdown transformer
+
+TCLTK_SUBDIRS = crayola labeler
 
 # Geomview's top-level configure script sets $(src_bin_module_subdirs)
 # to the list of subdirectories of this directory (src/bin) that have
@@ -12,10 +14,14 @@ XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti hinge \
 
 NORMAL_SUBDIRS = geomview togeomview geomutil animate
 
-DIST_SUBDIRS = $(NORMAL_SUBDIRS) $(XFORMS_SUBDIRS)
+DIST_SUBDIRS = $(NORMAL_SUBDIRS) $(XFORMS_SUBDIRS) $(TCLTK_SUBDIRS)
 
 SUBDIRS = $(NORMAL_SUBDIRS) $(src_bin_module_subdirs)
 
 if HAVE_XFORMS
 SUBDIRS += $(XFORMS_SUBDIRS)
+endif
+
+if HAVE_TCLTK
+SUBDIRS += $(TCLTK_SUBDIRS)
 endif
