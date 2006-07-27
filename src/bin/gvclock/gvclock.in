@@ -1,0 +1,170 @@
+#! /bin/sh
+
+exec date | \
+@AWK@ '
+{
+    unitcube = \
+	"OFF\n" \
+	"8 6 0\n" \
+	"-1 -1 -1\n" \
+	"1 -1 -1\n" \
+	"1 1 -1\n" \
+	"-1 1 -1\n" \
+	"-1 -1 1\n" \
+	"1 -1 1\n" \
+	"1 1 1\n" \
+	"-1 1 1\n" \
+	"4 0 1 2 3\n" \
+	"4 4 5 6 7\n" \
+	"4 0 4 7 3\n" \
+	"4 0 1 5 4\n" \
+	"4 1 5 6 2\n" \
+	"4 2 6 7 3\n";
+
+  printf("(progn ")
+
+  # Print out the clock face
+  printf("(geometry face { LIST ");
+  printf("{ INST unit { OFF 8 6 0 \n")
+  printf("-.05 .9 -.3\n")
+  printf(".05 .9 -.3\n")
+  printf(".05 1.1 -.3\n")
+  printf("-.05 1.1 -.3\n")
+  printf("-.05 .9 -.1\n")
+  printf(".05 .9 -.1\n")
+  printf(".05 1.1 -.1\n")
+  printf("-.05 1.1 -.1\n")
+  printf("4 0 1 2 3\n")
+  printf("4 4 5 6 7\n")
+  printf("4 0 4 7 3\n")
+  printf("4 0 1 5 4\n")
+  printf("4 1 5 6 2\n")
+  printf("4 2 6 7 3\n")
+  printf("}\ntlist\n")
+
+  # Not all versions of awk have sin/cos functions, so...
+  split("0 .5 .866 1 .866 .5", table);
+  for(i = 0; i < 6; i++) { sn[i] = table[i+1];  sn[i+6] = -sn[i]; }
+  for(i = 0; i < 12; i++) cs[i] = sn[(i+3) % 12];
+
+  for (i = 1; i < 12; ++i) {
+    # ang = i * 3.14159 / 6.0;
+    printf("%g %g 0 0\n", cs[i], -sn[i]);
+    printf("%g %g 0 0\n", sn[i], cs[i]);
+    printf("0 0 1 0\n");
+    printf("0 0 0 1\n\n");
+  }
+  printf("}\n");
+  printf("{appearance {material {diffuse 0 .75 .75}}");
+  printf("INST\n");
+  printf("unit OFF\n");
+  printf("20 12 30\n");
+  printf("	1.214124 0.000000 1.589309\n");
+  printf("	0.375185 1.154701 1.589309\n");
+  printf("	-0.982247 0.713644 1.589309\n");
+  printf("	-0.982247 -0.713644 1.589309\n");
+  printf("	0.375185 -1.154701 1.589309\n");
+  printf("	1.964494 0.000000 0.375185\n");
+  printf("	0.607062 1.868345 0.375185\n");
+  printf("	-1.589309 1.154701 0.375185\n");
+  printf("	-1.589309 -1.154701 0.375185\n");
+  printf("	0.607062 -1.868345 0.375185\n");
+  printf("	1.589309 1.154701 -0.375185\n");
+  printf("	-0.607062 1.868345 -0.375185\n");
+  printf("	-1.964494 0.000000 -0.375185\n");
+  printf("	-0.607062 -1.868345 -0.375185\n");
+  printf("	1.589309 -1.154701 -0.375185\n");
+  printf("	0.982247 0.713644 -1.589309\n");
+  printf("	-0.375185 1.154701 -1.589309\n");
+  printf("	-1.214124 0.000000 -1.589309\n");
+  printf("	-0.375185 -1.154701 -1.589309\n");
+  printf("	0.982247 -0.713644 -1.589309\n");
+  printf("	5 0 1 2 3 4\n");
+  printf("	5 0 5 10 6 1\n");
+  printf("	5 1 6 11 7 2\n");
+  printf("	5 2 7 12 8 3\n");
+  printf("	5 3 8 13 9 4\n");
+  printf("	5 4 9 14 5 0\n");
+  printf("	5 15 10 5 14 19\n");
+  printf("	5 16 11 6 10 15\n");
+  printf("	5 17 12 7 11 16\n");
+  printf("	5 18 13 8 12 17\n");
+  printf("	5 19 14 9 13 18\n");
+  printf("	5 19 18 17 16 15\n");
+  printf("transform\n");
+  printf("0.07  0  0    0\n");
+  printf("0   0.07  0   0\n");
+  printf("0  0   0.07   0\n");
+  printf("0 1 -.2 1\n");
+  printf("}\n");
+
+  printf("  })\n");
+
+
+  # Hour hand
+  printf("(geometry hour { INST unit {")
+  print unitcube;
+  printf("}\n")
+  printf("tlist\n")
+  printf(".12 0 0 0\n")
+  printf("0 .28 0 0\n")
+  printf("0 0 .05 0\n")
+  printf("0 .22 0 1\n");
+  printf("})")
+
+  # Minute hand
+  printf("(geometry minute { INST unit {")
+  print unitcube;
+  printf("}\n")
+  printf("tlist\n")
+  printf(".07 0 0 0\n")
+  printf("0 .55 0 0\n")
+  printf("0 0 .05 0\n")
+  printf("0 .45 .1 1\n")
+  printf("})\n");
+
+  # Second hand
+  printf("(geometry second { INST unit {")
+  print unitcube;
+  printf("}\n")
+  printf("tlist\n")
+  printf(".02 0 0 0\n")
+  printf("0 .6 0 0\n")
+  printf("0 0 .05 0\n")
+  printf("0 .45 .2 1\n")
+  printf("})\n");
+
+  printf("(normalization face none)")
+  printf("(normalization hour none)")
+  printf("(normalization minute none)")
+  printf("(normalization second none)")
+
+  printf("(bbox-draw face no)")
+  printf("(bbox-draw hour no)")
+  printf("(bbox-draw minute no)")
+  printf("(bbox-draw second no)")
+
+  printf("(merge-ap face {appearance +edge material { diffuse 0 0 .7}})")
+  printf("(merge-ap hour {appearance +edge material { diffuse .54 .15 1}})")
+  printf("(merge-ap minute {appearance +edge material { diffuse .13 .82 .51}})")
+  printf("(merge-ap second {appearance +edge material { diffuse .82 0 0 }})")
+
+  time = substr($4, 7, 2) + 0.0;
+  printf("(transform-set second world world rotate 0 0 %g)", \
+    -(time / 60.0) * 3.14159 * 2.0);
+
+  time = time + (substr($4, 4, 2) + 0.0)*60.0;
+  printf("(transform-set minute world world rotate 0 0 %g)", \
+    -(time / 3600.0) * 3.14159 * 2.0);
+
+  time += (substr($4, 1, 2)%12) * 3600.0;
+  printf("(transform-set hour world world rotate 0 0 %g)", \
+    -(time / 43200.0) * 3.14159 * 2.0);
+
+  printf("(transform-incr hour world world rotate 0 0 -3.14159 21600)")
+  printf("(transform-incr minute world world rotate 0 0 -3.14159 1800)")
+  printf("(transform-incr second world world rotate 0 0 -3.14159 30)")
+
+  printf(")")
+}
+'

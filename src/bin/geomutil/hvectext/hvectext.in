@@ -1,0 +1,513 @@
+:
+eval 'exec perl -S $0 ${1+"$@"}'
+                      if $running_under_some_shell;
+
+# Copyright (c) 1995, Geometry Center, University of Minnesota
+# Script by Stuart Levy, Geometry Center.
+# Uses Hershey fonts as encoded for Ghostscript.
+# This program may be freely used and redistributed so long as
+# this notice remains.
+
+# Configurable value: if you have Ghostscript Hershey fonts installed on your
+# system, you might want to set $gsfontdir to the directory where they live.
+# "-hershey" will seek files there if not found relative to ".".
+# This could be a colon-separated list of directories.
+
+$gsfontpath = $ENV{"GS_FONTPATH"} || "/usr/local/lib/ghostscript/fonts";
+
+
+if (@ARGV == 0) {
+	print STDERR 
+"Usage: $0  [-w totallength] [-s textheight] [-plane xy|xz|yz] [-at X Y Z]
+	[-hershey fontfile.gsf] [-align n|s|e|w|ne|nw|se|sw|c] [--] text string
+
+Generate geomview/OOGL vector-text object, of given height or total length
+(default -s .25), aligning the given corner of the text
+(default -align c (centered)) at given point (default -at 0 0 0).
+Accepts Ghostscript Hershey fonts; built-in default is Hershey-Plain-Simplex.
+";
+	exit(1);
+}
+
+@at = (0,0,0);
+
+$ujust = -.5, $vjust = -.5;
+$uaxis = 0, $vaxis = 1;
+%ax = ('x',0, 'y',1, 'z',2,
+       0,'x', 1,'y', 2,'z');
+
+($cmdline = join(" ", $0, @ARGV)) =~ s/[\000-\031\177-\377]/sprintf("\\%03o",unpack("C",$1))/eg;
+
+while(@ARGV) {
+    if($ARGV[0] =~ /^-w/) {
+	shift, $totallen = shift;
+    } elsif($ARGV[0] =~ /^-s/) {
+	shift, $height = shift;
+    } elsif($ARGV[0] =~ /^-pl?a?n?e?/) {
+	shift, $plane = shift;
+	$plane =~ tr/XYZ/xyz/;
+	$uaxis = $ax{substr($plane,0,1)};
+	$vaxis = $ax{substr($plane,1,1)};
+	unless ($uaxis != $vaxis && defined($uaxis) && defined($vaxis)) {
+	    print STDERR
+	      "$0: -plane: Expected \"xy\" or \"yz\" or \"xz\", not $plane.\n";
+	    exit(0);
+	}
+    } elsif($ARGV[0] =~ /^-ali?g?n?/) {
+	shift, $align = shift;
+	$ujust = $vjust = -.5;
+	$ujust = -1 if $align =~ /e/i;
+	$ujust = 0 if $align =~ /w/i;
+	$vjust = -1 if $align =~ /n/i;
+	$vjust = 0 if $align =~ /s/i;
+	unless($align =~ /^[nsewc]+$/i) {
+	    print STDERR
+	      "$0: -align: Expected some combination of letters n s e w c\n";
+	    exit(1);
+	}
+    } elsif($ARGV[0] =~ /^-at/) {
+	shift, @at = (shift,shift,shift);
+    } elsif($ARGV[0] =~ /^-her?s?h?e?y?/) {
+	shift, $gsfont = shift;
+	unless (-f $gsfont) {
+	   foreach $_ (split(":", $gsfontpath)) {
+		($gsfont = $_), last if -f ($_ .= "/" . $gsfont);
+	   }
+	}
+    } elsif($ARGV[0] =~ /^--/) {
+	shift, last;
+    } else {
+	last;
+    }
+}
+
+$chars{"space"} = " ";
+while(<DATA>) {
+    if(/CHARS/ .. /ENDCHARS/) {
+	($name, $char) = split;
+	$chars{$name} = $char if length($char) == 1;
+    }
+    last if /^%END/;
+}
+
+if($gsfont) {
+   local($_, $any);
+   $any = open(INF, $gsfont);
+   while(<INF>) {
+	last if /%END/;
+   }
+   if(/%END/) {
+	$INF = 'INF';
+   } else {
+	print STDERR $any
+	  ? "$gsfont isn't a Ghostscript Hershey font -- no %END tag found.\n"
+	  : "Can't open Ghostscript Hershey font file $gsfont, using default.\n";
+	$INF = 'DATA';
+   }
+} else {
+   $INF = 'DATA';
+}
+
+
+$aspect = .67;	# Width/height of typical character
+$fontscale = 1/33.;	# Hershey magic scale factor
+while(<$INF>) {
+    ($char, $xmin, $width, $codes) = (m'^/(\S+)\s*\[(\S+) (\S+) \(([^)]*)');
+    $char = $chars{$char} if length($char) > 1;
+    next unless defined($char);
+    $code{$char} = "$xmin,$width,$codes";
+}
+
+$string = join(" ", @ARGV);
+
+(print STDERR "$0: No string given?\n"), exit(1)
+    unless $string ne "";
+
+%escapes = ("n", "\n", "b", "\b", "r", "\r", "e", "\e");
+
+$string =~ s/\\([^0-7])/defined($escapes{$1}) ? $escapes{$1} : $1/eg;
+$string =~ s/\\([0-7][0-7]?[0-7]?)/pack("C",oct($1))/eg;
+
+$stringwidth = 0;
+
+foreach $char (split("", $string)) {
+   ($xmin,$xmax) = ($code{$char} =~ /([^,]+),([^,]+)/);
+   $stringwidth += $xmax - $xmin;
+}
+$stringwidth = 1 unless $stringwidth;
+
+if($totallen) {
+   $strscale = $totallen / $stringwidth;
+   $height = $strscale * $aspect / $fontscale;
+} else {
+   $height = 0.25 unless($height>0);
+   $strscale = $fontscale * $height / $aspect;
+   $totallen = $strscale * $stringwidth;
+}
+
+
+@path = ();
+@counts = ();
+
+# Interpret chars in string.
+
+# Apply justification offset
+$at[$uaxis] += $ujust * $totallen;
+$at[$vaxis] += $vjust * $height;
+
+foreach $ch (split("", $string)) {
+    ($xmin, $xmax, $paths) = split(",", $code{$ch});
+    $paths =~ s/\\([()\\])/$1/g;
+    foreach $arc (split(' ', $paths)) {
+	$u0 = -82-$xmin;
+	$v0 = -91;
+	@sites = unpack("C*",$arc);
+	printf STDERR "$0: internal error: tossing odd stroke for %s: '%s'\n", $ch, pop(@sites)
+		if(@sites & 1);
+	push(@counts, ($#sites+1)/2);
+	while($u = shift(@sites)) {
+	    $v = shift(@sites);
+	    @here = @at;
+	    $here[$uaxis] += $strscale*($u+$u0);
+	    $here[$vaxis] -= $strscale*($v+$v0);
+	    push(@path, sprintf("%.7g %.7g %.7g", @here));
+	}
+    }
+    $at[$uaxis] += $strscale*($xmax-$xmin);
+}
+
+($safestring = $string) =~
+	s/[\000-\031\177-\377]/sprintf("\\%03o",unpack("C",$1))/eg;
+
+printf "# Continue with: -align sw -plane %s%s -s %.6g -at %.6g %.6g %.6g\n",
+	$ax{$uaxis}, $ax{$vaxis}, $height, @at;
+
+if(@counts > 0) {
+    print "VECT  # $safestring\n";
+    printf "%d %d 0 # %s\n", $#counts+1, ($#path+1), $cmdline;
+    print join(" ",@counts),"\n";
+    print "0 " x ($#counts+1), "\n\n";
+
+    while(@path) {
+	print shift(@path), "\n";
+    }
+} else {
+    print "{ # $safestring\n";
+    print "} # $cmdline\n";
+}
+
+
+__END__
+
+CHARS
+exclam !
+quotedbl "
+numbersign #
+dollar $
+percent %
+ampersand &
+quotesingle '
+parenleft (
+parenright )
+asterisk *
+plus +
+comma ,
+hyphen -
+period .
+slash /
+zero 0
+one 1
+two 2
+three 3
+four 4
+five 5
+six 6
+seven 7
+eight 8
+nine 9
+colon :
+semicolon ;
+less <
+equal =
+greater >
+question ?
+bracketleft [
+backslash \
+bracketright ]
+asciicircum ^
+underscore _
+quoteleft `
+braceleft {
+bar |
+braceright }
+asciitilde ~
+tilde ~
+universal "
+existential $
+suchthat '
+asteriskmath *
+congruent @
+Alpha A
+Beta B
+Chi C
+Delta D
+Epsilon E
+Phi F
+Gamma G
+Eta H
+Iota I
+theta1 J
+Kappa K
+Lambda L
+Mu M
+Nu N
+Omicron O
+Pi P
+Theta Q
+Rho R
+Sigma S
+Tau T
+Upsilon U
+sigma1 V
+Omega W
+Xi X
+Psi Y
+Zeta Z
+therefore \
+perpendicular ^
+radicalex `
+alpha a
+beta b
+chi c
+delta d
+epsilon e
+phi f
+gamma g
+eta h
+iota i
+phi1 j
+kappa k
+lambda l
+mu m
+nu n
+omicron o
+pi p
+theta q
+rho r
+sigma s
+tau t
+upsilon u
+omega1 v
+omega w
+xi x
+psi y
+zeta z
+similar ~
+Upsilon1 ¡
+minute ¢
+lessequal £
+fraction ¤
+infinity ¥
+florin ¦
+club §
+diamond ¨
+heart ©
+spade ª
+arrowboth «
+arrowleft ¬
+arrowup ­
+arrowright ®
+arrowdown ¯
+degree °
+plusminus ±
+second ²
+greaterequal ³
+multiply ´
+proportional µ
+partialdiff ¶
+bullet ·
+divide ¸
+notequal ¹
+equivalence º
+approxequal »
+ellipsis ¼
+arrowvertex ½
+arrowhorizex ¾
+carriagereturn ¿
+aleph À
+Ifraktur Á
+Rfraktur Â
+weierstrass Ã
+circlemultiply Ä
+circleplus Å
+emptyset Æ
+intersection Ç
+union È
+propersuperset É
+reflexsuperset Ê
+notsubset Ë
+propersubset Ì
+reflexsubset Í
+element Î
+notelement Ï
+angle Ð
+gradient Ñ
+registerserif Ò
+copyrightserif Ó
+trademarkserif Ô
+product Õ
+radical Ö
+dotmath ×
+logicalnot Ø
+logicaland Ù
+logicalor Ú
+arrowdblboth Û
+arrowdblleft Ü
+arrowdblup Ý
+arrowdblright Þ
+arrowdbldown ß
+lozenge à
+angleleft á
+registersans â
+copyrightsans ã
+trademarksans ä
+summation å
+parenlefttp æ
+parenleftex ç
+parenleftbt è
+bracketlefttp é
+bracketleftex ê
+bracketleftbt ë
+bracelefttp ì
+braceleftmid í
+braceleftbt î
+braceex ï
+angleright ñ
+integral ò
+integraltp ó
+integralex ô
+integralbt õ
+parenrighttp ö
+parenrightex ÷
+parenrightbt ø
+bracketrighttp ù
+bracketrightex ú
+bracketrightbt û
+bracerighttp ü
+bracerightmid ý
+bracerightbt þ
+ENDCHARS
+
+# Now for our default font.
+# Boilerplate header from Ghostscript font hrpl_s.gsf omitted.
+%END
+
+150 dict dup begin
+/A [-8 9 (RFJ[ RFZ[ MTWT)] def
+/B [-10 10 (KFK[ KFTFWGXHYJYLXNWOTP KPTPWQXRYTYWXYWZT[K[)] def
+/C [-9 11 (ZKYIWGUFQFOGMILKKNKSLVMXOZQ[U[WZYXZV)] def
+/D [-10 10 (KFK[ KFRFUGWIXKYNYSXVWXUZR[K[)] def
+/E [-9 9 (LFL[ LFYF LPTP L[Y[)] def
+/F [-9 8 (LFL[ LFYF LPTP)] def
+/G [-9 11 (ZKYIWGUFQFOGMILKKNKSLVMXOZQ[U[WZYXZVZS USZS)] def
+/H [-10 11 (KFK[ YFY[ KPYP)] def
+/I [-3 4 (RFR[)] def
+/J [-7 8 (VFVVUYTZR[P[NZMYLVLT)] def
+/K [-10 10 (KFK[ YFKT POY[)] def
+/L [-9 7 (LFL[ L[X[)] def
+/M [-11 12 (JFJ[ JFR[ ZFR[ ZFZ[)] def
+/N [-10 11 (KFK[ KFY[ YFY[)] def
+/O [-10 11 (PFNGLIKKJNJSKVLXNZP[T[VZXXYVZSZNYKXIVGTFPF)] def
+/P [-10 10 (KFK[ KFTFWGXHYJYMXOWPTQKQ)] def
+/Q [-10 11 (PFNGLIKKJNJSKVLXNZP[T[VZXXYVZSZNYKXIVGTFPF SWY])] def
+/R [-10 10 (KFK[ KFTFWGXHYJYLXNWOTPKP RPY[)] def
+/S [-9 10 (YIWGTFPFMGKIKKLMMNOOUQWRXSYUYXWZT[P[MZKX)] def
+/T [-8 8 (RFR[ KFYF)] def
+/U [-11 11 (KFKULXNZQ[S[VZXXYUYF)] def
+/V [-9 10 (JFR[ ZFR[)] def
+/W [-13 12 (HFM[ RFM[ RFW[ \\FW[)] def
+/X [-10 10 (KFY[ YFK[)] def
+/Y [-9 9 (JFRPR[ ZFRP)] def
+/Z [-10 10 (YFK[ KFYF K[Y[)] def
+/a [-8 10 (XMX[ XPVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/b [-9 9 (LFL[ LPNNPMSMUNWPXSXUWXUZS[P[NZLX)] def
+/c [-8 9 (XPVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/d [-8 10 (XFX[ XPVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/e [-8 9 (LSXSXQWOVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/f [-4 7 (WFUFSGRJR[ OMVM)] def
+/g [-8 10 (XMX]W`VaTbQbOa XPVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/h [-8 10 (MFM[ MQPNRMUMWNXQX[)] def
+/i [-3 4 (QFRGSFREQF RMR[)] def
+/j [-4 5 (RFSGTFSERF SMS^RaPbNb)] def
+/k [-8 8 (MFM[ WMMW QSX[)] def
+/l [-3 4 (RFR[)] def
+/m [-14 15 (GMG[ GQJNLMOMQNRQR[ RQUNWMZM\\N]Q][)] def
+/n [-8 10 (MMM[ MQPNRMUMWNXQX[)] def
+/o [-8 10 (QMONMPLSLUMXOZQ[T[VZXXYUYSXPVNTMQM)] def
+/p [-9 9 (LMLb LPNNPMSMUNWPXSXUWXUZS[P[NZLX)] def
+/q [-8 10 (XMXb XPVNTMQMONMPLSLUMXOZQ[T[VZXX)] def
+/r [-6 7 (OMO[ OSPPRNTMWM)] def
+/s [-7 9 (XPWNTMQMNNMPNRPSUTWUXWXXWZT[Q[NZMX)] def
+/t [-5 7 (RFRWSZU[W[ OMVM)] def
+/u [-8 10 (MMMWNZP[S[UZXW XMX[)] def
+/v [-7 8 (LMR[ XMR[)] def
+/w [-11 11 (JMN[ RMN[ RMV[ ZMV[)] def
+/x [-7 9 (MMX[ XMM[)] def
+/y [-7 8 (LMR[ XMR[P_NaLbKb)] def
+/z [-7 9 (XMM[ MMXM M[X[)] def
+/zero [-10 10 (QFNGLJKOKRLWNZQ[S[VZXWYRYOXJVGSFQF)] def
+/one [-10 10 (NJPISFS[)] def
+/two [-10 10 (LKLJMHNGPFTFVGWHXJXLWNUQK[Y[)] def
+/three [-10 10 (MFXFRNUNWOXPYSYUXXVZS[P[MZLYKW)] def
+/four [-10 10 (UFKTZT UFU[)] def
+/five [-10 10 (WFMFLOMNPMSMVNXPYSYUXXVZS[P[MZLYKW)] def
+/six [-10 10 (XIWGTFRFOGMJLOLTMXOZR[S[VZXXYUYTXQVOSNRNOOMQLT)] def
+/seven [-10 10 (YFO[ KFYF)] def
+/eight [-10 10 (PFMGLILKMMONSOVPXRYTYWXYWZT[P[MZLYKWKTLRNPQOUNWMXKXIWGTFPF)] def
+/nine [-10 10 (XMWPURRSQSNRLPKMKLLINGQFRFUGWIXMXRWWUZR[P[MZLX)] def
+/period [-5 5 (RYQZR[SZRY)] def
+/comma [-5 5 (SZR[QZRYSZS\\R^Q_)] def
+/colon [-5 5 (RMQNROSNRM RYQZR[SZRY)] def
+/semicolon [-5 5 (RMQNROSNRM SZR[QZRYSZS\\R^Q_)] def
+/exclam [-7 7 (RFRT RYQZR[SZRY)] def
+/question [-9 9 (LKLJMHNGPFTFVGWHXJXLWNVORQRT RYQZR[SZRY)] def
+/quotedbl [-8 8 (NFNM VFVM)] def
+/ring [-7 7 (QFOGNINKOMQNSNUMVKVIUGSFQF)] def
+/dollar [-10 10 (PBP_ TBT_ YIWGTFPFMGKIKKLMMNOOUQWRXSYUYXWZT[P[MZKX)] def
+/fraction [-11 11 ([BIb)] def
+/parenleft [-7 5 (VBTDRGPKOPOTPYR]T`Vb)] def
+/parenright [-5 7 (NBPDRGTKUPUTTYR]P`Nb)] def
+/bar [-4 4 (RBRb)] def
+/hyphen [-13 13 (IR[R)] def
+/plus [-13 13 (RIR[ IR[R)] def
+/equal [-13 13 (IO[O IU[U)] def
+/periodcentered [-5 5 (RQQRRSSRRQ)] def
+/quoteleft [-5 5 (SFRGQIQKRLSKRJ)] def
+/quoteright [-5 5 (RHQGRFSGSIRKQL)] def
+/numbersign [-10 11 (SBLb YBRb LOZO KUYU)] def
+/ampersand [-13 13 (\\O\\N[MZMYNXPVUTXRZP[L[JZIYHWHUISJRQNRMSKSIRGPFNGMIMKNNPQUXWZY[[[\\Z\\Y)] def
+/bullet [-2 2 (QPPQPSQTSTTSTQSPQP RQQRRSSRRQ)] def
+/slash [-7 7 (K^YF)] def
+/backslash [-7 7 (KFY^)] def
+/underscore [-8 8 (J]Z])] def
+/tilde [-8 8 (LTLRMPOPUSWSXR LRMQOQUTWTXRXP)] def
+/bracketleft [-7 7 (OBOb PBPb OBVB ObVb)] def
+/bracketright [-7 7 (TBTb UBUb NBUB NbUb)] def
+/braceleft [-7 7 (TBRCQDPFPHQJRKSMSOQQ RCQEQGRISJTLTNSPORSTTVTXSZR[Q]Q_Ra QSSUSWRYQZP\\P^Q`RaTb)] def
+/braceright [-7 7 (PBRCSDTFTHSJRKQMQOSQ RCSESGRIQJPLPNQPURQTPVPXQZR[S]S_Ra SSQUQWRYSZT\\T^S`RaPb)] def
+/asterisk [-8 8 (RFRR MIWO WIMO)] def
+/less [-12 12 (ZIJRZ[)] def
+/greater [-12 12 (JIZRJ[)] def
+/asciitilde [-12 12 (IUISJPLONOPPTSVTXTZS[Q ISJQLPNPPQTTVUXUZT[Q[O)] def
+/asciicircum [-11 11 (JTROZT JTRPZT)] def
+/breve [-10 10 (KFLHNJQKSKVJXHYF KFLINKQLSLVKXIYF)] def
+/percent [-12 12 ([FI[ NFPHPJOLMMKMIKIIJGLFNFPGSHVHYG[F WTUUTWTYV[X[ZZ[X[VYTWT)] def
+/at [-13 14 (WNVLTKQKOLNMMPMSNUPVSVUUVS QKOMNPNSOUPV WKVSVUXVZV\\T]Q]O\\L[JYHWGTFQFNGLHJJILHOHRIUJWLYNZQ[T[WZYYZX XKWSWUXV)] def
+/section [-8 8 (UITJUKVJVIUGSFQFOGNINKOMQOVR OMTPVRWTWVVXTZ PNNPMRMTNVPXU[ NVSYU[V]V_UaSbQbOaN_N^O]P^O_)] def
+/dagger [-8 8 (RFQHRJSHRF RFRb RQQTRbSTRQ LMNNPMNLLM LMXM TMVNXMVLTM)] def
+/daggerdbl [-8 8 (RFQHRJSHRF RFRT RPQRSVRXQVSRRP RTRb R^Q`RbS`R^ LMNNPMNLLM LMXM TMVNXMVLTM L[N\\P[NZL[ L[X[ T[V\\X[VZT[)] def
+/space [-4 4 ()] def
+/quotesingle [-4 5 (SFRGRM SGRM SFTGRM)] def
+/.notdef [ 0 0 () ] def		% not defined
+end
+/Hershey-Plain-Simplex 4294100 0.8 0 MakeHersheyFont

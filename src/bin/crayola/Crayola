@@ -1,0 +1,118 @@
+# Copyright (C) 1992-1998 The Geometry Center
+# Copyright (C) 1998-2000 Geometry Technologies, Inc.
+#
+# This file is part of Geomview.
+# 
+# Geomview is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# Geomview is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Geomview; see the file COPYING.  If not, write to the
+# Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA,
+# or visit http://www.gnu.org.
+#
+
+# Author: Timothy Rowley
+
+
+# set up nicer-looking gray colors
+
+catch { tk_bisque }
+
+#set tk_strictMotif 1
+#option add *Background gray70 userDefault
+#option add *Foreground gray20 userDefault
+#option add *Checkbutton.selector yellow userDefault
+#option add *Radiobutton.selector yellow userDefault
+#. configure -background gray70
+
+
+proc newColor {} {
+    foreach p {r g b} {
+	append color [format %02x [expr int([.crayola.c.$p.s get]*255.999)]]
+    }
+    .crayola.swatch configure -background "#$color"
+}
+
+proc setsliders {which abc} {
+  foreach i {0 1 2} {
+    set p [string range $which $i $i]
+    set cmd [.crayola.c.$p.s cget -command]
+    .crayola.c.$p.s configure -command {}
+    .crayola.c.$p.s set [lindex $abc $i]
+    if {$cmd != ""} {after idle .crayola.c.$p.s configure -command $cmd}
+  }
+}
+
+proc newRGB {args} {
+    crayolaSetColor [.crayola.c.r.s get] [.crayola.c.g.s get] [.crayola.c.b.s get]
+    newColor
+}
+
+proc newHSV {args} {
+    crayolaSetColor -hsv [.crayola.c.h.s get] [.crayola.c.s.s get] [.crayola.c.v.s get]
+    newColor
+}
+
+proc mkCrayola {} {
+    global operation
+
+    toplevel .crayola
+    set w .crayola
+    wm title $w Crayola
+    $w configure -borderwidth 2 -relief raised
+
+    frame $w.col
+    frame $w.s -borderwidth 3 -relief sunken
+    frame $w.swatch -height 30
+    frame $w.c
+    foreach p {r g b h s v} {
+	frame $w.c.$p
+	label $w.c.$p.l -text [string toupper $p]
+	if {[string match {[rgb]} $p]} {
+	    set cmd newRGB
+	} else {
+	    set cmd newHSV
+	}
+	scale $w.c.$p.s -orient horizontal -from 0 -to 1 -resolution 0 -showvalue no -command $cmd
+	pack $w.c.$p.l $w.c.$p.s -in $w.c.$p -side left -fill y
+	pack $w.c.$p -side top 
+    }
+    frame $w.c.gap
+    pack $w.c.gap -after $w.c.b -pady 3
+    pack $w.swatch -in $w.s -fill x
+    pack $w.s $w.c -in $w.col -side top -expand 1 -fill x
+
+    frame $w.buttons
+    set b $w.buttons
+    frame $b.bot
+
+    set operation get
+    radiobutton $b.b1 -text "Get" -value get -variable operation \
+	-indicatoron false
+    radiobutton $b.b2 -text "Set" -value set -variable operation \
+	-indicatoron false
+    radiobutton $b.b3 -text "Set all" -value setall -variable operation \
+	-indicatoron false
+    radiobutton $b.b4 -text "Eliminate Color" -value eliminate \
+	-variable operation -indicatoron false
+
+    button $b.b5 -text "Undo!" -command crayolaUndo
+    button $b.b6 -text "Quit" -command crayolaQuit
+    pack $b.b1 $b.b2 $b.b3 $b.b4 -fill x
+    pack $b.b5 $b.b6 -in $b.bot -fill x
+    pack $b.bot -expand 1 -fill x
+
+    pack $w.col $w.buttons -side left -fill y -padx 2 -pady 2
+}
+
+wm withdraw .
+mkCrayola
+emodule_init crayola

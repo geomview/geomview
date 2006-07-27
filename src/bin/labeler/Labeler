@@ -1,0 +1,243 @@
+# Copyright (C) 1992-1998 The Geometry Center
+# Copyright (C) 1998-2000 Geometry Technologies, Inc.
+#
+# This file is part of Geomview.
+# 
+# Geomview is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# Geomview is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with Geomview; see the file COPYING.  If not, write to the
+# Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA,
+# or visit http://www.gnu.org.
+
+# Author: Timothy Rowley
+
+emodule_init labeler
+
+# set up nicer-looking gray colors
+
+#option add *Background gray70 userDefault
+#option add *Foreground gray20 userDefault
+#option add *Checkbutton.selector yellow userDefault
+#option add *Radiobutton.selector yellow userDefault
+#. configure -background gray70
+
+set family VECTOR
+set weight Medium
+set slant Roman
+set size 14
+set string ""
+
+proc doSelect {} {
+    global family weight slant size
+
+    foreach i "family weight slant size" {
+	eval set item $$i
+	set index [lsearch -exact [.$i get 0 end] $item]
+	.$i selection set $index
+	.$i see $index
+    }
+}
+
+proc doInsert {type name} {
+    set s [.$type get 0 end]
+    if {[lsearch -exact $s $name] == -1} {
+	set s [lsort [concat $s $name]]
+	.$type delete 0 end
+	eval .$type insert end $s
+	doSelect
+    }
+}
+    
+proc doDelete {type name} {
+    set s [.$type get 0 end]
+    set index [lsearch -exact $s $name]
+    if {$index != -1} {
+	set s [concat [lrange $s 0 [expr $index-1]] [lrange $s [expr $index+1] end]]
+	.$type delete 0 end
+	eval .$type insert end $s
+	doSelect
+    }
+}
+
+proc vectorString {s} {
+  if {[catch {
+	exec hvectext -s .25 -align sw -plane xy -at 0 0 0 -- $s >@ stdout
+    } trouble] != 0} {
+	puts stderr "Labeler: Error invoking hvectext: $trouble"
+  }
+}
+
+    
+proc doText {} {
+    global string family weight slant size
+
+    if {$string == ""} {
+	return
+    }
+    puts "(geometry \"Labeler-$string\" { "
+    if {$family != "VECTOR"} {
+	scanFont $family $weight $slant $size $string
+    } else {
+	vectorString $string
+    }
+    puts "})"
+    flush stdout
+}
+
+
+proc setValue {window} {
+    regsub "\." $window "" name
+    upvar #0 $name handle
+    if {[$window curselection] != ""} {
+	set handle [lindex [$window get 0 end] [$window curselection]]
+    }
+}
+
+proc mkListbox {frame name width entries} {
+    frame .fancy.$frame
+    label .fancy.$frame.l -text $name
+    frame .fancy.$frame.f
+    listbox .[string tolower $name] -height 6 -width $width \
+	-exportselection false -setgrid 1 -selectmode single
+    if {[llength $entries] > 6} {
+	scrollbar .fancy.$frame.f.s -command ".[string tolower $name] yview"
+	.[string tolower $name] configure -yscroll ".fancy.$frame.f.s set"
+	pack .fancy.$frame.f.s -side right -fill y
+    }
+    eval .[string tolower $name] insert end $entries
+    pack .[string tolower $name] -in .fancy.$frame.f -side left \
+	-expand yes -fill both
+    pack .fancy.$frame.l .fancy.$frame.f -side top
+    bind .[string tolower $name] <ButtonRelease-1> \
+	{setValue %W; handleFont $family $weight $slant $size}
+}
+
+proc changeFont {font} {
+    . configure -cursor watch
+    .f.e configure -font $font
+    update idletasks
+    . configure -cursor {}
+    update idletasks
+}
+
+proc fixSize {window} {
+    update idletasks
+    set geometry [split [wm geometry $window] "+-x"]
+    eval wm maxsize $window [lrange $geometry 0 1]
+    eval wm minsize $window [lrange $geometry 0 1]
+}
+
+proc mkMain {} {
+    wm title . Labeler
+    . configure -borderwidth 2 -relief raised
+    frame .top
+    label .top.l -font -*-helvetica-*-r-*-*-*-240-*-*-*-*-*-* -text "Labeler"
+    button .top.info -text Info -command mkInfo
+    button .top.exit -text Exit -command exit
+    pack .top.info -side left
+    pack .top.exit -side right
+    pack .top.l -side left -expand 1 -fill x
+
+    frame .f
+    label .f.l -text Text: -height 2
+    entry .f.e -textvariable string -width 5
+    pack .f.l .f.e -side left
+    pack .f.e -side left -expand 1 -fill x
+
+    pack .top .f -side top -expand 1 -fill x
+    frame .fancy
+
+    mkListbox f1 Family 22 "[lsort [concat VECTOR [getFonts]]]"
+    mkListbox f2 Weight 9 [getWeights]
+    mkListbox f3 Slant 7 [getSlants]
+    mkListbox f4 Size 4 [getSizes]
+
+    pack .fancy.f1 .fancy.f2 .fancy.f3 .fancy.f4 -side left -padx 2
+    pack .fancy
+
+    fixSize .
+    bind .f.e <Return> doText
+    focus .f.e
+}
+
+proc mkInfo {} {
+    if {[winfo exists .info]} {
+	wm deiconify .info
+	return
+    }
+    toplevel .info -relief raised -borderwidth 2
+    wm title .info Info
+    frame .info.f
+    label .info.f.l -font -*-helvetica-bold-r-*-*-*-240-*-*-*-*-*-* \
+	-text "Labeler Info"
+    button .info.f.b -text "Hide" -command "wm withdraw .info"
+    pack .info.f.l -side left -expand 1 -fill x
+    pack .info.f.b -side right
+    frame .info.t
+    text .info.t.t -width 42 -height 8 -yscrollcommand ".info.t.s set" \
+	-font -*-helvetica-medium-r-*-*-*-140-*-*-*-*-*-*
+    scrollbar .info.t.s -command ".info.t.t yview"
+    pack .info.t.s -side right -fill y
+    pack .info.t.t -side left -fill both
+    .info.t.t insert end \
+"By Timothy Rowley
+Version 1.5
+Copyright (c) 1995
+The Geometry Center
+www.geomview.org
+
+Labeler takes a text string and turns it into a
+three dimensional object which can be manipulated
+inside of Geomview.
+
+Labeler can generate text object using many
+different fonts.  Select the font you want to use
+by selecting the font Family, Weight, Slant, and
+Size in the bottom area.  The \"VECTOR\" font is
+special - it is carefully constructed of a small
+number of polylines.  Geomview can handle more of
+this font without slowing down.  The \"Size\"
+changes the size of the unnormalized text string.
+A higher \"Size\" will also generate a higher
+quality object composed of more polygons.
+
+Type the string you want into the text entry
+field.  The text will appear in the selected font.
+Pressing enter will create an geomview object with
+a name equal to the string.
+
+Labeler gives you the choice of the standard X
+fonts (Charter, Courier, Helvetica, New Century
+Schoolbook, and Times) plus any scalable fonts the
+X server supports.  Unfortunately, X supports two
+types of scalable fonts: bitmaps and outline.
+Outline fonts scale smoothly to any size.  Scaled
+bitmap fonts are generally of poor quality.  Xlib
+does not provide any way to tell bitmap and
+outline fonts apart, so Labeler can't prevent you
+from choosing a poor quality font.
+
+You may notice that Labeler causes your
+workstation to \"freeze\" momentarily when you
+interact with it.  This happens because the X
+server locks up when asked to load or scale a
+font.  "  
+    .info.t.t configure -state disabled
+    pack .info.f .info.t -side top -expand 1 -fill x 
+    fixSize .info
+}
+
+mkMain
+doSelect
+handleFont $family $weight $slant $size
+flush stdout
+
