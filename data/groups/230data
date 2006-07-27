@@ -1,0 +1,230 @@
+1.	tr	xyz
+2.	tr	XYZ
+3.	m	xyZ
+4.	m	i,xyZ
+5.	m'	xyZ
+6.	m'	i,xyZ
+7.	m	XYz
+8.	m	k,XYz
+9.	m'	XYz
+10.	m	XYz	xyZ
+11.	m	k,XYz	xyZ
+12.	m'	XYz	xyZ
+13.	m	XYz	i,xyZ
+14.	m	k,XYz	i,xyZ
+15.	m'	XYz	i,xyZ
+16.	o	XYz	xYz
+17.	o	k,XYz	xYz
+18.	o	XYz	k,xYz
+19.	o	XYz	i,xYz
+20.	o	k,XYz	i,xYz
+21.	o	XYz	i+k,xYz
+22.	o	k,XYz	i+k,xYz
+23.	o	i+j,XYz	j,xYz
+24.	o	i+j+k,XYz	j,xYz
+25.	o	i+j,XYz	j+k,xYz
+26.	o'	XYz	xYz
+27.	o'	k,XYz	xYz
+28.	o'	XYz	k,xYz
+29.	o'	XyZ	Xyz
+30.	o'	XyZ	j,Xyz
+31.	o'	XyZ	i,Xyz
+32.	o'	XyZ	i+j,Xyz
+33.	o''	XYz	xYz
+34.	o''	XYz	.5i+.5j+.5k,xYz
+35.	o'''	XYz	xYz
+36.	o'''	XYz	k,xYz
+37.	o'''	XYz	i,xYz
+38.	o	xYZ	XyZ
+39.	o	xYZ	k,XyZ
+40.	o	i+j,xYZ	XYz
+41.	o	i+j,xYZ	i+k,XYz
+42.	o'	xYZ	k,XyZ
+43. o'	xYZ	XyZ
+44.	o''	xYZ	XyZ
+45.	o'''	xYZ	XyZ
+46.	o'''	k,xYZ	i,XyZ
+47.	o	xYZ	XyZ	XYZ
+48.	o	xYZ	XyZ	i+j+k,XYZ
+49.	o	xYZ	XyZ	k,XYZ
+50.	o	xYZ	XyZ	i+j,XYZ
+51.	o	xYZ	k,XyZ	XYZ
+52.	o	xYZ	k,XyZ	i+j,XYZ
+53.	o	xYZ	k,XyZ	i,XYZ
+54.	o	xYZ	k,XyZ	j,XYZ
+55.	o	i+j,xYZ	XYz	XYZ
+56.	o	i+j,xYZ	XYz	i+j+k,XYZ
+57.	o	i+j,xYZ	XYz	j,XYZ
+58.	o	i+j,xYZ	XYz	k,XYZ
+59.	o	i+j,xYZ	XYz	i+j,XYZ
+60.	o	i+j,xYZ	XYz	j+k,XYZ
+61.	o	i+j,xYZ	j+k,XyZ	XYZ
+62.	o	i+j,xYZ	j+k,XyZ	i+j,XYZ
+63.	o'	xYZ	k,XyZ	XYZ
+64.	o'	xYZ	k,XyZ	i,XYZ
+65.	o'	xYZ	XyZ	XYZ
+66.	o'	xYZ	XyZ	i+j+k,XYZ
+67.	o'	xYZ	XyZ	i,XYZ
+68.	o'	xYZ	XyZ	j+k,XYZ
+69.	o''	xYZ	XyZ	XYZ
+70.	o''	xYZ	XyZ	.5i+.5j+.5k,XYZ
+71.	o'''	xYZ	XyZ	XYZ
+72.	o'''	xYZ	XyZ	k,XYZ
+73.	o'''	k,xYZ	i,XyZ	XYZ
+74.	o'''	k,xYZ	i,XyZ	i+j,XYZ
+75.	t	YxZ
+76.	t'	YxZ
+77.	t	xYZ	XyZ	yxz
+78.	t	xYZ	XyZ	k,yxz
+79.	t	XYz	YxZ	i+j,XyZ
+80.	t	XYz	YxZ	i+j+k,XyZ
+81.	t	xYZ	XyZ	yxz	i+j,xyz
+82.	t	xYZ	XyZ	k,yxz	i+j,xyz
+83.	t	yXZ	i,XyZ	i+j,xyz
+84.	t	yXZ	i+k,XyZ	i+j,xyz
+85.	t'	xYZ	XyZ	yxz
+86.	t'	xYZ	XyZ	k,yxz
+87.	t'	xYZ	XyZ	yxz	i+j+k,xyz
+88.	t'	yXZ	i+.5k,XyZ	i+j+k,xyz
+89.	t	Yxz
+90.	t	.5k,Yxz
+91.	t	k,Yxz
+92.	t	k+.5k,Yxz
+93.	t'	Yxz
+94.	t'	.5k,Yxz
+95.	t	Yxz	XYZ
+96.	t	k,Yxz	XYZ
+97.	t	Yxz	i+j,XYZ
+98.	t	k,Yxz	i+j,XYZ
+99.	t'	Yxz	XYZ
+100.	t'	.5i+.5j+k+.5k,yXz	j,xyZ	i+j+k,xyz	XYZ
+101.	t	Yxz	yxz
+102.	t	Yxz	i+j,yxz
+103.	t	k,Yxz	yxz
+104.	t	i+j+k,yXz	yxz
+105.	t	Yxz	k,yxz
+106.	t	Yxz	i+j+k,yxz
+107.	t	k,Yxz	k,yxz
+108.	t	k,Yxz	i+j+k,yxz
+109.	t'	Yxz	yxz
+110.	t'	Yxz	k,yxz
+111.	t'	j+.5k,yXz	Xyz
+112.	t'	j+.5k,yXz	k,Xyz
+113.	t	yXz	XyZ
+114.	t	i+j,yXz	i+j,XyZ
+115.	t	k+.5k,yXz	XyZ
+116.	t	i+j+k+.5k,yXz	i+j+.5k,XyZ
+117.	t	k,yXz	XyZ
+118.	t	i+j+k,yXz	i+j+k,XyZ
+119.	t	.5k,yXz	XyZ
+120.	t	i+j+.5k,yXz	xyZ
+121.	t'	Yxz	yxZ
+122.	t'	j+.5k,yXz	i+k+.5k,XyZ
+123.	t	Yxz	yxZ	XYZ
+124.	t	Yxz	yxZ	k,XYZ
+125.	t	Yxz	yxZ	i+j,XYZ
+126.	t	Yxz	yxZ	i+j+k,XYZ
+127.	t	Yxz	i+j,yxZ	XYZ
+128.	t	yXz	xyZ	i+j+k,Xyz
+129.	t	i+j,yXz	i+j,xyZ	Xyz
+130.	t	i+j,yXz	i+j,xyZ	k,Xyz
+131.	t	k,yXz	xyZ	Xyz
+132.	t	k,yXz	k,xyZ	k,Xyz
+133.	t	k,yXz	i+j,xyZ	i+j,Xyz
+134.	t	k,yXz	i+j+k,xyZ	i+j+k,Xyz
+135.	t	k,yXz	xyZ	i+j,Xyz
+136.	t	i+j+k,yXz	xyZ	i+j+k,Xyz
+137.	t	i+j+k,yXz	i+j+k,xyZ	Xyz
+138.	t	i+j+k,yXz	i+j,xyZ	k,Xyz
+139.	t'	Yxz	yxZ	XYZ
+140.	t'	Yxz	yxZ	k,XYZ
+141.	t'	j+.5k,yXz	i+k+.5k,xyZ	Xyz
+142.	t'	j+.5k,yXz	i+.5k,xyZ	k,Xyz
+143.	c	xYZ	XyZ	zxy
+144.	c'	xYZ	XyZ	zxy
+145.	c''	xYZ	XyZ	zxy
+146.	c	i+j,xYZ	j+k,XyZ	zxy
+147.	c''	k,xYZ	i,XyZ	zxy
+148.	c	xYZ	XyZ	zxy	XYZ
+149.	c	xYZ	XyZ	zxy	i+j+k,XYZ
+150.	c'	xYZ	XyZ	zxy	XYZ
+151.	c'	xYZ	XyZ	zxy	.5i+.5j+.5k,XYZ
+152.	c''	xYZ	XyZ	zxy	XYZ
+153.	c	i+j,xYZ	j+k,XyZ	zxy	XYZ
+154.	c''	k,xYZ	i,XyZ	zxy	XYZ
+155.	c	xYZ	XyZ	zxy	yxz
+156.	c'	xYZ	XyZ	zxy	yxz
+157.	c''	xYZ	XyZ	zxy	yxz
+158.	c	xYZ	XyZ	zxy	i+j+k,yxz
+159.	c'	xYZ	XyZ	zxy	i+j+k,yxz
+160.	c''	k,xYZ	i,XyZ	zxy	.5i+.5j+.5k,yxz
+161.	c	xYZ	XyZ	zxy	YXZ
+162.	c	xYZ	XyZ	zxy	i+j+k,YXZ
+163.	c'	xYZ	XyZ	zxy	YXZ
+164.	c'	xYZ	XyZ	zxy	.5i+.5j+.5k,YXZ
+165.	c''	xYZ	XyZ	zxy	YXZ
+166.	c	i+j,xYZ	j+k,XyZ	zxy	.5i+.5j+.5k,YXZ
+167.	c	i+j,xYZ	j+k,XyZ	zxy	i+.5i+j+.5j+k+.5k,YXZ
+168.	c''	k,xYZ	i,XyZ	zxy	.5i+.5j+.5k,YXZ
+169.	c	xYZ	XyZ	zxy	YXZ	XYZ
+170.	c	xYZ	XyZ	zxy	YXZ	i+j+k,XYZ
+171.	c	xYZ	XyZ	zxy	i+j+k,YXZ XYZ
+172.	c	xYZ	XyZ	zxy	i+j+k,YXZ i+j+k,XYZ
+173.	c'	xYZ	XyZ	zxy	YXZ	XYZ
+174.	c'	xYZ	XyZ	zxy	YXZ	i+j+k,XYZ
+175.	c'	xYZ	XyZ	zxy	.5i+.5j+.5k,YXZ	.5i+.5j+.5k,XYZ
+176.	c'	xYZ	XyZ	zxy	.5i+.5j+.5k,YXZ	i+.5i+j+.5j+k+.5k,XYZ
+177.	c''	xYZ	XyZ	zxy	YXZ	XYZ
+178.	c''	k,xYZ	i,XyZ	zxy	.5i+.5j+.5k,YXZ	XYZ
+179.	h	y-xXz
+180.	h	.6k,y-xXz
+181.	h	.6k+.6k,y-xXz
+182.	rh	zxy
+183.	h	y-xXz	XYZ
+184.	rh	zxy	XYZ
+185.	h	y-xXz	YXz
+186.	h	y-xXz	yxz
+187.	h	y-xXz	k,xx-yz
+188.	h	y-xXz	k,yxz
+189.	rh	zxy	xzy
+190.	rh	zxy	i+j+k,xzy
+191.	h	y-xXz	YXZ
+192.	h	y-xXz	yxZ
+193.	h	.6k,y-xXz	.6k+.6k,YXZ
+194.	h	.6k,y-xXz	.6k+.6k,yxZ
+195.	h	.6k+.6k,y-xXz	.6k,YXZ
+196.	h	.6k+.6k,y-xXz	.6k,yxZ
+197.	rh	zxy	YXZ
+198.	h	y-xXz	YXZ	XYZ
+199.	h	y-xXz	YXZ	k,XYZ
+200.	h	y-xXz	yxZ	XYZ
+201.	h	y-xXz	yxZ	k,XYZ
+202.	rh	zxy	YXZ	XYZ
+203.	rh	zxy	YXZ	i+j+k,XYZ
+204.	h	y-xXz xyZ
+205.	h	y-xXz	YXZ	xyZ
+206.	h	y-xXz	YXZ	k,xyZ
+207.	h	y-xXz	yxZ	xyZ
+208.	h	y-xXz	yxZ	k,xyZ
+209.	h	yy-xz
+210.	h	.3k,yy-xz
+211.	h	.6k+.6k+.3k,yy-xz
+212.	h	.6k,yy-xz
+213.	h	.6k+.6k,yy-xz
+214.	h	k,yy-xz
+215.	h	yy-xz	yxz
+216.	h	yy-xz	k,yxz
+217.	h	k,yy-xz	yxz
+218.	h	k,yy-xz	k,yxz
+219.	h	yy-xz	xyZ
+220.	h	k,yy-xz	xyZ
+221.	h	yy-xz	Xy-xZ
+222.	h	.3k,yy-xz	Xy-xZ
+223.	h	.6k+.6k+.3k,yy-xz	Xy-xZ
+224.	h	.6k,yy-xz	Xy-xZ
+225.	h	.6k+.6k,yy-xz	Xy-xZ
+226.	h	k,yy-xz	Xy-xZ
+227.	h	yy-xz	Xy-xZ	xyZ
+228.	h	yy-xz	Xy-xZ	k,xyZ
+229.	h	k,yy-xz	Xy-xZ	xyZ
+230.	h	k,yy-xz	Xy-xZ	k,xyZ

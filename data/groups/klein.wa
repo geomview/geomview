@@ -1,0 +1,24 @@
+Format 2.2
+fsa {
+	states 8
+	symbols 7
+	bfs
+	min
+	variables 1
+	alphabet {1 = a 2 = A 3 = b 4 = B 5 = c 6 = C 7 = $  }
+	start { 1 }
+
+%
+atable
+   1  N	   2   3   4   5   6   7   8;
+   2  N	   2   0   4   5   6   7   8;
+   3  N	   0   3   4   5   6   7   8;
+   4  N	   0   0   4   0   6   7   8;
+   5  N	   0   0   0   5   6   7   8;
+   6  N	   0   0   0   0   6   0   8;
+   7  N	   0   0   0   0   0   7   8;
+   8  A	   0   0   0   0   0   0   8;
+}
+	# Symbols used for inverses of generators
+inverses {
+inv(a)=A inv(A)=a inv(b)=B inv(B)=b inv(c)=C inv(C)=c }
