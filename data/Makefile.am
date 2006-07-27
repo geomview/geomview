@@ -13,12 +13,69 @@ aaaa2dir = $(geomdatadir)/geom/pieces
 aaaa3dir = $(geomdatadir)/geom/polyhedra
 aaaa4dir = $(geomdatadir)/geom/spherical
 aaaa5dir = $(geomdatadir)/geom/textured
+aaaa6dir = $(geomdatadir)/groups
 
 aaaa1_DATA =
 aaaa2_DATA =
 aaaa3_DATA =
 aaaa4_DATA =
 aaaa5_DATA =
+aaaa6_DATA =					\
+	groups/101a.dgp				\
+	groups/101b.dgp				\
+	groups/120.dgp				\
+	groups/230data				\
+	groups/230data.Conway			\
+	groups/230data.lat			\
+	groups/230data.names			\
+	groups/3torus.dgp			\
+	groups/3torus2.dgp			\
+	groups/94a.dgp				\
+	groups/94b.dgp				\
+	groups/CVS				\
+	groups/borrom.dgp			\
+	groups/borrom2.dgp			\
+	groups/borrom3.dgp			\
+	groups/borrom4.dgp			\
+	groups/borrom4.wa			\
+	groups/br4.0.tlist			\
+	groups/br4.1.tlist			\
+	groups/br4.2.tlist			\
+	groups/br4.3.tlist			\
+	groups/dir.1.gv				\
+	groups/dir.2.gv				\
+	groups/dir.3.gv				\
+	groups/dir.4.gv				\
+	groups/dodec.vect			\
+	groups/equi.1.gv			\
+	groups/equi.2.gv			\
+	groups/equi.3.gv			\
+	groups/equi.4.gv			\
+	groups/fig8.dgp				\
+	groups/g233.prj				\
+	groups/g234.prj				\
+	groups/g235.prj				\
+	groups/g236.prj				\
+	groups/g237.prj				\
+	groups/good_klein_quick.dgp		\
+	groups/hook.off				\
+	groups/klein.wa				\
+	groups/klein_bricks.dgp			\
+	groups/klein_whole.dgp			\
+	groups/loop.1.gv			\
+	groups/loop.2.gv			\
+	groups/loop.3.gv			\
+	groups/loop.4.gv			\
+	groups/notknot.dgp			\
+	groups/quart.1.gv			\
+	groups/quart.2.gv			\
+	groups/quart.3.gv			\
+	groups/quart.4.gv			\
+	groups/sample.proj.dgp			\
+	groups/sample.uhs.dgp			\
+	groups/spaceshipSpace.geom		\
+	groups/tetra2.dgp			\
+	groups/wholecube.geom
 
 geomdata_DATA = \
 	.geomview \
