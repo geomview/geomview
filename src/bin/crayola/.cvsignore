@@ -1,0 +1,6 @@
+.deps
+.geomview-crayola
+.libs
+Makefile
+Makefile.in
+crayola

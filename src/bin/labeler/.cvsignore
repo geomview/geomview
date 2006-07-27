@@ -1,0 +1,6 @@
+.deps
+.geomview-labeler
+.libs
+Makefile
+Makefile.in
+labeler
