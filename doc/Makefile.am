@@ -39,12 +39,14 @@ figs/%.png: figs/%.pdf
 	-rm -f $(<:.pdf=-000.ppm)
 
 html-local: $(PNGIMAGES)
-	-$(mkdir_p) geomview.html/figs/
-	-for file in $(PNGIMAGES); do \
-		if ! test -f "geomview.html/$$file"; then \
-			$(INSTALL_DATA) "$$file" "geomview.html/$$file"; \
-		fi; \
-	done
+	-if test -d $(builddir)/figs; then \
+	  $(mkdir_p) geomview.html/figs/; \
+	  for file in $(PNGIMAGES); do \
+	    if ! test -f "geomview.html/$$file"; then \
+	      $(INSTALL_DATA) "$$file" "geomview.html/$$file"; \
+	    fi; \
+	  done; \
+	fi
 
 endif
 
