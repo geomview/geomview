@@ -1397,7 +1397,7 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
     }
   }
   if (argsrequired<0) argsrequired = argspecs;
-  va_end(a_list);
+  /*va_end(a_list);*/
   if (argsgot < argsrequired) {
     OOGLError(0,"%s: internal argument list deficit; require %1d, got %1d\n\
 Please report this error!", name, argsrequired, argsgot);
@@ -1410,7 +1410,7 @@ Please report this error!", name);
   }
   return LASSIGN_GOOD;
  bad:
-  va_end(a_list);
+  /*va_end(a_list);*/
   return LASSIGN_BAD;
 }
 
