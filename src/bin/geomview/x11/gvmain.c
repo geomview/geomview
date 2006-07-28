@@ -69,9 +69,7 @@ static    void  env_usage();
 
 /*****************************************************************************/
 	
-int main(argc, argv)
-unsigned int argc;
-char **argv;
+int main(int argc, char **argv)
 {
   int i;
   CameraStruct  cs;
