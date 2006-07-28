@@ -46,10 +46,10 @@ int mgx11modN[256];
 int mgx11magic[16][16];
 
 static int magic4x4[4][4] =  {
- 	 0, 14,  3, 13,
-	11,  5,  8,  6,
-	12,  2, 15,  1,
-	 7,  9,  4, 10
+  { 0, 14,  3, 13 },
+  { 11, 5,  8,  6 },
+  { 12, 2, 15,  1 },
+  {  7, 9,  4, 10 }
 };
 
 /* basic dithering macro */
@@ -263,6 +263,7 @@ unsigned long dithergb( int x, int y, int *rgb, int levels)
  * Algorithm:
  * 	see "Note:" in bwdithermap comment.
  */
+int
 ditherbw( int x, int y, int val)
 {
     int col = x % 16, row = y % 16;

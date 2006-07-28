@@ -173,7 +173,6 @@ void mgx11_line( HPoint3 *p1, HPoint3 *p2 )
  */
 void mgx11_fatpoint(HPoint3 *v)
 {
-  int i;
   HPoint3 a;
   HPoint3 *p, *q;
   float vw;
@@ -296,7 +295,6 @@ void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
   int		i, j;
   Poly		*p;
   Vertex 	**v, *vp, **vh;
-  Point3	*n;
   struct mgastk *ma = _mgc->astk;
   int plflags = pl_flags;
   int flag, shading;
@@ -594,16 +592,13 @@ void mgx11polymeshrow(int wrap, int has, int off, int count, HPoint3 *P,
 void mgx11submesh(int wrap, int nu, int nv, int umin, int umax, int vmin,
 		int vmax, HPoint3 *meshP, Point3 *meshN, ColorA *meshC)
 {
-  int u, v;
-  int ucnt, vcnt;
+  int v;
+  int ucnt;
   HPoint3 *P;
   Point3 *N;
   ColorA *C;
   int prev;
   int du;
-  int douwrap;
-  HPoint3  tp;
-  Point3 tn;
   int i;
   int has;
   Appearance *ap;
@@ -695,6 +690,7 @@ void mgx11_mesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N,
 /*
  * Z-shift routines: for moving edges closer than faces, etc.
  */
+void
 mgx11_init_zrange()
 {
   _mgx11c->znudge = 1;
@@ -713,6 +709,7 @@ mgx11_farther()
   _mgx11c->znudgeby =  0.0;
 }
 
+void
 mgx11_findcam()
 {
 }

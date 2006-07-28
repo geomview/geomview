@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* }}} */
 
 static endPoint *mug=NULL;
-static mugSize = 0;
+static int mugSize = 0;
 
 static int rdiv, gdiv, bdiv, rshift, gshift, bshift;
 
@@ -381,7 +381,8 @@ Xmgr_16GZpolyline(unsigned char *buf, float *zbuf, int zwidth, int width, int he
 /* }}} */
 
 /*
-Local variables:
-folded-file: t
-*/
+ * Local variables: ***
+ * folded-file: t ***
+ * End: ***
+ */
 

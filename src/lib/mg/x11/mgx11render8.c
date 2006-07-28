@@ -87,7 +87,7 @@ ditherRGBvals(int x, int y, int r, int g, int b)
 /* }}} */
 
 static endPoint *mug=NULL;
-static mugSize = 0;
+static int mugSize = 0;
 
 void
 Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
@@ -141,8 +141,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] = col;
-#define WIDEXDOPIXEL buf[y*width+i] = col;
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] = col;
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] = col;
 #define DOPIXEL *ptr = col;
 #define VARIABLES unsigned char col=ditherRGB(0,0,color);
 #include "MGRline.h"
@@ -153,8 +153,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] =  ditherRGB(x, i, color);
-#define WIDEXDOPIXEL buf[y*width+i] =  ditherRGB(i, y, color);
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] =  ditherRGB(x, i, color);
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] =  ditherRGB(i, y, color);
 #define DOPIXEL *ptr = ditherRGB(x, y, color);
 #include "MGRline.h"
 
@@ -165,8 +165,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] = col;
-#define WIDEXDOPIXEL buf[y*width+i] = col;
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] = col;
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] = col;
 #define DOPIXEL *ptr = col;
 #define VARIABLES unsigned char col=ditherRGB(0,0,color);
 #include "MGRline.h"
@@ -178,8 +178,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] =  ditherRGB(x, i, color);
-#define WIDEXDOPIXEL buf[y*width+i] =  ditherRGB(i, y, color);
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] =  ditherRGB(x, i, color);
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] =  ditherRGB(i, y, color);
 #define DOPIXEL *ptr = ditherRGB(x, y, color);
 #include "MGRline.h"
 
@@ -191,8 +191,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] =  ditherRGBvals(x, i, r, g, b);
-#define WIDEXDOPIXEL buf[y*width+i] =  ditherRGBvals(i, y, r, g, b);
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] =  ditherRGBvals(x, i, r, g, b);
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] =  ditherRGBvals(i, y, r, g, b);
 #define DOPIXEL *ptr = ditherRGBvals(x, y, r, g, b);
 #include "MGRline.h"
 
@@ -205,8 +205,8 @@ Xmgr_8clear(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 #define PTR_INCR width
 #define PTR_TYPE unsigned char
 #define PTR_INIT buf+y1*width+x1
-#define WIDEYDOPIXEL buf[i*width+x] =  ditherRGBvals(x, i, r, g, b);
-#define WIDEXDOPIXEL buf[y*width+i] =  ditherRGBvals(i, y, r, g, b);
+#define WIDEYDOPIXEL ptr[i*ptrIncr+x] =  ditherRGBvals(x, i, r, g, b);
+#define WIDEXDOPIXEL ptr[y*ptrIncr+i] =  ditherRGBvals(i, y, r, g, b);
 #define DOPIXEL *ptr = ditherRGBvals(x, y, r, g, b);
 #include "MGRline.h"
 
@@ -485,5 +485,6 @@ Xmgr_8DGpolyline(unsigned char *buf, float *zbuf, int zwidth,
 /*
 Local variables:
 folded-file: t
+End:
 */
 

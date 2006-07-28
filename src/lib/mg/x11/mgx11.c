@@ -65,6 +65,9 @@ extern void mgx11_line();
 extern void mgx11_polyline();
 extern void mgx11_polylist();
 extern void mgx11_quads();
+extern void mgx11_setshader(mgshadefunc shader);
+extern void mgx11_appearance( struct mgastk *ma, int mask );
+extern void mgx11_init_zrange();
 
 void _mgx11_ctxset(int a1, va_list *alist);
 
@@ -163,7 +166,6 @@ void
 _mgx11_ctxset(int a1, va_list *alist)
 {
   int attr;
-  WnWindow *owin;
   char **ablock = NULL;
 
 #define NEXT(type) OOGL_VA_ARG(type, alist, ablock)
@@ -367,13 +369,15 @@ _mgx11_ctxset(int a1, va_list *alist)
 
 }
 
-mgx11_setwindow( WnWindow *win, int final )
+int mgx11_setwindow( WnWindow *win, int final )
 {
+#ifdef UNNEEDED
   WnPosition pos, vp;
   int xsize, ysize, flag, reconstrain;
   int positioned = 0;
   int zmin;
   char *name, *oname;
+#endif
 
   if (win == NULL)
    return 0;
@@ -562,6 +566,7 @@ int
 mgx11_pushappearance()
 {
   mg_pushappearance();
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -580,10 +585,11 @@ mgx11_popappearance()
   if (!(mastk_next = mastk->next))
   {
     OOGLError(0, "mgx11_popappearance: appearance stack has only 1 entry.");
-    return;
+    return 1;
   }
   mgx11_appearance(mastk_next, mastk_next->ap.valid);
   mg_popappearance();
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -637,6 +643,7 @@ mgx11_setappearance( Appearance *ap, int mergeflag )
     }
   }
   mgx11_appearance( mastk, changed);
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -674,6 +681,7 @@ mgx11_setcamera( Camera *cam )
   _mgc->cam = cam;
   RefIncr((Ref*) cam);
 
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -876,6 +884,8 @@ int
 mgx11_pushtransform( void )
 {
   mg_pushtransform();
+
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -883,9 +893,11 @@ mgx11_pushtransform( void )
  * Description:	pop the mg context xform stack
  * Returns:	nothing
  */
+int
 mgx11_poptransform( void )
 {
   mg_poptransform();
+  return 0;
 }
 
 void

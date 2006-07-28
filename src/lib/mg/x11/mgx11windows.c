@@ -59,12 +59,13 @@ unsigned long mgx11colors[217];
 static XColor mgx11colorcells[217];
 static Colormap	cmap;
 int mgx11multab[256];			/* premultiplied table for speed */
-static ColorA black = {0.0, 0.0, 0.0, 0.0 };
+/*static ColorA black = {0.0, 0.0, 0.0, 0.0 };*/
 static int curwidth = 1;
 static int shm_message_shown = 0;
 
 extern void dithermap(int, double, int [][3]);
 extern unsigned long dithergb(int, int, int *, int);
+extern int Xmg_primclip(mgx11prim *aprim);
 
 static int globalXError;		/* X Error stuff */
 
@@ -86,7 +87,6 @@ int myXErrorHandler(Display *d, XErrorEvent *e)
 */
 void Xmg_setx11display(Display *dpy)
 {
-  XColor	col;
   int		rgbmap[216][3], i, cube, colfail = 1;
   unsigned int	nplanes = 0;
   unsigned long	planemasks[1];
@@ -593,7 +593,6 @@ void Xmg_add(int primtype, int numdata, void *data, void *cdata)
 	case MGX_VERTEX:
 	  for (i=0; i<numdata; i++)
 	  {
-	    float w;
             vts = &(VVEC(_mgx11c->mysort->pverts, CPoint3)[_mgx11c->mysort->cvert]);
 	    HPt3Transform(_mgc->O2S, &(vt[i]), (HPoint3 *) vts);
 	    vts->drawnext = 1;
@@ -620,7 +619,6 @@ void Xmg_add(int primtype, int numdata, void *data, void *cdata)
 	case MGX_CVERTEX:
 	  for (i=0; i<numdata; i++)
 	  {
-	    float w;
             vts = &(VVEC(_mgx11c->mysort->pverts, CPoint3)[_mgx11c->mysort->cvert]);
 	    HPt3Transform(_mgc->O2S, &(vt[i]), (HPoint3 *) vts);
 	    vts->drawnext = 1;
@@ -736,7 +734,7 @@ void Xmg_sortdisplaylist()
 }
 
 static unsigned int byterev(unsigned int v) {
-  return (v >> 24) | (v >> 8) & 0xFF00 | (v << 8) & 0xFF0000 | (v << 24);
+  return (v >> 24) | ((v >> 8) & 0xFF00) | ((v << 8) & 0xFF0000) | (v << 24);
 }
 
 /*
@@ -746,11 +744,10 @@ static unsigned int byterev(unsigned int v) {
 */
 void Xmg_showdisplaylist()
 {
-  CPoint3 *vts, *vt;
-  int ref, i, vloc, *primp;
+  CPoint3 *vts;
+  int ref, *primp;
   mgx11prim *prim, *prim2;
   Display *dpy = _mgx11c->mgx11display;
-  mgx11win *curr = _mgx11c->myxwin;
   Drawable win = _mgx11c->myxwin->window;
   unsigned char *buf = _mgx11c->myxwin->buf;
   float *zbuf = mgx11zbuffer;
@@ -760,7 +757,6 @@ void Xmg_showdisplaylist()
   GC gc = _mgx11c->myxwin->gc;
   static int width;
   static int height;
-  static unsigned long bgcolor;
   void (*poly)(unsigned char *, float *, int, int, int, CPoint3 *, int, int *);
   void (*line)(unsigned char *, float *, int, int, int, 
 	       CPoint3 *, CPoint3 *, int, int *);

@@ -83,6 +83,7 @@ int Xmg_dividew(void)
      }
 
   }
+  return 0;
 }
 
 /*
@@ -106,7 +107,7 @@ int Xmg_cliptoplane(int coord, float plane, float sign)
   for (curr=vts1, n=prim1->numvts; n > 0; n--, prev=curr, i1=i2, curr++)
   {
     i2 = sign * ((float *) curr) [coord] - plane;
-    if (i1 <= 0.0 ^ i2 <= 0.0) {
+    if ((i1 <= 0.0) ^ (i2 <= 0.0)) {
       i =  i1/(i1 - i2);
       dest = &(vts2[prim2->numvts]);
       dest->x = prev->x + i * (curr->x - prev->x);
@@ -139,6 +140,7 @@ int Xmg_cliptoplane(int coord, float plane, float sign)
 		vts2[n].x, vts2[n].y, vts2[n].z, vts2[n].w, vts2[n].drawnext);
   }
 #endif
+  return 0;
 }
 
 
@@ -235,8 +237,6 @@ primtemp = prim2; prim2 = prim1; prim1 = primtemp; \
 			vertex list, then we need to copy it back to the
 			global vertex list */
   {
-    CPoint3 *vtfrom, *vtto;
-
     prim2->numvts = prim1->numvts;
 /*
     for (n=0; n < aprim->numvts; n++)

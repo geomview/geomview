@@ -113,11 +113,13 @@ static unsigned char dither[65][8] = {
 static unsigned char bits[8] = {
     0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
+#if 0
 static unsigned char startBits[8] = {
     0xFF, 0x7F, 0x3F, 0x1F, 0x0F, 0x07, 0x03, 0x01};
 
 static unsigned char endBits[8] = {
     0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF};
+#endif
 
 /* }}} */
 
@@ -136,6 +138,7 @@ RGB2gray(int *color)
 	return n;
 }
 
+#if 0
 static int
 RGB2gray2(float r, float g, float b)
 {
@@ -146,11 +149,9 @@ RGB2gray2(float r, float g, float b)
     else
 	return n;
 }
-
-#ifdef __GNUC__
-inline
 #endif
-static void
+
+static inline void
 setZpixel(unsigned char *buf, float *zbuf, int zwidth, int width, int height,
 	  CPoint3 *p, int *color)
 {
@@ -440,6 +441,7 @@ Xmgr_1DGZpolyline(unsigned char *buf, float *zbuf, int zwidth, int width, int he
 /*
 Local variables:
 folded-file: t
+End:
 */
 
 

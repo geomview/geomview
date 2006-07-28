@@ -37,6 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 extern void mgx11_linewidth(short);
 
+void
 mgx11_appearance( struct mgastk *ma, int mask )
 {
   Appearance *ap = &(ma->ap);
