@@ -26,7 +26,7 @@ static void record_alloc(void *ptr, size_t size,
 			 const char *file, const char *func, int line)
 {
   unsigned long seq_min;
-  int i, seq_min_i;
+  int i, seq_min_i = 0;
 
   for (seq_min = ~0, i = 0; i < N_RECORDS; i++) {
     if (records[i].seq == REC_FREE) {
@@ -64,8 +64,6 @@ static void record_free(void *ptr)
 
 void *malloc_record(size_t size, const char *file, const char *func, int line)
 {
-  int i, seq_min_i;
-  unsigned long seq_max;
   void *ptr;
 
   ptr = malloc(size);
@@ -98,8 +96,8 @@ void *realloc_record(void *ptr, size_t size,
 void *calloc_record(size_t nmemb, size_t size,
 		     const char *file, const char *func, int line)
 {
-  size *= nmemb;
   void *ptr;
+  size *= nmemb;
 
   ptr = malloc_record(size, file, func, line);
   memset(ptr, 0, size);
