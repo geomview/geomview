@@ -55,9 +55,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * All compile-time dependencies on graphics type (X11/GL/OPENGL)
  * reside in this file.
  */
-#if !defined(MGGL) && !defined(MGX11) && !defined(MGOPENGL)
+#if !MGGL && !MGX11 && !MGOPENGL
 /* default to MGOPENGL */
-#define MGOPENGL 1
+# define MGOPENGL 1
+#endif
+#if (MGOPENGL || MGGL) && MGX11
+# undef MGX11
 #endif
 
 #include "mg.h"
