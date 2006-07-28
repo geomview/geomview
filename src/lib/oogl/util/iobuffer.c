@@ -571,7 +571,7 @@ static void iob_flush_buffer(IOBLIST *ioblist)
 void iobfrewind(IOBFILE *iobf)
 {
   rewind(iobf->istream);
-  if (iobf->can_seek) {
+  if (1 || iobf->can_seek) {
     iob_release_buffer(&iobf->ioblist);
     iob_init_buffer(&iobf->ioblist);
   } else {
