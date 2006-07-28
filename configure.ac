@@ -106,6 +106,7 @@ AC_PROG_CPP
 AC_PROG_LEX
 #AC_PROG_RANLIB
 AC_PROG_YACC
+AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 # Search path for "find" executable.  Use "find" unless
 # the bogus MS Windows version is first on the path, in 
@@ -523,11 +524,14 @@ fi # without-opengl
 AC_SUBST(OPENGLLIBS)
 AC_SUBST(OPENGLINCLUDE)
 
+#
+# MGX11 is always defined, does not hurt to include it in the library.
+#
 if test "z${GL_I_OPTION}" != "z0" && \
    test "z${GL_L_OPTION}" != "z0" && \
    test "z${OPENGL_DIR}" != "zno"; then
   MGOPENGL=1
-  MGX11=0
+  MGX11=1
 else
   MGOPENGL=0
   MGX11=1
@@ -704,10 +708,13 @@ AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
 ########################################################################
 
+# cache 'moduledir' and 'geomdatadir' so individual module configure scripts
+# can get them from the cache
+
 moduledir="\$(libexecdir)/geomview"
 AC_SUBST(moduledir)
 
-geomdatadir="\$(pkgdatadir)/data"
+geomdatadir="\$(datadir)/geomview/data"
 AC_SUBST(geomdatadir)
 
 # cache 'moduledir' and 'geomdatadir' so individual module configure scripts
@@ -913,6 +920,8 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomview/x11/Makefile
 	  src/bin/geomview/x11/bitmaps/Makefile
 	  src/bin/geomview/x11/interface/Makefile
+	  src/bin/NDview/Makefile
+	  src/bin/clipboard/Makefile
 	  src/bin/crayola/Makefile
 	  src/bin/example/Makefile
 	  src/bin/ginsu/Makefile
