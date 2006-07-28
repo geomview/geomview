@@ -154,7 +154,6 @@ void update_dimension()
 	iobfrewind(infile);
 	printf("(echo (dimension)\\n)\n"); fflush(stdout);
 	iobfgets(buf, 10, infile); newdimension = atoi(buf);
-	fprintf(stderr, "dim-string: \"%s\"\n", buf);
 	if(newdimension < 3) newdimension = 3;   /* if gv in not ND yet */
 	if(dimension != newdimension) {
 		dimension = newdimension;
