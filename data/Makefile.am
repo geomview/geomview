@@ -8,19 +8,7 @@ EXTRA_DIST = $(geomdata_DATA)
 # automake will install the various *_DATA files in order of the
 # variable name.
 
-aaaa1dir = $(geomdatadir)/geom
-aaaa2dir = $(geomdatadir)/geom/pieces
-aaaa3dir = $(geomdatadir)/geom/polyhedra
-aaaa4dir = $(geomdatadir)/geom/spherical
-aaaa5dir = $(geomdatadir)/geom/textured
-aaaa6dir = $(geomdatadir)/groups
-
-aaaa1_DATA =
-aaaa2_DATA =
-aaaa3_DATA =
-aaaa4_DATA =
-aaaa5_DATA =
-aaaa6_DATA =					\
+groups =					\
 	groups/101a.dgp				\
 	groups/101b.dgp				\
 	groups/120.dgp				\
@@ -77,7 +65,7 @@ aaaa6_DATA =					\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
 
-geomdata_DATA = \
+nobase_geomdata_DATA = \
 	.geomview \
 	cmap.fmap \
 	geom/HingeCube \
@@ -198,3 +186,5 @@ geomdata_DATA = \
 	geom/xyz.grp \
 	geom/xyz.vect \
 	geom/ztent.mesh
+
+nobase_geomdata_DATA += $(groups)
