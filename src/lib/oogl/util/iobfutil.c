@@ -160,30 +160,30 @@
 #define fgetc  gobble
 
 #ifndef WORDS_BIGENDIAN
-static inline int ntohl(unsigned int v) {
+static inline int gv_ntohl(unsigned int v) {
   return (((v >> 24) & 0x000000FF) |
 	  ((v << 24) & 0xFF000000) |
 	  ((v >>  8) & 0x0000FF00) |
 	  ((v <<  8) & 0x00FF0000));
 }
-static inline short ntohs(unsigned short s) {
+static inline short gv_ntohs(unsigned short s) {
   return (((s >> 8) & 0x00FF) | ((s << 8) & 0xFF00));
 }
 #else
-static inline int ntohl(unsigned int v) {
+static inline int gv_ntohl(unsigned int v) {
   return v;
 }
-static inline short ntohs(unsigned short s) {
+static inline short gv_ntohs(unsigned short s) {
   return s;
 }
 #endif
 
 static inline short htons(unsigned short s)
 {
-  return ntohs(s);
+  return gv_ntohs(s);
 }
 static inline int htonl(unsigned int v) {
-  return ntohl(v);
+  return gv_ntohl(v);
 }
 
 int iobfnextc(IOBFILE *f, int flags)
@@ -244,7 +244,7 @@ int iobfgetnf(IOBFILE *f, int maxf, float *fv, int binary)
       float wf;
     } w;
     for(n=0; n<maxf && iobfread((char *)&w,sizeof(float),1,f) > 0; n++) {
-      w.wi = ntohl(w.wi);
+      w.wi = gv_ntohl(w.wi);
       fv[n] = w.wf;
     }
     return n;
@@ -336,8 +336,8 @@ int iobfgetnd(IOBFILE *f, int maxd, double *dv, int binary)
     } w;
     int tmp;
     for(n=0; n<maxd && iobfread((char *)&w,sizeof(double),1,f) > 0; n++) {
-      tmp     = ntohl(w.wi[0]);
-      w.wi[0] = ntohl(w.wi[1]);
+      tmp     = gv_ntohl(w.wi[0]);
+      w.wi[0] = gv_ntohl(w.wi[1]);
       w.wi[1] = tmp;
       dv[n] = w.wd;
     }
@@ -423,7 +423,7 @@ iobfgetni(IOBFILE *f, int maxi, int *iv, int binary)
 #else /* not native big-endian int's */
     int w;
     for(n = 0; n < maxi && iobfread(&w,4,1,f) > 0; n++)
-      iv[n] = ntohl(w);
+      iv[n] = gv_ntohl(w);
     return n;
 #endif /* not native big-endian int's */
   }
@@ -467,7 +467,7 @@ iobfgetns(IOBFILE *f, int maxs, short *sv, int binary)
 #else /* not native big-endian int's */
     short w;
     for(n = 0; n < maxs && iobfread(&w,2,1,f) > 0; n++)
-      sv[n] = ntohs(w);
+      sv[n] = gv_ntohs(w);
     return n;
 #endif /* not native big-endian int's */
   }

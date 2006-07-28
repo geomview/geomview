@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.15 2006/07/24 19:22:15 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.16 2006/07/28 18:18:30 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -129,30 +129,30 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ooglutil.h"
 
 #ifndef WORDS_BIGENDIAN
-static inline int ntohl(unsigned int v) {
+static inline int gv_ntohl(unsigned int v) {
   return (((v >> 24) & 0x000000FF) |
 	  ((v << 24) & 0xFF000000) |
 	  ((v >>  8) & 0x0000FF00) |
 	  ((v <<  8) & 0x00FF0000));
 }
-static inline short ntohs(unsigned short s) {
+static inline short gv_ntohs(unsigned short s) {
   return (((s >> 8) & 0x00FF) | ((s << 8) & 0xFF00));
 }
 #else
-static inline int ntohl(unsigned int v) {
+static inline int gv_ntohl(unsigned int v) {
   return v;
 }
-static inline short ntohs(unsigned short s) {
+static inline short gv_ntohs(unsigned short s) {
   return s;
 }
 #endif
 
 static inline short htons(unsigned short s)
 {
-  return ntohs(s);
+  return gv_ntohs(s);
 }
 static inline int htonl(unsigned int v) {
-  return ntohl(v);
+  return gv_ntohl(v);
 }
 
 int
@@ -280,8 +280,8 @@ int fgetnd(FILE *f, int maxd, double *dv, int binary)
     } w;
     int tmp;
     for(n=0; n<maxd && fread((char *)&w,sizeof(double),1,f) > 0; n++) {
-      tmp     = ntohl(w.wi[0]);
-      w.wi[0] = ntohl(w.wi[1]);
+      tmp     = gv_ntohl(w.wi[0]);
+      w.wi[0] = gv_ntohl(w.wi[1]);
       w.wi[1] = tmp;
       dv[n] = w.wd;
     }
@@ -375,7 +375,7 @@ fgetnf(FILE *f, int maxf, float *fv, int binary)
 			float wf;
 		} w;
 		for(n=0; n<maxf && fread((char *)&w,sizeof(float),1,f) > 0; n++) {
-			w.wi = ntohl(w.wi);
+			w.wi = gv_ntohl(w.wi);
 			fv[n] = w.wf;
 		}
 		return n;
@@ -461,7 +461,7 @@ fgetni(FILE *f, int maxi, int *iv, int binary)
 #else /* not native big-endian int's */
 		int w;
 		for(n = 0; n < maxi && fread(&w,4,1,f) > 0; n++)
-		    iv[n] = ntohl(w);
+		    iv[n] = gv_ntohl(w);
 		return n;
 #endif /* not native big-endian int's */
 	}
@@ -505,7 +505,7 @@ fgetns(FILE *f, int maxs, short *sv, int binary)
 #else /* not native big-endian int's */
 		short w;
 		for(n = 0; n < maxs && fread(&w,2,1,f) > 0; n++)
-		    sv[n] = ntohs(w);
+		    sv[n] = gv_ntohs(w);
 		return n;
 #endif /* not native big-endian int's */
 	}
