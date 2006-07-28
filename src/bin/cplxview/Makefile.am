@@ -1,5 +1,7 @@
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
+man_MANS = cplxview.1
+
 LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)      \
 	$(OOGLLIB) 

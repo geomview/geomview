@@ -6,6 +6,8 @@ LDADD =	$(XFORMSLIBS) \
 
 EXTRA_DIST = .geomview-transformer panel.fd  transformer.1
 
+man_MANS = transformer
+
 module_PROGRAMS = transformer
 transformer_SOURCES = transformer.main.c panel.c panel.h
 transformer_DEPENDENCIES = $(OOGLLIB)

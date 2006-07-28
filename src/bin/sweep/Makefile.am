@@ -6,6 +6,8 @@ LDADD =	$(XFORMSLIBS) \
 
 EXTRA_DIST = .geomview-sweep panel.fd  sweep.1 sweep.3
 
+man_MANS = sweep.1 sweep.3
+
 module_PROGRAMS = sweep
 sweep_SOURCES = sweep.c sweep.main.c panel.c panel.h sweep.h
 sweep_DEPENDENCIES = $(OOGLLIB)
