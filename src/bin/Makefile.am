@@ -1,7 +1,7 @@
 XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti gvclock hinge \
  stereo sweep tackdown transformer
 
-TCLTK_SUBDIRS = crayola labeler
+TCLTK_SUBDIRS = crayola labeler NDview
 
 # Geomview's top-level configure script sets $(src_bin_module_subdirs)
 # to the list of subdirectories of this directory (src/bin) that have
@@ -12,7 +12,7 @@ TCLTK_SUBDIRS = crayola labeler
 # with the main Geomview distribution, though, so we define
 # DIST_SUBDIRS without $(src_bin_module_subdirs).
 
-NORMAL_SUBDIRS = geomview togeomview geomutil animate
+NORMAL_SUBDIRS = geomview togeomview geomutil animate clipboard
 
 DIST_SUBDIRS = $(NORMAL_SUBDIRS) $(XFORMS_SUBDIRS) $(TCLTK_SUBDIRS)
 
