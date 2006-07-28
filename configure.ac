@@ -5,7 +5,7 @@ AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
-#AC_PREFIX_DEFAULT([/usr/local/Geomview])
+AC_PREFIX_DEFAULT([/usr/local/Geomview])
 
 
 AC_MSG_RESULT([configuring $PACKAGE $VERSION])
