@@ -2,7 +2,7 @@ INCLUDES = $(default_includes) $(MOTIFINCLUDE) $(OPENGLINCLUDE) -I..
 SUBDIRS = bitmaps interface
 
 gvx_LDADD = ../common/libgvcommon.a buildinfo.o \
- $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(XLIBS) $(OOGLLIB)
+ $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(OOGLLIB) $(XLIBS)
 gvx_DEPENDENCIES = ../common/libgvcommon.a buildinfo.o $(OOGLLIB)
 gvx_LDFLAGS = -rpath $(libdir)
 
@@ -25,4 +25,4 @@ buildinfo.c: $(gvx_OBJECTS) ../common/libgvcommon.a
 ../clang.c ../clang.h:
 	cd .. && $(MAKE) $(AM_MAKEFLAGS) clang
 
-DISTCLEANFILES = buildinfo.c clang.c clang.hy
+DISTCLEANFILES = buildinfo.c clang.c clang.h
