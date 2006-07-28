@@ -2,9 +2,7 @@ EXTRA_DIST = README example.1 panel.fd tutorial.ps tutorial.tex
 
 INCLUDES = $(default_includes) $(XFORMSINCLUDE)
 
-LDADD =	$(XFORMSLIBS) \
-	$(XLIBS)     \
-	$(OOGLLIB) 
+LDADD =	$(OOGLLIB) $(XFORMSLIBS) $(XLIBS)
 
 module_PROGRAMS = example
 example_SOURCES = main.c oogl.c callbacks.c panel.c panel.h

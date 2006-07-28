@@ -1,9 +1,14 @@
 INCLUDES = $(default_includes) $(MOTIFINCLUDE)
 SUBDIRS = interface
+
 EXTRA_DIST = animate.1
 
+man_MANS = animate.1
+
 module_PROGRAMS = animate
-animate_SOURCES = animate.c xanimate.c glob.c animate.h glob.h xanimate.h
+animate_SOURCES = \
+ animate.c xanimate.c glob.c animate.h glob.h xanimate.h \
+ interface/animate.mib interface/command.mib interface/info.mib
 animate_LDADD = $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(XLIBS)
 animate_LDFLAGS = -rpath $(libdir)
 
