@@ -1,0 +1,128 @@
+#!./testwish
+
+if [catch {set ndroot $env(GEOMDATA)}] {
+    puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
+    exit 1
+}
+
+proc mkDemo {} {
+    wm geometry . +0+0
+
+    frame .o
+    label .o.objectlabel -text "Objects"
+    frame .o.f -relief raised -bd 3
+    listbox .o.f.objects -selectmode browse -width 11 -height 9
+    bind .o.f.objects <ButtonRelease-1> {loadit [selection get]}
+    .o.f.objects insert end "Point"
+    .o.f.objects insert end "2 Points"
+    .o.f.objects insert end "Segment"
+    .o.f.objects insert end "2 Segments"
+    .o.f.objects insert end "Square"
+    .o.f.objects insert end "2 Squares"
+    .o.f.objects insert end "Cube"
+    .o.f.objects insert end "2 Cubes"
+    .o.f.objects insert end "Tesseract"
+
+    .o.f.objects select set 0
+    pack .o.f.objects -expand 1 -fill y
+    pack .o.objectlabel
+    pack .o.f -expand 1 -fill y
+    pack .o -side left -padx 2 -pady 2 -fill y
+
+    frame .text
+    pack .text -side left -padx 2 -pady 2 -expand 1 -fill both
+    text .text.t -relief sunken -bd 3 -width 50 -height 1 -yscrollcommand ".text.s set"
+    scrollbar .text.s -command ".text.t yview"
+    pack .text.s -fill y -side right
+    pack .text.t -expand 1 -fill both
+
+    frame .right
+    button .right.quit -command {
+	catch {
+	    puts {
+		(if (real-id axes) (delete axes))
+		(if (real-id g2) (delete g2))
+		(if (real-id X_W_plane) (delete X_W_plane))
+		(if (real-id X_Y_Z_hyperplane) (delete X_Y_Z_hyperplane))
+	    }
+	    flush stdout
+	}
+	catch {exec "killall eitherwindow"}
+	exit
+    } -text "Quit"
+    button .right.reset -command {
+	puts "(load NDview/scripts/reset.script command)"
+	flush stdout
+	.right.mslider.slider set 0
+    } -text "Reset"
+    button .right.help -command "loadtext text/demohelp.txt" -text "Help"
+    label .right.motion -text "Motion"
+
+    frame .right.mslider
+    frame .right.mslider.labels
+    label .right.mslider.labels.fast -text "Fast"
+    label .right.mslider.labels.slow -text "Slow"
+    label .right.mslider.labels.stop -text "Stop"
+    pack .right.mslider.labels.fast -side top
+    pack .right.mslider.labels.stop .right.mslider.labels.slow -side bottom
+    pack .right.mslider.labels -side left -expand 1 -fill y
+    scale .right.mslider.slider -showvalue no -from 1 -to 0 -resolution 0.01 \
+	-command "setspeed"
+    pack .right.mslider.slider -side right -expand 1 -fill y
+    
+    pack .right.quit .right.reset .right.help .right.motion -fill x
+    pack .right.mslider -expand 1 -fill y
+    
+    pack .right -side right -fill y -padx 2 -pady 2
+
+    wm resizable . 0 0
+}
+
+######################################################################
+
+proc setspeed {val} {
+    if 0==$val {
+	puts "(transform g2 X_W_plane X_W_plane rotate 0 0 0)"
+    } else {
+	puts [format "(transform-incr g2 X_W_plane X_W_plane rotate 0 0 1.57 %f)" [expr .5/($val*$val)]]
+    }
+    flush stdout
+}
+
+proc loadit {which} {
+    switch -exact $which {
+	"Point" {set data {text/point.txt NDview/geom/demo/point}}
+	"2 Points" {set data {text/pointd.txt NDview/geom/demo/points}}
+	"Segment" {set data {text/segment.txt NDview/geom/demo/segmentw+x+z+}}
+	"2 Segments" {set data {text/segmentd.txt NDview/geom/demo/segmentw+x+z}}
+	"Square" {set data {text/square.txt NDview/geom/demo/squarew+x+}}
+	"2 Squares" {set data {text/squared.txt NDview/geom/demo/squarew+x}}
+	"Cube" {set data {text/cube.txt NDview/geom/demo/cubew+}}
+	"2 Cubes" {set data {text/cubed.txt NDview/geom/demo/cubew}}
+	"Tesseract" {set data {text/tesseract.txt NDview/geom/demo/tesseract}}
+    }
+    loadtext [lindex $data 0]
+    puts "(if (real-id g2) (progn (geometry g2 < [lindex $data 1])) (load [lindex $data 1]))"
+    flush stdout
+}
+
+proc loadtext {text} {
+    global ndroot
+    set f [open $ndroot/NDview/$text]
+    .text.t configure -state normal
+    .text.t delete 0.0 end
+    .text.t insert end [read $f]
+    .text.t configure -state disabled
+    close $f
+}
+
+
+mkDemo
+puts [format {
+    (load NDview/scripts/startup.big.script command)
+    (load NDview/scripts/reset.script command)
+    (emodule-run %s/scripts/eitherwindow)
+} $ndroot/NDview]
+loadit Point
+loadtext text/demohelp.txt
+flush stdout

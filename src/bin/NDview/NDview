@@ -1,0 +1,414 @@
+#!./testwish
+
+emodule_init ndview
+
+if [catch {set ndroot $env(GEOMDATA)/NDview}] {
+    puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
+    exit 1
+}
+
+proc setentry {entry value} {
+    $entry delete 0 end
+    $entry insert 0 $value
+}
+
+# useful routines.
+
+proc viewfile {path file} {
+    global ndroot
+    set f [open $ndroot/$file]
+
+    catch {destroy $path};
+    toplevel $path
+    text $path.text -relief sunken -bd 2 -yscrollcommand "$path.scroll set" \
+	-width 50
+    scrollbar $path.scroll -command "$path.text yview"
+    button $path.done -command "destroy $path" -text "Done"
+    pack $path.done -side bottom -anchor se
+    pack $path.scroll -side right -fill y -anchor w
+    pack $path.text -side right -expand 1 -fill both
+
+    $path.text insert end [read $f]
+    $path.text configure -state disabled
+    close $f
+    wm minsize $path 300 300
+    wm title $path $file
+}
+
+################################################################
+# Top row of buttons
+
+# code to change selection
+
+proc selected_basis {} {
+	global update
+	ndview_set_update $update
+}
+
+proc unselected_basis {} {
+	ndview_set_update none
+}
+
+proc selected_toolkit {} {
+	ndview_update_dimension
+}
+
+proc setselect {i} {
+    global selected
+    catch unselected_$selected
+    foreach j {intro prefab toolkit basis basis_needmore} {
+	catch {pack forget .$j}
+	.sf.select.$j configure -relief raised -state normal
+    }
+    if \"$selected\"==\"$i\" {
+	set selected none
+    } else {
+	.sf.select.$i configure -relief sunken
+	pack .$i -expand 1 -fill both
+	set selected $i
+	catch selected_$i
+    }
+}
+
+proc mkTop {} {
+    frame .sf
+    frame .sf.select
+    button .sf.select.intro -text "Introduction" -command "setselect intro"
+    button .sf.select.prefab -text "Prefabricated" -command "setselect prefab"
+    button .sf.select.toolkit -text "Toolkit" -command "setselect toolkit"
+    button .sf.select.basis -text "Basis vectors" -command {
+	ndview_update_dimension
+	if "$dimension > 3" {setselect basis} else {setselect basis_needmore}
+    }
+    proc .sf.select.basis_needmore {args} {eval ".sf.select.basis $args"}
+    button .quit -text "Quit NDview" -command "destroy ."
+    
+    pack .sf.select.intro .sf.select.prefab .sf.select.toolkit \
+	.sf.select.basis -side left -anchor n -expand 1
+    label .sf.select.space -text " "
+    pack .sf.select.space -padx 8 -side left
+    pack .quit -side right -anchor ne -in .sf.select -expand 1
+
+    # unfortunately we have to do this, as there's a bug in tix.
+    pack .sf.select -padx 4 -pady 4 -expand 1 -fill x
+    pack .sf -expand 1 -fill x
+}
+
+
+################################################################
+# Introduction screen
+
+proc mkIntro {} {
+    frame .intro
+    
+    button .intro.help -text "Introductory help" \
+	-command "viewfile .intro.help.panel text/introhelp.txt"
+    button .intro.demo -text "Introductory demo" -command {
+	puts "(emodule-start NDdemo)";
+	flush stdout
+    }
+    label .intro.title1 -text "NDview 1.1"
+    label .intro.title2 -text "Tcl/Tk version by Nils McCarthy"
+    label .intro.title3 -text "Original version by Olaf Holt and Stuart Levy"
+    pack .intro.title1 .intro.title2 .intro.title3 -side top
+    pack .intro.help -side left -padx 4 -pady 2
+    pack .intro.demo -side right -padx 4 -pady 2
+}
+
+
+################################################################
+# Prefabricated stuff
+
+# define a nice listbox with scroll bar and labe.
+proc mylistbox {path short title command} {
+    global mylistbox_val_$short
+    frame $path
+    listbox $path.box -yscrollcommand "$path.scroll set" -relief sunken \
+	-selectmode browse -width 12 -height 5
+    bind $path.box <ButtonRelease-1> "$command \$mylistbox_val_${short}(\[selection get\])"
+    label $path.label -text $title
+    scrollbar $path.scroll -command "$path.box yview"
+    pack $path.label -side top -fill x
+    pack $path.scroll -side right -fill y
+    pack $path.box -side right -expand 1 -fill both
+    foreach i [lsort [array names mylistbox_val_$short]] {
+	$path.box insert end $i
+    }
+}
+
+# read in data file from .ndview
+proc readndview {file} {
+    if ![catch {set f [open $file r]}] {
+	while {[gets $f line] > -1} {
+	    if [regexp {^(.+):(.+):(.+)$} $line matchvar label module value] {
+		global mylistbox_val_$module
+		set "mylistbox_val_${module}($label)" $value
+	    }
+	}
+    }
+}
+
+proc load_command {file} {
+    puts "(load $file commands)"
+    flush stdout
+}
+
+proc load_script {file} {
+    puts "(load $file)"
+    flush stdout
+}
+
+proc load_module {module} {
+    puts "(emodule-start $module)"
+    flush stdout
+}
+
+# prefabricated screen
+
+proc mkPrefab {} {
+    global ndroot env
+
+    frame .prefab
+
+    readndview "$ndroot/scripts/.ndview"
+    readndview "$env(HOME)/.ndview"
+    readndview ".ndview"
+
+    mylistbox .prefab.envs environment "Environments" load_command
+    mylistbox .prefab.cmaps colormap "Colormaps" load_command
+    mylistbox .prefab.sample object "Sample objects" load_script
+
+    frame .prefab.right
+    mylistbox .prefab.right.modules demo "Modules" load_module
+    button .prefab.right.help -text "Help" \
+	-command "viewfile .prefab.help text/prefabhelp.txt"
+    pack .prefab.right.modules
+    pack .prefab.right.help -expand 1 -fill x
+
+    pack .prefab.envs .prefab.cmaps .prefab.sample .prefab.right \
+	-side left -padx 4 -pady 4 -expand 1 -fill both
+}
+
+################################################################
+# Toolkit stuff
+
+proc scrollset {path command region} {
+    $path set 360 10 $region [expr $region+9]
+    eval $command $region
+}
+
+proc myslider {path label command} {
+    frame $path
+    label $path.l -text $label
+    scale $path.s -from 0 -to 1 -resolution 0.01 -orient horizontal \
+	-showvalue no -command $command
+    pack $path.l -side left
+    pack $path.s -side left -fill x -expand 1
+}
+
+proc setlens {val} {
+    puts "(merge cameral allcams {focus [expr $val*$val*50.0]})"
+    flush stdout
+}
+
+proc setrotate {which val} {
+    foreach i {1 2 3} {
+	if $i!=$which {
+	    .toolkit.sliders.s$i.s set 0
+	}
+    }
+    if $val==0 {
+	puts "(transform target focus focus rotate 0 0 0)"
+    } else {
+	puts [format "(transform-incr target focus focus rotate %s %f)" [lindex {{} "1.57 0 0" "0 1.57 0" "0 0 1.57"} $which] [expr 0.5/$val]]
+    }
+    flush stdout
+}
+
+proc changedim {inc} {
+    global dimension;
+    set newdim [expr $dimension+$inc];
+    if $newdim<3 {
+	set newdim 3
+    }
+    set dimension $newdim
+    puts "(dimension $dimension)"
+    flush stdout
+}
+
+proc newwin {} {
+    global dimension newwin_dims
+    catch {destroy .newwin}
+    toplevel .newwin
+    set i 1
+    frame .newwin.dims
+    while {$i<=$dimension} {
+	checkbutton .newwin.dims.dim$i -command "newwin_button $i" \
+	    -text $i -variable dim$i
+	.newwin.dims.dim$i deselect
+	pack .newwin.dims.dim$i -side left
+	set i [expr $i+1]
+    }
+    button .newwin.ok -state disabled -command "newwin_ok" -text "done"
+    button .newwin.cancel -command "destroy .newwin" -text "cancel"
+    label .newwin.clusterlabel -text "cluster:"
+    entry .newwin.cluster -textvariable newwin_cluster -width 12 -relief sunken
+    pack .newwin.dims -side top
+    pack .newwin.ok .newwin.cancel .newwin.clusterlabel .newwin.cluster -side left
+    set newwin_dims {}
+}
+
+proc newwin_button {num} {
+    global newwin_dims
+    if [lsearch $newwin_dims $num]>=0 {
+#	.newwin.dims.dim$num configure -state normal
+	set newwin_dims [lreplace $newwin_dims [lsearch $newwin_dims $num] [lsearch $newwin_dims $num]]
+    } else {
+#	.newwin.dims.dim$num configure -state active
+	lappend newwin_dims $num
+    }
+    if [llength $newwin_dims]==3 {
+	.newwin.ok configure -state normal
+    } else {
+	.newwin.ok configure -state disabled
+    }
+}
+
+proc newwin_ok {} {
+    global newwin_dims newwin_cluster
+    set name $newwin_cluster:[join $newwin_dims _]
+    puts "(new-camera $name)"
+    set newwin_zerodims {}
+    foreach i $newwin_dims {
+	lappend newwin_zerodims [expr $i-1]
+    }
+    puts "(ND-axes $name $newwin_cluster $newwin_zerodims)"
+    flush stdout
+    destroy .newwin
+}
+
+proc newmap {} {
+    puts "(emodule-start colormap)"
+    flush stdout
+}
+
+# toolkit display
+
+proc mkToolkit {} {
+    frame .toolkit
+    frame .toolkit.sliders
+
+    myslider .toolkit.sliders.lens "Lens" "setlens"
+    .toolkit.sliders.lens.s set 0.245
+
+    label .toolkit.sliders.rotations -text "Rotations:"
+    myslider .toolkit.sliders.s1 "s1" "setrotate 1"
+    myslider .toolkit.sliders.s2 "s2" "setrotate 2"
+    myslider .toolkit.sliders.s3 "s3" "setrotate 3"
+
+    pack .toolkit.sliders.lens -side top -fill x -expand 1
+    pack .toolkit.sliders.rotations -side top -anchor w -fill x -expand 1
+    pack .toolkit.sliders.s1 -side top -fill x -expand 1
+    pack .toolkit.sliders.s2 -side top -fill x -expand 1
+    pack .toolkit.sliders.s3 -side top -fill x -expand 1
+
+    pack .toolkit.sliders -fill x -expand 1 -side left -padx 2
+
+    frame .toolkit.buttons
+    frame .toolkit.buttons.dim
+    button .toolkit.buttons.dim.plus -text "+" -command "changedim 1"
+    button .toolkit.buttons.dim.minus -text "-" -command "changedim -1"
+    label .toolkit.buttons.dim.val -textvariable dimension
+    pack .toolkit.buttons.dim.minus .toolkit.buttons.dim.val \
+	.toolkit.buttons.dim.plus -side left -expand 1 -fill both
+    set newwin_cluster cluster1
+    button .toolkit.buttons.newwin -text "New window" -command "newwin"
+    button .toolkit.buttons.newmap -text "New colormap" -command "newmap"
+    button .toolkit.buttons.help -text "Help" \
+	-command "viewfile .toolkit.help text/toolkithelp.txt"
+    pack .toolkit.buttons.dim .toolkit.buttons.newwin .toolkit.buttons.newmap \
+	.toolkit.buttons.help -expand 1 -fill x
+    pack .toolkit.buttons -side right -fill y -padx 2
+}
+
+################################################################
+# Basis vector stuff
+
+# basis vectors
+proc myentry {num path args} {
+    eval "entry $path $args -relief sunken -bd 3"
+    bind $path <Return> "$path select from 0;$path select to end;ndview_spanproc $num"
+}
+
+
+proc mkBasis {} {
+    frame .basis
+
+    frame .basis.l
+    label .basis.l.label -text "Image projected onto span {s1,s2,s3} where:"
+    frame .basis.l.left
+    label .basis.l.left.s1 -text "s1 = "
+    label .basis.l.left.s2 -text "s2 = "
+    label .basis.l.left.s3 -text "s3 = "
+    pack .basis.l.left.s1 .basis.l.left.s2 .basis.l.left.s3
+    frame .basis.l.right
+    myentry 1 .basis.l.right.s1 -width 20
+    myentry 2 .basis.l.right.s2 -width 20
+    myentry 3 .basis.l.right.s3 -width 20
+    pack .basis.l.right.s1 .basis.l.right.s2 .basis.l.right.s3 -fill x
+    pack .basis.l.label -side top
+    pack .basis.l.left -side left
+    pack .basis.l.right -side right -fill x -expand 1
+    frame .basis.r
+    label .basis.r.displabel -text "Displacement:"
+    myentry 4 .basis.r.disp -width 20
+    label .basis.r.viewlabel -text "Camera view from:"
+    myentry 5 .basis.r.view -width 20
+    pack .basis.r.displabel .basis.r.disp .basis.r.viewlabel .basis.r.view \
+	-fill x -expand 1
+
+    frame .basis.b
+    frame .basis.b.i
+    label .basis.b.i.label -text "Information for:"
+    label .basis.b.i.target -textvariable basis_target
+    set basis_target mytarget
+    pack .basis.b.i.label .basis.b.i.target
+    frame .basis.b.update
+    label .basis.b.update.label -text "Update:"
+    radiobutton .basis.b.update.single -variable update -value "single" \
+	-text "Single (allow input)" -anchor w \
+	-command {ndview_set_update single}
+    radiobutton .basis.b.update.continuous -variable update \
+	-value "continuous" -text "Continuous" -anchor w \
+	-command {ndview_set_update continuous}
+    set update single
+    catch {ndview_set_update none}
+    set update continuous
+    pack .basis.b.update.label -side left
+    pack .basis.b.update.single .basis.b.update.continuous -fill x
+    button .basis.b.help -text "Help" \
+	-command "viewfile .basis.help text/axeshelp.txt"
+    pack .basis.b.i .basis.b.update .basis.b.help -side left -expand 1
+    pack .basis.b -side bottom -fill x
+    pack .basis.l .basis.r -side left -padx 2 -fill x -expand 1
+
+    message .basis_needmore \
+	-text "Need at least 4 dimensions to see basis vectors." -width 200
+}
+
+set update continuous
+set selected none
+set newwin_cluster default
+ndview_c_exists
+ndview_update_dimension
+mkTop
+mkIntro
+mkPrefab
+mkToolkit
+mkBasis
+wm resizable . 0 0
+setselect intro
+
+puts "(bbox-draw allgeoms off)"
+puts "(ui-target g0)"
+flush stdout

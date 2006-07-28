@@ -1,0 +1,3 @@
+These segments are opposite sides of a square.
+
+Press "square" to continue.

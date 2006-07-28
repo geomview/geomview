@@ -1,0 +1,20 @@
+Here is the tesseract.  It should look like two
+cubes connected at the vertices, each cube
+rotating in a by now familiar way.  If it makes
+sense, congratulations, the rest of this demo is
+just icing.
+
+One variation is to do this whole progression
+again, but with a slightly tilted tesseract.
+
+Using the LEFT mouse button, tilt the tesseract
+slightly in the X_W_plane (not the
+X_Y_Z_hyperplane).
+
+Now try the progression from a single point to the
+segment and so on.  This should illustrate what's
+going on when we move to more general rotations.
+
+This concludes the explanatory text for this demo.
+If you have any comments, please email them to
+holt@geomview.org.  Thank you.

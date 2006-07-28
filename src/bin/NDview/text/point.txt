@@ -1,0 +1,42 @@
+What do I see?
+
+When geomview is ready, you should see two
+windows, labeled "X_W_plane", and
+"X_Y_Z_hyperplane".  They each show a set of axes
+and a point.
+
+If you haven't already, move the slider under
+"MOTION" to make the object rotate.
+
+Notice what is happening in the X_Y_Z_hyperplane--
+the point is moving along the x axis.
+
+Use the LEFT mouse button in the X_Y_Z_hyperplane
+to move it around and get a better look.  You can
+move the X_Y_Z_hyperplane like this at any point
+during this demo.
+
+What's going on?
+
+We are watching several projections of a point
+moving in four dimensional space.
+
+Click on the "Reset" button.
+
+You will notice that the point starts out at
+approximately (x=.7, y=0, z=0, w=.3).
+
+Click "Fast" or "Slow" to make it move again.
+
+The movement of the point in the x direction can
+been seen in the projection into the
+X_Y_Z_hyperplane, but its movement in the w
+direction has been hidden (or "projected out").
+
+Notice that everything has been color-coded
+according to height in the w direction, so that
+when the w coordinate of the point is high, the
+point is colored red, and when it is low, the
+point is colored blue.
+
+Press "2 points" to continue.

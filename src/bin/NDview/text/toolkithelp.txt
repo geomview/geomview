@@ -1,0 +1,61 @@
+The toolkit panel allows you to "manually" create
+windows, colormaps, and effect other
+transformations often done by scripts (if they are
+to be done many times).  In clockwise order, here
+is what the various controls do:
+
+Current (maximum) number of dimensions: this
+number determines the number of dimensions to be
+used in Geomview's internal calculations.  It
+should not be set higher than it needs to be for
+speed reasons.  Reducing this number forces a
+reset of all the camera and object positions.
+
+New Window: pressing this button brings up a panel
+for creating a new window, subject to the current
+(maximum) number of dimensions.  You may specify
+three projection axes and a cluster.  If you want
+all your cameras to act independently of each
+other, choose a new name for the cluster each time
+you create a new window.  A detailed explanation
+of how cameras are related to each other and the
+role of clusters is found in the NDview manual
+pages.
+
+New Colormap: pressing this button brings up an
+(independent) panel for creating a new colormap.
+Here is one procedure for using the colormap
+maker: 1) use the sliders to select a color 2)
+fill the fourth numeric input on the right with a
+height 3) press add to make the identification of
+the displayed height with the displayed color a
+part of the emerging colormap.  4) repeat steps
+1-3 until a satisfactory "rainbow" has been made
+5) press "axes" to specify the name of the window
+to which this colormap will be applied (look in
+the upper left corner), as well as a vector to
+determine the direction for the height function 6)
+press "save" to apply this colormap to the window
+specified in step 5.  These steps don't have to
+occur in exactly the order given above, but once
+you make one colormap the process should be clear.
+
+Rotations (x, y, and z): These three sliders
+create rotations about the given axis in the
+current window.  The position of the slider
+determines how the speed of the rotation.  This
+may be useful in the case where a precise rotation
+is desired, or when a very slow rotation would be
+helpful.
+
+Lens: This slider zooms all the cameras in or out
+simultaneously.  (Actually, it is adjusting the
+focal length of the cameras.)  This is useful if
+you want to zoom out quickly.  The effect of
+changing the focal length is not the same as
+moving the position of the camera in the basis
+vectors panel, due to different types of
+adjustments made to the internal stack of
+transformations.  Note that the position of this
+slider may not correspond with the current focal
+length of the current camera.

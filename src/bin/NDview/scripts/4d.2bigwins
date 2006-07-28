@@ -1,0 +1,10 @@
+(progn
+(dimension 4)
+(merge window default { position 854 1270 672 991})
+(new-camera X_W_Y_hyperplane)
+(ND-axes X_W_Y_hyperplane cluster1 0 3 1)
+(window "X_W_plane" window { size 319 288 position 697 1015 168 455 resize curpos 697 1015 168 455 })
+(new-camera X_Y_Z_hyperplane)
+(ND-axes X_Y_Z_hyperplane cluster2 0 1 2)
+(window "X_Y_Z_hyperplane" window { size 674 448 position 8 681 8 455 resize curpos 8 681 8 455 })
+)
