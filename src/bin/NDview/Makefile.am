@@ -56,18 +56,26 @@ nobase_ndview_DATA = $(ndview_scripts) $(ndview_geom) $(ndview_text)
 .geomview-nddemo: Makefile
 	echo '(emodule-define "NDdemo" "ndview $$GEOMVIEW_EMODULE_PATH/tcl/NDdemo")' > .geomview-nddemo
 
-all-local: $(top_builddir)/data/NDview/text $(top_builddir)/data/NDview/scripts $(top_builddir)/data/NDview/geom
+all-local: $(top_builddir)/data/NDview/text $(top_builddir)/data/NDview/scripts $(top_builddir)/data/NDview/geom $(top_builddir)/modules/.geomview-ndview  $(top_builddir)/modules/.geomview-nddemo
+
+$(top_builddir)/data/NDview/text $(top_builddir)/data/NDview/scripts $(top_builddir)/data/NDview/geom: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDview" "$(subdir)/ndview $(subdir)/NDview")' > $(top_builddir)/modules/.geomview-ndview
-	echo '(emodule-define "NDdemo" "$(subdir)/ndview $(subdir)/NDdemo")' > $(top_builddir)/modules/.geomview-nddemo
 	$(mkdir_p) $(top_builddir)/data/NDview
-	for f in $(ndview_DATA); do \
-	  $(INSTALL_DATA) -D "$$f" "$(top_builddir)/data/NDview/$$f"; \
+	for f in $(nobase_ndview_DATA); do \
+	  $(INSTALL_DATA) -D "$(srcdir)/$$f" "$(top_builddir)/data/NDview/$$f"; \
 	done
 	for f in $(ndview_scripts_SCRIPTS); do \
-	  $(INSTALL_SCRIPT) -D "$$f" "$(top_builddir)/data/NDview/$$f"; \
+	  $(INSTALL_SCRIPT) -D "$(srcdir)/$$f" "$(top_builddir)/data/NDview/$$f"; \
 	done
+
+$(top_builddir)/modules/.geomview-ndview \
+ $(top_builddir)/modules/.geomview-nddemo: Makefile
+	$(top_srcdir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "NDview" "$(subdir)/ndview $(subdir)/$(srcdir)/NDview")' > $(top_builddir)/modules/.geomview-ndview
+	echo '(emodule-define "NDdemo" "$(subdir)/ndview $(subdir)/$(srcdir)/NDdemo")' > $(top_builddir)/modules/.geomview-nddemo
 
 clean-local:
 	rm -fr $(top_builddir)/data/NDview
+	rm -f $(top_builddir)/modules/.geomview-ndview
+	rm -f $(top_builddir)/modules/.geomview-nddemo
 
