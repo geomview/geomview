@@ -1,8 +1,13 @@
 #!./testwish
 
-if [catch {set ndroot $env(GEOMDATA)}] {
-    puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
-    exit 1
+if [catch {set ndroot $env(NDVIEWROOT)}] {
+    if [catch {set ndroot $env(GEOMDATA)/NDview}] {
+	puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
+	exit 1
+    }
+} else {
+    puts "(set-load-path ($ndroot +))"
+    set ndroot "${ndroot}/NDview"
 }
 
 proc mkDemo {} {
@@ -108,7 +113,7 @@ proc loadit {which} {
 
 proc loadtext {text} {
     global ndroot
-    set f [open $ndroot/NDview/$text]
+    set f [open $ndroot/$text]
     .text.t configure -state normal
     .text.t delete 0.0 end
     .text.t insert end [read $f]
@@ -122,7 +127,7 @@ puts [format {
     (load NDview/scripts/startup.big.script command)
     (load NDview/scripts/reset.script command)
     (emodule-run %s/scripts/eitherwindow)
-} $ndroot/NDview]
+} $ndroot]
 loadit Point
 loadtext text/demohelp.txt
 flush stdout

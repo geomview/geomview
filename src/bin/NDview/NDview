@@ -2,9 +2,14 @@
 
 emodule_init ndview
 
-if [catch {set ndroot $env(GEOMDATA)/NDview}] {
-    puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
-    exit 1
+if [catch {set ndroot $env(NDVIEWROOT)}] {
+    if [catch {set ndroot $env(GEOMDATA)/NDview}] {
+	puts stderr "Normally, modules are run in an environment in which the GEOMDATA environment\nvariable is set, which has not been done.  This is done by the geomview\nshell script:  please check your shell script.\n"
+	exit 1
+    }
+} else {
+    puts "(set-load-path ($ndroot +))"
+    set ndroot "${ndroot}/NDview"
 }
 
 proc setentry {entry value} {
