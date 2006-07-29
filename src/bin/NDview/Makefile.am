@@ -61,8 +61,8 @@ all-local: $(top_builddir)/modules/.geomview-ndview  $(top_builddir)/modules/.ge
 $(top_builddir)/modules/.geomview-ndview \
  $(top_builddir)/modules/.geomview-nddemo: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDview" "env GEOMDATA=$(top_srcdir)/src/bin $(subdir)/ndview $(subdir)/$(srcdir)/NDview")' > $(top_builddir)/modules/.geomview-ndview
-	echo '(emodule-define "NDdemo" "env GEOMDATA=$(top_srcdir)/src/bin $(subdir)/ndview $(subdir)/$(srcdir)/NDdemo")' > $(top_builddir)/modules/.geomview-nddemo
+	echo '(emodule-define "NDview" "env NDVIEWROOT=$(subdir) $(subdir)/ndview $(subdir)/$(srcdir)/NDview")' > $(top_builddir)/modules/.geomview-ndview
+	echo '(emodule-define "NDdemo" "env NDVIEWROOT=$(subdir) $(subdir)/ndview $(subdir)/$(srcdir)/NDdemo")' > $(top_builddir)/modules/.geomview-nddemo
 
 clean-local:
 	rm -f $(top_builddir)/modules/.geomview-ndview
