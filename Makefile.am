@@ -16,7 +16,7 @@ m4_files = \
 
 geomview: geomview.sh Makefile
 	echo top_builddir is $(top_builddir)
-	sed -e 's|%GEOMROOT%|$(top_builddir)|g'                              \
+	sed -e 's|%GEOMROOT%|$(top_srcdir)|g'                              \
 	    -e 's|%GEOMVIEW_GVX%|$(top_builddir)/src/bin/geomview/x11/gvx|g' \
 	    -e 's|%GEOMVIEW_LTGVX%|$(top_builddir)/src/bin/geomview/x11/.libs/lt-gvx|g' \
 	    -e 's|%MACHTYPE%|$(MACHTYPE)|g'                                  \
