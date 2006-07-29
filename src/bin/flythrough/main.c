@@ -32,7 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "panel.h"
 
 float dodecscale;
-FILE *f;
+FILE *file;
 int go;
 int speed;
 int whichpath;
@@ -131,8 +131,9 @@ void PathProc(FL_OBJECT *obj, long val)
   case EQUI:
     first = "equi"; break;
   }
-  
-  fclose(f);  
+
+  if (file)
+    fclose(file);
   /* GEOMDATA environment variable is supposed to be set by geomview. 
      We'll assume it's correct and just whine if we can't find anything.
      Note the setenv hint for the user.
@@ -141,12 +142,12 @@ void PathProc(FL_OBJECT *obj, long val)
     sprintf(path,"%s.%1d.gv", first, speed);
   else 
     sprintf(path,"%s/groups/%s.%1d.gv", name, first, speed);
-  f = fopen(path, "r");
-  if (!f) {
+  file = fopen(path, "r");
+  if (!file) {
     fprintf(stderr, "Can't find path file %s.\nTry setting environment variable GEOMDATA.\n", path);
     exit(0);
   } else 
-    rewind(f);
+    rewind(file);
 
   /* Just in case someone recentered the camera and the fov got reset to 40 */
   printf(" (merge camera c0 {fov 100})\n");
@@ -232,8 +233,8 @@ int main(int argc, char *argv[])
       /* a command is exactly 18 lines long due to the vagaries of
 	 Mathematica... */
       for (i = 0; i < 18; i++) {
-	if (! (more = fgets(line, 80, f))) {
-	  rewind(f);
+	if (! (more = fgets(line, 80, file))) {
+	  rewind(file);
 	  break;
 	} else {
 	  fputs(line, stdout);
