@@ -2,7 +2,7 @@ INCLUDES = $(default_includes)
 
 EXTRA_DIST = togeomview.1
 
-LDADD = ${SOCKETLIBS}
+LDADD = $(OOGLLIB) ${SOCKETLIBS}
 
 man_MANS = togeomview.1
 
