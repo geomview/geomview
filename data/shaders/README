@@ -1,0 +1,2 @@
+The shaders in this directory are optionally used by the rib files generated
+by geomview when in hyperbolic space. 
