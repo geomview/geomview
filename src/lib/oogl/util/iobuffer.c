@@ -100,6 +100,7 @@ struct IOBFILE
   IOBLIST  ioblist;
   IOBLIST  ioblist_mark;
   size_t   mark_pos;
+  int      fd;
 #if HAVE_FCNTL
   int      fflags;
 #endif
@@ -190,21 +191,27 @@ FILE *iobfile(IOBFILE *iobf)
   return iobf ? iobf->istream : NULL;
 }
 
+int iobfileno(IOBFILE *iobf)
+{
+  return iobf ? iobf->fd : -1;
+}
+
 IOBFILE *iobfileopen(FILE *istream)
 {
   IOBFILE *iobf;
 
   iobf = calloc(1, sizeof(IOBFILE));
   iobf->istream = istream;
+  iobf->fd = fileno(istream);
   iobf->ungetc = EOF;
 
-  if (fileno(istream) >= 0 &&
-      lseek(fileno(istream), 0, SEEK_CUR) != -1 &&
-      !isatty(fileno(istream))) {
-    iobf->can_seek = -1;
-  }
+  if (iobf->fd >= 0) {
+    /* Determine whether we file positioning support */
+    if (lseek(iobf->fd, 0, SEEK_CUR) != -1 &&
+	!isatty(iobf->fd)) {
+      iobf->can_seek = -1;
+    }
 
-  if (fileno(istream) >= 0) {
     /* No stdio buffereing */
 #if SETVBUF_REVERSED
     setvbuf(istream, _IONBF, NULL, 0);
@@ -212,10 +219,10 @@ IOBFILE *iobfileopen(FILE *istream)
     setvbuf(istream, NULL, _IONBF, 0);
 #endif
 #if HAVE_FCNTL
-    iobf->fflags = fcntl(fileno(istream), F_GETFL);
+    iobf->fflags = fcntl(iobf->fd, F_GETFL);
     if (iobf->fflags != -1 && (iobf->fflags & o_nonblock)) {
       iobf->fflags &= ~o_nonblock;
-      if (fcntl(fileno(istream), F_SETFL, iobf->fflags) < 0) {
+      if (fcntl(iobf->fd, F_SETFL, iobf->fflags) < 0) {
 	fprintf(stderr, "iobfileopen(): unable to clear O_NONBLOCK: \"%s\"\n",
 		strerror(errno));
       }
@@ -389,6 +396,10 @@ size_t iobfgetbuffer(IOBFILE *iobf, void *ptr, size_t size, int direction)
   size_t offset, cpsz, rval, tot_space = ioblist->tot_size - ioblist->tot_pos;
   char *buf = ptr;
 
+  if (iobf->ungetc != EOF) {
+    ++tot_space;
+  }
+
   if (ptr == NULL) {
     return direction < 0 ? ioblist->tot_pos : tot_space;
   }
@@ -411,6 +422,10 @@ size_t iobfgetbuffer(IOBFILE *iobf, void *ptr, size_t size, int direction)
     }
   } else {
     rval = size = min(size, tot_space);
+    if (size > 0 && iobf->ungetc != EOF) {
+      *buf++ = iobf->ungetc;
+      --size;
+    }
     iob = ioblist->buf_ptr;
     offset = ioblist->buf_pos;
     cpsz = min(size, BUFFER_SIZE - offset);
@@ -631,15 +646,14 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 #if HAVE_FCNTL
       if (!iobf->can_seek) {
 	if (first && iobf->fflags != -1) {
-	  fcntl_err = fcntl(fileno(iobf->istream),
-			    F_SETFL, iobf->fflags | o_nonblock);
+	  fcntl_err = fcntl(iobf->fd, F_SETFL, iobf->fflags | o_nonblock);
 	}
-	if (!first || iobf->fflags == -1 || fcntl_err) {
+	if (!first || (iobf->fd && iobf->fflags == -1) || fcntl_err) {
 	  tail_space = min(tail_space, rq_size);
 	}
       }
 #else
-      if (!iobf->can_seek)
+      if (!iobf->can_seek && iobf->fd)
 	  tail_space = min(tail_space, rq_size);
 #endif
       tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
@@ -654,7 +668,7 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
       if (!iobf->can_seek && first && iobf->fflags != -1 && !fcntl_err) {
 	first = 0;
 	clearerr(iobf->istream);
-	if ((fcntl_err = fcntl(fileno(iobf->istream), F_SETFL, iobf->fflags))
+	if ((fcntl_err = fcntl(iobf->fd, F_SETFL, iobf->fflags))
 	    < 0) {
 	  fprintf(stderr, "iobfread(): unable to clear O_NONBLOCK: \"%s\"\n",
 		  strerror(errno));
@@ -782,7 +796,7 @@ int iobfeof(IOBFILE *iobf)
   } else if (iobf->ioblist.tot_pos < iobf->ioblist.tot_size) {
     return 0;
   } else if (iobf->eof == -1) {
-    if (feof(iobfile(iobf))) {
+    if (feof(iobf->istream)) {
       return 1;
     }
     iobf->eof = 0;

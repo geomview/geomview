@@ -59,11 +59,7 @@ extern long iobftell(IOBFILE *iobf);
 extern int iobfseek(IOBFILE *stream, long offset, int whence);
 extern char *iobfgets(char *s, int size, IOBFILE *iobf);
 extern int iobfeof(IOBFILE *iobf);
-
-static inline int iobfileno(IOBFILE *iobf)
-{
-  return fileno(iobfile(iobf));
-}
+extern int iobfileno(IOBFILE *iobf);
 
 extern size_t
 iobfgetbuffer(IOBFILE *iobf, void *ptr, size_t size, int direction);
