@@ -306,7 +306,8 @@ void spanproc(int i)
 
     /* next find out what camera this is */
     printf("(echo (real-id focus)\\n)\n"); fflush(stdout);
-    iobfnextc(infile, 0);
+    ch = iobfnextc(infile, 0);
+#if 0
     if ( scanf("\"%[^\"]\"",buf1) == 0) {
 	/* Ok, we don't have a focus.  We were probably started
 	   without a camera window.  Just return now and cut our
@@ -315,14 +316,49 @@ void spanproc(int i)
 /*	fprintf(stderr, "Please check source: #2388433\n"); */
     }
     sprintf(whatcamera,"%s",buf1);
+#else
+    /* no scanf with iobuffered files */
+    if (ch != '"' || (buf = iobftoken(infile, 0)) == NULL || strlen(buf) == 0) {
+	return;
+    }
+    sprintf(whatcamera,"%s",buf);
+#endif
 
     /* next find out what the x, y, z, projections are */
     printf("(echo (ND-axes focus)\\n)\n");
     fflush(stdout);
     iobfnextc(infile, 0);
+#if 0
     if ( scanf("(\"%[^\"]\"%d%d%d%[^)])",buf1,&xdim,&ydim,&zdim,buf2) == 0) {
 	fprintf(stderr, "Please check source: #2938423\n");;
     }
+#else
+    /* no scanf with iobuffered files */
+    if (iobfgetc(infile) != '(') {
+	fprintf(stderr, "Please check source: #2938423\n");
+	return;
+    }
+    if ((buf = iobfdelimtok(")", infile, 0)) == NULL) {
+	fprintf(stderr, "Please check source: #2938423\n");
+	return;
+    }
+    strncpy(buf1, buf, sizeof(buf1));
+    buf1[sizeof(buf1)-1] = '\0';
+    {
+	int dims[3];
+
+	if (iobfgetni(infile, 3, dims, 0) != 3) {
+	    fprintf(stderr, "buf1=%s, xdim=%d ydim=%d zdim=%d dimension=%d\n", 
+		    buf1, xdim, ydim, zdim, dimension);
+	    fprintf(stderr, "Please check source: #293842938 (%d %d %d)\n", xdim, ydim, zdim);
+	    return;
+	}
+	xdim = dims[0];
+	ydim = dims[1];
+	zdim = dims[2];
+    }
+    while ((buf = iobfdelimtok(")", infile, 0)) && *buf != ')');
+#endif
 
     if ( (xdim < 0) || (ydim < 0) || (zdim < 0) || (xdim > dimension) || 
 	 (ydim > dimension) || (zdim > dimension) ) {
