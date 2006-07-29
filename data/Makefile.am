@@ -65,6 +65,14 @@ groups =					\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
 
+shaders = \
+ shaders/hlight.sl \
+ shaders/hlight.slo \
+ shaders/hmatte.sl \
+ shaders/hmatte.slo \
+ shaders/hplastic.sl \
+ shaders/hplastic.slo
+
 nobase_geomdata_DATA = \
 	.geomview \
 	cmap.fmap \
@@ -187,4 +195,5 @@ nobase_geomdata_DATA = \
 	geom/xyz.vect \
 	geom/ztent.mesh
 
-nobase_geomdata_DATA += $(groups)
+nobase_geomdata_DATA += $(groups) $(shaders)
+
