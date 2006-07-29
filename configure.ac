@@ -1,14 +1,16 @@
 AC_PREREQ(2.59)
-AC_INIT(geomview, [1.8.2-rc6], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.8.2-rc7], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
+if test "z${cache_file}" = "z/dev/null"; then
+  cache_file=config.cache
+  AC_CACHE_LOAD
+fi
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE([dist-bzip2 1.9])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
 AC_PREFIX_DEFAULT([/usr/local/Geomview])
-
-
-AC_MSG_RESULT([configuring $PACKAGE $VERSION])
 
 dnl Add extra include or link directories
 AC_ARG_WITH(build-path,[
@@ -45,6 +47,17 @@ char *alloca ();
 #   endif
 #  endif
 # endif
+#endif
+
+#if !HAVE_LSTAT || \
+    !LSTAT_FOLLOWS_SLASHED_SYMLINK || \
+    HAVE_LSTAT_EMPTY_STRING_BUG 
+# define lstat(path, buf) gv_lstat(path, buf)
+#endif
+
+#if !HAVE_STAT || HAVE_STAT_EMPTY_STRING_BUG 
+# define stat(path, buf) gv_stat(path, buf)
+# define fstat(fd, buf) gv_fstat(fd, buf)
 #endif
 
 #if 0
@@ -128,11 +141,12 @@ AC_DEFINE_UNQUOTED([GLOB_SHELL], ["${GLOB_SHELL}"],
 	[Define to path and arguments of shell used for file name globbing])
 AC_SUBST([GLOB_SHELL])
 #
+if test $USE_MAINTAINER_MODE = yes; then
 AC_CHECK_PROGS(PS2EPSI, ps2epsi)
 AC_CHECK_PROGS(EPSTOPDF, epstopdf)
 AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
 AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
-
+fi
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
@@ -182,13 +196,16 @@ AC_FUNC_SETPGRP
 AC_FUNC_SETVBUF_REVERSED
 AC_TYPE_SIGNAL
 AC_FUNC_STAT
+AC_FUNC_LSTAT
+#AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
 AC_FUNC_WAIT3
 AC_CHECK_FUNCS([fmemopen],
   [AC_CHECK_DECLS([fmemopen])],
   [AC_LIBOBJ([fmemopen])])
-AC_REPLACE_FUNCS([putenv strdup popen strncasecmp strcasecmp acosh])
+AC_REPLACE_FUNCS([acosh popen putenv strcasecmp strdup strncasecmp lstat stat])
+AC_CHECK_FUNCS([fstat])
 AC_FUNC_SELECT_ARGTYPES
 AC_CHECK_FUNC([select],
   [AC_DEFINE(HAVE_SELECT, 1, [Define to 1 if you have the `select' function.])
