@@ -637,7 +637,7 @@ AC_SUBST(XFORMSLIBS)
 GEOMVIEW_CHECK_PACKAGE(tcl, tcl, ${x_libraries}, ${XLIBS}, tcl.h, , ,optional)
 GEOMVIEW_CHECK_PACKAGE(tk, tk, ${x_libraries}, ${XLIBS}, tk.h, , ,optional)
 
-AM_CONDITIONAL(HAVE_TCLTK, [test -n TCL_LIB && test -n TK_LIB])
+AM_CONDITIONAL(HAVE_TCLTK, [test -n "${TCL_LIB}" -a -n "${TK_LIB}"])
 
 ########################################################################
 

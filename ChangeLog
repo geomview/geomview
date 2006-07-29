@@ -1,3 +1,7 @@
+2006-07-29  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* configure.ac: Fix setting of HAVE_TCLTK.
+
 2006-07-25  rotdrop  <rotdrop@anaxagoras>
 
 	* configure.ac: Bump version to 1.8.2-rc6
