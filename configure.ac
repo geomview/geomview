@@ -938,6 +938,7 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomview/x11/bitmaps/Makefile
 	  src/bin/geomview/x11/interface/Makefile
 	  src/bin/NDview/Makefile
+	  src/bin/ndutils/Makefile
 	  src/bin/clipboard/Makefile
 	  src/bin/crayola/Makefile
 	  src/bin/example/Makefile
