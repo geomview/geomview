@@ -105,18 +105,26 @@ distribution are:
 
 MODULE	   	DESCRIPTION
 
-animate:	flip through a sequence of objects
-cplxview:       visualize the graphs of complex functions
-example:	generic FORMS example external module
-flythrough:     "Not Knot" visualisation
-ginsu:		interactively slice objects (see "clip")
-graffiti:	draw line segments on objects
-hinge:          "	copy-rotate" a polyhedron around edges of itself
-sweep:		generate objects of rotation from line segments
-stereo:         stereo vision module
-tackdown:	redefine an object's "home" position
-transformer:	explicitly control an object's transformation matrix
-
+3D-Snapshot:    Save a 3D projection of an ND object
+Animate:	flip through a sequence of objects
+Colormap:       Coloring of ND objects w.r.t. the "invisible" directions
+Cplxview:       visualize the graphs of complex functions
+Crayola:        interactive colouring of OOGL objects
+Example:	generic FORMS example external module
+Flythrough:     "Not Knot" visualisation (hyperbolic space)
+Ginsu:		interactively slice objects (see "clip")
+Graffiti:	draw line segments on objects
+Gvclock:        an animated clock
+Hinge:          "copy-rotate" a polyhedron around edges of itself
+Labeler:        somewhat crude generation of text as OOGL object
+NDview:         visualization of objects in > 3D
+NDdemo:         a demo for ND visualization
+Origin:         draw a coordinate frame for an OOGL object
+Slicer:         Slice ND objects (see also Ginsu below)
+Stereo:         stereo vision module
+Sweep:		generate objects of rotation from line segments
+Tackdown:	redefine an object's "home" position
+Transformer:	explicitly control an object's transformation matrix
 
 									
 AUXILIARY PROGRAMS
