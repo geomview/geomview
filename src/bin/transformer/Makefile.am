@@ -4,7 +4,7 @@ LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
 	$(OOGLLIB) 
 
-EXTRA_DIST = .geomview-transformer panel.fd  transformer.1
+EXTRA_DIST = panel.fd  transformer.1
 
 man_MANS = transformer
 
@@ -18,6 +18,10 @@ module_DATA = .geomview-transformer
 .geomview-transformer:
 	echo '(emodule-define "Transformer" "transformer")' > .geomview-transformer
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-transformer
+
+$(top_builddir)/modules/.geomview-transformer: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Transformer" "$(subdir)/transformer")' > $(top_builddir)/modules/.geomview-transformer
+	echo '(emodule-define "Transformer" "$(subdir)/transformer")' > $@
+
+CLEANFILES = $(top_builddir)/modules/.geomview-transformer $(module_DATA)

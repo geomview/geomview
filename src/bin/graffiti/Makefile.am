@@ -6,7 +6,7 @@ LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
 	$(OOGLLIB)
 
-EXTRA_DIST = .geomview-graffiti graffiti.1
+EXTRA_DIST = graffiti.1
 
 module_PROGRAMS = graffiti
 graffiti_SOURCES = graffiti.c gui.c lang.h panel.h graffiti.h lang.c panel.c
@@ -18,6 +18,10 @@ module_DATA = .geomview-graffiti
 .geomview-graffiti:
 	echo '(emodule-define "Graffiti" "graffiti")' > .geomview-graffiti
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-graffiti
+
+$(top_builddir)/modules/.geomview-graffiti: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Graffiti" "$(subdir)/graffiti")' > $(top_builddir)/modules/.geomview-graffiti
+	echo '(emodule-define "Graffiti" "$(subdir)/graffiti")' > $@
+
+CLEANFILES = $(top_builddir)/modules/.geomview-graffiti $(module_DATA)

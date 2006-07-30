@@ -4,7 +4,7 @@ LDADD =	$(XFORMSLIBS) \
 	$(XLIBS)     \
 	$(OOGLLIB)
 
-EXTRA_DIST = .geomview-sweep panel.fd  sweep.1 sweep.3
+EXTRA_DIST = panel.fd  sweep.1 sweep.3
 
 man_MANS = sweep.1 sweep.3
 
@@ -15,10 +15,15 @@ sweep_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-sweep
 
-.geomview-sweep:
+.geomview-sweep: Makefile
 	echo '(emodule-define "Sweep" "sweep")' > .geomview-sweep
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-sweep
+
+$(top_builddir)/modules/.geomview-sweep: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Sweep" "$(subdir)/sweep")' > $(top_builddir)/modules/.geomview-sweep
+	echo '(emodule-define "Sweep" "$(subdir)/sweep")' > $@
+
+CLEANFILES = $(top_builddir)/modules/.geomview-sweep $(module_DATA)
+
 

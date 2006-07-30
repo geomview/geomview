@@ -1,4 +1,4 @@
-EXTRA_DIST = $(geomdata_DATA)
+EXTRA_DIST = $(nobase_geomdata_DATA) $(nobase_geomdata_SCRIPTS)
 
 # Current automake (version 1.4) will not create directory "b" if
 # "a/b/foo" is listed in a _DATA variable.

@@ -14,16 +14,10 @@ module_DATA = .geomview-example
 .geomview-example:
 	echo '(emodule-define "Example" "example")' > .geomview-example
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-example
+
+$(top_builddir)/modules/.geomview-example: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Example" "$(subdir)/example")' > $(top_builddir)/modules/.geomview-example
+	echo '(emodule-define "Example" "$(subdir)/example")' > $@
 
-# bin_SCRIPTS = .geomview-example
-# 
-# noinst_SCRIPTS = install-geomview-dotfile
-# 
-# install-geomview-dotfile: example
-# 	$(top_builddir)/mkmodulesdir $(top_builddir)
-# 	echo '(emodule-define "Example" "$(subdir)/example")' > $(top_builddir)/modules/.geomview-example
-
-DISTCLEANFILES = .geomview-example
+CLEANFILES = $(module_DATA) $(top_builddir)/modules/.geomview-example

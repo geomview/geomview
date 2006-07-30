@@ -1,5 +1,7 @@
 INCLUDES = $(default_includes)
 
+EXTRA_DIST = $(module_tcl_DATA)
+
 LDADD = \
  $(TK_LIB) \
  $(TCL_LIB) \
@@ -7,12 +9,12 @@ LDADD = \
  $(OOGLLIB)
 
 module_PROGRAMS = ndutils
-ndutils_SOURCES = BasicFns.h Clip.h ColorMapDefs.h ColorPoint.h	    \
- GeExDir.h GeomExtentDirection.h GeomtoNoff.h LoadMap.h		    \
- MakeGoodTransforms.h Random.h TransformGeom.h WithColor.h include.h \
- init.h slicer.h snapshot.h wrappers.h BasicFns.c ColorPoint.c	    \
- GeExDir.c GeomExtentDirection.c GeomtoNoff.c LoadMap.c		    \
- MakeGoodTransforms.c Random.c TransformGeom.c WithColor.c clip.c    \
+ndutils_SOURCES = BasicFns.h Clip.h ColorMapDefs.h ColorPoint.h	  \
+ GeExDir.h GeomExtentDirection.h GeomtoNoff.h LoadMap.h		  \
+ MakeGoodTransforms.h Random.h TransformGeom.h WithColor.h	  \
+ init.h slicer.h snapshot.h wrappers.h BasicFns.c ColorPoint.c	  \
+ GeExDir.c GeomExtentDirection.c GeomtoNoff.c LoadMap.c		  \
+ MakeGoodTransforms.c Random.c TransformGeom.c WithColor.c clip.c \
  clipoogl.c init.c slicer.c snapshot.c testwish.c wrappers.c
 ndutils_DEPENDENCIES = $(OOGLLIB)
 ndutils_LDFLAGS= -rpath $(libdir)
@@ -47,8 +49,9 @@ all-local: \
  $(top_builddir)/modules/.geomview-slicer \
  $(top_builddir)/modules/.geomview-colormap
 
-clean-local:
-	rm -f $(top_builddir)/modules/.geomview-3d-snapshot
-	rm -f $(top_builddir)/modules/.geomview-slicer
-	rm -f $(top_builddir)/modules/.geomview-colormap
+CLEANFILES = \
+ $(top_builddir)/modules/.geomview-3d-snapshot \
+ $(top_builddir)/modules/.geomview-slicer \
+ $(top_builddir)/modules/.geomview-colormap \
+ $(module_DATA)
 

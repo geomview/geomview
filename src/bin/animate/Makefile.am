@@ -18,15 +18,12 @@ module_DATA = .geomview-animate
 	echo '(emodule-define "Animator" "animate")' > .geomview-animate
 
 # Populate local "modules" directory, allowing animate to run in the build dir.
-all-local:
+all-local: $(top_builddir)/modules/.geomview-animate
+
+$(top_builddir)/modules/.geomview-animate: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Animator" "$(subdir)/animate")' > $(top_builddir)/modules/.geomview-animate
+	echo '(emodule-define "Animator" "$(subdir)/animate")' > $@
 
-# noinst_SCRIPTS = install-geomview-dotfile
-# bin_SCRIPTS = .geomview-animate
-# 
-# install-geomview-dotfile: animate
-# 	$(top_builddir)/mkmodulesdir $(top_builddir)
-# 	echo '(emodule-define "Animator" "$(subdir)/animate")' > $(top_builddir)/modules/.geomview-animate
 
-DISTCLEANFILES = .geomview-animate
+CLEANFILES = $(top_builddir)/modules/.geomview-animate $(module_DATA)
+

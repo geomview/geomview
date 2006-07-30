@@ -7,8 +7,7 @@ LDADD =	$(XFORMSLIBS) \
 	$(OOGLLIB)
 
 
-EXTRA_DIST = \
- .geomview-tackdown .geomview-origin tackdown.1 panel.fd origin.panel.fd
+EXTRA_DIST = tackdown.1 panel.fd origin.panel.fd
 
 module_PROGRAMS = tackdown origin
 
@@ -24,12 +23,26 @@ origin_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-tackdown .geomview-origin
 
-.geomview-tackdown:
+.geomview-tackdown: Makefile
 	echo '(emodule-define "Tackdown" "tackdown")' > .geomview-tackdown
-.geomview-origin:
+.geomview-origin: Makefile
 	echo '(emodule-define "Origin" "origin")' > .geomview-origin
 
-all-local:
+all-local: \
+ $(top_builddir)/modules/.geomview-tackdown \
+ $(top_builddir)/modules/.geomview-origin
+
+$(top_builddir)/modules/.geomview-tackdown: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Tackdown" "$(subdir)/tackdown")' > $(top_builddir)/modules/.geomview-tackdown
-	echo '(emodule-define "Origin" "$(subdir)/origin")' > $(top_builddir)/modules/.geomview-origin
+	echo '(emodule-define "Tackdown" "$(subdir)/tackdown")' > $@
+
+$(top_builddir)/modules/.geomview-origin: Makefile
+	$(top_srcdir)/mkmodulesdir $(top_builddir)
+	echo '(emodule-define "Origin" "$(subdir)/origin")' > $@
+
+CLEANFILES = \
+ $(top_builddir)/modules/.geomview-tackdown \
+ $(top_builddir)/modules/.geomview-origin \
+ $(module_DATA)
+
+

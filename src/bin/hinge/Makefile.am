@@ -8,7 +8,7 @@ LDADD =	$(XFORMSLIBS) \
 
 EXTRA_DIST = \
     HingeCube HingeTetra HingeDiamond HingeTriangle HingeDodec HingeLongcube \
-    hingedata hinge.1 hingehelp panel.fd .geomview-hinge
+    hingedata hinge.1 hingehelp panel.fd
 
 module_PROGRAMS = hinge
 hinge_SOURCES = hui.c panel.c hingedata.h hui.h hinge.c lang.c panel.h \
@@ -18,9 +18,13 @@ hinge_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-hinge
 
-.geomview-hinge:
+.geomview-hinge: Makefile
 	echo '(emodule-define "Hinge" "hinge")' > .geomview-hinge
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-hinge
+
+$(top_builddir)/modules/.geomview-hinge: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Hinge" "$(subdir)/hinge")' > $(top_builddir)/modules/.geomview-hinge
+	echo '(emodule-define "Hinge" "$(subdir)/hinge")' > $@
+
+CLEANFILES = $(top_builddir)/modules/.geomview-hinge $(module_DATA)

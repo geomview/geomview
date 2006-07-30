@@ -1,5 +1,3 @@
-EXTRA_DIST = .geomview-gvclock
-
 module_SCRIPTS = gvclock
 CLEANFILES = $(module_SCRIPTS)
 
@@ -13,7 +11,11 @@ module_DATA = .geomview-gvclock
 #	sed -e 's,[@]AWK[@],$(AWK),g' < $< > $@
 #	chmod +x gvclock
 
-all-local:
+all-local: $(top_builddir)/modules/.geomview-gvclock
+
+$(top_builddir)/modules/.geomview-gvclock: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Clock" "$(subdir)/gvclock")' > $(top_builddir)/modules/.geomview-gvclock
+	echo '(emodule-define "Clock" "$(subdir)/gvclock")' > $@
 	chmod +x gvclock
+
+CLEANFILES = $(top_builddir)/modules/.geomview-gvclock $(module_DATA)
