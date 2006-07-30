@@ -20,7 +20,6 @@ groups =					\
 	groups/3torus2.dgp			\
 	groups/94a.dgp				\
 	groups/94b.dgp				\
-	groups/CVS				\
 	groups/borrom.dgp			\
 	groups/borrom2.dgp			\
 	groups/borrom3.dgp			\
