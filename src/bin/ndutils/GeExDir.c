@@ -146,7 +146,12 @@ int ObjExistCheck(ClientData clientdata, Tcl_Interp *interp,
 	} else if (strcmp(str, "no") == 0) {
 		interp->result="no";
 	} else {
-		interp->result="Error";
+		static char msg[1024];
+
+		sprintf(msg, "obj: \"%s\", answer: \"%s\"",
+			argv[1], str);
+
+		interp->result=msg /*"Error"*/;
 		return TCL_ERROR;
 	}
 	return TCL_OK;
