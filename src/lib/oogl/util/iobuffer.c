@@ -586,6 +586,7 @@ static void iob_flush_buffer(IOBLIST *ioblist)
 void iobfrewind(IOBFILE *iobf)
 {
   rewind(iobf->istream);
+#if 0
   if (1 || iobf->can_seek) {
     iob_release_buffer(&iobf->ioblist);
     iob_init_buffer(&iobf->ioblist);
@@ -595,6 +596,12 @@ void iobfrewind(IOBFILE *iobf)
     iobf->ioblist.buf_ptr =
       iobf->ioblist.buf_head;
   }
+#else
+  /* The fastest way is: simply move the position pointer to end of
+     buffer */
+  iobf->ioblist.tot_pos = iobf->ioblist.tot_size;
+  iobf->ioblist.buf_pos = iobf->ioblist.tail_size;
+#endif
   if (iobf->ioblist_mark.buf_head) {
     iob_release_buffer(&iobf->ioblist_mark);
   }
