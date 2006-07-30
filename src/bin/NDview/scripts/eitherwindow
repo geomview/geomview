@@ -1,8 +1,0 @@
-#! /bin/sh
-echo "(interest (winenter))"
-while read stuff; do
-	case "$stuff" in
-	  *X_Y_Z*) echo '(event-mode "[o] Cam Orbit")' ;;
-	  *) echo '(event-mode "[r] Rotate")' ;;
-	esac
-done

@@ -1,7 +1,0 @@
-(progn
-(bbox-draw allgeoms off)
-(dimension 5)
-(merge window default { position 200 500 200 500 })
-(new-camera cluster1:1_2_3)
-(ND-axes cluster1:1_2_3 cluster1 0 1 2)
-)

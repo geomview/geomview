@@ -1,4 +1,0 @@
-(progn
-  (delete allcams)
-  (delete allgeoms)
-)

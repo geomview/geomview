@@ -1,9 +1,0 @@
-appearance {linewidth 9 shading csmooth}
-nSKEL 4
-2 2
-
-.4 .4 .4 .4
-.4 -.4 .4 .4
-
-1 0 
-1 1

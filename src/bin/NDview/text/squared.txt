@@ -1,3 +1,0 @@
-These squares are opposite faces of a cube.
-
-Press "cube" to continue.

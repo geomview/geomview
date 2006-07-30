@@ -1,6 +1,0 @@
-(progn
-(dimension 4)
-(merge window default { position 300 600 300 600 })
-(new-camera cluster1:X_Y_Z)
-(ND-axes cluster1:X_Y_Z cluster1 0 1 2)
-)

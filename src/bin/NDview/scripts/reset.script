@@ -1,5 +1,0 @@
-(progn
-(rawevent 87 1 0 0 0)
-(merge camera "X_W_plane" camera { perspective 0 } )
-(transform-set X_Y_Z_hyperplane world world  rotate -.3 .5 .07)
-)
