@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.15 2006/07/26 10:55:10 lloydwood Exp $
+$Id: INSTALL.Geomview,v 1.16 2006/07/30 11:59:32 rotdrop Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -21,6 +21,13 @@ This is useful if no useful `configure' script is already present,
 which is normal only for copies of Geomview that have been taken
 directly from developer CVS. See the `README.cvs' textfile for hints
 on building Geomview from developer CVS.
+
+The default prefix for Geomview is `/usr/local/Geomview'; however, the
+directory layout below the prefix follows the convention for any other
+GNU package: binaries below `PREFIX/bin/', data below
+`PREFIX/share/geomview/', executable code below
+`PREFIX/libexec/geomview/' (here live the modules). The documentation
+is installed below `PREFIX/share/doc/geomview-VERSION/'
 
 IMPORTANT NOTE: by default 'make install' will install Geomview into
 `/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
@@ -103,6 +110,11 @@ variables are specific to Geomview:
 	    variable is just for specifying the list of libraries
 	    themselves.
 
+========================================================================
+Tcl/Tk:
+
+Some of Geomview's external modules use Tcl/Tk (NDview, NDdemo,
+Slicer, 3D-Snapshort, Colormap, Labeler, Crayola).
 
 ========================================================================
 
