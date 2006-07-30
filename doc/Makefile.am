@@ -14,8 +14,14 @@ EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
 
 AM_MAKEINFOFLAGS = --no-validate
 info_TEXINFOS = geomview.texi
+infoimgdir = $(infodir)
+nobase_infoimg_DATA = $(PNGIMAGES)
 
-DOCDIR = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
+docdir = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
+dochtmldir = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/html
+nobase_dochtml_DATA = $(PNGIMAGES)
+dochtml_DATA = $(wildcard geomview.html/* $(srcdir)/geomview.html/*)
+doc_DATA = geomview.pdf
 
 geomview.pdf:  $(PDFIMAGES)
 geomview.ps:   $(EPSIMAGES)
@@ -28,49 +34,21 @@ all-local: html pdf
 
 if MAINTAINER_MODE
 figs/%.eps: figs/%.ps
+	@test -d figs || mkdir figs
 	$(PS2EPSI) $< $@
 
 figs/%.pdf: figs/%.eps
+	@test -d figs || mkdir figs
 	$(EPSTOPDF) $<
 
 figs/%.png: figs/%.pdf
+	@test -d figs || mkdir figs
 	$(PDFIMAGESPROG) $< $(<:.pdf=)
 	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
 	-rm -f $(<:.pdf=-000.ppm)
-
-html-local: $(PNGIMAGES)
-	-if test -d $(builddir)/figs; then \
-	  $(mkdir_p) geomview.html/figs/; \
-	  for file in $(PNGIMAGES); do \
-	    if ! test -f "geomview.html/$$file"; then \
-	      $(INSTALL_DATA) "$$file" "geomview.html/$$file"; \
-	    fi; \
-	  done; \
-	fi
-
 endif
 
 dist-hook: html pdf
-
-install-info-hook: $(PNGIMAGES)
-	-$(mkdir_p) "$(DESTDIR)$(infodir)/figs"
-	for file in $(PNGIMAGES); do \
-		$(INSTALL_DATA) "$(srcdir)/$$file" "$(DESTDIR)$(infodir)/$$file"; \
-	done
-
-install-data-local: html pdf
-	-$(mkdir_p) "$(DESTDIR)$(DOCDIR)/html/figs"
-	for file in $(PNGIMAGES); do \
-		$(INSTALL_DATA) "$(srcdir)/geomview.html/$$file" "$(DESTDIR)$(DOCDIR)/html/$$file"; \
-	done
-	-for file in $(srcdir)/geomview.html/*.html; do \
-		$(INSTALL_DATA) "$$file" "$(DESTDIR)$(DOCDIR)/html/"; \
-	done
-	$(INSTALL_DATA) $(srcdir)/geomview.pdf "$(DESTDIR)$(DOCDIR)/"
-
-uninstall-local:
-	-rm -rf "$(DESTDIR)$(DOCDIR)/html/"
-	-rm -f "$(DESTDIR)$(DOCDIR)/geomview.pdf"
 
 MAINTAINERCLEANFILES = \
  $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
