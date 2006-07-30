@@ -1,57 +1,67 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 1
+Unit of measure: FL_COORD_PIXEL
 
 =============== FORM ===============
 Name: Example
-Width: 340.000000
-Height: 130.000000
+Width: 340
+Height: 130
 Number of Objects: 3
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 340.000000 130.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 340 130
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 21
-type: 1
-box: 10.000000 40.000000 320.000000 30.000000
-boxtype: 2
-colors: 47 47
-alignment: 1
-style: 0
-size: 20.000000
-lcol: 0
+class: FL_SLIDER
+type: HOR_SLIDER
+box: 10 60 320 30
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_BOTTOM
+style: FL_NORMAL_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLACK
 label: Velocity
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: VelocitySlider
 callback: VelocityProc
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 10.000000 90.000000 320.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 4
-size: 20.000000
-lcol: 4
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 10 10 320 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLUE
 label: EXAMPLE
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 

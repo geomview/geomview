@@ -1,259 +1,308 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 2
+Unit of measure: FL_COORD_PIXEL
 
 =============== FORM ===============
 Name: ClipPanel
-Width: 200.000000
-Height: 320.000000
+Width: 200
+Height: 320
 Number of Objects: 12
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 200.000000 320.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 200 320
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 70.000000 70.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 70 220 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Slice!
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: SliceButton
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 105.000000 140.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 195 140 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: ax + by + cz = d
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 145.000000 285.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 145 5 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Exit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: ExitButton
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 10.000000 70.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 10 220 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Info
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: InfoButton
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 50.000000 280.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 4
-size: 20.000000
-lcol: 4
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 50 10 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLUE
 label: Ginsu!
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 30.000000 175.000000 30.000000
-boxtype: 2
-colors: 9 10
-alignment: 1
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 260 175 30
+boxtype: FL_DOWN_BOX
+colors: FL_INDIANRED FL_PALEGREEN
+alignment: FL_ALIGN_BOTTOM
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: TARGET CLIP OBJECT
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: TargInput
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 250.000000 165.000000 30.000000
-boxtype: 2
-colors: 13 5
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 40 165 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_MAGENTA
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: a
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Ainput
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 210.000000 165.000000 30.000000
-boxtype: 2
-colors: 13 5
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 80 165 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_MAGENTA
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: b
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Binput
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 170.000000 165.000000 30.000000
-boxtype: 2
-colors: 13 5
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 120 165 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_MAGENTA
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: c
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Cinput
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 130.000000 165.000000 30.000000
-boxtype: 2
-colors: 13 5
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 160 165 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_MAGENTA
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: d
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Dinput
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 1
-box: 130.000000 70.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 130 220 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Edit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: EditButton
 callback: 
 argument: 
 
 =============== FORM ===============
 Name: InfoPanel
-Width: 270.000000
-Height: 220.000000
+Width: 270
+Height: 220
 Number of Objects: 4
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 270.000000 220.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 270 220
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 71
-type: 0
-box: 10.000000 10.000000 250.000000 160.000000
-boxtype: 2
-colors: 47 3
-alignment: 1
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 200 10 60 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Close
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: CloseButton
+callback: 
+argument: 
+
+--------------------
+class: FL_BROWSER
+type: NORMAL_BROWSER
+box: 10 50 250 160
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_YELLOW
+alignment: FL_ALIGN_BOTTOM
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: MyBrowser
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 30.000000 180.000000 205.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 4
-size: 20.000000
-lcol: 4
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 30 10 205 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLUE
 label: Ginsu Info
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
-callback: 
-argument: 
-
---------------------
-class: 11
-type: 0
-box: 200.000000 180.000000 60.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: Close
-name: CloseButton
 callback: 
 argument: 
 

@@ -1,273 +1,325 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 2
+Unit of measure: FL_COORD_PIXEL
 
 =============== FORM ===============
 Name: MainForm
-Width: 220.000000
-Height: 330.000000
+Width: 220
+Height: 330
 Number of Objects: 11
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 220.000000 330.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 220 330
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 60.000000 90.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 60 210 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Show Origin
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: ShowButton
 callback: ShowButtonProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 10.000000 50.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 10 250 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Done
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: DoneButton
 callback: DoneButtonProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 110.000000 50.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 110 250 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Cancel
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: CancelButton
 callback: CancelButtonProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 60.000000 10.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 60 290 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Quit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: QuitButtonProc
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 280.000000 220.000000 40.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 4
-size: 20.000000
-lcol: 1
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 10 220 40
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_RED
 label: Move Origin
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 250.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 60 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str1
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Instruc1
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 230.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 80 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str2
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Instruc2
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 210.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 100 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str3
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Instruc3
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 130.000000 200.000000 30.000000
-boxtype: 2
-colors: 47 47
-alignment: 0
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 170 200 30
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_TOP
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Target Object:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: TargetInput
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 190.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 120 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str3
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Instruc4
 callback: 
 argument: 
 
 =============== FORM ===============
 Name: ErrorForm
-Width: 220.000000
-Height: 150.000000
+Width: 220
+Height: 150
 Number of Objects: 6
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 220.000000 150.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 220 150
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 110.000000 220.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 4
-size: 20.000000
-lcol: 1
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 10 220 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_FIXED_STYLE
+size: 20
+lcol: FL_RED
 label: Oh No!!!
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 90.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 40 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str3
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Error1
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 70.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 60 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str3
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Error2
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 0.000000 50.000000 220.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 80 220 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: str3
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Error3
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 6
-box: 70.000000 10.000000 90.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: RETURN_BUTTON
+box: 70 110 90 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Ok
+shortcut: ^M
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: OkButton
 callback: 
 argument: 0

@@ -1,27 +1,9 @@
-/* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
- *
- * This file is part of Geomview.
- * 
- * Geomview is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- * 
- * Geomview is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geomview; see the file COPYING.  If not, write
- * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
- * USA, or visit http://www.gnu.org.
- */
-/* Header file generated with fdesign. */
+/** Header file generated with fdesign on Sun Jul 30 01:38:43 2006.**/
 
-/**** Callback routines ****/
+#ifndef FD_cplxmainpanel_h_
+#define FD_cplxmainpanel_h_
 
+/** Callbacks, globals and object handlers **/
 extern void functioncallback(FL_OBJECT *, long);
 extern void helpcallback(FL_OBJECT *, long);
 extern void quitcallback(FL_OBJECT *, long);
@@ -30,38 +12,26 @@ extern void coordtypecallback(FL_OBJECT *, long);
 extern void meshlabelcallback(FL_OBJECT *, long);
 extern void rangelabelcallback(FL_OBJECT *, long);
 extern void domaincallback(FL_OBJECT *, long);
-extern void domaincallback(FL_OBJECT *, long);
-extern void domaincallback(FL_OBJECT *, long);
-extern void domaincallback(FL_OBJECT *, long);
 
 extern void quitcplxhelpcallback(FL_OBJECT *, long);
 
 extern void slidercallback(FL_OBJECT *, long);
-extern void slidercallback(FL_OBJECT *, long);
 extern void slidershidecallback(FL_OBJECT *, long);
 
-extern void coordcallback(FL_OBJECT *, long);
-extern void coordcallback(FL_OBJECT *, long);
 extern void coordcallback(FL_OBJECT *, long);
 extern void coordtypehidecallback(FL_OBJECT *, long);
 
 extern void usercoordcallback(FL_OBJECT *, long);
-extern void usercoordcallback(FL_OBJECT *, long);
 extern void usercoordhidecallback(FL_OBJECT *, long);
 
-extern void meshcallback(FL_OBJECT *, long);
 extern void meshcallback(FL_OBJECT *, long);
 extern void meshlabelhidecallback(FL_OBJECT *, long);
 
 extern void rangecallback(FL_OBJECT *, long);
-extern void rangecallback(FL_OBJECT *, long);
-extern void rangecallback(FL_OBJECT *, long);
 extern void rangelabelhidecallback(FL_OBJECT *, long);
 
 
-
 /**** Forms and Objects ****/
-
 extern FL_FORM *cplxmainpanel;
 
 extern FL_OBJECT
@@ -122,7 +92,7 @@ extern FL_OBJECT
         *hiderangelabelbutton;
 
 
-
 /**** Creation Routine ****/
+extern void create_the_forms(void);
 
-extern void create_the_forms();
+#endif /* FD_cplxmainpanel_h_ */

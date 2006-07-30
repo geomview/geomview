@@ -1,528 +1,631 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 2
+Unit of measure: FL_COORD_PIXEL
 
 =============== FORM ===============
 Name: MainForm
-Width: 360.000000
-Height: 370.000000
+Width: 360
+Height: 370
 Number of Objects: 33
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 360.000000 370.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 360 370
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 6
-box: 20.000000 20.000000 160.000000 40.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: RETURN_BUTTON
+box: 20 310 160 40
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Make Sweep
+shortcut: ^M
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: GoButtonProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 180.000000 20.000000 160.000000 40.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 180 310 160 40
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Quit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: QuitButtonProc
 argument: 0
 
 --------------------
-class: 10000
+class: FL_BEGIN_GROUP
 type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+box: 0 10 10 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
-name: RotGroup
-callback: 
-argument: 
-
---------------------
-class: 1
-type: 6
-box: 20.000000 70.000000 320.000000 230.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: 
-name: 
-callback: 
-argument: 
-
---------------------
-class: 2
-type: 0
-box: 20.000000 260.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
-label: Arc length:
-name: 
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 120.000000 260.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
-label: 
-name: Rotlength
-callback: 
-argument: 
-
---------------------
-class: 11
-type: 2
-box: 190.000000 260.000000 70.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: Degrees
-name: DegButton
-callback: 
-argument: 
-
---------------------
-class: 11
-type: 2
-box: 260.000000 260.000000 70.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: Radians
-name: RadButton
-callback: 
-argument: 
-
---------------------
-class: 2
-type: 0
-box: 20.000000 220.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
-label: End of axis:
-name: 
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 280.000000 200.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: z:
-name: Rotendz
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 200.000000 200.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: y:
-name: Rotendy
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 120.000000 200.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: x:
-name: Rotendx
-callback: 
-argument: 
-
---------------------
-class: 2
-type: 0
-box: 20.000000 160.000000 130.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
-label: Direction of axis:
-name: 
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 280.000000 130.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: z:
-name: Rotdirz
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 200.000000 130.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: y:
-name: Rotdiry
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 120.000000 130.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
-label: x:
-name: Rotdirx
-callback: 
-argument: 
-
---------------------
-class: 2
-type: 0
-box: 20.000000 80.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
-label: Divisions:
-name: 
-callback: 
-argument: 
-
---------------------
-class: 31
-type: 0
-box: 120.000000 80.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
-label: 
-name: Rotdivisions
-callback: 
-argument: 
-
---------------------
-class: 20000
-type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: 
-name: 
-callback: 
-argument: 
-
---------------------
-class: 10000
-type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
-label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: TransGroup
 callback: 
 argument: 
 
 --------------------
-class: 1
-type: 6
-box: 20.000000 70.000000 320.000000 230.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: ROUNDED_BOX
+box: 20 70 320 230
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 240.000000 130.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 100 130 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Length of sweep:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 140.000000 160.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 200 160 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Direction of sweep:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 120.000000 210.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 130 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Units
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Translength
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 120.000000 110.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 230 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: x:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Transxdir
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 200.000000 110.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 200 230 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: y:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Transydir
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 280.000000 110.000000 50.000000 30.000000
-boxtype: 2
-colors: 15 15
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 280 230 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: z:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: Transzdir
 callback: 
 argument: 
 
 --------------------
-class: 20000
+class: FL_END_GROUP
 type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+box: 0 0 0 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 10000
+class: FL_BEGIN_GROUP
 type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+box: 0 10 10 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: TypeGroup
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 2
-box: 180.000000 310.000000 160.000000 40.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: RADIO_BUTTON
+box: 180 20 160 40
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Rotational Sweep
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: RotSweep
 callback: RotSweepProc
 argument: 0
 
 --------------------
-class: 11
-type: 2
-box: 20.000000 310.000000 160.000000 40.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: RADIO_BUTTON
+box: 20 20 160 40
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Translational Sweep
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: TransSweep
 callback: TransSweepProc
 argument: 0
 
 --------------------
-class: 20000
+class: FL_END_GROUP
 type: 0
-box: 0.000000 0.000000 0.000000 0.000000
-boxtype: 0
-colors: 0 0
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+box: 0 0 0 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_BEGIN_GROUP
+type: 0
+box: 0 10 10 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: RotGroup
+callback: 
+argument: 
+
+--------------------
+class: FL_BOX
+type: ROUNDED_BOX
+box: 20 70 320 230
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 80 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Arc length:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 80 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotlength
+callback: 
+argument: 
+
+--------------------
+class: FL_BUTTON
+type: RADIO_BUTTON
+box: 190 80 70 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Degrees
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: DegButton
+callback: 
+argument: 
+
+--------------------
+class: FL_BUTTON
+type: RADIO_BUTTON
+box: 260 80 70 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Radians
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: RadButton
+callback: 
+argument: 
+
+--------------------
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 120 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: End of axis:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 280 140 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: z:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotendz
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 200 140 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: y:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotendy
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 140 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: x:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotendx
+callback: 
+argument: 
+
+--------------------
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 180 130 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Direction of axis:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 280 210 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: z:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotdirz
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 200 210 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: y:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotdiry
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 210 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: x:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotdirx
+callback: 
+argument: 
+
+--------------------
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 260 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: Divisions:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: 
+argument: 
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 120 260 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_LEFT_BCOL FL_LEFT_BCOL
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: Rotdivisions
+callback: 
+argument: 
+
+--------------------
+class: FL_END_GROUP
+type: 0
+box: 0 0 0 0
+boxtype: FL_NO_BOX
+colors: FL_BLACK FL_BLACK
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
+label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 =============== FORM ===============
 Name: FooForm
-Width: 500.000000
-Height: 610.000000
+Width: 500
+Height: 610
 Number of Objects: 1
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 500.000000 610.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 500 610
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 

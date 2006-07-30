@@ -1,33 +1,13 @@
-/* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
- *
- * This file is part of Geomview.
- * 
- * Geomview is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- * 
- * Geomview is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * 
- * You should have received a copy of the GNU Lesser General Public
- * License along with Geomview; see the file COPYING.  If not, write
- * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
- * USA, or visit http://www.gnu.org.
- */
-/* Header file generated with fdesign. */
+/** Header file generated with fdesign on Sat Jul 29 21:03:24 2006.**/
 
-/**** Callback routines ****/
+#ifndef FD_ClipPanel_h_
+#define FD_ClipPanel_h_
 
-
+/** Callbacks, globals and object handlers **/
 
 
 
 /**** Forms and Objects ****/
-
 extern FL_FORM *ClipPanel;
 
 extern FL_OBJECT
@@ -44,11 +24,11 @@ extern FL_OBJECT
 extern FL_FORM *InfoPanel;
 
 extern FL_OBJECT
-        *MyBrowser,
-        *CloseButton;
-
+        *CloseButton,
+        *MyBrowser;
 
 
 /**** Creation Routine ****/
+extern void create_the_forms(void);
 
-extern void create_the_forms();
+#endif /* FD_ClipPanel_h_ */

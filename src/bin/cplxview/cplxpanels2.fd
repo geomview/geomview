@@ -1,798 +1,949 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 7
+Unit of measure: FL_COORD_PIXEL
 
 =============== FORM ===============
 Name: cplxmainpanel
-Width: 420.000000
-Height: 290.000000
+Width: 420
+Height: 290
 Number of Objects: 16
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 420.000000 290.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 420 290
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 70.000000 240.000000 320.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 4
-size: 20.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 100 20 240 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLACK
 label: Complex Function Viewer
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 100.000000 200.000000 280.000000 30.000000
-boxtype: 2
-colors: 9 9
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 80 60 320 30
+boxtype: FL_DOWN_BOX
+colors: FL_INDIANRED FL_INDIANRED
+alignment: FL_ALIGN_LEFT
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Function:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: functionbox
 callback: functioncallback
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 120.000000 20.000000 280.000000 30.000000
-boxtype: 4
-colors: 47 1
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 120 240 280 30
+boxtype: FL_BORDER_BOX
+colors: FL_COL1 FL_RED
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: This is a text box.
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: messagebox
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 350.000000 60.000000 50.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 350 200 50 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Help
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: helpbutton
 callback: helpcallback
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 20.000000 240.000000 30.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 20 20 50 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: quit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: quitbutton
 callback: quitcallback
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 270.000000 60.000000 70.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 270 200 70 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Sliders
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: funclabelbutton
 callback: sliderscallback
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 180.000000 60.000000 80.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 180 200 80 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Coordtype
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: coordtypebutton
 callback: coordtypecallback
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 90.000000 60.000000 80.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 90 200 80 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Meshsize
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: meshlabelbutton
 callback: meshlabelcallback
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 20.000000 60.000000 60.000000 30.000000
-boxtype: 6
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 1
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 20 200 60 30
+boxtype: FL_FRAME_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: Range
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: rangelabelbutton
 callback: rangelabelcallback
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 160.000000 100.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 100 100 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Domain:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 20.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 240 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Messages:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 25
-type: 0
-box: 300.000000 130.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_COUNTER
+type: NORMAL_COUNTER
+box: 300 130 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_BLACK
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: max(Re(z)):
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: x1box
 callback: domaincallback
 argument: 1
 
 --------------------
-class: 25
-type: 0
-box: 190.000000 160.000000 110.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_COUNTER
+type: NORMAL_COUNTER
+box: 190 100 110 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_BLACK
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: max(Im(z)):
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: y1box
 callback: domaincallback
 argument: 2
 
 --------------------
-class: 25
-type: 0
-box: 90.000000 130.000000 100.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_COUNTER
+type: NORMAL_COUNTER
+box: 90 130 100 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_BLACK
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: min(Re(z)):
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: x0box
 callback: domaincallback
 argument: 3
 
 --------------------
-class: 25
-type: 0
-box: 190.000000 100.000000 110.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_COUNTER
+type: NORMAL_COUNTER
+box: 190 160 110 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_BLACK
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: min(Im(z)):
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: y0box
 callback: domaincallback
 argument: 4
 
 =============== FORM ===============
 Name: cplxhelppanel
-Width: 480.000000
-Height: 240.000000
+Width: 480
+Height: 250
 Number of Objects: 4
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 480.000000 240.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 480 250
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 71
-type: 0
-box: 20.000000 20.000000 440.000000 180.000000
-boxtype: 2
-colors: 47 15
-alignment: 1
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BROWSER
+type: NORMAL_BROWSER
+box: 20 50 440 180
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_LEFT_BCOL
+alignment: FL_ALIGN_BOTTOM
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: cplxhelpbrowser
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 420.000000 210.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 410 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: quitcplxhelpbutton
 callback: quitcplxhelpcallback
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 210.000000 240.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 10 240 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLACK
 label: Cplxview Help
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 =============== FORM ===============
 Name: sliderspanel
-Width: 320.000000
-Height: 90.000000
+Width: 320
+Height: 100
 Number of Objects: 5
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 320.000000 90.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 320 100
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 24
-type: 1
-box: 30.000000 30.000000 280.000000 20.000000
-boxtype: 2
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_VALSLIDER
+type: HOR_SLIDER
+box: 30 50 280 20
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: a:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: abox
 callback: slidercallback
 argument: 1
 
 --------------------
-class: 24
-type: 1
-box: 30.000000 10.000000 280.000000 20.000000
-boxtype: 2
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_VALSLIDER
+type: HOR_SLIDER
+box: 30 70 280 20
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: b:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: bbox
 callback: slidercallback
 argument: 2
 
 --------------------
-class: 2
-type: 0
-box: 10.000000 60.000000 230.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 10 10 230 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Optional function parameters:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 260.000000 60.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 260 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: slidershidebox
 callback: slidershidecallback
 argument: 0
 
 =============== FORM ===============
 Name: coordtypepanel
-Width: 330.000000
-Height: 150.000000
+Width: 330
+Height: 150
 Number of Objects: 9
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 330.000000 150.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 330 150
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 1
-box: 20.000000 80.000000 190.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 20 40 190 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: rectangular coordinates:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: rectcoordbox
 callback: coordcallback
 argument: 1
 
 --------------------
-class: 11
-type: 1
-box: 20.000000 50.000000 190.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 20 70 190 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: polar coordinates:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: polarcoordbox
 callback: coordcallback
 argument: 2
 
 --------------------
-class: 11
-type: 1
-box: 20.000000 20.000000 190.000000 30.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 20 100 190 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: user defined coordinates:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: usercoordbox
 callback: coordcallback
 argument: 3
 
 --------------------
-class: 2
-type: 0
-box: 20.000000 120.000000 180.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 20 10 180 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: domain specified by:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 270.000000 120.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 270 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: coordtypehidebox
 callback: coordtypehidecallback
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 220.000000 80.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 220 40 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: z = x + i*y
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 220.000000 50.000000 100.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 220 70 100 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: z = r*exp(i*t)
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 220.000000 20.000000 90.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 220 100 90 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: z = s + i*t
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 =============== FORM ===============
 Name: usercoordpanel
-Width: 380.000000
-Height: 110.000000
+Width: 380
+Height: 120
 Number of Objects: 5
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 380.000000 110.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 380 120
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 80.000000 40.000000 280.000000 30.000000
-boxtype: 2
-colors: 9 9
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 80 50 280 30
+boxtype: FL_DOWN_BOX
+colors: FL_INDIANRED FL_INDIANRED
+alignment: FL_ALIGN_LEFT
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: s(u,v) =
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: suvbox
 callback: usercoordcallback
 argument: 1
 
 --------------------
-class: 31
-type: 0
-box: 80.000000 10.000000 280.000000 30.000000
-boxtype: 2
-colors: 9 9
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 80 80 280 30
+boxtype: FL_DOWN_BOX
+colors: FL_INDIANRED FL_INDIANRED
+alignment: FL_ALIGN_LEFT
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: t(u,v) =
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: tuvbox
 callback: usercoordcallback
 argument: 2
 
 --------------------
-class: 2
-type: 0
-box: 10.000000 70.000000 220.000000 30.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 10 10 220 30
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: User defined coordinates:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 320.000000 80.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 310 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: usercoordhidebox
 callback: usercoordhidecallback
 argument: 0
 
 =============== FORM ===============
 Name: meshlabelpanel
-Width: 290.000000
-Height: 40.000000
+Width: 290
+Height: 50
 Number of Objects: 5
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 290.000000 40.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 290 50
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 2
-type: 0
-box: 10.000000 10.000000 90.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 10 15 90 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Meshsize:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 2
-box: 100.000000 10.000000 50.000000 20.000000
-boxtype: 2
-colors: 8 9
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: INT_INPUT
+box: 100 10 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_INDIANRED
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: m1box
 callback: meshcallback
 argument: 1
 
 --------------------
-class: 31
-type: 0
-box: 170.000000 10.000000 50.000000 20.000000
-boxtype: 2
-colors: 8 9
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 170 10 50 30
+boxtype: FL_DOWN_BOX
+colors: FL_BOTTOM_BCOL FL_INDIANRED
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: x
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: m2box
 callback: meshcallback
 argument: 2
 
 --------------------
-class: 11
-type: 0
-box: 240.000000 10.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 230 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: meshlabelhidebox
 callback: meshlabelhidecallback
 argument: 0
 
 =============== FORM ===============
 Name: rangelabelpanel
-Width: 170.000000
-Height: 80.000000
+Width: 170
+Height: 90
 Number of Objects: 6
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 170.000000 80.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 170 90
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 1
-box: 10.000000 10.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 12
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 10 50 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_SLATEBLUE
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Re(f)
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: realrangebutton
 callback: rangecallback
 argument: 1
 
 --------------------
-class: 11
-type: 1
-box: 60.000000 10.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 12
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 60 50 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_SLATEBLUE
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Im(f)
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: imagrangebutton
 callback: rangecallback
 argument: 2
 
 --------------------
-class: 11
-type: 1
-box: 110.000000 10.000000 50.000000 30.000000
-boxtype: 1
-colors: 47 12
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: PUSH_BUTTON
+box: 110 50 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_SLATEBLUE
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 4D
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: d4rangebutton
 callback: rangecallback
 argument: 3
 
 --------------------
-class: 11
-type: 0
-box: 120.000000 50.000000 40.000000 20.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 8.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 110 10 50 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_RED
 label: hide
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: hiderangelabelbutton
 callback: rangelabelhidecallback
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 10.000000 50.000000 90.000000 20.000000
-boxtype: 0
-colors: 47 47
-alignment: 2
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 10 10 90 20
+boxtype: FL_NO_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Range:
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 

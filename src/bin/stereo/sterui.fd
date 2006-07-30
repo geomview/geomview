@@ -1,324 +1,386 @@
-Magic: 12321
+Magic: 13000
 
 Internal Form Definition File
     (do not change)
 
 Number of forms: 3
+Unit of measure: FL_COORD_PIXEL
+SnapGrid: 5
 
 =============== FORM ===============
 Name: stereo
-Width: 223.000000
-Height: 199.000000
+Width: 225
+Height: 205
 Number of Objects: 10
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 223.000000 199.000000
-boxtype: 1
-colors: 9 47
-alignment: 0
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 225 205
+boxtype: FL_UP_BOX
+colors: FL_INDIANRED FL_COL1
+alignment: FL_ALIGN_TOP
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 71
-type: 2
-box: 9.000000 112.000000 111.000000 78.000000
-boxtype: 2
-colors: 47 3
-alignment: 1
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BROWSER
+type: HOLD_BROWSER
+box: 9 9 111 78
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_YELLOW
+alignment: FL_ALIGN_BOTTOM
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: StereoBrowser
 callback: StereoProc
 argument: 0
 
 --------------------
-class: 12
-type: 1
-box: 123.000000 139.000000 93.000000 24.000000
-boxtype: 1
-colors: 39 3
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_LIGHTBUTTON
+type: PUSH_BUTTON
+box: 123 36 93 24
+boxtype: FL_UP_BOX
+colors: 39 FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: Eye Swap
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: SwapButton
 callback: SwapProc
 argument: 0
 
 --------------------
-class: 2
-type: 0
-box: 5.000000 14.000000 170.000000 26.000000
-boxtype: 0
-colors: 9 0
-alignment: 4
-style: 1
-size: 25.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 0 175 170 26
+boxtype: FL_NO_BOX
+colors: FL_INDIANRED FL_BLACK
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
+style: FL_BOLD_STYLE+FL_ENGRAVED_STYLE
+size: FL_LARGE_SIZE
+lcol: FL_BLACK
 label: Stereo View 1.0
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 182.000000 3.000000 38.000000 24.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 180 175 38 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: 11
+lcol: FL_BLACK
 label: Quit
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: QuitButton
 callback: QuitProc
 argument: 0
 
 --------------------
-class: 1
-type: 3
-box: 10.000000 69.000000 200.000000 40.000000
-boxtype: 3
-colors: 9 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: BORDER_BOX
+box: 10 90 205 40
+boxtype: FL_FLAT_BOX
+colors: FL_INDIANRED FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: BestViewText
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 123.000000 112.000000 93.000000 24.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 123 63 93 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: Focal Plane
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: FocalButton
 callback: FocalProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 176.000000 168.000000 40.000000 23.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 176 8 40 23
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: 11
+lcol: FL_BLACK
 label: Help
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: HelpButton
 callback: HelpProc
 argument: 1
 
 --------------------
-class: 24
-type: 5
-box: 8.000000 50.000000 198.000000 21.000000
-boxtype: 2
-colors: 9 11
-alignment: 0
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_VALSLIDER
+type: HOR_NICE_SLIDER
+box: 10 150 205 20
+boxtype: FL_DOWN_BOX
+colors: FL_INDIANRED FL_PALEGREEN
+alignment: FL_ALIGN_TOP
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: Convergence angle
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: ConvSlider
 callback: ConvProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 124.000000 167.000000 49.000000 24.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 124 8 49 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: 11
+lcol: FL_BLACK
 label: More..
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: MoreButton
 callback: MoreProc
 argument: 1
 
 =============== FORM ===============
 Name: Help
-Width: 475.000000
-Height: 450.000000
+Width: 475
+Height: 450
 Number of Objects: 3
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 475.000000 450.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 0
-size: 12.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 475 450
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 71
-type: 0
-box: 10.000000 30.000000 460.000000 410.000000
-boxtype: 2
-colors: 47 3
-alignment: 1
-style: 3
-size: 8.000000
-lcol: 0
+class: FL_BROWSER
+type: NORMAL_BROWSER
+box: 10 10 460 410
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_YELLOW
+alignment: FL_ALIGN_BOTTOM
+style: FL_BOLDITALIC_STYLE
+size: FL_TINY_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: HelpBrowser
 callback: 
 argument: 
 
 --------------------
-class: 11
-type: 0
-box: 425.000000 6.000000 45.000000 24.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 425 420 45 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Done
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: DoneButton
 callback: DoneProc
 argument: (long)Help
 
 =============== FORM ===============
 Name: More
-Width: 255.000000
-Height: 140.000000
+Width: 255
+Height: 140
 Number of Objects: 7
 
 --------------------
-class: 1
-type: 1
-box: 0.000000 0.000000 255.000000 140.000000
-boxtype: 1
-colors: 9 47
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_BOX
+type: UP_BOX
+box: 0 0 255 140
+boxtype: FL_UP_BOX
+colors: FL_INDIANRED FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: 
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 102.000000 110.000000 26.000000
-boxtype: 2
-colors: 14 6
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 12 110 26
+boxtype: FL_DOWN_BOX
+colors: FL_TOP_BCOL FL_CYAN
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Ocular Separation
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: OcularInput
 callback: OcularSepProc
 argument: 0
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 72.000000 110.000000 24.000000
-boxtype: 2
-colors: 14 6
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 44 110 24
+boxtype: FL_DOWN_BOX
+colors: FL_TOP_BCOL FL_CYAN
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Screen Width
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: ScreenWidthInput
 callback: ScreenWidthProc
 argument: 0
 
 --------------------
-class: 11
-type: 0
-box: 204.000000 11.000000 45.000000 24.000000
-boxtype: 1
-colors: 47 47
-alignment: 4
-style: 1
-size: 11.000000
-lcol: 0
+class: FL_BUTTON
+type: NORMAL_BUTTON
+box: 204 105 45 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Done
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: DoneButton
 callback: DoneProc
 argument: (long)More
 
 --------------------
-class: 2
-type: 0
-box: 139.000000 92.000000 78.000000 16.000000
-boxtype: 0
-colors: 9 0
-alignment: 2
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 139 32 78 16
+boxtype: FL_NO_BOX
+colors: FL_INDIANRED FL_BLACK
+alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: (in inches)
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
 
 --------------------
-class: 12
-type: 1
-box: 10.000000 10.000000 120.000000 25.000000
-boxtype: 1
-colors: 39 3
-alignment: 4
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_LIGHTBUTTON
+type: PUSH_BUTTON
+box: 10 105 120 25
+boxtype: FL_UP_BOX
+colors: 39 FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Fixed camera
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: FixedCamButton
 callback: 
 argument: 
 
 --------------------
-class: 31
-type: 0
-box: 10.000000 41.000000 110.000000 24.000000
-boxtype: 2
-colors: 14 6
-alignment: 3
-style: 0
-size: 11.000000
-lcol: 0
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 10 75 110 24
+boxtype: FL_DOWN_BOX
+colors: FL_TOP_BCOL FL_CYAN
+alignment: FL_ALIGN_RIGHT
+style: FL_NORMAL_STYLE
+size: FL_NORMAL_SIZE
+lcol: FL_BLACK
 label: Camera Name
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
 name: CamNameInput
 callback: CamNameProc
 argument: 0
