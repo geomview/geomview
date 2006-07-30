@@ -1,0 +1,74 @@
+The prefab panel allows you to quickly load
+pre-saved Geomview files.  Each browser is
+described below, followed by directions for adding
+your own options to them.
+
+The Environment Browser:
+
+This browser allows you to load a Geomview command
+file, which specifies windows, colormaps, objects,
+camera positions, ... just about everything
+about Geomview's state at a particular time.
+Loading one of these environments may or may not
+remove other windows and objects.  This is the
+best approach to a quick start-up, if you want to
+load up a standard set-up.  To save a command
+file, use Geomview's save option. (You can get the
+save panel by typing the greater than sign when
+you are in one of Geomview's windows.)
+
+The Coormap Browser:  
+
+This browser is used to apply a pre-saved colormap
+to the current window (usually the last one the
+mouse has been in).  In this application, a
+colormap is a function that assigns color to the
+vertices of an object according to the "height" of
+those vertices in a particular direction.  For
+more information about how to make your own
+colormap, please see the help page for the toolkit
+panel.  Right now saving a colormap is tricky--
+the best thing may be to save a command file (see
+above) and then take out the command beginning
+with "ND-color".  Note the "no-color" option on
+this menu that removes a colormap from the current
+window.
+
+The Sampe Objects Browser:  
+
+This browser contains a list of interesting higher
+dimensional objects.  Loading one of these objects
+via this browser causes all other Geomview objects
+being displayed to be removed, so if you would
+like to see several objects you may like to use
+the standard Geomview load option.  Saving objects
+should be done in the usual way for Geomview.
+
+The Modues Browser:
+
+This browser contains a list of external modules
+for Geomview that make use of its higher
+dimensional functionality.  Many of these are
+intended to help develop visualization skills, and
+the authors would like to include other modules as
+they are developed.
+
+The contents of the browsers are determined by 
+
+1) a default file in the Geomview default data
+directory under the name NDview/scripts/.ndview
+2) a file named .ndview in you home directory
+2) a file named .ndview in the current directory
+
+These files may contain lines of the form
+           label:type:filename
+where label is the label to appear in the browser,
+type is one of environment colormap object module,
+and filename is the name of the file to be loaded
+when the user clicks on the line of the browser
+displaying that label.  Note that the label and
+filename should not contain any colons.  Geomview
+will complain if it is unable to find a file when
+you try to load it.  An example line of the
+.ndview file is
+	flattorus:object:NDview/geom/thisobj.mesh

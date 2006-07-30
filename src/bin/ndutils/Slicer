@@ -1,0 +1,300 @@
+emodule_init ndutils
+
+proc EquationMaker {} {
+	global dim D
+	for {set i 1} {$i <= $dim} {incr i} {
+		global x$i
+	}
+	set eqn ""
+	for {set i 1} {$i <= $dim} {incr i} {
+		append eqn "a$i"
+		append eqn "x$i"
+		if {$i < $dim} {
+			append eqn " + "
+		}
+	}
+	append eqn " = D"
+	label .top.header -text "Hyperplane given by:"
+	label .top.eqn -text $eqn
+	frame .top.entries
+	for {set i 1} {$i <= $dim} {incr i} {
+		frame .top.entries.line$i
+		label .top.entries.line$i.l -text "a$i ="
+		entry .top.entries.line$i.e -width 10 -relief sunken -textvariable x$i
+		pack .top.entries.line$i.l .top.entries.line$i.e -side left -padx 1m -pady 1m
+	}
+	frame .top.entries.final
+	label .top.entries.final.l -text "D ="
+	entry .top.entries.final.e -width 10 -relief sunken -textvariable D
+	pack .top.entries.final.l .top.entries.final.e -side left -padx 1m -pady 1m
+	pack .top.header .top.eqn -side top -padx 1m
+	for {set i 1} {$i <= $dim} {incr i} {
+		pack .top.entries.line$i -side top 
+	}
+	pack .top.entries.final -side top
+	pack .top.entries -side top
+	for {set i 1} {$i <= $dim} {incr i} {
+		bind .top.entries.line$i.e <Return> "ReturnPict"
+	}
+	bind .top.entries.final.e <Return> "ReturnPict"
+}
+
+proc ReturnPict {} {
+	global dim D camera
+	for {set i 1} {$i <= $dim} {incr i} {
+		global x$i
+	}
+	set eqn {}
+	set eqn [lappend eqn $D]
+	for {set i 1} {$i <= $dim} {incr i} {
+		set stuff x$i
+		set temp [set $stuff]
+		set eqn [lappend eqn $temp]
+	}
+	set eqn [join $eqn { }]
+	UpdatePicture $dim $eqn $camera
+        UpdatePicture $dim $eqn $camera
+        UpdatePicture $dim $eqn $camera
+}
+
+proc RefreshScreen {} {
+	global dim D camera contupdate
+        for {set i 1} {$i <= $dim} {incr i} {
+                global x$i
+        }
+	destroy .top.header
+	destroy .top.eqn
+	destroy .top.entries
+	EquationMaker
+}
+
+proc Update {} {
+	global dim D camera contupdate
+	for {set i 1} {$i <= $dim} {incr i} {
+		global x$i
+	}
+	set flag [ObjExistCheck $camera]
+        if {$flag != "yes"} {
+                tk_dialog .error Error "Camera $camera does not exist" {} 0 OK
+                set contupdate 0
+        } else {
+		set newdim [GetDim]
+#		puts stderr "Got dim $newdim\n"
+		if {$newdim != $dim} {
+        		if {$newdim < $dim} {
+				set dim $newdim
+				CreateClipPlane $dim $camera
+				RefreshScreen 
+			} else {
+				for {set i [expr $dim + 1]} {$i<=$newdim} {incr i} {
+					global x$i
+					set x$i 0
+				}
+				set dim $newdim
+				CreateClipPlane $dim $camera
+				RefreshScreen
+			}
+		}
+		set list [GetData $dim $camera]
+		if {$list == "NoObj"} {
+			CreateClipPlane $dim $camera
+			Update
+		} else {
+			set list [split $list { }]
+			set D [lindex $list 0]
+			for {set i 1} {$i <= $dim} {incr i} {
+        			set x$i [lindex $list $i]
+			}
+		}
+	}
+}
+
+proc ContUpdate {} {
+        global dim D contupdate
+        for {set i 1} {$i <= $dim} {incr i} {
+                global x$i
+        }
+	focus .cont
+	while {$contupdate} {
+		update
+		Update
+	}
+	grab release .cont
+}
+
+proc Quit {} {
+	global contupdate
+	set contupdate 0
+	update
+	exit
+}
+
+proc CutIt {} {
+	global dim D object method d n HideEdge HideFace
+	for {set i 1} {$i <= $dim} {incr i} {
+		global x$i
+	}
+        set eqn {}
+        set eqn [lappend eqn $D]
+        for {set i 1} {$i <= $dim} {incr i} {
+                set stuff x$i
+                set temp [set $stuff]
+                set eqn [lappend eqn $temp]
+        }
+        set eqn [join $eqn { }]
+	if {$method == 3} {
+		set successful [SliceNDice $object $dim $eqn $method $n $d $HideEdge $HideFace]
+	} elseif {$method == 4} {
+		set successful [SliceNDice $object $dim $eqn $method $n $HideEdge $HideFace]
+	} else {
+		set successful [SliceNDice $object $dim $eqn $method]
+	}
+	if {$successful != "yes"} {
+		if {$successful == "NoObj"} {
+			tk_dialog .error Error "Object $object does not exist"\
+				{} 0 OK
+		} elseif {$successful == "DiffDims"} {
+			tk_dialog .error Error "Object and hyperplane do not\
+				agree in dimension" {} 0 OK
+		} else {
+			tk_dialog .error Error "Irrecoverable data error"\
+				{} 0 OK
+		}
+	}
+}
+
+proc DiceData {newmethod} {
+	global d n method HideEdge HideFace methodvar
+	set method $newmethod
+	destroy .dice.inner
+	frame .dice.inner
+	if {$method == 0} {
+		frame .dice.inner.empty
+		pack .dice.inner.empty
+		set methodvar "Clip: keep both sides"
+	} elseif {$method == 1} {
+		frame .dice.inner.empty
+		pack .dice.inner.empty
+		set methodvar "Clip: keep < side only"
+	} elseif {$method == 2} {
+		frame .dice.inner.empty
+		pack .dice.inner.empty
+		set methodvar "Clip: keep > side only"
+	} elseif {$method == 3} {
+		frame .dice.inner.data -borderwidth 4 -relief groove
+		label .dice.inner.data.note -text "For dicing only"
+		pack .dice.inner.data.note -side top
+		frame .dice.inner.data.d
+		label .dice.inner.data.d.l -text "d = "
+		entry .dice.inner.data.d.e -relief sunken -width 10 -textvariable d
+		pack .dice.inner.data.d.l .dice.inner.data.d.e -side left
+		pack .dice.inner.data.d -padx 1m -pady 1m -side top
+		frame .dice.inner.data.n
+		label .dice.inner.data.n.l -text "n = "
+		entry .dice.inner.data.n.e -relief sunken -width 10 -textvariable n
+		pack .dice.inner.data.n.l .dice.inner.data.n.e -side left
+		pack .dice.inner.data.n -side top -padx 1m -pady 1m
+		label .dice.inner.data.special -text "In alternating slices:"
+		checkbutton .dice.inner.data.hideedge -text "Hide Edges" -variable HideEdge
+		checkbutton .dice.inner.data.hideface -text "Hide Faces" -variable HideFace
+		pack .dice.inner.data.special .dice.inner.data.hideedge .dice.inner.data.hideface -side top -fill x -padx 1m -pady 1m
+		pack .dice.inner.data
+		bind .dice.inner.data.d.e <Return> ".cut.doit flash; CutIt"
+		bind .dice.inner.data.n.e <Return> ".cut.doit flash; CutIt"
+		set methodvar "Dice: create n slabs between D and d"
+	} else {
+		frame .dice.inner.data -borderwidth 4 -relief groove
+		label .dice.inner.data.note -text "For dicing only"
+		pack .dice.inner.data.note -side top
+		frame .dice.inner.data.n
+		label .dice.inner.data.n.l -text "n = "
+		entry .dice.inner.data.n.e -relief sunken -width 10 -textvariable n
+		pack .dice.inner.data.n.l .dice.inner.data.n.e -side left
+		pack .dice.inner.data.n -side top -padx 1m -pady 1m
+		label .dice.inner.data.special -text "In alternating slices:"
+		checkbutton .dice.inner.data.hideedge -text "Hide Edges" -variable HideEdge
+		checkbutton .dice.inner.data.hideface -text "Hide Faces" -variable HideFace
+		pack .dice.inner.data.special .dice.inner.data.hideedge .dice.inner.data.hideface -side top -fill x -padx 1m -pady 1m
+		pack .dice.inner.data
+		bind .dice.inner.data.n.e <Return> ".cut.doit flash; CutIt"
+		set methodvar "Dice: cut object into n pieces"
+	}
+	pack .dice.inner
+}
+
+set camera [GetFocusCam]
+frame .top -borderwidth 4 -relief ridge
+pack .top -side top -fill x -padx 1m -pady 1m
+set dim [GetDim]
+puts stderr "DIM: $dim\n"
+CreateClipPlane $dim $camera
+Update
+EquationMaker
+
+set contupdate 1
+set object g1
+set method 0
+set methodvar "Clip: keep both sides"
+set HideEdge 0
+set HideFace 0
+frame .cont -relief ridge -borderwidth 4
+label .cont.title -text "Method for computing hyperplane:"
+frame .cont.buttons
+radiobutton .cont.buttons.yes -text "Automatic Update" -variable contupdate\
+	 -value 1 -command ContUpdate
+radiobutton .cont.buttons.no -text "Manual Entry" -variable contupdate -value 0
+pack .cont -side top -fill x -padx 1m -pady 1m
+pack .cont.title .cont.buttons -padx 1m -pady 1m -side top
+pack .cont.buttons.yes .cont.buttons.no -padx 1m -pady 1m -side left
+frame .cont.options
+button .cont.options.singleupdate -text "Single Update" -command Update
+frame .cont.options.cam
+label .cont.options.cam.l -text Camera
+entry .cont.options.cam.e -relief sunken -width 15 -textvariable camera
+pack .cont.options.cam.l .cont.options.cam.e -side left
+pack .cont.options.singleupdate .cont.options.cam -padx 1m -pady 1m\
+	-side left
+pack .cont.options -side top 
+bind .cont.options.cam.e <Return> "Update"
+frame .target -borderwidth 4 -relief ridge
+frame .target.inner
+label .target.inner.l -text "Object to be sliced:"
+entry .target.inner.e -relief sunken -width 15 -textvariable object
+pack .target.inner.l .target.inner.e -side left -pady 1m
+pack .target.inner -side top
+pack .target -side top -padx 1m -pady 1m -fill x
+frame .cutops -borderwidth 4 -relief ridge
+label .cutops.l -text "Slicing Options:"
+
+menubutton .cutops.pup -textvariable methodvar -relief raised \
+        -menu .cutops.pup.m
+menu .cutops.pup.m
+.cutops.pup.m add command -label "Clip: keep both sides"\
+	-command "DiceData 0"
+.cutops.pup.m add command -label "Clip: keep <D side only"\
+	-command "DiceData 1"
+.cutops.pup.m add command -label "Clip: keep >D side only"\
+	-command "DiceData 2"
+.cutops.pup.m add command -label "Dice: create n slabs between D and d"\
+	-command "DiceData 3"
+.cutops.pup.m add command -label "Dice: cut object into n pieces"\
+	-command "DiceData 4"
+pack .cutops.l .cutops.pup -side left -fill x -padx 1m -pady 1m
+pack .cutops -side top -fill x -padx 1m -pady 1m
+frame .dice
+frame .dice.inner
+frame .dice.inner.empty
+pack .dice.inner.empty
+pack .dice.inner.empty
+pack .dice -side top -pady 1m
+frame .cut
+button .cut.doit -text Slice! -font -Adobe-Times-Bold-R-Normal-*-180-*\
+	-command CutIt
+pack .cut.doit -padx 1m -pady 1m -ipadx 1m -ipady 1m
+pack .cut -side top -fill x
+bind .target.inner.e <Return> ".cut.doit flash; CutIt"
+frame .exit
+button .exit.b -text "Exit" -command Quit
+pack .exit.b -side right -padx 1m -pady 1m
+pack .exit -side bottom -fill x
+ContUpdate

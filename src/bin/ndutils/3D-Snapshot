@@ -1,0 +1,62 @@
+emodule_init ndutils
+
+proc Exit {} {
+	exit
+}
+
+proc Save {} {
+	global filename camera object mode
+	set flag [ObjExistCheck $camera]
+	if {$flag != "yes"} {
+		tk_dialog .error Error "Camera $camera does not exist." {} 0 OK
+		Exit
+	}
+	set done [DoProjection $object $camera $filename $mode]
+	if {$done == "NoObj"} {
+		tk_dialog .error Error "Object $object does not exist." {} 0 OK
+	} elseif {$done != "yes"} {
+		tk_dialog .error Error "Unrecoverable data error." {} 0 OK
+	}
+	Exit
+}
+
+set filename {}
+set camera focus
+set object g1
+set mode 1
+frame .camera
+label .camera.l -text "Camera:"
+entry .camera.e -width 20 -relief sunken -textvariable camera
+pack .camera -side top -fill x -padx 1m -pady 1m
+pack .camera.l .camera.e -side left
+frame .object
+label .object.l -text "Object:"
+entry .object.e -width 20 -relief sunken -textvariable object
+pack .object -side top -fill x -padx 1m -pady 1m
+pack .object.l .object.e -side left
+frame .getname
+label .getname.note -text "Enter name for file:"
+entry .getname.space -textvariable filename -width 30 -relief sunken
+pack .getname -side top -fill x -padx 1m -pady 1m
+pack .getname.note .getname.space -side left
+frame .options -borderwidth 4 -relief raised
+frame .options.inner
+label .options.inner.title -text "Save object" 
+radiobutton .options.inner.withcolor -text "With Color Map Applied"\
+	-variable mode -value 1 -anchor w
+radiobutton .options.inner.withoutcolor -text "Without Color Map Applied" \
+	-variable mode -value 0 -anchor w
+pack .options.inner.title .options.inner.withcolor .options.inner.withoutcolor\
+	-side top -fill x 
+pack .options.inner -padx 1m -pady 1m
+pack .options -side top 
+frame .choices
+button .choices.ok -text Save -command "Save"
+button .choices.cancel -text Cancel -command "Exit"
+pack .choices -side bottom -fill x
+pack .choices.ok -padx 1m -pady 1m -side left
+pack .choices.cancel -padx 1m -pady 1m -side right
+bind .getname.space <Return> ".choices.ok invoke"
+bind .camera.e <Return> ".choices.ok invoke"
+bind .object.e <Return> ".choices.ok invoke"
+

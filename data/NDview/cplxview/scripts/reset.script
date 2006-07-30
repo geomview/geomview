@@ -1,0 +1,11 @@
+(progn
+(rawevent 87 1 0 0 0)
+(merge camera X_Y_U { focus 20 })
+(merge camera X_Y_V { focus 20 })
+(merge camera U_V_X { focus 20 })
+(merge camera U_V_Y { focus 20 })
+(transform X_Y_U world self  rotate -1.0 0.1 0.1)
+(transform X_Y_V world self  rotate -1.0 0.1 0.1)
+(transform U_V_X world self  rotate -1.0 0.1 0.1)
+(transform U_V_Y world self  rotate -1.0 0.1 0.1)
+)

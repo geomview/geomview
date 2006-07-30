@@ -1,0 +1,50 @@
+(progn
+(ui-panel "Tools" off )
+(if(real-id c0) (delete c0))
+(bbox-draw allgeoms off)
+(dimension 4)
+(merge window default { position 0 300 0  300 })
+(new-camera cluster1:1_2_3)
+(merge window default { position 330 630 0 300 })
+(new-camera cluster1:1_4_2)
+(merge window default { position 330 630 350 650 })
+(new-camera cluster2:1_2_3)
+(ND-axes cluster1:1_2_3 cluster1 0 1 2)
+(ND-axes cluster1:1_4_2 cluster1 0 3 1)
+(ND-axes cluster2:1_2_3 cluster2 0 1 2)
+(transform cluster2:1_2_3 world world  rotate -.3 .5 .07)
+(ND-color cluster1:1_2_3
+	(
+	  (
+	    ( 0 0 0 1 )
+	  -1e10 .3 .3 .3 1
+	    -.4 0 0 1 1
+	    .4  1 0 0 1
+	  1e10 .3 .3 .3 1
+	  )
+	)
+)
+(ND-color cluster1:1_4_2
+	(
+	  (
+	    ( 0 0 0 1 )
+	  -1e10 .3 .3 .3 1
+	    -.4 0 0 1 1
+	    .4  1 0 0 1
+	  1e10 .3 .3 .3 1
+	  )
+	)
+)
+(ND-color cluster2:1_2_3
+	(
+	  (
+	    ( 0 0 0 1 )
+	  -1e10 .3 .3 .3 1
+	    -.4 0 0 1 1
+	    .4  1 0 0 1
+	  1e10 .3 .3 .3 1
+	  )
+	)
+)
+(load geom/4daxes)
+)

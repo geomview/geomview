@@ -1,0 +1,2 @@
+(if (real-id c0) (delete c0))
+(ui-panel tools off)

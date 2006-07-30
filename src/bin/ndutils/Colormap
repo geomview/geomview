@@ -1,0 +1,650 @@
+emodule_init ndutils
+
+image create photo grad -width 432 -height 20
+setphoto grad
+set max 1.0
+set min -1.0
+set xsize 432
+set offset 10
+set camera focus
+set vector "(0 0 0 1)"
+set contupdate 0
+set continue 1 
+set object g1
+set WithRespectTo universe
+set exact 1
+set gvseqno 1
+
+proc readGeomviewColormap {} {
+    global camera vector min max WithRespectTo Other gvseqno
+
+    lookbusy 1
+    incr gvseqno
+    puts "(echo '\\n' $gvseqno '\\n' (ND-color $camera)\\n)"
+    flush stdout
+    while {[gets stdin m1] >= 0 && [lindex $m1 0] != $gvseqno} {
+    }
+    gets stdin m1
+    # puts stderr "********* GOT: $m1 x"
+    if {$m1 == "() "} {
+	tk_dialog .error Error "Camera $camera has no current colormap" {} 0 OK
+	lookbusy 0
+    	return
+    }
+    regsub -all \\\( $m1 \{ m2
+    regsub -all \\\) $m2 \} m3
+    set map [lindex [lindex $m3 0] 0]
+    set coordsys [lindex $map 0]
+    if {$coordsys == "universe"} {
+	set WithRespectTo universe
+    } elseif {$coordsys == "World"} {
+	set WithRespectTo world
+    } else {
+	set WithRespectTo other
+	set Other $coordsys
+    }
+    CoordSys
+    set vector ([lindex $map 1])
+    set colors [lrange $map 2 end]
+    .coloredit.c delete withtag tab
+    set y 25
+    set donemin no
+
+    for {set i 0} {$i < [llength $colors]} {incr i 5} {
+	if {[expr abs([lindex $colors $i])] < 1e5} {
+	   set max [lindex $colors $i] 
+	   set maxindex $i
+	   if {$donemin == "no"} {
+		set minindex $i
+		set min [lindex $colors $i]
+		set donemin yes
+	   }
+        }
+     }
+    .red set [expr int(255*[lindex $colors [expr $minindex+1]])]
+    .green set [expr int(255*[lindex $colors [expr $minindex+2]])]
+    .blue set [expr int(255*[lindex $colors [expr $minindex+3]])]
+    rulerNewTab .coloredit.c [convert [lindex $colors $minindex]] $y
+    .red set [expr int(255*[lindex $colors [expr $maxindex+1]])]
+    .green set [expr int(255*[lindex $colors [expr $maxindex+2]])]
+    .blue set [expr int(255*[lindex $colors [expr $maxindex+3]])]
+    rulerNewTab .coloredit.c [convert [lindex $colors $maxindex]] $y
+    .coloredit.c addtag stable withtag tab
+
+    for {set i [expr $minindex+5]} {$i < $maxindex} {incr i 5} {
+	if {[expr abs([lindex $colors $i])] < 1e5} {
+	   .red set [expr int(255*[lindex $colors [expr $i+1]])]
+	   .green set [expr int(255*[lindex $colors [expr $i+2]])]
+	   .blue set [expr int(255*[lindex $colors [expr $i+3]])]
+           rulerNewTab .coloredit.c [convert [lindex $colors $i]] $y
+        }
+     }
+    lookbusy 0
+}
+
+proc MkScale {filename} {
+    global offset xsize camera vector max min
+    set t [.coloredit.c find withtag tab]
+    set t [lsort -command tabCompare $t]
+    if {$filename==""} {
+	tk_dialog .error Error "No filename specified.  Color scale not saved." {} 0 OK
+	return
+    }
+    set fp [open $filename w]
+    puts $fp "appearance \{+keepcolor shading smooth\}"
+    puts $fp "CnMESH 3"
+    puts $fp "2 [llength $t]"
+    foreach i $t {
+        set array1 {}
+        set array2 {}
+        set s [.coloredit.c itemconfigure $i -fill]
+        scan [lindex $s [expr [llength $s]-1]] "#%02x%02x%02x" r g b
+        set x [expr ([lindex [.coloredit.c coords $i] 0]-$offset)/double($xsize-2)]
+        lappend array1 0.0 $x 0.0 [expr $r/255.0] [expr $g/255.0] [expr $b/255.0] 1
+        lappend array2 0.0842 $x 0.0 [expr $r/255.0] [expr $g/255.0] [expr $b/255.0] 1
+	puts $fp $array1
+        puts $fp $array2
+    }
+    close $fp
+}
+
+proc SaveScript {filename} {
+    global contupdate offset xsize camera vector max min WithRespectTo Other 
+    set fp [open $filename w]
+    set t [.coloredit.c find withtag tab]
+    set t [lsort -command tabCompare $t]
+    set array {}
+    foreach i $t {
+        set s [.coloredit.c itemconfigure $i -fill]
+        scan [lindex $s [expr [llength $s]-1]] "#%02x%02x%02x" r g b
+        set x [expr ([lindex [.coloredit.c coords $i] 0]-$offset)*double($max-$min)/double($xsize-2)+$min]
+        lappend array $x [expr $r/255.0] [expr $g/255.0] [expr $b/255.0] 1
+    }
+    set camexists [ObjExistCheck $camera]
+    if {$camexists == "yes"} {
+        if {$WithRespectTo == "other"} {
+                puts $fp "(ND-color $camera (($Other $vector -1000000.0 0 0 0 1 $array 1000000 1 1 1 1)))"
+	} else {
+		puts $fp "(ND-color $camera (($WithRespectTo $vector -1000000.0 0 0 0 1 $array 1000000 1 1 1 1)))"
+    	    	flush $fp
+		close $fp
+	}
+    } else {
+        tk_dialog .error Error "Camera $camera does not exist" {} 0 OK
+        set contupdate 0
+   }
+}
+
+proc Snapshot {filename withcolor} {
+        global camera object
+        set flag [ObjExistCheck $camera]
+        if {$flag != "yes"} {
+                tk_dialog .error Error "Camera $camera does not exist." {} 0 OK
+                Exit
+        }
+        set done [DoProjection $object $camera $filename $withcolor]
+        if {$done == "NoObj"} {
+                tk_dialog .error Error "Object $object does not exist." {} 0 OK
+        } elseif {$done != "yes"} {
+                tk_dialog .error Error "Unrecoverable data error." {} 0 OK
+        }
+}
+
+proc SaveMenu {} {
+    global do filename choice camera object
+    set filename ""
+    toplevel .getname -class Tk_Dialog
+    wm title .getname "Save Options"
+    set oldFocus [focus]
+    set choice 1
+    grab .getname
+    focus .getname
+    frame .getname.stuff
+    label .getname.stuff.note -text "Enter name for file:"
+    entry .getname.stuff.space -textvariable filename -width 35 -relief sunken
+    pack .getname.stuff -side top -fill x
+    pack .getname.stuff.note .getname.stuff.space -side left
+    frame .getname.options
+    radiobutton .getname.options.scale -text "Save color scale as OOGL object"\
+        -variable choice -value 1 -anchor w
+    radiobutton .getname.options.script -text "Save colormap as Geomview\
+        script" -variable choice -value 2 -anchor w
+    radiobutton .getname.options.snapshot -text "Save view of current object in\
+        current camara as 3D image" -variable choice -value 3 -anchor w
+    radiobutton .getname.options.wcsnapshot -text "Save view as 3D\
+        image with colormap" -variable choice -value 4 -anchor w
+    pack .getname.options -side top -fill x
+    pack .getname.options.scale .getname.options.script\
+        .getname.options.snapshot .getname.options.wcsnapshot -side top -fill x\
+	-padx 1m -pady 1m
+    frame .getname.choices
+    button .getname.choices.ok -text Save -command "set do 1"
+    button .getname.choices.cancel -text Cancel -command "set do 0"
+    pack .getname.choices -side bottom -fill x
+    pack .getname.choices.ok -padx 1m -pady 1m -side left
+    pack .getname.choices.cancel -padx 1m -pady 1m -side right
+    bind .getname.stuff.space <Return> ".getname.choices.ok flash; set do 1"
+    tkwait variable do
+    if {$do} {
+        if {$choice == 1} {MkScale $filename}
+        if {$choice == 2} {SaveScript $filename}
+	if {$choice == 3} {Snapshot $filename 0}
+	if {$choice == 4} {Snapshot $filename 1}
+    }
+    destroy .getname
+    focus $oldFocus
+}
+
+proc rulerMkTab {c x y} {
+    upvar #0 demo_rulerInfo v
+    $c create polygon $x $y [expr $x+$v(size)] [expr $y+$v(size)] \
+	    [expr $x-$v(size)] [expr $y+$v(size)]
+}
+
+proc rulerNewTab {c x y} {
+    upvar #0 demo_rulerInfo v
+    rulerReleaseTab $c
+    $c addtag active withtag [rulerMkTab $c $x $y]
+    $c addtag tab withtag active
+    set v(x) $x
+    set v(y) $y
+    $c itemconfigure active -fill \
+	[format #%02x%02x%02x [.red get] [.green get] [.blue get]]
+    rulerMoveTab $c $x $y
+}
+
+proc rulerMoveTab {c x y} {
+    upvar #0 demo_rulerInfo v
+    set tab [$c find withtag active]
+    set stables [$c find withtag stable]
+    if {[$c find withtag active] == ""} {
+	return
+    }
+    if {[lsearch $stables $tab] != -1} {
+	return
+    }
+    set cx [$c canvasx $x $v(grid)]
+    set cy [$c canvasy $y]
+    if {$cx < $v(left)} {
+	set cx $v(left)
+    }
+    if {$cx > $v(right)} {
+	set cx $v(right)
+    }
+    if {($cy >= $v(top)) && ($cy <= $v(bottom))} {
+	set cy [expr $v(top)+2]
+	eval "$c itemconf active $v(activeStyle)"
+    } else {
+	set cy [expr $cy-$v(size)-2]
+	eval "$c itemconf active $v(deleteStyle)"
+    }
+    $c move active [expr $cx-$v(x)] [expr $cy-$v(y)]
+    set v(x) $cx
+    set v(y) $cy
+    dumpTabs
+}
+
+proc demo_selectTab {c x y} {
+    upvar #0 demo_rulerInfo v
+    rulerReleaseTab $c
+    set v(x) [$c canvasx $x $v(grid)]
+    set v(y) [expr $v(top)+2]
+    $c addtag active withtag current
+    eval "$c itemconf active $v(activeStyle)"
+    $c raise active
+
+    set s [.coloredit.c itemconfigure active -fill]
+    scan [lindex $s [expr [llength $s]-1]] "#%02x%02x%02x" r g b
+    .red set $r
+    .green set $g
+    .blue set $b
+}
+
+proc rulerDeleteTab c {
+    upvar #0 demo_rulerInfo v
+    if {[$c find withtag active] == {}} {
+	return
+    }
+    if {$v(y) != [expr $v(top)+2]} {
+	$c delete active
+    }
+    dumpTabs
+}    
+
+proc rulerReleaseTab c {
+    upvar #0 demo_rulerInfo v
+    if {[$c find withtag active] == {}} {
+	return
+    }
+    if {$v(y) != [expr $v(top)+2]} {
+	$c delete active
+    } else {
+	eval "$c itemconf active $v(normalStyle)"
+	$c dtag active
+    }
+}
+
+proc newColor {value} {
+    set t [.coloredit.c find withtag active]
+    if {$t != {}} {
+	.coloredit.c itemconfigure $t -fill \
+	    [format #%02x%02x%02x [.red get] [.green get] [.blue get]]
+    }
+    dumpTabs
+}
+
+proc tabCompare {a b} {
+    set ax [lindex [.coloredit.c coords $a] 0]
+    set bx [lindex [.coloredit.c coords $b] 0]
+    return [expr int($ax-$bx)]
+}
+
+proc dumpTabs {} {
+    global max min offset xsize camera vector
+
+    set t [.coloredit.c find withtag tab]
+    set t [lsort -command tabCompare $t]
+    set array {}
+    foreach i $t {
+	set s [.coloredit.c itemconfigure $i -fill]
+	scan [lindex $s [expr [llength $s]-1]] "#%02x%02x%02x" r g b
+	set x [expr ([lindex [.coloredit.c coords $i] 0]-$offset)*double($max-$min)/double($xsize-2)+$min]
+	lappend array $x $r $g $b
+    }
+    setmin $min
+    setmax $max
+    eval colors $array
+}
+
+proc NDdump {} {
+    global contupdate offset xsize camera vector max min WithRespectTo object\
+	updatecolors Other
+    set t [.coloredit.c find withtag tab]
+    set t [lsort -command tabCompare $t]
+    set array {}
+    foreach i $t {
+	set s [.coloredit.c itemconfigure $i -fill]
+	scan [lindex $s [expr [llength $s]-1]] "#%02x%02x%02x" r g b
+	set x [expr ([lindex [.coloredit.c coords $i] 0]-$offset)*double($max-$min)/double($xsize-2)+$min]
+	lappend array $x [expr $r/255.0] [expr $g/255.0] [expr $b/255.0] 1
+    }
+    set camexists [ObjExistCheck $camera]
+    if {$camexists == "yes"} {
+	if {$WithRespectTo == "other"} {
+		puts "(ND-color $camera (($Other $vector -1000000.0 0 0 0 1 $array 1000000 1 1 1 1)))"
+	} else {
+		puts "(ND-color $camera (($WithRespectTo $vector -1000000.0 0 0 0 1 $array 1000000 1 1 1 1)))"
+	}
+	flush stdout
+    } else {
+	tk_dialog .error Error "Camera $camera does not exist" {} 0 OK
+	set contupdate 0
+	set updatecolors 0
+   }
+}
+
+proc convert {x} {
+    global max min xsize offset
+    return [expr $offset+$xsize*($x-$min)/($max-$min)]
+}
+
+proc UpdateColors {} {
+	global updatecolors
+	if {$updatecolors} {
+		pack forget .updatecolors.once
+		NDdump
+		after 100 UpdateColors
+	} else {
+		pack .updatecolors.once -side left -padx 1m -pady 1m
+	}
+}
+
+proc lookbusy {{busy 1}} {
+    if {$busy} {
+	. configure -cursor watch
+    } else {
+	. configure -cursor {}
+    }
+    update
+}
+
+proc mkColor {} {
+    global tk_library max min camera vector contupdate continue object\
+	 WithRespectTo exact updatecolors Other
+    frame .coloredit
+    set w .coloredit
+    upvar #0 demo_rulerInfo v
+    set c $w.c
+    
+    canvas $c -width 475 -height 40 -relief raised
+    pack $w.c -side top -fill x
+    
+    set v(grid) 5
+    set v(left) [winfo fpixels $c 10]
+    set v(right) [winfo fpixels $c 442]
+    set v(top) [winfo fpixels $c 25]
+    set v(bottom) [winfo fpixels $c 50]
+    set v(size) [winfo fpixels $c 10]
+    set v(normalStyle) "-smooth true"
+    set v(activeStyle) "-smooth false -stipple {}"
+    set v(deleteStyle) "-stipple gray25"
+    
+    $c create line 10 5  10 25  442 25  442 5 -width 1
+    $c create image 10 5 -anchor nw -image grad
+    $c addtag well withtag [$c create rect 445 20 468 5 \
+				-outline black -fill [lindex [$c config -bg] 4]]
+    $c addtag well withtag [rulerMkTab $c 457 8]
+
+    $c bind well <1> "rulerNewTab $c %x %y"
+    $c bind tab <1> "demo_selectTab $c %x %y"
+    bind $c <B1-Motion> "rulerMoveTab $c %x %y"
+    bind $c <Any-ButtonRelease-1> "rulerDeleteTab $c"
+    
+    frame .f
+    frame .f1
+    label .f1.t -text Minimum
+    entry .f1.e -textvariable min -width 9 -relief sunken
+    frame .f2
+    label .f2.t -text Maximum
+    entry .f2.e -textvariable max -width 9 -relief sunken
+    pack .f1.t .f1.e -side left
+    pack .f1 -in .f -side left
+    pack .f2.t .f2.e -side left
+    pack .f2 -in .f -side right
+    pack .f -in $w -side top -fill x -expand yes
+
+    scale .red -label Red -from 0 -to 255 -length 10c \
+	-orient horizontal -command newColor
+    scale .green -label Green -from 0 -to 255 -length 10c \
+	-orient horizontal -command newColor
+    scale .blue -label Blue -from 0 -to 255 -length 10c \
+	-orient horizontal -command newColor
+    pack .red .green .blue -in $w -side top
+    pack .coloredit
+    frame .coord 
+    label .coord.txt -text "Coordinate system"
+    radiobutton .coord.univ -text Universe -variable WithRespectTo -value universe\
+	-command CoordSys
+    radiobutton .coord.world -text World -variable WithRespectTo -value world\
+	-command CoordSys
+    radiobutton .coord.other -text Other -variable WithRespectTo -value other\
+	-command CoordSys
+    pack .coord.txt .coord.univ .coord.world .coord.other -side left\
+	 -padx 1m -pady 1m
+    entry .coord.data -textvariable Other -width 10 -relief sunken
+    pack .coord
+
+    frame .cc
+    frame .cc.f3
+    label .cc.f3.t -text Camera
+    entry .cc.f3.e -textvariable camera -width 20 -relief sunken
+    frame .cc.f4
+    label .cc.f4.t -text Vector
+    entry .cc.f4.e -textvariable vector -width 24 -relief sunken
+    pack .cc.f3.t .cc.f3.e -side left
+    pack .cc.f4.t .cc.f4.e -side left
+    pack .cc -side top
+    pack .cc.f3 .cc.f4 -side left -padx 1m -pady 2
+    frame .separate -height 1p -background black -borderwidth 1
+    pack .separate -side top -fill x -pady 2m
+    frame .updatecolors
+    label .updatecolors.l -text "Update colormap"
+    checkbutton .updatecolors.cont -text "Continuously" -variable updatecolors\
+	-command UpdateColors
+    button .updatecolors.once -text "Once" -command NDdump
+    pack .updatecolors.l .updatecolors.cont .updatecolors.once -side left\
+	-padx 1m -pady 1m
+    pack .updatecolors -side top
+    frame .line -height 1p -background black -borderwidth 1
+    pack .line -side top -fill x -pady 2m
+    frame .cd 
+    label .cd.title -text "Fit map to object"
+    checkbutton .cd.yes -text Continuously -variable contupdate -command ContUpdate
+    button .cd.once -text Once -command SingleUpdate
+    pack .cd -side top 
+    pack .cd.title .cd.yes .cd.once -side left -fill x\
+    	-padx 1m -pady 1m
+
+    frame .cf
+    label .cf.title -text "Make fit"
+    radiobutton .cf.exact -text Exact -variable exact -value 1
+    radiobutton .cf.some -text Approximate -variable exact -value 0
+    frame .cf.f5
+    entry .cf.f5.e -textvariable object -width 10 -relief sunken
+    label .cf.f5.t -text Object
+    pack .cf -side top
+    pack .cf.f5.t .cf.f5.e -side left
+    pack .cf.title .cf.exact .cf.some .cf.f5 -side left -fill x -padx 1m -pady 1m
+    frame .divisor -height 1p -background black -borderwidth 1
+    pack .divisor -side top -fill x -pady 2m
+    frame .options
+    button .options.save -text "Save options" -command SaveMenu
+    button .options.getmap -text "Load geomview colormap" -command readGeomviewColormap
+    pack .options.save .options.getmap -side left -padx 1m -pady 1m
+    pack .options -side top
+
+    frame .quit
+    button .quit.b -text Exit -command "Done"
+    pack .quit.b -side right -padx 1m -pady 1m
+    pack .quit -fill x
+
+    set y 25
+    .red set 255
+    .green set 0
+    .blue set 255
+    rulerNewTab $c [convert $min] $y
+    .red set 255
+    .green set 0
+    .blue set 0
+    rulerNewTab $c [convert $max] $y
+    $c addtag stable withtag tab
+
+    .red set 0
+    .green set 0
+    .blue set 255
+    rulerNewTab $c [convert -0.6] $y
+    .red set 0
+    .green set 255
+    .blue set 0
+    rulerNewTab $c [convert -0.2] $y
+    .red set 255
+    .green set 255
+    .blue set 0
+    rulerNewTab $c [convert 0.2] $y
+    .red set 255
+    .green set 128
+    .blue set 0
+    rulerNewTab $c [convert 0.6] $y
+    bind .f1.e <Return> ".updatecolors.once flash; NDdump"
+    bind .f2.e <Return> ".updatecolors.once flash; NDdump"
+    bind .cc.f4.e <Return> ".updatecolors.once flash; NDdump"
+    bind .cf.f5.e <Return> ".cd.once flash; SingleUpdate"
+    bind .cc.f3.e <Return> ".updatecolors.once flash; NDdump"
+    bind .coord.data <Return> ".updatecolors.once flash; NDdump"
+}
+
+proc CoordSys {} {
+	global WithRespectTo Other
+	if {$WithRespectTo == "universe"} {
+		pack forget .coord.data
+		set Other {}
+	} elseif {$WithRespectTo == "world"} {
+		pack forget .coord.data
+		set Other {}
+	} else {
+		pack .coord.data -side left -padx 1m -pady 1m
+	}
+}
+
+proc Settings {} {
+	global contupdate
+	if {$contupdate} {
+		tk_dialog .error "Invalid Command" "This field cannot be modified\
+			under current settings." {} 0 OK
+	}
+}
+
+
+proc SingleUpdate {} {
+	global max min vector object WithRespectTo exact camera Other
+	set direction $vector
+        set direction [string trim $direction ()]
+	if {$WithRespectTo == "other"} {
+		set objexist [ObjExistCheck $Other]
+		if {$objexist != "yes"} {
+			tk_dialog .error Error "Object $Other does not exist" {} 0 OK
+			return
+		}
+		set maxmindata [GeomExDir $direction $object $Other $exact]
+	} else {
+        	set maxmindata [GeomExDir $direction $object $WithRespectTo $exact]
+	}
+                if {$maxmindata == "Error"} {
+                        tk_dialog .error Error "Irrecoverable Data Error."\
+                                {} 0 OK
+                        set contupdate 0
+                } elseif {$maxmindata == "NoObj"} {
+                        tk_dialog .error Error "Object $object does not exist." {} 0 OK
+		} else {
+                        set maxmindata [split $maxmindata { }]
+                        if {[lindex $maxmindata 0] == "Pad"} {
+                                tk_dialog .warning Warning "All or part of the\
+                                        object is of a different dimension\
+					than the direction."\
+                                        {} 0 OK
+                                scan [lindex $maxmindata 1] "%f" max
+                                scan [lindex $maxmindata 2] "%f" min
+				setmin $min
+				setmax $max
+                        } else {
+                                scan [lindex $maxmindata 0] "%f" max
+                                scan [lindex $maxmindata 1] "%f" min
+				setmin $min
+				setmax $max
+                        }
+        }
+}
+
+proc ContUpdate {} {
+        global contupdate vector object WithRespectTo exact max min camera Other\
+		updatecolors
+        if {$contupdate} {
+		pack forget .cd.once
+                focus .cd
+                update
+                set direction $vector
+                set direction [string trim $direction ()]
+       		if {$WithRespectTo == "other"} {
+			set objexist [ObjExistCheck]
+        	        if {$objexist != "yes"} {
+                	        tk_dialog .error Error "Object $Other does not exist" {} 0 OK
+                       	 	set contupdate 0
+				pack .cd.once -side left -padx 1m -pady 1m
+	                }
+        	        set maxmindata [GeomExDir $direction $object $object $exact]
+       		} else {
+        	        set maxmindata [GeomExDir $direction $object $WithRespectTo $exact]
+		}
+                if {$maxmindata == "Error"} {
+                        tk_dialog .error Error "Irrecoverable Data Error."\
+                                {} 0 OK
+                        set contupdate 0
+                } elseif {$maxmindata == "NoObj"} {
+                        tk_dialog .error Error "Object $object does not exist."\
+                                {} 0 OK
+                        set contupdate 0
+                } else {
+                        set maxmindata [split $maxmindata { }]
+                        if {[lindex $maxmindata 0] == "Pad"} {
+                                tk_dialog .warning Warning "All or part of the\
+                                        object is of a different dimension\
+                                        than the direction.\
+                                        Aborting Autosizing."\
+                                        {} 0 OK
+                                scan [lindex $maxmindata 1] "%f" max
+                                scan [lindex $maxmindata 2] "%f" min
+                                set contupdate 0
+                        } else {
+                                scan [lindex $maxmindata 0] "%f" max
+                                scan [lindex $maxmindata 1] "%f" min
+                        }
+                }
+		after 100 ContUpdate
+        } else {
+		pack .cd.once -side left -padx 1m -pady 1m
+        	focus .
+	}
+}
+
+proc Done {} {
+        global contupdate
+        set contupdate 0
+        update
+        exit
+}
+
+#gradiant
+setmin $min
+setmax $max
+mkColor
+

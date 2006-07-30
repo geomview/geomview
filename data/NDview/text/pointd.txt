@@ -1,0 +1,6 @@
+Now there are two points in the X_Y_Z_hyperplane.
+If they have the same x and w coordinates, they
+appear to lie on top of each other in the
+X_W_plane.
+
+Press "segment" to continue.
