@@ -226,7 +226,11 @@ set camera [GetFocusCam]
 frame .top -borderwidth 4 -relief ridge
 pack .top -side top -fill x -padx 1m -pady 1m
 set dim [GetDim]
-puts stderr "DIM: $dim\n"
+#puts stderr "DIM: $dim\n"
+if {$dim == 0} {
+	puts stderr "Geometry is lower-dimensional\n"
+	exit 1
+}
 CreateClipPlane $dim $camera
 Update
 EquationMaker
