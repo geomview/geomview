@@ -119,7 +119,7 @@ AC_PROG_CPP
 AC_PROG_LEX
 #AC_PROG_RANLIB
 AC_PROG_YACC
-AC_DISABLE_SHARED
+#AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
 # Search path for "find" executable.  Use "find" unless
 # the bogus MS Windows version is first on the path, in 
