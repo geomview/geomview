@@ -42,6 +42,7 @@ extern int bitdepth;
 
 ColorA white = {1.0, 1.0, 1.0, 1.0};
 ColorA red = {1.0, 0, 0, 1.0};
+ColorA cameragray = {1.0/3.0, 1.0/3.0, 1.0/3.0, 1.0};
 ColorA darkgray = {0.2, 0.2, 0.2, 1.0};
 ColorA darkblue = {0, 0, .2, 1.0};
 Point lightpos1 = {1, .3, .7, 0.0};
@@ -96,12 +97,13 @@ void clipboard_init(Widget parent)
 			    AP_SHADING, APF_FLAT, AP_END);
 
   mgctx = mgctxcreate(MG_X11DISPLAY, XtDisplay(MG_DrawArea),
-	      MG_X11COLORMAP, colormap,
-	      MG_BITDEPTH, bitdepth,
-	      MG_X11VISUAL, visual,
-	      MG_X11WINID, XtWindow(MG_DrawArea),
-	      MG_CAMERA, theCamera, MG_BACKGROUND, &darkblue,
-	      MG_APPEAR, theAppearance, MG_END);
+		      MG_X11COLORMAP, colormap,
+		      MG_BITDEPTH, bitdepth,
+		      MG_X11VISUAL, visual,
+		      MG_X11WINID, XtWindow(MG_DrawArea),
+		      MG_CAMERA, theCamera,
+		      MG_BACKGROUND, &cameragray /*&darkblue */, 
+		      MG_APPEAR, theAppearance, MG_END);
 
   XtAddCallback(MG_DrawArea, XmNexposeCallback, (XtCallbackProc)winexpose, 0);
   XtVaSetValues(MG_DrawArea, XmNbackground,
