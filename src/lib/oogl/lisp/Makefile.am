@@ -9,10 +9,10 @@ liblisp_la_SOURCES = \
     clisp.h lisp2.h lisp.h
 
 if MAINTAINER_MODE
-all-local: clisp
+all-local: clisp.c clisp.h
 
-clisp.c clisp.h clisp: lisp.c
-	$(srcdir)/lisp2c -o clisp $(srcdir)/lisp.c
+clisp.c clisp.h: lisp.c
+	$(srcdir)/lisp2c -o $(srcdir)/clisp $(srcdir)/lisp.c
 endif
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
