@@ -745,7 +745,7 @@ AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 moduledir="\$(libexecdir)/geomview"
 AC_SUBST(moduledir)
 
-geomdatadir="\$(datadir)/geomview/data"
+geomdatadir="\$(datadir)/geomview"
 AC_SUBST(geomdatadir)
 
 # cache 'moduledir' and 'geomdatadir' so individual module configure scripts
