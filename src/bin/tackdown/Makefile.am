@@ -7,7 +7,8 @@ LDADD =	$(XFORMSLIBS) \
 	$(OOGLLIB)
 
 
-EXTRA_DIST = .geomview-tackdown tackdown.1 panel.fd origin.panel.fd
+EXTRA_DIST = \
+ .geomview-tackdown .geomview-origin tackdown.1 panel.fd origin.panel.fd
 
 module_PROGRAMS = tackdown origin
 
@@ -21,11 +22,14 @@ origin_SOURCES = origin.main.c origin.common.c origin.common.h \
 origin_DEPENDENCIES = $(OOGLLIBS)
 origin_LDFLAGS = -rpath $(libdir)
 
-module_DATA = .geomview-tackdown
+module_DATA = .geomview-tackdown .geomview-origin
 
 .geomview-tackdown:
 	echo '(emodule-define "Tackdown" "tackdown")' > .geomview-tackdown
+.geomview-origin:
+	echo '(emodule-define "Origin" "origin")' > .geomview-origin
 
 all-local:
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
 	echo '(emodule-define "Tackdown" "$(subdir)/tackdown")' > $(top_builddir)/modules/.geomview-tackdown
+	echo '(emodule-define "Origin" "$(subdir)/origin")' > $(top_builddir)/modules/.geomview-origin
