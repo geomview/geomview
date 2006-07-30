@@ -6131,12 +6131,13 @@ manipulates a 3-D axis-aligned projected subspace of the N-space seen
 by its cluster.  Moving one camera in a cluster affects its siblings.
 
 The ND-axes command configures all this.  It specifies a camera's
-cluster membership, and the set of N-space axes which become the
-3-D camera's X, Y, and Z axes.  Axes are specified by their indices,
-from 0 to N-1 for an N-dimensional space.  Cluster CLUSTERNAME is
-implicitly created if not previously known.
-To read a camera's configuration, use @code{(echo (ND-axes CAMID))}.
-
+cluster membership, and the set of N-space axes which become the 3-D
+camera's X, Y, and Z axes.  Axes are specified by their indices, from 0
+to N-1 for an N-dimensional space.  Cluster CLUSTERNAME is implicitly
+created if not previously known.  To read a camera's configuration, use
+@code{(echo (ND-axes CAMID))}. Beware that in this case the return value
+is a list of @emph{4} integers; the last one seems to be tied to -1 (but
+FIXME, cH).
 
 @findex ND-color
 @item (ND-color CAMID

@@ -252,7 +252,9 @@ LDEFINE(ND_axes, LLIST,
 	3-D camera's X, Y, and Z axes.  Axes are specified by their indices,\n\
 	from 0 to N-1 for an N-dimensional space.  Cluster CLUSTERNAME is\n\
 	implicitly created if not previously known.\n\
-	To read a camera's configuration, use \"(echo (ND-axes CAMID))\".\n")
+	To read a camera's configuration, use \"(echo (ND-axes CAMID))\".\n\
+        The return value is an array of 4 integers, the last one is\n\
+	to -1 (??? FIXME, cH)")
 {
   int axes[4];
   char *camname, *clustername = NULL;
