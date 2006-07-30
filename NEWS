@@ -1,21 +1,25 @@
 1.8.2   July, 2006
 
-   Bugfix release by cH <Claus.Heine@Mathematik.Uni-Freiburg.DE>:
+   Bugfix release.
 
    * I/O with release <= 1.8.1 was just broken, they used internals of
      opaque data-types (e.g. the FILE handle of the stdio library)
    * Maple V8 interface
    * VRML2 interface
    * build-system fixes (ported to recent automake/autoconf combo)
+   * standard GNU installation paths: PREFIX/bin, PREFIX/share/geomview,
+     PREFIX/libexec/geomview etc.
    * variable argument fixes, was also broken in <= 1.8.1 releases.
    * Documentation can be regenerated with recent texinfo releases.
-   * hinge, flythrough and cplxview modules resurrected. Probably only
-     the hinge module is useful.
    * OpenGL is now optional
    * one big shared libgeomview library
    * fmemopen() by using temporary files (not using stdio internals)
+   * I have resurrected a couple of old modules: NDview, clipboard,
+     cplxview, crayola, flythrough, gvclock, hinge, labeler, ndutils.
 
    Otherwise no real changes.
+
+   cH <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 1.8.1	March, 2001
 
