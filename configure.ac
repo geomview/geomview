@@ -639,6 +639,20 @@ GEOMVIEW_CHECK_PACKAGE(tk, tk, ${x_libraries}, ${XLIBS}, tk.h, , ,optional)
 
 AM_CONDITIONAL(HAVE_TCLTK, [test -n "${TCL_LIB}" -a -n "${TK_LIB}"])
 
+#
+# Cygwin does not seem to have the Tcl_CreateFileHandler() function,
+# so test for it and disable the crayola module in this case.
+#
+if test -n "${TCL_LIB}" -a -n "${TK_LIB}"; then
+    ac_save_LIBS="${LIBS}"
+    LIBS="-ltcl ${LIBS}"
+    AC_CHECK_FUNCS([Tcl_CreateFileHandler],
+	[TCLFILEHANDLER=yes],
+	[TCLFILEHANDLER=no])
+    LIBS="${ac_save_LIBS}"
+    AM_CONDITIONAL([TCLFILEHANDLER], [test "z${TCLFILEHANDLER}" = "zyes"])
+fi
+
 ########################################################################
 
 OPENGL_LD_LIBRARY_PATH=`expr "$GL_L_OPTION" : '-L\(.*\)'`
