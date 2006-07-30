@@ -73,7 +73,7 @@ void readVerts(Clip *clip, vertex_list *pv, Geom *g, int isnd)
 void readNDPoly(poly *p, NPolyList *pl, int polyNum)
 {
   int i;
-  pvtx *corner;
+  pvtx *corner = NULL;
   polyvtx_list *pv = (polyvtx_list *)malloc(sizeof(polyvtx_list));
   pvtx **prevp = &pv->head;
   NPoly *np = &pl->p[polyNum];
@@ -89,7 +89,7 @@ void readNDPoly(poly *p, NPolyList *pl, int polyNum)
   *prevp = pv->head;
   pv->point = corner;
   
-  p->c = *(Color *)&np->pcol;
+  p->c = *(Color *)(void *)&np->pcol;
 }
    
   
@@ -122,7 +122,7 @@ void readPoly(poly *p, PolyList *pl, int polyNum)
   p->me = (polyvtx_list *)malloc(sizeof(polyvtx_list));
   readPolyvtx(p->me, p->numvtx, pl, polyNum);	/* read each vertex ref number. */
 
-  p->c = *(Color *)&pl->p[polyNum].pcol;
+  p->c = *(Color *)(void *)&pl->p[polyNum].pcol;
 }
 
 void readPolys(Clip *clip, poly_list *ph, Geom *g, int isnd)

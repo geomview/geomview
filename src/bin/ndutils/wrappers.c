@@ -44,7 +44,7 @@ double max, min;
 double *
 colorSingle(double z)
 {
-    double r, g, b;
+    double r = 0, g = 0, b = 0;
     int i;
     double *c;
 
@@ -102,7 +102,7 @@ int
 colorsCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv)
 {
     int i, j, v;
-    double z, r, g, b;
+    double z, r = 0, g = 0, b = 0;
     int red, green, blue;
     int sub = 0;
     unsigned char *buf=blk.pixelPtr;

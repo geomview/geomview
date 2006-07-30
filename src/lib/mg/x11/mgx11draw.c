@@ -732,7 +732,7 @@ mgx11_drawnormal(HPoint3 *p, Point3 *n)
   if (p->w <= 0.0) return;
   if (p->w != 1) {
     HPt3ToPt3(p, &tp);
-    p = (HPoint3 *)&tp;
+    p = (HPoint3 *)(void *)&tp;
   }
 
   scale = _mgc->astk->ap.nscale;

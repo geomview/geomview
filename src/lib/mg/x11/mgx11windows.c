@@ -207,9 +207,9 @@ int Xmg_initx11device()
 int Xmg_openwin(char *id)
 {
   mgx11win *current;
-  Display  *dpy;
+  Display  *dpy = 0;
   unsigned int      border_width = 0;
-  int	   bitmap_pad;
+  int	   bitmap_pad = 0;
   XErrorHandler handler;
 
   if (!mgx11display)
@@ -1044,10 +1044,10 @@ void Xmg_getwinsize(int *xsize, int *ysize, int *xorig, int *yorig)
   Drawable win;
   unsigned int width, height, border_width, depth;
   int xpos, ypos, xold, yold;
-  int bytes_per_line;
+  int bytes_per_line = 0;
   mgx11win *current=_mgx11c->myxwin;
   XErrorHandler handler;
-  int bitmap_pad;
+  int bitmap_pad = 0;
 
   if(current == NULL)
     return;

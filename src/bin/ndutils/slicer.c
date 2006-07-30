@@ -309,7 +309,7 @@ int UpdatePicture(ClientData clientdata, Tcl_Interp *interp,
 
 int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
 	       int argc, const char **argv)
-{	Geom *g, *converted, **newobjs, *todo;
+{	Geom *g, *converted, **newobjs = NULL, *todo;
 	TransformN *t, *identity, *tinv, *tworld;
 	float D, d, *direction, *result, smalld, bigd, step;
 	char *ptr;
