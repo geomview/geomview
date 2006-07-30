@@ -934,10 +934,10 @@ LDEFINE(read, LVOID,
 		opsname, PoolName(POOL(lake)), opsname);
       goto fail;
     }
-    return Lt;
   }
   /* if lake == NULL then we're evaluating, but this function does
      no evaluation work; it's all in the parsing */
+  LFree(kw);
   return Lt;
  fail:
   LFree(kw);
