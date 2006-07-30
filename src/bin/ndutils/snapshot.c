@@ -40,7 +40,9 @@ extern IOBFILE *infile;
 
 int DoProjection(ClientData clientdata, Tcl_Interp *interp,
 		 int argc, const char **argv)
-{	TransformN *ObjUniv, *CamUniv;
+{
+	char scratch[16];
+	TransformN *ObjUniv, *CamUniv;
 	Geom *g;
 	int axes[3];
 	FILE *fileptr;
@@ -67,9 +69,12 @@ int DoProjection(ClientData clientdata, Tcl_Interp *interp,
         fflush(stdout);
 	iobftoken(infile, 0);
 	if (iobfgetni(infile, 3, axes, 0) != 3) {
+		iobfrewind(infile);
 		interp->result="Wrong reply to ND-axes";
 		return TCL_ERROR;
 	}
+	/* consume the remainder of the answer */
+	iobfgets(scratch, sizeof(scratch), infile);
 	iobfrewind(infile);
 	if(atoi(argv[4]))
 		g=GeomProjCamWC(g,ObjUniv,CamUniv,axes,

@@ -100,6 +100,7 @@ int GetDim(ClientData clientdata, Tcl_Interp *interp,
 int CreateClipPlane(ClientData clientdata, Tcl_Interp *interp,
 		    int argc, const char **argv)
 {
+	char scratch[16];
 	int dim, x, y, i, j, small,big, xy[2];
 	TransformN *t, *tworld, *tfinal;
 	if(argc!=3) {
@@ -113,13 +114,16 @@ int CreateClipPlane(ClientData clientdata, Tcl_Interp *interp,
 	iobftoken(infile, 0);
 	if (iobfgetni(infile, 2, xy, 0) != 2) {
 		interp->result="Wrong reply to ND-axes";
+		iobfrewind(infile);
 		return TCL_ERROR;
 	}
+	/* consume remainder of answer */
+	iobfgets(scratch, sizeof(scratch), infile);
+	iobfrewind(infile);
 	x = xy[0];
 	y = xy[1];
 	small=(x<y) ? x : y;
 	big=(x>y) ? x : y;
-	iobfrewind(infile);
 	printf("(geometry clip_plane { :cp})\n");
 	fflush(stdout);
 	printf("(read geometry {define cp \n");
@@ -178,6 +182,7 @@ int CreateClipPlane(ClientData clientdata, Tcl_Interp *interp,
 int GetData(ClientData clientdata, Tcl_Interp *interp,
 	    int argc, const char **argv)
 {
+	char scratch[16];
 	int a[3],i,j,dim;
 	static char str[200];
 	TransformN *t;
@@ -219,9 +224,12 @@ int GetData(ClientData clientdata, Tcl_Interp *interp,
         fflush(stdout);
 	iobftoken(infile, 0);
 	if (iobfgetni(infile, 3, a, 0) != 3) {
+		iobfrewind(infile);
 		interp->result="Wrong reply to ND-axes";
 		return TCL_ERROR;
 	}
+	/* consume the remainder of the answer */
+	iobfgets(scratch, sizeof(scratch), infile);
 	iobfrewind(infile);
 	for(i=0;i<3;i++)
 	{	Dir1[i]=(dir1->v)[a[i]];
@@ -250,6 +258,7 @@ int GetData(ClientData clientdata, Tcl_Interp *interp,
 int UpdatePicture(ClientData clientdata, Tcl_Interp *interp,
 		  int argc, const char **argv)
 {
+	char scratch[16];
 	int i, j, xdim, ydim, zdim, dim, xyz[3];
 	float D, *direction;
 	char *ptr;
@@ -274,9 +283,12 @@ int UpdatePicture(ClientData clientdata, Tcl_Interp *interp,
         fflush(stdout);
 	iobftoken(infile, 0);
 	if (iobfgetni(infile, 3, xyz, 0) != 3) {
+		iobfrewind(infile);
 		interp->result="Wrong reply to ND-axes";
 		return TCL_ERROR;
 	}
+	/* consume the remainder of the answer */
+	iobfgets(scratch, sizeof(scratch), infile);
 	iobfrewind(infile);
 	xdim = xyz[0];
 	ydim = xyz[1];
