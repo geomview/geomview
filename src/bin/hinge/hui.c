@@ -66,9 +66,8 @@ void hui_init(void)
   
   fl_add_browser_line(SpaceBrowser, "Euclidean");
   fl_add_browser_line(SpaceBrowser, "Hyperbolic");
-#if 0
   fl_add_browser_line(SpaceBrowser, "Spherical");
-#endif
+
   switch (space) {
   case EUCLIDEAN:
     fl_select_browser_line( SpaceBrowser, 1 );
@@ -267,7 +266,6 @@ void HingeIt(int dir)
   Inst(instno, (float)(dir * limit));
 
 }
-
 
 static char *getline(char *s)
 {
