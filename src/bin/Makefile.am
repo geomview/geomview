@@ -1,7 +1,7 @@
 XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti gvclock hinge \
  stereo sweep tackdown transformer
 
-TCLTK_SUBDIRS = crayola labeler NDview
+TCLTK_SUBDIRS = crayola labeler NDview ndutils
 
 # Geomview's top-level configure script sets $(src_bin_module_subdirs)
 # to the list of subdirectories of this directory (src/bin) that have
