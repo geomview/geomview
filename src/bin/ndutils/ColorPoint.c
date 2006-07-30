@@ -83,10 +83,14 @@ void addcomponentcolor(ColorA *color, HPointN *pt, char *coordsys, dir *plex,
 		return;
 	}
 	if(i==plex->np)	/*If none larger use largest*/
-	{	color->r+=(*(plex->p + i))->c.r;
-		color->g+=(*(plex->p + i))->c.g;
-		color->b+=(*(plex->p + i))->c.b;
-		color->a+=(*(plex->p + i))->c.a;
+	{
+		/* cH: that means i - 1, not i. Gnah. Go and code
+		   Fortran.
+		 */
+		color->r+=(*(plex->p + i - 1))->c.r;
+		color->g+=(*(plex->p + i - 1))->c.g;
+		color->b+=(*(plex->p + i - 1))->c.b;
+		color->a+=(*(plex->p + i - 1))->c.a;
 		return;
 	}		/*Otherwise interpolate in between*/
 	weight=(hgt-(*(plex->p + i - 1))->height)/
