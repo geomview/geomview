@@ -172,7 +172,9 @@ void InfoProc(FL_OBJECT *obj, long val)
   } else {
     fl_load_browser(HelpBrowser, "flyhelp");
   }
-  fclose(hf);
+  if (hf) {
+    fclose(hf);
+  }
   fl_set_button(Info, 1);
   fl_set_button(EucDiag, 1);
   fl_set_button(HypDiag, 0);
