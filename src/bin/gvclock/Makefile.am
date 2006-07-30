@@ -1,5 +1,4 @@
 module_SCRIPTS = gvclock
-CLEANFILES = $(module_SCRIPTS)
 
 module_DATA = .geomview-gvclock
 
@@ -18,4 +17,7 @@ $(top_builddir)/modules/.geomview-gvclock: Makefile
 	echo '(emodule-define "Clock" "$(subdir)/gvclock")' > $@
 	chmod +x gvclock
 
-CLEANFILES = $(top_builddir)/modules/.geomview-gvclock $(module_DATA)
+CLEANFILES = \
+ $(top_builddir)/modules/.geomview-gvclock \
+ $(module_DATA) \
+ $(module_SCRIPTS)
