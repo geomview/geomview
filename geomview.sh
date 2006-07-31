@@ -49,6 +49,11 @@ suf=
 export GEOMROOT GEOMVIEW_GVX GEOMVIEW_LOAD_PATH GEOMDATA \
         GEOMVIEW_EMODULE_PATH GEOMVIEW_SYSTEM_INITFILE
 
+if test "`uname -o`" = Cygwin; then
+    TCL_LIBRARY=/usr/share/tcl8.4
+    TK_LIBRARY=/usr/share/tk8.4
+    export TCL_LIBRARY TK_LIBRARY
+fi
 
 gvx="${GEOMVIEW_GVX}"
 case "$gvx" in
