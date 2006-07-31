@@ -497,9 +497,26 @@ Can't find OpenGL header file GL/gl.h.  Geomview does not require OpenGL
 but you will have to live without hardware accellerated rendering.
 See the file INSTALL.Geomview for details.
 ])
+    OPENGLINCLUDE=$GEOM_I_OPTION
   fi
   GL_I_OPTION=$GEOM_I_OPTION
-  OPENGLINCLUDE=$GEOM_I_OPTION
+
+  # Geomview does not require OpenGL, _BUT_ an OpenGL implementation
+  # through the X11 GLX extension; so check for glx.h as well.
+  #
+  #
+  GEOM_FIND_I_OPTION(GL/glx.h, ["$USER_OPENGL_DIR" "" "/usr/local/include"])
+  if test "$GEOM_I_OPTION" = "0" ; then
+    AC_MSG_WARN([
+Can't find OpenGL header file GL/glx.h.  Geomview does not require OpenGL
+but you will have to live without hardware accellerated rendering.
+See the file INSTALL.Geomview for details.
+])
+    GL_I_OPTION=0
+  else
+    GL_I_OPTION="${GL_I_OPTION} ${GEOM_I_OPTION}"
+    OPENGLINCLUDE="${OPENGLINCLUDE} ${GEOM_I_OPTION}"
+  fi
 
 ########################################################################
 
