@@ -14,7 +14,6 @@ endif
 # directory.  We don't want to distribute these module directories
 # with the main Geomview distribution, though, so we define
 # DIST_SUBDIRS without $(src_bin_module_subdirs).
-
 NORMAL_SUBDIRS = geomview togeomview geomutil animate clipboard
 
 DIST_SUBDIRS = $(NORMAL_SUBDIRS) $(XFORMS_SUBDIRS) $(TCLTK_SUBDIRS)
@@ -28,3 +27,8 @@ endif
 if HAVE_TCLTK
 SUBDIRS += $(TCLTK_SUBDIRS)
 endif
+
+distclean-local:
+	for i in $(src_bin_module_subdirs); do \
+		make -C $$i distclean; \
+	done
