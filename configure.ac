@@ -667,8 +667,8 @@ if test -n "${TCL_LIB}" -a -n "${TK_LIB}"; then
 	[TCLFILEHANDLER=yes],
 	[TCLFILEHANDLER=no])
     LIBS="${ac_save_LIBS}"
-    AM_CONDITIONAL([TCLFILEHANDLER], [test "z${TCLFILEHANDLER}" = "zyes"])
 fi
+AM_CONDITIONAL([TCLFILEHANDLER], [test "z${TCLFILEHANDLER}" = "zyes"])
 
 ########################################################################
 
