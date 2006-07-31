@@ -1,4 +1,52 @@
+2006-07-31  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* 1.8.2-rc7 release.
+
+	* configure.ac:
+	Search for GL/gl.h and GL/glx.h and make sure the beast still compiles
+	without OpenGL.
+
+	* geomview.sh:
+	Set TCL/TK_LIBRARY variables on Cygwin, the Cygwin Tcl/Tk port is
+	buggy in this respect.
+
+	* src/bin/geomview/x11/gvcamui.c:
+	Missing closing " after contact info update.
+
 2006-07-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Use PREFIX/share/geomview as data-dir (instead of
+	PREFIX/share/geomview/data).
+
+	* src/bin/ndutils/ColorPoint.c:
+	Off-by-1 bug: in C (in contrast to maybe Fortran ...) the last array
+	index is (size-1). Ups.
+
+	* src/bin/ndutils/GeExDir.c: Debugging message.
+
+	* src/bin/ndutils/slicer.c, src/bin/ndutils/snapshot.c:
+	Consume the fourth number of the ND-axes command.
+
+	* doc/geomview.texi, src/bin/geomview/common/space.c:
+	The "ND-axes" command was not correctly documented: it accepts 4
+	numbers, not 3, and return 4 numbers, not 3, when called without
+	camera cluster ID. The last number seems to be hard-wired to -1. But???????
+
+	* configure.ac, src/bin/Makefile.am:
+	Cygwin (and maybe other non-Unix systems) do not have the
+	Tcl_CreateFileHandler() function. Check for it and disable the crayola
+	module if the function is not found.
+
+	* src/bin/ndutils/clipoogl.c, src/bin/ndutils/slicer.c, src/bin/ndutils/wrappers.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11windows.c:
+	Remove some compiler warnings.
+
+	* src/lib/oogl/lisp/Makefile.am:
+	clisp.h must be copied to $(srcdir), otherwise the headers sym-link
+	stuff does not work.
+
+	* ChangeLog:
+	Update email addresses; I need to be more careful to run rcs2log with
+	the correct -u options.
 
 	* doc/Makefile.am: Cleaned up as suggested by Steve M. Robbins.
 
@@ -71,6 +119,145 @@
 
 	* src/bin/ndutils/init.h, src/bin/ndutils/slicer.c, src/bin/ndutils/slicer.h, src/bin/ndutils/snapshot.c, src/bin/ndutils/snapshot.h, src/bin/ndutils/testwish.c, src/bin/ndutils/wrappers.c, src/bin/ndutils/wrappers.h, src/bin/ndutils/3D-Snapshot, src/bin/ndutils/BasicFns.c, src/bin/ndutils/BasicFns.h, src/bin/ndutils/Clip.h, src/bin/ndutils/ColorMapDefs.h, src/bin/ndutils/ColorPoint.c, src/bin/ndutils/ColorPoint.h, src/bin/ndutils/Colormap, src/bin/ndutils/GeExDir.c, src/bin/ndutils/GeExDir.h, src/bin/ndutils/GeomExtentDirection.c, src/bin/ndutils/GeomExtentDirection.h, src/bin/ndutils/GeomtoNoff.c, src/bin/ndutils/GeomtoNoff.h, src/bin/ndutils/LoadMap.c, src/bin/ndutils/LoadMap.h, src/bin/ndutils/MakeGoodTransforms.c, src/bin/ndutils/MakeGoodTransforms.h, src/bin/ndutils/Makefile.am, src/bin/ndutils/Random.c, src/bin/ndutils/Random.h, src/bin/ndutils/Slicer, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/TransformGeom.h, src/bin/ndutils/WithColor.c, src/bin/ndutils/WithColor.h, src/bin/ndutils/clip.c, src/bin/ndutils/clipoogl.c, src/bin/ndutils/init.c, data/NDview/geom/demo/axes, data/NDview/geom/demo/cubew, data/NDview/geom/demo/cubew+, data/NDview/geom/demo/point, data/NDview/geom/demo/points, data/NDview/geom/demo/segmentw+x+z, data/NDview/geom/demo/segmentw+x+z+, data/NDview/geom/demo/squarew+x, data/NDview/geom/demo/squarew+x+, data/NDview/geom/demo/tesseract, data/NDview/scripts/reset.script, data/NDview/scripts/startup.big.script, data/NDview/scripts/startup.small.script, data/NDview/text/axeshelp.txt, data/NDview/text/cube.txt, data/NDview/text/cubed.txt, data/NDview/text/demohelp.txt, data/NDview/text/introhelp.txt, data/NDview/text/point.txt, data/NDview/text/pointd.txt, data/NDview/text/prefabhelp.txt, data/NDview/text/segment.txt, data/NDview/text/segmentd.txt, data/NDview/text/square.txt, data/NDview/text/squared.txt, data/NDview/text/tesseract.txt, data/NDview/text/toolkithelp.txt, data/NDview/scripts/.ndview, data/NDview/scripts/4d.2bigwins, data/NDview/scripts/4d.3wins, data/NDview/scripts/4d.4wins, data/NDview/scripts/4d.cplx, data/NDview/scripts/4d.earthcolor, data/NDview/scripts/4d.wildcolor, data/NDview/scripts/4d.xyw, data/NDview/scripts/4d.xyz, data/NDview/scripts/4d.xzw, data/NDview/scripts/4d.yzw, data/NDview/scripts/4dcol.w.rb, data/NDview/scripts/4dcol.x.rb, data/NDview/scripts/4dcol.y.rb, data/NDview/scripts/4dcol.z.rb, data/NDview/scripts/5d.123, data/NDview/scripts/5d.5wins, data/NDview/scripts/5dcol.1.rb, data/NDview/scripts/5dcol.2.rb, data/NDview/scripts/5dcol.3.rb, data/NDview/scripts/5dcol.4.rb, data/NDview/scripts/5dcol.5.rb, data/NDview/scripts/color.script, data/NDview/scripts/delete_all.script, data/NDview/scripts/deletecams.script, data/NDview/scripts/eitherwindow, data/NDview/scripts/nocolor.script, data/NDview/cplxview/geom/funcplane, data/NDview/cplxview/scripts/4d.colorcplx, data/NDview/cplxview/scripts/4d.cplx, data/NDview/cplxview/scripts/del_c0, data/NDview/cplxview/scripts/reset.script, data/NDview/cplxview/scripts/startup.script, data/NDview/cplxview/text/cplxhelp.txt, data/NDview/geom/4cube, data/NDview/geom/4daxes, data/NDview/geom/5daxes, data/NDview/geom/6daxes, data/NDview/geom/crosscap, data/NDview/geom/dodecaplex.skel, data/NDview/geom/flattorus, data/NDview/geom/funcplane, data/NDview/geom/hypercube.skel, data/NDview/geom/octaplex.skel, data/NDview/geom/orthoplex.skel, data/NDview/geom/pluker23col.4d, data/NDview/geom/simplex.skel, data/NDview/geom/tetraplex.skel:
 	Resurrected from older Geomview releases.
+
+2006-07-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/ndutils/clipoogl.c, src/bin/ndutils/slicer.c, src/bin/ndutils/wrappers.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11windows.c:
+	Remove some compiler warnings.
+
+	* src/lib/oogl/lisp/Makefile.am:
+	clisp.h must be copied to $(srcdir), otherwise the headers sym-link
+	stuff does not work.
+
+	* ChangeLog:
+	Update email addresses; I need to be more careful to run rcs2log with
+	the correct -u options.
+
+	* doc/Makefile.am: Cleaned up as suggested by Steve M. Robbins.
+
+	* data/Makefile.am: Erroneously included the groups/CVS/ subdir.
+
+	* src/bin/gvclock/Makefile.am: CLEANFILES was set twice.
+
+	* src/bin/sweep/.geomview-sweep, src/bin/tackdown/.geomview-tackdown, src/bin/transformer/.geomview-transformer, src/bin/hinge/.geomview-hinge, src/bin/stereo/.geomview-stereo, src/bin/graffiti/.geomview-graffiti, src/bin/flythrough/.geomview-flythrough, src/bin/ginsu/.geomview-ginsu, src/bin/cplxview/.geomview-cplxview:
+	Generated by make
+
+	* src/bin/geomview/common/comm.c:
+	LDEFINE(read, ...): Fix a long standing memory bug;
+
+	(read blah {stuff})
+
+	treats blah just as keyword, the resulting lisp-object (e.g. a string
+	"geometry") is never referenced again; so we _must_ free the keyword
+	in this function, not only on error, but in any case.
+
+	* src/bin/clipboard/clipx.c:
+	Use the "default" grey as backgound for the clibboard view.
+
+	* src/bin/transformer/Makefile.am, data/Makefile.am, src/bin/NDview/Makefile.am, src/bin/animate/Makefile.am, src/bin/clipboard/Makefile.am, src/bin/cplxview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/example/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/gvclock/Makefile.am, src/bin/hinge/Makefile.am, src/bin/labeler/Makefile.am, src/bin/ndutils/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am:
+	Some fixes after running "make distchek".
+
+	* README: Update modules list.
+
+	* NEWS: Update list of resurrected modules.
+
+	* INSTALL.Geomview:
+	Note that we are back to "vanilla" installation layout (with the
+	exception of the different prefix default).
+
+	* configure.ac: Again build a shared library.
+
+	* src/bin/ndutils/Slicer: Bail out if we are not in ND with N > 3.
+
+	* src/bin/maniview/maniview.h: xforms issue.
+
+	* src/bin/orrery/Makefile.am:
+	Let .geomview-orrery depend on the Makefile
+
+	* src/bin/tackdown/Makefile.am: origin module.
+
+	* src/bin/ndutils/.cvsignore: Initial revision.
+
+	* src/bin/hinge/hui.c: Mmmh.
+
+	* src/bin/flythrough/flythrough.h: Xforms issue.
+
+	* src/bin/flythrough/main.c:
+	Check for NULL before trying to close files.
+
+	* src/bin/cplxview/Makefile.am: Help text now in top-level directory.
+
+	* src/bin/NDview/Makefile.am:
+	Moved all data-files to top-level directory.
+
+	* configure.ac: ndutils
+
+	* data/Makefile.am: Install all data-files from here.
+
+	* src/bin/cplxview/cplxpanels2.c, src/bin/cplxview/cplxpanels2.fd, src/bin/cplxview/cplxpanels2.h, src/bin/example/panel.c, src/bin/example/panel.fd, src/bin/example/panel.h, src/bin/flythrough/panel.c, src/bin/flythrough/panel.fd, src/bin/flythrough/panel.h, src/bin/ginsu/ginsuF.c, src/bin/ginsu/ginsuF.fd, src/bin/ginsu/ginsuF.h, src/bin/hinge/panel.c, src/bin/hinge/panel.fd, src/bin/hinge/panel.h, src/bin/maniview/controlpanel.c, src/bin/maniview/controlpanel.fd, src/bin/maniview/controlpanel.h, src/bin/stereo/sterui.c, src/bin/stereo/sterui.fd, src/bin/stereo/sterui.h, src/bin/sweep/panel.c, src/bin/sweep/panel.fd, src/bin/sweep/panel.h, src/bin/tackdown/origin.panel.c, src/bin/tackdown/origin.panel.fd, src/bin/tackdown/origin.panel.h, src/bin/tackdown/panel.c, src/bin/tackdown/panel.fd, src/bin/tackdown/panel.h, src/bin/transformer/panel.c, src/bin/transformer/panel.fd, src/bin/transformer/panel.h:
+	Re-ran the fdesign program; several button, widges etc. just did not
+	look too good with the newer xforms stuff.
+
+	* src/bin/Makefile.am: Resurrect ndutils.
+
+	* src/lib/oogl/util/iobuffer.c: Make iobfrewind() more efficient.
+
+	* src/bin/ndutils/init.h, src/bin/ndutils/slicer.c, src/bin/ndutils/slicer.h, src/bin/ndutils/snapshot.c, src/bin/ndutils/snapshot.h, src/bin/ndutils/testwish.c, src/bin/ndutils/wrappers.c, src/bin/ndutils/wrappers.h, src/bin/ndutils/3D-Snapshot, src/bin/ndutils/BasicFns.c, src/bin/ndutils/BasicFns.h, src/bin/ndutils/Clip.h, src/bin/ndutils/ColorMapDefs.h, src/bin/ndutils/ColorPoint.c, src/bin/ndutils/ColorPoint.h, src/bin/ndutils/Colormap, src/bin/ndutils/GeExDir.c, src/bin/ndutils/GeExDir.h, src/bin/ndutils/GeomExtentDirection.c, src/bin/ndutils/GeomExtentDirection.h, src/bin/ndutils/GeomtoNoff.c, src/bin/ndutils/GeomtoNoff.h, src/bin/ndutils/LoadMap.c, src/bin/ndutils/LoadMap.h, src/bin/ndutils/MakeGoodTransforms.c, src/bin/ndutils/MakeGoodTransforms.h, src/bin/ndutils/Makefile.am, src/bin/ndutils/Random.c, src/bin/ndutils/Random.h, src/bin/ndutils/Slicer, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/TransformGeom.h, src/bin/ndutils/WithColor.c, src/bin/ndutils/WithColor.h, src/bin/ndutils/clip.c, src/bin/ndutils/clipoogl.c, src/bin/ndutils/init.c, data/NDview/geom/demo/axes, data/NDview/geom/demo/cubew, data/NDview/geom/demo/cubew+, data/NDview/geom/demo/point, data/NDview/geom/demo/points, data/NDview/geom/demo/segmentw+x+z, data/NDview/geom/demo/segmentw+x+z+, data/NDview/geom/demo/squarew+x, data/NDview/geom/demo/squarew+x+, data/NDview/geom/demo/tesseract, data/NDview/scripts/reset.script, data/NDview/scripts/startup.big.script, data/NDview/scripts/startup.small.script, data/NDview/text/axeshelp.txt, data/NDview/text/cube.txt, data/NDview/text/cubed.txt, data/NDview/text/demohelp.txt, data/NDview/text/introhelp.txt, data/NDview/text/point.txt, data/NDview/text/pointd.txt, data/NDview/text/prefabhelp.txt, data/NDview/text/segment.txt, data/NDview/text/segmentd.txt, data/NDview/text/square.txt, data/NDview/text/squared.txt, data/NDview/text/tesseract.txt, data/NDview/text/toolkithelp.txt, data/NDview/scripts/.ndview, data/NDview/scripts/4d.2bigwins, data/NDview/scripts/4d.3wins, data/NDview/scripts/4d.4wins, data/NDview/scripts/4d.cplx, data/NDview/scripts/4d.earthcolor, data/NDview/scripts/4d.wildcolor, data/NDview/scripts/4d.xyw, data/NDview/scripts/4d.xyz, data/NDview/scripts/4d.xzw, data/NDview/scripts/4d.yzw, data/NDview/scripts/4dcol.w.rb, data/NDview/scripts/4dcol.x.rb, data/NDview/scripts/4dcol.y.rb, data/NDview/scripts/4dcol.z.rb, data/NDview/scripts/5d.123, data/NDview/scripts/5d.5wins, data/NDview/scripts/5dcol.1.rb, data/NDview/scripts/5dcol.2.rb, data/NDview/scripts/5dcol.3.rb, data/NDview/scripts/5dcol.4.rb, data/NDview/scripts/5dcol.5.rb, data/NDview/scripts/color.script, data/NDview/scripts/delete_all.script, data/NDview/scripts/deletecams.script, data/NDview/scripts/eitherwindow, data/NDview/scripts/nocolor.script, data/NDview/cplxview/geom/funcplane, data/NDview/cplxview/scripts/4d.colorcplx, data/NDview/cplxview/scripts/4d.cplx, data/NDview/cplxview/scripts/del_c0, data/NDview/cplxview/scripts/reset.script, data/NDview/cplxview/scripts/startup.script, data/NDview/cplxview/text/cplxhelp.txt, data/NDview/geom/4cube, data/NDview/geom/4daxes, data/NDview/geom/5daxes, data/NDview/geom/6daxes, data/NDview/geom/crosscap, data/NDview/geom/dodecaplex.skel, data/NDview/geom/flattorus, data/NDview/geom/funcplane, data/NDview/geom/hypercube.skel, data/NDview/geom/octaplex.skel, data/NDview/geom/orthoplex.skel, data/NDview/geom/pluker23col.4d, data/NDview/geom/simplex.skel, data/NDview/geom/tetraplex.skel:
+	Resurrected from older Geomview releases.
+
+2006-07-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/flythrough/main.c:
+	Do  not try to call flcose() with NULL pointer.
+
+2006-07-29  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* ChangeLog, configure.ac: FIX setting of AM_CONDITIONAL HAVE_TCLTK.
+
+2006-07-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/NDview/ndview.c:
+	We have no fscanf() for IOBFILE files. Work around that.
+
+	* src/bin/NDview/Makefile.am, src/bin/NDview/NDdemo, src/bin/NDview/NDview:
+	Enable in-build-tree use of NDview and NDdemo.
+
+	* Makefile.am: Back to using top_srcdir for preliminary GEOMROOT.
+
+	* src/bin/NDview/Makefile.am:
+	Fiddle with in-builddir module definition.
+
+	* src/bin/orrery/Makefile.am: Look under GEOMDATA/modules/orrery/orrery
+
+	* src/lib/oogl/util/iobuffer.c, src/lib/oogl/util/iobuffer.h:
+	Fix iobfgetbuffer() should return 1 if iobf->ungetc != EOF; that ungetc
+	counts for one char of data :)
+
+	* src/lib/aclib/lstat.c, src/lib/aclib/stat.c:
+	Real wrappers for stat/lstat/fstat in case configure detects bugs in
+	the system's stat() implementations.
+
+	* src/bin/clipboard/.cvsignore: Add Makefile.in/Makefile.
+
+	* src/bin/animate/Makefile.am, src/bin/togeomview/Makefile.am:
+	Link against libgeomview.la (to get stat replacement functions).
+
+	* src/bin/NDview/Makefile.am:
+	Do not copy data to toplevel build-directory.
+
+	* src/bin/NDview/.cvsignore: Ignore Makefile, Makefile.in
+
+	* configure.ac: Provide wrappers for stat and lstat and fstat.
+
+	* data/Makefile.am: Include shaders into the distro.
+
+	* .cvsignore: Ignore directories starting with "build".
+
+	* data/shaders/hplastic.sl, data/shaders/hplastic.slo, data/shaders/README, data/shaders/hlight.sl, data/shaders/hlight.slo, data/shaders/hmatte.sl, data/shaders/hmatte.slo:
+	Initial revision.
+
+	* src/bin/orrery/configure.ac:
+	Fixed configure.ac: AM_INIT_AUTOMAKE/AC_CONFIG_AUXDIR order.
 
 2006-07-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
