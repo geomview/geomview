@@ -1,5 +1,10 @@
 2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
+	* gprim/geom/knownclass.c: In list of function prototypes, fix bug
+	arising from the fact that the "*" in C attaches to the
+	declarator rather than the type.  Patch from Karl Chen
+	(http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=366381).
+
 	* oogl/util/ooglutil.h: Remove declaration of fmemopen(), as it
 	is already in porting.h, included by this header.
 

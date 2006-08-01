@@ -32,7 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/geom/knownclass.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $
+ * $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/geom/knownclass.c,v 1.6 2006/08/01 03:38:48 smr99 Exp $
  */
 
 #include <string.h>
@@ -72,7 +72,8 @@ extern int
 	TlistPresent,
 	VectPresent;
 
-extern GeomClass *
+typedef GeomClass *GeomClassPtr;
+extern GeomClassPtr
 	BBoxMethods(),
 	BezierListMethods(),
 	BezierMethods(),
