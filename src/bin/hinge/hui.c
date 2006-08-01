@@ -46,7 +46,7 @@ char hingehelpstr[] =
 #include "hingehelp.h"
 ;
 
-static char *getline(char *s);
+static char *gv_getline(char *s);
 
 void hui_init(void)
 {
@@ -85,10 +85,10 @@ void hui_init(void)
 
     if (hf == NULL) {
       char *line;
-      line = getline(hingehelpstr);
+      line = gv_getline(hingehelpstr);
       while (line) {
 	fl_add_browser_line( HelpBrowser, line );
-	line = getline(NULL);
+	line = gv_getline(NULL);
       }
       fl_set_browser_topline( HelpBrowser, 1 );
     } else {
@@ -267,7 +267,7 @@ void HingeIt(int dir)
 
 }
 
-static char *getline(char *s)
+static char *gv_getline(char *s)
 {
   static char *p;
   char *first;

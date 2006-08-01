@@ -34,7 +34,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "meshflag.h"
 
 FILE *f = NULL;
-/*static char *getline(char *s);*/
 
 void Begin_OOGL(void)
 {
@@ -84,28 +83,3 @@ UpdateOOGL(int x_size, int y_size, float gridunit, float data[])
 	  OOGLFree(mesh);
 	}
 }
-
-#if 0
-
-/* Stolen from Mark Phillips' Hinge module */
-static char *getline(char *s)
-{
-  static char *p;
-  char *first;
-
-  if (s != NULL) {
-    p = s;
-  } else {
-    *p = '\n';
-  }
-  ++p;
-  first = p;
-  while (*p != '\n' && *p != '\0') ++p;
-  if (*p == '\n') {
-    *p = '\0';
-    return first;
-  }
-  return NULL;
-}
-
-#endif

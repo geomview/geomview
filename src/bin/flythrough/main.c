@@ -44,7 +44,7 @@ char flyhelpstr[] =
 #include "flyhelp.h"
 ;
 
-static char *getline(char *s);
+static char *gv_getline(char *s);
 
 void init(void)
 {
@@ -163,10 +163,10 @@ void InfoProc(FL_OBJECT *obj, long val)
 
   if (hf == NULL) {
     char *line;
-    line = getline(flyhelpstr);
+    line = gv_getline(flyhelpstr);
     while (line) {
       fl_add_browser_line( HelpBrowser, line );
-      line = getline(NULL);
+      line = gv_getline(NULL);
     }
     fl_set_browser_topline( HelpBrowser, 1 );
   } else {
@@ -250,7 +250,7 @@ int main(int argc, char *argv[])
 }
 
 /* Stolen from Mark Phillips' Hinge module */
-static char *getline(char *s)
+static char *gv_getline(char *s)
 {
   static char *p;
   char *first;

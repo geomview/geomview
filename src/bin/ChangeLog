@@ -1,3 +1,11 @@
+2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* flythrough/main.c:
+	* hinge/hui.c: Rename getline() to gv_getline() to avoid clash
+	with standard C library function.
+
+	* example/oogl.c: Remove unused method getline().
+
 2002-10-26  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* animate/glob.c: Add !defined(__CYGWIN__) to condition.
