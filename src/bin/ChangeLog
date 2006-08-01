@@ -1,3 +1,7 @@
+2006-08-01  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomutil/plutil/offconsol.1: Fix manpage section.
+
 2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* stereo/stereo.c: Make usage of "/usr/gfx/setmon" conditional on
