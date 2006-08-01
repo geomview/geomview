@@ -17,7 +17,7 @@ ndutils_SOURCES = BasicFns.h Clip.h ColorMapDefs.h ColorPoint.h	  \
  MakeGoodTransforms.c Random.c TransformGeom.c WithColor.c clip.c \
  clipoogl.c init.c slicer.c snapshot.c testwish.c wrappers.c
 ndutils_DEPENDENCIES = $(OOGLLIB)
-ndutils_LDFLAGS= -rpath $(libdir)
+#ndutils_LDFLAGS= -rpath $(libdir)
 
 module_tcldir = $(moduledir)/tcl
 module_tcl_DATA = 3D-Snapshot Slicer Colormap

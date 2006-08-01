@@ -14,12 +14,12 @@ module_PROGRAMS = tackdown origin
 tackdown_SOURCES = tackdown.main.c \
                    panel.h panel.c
 tackdown_DEPENDENCIES = $(OOGLLIBS)
-tackdown_LDFLAGS = -rpath $(libdir)
+#tackdown_LDFLAGS = -rpath $(libdir)
 
 origin_SOURCES = origin.main.c origin.common.c origin.common.h \
                    origin.panel.c origin.panel.h
 origin_DEPENDENCIES = $(OOGLLIBS)
-origin_LDFLAGS = -rpath $(libdir)
+#origin_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-tackdown .geomview-origin
 

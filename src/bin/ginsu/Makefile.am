@@ -11,7 +11,7 @@ EXTRA_DIST = ginsu.1 ginsuF.fd
 module_PROGRAMS = ginsu
 ginsu_SOURCES = ginsu.c ginsuF.c ginsuF.h
 ginsu_DEPENDENCIES = $(OOGLLIB)
-ginsu_LDFLAGS = -rpath $(libdir)
+#ginsu_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-ginsu
 

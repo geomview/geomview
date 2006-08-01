@@ -9,7 +9,7 @@ man_MANS = bdy.1
 bin_PROGRAMS = bdy
 bdy_SOURCES = bdy.c
 bdy_DEPENDENCIES = $(OOGLLIB)
-bdy_LDFLAGS = -rpath $(libdir)
+#bdy_LDFLAGS = -rpath $(libdir)
 
 module_SCRIPTS = drawbdy
 module_DATA = .geomview-drawbdy

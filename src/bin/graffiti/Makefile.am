@@ -11,7 +11,7 @@ EXTRA_DIST = graffiti.1
 module_PROGRAMS = graffiti
 graffiti_SOURCES = graffiti.c gui.c lang.h panel.h graffiti.h lang.c panel.c
 graffiti_DEPENDENCIES = $(OOGLLIB)
-graffiti_LDFLAGS = -rpath $(libdir)
+#graffiti_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-graffiti
 

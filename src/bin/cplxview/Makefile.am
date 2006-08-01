@@ -11,7 +11,7 @@ EXTRA_DIST = cplxpanels2.fd cplxview.1
 module_PROGRAMS = cplxview
 cplxview_SOURCES = computegraph.c cplxpanels2.c cplxpanels2.h cplxview.c
 cplxview_DEPENDENCIES = $(OOGLLIB)
-cplxview_LDFLAGS = -rpath $(libdir)
+#cplxview_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-cplxview
 

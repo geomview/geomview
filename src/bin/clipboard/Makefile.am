@@ -7,7 +7,7 @@ man_MANS =
 module_PROGRAMS = clipboard
 clipboard_SOURCES = clipboard.c clipboard.mib clipx.c clip.h
 clipboard_DEPENDENCIES = $(OOGLLIB)
-clipboard_LDFLAGS = -rpath $(libdir)
+#clipboard_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-clipboard
 

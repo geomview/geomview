@@ -13,7 +13,7 @@ EXTRA_DIST = crayola.1 Crayola
 module_PROGRAMS = crayola
 crayola_SOURCES = tkcrayola.c testwish.c callbacks.h callbacks.c ui.h
 crayola_DEPENDENCIES = $(OOGLLIB)
-crayola_LDFLAGS= -rpath $(libdir)
+#crayola_LDFLAGS= -rpath $(libdir)
 
 module_tcldir = $(moduledir)/tcl
 module_tcl_DATA = Crayola

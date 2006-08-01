@@ -11,7 +11,7 @@ EXTRA_DIST = flyhelp flythrough.1 panel.fd
 module_PROGRAMS = flythrough
 flythrough_SOURCES = main.c flyhelp.h panel.c panel.h flythrough.h
 flythrough_DEPENDENCIES = $(OOGLLIB)
-flythrough_LDFLAGS = -rpath $(libdir)
+#flythrough_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-flythrough
 

@@ -11,7 +11,7 @@ man_MANS = transformer
 module_PROGRAMS = transformer
 transformer_SOURCES = transformer.main.c panel.c panel.h
 transformer_DEPENDENCIES = $(OOGLLIB)
-transformer_LDFLAGS = -rpath $(libdir)
+#transformer_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-transformer
 

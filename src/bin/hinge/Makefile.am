@@ -14,7 +14,7 @@ module_PROGRAMS = hinge
 hinge_SOURCES = hui.c panel.c hingedata.h hui.h hinge.c lang.c panel.h \
     hinge.h hingehelp.h lang.h version.h
 hinge_DEPENDENCIES = $(OOGLLIB)
-hinge_LDFLAGS = -rpath $(libdir)
+#hinge_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-hinge
 

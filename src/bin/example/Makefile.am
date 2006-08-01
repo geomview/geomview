@@ -7,7 +7,7 @@ LDADD =	$(OOGLLIB) $(XFORMSLIBS) $(XLIBS)
 module_PROGRAMS = example
 example_SOURCES = main.c oogl.c callbacks.c panel.c panel.h
 example_DEPENDENCIES = $(OOGLLIB)
-example_LDFLAGS = -rpath $(libdir)
+#example_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-example
 

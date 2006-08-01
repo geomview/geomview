@@ -13,7 +13,7 @@ man_MANS =
 module_PROGRAMS = labeler
 labeler_SOURCES = labeler.c testwish.c
 labeler_DEPENDENCIES = $(OOGLLIB)
-labeler_LDFLAGS= -rpath $(libdir)
+#labeler_LDFLAGS= -rpath $(libdir)
 
 module_tcldir = $(moduledir)/tcl
 module_tcl_DATA = Labeler

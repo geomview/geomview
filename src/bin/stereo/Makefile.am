@@ -9,7 +9,7 @@ EXTRA_DIST = help.txt sterui.fd
 module_PROGRAMS = stereo
 stereo_SOURCES = stereo.c sterui.c sterui.h help.h
 stereo_DEPENDENCIES = $(OOGLLIB)
-stereo_LDFLAGS = -rpath $(libdir)
+#stereo_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-stereo
 

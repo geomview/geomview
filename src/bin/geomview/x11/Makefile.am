@@ -4,7 +4,7 @@ SUBDIRS = bitmaps interface
 gvx_LDADD = ../common/libgvcommon.a buildinfo.o \
  $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(OOGLLIB) $(XLIBS)
 gvx_DEPENDENCIES = ../common/libgvcommon.a buildinfo.o $(OOGLLIB)
-gvx_LDFLAGS = -rpath $(libdir)
+#gvx_LDFLAGS = -rpath $(libdir)
 
 module_PROGRAMS = gvx
 

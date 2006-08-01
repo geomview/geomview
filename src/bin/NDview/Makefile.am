@@ -11,7 +11,7 @@ LDADD = \
 module_PROGRAMS = ndview
 ndview_SOURCES = ndview.c testwish.c
 ndview_DEPENDENCIES = $(OOGLLIB)
-ndview_LDFLAGS= -rpath $(libdir)
+#ndview_LDFLAGS= -rpath $(libdir)
 
 module_tcldir = $(moduledir)/tcl
 module_tcl_DATA = NDview NDdemo
