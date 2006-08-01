@@ -148,6 +148,14 @@ AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
 AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
 fi
 
+# The stereo module needs to fiddle with monitor modes.
+# Currently, this only works on IRIX using an external command.
+#
+AC_PATH_PROG([SETMON_PATH],[setmon],,[$PATH:/usr/gfx])
+if test -n "$SETMON_PATH"; then
+  AC_DEFINE_UNQUOTED([SETMON_PATH], "$SETMON_PATH", [Path to setmon program])
+fi
+
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lm':
 AC_CHECK_LIB([m], [main])

@@ -682,11 +682,15 @@ int getmonitor(type) { return currentmonitor; }
 
 void setmonitor(int mode) {
     char cmd[128];
+#if defined(SETMON_PATH)
     if(mode != currentmonitor) {
-	sprintf(cmd, "/usr/gfx/setmon -n %s >&2",
-			mode==STR_RECT ? "STR_RECT" : "72HZ");
+	sprintf(cmd, "%s -n %s >&2",
+      		     SETMON_PATH, mode==STR_RECT ? "STR_RECT" : "72HZ");
 	system(cmd);
 	currentmonitor = mode;
     }
+#else
+    fprintf(stderr, "stereo: no method to set monitor mode.\n");
+#endif
 }
 #endif

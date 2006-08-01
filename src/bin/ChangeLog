@@ -1,5 +1,8 @@
 2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
+	* stereo/stereo.c: Make usage of "/usr/gfx/setmon" conditional on
+	that binary existing; it is an irix-specific program.
+
 	* flythrough/main.c:
 	* hinge/hui.c: Rename getline() to gv_getline() to avoid clash
 	with standard C library function.
