@@ -178,11 +178,11 @@ static inline short gv_ntohs(unsigned short s) {
 }
 #endif
 
-static inline short htons(unsigned short s)
+static inline short gv_htons(unsigned short s)
 {
   return gv_ntohs(s);
 }
-static inline int htonl(unsigned int v) {
+static inline int gv_htonl(unsigned int v) {
   return gv_ntohl(v);
 }
 

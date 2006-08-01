@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.16 2006/07/28 18:18:30 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.17 2006/08/01 16:01:25 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -147,11 +147,11 @@ static inline short gv_ntohs(unsigned short s) {
 }
 #endif
 
-static inline short htons(unsigned short s)
+static inline short gv_htons(unsigned short s)
 {
   return gv_ntohs(s);
 }
-static inline int htonl(unsigned int v) {
+static inline int gv_htonl(unsigned int v) {
   return gv_ntohl(v);
 }
 
@@ -165,7 +165,7 @@ fputnf(FILE *file, int count, float *v, int binary)
 #else
 	  long w;
 	  for(i = 0; i < count; i++) {
-	    w = htonl(*(long *)&v[i]);
+	    w = gv_htonl(*(long *)&v[i]);
 	    fwrite(&w, sizeof(float), 1, file);
 	  }
 	  return count;
@@ -195,7 +195,7 @@ fputtransform(FILE *file, int ntrans, float *trans, int binary)
 	    for (i = 0; i < ntrans; i++) {
 		    for (j = 0; j < 16; j++) {
 			    w.wf = trans[i*16 + j];
-			    w.wi = htonl(w.wi);
+			    w.wi = gv_htonl(w.wi);
 			    if (fwrite(&w, sizeof(float), 1, file) != 1) {
 				    return i;
 			    }
