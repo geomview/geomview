@@ -177,10 +177,6 @@ extern void OOGLSyntax(IOBFILE *, char *fmt, ...);
 #define	OE_VERBOSE	0x1
 #define	OE_FATAL	0x2
 
-/* supply missing declaration for fmemopen */
-#if !HAVE_DECL_FMEMOPEN
-extern FILE *fmemopen(void *buf, size_t buflen, char *mode);
-#endif
 
 /*
  * File-I/O utility routines

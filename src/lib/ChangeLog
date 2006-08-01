@@ -1,3 +1,8 @@
+2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* oogl/util/ooglutil.h: Remove declaration of fmemopen(), as it
+	is already in porting.h, included by this header.
+
 2002-10-26  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* oogl/util/futil.c: Add defined(__CYGWIN__) to __FreeBSD__ version of
