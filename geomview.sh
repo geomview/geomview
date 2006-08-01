@@ -88,6 +88,7 @@ gvx_option() {
   -h|-help|-HELP|-\?*)
     echo "For advice on selecting which geomview graphics option to use,
 see also \"geomview -graphics\"."
+    exit 0
     ;;
   -grap*|-Grap*|-GRAP*)
     if [ -f "$gvx.X11" -o -f "$gvx.MESA" -o -f "$gvx.C3D" -o -f "$gvx.OGL" ]; then
@@ -106,8 +107,10 @@ see also \"geomview -graphics\"."
 	echo "software OpenGL implementations are slower than $g -x11, but hardware ones"
 	echo "run faster."
 	echo "To change the default, setenv GEOMVIEW_GVXOPT to the appropriate option."
+    else
+	echo "No alternative graphics options available."
     fi >&2
-    exit 1
+    exit 0
     ;;
   *) test ;;
  esac

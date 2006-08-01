@@ -1,3 +1,9 @@
+2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* geomview.sh: Specifying -help should only print help and not
+	bring up geomview windows.  Fix diagnostic emitted when invoked
+	with "-graphics" and no alternatives exist.
+
 2006-07-31  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* 1.8.2-rc7 release.
