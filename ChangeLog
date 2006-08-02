@@ -1,3 +1,114 @@
+2006-08-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Apply David's Darwin patch.
+
+	* src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11windows.c:
+	Quick and dirty hack to fix upside-down bug with MGX11 driver.
+
+	* src/bin/labeler/Makefile.am:
+	Fix the local (i.e. in build-tree) .geomview-labeler module def.
+
+	* src/bin/geomview/common/transform.c:
+	When doing "look-recenter" we do not want to apply the object
+	transformation to the camera, because the object-trafo may contain
+	arbitrary deformations (at least I do not like being deformed when
+	watching Geomview). Instead, us a polar decomposition of the object's
+	transform and apply only the orthogonal factor to the camera.
+
+	* src/lib/Makefile.am:
+	Maybe do not install the library if not using shared libraries (we do
+	install ATM).
+
+	* src/lib/oogl/wa/yystype.h, src/lib/oogl/wa/Headers, src/lib/oogl/wa/Makefile.am, src/lib/oogl/wa/fsaparse.l, src/lib/oogl/wa/fsaparse.y, src/lib/oogl/wa/wa.yystype.h:
+	Renamed yystype.h to wa.yystype.h
+
+	* src/lib/geometry/transform3/Makefile.am, src/lib/geometry/transform3/tm3polardecomp.c, src/lib/geometry/transform3/transform.h, src/lib/geometry/transform3/transform3.h:
+	Polar decomposition of 3x3 matrix.
+
+	* Makefile.am: Install non-private header-files in pkginclude.
+
+	* configure.ac:
+	Adapt xforms include and library paths to the xforms source distro at
+	savannah.
+
+	* src/lib/geometry/transform3/tm3polardecomp.c: Initial revision.
+
+2006-08-01  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Disable building a shared library by default.
+
+	* src/lib/oogl/util/futil.c, src/lib/oogl/util/iobfutil.c:
+	htons/l -> gv_htons/l (bug reported by David Morisson).
+
+	* src/bin/geomutil/bdy/Makefile.am, src/bin/geomutil/clip/Makefile.am, src/bin/geomutil/oogl2rib/Makefile.am, src/bin/geomutil/oogl2vrml/Makefile.am, src/bin/geomutil/plutil/Makefile.am, src/bin/geomutil/ucd/Makefile.am, src/bin/geomview/x11/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/labeler/Makefile.am, src/bin/ndutils/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/NDview/Makefile.am, src/bin/animate/Makefile.am, src/bin/clipboard/Makefile.am, src/bin/cplxview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/example/Makefile.am:
+	Remove -rpath, not needed and not wanted by Debian.
+
+2006-08-01  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* src/bin/ChangeLog, src/bin/geomutil/plutil/offconsol.1:
+	Fix manpage section.
+
+	* ChangeLog, configure.ac, src/bin/ChangeLog, src/bin/stereo/stereo.c:
+	Search for /usr/gfx/setmon at configure time; may be overridden by
+	setting shell variable SETMON_PATH.  If not found, diagnostic is
+	emitted at runtime by stereo.
+
+	* src/lib/ChangeLog, src/lib/gprim/geom/knownclass.c:
+	Fix bug in list of function prototypes, arising from the fact that the
+	"*" in C attaches to the declarator rather than the type.
+
+	* ChangeLog, geomview.sh:
+	Specifying -help should only print help and not bring up geomview
+	windows.  Fix diagnostic emitted when invoked with "-graphics" and no
+	alternatives exist.
+
+	* src/bin/ChangeLog, src/bin/example/oogl.c, src/bin/flythrough/main.c, src/bin/hinge/hui.c:
+	Remove or rename function getline() to avoid clash with
+	standard C library function.
+
+	* src/lib/ChangeLog, src/lib/oogl/util/ooglutil.h:
+	Remove duplicate declaration of fmemopen().
+
+2006-07-31  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac:
+	AM_CONDITIONALS _must_ _not_ be defined conditionally. Gnah.
+
+	* src/bin/Makefile.am:
+	Forward the src_bin_module_subdirs to "make distclean" via distclean-local.
+
+	* ChangeLog: *** empty log message ***
+
+	* configure.ac:
+	Search for GL/gl.h and GL/glx.h and make sure the beast still compiles
+	without OpenGL.
+
+	* geomview.sh:
+	Set TCL/TK_LIBRARY variables on Cygwin, the Cygwin Tcl/Tk port is
+	buggy in this respect.
+
+	* src/bin/geomview/x11/gvcamui.c:
+	Missing closing " after contact info update.
+
+2006-07-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Use PREFIX/share/geomview as data-dir (instead of
+	PREFIX/share/geomview/data).
+
+	* src/bin/ndutils/ColorPoint.c:
+	Off-by-1 bug: in C (in contrast to maybe Fortran ...) the last array
+	index is (size-1). Ups.
+
+	* src/bin/ndutils/GeExDir.c: Debugging message.
+
+	* src/bin/ndutils/slicer.c, src/bin/ndutils/snapshot.c:
+	Consume the fourth number of the ND-axes command.
+
+	* doc/geomview.texi, src/bin/geomview/common/space.c:
+	The "ND-axes" command was not correctly documented: it accepts 4
+	numbers, not 3, and return 4 numbers, not 3, when called without
+	camera cluster ID. The last number seems to be hard-wired to -1. But???????
+
 2006-07-31  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
 
 	* configure.ac: Search for /usr/gfx/setmon; may be overridden by
