@@ -1291,6 +1291,7 @@ LDEFINE(look_recenter, LVOID,
   int i;
   DView *camObj;
   TransformStruct obj2univ;
+  Transform obj2univtm;
   int objID = WORLDGEOM, camID = CAMID(uistate.targetcam);
 
   LDECLARE(("look-recenter", LBEGIN,
@@ -1308,8 +1309,14 @@ LDEFINE(look_recenter, LVOID,
     return Lnil;
   }
 
-  drawer_get_transform(objID, obj2univ.tm,  UNIVERSE);
   obj2univ.h = NULL;
+  drawer_get_transform(objID, obj2univtm,  UNIVERSE);
+  /* It is probably not a good idea to deform the camera geometry (in
+   * general the spectator remains undeformed or suffers serious
+   * injuries ...). So we keep only the orthogonal part and through
+   * away the deformations.
+   */
+  TmPolarDecomp(obj2univtm, obj2univ.tm);
 
   MAYBE_LOOP(camID, i, T_CAM, DView, camObj) { 
     gv_xform_set(camObj->id, &obj2univ);
