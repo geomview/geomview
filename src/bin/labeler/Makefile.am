@@ -26,6 +26,6 @@ all-local: $(top_builddir)/modules/.geomview-labeler
 
 $(top_builddir)/modules/.geomview-labeler: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Labeler" "$(subdir)/labeler $(subdir)/Labeler")' > $@
+	echo '(emodule-define "Labeler" "$(subdir)/labeler $(subdir)/$(srcdir)/Labeler")' > $@
 
 CLEANFILES = $(top_builddir)/modules/.geomview-labeler $(module_DATA)
