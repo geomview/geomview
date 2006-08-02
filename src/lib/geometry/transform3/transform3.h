@@ -62,6 +62,7 @@ extern void Tm3Transpose( Transform3 Ta, Transform3 Tb );
 extern void Tm3PostConcat( Transform3 Ta, Transform3 Tb );
 extern void Tm3PreConcat( Transform3 Ta, Transform3 Tb );
 extern void Tm3Concat( Transform3 Ta, Transform3 Tb, Transform3 Tc );
+extern void Tm3PolarDecomp( Transform3, Transform3 );
 
 extern void Tm3Print( Transform3 T );
 extern void Tm3Copy( Transform3 Tsrc, Transform3 Tdst );

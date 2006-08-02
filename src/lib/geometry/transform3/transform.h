@@ -39,6 +39,7 @@ typedef Tm3Coord TmCoord;
 #define TmPreConcat Tm3PreConcat
 #define TmConcat Tm3Concat
 #define TmConjugate Tm3Conjugate
+#define TmPolarDecomp Tm3PolarDecomp
 
 #define TmPrint Tm3Print
 #define TmCopy Tm3Copy
