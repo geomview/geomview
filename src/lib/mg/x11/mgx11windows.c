@@ -514,6 +514,27 @@ void Xmg_add(int primtype, int numdata, void *data, void *cdata)
   static float average_depth;
   static int *primp, numverts, ecolor[3];
   static int maxlinewidth = 0;
+
+#if 1 || HACK_THE_CODE_BUT_BETTER_FIX_IT
+  if (!(_mgc->has & HAS_S2O)) {
+    Transform S;
+    WnPosition vp;
+
+    mg_findS2O();
+    mg_findO2S();
+
+    WnGet(_mgc->win, WN_VIEWPORT, &vp);
+    /* Fix up O2S and S2O matrices.  Since the X11
+     * coordinate system has Y increasing downward, flip it
+     * here, and translate by location of lower left corner
+     * of viewport.
+     */
+    TmTranslate(S, (double)vp.xmin, (double)vp.ymax, 0.);
+    S[1][1] = -1;		/* Invert sign of Y */
+    TmConcat(_mgc->O2S, S, _mgc->O2S);
+    TmInvert(_mgc->O2S, _mgc->S2O);
+  }
+#endif
   
   switch (primtype)
   {

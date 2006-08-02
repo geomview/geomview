@@ -913,6 +913,7 @@ mgx11_worldbegin( void )
   WnPosition vp;
 
   mg_worldbegin();
+#if 0 && !DO_NOT_HACK_THE_CODE_THIS_WAY
   WnGet(_mgc->win, WN_VIEWPORT, &vp);
 	/* Fix up W2S and S2W matrices.  Since the X11 coordinate system has
 	 * Y increasing downward, flip it here, and
@@ -922,6 +923,7 @@ mgx11_worldbegin( void )
   S[1][1] = -1;		/* Invert sign of Y */
   TmConcat(_mgc->W2S, S, _mgc->W2S);
   TmInvert(_mgc->W2S, _mgc->S2W);
+#endif
   _mgc->has = 0;
   Xmg_newdisplaylist();
 }
