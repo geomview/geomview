@@ -350,7 +350,7 @@ fi
 #       target_os       linux-gnu
 
 case "$target" in
- *linux*) MACHTYPE="linux"
+  *linux*) MACHTYPE="linux"
           ;;
   *irix*) MACHTYPE="sgi"
 	  AC_DEFINE(sgi, 1, [Define to 1 if we are compiling for sgi])
@@ -359,7 +359,10 @@ case "$target" in
             LIBS="$LIBS -lmalloc"
           fi
           ;;
-*rs6000*) MACHTYPE="rs6000"
+  *darwin*) MACHTYPE=$target_os
+          AC_DEFINE(unix, 1, [Define to 1 since we are compiling for unix])
+          ;;
+  *rs6000*) MACHTYPE="rs6000"
           AC_DEFINE(AIX, 1, [Define to 1if we are compiling for AIX])
 	  ACCEPT_ARG3_TYPE="unsigned long"
           AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
