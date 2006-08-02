@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT(geomview, [1.8.2-rc7], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.8.2-rc8], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
 if test "z${cache_file}" = "z/dev/null"; then
   cache_file=config.cache
@@ -120,6 +120,7 @@ AC_PROG_LEX
 #AC_PROG_RANLIB
 AC_PROG_YACC
 AC_DISABLE_SHARED
+AM_CONDITIONAL([INSTALL_LIBGEOMVIEW],[true || test  "z${enable_shared}" = "zyes"])
 AC_PROG_LIBTOOL
 # Search path for "find" executable.  Use "find" unless
 # the bogus MS Windows version is first on the path, in 
@@ -596,11 +597,11 @@ AC_CACHE_VAL(ac_cv_have_xforms,
     if test "$XFORMS_DIR" != "" ; then
       USER_XFORMS_DIR="$XFORMS_DIR"
     fi
-    GEOM_FIND_I_OPTION(forms.h, ["$USER_XFORMS_DIR" "" "$x_includes" "$x_includes/X11" "/usr/local/include"])
+    GEOM_FIND_I_OPTION(forms.h, ["${USER_XFORMS_DIR}/include" "" "$x_includes" "$x_includes/X11" "/usr/local/include"])
     ac_xforms_include=$GEOM_I_OPTION
     GEOM_FIND_L_OPTION(-lforms,
     		   fl_initialize,
-    		   ["$USER_XFORMS_DIR" "" "$x_libraries" "/usr/local/lib"],
+    		   ["${USER_XFORMS_DIR}/lib" "" "$x_libraries" "/usr/local/lib"],
     		   "$XLIBS -lXpm -lm"
     		  )
     if test "$ac_xforms_include" != 0 -a "$GEOM_L_OPTION" != "0" ; then
