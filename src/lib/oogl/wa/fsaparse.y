@@ -19,8 +19,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "wa.h"
-#include "yystype.h"
-#include "y.tab.h"
+#include "wa.yystype.h"
+#include "wa.yacc.h"
 
 #define MAXSTATES 100
 #define MAXGENS 128

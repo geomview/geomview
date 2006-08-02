@@ -1,3 +1,3 @@
 wa.h
-y.tab.h
-yystype.h
+wa.yacc.h
+wa.yystype.h

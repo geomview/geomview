@@ -14,8 +14,8 @@
 #include <stdlib.h> /* for atof() */
 #include <math.h>
 #include <string.h>
-#include "yystype.h"
-#include "y.tab.h"
+#include "wa.yystype.h"
+#include "wa.yacc.h"
 
 YYSTYPE yylval;
 
