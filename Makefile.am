@@ -13,6 +13,7 @@ m4_files = \
 #	m4/smr_REQUIRED_LIB.m4 \
 #	m4/smr_WITH_BUILD_PATH.m4
 
+nodist_pkginclude_HEADERS = $(wildcard include/*[^P].h)
 
 geomview: geomview.sh Makefile
 	echo top_builddir is $(top_builddir)
