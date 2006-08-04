@@ -9,7 +9,6 @@ libwa_la_SOURCES = \
     wa.lex.c wa.yacc.c wa.yacc.h \
     wa.h wa.yystype.h
 
-if MAINTAINER_MODE
 y.tab.c y.tab.h: $(srcdir)/fsaparse.y Makefile
 	$(YACC) -d $(srcdir)/fsaparse.y
 
@@ -27,6 +26,5 @@ wa.lex.c: wa.yacc.h $(srcdir)/fsaparse.l Makefile
  -e '/#ident/d' \
  -e 's/lex.wafsa.c/wa.lex.c/g' \
  -e 's/y.tab.h/wa.yacc.h/g' lex.yy.c) >$@
-endif
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)

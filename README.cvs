@@ -22,10 +22,6 @@ pbmtopng  (from the netpbm package)
 pdftex    (e.g. from the teTeX distribution)
 texinfo   (use a recent texinfo release).
 
-If you have all these things installed, then run
-
-configure --enable-maintainer-mode
-
 Good luck!
 
 I managed to rebuild Geomview from CVS on a recent Cygwin and on a

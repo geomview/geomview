@@ -32,7 +32,6 @@ TEXINPUTS = $(srcdir):
 
 all-local: html pdf
 
-if MAINTAINER_MODE
 figs/%.eps: figs/%.ps
 	@test -d figs || mkdir figs
 	$(PS2EPSI) $< $@
@@ -46,7 +45,6 @@ figs/%.png: figs/%.pdf
 	$(PDFIMAGESPROG) $< $(<:.pdf=)
 	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
 	-rm -f $(<:.pdf=-000.ppm)
-endif
 
 dist-hook: html pdf
 
