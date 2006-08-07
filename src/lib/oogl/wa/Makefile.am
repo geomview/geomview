@@ -9,16 +9,16 @@ libwa_la_SOURCES = \
     wa.lex.c wa.yacc.c wa.yacc.h \
     wa.h wa.yystype.h
 
-y.tab.c y.tab.h: $(srcdir)/fsaparse.y Makefile
+y.tab.c y.tab.h: $(srcdir)/fsaparse.y $(srcdir)/Makefile.in
 	$(YACC) -d $(srcdir)/fsaparse.y
 
-wa.yacc.c: y.tab.c Makefile
+wa.yacc.c: y.tab.c $(srcdir)/Makefile.in
 	sed -e '/^\#include/!s/yy/wafsa/g' -e '/#ident/d' $< >$@
 
-wa.yacc.h:  y.tab.h Makefile
+wa.yacc.h:  y.tab.h $(srcdir)/Makefile.in
 	sed -e '/^\#include/!s/yy/wafsa/g' -e '/#ident/d' $< >$@
 
-wa.lex.c: wa.yacc.h $(srcdir)/fsaparse.l Makefile
+wa.lex.c: wa.yacc.h $(srcdir)/fsaparse.l $(srcdir)/Makefile.in
 	rm -f lex.yy.c $@
 	($(LEX) $(srcdir)/fsaparse.l; \
 	 sed -e '/^\#include/!s/yy/wafsa/g' \
