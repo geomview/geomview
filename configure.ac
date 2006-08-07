@@ -142,12 +142,10 @@ AC_DEFINE_UNQUOTED([GLOB_SHELL], ["${GLOB_SHELL}"],
 	[Define to path and arguments of shell used for file name globbing])
 AC_SUBST([GLOB_SHELL])
 #
-if test $USE_MAINTAINER_MODE = yes; then
 AC_CHECK_PROGS(PS2EPSI, ps2epsi)
 AC_CHECK_PROGS(EPSTOPDF, epstopdf)
 AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
 AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
-fi
 
 # The stereo module needs to fiddle with monitor modes.
 # Currently, this only works on IRIX using an external command.
