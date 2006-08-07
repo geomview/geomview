@@ -1,3 +1,7 @@
 .deps
+.geomview-3d-snapshot
+.geomview-colormap
+.geomview-slicer
 Makefile
 Makefile.in
+ndutils

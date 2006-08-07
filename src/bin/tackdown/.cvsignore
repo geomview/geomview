@@ -1,7 +1,9 @@
+*.la
+*.lo
+.geomview-origin
+.geomview-tackdown
+.libs
 .libs
 Makefile Makefile.in .deps
 origin
 tackdown
-*.lo
-*.la
-.libs

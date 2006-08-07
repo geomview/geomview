@@ -1,6 +1,7 @@
+*.la
+*.lo
+.geomview-sweep
+.libs
 .libs
 Makefile Makefile.in .deps
 sweep
-*.lo
-*.la
-.libs

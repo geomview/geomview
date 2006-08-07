@@ -1,7 +1,8 @@
 
+*.la
+*.lo
+.geomview-transformer
+.libs
 .libs
 Makefile Makefile.in .deps
 transformer
-*.lo
-*.la
-.libs

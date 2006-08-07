@@ -1,6 +1,7 @@
+*.la
+*.lo
+.geomview-cplxview
+.libs
 .libs
 Makefile Makefile.in .deps
 cplxview
-*.lo
-*.la
-.libs

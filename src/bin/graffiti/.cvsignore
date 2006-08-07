@@ -1,7 +1,8 @@
 
+*.la
+*.lo
+.geomview-graffiti
+.libs
 .libs
 Makefile Makefile.in .deps
 graffiti
-*.lo
-*.la
-.libs
