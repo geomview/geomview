@@ -6,7 +6,6 @@ geomview.pdf geomview.ps
 mdate-sh
 stamp-vti
 texinfo.tex
-version.texi
 html/*
 *.lo
 *.la

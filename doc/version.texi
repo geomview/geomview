@@ -1,0 +1,4 @@
+@set UPDATED 31 July 2006
+@set UPDATED-MONTH July 2006
+@set EDITION 1.8.2-rc8
+@set VERSION 1.8.2-rc8
