@@ -1,9 +1,10 @@
+*.la
+*.lo
+.libs
 Makefile Makefile.in .deps
 lex.yy.c
 wa.lex.c
 wa.yacc.c
+wa.yacc.h
 y.tab.c
 y.tab.h
-*.lo
-*.la
-.libs
