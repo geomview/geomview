@@ -1,4 +1,4 @@
-SUBDIRS = doc src data
+SUBDIRS = src data doc
 EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir \
              $(m4_files)
 
