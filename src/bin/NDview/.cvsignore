@@ -1,4 +1,5 @@
+.deps
 .geomview-nddemo
 .geomview-ndview
-Makefile.in
 Makefile
+Makefile.in
