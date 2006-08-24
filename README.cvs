@@ -6,9 +6,13 @@ autoconf-2.59
 automake-1.9
 libtool-1.5.22
 
+Some files may need a `yacc' (e.g. GNU bison) and `lex' (e.g. GNU
+flex) version to be regenerated.
+
 If you have to upgrade to a more recent autoconf/automake version then
-you can install autoconf _and_ automake (both of them) locally. Then
-just change to the top-level source directory and issue the command:
+you can install autoconf _and_ automake (both of them) locally,
+e.g. in your home directory. Then just change to the top-level source
+directory and issue the command:
 
 autoreconf --install
 
