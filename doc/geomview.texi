@@ -32,35 +32,35 @@
 @end titlepage
 @page
 
-@node Top,Intro,,(DIR)
+@node Top, Intro, (dir), (dir)
 
 Geomview, the interactive 3D viewing program.
 
 @menu
-* Intro::		Introduction to Geomview.
-* Distrib::	        How to get the latest Geomview distribution.
-* Copying::	        The GNU Lesser Public License gives you permission
-			  to redistribute Geomview on certain terms;
-			  it also explains that there is no warranty.
-* History::		History of Geomview's Development.
-* Authors::		The Authors of Geomview.
-* Platforms::		Supported Platforms.
-* Pronunciation::	How to Pronounce ``Geomview''.
-* Overview::		Overview of Geomview.
-* Tutorial::		Introductory Tutorial.
-* Interaction::		Interacting with Geomview.
-* OOGL File Formats::	Formats for Geometry Input.
-* Customization::	Modifying the behavior of Geomview.
-* Modules::		Programs that use Geomview for graphics display.
-* GCL::			gcl: the Geomview Command Language.
-* Mathematica::		Mathematica Graphics in Geomview or RenderMan.
-* Installation::	Installing Geomview on your computer.
-* Support::		Getting Technical Support for Geomview.
+* Intro::                       Introduction to Geomview.
+* Distrib::                     How to get the latest Geomview distribution.
+* Copying::                     The GNU Lesser Public License.
+* History::                     History of Geomview's Development.
+* Platforms::                   Supported Platforms.
+* Pronunciation::               How to Pronounce ``Geomview''.
+* Overview::                    Overview of Geomview.
+* Tutorial::                    Introductory Tutorial.
+* Interaction::                 Interacting with Geomview.
+* OOGL File Formats::           Formats for Geometry Input.
+* Customization::               Modifying the behavior of Geomview.
+* Modules::                     Programs that use Geomview for graphics display.
+* GCL::                         gcl: the Geomview Command Language.
+* Non-Euclidean Geometry::      Non-Euclidean Geometry.
+* Mathematica::                 Mathematica Graphics in Geomview or RenderMan.
+* Installation::                Installing Geomview on your computer.
+* Support::                     Getting Technical Support for Geomview.
 
-* Function Index::	A node for each gcl function.
+* Contributing::                How to contribute to Geomview.
+* Function Index::              A node for each gcl function.
+* List of Figures::             List of Figures.
 @end menu
 
-@node Intro,Distrib,Top,Top
+@node Intro, Distrib, Top, Top
 @unnumbered Introduction to Geomview
 
 Geomview is an interactive program for viewing and manipulating
@@ -75,13 +75,7 @@ Geomview is free software, available under the terms of the GNU Lesser
 Public License; @pxref{Copying} for details.
 
 Geomview and this manual are available for download from
-@ifhtml
-<a href="http://www.geomview.org">
-@end ifhtml
-http://www.geomview.org
-@ifhtml
-</a>
-@end ifhtml
+@uref{http://www.geomview.org}.
 
 Permission is granted to make copies of this manual.
 
@@ -91,9 +85,9 @@ forum in which users of Geomview communicate to answer
 each others' questions and to share news about what they are doing with
 Geomview.  The Geomview authors participate in this list and sometimes
 post answers to questions there.  To join the list, visit the list web page
-at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
+at @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
-@node Distrib, Copying, Top, Top
+@node Distrib, Copying, Intro, Top
 @unnumbered Distribution
 
 Geomview is @dfn{free software}; this means that everyone is free to
@@ -110,15 +104,7 @@ appears following this section.
 One way to get a copy of Geomview is from someone else who has it.  You
 need not ask for our permission to do so, or tell any one else; just
 copy it.  If you have access to the Internet, you can get the latest
-distribution version of Geomview at 
-@ifhtml
-<a href="http://www.geomview.org">
-@end ifhtml
-http://www.geomview.org
-@ifhtml
-</a>
-@end ifhtml
-.
+distribution version of Geomview at @uref{http://www.geomview.org}.
 
 You may also receive Geomview when you buy a computer.  Computer
 manufacturers are free to distribute copies on the same terms that apply to
@@ -129,6 +115,7 @@ General Public License.  In other words, the program must be free for you
 when you get it, not just free for the manufacturer.
 
 @node Copying, History, Distrib, Top
+@unnumbered Copying
 
 @smallexample
 NOTE: Geomview is distributed under the GNU LESSER GENERAL PUBLIC
@@ -256,12 +243,7 @@ modification follow.  Pay close attention to the difference between a
 former contains code derived from the library, whereas the latter must
 be combined with the library in order to run.
 
-@iftex
 @unnumberedsec TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-@end iftex
-@ifinfo
-@center TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-@end ifinfo
 
 @enumerate 0
 @item
@@ -615,12 +597,7 @@ decision will be guided by the two goals of preserving the free status
 of all derivatives of our free software and of promoting the sharing
 and reuse of software generally.
 
-@iftex
 @heading NO WARRANTY
-@end iftex
-@ifinfo
-@center NO WARRANTY
-@end ifinfo
 
 @item
 BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO
@@ -646,12 +623,7 @@ SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGES.
 @end enumerate
 
-@iftex
 @heading END OF TERMS AND CONDITIONS
-@end iftex
-@ifinfo
-@center END OF TERMS AND CONDITIONS
-@end ifinfo
 
 @page
 @unnumberedsec How to Apply These Terms to Your New Programs
@@ -706,7 +678,7 @@ Ty Coon, President of Vice
 
 That's all there is to it!
 
-@node History,Authors,Top,Top
+@node History, Platforms, Copying, Top
 @unnumbered History of Geomview's Development
 
 Geomview was originally written at the Geometry Center at the University
@@ -751,25 +723,22 @@ the Geometry Center developed a web site, www.geom.umn.edu, in late
 the web site was of course devoted to Geomview, and helped to spread the
 word about its existence.
 
-The Geometry Center closed its "brick and mortar" facilities
-in August of 1998 (NSF cut its funding), but the web site continued
-to exist, and Geomview continued to be very popular around the world.
-In December of 1999 some of the former Geometry Center staff set
-up 
-@ifhtml
-<a href="http://www.geomview.org">
-@end ifhtml
-http://www.geomview.org
-@ifhtml
-</a>
-@end ifhtml
-as a permanent home on the web for Geomview.
+The Geometry Center closed its "brick and mortar" facilities in August
+of 1998 (NSF cut its funding), but the web site continued to exist, and
+Geomview continued to be very popular around the world.  In December of
+1999 some of the former Geometry Center staff set up
+@uref{http://www.geomview.org} as a permanent home on the web for
+Geomview.
 
 Geomview's original authors, as well as a number of other volunteers
 around the world, are still actively involved in using and developing
 Geomview.
 
-@node Authors,Platforms,History,Intro
+@menu
+* Authors::                     Authors.
+@end menu
+
+@node Authors,  , History, History
 @unnumberedsec Authors
 
 Tamara Munzner, Stuart Levy, and Mark Phillips are the original authors
@@ -784,7 +753,7 @@ and Tamara Munzner.  Countless Geomview users have also been of great
 help by reading it and pointing out mistakes.
 
 
-@node Platforms,Pronunciation,Authors,Top
+@node Platforms, Pronunciation, History, Top
 @unnumbered Supported Platforms
 
 Geomview runs on a wide variety of Unix systems. It has been tested on
@@ -808,7 +777,7 @@ you can contribute to its development in several ways.
 
 There is also no version of Geomview for Macintosh.
 
-@node Pronunciation,Overview,Platforms,Top
+@node Pronunciation, Overview, Platforms, Top
 @unnumbered How to Pronounce ``Geomview``
 
 The word 'Geomview' is a combination of the first syllable of the word
@@ -830,7 +799,7 @@ pronunciation.
 @comment
 
 @comment ****************************************************************
-@node Overview,Tutorial,Pronunciation,Top
+@node Overview, Interaction, Pronunciation, Top
 @chapter Overview
 
 Geomview's main purpose is to display objects whose geometry is given,
@@ -881,10 +850,7 @@ creating named references.
 Geomview can display 3-D graphics output from Mathematica and Maple.
 
 @comment ****************************************************************
-@node Tutorial,Interaction,Overview,Top
-@ifhtml
-<a name="tutorial">
-@end ifhtml
+@node Tutorial, Interaction, Overview, Top
 @chapter Tutorial
 
 This chapter leads you through some of the basics of using Geomview.
@@ -1103,27 +1069,27 @@ that file will be incorporated into a future version of this manual.
 @end float
 
 @comment ****************************************************************
-@node Interaction,Starting Geomview,Tutorial,Top
+@node Interaction, Customization, Overview, Top
 @chapter Interaction
 
 This chapter describes how you interact with Geomview through the
 mouse and keyboard.
 
 @menu
-* Starting Geomview::      Starting Geomview.
-* Command Line Options::   Command Line Options.
-* Basic Interaction::      Basic Interaction: The Main Panel.
-* Loading::                Loading Objects Into Geomview.
-* Mouse Motions::          Using the Mouse to Manipulate Objects.
-* Appearance::             Changing the Way Things Look.
-* Cameras::                Cameras.
-* Saving::                 Saving your work.
-* Commands::               The Commands Panel.
-* Keyboard Shortcuts::     Keyboard Shortcuts.
+* Starting Geomview::           Starting Geomview.
+* Command Line Options::        Command Line Options.
+* Basic Interaction::           Basic Interaction: The Main Panel.
+* Loading::                     Loading Objects Into Geomview.
+* Mouse Motions::               Using the Mouse to Manipulate Objects.
+* Appearance::                  Changing the Way Things Look.
+* Cameras::                     Cameras.
+* Saving::                      Saving your work.
+* Commands::                    The Commands Panel.
+* Keyboard Shortcuts::          Keyboard Shortcuts.
 @end menu
 
 @comment ================================================================
-@node Starting Geomview,Command Line Options,Interaction,Interaction
+@node Starting Geomview, Command Line Options, Interaction, Interaction
 @section Starting Geomview
 
 The usual way to start Geomview is to type @kbd{geomview @key{Enter}} in a shell
@@ -1137,7 +1103,7 @@ startup time by giving arguments in the shell command line.
 
 
 @comment ================================================================
-@node Command Line Options,Basic Interaction,Starting Geomview,Interaction
+@node Command Line Options, Basic Interaction, Starting Geomview, Interaction
 @section Command Line Options
 
 Here are the command line options that Geomview allows:
@@ -1208,7 +1174,7 @@ are appended to the UNIX search path when invoking @var{shell-command}.
 @end table
 
 @comment ================================================================
-@node Basic Interaction,Loading,Command Line Options,Interaction
+@node Basic Interaction, Loading, Command Line Options, Interaction
 @section Basic Interaction: The Main Panel
 
 Normally when you invoke Geomview, three windows appear: the
@@ -1357,7 +1323,7 @@ For a list of all keyboard shortcuts, press the @emph{@code{?}} key.
 
 
 @comment ================================================================
-@node Loading,Mouse Motions,Basic Interaction,Interaction
+@node Loading, Mouse Motions, Basic Interaction, Interaction
 @section Loading Objects Into Geomview
 
 There are several ways to load an object into Geomview.
@@ -1433,7 +1399,7 @@ gcl commands allow you to load an object into Geomview;
 @end table
 
 @comment ================================================================
-@node Mouse Motions,Point of Interest,Loading,Interaction
+@node Mouse Motions, Appearance, Loading, Interaction
 @section Using the Mouse to Manipulate Objects
 
 Geomview lets you manipulate objects with the mouse.  There are six
@@ -1639,7 +1605,11 @@ the @emph{Constrain Motion} button.
 @end table
 
 @comment ================================================================
-@node Point of Interest,Appearance,Mouse Motions,Mouse Motions
+@menu
+* Point of Interest::           Point of Interest.
+@end menu
+
+@node Point of Interest,  , Mouse Motions, Mouse Motions
 @subsection Selecting a Point of Interest
 
 It is sometimes useful to specify a particular point on some object in a
@@ -1698,7 +1668,7 @@ the current camera, @var{cam-id}.  The first command above creates the
 "alien" CENTER if it does not yet exist.
 
 @comment ================================================================
-@node Appearance,Appearance Panel,Point of Interest,Interaction
+@node Appearance, Cameras, Mouse Motions, Interaction
 @section Changing the Way Things Look
 
 Geomview uses a hierarchy of appearances to control the way things look.
@@ -1729,13 +1699,13 @@ properties that you do not explicitly set.
 Geomview has three panels which let you modify appearances.  
 
 @menu
-* Appearance Panel::	Color etc.
-* Materials Panel::	Surface Material properties.
-* Lighting Panel::	Lighting Parameters.
+* Appearance Panel::            Color etc.
+* Materials Panel::             Surface Material properties.
+* Lighting Panel::              Lighting Parameters.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node Appearance Panel,Materials Panel,Appearance,Appearance
+@node Appearance Panel, Materials Panel, Appearance, Appearance
 @subsection The Appearance Panel
 
 The @emph{Appearance} panel lets you change most common appearance
@@ -1885,7 +1855,7 @@ By default, @emph{Override} is enabled.  This button applies to all objects,
 and to all appearance-related panels.
 
 @comment ----------------------------------------------------------------
-@node Materials Panel,Lighting Panel,Appearance Panel,Appearance
+@node Materials Panel, Lighting Panel, Appearance Panel, Appearance
 @subsection The Materials Panel
 
 The @emph{Materials} panel controls material properties of surfaces.
@@ -1934,7 +1904,7 @@ This button dismisses the @emph{Materials} panel.
 @end table
 
 @comment ----------------------------------------------------------------
-@node Lighting Panel,Cameras,Materials Panel,Appearance
+@node Lighting Panel,  , Materials Panel, Appearance
 @subsection The Lighting Panel
 
 The @emph{Lighting} panel controls the number, position, and color of
@@ -1999,7 +1969,7 @@ OOGL files; for details, @pxref{Appearances}.
 
 
 @comment ================================================================
-@node Cameras,Saving,Lighting Panel,Interaction
+@node Cameras, Saving, Appearance, Interaction
 @section Cameras
 
 A camera in Geomview is the object that corresponds to a camera window.
@@ -2137,7 +2107,7 @@ This button dismisses the @emph{Cameras} panel.
 @end table
 
 @comment ================================================================
-@node Saving,Commands,Cameras,Interaction
+@node Saving, Commands, Cameras, Interaction
 @section Saving your work
 
 Geomview's @emph{Save} panel lets you store Geomview objects and other
@@ -2250,7 +2220,7 @@ restore the positions of all the panels.
 @end table
 
 @comment ================================================================
-@node Commands,Keyboard Shortcuts,Saving,Interaction
+@node Commands, Keyboard Shortcuts, Saving, Interaction
 @section The Commands Panel
 
 The @emph{Commands} panel lets you type in a gcl command.  When
@@ -2314,7 +2284,7 @@ it in view, then switch to "Keep".
 @end table
 
 @comment ================================================================
-@node Keyboard Shortcuts,OOGL File Formats,Commands,Interaction
+@node Keyboard Shortcuts, Conventions, Commands, Interaction
 @section Keyboard Shortcuts
 
 Most actions that you can do through Geomview's panels have equivalent
@@ -2570,10 +2540,7 @@ Below is a summary of all keyboard shortcuts.
 @end table
 
 @comment ****************************************************************
-@node OOGL File Formats,Conventions,Keyboard Shortcuts,Top
-@ifhtml
-<a name="OOGLRef">
-@end ifhtml
+@node OOGL File Formats, Customization, Interaction, Top
 @chapter OOGL File Formats
 
 The objects that you can load into Geomview are called OOGL objects.
@@ -2587,28 +2554,29 @@ Examples of most file types live in Geomview's @file{data/geom}
 directory.
 
 @menu
-* Conventions::                   Conventions.
-* Object File Formats::           Object File Formats.
-* Non-geometric objects::         Non-geometric objects.
+* Conventions::                 Conventions.
+* Object File Formats::         Object File Formats.
+* Non-geometric objects::       Non-geometric objects.
 @end menu
 
 @comment ================================================================
-@node Conventions,Common syntax,OOGL File Formats,OOGL File Formats
+@node Conventions, Object File Formats, Keyboard Shortcuts, Interaction
 @section Conventions
 
 @menu
-* Common syntax::                  Syntax Common to All OOGL File Formats.
-* File names::                     File Names.
-* Vertices::                       Vertices.
-* Surface normal directions::      Surface normal directions.
-* Transformation matrices::        Transformation matrices.
-* Binary format::                  Binary format.
-* References::                     Embedded objects and external-object references.
-* Appearances::                    Appearances.
+* Common syntax::               Syntax Common to All OOGL File Formats.
+* File names::                  File Names.
+* Vertices::                    Vertices.
+* Surface normal directions::   Surface normal directions.
+* Transformation matrices::     Transformation matrices.
+* Binary format::               Binary format.
+* References::                  Embedded objects and external-object references.
+* Appearances::                 Appearances.
+* Texture Mapping::             Texture mapping.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node Common syntax,File names,Conventions,Conventions
+@node Common syntax, File names, Conventions, Conventions
 @subsection Syntax Common to All OOGL File Formats
 
 Most OOGL object file formats are free-format ASCII --- any amount of
@@ -2632,7 +2600,7 @@ prefixes is significant, e.g. @code{CNMESH} is meaningful but
 @code{NCMESH} is invalid.
 
 @comment ----------------------------------------------------------------
-@node File names,Vertices,Common syntax,Conventions
+@node File names, Vertices, Common syntax, Conventions
 @subsection File Names
 
 When OOGL objects are read from disk files, the OOGL library uses the
@@ -2644,7 +2612,7 @@ known types of objects are tried in turn until one accepts the data as
 valid.
 
 @comment ----------------------------------------------------------------
-@node Vertices,Surface normal directions,File names,Conventions
+@node Vertices, Surface normal directions, File names, Conventions
 @subsection Vertices
 
 Several objects share a common style of representing vertices with
@@ -2697,7 +2665,7 @@ You can't change the data order by changing the header key word; an
 @samp{NCOFF} is just not recognized.
 
 @comment ----------------------------------------------------------------
-@node Surface normal directions,Transformation matrices,Vertices,Conventions
+@node Surface normal directions, Transformation matrices, Vertices, Conventions
 @subsection Surface normal directions
 
 Geomview uses normal vectors to determine how an object is shaded.
@@ -2714,7 +2682,7 @@ On parametric surfaces (Bezier patches), the normal at point P(u,v)
 is in the direction dP/du cross dP/dv.
 
 @comment ----------------------------------------------------------------
-@node Transformation matrices,Binary format,Surface normal directions,Conventions
+@node Transformation matrices, Binary format, Surface normal directions, Conventions
 @subsection Transformation matrices
 
 Some objects incorporate 4x4 real matrices for homogeneous object
@@ -2731,7 +2699,7 @@ the fourth row (last four elements) of A.  A's last column (4th, 8th,
 12th and 16th elements) are typically 0, 0, 0, and 1 respectively.
 
 @comment ----------------------------------------------------------------
-@node Binary format,References,Transformation matrices,Conventions
+@node Binary format, References, Transformation matrices, Conventions
 @subsection Binary format
 
 Many OOGL objects accept binary as well as ASCII file formats.
@@ -2775,7 +2743,7 @@ object, though comments may appear in the header before the beginning of
 binary data.
 
 @comment ----------------------------------------------------------------
-@node References,Appearances,Binary format,Conventions
+@node References, Appearances, Binary format, Conventions
 @subsection Embedded objects and external-object references
 
 Some object types (@code{LIST}, @code{INST}) allow references to other
@@ -2835,7 +2803,7 @@ may appear anywhere.
 
 
 @comment ----------------------------------------------------------------
-@node Appearances,Texture Mapping,References,Conventions
+@node Appearances, Texture Mapping, References, Conventions
 @subsection Appearances
 
 Geometric objects can have associated "appearance" information,
@@ -2999,7 +2967,7 @@ However, if a user-supplied object contains an appearance field with
 override status set, that property will be immune to Geomview's controls.
 
 @comment ----------------------------------------------------------------
-@node Texture Mapping,Object File Formats,Appearances,Conventions
+@node Texture Mapping,  , Appearances, Conventions
 @subsection Texture Mapping
 
 Some platforms support texture-mapped objects.
@@ -3094,28 +3062,28 @@ transform @code{transformation-matrix}
 @end example
 
 @comment ================================================================
-@node Object File Formats,QUAD,Texture Mapping,OOGL File Formats
+@node Object File Formats, Non-geometric objects, Conventions, Interaction
 @section Object File Formats
 
 @menu
-* QUAD::		List of quadrilaterals.
-* MESH::		Rectangularly-connected mesh.
-* BBP and BEZ::		List of Bezier surface patches.
-* OFF::			Polyhedra: polygons with shared vertices.
-* VECT::		List of points and lines.
-* SKEL::		List of points and lines, with shared vertices.
-* SPHERE::		Sphere
-* INST::		Transformed Instance of another object.
-* LIST::		List of other objects.
-* TLIST::		Collection of 4x4 transformation matrices.
-* GROUP::		Obsolete format for collections of objects.
-* DISCGRP::             Discrete Group objects.
-* COMMENT::		Comment object, for caching information.
+* QUAD::                        List of quadrilaterals.
+* MESH::                        Rectangularly-connected mesh.
+* BBP and BEZ::                 List of Bezier surface patches.
+* OFF::                         Polyhedra: polygons with shared vertices.
+* VECT::                        List of points and lines.
+* SKEL::                        List of points and lines, with shared vertices.
+* SPHERE::                      Sphere
+* INST::                        Transformed Instance of another object.
+* LIST::                        List of other objects.
+* TLIST::                       Collection of 4x4 transformation matrices.
+* GROUP::                       Obsolete format for collections of objects.
+* DISCGRP::                     Discrete Group objects.
+* COMMENT::                     Comment object, for caching information.
 @end menu
 
 
 @comment ----------------------------------------------------------------
-@node QUAD,MESH,Object File Formats,Object File Formats
+@node QUAD, MESH, Object File Formats, Object File Formats
 @subsection QUAD: collection of quadrilaterals
 
 The conventional suffix for a @code{QUAD} file is @file{.quad}.
@@ -3152,7 +3120,7 @@ quads in the object; following that is a series of 32-bit floats,
 arranged just as in the ASCII format.
 
 @comment ----------------------------------------------------------------
-@node MESH,BBP and BEZ,QUAD,Object File Formats
+@node MESH, BBP and BEZ, QUAD, Object File Formats
 @subsection MESH: rectangularly-connected mesh
 
 The conventional suffix for a @code{MESH} file is @file{.mesh}.
@@ -3227,7 +3195,7 @@ values of @var{Nu} and @var{Nv} are 32-bit integers; all other values
 are 32-bit floats.
 
 @comment ----------------------------------------------------------------
-@node BBP and BEZ,OFF,MESH,Object File Formats
+@node BBP and BEZ, OFF, MESH, Object File Formats
 @subsection Bezier Surfaces
 
 The conventional file suffixes for Bezier surface files are @file{.bbp}
@@ -3317,7 +3285,7 @@ The series of patches ends at end-of-file, or with a closebrace if
 incorporated in an object reference.
 
 @comment ----------------------------------------------------------------
-@node OFF,VECT,BBP and BEZ,Object File Formats
+@node OFF, VECT, BBP and BEZ, Object File Formats
 @subsection OFF Files
 
 The conventional suffix for @code{OFF} files is @file{.off}.
@@ -3431,7 +3399,7 @@ int int int int int float float float float
 
 
 @comment ----------------------------------------------------------------
-@node VECT,SKEL,OFF,Object File Formats
+@node VECT, SKEL, OFF, Object File Formats
 @subsection VECT Files
 
 The conventional suffix for @code{VECT} files is @file{.vect}.
@@ -3507,7 +3475,7 @@ integers appear, and 32-bit floats where real values appear.
 
 
 @comment ----------------------------------------------------------------
-@node SKEL,SPHERE,VECT,Object File Formats
+@node SKEL, SPHERE, VECT, Object File Formats
 @subsection SKEL Files
 
 @code{SKEL} files represent collections of points and polylines, with
@@ -3548,7 +3516,7 @@ the final component is the homogeneous divisor.
 No @code{BINARY} format is implemented as yet for @code{SKEL} objects.
 
 @comment ----------------------------------------------------------------
-@node SPHERE,INST,SKEL,Object File Formats
+@node SPHERE, INST, SKEL, Object File Formats
 @subsection SPHERE Files
 
 The conventional suffix for @code{SPHERE} files is @file{.sph}.
@@ -3566,7 +3534,7 @@ From Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or
 a @code{dice nu nv} Appearance attribute sets this.
 
 @comment ----------------------------------------------------------------
-@node INST,INST Examples,SPHERE,Object File Formats
+@node INST, LIST, SPHERE, Object File Formats
 @subsection INST Files
 
 The conventional suffix for a @code{INST} file is @file{.inst}.
@@ -3687,11 +3655,11 @@ near clipping plane.  The unit-length X and Y edges are scaled to be just 100
 screen units -- pixels -- long, regardless of the size of the window.
 
 @menu
-* INST Examples::	Some example of @code{INST} Files.
+* INST Examples::               Some example of @code{INST} Files.
 @end menu
 
 @comment ................................................................
-@node INST Examples,LIST,INST,Object File Formats
+@node INST Examples,  , INST, INST
 @subsubsection INST Examples
 
 Here are some examples of @code{INST} files
@@ -3743,7 +3711,7 @@ since the range of ndc X and Y coordinates is -1 to +1).
 @}
 @end example
 @comment ----------------------------------------------------------------
-@node LIST,TLIST,INST Examples,Object File Formats
+@node LIST, TLIST, INST, Object File Formats
 @subsection LIST Files
 
 The conventional suffix for a @code{LIST} file is @file{.list}.
@@ -3779,7 +3747,7 @@ symbol's definition you might write
 
 
 @comment ----------------------------------------------------------------
-@node TLIST,GROUP,LIST,Object File Formats
+@node TLIST, GROUP, LIST, Object File Formats
 @subsection TLIST Files
 
 
@@ -3836,7 +3804,7 @@ matrix elements is the same as in the ASCII format.
 
 
 @comment ----------------------------------------------------------------
-@node GROUP,DISCGRP,TLIST,Object File Formats
+@node GROUP, DISCGRP, TLIST, Object File Formats
 @subsection GROUP Files
 
 This format is obsolete, but is still accepted.  It combined the
@@ -3857,7 +3825,7 @@ INST
 @end example
 
 @comment ----------------------------------------------------------------
-@node DISCGRP,COMMENT,GROUP,Object File Formats
+@node DISCGRP, COMMENT, GROUP, Object File Formats
 @subsection DISCGRP Files
 
 This format is for discrete groups, such as appear in the theory of
@@ -3865,7 +3833,7 @@ manifolds or in symmetry patterns.  This format has its own man page.
 See discgrp(5).
 
 @comment ----------------------------------------------------------------
-@node COMMENT,Non-geometric objects,DISCGRP,Object File Formats
+@node COMMENT,  , DISCGRP, Object File Formats
 @subsection COMMENT Objects
 
 The COMMENT object is a mechanism for encoding arbitrary data within an
@@ -3914,7 +3882,7 @@ with the other OOGL binary formats. @xref{Binary format}. The
 instead of data enclosed in curly braces. 
 
 @comment ================================================================
-@node Non-geometric objects,transform,COMMENT,OOGL File Formats
+@node Non-geometric objects,  , Object File Formats, Interaction
 @section Non-geometric objects
 
 
@@ -3924,13 +3892,13 @@ without quotes, square bracketed ([ ]) items are optional, and | separates
 alternative choices.
 
 @menu
-* transform::	Transformation matrices.
-* camera::	Cameras.
-* window::	Windows.
+* transform::                   Transformation matrices.
+* camera::                      Cameras.
+* window::                      Windows.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node transform,camera,Non-geometric objects,Non-geometric objects
+@node transform, camera, Non-geometric objects, Non-geometric objects
 @subsection Transform Objects
 
 Where a single 4x4 matrix is expected -- as in the
@@ -4007,7 +3975,7 @@ Some examples, in contexts where they might be used:
 @end example
 
 @comment ----------------------------------------------------------------
-@node camera,window,transform,Non-geometric objects
+@node camera, window, transform, Non-geometric objects
 @subsection cameras
 
 A camera object specifies the following properties of a camera:
@@ -4109,7 +4077,7 @@ The syntax for a camera is:
 
 
 @comment ----------------------------------------------------------------
-@node window,Customization,camera,Non-geometric objects
+@node window,  , camera, Non-geometric objects
 @subsection window
 
 A window object specifies size, position, and other window-system
@@ -4156,7 +4124,7 @@ to change those of an existing window.
 
 
 @comment ****************************************************************
-@node Customization,Modules,window,Top
+@node Customization, Modules, Interaction, Top
 @chapter Customization: @file{.geomview} files
 
 When Geomview is started, it loads and executes commands in a
@@ -4190,7 +4158,7 @@ Geomview to execute them all at once.  Otherwise Geomview might execute
 them sequentially over the first few refresh cycles after starting up.
 
 @comment ****************************************************************
-@node Modules,Interface,Customization,Top
+@node Modules, GCL, Customization, Top
 @chapter External Modules
 
 An external module is a program that interacts with Geomview.  A
@@ -4210,16 +4178,16 @@ keyboard events that take place in a Geomview window, thus extending
 the capability of Geomview itself.
 
 @menu
-* Interface::               How External Modules Interface with Geomview.
-* Example1::                Simple External Module.
-* Example2::                Simple External Module with FORMS Control Panel.
-* Forms::                   The FORMS Library.
-* Example3::                External Module with Bi-Directional Communication.
-* Example4::                Simple Tcl/Tk Module Demonstrating Picking.
-* Module Installation::     Module Installation.
+* Interface::                   How External Modules Interface with Geomview.
+* Example1::                    Simple External Module.
+* Example2::                    Simple External Module with FORMS Control Panel.
+* Forms::                       The FORMS Library.
+* Example3::                    External Module with Bi-Directional Communication.
+* Example4::                    Simple Tcl/Tk Module Demonstrating Picking.
+* Module Installation::         Module Installation.
 @end menu
 
-@node Interface,Example1,Modules,Modules
+@node Interface, Example1, Modules, Modules
 @section How External Modules Interface with Geomview
 
 External modules appear in the @emph{Modules} browser in Geomview's
@@ -4254,7 +4222,7 @@ communicate with the user it can do so either through a control
 panel of its own or else by responding to certain events that it finds
 out about from Geomview.
 
-@node Example1,Example2,Interface,Modules
+@node Example1, Example2, Interface, Modules
 @section Example 1: Simple External Module
 
 This section gives a very simple external module which displays an
@@ -4466,7 +4434,7 @@ commands it prints out.  You will have to kill it with
 @kbd{ctrl-C} to get it to stop.
 
 @comment ================================================================
-@node Example2,Forms,Example1,Modules
+@node Example2, Forms, Example1, Modules
 @section Example 2: Simple External Module with FORMS Control Panel
 
 This section gives a new version of the above module --- one that
@@ -4699,7 +4667,7 @@ The last line of the main loop in this example, the call to
 @code{UpdateMesh}, is the same as in the previous example.
 
 @comment ================================================================
-@node Forms,Example3,Example2,Modules
+@node Forms, Example3, Example2, Modules
 @section The FORMS Library
 
 Geomview itself is written using Mark Overmar's public domain FORMS
@@ -4726,7 +4694,7 @@ simple.
 
 
 @comment ================================================================
-@node Example3,Example4,Forms,Modules
+@node Example3, Example4, Forms, Modules
 @section Example 3: External Module with Bi-Directional Communication
 
 The previous two example modules simply send commands to Geomview and do
@@ -5204,7 +5172,7 @@ argument to @code{LakeDefine} should be @code{NULL} for external modules
 which parses and evaluates expressions from standard input.
 
 @comment ****************************************************************
-@node Example4,Module Installation,Example3,Modules
+@node Example4, Module Installation, Example3, Modules
 @section Example 4: Simple Tcl/Tk Module Demonstrating Picking
 
 It's not necessary to write a Geomview module in C.  The only requirement
@@ -5385,7 +5353,7 @@ msg "Click right mouse in graphics window"
 @end example
 
 @comment ****************************************************************
-@node Module Installation,Private Module Installation,Example4,Modules
+@node Module Installation,  , Example4, Modules
 @section Module Installation
 
 This section tells how to install an external module so you can invoke
@@ -5396,13 +5364,13 @@ so that the module is available to all users on your system whenever they
 run Geomview.
 
 @menu
-* Private Module Installation::.
-* System Module Installation::.
+* Private Module Installation::         Per-user modules.
+* System Module Installation::          System-wide modules.
 @end menu
 
 
 @comment ----------------------------------------------------------------
-@node Private Module Installation,System Module Installation,Module Installation,Module Installation
+@node Private Module Installation, System Module Installation, Module Installation, Module Installation
 @subsection Private Module Installation
 
 The @code{emodule-define} command arranges for a module to appear in
@@ -5431,7 +5399,7 @@ There are several other gcl commands for controlling the entries
 in the @emph{Modules} browser; for details, @xref{GCL}.
 
 @comment ----------------------------------------------------------------
-@node System Module Installation,GCL,Private Module Installation,Module Installation
+@node System Module Installation,  , Private Module Installation, Module Installation
 @subsection System Module Installation
 
 To install a module so that it is available to all Geomview users do
@@ -5468,7 +5436,7 @@ directory and prepends that path to the $path of the shell in which it
 invokes such a module.
 
 @comment ****************************************************************
-@node GCL,Argument Conventions,System Module Installation,Top
+@node GCL, Non-Euclidean Geometry, Modules, Top
 @chapter gcl: the Geomview Command Language
 
 Gcl has the syntax of lisp -- i.e. an expression of the form (f a b
@@ -5529,11 +5497,10 @@ print all information about all commands containing the string
 @code{emodule}.  @code{(? *)} will print a short list of all commands.
 
 @menu
-* Argument Conventions::  Conventions used in describing argument types.
-* Gcl Reference::	  Documentation for each gcl command.
+* Argument Conventions::        Conventions used in describing argument types.
 @end menu
 
-@node Argument Conventions,Gcl Reference,GCL,GCL
+@node Argument Conventions,  , GCL, GCL
 @section Conventions Used In Describing Argument Types
 
 The following symbols are used to describe argument types
@@ -5634,10 +5601,7 @@ is an OOGL winddow specification.
 
 @end table
 
-@node Gcl Reference,Non-Euclidean Geometry,Argument Conventions,GCL
-@ifhtml
-<a name="GCLRef">
-@end ifhtml
+@node Gcl Reference,  , Argument Conventions, GCL
 @section Gcl Reference Guide
 
 @table @code
@@ -6720,7 +6684,7 @@ FACTOR should be a positive number.
 
 
 @comment ****************************************************************
-@node Non-Euclidean Geometry,Mathematica,Gcl Reference,Top
+@node Non-Euclidean Geometry, Mathematica, GCL, Top
 @chapter Non-Euclidean Geometry
 
 Geomview supports hyperbolic and spherical geometry as well as
@@ -6755,11 +6719,11 @@ of the 3-sphere imbedded in Euclidean 3-space.  Spherical motions give
 rise to projective transformations in the @emph{Projective} model, and
 to
 @tex
-Mo\"bius
+M\"{o}bius
 @end tex
-@ifinfo
+@ifnottex
 Moebius
-@end ifinfo
+@end ifnottex
 transformations in the @emph{Conformal} model.  In both of these
 models the camera moves by Euclidean motions.
 
@@ -6776,7 +6740,7 @@ Likewise, the subdirectory @file{data/geom/spherical}
 contains several sample spherical space objects.
 
 @comment ****************************************************************
-@node Mathematica,OOGL.m,Non-Euclidean Geometry,Top
+@node Mathematica, Installation, Non-Euclidean Geometry, Top
 @chapter Mathematica Graphics in Geomview or RenderMan
 
 Geomview comes with some Mathematica packages that let you use use
@@ -6802,16 +6766,16 @@ package which does this translation.  Before doing either of the
 above you must install this package.
 
 @menu
-* OOGL.m::		Generating OOGL files in Mathematica.
-* Geomview.m::		Geomview as Mathematica's Default 3D Display.
-* RenderMan::		Generating RenderMan files in Mathematica.
-* Remote Display::	Using Geomview and Mathematica on different computers.
-* Package Details::	Some details about the packages.
-* Package Installation::  Installing the Mathematica->Geomview package.
+* OOGL.m::                      Generating OOGL files in Mathematica.
+* Geomview.m::                  Geomview as Mathematica's Default 3D Display.
+* RenderMan::                   Generating RenderMan files in Mathematica.
+* Remote Display::              Using Geomview and Mathematica on different computers.
+* Package Details::             Some details about the packages.
+* Package Installation::        Installing the Mathematica->Geomview package.
 @end menu
 
 @comment ================================================================
-@node OOGL.m,Geomview.m,Mathematica,Mathematica
+@node OOGL.m, Geomview.m, Mathematica, Mathematica
 @section Using Mathematica to generate OOGL files
 
 The package @file{OOGL.m} allows Mathematica to write graphics objects
@@ -6871,7 +6835,7 @@ Out[5] := -Graphics3D-
 
 
 @comment ================================================================
-@node Geomview.m,RenderMan,OOGL.m,Mathematica
+@node Geomview.m, RenderMan, OOGL.m, Mathematica
 @section Using Geomview as Mathematica's Default 3D Display
 
 The package @file{Geomview.m} arranges for Geomview to be the
@@ -6960,7 +6924,7 @@ curvature.  Parametrization from Alfred Gray's @emph{Modern Differential
 Geometry of Curves and Surfaces} textbook.
 
 @comment ================================================================
-@node RenderMan,Remote Display,Geomview.m,Mathematica
+@node RenderMan, Remote Display, Geomview.m, Mathematica
 @section Using Mathematica to generate RenderMan files
 
 In addition to the @code{WriteOOGL} and @code{Geomview} commands
@@ -7036,7 +7000,7 @@ Output only a Quick Renderman clip object.  Ignores -nBwhf.
 
 
 @comment ================================================================
-@node Remote Display,Networked Geomview,RenderMan,Mathematica
+@node Remote Display, Package Details, RenderMan, Mathematica
 @section Using Geomview and Mathematica on Different Computers
 
 It is possible to use Geomview to display graphics generated by
@@ -7047,12 +7011,12 @@ Mathematica which you transfer to the Geomview computer and then
 translate to OOGL format for displaying in Geomview.
 
 @menu
-* Networked Geomview::	Using a networked Geomview host.
-* Chunks::		Transporting Mathematica files to Geomview by Hand.
+* Networked Geomview::          Using a networked Geomview host.
+* Chunks::                      Transporting Mathematica files to Geomview by Hand.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node Networked Geomview,Chunks,Remote Display,Remote Display
+@node Networked Geomview, Chunks, Remote Display, Remote Display
 @subsection Using a Networked Geomview Host
 
 The @code{Geomview} command looks at the @code{DISPLAY} or
@@ -7103,7 +7067,7 @@ arranges for @code{Geomview} to run Geomview on an SGI workstation named
 @code{riemann}.@refill
 
 @comment ----------------------------------------------------------------
-@node Chunks,Package Details,Networked Geomview,Remote Display
+@node Chunks,  , Networked Geomview, Remote Display
 @subsection Transporting Mathematica Files to Geomview by Hand
 
 The auxilliary function @code{WriteChunk} is for those who can only use
@@ -7157,7 +7121,7 @@ math2oogl < mychunk | oogl2rib -n mma.tiff
 
 
 @comment ================================================================
-@node Package Details,Package Installation,Chunks,Mathematica
+@node Package Details, Package Installation, Remote Display, Mathematica
 @section Details of the Mathematica->Geomview Package
 
 The @file{OOGL.m} package uses the external program @file{math2oogl} to
@@ -7188,7 +7152,7 @@ The packages work best with Mathematica 2.0 or better.  With version 1.2,
 the Geomview display is always on the local host. 
 
 @comment ================================================================
-@node Package Installation,Installation,Package Details,Mathematica
+@node Package Installation,  , Package Details, Mathematica
 @section Installing the Mathematica Packages
 
 If Geomview is properly installed on your system according to the
@@ -7262,7 +7226,7 @@ invoke Geomview, it's worth double-checking that the settings in the
 @end enumerate
 
 @comment ****************************************************************
-@node Installation,Unix Binary Installation,Package Installation,Top
+@node Installation, Support, Mathematica, Top
 @chapter Installation
 
 What you do to install Geomview depends on which kind of computer you
@@ -7275,12 +7239,12 @@ installation is much easier and quicker than compiling and
 installing the source code.
 
 @menu
-* Unix Binary Installation::  Installing the Unix Binary Distribution
-* Source Code Installation::  Compiling and Installing the Source Code Distribution.
+* Unix Binary Installation::    Installing the Unix Binary Distribution
+* Source Code Installation::    Compiling and Installing the Source Code Distribution.
 @end menu
 
 @comment ================================================================
-@node Unix Binary Installation,Unix Binary Detail,Installation,Installation
+@node Unix Binary Installation, Source Code Installation, Installation, Installation
 @section Installing the Unix Binary Distribution
 
 If you have just obtained a copy of the binary distribution 
@@ -7342,7 +7306,11 @@ You can remove all the files in this directory.
 
 
 @comment ================================================================
-@node Unix Binary Detail,Source Code Installation,Unix Binary Installation,Unix Binary Installation
+@menu
+* Unix Binary Detail::          
+@end menu
+
+@node Unix Binary Detail,  , Unix Binary Installation, Unix Binary Installation
 @subsection Details of the Unix Binary Installation
 
 The @code{install} script should be self-explanatory; just run it and
@@ -7392,7 +7360,7 @@ connect to Geomview, @pxref{Package Installation}.
 @end table
 
 @comment ================================================================
-@node Source Code Installation,Support,Unix Binary Detail,Installation
+@node Source Code Installation,  , Unix Binary Installation, Installation
 @section Compiling and Installing the Source Code Distribution
 
 The main reason to get the source code distribution is to look at and/or
@@ -7467,7 +7435,7 @@ the file @file{$GEOMROOT/makefiles/Makedefs.global}; the @code{COPTS}
 variable specifies the flags passed to the C compiler (cc).
 
 @comment *********************************************************
-@node Support,Contributing,Installation,Top
+@node Support, Contributing, Installation, Top
 @unnumbered Getting Technical Support for Geomview
 
 There are several ways to get support for Geomview.
@@ -7475,44 +7443,30 @@ There are several ways to get support for Geomview.
 @enumerate
 
 @item 
-Visit the Geomview web site, 
-@ifhtml
-<a href="http://www.geomview.org">
-@end ifhtml
-http://www.geomview.org
-@ifhtml
-</a>
-@end ifhtml
-.  It contains the latest
-documentation, news about development, and FAQ (Frequently Asked
-Questions) list.
+Visit the Geomview web site, @uref{http://www.geomview.org}.  It
+contains the latest documentation, news about development, and FAQ
+(Frequently Asked Questions) list.
 
 @item
-Send email to the geomview-users@@lists.sourceforge.net mailing list.  This is a
-mailing list for discussing any issues related to using Geomview.
-To join the list, send an
-empty note with 'subscribe' in the subject line to
-geomview-users-request@@lists.sourceforge.net, or visit the list web page
-at http://lists.sourceforge.net/mailman/listinfo/geomview-users.
+Send email to the geomview-users@@lists.sourceforge.net mailing list.
+This is a mailing list for discussing any issues related to using
+Geomview.  To join the list, send an empty note with 'subscribe' in the
+subject line to
+@uref{mailto:geomview-users-request@@lists.sourceforge.net,geomview-users-request@@lists.sourceforge.net}, or visit
+the list web page at
+@uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
 
 @item
 Contract with Geometry Technologies for support.  Geometry Technologies
 is a contract support and programming company that emerged from the
-Geometry Center, where Geomview was written.  For more information
-visit the Geometry Technologies web site at
-@ifhtml
-<a href="http://www.geomtech.com">
-@end ifhtml
-http://www.geomtech.com
-@ifhtml
-</a>
-@end ifhtml
+Geometry Center, where Geomview was written.  For more information visit
+the Geometry Technologies web site at @uref{http://www.geomtech.com}.
 
 @end enumerate
 
 @comment ############################################################
-@node Contributing,Function Index,Support,Top
+@node Contributing, Function Index, Support, Top
 @unnumbered Contributing to Geomview's Development
 
 If you are interested in contributing to the development of Geomview,
@@ -7525,7 +7479,7 @@ there are several things you can do:
 If you are a programmer and make an improvement to Geomview, contact
 the other geomview authors by sending a note to the
 @file{geomview-users} mailing list (see
-http://lists.sourceforge.net/mailman/listinfo/geomview-users).
+@uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}).
 
 @item @strong{Contract with Geometry Technologies}.
 
@@ -7534,30 +7488,15 @@ technical support and custom programming services in the area of 3D
 graphics.  This includes a wide range of services related to 3D
 graphics, included but not limited to applications involving Geomview.
 To the extent that resources allow, Geometry Technologies supports the
-developement of Geomview; in particular it hosts the 
-@ifhtml
-<a href="http://www.geomview.org">
-@end ifhtml
-http://www.geomview.org
-@ifhtml
-</a>
-@end ifhtml
-web site, and its staff make ongoing improvements to Geomview itself.
-If you are in a position to pay for technical support or custom
-programming work, contracting with Geometry Technologies indirectly
-supports Geomview.  You can also contract with with Geometry
-Technologies to have particular features that you want added to
-Geomview, or to port Geomview to a new platform.  For more information
-see Geometry Technologies web site at 
-@ifhtml
-<a href="http://www.geomtech.com">
-@end ifhtml
-http://www.geomtech.com
-@ifhtml
-</a>
-@end ifhtml
-.
-     
+developement of Geomview; in particular it hosts the
+@uref{http://www.geomview.org} web site, and its staff make ongoing
+improvements to Geomview itself.  If you are in a position to pay for
+technical support or custom programming work, contracting with Geometry
+Technologies indirectly supports Geomview.  You can also contract with
+with Geometry Technologies to have particular features that you want
+added to Geomview, or to port Geomview to a new platform.  For more
+information see Geometry Technologies web site at
+@uref{http://www.geomtech.com}.
 
 @end enumerate
 
@@ -7566,7 +7505,7 @@ Thank you.
 
 
 @comment ****************************************************************
-@node Function Index, ,Contributing,Top
+@node Function Index, List of Figures, Contributing, Top
 @unnumbered Function Index
 
 @printindex fn
@@ -7575,7 +7514,7 @@ Thank you.
 
 @contents
 
-@node List of Figures
+@node List of Figures,  , Function Index, Top
 @unnumbered List of Figures
 @listoffloats Figure
 
