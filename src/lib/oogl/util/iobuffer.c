@@ -60,6 +60,10 @@ static const int o_nonblock =
 
 #include "iobuffer.h"
 
+#ifndef DEBUG
+# define DEBUG 0
+#endif
+
 #ifndef min
 # define min(a, b) (((a) <= (b)) ? (a) : (b))
 #endif
