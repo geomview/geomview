@@ -3374,10 +3374,11 @@ The meaning of "default color" varies.  If no face of the object has a
 color, all inherit the environment's default material color.  If some
 but not all faces have colors, the default is gray (R,G,B,A=.666).
 
-A @code{[ST][C][N][n]OFF BINARY} format is accepted; @xref{Binary format}.  It
-resembles the ASCII format in almost the way you'd expect, with 32-bit
-integers for all counters and vertex indices and 32-bit floats for
-vertex positions (and texture coordinates or vertex colors or normals if
+A @code{[ST][C][N][n]OFF BINARY} format is accepted; @xref{Binary
+format}.  It resembles the ASCII format in almost the way you'd expect,
+with 32-bit integers for all counters and vertex indices and 32-bit
+floats for vertex positions (and texture coordinates or vertex colors or
+normals if
 @code{COFF}/@code{NOFF}/@code{CNOFF}/@code{STCNOFF}/etc. format).
 
 Exception: each face's vertex indices are followed by an integer
@@ -3513,7 +3514,27 @@ For @code{nSKEL} objects, each vertex has @var{NDim} components.
 For @code{4nSKEL} objects, each vertex has @var{NDim+1} components;
 the final component is the homogeneous divisor.
 
-No @code{BINARY} format is implemented as yet for @code{SKEL} objects.
+A @var{[4][n]SKEL BINARY} format is accepted; @xref{Binary format}.
+It resembles the ASCII format in almost the way you'd expect,
+with 32-bit integers for all counters and vertex indices and 32-bit
+floats for vertex positions.
+
+Exception: each polyline's vertex indices are followed by an integer
+indicating how many color components accompany it. Polyline color
+components must be floats, not integer values.  Thus a colorless
+polyline with 3 vertices might be represented as
+
+@example
+int int int int int
+3   17   5   9   0
+@end example
+
+while the same polyline colored red might be
+
+@example
+int int int int int float float float float
+ 3  17   5   9   4   1.0   0.0   0.0   1.0
+@end example
 
 @comment ----------------------------------------------------------------
 @node SPHERE, INST, SKEL, Object File Formats
