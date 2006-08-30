@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
   * 
   * Geometry Supercomputer Project
   * 
-  * ROUTINE DESCRIPTION:  Create and load a vert object from a file.
+  * ROUTINE DESCRIPTION:  Create and load a vect object from a file.
   * 
   */
 
