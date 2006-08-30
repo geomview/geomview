@@ -77,6 +77,12 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 	    return NULL;
 	}
     }
+    if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
+      binary = 1;
+      if(iobfnextc(file, 1) != '\n')	/* Expect \n after BINARY */
+	return NULL;
+      (void) iobfgetc(file);		/* Toss \n */
+    }
 
     s = OOGLNewE(Skel, "SkelFLoad: skel");
 
@@ -131,12 +137,27 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 	vvneeds(&colors, VVCOUNT(colors)+1);
 	cp = &VVEC(colors, ColorA)[VVCOUNT(colors)];
 	*cp = black;
-	for(k = 0; k < 4 && iobfnextc(file, 1) != '\n'; k++) {
-	    if(iobfgetnf(file, 1, ((float *)cp)+k, 0) < 1) {
-		OOGLSyntax(file, "Reading SKEL from \"%s\": polyline %d of %d: expected color component",
-		    fname, i, s->nlines);
-		goto bogus;
+	/* Pick up the color, if any.
+	 * In ASCII format, take whatever's left before end-of-line
+	 */
+	if (!binary) {
+	    for(k = 0; k < 4 && iobfnextc(file, 1) != '\n'; k++) {
+		if(iobfgetnf(file, 1, ((float *)cp)+k, 0) < 1) {
+		    OOGLSyntax(file, "Reading SKEL from \"%s\": polyline %d of %d: expected color component",
+			       fname, i, s->nlines);
+		    goto bogus;
+		}
 	    }
+	} else {
+	    int ncol;
+
+	    if(iobfgetni(file, 1, &ncol, 1) <= 0
+	       || iobfgetnf(file, ncol, (float *)cp, 1) < ncol) {
+		goto bogus;
+		OOGLSyntax(file, "Reading binary SKEL from \"%s\": polyline %d of %d: expected color component",
+			   fname, i, s->nlines);
+	    }
+	    k = ncol;
 	}
 
 	lp->c0 = VVCOUNT(colors);
@@ -161,3 +182,9 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     GeomDelete((Geom *)s);
     return NULL;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
