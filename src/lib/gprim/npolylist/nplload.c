@@ -243,6 +243,6 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 
 /*
  * Local Variables: ***
- * c-basic-offset: 4
+ * c-basic-offset: 4 ***
  * End: ***
  */
