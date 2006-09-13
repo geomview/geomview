@@ -5385,8 +5385,8 @@ so that the module is available to all users on your system whenever they
 run Geomview.
 
 @menu
-* Private Module Installation::         Per-user modules.
-* System Module Installation::          System-wide modules.
+* Private Module Installation::  Per-user modules.
+* System Module Installation::  System-wide modules.
 @end menu
 
 
@@ -5519,6 +5519,7 @@ print all information about all commands containing the string
 
 @menu
 * Argument Conventions::        Conventions used in describing argument types.
+* Gcl Reference::               Documentation for each gcl command.
 @end menu
 
 @node Argument Conventions,  , GCL, GCL
