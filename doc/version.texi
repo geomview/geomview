@@ -1,4 +1,4 @@
-@set UPDATED 30 August 2006
-@set UPDATED-MONTH August 2006
+@set UPDATED 13 September 2006
+@set UPDATED-MONTH September 2006
 @set EDITION 1.8.2-post-rc8-CVS
 @set VERSION 1.8.2-post-rc8-CVS
