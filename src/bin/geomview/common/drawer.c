@@ -2821,6 +2821,7 @@ really_draw_view(DView *dv)
 	    }
 	    GeomDraw(dgeom[i]->Item);
 	}
+	TmNDelete(W2G);
 	TmNDelete(W2C);
 	TmNDelete(O2C);
 	TmNDelete(O2G);

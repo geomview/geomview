@@ -961,7 +961,8 @@ LDEFINE(position_toward, LVOID,
  * new 
  */
 
-#define TmNDelete(x) 
+/* What kind of brain-damaged idiot did code the following line???? */
+/* #define TmNDelete(x) */
 
 LDEFINE(new_center, LVOID,
 	"(new-center [id])\n\
@@ -1560,7 +1561,7 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
   drawer_set_ND_xform( moving, Tmp );
   TmNDelete( Tgf );
   TmNDelete( Tfg );
-  TmNDelete( Tcf );
+  /*TmNDelete( Tcf );*/ /* already done above */
   TmNDelete( Tmf );
   TmNDelete( Tmg );
   TmNDelete( Tfp );

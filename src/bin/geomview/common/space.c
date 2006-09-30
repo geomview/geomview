@@ -49,44 +49,44 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 char *
 spacename(int space)
 {
-    switch(space) {
-	case TM_SPHERICAL: return "spherical";
-	case TM_EUCLIDEAN: return "euclidean";
-	case TM_HYPERBOLIC: return "hyperbolic";
-	default: return NULL;
-    }
+  switch(space) {
+  case TM_SPHERICAL: return "spherical";
+  case TM_EUCLIDEAN: return "euclidean";
+  case TM_HYPERBOLIC: return "hyperbolic";
+  default: return NULL;
+  }
 }
 
 void
 camera_space_relabel(int id)
 {
-    DView *dv = (DView *)drawer_get_object(id);
-    char *extra=NULL;
-    char *fmt;
-    char label[256];
+  DView *dv = (DView *)drawer_get_object(id);
+  char *extra=NULL;
+  char *fmt;
+  char label[256];
 
-    if(!ISCAM(id) || dv == NULL || dv->mgctx == NULL)
-	return;
-    mgctxselect(dv->mgctx);
-    extra = keywordname(hmodelkeyword("", dv->hmodel));
-    switch(spaceof(WORLDGEOM)) {
-    case TM_SPHERICAL: fmt = "%s (spherical %s view)"; break;
-    case TM_HYPERBOLIC: fmt = "%s (hyperbolic %s view)"; break;
-    case TM_EUCLIDEAN: fmt = "%s (Euclidean%s view)";
-      switch (dv->hmodel) {
-      case VIRTUAL:
-      case PROJECTIVE:
-	extra = "";
-	break;
-      case CONFORMALBALL:
-	extra = " inverted";
-	break;
-      }
+  if(!ISCAM(id) || dv == NULL || dv->mgctx == NULL)
+    return;
+  mgctxselect(dv->mgctx);
+  extra = keywordname(hmodelkeyword("", dv->hmodel));
+  switch(spaceof(WORLDGEOM)) {
+  case TM_SPHERICAL: fmt = "%s (spherical %s view)"; break;
+  case TM_HYPERBOLIC: fmt = "%s (hyperbolic %s view)"; break;
+  case TM_EUCLIDEAN: fmt = "%s (Euclidean%s view)";
+    switch (dv->hmodel) {
+    case VIRTUAL:
+    case PROJECTIVE:
+      extra = "";
       break;
-    default: return;
+    case CONFORMALBALL:
+      extra = " inverted";
+      break;
     }
-    sprintf(label, fmt, dv->name[1], extra);
-    mgctxset(MG_WnSet, WN_NAME, label, WN_END, MG_END);
+    break;
+  default: return;
+  }
+  sprintf(label, fmt, dv->name[1], extra);
+  mgctxset(MG_WnSet, WN_NAME, label, WN_END, MG_END);
 }
 
 /*
@@ -96,11 +96,11 @@ camera_space_relabel(int id)
 int
 our_space_dir(char *dirname)
 {
-    char *sname, sub[4];
-    if((sname = spacename(spaceof(WORLDGEOM))) == NULL)
-	return 0;
-    sprintf(sub, "%.3s", sname);
-    return (int)(long)strstr(dirname, sub);
+  char *sname, sub[4];
+  if((sname = spacename(spaceof(WORLDGEOM))) == NULL)
+    return 0;
+  sprintf(sub, "%.3s", sname);
+  return (int)(long)strstr(dirname, sub);
 }
     
 
@@ -111,72 +111,72 @@ Geom *unitsphere(int n, ColorA *color);
 Geom *
 unitsphere(int n, ColorA *color)
 {
-    int i, j;
-    float si[N+1], ci[N+1], sj[N+1], cj[N+1];
-    Point3 verts[(N-2 + N)*N];
-    short vcounts[N-2 + N/2];
-    short ccounts[N-2 + N/2];
-    Point3 *p;
-    short *vc;
-    Geom *g;
-    float excess = 1. / cos(M_PI / n);
+  int i, j;
+  float si[N+1], ci[N+1], sj[N+1], cj[N+1];
+  Point3 verts[(N-2 + N)*N];
+  short vcounts[N-2 + N/2];
+  short ccounts[N-2 + N/2];
+  Point3 *p;
+  short *vc;
+  Geom *g;
+  float excess = 1. / cos(M_PI / n);
  
-    for(i = 0; i <= n; i++) {
-	float t = i * 2*M_PI / n;
-	sj[i] = sin(t) * excess;
-	cj[i] = cos(t) * excess;
-	t = i * M_PI / n;
-	si[i] = sin(t);
-	ci[i] = cos(t);
+  for(i = 0; i <= n; i++) {
+    float t = i * 2*M_PI / n;
+    sj[i] = sin(t) * excess;
+    cj[i] = cos(t) * excess;
+    t = i * M_PI / n;
+    si[i] = sin(t);
+    ci[i] = cos(t);
+  }
+
+  memset(ccounts, 0, sizeof(ccounts));
+  ccounts[0] = color ? 1 : 0;
+
+  /* Construct n-2 parallels */
+  p = verts;
+  vc = vcounts;
+  for(i = 1; i < n-1; i++) {
+    float y = ci[i];
+    float r = si[i];
+
+    *vc++ = -n;		/* Closed line with n vertices */
+    for(j = 0; j < n; j++) {
+      p->x = r*cj[j];
+      p->y = y;
+      p->z = r*sj[j];
+      p++;
     }
+  }
+  /* Construct n/2 meridians, each a full circle */
+  for(j = 0; j < n/2; j++) {
+    float s = sj[j];
+    float c = cj[j];
 
-    memset(ccounts, 0, sizeof(ccounts));
-    ccounts[0] = color ? 1 : 0;
-
-    /* Construct n-2 parallels */
-    p = verts;
-    vc = vcounts;
-    for(i = 1; i < n-1; i++) {
-	float y = ci[i];
-	float r = si[i];
-
-	*vc++ = -n;		/* Closed line with n vertices */
-	for(j = 0; j < n; j++) {
-	    p->x = r*cj[j];
-	    p->y = y;
-	    p->z = r*sj[j];
-	    p++;
-	}
+    *vc++ = -2*n;
+    for(i = 0; i < n; i++) {
+      p->x = c*si[i];
+      p->y = ci[i];
+      p->z = s*si[i];
+      p++;
     }
-    /* Construct n/2 meridians, each a full circle */
-    for(j = 0; j < n/2; j++) {
-	float s = sj[j];
-	float c = cj[j];
-
-	*vc++ = -2*n;
-	for(i = 0; i < n; i++) {
-	    p->x = c*si[i];
-	    p->y = ci[i];
-	    p->z = s*si[i];
-	    p++;
-	}
-	for(i = n; i > 0; i--) {
-	    p->x = -c*si[i];
-	    p->y = ci[i];
-	    p->z = -s*si[i];
-	    p++;
-	}
+    for(i = n; i > 0; i--) {
+      p->x = -c*si[i];
+      p->y = ci[i];
+      p->z = -s*si[i];
+      p++;
     }
-    g = GeomCreate("vect",
-		   CR_NVECT,	n-2 + n/2,
-		   CR_VECTC,	vcounts,
-		   CR_COLRC,	ccounts,
-		   CR_NVERT,	(n-2 + n) * n,
-		   CR_POINT,	verts,
-		   CR_NCOLR,	color ? 1 : 0,
-		   CR_COLOR,	color,
-		   CR_END);
-    return g;
+  }
+  g = GeomCreate("vect",
+		 CR_NVECT,	n-2 + n/2,
+		 CR_VECTC,	vcounts,
+		 CR_COLRC,	ccounts,
+		 CR_NVERT,	(n-2 + n) * n,
+		 CR_POINT,	verts,
+		 CR_NCOLR,	color ? 1 : 0,
+		 CR_COLOR,	color,
+		 CR_END);
+  return g;
 }
 
 void
@@ -196,7 +196,7 @@ set_hsphere_draw(int id, int draw)
   
   if (draw) {
     if (!hsphere) {
-	hsphere = unitsphere(16, &color);
+      hsphere = unitsphere(16, &color);
     }
     dv->hsphere = hsphere;
   } else {
@@ -208,28 +208,28 @@ set_hsphere_draw(int id, int draw)
 NDcam *
 NDcluster(char *name)
 {
-    NDcam *c;
+  NDcam *c;
 
-    for(c = drawerstate.NDcams; c != NULL; c = c->next)
-	if(strcmp(c->name, name) == 0) return c;
-    return NULL;
+  for(c = drawerstate.NDcams; c != NULL; c = c->next)
+    if(strcmp(c->name, name) == 0) return c;
+  return NULL;
 }
 
 NDcam *
 NDnewcluster(char *name)
 {
-    NDcam *c;
+  NDcam *c;
 
-    c = NDcluster(name);
-    if(c == NULL) {
-	c = OOGLNewE(NDcam, "NDcam cluster");
-	c->name = strdup(name);
-	c->C2W = TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
-	c->W2C = NULL;
-	c->next = drawerstate.NDcams;
-	drawerstate.NDcams = c;
-    }
-    return c;
+  c = NDcluster(name);
+  if(c == NULL) {
+    c = OOGLNewE(NDcam, "NDcam cluster");
+    c->name = strdup(name);
+    c->C2W = TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
+    c->W2C = NULL;
+    c->next = drawerstate.NDcams;
+    drawerstate.NDcams = c;
+  }
+  return c;
 }
 
 void
@@ -263,24 +263,24 @@ LDEFINE(ND_axes, LLIST,
 
   axes[0] = axes[1] = axes[2] = axes[3] = -1;
   LDECLARE(("ND-axes", LBEGIN,
-	LSTRING, &camname,
-	LOPTIONAL,
-	LSTRING, &clustername,
-	LINT, &axes[0],
-	LINT, &axes[1],
-	LINT, &axes[2],
-	LINT, &axes[3],
-	LEND));
+	    LSTRING, &camname,
+	    LOPTIONAL,
+	    LSTRING, &clustername,
+	    LINT, &axes[0],
+	    LINT, &axes[1],
+	    LINT, &axes[2],
+	    LINT, &axes[3],
+	    LEND));
   if((cam = drawer_idbyname(camname)) == NOID ||
-	(dv = (DView *)drawer_get_object(cam)) == NULL || !ISCAM(dv->id)) {
+     (dv = (DView *)drawer_get_object(cam)) == NULL || !ISCAM(dv->id)) {
     OOGLError(0, "ND-axes: unknown camera %s", camname);
     return Lnil;
   } else if(axes[0] < 0) {
     LList *l = NULL;
     if(dv->cluster) {
-	l = LListAppend(NULL, LTOOBJ(LSTRING)(&dv->cluster->name));
-	for(i = 0; i < 4; i++)
-	    l = LListAppend(l, LNew( LINT, &dv->NDPerm[i] ));
+      l = LListAppend(NULL, LTOOBJ(LSTRING)(&dv->cluster->name));
+      for(i = 0; i < 4; i++)
+	l = LListAppend(l, LNew( LINT, &dv->NDPerm[i] ));
     }
     return LNew( LLIST, &l );
   } else {
@@ -296,22 +296,22 @@ LDEFINE(ND_axes, LLIST,
 
 static void set_dimension(int d, TransformN **Tp, TransformN **Tinvp)
 {
-   if(Tinvp) {
-	TmNDelete(*Tinvp);
-	*Tinvp = NULL;
-   }
-   if(Tp == NULL)
-	return;
-   if(d == 0) {
-	TmNDelete(*Tp);
-	*Tp = NULL;
-   } else {
-	if(TmNGetSize(*Tp, NULL,NULL) > d) {
-	    TmNDelete(*Tp);
-	    *Tp = NULL;
-	}
-	*Tp = TmNPad(*Tp, d, d, *Tp);
-   }
+  if(Tinvp) {
+    TmNDelete(*Tinvp);
+    *Tinvp = NULL;
+  }
+  if(Tp == NULL)
+    return;
+  if(d == 0) {
+    TmNDelete(*Tp);
+    *Tp = NULL;
+  } else {
+    if(TmNGetSize(*Tp, NULL,NULL) > d) {
+      TmNDelete(*Tp);
+      *Tp = NULL;
+    }
+    *Tp = TmNPad(*Tp, d, d, *Tp);
+  }
 }
 
 LDEFINE(dimension, LLIST,
@@ -325,9 +325,9 @@ LDEFINE(dimension, LLIST,
   int i, d = -1;
 
   LDECLARE(("dimension", LBEGIN,
-	LOPTIONAL,
-	LINT, &d,
-	LEND));
+	    LOPTIONAL,
+	    LINT, &d,
+	    LEND));
 
   if(d < 0) {
     d = drawerstate.NDim-1;
@@ -336,23 +336,23 @@ LDEFINE(dimension, LLIST,
   } else {
     NDcam *c;
     if(d == 0) {
-	for(i = 0; i < dview_max; i++)
-	    if(dview[i] && dview[i]->cluster) {
-		NDdeletecluster(dview[i]->cluster);
-		dview[i]->cluster = NULL;
-	    }
+      for(i = 0; i < dview_max; i++)
+	if(dview[i] && dview[i]->cluster) {
+	  NDdeletecluster(dview[i]->cluster);
+	  dview[i]->cluster = NULL;
+	}
     } else {
-	d++;	/* Include homogeneous coordinate drawerstate.NDim */
+      d++;	/* Include homogeneous coordinate drawerstate.NDim */
     }
     if(drawerstate.NDim != d) {
-	for(c = drawerstate.NDcams; c != NULL; c = c->next)
-	    set_dimension(d, &c->C2W, &c->W2C);
-	for(i = 0; i < dgeom_max; i++) {
-	    if(dgeom[i])
-		set_dimension(d, &dgeom[i]->NDT, &dgeom[i]->NDTinv);
-	}
-	drawerstate.changed = 1;
-	drawerstate.NDim = d;
+      for(c = drawerstate.NDcams; c != NULL; c = c->next)
+	set_dimension(d, &c->C2W, &c->W2C);
+      for(i = 0; i < dgeom_max; i++) {
+	if(dgeom[i])
+	  set_dimension(d, &dgeom[i]->NDT, &dgeom[i]->NDTinv);
+      }
+      drawerstate.changed = 1;
+      drawerstate.NDim = d;
     }
   }
   return Lt;
@@ -371,10 +371,10 @@ LDEFINE(ND_xform, LTRANSFORMN,
   NDcam *cl = NULL;
 
   LDECLARE(("ND-xform", LBEGIN,
-	LID, &id,
-	LOPTIONAL,
-	LTRANSFORMN, &ts,
-	LEND));
+	    LID, &id,
+	    LOPTIONAL,
+	    LTRANSFORMN, &ts,
+	    LEND));
 
   if((obj = drawer_get_object(id)) == NULL || drawerstate.NDim == 0)
     return Lnil;
@@ -389,17 +389,17 @@ LDEFINE(ND_xform, LTRANSFORMN,
     ts = OOGLNewE(TmNStruct, "TmN");
     ts->h = NULL;
     ts->tm = T ? REFINCR(TransformN, T) :
-		TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
+      TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
     return LNew(LTRANSFORMN, &ts);
   } else {
     /* (ND-xform id transformn { ... }) -> set transform */
     TmNDelete(T);
     if(ISGEOM(obj->id)) {
-	((DGeom *)obj)->NDT = REFINCR(TransformN, ts->tm);
-	obj->changed |= 1;
+      ((DGeom *)obj)->NDT = REFINCR(TransformN, ts->tm);
+      obj->changed |= 1;
     } else if(cl != NULL) {
-	cl->C2W = REFINCR(TransformN, ts->tm);
-	drawerstate.changed = 1;
+      cl->C2W = REFINCR(TransformN, ts->tm);
+      drawerstate.changed = 1;
     }
   }
   return Lt;
@@ -419,10 +419,10 @@ LDEFINE(ND_xform_get, LTRANSFORMN,
   extern TransformN *drawer_get_ND_transform(int from_id, int to_id);
 
   LDECLARE(("ND-xform-get", LBEGIN,
-	LID, &from_id,
-	LOPTIONAL,
-	LID, &to_id,
-	LEND));
+	    LID, &from_id,
+	    LOPTIONAL,
+	    LID, &to_id,
+	    LEND));
   if((tm = drawer_get_ND_transform(from_id, to_id)) == NULL)
     return Lnil;
   ts = OOGLNewE(TmNStruct, "TmN");
@@ -461,11 +461,11 @@ LDEFINE(ND_color, LLIST,
   int nents, nfields, ncolors;
 
   LDECLARE(("ND-color", LBEGIN,
-	LID, &id,
-	LOPTIONAL,
-	LLITERAL,
-	LLIST, &l,
-	LEND));
+	    LID, &id,
+	    LOPTIONAL,
+	    LLITERAL,
+	    LLIST, &l,
+	    LEND));
 
   if((dv = (DView *)drawer_get_object(id)) == NULL || !ISCAM(dv->id)) {
     OOGLError(0, "ND-color: expected camera name");
@@ -476,21 +476,21 @@ LDEFINE(ND_color, LLIST,
     ents = NULL;
     cm = dv->NDcmap;
     for(i = 0; i < dv->nNDcmap; i++, cm++) {
-	DObject *dobj = drawer_get_object(cm->coords);
-	char *dname = (dobj && dobj->name[1]) ? dobj->name[1] : "universe";
+      DObject *dobj = drawer_get_object(cm->coords);
+      char *dname = (dobj && dobj->name[1]) ? dobj->name[1] : "universe";
 
-	dname = strdup(dname);
-	l = LListAppend(NULL, LNew(LSTRING, (char *)&dname));
-	l = LListAppend(l,
-		    LMakeArray(LFLOAT, (char *)cm->axis->v, cm->axis->dim-1));
-	for(k = VVCOUNT(cm->cents), ce = VVEC(cm->cents, cent); --k > 0; ce++) {
-	    l = LListAppend(l, LNew(LFLOAT, (char *)&ce->v));
-	    l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.r));
-	    l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.g));
-	    l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.b));
-	    l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.a));
-	}
-	ents = LListAppend(ents, LNew(LLIST, &l));
+      dname = strdup(dname);
+      l = LListAppend(NULL, LNew(LSTRING, (char *)&dname));
+      l = LListAppend(l,
+		      LMakeArray(LFLOAT, (char *)cm->axis->v, cm->axis->dim-1));
+      for(k = VVCOUNT(cm->cents), ce = VVEC(cm->cents, cent); --k > 0; ce++) {
+	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->v));
+	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.r));
+	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.g));
+	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.b));
+	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.a));
+      }
+      ents = LListAppend(ents, LNew(LLIST, &l));
     }
     return LNew(LLIST, &ents);
   }
@@ -499,9 +499,9 @@ LDEFINE(ND_color, LLIST,
 
   nents = LListLength(ents);
   if(nents > MAXCMAP) {
-	OOGLError(0, "Only %d colormaps allowed per camera; using first %d of %d",
-		MAXCMAP, MAXCMAP, nents);
-	nents = MAXCMAP;
+    OOGLError(0, "Only %d colormaps allowed per camera; using first %d of %d",
+	      MAXCMAP, MAXCMAP, nents);
+    nents = MAXCMAP;
   }
 
   cm = dv->NDcmap;
@@ -516,45 +516,45 @@ LDEFINE(ND_color, LLIST,
      *    x0,x1,x2,...
      */
     if(! LFROMOBJ(LLIST)(ent, &entlist)) {
-	err = "ND-color: expected list of lists";
-	goto no;
+      err = "ND-color: expected list of lists";
+      goto no;
     }
 
     cm->coords = UNIVERSE;
     if( entlist->car->type == LSTRING ) {
-	cm->coords = drawer_idbyname(LSTRINGVAL(entlist->car));
-	if(cm->coords == NOID) {
-	    OOGLError(0, "ND-color: unknown coordinate system %s, using 'universe'",
-		LSTRINGVAL(entlist->car));
-	    cm->coords = UNIVERSE;
-	}
-	entlist = entlist->cdr;
+      cm->coords = drawer_idbyname(LSTRINGVAL(entlist->car));
+      if(cm->coords == NOID) {
+	OOGLError(0, "ND-color: unknown coordinate system %s, using 'universe'",
+		  LSTRINGVAL(entlist->car));
+	cm->coords = UNIVERSE;
+      }
+      entlist = entlist->cdr;
     }
 
     if(! LFROMOBJ(LLIST)(entlist->car, &axis)) {
-	err = "ND-color: expected N-D projection axis";
-	goto no;
+      err = "ND-color: expected N-D projection axis";
+      goto no;
     }
 
     dim = LListLength(axis);
     cm->axis = cm->axis ? HPtNPad(cm->axis, dim + 1, cm->axis)
-		: HPtNCreate(dim+1, NULL);
+      : HPtNCreate(dim+1, NULL);
     /* The projection axis is a vector, so its homogeneous component is zero */
     cm->axis->v[dim] = 0;
     /* Extract the real components */
     for(j = 0; j < dim; j++) {
-	if(!LFROMOBJ(LFLOAT)(LListEntry(axis, j+1), &cm->axis->v[j])) {
-	   err = "Non-numeric entry in projection axis?";
-	   goto no;
-	}
+      if(!LFROMOBJ(LFLOAT)(LListEntry(axis, j+1), &cm->axis->v[j])) {
+	err = "Non-numeric entry in projection axis?";
+	goto no;
+      }
     }
 
     entlist = entlist->cdr;	/* Look at the remainder of the list */
     nfields = LListLength(entlist);
     ncolors = nfields / 5;
     if(nfields % 5 != 0 || nfields == 0) {
-	err = "Each colormap should contain a multiple of 5 numbers: v0 r0 g0 b0 a0  v1 r1 g1 b1 a1 ...";
-	goto no;
+      err = "Each colormap should contain a multiple of 5 numbers: v0 r0 g0 b0 a0  v1 r1 g1 b1 a1 ...";
+      goto no;
     }
 
     vvneeds(&cm->cents, ncolors+1);
@@ -562,15 +562,15 @@ LDEFINE(ND_color, LLIST,
 
 
     for(j = 1; j <= nfields; j += 5, ce++) {
-	ce->interp = 1;
-	if(!LFROMOBJ(LFLOAT)(LListEntry(entlist, j), &ce->v) ||
-	   !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+1), &ce->c.r) ||
-	   !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+2), &ce->c.g) ||
-	   !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+3), &ce->c.b) ||
-	   !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+4), &ce->c.a) ) {
-	    err = "Non-numeric entry in colormap?";
-	    goto no;
-	}
+      ce->interp = 1;
+      if(!LFROMOBJ(LFLOAT)(LListEntry(entlist, j), &ce->v) ||
+	 !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+1), &ce->c.r) ||
+	 !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+2), &ce->c.g) ||
+	 !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+3), &ce->c.b) ||
+	 !LFROMOBJ(LFLOAT)(LListEntry(entlist, j+4), &ce->c.a) ) {
+	err = "Non-numeric entry in colormap?";
+	goto no;
+      }
     }
     VVCOUNT(cm->cents) = ncolors+1;
     ce = &VVEC(cm->cents, cent)[ncolors];
