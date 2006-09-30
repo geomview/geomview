@@ -681,8 +681,9 @@ static int currentmonitor = -1;	/* Initially unknown */
 int getmonitor(type) { return currentmonitor; }
 
 void setmonitor(int mode) {
-    char cmd[128];
 #if defined(SETMON_PATH)
+    char cmd[128];
+
     if(mode != currentmonitor) {
 	sprintf(cmd, "%s -n %s >&2",
       		     SETMON_PATH, mode==STR_RECT ? "STR_RECT" : "72HZ");
