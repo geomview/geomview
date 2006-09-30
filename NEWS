@@ -1,4 +1,4 @@
-1.8.2 August, 2006
+1.8.2 October, 2006
 
    Bugfix release.
 
@@ -16,6 +16,7 @@
    * fmemopen() by using temporary files (not using stdio internals)
    * I have resurrected a couple of old modules: NDview, clipboard,
      cplxview, crayola, flythrough, gvclock, hinge, labeler, ndutils.
+   * The Nd code in Geomview was ONE BIG UGLY memory leak. Fixed that.
 
    Otherwise no real changes.
 
