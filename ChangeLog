@@ -1,5 +1,7 @@
 2006-09-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
+	* rc9 checkpoint.
+
 	* NEWS: Document the Nd-code bugfix.
 
 	* configure.ac, doc/version.texi: Bump version to rc9.
