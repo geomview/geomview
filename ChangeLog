@@ -1,3 +1,154 @@
+2006-09-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* NEWS: Document the Nd-code bugfix.
+
+	* configure.ac, doc/version.texi: Bump version to rc9.
+
+	* src/bin/stereo/stereo.c: Fix unused variable warning.
+
+	* src/lib/geometry/transformn/transformn.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c:
+	The nD stuff was really badly broken. I'm tempted to say that it did
+	not have memory leaks, but _was_ one single big memory leak.
+
+	* doc/version.texi: Update.
+
+2006-09-13  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi:
+	The menu entry for the GCL reference somehow vanished in the previous commit.
+
+	* doc/version.texi: Update.
+
+	* src/lib/gprim/comment/commentcreate.c:
+	Undo a debugging relict that broke comment objects.
+
+2006-08-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/vect/vectload.c: Typo.
+
+	* doc/version.texi, doc/geomview.texi: Document binary SKEL format.
+
+	* src/lib/gprim/skel/skelload.c: Binary SKEL format.
+
+	* src/lib/gprim/npolylist/nplload.c: Fix Emacs per-file variable spec.
+
+	* doc/version.texi: Update time-stamp.
+
+2006-08-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi, doc/geomview.texi:
+	The node- and menu structure was partially garbled which confused the
+	html output, at least. Get rid of most @ifFORMAT constructs; use
+	@uref{} to refer to URL's (works nowadays).
+
+	* src/lib/oogl/util/iobuffer.c: Debugging stuff.
+
+2006-08-24  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* README.cvs:
+	At least mention flex and bison (although the parser is now included
+	in the CVS).
+
+2006-08-23  Lloyd Woord  <L.Wood@surrey.ac.uk>
+
+	* geomview.sh:
+	This is the same Cygwin filesystem check that SaVi uses. It's less complex than
+	if test "`uname | grep CYGWIN`"; then
+
+	/cygdrive only exists if cygwin is running...
+
+2006-08-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/wa/.cvsignore, src/lib/oogl/wa/wa.lex.c, src/lib/oogl/wa/wa.yacc.c, src/lib/oogl/wa/wa.yacc.h:
+	Re-add scanner/parser output files.
+
+2006-08-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi: Update to post-rc8 version.
+
+2006-08-07  Lloyd Woord  <L.Wood@surrey.ac.uk>
+
+	* Makefile.am:
+	Building doc/ at end -- so that if there's a problem with the tex or ps
+	stuff, the C build has already completed and is unaffected.
+
+2006-08-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/NDview/.cvsignore, src/bin/clipboard/.cvsignore, src/bin/cplxview/.cvsignore, src/bin/flythrough/.cvsignore, src/bin/ginsu/.cvsignore, src/bin/graffiti/.cvsignore, src/bin/hinge/.cvsignore, src/bin/ndutils/.cvsignore, src/bin/stereo/.cvsignore, src/bin/sweep/.cvsignore, src/bin/tackdown/.cvsignore, src/bin/transformer/.cvsignore:
+	CVS ignore stuff.
+
+	* src/lib/oogl/wa/Makefile.am:
+	The dependency of the parser/scanner files should be on
+	$(srcdir)/Makefile.in, not on Makefile.
+
+	* src/lib/gprim/geom/geomstream.c: Remove a double file-close.
+
+	* configure.ac: Use a fancy "post-rc8-CVS" version string.
+
+	* src/lib/oogl/wa/.cvsignore: Ignore wa.yacc.c
+
+	* doc/.cvsignore, doc/version.texi:
+	Include version.texi into the CVS. IMHO this is a bad idea, but the
+	maintainer-mode concept seems to be too complicated.
+
+	* src/bin/NDview/.cvsignore, src/bin/clipboard/.cvsignore, src/bin/ndutils/.cvsignore:
+	Ignore .deps directory.
+
+	* configure.ac:
+	Unconditionally check for ps2epsi, epstopdf, pdfimags and pnmtopng,
+	even without MAINTAINERMODE:
+
+	* reconf: Use "$@" not $* (expansion of arguments in quoted words).
+
+2006-08-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* README.cvs, doc/Makefile.am, src/lib/oogl/lisp/Makefile.am, src/lib/oogl/wa/Makefile.am:
+	Letting targets to create "maintainermode"-files depend on the
+	automake-conditional MAINTAINERMODE was a very stupid idea.
+
+2006-08-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* README.cvs: Mention that we need --enable-maintainer-mode ...
+
+2006-08-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* NEWS: Meanwhile it's August 2006 ... tempus fugit.
+
+	* ChangeLog: Update to 1.8.2-rc8 state.
+
+	* configure.ac: Apply David's Darwin patch.
+
+	* src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11windows.c:
+	Quick and dirty hack to fix upside-down bug with MGX11 driver.
+
+	* src/bin/labeler/Makefile.am:
+	Fix the local (i.e. in build-tree) .geomview-labeler module def.
+
+	* src/bin/geomview/common/transform.c:
+	When doing "look-recenter" we do not want to apply the object
+	transformation to the camera, because the object-trafo may contain
+	arbitrary deformations (at least I do not like being deformed when
+	watching Geomview). Instead, us a polar decomposition of the object's
+	transform and apply only the orthogonal factor to the camera.
+
+	* src/lib/Makefile.am:
+	Maybe do not install the library if not using shared libraries (we do
+	install ATM).
+
+	* src/lib/oogl/wa/yystype.h, src/lib/oogl/wa/Headers, src/lib/oogl/wa/Makefile.am, src/lib/oogl/wa/fsaparse.l, src/lib/oogl/wa/fsaparse.y, src/lib/oogl/wa/wa.yystype.h:
+	Renamed yystype.h to wa.yystype.h
+
+	* src/lib/geometry/transform3/Makefile.am, src/lib/geometry/transform3/tm3polardecomp.c, src/lib/geometry/transform3/transform.h, src/lib/geometry/transform3/transform3.h:
+	Polar decomposition of 3x3 matrix.
+
+	* Makefile.am: Install non-private header-files in pkginclude.
+
+	* configure.ac:
+	Adapt xforms include and library paths to the xforms source distro at
+	savannah.
+
+	* src/lib/geometry/transform3/tm3polardecomp.c: Initial revision.
+
 2006-08-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* configure.ac: Apply David's Darwin patch.
