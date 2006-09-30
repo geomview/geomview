@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT(geomview, [1.8.2-rc9], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.8.2-post-rc9], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
 if test "z${cache_file}" = "z/dev/null"; then
   cache_file=config.cache
