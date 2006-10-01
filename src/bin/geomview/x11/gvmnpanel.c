@@ -325,9 +325,12 @@ void ui_load_mainpanel()
   mainform = XmCreateForm(mainwindow, "Geomview", args, n);
 /*mainload = mib_load_interface(mainform, "interface/MainPanel.mib",
 		MI_FROMFILE);*/
-  mainload = mib_load_interface(mainform, Root,
-		MI_FROMSTRING);
- 
+  mainload = mib_load_interface(mainform, Root, MI_FROMSTRING);
+
+  /* Prevent automatic resizing; otherwise the main widget changes
+     everytime we start or stop a new module. */
+  XtVaSetValues(mainload->me, XmNresizePolicy, XmRESIZE_NONE, NULL);
+
   XtManageChild(mainform);
   XtInstallAccelerators(mainmenu, mainform);
 
