@@ -253,11 +253,11 @@ BuildMenu(Widget parent, int menu_type, char *menu_title, char menu_mnemonic,
 	sprintf(bname, "button_%d", i);
         str = XmStringCreateSimple(menu_title);
         cascade = XtVaCreateManagedWidget(bname,
-            xmCascadeButtonGadgetClass, parent,
-            XmNsubMenuId,   menu,
-            XmNlabelString, str,
-            XmNmnemonic,    menu_mnemonic,
-            NULL);
+					  xmCascadeButtonGadgetClass, parent,
+					  XmNsubMenuId,   menu,
+					  XmNlabelString, str,
+					  XmNmnemonic,    (XID)menu_mnemonic,
+					  NULL);
         XmStringFree(str);
     } else if (menu_type == XmMENU_OPTION) {
         /* Option menus are a special case, but not hard to handle */
@@ -305,7 +305,7 @@ BuildMenu(Widget parent, int menu_type, char *menu_title, char menu_mnemonic,
          * menu, it can still have a mnemonic.
          */
         if (items[i].mnemonic)
-            XtVaSetValues(widget, XmNmnemonic, items[i].mnemonic, NULL);
+	  XtVaSetValues(widget, XmNmnemonic, (XID)items[i].mnemonic, NULL);
 
         /* any item can have an accelerator, except cascade menus. But,
          * we don't worry about that; we know better in our declarations.

@@ -263,10 +263,10 @@ void ui_load_mainpanel()
 
   str[0] = XmStringCreateSimple("Space");
   cascade = XtVaCreateManagedWidget("button_3",	/* lesstif demands "button_<N>" */
-	xmCascadeButtonGadgetClass, mainmenu,
-	XmNlabelString, str[0],
-	XmNmnemonic,    'S',
-	NULL);
+				    xmCascadeButtonGadgetClass, mainmenu,
+				    XmNlabelString, str[0],
+				    XmNmnemonic, (XID)'S',
+				    NULL);
   XmStringFree(str[0]);
 
   str[0] = XmStringCreateSimple("Euclidean    [me]");
