@@ -51,7 +51,7 @@
 	At least mention flex and bison (although the parser is now included
 	in the CVS).
 
-2006-08-23  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-08-23  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* geomview.sh:
 	This is the same Cygwin filesystem check that SaVi uses. It's less complex than
@@ -68,11 +68,15 @@
 
 	* doc/version.texi: Update to post-rc8 version.
 
-2006-08-07  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-08-07  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* Makefile.am:
 	Building doc/ at end -- so that if there's a problem with the tex or ps
 	stuff, the C build has already completed and is unaffected.
+
+	make geomview
+	can be used if the C build has completed and the doc/ build fails,
+	to create the ./geomview script than runs Geomview.
 
 2006-08-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
@@ -697,7 +701,7 @@
 	* AUTHORS, NEWS, README:
 	Update some email addresses, time stamps, NEWs file.
 
-2006-07-26  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-07-26  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* INSTALL.Geomview:
 	Pointing to Claus's new README.cvs textfile instead.
@@ -856,7 +860,7 @@
 	string constants, and some unput() functions in the two scanners,
 	those are defined but not used.
 
-2006-07-05  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-07-05  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* src/lib/mg/rib/mgribdraw.c: Checking in rendering transparency patch:
 	http://sourceforge.net/tracker/index.php?func=detail&aid=1231146&group_id=9736&atid=309736
@@ -873,7 +877,7 @@
 
 	* configure.ac: Bump version to 1.8.2-rc1
 
-2006-06-25  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-06-25  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* configure: It's INSTALL.Geomview with a capital G.
 
@@ -968,7 +972,7 @@
 
 	* configure.in: Explicitly link with -lXpm, at least I need it.
 
-2006-06-23  Lloyd Woord  <L.Wood@surrey.ac.uk>
+2006-06-23  Lloyd Wood  <L.Wood@surrey.ac.uk>
 
 	* INSTALL.Geomview: Adding explanatory note about reconf use.
 
