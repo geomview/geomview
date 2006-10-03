@@ -736,7 +736,7 @@ LDEFINE(quote, LLOBJECT,
   return arg;
 }
 
-LDEFINE(if, LVOID,
+LDEFINE(if, LLOBJECT,
 	"(if TEST EXPR1 [EXPR2])\n\
 	Evaluates TEST; if TEST returns a non-nil value, returns the\n\
 	value of EXPR1.  If TEST returns nil, returns the value of\n\
@@ -756,6 +756,53 @@ LDEFINE(if, LVOID,
   } else {
     return Lnil;
   }
+}
+
+LDEFINE(not, LINT,
+	"(not EXPR)\n\
+	Evaluates EXPR; if EXPR returns a non-nil value, returns nil,\n\
+	if EXPR returns nil, return t.")
+{
+  LObject *expr;
+
+  LDECLARE(("not", LBEGIN,
+	    LLOBJECT, &expr,
+	    LEND));
+  if (expr != Lnil) {
+    return Lnil;
+  } else {
+    return Lt;
+  }
+}
+
+LDEFINE(or, LLOBJECT,
+	"(or EXPR1 EXPR2\n\
+	Evaluates EXPR1; if EXPR1 returns non-nil, return its value,\n\
+        if EXPR1 returns nil, evaluate EXPR2 and return its value.")
+{
+  LObject *expr1, *expr2;
+  LDECLARE(("or", LBEGIN,
+	    LLOBJECT, &expr1,
+	    LHOLD, LLOBJECT, &expr2,
+	    LEND));
+  if (expr1 != Lnil) {
+    return expr1;
+  } else {
+    return LEval(expr2);
+  }
+}
+
+LDEFINE(and, LINT,
+	"(and EXPR1 EXPR2\n\
+	Evaluate EXPR1 and EXPR2 and return t if both return non-nil,\n\
+	otherwise return nil.")
+{
+  LObject *expr1, *expr2;
+  LDECLARE(("and", LBEGIN,
+	    LLOBJECT, &expr1,
+	    LLOBJECT, &expr2,
+	    LEND));
+  return (expr1 != Lnil && expr2 != Lnil) ? Lt : Lnil;
 }
 
 LDEFINE(greater, LINT,

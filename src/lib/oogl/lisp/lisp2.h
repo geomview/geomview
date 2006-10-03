@@ -248,7 +248,7 @@ void LWriteFile(char *fname, LObject *obj);
   function's name to be "Lname" (the "name" argument with "L"
   prepended to it).  It also defines a string named "Hname"
   initialized to "doc".  The "ltype" argument gives the lisp object
-  type returned by the function (all functions defined via DEFILE
+  type returned by the function (all functions defined via LDEFINE
   *must* return a lisp object.)  LDEFINE actually ignores this but
   read the next paragraph.
 
