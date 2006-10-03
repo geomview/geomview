@@ -1,6 +1,6 @@
 (progn
 (ui-panel "Tools" off )
-(if(real-id c0) (delete c0))
+(if (real-id c0) (delete c0))
 (bbox-draw allgeoms off)
 (dimension 4)
 (merge window default { position 0 300 0  300 })
