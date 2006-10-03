@@ -371,24 +371,36 @@ comm_sigttin(int sig)
 #endif
 }
 
+static const char *signal_name(int sig)
+{
+  static char buffer[256];
+
+  switch(sig) {
+  case SIGSEGV:
+    return "Segmentation violation";
+  case SIGBUS:
+    return "Bus error";
+  case SIGILL:
+    return "Illegal instruction";
+  default:
+    snprintf(buffer, sizeof(buffer), "Signal number %d\n", sig);
+    return buffer;
+  }
+}
+
 static void
 fatalsig(int sig)
 {
-  char *msg;
-  static char msg0[] = "Geomview: internal error: ";
-  static char msg1[] = "; dump core now (y/n) [n] ? ";
   char die = 'y';
 
-  switch(sig) {
-  case SIGSEGV: msg = "Segmentation violation"; break;
-  case SIGBUS: msg = "Bus error"; break;
-  case SIGILL: msg = "Illegal instruction"; break;
-  default:     msg = "unknown signal?"; break;
-  }
-  write(2, msg0, sizeof(msg0)-1);
-  write(2, msg, strlen(msg));
-  write(2, msg1, sizeof(msg1)-1);
+  fprintf(stderr,
+	  "Geomview(%d): internal error: \"%s\"; "
+	  "dump core now (y/n) [n] ? ",
+	  getpid(), signal_name(sig));
+  fflush(stderr);
   read(2, &die, 1);
+  fprintf(stderr, "got answer %c\n", (int)die % 0xff);
+  fflush(stderr);
   if(die != 'y' && die != 'Y')
 	gv_exit();
   /* else return, and hope the OS gives us a core dump. */
