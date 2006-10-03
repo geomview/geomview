@@ -1256,16 +1256,26 @@ LDEFINE(delete, LVOID,
   wasfrozen = uistate.freeze;
   gv_ui_freeze(1);
   MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
-    if(obj->id == WORLDGEOM || obj->id == DEFAULTCAMID) continue;
-    if (obj->name[0]) fsa_install( name_fsa, obj->name[0], NOID );
-    if (obj->name[1]) fsa_install( name_fsa, obj->name[1], NOID );
-    HandleUnregisterAll((Ref *)obj, (void *)(long)(int)obj->seqno, object_changed);
-    stop_motions(obj->id);
-    switch(TYPEOF(obj->id)) {
-    case T_GEOM: delete_geometry((DGeom *)obj); break;
-    case T_CAM:  delete_camera((DView *)obj); break;
+    int obj_id = obj->id; /* remember, must not access obj->id after
+			   * obj has gone.
+			   */
+    if(obj_id == WORLDGEOM || obj_id == DEFAULTCAMID)
+      continue;
+    if (obj->name[0])
+      fsa_install( name_fsa, obj->name[0], NOID );
+    if (obj->name[1])
+      fsa_install( name_fsa, obj->name[1], NOID );
+
+    HandleUnregisterAll((Ref *)obj,
+			(void *)(long)(int)obj->seqno, object_changed);
+    stop_motions(obj_id);
+    switch(TYPEOF(obj_id)) {
+    case T_GEOM:
+      delete_geometry((DGeom *)obj); break;
+    case T_CAM:
+      delete_camera((DView *)obj); break;
     }
-    if (uistate.centerid==obj->id)
+    if (uistate.centerid==obj_id)
       gv_ui_center(TARGETID);
   }
   gv_ui_freeze(wasfrozen);
