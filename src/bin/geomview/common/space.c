@@ -361,7 +361,8 @@ LDEFINE(dimension, LLIST,
 LDEFINE(ND_xform, LTRANSFORMN,
 	"(ND-xform OBJID [ntransform { idim odim  ... }])\n\
 	Sets or returns the N-D transform of the given object.\n\
-	In dimension N, this is an (N+1)x(N+1) matrix.\n\
+	In dimension N, this is an (N+1)x(N+1) matrix, so in that case\n\
+	idim and odim are expected to be both equal to (N+1).\n\
 	Note that all cameras in a camera-cluster have the same N-D transform.\n")
 {
   int id;
