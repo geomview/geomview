@@ -433,7 +433,7 @@ void mgopengl_polylist( int np, Poly *_p, int nv, Vertex *V, int plflags )
 	v = p->v;
 	if((j = p->n_vertices) <= 2) {
 	    nonsurf = i;
-	} else if(j <= 4 || !(flag & APF_CONCAVE)
+	} else if(j < 4 || !(flag & APF_CONCAVE)
 			|| !mgopengl_trickypolygon(p, plflags)) {
 
 	    glBegin(GL_POLYGON);
