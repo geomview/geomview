@@ -909,20 +909,26 @@ mgx11_sync( void )
 void
 mgx11_worldbegin( void )
 {
-  Transform S;
-  WnPosition vp;
-
   mg_worldbegin();
 #if 0 && !DO_NOT_HACK_THE_CODE_THIS_WAY
-  WnGet(_mgc->win, WN_VIEWPORT, &vp);
-	/* Fix up W2S and S2W matrices.  Since the X11 coordinate system has
-	 * Y increasing downward, flip it here, and
-	 * translate by location of lower left corner of viewport.
-	 */
-  TmTranslate(S, (double)vp.xmin, (double)vp.ymax, 0.);
-  S[1][1] = -1;		/* Invert sign of Y */
-  TmConcat(_mgc->W2S, S, _mgc->W2S);
-  TmInvert(_mgc->W2S, _mgc->S2W);
+  {
+    /* This cannot be done here because there are objects which do not
+     * belong to the world coordinate system; this stuff needs to be
+     * done in mgx11windows.c in Xmg_add().
+     */
+    Transform S;
+    WnPosition vp;
+
+    WnGet(_mgc->win, WN_VIEWPORT, &vp);
+    /* Fix up W2S and S2W matrices.  Since the X11 coordinate system
+     * has Y increasing downward, flip it here, and translate by
+     * location of lower left corner of viewport.
+     */
+    TmTranslate(S, (double)vp.xmin, (double)vp.ymax, 0.);
+    S[1][1] = -1;		/* Invert sign of Y */
+    TmConcat(_mgc->W2S, S, _mgc->W2S);
+    TmInvert(_mgc->W2S, _mgc->S2W);
+  }
 #endif
   _mgc->has = 0;
   Xmg_newdisplaylist();
