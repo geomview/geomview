@@ -5870,8 +5870,24 @@ Same as scale but multiplies by exp(scale).  Obsolete.
 @findex event-mode
 @item (event-mode     MODESTRING)
 Set the mouse event (motion) mode; MODESTRING should be one of
-the strings that appears in the motion mode browser (including
-the keyboard shortcut, e.g. @code{[r] Rotate}).
+the following strings:
+@enumerate
+@item
+@code{"[r] Rotate"}
+@item
+@code{"[t] Translate"}
+@item
+@code{"[z] Cam Zoom"}
+@item
+@code{"[s] Geom Scale"}
+@item
+@code{"[f] Cam Fly"}
+@item
+@code{"[o] Cam Orbit"}
+@item
+@code{"[le] Edit Lights"}
+@end enumerate
+
 
 @findex event-pick
 @item (event-pick @{on|off@})

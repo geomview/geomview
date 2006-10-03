@@ -437,8 +437,14 @@ Geomview(5)					      Geomview(5)
 
        `(event-mode	MODESTRING)'
 	    Set the mouse event (motion) mode; MODESTRING should be one of
-	    the strings that appears in the motion mode browser (including
-	    the keyboard shortcut, e.g. `[r] Rotate').
+	    the following strings:
+                1. "[r] Rotate"
+                2. "[t] Translate"
+                3. "[z] Cam Zoom"
+                4. "[s] Geom Scale"
+                5. "[f] Cam Fly"
+                6. "[o] Cam Orbit"
+                7. "[le] Edit Lights"
 
        `(event-pick {on|off})'
 	    Turn picking on or off.
