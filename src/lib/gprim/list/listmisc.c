@@ -65,17 +65,14 @@ ListEvert( List *list )
     return list;
 }
 
-BBox *
-ListBound( list, T )
-    List *list;
-    Transform  T;
+BBox *ListBound(List *list, Transform  T, TransformN *TN, int *axes)
 {
     Geom *carbox = NULL;
     BBox *bbox = NULL;
     List *l;
 
     for(l = list; l != NULL; l = l->cdr) {
-	carbox = GeomBound( l->car, T );
+	    carbox = GeomBound( l->car, T, TN, axes );
 	if(carbox == NULL)
 		continue;
 	if(bbox) {
@@ -88,23 +85,13 @@ ListBound( list, T )
     return bbox;
 }
 
-List *
-ListTransform( list, T )
-    List *list;
-    Transform T;
+List *ListTransform(List *list, Transform T, TransformN *TN)
 {
     List *l;
 
     for(l = list; l != NULL; l = l->cdr)
-	GeomTransform( l->car, T );
+	    GeomTransform( l->car, T, TN );
 
     return list;
 }
 
-List *
-ListTransformTo( list, T )
-     List *list;
-     Transform T;
-{
-  return(ListTransform(list, T));
-}

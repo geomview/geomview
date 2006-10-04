@@ -123,6 +123,11 @@ va_list *a_list;
 
 	case CR_DIM:
 	    m->pdim = va_arg(*a_list, int);
+	    if (m->pdim < 4) {
+		    OOGLError(1, "Dimension %d < 4", m->pdim);
+		    return NULL;
+	    }
+	    m->pdim++; /* should be the projective dimension */
 	    break;
 
 	case CR_POINT:

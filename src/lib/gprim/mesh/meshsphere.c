@@ -32,15 +32,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "create.h"
 #include "meshP.h"
 
-Geom *MeshBoundSphere(mesh, T, space) 
-     Mesh *mesh;
-     Transform T;
-     int space;
+Geom *MeshBoundSphere(Mesh *mesh, Transform T, TransformN *TN, int *axes,
+		      int space)
 {
   Geom *sphere;
 
   if(mesh->flag & MESH_4D)
-    return GeomBoundSphereFromBBox((Geom *)mesh, T, space);
+    return GeomBoundSphereFromBBox((Geom *)mesh, T, NULL, NULL, space);
 
   sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, mesh->p, 
 		      CR_NENCOMPASS_POINTS, (mesh->nu * mesh->nv),

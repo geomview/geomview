@@ -34,47 +34,63 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bboxP.h"
 #include "meshP.h"
 
-BBox *
-MeshBound(mesh, T)
-	Mesh	*mesh;
-	Transform T;
+BBox *MeshBound(Mesh *mesh, Transform T, TransformN *TN, int *axes)
 {
 	int	n;
 	HPoint3 *p;
 	HPoint3	min, max;
 	HPoint3	p0;
 
+	if (T == TM_IDENTITY) {
+		T = NULL;
+	}
+
 	n = mesh->nu * mesh->nv;
 	p = mesh->p;
 
-#ifdef BBOX_ND_HACK
+#if 0 && defined(BBOX_ND_HACK)
 	if(mesh->flag & MESH_4D)
 	    return BBox_ND_hack(NULL, (float *)p, 4*n);
 #endif
 
-	while(--n >= 0 && !finite(p->x + p->y + p->z))
+	while(--n >= 0 && !finite(p->x + p->y + p->z + p->w))
 		p++;
 	if(n <= 0)
 		return NULL;	/* No finite elements! */
 	min = *p;
-	HPt3TransPt3(T, p, (Point3 *)(void *)&min);
+	if (T) {
+		HPt3Transform(T, p, &min);
+	}
+	if (!(mesh->geomflags & VERT_4D)) {
+		HPt3Dehomogenize(&min, &min);
+	}
 	min.w = 1.;
 	max = min;
 	while(--n >= 0) {
 		p++;
-            	if (T != TM_IDENTITY)
-			HPt3TransPt3(T, p, (Point3 *)(void *)&p0);
-		else if(p->w == 1.)
-			p0 = *p;
-		else
-			HPt3Normalize(p, &p0);
+            	if (T) {
+			HPt3Transform(T, p, &p0);
+		}
+		if (!(mesh->geomflags & VERT_4D))
+			HPt3Dehomogenize(&p0, &p0);
+
 		if(min.x > p0.x) min.x = p0.x;
 		else if(max.x < p0.x) max.x = p0.x;
 		if(min.y > p0.y) min.y = p0.y;
 		else if(max.y < p0.y) max.y = p0.y;
 		if(min.z > p0.z) min.z = p0.z;
 		else if(max.z < p0.z) max.z = p0.z;
+		if (mesh->geomflags & VERT_4D) {
+			if(min.w > p0.w) min.w = p0.w;
+			else if(max.w < p0.w) max.w = p0.w;
+		}
 	}
-	return (BBox *) GeomCCreate(NULL,BBoxMethods(), CR_MIN, &min, CR_MAX, &max, NULL);
+	if (mesh->geomflags & VERT_4D) {
+		return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+					   CR_4MIN, &min, CR_4MAX, &max, NULL);
+	} else {
+		return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+					   CR_4MIN, &min, CR_MAX, &max, NULL);
+	}
 }
 

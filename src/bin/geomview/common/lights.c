@@ -340,7 +340,7 @@ Geom* make_light(Point3 axis, Color *color)
     fprintf(stderr, "Couldn't create inst\n");
     return NULL;
   }
-  InstTransformTo((Inst *)g, t);
+  InstTransformTo((Inst *)g, t, NULL);
   return g;
 }
 
@@ -418,7 +418,7 @@ lightedit(Event *event)
       /* dragging while button down */
       mousedisp(event, &dx, &dy, &dt, &drawerstate.winpos);
       Rotation(dx, dy, T, &target);
-      InstTransform((Inst *)lr.lightgeoms[uistate.current_light], T);
+      InstTransform((Inst *)lr.lightgeoms[uistate.current_light], T, NULL);
       PtTransform(T, &(lr.lights[uistate.current_light]->position),
 		  &(lr.lights[uistate.current_light]->position));
 #if LIGHTDEBUG
@@ -456,7 +456,7 @@ static int updateproc(Geom *g)
   /* don't do anything with ambient light */
   if (uistate.current_light == 0) return 42;
 
-  InstTransform((Inst *)lr.lightgeoms[uistate.current_light], Tincr);
+  InstTransform((Inst *)lr.lightgeoms[uistate.current_light], Tincr, NULL);
   PtTransform(Tincr, &(lr.lights[uistate.current_light]->position),
 	      &(lr.lights[uistate.current_light]->position));
   apseq = ++drawerstate.apseq;

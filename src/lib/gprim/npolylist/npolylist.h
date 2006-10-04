@@ -33,7 +33,8 @@
 typedef struct NPolyList NPolyList;
 
 extern NPolyList *NPolyListDraw( NPolyList * );
-extern BBox	*NPolyListBound( NPolyList *, Transform );
+extern BBox *NPolyListBound(NPolyList *np,
+			    Transform T, TransformN *TN, int *axes);
 extern NPolyList *NPolyListEvert( NPolyList * );
 extern NPolyList *NPolyListLoad( char * );	/* Loads "off" files */
 extern NPolyList *NPolyListFLoad( IOBFILE *, char *fname );

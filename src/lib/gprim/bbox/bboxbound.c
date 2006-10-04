@@ -33,18 +33,41 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bboxP.h"
 
-BBox *
-BBoxBound(bbox, T)
-	BBox	*bbox;
-	Transform T;
+BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN, int *axes)
 {
-	if(bbox == NULL)
-		return NULL;
+    if(bbox == NULL)
+	return NULL;
 
-	if(T == NULL || T == TM_IDENTITY)
-		return (BBox *) GeomCopy((Geom *)bbox);	/* entirely trivial! */
+    bbox = (BBox *)GeomCopy((Geom *)bbox);
+    if((T == NULL || T == TM_IDENTITY) &&
+       (TN == NULL || TN == (void *)TM_IDENTITY))
+	return bbox;
 
-	return BBoxTransform((BBox *)GeomCopy((Geom *)bbox), T);
+    bbox = BBoxTransform(bbox, T, TN);
+
+    if (TN && axes && bbox->pdim > 4) {
+	int i;
+	float *min = (float *)&bbox->min;
+	float *max = (float *)&bbox->max;
+
+	for (i = 0; i < 3; i++) {
+	    min[i] = bbox->minN->v[axes[i]];
+	    max[i] = bbox->maxN->v[axes[i]];
+	}
+	if (bbox->geomflags & VERT_4D) {
+	    min[3] = bbox->minN->v[axes[3]];
+	    max[3] = bbox->maxN->v[axes[3]];
+	} else {
+	    min[3] = 1.0;
+	    max[3] = 1.0;
+	}
+	HPtNDelete(bbox->minN);
+	HPtNDelete(bbox->maxN);
+	bbox->minN = bbox->maxN = NULL;
+	bbox->pdim = 4;
+    }
+
+    return bbox;
 }
 
 BBox *

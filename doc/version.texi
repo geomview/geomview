@@ -1,4 +1,4 @@
-@set UPDATED 14 September 2006
-@set UPDATED-MONTH September 2006
+@set UPDATED 3 October 2006
+@set UPDATED-MONTH October 2006
 @set EDITION 1.8.2-post-rc9
 @set VERSION 1.8.2-post-rc9

@@ -42,6 +42,7 @@ HPtNCreate(int dim, const HPtNCoord *vec)
 /*    pt->space = 0;  			*/
     if(dim <= 0) dim = 1;
     pt->dim = dim;
+    pt->flags = 0; /* for now */
     pt->v = OOGLNewNE(HPtNCoord, dim, "new HPointN data");
 	if(vec == NULL) {
 	    memset(pt->v, 0, dim*sizeof(HPtNCoord));

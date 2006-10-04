@@ -49,6 +49,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #define ERROR(fmt, arg) OOGLError(1, fmt, arg)
 
+#define	DGobj(obj)  ((DGeom *)obj)
+#define	DVobj(obj)  ((DView *)obj)
+
 Motion *allMotions = NULL;
 
 int is_descendant(int id, int ancestor_id);
@@ -101,7 +104,7 @@ Geom *id_bbox(int geomID, int coordsysID) {
   }
   MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
     drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
-    other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys);
+    other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys, NULL, NULL);
     if (bbox == NULL) bbox = other_bbox;
     else {
       BBoxUnion3((BBox *)bbox, (BBox *)other_bbox, (BBox *)bbox);
@@ -127,7 +130,8 @@ Geom *id_bsphere(int geomID, int coordsysID) {
     drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
     if (geomObj->Lgeom == NULL) continue;
     GeomGet(geomObj->Lgeom, CR_GEOM, &obj);
-    other_sphere = GeomBoundSphere(obj, geom2coordsys, drawerstate.space);
+    other_sphere = GeomBoundSphere(obj, geom2coordsys, NULL, NULL,
+				   drawerstate.space);
     if (sphere == NULL) sphere = other_sphere;
     else {
       SphereUnion3((Sphere *)sphere, (Sphere *)other_sphere, 
@@ -1293,6 +1297,8 @@ LDEFINE(look_recenter, LVOID,
   DView *camObj;
   TransformStruct obj2univ;
   Transform obj2univtm;
+  TmNStruct obj2univN;
+  TransformN *obj2univtmN;
   int objID = WORLDGEOM, camID = CAMID(uistate.targetcam);
 
   LDECLARE(("look-recenter", LBEGIN,
@@ -1310,24 +1316,36 @@ LDEFINE(look_recenter, LVOID,
     return Lnil;
   }
 
-  obj2univ.h = NULL;
-  drawer_get_transform(objID, obj2univtm,  UNIVERSE);
   /* It is probably not a good idea to deform the camera geometry (in
    * general the spectator remains undeformed or suffers serious
-   * injuries ...). So we keep only the orthogonal part and through
+   * injuries ...). So we keep only the orthogonal part and throw
    * away the deformations.
    */
+  obj2univ.h = NULL;
+  drawer_get_transform(objID, obj2univtm,  UNIVERSE);
   TmPolarDecomp(obj2univtm, obj2univ.tm);
+
+  obj2univN.h = NULL;
+  if ((obj2univtmN = drawer_get_ND_transform(objID, UNIVERSE)) != NULL) {
+    obj2univN.tm = TmNPolarDecomp(obj2univtmN, NULL);
+    TmNDelete(obj2univtmN); /* decrease the ref-count */
+  } else {
+    obj2univN.tm = NULL;
+  }
 
   MAYBE_LOOP(camID, i, T_CAM, DView, camObj) { 
     gv_xform_set(camObj->id, &obj2univ);
+    if (obj2univN.tm) {
+      gv_ND_xform(camObj->id, &obj2univN);
+    }
     gv_position_at(camObj->id, objID, 
 		   spaceof(objID) == TM_EUCLIDEAN ? "center" : "origin");
   }
+  TmNDelete(obj2univN.tm);
 
   if (spaceof(objID) == TM_EUCLIDEAN) 
     gv_look_encompass(objID, camID);
-  
+    
   return Lt;
 }
 
@@ -1353,9 +1371,6 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
   DObject *obj;
   Transform Tfrom, Tto, Ttoinv;
 
-#define	DGobj  ((DGeom *)obj)
-#define	DVobj  ((DView *)obj)
-
   if(from_id == to_id || to_id == SELF) {
     TmIdentity(T);
     return;
@@ -1373,21 +1388,21 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
     if (ISGEOM(from_id)) {
 	switch(to_id) {
 	case UNIVERSE:
-	    get_geom_transform(DGobj, T);
-	    if(DGobj->citizenship == ORDINARY) {
-		get_geom_transform(dgeom[0], Tfrom);
-		TmConcat(T, Tfrom, T);
-	    }
-	    return;
+	  get_geom_transform(DGobj(obj), T);
+	  if(DGobj(obj)->citizenship == ORDINARY) {
+	    get_geom_transform(dgeom[0], Tfrom);
+	    TmConcat(T, Tfrom, T);
+	  }
+	  return;
 	case WORLDGEOM:
-	    if(DGobj->citizenship == ORDINARY) {
-		get_geom_transform(DGobj, T);
+	    if(DGobj(obj)->citizenship == ORDINARY) {
+		get_geom_transform(DGobj(obj), T);
 		return;
 	    }
 	}
     } else if (ISCAM(from_id)) {
 	if(to_id == UNIVERSE) {
-	    CamGet(DVobj->cam, CAM_C2W, T);
+	    CamGet(DVobj(obj)->cam, CAM_C2W, T);
 	    return;
 	}
     }
@@ -1433,8 +1448,8 @@ drawer_get_ND_transform(int from_id, int to_id)
     if (ISGEOM(from_id)) {
 	switch(to_id) {
 	case UNIVERSE:
-	    T = get_geom_ND_transform(DGobj);
-	    if(DGobj->citizenship == ORDINARY && dgeom[0]->NDT) {
+	    T = get_geom_ND_transform(DGobj(obj));
+	    if(DGobj(obj)->citizenship == ORDINARY && dgeom[0]->NDT) {
 		if(T == NULL)
 		    return REFINCR(TransformN, dgeom[0]->NDT);
 		else if(dgeom[0]->NDT == NULL)
@@ -1447,8 +1462,8 @@ drawer_get_ND_transform(int from_id, int to_id)
 	    }
 	    return T;
 	case WORLDGEOM:
-	    if(DGobj->citizenship == ORDINARY) {
-		return REFINCR(TransformN, DGobj->NDT);
+	    if(DGobj(obj)->citizenship == ORDINARY) {
+		return REFINCR(TransformN, DGobj(obj)->NDT);
 	    }
 	}
     } else if (ISCAM(from_id)) {
@@ -1495,7 +1510,7 @@ drawer_set_ND_xform(int id, TransformN *T)
 	    tp = &((DView *)obj)->cluster->C2W;
 	    drawerstate.changed |= 1;
 	} else {
-	    tp = &DGobj->NDT;
+	    tp = &DGobj(obj)->NDT;
 	    obj->changed |= 1;
 	}
    }

@@ -45,6 +45,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "camera.h"
 #include "space.h"
 
+#define	DGobj(obj)  ((DGeom *)obj)
+#define	DVobj(obj)  ((DView *)obj)
 
 char *
 spacename(int space)
@@ -359,8 +361,44 @@ LDEFINE(dimension, LLIST,
 }
 
 LDEFINE(ND_xform, LTRANSFORMN,
-	"(ND-xform OBJID [ntransform { idim odim  ... }])\n\
-	Sets or returns the N-D transform of the given object.\n\
+        "(ND-xform OBJID [ntransform { idim odim ... }]\n\
+	Concatenate the given ND-transform with the current\n\
+	ND-transform of the object (apply the ND-transform to\n\
+	object ID, as opposed to simply setting its\n\
+	ND-transform; i.e. a reset will not undo this operation).")
+{
+  int index;
+  int id;
+  TmNStruct *ts = NULL;
+  DObject *obj;
+  NDcam *cl = NULL;
+
+  LDECLARE(("ND-xform", LBEGIN,
+	    LID, &id,
+	    LTRANSFORMN, &ts,
+	    LEND));
+
+  if((obj = drawer_get_object(id)) == NULL || drawerstate.NDim == 0)
+    return Lnil;
+
+  MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
+	  if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN)
+	continue;
+    if (ISGEOM(id)) {
+      GeomTransform(DGobj(obj)->Item, NULL, ts->tm);
+    } else if(ISCAM(obj->id) && (cl = ((DView *)obj)->cluster)) {
+      TmNConcat(ts->tm, cl->C2W, cl->C2W);
+    }
+    TmIdentity(obj->Incr);
+    obj->redraw = 1;
+    obj->moving = (obj->updateproc!=NULL);
+  }
+  return Lt;
+}
+
+LDEFINE(ND_xform_set, LTRANSFORMN,
+	"(ND-xform-set OBJID [ntransform { idim odim  ... }])\n\
+	Sets the N-D transform of the given object.\n\
 	In dimension N, this is an (N+1)x(N+1) matrix, so in that case\n\
 	idim and odim are expected to be both equal to (N+1).\n\
 	Note that all cameras in a camera-cluster have the same N-D transform.\n")
@@ -371,7 +409,7 @@ LDEFINE(ND_xform, LTRANSFORMN,
   TransformN *T = NULL;
   NDcam *cl = NULL;
 
-  LDECLARE(("ND-xform", LBEGIN,
+  LDECLARE(("ND-xform-set", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
 	    LTRANSFORMN, &ts,
@@ -379,38 +417,30 @@ LDEFINE(ND_xform, LTRANSFORMN,
 
   if((obj = drawer_get_object(id)) == NULL || drawerstate.NDim == 0)
     return Lnil;
+
   if(ISGEOM(obj->id)) {
     T = ((DGeom *)obj)->NDT;
   } else if(ISCAM(obj->id) && (cl = ((DView *)obj)->cluster)) {
     T = cl->C2W;
   }
 
-  if(ts == NULL) {
-    /* (ND-xform id) -> return transform */
-    ts = OOGLNewE(TmNStruct, "TmN");
-    ts->h = NULL;
-    ts->tm = T ? REFINCR(TransformN, T) :
-      TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
-    return LNew(LTRANSFORMN, &ts);
-  } else {
-    /* (ND-xform id transformn { ... }) -> set transform */
-    TmNDelete(T);
-    if(ISGEOM(obj->id)) {
-      ((DGeom *)obj)->NDT = REFINCR(TransformN, ts->tm);
-      obj->changed |= 1;
-    } else if(cl != NULL) {
-      cl->C2W = REFINCR(TransformN, ts->tm);
-      drawerstate.changed = 1;
-    }
+  /* (ND-xform-set id transformn { ... }) -> set transform */
+  TmNDelete(T);
+  if(ISGEOM(obj->id)) {
+    ((DGeom *)obj)->NDT = REFINCR(TransformN, ts->tm);
+    obj->changed |= 1;
+  } else if(cl != NULL) {
+    cl->C2W = REFINCR(TransformN, ts->tm);
+    drawerstate.changed = 1;
   }
   return Lt;
 }
 
 LDEFINE(ND_xform_get, LTRANSFORMN,
 	"(ND-xform-get ID [from-ID])\n\
-	Returns the N-D transform of the given object in the coordinate system\n\
-	of from-ID (default \"universe\"), in the sense\n\
-	  <point-in-ID-coords> * Transform = <point-in-from-ID-coords>")
+	Returns the N-D transform of the given object in the coordinate\n\
+	system of from-ID (default \"universe\"), in the sense\n\
+	<point-in-ID-coords> * Transform = <point-in-from-ID-coords>")
 {
   int from_id;
   int to_id = UNIVERSE;

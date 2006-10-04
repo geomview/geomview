@@ -429,7 +429,7 @@ int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
 		GeomFSave(*newobjs,stdout,"stdout");
 		printf(")\n");
 		fflush(stdout);
-		printf("(ND-xform clip_1\n");
+		printf("(ND-xform-set clip_1\n");
 		printf("{%d %d\n",tworld->idim,tworld->odim);
 		for(j=0;j<tworld->idim;j++)
 		{	for(k=0;k<tworld->odim;k++)
@@ -457,7 +457,7 @@ int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
 		printf(")\n");
 		fflush(stdout);
 		free(*newobjs);
-		printf("(ND-xform clip_1\n");
+		printf("(ND-xform-set clip_1\n");
 		printf("{%d %d\n",tworld->idim,tworld->odim);
 		for(j=0;j<tworld->idim;j++)
 		{	for(k=0;k<t->odim;k++)
@@ -503,7 +503,7 @@ int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
 			GeomFSave(newobjs[i],stdout,"stdout");
 			printf(")\n");
 			fflush(stdout);
-			printf("(ND-xform clip_%d\n",i+1);
+			printf("(ND-xform-set clip_%d\n",i+1);
 			printf("{%d %d\n",tworld->idim,tworld->odim);
 			for(j=0;j<tworld->idim;j++)
 			{	for(k=0;k<tworld->odim;k++)
@@ -567,7 +567,7 @@ int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
                         GeomFSave(newobjs[i],stdout,"stdout");
                         printf(")\n");
                         fflush(stdout);
-			printf("(ND-xform clip_%d\n",i+1);
+			printf("(ND-xform-set clip_%d\n",i+1);
 			printf("{%d %d\n",tworld->idim,tworld->odim);
 			for(j=0;j<tworld->idim;j++)
 			{	for(k=0;k<tworld->odim;k++)

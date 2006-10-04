@@ -76,6 +76,11 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 	    OOGLSyntax(file, "Reading nSKEL from \"%s\": Expected dimension", fname);
 	    return NULL;
 	}
+	if (dim < 4) {
+	    OOGLSyntax(file, "Reading nSKEL from \"%s\": dimension %d <= 4",
+		       fname, dim);
+	    return NULL;
+	}
     }
     if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
       binary = 1;
@@ -88,7 +93,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
     GGeomInit(s, SkelMethods(), SKELMAGIC, NULL);
     s->geomflags = geomflags;
-    s->dim = s->geomflags & SKEL_4D ? dim : dim+1;
+    s->dim = (s->geomflags & SKEL_4D) ? dim : dim+1;
     s->p = NULL;
     s->l = NULL;
     s->c = NULL;

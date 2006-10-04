@@ -64,6 +64,10 @@ NDMeshMethods()
 		aNDMeshMethods->fsave = (GeomFSaveFunc *) NDMeshFSave;
 		aNDMeshMethods->bound = (GeomBoundFunc *) NDMeshBound;
 		aNDMeshMethods->draw = (GeomDrawFunc *) NDMeshDraw;
+		aNDMeshMethods->transform = 
+		  (GeomTransformFunc *) NDMeshTransform;
+		aNDMeshMethods->transformto =
+		  (GeomTransformToFunc *) NDMeshTransform; /* == Transform */
 	}
 	return aNDMeshMethods;
 }

@@ -43,7 +43,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void SphereMinMax(Sphere *sphere, HPoint3 *min, HPoint3 *max) 
 {
   Geom *bbox;
-  bbox = GeomBound((Geom *)sphere, TM_IDENTITY);
+  bbox = GeomBound((Geom *)sphere, TM_IDENTITY, NULL, NULL);
   BBoxMinMax((BBox *)bbox, min, max);
   GeomDelete(bbox);
   HPt3Normalize(min, min);
@@ -60,14 +60,15 @@ float SphereRadius(Sphere *sphere)
   return sphere->radius;
 }
 
-void SphereSwitchSpace(Sphere *sphere, int space) {
+void SphereSwitchSpace(Sphere *sphere, int space)
+{
   Transform T;
   
   sphere->space = space;
   TmScale(sphere->axis, sphere->radius, sphere->radius, sphere->radius);
   TmSpaceTranslate(T, sphere->center.x, sphere->center.y, sphere->center.z,
 		   sphere->space);
-  GeomTransform((Geom*)sphere, T);
+  GeomTransform((Geom*)sphere, T, NULL);
 }
 
 Sphere *SphereUnion3(Sphere *a, Sphere *b, Sphere *dest) {

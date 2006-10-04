@@ -43,58 +43,74 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "polylistP.h"
 
-BBox *
-PolyListBound(polylist, T)
-     PolyList       *polylist;
-     Transform	T;
+BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN, int *axes)
 {
-	int n;
-	Vertex	*v;
-	HPoint3	min, max;
-	HPoint3	*raw, *clean, p0, p1;
+  int n;
+  Vertex  *v;
+  HPoint3 min, max;
+  HPoint3 *raw, *clean, tmp;
 
-	n = polylist->n_verts;
-	v = polylist->vl;
+  if (T == TM_IDENTITY)
+    T = NULL;
 
-	/* We assume all the vertices in vl[] are actually used... */
-	while(--n >= 0 && !finite(v->pt.x + v->pt.y + v->pt.z))
-	    v++;
-	if(n <= 0)
-	    return NULL;	/* No finite points */
+  n = polylist->n_verts;
+  v = polylist->vl;
 
-#ifdef BBOX_ND_HACK
-	if(polylist->geomflags & VERT_4D) {
-	   BBox *b;
-	   for(b = NULL; --n >= 0; )
-		b = BBox_ND_hack(b, &v->pt.x, 4);
-	   return b;
-	}
+  /* We assume all the vertices in vl[] are actually used... */
+  while(--n >= 0 && !finite(v->pt.x + v->pt.y + v->pt.z + v->pt.w))
+    v++;
+  if(n <= 0)
+    return NULL;	/* No finite points */
+
+#if 0 && defined(BBOX_ND_HACK)
+  if(polylist->geomflags & VERT_4D) {
+    BBox *b;
+    for(b = NULL; --n >= 0; )
+      b = BBox_ND_hack(b, &v->pt.x, 4);
+    return b;
+  }
 #endif
 
-	min = v->pt;
-	/* all points are 4-vectors, but we've marked whether they
-	 * have true 4-dimensional nature */
-	if (T) 	{
-		HPt3Transform(T, &min, &min);
-	    	HPt3Normalize( &min, &min );
-		}
-	max = min;
-	clean = &p1;
-	while(--n >= 0) {
-		v++;
-            	if (T && T != TM_IDENTITY) 	{
-			HPt3Transform(T, &v->pt, &p0);
-			raw = &p0;
-			}
-		else raw = &v->pt;
-		HPt3Normalize( raw , clean );
-		if(min.x > clean->x) min.x = clean->x;
-		else if(max.x < clean->x) max.x = clean->x;
-		if(min.y > clean->y) min.y = clean->y;
-		else if(max.y < clean->y) max.y = clean->y;
-		if(min.z > clean->z) min.z = clean->z;
-		else if(max.z < clean->z) max.z = clean->z;
-		}
-	return (BBox *) GeomCCreate(NULL, BBoxMethods(),
-			    CR_MIN, &min, CR_MAX, &max, CR_END);
+  min = v->pt;
+  /* all points are 4-vectors, but we've marked whether they
+   * have true 4-dimensional nature */
+  if (T) 	{
+    HPt3Transform(T, &min, &min);
+  }
+  if (!(polylist->geomflags & VERT_4D)) {
+    HPt3Dehomogenize( &min, &min );
+  }
+  max = min;
+  while(--n >= 0) {
+    v++;
+    if (T) 	{
+      raw = &tmp;
+      HPt3Transform(T, &v->pt, raw);
+    } else {
+      raw = &v->pt;
+    }
+    if (!(polylist->geomflags & VERT_4D)) {
+      clean = &tmp;
+      HPt3Normalize( raw, clean );
+    } else {
+      clean = raw;
+    }
+    if(min.x > clean->x) min.x = clean->x;
+    else if(max.x < clean->x) max.x = clean->x;
+    if(min.y > clean->y) min.y = clean->y;
+    else if(max.y < clean->y) max.y = clean->y;
+    if(min.z > clean->z) min.z = clean->z;
+    else if(max.z < clean->z) max.z = clean->z;
+    if (polylist->geomflags & VERT_4D) {
+      if(min.w > clean->w) min.w = clean->w;
+      else if(max.w < clean->w) max.w = clean->w;
+    }
+  }
+  if (polylist->geomflags & VERT_4D) {
+    return (BBox *) GeomCCreate(NULL, BBoxMethods(),
+				CR_4MIN, &min, CR_4MAX, &max, CR_END);
+  } else {
+    return (BBox *) GeomCCreate(NULL, BBoxMethods(),
+				CR_MIN, &min, CR_MAX, &max, CR_END);
+  }
 }

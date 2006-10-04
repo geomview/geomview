@@ -34,34 +34,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geomclass.h"
 
 Geom *
-GeomPosition( object, T )
-    Geom *object;
-    Transform T;
+GeomPosition(Geom *object, Transform T)
 {
     if( object && object->Class->position )
-	(*object->Class->position)(object,T);
-    else
+	(*object->Class->position)(object, T);
+    else if (T)
 	TmIdentity(T);
     return object;
 }
 
-Geom *
-GeomTransformTo( object, T )
-    Geom *object;
-    Transform T;
+Geom *GeomTransformTo(Geom *object, Transform T, TransformN *TN)
 {
     if( object && object->Class->transformto )
-	(*object->Class->transformto)(object,T);
+	(*object->Class->transformto)(object,T, TN);
     return object;
 }
 
-Geom *
-GeomTransform( object, T )
-    Geom *object;
-    Transform T;
+Geom *GeomTransform(Geom *object, Transform T, TransformN *TN)
 {
     if( object && object->Class->transform )
-	(*object->Class->transform)(object,T);
+	(*object->Class->transform)(object, T, TN);
     return object;
 }
 

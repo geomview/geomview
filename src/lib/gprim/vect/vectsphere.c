@@ -32,17 +32,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "create.h"
 #include "vectP.h"
 
-Geom *VectBoundSphere(vect, T, space)
-     Vect *vect;
-     Transform T;
-     int space;
+Geom *VectBoundSphere(Vect *vect,
+		      Transform T, TransformN *TN, int *axes,
+		      int space)
 {
   Geom *sphere;
+
   if(vect->geomflags & VERT_4D)
-    return GeomBoundSphereFromBBox((Geom *)vect, T, space);
+    return GeomBoundSphereFromBBox((Geom *)vect, T, TN, axes, space);
 
   sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, vect->p,
 		      CR_NENCOMPASS_POINTS, vect->nvert,
-		      CR_AXIS, T, CR_SPACE, space, CR_END);
+		      CR_AXIS, T ? T : TM_IDENTITY, CR_SPACE, space, CR_END);
   return sphere;
 }

@@ -48,7 +48,9 @@
 struct BBox {
 	GEOMFIELDS
 	int             flag;
+	int             pdim; /* dim+1 if dim > 3 */
 	HPoint3		min, max;
+	HPointN         *minN, *maxN;
 };
 
 #define BBOX_ND_HACK	BBox_ND_hack

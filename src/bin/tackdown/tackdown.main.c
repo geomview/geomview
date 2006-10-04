@@ -69,7 +69,7 @@ void TransButtonProc(FL_OBJECT *o, long val) {
  
   TransStreamIn(standardIn, NULL, t);
 
-  GeomTransform(g, t);
+  GeomTransform(g, t, NULL);
 
   printf("(freeze allcams)");
   printf("(geometry targetgeom {");

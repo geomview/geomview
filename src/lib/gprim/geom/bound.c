@@ -39,13 +39,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * if T is NULL, compute bbox of geom in its native coordinates.
  */
 
-Geom *
-GeomBound(geom, T)
-    Geom *geom;
-    Transform T;
+Geom *GeomBound(Geom *geom, Transform T, TransformN *TN, int *axes)
 {
     if (geom && geom->Class->bound) {
-	return (*geom->Class->bound) (geom, T==NULL ? TM_IDENTITY : T);
+	return (*geom->Class->bound) (geom, T, TN, axes);
     }
     return NULL;
 }

@@ -261,7 +261,7 @@ Default: create complete rib file containing default camera, lights, etc.\n\
 	    mgworldbegin();
 
 	    /* we use the bbox to determain how to place the geometry */
-	    bbox = GeomBound(ageom, TM_IDENTITY);
+	    bbox = GeomBound(ageom, NULL, NULL, NULL);
 	    if (bbox != NULL) {
 		BBoxMinMax((BBox*)bbox, &min, &max);
 		cx = (max.x + min.x) * .5;

@@ -45,23 +45,29 @@ BBoxUnion(BBox *bbox1, BBox *bbox2)
 BBox *
 BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 {
+    /* TAKE CARE OF THE CASE OF EITHER CUBE BEING NULL */
+    if (!bbox1) {
+	if(!bbox2) {
+	    if(result) {
+		static Point Max = { -1e10,-1e10,-1e10, 1 };
+		static Point Min = {  1e10, 1e10, 1e10, 1 };
+		result->min = Min;
+		result->max = Max;
+	    }
+	    return result;
+	}
+	bbox1 = bbox2;
+	bbox2 = NULL;
+    }
+
+    if (bbox1->pdim != bbox2->pdim) {
+	OOGLError (0, "BBoxUnion3: dimensions do not match: %d/%d",
+		   bbox1->pdim, bbox2->pdim);
+    }
+
+    if (bbox1->minN == NULL) { /* ordinary case */
 	HPoint3	min, max;
 
-
-	/* TAKE CARE OF THE CASE OF EITHER CUBE BEING NULL */
-	if (!bbox1) {
-	    if(!bbox2) {
-		if(result) {
-		    static Point Max = { -1e10,-1e10,-1e10, 1 };
-		    static Point Min = {  1e10, 1e10, 1e10, 1 };
-		    result->min = Min;
-		    result->max = Max;
-		}
-		return result;
-	    }
-	    bbox1 = bbox2;
-	    bbox2 = NULL;
-	}
 	min = bbox1->min;
 	max = bbox1->max;
 	if(bbox2) {
@@ -71,13 +77,57 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 	    if(max.y < bbox2->max.y) max.y = bbox2->max.y;
 	    if(min.z > bbox2->min.z) min.z = bbox2->min.z;
 	    if(max.z < bbox2->max.z) max.z = bbox2->max.z;
+	    if(min.w > bbox2->min.w) min.w = bbox2->min.w;
+	    if(max.w < bbox2->max.w) max.w = bbox2->max.w;
 	}
-	/* this needs to be fleshed out for true 4D */
-	min.w = max.w = 1.0;
-	if(result == NULL)
-	    return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				CR_MIN, &min, CR_MAX, &max, CR_END);
-	result->min = min;
-	result->max = max;
+
+	if (bbox1->geomflags & VERT_4D) {
+	    return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+				       CR_4MIN, &min, CR_4MAX, &max, CR_END);
+	} else {
+	    return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+				       CR_MIN, &min, CR_MAX, &max, CR_END);
+	}
+    } else {
+	int dim;
+
+	if (bbox1->geomflags & VERT_4D) {
+	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+					 CR_NMIN, bbox1->minN,
+					 CR_NMAX, bbox1->maxN,
+					 CR_4D, 1,
+					 CR_END);
+	    dim = bbox1->pdim;
+	} else {
+	    HPtNDehomogenize(bbox1->minN, bbox1->minN);
+	    HPtNDehomogenize(bbox1->minN, bbox1->maxN);
+
+	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+					 CR_NMIN, bbox1->minN,
+					 CR_NMAX, bbox1->maxN,
+					 CR_4D, 1,
+					 CR_END);
+	    dim = bbox1->pdim-1;
+	}
+
+	if (bbox2) {
+	    int i;
+
+	    if (!(bbox1->geomflags & VERT_4D)) {
+		HPtNDehomogenize(bbox2->minN, bbox2->minN);
+		HPtNDehomogenize(bbox2->minN, bbox2->maxN);
+	    }
+
+	    for (i = 0; i < dim; i++) {
+		if (result->minN->v[i] > bbox2->minN->v[i]) {
+		    result->minN->v[i] = bbox2->minN->v[i];
+		}
+		if (result->maxN->v[i] < bbox2->maxN->v[i]) {
+		    result->maxN->v[i] = bbox2->maxN->v[i];
+		}
+	    }
+	}
+	
 	return result;
+    }
 }

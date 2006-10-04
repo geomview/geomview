@@ -27,14 +27,15 @@
 #ifndef PLUTIL_H
 #define PLUTIL_H
 
+#include "appearance.h"
+#include "transformn.h"
+
 typedef struct _PLData PLData;
 
 Geom *PLCombine(Geom *a1, Geom *b1);
 Geom *AnyToPL(Geom *old, Transform T);
 Geom *PLConsol(Geom *g, float prec);
 
-/* Anyone wanting to use this entry point must #include "transformn.h" first */
-#ifdef TRANSFORMNDEF
 PLData *AnyGeomToPLData(Geom *old, Transform T, TransformN *Tn, Appearance *ap, PLData *pd);
 Geom *PLDataToGeom(PLData *pd, int want, int unwant);
 
@@ -42,7 +43,5 @@ Geom *PLDataToGeom(PLData *pd, int want, int unwant);
 #define PL_N            0x2
 #define PL_H            0x4
 #define PL_ND           0x8
-
-#endif
 
 #endif /* PLUTIL_H */

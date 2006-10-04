@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.4 2006/07/14 17:47:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.5 2006/10/04 08:10:04 rotdrop Exp $ */
 
 
 /*
@@ -75,7 +75,7 @@ PolyListMethods()
 		aPolyListMethods->transform = 
 		  (GeomTransformFunc *) PolyListTransform;
 		aPolyListMethods->transformto = 
-		  (GeomTransformToFunc *) PolyListTransformTo;
+		  (GeomTransformToFunc *) PolyListTransform;
 	}
 	return aPolyListMethods;
 }

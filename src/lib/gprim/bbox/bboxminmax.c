@@ -33,15 +33,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bboxP.h"
 
-BBox           *
-BBoxMinMax(bbox, min, max)
-    BBox *bbox;
-    HPoint3	*min, *max;
+BBox *BBoxMinMax(BBox *bbox, HPoint3 *min, HPoint3 *max)
 {
     static HPoint3 nullpoint = {0,0,0,1};
     if (bbox != NULL) {
-	*min = bbox->min;
-	*max = bbox->max;
+      *min = bbox->min;
+      *max = bbox->max;
     } else {
       *min = nullpoint;
       *max = nullpoint;

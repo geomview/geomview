@@ -39,14 +39,14 @@ getmeshvert(IOBFILE *file, int flag, int pdim, int u, int v, HPointN **p,
 		ColorA *c, Point3 *t)
 {
 	float	inputs[128];
-	int readdim = flag&MESH_4D ? pdim+1 : pdim;
+	int readdim = flag&MESH_4D ? pdim : pdim - 1;
 	int binary = flag&MESH_BINARY;
 
-	inputs[pdim] = 1.0;
+	inputs[pdim-1] = 1.0;
 	if (iobfgetnf(file, readdim, inputs, binary) < readdim)
 	    return 0;
 
-	*p = HPtNCreate(pdim+1, inputs);
+	*p = HPtNCreate(pdim, inputs);
 
 	if (flag & MESH_C && iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return 0;
@@ -58,7 +58,7 @@ getmeshvert(IOBFILE *file, int flag, int pdim, int u, int v, HPointN **p,
 }
 
 static int
-getheader(IOBFILE *file, int *dimp)
+getheader(IOBFILE *file, const char *fname, int *dimp)
 {
 	int i, flag;
 	char *token;
@@ -81,6 +81,13 @@ getheader(IOBFILE *file, int *dimp)
 
 	if(iobfgetni(file, 1, dimp, 0) <= 0)
 	    return -1;
+
+	if (*dimp < 4) {
+		OOGLSyntax(file,
+			   "Reading nMESH from \"%s\": dimension %d < 4",
+			   fname, *dimp);
+	}
+	(*dimp)++;
 
 	if(iobfnextc(file, 1) == 'B') {
 	    if(iobfexpectstr(file, "BINARY"))
@@ -105,7 +112,7 @@ NDMeshFLoad(IOBFILE *file, char *fname)
 	if (!file)
 		return NULL;
 
-	if((m.flag = getheader(file, &m.pdim)) == -1)
+	if((m.flag = getheader(file, fname, &m.pdim)) == -1)
 		return NULL;
 
 	m.meshd = 2;	/* Hack.  Should allow general meshes */
@@ -136,7 +143,7 @@ NDMeshFLoad(IOBFILE *file, char *fname)
 	for (i = 0, v = 0; v < size[1]; v++) {
 	    for (u = 0; u < size[0]; u++, i++) {
 		if(getmeshvert(file, m.flag, m.pdim, u, v,
-			&m.p[i], &m.c[i], &m.u[i]) == 0) {
+			       &m.p[i], &m.c[i], &m.u[i]) == 0) {
 		    OOGLSyntax(file,
 		"Reading nMESH from \"%s\": bad element (%d,%d) of (%d,%d)",
 			    fname, u,v, size[0],size[1]);
@@ -145,7 +152,7 @@ NDMeshFLoad(IOBFILE *file, char *fname)
 	    }
 	}
 	return (NDMesh *) GeomCCreate (NULL, NDMeshMethods(), CR_NOCOPY,
-		CR_MESHDIM, 2, CR_MESHSIZE, size, CR_DIM, m.pdim,
+		CR_MESHDIM, 2, CR_MESHSIZE, size, CR_DIM, m.pdim-1,
 		CR_4D, (m.flag & MESH_4D), CR_FLAG, m.flag,
 		CR_POINT4, m.p, CR_COLOR, m.c, CR_U, m.u, CR_END);
 }

@@ -47,13 +47,13 @@ extern Mesh	*MeshFLoad( IOBFILE *, char * );
 extern Mesh	*MeshLoad( char * );
 extern Mesh	*MeshSave( Mesh *, char * );
 extern Mesh	*MeshFSave( Mesh *, FILE * );
-extern BBox	*MeshBound( Mesh *, Transform );
-extern Geom	*MeshBoundSphere( Mesh *, Transform, int );
+extern BBox	*MeshBound( Mesh *, Transform T, TransformN *TN, int *axes );
+extern Geom	*MeshBoundSphere( Mesh *,
+				  Transform T, TransformN *TN, int *axes, int );
 extern Mesh	*MeshDice( Mesh *, int (*proc)() );
 extern Mesh	*MeshEvert( Mesh * );
 extern Mesh	*MeshDraw( Mesh * );
 extern Mesh	*MeshPick( Mesh *, Pick *, Appearance *, Transform );
-extern Mesh     *MeshTransform( Mesh *, Transform );
-extern Mesh     *MeshTransformTo( Mesh *, Transform );
+extern Mesh     *MeshTransform( Mesh *, Transform, TransformN * );
 
 #endif /*MESHDEF*/

@@ -52,6 +52,8 @@
 #define CR_MIN		17	/* Point3 *	(BBox)			*/
 #define CR_4MAX		1492	/* HPoint3 *	(BBox)			*/
 #define CR_4MIN		1066	/* HPoint3 *	(BBox)			*/
+#define CR_NMIN		2048    /* HPointN *	(BBox)			*/
+#define CR_NMAX		2049    /* HPointN *	(BBox)			*/
 
 #define CR_4D		19	/* is this object a true 4D item?	*/
 

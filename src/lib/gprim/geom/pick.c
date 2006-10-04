@@ -122,7 +122,7 @@ GenericPick(Geom *g, Pick *p, Appearance *ap, Transform T)
     Geom *bbox;
     HPoint3 min, max;
 
-    bbox = GeomBound(g, T);
+    bbox = GeomBound(g, T, NULL, NULL);
     BBoxMinMax((BBox*)bbox, &min, &max);
     if(min.x <= 0 && max.x >= 0 && min.y <= 0 && max.y >= 0 &&
 					.5*(min.z + max.z) <= p->got.z) {

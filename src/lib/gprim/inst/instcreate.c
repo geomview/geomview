@@ -165,7 +165,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 
 	case CR_AXIS:
 	    t = va_arg(*a_list, Transform *);
-	    InstTransformTo(inst, (*t));
+	    InstTransformTo(inst, (*t), NULL);
 	    break;
 
 	case CR_AXISHANDLE:

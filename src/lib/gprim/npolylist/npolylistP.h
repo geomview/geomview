@@ -64,6 +64,8 @@ struct NPolyList
 extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list *a_list);
 extern NPolyList *NPolyListCopy( NPolyList *poly );
 extern NPolyList *NPolyListDelete( NPolyList *poly );
+extern NPolyList *NPolyListTransform(NPolyList *np,
+				     Transform T, TransformN *TN);
 extern GeomClass *NPolyListMethods();
 
 #endif/*NPOLYLISTPDEFS*/

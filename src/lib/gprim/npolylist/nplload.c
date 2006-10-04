@@ -87,6 +87,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 	token++;
     }
     if(*token == 'S') {		/* "smooth surface": we compute vtx normals */
+	/* ??? normals ??? */
 	makenorm = 1;
 	token++;
     }
@@ -94,6 +95,10 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 	headerseen = 1;
 	if(iobfgetni(file, 1, &pdim, binary) == 0) {
 	    OOGLSyntax(file, "nOFF %s: expected dimension", fname);
+	    return NULL;
+	}
+	if (pdim < 4) {
+	    OOGLSyntax(file, "nOFF %s: dimension %d must be > 4", fname, pdim);
 	    return NULL;
 	}
 	if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
@@ -118,7 +123,14 @@ NPolyListFLoad(IOBFILE *file, char *fname)
     pl->flags = flags;
     pl->geomflags = (dimn == 4) ? VERT_4D : 0;
 
+#if 0
+    /* wrong: the Ndim number of the nOFF and 4nOFF file formats does
+       _NOT_ include the homogeneous component */
     pl->pdim = pdim + (dimn == 4 ? 0 : 1);
+#else
+    pl->pdim = pdim + 1;
+    pdim += dimn == 4; /* number of coordinates specified in OFF file */
+#endif
 
 
     if(iobfgetni(file, 1, &pl->n_verts, binary) <= 0 ||

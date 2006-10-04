@@ -39,21 +39,52 @@ BBoxFLoad(IOBFILE *f, char *fname)
     BBox b;
     BBox *bbox;
     char *token = GeomToken(f);
-    int dim = 3;
+    int dimn = 3, nd = 0, pdim = 4;
 
     if(*token == '4') {
-	dim = 4;
+	dimn = 4;
+	token++;
+    }
+    if(*token == 'n') {
+	nd = 1;
 	token++;
     }
     if(strcmp(token, "BBOX"))
 	return NULL;
 
-    b.min.w = b.max.w = 1.0;
-    if(iobfgetnf(f, dim, &b.min.x, 0) != dim ||
-       iobfgetnf(f, dim, &b.max.x, 0) != dim) {
-      OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
-		 fname, dim * 2);
-      return NULL;
+    if(nd) {
+      if(iobfgetni(f, 1, &pdim, 0) <= 0) {
+	OOGLSyntax(f, "Reading nBBOX from \"%s\": Expected dimension", fname);
+	return NULL;
+      }
+
+      b.pdim += (dimn == 4) ? 0 : 1;
+
+      b.minN = HPtNCreate(pdim, NULL);
+      b.maxN = HPtNCreate(pdim, NULL);
+
+      if(iobfgetnf(f, pdim, b.minN->v, 0) != pdim ||
+	 iobfgetnf(f, pdim, b.maxN->v, 0) != pdim) {
+	OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
+		   fname, pdim * 2);
+	HPtNDelete(b.minN);
+	HPtNDelete(b.maxN);
+	return NULL;
+      }
+      if (dimn == 3) {
+	b.minN->v[pdim] = 1.0;
+	b.maxN->v[pdim] = 1.0;
+      }
+
+    } else {
+
+      b.min.w = b.max.w = 1.0;
+      if(iobfgetnf(f, dimn, &b.min.x, 0) != dimn ||
+	 iobfgetnf(f, dimn, &b.max.x, 0) != dimn) {
+	OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
+		   fname, dimn * 2);
+	return NULL;
+      }
     }
 
     bbox = OOGLNewE(BBox, "BBoxFLoad BBox");
@@ -61,7 +92,7 @@ BBoxFLoad(IOBFILE *f, char *fname)
 
     GGeomInit(bbox, BBoxMethods(), BBOXMAGIC, NULL);
 
-    if (dim == 4) bbox->geomflags |= VERT_4D;
+    if (dimn == 4) bbox->geomflags |= VERT_4D;
 
     return bbox;
 }

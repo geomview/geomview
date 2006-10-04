@@ -215,7 +215,7 @@ int return_new_matrix(TransformN *O2C, TransformN *O2W, TransformN *C2U, Transfo
 	/* we get this from O2C * C2U * U2W  */
 	tmp = TmNConcat(O2C, C2U, tmp);
 	O2W = TmNConcat(tmp, U2W, O2W);
-	printf("(ND-xform targetgeom %d %d ",dimension+1,dimension+1);
+	printf("(ND-xform-set targetgeom %d %d ",dimension+1,dimension+1);
 	for ( j = 0; j < dimension + 1; j++ )
 	    for ( k = 0; k < dimension + 1; k++ )
 		printf("%.2f ",O2W->a[j*(dimension+1)+k]);
@@ -226,7 +226,7 @@ int return_new_matrix(TransformN *O2C, TransformN *O2W, TransformN *C2U, Transfo
 	   O2C  (which is really W2C in this case)  */
 	tmp = TmNConcat(U2W, O2C, tmp);
 	C2U = TmNInvert(tmp, C2U);
-	printf("(ND-xform focus %d %d ",dimension+1,dimension+1);
+	printf("(ND-xform-set focus %d %d ",dimension+1,dimension+1);
 	for ( j = 0; j < dimension + 1; j++ )
 	    for ( k = 0; k < dimension + 1; k++ )
 		printf("%.2f ",C2U->a[j*(dimension+1)+k]);
@@ -283,15 +283,16 @@ void spanproc(int i)
 	/* the world is NOT selected */
 	fprintf(stderr, "The world is NOT selected: %s\n",buf1);
 	objectflag = 1;
-	printf("(echo (ND-xform targetgeom))\n");
+	printf("(echo (ND-xform-get targetgeom))\n");
 	fflush(stdout);
 	O2W = TmNRead(infile);
     }
 
-    printf("(echo (ND-xform world))\n");
+    printf("(echo (ND-xform-get world))\n");
     fflush(stdout);
     W2U = TmNRead(infile);
-    printf("(echo (if (real-id focus) (ND-xform focus) (ND-xform g0)))\n");
+    printf("(echo (if (real-id focus) "
+	   "(ND-xform-get focus) (ND-xform-get g0)))\n");
     fflush(stdout);
     C2U = TmNRead(infile);
 

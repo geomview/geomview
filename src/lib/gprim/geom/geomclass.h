@@ -49,15 +49,17 @@ typedef Geom *GeomSaveFunc( Geom *object, char *name );
 typedef Geom *GeomFSaveFunc( Geom *object, FILE *file, char *name );
 
 typedef Geom *GeomPositionFunc( Geom *object, Transform T );
-typedef Geom *GeomTransformFunc( Geom *object, Transform T );
-typedef Geom *GeomTransformToFunc( Geom *object, Transform T );
+typedef Geom *GeomTransformFunc( Geom *object, Transform T, TransformN *TN );
+typedef Geom *GeomTransformToFunc( Geom *object, Transform T, TransformN *TN );
 typedef Geom *GeomRotateFunc( Geom *object, float angle, Point3 *axis  );
 typedef Geom *GeomTranslateFunc( Geom *object, float x, float y, float z );
 typedef Geom *GeomScaleFunc( Geom *object, float x, float y, float z );
 
 typedef Geom *GeomEvertFunc( Geom *object );
-typedef Geom *GeomBoundFunc( Geom *object, Transform T );
-typedef Geom *GeomBoundSphereFunc( Geom *object, Transform T, int space );
+typedef Geom *GeomBoundFunc( Geom *object,
+			     Transform T, TransformN *TN, int *axes );
+typedef Geom *GeomBoundSphereFunc( Geom *object, Transform T,
+				   TransformN *TN, int * axes, int space );
 typedef Geom *GeomEvalFunc(  Geom *object, float u, float v );
 typedef Geom *GeomDiceFunc( Geom *object, int nu, int nv );
 typedef Geom *GeomSubdivideFunc( /* Geom *object */ );
@@ -127,7 +129,8 @@ extern void	 *GeomClassIterate();
 extern GeomClass *GeomNextClass( void *iter );
 extern GeomClass *GeomFName2Class( char *fname );
 
-extern Geom	 *GeomBoundSphereFromBBox(Geom *, Transform, int space);
+extern Geom *GeomBoundSphereFromBBox(Geom *, Transform, TransformN *, int *axes,
+				     int space);
 
 /* internal routine used by file-reading routines */
 extern char *GeomToken(IOBFILE *f);

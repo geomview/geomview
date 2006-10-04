@@ -119,6 +119,7 @@ extern Geom *GeomMousePick( Geom *g, Pick *p, Appearance *ap, Transform Tproj,
  *	T is adapted for convenience in pick calculations;
  *	it is translated such that the pick goes through (x,y) = (0,0).
  */
-extern Geom *GeomPick( Geom *g, Pick *p, Appearance *ap, Transform T );
+extern Geom *GeomPick( Geom *g, Pick *p, Appearance *ap,
+		       Transform T );
 
 #endif /*PICKDEF*/

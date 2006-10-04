@@ -64,7 +64,7 @@ ListMethods()
         ListClass->evert = (GeomEvertFunc *)ListEvert;
 	ListClass->dice = (GeomDiceFunc *)ListDice;
         ListClass->transform = (GeomTransformFunc *)ListTransform;
-	ListClass->transformto = (GeomTransformToFunc *)ListTransformTo;
+	ListClass->transformto = (GeomTransformToFunc *)ListTransform;
 	ListClass->pick = (GeomPickFunc *)ListPick;
 	ListClass->copy = (GeomCopyFunc *)ListCopy;
         ListClass->draw = (GeomDrawFunc *)ListDraw;

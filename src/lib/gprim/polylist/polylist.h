@@ -33,15 +33,16 @@
 typedef struct PolyList PolyList;
 
 extern PolyList *PolyListDraw( PolyList * );
-extern BBox	*PolyListBound( PolyList *, Transform );
-extern Geom 	*PolyListSphere( PolyList *, Transform, int );
+extern BBox     *PolyListBound(PolyList *polylist,
+			       Transform T, TransformN *TN, int *axes);
+extern Geom 	*PolyListSphere( PolyList *,
+				 Transform, TransformN *TN, int *axes, int );
 extern PolyList *PolyListEvert( PolyList * );
 extern PolyList *PolyListLoad( char * );	/* Loads "off" files */
 extern PolyList *PolyListFLoad( IOBFILE *, char *fname );
 extern char    *PolyListName( void );
 extern PolyList *PolyListSave( PolyList *, char * );
 extern PolyList *PolyListFSave( PolyList *, FILE *, char * );
-extern PolyList *PolyListTransform( PolyList *, Transform );
-extern PolyList *PolyListTransformTo( PolyList *, Transform );
+extern PolyList *PolyListTransform( PolyList *, Transform, TransformN * );
 
 #endif/*POLYLISTDEFS*/

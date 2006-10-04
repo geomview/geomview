@@ -39,10 +39,10 @@ extern GeomClass *ListMethods( void );
 extern char *ListName( void );
 extern List *ListLoad( char *fname );
 extern List *ListFLoad( FILE *f, char *fname );
-extern BBox *ListBound( List *, Transform );
-extern Geom *ListBoundSphere( List *, Transform, int );
-extern List *ListTransform( List *, Transform );
-extern List *ListTransformTo( List *, Transform );
+extern BBox *ListBound( List *, Transform, TransformN *TN, int *axes );
+extern Geom *ListBoundSphere( List *,
+			      Transform, TransformN *TN, int *axes, int );
+extern List *ListTransform( List *, Transform, TransformN* );
 extern List *ListRotate( List *, float, Point * );
 extern List *ListTranslate( List *, float, float, float );
 extern List *ListScale( List *, float, float, float );

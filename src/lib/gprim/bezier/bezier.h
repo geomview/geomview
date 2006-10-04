@@ -52,12 +52,13 @@ List 		*BezierListSave();
 List		*BezierListFSave();
 char           	*BezierName();
 BBox           	*BezierBound();
-Geom 		*BezierBoundSphere( Bezier *, Transform, int );
+Geom 		*BezierBoundSphere( Bezier *,
+				    Transform T, TransformN *TN, int *axes,
+				    int );
 Bezier      	*BezierEvert();
 Bezier      	*BezierDraw( Bezier *bezier );
 Geom      	*BezierPick( Bezier *, Pick *, Appearance *, Transform );
-Bezier      	*BezierTransform( Bezier *, Transform );
-Bezier          *BezierTransformTo( Bezier *, Transform );
+Bezier      	*BezierTransform( Bezier *, Transform, TransformN * );
 
 int		 BezierExport();
 int		 BezierUnexport();

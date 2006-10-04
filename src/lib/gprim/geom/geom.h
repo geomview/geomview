@@ -56,14 +56,16 @@ extern Geom    *GeomFSave( Geom *obj, FILE *outf, char *fname );
 extern Geom    *GeomFSaveEmbedded( Geom *obj, Handle *handle, FILE *inf, char *fname );
 extern void	GeomReplace( Geom *parent, Geom *newchild );
 extern Geom    *GeomEvert( Geom *obj );
-extern Geom    *GeomBound( Geom *obj, Transform T );
-extern Geom    *GeomBoundSphere( Geom *obj, Transform T, int space );
+extern Geom    *GeomBound( Geom *obj, Transform T, TransformN *TN, int *axes );
+extern Geom    *GeomBoundSphere( Geom *obj,
+				 Transform T, TransformN *, int *axes,
+				 int space );
 extern Geom    *GeomEval( Geom *obj );
 extern Geom    *GeomDice( Geom *obj, int nu, int nv );
 extern Geom    *GeomSubdivide( Geom *obj );
 extern Geom    *GeomPosition( Geom *obj, Transform T );
-extern Geom    *GeomTransform( Geom *obj, Transform T );
-extern Geom    *GeomTransformTo( Geom *obj, Transform T );
+extern Geom    *GeomTransform( Geom *obj, Transform T, TransformN *TN );
+extern Geom    *GeomTransformTo( Geom *obj, Transform T, TransformN *TN );
 
 extern int	GeomSet( Geom *g, /* int attr, */ ... /* , CR_END */ );
 extern int	GeomGet( Geom *g, int attr, void *attrp );

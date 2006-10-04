@@ -31,12 +31,72 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#include "mg.h"
 #include "bboxP.h"
+#include "mgP.h"	/* need mgP.h (instead of mg.h) for _mgc below */
+#include "hpointn.h"
+#include <stdlib.h>
+#ifndef alloca
+#include <alloca.h>
+#endif
 
-BBox *
-BBoxDraw(bbox)
-     BBox *bbox;
+static void draw_projected_bbox(mgmapfunc NDmap, void *NDinfo,
+				BBox *bbox, Appearance *ap)
+{
+    int i, e, numvert, dim;
+    ColorA edgecolor;
+    HPointN *ptN;
+    HPoint3 *pts3;
+
+    if (bbox->minN == NULL)
+	return; /* Draw only Nd objects */
+
+    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.a = 1;
+
+    ptN = HPtNCreate(bbox->pdim, NULL);
+    if (bbox->geomflags & VERT_4D) {
+	dim = bbox->pdim;
+    } else {
+	dim = bbox->pdim-1;
+	HPtNDehomogenize(bbox->minN, bbox->minN);
+	HPtNDehomogenize(bbox->maxN, bbox->maxN);
+	ptN->v[dim] = 1.0;
+    }
+    numvert = 1 << dim;
+    pts3 = (HPoint3 *)alloca(numvert*sizeof(HPoint3));
+
+    for (i = 0; i < numvert; i++) {
+	for (e = 0; e < dim; e++) {
+	    ptN->v[e] = (i & (1 << e)) ? bbox->minN->v[e] : bbox->maxN->v[e];
+	}
+	(*NDmap)(NDinfo, ptN, &pts3[i], NULL);
+    }
+    HPtNDelete(ptN);
+
+    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.a = 1;
+
+    for(i = 0; i < numvert; i++) {
+	int j, incr;
+	HPoint3 edge[2];
+
+	for(j = 0; j < dim; j ++) {
+	    /* connect this vertex to its nearest neighbors if they
+	     * follow it in lexicographical order */
+	    incr = 1 << j;
+	    /* is the j_th bit a zero? */
+	    if ( ! (i & incr) )	{
+		/* if so, draw the edge to the vertex whose number is
+		 * gotten from i by making the j_th bit a one */
+		edge[0] = pts3[i];
+		edge[1] = pts3[i + incr];
+		mgpolyline(2, edge, 1,  &edgecolor, 0) ;
+	    }
+	}
+    }
+}
+
+BBox *BBoxDraw(BBox *bbox)
 {
     int i, numvert;
     int dimn;
@@ -47,10 +107,24 @@ BBoxDraw(bbox)
     if(!(ap->flag & APF_EDGEDRAW))
 	return bbox;
 
+    if (_mgc->NDinfo) {
+	Transform T;
+	float focallen;
+
+	mgpushtransform();
+	CamGet(_mgc->cam, CAM_FOCUS, &focallen);
+	TmTranslate(T, 0., 0., -focallen);
+	TmConcat(T, _mgc->C2W, T);
+	mgsettransform(T);
+	draw_projected_bbox(_mgc->NDmap, _mgc->NDinfo, bbox, ap);
+	mgpoptransform();
+	return bbox;
+    }
+
     dimn = (bbox->geomflags & VERT_4D) ? 4 : 3;
     if (dimn == 3)	{	/* dehomogenize min, max vals */
-	HPt3Normalize(&bbox->min, &bbox->min);
-	HPt3Normalize(&bbox->max, &bbox->max);
+	HPt3Dehomogenize(&bbox->min, &bbox->min);
+	HPt3Dehomogenize(&bbox->max, &bbox->max);
 	}
 
     /* fill in the vertices of the (hyper) cube */

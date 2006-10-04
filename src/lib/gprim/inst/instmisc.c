@@ -91,9 +91,7 @@ InstPosition( inst, T )
  * We discard any tlist/tlisthandle and just assign to axis.
  */
 Inst *
-InstTransformTo( inst, T )
-    Inst *inst;
-    Transform T;
+InstTransformTo(Inst *inst, Transform T, TransformN *TN)
 {
     if(inst->tlist) {
 	GeomDelete(inst->tlist);
@@ -103,7 +101,7 @@ InstTransformTo( inst, T )
 	HandlePDelete(&inst->tlisthandle);
 	inst->tlisthandle = NULL;
     }
-    TmCopy( T, inst->axis );
+    TmCopy( T ? T : TM_IDENTITY, inst->axis );
     return inst;
 }
 
@@ -116,11 +114,12 @@ InstTransformTo( inst, T )
  */
       
 Inst *
-InstTransform( inst, T )
-    Inst *inst;
-    Transform T;
+InstTransform(Inst *inst, Transform T, TransformN *TN)
 {
     Tlist *tl;
+
+    if (T == NULL || T == TM_IDENTITY)
+	return inst;
 
     if(inst->tlist == NULL && inst->tlisthandle == NULL) {
 	TmConcat( inst->axis, T, inst->axis );

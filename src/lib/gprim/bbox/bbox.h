@@ -33,9 +33,9 @@ typedef struct BBox BBox;
 
 extern GeomClass *BBoxMethods( void );
 extern char	*BBoxName( void );
-extern BBox	*BBoxBound( BBox *, Transform );
+extern BBox	*BBoxBound( BBox *, Transform T, TransformN *TN, int *axes );
 extern BBox	*BBoxDraw( BBox * );
-extern BBox	*BBoxTransform( BBox *, Transform );	/* Overwrites input! */
+extern BBox	*BBoxTransform( BBox *, Transform T, TransformN *TN );
 extern BBox	*BBoxMinMax( BBox *, HPoint3 *min, HPoint3 *max );
 extern BBox	*BBoxUnion( BBox *, BBox * );
 extern BBox	*BBoxUnion3( BBox *b1, BBox *b2, BBox *result );

@@ -32,16 +32,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "create.h"
 #include "bezierP.h"
 
-Geom *BezierBoundSphere(bezier, T, space)
-     Bezier *bezier;
-     Transform T;
-     int space;
+Geom *BezierBoundSphere(Bezier *bezier,
+			Transform T, TransformN *TN, int *axes,
+			int space)
 {
   if(bezier->flag & BEZ_REMESH ||
      bezier->mesh == NULL || bezier->mesh->p == NULL) {
     if(BezierReDice(bezier) == NULL)
       return NULL;            /* Oh no */
   }
-  return MeshBoundSphere( bezier->mesh, T, space );
+  return MeshBoundSphere( bezier->mesh, T, TN, axes, space );
 }
 

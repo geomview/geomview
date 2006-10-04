@@ -106,4 +106,4 @@ movements of cameras or objects, whichever is
 easier.)  All of these matrices can be examined
 directly by using Geomview's command language.
 For example, to get the camera c0's matrix, give
-Geomview the command (echo (ND-xform c0))
+Geomview the command (echo (ND-xform-get c0))

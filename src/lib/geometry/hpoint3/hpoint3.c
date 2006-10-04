@@ -53,15 +53,7 @@ HPt3Copy( HPoint3 *pt1, HPoint3 *pt2 )
 void
 HPt3Normalize( HPoint3 *pt1, HPoint3 *pt2 )
 {
-    if(pt1->w == 1.0 || pt1->w == 0.0) {
-	*pt2 = *pt1;
-    } else {
-	float inv = 1.0/pt1->w;
-	pt2->x = pt1->x * inv;
-	pt2->y = pt1->y * inv;
-	pt2->z = pt1->z * inv;
-	pt2->w = 1.0;
-    }
+    HPt3Dehomogenize( pt1, pt2 );
 }
 
 /*
@@ -144,7 +136,8 @@ HPt3Dehomogenize( HPoint3 *hp1, HPoint3 *hp2 )
   float inv;
   if (hp1->w == 1.0 || hp1->w == 0.0) {
 	if (hp2 != hp1) *hp2 = *hp1; 
-	return; }
+	return;
+  }
   /* else if ( || hp->w == 0.0) hp->w = .000001;*/	
   inv = 1.0 / hp1->w;
     hp2->x = hp1->x * inv;

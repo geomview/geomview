@@ -37,11 +37,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Take this out once the create flags are all in the right place */
 #include "sphereP.h"
 
-Geom *
-GeomBoundSphereFromBBox(Geom *geom, Transform T, int space)
+Geom *GeomBoundSphereFromBBox(Geom *geom,
+			      Transform T, TransformN *TN, int *axes,
+			      int space)
 {
   HPoint3 minmax[2];
-  Geom *sphere, *bbox = GeomBound(geom, T);
+  Geom *sphere, *bbox = GeomBound(geom, T, TN, axes );
 
   if (bbox == NULL) return NULL;
   BBoxMinMax((BBox *)bbox, &minmax[0], &minmax[1]);
@@ -52,21 +53,21 @@ GeomBoundSphereFromBBox(Geom *geom, Transform T, int space)
   sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, minmax,
 		      CR_NENCOMPASS_POINTS, 2, CR_SPACE, space,
 		      CR_END);
-  if (sphere != NULL && T != NULL) GeomTransform(sphere, T);
+
+  /* ???? is this correct? The bounding box has already been
+     transformed by T ... */
+  if (sphere != NULL && T != NULL) GeomTransform(sphere, T, TN);
   return sphere;
 }
 
-Geom *
-GeomBoundSphere(geom, T, space)
-     Geom *geom;
-     Transform T;
-     int space;
+Geom *GeomBoundSphere(Geom *geom,
+		      Transform T, TransformN *TN, int *axes,
+		      int space)
 {
 
   if (geom && geom->Class->boundsphere) {
-    return (*geom->Class->boundsphere) (geom, T==NULL ? TM_IDENTITY : T,
-					space);
+	  return (*geom->Class->boundsphere) (geom, T, TN, axes, space);
   }
 
-  return GeomBoundSphereFromBBox(geom, T, space);
+  return GeomBoundSphereFromBBox(geom, T, TN, axes, space);
 }

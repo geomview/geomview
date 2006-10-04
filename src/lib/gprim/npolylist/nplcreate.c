@@ -151,6 +151,9 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
 	if (!nvertflag) OOGLError(0,"Must specify NVERT array");
 	if (!vertflag) OOGLError(0,"Must specify VERT array");
 	if (!pointflag) OOGLError(0,"Must specify vertices");
+	if (pl->pdim < 5)OOGLError(0, "Dimension %d too small, "
+				   "please use ordinary OFF format",
+				   pl->pdim-1);
 	GeomDelete((Geom *)pl);
 	return NULL;
     }

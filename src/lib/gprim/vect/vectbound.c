@@ -44,50 +44,69 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "vectP.h"
 #include "bboxP.h"
 
-
-BBox *
-VectBound(v, T)
-	Vect *v;
-	Transform T;
+BBox *VectBound(Vect *v, Transform T, TransformN *TN, int *axes)
 {
 	int n;
 	HPoint3 *p;
 	HPoint3 min, max;
 	HPoint3	*raw, *clean, p0, p1;
 
+	if (T == TM_IDENTITY) {
+		T = NULL;
+	}
+
 	n = v->nvert;
 	p = v->p;
-	while(--n >= 0 && !finite(p->x + p->y + p->z))
+	while(--n >= 0 && !finite(p->x + p->y + p->z + p->w))
 		p++;
 	if(n <= 0)
 		return NULL;	/* No (finite) points! */
 
-#ifdef BBOX_ND_HACK
+#if 0 && defined(BBOX_ND_HACK)
 	if(v->geomflags & VERT_4D)
 	    return BBox_ND_hack(NULL, (float *)p, n*4);
 #endif
 
 	min = *p;
-    	if (T && T != TM_IDENTITY) 	{
+    	if (T) 	{
     		HPt3Transform(T, &min, &min);
-		HPt3Normalize( &min, &min );
-    		}
+	}
+	if (!(v->geomflags & VERT_4D)) {
+		HPt3Dehomogenize( &min, &min );
+	}
 	max = min;
 	clean = &p1;
 	while(--n >= 0) {
 		p++;
-            	if (T && T != TM_IDENTITY) 	{
-			HPt3Transform(T, p, &p0);
+            	if (T) {
 			raw = &p0;
-			}
-		else raw = p;
-		HPt3Normalize( raw , clean );
+			HPt3Transform(T, p, raw);
+		} else {
+			raw = p;
+		}
+		if (!(v->geomflags & VERT_4D)) {
+			clean = &p1;
+			HPt3Normalize( raw , clean );
+		} else {
+			clean = raw;
+		}
+		
 		if(min.x > clean->x) min.x = clean->x;
 		else if(max.x < clean->x) max.x = clean->x;
 		if(min.y > clean->y) min.y = clean->y;
 		else if(max.y < clean->y) max.y = clean->y;
 		if(min.z > clean->z) min.z = clean->z;
 		else if(max.z < clean->z) max.z = clean->z;
-		} 
-    return (BBox *) GeomCreate ("bbox", CR_MIN, &min, CR_MAX, &max, NULL );
+		if (v->geomflags & VERT_4D) {
+			if(min.w > clean->w) min.w = clean->w;
+			else if(max.w < clean->w) max.w = clean->w;
+		}
+	} 
+	if (v->geomflags & VERT_4D) {
+		return (BBox *)GeomCreate("bbox",
+					  CR_4MIN, &min, CR_4MAX, &max, NULL );
+	} else {
+		return (BBox *)GeomCreate("bbox",
+					  CR_MIN, &min, CR_MAX, &max, NULL );
+	}
 }

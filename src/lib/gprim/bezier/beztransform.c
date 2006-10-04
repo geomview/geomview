@@ -37,9 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bezierP.h"
 
 Bezier *
-BezierTransform( b, T )
-     Bezier *b;
-     Transform T;
+BezierTransform(Bezier *b, Transform T, TransformN *dummy)
 {
   int i;
   Point3 *p;
@@ -65,10 +63,3 @@ BezierTransform( b, T )
   return(b);
 }
 
-Bezier *
-BezierTransformTo( b, T )
-     Bezier *b;
-     Transform T;
-{
-  return(BezierTransform(b, T));
-}

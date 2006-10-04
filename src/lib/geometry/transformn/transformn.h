@@ -107,4 +107,8 @@ extern TransformN *TmNRead(IOBFILE *f);
 	/* scale all elements of "upper left" of matrix by a scalar */
 extern TransformN *CtmNScale( HPtNCoord s, TransformN *in, TransformN *out);
 
+
+	/* palar decompositon of upper NxN part */
+extern TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q);
+
 # endif

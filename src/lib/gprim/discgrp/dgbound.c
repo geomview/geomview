@@ -35,9 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "discgrpP.h"
 
 BBox *
-DiscGrpBound(discgrp, T)
-	DiscGrp	*discgrp;
-	Transform T;
+DiscGrpBound(DiscGrp *discgrp, Transform T, TransformN *TN, int *axes)
 {
     BBox *geombbox;
     Transform Tnew;
@@ -49,6 +47,9 @@ DiscGrpBound(discgrp, T)
     if( discgrp == NULL)
 	return NULL;
 
+    if (T == NULL)
+	T = TM_IDENTITY;
+
     if (discgrp->geom == NULL)  return NULL;
 
     it = GeomIterate( (Geom *)discgrp, DEEP );
@@ -59,7 +60,7 @@ DiscGrpBound(discgrp, T)
      * proportional to the bbox of the world.  Solution: we only look
      * at the identity element's bbox */
 #ifdef BADVELOCITY	/* strange flying mode velocity comps require this */
-    if (discgrp->attributes & DG_SPHERICAL || discgrp->flag & DG_CENTERCAM)	{
+    if (discgrp->attributes & DG_SPHERICAL || discgrp->flag & DG_CENTERCAM) {
         nels = discgrp->big_list->num_el;
         discgrp->big_list->num_el = 1;
 	}
@@ -69,7 +70,7 @@ DiscGrpBound(discgrp, T)
 	BBox *box;
 
 	TmConcat( Tnew,  T, Tnew );
-	if((box = (BBox *)GeomBound( discgrp->geom, Tnew )) != NULL) {
+	if((box = (BBox *)GeomBound(discgrp->geom, Tnew, NULL, NULL)) != NULL) {
 	    if(geombbox) {
 		BBoxUnion3(geombbox, box, geombbox);
 		GeomDelete((Geom *)box);

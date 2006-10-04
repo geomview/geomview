@@ -76,7 +76,7 @@ BezierMethods()
 	aBezierMethods->transform = 
 	  (GeomTransformFunc *)BezierTransform;
 	aBezierMethods->transformto =
-	  (GeomTransformToFunc *)BezierTransformTo;
+	  (GeomTransformToFunc *)BezierTransform;
     }
     return aBezierMethods;
 }

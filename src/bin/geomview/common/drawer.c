@@ -102,8 +102,8 @@ static GeomStruct nullgs = {NULL, NULL};    /* Substitute for optional arg */
 
 extern HandleOps GeomOps, WindowOps;
 
-#define DGobj ((DGeom *)obj)
-#define DVobj ((DView *)obj)
+#define DGobj(obj) ((DGeom *)obj)
+#define DVobj(obj) ((DView *)obj)
 
 #define name_object(obj, ni, name) _name_object((DObject*)(obj),ni,name)
 
@@ -520,7 +520,7 @@ drawer_next_bcast( int id, int *indexp, int type )
     id = real_id(real_id(id));
   if(id == WORLDGEOM)
     while((obj = drawer_next_object(ALLGEOMS, indexp, type)) != NULL
-		&& DGobj->citizenship == ALIEN)
+		&& DGobj(obj)->citizenship == ALIEN)
 	(*indexp)++;
   else
     obj = drawer_next_object(id, indexp, type);
@@ -821,7 +821,7 @@ LDEFINE(xform_set, LVOID,
 	    LEND));
 
     MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-      if (id == ALLGEOMS && DGobj->citizenship == ALIEN)
+      if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
 	continue;
       if(ts->tm == TMNULL) {
 	/*
@@ -830,12 +830,12 @@ LDEFINE(xform_set, LVOID,
 	if(ISGEOM(id))
 	  GeomSet(obj->Item, CR_AXISHANDLE, ts->h, CR_END);
 	else
-	  CamSet(DVobj->cam, CAM_C2WHANDLE, ts->h, CAM_END);
+	  CamSet(DVobj(obj)->cam, CAM_C2WHANDLE, ts->h, CAM_END);
       } else {
 	if (ISGEOM(id))
-	  GeomSet(DGobj->Item, CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
+	  GeomSet(DGobj(obj)->Item, CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
 	else 
-	  CamSet(DVobj->cam, CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
+	  CamSet(DVobj(obj)->cam, CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
       }
       TmIdentity(obj->Incr);
       obj->redraw = 1;
@@ -847,8 +847,11 @@ LDEFINE(xform_set, LVOID,
 
 LDEFINE(xform, LVOID,
        "(xform          ID TRANSFORM)\n\
-	Concatenate TRANSFORM with the current transform of the object\n\
-	(apply TRANSFORM to object ID).")
+	Apply TRANSFORM to object ID, as opposed to simply setting its\n\
+	transform; i.e. a reset will not undo this operation. The current\n\
+	object transform will not be changed, so the effective position\n\
+	of the object will be the concatenation of TRANSFORM with the\n\
+	current object transform.")
 {
   int id;
   TransformStruct *ts;
@@ -861,12 +864,12 @@ LDEFINE(xform, LVOID,
 	    LEND));
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-    if (id == ALLGEOMS && DGobj->citizenship==ALIEN)
+    if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN)
 	continue;
     if (TYPEOF(id) == T_GEOM)
-	GeomTransform(DGobj->Item, ts->tm);
-	    else 
-	CamTransform(DVobj->cam, ts->tm);
+      GeomTransform(DGobj(obj)->Item, ts->tm, NULL);
+    else 
+      CamTransform(DVobj(obj)->cam, ts->tm);
     TmIdentity(obj->Incr);
     obj->redraw = 1;
     obj->moving = (obj->updateproc!=NULL);
@@ -891,7 +894,7 @@ LDEFINE(xform_incr, LVOID,
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
       stop_motions(obj->id);
-      if (id == ALLGEOMS && DGobj->citizenship == ALIEN)
+      if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
 	continue;
       if(obj->incrhandle != NULL)
 	HandlePDelete(&obj->incrhandle);
@@ -1141,7 +1144,7 @@ drawer_replace_geometry(int id, int *p, int pn, GeomStruct *gs)
   Geom *where;
 
   MAYBE_LOOP(id, ind, T_GEOM, DObject, obj) {
-    for (GeomGet(DGobj->Lgeom, CR_GEOM, &where); where && pn>0; pn--, p++) {
+    for (GeomGet(DGobj(obj)->Lgeom, CR_GEOM, &where); where && pn>0; pn--, p++) {
       for (count = 0; count < *p; count++) {
 	GeomGet(where, CR_CDR, &where);
       }
@@ -1756,8 +1759,8 @@ drawer_int(int id, DrawerKeyword key, int ival)
     ApDelete(as.ap);
 #if 0
     MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
-        DGobj->bezdice = ival;
-        GeomDice(DGobj->Item, ival, ival);
+        DGobj(obj)->bezdice = ival;
+        GeomDice(DGobj(obj)->Item, ival, ival);
         obj->changed = 1;
     }
 #endif
@@ -1770,14 +1773,14 @@ drawer_int(int id, DrawerKeyword key, int ival)
 
   case DRAWER_PROJECTION:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-      CamSet(DVobj->cam, CAM_PERSPECTIVE, ival, CAM_END);
+      CamSet(DVobj(obj)->cam, CAM_PERSPECTIVE, ival, CAM_END);
       obj->changed = 1;
     }
     break;
 
   case DRAWER_BBOXDRAW:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-      DGobj->bboxdraw = ival;
+      DGobj(obj)->bboxdraw = ival;
       obj->redraw = 1;
     }
     break;
@@ -1785,13 +1788,13 @@ drawer_int(int id, DrawerKeyword key, int ival)
 
   case DRAWER_NORMALIZATION:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-      normalize(DGobj, ival);
+      normalize(DGobj(obj), ival);
     }
     break;
 
   case DRAWER_PICKABLE:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-      DGobj->pickable = ival;
+      DGobj(obj)->pickable = ival;
     }
     break;
 
@@ -1804,7 +1807,7 @@ drawer_int(int id, DrawerKeyword key, int ival)
 
   case DRAWER_CAMERADRAW:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-      DVobj->cameradraw = ival;
+      DVobj(obj)->cameradraw = ival;
       obj->redraw = 1;
     }
     break;
@@ -1812,8 +1815,8 @@ drawer_int(int id, DrawerKeyword key, int ival)
   case DRAWER_DOUBLEBUFFER:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
 	int opts;
-	if(DVobj->mgctx == NULL) continue;
-	mgctxselect(DVobj->mgctx);
+	if(DVobj(obj)->mgctx == NULL) continue;
+	mgctxselect(DVobj(obj)->mgctx);
 	mgctxget(MG_SETOPTIONS, &opts);
 	mgctxset(ival==0 || (ival<0 && opts&MGO_DOUBLEBUFFER) ?
 			MG_UNSETOPTIONS : MG_SETOPTIONS,
@@ -1893,10 +1896,10 @@ drawer_float(int id, DrawerKeyword key, float fval)
   setcam:
     interested = LInterestList("merge");
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-	DVobj->cam = CamSet(DVobj->cam, attr, fval, CAM_END);
-	DVobj->redraw = 1;
+	DVobj(obj)->cam = CamSet(DVobj(obj)->cam, attr, fval, CAM_END);
+	DVobj(obj)->redraw = 1;
 	if(interested)
-	    gv_merge(&CamOps, DVobj->id, (Ref *)DVobj->cam);
+	    gv_merge(&CamOps, DVobj(obj)->id, (Ref *)DVobj(obj)->cam);
     }
     break;
 
@@ -1927,8 +1930,8 @@ drawer_float(int id, DrawerKeyword key, float fval)
 
   case DRAWER_LINE_ZNUDGE:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-	DVobj->lineznudge = fval;
-	DVobj->redraw = 1;
+	DVobj(obj)->lineznudge = fval;
+	DVobj(obj)->redraw = 1;
     }
     drawerstate.defview.lineznudge = fval;
     break;
@@ -2002,8 +2005,8 @@ drawer_color(int id, DrawerKeyword key, Color *col)
 
   case DRAWER_BBOXCOLOR:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-      if (DGobj->bboxap && DGobj->bboxap->mat) {
-	MtSet(DGobj->bboxap->mat, MT_EDGECOLOR, col, 
+      if (DGobj(obj)->bboxap && DGobj(obj)->bboxap->mat) {
+	MtSet(DGobj(obj)->bboxap->mat, MT_EDGECOLOR, col, 
 	      MT_OVERRIDE, MTF_EDGECOLOR & uistate.apoverride, MT_END);
 	obj->redraw = 1;
       }
@@ -2017,8 +2020,8 @@ drawer_color(int id, DrawerKeyword key, Color *col)
   case DRAWER_BACKCOLOR:
     drawerstate.defview.backcolor = *col;
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-      DVobj->backcolor = *col;
-      DVobj->redraw = 1;
+      DVobj(obj)->backcolor = *col;
+      DVobj(obj)->redraw = 1;
     }
     break;
 
@@ -2482,7 +2485,7 @@ make_bbox(DGeom *dg, int combine)
   if(!dg->bboxvalid) {
     if(!combine)
 	GeomReplace(dg->Lbbox, NULL);
-    bbox = GeomBound(dg->Lgeom, TM_IDENTITY);
+    bbox = GeomBound(dg->Lgeom, NULL, NULL, NULL);
     if(bbox) {
 	GeomReplace(dg->Lbbox, bbox);
 	GeomDelete(bbox);		/* Only Lbbox needs it now */
@@ -2614,12 +2617,12 @@ updateit(float dt)
   do_motion(dt);
   for(i = 0; i < dgeom_max; i++) {
     if((dg = dgeom[i]) == NULL)
-	continue;
+      continue;
     if (dg->updateproc) {
-	GeomGet(dg->Lgeom, CR_GEOM, &g);
-	(*(dg->updateproc))(g);
+      GeomGet(dg->Lgeom, CR_GEOM, &g);
+      (*(dg->updateproc))(g);
     } else {
-	GeomTransform(dg->Item, dg->Incr);
+      GeomTransform(dg->Item, dg->Incr, NULL);
     }
   }
   LOOPVIEWS(i,dv) {
@@ -2983,7 +2986,7 @@ normalize(DGeom *dg, int normalization)
   if(dg->id == WORLDGEOM) return;
   switch(normalization) {
   case NONE:
-    GeomTransformTo(dg->Inorm, TM_IDENTITY);
+    GeomTransformTo(dg->Inorm, NULL, NULL);
     break;
 
   case EACH:
@@ -3003,7 +3006,7 @@ normalize(DGeom *dg, int normalization)
       cs = (r == 0) ? 1 : 2.0/r;
       TmScale(tmp,cs,cs,cs);
       CtmTranslate(tmp,-cx,-cy,-cz);
-      GeomTransformTo(dg->Inorm, tmp);
+      GeomTransformTo(dg->Inorm, tmp, NULL);
     }
     break;
   /* case KEEP: Leave normalization transform alone */

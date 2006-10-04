@@ -33,10 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bezierP.h"
 
-BBox *
-BezierBound( bezier, T )
-    Bezier *bezier;
-    Transform T;
+BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN, int *axes)
 {
     float *p;
     int v, n;
@@ -52,13 +49,16 @@ BezierBound( bezier, T )
 	    if(BezierReDice(bezier) == NULL)
 		return NULL;		/* Oh no */
 	}
-	return MeshBound( bezier->mesh, T );
+	return MeshBound( bezier->mesh, T, TN, axes );
     }
 
     if (bezier->dimn != 3) {
        GeomError(0,"BezierBound: invalid dimension %d",bezier->dimn);
        return(NULL);
     }
+
+    if (T == NULL)
+	T = TM_IDENTITY;
 
     n = (bezier->degree_u + 1) * (bezier->degree_v + 1);
 

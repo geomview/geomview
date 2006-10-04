@@ -50,11 +50,15 @@ NDMeshFSave(NDMesh *m, FILE *outf)
 	wdim = m->pdim;
 
 	if (m->flag & MESH_C) fputc('C', outf);
-	if (m->geomflags & VERT_4D) fputc('4', outf);
+	if (m->geomflags & VERT_4D)
+		fputc('4', outf);
+	else
+		--wdim;
 	if (m->flag & MESH_U) fputc('U', outf);
 	if (m->flag & MESH_UWRAP) fputc('u', outf);
 	if (m->flag & MESH_VWRAP) fputc('v', outf);
-	fprintf(outf, "nMESH %d", m->pdim);
+	/* dim is always pdim-1, even for 4nMESH */
+	fprintf(outf, "nMESH %d", m->pdim-1);
 	if (m->flag & MESH_BINARY)    /* Hack -- should be sent by context */
 	{
 	    fprintf(outf, "BINARY\n");

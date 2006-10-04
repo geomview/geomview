@@ -136,7 +136,7 @@ void internalsDone() {
     }
     TmInvert(w2axes, axes2w);
     TmConcat(axes2w, w2target, axes2target);
-    GeomTransform(g, axes2target);
+    GeomTransform(g, axes2target, NULL);
 
     printf("(progn ");
     printf("(geometry %s ", targetname);

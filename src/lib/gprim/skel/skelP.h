@@ -56,8 +56,8 @@ extern Skel *SkelCopy( Skel * );
 extern Skel *SkelPick( Skel *, Pick *, Appearance *, Transform );
 extern Skel *SkelFLoad( IOBFILE *f, char *fname );
 extern Skel *SkelFSave( Skel *, FILE * );
-extern BBox *SkelBound( Skel *, Transform );
+extern BBox *SkelBound(Skel *s, Transform T, TransformN *TN, int *axes);
 extern Skel *SkelDraw( Skel * );
-extern Skel *SkelTransform( Skel *, Transform );
+extern Skel *SkelTransform( Skel *, void *Trafo );
 
 #endif /*SKELPDEF*/

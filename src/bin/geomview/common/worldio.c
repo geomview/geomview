@@ -271,7 +271,7 @@ save_dgeom(Pool *p, DGeom *dg, int doaliens)
   maybe_save_xform(p, "xform-set", name, h, T);
 
   if(dg->NDT) {
-    fprintf(fp, "(ND-xform \"%s\" ", name);
+    fprintf(fp, "(ND-xform-set \"%s\" ", name);
     TmNPrint(fp, dg->NDT);
     fprintf(fp, ")\n");
   }
@@ -320,7 +320,7 @@ save_dview(Pool *p, DView *dv)
 		dv->NDPerm[0], dv->NDPerm[1], dv->NDPerm[2], dv->NDPerm[3]);
 
     if(dv->cluster->C2W != NULL) {
-	fprintf(fp, "(ND-xform \"%s\" ", name);
+	fprintf(fp, "(ND-xform-set \"%s\" ", name);
 	TmNPrint(fp, dv->cluster->C2W);
 	fprintf(fp, ")\n");
     }

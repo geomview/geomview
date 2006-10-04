@@ -35,12 +35,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "point3.h"
 #include "polylistP.h"
 
-PolyList *
-PolyListTransform( p, T )
-     PolyList *p;
-     Transform T;
+PolyList *PolyListTransform(PolyList *p, Transform T, TransformN *TN)
 {
   int i;
+
+  if (!T)
+    return p;
+
   for (i = 0; i < p->n_verts; i++)
     HPt3Transform(T, &p->vl[i].pt, &p->vl[i].pt);
   if (p->flags & PL_HASVN)
@@ -49,15 +50,6 @@ PolyListTransform( p, T )
   if (p->flags & PL_HASPN)
     for (i = 0; i < p->n_polys; i++)
       NormalTransform(T, &p->p[i].pn, &p->p[i].pn);
+
   return p;
 }
-
-PolyList *
-PolyListTransformTo( p, T )
-     PolyList *p;
-     Transform T;
-{
-  return(PolyListTransform(p, T));
-}
-
-

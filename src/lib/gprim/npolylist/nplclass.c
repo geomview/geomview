@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.5 2006/07/14 17:47:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.6 2006/10/04 08:10:04 rotdrop Exp $ */
 
 
 /*
@@ -73,6 +73,10 @@ NPolyListMethods()
 		aNPolyListMethods->fsave = (GeomFSaveFunc *) NPolyListFSave;
 		aNPolyListMethods->Delete = (GeomDeleteFunc *) NPolyListDelete;
 		aNPolyListMethods->fload = (GeomFLoadFunc *) NPolyListFLoad;
+		aNPolyListMethods->transform = 
+		  (GeomTransformFunc *) NPolyListTransform;
+		aNPolyListMethods->transformto =
+		  (GeomTransformToFunc *) NPolyListTransform; /* == Transform */
 	}
 	return aNPolyListMethods;
 }

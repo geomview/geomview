@@ -632,8 +632,7 @@ static int snapsetup(DView *dv)
     int opts;
     int unset = 0;
     struct camwins *cw;
-    static int delay[2] = { 0, 200000 };	/* 0.2 second */
-    static struct timeval tdelay;
+    struct timeval tdelay;
 #if MGOPENGL
     GLint bitsdeep;
 #endif
@@ -672,8 +671,9 @@ static int snapsetup(DView *dv)
      * a struct timeval isn't the same as an array of 2 ints.  Changed to use &tdelay
      * by mbp on Tue Oct  3 10:19:56 2006.
      */
-    tdelay.tv_sec = delay[0];
-    tdelay.tv_usec = delay[1];
+#define DELAY_US 200000	/* 0.2 second */
+    tdelay.tv_sec = 0;
+    tdelay.tv_usec = DELAY_US;
     select(0,NULL,NULL,NULL,&tdelay);
     gv_draw(dv->id);	/* draw window now */
 

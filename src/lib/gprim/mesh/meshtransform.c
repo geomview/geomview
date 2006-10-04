@@ -36,23 +36,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "point3.h"
 #include "meshP.h"
 
-Mesh *
-MeshTransform( m, T )
-     Mesh *m;
-     Transform T;
+Mesh *MeshTransform(Mesh *m, Transform T, TransformN *TN)
 {
+  if (!T)
+    return m;
+
   m->flag &= ~MESH_Z;
   HPt3TransformN(T, m->p, m->p, m->nu * m->nv);
   if (m->flag & MESH_N)
     NormalTransformN(T, m->n, m->n, m->nu * m->nv);
+
   return m;
 }
-
-Mesh *
-MeshTransformTo( m, T )
-     Mesh *m;
-     Transform T;
-{
-  return(MeshTransform(m, T));
-}
-

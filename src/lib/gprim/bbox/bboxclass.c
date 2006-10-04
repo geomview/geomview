@@ -62,15 +62,13 @@ BBoxMethods()
 		aBBoxMethods->bound = (GeomBoundFunc *) BBoxBound;
 		aBBoxMethods->copy = (GeomCopyFunc *) BBoxCopy;
 		aBBoxMethods->create = (GeomCreateFunc *) BBoxCreate;
+		aBBoxMethods->Delete = (GeomDeleteFunc *) BBoxDelete;
 		aBBoxMethods->draw = (GeomDrawFunc *) BBoxDraw;
 		aBBoxMethods->methods = (GeomMethodsFunc *) BBoxMethods;
 		aBBoxMethods->name = (GeomNameFunc *) BBoxName;
 		aBBoxMethods->transform = (GeomTransformFunc *) BBoxTransform;
 		aBBoxMethods->fsave = (GeomFSaveFunc *) BBoxFSave;
 		aBBoxMethods->fload = (GeomFLoadFunc *) BBoxFLoad;
-		/*
-		 * Note we need no delete method -- GeomDelete does all.
-		 */
 	}
 	return aBBoxMethods;
 }

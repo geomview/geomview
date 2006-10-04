@@ -33,9 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bboxP.h"
 
-BBox *
-BBoxCopy(source_bbox)
-	BBox	*source_bbox;
+BBox *BBoxCopy(BBox *source_bbox)
 {
 	BBox           *dest_bbox;
 
@@ -46,5 +44,13 @@ BBoxCopy(source_bbox)
            return NULL;
         }
 	*dest_bbox = *source_bbox;
+	if (source_bbox->minN != NULL) {
+		dest_bbox->minN = HPtNCreate(dest_bbox->minN->dim,
+					     dest_bbox->minN->v);
+	}
+	if (source_bbox->maxN != NULL) {
+		dest_bbox->maxN = HPtNCreate(dest_bbox->maxN->dim,
+					     dest_bbox->maxN->v);
+	}
 	return (dest_bbox);
 }

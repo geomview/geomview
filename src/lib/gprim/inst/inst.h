@@ -55,11 +55,12 @@ extern Inst *InstLoad( char * );
 extern Inst *InstFLoad( FILE *, char *name );
 extern Inst *InstSave( Inst *, char * );
 extern Inst *InstFSave( Inst *, FILE *, char * );
-extern BBox *InstBound( Inst *, Transform T );
-extern Geom *InstBoundSphere( Inst *, Transform T, int );
+extern BBox *InstBound( Inst *, Transform T, TransformN *TN, int *axes );
+extern Geom *InstBoundSphere( Inst *,
+			      Transform T, TransformN *TN, int *axes, int );
 extern Inst *InstPosition( Inst *, Transform T );
-extern Inst *InstTransformTo( Inst *, Transform T );
-extern Inst *InstTransform( Inst *, Transform T );
+extern Inst *InstTransformTo( Inst *, Transform T, TransformN *TN );
+extern Inst *InstTransform( Inst *, Transform T, TransformN *TN );
 extern Inst *InstEvert( Inst * );
 extern Inst *InstDraw( Inst * );
 extern Geom *InstReplace( Inst *, Geom * );

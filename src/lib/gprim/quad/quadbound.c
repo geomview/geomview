@@ -33,44 +33,52 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "quadP.h"
 
-BBox *
-QuadBound( Quad *q, Transform T )
+BBox *QuadBound(Quad *q, Transform T, TransformN *TN, int *axes)
 {
     int v;
     HPoint3 min, max;
     HPoint3 *p;
-    Point3 p0;
+    HPoint3 p0;
+
+    if (T == TM_IDENTITY)
+	T = NULL;
 
     p = q->p[0];
 
-#ifdef BBOX_ND_HACK
+#if 0 && defined(BBOX_ND_HACK)
     if(q->flags & QUAD_4D)
 	return BBox_ND_hack(NULL, p, 4*q->maxquad);
 #endif
 
-    if (T != TM_IDENTITY)
-	    HPt3TransPt3(T, p, (Point3 *)(void *)&min);
-    else
+    if (T)
+	HPt3Transform(T, p, &min);
+    if (!(q->geomflags & VERT_4D))
 	HPt3Normalize(p, &min);
     max = min;
     for( v = 4 * q->maxquad; --v > 0; ) {
         p++;
-        if (T != TM_IDENTITY)
-	    HPt3TransPt3(T, p, (Point3 *)&p0);
-	else {
-	    p0 = *(Point3 *)p;
-	    if(p->w != 1.0 && p->w != 0.0)
-		p0.x /= p->w, p0.y /= p->w, p0.z /= p->w;
-	}
+        if (T)
+	    HPt3Transform(T, p, &p0);
+	if (!(q->geomflags & VERT_4D))
+	    HPt3Normalize(p, &p0);
         if(min.x > p0.x) min.x = p0.x;
         else if(max.x < p0.x) max.x = p0.x;
         if(min.y > p0.y) min.y = p0.y;
         else if(max.y < p0.y) max.y = p0.y;
         if(min.z > p0.z) min.z = p0.z;
         else if(max.z < p0.z) max.z = p0.z;
+	if (q->geomflags & VERT_4D) {
+	    if(min.w > p0.w) min.w = p0.w;
+	    else if(max.w < p0.w) max.z = p0.w;
+	}
     }
     
-    return (BBox *) GeomCCreate (NULL, BBoxMethods(),
-		CR_MIN, &min, CR_MAX, &max, CR_END);
+    if (q->geomflags & VERT_4D) {
+	return (BBox *) GeomCCreate (NULL, BBoxMethods(),
+				     CR_4MIN, &min, CR_4MAX, &max, CR_END);
+    } else {
+	return (BBox *) GeomCCreate (NULL, BBoxMethods(),
+				     CR_MIN, &min, CR_MAX, &max, CR_END);
+    }
 }
 

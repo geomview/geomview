@@ -37,9 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 
 BBox *
-InstBound( inst, T )
-    Inst *inst;
-    Transform T;
+InstBound(Inst *inst, Transform T, TransformN *TN, int *axes)
 {
     BBox *geombbox;
     Transform Tnew;
@@ -47,6 +45,9 @@ InstBound( inst, T )
 
     if( inst == NULL || inst->geom == NULL)
 	return NULL;
+
+    if (T == NULL)
+	T = TM_IDENTITY;
 
     /* Insts which tie themselves to particular locations have no
      * bounding box, either.
@@ -60,7 +61,7 @@ InstBound( inst, T )
 	BBox *box;
 
 	TmConcat( Tnew, T, Tnew );
-	if((box = (BBox *)GeomBound( inst->geom, Tnew )) != NULL) {
+	if((box = (BBox *)GeomBound( inst->geom, Tnew, NULL, NULL )) != NULL) {
 	    if(geombbox) {
 		BBoxUnion3(geombbox, box, geombbox);
 		GeomDelete((Geom *)box);

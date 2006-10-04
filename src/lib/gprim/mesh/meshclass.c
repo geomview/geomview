@@ -72,7 +72,7 @@ MeshMethods()
 		aMeshMethods->transform = 
 		  (GeomTransformFunc *) MeshTransform;
 		aMeshMethods->transformto = 
-		  (GeomTransformToFunc *) MeshTransformTo;
+		  (GeomTransformToFunc *) MeshTransform;
 	}
 	return aMeshMethods;
 }

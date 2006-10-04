@@ -37,8 +37,10 @@ extern Quad *QuadLoad( char * );
 extern Quad *QuadFLoad( IOBFILE *, char *fname );
 extern Quad *QuadSave( Quad *, char * );
 extern Quad *QuadFSave( Quad *, FILE *, char *fname );
-extern BBox *QuadBound( Quad *, Transform );
-extern Geom *QuadSphere( Quad *, Transform, int );
+extern BBox *QuadBound(Quad *q, Transform T, TransformN *TN, int *axes);
+extern Geom *QuadSphere(Quad *q,
+			Transform T, TransformN *TN, int *axes,
+			int space);
 extern Quad *QuadEvert( Quad * );
 extern Quad *QuadDraw( Quad * );
 extern Quad *QuadTransform( Quad *, Transform );

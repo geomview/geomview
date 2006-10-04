@@ -33,10 +33,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 #include "sphere.h"
 
-Geom *InstBoundSphere(inst, T, space)
-     Inst *inst;
-     Transform T;
-     int space;
+Geom *InstBoundSphere(Inst *inst,
+		      Transform T, TransformN *TN, int *axes, int space)
 {
   Sphere *geomsphere, *sphere;
   Transform Tnew;
@@ -45,6 +43,9 @@ Geom *InstBoundSphere(inst, T, space)
   if (inst == NULL || inst->geom == NULL)
     return NULL;
 
+  if (T == NULL)
+    T = TM_IDENTITY;
+
   if (inst->location > L_LOCAL || inst->origin > L_LOCAL)
     return NULL;
 
@@ -52,7 +53,7 @@ Geom *InstBoundSphere(inst, T, space)
   geomsphere = NULL;
   while (NextTransform(it, Tnew) > 0) {
     TmConcat(Tnew, T, Tnew);
-    sphere = (Sphere *)GeomBoundSphere(inst->geom, Tnew, space);
+    sphere = (Sphere *)GeomBoundSphere(inst->geom, Tnew, NULL, NULL, space);
     if (sphere != NULL) {
       if (geomsphere != NULL) {
 	SphereUnion3(geomsphere, sphere, geomsphere);

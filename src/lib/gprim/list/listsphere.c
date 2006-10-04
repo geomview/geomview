@@ -33,15 +33,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "listP.h"
 #include "sphere.h"
 
-Geom *ListBoundSphere(list, T, space)
-     List *list;
-     Transform T;
-     int space;
+Geom *ListBoundSphere(List *list,
+		      Transform T, TransformN *TN, int *axes,
+		      int space)
 {
   Geom *carsphere = NULL, *sphere = NULL;
   List *l;
   for (l = list; l != NULL; l = l->cdr) {
-    carsphere = GeomBoundSphere(l->car, T, space);
+    carsphere = GeomBoundSphere(l->car, T, TN, axes, space);
     if (carsphere == NULL) continue;
     if (sphere != NULL) {
       SphereUnion3((Sphere *)sphere, (Sphere *)carsphere, (Sphere *)sphere);

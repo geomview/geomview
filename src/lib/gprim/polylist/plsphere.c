@@ -33,10 +33,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 #include "sphere.h"
 
-Geom *PolyListSphere(p, T, space)
-     PolyList *p;
-     Transform T;
-     int space;
+Geom *PolyListSphere(PolyList *p,
+		     Transform T, TransformN *TN, int *axes,
+		     int space)
 {
   int i;
   Sphere *sphere;
@@ -45,7 +44,7 @@ Geom *PolyListSphere(p, T, space)
   if (p == NULL || p->n_verts == 0 || p->n_polys == 0) return NULL;
 
   if(p->geomflags & VERT_4D)
-	return GeomBoundSphereFromBBox((Geom *)p, T, space);
+    return GeomBoundSphereFromBBox((Geom *)p, T, NULL, NULL, space);
 
   sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &p->vl[0].pt,
 				CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
