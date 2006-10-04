@@ -965,9 +965,10 @@ void BUFmg_add(int primtype, int numdata, void *data, void *cdata)
       numverts = 0;
       ewidth = curwidth;
 
-      if (!(_mgc->has & HAS_S2O))
-	  mg_findS2O();
-      mg_findO2S();
+      if (!(_mgc->has & HAS_S2O)) {
+	mg_findS2O();
+	mg_findO2S();
+      }
       break;
 
   case MGX_BGNPOLY:
@@ -987,9 +988,10 @@ void BUFmg_add(int primtype, int numdata, void *data, void *cdata)
       ewidth = curwidth;
       numverts = 0;
 	  
-      if (!(_mgc->has & HAS_S2O))
-	  mg_findS2O();
-      mg_findO2S();
+      if (!(_mgc->has & HAS_S2O)) {
+	mg_findS2O();
+	mg_findO2S();
+      }
       break;
 
   case MGX_VERTEX:
