@@ -42,10 +42,9 @@ typedef struct NPoly
 
 struct NPolyList
 {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int	n_polys;
 	int	n_verts;
-	int	pdim;		/* Space dimension, *including* homogeneous component */
 	NPoly	*p;		/* array of polygon definitions */
 	int	*vi;		/* array of vertex indices (all faces) */
 	int	nvi;		/* room allocated for vertex indices */

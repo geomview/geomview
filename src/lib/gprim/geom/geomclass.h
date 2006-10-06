@@ -136,15 +136,16 @@ extern Geom *GeomBoundSphereFromBBox(Geom *, Transform, TransformN *, int *axes,
 extern char *GeomToken(IOBFILE *f);
 
 /* This is the "common" geom stuff which starts every geom */
-#define GEOMFIELDS	\
+#define GEOMFIELDS					\
     REFERENCEFIELDS	/* magic, ref_count, handle */	\
-    struct GeomClass	*Class;	\
-    struct Appearance	*ap;	\
-    Handle		*aphandle;	\
-    int			geomflags;
+    struct GeomClass	*Class;				\
+    struct Appearance	*ap;				\
+    Handle		*aphandle;			\
+    int			geomflags;			\
+    int pdim /* this really belongs here */
 
 struct Geom {	/* common data structures for all Geom's */
-    GEOMFIELDS
+    GEOMFIELDS;
 } ;
 
 typedef struct HGeom {	/* This tuple appears in hierarchy objects */

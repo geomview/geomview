@@ -110,6 +110,8 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 	bezier = exist;
     }
 
+    bezier->pdim = 4; /* hard-wired */
+
     while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
 	    bezier->flag = va_arg (*a_list, int);

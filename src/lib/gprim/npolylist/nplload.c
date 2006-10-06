@@ -121,7 +121,8 @@ NPolyListFLoad(IOBFILE *file, char *fname)
     pl->st = NULL;
 
     pl->flags = flags;
-    pl->geomflags = (dimn == 4) ? VERT_4D : 0;
+    pl->geomflags  = (dimn == 4) ? VERT_4D : 0;
+    pl->geomflags |= VERT_ND;
 
 #if 0
     /* wrong: the Ndim number of the nOFF and 4nOFF file formats does

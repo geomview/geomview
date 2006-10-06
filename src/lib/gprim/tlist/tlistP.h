@@ -38,7 +38,7 @@
  */
 
 struct Tlist {
-    GEOMFIELDS
+    GEOMFIELDS;
     int   	nelements;
     Transform 	*elements;
     Geom 	*tlist;		/* More transformations: take product */

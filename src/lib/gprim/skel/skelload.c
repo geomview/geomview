@@ -158,9 +158,9 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
 	    if(iobfgetni(file, 1, &ncol, 1) <= 0
 	       || iobfgetnf(file, ncol, (float *)cp, 1) < ncol) {
-		goto bogus;
 		OOGLSyntax(file, "Reading binary SKEL from \"%s\": polyline %d of %d: expected color component",
 			   fname, i, s->nlines);
+		goto bogus;
 	    }
 	    k = ncol;
 	}

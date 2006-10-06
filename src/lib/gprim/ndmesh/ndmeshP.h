@@ -30,12 +30,11 @@
 #include "ndmesh.h"
 
 struct NDMesh {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int	flag;
 	int 	seq;
 	int	meshd;		/* mesh dimension */
 	int	*mdim;		/* mesh size, indexed 0..meshd-1 */
-	int	pdim;		/* dimension of space where mesh points live */
 	HPointN	**p;		/* N-D vertices; dim[0] axis varies fastest */
 	ColorA	*c;		/* vertex colors, indexed likewise */
 	Point3	*u;		/* texture coordinates, should we need any */

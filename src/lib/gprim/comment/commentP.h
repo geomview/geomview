@@ -38,7 +38,7 @@
 #define COMMENTMAGIC	GeomMagic('c', 1)
 
 struct Comment {
-    GEOMFIELDS
+    GEOMFIELDS;
     char	*name;
     char	*type;
     int		length;		/* 0 if data is ASCII */

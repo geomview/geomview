@@ -82,7 +82,7 @@ typedef struct {
 	
 		
 struct DiscGrp {
-	GEOMFIELDS
+	GEOMFIELDS;
 	char 		*name;
 	char 		*comment;
 	int 		flag;		/* graphics flags */

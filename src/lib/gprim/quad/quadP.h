@@ -39,7 +39,7 @@ typedef Point3 QuadN[4];
 typedef ColorA QuadC[4];
 
 struct Quad {
-    GEOMFIELDS
+    GEOMFIELDS;
     int 	flag;
     int		seq;	 	/* for 4D -> 3D tforms */
     int 	maxquad;

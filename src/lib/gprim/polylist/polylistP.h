@@ -51,7 +51,7 @@ typedef struct Poly
 
 struct PolyList
 {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int	n_polys;
 	int	n_verts;
 	Poly	*p;

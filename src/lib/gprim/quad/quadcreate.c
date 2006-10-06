@@ -58,6 +58,8 @@ QuadCreate (exist, classp, a_list)
 	q = exist;
     }
 
+    q->pdim = 4;
+
     while ((attr = va_arg(*a_list, int)))   /* parse argument list */
       switch (attr) {
 	case CR_FLAG:

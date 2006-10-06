@@ -29,7 +29,7 @@
 #include "list.h"
 
 struct List {
-    GEOMFIELDS
+    GEOMFIELDS;
     Geom 	*car;
     Handle	*carhandle;
     struct List	*cdr;

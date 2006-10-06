@@ -67,7 +67,7 @@
  */
 
 struct Vect {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int	flag, nvec, nvert, ncolor;
 	int	seq;		/* for 4D -> 3D tforms */
 	short	*vnvert;	/* vnvert[nvec] (# p[]'s per vec) */

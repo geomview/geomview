@@ -30,7 +30,7 @@
 #include "meshP.h"
 
 struct Bezier {
-  GEOMFIELDS
+  GEOMFIELDS;
   int		flag, degree_u, degree_v, dimn;
   int		nu, nv;	/* these must match mesh dimensions or remake mesh */
   float		*CtrlPnts;

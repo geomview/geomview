@@ -36,7 +36,7 @@ typedef struct Skline {
 } Skline;
 
 struct Skel {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int nvert, nlines;
 	int dim;		/* Dimension of points */
 	float *p;		/* Array[nvert][dim] of point coords */

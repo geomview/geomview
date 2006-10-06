@@ -29,7 +29,7 @@
 #include "mesh.h"
 
 struct Mesh {
-	GEOMFIELDS
+	GEOMFIELDS;
 	int	flag;
 	int 	seq;
 	int	nu, nv;
