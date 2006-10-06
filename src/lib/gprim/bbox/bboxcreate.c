@@ -47,6 +47,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 {
+    HPointN *tmp;
     BBox *bbox;
     int attr, copy = 1;
 
@@ -85,15 +86,21 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	    bbox->pdim = 4;
 	    break;
 	case CR_NMIN:
-	    HPtNDelete(bbox->minN);
-	    bbox->minN = va_arg(*a_list, HPointN *);
-	    bbox->minN = HPtNCreate(bbox->minN->dim, bbox->minN->v);
+	    tmp = va_arg(*a_list, HPointN *);
+	    if (tmp != bbox->minN) { /* could happen, BBoxUnion3() ... */
+		HPtNDelete(bbox->minN);
+		bbox->minN = HPtNCreate(tmp->dim, tmp->v);
+	    }	    
+	    bbox->geomflags |= VERT_ND;
 	    bbox->pdim  = bbox->minN->dim;
 	    break;
 	case CR_NMAX:
-	    HPtNDelete(bbox->maxN);
-	    bbox->maxN = va_arg(*a_list, HPointN *);
-	    bbox->maxN = HPtNCreate(bbox->maxN->dim, bbox->maxN->v);
+	    tmp = va_arg(*a_list, HPointN *);
+	    if (tmp != bbox->maxN) { /* could happen, BBoxUnion3() ... */
+		HPtNDelete(bbox->maxN);
+		bbox->maxN = HPtNCreate(tmp->dim, tmp->v);
+	    }	    
+	    bbox->geomflags |= VERT_ND;
 	    bbox->pdim  = bbox->maxN->dim;
 	    break;
 	default:

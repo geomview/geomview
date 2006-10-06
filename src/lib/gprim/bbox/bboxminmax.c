@@ -45,3 +45,26 @@ BBox *BBoxMinMax(BBox *bbox, HPoint3 *min, HPoint3 *max)
     }
     return bbox;
 }
+
+BBox *BBoxMinMaxND(BBox *bbox, HPointN **min, HPointN **max)
+{
+    if (bbox != NULL) {
+	if (bbox->pdim > 4) {
+	    *min = HPtNCopy(bbox->minN, *min);
+	    *max = HPtNCopy(bbox->maxN, *max);
+	} else {
+	    *min = Pt4ToHPtN(&bbox->min, *min);
+	    *max = Pt4ToHPtN(&bbox->max, *min);
+	}
+    } else {
+	*min = NULL;
+	*max = NULL;
+    }
+    return bbox;
+}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

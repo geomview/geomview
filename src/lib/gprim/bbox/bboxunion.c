@@ -65,7 +65,7 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 		   bbox1->pdim, bbox2->pdim);
     }
 
-    if (bbox1->minN == NULL) { /* ordinary case */
+    if (bbox1->pdim <= 4) { /* ordinary case */
 	HPoint3	min, max;
 
 	min = bbox1->min;
@@ -89,25 +89,25 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 				       CR_MIN, &min, CR_MAX, &max, CR_END);
 	}
     } else {
-	int dim;
+	int dim = (bbox1->geomflags & VERT_4D) ? bbox1->pdim : bbox1->pdim - 1;
 
-	if (bbox1->geomflags & VERT_4D) {
+	if (result != bbox1) {
+	  if (bbox1->geomflags & VERT_4D) {
 	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
 					 CR_NMIN, bbox1->minN,
 					 CR_NMAX, bbox1->maxN,
 					 CR_4D, 1,
 					 CR_END);
-	    dim = bbox1->pdim;
-	} else {
+	  } else {
 	    HPtNDehomogenize(bbox1->minN, bbox1->minN);
-	    HPtNDehomogenize(bbox1->minN, bbox1->maxN);
-
+	    HPtNDehomogenize(bbox1->maxN, bbox1->maxN);
+	    
 	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
 					 CR_NMIN, bbox1->minN,
 					 CR_NMAX, bbox1->maxN,
-					 CR_4D, 1,
+					 CR_4D, 0,
 					 CR_END);
-	    dim = bbox1->pdim-1;
+	  }
 	}
 
 	if (bbox2) {
@@ -115,7 +115,7 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 
 	    if (!(bbox1->geomflags & VERT_4D)) {
 		HPtNDehomogenize(bbox2->minN, bbox2->minN);
-		HPtNDehomogenize(bbox2->minN, bbox2->maxN);
+		HPtNDehomogenize(bbox2->maxN, bbox2->maxN);
 	    }
 
 	    for (i = 0; i < dim; i++) {
