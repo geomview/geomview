@@ -31,11 +31,11 @@ ndview_textdir     = $(ndviewdir)/text
 
 $(top_builddir)/modules/.geomview-ndview: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDview" "$(subdir)/ndview $(subdir)/$(srcdir)/NDview")' > $@
+	echo '(emodule-define "NDview" "$(subdir)/ndview $(realpath $(srcdir))/NDview")' > $@
 
 $(top_builddir)/modules/.geomview-nddemo: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDdemo" "$(subdir)/ndview $(subdir)/$(srcdir)/NDdemo")' > $@
+	echo '(emodule-define "NDdemo" "$(subdir)/ndview $(realpath $(srcdir))/$(srcdir)/NDdemo")' > $@
 
 all-local: $(top_builddir)/modules/.geomview-ndview  $(top_builddir)/modules/.geomview-nddemo
 
