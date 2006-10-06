@@ -95,6 +95,7 @@ Geom *id_bbox(int geomID, int coordsysID) {
   DGeom *geomObj;
   Geom *bbox = NULL, *other_bbox;
   Transform geom2coordsys;
+  TransformN *geom2coordsysN;
 
   if (!ISGEOM(geomID)) {
     OOGLError(1, "%s\n%s",
@@ -102,15 +103,44 @@ Geom *id_bbox(int geomID, int coordsysID) {
 	      "not a geom.");
     return NULL;
   }
-  MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
-    drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
-    other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys, NULL, NULL);
-    if (bbox == NULL) bbox = other_bbox;
-    else {
-      BBoxUnion3((BBox *)bbox, (BBox *)other_bbox, (BBox *)bbox);
-      GeomDelete(other_bbox);
+
+  if (drawerstate.NDim > 0) {
+    static const int NDPermDflt[] = { 0, 1, 2, -1 };
+    int *NDPerm = NULL;
+    DObject *obj;
+
+    /* If the reference frame is a camera then do the appropriate
+     * projection, with a fallback to the default x-y-z case.
+     */
+    if (ISCAM(coordsysID)) {
+      if ((obj = drawer_get_object(coordsysID)) != NULL) {
+	NDPerm = DVobj(obj)->NDPerm;
+      } else {
+	NDPerm = (int *)NDPermDflt;
+      }      
+    }
+    MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
+      geom2coordsysN = drawer_get_ND_transform(geomObj->id, coordsysID);
+      other_bbox = GeomBound(geomObj->Lgeom, NULL, geom2coordsysN, NDPerm);
+      TmNDelete(geom2coordsysN);
+      if (bbox == NULL) bbox = other_bbox;
+      else {
+	BBoxUnion3((BBox *)bbox, (BBox *)other_bbox, (BBox *)bbox);
+	GeomDelete(other_bbox);
+      }
+    }
+  } else {
+    MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
+      drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
+      other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys, NULL, NULL);
+      if (bbox == NULL) bbox = other_bbox;
+      else {
+	BBoxUnion3((BBox *)bbox, (BBox *)other_bbox, (BBox *)bbox);
+	GeomDelete(other_bbox);
+      }
     }
   }
+  
   return bbox;
 }
 
@@ -241,6 +271,85 @@ void drawer_transform(
   }
 }
 
+static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
+			       int use_origin)
+{
+  int i;
+  DObject *moveObj;
+  TransformN *ref2w, *w2moving, *T, *objT;
+  HPointN *ptWorld, *ptMoving;
+  Geom *bbox = NULL;
+  int pdim = drawerstate.NDim;
+
+  if (use_origin) {
+    ref2w = drawer_get_ND_transform(ref_id, WORLDGEOM);
+    ptWorld = HPtNCreate(pdim, NULL);
+    HPtNTransform(ref2w, ptWorld, ptWorld);
+    TmNDelete(ref2w);
+  } else {
+    if (spaceof(ref_id) != TM_EUCLIDEAN)
+      OOGLError(1, "Computing bounding box while in non-Euclidean space");
+    bbox = id_bbox(ref_id, WORLDGEOM);
+    ptWorld = BBoxCenterND((BBox *)bbox, NULL);
+    GeomDelete(bbox);    
+  }
+
+  MAYBE_LOOP(moving_id, i, T_NONE, DObject, moveObj) {
+
+    if (!strcmp(position_type, "position-at")) {
+      w2moving = drawer_get_ND_transform(WORLDGEOM, moveObj->id);
+      ptMoving = HPtNTransform(w2moving, ptWorld, NULL);
+      T = TmNSpaceTranslateOrigin(NULL, ptMoving);
+      HPtNDelete(ptMoving);
+      TmNDelete(w2moving);
+    } else if (!strcmp(position_type, "position-toward")) {
+      /* This actually does not make too much sense if movObj is not a
+       * camera; if it is a camera, then we "careful rotate" within its
+       * sub-space. Otherwise we fake the standard { 0, 1, 2, -1 }
+       * projection.
+       */
+      static const int NDPermDflt[] = { 0, 1, 2, -1 };
+      int *NDPerm = NULL;
+      DObject *obj;
+      Point ptMoving3;
+      Transform T3;
+
+      w2moving = drawer_get_ND_transform(WORLDGEOM, moveObj->id);
+      ptMoving = HPtNTransform(w2moving, ptWorld, NULL);
+      if (ISCAM(moveObj->id) &&
+	  (obj = drawer_get_object(moveObj->id)) != NULL) {
+	NDPerm = DVobj(obj)->NDPerm;
+      } else {
+	NDPerm = (int *)NDPermDflt;
+      }
+      ptMoving3.x = ptMoving->v[NDPerm[0]];
+      ptMoving3.y = ptMoving->v[NDPerm[1]];
+      ptMoving3.z = ptMoving->v[NDPerm[2]];
+      ptMoving3.w = 1.0;
+      HPtNDelete(ptMoving);
+      TmNDelete(w2moving);
+      TmCarefulRotateTowardZ(T3, &ptMoving3);
+      /* Now we have to apply T3 to the proper sub-space, the easiest
+       * way is to just promot T3 to the entire space.
+       */
+      T = TmNApplyDN(TmNIdentity(TmNCreate(pdim, pdim, NULL)), NDPerm, T3);
+    } else if (!strcmp(position_type, "position")) {
+      T = drawer_get_ND_transform(ref_id, moveObj->id); 
+    }
+    /* Now that we have computed an incremental transform for moveObj
+     * apply it to its ND-transform.
+     */
+    if (ISGEOM(moveObj->id)) {
+      objT = drawer_get_ND_transform(moveObj->id, WORLDGEOM);
+    } else if (ISCAM(moveObj->id)) {
+      objT = drawer_get_ND_transform(moveObj->id, UNIVERSE);
+    }
+    TmNConcat(T, objT, objT);
+    drawer_set_ND_xform(moveObj->id, objT);
+    TmNDelete(T);
+  }
+  HPtNDelete(ptWorld);
+}
 
 /* 
  * center = NULL or center = "center" ---> position-[at | toward] the
@@ -248,12 +357,12 @@ void drawer_transform(
  * center = "origin" ---> position-[at | toward] the origin of 
  * 	ref_id's coordinate system
  */
-void drawer_position( int moving_id, int ref_id, char *position_type,
-		     char *center) {
+void drawer_position(int moving_id, int ref_id, char *position_type,
+		     char *center)
+{
   int i;
   DObject *moveObj;
   Transform ref2w, w2moving, T;
-  HPoint3 min, max;
   int use_origin;
 
   /* ptWorld = reference point in World coordinates, 
@@ -272,6 +381,12 @@ void drawer_position( int moving_id, int ref_id, char *position_type,
   }
   if (!ISGEOM(ref_id)) use_origin = 1;
 
+  if (drawerstate.NDim > 0) {
+    /* The ND-stuff needs special care. */
+    drawer_ND_position(moving_id, ref_id, position_type, use_origin);
+    return;
+  }
+
   /* First, get the point to which we are relatively positioning in
    * world coordinates (using world coordinates is somewhat arbitrary -
    * there just needs to be an intermediate coordinate system). */
@@ -282,16 +397,10 @@ void drawer_position( int moving_id, int ref_id, char *position_type,
     HPt3Transform(ref2w, &ptWorld, &ptWorld);
   } else {
     if (spaceof(ref_id) != TM_EUCLIDEAN)
-      OOGLError(1, "Computing bounding box while in non-eudlidean space");
+      OOGLError(1, "Computing bounding box while in non-Euclidean space");
     bbox = id_bbox(ref_id, WORLDGEOM);
-    BBoxMinMax((BBox *)bbox, &min, &max);
+    BBoxCenter((BBox *)bbox, &ptWorld);
     GeomDelete(bbox);
-    HPt3Normalize(&min, &min);
-    HPt3Normalize(&max, &max);
-    ptWorld.x = (min.x + max.x) / 2.0;
-    ptWorld.y = (min.y + max.y) / 2.0;
-    ptWorld.z = (min.z + max.z) / 2.0;
-    ptWorld.w = 1.0;
   }
 
   MAYBE_LOOP(moving_id, i, T_NONE, DObject, moveObj) {
@@ -725,6 +834,10 @@ LDEFINE(escale, LVOID,
   return Lt;
 }
 
+/* Concat T with the current object's world transform, keeping the
+ * normalization (obsolete) into account. So "T" is an incremental
+ * transform.
+ */
 void drawer_post_xform(int id, Transform T)
 {
   TransformStruct ts;
@@ -1336,7 +1449,7 @@ LDEFINE(look_recenter, LVOID,
   MAYBE_LOOP(camID, i, T_CAM, DView, camObj) { 
     gv_xform_set(camObj->id, &obj2univ);
     if (obj2univN.tm) {
-      gv_ND_xform(camObj->id, &obj2univN);
+      gv_ND_xform_set(camObj->id, &obj2univN);
     }
     gv_position_at(camObj->id, objID, 
 		   spaceof(objID) == TM_EUCLIDEAN ? "center" : "origin");
