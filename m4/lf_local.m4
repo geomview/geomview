@@ -66,7 +66,7 @@ AC_DEFUN([LF_LINK_HEADERS],[
 	if test -e "`pwd`/$srcdir/$lf_dir/$lf_file"; then
 	    $LN_S "`pwd`/$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
 	else
-	    if test -e "../$srcdir/$lf_dir/$lf_file"; then
+	    if test -e "$srcdir/$lf_dir/$lf_file"; then
 		$LN_S "$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
 	    fi
 	fi
