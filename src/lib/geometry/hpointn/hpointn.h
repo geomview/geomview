@@ -26,6 +26,7 @@
 #define HPOINTNDEF
 
 #include "reference.h"
+#include "hpoint3.h"
 
 typedef float HPtNCoord;
 typedef struct HPtN {
@@ -95,5 +96,7 @@ extern HPtNCoord HPtNDot( const HPointN *p1, const HPointN *p2);
 	 *   [0 1 2 -1]
 	 */
 extern HPtNCoord *HPtNTransformComponents( const HPointN *p, const TransformN *T, int ncomponents, int *indices, HPtNCoord *results );
+
+extern HPointN *Pt4ToHPtN(HPoint3 *v4, HPointN *vN);
 
 #endif

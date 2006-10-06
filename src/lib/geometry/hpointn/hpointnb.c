@@ -58,6 +58,25 @@ HPtNCopy(const HPointN *pt1, HPointN *pt2)
 }
 
 HPointN *
+Pt4ToHPtN(HPoint3 *v4, HPointN *vN)
+{
+  int i;
+
+  if (!vN) {
+    vN = HPtNCreate(5, NULL);
+  }
+  for (i = 0; i < 4; ++i) {
+    vN->v[i] = ((HPt3Coord *)v4)[i];
+  }
+  for (; i < vN->dim-1; i++) {
+    vN->v[i] = 0.0;
+  }
+  vN->v[i] = 1.0;
+
+  return vN;
+}
+
+HPointN *
 HPtNPad(HPointN *pt1, short dim2, HPointN *pt2)
 {
 	short dim1 = pt1->dim;
