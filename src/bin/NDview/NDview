@@ -414,6 +414,11 @@ mkBasis
 wm resizable . 0 0
 setselect intro
 
-puts "(bbox-draw allgeoms off)"
+# no longer necesary, bboxes are just drawn fine.
+#puts "(bbox-draw allgeoms off)"
+
+# but normalization is annoying, and doesn't work anyway.
+puts "(normalization g0 none)"
+
 puts "(ui-target g0)"
 flush stdout
