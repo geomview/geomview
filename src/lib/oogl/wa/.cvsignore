@@ -1,1 +1,5 @@
+Makefile
 Makefile.in
+lex.yy.c
+y.tab.c
+y.tab.h
