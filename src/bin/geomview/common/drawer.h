@@ -126,12 +126,6 @@ typedef struct DView {
   int nNDcmap;
   cmap NDcmap[MAXCMAP];	/* N-D color map */
   struct NDcam *cluster;/* to which cluster do we belong?  NULL if not N-D */
-  Transform NDC2Wpriv;  /* a private transform, only applied in our 3d
-			 * sub-space. This transformation is prepended
-			 * as C2W transform to the global C2W
-			 * transform.
-			 */
-  Transform NDW2Cpriv;  /* inverse of NDC2Wpriv */
 } DView;
 
 typedef struct NDcam {

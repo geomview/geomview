@@ -296,13 +296,7 @@ LDEFINE(ND_axes, LLIST,
     dv->cluster = c;
     memcpy(dv->NDPerm, axes, 4*sizeof(int));
 
-    /* Reset and copy the default transformation to our "private" 3d
-     * transform.
-     */
     CamReset(dv->cam);
-    CamGet(dv->cam, CAM_C2W, &dv->NDC2Wpriv);
-    CamGet(dv->cam, CAM_W2C, &dv->NDW2Cpriv);
-    CamSet(dv->cam, CAM_C2W, &TM_IDENTITY, CAM_END);
 
     dv->changed |= 1;
     return Lt;

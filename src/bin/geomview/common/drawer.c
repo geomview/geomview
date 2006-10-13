@@ -1008,9 +1008,6 @@ LDEFINE(camera_reset, LVOID,
        * slevy & holt
        */
       drawer_set_ND_xform(dv->id, NULL);
-      CamGet(dv->cam, CAM_C2W, &dv->NDC2Wpriv);
-      CamGet(dv->cam, CAM_W2C, &dv->NDW2Cpriv);
-      CamSet(dv->cam, CAM_C2W, &TM_IDENTITY, CAM_END);
     }
 
     TmIdentity(dv->Incr);
@@ -2787,21 +2784,6 @@ really_draw_view(DView *dv)
 	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
 	TransformN *Tc = NULL, *W2G = NULL;
 	HPointN *caxis = NULL;
-	Transform T3d;
-	float focallen;
-
-	/* Need to apply the world transform here, so
-	 * ordinary 3-D objects are positioned correctly.
-	 */
-#if 0
-	/* Mmmh. Every Geom now has an ND drawing routine. So why
-	 * should this stuff be necesary?
-	 */
-	GeomGet(dgeom[0]->Inorm, CR_AXIS, T3d);
-	mgtransform(T3d);
-	GeomGet(dgeom[0]->Item, CR_AXIS, T3d);
-	mgtransform(T3d);
-#endif
 
 	cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
 	if(dgeom[0]->NDT) {
@@ -2811,17 +2793,6 @@ really_draw_view(DView *dv)
 	    W2C = TmNCopy( cluster->W2C, NULL );
 	    W2G = TmNCreate(dim,dim, NULL);
 	}
-
-	/* The funny construct below undoes the action of any ordinary
-	 * CAM_W2C transformation and efficiently installs NDW2Cpriv
-	 * als CAM_W2C. FIXME. Should not use W2Cpriv at all and
-	 * instead use the camera's ordinary W2C transformation. This
-	 * would work, because motion only act on the ND transforms
-	 * while ND-viewing is enabled.
-	 */
-	CamGet(dv->cam, CAM_C2W, T3d);
-	TmConcat(dv->NDW2Cpriv, T3d, T3d);
-	TmNApplyDN(W2C, dv->NDPerm, T3d);	
 
 	nds.axes = dv->NDPerm;
 	nds.ncm = dv->nNDcmap;
@@ -2856,8 +2827,6 @@ really_draw_view(DView *dv)
 	mgctxset(MG_NDMAP, map_ND_point, MG_NDINFO, &nds, MG_END);
 
 	for(i = 1; i < dgeom_max; i++) {
-	    Transform CamTrans, C2W3;
-	    float focallen;
 
 	    if(dgeom[i] == NULL) continue;
 

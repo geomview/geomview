@@ -361,28 +361,30 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
       /* If this is a camera then we have an additional 3d transformations 
        * which is appended to the cameras 3d W2C transform.
        */
-#if 1
       if (ISCAM(moveObj->id)) {
-	HPt3Transform(DVobj(obj)->NDW2Cpriv, &ptMoving3, &ptMoving3);
+	Transform camW2C;
+
+	CamGet(DVobj(obj)->cam, CAM_W2C, &camW2C);
+	HPt3Transform(camW2C, &ptMoving3, &ptMoving3);
 	HPt3Dehomogenize(&ptMoving3, &ptMoving3);
       }
-#else
-      /* Add the camera's focal-length as translation in z-direction */
-      if (ISCAM(moveObj->id)) {
-	  CamGet(moveObj, CAM_FOCUS, &focallen);
-	  ptMoving3.z += focallen;
-      }
-#endif
 
       /* construct the rotation */
       TmCarefulRotateTowardZ(T3, &ptMoving3);
 
       if (ISCAM(moveObj->id)) {
-	/* We have to conjugate T3 with NDC2Wpriv before we can apply
-	 * it to the cluster's ND transform.
+	/* We have to conjugate T3 with this camera's private 3d
+	 * transform before we can apply it to the cluster's ND
+	 * transform.
 	 */
-	TmConcat(DVobj(obj)->NDW2Cpriv, T3, T3);
-	TmConcat(T3, DVobj(obj)->NDC2Wpriv, T3);
+	Transform camW2C;
+	Transform camC2W;
+	
+	CamGet(DVobj(obj)->cam, CAM_C2W, &camC2W);
+	CamGet(DVobj(obj)->cam, CAM_W2C, &camW2C);
+
+	TmConcat(camW2C, T3, T3);
+	TmConcat(T3, camC2W, T3);
       }
       
       T = TmNApplyDN(TmNIdentity(TmNCreate(pdim, pdim, NULL)), NDPerm, T3);
@@ -1288,6 +1290,7 @@ static void ND_look_encompass(int objID, int camID)
   Transform Tfocus;
 
   MAYBE_LOOP(camID, i, T_CAM, DView, dv) {
+    Transform camC2W, camW2C;
 
     /* Figure out the bounding sphere of the object, in contrast to
      * the 3d case we compute the bounding sphere relative to the
@@ -1303,15 +1306,14 @@ static void ND_look_encompass(int objID, int camID)
 
     /* fromcam now contains the coordinates of the center of the
      * bounding sphere in the coordinate frame defined by the cluster,
-     * projected to our 3d sub-space. We need to apply dv->NDprivate
-     * to the final position (NDprivate is an additional 3d transform
-     * private to this camera, i.e. not shared by the cluster).
-     *
-     * In case no look-encompass commands etc. have been called
-     * NDW2Cpriv simply containes the -focallen translation in z
-     * direction.
+     * projected to our 3d sub-space. We need to append this camera's
+     * private 3d transform to get the final position w.r.t. this
+     * camera.
      */
-    HPt3Transform(dv->NDW2Cpriv, &center, &fromcam);
+    CamGet(dv->cam, CAM_C2W, &camC2W);
+    CamGet(dv->cam, CAM_W2C, &camW2C);
+    
+    HPt3Transform(&camW2C, &center, &fromcam);
     HPt3Dehomogenize(&fromcam, &fromcam);
 
     if(fromcam.x < 0) fromcam.x = -fromcam.x;
@@ -1381,16 +1383,16 @@ static void ND_look_encompass(int objID, int camID)
 
     /* In contrast to the 3d case we MUST NOT call apply_motion()
      * (through gv_transform()). Instead, we apply the transformation
-     * to the normal C2W xform, and remember in dv->NDW2Cpriv its
-     * inverse to be able to apply the part of C2W/W2C which is
-     * private to this camera and not shared with the other cameras of
-     * this cluster.
+     * to the camera's normal C2W transform and thus install a
+     * translation in z-direction which is private to this camera.
      */
     TmTranslate(Tfocus, 0.0, 0.0, newzrange - zrange);
     drawer_post_xform(dv->id, Tfocus);
-    TmConcat(Tfocus, dv->NDC2Wpriv, dv->NDC2Wpriv);
+    TmConcat(Tfocus, camC2W, camC2W);
+    CamSet(dv->cam, CAM_C2W, &camC2W, CAM_END);
     TmTranslate(Tfocus, 0.0, 0.0, -newzrange + zrange);
-    TmConcat(dv->NDW2Cpriv, Tfocus, dv->NDW2Cpriv);
+    TmConcat(camW2C, Tfocus, camW2C);
+    CamSet(dv->cam, CAM_W2C, &camW2C, CAM_END);
   }
 }
 
@@ -1893,6 +1895,9 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
    * with its origin at 'center'.
    * It's in this system that 'delta' is defined.
    * Tgf is the transform from this system to 'frame'.
+   *
+   * cH: we allow a "private" 3d transform for each camera of a
+   * cluster; this has to be taken into account here.
    */
 
   cam = frame;
@@ -1905,22 +1910,20 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
     perm = (int *)dflt_perm;
   }
 
-  /* If either moving or center are a camera, then we have to apply
-   * the camera's private 3d transform as well as the ND transform of
-   * the cluster. Luckily this has to be done ONLY for the translation
-   * of the origin of the motion; all other "private" 3d transforms
-   * would cancel out.
-   */
   origin = HPtNCreate(drawerstate.NDim, NULL);
   Tcf = drawer_get_ND_transform(center, frame);
   if (ISCAM(center) && (dv = (DView *)drawer_get_object(center)) != NULL) {
-    HPtNTransform3(dv->NDC2Wpriv, dv->NDPerm, origin, origin);
+    Transform camC2W;
+    CamGet(dv->cam, CAM_C2W, &camC2W);
+    HPtNTransform3(camC2W, dv->NDPerm, origin, origin);
   }
   if (Tcf) {
     HPtNTransform( Tcf, origin, origin );
   }
   if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
-    HPtNTransform3(dv->NDW2Cpriv, dv->NDPerm, origin, origin);
+    Transform camW2C;
+    CamGet(dv->cam, CAM_W2C, &camW2C);
+    HPtNTransform3(camW2C, dv->NDPerm, origin, origin);
   }
   Tgf = TmNSpaceTranslateOrigin(NULL, origin);
   /* TranslateOrigin() will call Dehomogenize anyway, so negation of
@@ -1935,12 +1938,11 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
    *  the chain in reverse order, starting with Tfg
    */
   if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
-    Tfg = TmNApplyT3TN(dv->NDW2Cpriv, dv->NDPerm, Tfg);
+    Transform camW2C;
+    CamGet(dv->cam, CAM_W2C, &camW2C);
+    Tfg = TmNApplyT3TN(camW2C, dv->NDPerm, Tfg);
   }
   Tmg = Tmf ? TmNConcat( Tmf, Tfg, NULL ) : REFINCR(TransformN, Tfg);
-  if (0 && ISCAM(moving) && (dv = (DView *)drawer_get_object(moving)) != NULL) {
-    Tmg = TmNApplyT3TN(dv->NDC2Wpriv, dv->NDPerm, Tmg);
-  }
 
   /* ... and here it comes ... */
   TmNApplyDN(Tmg, perm, delta);
@@ -1948,7 +1950,9 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
   TmNDelete(Tmf); /* Do not modify, generate a new one */
   Tmf = TmNConcat(Tmg, Tgf, NULL);
   if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
-    Tmf = TmNApplyDN(Tmf, dv->NDPerm, dv->NDC2Wpriv);
+    Transform camC2W;
+    CamGet(dv->cam, CAM_C2W, &camC2W);
+    Tmf = TmNApplyDN(Tmf, dv->NDPerm, camC2W);
   }
   Tfp = drawer_get_ND_transform(frame, get_parent(moving));
   Tmp = Tfp ? TmNConcat(Tmf, Tfp, NULL) : REFINCR(TransformN, Tmf);
