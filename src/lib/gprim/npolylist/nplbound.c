@@ -38,103 +38,118 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  *
  * ROUTINE DESCRIPTION:  Return the bounding box of a polylist.
  *
+ * if T != NULL then we act only on the 3d sub-space of the first 3
+ * components.
  */
 
 
 #include "npolylistP.h"
 
-BBox *NPolyListBound(NPolyList *np, Transform dummy, TransformN *T, int *axes)
+BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 {
   BBox *result;
-  int n, i, pdim, dim;
-  float *v;
-  HPointN *min, *max;
-  HPointN *clean, *raw, *tmp, *tmp2;
-  float *tmp_data;
-
-  if ((void *)T == (void *)TM_IDENTITY) {
-    T = NULL;
-  }
+  int n, pdim;
+  HPoint3 min, max, tmp, clean;
+  HPointN ptN[1];
 
   n = np->n_verts;
-  v = np->v;
   pdim = np->pdim;
- 
-  tmp = HPtNCreate(pdim, NULL);
-  tmp_data = tmp->v;
-  tmp->v = v;
+  ptN->v = np->v;
+  ptN->dim = pdim;
 
-  min = HPtNCreate(pdim, NULL);
+  /* First handle the case without transformations, this means that we
+   * return an Nd bbox.
+   */
+  if (!T && !TN) {
+    HPointN *min = HPtNCreate(pdim, np->v);
+    HPointN *max;
 
-  /* all points are (N+1)-vectors */
-  if (T) {
-    HPtNTransform(T, tmp, min);
-  }
-  if (!(np->geomflags & VERT_4D)) {
-    HPtNDehomogenize( min, min );
-    dim = pdim - 1;
-  } else {
-    dim = pdim;
-  }
-  max = HPtNCopy(min, NULL);
-  
-  tmp2 = HPtNCreate(pdim, NULL);  
-  while(--n > 0) {
-
-    tmp->v += pdim;
-
-    if (T) {
-      raw = tmp2;
-      HPtNTransform(T, tmp, raw);
+    if (np->geomflags & VERT_4D) {
+      max = HPtNCopy(min, NULL);
+      while(--n >= 0) {
+	ptN->v += pdim;
+	HPtNMinMax(min, max, ptN, pdim);
+      }
+      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				   CR_NMIN, min, CR_NMAX, max, CR_4D, 1,
+				   CR_END);
     } else {
-      raw = tmp;
+      HPointN *clean = HPtNCreate(pdim, NULL);
+      HPtNDehomogenize(min, min);
+      max = HPtNCopy(min, NULL);
+      while(--n >= 0) {
+	ptN->v += pdim;
+	HPtNDehomogenize(ptN, clean);
+	HPtNMinMax(min, max, clean, pdim-1);
+      }
+      HPtNDelete(clean);
+      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				   CR_MIN, &min, CR_MAX, &max, CR_END);
     }
+    HPtNDelete(min);
+    HPtNDelete(max);
+
+    return result;
+  }
+
+  if (TN) {
+    /* Nd bounding box is requested, with transformation. */
+    HPointN *minN;
+    HPointN *maxN;
+    BBox *result;
+
+    minN = HPtNTransform(TN, ptN, NULL);
     if (!(np->geomflags & VERT_4D)) {
-      clean = tmp2;
-      HPtNDehomogenize(raw, clean);
-    } else {
-      clean = raw;
+      HPtNDehomogenize(minN, minN);
     }
-    for (i = 0; i < dim; i++) {
-      if (min->v[i] > clean->v[i]) {
-	min->v[i] = clean->v[i];
-      } else if (max->v[i] < clean->v[i]) {
-	max->v[i] = clean->v[i];
+    maxN = HPtNCopy(minN, NULL);
+    while(--n >= 0) {
+      ptN->v += pdim;
+      HPtNTransform(TN, ptN, ptN);
+      if (!(np->geomflags & VERT_4D)) {
+	HPtNDehomogenize(ptN, ptN);
+	HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+      } else {
+	HPtNMinMax(minN, maxN, ptN, TN->odim);
       }
     }
-  }
-
-  if (axes) {
-    HPt3Coord min4[4], max4[4];
-
-    for (i = 0; i < 3; i++) {
-      min4[i] = min->v[axes[i]];
-      max4[i] = max->v[axes[i]];
-    }
-    if (np->geomflags & VERT_4D) {
-      min4[3] = min->v[axes[3]];
-      min4[3] = max->v[axes[3]];
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_4MIN, min4, CR_4MAX, max4, CR_END);
-    } else {
-      min4[3] = 1.0;
-      max4[3] = 1.0;
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_MIN, min4, CR_MAX, max4, CR_END);
-    }
-  } else {
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				 CR_NMIN, min, CR_NMAX, max,
-				 CR_4D, (np->geomflags & VERT_4D) != 0,
-				 CR_END);
+				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
+
+    HPtNDelete(minN);
+    HPtNDelete(maxN);
+
+    return result;
   }
 
-  /* Cleanup */
-  tmp->v = tmp_data;
-  HPtNDelete(tmp);
-  HPtNDelete(min);
-  HPtNDelete(max);
-  HPtNDelete(tmp2);
+  /* A 3d bbox is requested, with transformations */
 
-  return result;
+  if (T) {
+    /* ordinary 3d transform */
+    HPtNToHPt3(ptN, &min, NULL);
+    HPt3Transform(T, &min, &min);
+    HPt3Dehomogenize(&min, &min);
+    max = min;
+    while(--n >= 0) {
+      ptN->v += pdim;
+      HPtNToHPt3(ptN, &tmp, NULL);
+      tmp.x = ptN->v[0]; tmp.y = ptN->v[1]; tmp.z = ptN->v[2];
+      tmp.w = ptN->v[pdim-1];
+      HPt3Transform(T, &tmp, &clean);
+      HPt3Dehomogenize(&clean, &clean);
+      Pt3MinMax(&min, &max, &clean);
+    }
+
+    /* At this point we are ready to generate a 3d bounding box */
+    return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+			       CR_MIN, &min, CR_MAX, &max, CR_END);
+  }
+
+  return NULL;  
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

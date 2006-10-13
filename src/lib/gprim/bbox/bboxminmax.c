@@ -35,36 +35,32 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxMinMax(BBox *bbox, HPoint3 *min, HPoint3 *max)
 {
-    static HPoint3 nullpoint = {0,0,0,1};
-    if (bbox != NULL) {
-      *min = bbox->min;
-      *max = bbox->max;
-    } else {
-      *min = nullpoint;
-      *max = nullpoint;
-    }
-    return bbox;
+  static HPoint3 nullpoint = {0,0,0,1};
+
+  if (bbox != NULL && bbox->pdim == 4) {
+    *min = *(HPoint3 *)bbox->min->v;
+    *max = *(HPoint3 *)bbox->max->v;
+  } else {
+    *min = nullpoint;
+    *max = nullpoint;
+  }
+  return bbox;
 }
 
 BBox *BBoxMinMaxND(BBox *bbox, HPointN **min, HPointN **max)
 {
-    if (bbox != NULL) {
-	if (bbox->pdim > 4) {
-	    *min = HPtNCopy(bbox->minN, *min);
-	    *max = HPtNCopy(bbox->maxN, *max);
-	} else {
-	    *min = Pt4ToHPtN(&bbox->min, *min);
-	    *max = Pt4ToHPtN(&bbox->max, *min);
-	}
-    } else {
-	*min = NULL;
-	*max = NULL;
-    }
-    return bbox;
+  if (bbox != NULL) {
+    *min = HPtNCopy(bbox->min, *min);
+    *max = HPtNCopy(bbox->max, *max);
+  } else {
+    *min = NULL;
+    *max = NULL;
+  }
+  return bbox;
 }
 
 /*
  * Local Variables: ***
- * c-basic-offset: 4 ***
+ * c-basic-offset: 2 ***
  * End: ***
  */

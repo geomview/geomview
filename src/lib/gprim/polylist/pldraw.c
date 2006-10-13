@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.6 2006/10/13 22:20:34 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -56,7 +56,6 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
     Vertex *ov, *nv;
     Vertex **vps;
     int i, j, colored = 0;
-    float *hdata;
 
     /* Copy the PolyList onto the stack. */
     newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
@@ -72,11 +71,19 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
 
     /* Transform vertices */
     h = HPtNCreate(5, NULL);
-    hdata = h->v;
-    for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
+    if (pl->geomflags & VERT_4D) {
+      for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
 	*(HPoint3 *)h->v = ov->pt;
 	nv->vcol = ov->vcol;
 	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+      }
+    } else {
+      for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
+	HPt3Dehomogenize(&ov->pt, &ov->pt);
+	*(HPoint3 *)h->v = ov->pt;
+	nv->vcol = ov->vcol;
+	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+      }
     }
 
     newpl.flags &= ~(PL_HASVN|PL_HASPN);
@@ -104,7 +111,6 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
     }
 
     mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.flags);
-    h->v = hdata;
     HPtNDelete(h);
 }
 
@@ -116,17 +122,7 @@ PolyListDraw( PolyList *pl )
     
 
     if(_mgc->NDinfo) {
-	Transform T;
-	float focallen;
-	mgpushtransform();
-	CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-	TmTranslate(T, 0., 0., -focallen);
-	TmConcat(T, _mgc->C2W, T);
-	mgsettransform(T);
-
 	draw_projected_polylist(_mgc->NDmap, _mgc->NDinfo, pl);
-
-	mgpoptransform();
 	return pl;
     }
 

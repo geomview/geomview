@@ -28,21 +28,25 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
+#include "geom.h"
+#include "create.h"
+#include "skelP.h"
+#include "sphere.h"
 
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
-
-#include "geomclass.h"
-
-/*
- * Compute the bounding box of a geom.
- * If a transform T is supplied, compute bbox of geom transformed by T;
- * if T is NULL, compute bbox of geom in its native coordinates.
- */
-
-Geom *GeomBound(Geom *geom, Transform T, TransformN *TN)
+Geom *SkelBoundSphere(Skel *skel, Transform T, TransformN *TN, int *axes,
+		      int space)
 {
-    if (geom && geom->Class->bound) {
-	return (*geom->Class->bound) (geom, T, TN);
-    }
-    return NULL;
+  Geom *sphere;
+
+  /* Create a dummy sphere, the center will be corrected later */
+  sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
+    
+  SphereEncompassPoints((Sphere *)sphere,
+			skel->p,
+			(skel->geomflags & VERT_4D) ? skel->pdim : skel->pdim-1,
+			skel->pdim,
+			skel->nvert,
+			T, TN, axes);
+
+  return sphere;
 }

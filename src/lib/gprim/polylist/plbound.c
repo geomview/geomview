@@ -38,23 +38,32 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  *
  * ROUTINE DESCRIPTION:  Return the bounding box of a polylist.
  *
+ * T     TN    AXES  BBOX
+ * NULL  NULL  NULL  return the objects "native" bounding box
+ * !NULL NULL  NULL  return a transformed bounding box, Nd objects
+ *                   interprete T as acting on the x,y,z sub-space.
+ * NULL  !NULL NULL  return a "native" transformed bounding box, Nd objects
+ *                   just let TN act on their coordinates, 3d objects are
+ *                   implicitly padded with zeros
+ * NULL  !NULL !NULL return a transformed and projected 3d bounding box.
+ *                   3d objects are implicitly padded with zeroes before
+ *                   the projection is applied.
+ *
+ * All other combinations are unsupported.
  */
-
 
 #include "polylistP.h"
 
-BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN, int *axes)
+BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
 {
   int n;
   Vertex  *v;
   HPoint3 min, max;
-  HPoint3 *raw, *clean, tmp;
-
-  if (T == TM_IDENTITY)
-    T = NULL;
+  HPoint3 clean, tmp;
 
   n = polylist->n_verts;
   v = polylist->vl;
+  min = v->pt;
 
   /* We assume all the vertices in vl[] are actually used... */
   while(--n >= 0 && !finite(v->pt.x + v->pt.y + v->pt.z + v->pt.w))
@@ -62,55 +71,106 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN, int *axes)
   if(n <= 0)
     return NULL;	/* No finite points */
 
-#if 0 && defined(BBOX_ND_HACK)
-  if(polylist->geomflags & VERT_4D) {
-    BBox *b;
-    for(b = NULL; --n >= 0; )
-      b = BBox_ND_hack(b, &v->pt.x, 4);
-    return b;
-  }
-#endif
-
-  min = v->pt;
-  /* all points are 4-vectors, but we've marked whether they
-   * have true 4-dimensional nature */
-  if (T) 	{
-    HPt3Transform(T, &min, &min);
-  }
-  if (!(polylist->geomflags & VERT_4D)) {
-    HPt3Dehomogenize( &min, &min );
-  }
-  max = min;
-  while(--n >= 0) {
-    v++;
-    if (T) 	{
-      raw = &tmp;
-      HPt3Transform(T, &v->pt, raw);
-    } else {
-      raw = &v->pt;
-    }
-    if (!(polylist->geomflags & VERT_4D)) {
-      clean = &tmp;
-      HPt3Normalize( raw, clean );
-    } else {
-      clean = raw;
-    }
-    if(min.x > clean->x) min.x = clean->x;
-    else if(max.x < clean->x) max.x = clean->x;
-    if(min.y > clean->y) min.y = clean->y;
-    else if(max.y < clean->y) max.y = clean->y;
-    if(min.z > clean->z) min.z = clean->z;
-    else if(max.z < clean->z) max.z = clean->z;
+  /* First handle the case without transformations, this means that we
+     return a 3d bbox for 3d polylists, and a 4d bboy for 4d polylists.
+   */
+  if (!T && !TN) {
     if (polylist->geomflags & VERT_4D) {
-      if(min.w > clean->w) min.w = clean->w;
-      else if(max.w < clean->w) max.w = clean->w;
+      max = min;
+      while(--n >= 0) {
+	HPt3MinMax(&min, &max, &(++v)->pt);
+      }
+      return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
+    } else {
+      HPt3Dehomogenize(&min, &min);
+      max = min;
+      while(--n >= 0) {
+	HPt3Dehomogenize(&(++v)->pt, &clean);
+	Pt3MinMax(&min, &max, &clean);
+      }
+      return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_MIN, &min, CR_MAX, &max, CR_END);
     }
   }
-  if (polylist->geomflags & VERT_4D) {
-    return (BBox *) GeomCCreate(NULL, BBoxMethods(),
-				CR_4MIN, &min, CR_4MAX, &max, CR_END);
-  } else {
-    return (BBox *) GeomCCreate(NULL, BBoxMethods(),
-				CR_MIN, &min, CR_MAX, &max, CR_END);
+  
+  if (TN) {
+    /* Nd bounding box is requested, with transformation. */
+    HPointN *ptN;
+    HPointN *minN;
+    HPointN *maxN;
+    BBox *result;
+
+    ptN = HPtNCreate(5, NULL);
+
+    if (!(polylist->geomflags & VERT_4D)) {
+      HPt3Dehomogenize(&min, &min);
+    }
+    *(HPoint3 *)ptN->v = min;
+    minN = HPtNTransform(TN, ptN, NULL);
+    HPtNDehomogenize(minN, minN);
+    maxN = HPtNCopy(minN, NULL);
+    while(--n >= 0) {
+      *(HPoint3 *)ptN->v = (++v)->pt;
+      if (!(polylist->geomflags & VERT_4D)) {
+	HPt3Dehomogenize((HPoint3 *)ptN->v, (HPoint3 *)ptN->v);
+      }
+      HPtNTransform(TN, ptN, ptN);
+      HPtNDehomogenize(ptN, ptN);
+      HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+    }
+    result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
+
+    HPtNDelete(ptN);
+    HPtNDelete(minN);
+    HPtNDelete(maxN);
+
+    return result;
   }
+
+  /* A 3d bbox is requested, with transformations */
+
+  if (T) {
+    /* ordinary 3d transform */
+    if (polylist->geomflags & VERT_4D) {
+      /* We operate on the 3x3 x,y,z space, this means that we just
+       * have to omit the "w" coordinate.
+       */
+      min.w = 1.0;
+      HPt3Transform(T, &min, &min);
+      HPt3Dehomogenize(&min, &min);
+      max = min;
+      while(--n >= 0) {
+	tmp = (++v)->pt;
+	tmp.w = 1.0;
+	HPt3Transform(T, &tmp, &clean);
+	HPt3Dehomogenize(&clean, &clean);
+	Pt3MinMax(&min, &max, &clean);
+      }
+    } else {
+      /* ordinary 3d object */
+      HPt3Transform(T, &min, &min);
+      HPt3Dehomogenize(&min, &min);
+      max = min;
+      while(--n >= 0) {
+	tmp = (++v)->pt;
+	HPt3Transform(T, &tmp, &clean);
+	HPt3Dehomogenize(&clean, &clean);
+	Pt3MinMax(&min, &max, &clean);
+      }
+    }
+
+    /* At this point we are ready to generate a 3d bounding box */
+    return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+			       CR_MIN, &min, CR_MAX, &max, CR_END);
+  }
+
+  return NULL;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

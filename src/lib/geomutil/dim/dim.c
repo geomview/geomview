@@ -48,15 +48,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "dim.h"
 
 static void *dimdefault(int sel, Geom *g, va_list *args) {
-    return (void *)(long)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
+    return
+      (void *)(long)((g && (g->geomflags & VERT_4D)) ? g->pdim : g->pdim-1);
 }
 
 static void *dimSkel(int sel, Geom *g, va_list *args) {
-    return (void *)(long)(((Skel *)g)->dim - 1);
+    return (void *)(long)(((Skel *)g)->pdim-1);
 }
 
 static void *dimNDMesh(int sel, Geom *g, va_list *args) {
-    return (void *)(long)(((NDMesh *)g)->pdim);
+    return (void *)(long)(((NDMesh *)g)->pdim-1);
 }
 
 static void *dimNPolyList(int sel, Geom *g, va_list *args) {
@@ -64,11 +65,11 @@ static void *dimNPolyList(int sel, Geom *g, va_list *args) {
 }
 
 static void *dimQuad(int sel, Geom *g, va_list *args) {
-    return (void *)(long)(((Quad *)g)->flag & QUAD_4D ? 4 : 3);
+    return (void *)(long)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
 }
 
 static void *dimMesh(int sel, Geom *g, va_list *args) {
-    return (void *)(long)(((Mesh *)g)->flag & MESH_4D ? 4 : 3);
+    return (void *)(long)((g && (g->geomflags & VERT_4D)) ? 4 : 3);
 }
 
 static void *dimList(int sel, Geom *g, va_list *args) {

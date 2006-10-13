@@ -45,89 +45,71 @@ BBoxUnion(BBox *bbox1, BBox *bbox2)
 BBox *
 BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 {
-    /* TAKE CARE OF THE CASE OF EITHER CUBE BEING NULL */
-    if (!bbox1) {
-	if(!bbox2) {
-	    if(result) {
-		static Point Max = { -1e10,-1e10,-1e10, 1 };
-		static Point Min = {  1e10, 1e10, 1e10, 1 };
-		result->min = Min;
-		result->max = Max;
-	    }
-	    return result;
-	}
-	bbox1 = bbox2;
-	bbox2 = NULL;
+  int dim1, dim2 = 0;
+  
+  /* TAKE CARE OF THE CASE OF EITHER CUBE BEING NULL */
+  if (!bbox1) {
+    if(!bbox2) {
+      static Point Max = { -1e10,-1e10,-1e10, 1 };
+      static Point Min = {  1e10, 1e10, 1e10, 1 };
+      return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+				 CR_MIN, Min, CR_MAX, Max, CR_END);
     }
+    bbox1 = bbox2;
+    bbox2 = NULL;
+  }
 
-    if (bbox1->pdim != bbox2->pdim) {
-	OOGLError (0, "BBoxUnion3: dimensions do not match: %d/%d",
-		   bbox1->pdim, bbox2->pdim);
+  if (bbox2) {
+    dim2 = bbox2->pdim;
+    if (!(bbox2->geomflags & VERT_4D)) {
+      HPtNDehomogenize(bbox2->min, bbox2->min);
+      HPtNDehomogenize(bbox2->max, bbox2->max);
+      --dim2;
     }
+  }
+  
+  dim1 = bbox1->pdim;
+  if (!(bbox1->geomflags & VERT_4D)) {
+    HPtNDehomogenize(bbox1->min, bbox1->min);
+    HPtNDehomogenize(bbox1->max, bbox1->max);
+    --dim1;
+  }
 
-    if (bbox1->pdim <= 4) { /* ordinary case */
-	HPoint3	min, max;
+  /* Make sure bbox1 is one with the larger dimension */
+  if (dim2 > dim1) {
+    BBox *bboxswap;
+    int dimswap;
 
-	min = bbox1->min;
-	max = bbox1->max;
-	if(bbox2) {
-	    if(min.x > bbox2->min.x) min.x = bbox2->min.x;
-	    if(max.x < bbox2->max.x) max.x = bbox2->max.x;
-	    if(min.y > bbox2->min.y) min.y = bbox2->min.y;
-	    if(max.y < bbox2->max.y) max.y = bbox2->max.y;
-	    if(min.z > bbox2->min.z) min.z = bbox2->min.z;
-	    if(max.z < bbox2->max.z) max.z = bbox2->max.z;
-	    if(min.w > bbox2->min.w) min.w = bbox2->min.w;
-	    if(max.w < bbox2->max.w) max.w = bbox2->max.w;
-	}
+    bboxswap = bbox1; bbox1 = bbox2; bbox2 = bboxswap;
+    dimswap = dim1; dim1 = dim2; dim2 = dim1;
+  }
+  
+  if (bbox1->pdim == 4) {
+    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+				 CR_4MIN, bbox1->min,
+				 CR_4MAX, bbox1->max,
+				 CR_4D, (bbox1->geomflags & VERT_4D) != 0,
+				 CR_END);
+  } else {
+    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+				 CR_NMIN, bbox1->min,
+				 CR_NMAX, bbox1->max,
+				 CR_4D, (bbox1->geomflags & VERT_4D) != 0,
+				 CR_END);
+  }
 
-	if (bbox1->geomflags & VERT_4D) {
-	    return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				       CR_4MIN, &min, CR_4MAX, &max, CR_END);
-	} else {
-	    return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				       CR_MIN, &min, CR_MAX, &max, CR_END);
-	}
-    } else {
-	int dim = (bbox1->geomflags & VERT_4D) ? bbox1->pdim : bbox1->pdim - 1;
+  if (bbox2) {
+    int i;
 
-	if (result != bbox1) {
-	  if (bbox1->geomflags & VERT_4D) {
-	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-					 CR_NMIN, bbox1->minN,
-					 CR_NMAX, bbox1->maxN,
-					 CR_4D, 1,
-					 CR_END);
-	  } else {
-	    HPtNDehomogenize(bbox1->minN, bbox1->minN);
-	    HPtNDehomogenize(bbox1->maxN, bbox1->maxN);
-	    
-	    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-					 CR_NMIN, bbox1->minN,
-					 CR_NMAX, bbox1->maxN,
-					 CR_4D, 0,
-					 CR_END);
-	  }
-	}
-
-	if (bbox2) {
-	    int i;
-
-	    if (!(bbox1->geomflags & VERT_4D)) {
-		HPtNDehomogenize(bbox2->minN, bbox2->minN);
-		HPtNDehomogenize(bbox2->maxN, bbox2->maxN);
-	    }
-
-	    for (i = 0; i < dim; i++) {
-		if (result->minN->v[i] > bbox2->minN->v[i]) {
-		    result->minN->v[i] = bbox2->minN->v[i];
-		}
-		if (result->maxN->v[i] < bbox2->maxN->v[i]) {
-		    result->maxN->v[i] = bbox2->maxN->v[i];
-		}
-	    }
-	}
+    for (i = 0; i < dim2; i++) {
+      if (result->min->v[i] > bbox2->min->v[i]) {
+	result->min->v[i] = bbox2->min->v[i];
+      }
+      if (result->max->v[i] < bbox2->max->v[i]) {
+	result->max->v[i] = bbox2->max->v[i];
+      }
+    }
+  }
 	
-	return result;
-    }
+  return result;
 }

@@ -133,15 +133,8 @@ VectDraw(v)
 	penultimate = v->nvec - 2;
 
 	if(_mgc->NDinfo) {
-	    Transform T;
-	    float focallen;
-	    mgpushtransform();
-	    CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-	    TmTranslate(T, 0., 0., -focallen);
-	    TmConcat(T, _mgc->C2W, T);
-	    mgsettransform(T);
-	    draw_projected_vect(_mgc->NDmap, _mgc->NDinfo, v, flags, penultimate, hascolor);
-	    mgpoptransform();
+	    draw_projected_vect(_mgc->NDmap, _mgc->NDinfo, v, flags,
+				penultimate, hascolor);
 	    return v;
 	}
 

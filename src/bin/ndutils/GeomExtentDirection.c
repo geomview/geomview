@@ -139,13 +139,13 @@ static void *extentDirSkel(int sel, Geom *g, va_list *args)
 	HPointN *hpt;
 	t = va_arg(*args,TransformN *);
 	dimdir = va_arg(*args,int);
-	dimvert = ((Skel *)g)->dim -1;
+	dimvert = ((Skel *)g)->pdim -1;
 	direction = va_arg(*args,float *);
 	smdim = (dimvert < dimdir) ? dimvert : dimdir;
 	if (((Skel *)g)->nvert == 0)
 		return (void *)NULL;
 	results = (float *)malloc((sizeof *results)*3);
-	hpt=HPtNCreate(((Skel *)g)->dim,NULL);
+	hpt=HPtNCreate(((Skel *)g)->pdim,NULL);
 	hpt->v=((Skel *)g)->p;
 	hpt=HPtNTransform(t,hpt,hpt);
 	point=hpt->v;

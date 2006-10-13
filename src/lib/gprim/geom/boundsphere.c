@@ -42,9 +42,19 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
 			      int space)
 {
   HPoint3 minmax[2];
-  Geom *sphere, *bbox = GeomBound(geom, T, TN, axes );
+  Geom *sphere, *bbox;
 
-  if (bbox == NULL) return NULL;
+  /* The BoundSphere really is something 3-dimensional */
+  if (axes == NULL) {
+    static int dflt_axes[] = { 0, 1, 2, -1 };
+    axes = dflt_axes;
+  }
+
+  bbox = GeomBound(geom, T, TN);
+
+  if (bbox == NULL)
+    return NULL;
+
   BBoxMinMax((BBox *)bbox, &minmax[0], &minmax[1]);
   GeomDelete(bbox);
   HPt3Normalize(&minmax[0], &minmax[0]);
@@ -54,9 +64,12 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
 		      CR_NENCOMPASS_POINTS, 2, CR_SPACE, space,
 		      CR_END);
 
+#if 0
   /* ???? is this correct? The bounding box has already been
      transformed by T ... */
   if (sphere != NULL && T != NULL) GeomTransform(sphere, T, TN);
+#endif
+
   return sphere;
 }
 

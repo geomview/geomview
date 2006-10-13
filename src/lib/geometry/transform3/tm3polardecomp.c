@@ -40,7 +40,7 @@
 
 static Tm3Coord frob_norm(Transform3 A);
 static void invt3x3(Transform3 A, Transform3 Ainv);
-static inline void axpby3x3(Tm3Coord a, Transform3 x,
+static inline void axpbyt3x3(Tm3Coord a, Transform3 x,
 			    Tm3Coord b, Transform3 y, Transform3 res);
 
 #define EPS 1e-8
@@ -54,14 +54,14 @@ void Tm3PolarDecomp(Transform3 A, Transform3 Q)
   limit = (1.0+EPS)*sqrt(3.0);
   invt3x3(Q, a);
   g = sqrt(frob_norm(a)/frob_norm(Q));
-  axpby3x3(0.5*g, Q, 0.5/g, a, Q);
+  axpbyt3x3(0.5*g, Q, 0.5/g, a, Q);
   f = frob_norm(Q);
   pf = 1e8;
   while (f > limit && f < pf) {
     pf = f;
     invt3x3(Q, a);
     g = sqrt(frob_norm(a) / f);
-    axpby3x3(0.5*g, Q, 0.5/g, a, Q);
+    axpbyt3x3(0.5*g, Q, 0.5/g, a, Q);
     f = frob_norm(Q);
   }
 }
@@ -108,14 +108,14 @@ static void invt3x3(Transform3 A, Transform3 Ainv)
   }
 }
 
-static inline void axpby3x3(Tm3Coord a, Transform3 x,
+static inline void axpbyt3x3(Tm3Coord a, Transform3 x,
 			    Tm3Coord b, Transform3 y, Transform3 res)
 {
   int i, j;
 
   for (i = 0; i < 3; i++) {
     for (j = 0; j < 3; j++) {
-      res[i][j] = a * x[i][j] + b * y[i][j];
+      res[i][j] = a * x[i][j] + b * y[j][i];
     }
   }
 }

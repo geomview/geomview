@@ -35,7 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "discgrpP.h"
 
 BBox *
-DiscGrpBound(DiscGrp *discgrp, Transform T, TransformN *TN, int *axes)
+DiscGrpBound(DiscGrp *discgrp, Transform T, TransformN *TN)
 {
     BBox *geombbox;
     Transform Tnew;
@@ -70,7 +70,7 @@ DiscGrpBound(DiscGrp *discgrp, Transform T, TransformN *TN, int *axes)
 	BBox *box;
 
 	TmConcat( Tnew,  T, Tnew );
-	if((box = (BBox *)GeomBound(discgrp->geom, Tnew, NULL, NULL)) != NULL) {
+	if((box = (BBox *)GeomBound(discgrp->geom, Tnew, NULL)) != NULL) {
 	    if(geombbox) {
 		BBoxUnion3(geombbox, box, geombbox);
 		GeomDelete((Geom *)box);

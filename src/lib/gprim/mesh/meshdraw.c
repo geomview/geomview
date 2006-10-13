@@ -43,39 +43,48 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static int
 draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
 {
-    Mesh m = *mesh;
-    HPointN *h = HPtNCreate(5, NULL);
-    HPoint3 *op, *np;
-    int i, colored = 0;
-    int npts = m.nu * m.nv;
-    m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
-    m.n = NULL;
-    m.c = (ColorA *)alloca(npts*sizeof(ColorA));
+  Mesh m = *mesh;
+  HPointN *h = HPtNCreate(5, NULL);
+  HPoint3 *op, *np;
+  int i, colored = 0;
+  int npts = m.nu * m.nv;
+  m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
+  m.n = NULL;
+  m.c = (ColorA *)alloca(npts*sizeof(ColorA));
+  if (mesh->geomflags & VERT_4D) {
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
-	/* Set the point's first four components from our 4-D mesh vertex */
-	*(HPoint3 *)h->v = *op;
-	colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
+      /* Set the point's first four components from our 4-D mesh vertex */
+      *(HPoint3 *)h->v = *op;
+      colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
     }
-    m.flag &= ~MESH_4D;
-    if(colored) m.flag |= MESH_C;
-    MeshComputeNormals(&m);
-    if(_mgc->astk->useshader) {
-	ColorA *c = colored ? m.c :
-		(_mgc->astk->mat.override & MTF_DIFFUSE) ? NULL : mesh->c;
-	if(c) {
-	    (*_mgc->astk->shader)(npts, mesh->p, mesh->n, c, m.c);
-	} else {
-	    for(i = 0; i < npts; i++) {
-		(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
-			(ColorA *)&_mgc->astk->mat.diffuse, m.c + i);
-	    }
-	}
-	colored = 1;
+  } else {
+    for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
+      /* Set the point's first four components from our 4-D mesh vertex */
+      HPt3Dehomogenize(op, op);
+      *(HPoint3 *)h->v = *op;
+      colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
     }
-    mgmeshst(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c, mesh->u);
-    OOGLFree(m.n);
-    HPtNDelete(h);
-    return 0;
+  }
+  m.flag &= ~MESH_4D;
+  if(colored) m.flag |= MESH_C;
+  MeshComputeNormals(&m);
+  if(_mgc->astk->useshader) {
+    ColorA *c = colored ? m.c :
+      (_mgc->astk->mat.override & MTF_DIFFUSE) ? NULL : mesh->c;
+    if(c) {
+      (*_mgc->astk->shader)(npts, mesh->p, mesh->n, c, m.c);
+    } else {
+      for(i = 0; i < npts; i++) {
+	(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
+			      (ColorA *)&_mgc->astk->mat.diffuse, m.c + i);
+      }
+    }
+    colored = 1;
+  }
+  mgmeshst(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c, mesh->u);
+  OOGLFree(m.n);
+  HPtNDelete(h);
+  return 0;
 }
 
 Mesh *
@@ -88,34 +97,26 @@ MeshDraw(Mesh *mesh)
 
     ap = mggetappearance();
     if(ap->shading != APF_CONSTANT || ap->flag & APF_NORMALDRAW)
-	MeshComputeNormals(mesh);
+      MeshComputeNormals(mesh);
   }
 
   if(_mgc->NDinfo) {
-    Transform T;
-    float focallen;
-    mgpushtransform();
-    CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-    TmTranslate(T, 0., 0., -focallen);
-    TmConcat(T, _mgc->C2W, T);
-    mgsettransform(T);
     draw_projected_mesh(_mgc->NDmap, _mgc->NDinfo, mesh);
-    mgpoptransform();
   } else if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_draw_mesh(mesh);
   } else if(_mgc->astk->useshader) {
-	int i, npts = mesh->nu * mesh->nv;
-	ColorA *c = (ColorA *)alloca(npts * sizeof(ColorA));
-	if(mesh->c && !(_mgc->astk->mat.override & MTF_DIFFUSE)) {
-	    (*_mgc->astk->shader)(npts, mesh->p, mesh->n, mesh->c, c);
-	} else {
-	    for(i = 0; i < npts; i++) {
-		(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
-			(ColorA *)&_mgc->astk->mat.diffuse, c + i);
-	    }
-	}
-	mgmeshst(mesh->flag | MESH_C, mesh->nu, mesh->nv, mesh->p, mesh->n, c, mesh->u);
+    int i, npts = mesh->nu * mesh->nv;
+    ColorA *c = (ColorA *)alloca(npts * sizeof(ColorA));
+    if(mesh->c && !(_mgc->astk->mat.override & MTF_DIFFUSE)) {
+      (*_mgc->astk->shader)(npts, mesh->p, mesh->n, mesh->c, c);
+    } else {
+      for(i = 0; i < npts; i++) {
+	(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
+			      (ColorA *)&_mgc->astk->mat.diffuse, c + i);
+      }
+    }
+    mgmeshst(mesh->flag | MESH_C, mesh->nu, mesh->nv, mesh->p, mesh->n, c, mesh->u);
   } else {
     mgmeshst(mesh->flag, mesh->nu, mesh->nv, mesh->p, mesh->n, mesh->c, mesh->u);
   }

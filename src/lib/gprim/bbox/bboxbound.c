@@ -33,64 +33,131 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bboxP.h"
 
-BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN, int *axes)
+BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
 {
-    if(bbox == NULL)
-	return NULL;
+  HPoint3 min, max;
+  HPt3Coord tmp;
+  
+  if (bbox == NULL)
+    return NULL;
 
-    bbox = (BBox *)GeomCopy((Geom *)bbox);
-    if((T == NULL || T == TM_IDENTITY) &&
-       (TN == NULL || TN == (void *)TM_IDENTITY))
-	return bbox;
+  if (bbox->pdim < 4)
+    return NULL; /* should not happen */
 
-    bbox = BBoxTransform(bbox, T, TN);
+  if (!T && !TN) {
+    return (BBox *)GeomCopy((Geom *)bbox);
+  }
 
-    if (TN && axes && bbox->pdim > 4) {
-	int i;
-	float *min = (float *)&bbox->min;
-	float *max = (float *)&bbox->max;
+  if (TN) { /* real ND bbox */
+    int i, dim;
+    HPointN *minN;
+    HPointN *maxN;
+    BBox *result;
 
-	for (i = 0; i < 3; i++) {
-	    min[i] = bbox->minN->v[axes[i]];
-	    max[i] = bbox->maxN->v[axes[i]];
-	}
-	if (bbox->geomflags & VERT_4D) {
-	    min[3] = bbox->minN->v[axes[3]];
-	    max[3] = bbox->maxN->v[axes[3]];
-	} else {
-	    min[3] = 1.0;
-	    max[3] = 1.0;
-	}
-	HPtNDelete(bbox->minN);
-	HPtNDelete(bbox->maxN);
-	bbox->minN = bbox->maxN = NULL;
-	bbox->pdim = 4;
+    if (bbox->pdim <= 4) {
+      /* actually == 4, this is the special 3d VERT_4D case */
+      HPointN tmp;
+
+      tmp.flags = 0;
+      tmp.dim = bbox->pdim+1;
+      tmp.v   = alloca(tmp.dim*sizeof(HPtNCoord));
+      tmp.v[tmp.dim-1] = 1.0;
+      *(HPoint3 *)tmp.v = *(HPoint3 *)bbox->min->v;
+      if (!(bbox->geomflags & VERT_4D)) {
+	HPt3Dehomogenize((HPoint3 *)tmp.v, (HPoint3 *)tmp.v);
+      }
+      minN = HPtNTransform(TN, &tmp, NULL);
+      *(HPoint3 *)tmp.v = *(HPoint3 *)bbox->max->v;
+      if (!(bbox->geomflags & VERT_4D)) {
+	HPt3Dehomogenize((HPoint3 *)tmp.v, (HPoint3 *)tmp.v);
+      }
+      maxN = HPtNTransform(TN, &tmp, NULL);
+
+    } else {
+      minN = HPtNTransform(TN, bbox->min, NULL);
+      maxN = HPtNTransform(TN, bbox->max, NULL);
+    }
+     
+    if (!(bbox->geomflags & VERT_4D)) {
+      HPtNDehomogenize(minN, minN);
+      HPtNDehomogenize(maxN, maxN);
+      dim = TN->odim-1;
+    } else {
+      dim = TN->odim;
     }
 
-    return bbox;
+    /* and now swap coordinates between min and max as necessary */
+    for (i = 0; i < dim; i++) {
+      if (minN->v[i] > maxN->v[i]) {
+	tmp = maxN->v[i]; maxN->v[i] = minN->v[i]; minN->v[i] = tmp;
+      }
+    }
+
+    /* At this point we are ready to generate an Nd bounding box */
+    result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
+    HPtNDelete(minN);
+    HPtNDelete(maxN);
+    return result;
+  }
+
+  if (T) {
+
+    if (!(bbox->geomflags & VERT_4D)) {
+      HPt3Dehomogenize((HPoint3 *)bbox->min->v, (HPoint3 *)bbox->min->v);
+      HPt3Dehomogenize((HPoint3 *)bbox->max->v, (HPoint3 *)bbox->max->v);
+    }
+    HPt3Transform(T, (HPoint3 *)bbox->min->v, &min);
+    HPt3Transform(T, (HPoint3 *)bbox->max->v, &max);
+    HPt3Dehomogenize(&min, &min);
+    HPt3Dehomogenize(&max, &max);
+      
+    /* and now swap coordinates between min and max as necessary */
+    if (min.x > max.x) {
+      tmp = max.x; max.x = min.x; min.x = tmp;
+    }
+    if (min.y > max.y) {
+      tmp = max.y; max.y = min.y; min.y = tmp;
+    }
+    if (min.z > max.z) {
+      tmp = max.z; max.z = min.z; min.z = tmp;
+    }
+
+    /* At this point we are ready to generate a 3d bounding box */
+    return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+			       CR_MIN, &min, CR_MAX, &max, CR_END);
+  }
+  
+  return NULL;  
 }
 
 BBox *
 BBox_ND_hack(BBox *b, float *p, int nfloats)
 {
-    float vmin, vmax;
+  float vmin, vmax;
 
-    if(nfloats <= 0)
-	return b;
-    if(b == NULL) {
-	b = (BBox *)GeomCCreate(NULL, BBoxMethods(), CR_END);
-	vmin = vmax = *p++;
-	nfloats--;
-    } else {
-	vmin = b->min.x;
-	vmax = b->max.x;
-    }
-    for( ; --nfloats >= 0; p++) {
-	if(vmin > *p) vmin = *p;
-	if(vmax < *p) vmax = *p;
-    }
-    b->min.x = b->min.y = b->min.z = vmin;
-    b->max.x = b->max.y = b->max.z = vmax;
-    b->min.w = b->max.w = 1;
+  if(nfloats <= 0)
     return b;
+  if(b == NULL) {
+    b = (BBox *)GeomCCreate(NULL, BBoxMethods(), CR_END);
+    vmin = vmax = *p++;
+    nfloats--;
+  } else {
+    vmin = b->min->v[0];
+    vmax = b->max->v[0];
+  }
+  for( ; --nfloats >= 0; p++) {
+    if(vmin > *p) vmin = *p;
+    if(vmax < *p) vmax = *p;
+  }
+  b->min->v[0] = b->min->v[1] = b->min->v[2] = vmin;
+  b->max->v[0] = b->max->v[1] = b->max->v[2] = vmax;
+  b->min->v[3] = b->max->v[3] = 1;
+  return b;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

@@ -848,8 +848,7 @@ LDEFINE(xform_set, LVOID,
 LDEFINE(xform, LVOID,
        "(xform          ID TRANSFORM)\n\
 	Apply TRANSFORM to object ID, as opposed to simply setting its\n\
-	transform; i.e. a reset will not undo this operation. The current\n\
-	object transform will not be changed, so the effective position\n\
+	transform, so the effective position\n\
 	of the object will be the concatenation of TRANSFORM with the\n\
 	current object transform.")
 {
@@ -998,15 +997,21 @@ LDEFINE(camera_reset, LVOID,
   MAYBE_LOOP(id, index, T_CAM, DView, dv) {
     CamReset(dv->cam);
     drawer_stop(dv->id);
-    if (   (spaceof(WORLDGEOM) == TM_SPHERICAL)
-	&& (dv->hmodel == CONFORMALBALL)) {
+    if ((spaceof(WORLDGEOM) == TM_SPHERICAL) && (dv->hmodel == CONFORMALBALL)) {
       CamTranslate( dv->cam, 0.0, 0.0, 10.0 );
     }
-    /* Note: the following resets the *entire* N-D xform to the identity,
-     * not just that in the subspace we're looking through.
-     * Might want to have finer control.  XXX - 7/28/93, slevy & holt
-     */
-    drawer_set_ND_xform(dv->id, NULL);
+
+    if (drawerstate.NDim > 0) {
+      /* Note: the following resets the *entire* N-D xform to the
+       * identity, not just that in the subspace we're looking
+       * through.  Might want to have finer control.  XXX - 7/28/93,
+       * slevy & holt
+       */
+      drawer_set_ND_xform(dv->id, NULL);
+      CamGet(dv->cam, CAM_C2W, &dv->NDC2Wpriv);
+      CamGet(dv->cam, CAM_W2C, &dv->NDW2Cpriv);
+      CamSet(dv->cam, CAM_C2W, &TM_IDENTITY, CAM_END);
+    }
 
     TmIdentity(dv->Incr);
     dv->moving = (dv->updateproc!=NULL);
@@ -1290,14 +1295,29 @@ LDEFINE(scene, LVOID,
 	Make CAM-ID look at GEOMETRY instead of at the universe.")
 {
   DView *dv;
+  NDcam *cluster;
   int index;
   GeomStruct *gs = &nullgs;
   int id;
+
   LDECLARE(("scene", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
 	    LGEOM, &gs,
 	    LEND));
+
+  if (drawerstate.NDim > 0 && ISCAM(id) &&
+      id != ALLCAMS && (cluster = ((DView *)drawer_get_object(id))->cluster)) {
+    MAYBE_LOOP(ALLCAMS, index, T_CAM, DView, dv) {
+      if (dv->cluster == cluster) {
+	RefIncr((Ref *)gs->geom);
+	GeomDelete(dv->Item);
+	dv->Item = gs->geom;
+	dv->changed = 1;
+      }
+    }
+    return Lt;
+  }
 
   MAYBE_LOOP(id, index, T_CAM, DView, dv) {
     RefIncr((Ref *)gs->geom);
@@ -1305,6 +1325,7 @@ LDEFINE(scene, LVOID,
     dv->Item = gs->geom;
     dv->changed = 1;
   }
+
   return Lt;
 }
 
@@ -2485,7 +2506,7 @@ make_bbox(DGeom *dg, int combine)
   if(!dg->bboxvalid) {
     if(!combine)
 	GeomReplace(dg->Lbbox, NULL);
-    bbox = GeomBound(dg->Lgeom, NULL, NULL, NULL);
+    bbox = GeomBound(dg->Lgeom, NULL, NULL);
     if(bbox) {
 	GeomReplace(dg->Lbbox, bbox);
 	GeomDelete(bbox);		/* Only Lbbox needs it now */
@@ -2767,14 +2788,20 @@ really_draw_view(DView *dv)
 	TransformN *Tc = NULL, *W2G = NULL;
 	HPointN *caxis = NULL;
 	Transform T3d;
+	float focallen;
 
 	/* Need to apply the world transform here, so
 	 * ordinary 3-D objects are positioned correctly.
+	 */
+#if 0
+	/* Mmmh. Every Geom now has an ND drawing routine. So why
+	 * should this stuff be necesary?
 	 */
 	GeomGet(dgeom[0]->Inorm, CR_AXIS, T3d);
 	mgtransform(T3d);
 	GeomGet(dgeom[0]->Item, CR_AXIS, T3d);
 	mgtransform(T3d);
+#endif
 
 	cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
 	if(dgeom[0]->NDT) {
@@ -2784,6 +2811,17 @@ really_draw_view(DView *dv)
 	    W2C = TmNCopy( cluster->W2C, NULL );
 	    W2G = TmNCreate(dim,dim, NULL);
 	}
+
+	/* The funny construct below undoes the action of any ordinary
+	 * CAM_W2C transformation and efficiently installs NDW2Cpriv
+	 * als CAM_W2C. FIXME. Should not use W2Cpriv at all and
+	 * instead use the camera's ordinary W2C transformation. This
+	 * would work, because motion only act on the ND transforms
+	 * while ND-viewing is enabled.
+	 */
+	CamGet(dv->cam, CAM_C2W, T3d);
+	TmConcat(dv->NDW2Cpriv, T3d, T3d);
+	TmNApplyDN(W2C, dv->NDPerm, T3d);	
 
 	nds.axes = dv->NDPerm;
 	nds.ncm = dv->nNDcmap;
@@ -2818,9 +2856,13 @@ really_draw_view(DView *dv)
 	mgctxset(MG_NDMAP, map_ND_point, MG_NDINFO, &nds, MG_END);
 
 	for(i = 1; i < dgeom_max; i++) {
+	    Transform CamTrans, C2W3;
+	    float focallen;
+
 	    if(dgeom[i] == NULL) continue;
+
 	    if(dgeom[i]->NDT) {
-		nds.T = O2C = TmNConcat( dgeom[i]->NDT, W2C, O2C );
+		nds.T = O2C = TmNConcat(dgeom[i]->NDT, W2C, O2C);
 	    } else {
 		nds.T = W2C;
 	    }
@@ -2832,6 +2874,8 @@ really_draw_view(DView *dv)
 		    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
 		}
 	    }
+
+
 	    GeomDraw(dgeom[i]->Item);
 	}
 	TmNDelete(W2G);
@@ -2840,6 +2884,81 @@ really_draw_view(DView *dv)
 	TmNDelete(O2G);
 	HPtNDelete(nds.hc);
 	HPtNDelete(caxis);
+#if 1
+    } else if(dv->cluster != NULL) {
+	/* (scene cam geom) works also withg ND-view. One just has to
+	 * forget about the world transform. The (scene ...) command
+	 * takes care of attaching the same scene to all cameras of a
+	 * cluster.
+	 */
+	NDcam *cluster = dv->cluster;
+	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
+	struct ndstuff nds;
+	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
+	TransformN *Tc = NULL, *W2G = NULL;
+	HPointN *caxis = NULL;
+	Transform CamTrans, C2W3;
+	float focallen;
+
+	cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
+	W2C = TmNCopy( cluster->W2C, NULL );
+	W2G = TmNCreate(dim,dim, NULL);
+
+	nds.axes = dv->NDPerm;
+	nds.ncm = dv->nNDcmap;
+	nds.cm = dv->NDcmap;
+	nds.Tc = NULL;
+	nds.hc = HPtNCreate(dim, NULL);
+	if(dv->nNDcmap > 0) {
+	    /* Build array of N-D-to-color projection vectors:
+	     * it becomes a matrix, multiplied by N-D row vector on the left,
+	     * yielding an array of dv->nNDcmap projections used for coloring.
+	     * So it has (dimension) rows, (dv->nNDcmap) columns.
+	     */
+	    Tc = TmNCreate(dim, dv->nNDcmap, NULL);
+	    for(i = 0; i < dv->nNDcmap; i++) {
+		cmap *cm = &dv->NDcmap[i];
+		int cdim = cm->axis->dim;
+		int mindim = (dim < cdim) ? dim : cdim;
+		HPointN *our_caxis = cm->axis;
+		TransformN *TxC;
+
+		if(cm->coords != UNIVERSE) {
+		    TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
+		    if(TxC) {
+			our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
+			TmNDelete(TxC);
+		    }
+		}
+		for(j = 0; j < mindim; j++)
+		    Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
+	    }
+	}
+	mgctxset(MG_NDMAP, map_ND_point, MG_NDINFO, &nds, MG_END);
+	
+	nds.T = W2C;
+	if(Tc) {
+	    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
+	}
+
+	mgpushtransform();
+	CamGet(dv->cam, CAM_FOCUS, &focallen);
+	TmTranslate(CamTrans, 0., 0., -focallen);
+	CamGet(dv->cam, CAM_C2W, C2W3);
+	TmConcat(CamTrans, C2W3, CamTrans);
+	mgsettransform(CamTrans);
+
+	GeomDraw(dv->Item);
+	
+	mgpoptransform();
+
+	TmNDelete(W2G);
+	TmNDelete(W2C);
+	TmNDelete(O2C);
+	TmNDelete(O2G);
+	HPtNDelete(nds.hc);
+	HPtNDelete(caxis);
+#endif
     } else {
 	/* Normal case.  Just draw whatever's attached to this camera */
 
@@ -3520,6 +3639,8 @@ LDEFINE(write_comments, LVOID,
   return Lt;
 }
 
-    
-
-
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

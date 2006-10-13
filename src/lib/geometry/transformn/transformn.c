@@ -32,6 +32,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips, Olaf Holt */
 
 #include "hpointn.h"	/* Defines HPointN and TransformN */
+#include "hpoint3.h"
 #include "transformn.h"
 #include <ooglutil.h>
 #include <transform3.h>
@@ -323,6 +324,9 @@ TmNTranslateOrigin( TransformN *T, const HPointN *p )
   pt->v[dim] = 1;
 
   TmNTranslate(T,pt);
+
+  HPtNDelete(pt);
+
   return(T);
 }
 
@@ -796,11 +800,11 @@ TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward )
   return(T);
 }
 
-
 /* special operation for computing n-d counterpart for movement
    in a subspace */
 /* permute tells which dimensions are projected */
 /* delta is the usual 4x4 matrix used in Geomview */
+/* NOTE: this functions computes mat * delta */
 TransformN *
 TmNApplyDN( TransformN *mat, int *perm, Transform3 delta)
 {
@@ -844,6 +848,55 @@ TmNApplyDN( TransformN *mat, int *perm, Transform3 delta)
 
   OOGLFree(tmp);
   return(mat);
+}
+
+/* Apply a 3d transformation from the left (in contrast to
+   TmNApplyDN() which applies it from the right.
+*/
+TransformN *
+TmNApplyT3TN(Transform3 T3,  int *perm, TransformN *mat)
+{
+  HPtNCoord sum;
+  short n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
+  short nprime = mat->odim;
+  HPtNCoord *tmp;
+  int i,j,k;
+  int permute[4];
+
+  if( mat->odim != n) {
+    if(nprime > n) {
+      n = nprime;
+      TmNPad(mat,n,n,mat);    /* Note: the input matrix is changed here */
+    } else {
+      TmNPad(mat,n,n,mat);
+    }
+  }
+
+  /* Map "-1" in perm[] array to dimension N-1 (homogeneous divisor) */
+  for(i = 0; i < d; i++)
+    permute[i] = (perm[i] >= 0 && perm[i] < n) ? perm[i] : n-1;
+
+  tmp = OOGLNewNE(HPtNCoord, n*d, "TmNApplyDN data");
+
+  for(i = 0; i < d; i++) {
+    for(j= 0; j < n; j++) {
+      tmp[i*n+j] = mat->a[permute[i]*n+j];
+    }
+  }
+
+  for(i = 0; i < d; i++) {
+    for (j= 0; j < n; j++) {
+      sum = 0;
+      for(k = 0; k < d; k++) {	
+	sum += T3[i][k] * tmp[k*n+j];
+      }
+      mat->a[permute[i]*n + j] = sum;
+    }
+  }
+
+  OOGLFree(tmp);
+
+  return mat;
 }
 
 /* Return dimensions of a TransformN.  Value is first dimension. */
@@ -907,22 +960,3 @@ TmNRead(IOBFILE *f)
   return TmNCreate(idim,odim,a);
 }
 
-TransformN *
-CtmNScale( HPtNCoord s, TransformN *in, TransformN *out)
-{
-  short idim = in->idim;
-  short odim = in->odim;
-  int i,j;
-
-  if(out == in) {
-    for( i=0; i<idim-1; i++)
-      for( j = 0; j<odim-1; j++)
-	out->a[i*odim+j] *= s;
-  } else {
-    out = TmNCopy(in, out);
-    for( i=0; i<idim-1; i++)
-      for( j = 0; j<odim-1; j++)
-	out->a[i*odim+j] = s*in->a[i*odim+j];
-  }
-  return(out);
-}

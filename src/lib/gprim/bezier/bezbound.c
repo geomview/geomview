@@ -33,51 +33,109 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "bezierP.h"
 
-BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN, int *axes)
+BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
 {
-    float *p;
-    int v, n;
-    HPoint3 min, max;
+  float *p;
+  int n;
+  HPoint3 min, max, tmp, clean;
 
-    /* only support 3 and 4 dimn patches */
-    if(bezier->dimn == 4) {
-	/* It may not make sense to find the bbox of these 4-D control points.
-	 * Dice it into a real mesh and take the bbox of that.
-	 */
-	if(bezier->flag & BEZ_REMESH ||
-	   bezier->mesh == NULL || bezier->mesh->p == NULL) {
-	    if(BezierReDice(bezier) == NULL)
-		return NULL;		/* Oh no */
-	}
-	return MeshBound( bezier->mesh, T, TN, axes );
-    }
+  p = bezier->CtrlPnts;
+  n = (bezier->degree_u + 1) * (bezier->degree_v + 1);
+  min = *(HPoint3 *)p;
 
-    if (bezier->dimn != 3) {
-       GeomError(0,"BezierBound: invalid dimension %d",bezier->dimn);
-       return(NULL);
-    }
-
-    if (T == NULL)
-	T = TM_IDENTITY;
-
-    n = (bezier->degree_u + 1) * (bezier->degree_v + 1);
-
-    p = bezier->CtrlPnts;
-    Pt3Transform( T, p, &min );
-    min.w = 1;
-    max = min;
-    for( v = n; --v > 0; ) {
-	Point3 t;
-
+  /* First handle the case without transformations, this means that we
+     return a 3d bbox for 3d beziers, and a 4d bboy for 4d beziers.
+   */
+  if (!T && !TN) {
+    if (bezier->geomflags & VERT_4D) {
+      max = min;
+      while(--n >= 0) {
+	p += 4;
+	HPt3MinMax(&min, &max, (HPoint3 *)p);
+      }
+      return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
+    } else {
+      min.w = 1.0;
+      max = min;
+      while(--n >= 0) {
 	p += 3;
-	Pt3Transform( T, p, &t );
-	if(min.x > t.x) min.x = t.x;
-	else if(max.x < t.x) max.x = t.x;
-	if(min.y > t.y) min.y = t.y;
-	else if(max.y < t.y) max.y = t.y;
-	if(min.z > t.z) min.z = t.z;
-	else if(max.z < t.z) max.z = t.z;
+	Pt3MinMax(&min, &max, (HPoint3 *)p);
+      }
+      return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_MIN, &min, CR_MAX, &max, CR_END);
     }
+  }
+  
+  if (TN) {
+    /* Nd bounding box is requested, with transformation. */
+    int stride = (bezier->geomflags & VERT_4D) ? 4 : 3;
+    HPointN *ptN;
+    HPointN *minN;
+    HPointN *maxN;
+    BBox *result;
 
-    return (BBox *) GeomCCreate (NULL, BBoxMethods(), CR_MIN, &min, CR_MAX, &max, NULL);
+    ptN = HPtNCreate(5, NULL);
+
+    if (!(bezier->geomflags & VERT_4D)) {
+      min.w = 1.0;
+    }
+    *(HPoint3 *)ptN->v = min;
+    minN = HPtNTransform(TN, ptN, NULL);
+    HPtNDehomogenize(minN, minN);
+    maxN = HPtNCopy(minN, NULL);
+    while(--n >= 0) {
+      p += stride;
+      *(HPoint3 *)ptN->v = *(HPoint3 *)p;
+      if (!(bezier->geomflags & VERT_4D)) {
+	ptN->v[3] = 1.0;
+      }
+      HPtNTransform(TN, ptN, ptN);
+      HPtNDehomogenize(ptN, ptN);
+      HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+    }
+    result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
+
+    HPtNDelete(ptN);
+    HPtNDelete(minN);
+    HPtNDelete(maxN);
+
+    return result;
+  }
+
+  /* A 3d bbox is requested, with transformations */
+
+  if (T) {
+    int stride = (bezier->geomflags & VERT_4D) ? 4 : 3;
+    
+    /* ordinary 3d transform, act on the x,y,z sub-space */
+
+    min.w = 1.0;
+    HPt3Transform(T, &min, &min);
+    HPt3Dehomogenize(&min, &min);
+    max = min;
+    while(--n >= 0) {
+      p += stride;
+      tmp.x = p[0];
+      tmp.y = p[1];
+      tmp.z = p[2];
+      tmp.w = 1.0;
+      HPt3Transform(T, &tmp, &clean);
+      HPt3Dehomogenize(&clean, &clean);
+      Pt3MinMax(&min, &max, &clean);
+    }
+    /* At this point we are ready to generate a 3d bounding box */
+    return (BBox *)GeomCCreate(NULL, BBoxMethods(),
+			       CR_MIN, &min, CR_MAX, &max,
+			       CR_END);
+  }
+
+  return NULL;  
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

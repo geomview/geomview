@@ -342,7 +342,7 @@ static void *projectCamWCSkel(int sel, Geom *g, va_list *args)
                 *(++ptr)=*(CamUniv->a + i*(CamUniv->idim) + CamUniv->odim-1);
         }
         ProjMat=TmNCreate(CamUniv->idim,4,newmat);
-	hptn1=HPtNCreate(((Skel *)g)->dim,NULL);
+	hptn1=HPtNCreate(((Skel *)g)->pdim,NULL);
 	hptn2=HPtNCreate(4,NULL);
 	printf("(echo(ND-color %s)\\n)\n",camname);
 	fflush(stdout);
@@ -371,7 +371,7 @@ static void *projectCamWCSkel(int sel, Geom *g, va_list *args)
 				(newlines+k)->nc=1;
 				(newlines+k)->c0=k;
 				hptn1->v=((Skel *)g)->p + newvi[l]
-					*((Skel *)g)->dim;
+					*((Skel *)g)->pdim;
 				col=colorpoint(hptn1,map,objname);
 				memcpy(((Skel *)g)->c + k, col, sizeof *col);
 				free(col);
@@ -389,7 +389,7 @@ static void *projectCamWCSkel(int sel, Geom *g, va_list *args)
 					(newlines+k)->nc=1;
 					(newlines+k)->c0=k;
 					hptn1->v=((Skel *)g)->p + newvi[l]
-						*((Skel *)g)->dim;
+						*((Skel *)g)->pdim;
 					col=colorpoint(hptn1,map,objname);
 					memcpy(((Skel *)g)->c + k,
 						 col, sizeof *col);
@@ -406,13 +406,13 @@ static void *projectCamWCSkel(int sel, Geom *g, va_list *args)
 		((Skel *)g)->nlines=((Skel *)g)->nc=numcolors;
 	}
         for(i=0;i<((Skel *)g)->nvert;i++)
-	{	hptn1->v=((Skel *)g)->p + i*(((Skel *)g)->dim);
+	{	hptn1->v=((Skel *)g)->p + i*(((Skel *)g)->pdim);
                 hptn1=HPtNTransform(ObjUniv,hptn1,hptn1);
                 hptn2=HPtNTransform(ProjMat,hptn1,hptn2);
-		for(j=0;j<((Skel *)g)->dim;j++)
+		for(j=0;j<((Skel *)g)->pdim;j++)
 			*(((Skel *)g)->p + i*(hptn2->dim)+j) = (hptn2->v)[j];
         }
-	((Skel *)g)->dim = 4;
+	((Skel *)g)->pdim = 4;
         free(newmat);
 	free(ProjMat);
 	free(hptn1);

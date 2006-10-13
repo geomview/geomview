@@ -259,16 +259,16 @@ static void *projectCamSkel(int sel, Geom *g, va_list *args)
                 *(++ptr)=*(CamUniv->a + i*(CamUniv->idim) + CamUniv->odim-1);
         }
         ProjMat=TmNCreate(CamUniv->idim,4,newmat);
-	hptn1=HPtNCreate(((Skel *)g)->dim,NULL);
+	hptn1=HPtNCreate(((Skel *)g)->pdim,NULL);
 	hptn2=HPtNCreate(4,NULL);
         for(i=0;i<((Skel *)g)->nvert;i++)
-	{	hptn1->v=((Skel *)g)->p + i*(((Skel *)g)->dim);
+	{	hptn1->v=((Skel *)g)->p + i*(((Skel *)g)->pdim);
                 hptn1=HPtNTransform(ObjUniv,hptn1,hptn1);
                 hptn2=HPtNTransform(ProjMat,hptn1,hptn2);
-		for(j=0;j<((Skel *)g)->dim;j++)
+		for(j=0;j<((Skel *)g)->pdim;j++)
 			*(((Skel *)g)->p + i*(hptn2->dim)+j) = (hptn2->v)[j];
         }
-	((Skel *)g)->dim = 4;
+	((Skel *)g)->pdim = 4;
         free(newmat);
 	free(ProjMat);
 	free(hptn1);

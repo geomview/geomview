@@ -33,8 +33,7 @@
 typedef struct PolyList PolyList;
 
 extern PolyList *PolyListDraw( PolyList * );
-extern BBox     *PolyListBound(PolyList *polylist,
-			       Transform T, TransformN *TN, int *axes);
+extern BBox     *PolyListBound(PolyList *polylist, Transform T, TransformN *TN);
 extern Geom 	*PolyListSphere( PolyList *,
 				 Transform, TransformN *TN, int *axes, int );
 extern PolyList *PolyListEvert( PolyList * );

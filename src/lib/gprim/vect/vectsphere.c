@@ -31,6 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geom.h"
 #include "create.h"
 #include "vectP.h"
+#include "sphere.h"
 
 Geom *VectBoundSphere(Vect *vect,
 		      Transform T, TransformN *TN, int *axes,
@@ -38,11 +39,25 @@ Geom *VectBoundSphere(Vect *vect,
 {
   Geom *sphere;
 
-  if(vect->geomflags & VERT_4D)
-    return GeomBoundSphereFromBBox((Geom *)vect, T, TN, axes, space);
+  if (TN) {
 
-  sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, vect->p,
-		      CR_NENCOMPASS_POINTS, vect->nvert,
-		      CR_AXIS, T ? T : TM_IDENTITY, CR_SPACE, space, CR_END);
+    /* Create a dummy sphere, the center will be corrected later */
+    sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
+    
+    SphereEncompassPoints((Sphere *)sphere,
+			  (float *)vect->p,
+			  (vect->flag & VERT_4D) ? 4 : 3, 4, vect->nvert,
+			  T, TN, axes);
+
+  } else {
+
+    if(vect->geomflags & VERT_4D)
+      return GeomBoundSphereFromBBox((Geom *)vect, T, TN, axes, space);
+
+    sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, vect->p,
+			CR_NENCOMPASS_POINTS, vect->nvert,
+			CR_AXIS, T ? T : TM_IDENTITY, CR_SPACE, space, CR_END);
+  }
+  
   return sphere;
 }

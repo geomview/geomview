@@ -55,13 +55,13 @@ SkelFSave(Skel *s, FILE *f)
 	if(s == NULL || f == NULL)
 		return NULL;
 
-	d = s->geomflags & VERT_4D ? s->dim : s->dim-1;
+	d = s->geomflags & VERT_4D ? s->pdim : s->pdim-1;
 	if (s->geomflags & VERT_4D)
 	    fprintf(f, "4");
-	fprintf(f, s->dim==4 ? "SKEL" : "nSKEL %d", d);
+	fprintf(f, s->pdim==4 ? "SKEL" : "nSKEL %d", d);
 	fprintf(f, "\n%d %d\n\n", s->nvert, s->nlines);
 
-	for(i = 0, p = s->p; i < s->nvert; i++, p += s->dim) {
+	for(i = 0, p = s->p; i < s->nvert; i++, p += s->pdim) {
 	    fputnf(f, d, p, 0);
 	    fputc('\n', f);
 	}

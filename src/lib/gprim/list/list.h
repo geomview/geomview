@@ -39,7 +39,7 @@ extern GeomClass *ListMethods( void );
 extern char *ListName( void );
 extern List *ListLoad( char *fname );
 extern List *ListFLoad( FILE *f, char *fname );
-extern BBox *ListBound( List *, Transform, TransformN *TN, int *axes );
+extern BBox *ListBound( List *, Transform, TransformN *TN);
 extern Geom *ListBoundSphere( List *,
 			      Transform, TransformN *TN, int *axes, int );
 extern List *ListTransform( List *, Transform, TransformN* );

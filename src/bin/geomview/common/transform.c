@@ -63,25 +63,25 @@ void drawer_set_ND_xform(int id, TransformN *T);
 TransformN *drawer_get_ND_transform(int from_id, int to_id);
 
 static void _translate(float amount[3], Point *pt, Transform T,
-				int space, int frame);
+		       int space, int frame);
 static void _translate_scaled(float amount[3], Point *pt, Transform T,
-				int space, int frame);
+			      int space, int frame);
 static void euclidean_translate(float amount[3], Point *pt, Transform T,
 				int space, int frame);
 static void euclidean_translate_scaled(float amount[3], Point *pt, Transform T,
- 				 int space, int frame);
+				       int space, int frame);
 static void hyperbolic_translate(float amount[3], Point *pt, Transform T,
-				int space, int frame);
+				 int space, int frame);
 static void hyperbolic_translate_scaled(float amount[3], Point *pt, Transform T,
- 				 int space, int frame);
+					int space, int frame);
 static void spherical_translate(float amount[3], Point *pt, Transform T,
 				int space, int frame);
 static void spherical_translate_scaled(float amount[3], Point *pt, Transform T,
- 				int space, int frame);
+				       int space, int frame);
 static void _rotate(float amount[3], Point *pt, Transform T,
-				int space, int frame);
+		    int space, int frame);
 static void _scale(float amount[3], Point *pt, Transform T,
-				int space, int frame);
+		   int space, int frame);
 
 /* 
  * This should DEFINITELY go somewhere else, but I'm not sure where
@@ -105,23 +105,12 @@ Geom *id_bbox(int geomID, int coordsysID) {
   }
 
   if (drawerstate.NDim > 0) {
-    static const int NDPermDflt[] = { 0, 1, 2, -1 };
-    int *NDPerm = NULL;
-    DObject *obj;
-
     /* If the reference frame is a camera then do the appropriate
      * projection, with a fallback to the default x-y-z case.
      */
-    if (ISCAM(coordsysID)) {
-      if ((obj = drawer_get_object(coordsysID)) != NULL) {
-	NDPerm = DVobj(obj)->NDPerm;
-      } else {
-	NDPerm = (int *)NDPermDflt;
-      }      
-    }
     MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
       geom2coordsysN = drawer_get_ND_transform(geomObj->id, coordsysID);
-      other_bbox = GeomBound(geomObj->Lgeom, NULL, geom2coordsysN, NDPerm);
+      other_bbox = GeomBound(geomObj->Lgeom, NULL, geom2coordsysN);
       TmNDelete(geom2coordsysN);
       if (bbox == NULL) bbox = other_bbox;
       else {
@@ -132,7 +121,7 @@ Geom *id_bbox(int geomID, int coordsysID) {
   } else {
     MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
       drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
-      other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys, NULL, NULL);
+      other_bbox = GeomBound(geomObj->Lgeom, geom2coordsys, NULL);
       if (bbox == NULL) bbox = other_bbox;
       else {
 	BBoxUnion3((BBox *)bbox, (BBox *)other_bbox, (BBox *)bbox);
@@ -144,11 +133,11 @@ Geom *id_bbox(int geomID, int coordsysID) {
   return bbox;
 }
 
-Geom *id_bsphere(int geomID, int coordsysID) {
+Geom *id_bsphere(int geomID, int coordsysID)
+{
   int i;
   DGeom *geomObj;
   Geom *sphere = NULL, *other_sphere, *obj;
-  Transform geom2coordsys;
 
   if (!ISGEOM(geomID)) {
     OOGLError(0, "id_bsphere: %s\n%s",
@@ -156,30 +145,63 @@ Geom *id_bsphere(int geomID, int coordsysID) {
 	      "not a geom.");
     return NULL;
   }
-  MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
-    drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
-    if (geomObj->Lgeom == NULL) continue;
-    GeomGet(geomObj->Lgeom, CR_GEOM, &obj);
-    other_sphere = GeomBoundSphere(obj, geom2coordsys, NULL, NULL,
-				   drawerstate.space);
-    if (sphere == NULL) sphere = other_sphere;
-    else {
-      SphereUnion3((Sphere *)sphere, (Sphere *)other_sphere, 
-		   (Sphere *)sphere);
-      GeomDelete(other_sphere);
+
+  if (drawerstate.NDim > 0) {
+    TransformN *geom2coordsys;
+    DObject *camObj;
+    int *NDPerm;
+    static const int NDPermDflt[] = { 0, 1, 2, -1 };
+
+    if (ISCAM(coordsysID) && (camObj = drawer_get_object(coordsysID)) != NULL) {
+      NDPerm = DVobj(camObj)->NDPerm;
+    } else {
+      NDPerm = (int *)NDPermDflt;
+    }
+
+    MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
+      geom2coordsys = drawer_get_ND_transform(geomObj->id, coordsysID);
+      if (geomObj->Lgeom == NULL) {
+	continue;
+      }
+      GeomGet(geomObj->Lgeom, CR_GEOM, &obj);
+      other_sphere = GeomBoundSphere(obj, NULL, geom2coordsys, NDPerm,
+				     drawerstate.space);
+      if (sphere == NULL) {
+	sphere = other_sphere;
+      } else {
+	SphereUnion3((Sphere *)sphere, (Sphere *)other_sphere, 
+		     (Sphere *)sphere);
+	GeomDelete(other_sphere);
+      }
+    }
+  } else {
+    Transform geom2coordsys;
+
+    MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
+      drawer_get_transform(geomObj->id, geom2coordsys, coordsysID);
+      if (geomObj->Lgeom == NULL) continue;
+      GeomGet(geomObj->Lgeom, CR_GEOM, &obj);
+      other_sphere = GeomBoundSphere(obj, geom2coordsys, NULL, NULL,
+				     drawerstate.space);
+      if (sphere == NULL) sphere = other_sphere;
+      else {
+	SphereUnion3((Sphere *)sphere, (Sphere *)other_sphere, 
+		     (Sphere *)sphere);
+	GeomDelete(other_sphere);
+      }
     }
   }
   return sphere;
 }
 
 void drawer_transform(
-  int moving_id, int center_id, int frame_id,
-  int transform_type,
-  float amount[3],
-  float timeunit,
-  char *repeat_type,
-  int smoothanim
-) {
+		      int moving_id, int center_id, int frame_id,
+		      int transform_type,
+		      float amount[3],
+		      float timeunit,
+		      char *repeat_type,
+		      int smoothanim
+		      ) {
   Motion motion;
   int i;
   float augment;
@@ -234,9 +256,9 @@ void drawer_transform(
      * Refuse to scale down to zero, or to change sign.
      */
     for(i = 0; i < 3; i++)
-	motion.amount[i] = amount[i] > 0 ? log(amount[i]) : 0;
-    motion.transform = _scale;
-    break;
+      motion.amount[i] = amount[i] > 0 ? log(amount[i]) : 0;
+	motion.transform = _scale;
+	break;
 
   default:
     ERROR("Undefined transform type %d", transform_type);
@@ -255,19 +277,19 @@ void drawer_transform(
   else {
     /* Avoid applying ineffective motions */
     if(motion.amount[0]==0 && motion.amount[1]==0 && motion.amount[2]==0)
-	return;
+      return;
     if (!strcmp(repeat_type, "transform")) {
-	if(motion.timeunit > 0) {
-	    motion.timeleft = motion.timeunit;
-	    motion.smooth = smoothanim;
-	    insert_motion(&motion);
-	} else {
-	    apply_motion(&motion, motion.timeunit);
-	}
-    } else if (!strcmp(repeat_type, "transform-incr")) {
+      if(motion.timeunit > 0) {
+	motion.timeleft = motion.timeunit;
+	motion.smooth = smoothanim;
 	insert_motion(&motion);
+      } else {
+	apply_motion(&motion, motion.timeunit);
+      }
+    } else if (!strcmp(repeat_type, "transform-incr")) {
+      insert_motion(&motion);
     } else
-	ERROR("unknown transform applier %s", repeat_type);
+      ERROR("unknown transform applier %s", repeat_type);
   }
 }
 
@@ -290,6 +312,8 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
     if (spaceof(ref_id) != TM_EUCLIDEAN)
       OOGLError(1, "Computing bounding box while in non-Euclidean space");
     bbox = id_bbox(ref_id, WORLDGEOM);
+    if (!bbox)
+      return;
     ptWorld = BBoxCenterND((BBox *)bbox, NULL);
     GeomDelete(bbox);    
   }
@@ -297,6 +321,9 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
   MAYBE_LOOP(moving_id, i, T_NONE, DObject, moveObj) {
 
     if (!strcmp(position_type, "position-at")) {
+      /* NOTE: even if movingId is a camera we omit the focal length
+       * here.
+       */
       w2moving = drawer_get_ND_transform(WORLDGEOM, moveObj->id);
       ptMoving = HPtNTransform(w2moving, ptWorld, NULL);
       T = TmNSpaceTranslateOrigin(NULL, ptMoving);
@@ -307,6 +334,10 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
        * camera; if it is a camera, then we "careful rotate" within its
        * sub-space. Otherwise we fake the standard { 0, 1, 2, -1 }
        * projection.
+       *
+       * If moving_id is indeed a camera, then we must not forget to
+       * transform ptMoving3 by the private 3d transformation attached
+       * to this camera.
        */
       static const int NDPermDflt[] = { 0, 1, 2, -1 };
       int *NDPerm = NULL;
@@ -316,37 +347,77 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
 
       w2moving = drawer_get_ND_transform(WORLDGEOM, moveObj->id);
       ptMoving = HPtNTransform(w2moving, ptWorld, NULL);
+      HPtNDehomogenize(ptMoving, ptMoving);
       if (ISCAM(moveObj->id) &&
 	  (obj = drawer_get_object(moveObj->id)) != NULL) {
 	NDPerm = DVobj(obj)->NDPerm;
       } else {
 	NDPerm = (int *)NDPermDflt;
       }
-      ptMoving3.x = ptMoving->v[NDPerm[0]];
-      ptMoving3.y = ptMoving->v[NDPerm[1]];
-      ptMoving3.z = ptMoving->v[NDPerm[2]];
-      ptMoving3.w = 1.0;
+      HPtNToHPt3(ptMoving, &ptMoving3, NDPerm);
       HPtNDelete(ptMoving);
       TmNDelete(w2moving);
-      TmCarefulRotateTowardZ(T3, &ptMoving3);
-      /* Now we have to apply T3 to the proper sub-space, the easiest
-       * way is to just promot T3 to the entire space.
+
+      /* If this is a camera then we have an additional 3d transformations 
+       * which is appended to the cameras 3d W2C transform.
        */
+#if 1
+      if (ISCAM(moveObj->id)) {
+	HPt3Transform(DVobj(obj)->NDW2Cpriv, &ptMoving3, &ptMoving3);
+	HPt3Dehomogenize(&ptMoving3, &ptMoving3);
+      }
+#else
+      /* Add the camera's focal-length as translation in z-direction */
+      if (ISCAM(moveObj->id)) {
+	  CamGet(moveObj, CAM_FOCUS, &focallen);
+	  ptMoving3.z += focallen;
+      }
+#endif
+
+      /* construct the rotation */
+      TmCarefulRotateTowardZ(T3, &ptMoving3);
+
+      if (ISCAM(moveObj->id)) {
+	/* We have to conjugate T3 with NDC2Wpriv before we can apply
+	 * it to the cluster's ND transform.
+	 */
+	TmConcat(DVobj(obj)->NDW2Cpriv, T3, T3);
+	TmConcat(T3, DVobj(obj)->NDC2Wpriv, T3);
+      }
+      
       T = TmNApplyDN(TmNIdentity(TmNCreate(pdim, pdim, NULL)), NDPerm, T3);
     } else if (!strcmp(position_type, "position")) {
       T = drawer_get_ND_transform(ref_id, moveObj->id); 
+      drawer_set_ND_xform(moveObj->id, T);
+      TmNDelete(T);
+      T = NULL;
+    } else {
+      break;
     }
+
     /* Now that we have computed an incremental transform for moveObj
      * apply it to its ND-transform.
      */
-    if (ISGEOM(moveObj->id)) {
-      objT = drawer_get_ND_transform(moveObj->id, WORLDGEOM);
-    } else if (ISCAM(moveObj->id)) {
-      objT = drawer_get_ND_transform(moveObj->id, UNIVERSE);
+    if (T) {
+      if (ISGEOM(moveObj->id)) {
+	objT = drawer_get_ND_transform(moveObj->id, WORLDGEOM);
+      } else if (ISCAM(moveObj->id)) {
+	objT = drawer_get_ND_transform(moveObj->id, UNIVERSE);
+      } else {
+	objT = NULL;
+      }
+      if (objT) {
+	TmNConcat(T, objT, T);
+	drawer_set_ND_xform(moveObj->id, T);
+      }
+
+      TmNDelete(T);
+      /* FIXME: for consistency we maybe should also apply the proper
+	 sub-transform to the 3d transforms of all other cameras in
+	 the cluster (if we have a cluster)
+       */
     }
-    TmNConcat(T, objT, objT);
-    drawer_set_ND_xform(moveObj->id, objT);
-    TmNDelete(T);
+
   }
   HPtNDelete(ptWorld);
 }
@@ -399,6 +470,8 @@ void drawer_position(int moving_id, int ref_id, char *position_type,
     if (spaceof(ref_id) != TM_EUCLIDEAN)
       OOGLError(1, "Computing bounding box while in non-Euclidean space");
     bbox = id_bbox(ref_id, WORLDGEOM);
+    if (!bbox)
+      return;
     BBoxCenter((BBox *)bbox, &ptWorld);
     GeomDelete(bbox);
   }
@@ -429,10 +502,10 @@ void set_motion(Motion *motion)
   ts.h = NULL;
   TmIdentity(ts.tm);
   gv_xform_set(motion->moving_id, &ts);
-    /* Note: the following resets the *entire* N-D xform to the identity,
-     * not just that in the subspace we're looking through.
-     * Might want to have finer control.  XXX - 7/28/93, slevy & holt
-     */
+  /* Note: the following resets the *entire* N-D xform to the identity,
+   * not just that in the subspace we're looking through.
+   * Might want to have finer control.  XXX - 7/28/93, slevy & holt
+   */
   drawer_set_ND_xform(motion->moving_id, NULL);
   apply_motion(motion, motion->timeunit);
 }
@@ -446,9 +519,9 @@ void apply_motion(Motion *motion, float dt)
   float tscale;
 
   if (motion->moving_id == UNIVERSE
-   || !id_exists(motion->moving_id)
-   || !id_exists(motion->center_id)
-   || !id_exists(motion->frame_id)) {
+      || !id_exists(motion->moving_id)
+      || !id_exists(motion->center_id)
+      || !id_exists(motion->frame_id)) {
     motion->timeleft = 0;	/* Prevent recursion */
     delete_like_motions(motion, 0.);
     return;
@@ -530,58 +603,61 @@ void apply_motion(Motion *motion, float dt)
   }
 #endif
   
-  /* Conjugate the local transform to put it into the coordinate system of T_m*/
-  TmInvert(T_R, T_Rinv);
-  TmConcat(T_R, T_l, T);
-  TmConcat(T, T_Rinv, T);
+  if(drawerstate.NDim == 0) {
+    /* Conjugate the local transform to put it into the coordinate
+     * system of T_m
+     */
+    TmInvert(T_R, T_Rinv);
+    TmConcat(T_R, T_l, T);
+    TmConcat(T, T_Rinv, T);
 
-  if (!finite(T[0][0])) {
-    fprintf(stderr, "Matrix is not finite!\n");
+    if (!finite(T[0][0])) {
+      fprintf(stderr, "Matrix is not finite!\n");
+    } else {
+      /* Apply the matrix to the moving object */
+      drawer_post_xform(motion->moving_id, T);
+    }
   } else {
-	/* Apply the matrix to the moving object */
-    drawer_post_xform(motion->moving_id, T);
-  }
-
-  if(drawerstate.NDim > 0) {
-    /* Apply subspace transform to the N-dimensional matrices too. */
-    apply_ND_transform(T_l, motion->moving_id, motion->center_id, motion->frame_id);
+    /* Apply subspace transform to the N-dimensional matrices. */
+    apply_ND_transform(T_l,
+		       motion->moving_id, motion->center_id, motion->frame_id);
   }
 
   if(motion->timeleft) {
     motion->timeleft -= dt;
     if(motion->timeleft <= 0) {
-	motion->timeleft = 0;	/* Prevent recursion */
-	delete_motion(motion);
+      motion->timeleft = 0;	/* Prevent recursion */
+      delete_motion(motion);
     }
   }
 }
 
 static void _translate(float amount[3], Point *pt, Transform T, int space,
-		int frame)
+		       int frame)
 {
   TmSpaceTranslate(T, amount[0], amount[1], amount[2], space);
 }
 
 static void euclidean_translate(float amount[3], Point *pt, Transform T, int space,
-			 int frame)
+				int frame)
 {
   TmTranslate(T, amount[0], amount[1], amount[2]);
 }
 
 static void hyperbolic_translate(float amount[3], Point *pt, Transform T, int space,
-			  int frame)
+				 int frame)
 {
   TmHypTranslate(T, amount[0], amount[1], amount[2]);
 }
 
 static void spherical_translate(float amount[3], Point *pt, Transform T, int space,
-			 int frame)
+				int frame)
 {
   TmSphTranslate(T, amount[0], amount[1], amount[2]);
 }
 
 static void _translate_scaled(float amount[3], Point *pt, Transform T, int space,
-		       int frame)
+			      int frame)
 {
   double dist = 1;
   float scaled_amount[3];
@@ -590,7 +666,7 @@ static void _translate_scaled(float amount[3], Point *pt, Transform T, int space
   default:
   case TM_EUCLIDEAN:
     dist = sqrt(pt->x * pt->x + pt->y * pt->y + pt->z * pt->z)
-	    + scaleof(frame) * drawerstate.motionscale;
+      + scaleof(frame) * drawerstate.motionscale;
     break;
   case TM_HYPERBOLIC:
     /* NYI */
@@ -606,19 +682,19 @@ static void _translate_scaled(float amount[3], Point *pt, Transform T, int space
 }
 
 static void euclidean_translate_scaled(float amount[3], Point *pt, Transform T,
-				int space, int frame)
+				       int space, int frame)
 {
   _translate_scaled(amount, pt, T, TM_EUCLIDEAN, frame);
 }
 
 static void hyperbolic_translate_scaled(float amount[3], Point *pt, Transform T,
-				 int space, int frame)
+					int space, int frame)
 {
   hyperbolic_translate(amount, pt, T, space, frame); /* scaling is NYI */
 }
 
 static void spherical_translate_scaled(float amount[3], Point *pt, Transform T,
-				int space, int frame)
+				       int space, int frame)
 {
   spherical_translate(amount, pt, T, space, frame); /* scaling is NYI */
 }
@@ -663,10 +739,10 @@ void delete_motion(Motion *m)
   if(*s == m) {
     *s = m->next;
     if(m->timeleft)		/* If we're in mid-animation, ... */
-	apply_motion(m, 1e10);	/* finish anim step before cancelling. */
+      apply_motion(m, 1e10);	/* finish anim step before cancelling. */
 				/* It will free itself. */
     else
-	OOGLFree(m);
+      OOGLFree(m);
   }
 }
 
@@ -683,18 +759,18 @@ void delete_like_motions(Motion *m, float augment)
 
   while (*s) {
     if ((*s)->moving_id == m->moving_id
-/*   && (*s)->center_id == m->center_id --- this makes motion more intuitive
-     && (*s)->frame_id == m->frame_id   --- njt*/
-     && ((*s)->transform == m->transform ||
-		/* Consider scaled and non-scaled translations equivalent */
-	 (was_translation && is_translation(*s))) ) {
+	/*   && (*s)->center_id == m->center_id --- this makes motion more intuitive
+	     && (*s)->frame_id == m->frame_id   --- njt*/
+	&& ((*s)->transform == m->transform ||
+	    /* Consider scaled and non-scaled translations equivalent */
+	    (was_translation && is_translation(*s))) ) {
 
       if(augment != 0) {
 	/* Incorporate some fraction of the existing motion into the
 	 * motion that is replacing it.
 	 */
 	float scl = augment * ((*s)->timeunit!=0 && m->timeunit!=0
-				? m->timeunit / (*s)->timeunit : 1);
+			       ? m->timeunit / (*s)->timeunit : 1);
 	m->amount[0] = (1-augment)*m->amount[0] + scl*(*s)->amount[0];
 	m->amount[1] = (1-augment)*m->amount[1] + scl*(*s)->amount[1];
 	m->amount[2] = (1-augment)*m->amount[2] + scl*(*s)->amount[2];
@@ -718,7 +794,7 @@ void stop_motions(int id)
   Motion *n;
   while (*s) {
     if ((*s)->moving_id == id) {
-	/* Should we finish partially-complete animations? */
+      /* Should we finish partially-complete animations? */
       n = (*s)->next;
       OOGLFree(*s);
       *s = n;
@@ -738,7 +814,7 @@ void do_motion(float dt)
 }
 
 LDEFINE(zoom, LVOID,
-       "(zoom           CAM-ID FACTOR)\n\
+	"(zoom           CAM-ID FACTOR)\n\
 	Zoom CAM-ID, multiplying its field of view by FACTOR.\n\
 	FACTOR should be a positive number.")
 {
@@ -764,7 +840,7 @@ LDEFINE(zoom, LVOID,
 }
 
 LDEFINE(ezoom, LVOID,
-"(ezoom          GEOM-ID FACTOR)\n\
+	"(ezoom          GEOM-ID FACTOR)\n\
 	Same as zoom but multiplies by exp(zoom).  Obsolete.")
 {
   int id;
@@ -777,10 +853,8 @@ LDEFINE(ezoom, LVOID,
   return Lt;
 }
 
-
-
 LDEFINE(scale, LVOID,
-"(scale          GEOM-ID FACTOR [FACTORY FACTORZ])\n\
+	"(scale          GEOM-ID FACTOR [FACTORY FACTORZ])\n\
 	Scale GEOM-ID, multiplying its size by FACTOR.  The factors \n\
 	should be positive numbers.  If FACTORY and FACTORZ are \n\
 	present and non-zero, the object is scaled by FACTOR in x, by \n\
@@ -789,9 +863,14 @@ LDEFINE(scale, LVOID,
 	really makes sense in Euclidean space.  Mouse-driven scaling in \n\
 	other spaces is not allowed;  the scale command may be issued \n\
 	in other spaces but should be used with caution because it may \n\
-	cause the data to extend beyond the limits of the space.")
+	cause the data to extend beyond the limits of the space.\n\
+	\n\
+	For the ND case only (scale GEOM-ID FACTOR) is supported, i.e.\n\
+	the optional FACTORY and FACTORZ arguments are ignored. You can,\n\
+	of course, scale GEOM-ID by different factors in different directions\n\
+	by calling (ND-xform GEOM-ID TRANSFORMN) where TRANSFORMN is a\n\
+	diagonal ND transform.")
 {
-  TransformStruct ts;
   int id;
   float x, y = 0.0, z = 0.0;
   LDECLARE(("scale", LBEGIN,
@@ -806,21 +885,37 @@ LDEFINE(scale, LVOID,
     OOGLError(0, "scale: Can only scale geometry.");    
     return Lnil; 
   }
-  ts.h = NULL;
-  if (y != 0.0 && z != 0.0) TmScale(ts.tm, x, y, z);
-  else TmScale(ts.tm, x, x, x);
-  gv_xform(id, &ts);
+
   if(drawerstate.NDim > 0) {
-    TransformN *Tobj = drawer_get_ND_transform(id, get_parent(id));
-    if(Tobj == NULL)
-	Tobj = TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL);
-    drawer_set_ND_xform(id, CtmNScale(x, Tobj, Tobj));
+    /* We have to scale the ND-xform of id _ONLY_, otherwise we will
+     * get funny results :)
+     */
+    TmNStruct tsN;
+    HPointN *scale = HPtNCreate(drawerstate.NDim, NULL);
+    int i;
+    
+    tsN.h = NULL;
+    for (i = 0; i < drawerstate.NDim-1; i++) {
+      scale->v[i] = x;
+    }
+    tsN.tm = TmNScale(NULL, scale);
+    HPtNDelete(scale);
+    gv_ND_xform(id, &tsN);
+    TmNDelete(tsN.tm);
+  } else {
+    TransformStruct ts;
+
+    ts.h = NULL;
+    if (y != 0.0 && z != 0.0) TmScale(ts.tm, x, y, z);
+    else TmScale(ts.tm, x, x, x);
+    gv_xform(id, &ts);
   }
+
   return Lt;
 }
 
 LDEFINE(escale, LVOID,
-"(escale          GEOM-ID FACTOR)\n\
+	"(escale          GEOM-ID FACTOR)\n\
 	Same as scale but multiplies by exp(scale).  Obsolete.")
 {
   int id;
@@ -861,7 +956,8 @@ void drawer_post_xform(int id, Transform T)
   gv_xform_set(id, &ts);
 }
 
-int motions_exist() {
+int motions_exist()
+{
   return allMotions != NULL;
 }
 
@@ -872,8 +968,8 @@ int is_descendant(int id, int ancestor_id)
   DGeom *dg;
   if (id == ancestor_id) return 1;
   else if (ancestor_id == WORLDGEOM
-   && (dg = (DGeom *)drawer_get_object(id)) != NULL
-   && ISGEOM(dg->id) && dg->citizenship == ORDINARY)
+	   && (dg = (DGeom *)drawer_get_object(id)) != NULL
+	   && ISGEOM(dg->id) && dg->citizenship == ORDINARY)
     return 1;
   else return 0;
 }
@@ -887,35 +983,35 @@ LDEFINE(real_id, LSTRING,
 	 (if (= (real-id targetgeom) (real-id World)) () (delete targetgeom))\n\
 	deletes \"targetgeom\" if it is different from the World.\n")
 {
-    int id;
-    char *str;
-    DObject *obj;
+  int id;
+  char *str;
+  DObject *obj;
 
-    LDECLARE(("real-id", LBEGIN,
-	LSTRING, &str,
-	LEND));
-    id = drawer_idbyname(str);
-    obj = drawer_get_object(id);
-    if(obj == NULL) return Lnil;
-    str = obj->name[1] ? obj->name[1] : obj->name[0];
-    return (LTOOBJ(LSTRING))(&str);
+  LDECLARE(("real-id", LBEGIN,
+	    LSTRING, &str,
+	    LEND));
+  id = drawer_idbyname(str);
+  obj = drawer_get_object(id);
+  if(obj == NULL) return Lnil;
+  str = obj->name[1] ? obj->name[1] : obj->name[0];
+  return (LTOOBJ(LSTRING))(&str);
 }
 
 int real_id(int id)
 {
   if (id > 0) return id;
   switch(id) {
-    case UNIVERSE: return UNIVERSE; break;
-    case SELF: return SELF; break;
-    case FOCUSID: return CAMID(uistate.mousefocus); break;
-    case TARGETID: return real_id(uistate.targetid); break;
-    case CENTERID: return real_id(uistate.centerid); break;
-    case TARGETGEOMID: return GEOMID(uistate.targetgeom); break;
-    case TARGETCAMID: return CAMID(uistate.targetcam); break;
-    case ALLGEOMS: return WORLDGEOM; break;
-    case ALLCAMS: return ALLCAMS; break;
-    case DEFAULTCAMID: return DEFAULTCAMID; break;
-    default: ERROR("bizarre id %d", id); return WORLDGEOM; break;
+  case UNIVERSE: return UNIVERSE; break;
+  case SELF: return SELF; break;
+  case FOCUSID: return CAMID(uistate.mousefocus); break;
+  case TARGETID: return real_id(uistate.targetid); break;
+  case CENTERID: return real_id(uistate.centerid); break;
+  case TARGETGEOMID: return GEOMID(uistate.targetgeom); break;
+  case TARGETCAMID: return CAMID(uistate.targetcam); break;
+  case ALLGEOMS: return WORLDGEOM; break;
+  case ALLCAMS: return ALLCAMS; break;
+  case DEFAULTCAMID: return DEFAULTCAMID; break;
+  default: ERROR("bizarre id %d", id); return WORLDGEOM; break;
   }
 }
 
@@ -924,7 +1020,7 @@ int id_exists(int id) {
 }
 
 LDEFINE(transform, LVOID,
-       "(transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt] [\"smooth\"])\n\
+	"(transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt] [\"smooth\"])\n\
 	Apply a motion (rotation, translation, scaling) to object \"objectID\";\n\
 	that is, construct and concatenate a transformation matrix with\n\
 	objectID's transform  The 3 IDs involved are the object\n\
@@ -969,7 +1065,7 @@ LDEFINE(transform, LVOID,
 }
 
 LDEFINE(transform_incr, LVOID,
-       "(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt])\n\
+	"(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt])\n\
 	Apply continuing motion: construct a transformation matrix and\n\
 	concatenate it with the current transform of objectID every\n\
 	refresh (sets objectID's incremental transform). Same syntax\n\
@@ -1000,7 +1096,7 @@ LDEFINE(transform_incr, LVOID,
 }
 
 LDEFINE(transform_set, LVOID,
-       "(transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z)\n\
+	"(transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z)\n\
 	Set objectID's transform to the constructed transform.\n\
 	Same syntax as transform.")
 {
@@ -1023,7 +1119,7 @@ LDEFINE(transform_set, LVOID,
 
 
 LDEFINE(position, LVOID,
-       "(position       objectID otherID)\n\
+	"(position       objectID otherID)\n\
 	Set the transform of objectID to that of otherID.")
 {
   int moving_id, ref_id;
@@ -1036,7 +1132,7 @@ LDEFINE(position, LVOID,
 }
 
 LDEFINE(position_at, LVOID,
-       "(position-at    objectID otherID [center | origin])\n\
+	"(position-at    objectID otherID [center | origin])\n\
 	Translate objectID to the center of the bounding box or the \n\
 	origin of the coordinate system of otherID (parallel translation).\n\
 	Default is center.")
@@ -1054,7 +1150,7 @@ LDEFINE(position_at, LVOID,
 }
 
 LDEFINE(position_toward, LVOID,
-       "(position-toward objectID otherID [center | origin])\n\
+	"(position-toward objectID otherID [center | origin])\n\
 	Rotate objectID so that the center of the bounding box\n\
 	or the origin of the coordinate system of the otherID\n\
 	lies on the positive z-axis of the first object.  Default is\n\
@@ -1100,8 +1196,8 @@ LDEFINE(new_center, LVOID,
     drawer_stop(obj->id);
     gv_xform_set(obj->id, &ts_identity);
     if(ISGEOM(obj->id) && ((DGeom *)obj)->NDT != NULL) {
-	TmNDelete( ((DGeom *)obj)->NDT );  ((DGeom *)obj)->NDT = NULL;
-	TmNDelete( ((DGeom *)obj)->NDTinv );  ((DGeom *)obj)->NDTinv = NULL;
+      TmNDelete( ((DGeom *)obj)->NDT );  ((DGeom *)obj)->NDT = NULL;
+      TmNDelete( ((DGeom *)obj)->NDTinv );  ((DGeom *)obj)->NDTinv = NULL;
     }
 	
   }
@@ -1147,10 +1243,10 @@ LDEFINE(new_reset, LVOID,
  */
 #define ENCOMPASS_DEFAULTS 1.0, 1000., 0.1, 3.0
 struct encompass {
-    float view_frac;
-    float clip_ratio;
-    float near_margin;
-    float far_margin;
+  float view_frac;
+  float clip_ratio;
+  float near_margin;
+  float far_margin;
 };
 
 static struct encompass enc = { ENCOMPASS_DEFAULTS };
@@ -1167,17 +1263,135 @@ LDEFINE(look_encompass_size, LLIST,
 	Defaults: .75  100  0.1  4.0\n")
 {
   LDECLARE(("look-encompass-size", LBEGIN,
-	   LOPTIONAL,
-	   LFLOAT, &enc.view_frac,
-	   LFLOAT, &enc.clip_ratio,
-	   LFLOAT, &enc.near_margin,
-	   LFLOAT, &enc.far_margin,
-	   LEND));
+	    LOPTIONAL,
+	    LFLOAT, &enc.view_frac,
+	    LFLOAT, &enc.clip_ratio,
+	    LFLOAT, &enc.near_margin,
+	    LFLOAT, &enc.far_margin,
+	    LEND));
   if(enc.view_frac <= 0) enc.view_frac = edflt.view_frac;
   if(enc.clip_ratio <= 0) enc.clip_ratio = edflt.clip_ratio;
   if(enc.near_margin <= 0) enc.near_margin = edflt.near_margin;
   if(enc.far_margin <= 0) enc.far_margin = edflt.far_margin;
   return LMakeArray(LFLOAT, (char *)&enc, 4);
+}
+
+static void ND_look_encompass(int objID, int camID)
+{
+  int i;
+  Sphere *sphere;
+  DView *dv;
+  float aspect, near, far, focallen, yfield, minfield, newyfield;
+  int perspective;
+  HPoint3 fromcam, center;
+  float radius, effradius, zrange, newzrange, newfar, newnear;
+  Transform Tfocus;
+
+  MAYBE_LOOP(camID, i, T_CAM, DView, dv) {
+
+    /* Figure out the bounding sphere of the object, in contrast to
+     * the 3d case we compute the bounding sphere relative to the
+     * camera (we need the projection to the camera's 3d sub-space)
+     */
+    sphere = (Sphere *)id_bsphere(objID, dv->id);
+    if (sphere == NULL) {
+      return;
+    }
+    SphereCenter(sphere, &center);
+    radius = SphereRadius(sphere);
+    GeomDelete((Geom *)sphere);
+
+    /* fromcam now contains the coordinates of the center of the
+     * bounding sphere in the coordinate frame defined by the cluster,
+     * projected to our 3d sub-space. We need to apply dv->NDprivate
+     * to the final position (NDprivate is an additional 3d transform
+     * private to this camera, i.e. not shared by the cluster).
+     *
+     * In case no look-encompass commands etc. have been called
+     * NDW2Cpriv simply containes the -focallen translation in z
+     * direction.
+     */
+    HPt3Transform(dv->NDW2Cpriv, &center, &fromcam);
+    HPt3Dehomogenize(&fromcam, &fromcam);
+
+    if(fromcam.x < 0) fromcam.x = -fromcam.x;
+    if(fromcam.y < 0) fromcam.y = -fromcam.y;
+    zrange = -fromcam.z;
+
+    CamGet(dv->cam, CAM_HALFYFIELD, &yfield);
+    CamGet(dv->cam, CAM_ASPECT, &aspect);
+    CamGet(dv->cam, CAM_NEAR, &near);
+    CamGet(dv->cam, CAM_FAR, &far);
+    CamGet(dv->cam, CAM_FOCUS, &focallen);
+    CamGet(dv->cam, CAM_PERSPECTIVE, &perspective);
+
+    /* Camera's field in its minimum direction. */
+    minfield = aspect<1 ? yfield*aspect : yfield;
+    if (minfield <= 0.0) {
+      OOGLError(0, "look-encompass: Erroneous field of view / aspect ratio combination.");
+      minfield = aspect = yfield = 1.0;
+    }
+
+    /* Handle the case of look-encompass applied to a point.
+     * Then, pretend the sphere's radius matches the camera's current
+     * field of view in its focal plane.
+     */
+    effradius = radius;
+    if(effradius <= 0)
+      effradius = (perspective ? minfield * zrange : minfield)
+	* enc.view_frac;
+	
+
+    if (perspective) {
+      /* Perspective case
+       * Move the camera backward or forward until the sphere is tangent
+       * to the frustrum.
+       * minfield is tan(1/2 * field-of-view-in-shorter-direction).
+       * First newzrange term is the Z-distance we'd need to enclose the
+       *   sphere if it lay on the camera's Z axis.
+       * Rest is the extra we need to account for its displacement from Z
+       */
+
+      newzrange = effradius/enc.view_frac * sqrt(1 + 1/(minfield*minfield))
+	+ MAX(fromcam.y / yfield, fromcam.x / (yfield*aspect));
+    } else {
+      /* Orthogonal case
+       * Change the field of view of the camera so that the frustrum is 
+       * tangent to the sphere
+       */
+      newyfield = MAX( effradius+fromcam.y, (effradius+fromcam.x) / aspect )
+	/ enc.view_frac;
+      CamSet(dv->cam, CAM_HALFYFIELD, newyfield, CAM_END);
+      newzrange = zrange;
+    }
+    newnear = enc.near_margin*(newzrange - effradius);
+    newfar = enc.far_margin * (newzrange + effradius);
+    if(newnear < near || newfar > far || near*enc.clip_ratio < far) {
+      float newnewz = effradius
+	* (enc.clip_ratio * enc.near_margin - enc.far_margin)
+	/ (enc.clip_ratio * enc.near_margin + enc.far_margin);
+      if(newzrange < newnewz)
+	newzrange = newnewz;
+      newnear = enc.near_margin * (newzrange - effradius);
+      newfar  =  enc.far_margin * (newzrange + effradius);
+    }
+    drawer_float(dv->id, DRAWER_FAR, newfar);
+    drawer_float(dv->id, DRAWER_NEAR, newnear);
+    drawer_float(dv->id, DRAWER_FOCALLENGTH, newzrange);
+
+    /* In contrast to the 3d case we MUST NOT call apply_motion()
+     * (through gv_transform()). Instead, we apply the transformation
+     * to the normal C2W xform, and remember in dv->NDW2Cpriv its
+     * inverse to be able to apply the part of C2W/W2C which is
+     * private to this camera and not shared with the other cameras of
+     * this cluster.
+     */
+    TmTranslate(Tfocus, 0.0, 0.0, newzrange - zrange);
+    drawer_post_xform(dv->id, Tfocus);
+    TmConcat(Tfocus, dv->NDC2Wpriv, dv->NDC2Wpriv);
+    TmTranslate(Tfocus, 0.0, 0.0, -newzrange + zrange);
+    TmConcat(dv->NDW2Cpriv, Tfocus, dv->NDW2Cpriv);
+  }
 }
 
 /* 
@@ -1224,6 +1438,13 @@ LDEFINE(look_encompass, LVOID,
     return Lnil;
   }
 
+  /* the ND-case needs special care. */
+  if (drawerstate.NDim > 0) {
+    /* The ND-stuff needs special care. */
+    ND_look_encompass(objID, camID);
+    return Lnil;
+  }
+
   /* Figure out the bounding sphere of the object in world coordinates */
   sphere = (Sphere *)id_bsphere(objID, UNIVERSE);
   if (sphere == NULL) return Lnil;
@@ -1251,8 +1472,8 @@ LDEFINE(look_encompass, LVOID,
     /* Camera's field in its minimum direction. */
     minfield = aspect<1 ? yfield*aspect : yfield;
     if (minfield <= 0.0) {
-	OOGLError(0, "look-encompass: Erroneous field of view / aspect ratio combination.");
-	minfield = aspect = yfield = 1.0;
+      OOGLError(0, "look-encompass: Erroneous field of view / aspect ratio combination.");
+      minfield = aspect = yfield = 1.0;
     }
 
     /* Handle the case of look-encompass applied to a point.
@@ -1261,42 +1482,42 @@ LDEFINE(look_encompass, LVOID,
      */
     effradius = radius;
     if(effradius <= 0)
-	effradius = (perspective ? minfield * zrange : minfield)
-			* enc.view_frac;
+      effradius = (perspective ? minfield * zrange : minfield)
+	* enc.view_frac;
 	
 
     if (perspective) {
-	/* Perspective case
-	 * Move the camera backward or forward until the sphere is tangent
-	 * to the frustrum.
-	 * minfield is tan(1/2 * field-of-view-in-shorter-direction).
-	 * First newzrange term is the Z-distance we'd need to enclose the
-	 *   sphere if it lay on the camera's Z axis.
-	 * Rest is the extra we need to account for its displacement from Z
-	 */
+      /* Perspective case
+       * Move the camera backward or forward until the sphere is tangent
+       * to the frustrum.
+       * minfield is tan(1/2 * field-of-view-in-shorter-direction).
+       * First newzrange term is the Z-distance we'd need to enclose the
+       *   sphere if it lay on the camera's Z axis.
+       * Rest is the extra we need to account for its displacement from Z
+       */
 
-	newzrange = effradius/enc.view_frac * sqrt(1 + 1/(minfield*minfield))
-		      + MAX(fromcam.y / yfield, fromcam.x / (yfield*aspect));
+      newzrange = effradius/enc.view_frac * sqrt(1 + 1/(minfield*minfield))
+	+ MAX(fromcam.y / yfield, fromcam.x / (yfield*aspect));
     } else {
-	/* Orthogonal case
-	 * Change the field of view of the camera so that the frustrum is 
-	 * tangent to the sphere
-	 */
-	newyfield = MAX( effradius+fromcam.y, (effradius+fromcam.x) / aspect )
-			/ enc.view_frac;
-	CamSet(dv->cam, CAM_HALFYFIELD, newyfield, CAM_END);
-	newzrange = zrange;
+      /* Orthogonal case
+       * Change the field of view of the camera so that the frustrum is 
+       * tangent to the sphere
+       */
+      newyfield = MAX( effradius+fromcam.y, (effradius+fromcam.x) / aspect )
+	/ enc.view_frac;
+      CamSet(dv->cam, CAM_HALFYFIELD, newyfield, CAM_END);
+      newzrange = zrange;
     }
     newnear = enc.near_margin*(newzrange - effradius);
     newfar = enc.far_margin * (newzrange + effradius);
     if(newnear < near || newfar > far || near*enc.clip_ratio < far) {
-	float newnewz = effradius
-			* (enc.clip_ratio * enc.near_margin - enc.far_margin)
-			/ (enc.clip_ratio * enc.near_margin + enc.far_margin);
-	if(newzrange < newnewz)
-	    newzrange = newnewz;
-	newnear = enc.near_margin * (newzrange - effradius);
-	newfar  =  enc.far_margin * (newzrange + effradius);
+      float newnewz = effradius
+	* (enc.clip_ratio * enc.near_margin - enc.far_margin)
+	/ (enc.clip_ratio * enc.near_margin + enc.far_margin);
+      if(newzrange < newnewz)
+	newzrange = newnewz;
+      newnear = enc.near_margin * (newzrange - effradius);
+      newfar  =  enc.far_margin * (newzrange + effradius);
     }
     drawer_float(dv->id, DRAWER_FAR, newfar);
     drawer_float(dv->id, DRAWER_NEAR, newnear);
@@ -1464,12 +1685,12 @@ LDEFINE(look_recenter, LVOID,
 
 static void get_geom_transform(DGeom *dg, Transform T_to_parent)
 {
-    Transform Tm, Tn;
-    if(GeomGet(dg->Item, CR_AXIS, Tm) > 0 &&
-		GeomGet(dg->Inorm, CR_AXIS, Tn) > 0)
-	TmConcat(Tn, Tm, T_to_parent);
-    else
-	TmIdentity(T_to_parent);
+  Transform Tm, Tn;
+  if(GeomGet(dg->Item, CR_AXIS, Tm) > 0 &&
+     GeomGet(dg->Inorm, CR_AXIS, Tn) > 0)
+    TmConcat(Tn, Tm, T_to_parent);
+  else
+    TmIdentity(T_to_parent);
 }
 
 
@@ -1491,33 +1712,33 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
 
   if((obj = drawer_get_object(from_id)) == NULL) {
     if(to_id == UNIVERSE) {
-	OOGLError(1, "drawer_get_transform: can't handle from_id %d", from_id);
-	TmIdentity(T);
-	return;
+      OOGLError(1, "drawer_get_transform: can't handle from_id %d", from_id);
+      TmIdentity(T);
+      return;
     }
   } else {
     if(from_id < 0)
-	from_id = obj->id;
+      from_id = obj->id;
     if (ISGEOM(from_id)) {
-	switch(to_id) {
-	case UNIVERSE:
+      switch(to_id) {
+      case UNIVERSE:
+	get_geom_transform(DGobj(obj), T);
+	if(DGobj(obj)->citizenship == ORDINARY) {
+	  get_geom_transform(dgeom[0], Tfrom);
+	  TmConcat(T, Tfrom, T);
+	}
+	return;
+      case WORLDGEOM:
+	if(DGobj(obj)->citizenship == ORDINARY) {
 	  get_geom_transform(DGobj(obj), T);
-	  if(DGobj(obj)->citizenship == ORDINARY) {
-	    get_geom_transform(dgeom[0], Tfrom);
-	    TmConcat(T, Tfrom, T);
-	  }
 	  return;
-	case WORLDGEOM:
-	    if(DGobj(obj)->citizenship == ORDINARY) {
-		get_geom_transform(DGobj(obj), T);
-		return;
-	    }
 	}
+      }
     } else if (ISCAM(from_id)) {
-	if(to_id == UNIVERSE) {
-	    CamGet(DVobj(obj)->cam, CAM_C2W, T);
-	    return;
-	}
+      if(to_id == UNIVERSE) {
+	CamGet(DVobj(obj)->cam, CAM_C2W, T);
+	return;
+      }
     }
   }
 
@@ -1552,40 +1773,42 @@ drawer_get_ND_transform(int from_id, int to_id)
 
   if((obj = drawer_get_object(from_id)) == NULL) {
     if(to_id == UNIVERSE) {
-	OOGLError(1, "drawer_get_transform: can't handle from_id %d", from_id);
-	return NULL;
+      OOGLError(1, "drawer_get_transform: can't handle from_id %d", from_id);
+      return NULL;
     }
   } else {
     if(from_id < 0)
-	from_id = obj->id;
+      from_id = obj->id;
     if (ISGEOM(from_id)) {
-	switch(to_id) {
-	case UNIVERSE:
-	    T = get_geom_ND_transform(DGobj(obj));
-	    if(DGobj(obj)->citizenship == ORDINARY && dgeom[0]->NDT) {
-		if(T == NULL)
-		    return REFINCR(TransformN, dgeom[0]->NDT);
-		else if(dgeom[0]->NDT == NULL)
-		    return T;
-		else {
-		    TransformN *To = TmNConcat(T, dgeom[0]->NDT, NULL);
-		    TmNDelete(T);
-		    return To;
-		}
-	    }
+      switch(to_id) {
+      case UNIVERSE:
+	Tfrom = get_geom_ND_transform(DGobj(obj));
+	if(DGobj(obj)->citizenship == ORDINARY) {
+	  Tto = get_geom_ND_transform(dgeom[0]);
+	  if(Tfrom == NULL)
+	    return Tto;
+	  else if(dgeom[0]->NDT == NULL)
+	    return Tfrom;
+	  else {
+	    T = TmNConcat(Tfrom, Tto, NULL);
+	    TmNDelete(Tfrom);
+	    TmNDelete(Tto);
 	    return T;
-	case WORLDGEOM:
-	    if(DGobj(obj)->citizenship == ORDINARY) {
-		return REFINCR(TransformN, DGobj(obj)->NDT);
-	    }
+	  }
 	}
+	return Tfrom;
+      case WORLDGEOM:
+	if(DGobj(obj)->citizenship == ORDINARY) {
+	  return get_geom_ND_transform(DGobj(obj));
+	}
+      }
     } else if (ISCAM(from_id)) {
-	if(to_id == UNIVERSE) {
-	    T = (obj && ((DView *)obj)->cluster) ?
-		REFINCR(TransformN, ((DView *)obj)->cluster->C2W) : NULL;
-	    return T ? T :
-		TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
-	}
+      if(to_id == UNIVERSE) {
+	T = (obj && ((DView *)obj)->cluster) ?
+	  REFINCR(TransformN, ((DView *)obj)->cluster->C2W) : NULL;
+	return T ? T :
+	  TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
+      }
     }
   }
 
@@ -1598,11 +1821,11 @@ drawer_get_ND_transform(int from_id, int to_id)
     TransformN *Tot = TmNInvert(Tto, NULL);
     TmNDelete(Tto);
     if(Tfrom) {
-	T = TmNConcat(Tfrom, Tot, NULL);
-	TmNDelete(Tfrom);
-	TmNDelete(Tot);
+      T = TmNConcat(Tfrom, Tot, NULL);
+      TmNDelete(Tfrom);
+      TmNDelete(Tot);
     } else {
-	T = Tot;
+      T = Tot;
     }
     return T;
   } else {
@@ -1610,28 +1833,38 @@ drawer_get_ND_transform(int from_id, int to_id)
   }
 }
 
+/* Note: this function always makes a copy of T, otherwise stuff like
+ *
+ * drawer_get_ND_xform(other_id, WORLD);
+ * drawer_set_ND_xform(this-id, WORLD);
+ *
+ * would not work correctly.
+ */
 void
 drawer_set_ND_xform(int id, TransformN *T)
 {
-   DObject *obj;
-   TransformN **tp = NULL;
+  DObject *obj;
+  TransformN **tp = NULL;
 
-   if((obj = drawer_get_object(id)) != NULL) {
-	if(ISCAM(obj->id)) {
-	    if(((DView *)obj)->cluster == NULL)	/* N-D camera? */
-		return;
-	    tp = &((DView *)obj)->cluster->C2W;
-	    drawerstate.changed |= 1;
-	} else {
-	    tp = &DGobj(obj)->NDT;
-	    obj->changed |= 1;
-	}
-   }
-   if(tp) {
-	if(*tp) TmNDelete(*tp);
-	*tp = T ? T :
-	      TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
-   }
+  if((obj = drawer_get_object(id)) != NULL) {
+    if(ISCAM(obj->id)) {
+      if(((DView *)obj)->cluster == NULL)	/* N-D camera? */
+	return;
+      tp = &((DView *)obj)->cluster->C2W;
+      drawerstate.changed |= 1;
+    } else {
+      tp = &DGobj(obj)->NDT;
+      obj->changed |= 1;
+    }
+  }
+  if(tp) {
+    if (!T) {
+      T = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
+    }
+    if (T != *tp) {
+      *tp = TmNCopy(T, *tp);
+    }
+  }
 }
 
 int
@@ -1640,7 +1873,7 @@ get_parent(int id)
   DGeom *dg;
 
   if(ISGEOM(id) && (dg = (DGeom *)drawer_get_object(id)) != NULL) {
-     if(dg->citizenship == ORDINARY) return WORLDGEOM;
+    if(dg->citizenship == ORDINARY) return WORLDGEOM;
   }
   /* Cameras, etc. are all referred to UNIVERSE */
   return UNIVERSE;
@@ -1653,7 +1886,7 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
   TransformN *Tgf = NULL, *Tfg = NULL, *Tcf = NULL;
   TransformN *Tmf = NULL, *Tmg = NULL, *Tfp = NULL, *Tmp = NULL;
   DView *dv;
-  int perm[4];
+  int *perm;
   int cam;
 
   /* Construct new coord system 'g' with the orientation of 'frame' but
@@ -1661,76 +1894,118 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
    * It's in this system that 'delta' is defined.
    * Tgf is the transform from this system to 'frame'.
    */
-  origin = HPtNCreate(drawerstate.NDim, NULL);
-  Tcf = drawer_get_ND_transform(center, frame);
-  if(Tcf) HPtNTransform( Tcf, origin, origin );
-  TmNDelete(Tcf);
-  Tgf = TmNSpaceTranslateOrigin(Tgf, origin);
-  Tfg = TmNInvert(Tgf, Tfg);	/* Should be sped up: negate "origin" rather than inverting */
-  HPtNDelete(origin);
 
   cam = frame;
   if(!ISCAM(cam)) cam = center;
   if(!ISCAM(cam)) cam = moving;
   if(ISCAM(cam) && (dv = (DView *)drawer_get_object(cam)) != NULL) {
-    memcpy(perm, dv->NDPerm, sizeof(perm));
+    perm = dv->NDPerm;
   } else {
-    perm[0] = 0; perm[1] = 1; perm[2] = 2;
-    perm[3] = -1;
+    static const int dflt_perm[] = { 0, 1, 2, -1 };
+    perm = (int *)dflt_perm;
   }
 
-  Tmf = drawer_get_ND_transform(moving, frame);
-  Tmg = Tmf ? TmNConcat( Tmf, Tfg, Tmg ) : REFINCR(TransformN, Tfg);
-  TmNApplyDN( Tmg, perm, delta );
+  /* If either moving or center are a camera, then we have to apply
+   * the camera's private 3d transform as well as the ND transform of
+   * the cluster. Luckily this has to be done ONLY for the translation
+   * of the origin of the motion; all other "private" 3d transforms
+   * would cancel out.
+   */
+  origin = HPtNCreate(drawerstate.NDim, NULL);
+  Tcf = drawer_get_ND_transform(center, frame);
+  if (ISCAM(center) && (dv = (DView *)drawer_get_object(center)) != NULL) {
+    HPtNTransform3(dv->NDC2Wpriv, dv->NDPerm, origin, origin);
+  }
+  if (Tcf) {
+    HPtNTransform( Tcf, origin, origin );
+  }
+  if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
+    HPtNTransform3(dv->NDW2Cpriv, dv->NDPerm, origin, origin);
+  }
+  Tgf = TmNSpaceTranslateOrigin(NULL, origin);
+  /* TranslateOrigin() will call Dehomogenize anyway, so negation of
+   * origin is really easy, just negate the homogeneous component.
+   */
+  origin->v[drawerstate.NDim-1] = -origin->v[drawerstate.NDim-1];
+  Tfg = TmNSpaceTranslateOrigin(NULL, origin);
+  HPtNDelete(origin);
 
-  Tmf = TmNConcat( Tmg, Tgf, Tmf );
+  Tmf = drawer_get_ND_transform(moving, frame);
+  /* We must not modify Tmf, it could be only a reference, so build up
+   *  the chain in reverse order, starting with Tfg
+   */
+  if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
+    Tfg = TmNApplyT3TN(dv->NDW2Cpriv, dv->NDPerm, Tfg);
+  }
+  Tmg = Tmf ? TmNConcat( Tmf, Tfg, NULL ) : REFINCR(TransformN, Tfg);
+  if (0 && ISCAM(moving) && (dv = (DView *)drawer_get_object(moving)) != NULL) {
+    Tmg = TmNApplyT3TN(dv->NDC2Wpriv, dv->NDPerm, Tmg);
+  }
+
+  /* ... and here it comes ... */
+  TmNApplyDN(Tmg, perm, delta);
+
+  TmNDelete(Tmf); /* Do not modify, generate a new one */
+  Tmf = TmNConcat(Tmg, Tgf, NULL);
+  if (ISCAM(frame) && (dv = (DView *)drawer_get_object(frame)) != NULL) {
+    Tmf = TmNApplyDN(Tmf, dv->NDPerm, dv->NDC2Wpriv);
+  }
   Tfp = drawer_get_ND_transform(frame, get_parent(moving));
-  Tmp = Tfp ? TmNConcat(Tmf, Tfp, Tmp) : REFINCR(TransformN, Tmf);
-  drawer_set_ND_xform( moving, Tmp );
-  TmNDelete( Tgf );
-  TmNDelete( Tfg );
-  /*TmNDelete( Tcf );*/ /* already done above */
-  TmNDelete( Tmf );
-  TmNDelete( Tmg );
-  TmNDelete( Tfp );
+  Tmp = Tfp ? TmNConcat(Tmf, Tfp, NULL) : REFINCR(TransformN, Tmf);
+
+  drawer_set_ND_xform(moving, Tmp);
+
+  /*TmNDelete(Tmp);*/
+  TmNDelete(Tgf);
+  TmNDelete(Tfg);
+  TmNDelete(Tcf);
+  TmNDelete(Tmf);
+  TmNDelete(Tmg);
+  TmNDelete(Tfp);
 }
 
 
 void make_center(char *objname, Point3 *pt)
 {
-    TransformStruct ts;
-    int cid;
+  TransformStruct ts;
+  int cid;
 
-    if((cid = drawer_idbyname(objname)) == NOID) {
-	GeomStruct gs;
-	gs.h = NULL;
-	gs.geom = NULL;
-	cid = gv_new_alien(objname, &gs);
-    }
-    ts.h = NULL;
-    TmTranslate(ts.tm, pt->x, pt->y, pt->z);
-    gv_xform_set( cid, &ts );
-    gv_ui_center(cid);
+  if((cid = drawer_idbyname(objname)) == NOID) {
+    GeomStruct gs;
+    gs.h = NULL;
+    gs.geom = NULL;
+    cid = gv_new_alien(objname, &gs);
+  }
+  ts.h = NULL;
+  TmTranslate(ts.tm, pt->x, pt->y, pt->z);
+  gv_xform_set( cid, &ts );
+  gv_ui_center(cid);
 }
 
 void make_center_from_pick(char *objname, Pick *pick, int camid)
 {
-    Point3 center, fromcam;
-    Transform Tuni, Tcam;
-    int index;
-    DView *dv;
+  Point3 center, fromcam;
+  Transform Tuni, Tcam;
+  int index;
+  DView *dv;
 
-	/* Apply primitive -> World transform.
-	 * XXX if we ever implement object hierarchy, a Center like this
-	 * should be referred to the object we picked, not the Universe.
-	 */
-    drawer_get_transform(WORLDGEOM, Tuni, UNIVERSE);
-    Pt3Transform(pick->Tw, &pick->got, &center);
-    Pt3Transform(Tuni, &center, &center);	/* Convert to universe coords */
-    make_center(objname, &center);
-    MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
-	drawer_get_transform(UNIVERSE, Tcam, dv->id);
-	Pt3Transform(Tcam, &center, &fromcam);
-	drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
-    }
+  /* Apply primitive -> World transform.
+   * XXX if we ever implement object hierarchy, a Center like this
+   * should be referred to the object we picked, not the Universe.
+   */
+  drawer_get_transform(WORLDGEOM, Tuni, UNIVERSE);
+  Pt3Transform(pick->Tw, &pick->got, &center);
+  Pt3Transform(Tuni, &center, &center);	/* Convert to universe coords */
+  make_center(objname, &center);
+  MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
+    drawer_get_transform(UNIVERSE, Tcam, dv->id);
+    Pt3Transform(Tcam, &center, &fromcam);
+    drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
+  }
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

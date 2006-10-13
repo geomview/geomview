@@ -38,7 +38,6 @@ typedef struct Skline {
 struct Skel {
 	GEOMFIELDS;
 	int nvert, nlines;
-	int dim;		/* Dimension of points */
 	float *p;		/* Array[nvert][dim] of point coords */
 	Skline *l;		/* nl[nlines] */
 	int nvi;		/* Total number of vertex indices */
@@ -56,8 +55,8 @@ extern Skel *SkelCopy( Skel * );
 extern Skel *SkelPick( Skel *, Pick *, Appearance *, Transform );
 extern Skel *SkelFLoad( IOBFILE *f, char *fname );
 extern Skel *SkelFSave( Skel *, FILE * );
-extern BBox *SkelBound(Skel *s, Transform T, TransformN *TN, int *axes);
+extern BBox *SkelBound(Skel *s, Transform T, TransformN *TN);
 extern Skel *SkelDraw( Skel * );
-extern Skel *SkelTransform( Skel *, void *Trafo );
+extern Skel *SkelTransform( Skel *s, Transform T, TransformN *TN );
 
 #endif /*SKELPDEF*/

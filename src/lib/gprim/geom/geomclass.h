@@ -56,8 +56,7 @@ typedef Geom *GeomTranslateFunc( Geom *object, float x, float y, float z );
 typedef Geom *GeomScaleFunc( Geom *object, float x, float y, float z );
 
 typedef Geom *GeomEvertFunc( Geom *object );
-typedef Geom *GeomBoundFunc( Geom *object,
-			     Transform T, TransformN *TN, int *axes );
+typedef Geom *GeomBoundFunc( Geom *object, Transform T, TransformN *TN );
 typedef Geom *GeomBoundSphereFunc( Geom *object, Transform T,
 				   TransformN *TN, int * axes, int space );
 typedef Geom *GeomEvalFunc(  Geom *object, float u, float v );

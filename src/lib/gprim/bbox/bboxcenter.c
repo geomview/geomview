@@ -24,56 +24,46 @@
 
 #include "bboxP.h"
 
-HPoint3 *BBoxCenter(BBox *bbox, HPoint3 *center)
+static void _BBoxCenter(BBox *bbox, HPtNCoord *center)
 {
-    static HPoint3 space;
-
-    if (!center)
-	center = &space;
-
-    if (bbox->geomflags & VERT_4D) {
-	center->x = (bbox->min.x + bbox->max.x) / 2.0;
-	center->y = (bbox->min.y + bbox->max.y) / 2.0;
-	center->z = (bbox->min.z + bbox->max.z) / 2.0;
-	center->w = (bbox->min.w + bbox->max.w) / 2.0;
-    } else {
-	HPt3Dehomogenize(&bbox->min, &bbox->min);
-	HPt3Dehomogenize(&bbox->max, &bbox->max);
-	center->x = (bbox->min.x + bbox->max.x) / 2.0;
-	center->y = (bbox->min.y + bbox->max.y) / 2.0;
-	center->z = (bbox->min.z + bbox->max.z) / 2.0;
-	center->w = 1.0;
-    }
-
-    return center;
+  int i, dim;
+  
+  if (bbox->geomflags & VERT_4D) {
+    dim = bbox->pdim;
+  } else {
+    HPtNDehomogenize(bbox->min, bbox->min);
+    HPtNDehomogenize(bbox->max, bbox->max);
+    dim = bbox->pdim-1;
+    center[dim] = 1.0;
+  }
+  
+  for (i = 0; i < dim; i++) {
+    center[i] = 0.5 * (bbox->min->v[i] + bbox->max->v[i]);
+  }
 }
+
+void BBoxCenter(BBox *bbox, HPoint3 *center)
+{
+  if (bbox->pdim > 4) {
+    return;
+  }
+  
+  _BBoxCenter(bbox, (HPtNCoord *)center);
+}
+
 
 HPointN *BBoxCenterND(BBox *bbox, HPointN *center)
 {
-    int i;
+  if (!center) {
+    center = HPtNCreate(bbox->pdim, NULL);
+  } else if (center->dim != bbox->pdim) {
+    center->v= OOGLRenewNE(HPtNCoord, center->v, bbox->pdim, "renew HPointN");
+    center->dim = bbox->pdim;
+  }
+      
+  _BBoxCenter(bbox, (HPtNCoord *)center->v);
 
-    if (!center)
-	center = HPtNCreate(bbox->pdim, NULL);
-
-    if (bbox->pdim < 5) {
-	HPt3Coord center4[4];
-	HPt3Coord *min = (HPt3Coord *)&bbox->min;
-	HPt3Coord *max = (HPt3Coord *)&bbox->max;
-
-	for (i = 0; i < 4; i++) {
-	    center4[i] = 0.5 * (min[i] + max[i]);
-	}
-	Pt4ToHPtN((HPoint3 *)center4, center);
-    } else {
-	HPtNDehomogenize(bbox->minN, bbox->minN);
-	HPtNDehomogenize(bbox->maxN, bbox->maxN);
-	for (i = 0; i < bbox->pdim-1; i++) {
-	    center->v[i] = 0.5 * (bbox->minN->v[i] + bbox->maxN->v[i]);
-	}
-	center->v[i] = 1.0;
-    }
-
-    return center;
+  return center;
 }
 
 /*

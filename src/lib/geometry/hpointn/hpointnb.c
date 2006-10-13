@@ -44,21 +44,23 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 HPointN *
 HPtNCopy(const HPointN *pt1, HPointN *pt2)
 {
-    if(pt2 == NULL) {
-		pt2 = HPtNCreate(pt1->dim, pt1->v);
-    } else {
-		if(pt2->dim != pt1->dim) {
-	   	 pt2->v = OOGLRenewNE(HPtNCoord, pt2->v, pt1->dim, "renew HPointN");
-	   	 pt2->dim = pt1->dim;
-		}
-	    memcpy(pt2->v, pt1->v, pt1->dim*sizeof(HPtNCoord));
+  if(pt2 == NULL) {
+    pt2 = HPtNCreate(pt1->dim, pt1->v);
+  } else {
+    if(pt2->dim != pt1->dim) {
+      pt2->v = OOGLRenewNE(HPtNCoord, pt2->v, pt1->dim, "renew HPointN");
+      pt2->dim = pt1->dim;
     }
+    memcpy(pt2->v, pt1->v, pt1->dim*sizeof(HPtNCoord));
+  }
 /*    pt2->space = pt1->space; */
-    return(pt2);
+  return(pt2);
 }
 
-HPointN *
-Pt4ToHPtN(HPoint3 *v4, HPointN *vN)
+/* Convert a HPoint3 into a HPointN while interpreting the HPoint3 as
+ * a 4-point.
+ */
+HPointN *Pt4ToHPtN(HPoint3 *v4, HPointN *vN)
 {
   int i;
 
@@ -277,7 +279,36 @@ HPtNDehomogenize(const HPointN *from, HPointN *to)
 	to->v[dim-1] = 1.0;
 	return(1./inv);
 }
-	
+
+/* Transform an HPointN according to a 3d transform acting only on the
+ * sub-space defined by "axes"
+ */
+HPointN * HPtNTransform3(Transform3 T, int *perm,
+			 const HPointN *from, HPointN *to)
+{
+  int i, dim = from->dim;
+  HPt3Coord from3[4];
+  int permute[4];
+
+  to = HPtNCopy(from, to);
+
+
+  /* Map "-1" in perm[] array to dimension N-1 (homogeneous divisor) */
+  for(i = 0; i < 4; i++) {
+    permute[i] = (perm[i] >= 0 && perm[i] < dim) ? perm[i] : dim-1;
+  }
+
+  for (i = 0; i < 4; i++) {
+    from3[i] = from->v[permute[i]];
+  }
+  
+  HPt3Transform(T, (HPoint3 *)from3, (HPoint3 *)from3);
+
+  for (i = 0; i < 4; i++) {
+    to->v[permute[i]] = from3[i];
+  }
+  return to;
+}
 
 	/* Apply a TransformN to an HPointN */
 HPointN *
@@ -287,8 +318,11 @@ HPtNTransform( const TransformN *T, const HPointN *from, HPointN *to )
 	int i, j;
 	HPtNCoord *v = (HPtNCoord *)alloca(idim*sizeof(HPtNCoord));
 
-	for( i=0; i<idim; i++)
+	for( i=0; i<dim; i++)
 		v[i] = from->v[i];
+	for (; i<idim; i++) {
+		v[i] = 0.0;
+	}
 
   	if(to == NULL)
 		to = HPtNCreate(odim,NULL);
@@ -388,4 +422,44 @@ HPtNTransformComponents( const HPointN *p, const TransformN *T, int ncomponents,
 	}
 
   return(results);
+}
+
+/* Transform a 4-point to a 3-point according to the mapping defined
+ * in "axes"
+ */
+HPoint3 *
+HPtNToHPt3(HPointN *from, HPoint3 *hp3, int *axes)
+{
+  HPt3Coord *to = (HPt3Coord *)hp3;
+  int i, dim = from->dim;
+
+  if (!axes) {
+    hp3->x = from->v[0];
+    hp3->y = from->v[1];
+    hp3->z = from->v[2];
+    hp3->w = from->v[dim-1];
+  } else {
+    for (i = 0; i < 3; i++) {
+      if (axes[i] > dim-1) {
+	to[i] = 0.0;
+      } else if (axes[i] != -1) {
+	to[i] = from->v[axes[i]];
+      }
+    }
+    hp3->w = from->v[dim-1];
+  }
+  return hp3;
+}
+
+void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other, int dim)
+{
+  int i;
+  
+  for (i = 0; i < dim; i++) {
+    if (min->v[i] > other->v[i]) {
+      min->v[i] = other->v[i];
+    } else if (max->v[i] < other->v[i]) {
+      max->v[i] = other->v[i];
+    }
+  }    
 }

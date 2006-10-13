@@ -153,6 +153,7 @@ GeomDecorate(g, copyp, feature, ap)
     case CR_4D:		/* this is a token, value pair so it can be
 			set conditionally */
 	val = va_arg(*ap, int);
+	g->geomflags &= ~VERT_4D;
  	g->geomflags |= val ? VERT_4D : 0;
 	break;
     case CR_APPEAR:		/* Assign or remove Appearance.  */

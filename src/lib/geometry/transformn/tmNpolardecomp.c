@@ -42,8 +42,8 @@
  */
 
 static Tm3Coord frob_norm(TransformN *A);
-static inline void axpbyNxN(HPtNCoord a, TransformN *x,
-			    HPtNCoord b, TransformN *y, TransformN *res);
+static inline void axpbytNxN(HPtNCoord a, TransformN *x,
+			     HPtNCoord b, TransformN *y, TransformN *res);
 
 #define EPS 1e-8
 
@@ -53,17 +53,17 @@ TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q)
   TransformN *a;
 
   Q = TmNCopy(A, Q);
-  limit = (1.0+EPS)*sqrt(3.0);
+  limit = (1.0+EPS)*sqrt((float)(A->odim-1));
   a = TmNInvert(Q, NULL);
   g = sqrt(frob_norm(a)/frob_norm(Q));
-  axpbyNxN(0.5*g, Q, 0.5/g, a, Q);
+  axpbytNxN(0.5*g, Q, 0.5/g, a, Q);
   f = frob_norm(Q);
   pf = 1e8;
   while (f > limit && f < pf) {
     pf = f;
     TmNInvert(Q, a);
     g = sqrt(frob_norm(a) / f);
-    axpbyNxN(0.5*g, Q, 0.5/g, a, Q);
+    axpbytNxN(0.5*g, Q, 0.5/g, a, Q);
     f = frob_norm(Q);
   }
   TmNDelete(a);
@@ -84,15 +84,15 @@ static HPtNCoord frob_norm(TransformN *A)
   return sqrt(res);
 }
 
-static inline void axpbyNxN(HPtNCoord a, TransformN *x,
+static inline void axpbytNxN(HPtNCoord a, TransformN *x,
 			    HPtNCoord b, TransformN *y, TransformN *res)
 {
   int i, j;
-  int idim = x->idim, odim = x->odim;
+  int dim = x->idim;
   
-  for (i = 0; i < idim-1; i++) {
-    for (j = 0; j < odim-1; j++) {
-      res->a[i*odim+j] = a * x->a[i*odim+j] + b * y->a[i*odim+j];
+  for (i = 0; i < dim-1; i++) {
+    for (j = 0; j < dim-1; j++) {
+      res->a[i*dim+j] = a * x->a[i*dim+j] + b * y->a[j*dim+i];
     }
   }
 }

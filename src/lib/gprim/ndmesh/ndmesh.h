@@ -47,8 +47,10 @@ extern NDMesh	*NDMeshFLoad( IOBFILE *, char * );
 extern NDMesh	*NDMeshLoad( char * );
 extern NDMesh	*NDMeshSave( NDMesh *, char * );
 extern NDMesh	*NDMeshFSave( NDMesh *, FILE * );
-extern BBox	*NDMeshBound(NDMesh *, Transform T, TransformN *TN, int *axes );
-extern Geom	*NDMeshBoundSphere( NDMesh *, Transform, int );
+extern BBox	*NDMeshBound(NDMesh *, Transform T, TransformN *TN);
+extern Geom     *NDMeshBoundSphere(NDMesh *mesh,
+				   Transform T, TransformN *TN, int *axes,
+				   int space);
 extern NDMesh	*NDMeshDice( NDMesh *, int (*proc)() );
 extern NDMesh	*NDMeshDraw( NDMesh * );
 extern NDMesh	*NDMeshPick( NDMesh *, Pick *, Appearance *, Transform );

@@ -130,4 +130,3 @@ va_list *a_list;
 			 (axis == NULL) ? TM_IDENTITY : *axis);
   return sphere;
 }
-

@@ -55,7 +55,7 @@ extern Inst *InstLoad( char * );
 extern Inst *InstFLoad( FILE *, char *name );
 extern Inst *InstSave( Inst *, char * );
 extern Inst *InstFSave( Inst *, FILE *, char * );
-extern BBox *InstBound( Inst *, Transform T, TransformN *TN, int *axes );
+extern BBox *InstBound( Inst *, Transform T, TransformN *TN);
 extern Geom *InstBoundSphere( Inst *,
 			      Transform T, TransformN *TN, int *axes, int );
 extern Inst *InstPosition( Inst *, Transform T );

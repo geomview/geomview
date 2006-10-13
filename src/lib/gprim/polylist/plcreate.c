@@ -81,11 +81,11 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
       pl = OOGLNewE(PolyList,"PolyListCreate polylist");
       GGeomInit(pl, classp, PLMAGIC, NULL);
       pl->flags = pl->n_polys = pl->n_verts = 0;
+      pl->pdim = 4;
       pl->p = (Poly *)NULL; pl->vl = (Vertex *)NULL;
    } else {
       pl = exist;
    }
-
 
    while ((attr = va_arg(*a_list, int))) 
      switch (attr) {

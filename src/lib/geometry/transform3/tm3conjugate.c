@@ -51,7 +51,12 @@ Tm3Conjugate( T, Tcon, Tres )
     Transform3 Tconinv;
 
     /* We actually use adjoint instead of inverse, because the det
-       factors would cancel out anyway */
+       factors would cancel out anyway
+
+       cH: the above is obviously not true, maybe this routine was
+       only used for conformal geometry; then it is true. Otherwise
+       not.
+    */
     Tm3Adjoint( Tcon, Tconinv );
     Tm3Concat( Tconinv, T, Tres );
     Tm3Concat( Tres, Tcon, Tres );

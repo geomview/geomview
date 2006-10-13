@@ -178,7 +178,7 @@ BezierListFLoad(IOBFILE *file, char *fname)
 	    ListAppend(bezierlist, geom);
 	else
 	    bezierlist = GeomCCreate(NULL, BezierListMethods(),
-					CR_GEOM, geom, CR_END);
+				     CR_GEOM, geom, CR_END);
     }
 
     if(!ok) {

@@ -124,6 +124,9 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 	    break;
 	case CR_DIM:
 	    bezier->dimn = va_arg (*a_list, int);
+	    if (bezier->dimn == bezier->pdim) {
+	      bezier->geomflags |= VERT_4D;
+	    }
 	    break;
 	case CR_NU:
 	    bezier->nu = va_arg (*a_list, int);

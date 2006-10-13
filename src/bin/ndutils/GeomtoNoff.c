@@ -100,13 +100,13 @@ static void *toNoffSkel(int sel, Geom *g, va_list *args)
 		else
 			for(j=0;j<((s->l)+i)->nv-1;j++)
 				numvertsperpoly[k++]=2;
-	vertlist=(float *)malloc((sizeof *vertlist)*(s->dim)*(s->nvert));
-	hptn=HPtNCreate(s->dim,NULL);
-	hptn->v=(float *)malloc((sizeof *(hptn->v))*s->dim);
+	vertlist=(float *)malloc((sizeof *vertlist)*(s->pdim)*(s->nvert));
+	hptn=HPtNCreate(s->pdim,NULL);
+	hptn->v=(float *)malloc((sizeof *(hptn->v))*s->pdim);
 	for(i=0;i<s->nvert;i++)
-	{	memcpy(hptn->v,(s->p + i*(s->dim)),(sizeof *(hptn->v))*s->dim);
+	{	memcpy(hptn->v,(s->p + i*(s->pdim)),(sizeof *(hptn->v))*s->pdim);
 		hptn=HPtNTransform(t,hptn,hptn);
-		memcpy(vertlist+(i*(s->dim)),hptn->v,(sizeof *vertlist)*(s->dim));
+		memcpy(vertlist+(i*(s->pdim)),hptn->v,(sizeof *vertlist)*(s->pdim));
 	}
 	indexlist=(int *)malloc((sizeof *indexlist)*2*npoly);
 	for(i=0,k=0;i<s->nlines;i++)
@@ -132,7 +132,7 @@ static void *toNoffSkel(int sel, Geom *g, va_list *args)
 		CR_NPOLY, npoly,
 		CR_NVERT, numvertsperpoly,
 		CR_VERT, indexlist,
-		CR_DIM, s->dim - 1,
+		CR_DIM, s->pdim - 1,
 		CR_POINT4, vertlist,
 		CR_POLYCOLOR, colorlist,
 		CR_APPEAR, g->ap,

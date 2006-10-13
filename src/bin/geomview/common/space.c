@@ -278,6 +278,7 @@ LDEFINE(ND_axes, LLIST,
     OOGLError(0, "ND-axes: unknown camera %s", camname);
     return Lnil;
   } else if(axes[0] < 0) {
+    /* return the current ND configuratino of cam */
     LList *l = NULL;
     if(dv->cluster) {
       l = LListAppend(NULL, LTOOBJ(LSTRING)(&dv->cluster->name));
@@ -286,10 +287,22 @@ LDEFINE(ND_axes, LLIST,
     }
     return LNew( LLIST, &l );
   } else {
+    /* possibly generate a new cluster, or add to an existing
+     * cluster. NOTE: we first reset the camera to its default state.
+     */
     NDcam *c = NDnewcluster(clustername);
-    NDdeletecluster(dv->cluster);
+
+    NDdeletecluster(dv->cluster); /* a no-op yet */
     dv->cluster = c;
     memcpy(dv->NDPerm, axes, 4*sizeof(int));
+
+    /* Reset and copy the default transformation to our "private" 3d
+     * transform.
+     */
+    CamReset(dv->cam);
+    CamGet(dv->cam, CAM_C2W, &dv->NDC2Wpriv);
+    CamGet(dv->cam, CAM_W2C, &dv->NDW2Cpriv);
+    CamSet(dv->cam, CAM_C2W, &TM_IDENTITY, CAM_END);
 
     dv->changed |= 1;
     return Lt;
@@ -364,11 +377,11 @@ LDEFINE(ND_xform, LTRANSFORMN,
         "(ND-xform OBJID [ntransform { idim odim ... }]\n\
 	Concatenate the given ND-transform with the current\n\
 	ND-transform of the object (apply the ND-transform to\n\
-	object ID, as opposed to simply setting its\n\
-	ND-transform; i.e. a reset will not undo this operation).")
+	object ID, as opposed to simply setting its ND-transform).")
 {
   int index;
   int id;
+  TransformN *T;
   TmNStruct *ts = NULL;
   DObject *obj;
   NDcam *cl = NULL;
@@ -381,18 +394,28 @@ LDEFINE(ND_xform, LTRANSFORMN,
   if((obj = drawer_get_object(id)) == NULL || drawerstate.NDim == 0)
     return Lnil;
 
-  MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-	  if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN)
-	continue;
-    if (ISGEOM(id)) {
-      GeomTransform(DGobj(obj)->Item, NULL, ts->tm);
-    } else if(ISCAM(obj->id) && (cl = ((DView *)obj)->cluster)) {
-      TmNConcat(ts->tm, cl->C2W, cl->C2W);
-    }
-    TmIdentity(obj->Incr);
-    obj->redraw = 1;
-    obj->moving = (obj->updateproc!=NULL);
+  if(ISGEOM(obj->id)) {
+    T = ((DGeom *)obj)->NDT;
+  } else if(ISCAM(obj->id) && (cl = ((DView *)obj)->cluster)) {
+    T = cl->C2W;
   }
+
+  if (!T) {
+    T = REFINCR(TransformN, ts->tm);
+  } else {
+    TmNConcat(ts->tm, T, T);
+  }
+
+  if(ISGEOM(obj->id)) {
+    ((DGeom *)obj)->NDT = T;
+    obj->changed |= 1;
+  } else if(cl != NULL) {
+    cl->C2W = T;
+    drawerstate.changed = 1;
+  }
+  TmIdentity(obj->Incr);
+  obj->redraw = 1;
+  obj->moving = (obj->updateproc != NULL);
   return Lt;
 }
 
@@ -400,8 +423,8 @@ LDEFINE(ND_xform_set, LTRANSFORMN,
 	"(ND-xform-set OBJID [ntransform { idim odim  ... }])\n\
 	Sets the N-D transform of the given object.\n\
 	In dimension N, this is an (N+1)x(N+1) matrix, so in that case\n\
-	idim and odim are expected to be both equal to (N+1).\n\
-	Note that all cameras in a camera-cluster have the same N-D transform.\n")
+	idim and odim are expected to be both equal to (N+1). Note that\n\
+	all cameras in a camera-cluster have the same N-D transform.\n")
 {
   int id;
   DObject *obj;

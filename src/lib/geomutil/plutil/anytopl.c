@@ -500,9 +500,9 @@ static void *skeltoPL(int sel, Skel *s, va_list *args) {
 
   if(PL->ap && (PL->ap->flag & APF_VECTDRAW) == 0)
     return NULL;
-  base = s->dim == 4
+  base = s->pdim == 4
 	? PLaddverts(PL, s->nvert, (HPoint3 *)s->p, NULL, NULL)
-	: PLaddNDverts(PL, s->nvert, s->dim, s->p, NULL);
+	: PLaddNDverts(PL, s->nvert, s->pdim, s->p, NULL);
 
   vvneeds(&PL->vtable, VVCOUNT(PL->vtable) + 2*s->nvi);
 

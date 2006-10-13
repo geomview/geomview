@@ -37,7 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 
 BBox *
-InstBound(Inst *inst, Transform T, TransformN *TN, int *axes)
+InstBound(Inst *inst, Transform T, TransformN *TN)
 {
     BBox *geombbox;
     Transform Tnew;
@@ -61,7 +61,7 @@ InstBound(Inst *inst, Transform T, TransformN *TN, int *axes)
 	BBox *box;
 
 	TmConcat( Tnew, T, Tnew );
-	if((box = (BBox *)GeomBound( inst->geom, Tnew, NULL, NULL )) != NULL) {
+	if((box = (BBox *)GeomBound( inst->geom, Tnew, TN)) != NULL) {
 	    if(geombbox) {
 		BBoxUnion3(geombbox, box, geombbox);
 		GeomDelete((Geom *)box);

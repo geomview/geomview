@@ -45,8 +45,8 @@ static BBox *BBoxTransformN(BBox *bbox, Transform dummy, TransformN *T)
     dim = bbox->pdim;
   } else {
     dim = bbox->pdim-1;
-    HPtNDehomogenize(bbox->minN, bbox->minN);
-    HPtNDehomogenize(bbox->maxN, bbox->maxN);
+    HPtNDehomogenize(bbox->min, bbox->min);
+    HPtNDehomogenize(bbox->max, bbox->max);
   }
   numvert = 1 << dim;
   ptN = (HPointN **)alloca(numvert*sizeof(HPointN *));
@@ -54,7 +54,7 @@ static BBox *BBoxTransformN(BBox *bbox, Transform dummy, TransformN *T)
   for (i = 0; i < numvert; i++) {
     ptN[i] = HPtNCreate(bbox->pdim, NULL);
     for (j = 0; j < dim; j++) {
-      ptN[i]->v[j] = (i & (1 << j)) ? bbox->minN->v[j] : bbox->maxN->v[j];
+      ptN[i]->v[j] = (i & (1 << j)) ? bbox->min->v[j] : bbox->max->v[j];
     }
     if (!(bbox->geomflags & VERT_4D)) {
       ptN[i]->v[dim] = 1.0;
@@ -66,8 +66,8 @@ static BBox *BBoxTransformN(BBox *bbox, Transform dummy, TransformN *T)
   if (!(bbox->geomflags & VERT_4D)) {
     HPtNDehomogenize(p, p);
   }
-  HPtNCopy(p, bbox->minN);
-  HPtNCopy(p, bbox->maxN);
+  HPtNCopy(p, bbox->min);
+  HPtNCopy(p, bbox->max);
   HPtNDelete(p);
 
   for (i = 1; i < numvert; i++) {
@@ -78,8 +78,8 @@ static BBox *BBoxTransformN(BBox *bbox, Transform dummy, TransformN *T)
     }
 
     for (j = 0; j < dim; j++) {
-      if (p->v[j] < bbox->minN->v[j]) bbox->minN->v[j] = p->v[j];
-      else if (p->v[j] > bbox->maxN->v[j]) bbox->maxN->v[j] = p->v[j];
+      if (p->v[j] < bbox->min->v[j]) bbox->min->v[j] = p->v[j];
+      else if (p->v[j] > bbox->max->v[j]) bbox->max->v[j] = p->v[j];
     }
 
     HPtNDelete(p);
@@ -101,10 +101,10 @@ BBox *BBoxTransform(BBox *bbox, Transform T, TransformN *TN)
     return bbox;
 
   for(i = 0, p = &vert[0]; i < 8; i++, p++) {
-    *p = bbox->min;
-    if(i&1) p->x = bbox->max.x;	/* Neat huh */
-    if(i&2) p->y = bbox->max.y;	/* Binary encoding of verts */
-    if(i&4) p->z = bbox->max.z;
+    *p = *(HPoint3 *)bbox->min->v;
+    if(i&1) p->x = bbox->max->v[0];	/* Neat huh */
+    if(i&2) p->y = bbox->max->v[1];	/* Binary encoding of verts */
+    if(i&4) p->z = bbox->max->v[2];
   }
 	
   p = &vert[0];
@@ -112,23 +112,29 @@ BBox *BBoxTransform(BBox *bbox, Transform T, TransformN *TN)
   if (!(bbox->geomflags & VERT_4D)) {
     HPt3Dehomogenize(p, p);
   }
-  bbox->min = *p;
-  bbox->max = bbox->min;
+  *(HPoint3 *)bbox->min->v = *p;
+  *(HPoint3 *)bbox->max->v = *p;
   i = 8-1;
   do {
     p++;
     HPt3Transform(T, p, p);
     HPt3Normalize(p, p);
-    if(bbox->min.x > p->x) bbox->min.x = p->x;
-    else if(bbox->max.x < p->x) bbox->max.x = p->x;
-    if(bbox->min.y > p->y) bbox->min.y = p->y;
-    else if(bbox->max.y < p->y) bbox->max.y = p->y;
-    if(bbox->min.z > p->z) bbox->min.z = p->z;
-    else if(bbox->max.z < p->z) bbox->max.z = p->z;
+    if(bbox->min->v[0] > p->x) bbox->min->v[0] = p->x;
+    else if(bbox->max->v[0] < p->x) bbox->max->v[0] = p->x;
+    if(bbox->min->v[1] > p->y) bbox->min->v[1] = p->y;
+    else if(bbox->max->v[1] < p->y) bbox->max->v[1] = p->y;
+    if(bbox->min->v[2] > p->z) bbox->min->v[2] = p->z;
+    else if(bbox->max->v[2] < p->z) bbox->max->v[2] = p->z;
     if (bbox->geomflags & VERT_4D) {
-      if(bbox->min.w > p->w) bbox->min.w = p->w;
-      else if(bbox->max.w < p->w) bbox->max.w = p->w;
+      if(bbox->min->v[3] > p->w) bbox->min->v[3] = p->w;
+      else if(bbox->max->v[3] < p->w) bbox->max->v[3] = p->w;
     }
   } while(--i > 0);
   return (bbox);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

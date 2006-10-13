@@ -56,7 +56,7 @@ extern Geom    *GeomFSave( Geom *obj, FILE *outf, char *fname );
 extern Geom    *GeomFSaveEmbedded( Geom *obj, Handle *handle, FILE *inf, char *fname );
 extern void	GeomReplace( Geom *parent, Geom *newchild );
 extern Geom    *GeomEvert( Geom *obj );
-extern Geom    *GeomBound( Geom *obj, Transform T, TransformN *TN, int *axes );
+extern Geom    *GeomBound( Geom *obj, Transform T, TransformN *TN);
 extern Geom    *GeomBoundSphere( Geom *obj,
 				 Transform T, TransformN *, int *axes,
 				 int space );

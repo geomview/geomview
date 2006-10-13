@@ -80,9 +80,16 @@ extern TransformN *TmNScale( TransformN *T, const HPointN *amount);
 	/* Construct a geodesic rotation taking vector 'from' to 'toward' */
 extern TransformN *TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward);
 
-	/* Modify nxn matrix to accomodate usual matrix from Geomview */
-/*skip*/
+/* Modify nxn matrix to accomodate usual matrix from Geomview T is
+ * multiplied from the right by delta, where delta acts trivially on
+ * the "missing" dimensions.
+ */
+
 extern TransformN *TmNApplyDN( TransformN *T, int *permute, Transform3 delta);
+
+/* Multiply "mat" from the left by "T3" */
+TransformN *
+TmNApplyT3TN(Transform3 T3,  int *perm, TransformN *mat);
 
 	/* Add ones and zeros to a matrix to make it larger, with special treatment
 	for the last row */
@@ -103,10 +110,6 @@ extern void TmNPrint(FILE *f, const TransformN *T);
 
 	/* Get a TransformN, given a file pointer */
 extern TransformN *TmNRead(IOBFILE *f);
-
-	/* scale all elements of "upper left" of matrix by a scalar */
-extern TransformN *CtmNScale( HPtNCoord s, TransformN *in, TransformN *out);
-
 
 	/* palar decompositon of upper NxN part */
 extern TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q);

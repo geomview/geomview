@@ -36,63 +36,69 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *
 BBoxFLoad(IOBFILE *f, char *fname)
 {
-    BBox b;
-    BBox *bbox;
-    char *token = GeomToken(f);
-    int dimn = 3, nd = 0, pdim = 4;
+  BBox b = { 0 };
+  BBox *bbox;
+  char *token = GeomToken(f);
+  int dimn = 3, nd = 0, pdim = 4;
 
-    if(*token == '4') {
-	dimn = 4;
-	token++;
+  b.geomflags = 0;
+
+  if(*token == '4') {
+    b.geomflags = VERT_4D;
+    dimn = 4;
+    token++;
+  }
+  if(*token == 'n') {
+    nd = 1;
+    token++;
+  }
+  if(strcmp(token, "BBOX"))
+    return NULL;
+
+  if(nd) {
+    if(iobfgetni(f, 1, &pdim, 0) <= 0) {
+      OOGLSyntax(f, "Reading nBBOX from \"%s\": Expected dimension", fname);
+      return NULL;
     }
-    if(*token == 'n') {
-	nd = 1;
-	token++;
-    }
-    if(strcmp(token, "BBOX"))
-	return NULL;
-
-    if(nd) {
-      if(iobfgetni(f, 1, &pdim, 0) <= 0) {
-	OOGLSyntax(f, "Reading nBBOX from \"%s\": Expected dimension", fname);
-	return NULL;
-      }
-
-      b.pdim += (dimn == 4) ? 0 : 1;
-
-      b.minN = HPtNCreate(pdim, NULL);
-      b.maxN = HPtNCreate(pdim, NULL);
-
-      if(iobfgetnf(f, pdim, b.minN->v, 0) != pdim ||
-	 iobfgetnf(f, pdim, b.maxN->v, 0) != pdim) {
-	OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
-		   fname, pdim * 2);
-	HPtNDelete(b.minN);
-	HPtNDelete(b.maxN);
-	return NULL;
-      }
-      if (dimn == 3) {
-	b.minN->v[pdim] = 1.0;
-	b.maxN->v[pdim] = 1.0;
-      }
-
+    if (dimn == 4) {
+      dimn = pdim;
     } else {
-
-      b.min.w = b.max.w = 1.0;
-      if(iobfgetnf(f, dimn, &b.min.x, 0) != dimn ||
-	 iobfgetnf(f, dimn, &b.max.x, 0) != dimn) {
-	OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
-		   fname, dimn * 2);
-	return NULL;
-      }
+      dimn = pdim++;
     }
+    b.geomflags = VERT_ND;
+  }
 
-    bbox = OOGLNewE(BBox, "BBoxFLoad BBox");
-    *bbox = b;
+  b.pdim = pdim;
 
-    GGeomInit(bbox, BBoxMethods(), BBOXMAGIC, NULL);
+  b.min = HPtNCreate(pdim, NULL);
+  b.max = HPtNCreate(pdim, NULL);
 
-    if (dimn == 4) bbox->geomflags |= VERT_4D;
+  if(iobfgetnf(f, dimn, b.min->v, 0) != dimn ||
+     iobfgetnf(f, dimn, b.max->v, 0) != dimn) {
+    OOGLSyntax(f, "Reading BBOX from \"%s\": expected %d floats", 
+	       fname, dimn * 2);
+    HPtNDelete(b.min);
+    HPtNDelete(b.max);
+    return NULL;
+  }
 
-    return bbox;
+  bbox = OOGLNewE(BBox, "BBoxFLoad BBox");
+  *bbox = b;
+
+  GGeomInit(bbox, BBoxMethods(), BBOXMAGIC, NULL);
+
+  if (pdim == dimn + 1) {
+    bbox->min->v[dimn] = 1.0;
+    bbox->max->v[dimn] = 1.0;
+  }
+
+  bbox->geomflags |= b.geomflags;
+
+  return bbox;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

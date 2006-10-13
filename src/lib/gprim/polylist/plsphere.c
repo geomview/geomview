@@ -39,25 +39,108 @@ Geom *PolyListSphere(PolyList *p,
 {
   int i;
   Sphere *sphere;
-  HPoint3 spanPts[6];
 
   if (p == NULL || p->n_verts == 0 || p->n_polys == 0) return NULL;
 
-  if(p->geomflags & VERT_4D)
-    return GeomBoundSphereFromBBox((Geom *)p, T, NULL, NULL, space);
-
+  /* Create a dummy sphere, the center will be corrected later */
   sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &p->vl[0].pt,
 				CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
 				CR_END);
-  /* For convenience (if not efficiency) assume all the vertices are 
-   * used */
-  for (i = 0; i < 6; i++) spanPts[i] = p->vl[0].pt;
-  for (i = 0; i < p->n_verts; i++) MaxDimensionalSpan(spanPts, &p->vl[i].pt);
-  HPt3TransformN(T, spanPts, spanPts, 6);
-  SphereEncompassBounds(sphere, spanPts);
-  for (i = 0; i < p->n_verts; i++) 
-    SphereAddHPt3(sphere, &p->vl[i].pt, T);
-  
+
+  if (TN) {
+    HPointN *tmp = HPtNCreate(5, NULL);
+    HPointN *spanPts[2*4];
+    HPoint3 spanPts3[2*4];
+
+    if(p->geomflags & VERT_4D) {
+      for (i = 0; i < 2*4; i++) {
+	spanPts[i] = HPtNCreate(5, NULL);
+	*(HPoint3 *)spanPts[i]->v = p->vl[0].pt;
+      }
+      for (i = 0; i < p->n_verts; i++) {
+	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	MaxDimensionalSpanHPtN(spanPts, tmp);
+      }
+      for (i = 0; i < 2*4; i++) {
+	HPtNTransformComponents(spanPts[i], TN, 4, axes,
+				(HPt3Coord *)&spanPts3[i]);
+	HPtNDelete(spanPts[i]);
+      }
+      SphereEncompassBoundsN(sphere, spanPts3, 4);
+      for (i = 0; i < p->n_verts; i++) {
+	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	SphereAddHPtN(sphere, tmp, NULL, TN, axes);
+      }
+    } else {
+      for (i = 0; i < 2*4; i++) {
+	spanPts[i] = HPtNCreate(5, NULL);
+	*(HPoint3 *)spanPts[i]->v = p->vl[0].pt;
+	HPt3Dehomogenize((HPoint3 *)spanPts[i]->v, (HPoint3 *)spanPts[i]->v);
+      }
+      for (i = 0; i < p->n_verts; i++) {
+	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	HPt3Dehomogenize((HPoint3 *)tmp->v, (HPoint3 *)tmp->v);
+	MaxDimensionalSpanHPtN(spanPts, tmp);
+      }
+      for (i = 0; i < 2*4; i++) {
+	HPtNTransformComponents(spanPts[i], TN, 4, axes,
+				(HPt3Coord *)&spanPts3[i]);
+	HPt3Dehomogenize(&spanPts3[i], &spanPts3[i]);
+	HPtNDelete(spanPts[i]);
+      }
+      SphereEncompassBoundsN(sphere, spanPts3, 4);
+      for (i = 0; i < p->n_verts; i++) {
+	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	SphereAddHPtN(sphere, tmp, NULL, TN, axes);
+      }
+    }
+    HPtNDelete(tmp);
+  } else {
+    HPoint3 spanPts[6];
+    
+    if(p->geomflags & VERT_4D) {
+      /* 4d, but no 4d transform, act on x,y,z sub-space */
+      HPoint3 tmp;
+
+      tmp   = p->vl[0].pt;
+      tmp.w = 1.0;
+      sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &tmp,
+				    CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
+				    CR_END);
+      /* For convenience (if not efficiency) assume all the vertices
+       * are used */
+      for (i = 0; i < 6; i++) {
+	spanPts[i] = p->vl[0].pt;
+	spanPts[i].w = 1.0;
+      }
+      for (i = 0; i < p->n_verts; i++) {
+	tmp = p->vl[i].pt;
+	tmp.w = 1.0;
+	MaxDimensionalSpan(spanPts, &tmp);
+      }
+      HPt3TransformN(T, spanPts, spanPts, 6);
+      SphereEncompassBounds(sphere, spanPts);
+      for (i = 0; i < p->n_verts; i++) {
+	tmp = p->vl[i].pt;
+	tmp.w = 1.0;
+	SphereAddHPt3(sphere, &tmp, T);
+      }
+    } else {
+      
+      sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &p->vl[0].pt,
+				    CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
+				    CR_END);
+      /* For convenience (if not efficiency) assume all the vertices
+       * are used */
+      for (i = 0; i < 6; i++) spanPts[i] = p->vl[0].pt;
+      for (i = 0; i < p->n_verts; i++)
+	MaxDimensionalSpan(spanPts, &p->vl[i].pt);
+      HPt3TransformN(T, spanPts, spanPts, 6);
+      SphereEncompassBounds(sphere, spanPts);
+      for (i = 0; i < p->n_verts; i++) 
+	SphereAddHPt3(sphere, &p->vl[i].pt, T);
+    }
+  }
   return (Geom *)sphere;
 }
 						 

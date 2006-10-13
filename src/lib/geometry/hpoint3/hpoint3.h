@@ -80,6 +80,7 @@ extern HPt3Coord HPt3TransPt3( Transform3 T, HPoint3 *from, Point3 *into );
 extern void Pt3ToPt4( Point3 *src, HPoint3 *dst, int npoints );
 extern void HPt3ToPt3( HPoint3 *src, Point3 *dst );
 extern void HPt3Dehomogenize( HPoint3 *src, HPoint3 *dst );
+extern void Pt4ToHPt3(HPoint3 *pt4, HPoint3 *hp3, int *axes);
 
 extern void HPt3Dual( HPoint3 *pt, HPlane3 *pl );
 
@@ -105,4 +106,8 @@ extern void HPt3SpaceGramSchmidt(HPoint3 *base, HPoint3 *v, int space);
 extern void HPt3SubPt3(HPoint3 *p1, HPoint3 *p2, Point3 *v);
 extern void HPt3SphGramSchmidt(HPoint3 *base, HPoint3 *v);
 extern void HPt3HypGramSchmidt(HPoint3 *base, HPoint3 *v);
+
+extern void HPt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other);
+extern void Pt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other);
+
 #endif

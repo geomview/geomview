@@ -268,3 +268,4 @@ NormalTransformN( Transform3 T, Point3 *a, Point3 *b, int n )
   while ( n-- )
     NormalTransform( T, a++, b++ );
 }
+

@@ -100,10 +100,21 @@ int name(int action, float x, float y, float t, float dx, float dy, float dt) \
 
 static void maybe_scale(int id, float s)
 {
-  /* only allow mouse scaling in Euclidean space */
-  if (spaceof(id) == TM_EUCLIDEAN)
-    gv_transform(id, CENTERID, FOCUSID, SCALE_KEYWORD, s, s, s, 0, NO_KEYWORD);
-  return;
+  /* If ND-viewing is active, then a scaling motion is very confusing
+     because it only applies to one 3d sub-space. Instead, I change
+     the behaviour of the "scale" button to directly change the
+     ND-transform of "id". FIXME. We should handle this case as motion,
+     but that would require quite some hacks. cH.
+   */
+  if (drawerstate.NDim > 0) {
+    gv_scale(id, s, s, s);
+  } else {
+    /* only allow mouse scaling in Euclidean space */
+    if (spaceof(id) == TM_EUCLIDEAN)
+      gv_transform(id, CENTERID, FOCUSID,
+		   SCALE_KEYWORD, s, s, s, 0, NO_KEYWORD);
+    return;
+  }
 }
 
 static float scaleexp(float dx, float dy)

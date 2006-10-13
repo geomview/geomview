@@ -47,91 +47,109 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 {
-    HPointN *tmp;
-    BBox *bbox;
-    int attr, copy = 1;
+  HPointN *tmp;
+  BBox *bbox;
+  int attr, copy = 1;
 
-    if (exist == NULL) {
-	bbox = OOGLNewE(BBox, "BBoxCreate BBox");
-	bbox->flag = BBOX_P;
-	bbox->minN = bbox->maxN = NULL;
-	bbox->pdim = 3;
-        GGeomInit (bbox, classp, BBOXMAGIC, NULL);
-    } else {
-	/* Check that exist is in fact a BBox. */
-	bbox = exist;
-    }
+  if (exist == NULL) {
+    bbox = OOGLNewE(BBox, "BBoxCreate BBox");
+    bbox->min = HPtNCreate(4, NULL);
+    bbox->max = HPtNCreate(4, NULL);
+    bbox->pdim = 4;
+    GGeomInit (bbox, classp, BBOXMAGIC, NULL);
+  } else {
+    /* FIXME: Check that exist is in fact a BBox. */
+    bbox = exist;
+  }
 
-    while ((attr = va_arg (*a_list, int)))
-	switch (attr) {
-	case CR_FLAG:
-	    bbox->flag = va_arg (*a_list, int );
-	    break;
-	case CR_MIN:
-	    Pt3ToPt4(va_arg(*a_list, Point3 *), &bbox->min, 1);
-	    bbox->pdim = 3;
-	    break;
-	case CR_MAX:
-	    Pt3ToPt4(va_arg(*a_list, Point3 *), &bbox->max, 1);
-	    bbox->pdim = 3;
-	    break;
-	case CR_4MIN:
-	    bbox->min = *va_arg(*a_list, HPoint3 *);
-	    bbox->geomflags |= VERT_4D;
-	    bbox->pdim = 4;
-	    break;
-	case CR_4MAX:
-	    bbox->max = *va_arg(*a_list, HPoint3 *);
-	    bbox->geomflags |= VERT_4D;
-	    bbox->pdim = 4;
-	    break;
-	case CR_NMIN:
-	    tmp = va_arg(*a_list, HPointN *);
-	    if (tmp != bbox->minN) { /* could happen, BBoxUnion3() ... */
-		HPtNDelete(bbox->minN);
-		bbox->minN = HPtNCreate(tmp->dim, tmp->v);
-	    }	    
-	    bbox->geomflags |= VERT_ND;
-	    bbox->pdim  = bbox->minN->dim;
-	    break;
-	case CR_NMAX:
-	    tmp = va_arg(*a_list, HPointN *);
-	    if (tmp != bbox->maxN) { /* could happen, BBoxUnion3() ... */
-		HPtNDelete(bbox->maxN);
-		bbox->maxN = HPtNCreate(tmp->dim, tmp->v);
-	    }	    
-	    bbox->geomflags |= VERT_ND;
-	    bbox->pdim  = bbox->maxN->dim;
-	    break;
-	default:
-	    if (GeomDecorate (bbox, &copy, attr, a_list)) {
-		OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
-		HPtNDelete(bbox->minN);
-		HPtNDelete(bbox->maxN);
-		OOGLFree (bbox);
-		return NULL;
-	    }
-    }
-
-    if (bbox->minN && bbox->maxN && bbox->minN->dim != bbox->maxN->dim) {
-	OOGLError (0, "BBoxCreate: dimensions do of minN/maxN "
-		   "vectors do not match: %d/%d",
-		   bbox->minN->dim, bbox->maxN->dim);
-	HPtNDelete(bbox->minN);
-	HPtNDelete(bbox->maxN);
+  while ((attr = va_arg (*a_list, int)))
+    switch (attr) {
+    case CR_FLAG:
+	  
+      break;
+    case CR_MIN:
+      Pt3ToPt4(va_arg(*a_list, Point3 *), (HPoint3 *)bbox->min->v, 1);
+      if (bbox->pdim > 4) {
+	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
+	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
+	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      }
+      break;
+    case CR_MAX:
+      Pt3ToPt4(va_arg(*a_list, Point3 *), (HPoint3 *)bbox->max->v, 1);
+      if (bbox->pdim > 4) {
+	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
+	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
+	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      }
+      break;
+    case CR_4MIN:
+      *(HPoint3 *)bbox->min->v = *va_arg(*a_list, HPoint3 *);
+      bbox->geomflags |= VERT_4D;
+      if (bbox->pdim > 4) {
+	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
+	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
+	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      }
+      break;
+    case CR_4MAX:
+      *(HPoint3 *)bbox->max->v = *va_arg(*a_list, HPoint3 *);
+      bbox->geomflags |= VERT_4D;
+      if (bbox->pdim > 4) {
+	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
+	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
+	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      }
+      break;
+    case CR_NMIN:
+      tmp = va_arg(*a_list, HPointN *);
+      if (tmp != bbox->min) { /* == could happen, BBoxUnion3() ... */
+	HPtNCopy(tmp, bbox->min);
+	if (bbox->pdim != tmp->dim) {
+	  bbox->max->v =
+	    OOGLRenewNE(HPtNCoord, bbox->max->v, tmp->dim, "renew HPointN");
+	  bbox->max->dim = bbox->pdim = tmp->dim;
+	}
+      }
+      bbox->geomflags |= VERT_ND;
+      break;
+    case CR_NMAX:
+      tmp = va_arg(*a_list, HPointN *);
+      if (tmp != bbox->max) { /* == could happen, BBoxUnion3() ... */
+	HPtNCopy(tmp, bbox->max);
+	if (bbox->pdim != tmp->dim) {
+	  bbox->min->v =
+	    OOGLRenewNE(HPtNCoord, bbox->min->v, tmp->dim, "renew HPointN");
+	  bbox->min->dim = bbox->pdim = tmp->dim;
+	}
+      }
+      bbox->geomflags |= VERT_ND;
+      break;
+    default:
+      if (GeomDecorate (bbox, &copy, attr, a_list)) {
+	OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
+	HPtNDelete(bbox->min);
+	HPtNDelete(bbox->max);
 	OOGLFree (bbox);
 	return NULL;
+      }
     }
 
-    if (exist != NULL) return exist;
+  if (exist != NULL) return exist;
     
-    return (bbox);
+  return (bbox);
 }
 
 void BBoxDelete(BBox *bbox)
 {
-    if (bbox) {
-	HPtNDelete(bbox->minN);
-	HPtNDelete(bbox->maxN);
-    }
+  if (bbox) {
+    HPtNDelete(bbox->min);
+    HPtNDelete(bbox->max);
+  }
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

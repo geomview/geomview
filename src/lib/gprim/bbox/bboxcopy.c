@@ -35,22 +35,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxCopy(BBox *source_bbox)
 {
-	BBox           *dest_bbox;
+  BBox           *dest_bbox;
 
-	if(source_bbox == NULL) return NULL;
+  if(source_bbox == NULL) return NULL;
 
-	if ( (dest_bbox = GeomNew(BBox))== NULL) {
-           GeomError(0, "Can't allocate space for BBox");
-           return NULL;
-        }
-	*dest_bbox = *source_bbox;
-	if (source_bbox->minN != NULL) {
-		dest_bbox->minN = HPtNCreate(dest_bbox->minN->dim,
-					     dest_bbox->minN->v);
-	}
-	if (source_bbox->maxN != NULL) {
-		dest_bbox->maxN = HPtNCreate(dest_bbox->maxN->dim,
-					     dest_bbox->maxN->v);
-	}
-	return (dest_bbox);
+  if ( (dest_bbox = GeomNew(BBox))== NULL) {
+    GeomError(0, "Can't allocate space for BBox");
+    return NULL;
+  }
+  *dest_bbox = *source_bbox;
+  dest_bbox->min = HPtNCopy(dest_bbox->min, NULL);
+  dest_bbox->max = HPtNCopy(dest_bbox->max, NULL);
+
+  return (dest_bbox);
 }

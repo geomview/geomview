@@ -12,7 +12,7 @@ module_DATA = .geomview-gvclock
 
 all-local: $(top_builddir)/modules/.geomview-gvclock
 
-$(top_builddir)/modules/.geomview-gvclock: Makefile
+$(top_builddir)/modules/.geomview-gvclock: Makefile gvclock
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
 	echo '(emodule-define "Clock" "$(subdir)/gvclock")' > $@
 	chmod +x gvclock

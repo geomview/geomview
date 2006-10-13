@@ -506,8 +506,8 @@ int wafsa_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *wafsatext;
-#line 1 "../../../../../src/lib/oogl/wa/fsaparse.l"
-#line 2 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 1 "./fsaparse.l"
+#line 2 "./fsaparse.l"
 
 /*
  * fsaparse.l (wa.lex.c)
@@ -685,7 +685,7 @@ YY_DECL
 	register char *wafsa_cp, *wafsa_bp;
 	register int wafsa_act;
     
-#line 33 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 33 "./fsaparse.l"
 
 
 #line 692 "wa.lex.c"
@@ -774,132 +774,132 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 35 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 35 "./fsaparse.l"
 ;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 37 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 37 "./fsaparse.l"
 { return(FORMAT);	}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 38 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 38 "./fsaparse.l"
 { return(FORMAT);	}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 39 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 39 "./fsaparse.l"
 { return(FSA);		}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 40 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 40 "./fsaparse.l"
 { return(STATES);	}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 41 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 41 "./fsaparse.l"
 { return(SYMBOLS);	}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 42 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 42 "./fsaparse.l"
 { return(BFS);		}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 43 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 43 "./fsaparse.l"
 { return(MIN);		}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 44 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 44 "./fsaparse.l"
 { return(VARIABLES);	}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 45 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 45 "./fsaparse.l"
 { return(ALPHABET);	}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 46 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 46 "./fsaparse.l"
 { return(START);	}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 47 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 47 "./fsaparse.l"
 { return(ATABLE);	}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 48 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 48 "./fsaparse.l"
 { return(INVERSES);	}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 49 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 49 "./fsaparse.l"
 { return(INV);		}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 51 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 51 "./fsaparse.l"
 { return(LEFT_BRACE);	}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 52 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 52 "./fsaparse.l"
 { return(RIGHT_BRACE);	}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 53 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 53 "./fsaparse.l"
 { return(LEFT_PAREN);	}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 54 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 54 "./fsaparse.l"
 { return(RIGHT_PAREN);	}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 55 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 55 "./fsaparse.l"
 { return(SEMICOLON);	}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 56 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 56 "./fsaparse.l"
 { return(PERCENT);	}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 57 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 57 "./fsaparse.l"
 { return(EQUAL);	}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 59 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 59 "./fsaparse.l"
 { wafsalval.i = atoi(wafsatext); return(INT);  }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 60 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 60 "./fsaparse.l"
 { wafsalval.d = atof(wafsatext); return(REAL); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 61 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 61 "./fsaparse.l"
 { wafsalval.d = atof(wafsatext); return(REAL); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 63 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 63 "./fsaparse.l"
 { strcpy(wafsalval.s, wafsatext); return(STRING); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 65 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 65 "./fsaparse.l"
 ECHO;
 	YY_BREAK
 #line 906 "wa.lex.c"
@@ -1650,10 +1650,10 @@ YY_BUFFER_STATE wafsa_scan_buffer  (char * base, wafsa_size_t  size )
  * @note If you want to scan bytes that may contain NUL values, then use
  *       wafsa_scan_bytes() instead.
  */
-YY_BUFFER_STATE wafsa_scan_string (wafsaconst char * __wafsastr )
+YY_BUFFER_STATE wafsa_scan_string (wafsaconst char * wafsastr )
 {
     
-	return wafsa_scan_bytes(__wafsastr,strlen(__wafsastr) );
+	return wafsa_scan_bytes(wafsastr,strlen(wafsastr) );
 }
 
 /** Setup the input buffer state to scan the given bytes. The next call to wafsalex() will
@@ -1898,7 +1898,7 @@ void wafsafree (void * ptr )
 
 #define YYTABLES_NAME "wafsatables"
 
-#line 65 "../../../../../src/lib/oogl/wa/fsaparse.l"
+#line 65 "./fsaparse.l"
 
 
 

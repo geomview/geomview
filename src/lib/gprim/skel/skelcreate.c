@@ -46,12 +46,12 @@ SkelCopy(Skel *os)
 	s = OOGLNewE(Skel, "new SKEL");
 
 	*s = *os;
-	s->p = OOGLNewNE(float, os->nvert * os->dim, "Skel vertices");
+	s->p = OOGLNewNE(float, os->nvert * os->pdim, "Skel vertices");
 	s->c = os->nc > 0 ? OOGLNewNE(ColorA, os->nc, "Skel colors") : NULL;
 	s->l = OOGLNewNE(Skline, os->nlines, "Skel lines");
 	s->vi = OOGLNewNE(int, os->nvi, "Skel nverts");
 
-	memcpy(s->p, os->p, os->nvert * os->dim * sizeof(float));
+	memcpy(s->p, os->p, os->nvert * os->pdim * sizeof(float));
 	memcpy(s->l, os->l, os->nlines * sizeof(Skline));
 	if(os->nc > 0) memcpy(s->c, os->c, os->nc * sizeof(ColorA));
 	memcpy(s->vi, os->vi, os->nvi * sizeof(int));

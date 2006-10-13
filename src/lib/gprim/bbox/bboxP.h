@@ -27,6 +27,7 @@
 
 #include "geomclass.h"
 #include "bbox.h"
+#include "hpointn.h"
 
 /*
  * The vert[] array lists vertices, indexed by binary order of initial axes,
@@ -40,16 +41,12 @@
  * Note this property isn't necessarily preserved if the bbox is transformed.
  */
 
-#define BBOX_P VERT_P
-/* we allow BBOX_4D's.  This would be drawn as a hypercube, having
-   16 vertices */
-#define BBOX_4D VERT_4D
-
+/* We always use projective coordinates, i.e. min and max are vectors
+ * of length pdim
+ */
 struct BBox {
-	GEOMFIELDS;
-	int     flag;
-	HPoint3	min, max;
-	HPointN *minN, *maxN;
+  GEOMFIELDS;
+  HPointN *min, *max;
 };
 
 #define BBOX_ND_HACK	BBox_ND_hack

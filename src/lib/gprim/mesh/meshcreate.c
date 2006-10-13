@@ -69,6 +69,8 @@ va_list *a_list;
 
     npts = mesh->nu * mesh->nv;
 
+    mesh->pdim = 4; /* hard-wired */
+
     while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
 	    mesh->flag = va_arg (*a_list, int);

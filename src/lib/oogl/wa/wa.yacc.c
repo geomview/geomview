@@ -1,7 +1,9 @@
-/* A Bison parser, made by GNU Bison 2.1.  */
+/* A Bison parser, made by GNU Bison 2.2.  */
 
-/* Skeleton parser for Yacc-like parsing with Bison,
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+/* Skeleton implementation for Bison's Yacc-like parsers in C
+
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,13 +20,21 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.  */
 
-/* As a special exception, when this file is copied by Bison into a
-   Bison output file, you may use that output file without restriction.
-   This special exception was added by the Free Software Foundation
-   in version 1.24 of Bison.  */
+/* As a special exception, you may create a larger work that contains
+   part or all of the Bison parser skeleton and distribute that work
+   under terms of your choice, so long as that work isn't itself a
+   parser generator using the skeleton or a modified version thereof
+   as a parser skeleton.  Alternatively, if you modify or redistribute
+   the parser skeleton itself, you may (at your option) remove this
+   special exception, which will cause the skeleton and the resulting
+   Bison output files to be licensed under the GNU General Public
+   License without this special exception.
 
-/* Written by Richard Stallman by simplifying the original so called
-   ``semantic'' parser.  */
+   This special exception was added by the Free Software Foundation in
+   version 2.2 of Bison.  */
+
+/* C LALR(1) parser skeleton written by Richard Stallman, by
+   simplifying the original so-called "semantic" parser.  */
 
 /* All symbols defined below should begin with wafsa or YY, to avoid
    infringing on user name space.  This should be done even for local
@@ -37,7 +47,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.1"
+#define YYBISON_VERSION "2.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -108,7 +118,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 16 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 16 "./fsaparse.y"
 
 
 #include <stdio.h>
@@ -154,7 +164,7 @@ static wa *fsa;
 # define YYTOKEN_TABLE 0
 #endif
 
-#if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
+#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef int YYSTYPE;
 # define wafsastype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -166,22 +176,55 @@ typedef int YYSTYPE;
 /* Copy the second part of user declarations.  */
 
 
-/* Line 219 of yacc.c.  */
-#line 171 "y.tab.c"
+/* Line 216 of yacc.c.  */
+#line 181 "y.tab.c"
 
-#if ! defined (YYSIZE_T) && defined (__SIZE_TYPE__)
-# define YYSIZE_T __SIZE_TYPE__
+#ifdef short
+# undef short
 #endif
-#if ! defined (YYSIZE_T) && defined (size_t)
-# define YYSIZE_T size_t
+
+#ifdef YYTYPE_UINT8
+typedef YYTYPE_UINT8 wafsatype_uint8;
+#else
+typedef unsigned char wafsatype_uint8;
 #endif
-#if ! defined (YYSIZE_T) && (defined (__STDC__) || defined (__cplusplus))
-# include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-# define YYSIZE_T size_t
+
+#ifdef YYTYPE_INT8
+typedef YYTYPE_INT8 wafsatype_int8;
+#elif (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+typedef signed char wafsatype_int8;
+#else
+typedef short int wafsatype_int8;
 #endif
-#if ! defined (YYSIZE_T)
-# define YYSIZE_T unsigned int
+
+#ifdef YYTYPE_UINT16
+typedef YYTYPE_UINT16 wafsatype_uint16;
+#else
+typedef unsigned short int wafsatype_uint16;
 #endif
+
+#ifdef YYTYPE_INT16
+typedef YYTYPE_INT16 wafsatype_int16;
+#else
+typedef short int wafsatype_int16;
+#endif
+
+#ifndef YYSIZE_T
+# ifdef __SIZE_TYPE__
+#  define YYSIZE_T __SIZE_TYPE__
+# elif defined size_t
+#  define YYSIZE_T size_t
+# elif ! defined YYSIZE_T && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+#  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
+#  define YYSIZE_T size_t
+# else
+#  define YYSIZE_T unsigned int
+# endif
+#endif
+
+#define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
 
 #ifndef YY_
 # if YYENABLE_NLS
@@ -195,7 +238,32 @@ typedef int YYSTYPE;
 # endif
 #endif
 
-#if ! defined (wafsaoverflow) || YYERROR_VERBOSE
+/* Suppress unused-variable warnings by "using" E.  */
+#if ! defined lint || defined __GNUC__
+# define YYUSE(e) ((void) (e))
+#else
+# define YYUSE(e) /* empty */
+#endif
+
+/* Identity function, used to suppress warnings about constant conditions.  */
+#ifndef lint
+# define YYID(n) (n)
+#else
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static int
+YYID (int i)
+#else
+static int
+YYID (i)
+    int i;
+#endif
+{
+  return i;
+}
+#endif
+
+#if ! defined wafsaoverflow || YYERROR_VERBOSE
 
 /* The parser invokes alloca or malloc; define the necessary symbols.  */
 
@@ -203,64 +271,76 @@ typedef int YYSTYPE;
 #  if YYSTACK_USE_ALLOCA
 #   ifdef __GNUC__
 #    define YYSTACK_ALLOC __builtin_alloca
+#   elif defined __BUILTIN_VA_ARG_INCR
+#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
+#   elif defined _AIX
+#    define YYSTACK_ALLOC __alloca
+#   elif defined _MSC_VER
+#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
+#    define alloca _alloca
 #   else
 #    define YYSTACK_ALLOC alloca
-#    if defined (__STDC__) || defined (__cplusplus)
+#    if ! defined _ALLOCA_H && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 #     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-#     define YYINCLUDED_STDLIB_H
+#     ifndef _STDLIB_H
+#      define _STDLIB_H 1
+#     endif
 #    endif
 #   endif
 #  endif
 # endif
 
 # ifdef YYSTACK_ALLOC
-   /* Pacify GCC's `empty if-body' warning. */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
+   /* Pacify GCC's `empty if-body' warning.  */
+#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (YYID (0))
 #  ifndef YYSTACK_ALLOC_MAXIMUM
     /* The OS might guarantee only one guard page at the bottom of the stack,
        and a page size can be as small as 4096 bytes.  So we cannot safely
        invoke alloca (N) if N exceeds 4096.  Use a slightly smaller number
        to allow for a few compiler-allocated temporary stack slots.  */
-#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2005 */
+#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
 #  endif
 # else
 #  define YYSTACK_ALLOC YYMALLOC
 #  define YYSTACK_FREE YYFREE
 #  ifndef YYSTACK_ALLOC_MAXIMUM
-#   define YYSTACK_ALLOC_MAXIMUM ((YYSIZE_T) -1)
+#   define YYSTACK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
 #  endif
-#  ifdef __cplusplus
-extern "C" {
+#  if (defined __cplusplus && ! defined _STDLIB_H \
+       && ! ((defined YYMALLOC || defined malloc) \
+	     && (defined YYFREE || defined free)))
+#   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
+#   ifndef _STDLIB_H
+#    define _STDLIB_H 1
+#   endif
 #  endif
 #  ifndef YYMALLOC
 #   define YYMALLOC malloc
-#   if (! defined (malloc) && ! defined (YYINCLUDED_STDLIB_H) \
-	&& (defined (__STDC__) || defined (__cplusplus)))
+#   if ! defined malloc && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
 #  ifndef YYFREE
 #   define YYFREE free
-#   if (! defined (free) && ! defined (YYINCLUDED_STDLIB_H) \
-	&& (defined (__STDC__) || defined (__cplusplus)))
+#   if ! defined free && ! defined _STDLIB_H && (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 void free (void *); /* INFRINGES ON USER NAME SPACE */
 #   endif
 #  endif
-#  ifdef __cplusplus
-}
-#  endif
 # endif
-#endif /* ! defined (wafsaoverflow) || YYERROR_VERBOSE */
+#endif /* ! defined wafsaoverflow || YYERROR_VERBOSE */
 
 
-#if (! defined (wafsaoverflow) \
-     && (! defined (__cplusplus) \
-	 || (defined (YYSTYPE_IS_TRIVIAL) && YYSTYPE_IS_TRIVIAL)))
+#if (! defined wafsaoverflow \
+     && (! defined __cplusplus \
+	 || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
 
 /* A type that is properly aligned for any stack member.  */
 union wafsaalloc
 {
-  short int wafsass;
+  wafsatype_int16 wafsass;
   YYSTYPE wafsavs;
   };
 
@@ -270,13 +350,13 @@ union wafsaalloc
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (short int) + sizeof (YYSTYPE))			\
+     ((N) * (sizeof (wafsatype_int16) + sizeof (YYSTYPE)) \
       + YYSTACK_GAP_MAXIMUM)
 
 /* Copy COUNT objects from FROM to TO.  The source and destination do
    not overlap.  */
 # ifndef YYCOPY
-#  if defined (__GNUC__) && 1 < __GNUC__
+#  if defined __GNUC__ && 1 < __GNUC__
 #   define YYCOPY(To, From, Count) \
       __builtin_memcpy (To, From, (Count) * sizeof (*(From)))
 #  else
@@ -287,7 +367,7 @@ union wafsaalloc
 	  for (wafsai = 0; wafsai < (Count); wafsai++)	\
 	    (To)[wafsai] = (From)[wafsai];		\
 	}					\
-      while (0)
+      while (YYID (0))
 #  endif
 # endif
 
@@ -305,28 +385,22 @@ union wafsaalloc
 	wafsanewbytes = wafsastacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
 	wafsaptr += wafsanewbytes / sizeof (*wafsaptr);				\
       }									\
-    while (0)
+    while (YYID (0))
 
 #endif
 
-#if defined (__STDC__) || defined (__cplusplus)
-   typedef signed char wafsasigned_char;
-#else
-   typedef short int wafsasigned_char;
-#endif
-
-/* YYFINAL -- State number of the termination state. */
+/* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  4
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   44
 
-/* YYNTOKENS -- Number of terminals. */
+/* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  25
-/* YYNNTS -- Number of nonterminals. */
+/* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  18
-/* YYNRULES -- Number of rules. */
+/* YYNRULES -- Number of rules.  */
 #define YYNRULES  29
-/* YYNRULES -- Number of states. */
+/* YYNRULES -- Number of states.  */
 #define YYNSTATES  56
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
@@ -337,7 +411,7 @@ union wafsaalloc
   ((unsigned int) (YYX) <= YYMAXUTOK ? wafsatranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[YYLEX] -- Bison symbol number corresponding to YYLEX.  */
-static const unsigned char wafsatranslate[] =
+static const wafsatype_uint8 wafsatranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -372,15 +446,15 @@ static const unsigned char wafsatranslate[] =
 #if YYDEBUG
 /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
    YYRHS.  */
-static const unsigned char wafsaprhs[] =
+static const wafsatype_uint8 wafsaprhs[] =
 {
        0,     0,     3,     7,    17,    20,    23,    25,    28,    30,
       32,    35,    37,    40,    42,    44,    49,    51,    54,    58,
       63,    69,    71,    74,    77,    79,    81,    84,    89,    91
 };
 
-/* YYRHS -- A `-1'-separated list of the rules' RHS. */
-static const wafsasigned_char wafsarhs[] =
+/* YYRHS -- A `-1'-separated list of the rules' RHS.  */
+static const wafsatype_int8 wafsarhs[] =
 {
       26,     0,    -1,     3,    24,    27,    -1,     4,    15,    28,
       29,    30,    32,    20,    39,    16,    -1,     5,    21,    -1,
@@ -395,7 +469,7 @@ static const wafsasigned_char wafsarhs[] =
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
-static const unsigned char wafsarline[] =
+static const wafsatype_uint8 wafsarline[] =
 {
        0,    54,    54,    57,    69,    77,    94,    95,   100,   101,
      102,   106,   107,   110,   111,   117,   120,   121,   124,   132,
@@ -405,7 +479,7 @@ static const unsigned char wafsarline[] =
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
 /* YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
-   First, the terminals, then, starting at YYNTOKENS, nonterminals. */
+   First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const wafsatname[] =
 {
   "$end", "error", "$undefined", "FORMAT", "FSA", "STATES", "SYMBOLS",
@@ -422,7 +496,7 @@ static const char *const wafsatname[] =
 # ifdef YYPRINT
 /* YYTOKNUM[YYLEX-NUM] -- Internal token number corresponding to
    token YYLEX-NUM.  */
-static const unsigned short int wafsatoknum[] =
+static const wafsatype_uint16 wafsatoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
@@ -431,7 +505,7 @@ static const unsigned short int wafsatoknum[] =
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const unsigned char wafsar1[] =
+static const wafsatype_uint8 wafsar1[] =
 {
        0,    25,    26,    27,    28,    29,    30,    30,    31,    31,
       31,    32,    32,    33,    33,    34,    35,    35,    36,    37,
@@ -439,7 +513,7 @@ static const unsigned char wafsar1[] =
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
-static const unsigned char wafsar2[] =
+static const wafsatype_uint8 wafsar2[] =
 {
        0,     2,     3,     9,     2,     2,     1,     2,     1,     1,
        2,     1,     2,     1,     1,     4,     1,     2,     3,     4,
@@ -449,7 +523,7 @@ static const unsigned char wafsar2[] =
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
    STATE-NUM when YYTABLE doesn't specify something else to do.  Zero
    means the default is an error.  */
-static const unsigned char wafsadefact[] =
+static const wafsatype_uint8 wafsadefact[] =
 {
        0,     0,     0,     0,     1,     0,     2,     0,     0,     0,
        4,     0,     0,     5,     8,     9,     0,     0,     6,    10,
@@ -459,8 +533,8 @@ static const unsigned char wafsadefact[] =
        0,    26,    28,     0,    27,    29
 };
 
-/* YYDEFGOTO[NTERM-NUM]. */
-static const wafsasigned_char wafsadefgoto[] =
+/* YYDEFGOTO[NTERM-NUM].  */
+static const wafsatype_int8 wafsadefgoto[] =
 {
       -1,     2,     6,     9,    12,    17,    18,    22,    23,    24,
       32,    33,    25,    42,    36,    44,    45,    53
@@ -469,7 +543,7 @@ static const wafsasigned_char wafsadefgoto[] =
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
 #define YYPACT_NINF -17
-static const wafsasigned_char wafsapact[] =
+static const wafsatype_int8 wafsapact[] =
 {
        5,   -11,    12,    10,   -17,     1,   -17,    13,    -6,    11,
      -17,    -2,    -5,   -17,   -17,   -17,    -1,     0,    -5,   -17,
@@ -480,7 +554,7 @@ static const wafsasigned_char wafsapact[] =
 };
 
 /* YYPGOTO[NTERM-NUM].  */
-static const wafsasigned_char wafsapgoto[] =
+static const wafsatype_int8 wafsapgoto[] =
 {
      -17,   -17,   -17,   -17,   -17,    22,   -17,    21,   -17,   -17,
      -17,    -4,   -17,   -14,   -17,   -13,   -17,   -17
@@ -491,7 +565,7 @@ static const wafsasigned_char wafsapgoto[] =
    number is the opposite.  If zero, do what YYDEFACT says.
    If YYTABLE_NINF, syntax error.  */
 #define YYTABLE_NINF -1
-static const unsigned char wafsatable[] =
+static const wafsatype_uint8 wafsatable[] =
 {
       38,    40,    14,    15,    16,    31,    41,    54,     1,    55,
       20,    21,     4,     3,     5,    10,     7,    11,     8,    13,
@@ -500,7 +574,7 @@ static const unsigned char wafsatable[] =
       26,    52,    50,     0,    30
 };
 
-static const wafsasigned_char wafsacheck[] =
+static const wafsatype_int8 wafsacheck[] =
 {
       16,    16,     7,     8,     9,    21,    21,    19,     3,    21,
       10,    11,     0,    24,     4,    21,    15,     6,     5,    21,
@@ -511,7 +585,7 @@ static const wafsasigned_char wafsacheck[] =
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
-static const unsigned char wafsastos[] =
+static const wafsatype_uint8 wafsastos[] =
 {
        0,     3,    26,    24,     0,     4,    27,    15,     5,    28,
       21,     6,    29,    21,     7,     8,     9,    30,    31,    21,
@@ -546,7 +620,7 @@ do								\
       wafsachar = (Token);						\
       wafsalval = (Value);						\
       wafsatoken = YYTRANSLATE (wafsachar);				\
-      YYPOPSTACK;						\
+      YYPOPSTACK (1);						\
       goto wafsabackup;						\
     }								\
   else								\
@@ -554,7 +628,7 @@ do								\
       wafsaerror (YY_("syntax error: cannot back up")); \
       YYERROR;							\
     }								\
-while (0)
+while (YYID (0))
 
 
 #define YYTERROR	1
@@ -569,7 +643,7 @@ while (0)
 #ifndef YYLLOC_DEFAULT
 # define YYLLOC_DEFAULT(Current, Rhs, N)				\
     do									\
-      if (N)								\
+      if (YYID (N))                                                    \
 	{								\
 	  (Current).first_line   = YYRHSLOC (Rhs, 1).first_line;	\
 	  (Current).first_column = YYRHSLOC (Rhs, 1).first_column;	\
@@ -583,7 +657,7 @@ while (0)
 	  (Current).first_column = (Current).last_column =		\
 	    YYRHSLOC (Rhs, 0).last_column;				\
 	}								\
-    while (0)
+    while (YYID (0))
 #endif
 
 
@@ -595,8 +669,8 @@ while (0)
 # if YYLTYPE_IS_TRIVIAL
 #  define YY_LOCATION_PRINT(File, Loc)			\
      fprintf (File, "%d.%d-%d.%d",			\
-              (Loc).first_line, (Loc).first_column,	\
-              (Loc).last_line,  (Loc).last_column)
+	      (Loc).first_line, (Loc).first_column,	\
+	      (Loc).last_line,  (Loc).last_column)
 # else
 #  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
 # endif
@@ -623,36 +697,96 @@ while (0)
 do {						\
   if (wafsadebug)					\
     YYFPRINTF Args;				\
-} while (0)
+} while (YYID (0))
 
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)		\
-do {								\
-  if (wafsadebug)							\
-    {								\
-      YYFPRINTF (stderr, "%s ", Title);				\
-      wafsasymprint (stderr,					\
-                  Type, Value);	\
-      YYFPRINTF (stderr, "\n");					\
-    }								\
-} while (0)
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)			  \
+do {									  \
+  if (wafsadebug)								  \
+    {									  \
+      YYFPRINTF (stderr, "%s ", Title);					  \
+      wafsa_symbol_print (stderr,						  \
+		  Type, Value); \
+      YYFPRINTF (stderr, "\n");						  \
+    }									  \
+} while (YYID (0))
+
+
+/*--------------------------------.
+| Print this symbol on YYOUTPUT.  |
+`--------------------------------*/
+
+/*ARGSUSED*/
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static void
+wafsa_symbol_value_print (FILE *wafsaoutput, int wafsatype, const YYSTYPE * const wafsavaluep)
+#else
+static void
+wafsa_symbol_value_print (wafsaoutput, wafsatype, wafsavaluep)
+    FILE *wafsaoutput;
+    int wafsatype;
+    const YYSTYPE * const wafsavaluep;
+#endif
+{
+  if (!wafsavaluep)
+    return;
+# ifdef YYPRINT
+  if (wafsatype < YYNTOKENS)
+    YYPRINT (wafsaoutput, wafsatoknum[wafsatype], *wafsavaluep);
+# else
+  YYUSE (wafsaoutput);
+# endif
+  switch (wafsatype)
+    {
+      default:
+	break;
+    }
+}
+
+
+/*--------------------------------.
+| Print this symbol on YYOUTPUT.  |
+`--------------------------------*/
+
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+static void
+wafsa_symbol_print (FILE *wafsaoutput, int wafsatype, const YYSTYPE * const wafsavaluep)
+#else
+static void
+wafsa_symbol_print (wafsaoutput, wafsatype, wafsavaluep)
+    FILE *wafsaoutput;
+    int wafsatype;
+    const YYSTYPE * const wafsavaluep;
+#endif
+{
+  if (wafsatype < YYNTOKENS)
+    YYFPRINTF (wafsaoutput, "token %s (", wafsatname[wafsatype]);
+  else
+    YYFPRINTF (wafsaoutput, "nterm %s (", wafsatname[wafsatype]);
+
+  wafsa_symbol_value_print (wafsaoutput, wafsatype, wafsavaluep);
+  YYFPRINTF (wafsaoutput, ")");
+}
 
 /*------------------------------------------------------------------.
 | wafsa_stack_print -- Print the state stack from its BOTTOM up to its |
 | TOP (included).                                                   |
 `------------------------------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
-wafsa_stack_print (short int *bottom, short int *top)
+wafsa_stack_print (wafsatype_int16 *bottom, wafsatype_int16 *top)
 #else
 static void
 wafsa_stack_print (bottom, top)
-    short int *bottom;
-    short int *top;
+    wafsatype_int16 *bottom;
+    wafsatype_int16 *top;
 #endif
 {
   YYFPRINTF (stderr, "Stack now");
-  for (/* Nothing. */; bottom <= top; ++bottom)
+  for (; bottom <= top; ++bottom)
     YYFPRINTF (stderr, " %d", *bottom);
   YYFPRINTF (stderr, "\n");
 }
@@ -661,37 +795,48 @@ wafsa_stack_print (bottom, top)
 do {								\
   if (wafsadebug)							\
     wafsa_stack_print ((Bottom), (Top));				\
-} while (0)
+} while (YYID (0))
 
 
 /*------------------------------------------------.
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
-wafsa_reduce_print (int wafsarule)
+wafsa_reduce_print (YYSTYPE *wafsavsp, 
+		   int wafsarule)
 #else
 static void
-wafsa_reduce_print (wafsarule)
-    int wafsarule;
+wafsa_reduce_print (wafsavsp, wafsarule
+		   )
+    YYSTYPE *wafsavsp;
+    
+		   int wafsarule;
 #endif
 {
+  int wafsanrhs = wafsar2[wafsarule];
   int wafsai;
   unsigned long int wafsalno = wafsarline[wafsarule];
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu), ",
-             wafsarule - 1, wafsalno);
-  /* Print the symbols being reduced, and their result.  */
-  for (wafsai = wafsaprhs[wafsarule]; 0 <= wafsarhs[wafsai]; wafsai++)
-    YYFPRINTF (stderr, "%s ", wafsatname[wafsarhs[wafsai]]);
-  YYFPRINTF (stderr, "-> %s\n", wafsatname[wafsar1[wafsarule]]);
+  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+	     wafsarule - 1, wafsalno);
+  /* The symbols being reduced.  */
+  for (wafsai = 0; wafsai < wafsanrhs; wafsai++)
+    {
+      fprintf (stderr, "   $%d = ", wafsai + 1);
+      wafsa_symbol_print (stderr, wafsarhs[wafsaprhs[wafsarule] + wafsai],
+		       &(wafsavsp[(wafsai + 1) - (wafsanrhs)])
+		       		       );
+      fprintf (stderr, "\n");
+    }
 }
 
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (wafsadebug)				\
-    wafsa_reduce_print (Rule);		\
-} while (0)
+    wafsa_reduce_print (wafsavsp, Rule); \
+} while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
@@ -725,42 +870,44 @@ int wafsadebug;
 #if YYERROR_VERBOSE
 
 # ifndef wafsastrlen
-#  if defined (__GLIBC__) && defined (_STRING_H)
+#  if defined __GLIBC__ && defined _STRING_H
 #   define wafsastrlen strlen
 #  else
 /* Return the length of YYSTR.  */
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static YYSIZE_T
-#   if defined (__STDC__) || defined (__cplusplus)
 wafsastrlen (const char *wafsastr)
-#   else
+#else
+static YYSIZE_T
 wafsastrlen (wafsastr)
-     const char *wafsastr;
-#   endif
+    const char *wafsastr;
+#endif
 {
-  const char *wafsas = wafsastr;
-
-  while (*wafsas++ != '\0')
+  YYSIZE_T wafsalen;
+  for (wafsalen = 0; wafsastr[wafsalen]; wafsalen++)
     continue;
-
-  return wafsas - wafsastr - 1;
+  return wafsalen;
 }
 #  endif
 # endif
 
 # ifndef wafsastpcpy
-#  if defined (__GLIBC__) && defined (_STRING_H) && defined (_GNU_SOURCE)
+#  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
 #   define wafsastpcpy stpcpy
 #  else
 /* Copy YYSRC to YYDEST, returning the address of the terminating '\0' in
    YYDEST.  */
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static char *
-#   if defined (__STDC__) || defined (__cplusplus)
 wafsastpcpy (char *wafsadest, const char *wafsasrc)
-#   else
+#else
+static char *
 wafsastpcpy (wafsadest, wafsasrc)
-     char *wafsadest;
-     const char *wafsasrc;
-#   endif
+    char *wafsadest;
+    const char *wafsasrc;
+#endif
 {
   char *wafsad = wafsadest;
   const char *wafsas = wafsasrc;
@@ -786,7 +933,7 @@ wafsatnamerr (char *wafsares, const char *wafsastr)
 {
   if (*wafsastr == '"')
     {
-      size_t wafsan = 0;
+      YYSIZE_T wafsan = 0;
       char const *wafsap = wafsastr;
 
       for (;;)
@@ -821,53 +968,123 @@ wafsatnamerr (char *wafsares, const char *wafsastr)
 }
 # endif
 
-#endif /* YYERROR_VERBOSE */
+/* Copy into YYRESULT an error message about the unexpected token
+   YYCHAR while in state YYSTATE.  Return the number of bytes copied,
+   including the terminating null byte.  If YYRESULT is null, do not
+   copy anything; just return the number of bytes that would be
+   copied.  As a special case, return 0 if an ordinary "syntax error"
+   message will do.  Return YYSIZE_MAXIMUM if overflow occurs during
+   size calculation.  */
+static YYSIZE_T
+wafsasyntax_error (char *wafsaresult, int wafsastate, int wafsachar)
+{
+  int wafsan = wafsapact[wafsastate];
 
+  if (! (YYPACT_NINF < wafsan && wafsan <= YYLAST))
+    return 0;
+  else
+    {
+      int wafsatype = YYTRANSLATE (wafsachar);
+      YYSIZE_T wafsasize0 = wafsatnamerr (0, wafsatname[wafsatype]);
+      YYSIZE_T wafsasize = wafsasize0;
+      YYSIZE_T wafsasize1;
+      int wafsasize_overflow = 0;
+      enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
+      char const *wafsaarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
+      int wafsax;
+
+# if 0
+      /* This is so xgettext sees the translatable formats that are
+	 constructed on the fly.  */
+      YY_("syntax error, unexpected %s");
+      YY_("syntax error, unexpected %s, expecting %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s or %s");
+      YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s");
+# endif
+      char *wafsafmt;
+      char const *wafsaf;
+      static char const wafsaunexpected[] = "syntax error, unexpected %s";
+      static char const wafsaexpecting[] = ", expecting %s";
+      static char const wafsaor[] = " or %s";
+      char wafsaformat[sizeof wafsaunexpected
+		    + sizeof wafsaexpecting - 1
+		    + ((YYERROR_VERBOSE_ARGS_MAXIMUM - 2)
+		       * (sizeof wafsaor - 1))];
+      char const *wafsaprefix = wafsaexpecting;
+
+      /* Start YYX at -YYN if negative to avoid negative indexes in
+	 YYCHECK.  */
+      int wafsaxbegin = wafsan < 0 ? -wafsan : 0;
+
+      /* Stay within bounds of both wafsacheck and wafsatname.  */
+      int wafsachecklim = YYLAST - wafsan + 1;
+      int wafsaxend = wafsachecklim < YYNTOKENS ? wafsachecklim : YYNTOKENS;
+      int wafsacount = 1;
+
+      wafsaarg[0] = wafsatname[wafsatype];
+      wafsafmt = wafsastpcpy (wafsaformat, wafsaunexpected);
+
+      for (wafsax = wafsaxbegin; wafsax < wafsaxend; ++wafsax)
+	if (wafsacheck[wafsax + wafsan] == wafsax && wafsax != YYTERROR)
+	  {
+	    if (wafsacount == YYERROR_VERBOSE_ARGS_MAXIMUM)
+	      {
+		wafsacount = 1;
+		wafsasize = wafsasize0;
+		wafsaformat[sizeof wafsaunexpected - 1] = '\0';
+		break;
+	      }
+	    wafsaarg[wafsacount++] = wafsatname[wafsax];
+	    wafsasize1 = wafsasize + wafsatnamerr (0, wafsatname[wafsax]);
+	    wafsasize_overflow |= (wafsasize1 < wafsasize);
+	    wafsasize = wafsasize1;
+	    wafsafmt = wafsastpcpy (wafsafmt, wafsaprefix);
+	    wafsaprefix = wafsaor;
+	  }
+
+      wafsaf = YY_(wafsaformat);
+      wafsasize1 = wafsasize + wafsastrlen (wafsaf);
+      wafsasize_overflow |= (wafsasize1 < wafsasize);
+      wafsasize = wafsasize1;
+
+      if (wafsasize_overflow)
+	return YYSIZE_MAXIMUM;
+
+      if (wafsaresult)
+	{
+	  /* Avoid sprintf, as that infringes on the user's name space.
+	     Don't have undefined behavior even if the translation
+	     produced a string with the wrong number of "%s"s.  */
+	  char *wafsap = wafsaresult;
+	  int wafsai = 0;
+	  while ((*wafsap = *wafsaf) != '\0')
+	    {
+	      if (*wafsap == '%' && wafsaf[1] == 's' && wafsai < wafsacount)
+		{
+		  wafsap += wafsatnamerr (wafsap, wafsaarg[wafsai++]);
+		  wafsaf += 2;
+		}
+	      else
+		{
+		  wafsap++;
+		  wafsaf++;
+		}
+	    }
+	}
+      return wafsasize;
+    }
+}
+#endif /* YYERROR_VERBOSE */
 
 
-#if YYDEBUG
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
-
-#if defined (__STDC__) || defined (__cplusplus)
-static void
-wafsasymprint (FILE *wafsaoutput, int wafsatype, YYSTYPE *wafsavaluep)
-#else
-static void
-wafsasymprint (wafsaoutput, wafsatype, wafsavaluep)
-    FILE *wafsaoutput;
-    int wafsatype;
-    YYSTYPE *wafsavaluep;
-#endif
-{
-  /* Pacify ``unused variable'' warnings.  */
-  (void) wafsavaluep;
-
-  if (wafsatype < YYNTOKENS)
-    YYFPRINTF (wafsaoutput, "token %s (", wafsatname[wafsatype]);
-  else
-    YYFPRINTF (wafsaoutput, "nterm %s (", wafsatname[wafsatype]);
-
-
-# ifdef YYPRINT
-  if (wafsatype < YYNTOKENS)
-    YYPRINT (wafsaoutput, wafsatoknum[wafsatype], *wafsavaluep);
-# endif
-  switch (wafsatype)
-    {
-      default:
-        break;
-    }
-  YYFPRINTF (wafsaoutput, ")");
-}
-
-#endif /* ! YYDEBUG */
 /*-----------------------------------------------.
 | Release the memory associated to this symbol.  |
 `-----------------------------------------------*/
 
-#if defined (__STDC__) || defined (__cplusplus)
+/*ARGSUSED*/
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 static void
 wafsadestruct (const char *wafsamsg, int wafsatype, YYSTYPE *wafsavaluep)
 #else
@@ -878,8 +1095,7 @@ wafsadestruct (wafsamsg, wafsatype, wafsavaluep)
     YYSTYPE *wafsavaluep;
 #endif
 {
-  /* Pacify ``unused variable'' warnings.  */
-  (void) wafsavaluep;
+  YYUSE (wafsavaluep);
 
   if (!wafsamsg)
     wafsamsg = "Deleting";
@@ -889,7 +1105,7 @@ wafsadestruct (wafsamsg, wafsatype, wafsavaluep)
     {
 
       default:
-        break;
+	break;
     }
 }
 
@@ -897,13 +1113,13 @@ wafsadestruct (wafsamsg, wafsatype, wafsavaluep)
 /* Prevent warnings from -Wmissing-prototypes.  */
 
 #ifdef YYPARSE_PARAM
-# if defined (__STDC__) || defined (__cplusplus)
+#if defined __STDC__ || defined __cplusplus
 int wafsaparse (void *YYPARSE_PARAM);
-# else
+#else
 int wafsaparse ();
-# endif
+#endif
 #else /* ! YYPARSE_PARAM */
-#if defined (__STDC__) || defined (__cplusplus)
+#if defined __STDC__ || defined __cplusplus
 int wafsaparse (void);
 #else
 int wafsaparse ();
@@ -928,20 +1144,24 @@ int wafsanerrs;
 `----------*/
 
 #ifdef YYPARSE_PARAM
-# if defined (__STDC__) || defined (__cplusplus)
-int wafsaparse (void *YYPARSE_PARAM)
-# else
-int wafsaparse (YYPARSE_PARAM)
-  void *YYPARSE_PARAM;
-# endif
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
+int
+wafsaparse (void *YYPARSE_PARAM)
+#else
+int
+wafsaparse (YYPARSE_PARAM)
+    void *YYPARSE_PARAM;
+#endif
 #else /* ! YYPARSE_PARAM */
-#if defined (__STDC__) || defined (__cplusplus)
+#if (defined __STDC__ || defined __C99__FUNC__ \
+     || defined __cplusplus || defined _MSC_VER)
 int
 wafsaparse (void)
 #else
 int
 wafsaparse ()
-    ;
+
 #endif
 #endif
 {
@@ -953,6 +1173,12 @@ wafsaparse ()
   int wafsaerrstatus;
   /* Look-ahead token as an internal (translated) token number.  */
   int wafsatoken = 0;
+#if YYERROR_VERBOSE
+  /* Buffer for error messages, and its allocated size.  */
+  char wafsamsgbuf[128];
+  char *wafsamsg = wafsamsgbuf;
+  YYSIZE_T wafsamsg_alloc = sizeof wafsamsgbuf;
+#endif
 
   /* Three stacks and their tools:
      `wafsass': related to states,
@@ -963,9 +1189,9 @@ wafsaparse ()
      to reallocate them elsewhere.  */
 
   /* The state stack.  */
-  short int wafsassa[YYINITDEPTH];
-  short int *wafsass = wafsassa;
-  short int *wafsassp;
+  wafsatype_int16 wafsassa[YYINITDEPTH];
+  wafsatype_int16 *wafsass = wafsassa;
+  wafsatype_int16 *wafsassp;
 
   /* The semantic value stack.  */
   YYSTYPE wafsavsa[YYINITDEPTH];
@@ -974,7 +1200,7 @@ wafsaparse ()
 
 
 
-#define YYPOPSTACK   (wafsavsp--, wafsassp--)
+#define YYPOPSTACK(N)   (wafsavsp -= (N), wafsassp -= (N))
 
   YYSIZE_T wafsastacksize = YYINITDEPTH;
 
@@ -983,9 +1209,9 @@ wafsaparse ()
   YYSTYPE wafsaval;
 
 
-  /* When reducing, the number of symbols on the RHS of the reduced
-     rule.  */
-  int wafsalen;
+  /* The number of symbols on the RHS of the reduced rule.
+     Keep to zero when no symbol should be popped.  */
+  int wafsalen = 0;
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
@@ -1009,8 +1235,7 @@ wafsaparse ()
 `------------------------------------------------------------*/
  wafsanewstate:
   /* In all cases, when you get here, the value and location stacks
-     have just been pushed. so pushing a state here evens the stacks.
-     */
+     have just been pushed.  So pushing a state here evens the stacks.  */
   wafsassp++;
 
  wafsasetstate:
@@ -1023,11 +1248,11 @@ wafsaparse ()
 
 #ifdef wafsaoverflow
       {
-	/* Give user a chance to reallocate the stack. Use copies of
+	/* Give user a chance to reallocate the stack.  Use copies of
 	   these so that the &'s don't force the real ones into
 	   memory.  */
 	YYSTYPE *wafsavs1 = wafsavs;
-	short int *wafsass1 = wafsass;
+	wafsatype_int16 *wafsass1 = wafsass;
 
 
 	/* Each stack pointer address is followed by the size of the
@@ -1055,7 +1280,7 @@ wafsaparse ()
 	wafsastacksize = YYMAXDEPTH;
 
       {
-	short int *wafsass1 = wafsass;
+	wafsatype_int16 *wafsass1 = wafsass;
 	union wafsaalloc *wafsaptr =
 	  (union wafsaalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (wafsastacksize));
 	if (! wafsaptr)
@@ -1090,12 +1315,10 @@ wafsaparse ()
 `-----------*/
 wafsabackup:
 
-/* Do appropriate processing given the current state.  */
-/* Read a look-ahead token if we need one and don't already have one.  */
-/* wafsaresume: */
+  /* Do appropriate processing given the current state.  Read a
+     look-ahead token if we need one and don't already have one.  */
 
   /* First try to decide what to do without reference to look-ahead token.  */
-
   wafsan = wafsapact[wafsastate];
   if (wafsan == YYPACT_NINF)
     goto wafsadefault;
@@ -1137,22 +1360,21 @@ wafsabackup:
   if (wafsan == YYFINAL)
     YYACCEPT;
 
-  /* Shift the look-ahead token.  */
-  YY_SYMBOL_PRINT ("Shifting", wafsatoken, &wafsalval, &wafsalloc);
-
-  /* Discard the token being shifted unless it is eof.  */
-  if (wafsachar != YYEOF)
-    wafsachar = YYEMPTY;
-
-  *++wafsavsp = wafsalval;
-
-
   /* Count tokens shifted since error; after three, turn off error
      status.  */
   if (wafsaerrstatus)
     wafsaerrstatus--;
 
+  /* Shift the look-ahead token.  */
+  YY_SYMBOL_PRINT ("Shifting", wafsatoken, &wafsalval, &wafsalloc);
+
+  /* Discard the shifted token unless it is eof.  */
+  if (wafsachar != YYEOF)
+    wafsachar = YYEMPTY;
+
   wafsastate = wafsan;
+  *++wafsavsp = wafsalval;
+
   goto wafsanewstate;
 
 
@@ -1188,24 +1410,24 @@ wafsareduce:
   switch (wafsan)
     {
         case 3:
-#line 66 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 66 "./fsaparse.y"
     { return(0); }
     break;
 
   case 4:
-#line 70 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 70 "./fsaparse.y"
     {
-		      fsa->nstates = (wafsavsp[0].i);
+		      fsa->nstates = (wafsavsp[(2) - (2)].i);
 		      fsa->action =
 			(int**)malloc((fsa->nstates+1)*sizeof(int*));
 		    }
     break;
 
   case 5:
-#line 78 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 78 "./fsaparse.y"
     {
 		      int i,j;
-		      fsa->ngens = (wafsavsp[0].i);
+		      fsa->ngens = (wafsavsp[(2) - (2)].i);
 		      for (i=0; i<=fsa->nstates; ++i) {
 			fsa->action[i] =
 			  (int*)malloc((fsa->ngens+1)*sizeof(int));
@@ -1219,61 +1441,59 @@ wafsareduce:
     break;
 
   case 14:
-#line 112 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 112 "./fsaparse.y"
     {
-		      fsa->start= (wafsavsp[0].i);
+		      fsa->start= (wafsavsp[(1) - (1)].i);
 		    }
     break;
 
   case 18:
-#line 125 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 125 "./fsaparse.y"
     {
-		      fsa->genlist[(wafsavsp[-2].i)-1] =
-			(char*)malloc((strlen((wafsavsp[0].s))+1)*sizeof(char));
-		      strcpy(fsa->genlist[(wafsavsp[-2].i)-1], (wafsavsp[0].s));
+		      fsa->genlist[(wafsavsp[(1) - (3)].i)-1] =
+			(char*)malloc((strlen((wafsavsp[(3) - (3)].s))+1)*sizeof(char));
+		      strcpy(fsa->genlist[(wafsavsp[(1) - (3)].i)-1], (wafsavsp[(3) - (3)].s));
 		    }
     break;
 
   case 19:
-#line 133 "../../../../../src/lib/oogl/wa/fsaparse.y"
-    { (wafsaval.i) = (wafsavsp[-1].i); }
+#line 133 "./fsaparse.y"
+    { (wafsaval.i) = (wafsavsp[(3) - (4)].i); }
     break;
 
   case 20:
-#line 135 "../../../../../src/lib/oogl/wa/fsaparse.y"
-    { (wafsaval.i) = (wafsavsp[-2].i); }
+#line 135 "./fsaparse.y"
+    { (wafsaval.i) = (wafsavsp[(3) - (5)].i); }
     break;
 
   case 27:
-#line 153 "../../../../../src/lib/oogl/wa/fsaparse.y"
-    { install_adjacency((wafsavsp[-3].i)); adj_index = 0; }
+#line 153 "./fsaparse.y"
+    { install_adjacency((wafsavsp[(1) - (4)].i)); adj_index = 0; }
     break;
 
   case 28:
-#line 157 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 157 "./fsaparse.y"
     {
-		    adj[adj_index++] = (wafsavsp[0].i);
+		    adj[adj_index++] = (wafsavsp[(1) - (1)].i);
 		  }
     break;
 
   case 29:
-#line 161 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 161 "./fsaparse.y"
     {
-		    adj[adj_index++] = (wafsavsp[0].i);
+		    adj[adj_index++] = (wafsavsp[(2) - (2)].i);
 		  }
     break;
 
 
+/* Line 1267 of yacc.c.  */
+#line 1491 "y.tab.c"
       default: break;
     }
+  YY_SYMBOL_PRINT ("-> $$ =", wafsar1[wafsan], &wafsaval, &wafsaloc);
 
-/* Line 1126 of yacc.c.  */
-#line 1272 "y.tab.c"
-
-  wafsavsp -= wafsalen;
-  wafsassp -= wafsalen;
-
-
+  YYPOPSTACK (wafsalen);
+  wafsalen = 0;
   YY_STACK_PRINT (wafsass, wafsassp);
 
   *++wafsavsp = wafsaval;
@@ -1302,110 +1522,41 @@ wafsaerrlab:
   if (!wafsaerrstatus)
     {
       ++wafsanerrs;
-#if YYERROR_VERBOSE
-      wafsan = wafsapact[wafsastate];
-
-      if (YYPACT_NINF < wafsan && wafsan < YYLAST)
-	{
-	  int wafsatype = YYTRANSLATE (wafsachar);
-	  YYSIZE_T wafsasize0 = wafsatnamerr (0, wafsatname[wafsatype]);
-	  YYSIZE_T wafsasize = wafsasize0;
-	  YYSIZE_T wafsasize1;
-	  int wafsasize_overflow = 0;
-	  char *wafsamsg = 0;
-#	  define YYERROR_VERBOSE_ARGS_MAXIMUM 5
-	  char const *wafsaarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-	  int wafsax;
-
-#if 0
-	  /* This is so xgettext sees the translatable formats that are
-	     constructed on the fly.  */
-	  YY_("syntax error, unexpected %s");
-	  YY_("syntax error, unexpected %s, expecting %s");
-	  YY_("syntax error, unexpected %s, expecting %s or %s");
-	  YY_("syntax error, unexpected %s, expecting %s or %s or %s");
-	  YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s");
-#endif
-	  char *wafsafmt;
-	  char const *wafsaf;
-	  static char const wafsaunexpected[] = "syntax error, unexpected %s";
-	  static char const wafsaexpecting[] = ", expecting %s";
-	  static char const wafsaor[] = " or %s";
-	  char wafsaformat[sizeof wafsaunexpected
-			+ sizeof wafsaexpecting - 1
-			+ ((YYERROR_VERBOSE_ARGS_MAXIMUM - 2)
-			   * (sizeof wafsaor - 1))];
-	  char const *wafsaprefix = wafsaexpecting;
-
-	  /* Start YYX at -YYN if negative to avoid negative indexes in
-	     YYCHECK.  */
-	  int wafsaxbegin = wafsan < 0 ? -wafsan : 0;
-
-	  /* Stay within bounds of both wafsacheck and wafsatname.  */
-	  int wafsachecklim = YYLAST - wafsan;
-	  int wafsaxend = wafsachecklim < YYNTOKENS ? wafsachecklim : YYNTOKENS;
-	  int wafsacount = 1;
-
-	  wafsaarg[0] = wafsatname[wafsatype];
-	  wafsafmt = wafsastpcpy (wafsaformat, wafsaunexpected);
-
-	  for (wafsax = wafsaxbegin; wafsax < wafsaxend; ++wafsax)
-	    if (wafsacheck[wafsax + wafsan] == wafsax && wafsax != YYTERROR)
-	      {
-		if (wafsacount == YYERROR_VERBOSE_ARGS_MAXIMUM)
-		  {
-		    wafsacount = 1;
-		    wafsasize = wafsasize0;
-		    wafsaformat[sizeof wafsaunexpected - 1] = '\0';
-		    break;
-		  }
-		wafsaarg[wafsacount++] = wafsatname[wafsax];
-		wafsasize1 = wafsasize + wafsatnamerr (0, wafsatname[wafsax]);
-		wafsasize_overflow |= wafsasize1 < wafsasize;
-		wafsasize = wafsasize1;
-		wafsafmt = wafsastpcpy (wafsafmt, wafsaprefix);
-		wafsaprefix = wafsaor;
-	      }
-
-	  wafsaf = YY_(wafsaformat);
-	  wafsasize1 = wafsasize + wafsastrlen (wafsaf);
-	  wafsasize_overflow |= wafsasize1 < wafsasize;
-	  wafsasize = wafsasize1;
-
-	  if (!wafsasize_overflow && wafsasize <= YYSTACK_ALLOC_MAXIMUM)
-	    wafsamsg = (char *) YYSTACK_ALLOC (wafsasize);
-	  if (wafsamsg)
-	    {
-	      /* Avoid sprintf, as that infringes on the user's name space.
-		 Don't have undefined behavior even if the translation
-		 produced a string with the wrong number of "%s"s.  */
-	      char *wafsap = wafsamsg;
-	      int wafsai = 0;
-	      while ((*wafsap = *wafsaf))
-		{
-		  if (*wafsap == '%' && wafsaf[1] == 's' && wafsai < wafsacount)
-		    {
-		      wafsap += wafsatnamerr (wafsap, wafsaarg[wafsai++]);
-		      wafsaf += 2;
-		    }
-		  else
-		    {
-		      wafsap++;
-		      wafsaf++;
-		    }
-		}
-	      wafsaerror (wafsamsg);
+#if ! YYERROR_VERBOSE
+      wafsaerror (YY_("syntax error"));
+#else
+      {
+	YYSIZE_T wafsasize = wafsasyntax_error (0, wafsastate, wafsachar);
+	if (wafsamsg_alloc < wafsasize && wafsamsg_alloc < YYSTACK_ALLOC_MAXIMUM)
+	  {
+	    YYSIZE_T wafsaalloc = 2 * wafsasize;
+	    if (! (wafsasize <= wafsaalloc && wafsaalloc <= YYSTACK_ALLOC_MAXIMUM))
+	      wafsaalloc = YYSTACK_ALLOC_MAXIMUM;
+	    if (wafsamsg != wafsamsgbuf)
 	      YYSTACK_FREE (wafsamsg);
-	    }
-	  else
-	    {
-	      wafsaerror (YY_("syntax error"));
+	    wafsamsg = (char *) YYSTACK_ALLOC (wafsaalloc);
+	    if (wafsamsg)
+	      wafsamsg_alloc = wafsaalloc;
+	    else
+	      {
+		wafsamsg = wafsamsgbuf;
+		wafsamsg_alloc = sizeof wafsamsgbuf;
+	      }
+	  }
+
+	if (0 < wafsasize && wafsasize <= wafsamsg_alloc)
+	  {
+	    (void) wafsasyntax_error (wafsamsg, wafsastate, wafsachar);
+	    wafsaerror (wafsamsg);
+	  }
+	else
+	  {
+	    wafsaerror (YY_("syntax error"));
+	    if (wafsasize != 0)
 	      goto wafsaexhaustedlab;
-	    }
-	}
-      else
-#endif /* YYERROR_VERBOSE */
-	wafsaerror (YY_("syntax error"));
+	  }
+      }
+#endif
     }
 
 
@@ -1416,14 +1567,15 @@ wafsaerrlab:
 	 error, discard it.  */
 
       if (wafsachar <= YYEOF)
-        {
+	{
 	  /* Return failure if at end of input.  */
 	  if (wafsachar == YYEOF)
 	    YYABORT;
-        }
+	}
       else
 	{
-	  wafsadestruct ("Error: discarding", wafsatoken, &wafsalval);
+	  wafsadestruct ("Error: discarding",
+		      wafsatoken, &wafsalval);
 	  wafsachar = YYEMPTY;
 	}
     }
@@ -1441,11 +1593,14 @@ wafsaerrorlab:
   /* Pacify compilers like GCC when the user code never invokes
      YYERROR and the label wafsaerrorlab therefore never appears in user
      code.  */
-  if (0)
+  if (/*CONSTCOND*/ 0)
      goto wafsaerrorlab;
 
-wafsavsp -= wafsalen;
-  wafsassp -= wafsalen;
+  /* Do not reclaim the symbols of the rule which action triggered
+     this YYERROR.  */
+  YYPOPSTACK (wafsalen);
+  wafsalen = 0;
+  YY_STACK_PRINT (wafsass, wafsassp);
   wafsastate = *wafsassp;
   goto wafsaerrlab1;
 
@@ -1475,8 +1630,9 @@ wafsaerrlab1:
 	YYABORT;
 
 
-      wafsadestruct ("Error: popping", wafsastos[wafsastate], wafsavsp);
-      YYPOPSTACK;
+      wafsadestruct ("Error: popping",
+		  wafsastos[wafsastate], wafsavsp);
+      YYPOPSTACK (1);
       wafsastate = *wafsassp;
       YY_STACK_PRINT (wafsass, wafsassp);
     }
@@ -1487,7 +1643,7 @@ wafsaerrlab1:
   *++wafsavsp = wafsalval;
 
 
-  /* Shift the error token. */
+  /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", wafsastos[wafsan], wafsavsp, wafsalsp);
 
   wafsastate = wafsan;
@@ -1522,21 +1678,29 @@ wafsareturn:
   if (wafsachar != YYEOF && wafsachar != YYEMPTY)
      wafsadestruct ("Cleanup: discarding lookahead",
 		 wafsatoken, &wafsalval);
+  /* Do not reclaim the symbols of the rule which action triggered
+     this YYABORT or YYACCEPT.  */
+  YYPOPSTACK (wafsalen);
+  YY_STACK_PRINT (wafsass, wafsassp);
   while (wafsassp != wafsass)
     {
       wafsadestruct ("Cleanup: popping",
 		  wafsastos[*wafsassp], wafsavsp);
-      YYPOPSTACK;
+      YYPOPSTACK (1);
     }
 #ifndef wafsaoverflow
   if (wafsass != wafsassa)
     YYSTACK_FREE (wafsass);
 #endif
+#if YYERROR_VERBOSE
+  if (wafsamsg != wafsamsgbuf)
+    YYSTACK_FREE (wafsamsg);
+#endif
   return wafsaresult;
 }
 
 
-#line 167 "../../../../../src/lib/oogl/wa/fsaparse.y"
+#line 167 "./fsaparse.y"
 
 
 static void wafsaerror(char *s)

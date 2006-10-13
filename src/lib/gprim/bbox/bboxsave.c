@@ -35,36 +35,42 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxFSave(BBox *bbox, FILE *f, char *fname)
 {
-    if ((bbox->geomflags & VERT_4D) && bbox->minN == NULL) {
-	fprintf(f, "4BBOX\n%g %g %g %g\n%g %g %g %g\n",
-		bbox->min.x, bbox->min.y, bbox->min.z, bbox->min.w,
-	bbox->max.x, bbox->max.y, bbox->max.z, bbox->max.w);
-    } else if (bbox->minN == NULL) {
-	fprintf(f, "BBOX\n%g %g %g\n%g %g %g\n",
-		bbox->min.x, bbox->min.y, bbox->min.z,
-		bbox->max.x, bbox->max.y, bbox->max.z);
-    } else if (bbox->geomflags & VERT_4D) {
-	int i;
+  if ((bbox->geomflags & VERT_4D) && bbox->pdim == 4) {
+    fprintf(f, "4BBOX\n%g %g %g %g\n%g %g %g %g\n",
+	    bbox->min->v[0], bbox->min->v[1], bbox->min->v[2], bbox->min->v[3],
+	    bbox->max->v[0], bbox->max->v[1], bbox->max->v[2], bbox->max->v[3]);
+  } else if (bbox->pdim == 4) {
+    fprintf(f, "BBOX\n%g %g %g\n%g %g %g\n",
+	    bbox->min->v[0], bbox->min->v[1], bbox->min->v[2],
+	    bbox->max->v[0], bbox->max->v[1], bbox->max->v[2]);
+  } else if (bbox->geomflags & VERT_4D) {
+    int i;
 	
-	fprintf(f, "4nBBOX %d\n", bbox->pdim);
-	for (i = 0; i < bbox->pdim; i++) {
-	    fprintf(f, " %g", bbox->minN->v[i]);
-	}
-	fprintf(f, "\n");
-	for (i = 0; i < bbox->pdim; i++) {
-	    fprintf(f, " %g", bbox->maxN->v[i]);
-	}
-    } else {
-	int i;
-	
-	fprintf(f, "nBBOX %d\n", bbox->pdim-1);
-	for (i = 0; i < bbox->pdim; i++) {
-	    fprintf(f, " %g", bbox->minN->v[i]);
-	}
-	fprintf(f, "\n");
-	for (i = 0; i < bbox->pdim-1; i++) {
-	    fprintf(f, " %g", bbox->maxN->v[i]);
-	}
+    fprintf(f, "4nBBOX %d\n", bbox->pdim);
+    for (i = 0; i < bbox->pdim; i++) {
+      fprintf(f, " %g", bbox->min->v[i]);
     }
-    return bbox;
+    fprintf(f, "\n");
+    for (i = 0; i < bbox->pdim; i++) {
+      fprintf(f, " %g", bbox->max->v[i]);
+    }
+  } else {
+    int i;
+	
+    fprintf(f, "nBBOX %d\n", bbox->pdim-1);
+    for (i = 0; i < bbox->pdim-1; i++) {
+      fprintf(f, " %g", bbox->min->v[i]);
+    }
+    fprintf(f, "\n");
+    for (i = 0; i < bbox->pdim-1; i++) {
+      fprintf(f, " %g", bbox->max->v[i]);
+    }
+  }
+  return bbox;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

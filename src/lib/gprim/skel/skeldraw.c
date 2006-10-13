@@ -58,7 +58,7 @@ static void
 draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
 			int penultimate, int hascolor)
 {
-    HPointN *h = HPtNCreate(s->dim, NULL);
+    HPointN *h = HPtNCreate(s->pdim, NULL);
     float *hdata = h->v;
     float *op;
     HPoint3 *np, *newp;
@@ -71,9 +71,17 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
     newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
     newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
 
-    for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->dim, np++) {
+    if (s->pdim == 4 && !(s->geomflags & VERT_4D)) {
+      for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+	HPt3Dehomogenize((HPoint3 *)op, (HPoint3 *)op);
 	h->v = op;
 	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+      }      
+    } else {
+      for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+	h->v = op;
+	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+      }
     }
     if(!hascolor) colored = 0;
 
@@ -145,16 +153,8 @@ SkelDraw(s)
     flags = penultimate>0 ? 4 : 0;	/* 4: not last mbr of batch of lines */
 
     if(_mgc->NDinfo) {
-	Transform T;
-	float focallen;
-	mgpushtransform();
-	CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-	TmTranslate(T, 0., 0., -focallen);
-	TmConcat(T, _mgc->C2W, T);
-	mgsettransform(T);
 	draw_projected_skel(_mgc->NDmap, _mgc->NDinfo, s, flags,
-				penultimate, hascolor);
-	mgpoptransform();
+			    penultimate, hascolor);
 	return s;
     }
 
@@ -168,9 +168,9 @@ SkelDraw(s)
 	    lastcolor = &s->c[l->c0];
 	while(nleft > MAXPLINE) {
 	    for(j = 0; j < MAXPLINE; j++) {
-		tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->dim];
-		if (s->dim < 4) {
-		    if (s->dim < 3) {
+		tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
+		if (s->pdim < 4) {
+		    if (s->pdim < 3) {
 			tv[j].y = 0;
 		    }
 		    tv[j].z = 0;
@@ -183,9 +183,9 @@ SkelDraw(s)
 	    flags = 6;
 	}
 	for(j = 0; j < nleft; j++) {
-	    tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->dim];
-	    if (s->dim < 4) {
-		if (s->dim < 3) {
+	    tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
+	    if (s->pdim < 4) {
+		if (s->pdim < 3) {
 		    tv[j].y = 0;
 		}
 		tv[j].z = 0;

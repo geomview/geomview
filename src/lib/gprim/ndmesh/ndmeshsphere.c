@@ -1,5 +1,4 @@
-/* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+/* Copyright (C) 2006 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -23,26 +22,23 @@
 # include "config.h"
 #endif
 
-#if 0
-static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
-#endif
+#include "geom.h"
+#include "create.h"
+#include "ndmeshP.h"
+#include "sphere.h"
 
-
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
-
-#include "geomclass.h"
-
-/*
- * Compute the bounding box of a geom.
- * If a transform T is supplied, compute bbox of geom transformed by T;
- * if T is NULL, compute bbox of geom in its native coordinates.
- */
-
-Geom *GeomBound(Geom *geom, Transform T, TransformN *TN)
+Geom *NDMeshBoundSphere(NDMesh *mesh, Transform T, TransformN *TN, int *axes,
+			int space)
 {
-    if (geom && geom->Class->bound) {
-	return (*geom->Class->bound) (geom, T, TN);
-    }
-    return NULL;
+  Geom *sphere;
+
+  /* Create a dummy sphere, the center will be corrected later */
+  sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
+    
+  SphereEncompassHPtNN((Sphere *)sphere,
+		       mesh->p,
+		       mesh->mdim[0]*mesh->mdim[1],		      
+		       T, TN, axes);
+
+  return sphere;
 }

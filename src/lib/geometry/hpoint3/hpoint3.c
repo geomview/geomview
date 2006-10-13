@@ -42,6 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "hg4.h"
 #include "point3.h"
 #include "hpoint3.h"
+#include "transformn.h"
 #include "tolerance.h"
 
 void
@@ -99,6 +100,41 @@ HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
     return tp.w;
 }
 
+/* Apply a TransformN to an HPoint3. Only the upper 4x4 triangle is
+ * applied, and the first 4 components of the translation.
+ */
+HPoint3 *
+HPt3NTransform( const TransformN *T, const HPoint3 *from, HPoint3 *to )
+{
+  short idim = T->idim, odim = T->odim;
+  int i, j;
+  HPt3Coord v[4], *fromp, *top;
+  HPtNCoord scale;
+
+  top = (HPt3Coord *)to;
+  if (from == to) {
+    for( i=0; i<4; i++)
+      v[i] = ((HPt3Coord *)from)[i];
+    fromp = v;
+  } else {
+    fromp = (HPt3Coord *)from;
+  }
+
+  for(i = 0; i < 4; i++) {
+    top[i] = 0;
+    for(j=0; j < 4; j++)
+      top[i] += v[j] * T->a[j*odim+i];
+  }
+
+  /* Add the translation */
+  scale = T->a[(idim-1)*odim + (idim-1)];
+  for (i = 0; i < 4; i++) {
+    top[i] += T->a[(idim-1)*odim + i] / scale;
+  }
+
+  return to;
+}
+
 /* 
  * Pt3ToPt4: convert 3-vectors to 4-vectors by padding with 1.0 's.
  *
@@ -126,6 +162,41 @@ HPt3ToPt3( HPoint3 *hp, Point3 *p )
     p->y = hp->y / hp->w;
     p->z = hp->z / hp->w;
   }
+}
+
+/* Transform a 4-point to a 3-point according to the mapping defined
+ * in "axes"
+ */
+void
+Pt4ToHPt3(HPoint3 *pt4, HPoint3 *hp3, int *axes)
+{
+  HPt3Coord *from = (HPt3Coord *)pt4, *to = (HPt3Coord *)hp3;
+  HPoint3 tmp;
+  int i;
+
+  if (!axes) {
+    if (pt4 != hp3) {
+      hp3->x = pt4->x;
+      hp3->y = pt4->y;
+      hp3->z = pt4->z;
+    }
+    hp3->w = 1.0;
+    return;
+  }
+  
+  if (pt4 == hp3) {
+    tmp = *pt4;
+    from = (HPt3Coord *)&tmp;
+  }
+
+  for (i = 0; i < 3; i++) {
+    if (axes[i] > 3) {
+      to[i] = 0.0;
+    } else if (axes[i] != -1) {
+      to[i] = from[axes[i]];
+    }
+  }
+  hp3->w = 1.0;
 }
 
 /* also need an in-place dehomogenization routine which

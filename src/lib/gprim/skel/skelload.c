@@ -93,7 +93,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
     GGeomInit(s, SkelMethods(), SKELMAGIC, NULL);
     s->geomflags = geomflags;
-    s->dim = (s->geomflags & SKEL_4D) ? dim : dim+1;
+    s->pdim = (s->geomflags & SKEL_4D) ? dim : dim+1;
     s->p = NULL;
     s->l = NULL;
     s->c = NULL;
@@ -106,15 +106,15 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 	goto bogus;
     }
 
-    s->p = OOGLNewNE(float, s->nvert * s->dim, "SKEL vertices");
+    s->p = OOGLNewNE(float, s->nvert * s->pdim, "SKEL vertices");
     s->l = OOGLNewNE(Skline, s->nlines, "SKEL lines");
     VVINIT(colors, ColorA, 10);
     VVINIT(verts, int, 40);
 
 
-    k = (geomflags & SKEL_4D) ? s->dim : s->dim - 1;
-    for(i = 0, vp = s->p; i < s->nvert; i++, vp += s->dim) {
-	vp[s->dim - 1] = 1.0;			/* homogeneous component */
+    k = (geomflags & SKEL_4D) ? s->pdim : s->pdim - 1;
+    for(i = 0, vp = s->p; i < s->nvert; i++, vp += s->pdim) {
+	vp[s->pdim - 1] = 1.0;			/* homogeneous component */
 	if(iobfgetnf(file, k, vp, binary) < k) {
 	    OOGLSyntax(file, "Reading SKEL from \"%s\": error reading vertex %d of %d", fname, i, s->nvert);
 	    goto bogus;

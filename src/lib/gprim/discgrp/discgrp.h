@@ -54,8 +54,7 @@ extern DiscGrp	*DiscGrpLoad( char * );
 extern Geom  *DiscGrpImport (Pool * );
 extern DiscGrp	*DiscGrpSave( DiscGrp *, char * );
 extern DiscGrp	*DiscGrpFSave( DiscGrp *, FILE *, char * );
-extern BBox	*DiscGrpBound( DiscGrp *,
-			       Transform T, TransformN *TN, int *axes );
+extern BBox	*DiscGrpBound( DiscGrp *, Transform T, TransformN *TN);
 extern DiscGrp	*DiscGrpDraw( DiscGrp * );
 /*
 extern DiscGrpElList *DiscGrpElListCreate(DiscGrpElList *, ...);

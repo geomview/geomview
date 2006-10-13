@@ -46,43 +46,34 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static void
 draw_projected_ndmesh(mgmapfunc NDmap, void *NDinfo, NDMesh *mesh)
 {
-    Mesh m;
-    HPointN **op;
-    HPoint3 *np;
-    int i, colored = 0;
-    int npts = mesh->mdim[0] * mesh->mdim[1];
+  Mesh m;
+  HPointN **op;
+  HPoint3 *np;
+  int i, colored = 0;
+  int npts = mesh->mdim[0] * mesh->mdim[1];
 
-    memset(&m, 0, sizeof(m));
-    m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
-    m.n = NULL;
-    m.c = (ColorA *)alloca(npts*sizeof(ColorA));
-    m.nu = mesh->mdim[0];
-    m.nv = mesh->mdim[1];
-    m.flag = mesh->flag & ~MESH_4D;
-    for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
-	/* Set the point's first four components from our N-D mesh vertex */
-	colored = (*NDmap)(NDinfo, *op, np, &m.c[i]);
-    }
-    if(colored) m.flag |= MESH_C;
-    MeshComputeNormals(&m);
-    mgmesh(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c);
-    OOGLFree(m.n);
+  memset(&m, 0, sizeof(m));
+  m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
+  m.n = NULL;
+  m.c = (ColorA *)alloca(npts*sizeof(ColorA));
+  m.nu = mesh->mdim[0];
+  m.nv = mesh->mdim[1];
+  m.flag = mesh->flag & ~MESH_4D;
+  for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
+    /* Set the point's first four components from our N-D mesh vertex */
+    colored = (*NDmap)(NDinfo, *op, np, &m.c[i]);
+  }
+  if(colored) m.flag |= MESH_C;
+  MeshComputeNormals(&m);
+  mgmesh(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c);
+  OOGLFree(m.n);
 }
 
 NDMesh *
 NDMeshDraw(NDMesh *mesh)
 {
-  Transform T;
-  float focallen;
-
   if(_mgc->NDinfo) {
-    mgpushtransform();
-    CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-    TmTranslate(T, 0., 0., -focallen);
-    TmConcat(T, _mgc->C2W, T);
-    mgsettransform(T);
     draw_projected_ndmesh(_mgc->NDmap, _mgc->NDinfo, mesh);
-    mgpoptransform();
   }
   return mesh;
 }

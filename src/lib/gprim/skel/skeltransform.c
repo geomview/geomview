@@ -34,13 +34,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "skelP.h"
 
-Skel *SkelTransform( Skel *s, void *T )
+Skel *SkelTransform( Skel *s, Transform T, TransformN *TN )
 {
+#if 0
   if (T && T != TM_IDENTITY) {
 
-    if(s->dim == 4) {
+    if(s->pdim == 4) {
       HPt3TransformN(T, (HPoint3 *)s->p, (HPoint3 *)s->p, s->nvert);
-    } else if (s->dim > 4) {
+    } else if (s->pdim > 4) {
       HPointN *tmp = HPtNCreate(s->dim, NULL);
       float *tmp_data = tmp->v;
       int i;
@@ -55,6 +56,6 @@ Skel *SkelTransform( Skel *s, void *T )
   } else {   
     OOGLError(1, "Can't SkelTransform() %d-D Skel", s->dim);
   }
-
+#endif
   return s;
 }

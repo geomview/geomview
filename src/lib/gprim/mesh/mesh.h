@@ -47,7 +47,7 @@ extern Mesh	*MeshFLoad( IOBFILE *, char * );
 extern Mesh	*MeshLoad( char * );
 extern Mesh	*MeshSave( Mesh *, char * );
 extern Mesh	*MeshFSave( Mesh *, FILE * );
-extern BBox	*MeshBound( Mesh *, Transform T, TransformN *TN, int *axes );
+extern BBox	*MeshBound( Mesh *, Transform T, TransformN *TN);
 extern Geom	*MeshBoundSphere( Mesh *,
 				  Transform T, TransformN *TN, int *axes, int );
 extern Mesh	*MeshDice( Mesh *, int (*proc)() );

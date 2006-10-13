@@ -40,9 +40,8 @@ int BBoxPresent = 1;
 static char bboxName[] = "bbox";
 
 extern BBox *BBoxCopy ( BBox * );
-extern Geom *BBoxCreate ( va_list *);
 extern BBox *BBoxDelete ( BBox * );
-
+extern BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list);
 extern BBox *BBoxFSave( BBox *, FILE *, char * );
 extern BBox *BBoxFLoad( FILE *, char * );
 

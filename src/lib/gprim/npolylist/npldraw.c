@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.6 2006/10/13 22:20:34 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -50,89 +50,79 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static void
 draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, NPolyList *pl)
 {
-    PolyList newpl;
-    HPointN *h;
-    NPoly *op;
-    Poly *np;
-    Vertex *nv;
-    float *ov;
-    ColorA *oc;
-    Vertex **vps;
-    int i, j, k, colored = 0;
-    float *hdata;
+  PolyList newpl;
+  HPointN *h;
+  NPoly *op;
+  Poly *np;
+  Vertex *nv;
+  float *ov;
+  ColorA *oc;
+  Vertex **vps;
+  int i, j, k, colored = 0;
+  float *hdata;
 
-    /* Copy the PolyList onto the stack. */
-    newpl.n_polys = pl->n_polys;
-    newpl.n_verts = pl->n_verts;
-    newpl.flags = pl->flags;
-    newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
-    newpl.p = (Poly *)alloca(pl->n_polys * sizeof(Poly));
+  /* Copy the PolyList onto the stack. */
+  newpl.n_polys = pl->n_polys;
+  newpl.n_verts = pl->n_verts;
+  newpl.flags = pl->flags;
+  newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
+  newpl.p = (Poly *)alloca(pl->n_polys * sizeof(Poly));
 
-    for(i = 0, op = pl->p, np = newpl.p; i < pl->n_polys; i++, op++, np++) {
-	np->n_vertices = op->n_vertices;
-	np->v = vps = (Vertex **)alloca(np->n_vertices * sizeof(Vertex *));
-	np->pcol = op->pcol;
-	for(j = 0, k = op->vi0; j < np->n_vertices; j++, k++)
-	    np->v[j] = &newpl.vl[pl->vi[k]];
-    }
+  for(i = 0, op = pl->p, np = newpl.p; i < pl->n_polys; i++, op++, np++) {
+    np->n_vertices = op->n_vertices;
+    np->v = vps = (Vertex **)alloca(np->n_vertices * sizeof(Vertex *));
+    np->pcol = op->pcol;
+    for(j = 0, k = op->vi0; j < np->n_vertices; j++, k++)
+      np->v[j] = &newpl.vl[pl->vi[k]];
+  }
 
-    /* Transform vertices */
-    h = HPtNCreate(pl->pdim, NULL);
-    hdata = h->v;
-    ov = pl->v;
-    oc = pl->vcol;
-    for(i = 0, ov = pl->v, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
-	h->v = ov;
-	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
-	ov += pl->pdim;
-    }
+  /* Transform vertices */
+  h = HPtNCreate(pl->pdim, NULL);
+  hdata = h->v;
+  ov = pl->v;
+  oc = pl->vcol;
+  for(i = 0, ov = pl->v, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
+    h->v = ov;
+    colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+    ov += pl->pdim;
+  }
 
-    if(colored) {
-	newpl.flags = (newpl.flags &~ PL_HASPCOL) | PL_HASVCOL;
-    } else if((oc = pl->vcol) != NULL) {
-	for(i = pl->n_verts, nv = newpl.vl; --i >= 0; nv++)
-	    nv->vcol = *oc++;
+  if(colored) {
+    newpl.flags = (newpl.flags &~ PL_HASPCOL) | PL_HASVCOL;
+  } else if((oc = pl->vcol) != NULL) {
+    for(i = pl->n_verts, nv = newpl.vl; --i >= 0; nv++)
+      nv->vcol = *oc++;
+  }
+  if(pl->st != NULL) {
+    float *st = pl->st;
+    for(i = 0, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
+      nv->st[0] = *st++;
+      nv->st[1] = *st++;
     }
-    if(pl->st != NULL) {
-	float *st = pl->st;
-	for(i = 0, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
-	    nv->st[0] = *st++;
-	    nv->st[1] = *st++;
-	}
-    }
-    newpl.flags &= ~(PL_HASVN|PL_HASPN);
-    PolyListComputeNormals(&newpl);
-    mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.flags);
-    h->v = hdata;
-    HPtNDelete(h);
+  }
+  newpl.flags &= ~(PL_HASVN|PL_HASPN);
+  PolyListComputeNormals(&newpl);
+  mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.flags);
+  h->v = hdata;
+  HPtNDelete(h);
 }
 
 NPolyList *
 NPolyListDraw( NPolyList *pl )
 {
-    static int warned = 0;
+  static int warned = 0;
 
-    if (pl == NULL)
-      return NULL;
-
-    if(_mgc->NDinfo) {
-	Transform T;
-	float focallen;
-	mgpushtransform();
-	CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-	TmTranslate(T, 0., 0., -focallen);
-	TmConcat(T, _mgc->C2W, T);
-	mgsettransform(T);
-
-	draw_projected_polylist(_mgc->NDmap, _mgc->NDinfo, pl);
-
-	mgpoptransform();
-	return pl;
-    }
-
-    if(!warned) {
-	OOGLError(0,"Sorry, need to turn on N-D mode before nOFF objects become visible.");
-	warned = 1;
-    }
+  if (pl == NULL)
     return NULL;
+
+  if(_mgc->NDinfo) {
+    draw_projected_polylist(_mgc->NDmap, _mgc->NDinfo, pl);
+    return pl;
+  }
+
+  if(!warned) {
+    OOGLError(0,"Sorry, need to turn on N-D mode before nOFF objects become visible.");
+    warned = 1;
+  }
+  return NULL;
 }

@@ -83,6 +83,9 @@ extern HPtNCoord HPtNDehomogenize(const HPointN *from, HPointN *to);
 	/* Apply a TransformN to an HPointN */
 extern HPointN *HPtNTransform( const TransformN *T, const HPointN *from, HPointN *to );
 
+extern HPointN * HPtNTransform3(Transform3 T, int *axes,
+				const HPointN *from, HPointN *to);
+
 	/* Add zeros to a vector to make it a given dimension */
 extern HPointN *HPtNPad(HPointN *from, short dim, HPointN *to);
 
@@ -98,5 +101,7 @@ extern HPtNCoord HPtNDot( const HPointN *p1, const HPointN *p2);
 extern HPtNCoord *HPtNTransformComponents( const HPointN *p, const TransformN *T, int ncomponents, int *indices, HPtNCoord *results );
 
 extern HPointN *Pt4ToHPtN(HPoint3 *v4, HPointN *vN);
+extern HPoint3 *HPtNToHPt3(HPointN *from, HPoint3 *hp3, int *axes);
+extern void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other, int dim);
 
 #endif
