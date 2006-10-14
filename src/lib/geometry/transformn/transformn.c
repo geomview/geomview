@@ -937,7 +937,7 @@ TmNRead(IOBFILE *f)
   int idim, odim;
 
   iobfexpecttoken(f, "ntransform");
-
+    
   if(iobfnextc(f,0) == '{')
     brack = iobfgetc(f);
 
@@ -951,6 +951,7 @@ TmNRead(IOBFILE *f)
   got = iobfgetnf(f, n, a, 0);
   if(got < n) {
     OOGLSyntax(f, "N-D transform: error reading %d'th of %d values.", got, n);
+    OOGLFree(a);
     return NULL;
   }
 
