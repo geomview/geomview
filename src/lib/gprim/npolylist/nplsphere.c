@@ -25,19 +25,20 @@
 #include "geom.h"
 #include "create.h"
 #include "npolylistP.h"
+#include "sphere.h"
 
-Geom *NPolzListBoundSphere(NPolylist *npl,
-			   Transform T, TransformN *TN, int *axes,
-			   int space)
+Geom *NPolyListSphere(NPolyList *npl,
+		      Transform T, TransformN *TN, int *axes,
+		      int space)
 {
   Geom *sphere;
 
   /* Create a dummy sphere, the center will be corrected later */
-  sphere = (Sphere *)GeomCreate("sphere", CR_SPACE, space, CR_END);
+  sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
     
-  void SphereEncompassPoints(sphere,
-			     npl->v, npl->pdim-1, npl->pdim, npl->Kn_verts,
-			     T, TN, axes);
+  SphereEncompassPoints((Sphere *)sphere,
+			npl->v, npl->pdim-1, npl->pdim, npl->n_verts,
+			T, TN, axes);
 
   return sphere;
 }
