@@ -197,7 +197,7 @@ void SphereEncompassHPt3N(Sphere *sphere, HPoint3 *point, int n,
   for (i = 1; i < 6; i++) {
     spanPts[i] = spanPts[0];
   }
-  MaxDimensionalSpanN(spanPts, point, n);
+  MaxDimensionalSpanN(spanPts, point+1, n-1);
   HPt3TransformN(T, spanPts, spanPts, 6);
   SphereEncompassBounds(sphere, spanPts);
   SphereAddHPt3N(sphere, point, n, T);
@@ -285,7 +285,7 @@ void SphereEncompassHPtNN(Sphere *sphere, HPointN **point, int n,
   for (i = 1; i < 2*dim; i++) {
     spanPts[i] = HPtNCopy(spanPts[0], NULL);
   }
-  MaxDimensionalSpanHPtNN(spanPts, point, n);
+  MaxDimensionalSpanHPtNN(spanPts, point+1, n-1);
   if (TN) {
     for (i = 0; i < 2*dim; i++) {
       HPtNTransformComponents(spanPts[i], TN, 4, axes,
@@ -428,7 +428,7 @@ void SphereEncompassPoints(Sphere *sphere,
       spanPts[i] = HPtNCopy(spanPts[0], NULL);
     }
   }
-  MaxNDimensionalSpanN(spanPts, points+pdim, dim, pdim, n);
+  MaxNDimensionalSpanN(spanPts, points+pdim, dim, pdim, n-1);
   if (TN) {
     for (i = 0; i < 2*dim; i++) {
       HPtNTransformComponents(spanPts[i], TN, 4, axes,
