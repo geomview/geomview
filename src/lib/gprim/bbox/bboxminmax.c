@@ -37,9 +37,9 @@ BBox *BBoxMinMax(BBox *bbox, HPoint3 *min, HPoint3 *max)
 {
   static HPoint3 nullpoint = {0,0,0,1};
 
-  if (bbox != NULL && bbox->pdim == 4) {
-    *min = *(HPoint3 *)bbox->min->v;
-    *max = *(HPoint3 *)bbox->max->v;
+  if (bbox != NULL) {
+    HPtNToHPt3(bbox->min, min, NULL);
+    HPtNToHPt3(bbox->max, max, NULL);
   } else {
     *min = nullpoint;
     *max = nullpoint;
