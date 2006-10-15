@@ -49,7 +49,7 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
   if (!T && !TN) {
     if (bezier->geomflags & VERT_4D) {
       max = min;
-      while(--n >= 0) {
+      while(--n > 0) {
 	p += 4;
 	HPt3MinMax(&min, &max, (HPoint3 *)p);
       }
@@ -58,7 +58,7 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
     } else {
       min.w = 1.0;
       max = min;
-      while(--n >= 0) {
+      while(--n > 0) {
 	p += 3;
 	Pt3MinMax(&min, &max, (HPoint3 *)p);
       }
@@ -84,7 +84,7 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
     minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
-    while(--n >= 0) {
+    while(--n > 0) {
       p += stride;
       *(HPoint3 *)ptN->v = *(HPoint3 *)p;
       if (!(bezier->geomflags & VERT_4D)) {
@@ -115,7 +115,7 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
-    while(--n >= 0) {
+    while(--n > 0) {
       p += stride;
       tmp.x = p[0];
       tmp.y = p[1];

@@ -66,7 +66,7 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 
     if (np->geomflags & VERT_4D) {
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	ptN->v += pdim;
 	HPtNMinMax(min, max, ptN, pdim);
       }
@@ -77,7 +77,7 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
       HPointN *clean = HPtNCreate(pdim, NULL);
       HPtNDehomogenize(min, min);
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	ptN->v += pdim;
 	HPtNDehomogenize(ptN, clean);
 	HPtNMinMax(min, max, clean, pdim-1);
@@ -96,6 +96,7 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
     /* Nd bounding box is requested, with transformation. */
     HPointN *minN;
     HPointN *maxN;
+    HPointN *clean;
     BBox *result;
 
     minN = HPtNTransform(TN, ptN, NULL);
@@ -103,14 +104,16 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
       HPtNDehomogenize(minN, minN);
     }
     maxN = HPtNCopy(minN, NULL);
-    while(--n >= 0) {
+
+    clean = HPtNCreate(np->pdim, NULL);
+    while(--n > 0) {
       ptN->v += pdim;
-      HPtNTransform(TN, ptN, ptN);
+      HPtNTransform(TN, ptN, clean);
       if (!(np->geomflags & VERT_4D)) {
-	HPtNDehomogenize(ptN, ptN);
-	HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+	HPtNDehomogenize(clean, clean);
+	HPtNMinMax(minN, maxN, clean, TN->odim-1);
       } else {
-	HPtNMinMax(minN, maxN, ptN, TN->odim);
+	HPtNMinMax(minN, maxN, clean, TN->odim);
       }
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
@@ -118,6 +121,7 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 
     HPtNDelete(minN);
     HPtNDelete(maxN);
+    HPtNDelete(clean);
 
     return result;
   }
@@ -130,7 +134,7 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
-    while(--n >= 0) {
+    while(--n > 0) {
       ptN->v += pdim;
       HPtNToHPt3(ptN, &tmp, NULL);
       tmp.x = ptN->v[0]; tmp.y = ptN->v[1]; tmp.z = ptN->v[2];

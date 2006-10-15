@@ -56,7 +56,7 @@ BBox *QuadBound(Quad *q, Transform T, TransformN *TN)
     } else {
       HPt3Dehomogenize(&min, &min);
       max = min;
-      while(--n >= 0) {
+      while(--n > 0) {
 	HPt3Dehomogenize(++p, &clean);
 	Pt3MinMax(&min, &max, &clean);
       }
@@ -81,7 +81,7 @@ BBox *QuadBound(Quad *q, Transform T, TransformN *TN)
     minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
-    while(--n >= 0) {
+    while(--n > 0) {
       *(HPoint3 *)ptN->v = *(++p);
       if (!(q->geomflags & VERT_4D)) {
 	HPt3Dehomogenize((HPoint3 *)ptN->v, (HPoint3 *)ptN->v);
@@ -112,7 +112,7 @@ BBox *QuadBound(Quad *q, Transform T, TransformN *TN)
       HPt3Transform(T, &min, &min);
       HPt3Dehomogenize(&min, &min);
       max = min;
-      while(--n >= 0) {
+      while(--n > 0) {
 	tmp = *(++p);
 	tmp.w = 1.0;
 	HPt3Transform(T, &tmp, &clean);
@@ -124,7 +124,7 @@ BBox *QuadBound(Quad *q, Transform T, TransformN *TN)
       HPt3Transform(T, &min, &min);
       HPt3Dehomogenize(&min, &min);
       max = min;
-      while(--n >= 0) {
+      while(--n > 0) {
 	tmp = *(++p);
 	HPt3Transform(T, &tmp, &clean);
 	HPt3Dehomogenize(&clean, &clean);

@@ -55,7 +55,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     min = HPtNCopy(p[0], NULL);
     if (mesh->geomflags & VERT_4D) {
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	HPtNMinMax(min, max, *(++p), pdim);
       }
       result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
@@ -65,7 +65,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
       HPointN *clean = HPtNCreate(pdim, NULL);
       HPtNDehomogenize(min, min);
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	HPtNDehomogenize(*(++p), clean);
 	HPtNMinMax(min, max, clean, pdim-1);
       }
@@ -92,7 +92,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     }
     maxN = HPtNCopy(minN, NULL);
     ptN = HPtNCreate(TN->odim, NULL);
-    while(--n >= 0) {
+    while(--n > 0) {
       HPtNTransform(TN, *(++p), ptN);
       if (!(mesh->geomflags & VERT_4D)) {
 	HPtNDehomogenize(ptN, ptN);
@@ -120,7 +120,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
-    while(--n >= 0) {
+    while(--n > 0) {
       HPtNToHPt3(*(++p), &min, NULL);
       HPt3Transform(T, &tmp, &clean);
       HPt3Dehomogenize(&clean, &clean);

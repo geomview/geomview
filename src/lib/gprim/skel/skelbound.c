@@ -65,7 +65,7 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
 
     if (s->geomflags & VERT_4D) {
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	ptN->v += pdim;
 	HPtNMinMax(min, max, ptN, pdim);
       }
@@ -76,7 +76,7 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
       HPointN *clean = HPtNCreate(pdim, NULL);
       HPtNDehomogenize(min, min);
       max = HPtNCopy(min, NULL);
-      while(--n >= 0) {
+      while(--n > 0) {
 	ptN->v += pdim;
 	HPtNDehomogenize(ptN, clean);
 	HPtNMinMax(min, max, clean, pdim-1);
@@ -95,6 +95,7 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
     /* Nd bounding box is requested, with transformation. */
     HPointN *minN;
     HPointN *maxN;
+    HPointN *clean;
     BBox *result;
 
     minN = HPtNTransform(TN, ptN, NULL);
@@ -102,14 +103,16 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
       HPtNDehomogenize(minN, minN);
     }
     maxN = HPtNCopy(minN, NULL);
-    while(--n >= 0) {
+
+    clean = HPtNCreate(s->pdim, NULL);
+    while(--n > 0) {
       ptN->v += pdim;
-      HPtNTransform(TN, ptN, ptN);
+      HPtNTransform(TN, ptN, clean);
       if (!(s->geomflags & VERT_4D)) {
-	HPtNDehomogenize(ptN, ptN);
-	HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+	HPtNDehomogenize(clean, clean);
+	HPtNMinMax(minN, maxN, clean, TN->odim-1);
       } else {
-	HPtNMinMax(minN, maxN, ptN, TN->odim);
+	HPtNMinMax(minN, maxN, clean, TN->odim);
       }
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
@@ -117,6 +120,7 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
 
     HPtNDelete(minN);
     HPtNDelete(maxN);
+    HPtNDelete(clean);
 
     return result;
   }
@@ -131,7 +135,7 @@ static BBox *NSkelBound(Skel *s, Transform T, TransformN *TN)
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
-    while(--n >= 0) {
+    while(--n > 0) {
       ptN->v += pdim;
       HPtNToHPt3(ptN, &tmp, NULL);
       HPt3Transform(T, &tmp, &clean);
