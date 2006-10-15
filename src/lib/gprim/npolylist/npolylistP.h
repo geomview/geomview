@@ -28,6 +28,7 @@
  * Private definitions for PolyList's
  */
 
+#include "geom.h"
 #include "bboxP.h"
 #include "npolylist.h"
 
@@ -65,6 +66,8 @@ extern NPolyList *NPolyListCopy( NPolyList *poly );
 extern NPolyList *NPolyListDelete( NPolyList *poly );
 extern NPolyList *NPolyListTransform(NPolyList *np,
 				     Transform T, TransformN *TN);
+extern Geom *NPolyListSphere(NPolyList *npl,
+			     Transform T, TransformN *TN, int *axes, int space);
 extern GeomClass *NPolyListMethods();
 
 #endif/*NPOLYLISTPDEFS*/
