@@ -31,14 +31,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.6 2006/10/04 08:10:04 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.7 2006/10/15 12:53:12 rotdrop Exp $ */
 
 
 /*
  * Initialize the PolyList class record.
  */
 
-#include	"npolylistP.h"
+#include "npolylistP.h"
 
 
 static GeomClass *aNPolyListMethods = NULL;
@@ -55,28 +55,25 @@ static char npolylistName[] = "npolylist";
 char *
 NPolyListName()
 {
-	return npolylistName;
+  return npolylistName;
 }
 
-GeomClass      *
-NPolyListMethods()
+GeomClass *NPolyListMethods(void)
 {
-	if (!aNPolyListMethods)
-	{
-		aNPolyListMethods = GeomClassCreate(npolylistName);
-		aNPolyListMethods->name = (GeomNameFunc *) NPolyListName;
-		aNPolyListMethods->methods = (GeomMethodsFunc *) NPolyListMethods;
-		aNPolyListMethods->draw = (GeomDrawFunc *) NPolyListDraw;
-		aNPolyListMethods->bound = (GeomBoundFunc *) NPolyListBound;
-		aNPolyListMethods->create = (GeomCreateFunc *) NPolyListCreate;
-		aNPolyListMethods->copy = (GeomCopyFunc *) NPolyListCopy;
-		aNPolyListMethods->fsave = (GeomFSaveFunc *) NPolyListFSave;
-		aNPolyListMethods->Delete = (GeomDeleteFunc *) NPolyListDelete;
-		aNPolyListMethods->fload = (GeomFLoadFunc *) NPolyListFLoad;
-		aNPolyListMethods->transform = 
-		  (GeomTransformFunc *) NPolyListTransform;
-		aNPolyListMethods->transformto =
-		  (GeomTransformToFunc *) NPolyListTransform; /* == Transform */
-	}
-	return aNPolyListMethods;
+  if (!aNPolyListMethods) {
+    aNPolyListMethods = GeomClassCreate(npolylistName);
+    aNPolyListMethods->name = (GeomNameFunc *) NPolyListName;
+    aNPolyListMethods->methods = (GeomMethodsFunc *) NPolyListMethods;
+    aNPolyListMethods->draw = (GeomDrawFunc *) NPolyListDraw;
+    aNPolyListMethods->bound = (GeomBoundFunc *) NPolyListBound;
+    aNPolyListMethods->boundsphere = (GeomBoundSphereFunc *) NPolyListSphere;
+    aNPolyListMethods->create = (GeomCreateFunc *) NPolyListCreate;
+    aNPolyListMethods->copy = (GeomCopyFunc *) NPolyListCopy;
+    aNPolyListMethods->fsave = (GeomFSaveFunc *) NPolyListFSave;
+    aNPolyListMethods->Delete = (GeomDeleteFunc *) NPolyListDelete;
+    aNPolyListMethods->fload = (GeomFLoadFunc *) NPolyListFLoad;
+    aNPolyListMethods->transform = (GeomTransformFunc *) NPolyListTransform;
+    aNPolyListMethods->transformto = (GeomTransformToFunc *) NPolyListTransform;
+  }
+  return aNPolyListMethods;
 }

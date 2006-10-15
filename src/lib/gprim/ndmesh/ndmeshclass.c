@@ -46,28 +46,25 @@ extern NDMesh      *NDMeshCopy( NDMesh * );
 char *
 NDMeshName()
 {
-	return ndmeshName;
+  return ndmeshName;
 }
 
-GeomClass      *
-NDMeshMethods()
+GeomClass *NDMeshMethods(void)
 {
-	if (!aNDMeshMethods)
-	{
-		aNDMeshMethods = GeomClassCreate(ndmeshName);
+  if (!aNDMeshMethods) {
+    aNDMeshMethods = GeomClassCreate(ndmeshName);
 
-		aNDMeshMethods->name = NDMeshName;
-		aNDMeshMethods->methods = (GeomMethodsFunc *) NDMeshMethods;
-		aNDMeshMethods->create = (GeomCreateFunc *) NDMeshCreate;
-		aNDMeshMethods->Delete = (GeomDeleteFunc *) NDMeshDelete;
-		aNDMeshMethods->fload = (GeomFLoadFunc *) NDMeshFLoad;
-		aNDMeshMethods->fsave = (GeomFSaveFunc *) NDMeshFSave;
-		aNDMeshMethods->bound = (GeomBoundFunc *) NDMeshBound;
-		aNDMeshMethods->draw = (GeomDrawFunc *) NDMeshDraw;
-		aNDMeshMethods->transform = 
-		  (GeomTransformFunc *) NDMeshTransform;
-		aNDMeshMethods->transformto =
-		  (GeomTransformToFunc *) NDMeshTransform; /* == Transform */
-	}
-	return aNDMeshMethods;
+    aNDMeshMethods->name = NDMeshName;
+    aNDMeshMethods->methods = (GeomMethodsFunc *) NDMeshMethods;
+    aNDMeshMethods->create = (GeomCreateFunc *) NDMeshCreate;
+    aNDMeshMethods->Delete = (GeomDeleteFunc *) NDMeshDelete;
+    aNDMeshMethods->fload = (GeomFLoadFunc *) NDMeshFLoad;
+    aNDMeshMethods->fsave = (GeomFSaveFunc *) NDMeshFSave;
+    aNDMeshMethods->bound = (GeomBoundFunc *) NDMeshBound;
+    aNDMeshMethods->boundsphere = (GeomBoundSphereFunc *) NDMeshBoundSphere;
+    aNDMeshMethods->draw = (GeomDrawFunc *) NDMeshDraw;
+    aNDMeshMethods->transform = (GeomTransformFunc *) NDMeshTransform;
+    aNDMeshMethods->transformto = (GeomTransformToFunc *) NDMeshTransform;
+  }
+  return aNDMeshMethods;
 }

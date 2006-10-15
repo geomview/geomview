@@ -42,31 +42,28 @@ static char skelName[] = "skel";
 char *
 SkelName()
 {
-	return skelName;
+  return skelName;
 }
 
 
-GeomClass      *
-SkelMethods()
+GeomClass *SkelMethods(void)
 {
-	if (!aSkelMethods)
-	{
-		aSkelMethods = GeomClassCreate(skelName);
+  if (!aSkelMethods) {
+    aSkelMethods = GeomClassCreate(skelName);
 
-		aSkelMethods->name = SkelName;
-		aSkelMethods->methods = (GeomMethodsFunc *) SkelMethods;
-		aSkelMethods->create = (GeomCreateFunc *) SkelCreate;
-		aSkelMethods->fload = (GeomFLoadFunc *) SkelFLoad;
-		aSkelMethods->fsave = (GeomFSaveFunc *) SkelFSave;
-		aSkelMethods->bound = (GeomBoundFunc *) SkelBound;
-		aSkelMethods->Delete = (GeomDeleteFunc *) SkelDelete;
-		aSkelMethods->draw = (GeomDrawFunc *) SkelDraw;
-		aSkelMethods->copy = (GeomCopyFunc *) SkelCopy;
-		aSkelMethods->pick = (GeomPickFunc *) SkelPick;
-		aSkelMethods->transform = 
-		  (GeomTransformFunc *) SkelTransform;
-		aSkelMethods->transformto =
-		  (GeomTransformToFunc *) SkelTransform; /* == TransformTo */
-	}
-	return aSkelMethods;
+    aSkelMethods->name = SkelName;
+    aSkelMethods->methods = (GeomMethodsFunc *) SkelMethods;
+    aSkelMethods->create = (GeomCreateFunc *) SkelCreate;
+    aSkelMethods->fload = (GeomFLoadFunc *) SkelFLoad;
+    aSkelMethods->fsave = (GeomFSaveFunc *) SkelFSave;
+    aSkelMethods->bound = (GeomBoundFunc *) SkelBound;
+    aSkelMethods->boundsphere = (GeomBoundSphereFunc *) SkelBoundSphere;
+    aSkelMethods->Delete = (GeomDeleteFunc *) SkelDelete;
+    aSkelMethods->draw = (GeomDrawFunc *) SkelDraw;
+    aSkelMethods->copy = (GeomCopyFunc *) SkelCopy;
+    aSkelMethods->pick = (GeomPickFunc *) SkelPick;
+    aSkelMethods->transform = (GeomTransformFunc *) SkelTransform;
+    aSkelMethods->transformto = (GeomTransformToFunc *) SkelTransform;
+  }
+  return aSkelMethods;
 }

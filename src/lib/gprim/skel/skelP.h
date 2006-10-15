@@ -58,5 +58,7 @@ extern Skel *SkelFSave( Skel *, FILE * );
 extern BBox *SkelBound(Skel *s, Transform T, TransformN *TN);
 extern Skel *SkelDraw( Skel * );
 extern Skel *SkelTransform( Skel *s, Transform T, TransformN *TN );
+extern Geom *SkelBoundSphere(Skel *skel, Transform T, TransformN *TN, int *axes,
+			     int space);
 
 #endif /*SKELPDEF*/
