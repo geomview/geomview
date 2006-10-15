@@ -1669,10 +1669,13 @@ LDEFINE(look_recenter, LVOID,
     obj2univN.tm = NULL;
   }
 
-  MAYBE_LOOP(camID, i, T_CAM, DView, camObj) { 
-    gv_xform_set(camObj->id, &obj2univ);
-    if (obj2univN.tm) {
-      gv_ND_xform_set(camObj->id, &obj2univN);
+  MAYBE_LOOP(camID, i, T_CAM, DView, camObj) {
+    if (drawerstate.NDim == 0) {
+      gv_xform_set(camObj->id, &obj2univ);
+    } else {
+      if (obj2univN.tm) {
+	gv_ND_xform_set(camObj->id, &obj2univN);
+      }
     }
     gv_position_at(camObj->id, objID, 
 		   spaceof(objID) == TM_EUCLIDEAN ? "center" : "origin");
