@@ -41,8 +41,8 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
 			      Transform T, TransformN *TN, int *axes,
 			      int space)
 {
-  HPoint3 minmax[2];
   Geom *sphere, *bbox;
+  HPoint3 minmax[2];
 
   /* The BoundSphere really is something 3-dimensional */
   if (axes == NULL) {
@@ -55,8 +55,18 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
   if (bbox == NULL)
     return NULL;
 
-  BBoxMinMax((BBox *)bbox, &minmax[0], &minmax[1]);
-  GeomDelete(bbox);
+  if (TN) {
+    HPointN *minmaxN[2] = { NULL, NULL };
+    
+    BBoxMinMaxND((BBox *)bbox, &minmaxN[0], &minmaxN[1]);
+    GeomDelete(bbox);
+    HPtNToHPt3(minmaxN[0], &minmax[0], axes);
+    HPtNToHPt3(minmaxN[1], &minmax[1], axes);
+  } else {
+    BBoxMinMax((BBox *)bbox, &minmax[0], &minmax[1]);
+    GeomDelete(bbox);
+  }
+
   HPt3Normalize(&minmax[0], &minmax[0]);
   HPt3Normalize(&minmax[1], &minmax[1]);
 
@@ -84,3 +94,9 @@ Geom *GeomBoundSphere(Geom *geom,
 
   return GeomBoundSphereFromBBox(geom, T, TN, axes, space);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
