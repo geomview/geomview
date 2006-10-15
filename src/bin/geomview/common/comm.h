@@ -43,7 +43,7 @@
 #define	COMM_NOW	1
 #define	COMM_LATER	0
 
-extern HandleOps CommandOps, TransOps, GeomOps, CamOps, WindowOps;
+extern HandleOps CommandOps, TransOps, NTransOps, GeomOps, CamOps, WindowOps;
 
 extern void comm_init();
 

@@ -50,7 +50,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "fsa.h"
 #include "lang.h"
 
-extern HandleOps TransOps, GeomOps, CamOps, WindowOps;
+extern HandleOps TransOps, NTransOps, GeomOps, CamOps, WindowOps;
 
 LObject *L0, *L1;
 
@@ -531,7 +531,7 @@ LObject *tmn2obj( TmNStruct **x )
 void tmnfree(TmNStruct **x)
 {
   if (*x) {
-    if ((*x)->tm) TmNDelete( (*x)->tm );
+    /*if ((*x)->tm) TmNDelete( (*x)->tm );*/
     if ((*x)->h) HandleDelete( (*x)->h );
   }
   OOGLFree(*x);
@@ -558,15 +558,13 @@ void tmnpull(a_list, x)
 
 LObject *tmnparse(Lake *lake)
 {
-  TransformN *T = TmNRead(lake->streamin);
-  TmNStruct *new;
-  if(T) {
-    new = OOGLNew(TmNStruct);
-    new->h = NULL;
-    new->tm = T;
+  TmNStruct *new = OOGLNew(TmNStruct);
+  new->h = NULL;
+  new->tm = NULL;
+  if (NTransOps.strmin(POOL(lake), (Handle **)&(new->h), (Ref **)(void *)(&new->tm)) == 0) {
+    return Lnil;
+  } else
     return LNew( LTRANSFORMN, &new );
-  }
-  return Lnil;
 }
 
 LType LTransformNp = {

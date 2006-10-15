@@ -116,6 +116,7 @@ void lang_init()
   define_keyword("camera", CAMERA_KEYWORD);
   define_keyword("geometry", GEOM_KEYWORD);
   define_keyword("transform", TRANSFORM_KEYWORD);
+  define_keyword("ntransform", NTRANSFORM_KEYWORD);
   define_keyword("command", COMMAND_KEYWORD);
   define_keyword("window", WINDOW_KEYWORD);
   
@@ -230,6 +231,7 @@ HandleOps *keyword2ops(int keyword)
   case CAMERA_KEYWORD:		return &CamOps;
   case GEOM_KEYWORD: 		return &GeomOps;
   case TRANSFORM_KEYWORD: 	return &TransOps;
+  case NTRANSFORM_KEYWORD: 	return &NTransOps;
   case COMMAND_KEYWORD: 	return &CommandOps;
   case WINDOW_KEYWORD: 		return &WindowOps;
   default: return NULL;
@@ -260,6 +262,7 @@ char *keywordname(int keyword)
   case CAMERA_KEYWORD:		return "camera";
   case GEOM_KEYWORD: 		return "geometry";
   case TRANSFORM_KEYWORD: 	return "transform";
+  case NTRANSFORM_KEYWORD: 	return "ntransform";
   case COMMAND_KEYWORD: 	return "command";
   case WINDOW_KEYWORD: 		return "window";
 

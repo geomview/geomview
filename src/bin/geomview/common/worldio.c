@@ -375,6 +375,7 @@ int worldio(HandleOps *ops, Pool *p, int to_coords, int id)
 {
   int ok = -1;
   Transform T;
+  TransformN *TN;
   int wrap = 1;
 
   if (to_coords == SELF)
@@ -395,6 +396,10 @@ int worldio(HandleOps *ops, Pool *p, int to_coords, int id)
   } else if(ops == &TransOps) {
     drawer_get_transform(id, T, to_coords);
     ok = TransStreamOut(p, NULL, T);
+  } else if(ops == &NTransOps) {
+    TN = drawer_get_ND_transform(id, to_coords);
+    ok = NTransStreamOut(p, NULL, TN);
+    TmNDelete(TN);
   }    
   fflush(PoolOutputFile(p));
   return ok;

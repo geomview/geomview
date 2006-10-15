@@ -61,7 +61,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "lisp.h"
 #include "transobj.h"
 
-extern HandleOps CamOps, GeomOps, TransOps, CommandOps, WindowOps;
+extern HandleOps CamOps, GeomOps, TransOps, NTransOps, CommandOps, WindowOps;
 
 int gv_debug = 0;
 
@@ -1075,6 +1075,7 @@ str2ops(char *str)
   else if(!strncmp(str, "geom", 4)) return &GeomOps;
   else if(!strncmp(str, "comm", 4)) return &CommandOps;
   else if(!strncmp(str, "trans", 5)) return &TransOps;
+  else if(!strncmp(str, "ntrans", 6)) return &NTransOps;
   else if(!strncmp(str, "win", 3)) return &WindowOps;
   else return NULL;
 }
@@ -1086,6 +1087,7 @@ ops2ltype(HandleOps *ops)
   else if(ops == &GeomOps) return LGEOM;
   else if(ops == &WindowOps) return LWINDOW;
   else if(ops == &TransOps) return LTRANSFORM;
+  else if(ops == &NTransOps) return LTRANSFORMN;
   else if(ops == &CommandOps) return LLOBJECT;
   else return NULL;
 }
@@ -1168,7 +1170,7 @@ loadfile(char *name, HandleOps *defops, int guess)
 }
 
 LDEFINE(hdefine, LVOID,
-	"(hdefine  \"geometry\"|\"camera\"|\"transform\"|\"window\"  name  value)\n\
+	"(hdefine  \"geometry\"|\"camera\"|\"transform\"|\"ntransform\"|\"window\"  name  value)\n\
 	Sets the value of a handle of a given type.\n\
 	  (hdefine  <type>  <name>  <value>)  is generally equivalent to\n\
 	  (read <type>  { define <name> <value> })\n\
@@ -1188,6 +1190,7 @@ LDEFINE(hdefine, LVOID,
     GeomStruct gs;
     CameraStruct cs;
     TransformStruct ts;
+    TmNStruct tns;
     WindowStruct ws;
     ApStruct as;
     LObject lobj;
@@ -1200,7 +1203,7 @@ LDEFINE(hdefine, LVOID,
 	  (ops = str2ops(opsname)) == NULL ||
 	  (ltype = ops2ltype(ops)) == NULL) {
       OOGLSyntax(lake->streamin,
-	"\"hdefine\" in \"%s\": expected \"camera\" or \"window\" or \"transform\" or \"geometry\", got \"%s\"", LakeName(lake), opsname);
+	"\"hdefine\" in \"%s\": expected \"camera\" or \"window\" or \"transform\" or \"ntransform\" or \"geometry\", got \"%s\"", LakeName(lake), opsname);
       goto parsefail;
     }
 
@@ -1243,6 +1246,7 @@ LDEFINE(hdefine, LVOID,
     return Lnil;
   }
   if(ops == &TransOps) obj = (Ref *)TransCreate( s->ts.tm );
+  else if(ops == &NTransOps) obj = (Ref *)NTransCreate( s->tns.tm );
   else if(ops == &CommandOps) obj = NULL; /* (Ref *)LispCreate( s->lobj ) */
   else obj = (Ref *)s->gs.geom;	/* All other types resemble geoms */
   HandleAssign(hname, ops, obj);
