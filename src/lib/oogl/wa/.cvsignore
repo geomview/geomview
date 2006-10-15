@@ -1,5 +1,8 @@
+.deps
+.libs
 Makefile
 Makefile.in
 lex.yy.c
+libwa.la
 y.tab.c
 y.tab.h

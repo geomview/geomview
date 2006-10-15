@@ -2,6 +2,7 @@
 .geomview-3d-snapshot
 .geomview-colormap
 .geomview-slicer
+.libs
 Makefile
 Makefile.in
 ndutils

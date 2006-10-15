@@ -1,5 +1,6 @@
 .deps
 .geomview-clipboard
+.libs
 Makefile
 Makefile.in
 clipboard

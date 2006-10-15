@@ -1,6 +1,7 @@
 .deps
 .geomview-nddemo
 .geomview-ndview
+.libs
 Makefile
 Makefile.in
 ndview
