@@ -439,14 +439,15 @@ HPtNToHPt3(HPointN *from, HPoint3 *hp3, int *axes)
     hp3->z = from->v[2];
     hp3->w = from->v[dim-1];
   } else {
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 4; i++) {
       if (axes[i] > dim-1) {
 	to[i] = 0.0;
-      } else if (axes[i] != -1) {
+      } else if (axes[i] == -1) {
+	to[i] = from->v[dim-1];
+      } else {
 	to[i] = from->v[axes[i]];
       }
     }
-    hp3->w = from->v[dim-1];
   }
   return hp3;
 }
@@ -463,3 +464,9 @@ void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other, int dim)
     }
   }    
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
