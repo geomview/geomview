@@ -824,6 +824,7 @@ OOGLLIBS="\$(top_geom_builddir)/src/lib/oogl/wa/libwa.la                     \
           \$(top_geom_builddir)/src/lib/geometry/transform3/libtransform3.la \
           \$(top_geom_builddir)/src/lib/geometry/transformn/libtransformn.la \
           \$(top_geom_builddir)/src/lib/geometry/transobj/libtransobj.la     \
+          \$(top_geom_builddir)/src/lib/geometry/ntransobj/libntransobj.la   \
           \$(top_geom_builddir)/src/lib/oogl/lisp/liblisp.la                 \
           \$(top_geom_builddir)/src/lib/oogl/refcomm/librefcomm.la           \
           \$(top_geom_builddir)/src/lib/oogl/util/libooglutil.la             \
@@ -863,6 +864,7 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 		src/lib/geometry/transform3	\
 		src/lib/geometry/transformn	\
 		src/lib/geometry/transobj	\
+		src/lib/geometry/ntransobj	\
 		src/lib/camera			\
 		src/lib/color			\
 		src/lib/fexpr			\
@@ -936,6 +938,7 @@ AC_CONFIG_FILES([Makefile
 	  src/lib/geometry/transform3/Makefile
 	  src/lib/geometry/transformn/Makefile
 	  src/lib/geometry/transobj/Makefile
+	  src/lib/geometry/ntransobj/Makefile
 	  src/lib/geomutil/Makefile
 	  src/lib/geomutil/bdy/Makefile
 	  src/lib/geomutil/crayplutil/Makefile
