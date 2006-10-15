@@ -46,33 +46,28 @@ extern Mesh      *MeshCopy( Mesh * );
 char *
 MeshName()
 {
-	return meshName;
+  return meshName;
 }
 
-GeomClass      *
-MeshMethods()
+GeomClass *MeshMethods(void)
 {
-	if (!aMeshMethods)
-	{
-		aMeshMethods = GeomClassCreate(meshName);
+  if (!aMeshMethods) {
+    aMeshMethods = GeomClassCreate(meshName);
 
-		aMeshMethods->name = MeshName;
-		aMeshMethods->methods = (GeomMethodsFunc *) MeshMethods;
-		aMeshMethods->create = (GeomCreateFunc *) MeshCreate;
-		aMeshMethods->Delete = (GeomDeleteFunc *) MeshDelete;
-		aMeshMethods->copy = (GeomCopyFunc *) MeshCopy;
-		aMeshMethods->fload = (GeomFLoadFunc *) MeshFLoad;
-		aMeshMethods->fsave = (GeomFSaveFunc *) MeshFSave;
-		aMeshMethods->bound = (GeomBoundFunc *) MeshBound;
-		aMeshMethods->boundsphere = 
-		  (GeomBoundSphereFunc *) MeshBoundSphere;
-		aMeshMethods->evert = (GeomEvertFunc *) MeshEvert;
-		aMeshMethods->draw = (GeomDrawFunc *) MeshDraw;
-		aMeshMethods->pick = (GeomPickFunc *) MeshPick;
-		aMeshMethods->transform = 
-		  (GeomTransformFunc *) MeshTransform;
-		aMeshMethods->transformto = 
-		  (GeomTransformToFunc *) MeshTransform;
-	}
-	return aMeshMethods;
+    aMeshMethods->name = MeshName;
+    aMeshMethods->methods = (GeomMethodsFunc *) MeshMethods;
+    aMeshMethods->create = (GeomCreateFunc *) MeshCreate;
+    aMeshMethods->Delete = (GeomDeleteFunc *) MeshDelete;
+    aMeshMethods->copy = (GeomCopyFunc *) MeshCopy;
+    aMeshMethods->fload = (GeomFLoadFunc *) MeshFLoad;
+    aMeshMethods->fsave = (GeomFSaveFunc *) MeshFSave;
+    aMeshMethods->bound = (GeomBoundFunc *) MeshBound;
+    aMeshMethods->boundsphere = (GeomBoundSphereFunc *) MeshBoundSphere;
+    aMeshMethods->evert = (GeomEvertFunc *) MeshEvert;
+    aMeshMethods->draw = (GeomDrawFunc *) MeshDraw;
+    aMeshMethods->pick = (GeomPickFunc *) MeshPick;
+    aMeshMethods->transform = (GeomTransformFunc *) MeshTransform;
+    aMeshMethods->transformto = (GeomTransformToFunc *) MeshTransform;
+  }
+  return aMeshMethods;
 }

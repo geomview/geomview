@@ -31,14 +31,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.5 2006/10/04 08:10:04 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.6 2006/10/15 12:52:30 rotdrop Exp $ */
 
 
 /*
  * Initialize the PolyList class record.
  */
 
-#include	"polylistP.h"
+#include "polylistP.h"
 
 
 static GeomClass *aPolyListMethods = NULL;
@@ -50,32 +50,27 @@ static char polylistName[] = "polylist";
 char *
 PolyListName()
 {
-	return polylistName;
+  return polylistName;
 }
 
-GeomClass      *
-PolyListMethods()
+GeomClass *PolyListMethods(void)
 {
-	if (!aPolyListMethods)
-	{
-		aPolyListMethods = GeomClassCreate(polylistName);
-		aPolyListMethods->name = (GeomNameFunc *) PolyListName;
-		aPolyListMethods->methods = (GeomMethodsFunc *) PolyListMethods;
-		aPolyListMethods->draw = (GeomDrawFunc *) PolyListDraw;
-		aPolyListMethods->bound = (GeomBoundFunc *) PolyListBound;
-		aPolyListMethods->boundsphere = 
-		  (GeomBoundSphereFunc *) PolyListSphere;
-		aPolyListMethods->evert = (GeomEvertFunc *) PolyListEvert;
-		aPolyListMethods->create = (GeomCreateFunc *) PolyListCreate;
-		aPolyListMethods->copy = (GeomCopyFunc *) PolyListCopy;
-		aPolyListMethods->fsave = (GeomFSaveFunc *) PolyListFSave;
-		aPolyListMethods->Delete = (GeomDeleteFunc *) PolyListDelete;
-		aPolyListMethods->fload = (GeomFLoadFunc *) PolyListFLoad;
-		aPolyListMethods->pick = (GeomPickFunc *) PolyListPick;
-		aPolyListMethods->transform = 
-		  (GeomTransformFunc *) PolyListTransform;
-		aPolyListMethods->transformto = 
-		  (GeomTransformToFunc *) PolyListTransform;
-	}
-	return aPolyListMethods;
+  if (!aPolyListMethods) {
+    aPolyListMethods = GeomClassCreate(polylistName);
+    aPolyListMethods->name = (GeomNameFunc *) PolyListName;
+    aPolyListMethods->methods = (GeomMethodsFunc *) PolyListMethods;
+    aPolyListMethods->draw = (GeomDrawFunc *) PolyListDraw;
+    aPolyListMethods->bound = (GeomBoundFunc *) PolyListBound;
+    aPolyListMethods->boundsphere = (GeomBoundSphereFunc *) PolyListSphere;
+    aPolyListMethods->evert = (GeomEvertFunc *) PolyListEvert;
+    aPolyListMethods->create = (GeomCreateFunc *) PolyListCreate;
+    aPolyListMethods->copy = (GeomCopyFunc *) PolyListCopy;
+    aPolyListMethods->fsave = (GeomFSaveFunc *) PolyListFSave;
+    aPolyListMethods->Delete = (GeomDeleteFunc *) PolyListDelete;
+    aPolyListMethods->fload = (GeomFLoadFunc *) PolyListFLoad;
+    aPolyListMethods->pick = (GeomPickFunc *) PolyListPick;
+    aPolyListMethods->transform = (GeomTransformFunc *) PolyListTransform;
+    aPolyListMethods->transformto = (GeomTransformToFunc *) PolyListTransform;
+  }
+  return aPolyListMethods;
 }
