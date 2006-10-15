@@ -1959,7 +1959,7 @@ apply_ND_transform(Transform delta, int moving, int center, int frame)
 
   drawer_set_ND_xform(moving, Tmp);
 
-  /*TmNDelete(Tmp);*/
+  TmNDelete(Tmp);
   TmNDelete(Tgf);
   TmNDelete(Tfg);
   TmNDelete(Tcf);
