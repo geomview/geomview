@@ -411,6 +411,7 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
       if (objT) {
 	TmNConcat(T, objT, T);
 	drawer_set_ND_xform(moveObj->id, T);
+	TmNDelete(objT);
       }
 
       TmNDelete(T);
