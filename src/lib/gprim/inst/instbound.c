@@ -39,35 +39,72 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *
 InstBound(Inst *inst, Transform T, TransformN *TN)
 {
-    BBox *geombbox;
-    Transform Tnew;
-    GeomIter *it;
+  BBox *geombbox;
+  Transform Tnew;
+  GeomIter *it;
 
-    if( inst == NULL || inst->geom == NULL)
-	return NULL;
+  if( inst == NULL || inst->geom == NULL)
+    return NULL;
 
-    if (T == NULL)
-	T = TM_IDENTITY;
+  if (T == NULL)
+    T = TM_IDENTITY;
 
-    /* Insts which tie themselves to particular locations have no
-     * bounding box, either.
-     */
-    if( inst->location > L_LOCAL || inst->origin > L_LOCAL )
-	return NULL;
+  /* Insts which tie themselves to particular locations have no
+   * bounding box, either.
+   */
+  if( inst->location > L_LOCAL || inst->origin > L_LOCAL )
+    return NULL;
 
-    it = GeomIterate( (Geom *)inst, DEEP );
-    geombbox = NULL;
-    while(NextTransform(it, Tnew) > 0) {
+  /* FIXME: if inst->ndaxis != NULL and/or TN != NULL we have to do
+   * something here.
+   *
+   * If TN != NULL, then Tnew should be prepended to TN w.r.t. to
+   * the default x,y,z space (because this is the way we interprete
+   * 3d objects in Nd).
+   *
+   * GeomIterate() should not be necessary in this case; MMmh.
+   */
+
+  if (inst->ndaxis == NULL) {
+    if (TN == NULL) {
+      it = GeomIterate( (Geom *)inst, DEEP );
+      geombbox = NULL;
+      while(NextTransform(it, Tnew) > 0) {
 	BBox *box;
-
+		
 	TmConcat( Tnew, T, Tnew );
 	if((box = (BBox *)GeomBound( inst->geom, Tnew, TN)) != NULL) {
-	    if(geombbox) {
-		BBoxUnion3(geombbox, box, geombbox);
-		GeomDelete((Geom *)box);
-	    } else
-		geombbox = box;
+	  if(geombbox) {
+	    BBoxUnion3(geombbox, box, geombbox);
+	    GeomDelete((Geom *)box);
+	  } else
+	    geombbox = box;
 	}
+      }
+    } else {
+      TransformN *TnewN = TmNCopy(TN, NULL);
+      static int dflt_axes[] = { 0, 1, 2, -1 };
+
+      it = GeomIterate( (Geom *)inst, DEEP );
+      geombbox = NULL;
+      while(NextTransform(it, Tnew) > 0) {
+	BBox *box;
+
+	TmNCopy(TN, TnewN);
+	TmNApplyT3TN(Tnew, dflt_axes, TnewN);
+	if((box = (BBox *)GeomBound( inst->geom, NULL, TnewN)) != NULL) {
+	  if(geombbox) {
+	    BBoxUnion3(geombbox, box, geombbox);
+	    GeomDelete((Geom *)box);
+	  } else
+	    geombbox = box;
+	}
+      }
+      TmNDelete(TnewN);
     }
-    return geombbox;
+  } else {
+    /* FIXME, TODO */
+  }
+    
+  return geombbox;
 }

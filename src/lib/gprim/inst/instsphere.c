@@ -49,17 +49,48 @@ Geom *InstBoundSphere(Inst *inst,
   if (inst->location > L_LOCAL || inst->origin > L_LOCAL)
     return NULL;
 
-  it = GeomIterate((Geom *)inst, DEEP);
-  geomsphere = NULL;
-  while (NextTransform(it, Tnew) > 0) {
-    TmConcat(Tnew, T, Tnew);
-    sphere = (Sphere *)GeomBoundSphere(inst->geom, Tnew, NULL, NULL, space);
-    if (sphere != NULL) {
-      if (geomsphere != NULL) {
-	SphereUnion3(geomsphere, sphere, geomsphere);
-	GeomDelete((Geom *)sphere);
-      } else geomsphere = sphere;
+  if (inst->ndaxis == NULL) {
+    if (TN == NULL) {
+      it = GeomIterate((Geom *)inst, DEEP);
+      geomsphere = NULL;
+      while (NextTransform(it, Tnew) > 0) {
+	TmConcat(Tnew, T, Tnew);
+	sphere = (Sphere *)GeomBoundSphere(inst->geom, Tnew, NULL, NULL, space);
+	if (sphere != NULL) {
+	  if (geomsphere != NULL) {
+	    SphereUnion3(geomsphere, sphere, geomsphere);
+	    GeomDelete((Geom *)sphere);
+	  } else geomsphere = sphere;
+	}
+      }
+    } else {
+      TransformN *TnewN = TmNCopy(TN, NULL);
+      static int dflt_axes[] = { 0, 1, 2, -1 };
+
+      it = GeomIterate((Geom *)inst, DEEP);
+      geomsphere = NULL;
+      while (NextTransform(it, Tnew) > 0) {
+
+	/* If TN != NULL, then Tnew is first applied to the x,y,z
+	 * sub-space of the object, then folded into TN, and finally
+	 * the product is projected down to the sub-space defined by
+	 * the "axes" argument.
+	 */
+	TmNCopy(TN, TnewN);
+	TmNApplyT3TN(Tnew, dflt_axes, TnewN);
+	sphere = (Sphere *)GeomBoundSphere(inst->geom, NULL, TN,  axes, space);
+	if (sphere != NULL) {
+	  if (geomsphere != NULL) {
+	    SphereUnion3(geomsphere, sphere, geomsphere);
+	    GeomDelete((Geom *)sphere);
+	  } else geomsphere = sphere;
+	}
+      }
+
+      TmNDelete(TnewN);
     }
+  } else {
+    /* FIXME, todo */
   }
 
   return (Geom *)geomsphere;
