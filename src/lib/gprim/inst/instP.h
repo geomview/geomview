@@ -37,12 +37,13 @@
 #define INSTFIELDS						\
   GEOMFIELDS;							\
   Transform 	axis;		/* this ought to go... */	\
-  TransformN    *axisN;						\
+  TransformN    *ndaxis;	/* maybe not. */		\
   Geom		*geom;						\
   Handle	*geomhandle;					\
   Geom		*tlist;						\
   Handle	*tlisthandle;					\
   Handle	*axishandle;					\
+  Handle	*ndaxishandle;					\
   int		location;	/* L_LOCAL, etc. */		\
   int		origin;		/* L_NONE, L_LOCAL, etc. */	\
   Point3	originpt	/* Only if origin != L_NONE */

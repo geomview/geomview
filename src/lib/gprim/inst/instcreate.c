@@ -36,6 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "instP.h"
 #include "transobj.h"
+#include "ntransobj.h"
 
 void
 InstDelete( inst )
@@ -110,6 +111,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     int attr;
     int copy = 1;
     Transform *t;
+    TransformN *nt;
     Geom *g;
     Handle *h;
 
@@ -164,6 +166,8 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	    break;
 	    
 	case CR_NDAXIS:
+	    nt = va_arg(*a_list, TransformN *);
+	    InstTransformTo(inst, NULL, nt);
 	    break;
 
 	case CR_AXISHANDLE:
@@ -176,6 +180,12 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	    break;
 
 	case CR_NDAXISHANDLE:
+	    h = va_arg(*a_list, Handle *);
+	    if(copy) RefIncr((Ref *)h);
+	    if(inst->ndaxishandle)
+		HandlePDelete(&inst->ndaxishandle);
+	    inst->ndaxishandle = h;
+	    HandleRegister(&inst->ndaxishandle, (Ref *)inst, inst->ndaxis, NTransUpdate);
 	    break;
 
 	case CR_TLIST:

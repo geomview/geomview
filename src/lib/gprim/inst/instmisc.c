@@ -101,7 +101,19 @@ InstTransformTo(Inst *inst, Transform T, TransformN *TN)
 	HandlePDelete(&inst->tlisthandle);
 	inst->tlisthandle = NULL;
     }
-    TmCopy( T ? T : TM_IDENTITY, inst->axis );
+    if (TN) {
+	if (inst->axishandle) {
+	    HandlePDelete(&inst->axishandle);
+	    inst->axishandle = NULL;
+	}
+	inst->ndaxis = TmNCopy(TN, inst->ndaxis);
+    } else {
+	if (inst->ndaxishandle) {
+	    HandlePDelete(&inst->ndaxishandle);
+	    inst->ndaxishandle = NULL;
+	}
+	TmCopy( T ? T : TM_IDENTITY, inst->axis );
+    }
     return inst;
 }
 
@@ -118,12 +130,20 @@ InstTransform(Inst *inst, Transform T, TransformN *TN)
 {
     Tlist *tl;
 
-    if (T == NULL || T == TM_IDENTITY)
+    if (TN == NULL && (T == NULL || T == TM_IDENTITY))
 	return inst;
 
     if(inst->tlist == NULL && inst->tlisthandle == NULL) {
-	TmConcat( inst->axis, T, inst->axis );
-    } else {
+	if (TN) {
+	    if (inst->ndaxis) {
+		TmNConcat(inst->ndaxis, TN, inst->ndaxis);
+	    } else {
+		inst->ndaxis = TmNCopy(TN, NULL);
+	    }
+	} else {
+	    TmConcat( inst->axis, T, inst->axis );
+	}
+    } else if (TN == NULL) {
 	tl = (Tlist *)inst->tlist;
 	if(tl != NULL && tl->Class == TlistClass && tl->nelements == 1
 			&& tl->ref_count == 1) {

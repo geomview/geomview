@@ -35,6 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 #include "streampool.h"
 #include "transobj.h"
+#include "ntransobj.h"
 #include "handleP.h"
 
 static char *locations[] = {
@@ -122,6 +123,19 @@ InstImport( Pool *p )
 				&inst->geom, HandleUpdRef);
 	    break;
 
+	case 'n': /* ntransform */
+	    if(iobfexpectstr(file, (expect = "ntransform")))
+		goto syntax;
+	    if(inst == NULL)
+		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    expect = "ntransform matrix";
+	    if(!NTransStreamIn(p, &inst->ndaxishandle, &inst->ndaxis))
+		goto failed;
+	    if(inst->ndaxishandle)
+		HandleRegister(&inst->ndaxishandle, (Ref *)inst,
+			       inst->ndaxis, NTransUpdate);
+	    break;
+	    
 	case 't':		/* tlist ... or transform ... */
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
@@ -205,8 +219,10 @@ InstExport( Inst *inst, Pool *pool )
     if(inst->tlist != NULL || inst->tlisthandle != NULL) {
 	fprintf(pool->outf, "  tlist ");
 	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
-    } else {
+    } else if (inst->axishandle != NULL) {
 	ok &= TransStreamOut(pool, inst->axishandle, inst->axis);
+    } else if (inst->ndaxishandle != NULL) {
+	ok &= NTransStreamOut(pool, inst->ndaxishandle, inst->ndaxis);
     }
 
     if(inst->geom != NULL || inst->geomhandle != NULL) {
