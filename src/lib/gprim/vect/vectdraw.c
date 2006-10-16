@@ -63,10 +63,20 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
     newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
     newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));
 
-    for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
+    if (v->geomflags & VERT_4D) {
+      for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
 	*(HPoint3 *)h->v = *op;
 	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
 	hascolor = colored;
+      }
+    } else {
+      /* w has no special meaning for ND > 3 */
+      for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
+	HPt3Dehomogenize(op, (HPoint3 *)h->v);
+	h->v[3] = 0.0;
+	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+	hascolor = colored;
+      }
     }
 
     for(i = 0, p = newp, c = colored ? newc : v->c; i < v->nvec; i++) {

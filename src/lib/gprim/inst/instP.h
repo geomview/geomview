@@ -34,23 +34,21 @@
 
 #define INSTMAGIC	GeomMagic('i', 3)
 
-#define INST_4D	VERT_4D
-
-#define INSTFIELDS							\
-  GEOMFIELDS;								\
-  Transform 	axis;		/* this ought to go... */		\
-  Geom		*geom;							\
-  Handle	*geomhandle;						\
-  Geom		*tlist;							\
-  Handle	*tlisthandle;						\
-  Handle	*axishandle;						\
-  int 		instflag;	/* currently, only bit read is 4D */	\
-  int		location;	/* L_LOCAL, etc. */			\
-  int		origin;		/* L_NONE, L_LOCAL, etc. */		\
-  Point3	originpt;	/* Only if origin != L_NONE */
+#define INSTFIELDS						\
+  GEOMFIELDS;							\
+  Transform 	axis;		/* this ought to go... */	\
+  TransformN    *axisN;						\
+  Geom		*geom;						\
+  Handle	*geomhandle;					\
+  Geom		*tlist;						\
+  Handle	*tlisthandle;					\
+  Handle	*axishandle;					\
+  int		location;	/* L_LOCAL, etc. */		\
+  int		origin;		/* L_NONE, L_LOCAL, etc. */	\
+  Point3	originpt	/* Only if origin != L_NONE */
 
 struct Inst {
-  INSTFIELDS
+  INSTFIELDS;
 };
 
 extern GeomClass *InstClass;		/* Public read-only; valid only

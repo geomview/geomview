@@ -25,13 +25,13 @@
 #include "instP.h"
 
 #define SPHEREFIELDS \
-  INSTFIELDS \
+  INSTFIELDS; \
   float radius; \
   HPoint3 center; \
-  int space;
+  int space
 
 struct Sphere {
-  SPHEREFIELDS
+  SPHEREFIELDS;
 };
     
 #define SPHEREMAGIC	GeomMagic('s', 1)

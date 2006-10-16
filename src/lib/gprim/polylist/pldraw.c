@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.6 2006/10/13 22:20:34 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.7 2006/10/16 07:06:23 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -79,14 +79,15 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
       }
     } else {
       for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
-	HPt3Dehomogenize(&ov->pt, &ov->pt);
-	*(HPoint3 *)h->v = ov->pt;
+	HPt3Dehomogenize(&ov->pt, (HPoint3 *)h->v);
+	h->v[3] = 0; /* w-direction has no special meaning in ND */
 	nv->vcol = ov->vcol;
 	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
       }
     }
 
     newpl.flags &= ~(PL_HASVN|PL_HASPN);
+    newpl.geomflags &= ~VERT_4D;
     PolyListComputeNormals(&newpl);
     if(colored)
 	newpl.flags = (newpl.flags &~ PL_HASPCOL) | PL_HASVCOL;

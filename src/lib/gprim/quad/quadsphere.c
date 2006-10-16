@@ -39,25 +39,13 @@ Geom *QuadSphere(Quad *q,
 {
   Geom *sphere;
 
-  if (TN) {
-
-    /* Create a dummy sphere, the center will be corrected later */
-    sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
+  /* Create a dummy sphere, the center will be corrected later */
+  sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
     
-    SphereEncompassPoints((Sphere *)sphere,
-			  (float *)q->p, (q->geomflags & VERT_4D) ? 4 : 3, 4,
-			  q->maxquad * 4,
-			  NULL, TN, axes);
-    
-  } else {
-    
-    if(q->flag & QUAD_4D)
-      return GeomBoundSphereFromBBox((Geom *)q, T, TN, axes, space);
-
-    sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, q->p,
-			CR_NENCOMPASS_POINTS, q->maxquad * 4,
-			CR_AXIS, T ? T : TM_IDENTITY, CR_SPACE, space, CR_END);
-  }
+  SphereEncompassPoints((Sphere *)sphere,
+			(float *)q->p, (q->geomflags & VERT_4D) ? 4 : 3, 4,
+			q->maxquad * 4,
+			T, TN, axes);
   
   return sphere;
 }

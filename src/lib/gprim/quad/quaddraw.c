@@ -57,11 +57,9 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
   op = qquad->p[0];
   if (!(qquad->geomflags & VERT_4D)) {
     for(i = 0; i < npts; i++, op++, np++, nc++) {
-      /* Set the point's first four components from our 4-D vertex */
-      if (op->w != 1.0) {
-	HPt3Dehomogenize(op, op);
-      }
-      *(HPoint3 *)h->v = *op;
+      /* Set the point's first THREE components from our 4-D vertex */
+      HPt3Dehomogenize(op, (HPoint3 *)h->v);
+      h->v[3] = 0.0;
       colored = (*NDmap)(NDinfo, h, np, nc);
     }
   } else {
@@ -71,7 +69,7 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
       colored = (*NDmap)(NDinfo, h, np, nc);
     }
   }
-  q.flag &= ~QUAD_4D;
+
   if(colored) q.flag |= QUAD_C;
   QuadComputeNormals(&q);
   mgquads( q.maxquad, q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0] );

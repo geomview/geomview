@@ -61,7 +61,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
     token = GeomToken(file);
     if(*token == '4') {		/* Really means "homogeneous coords" */
-	geomflags = SKEL_4D;
+	geomflags = VERT_4D;
 	token++;
     }
     if(*token == 'n') {
@@ -93,7 +93,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
     GGeomInit(s, SkelMethods(), SKELMAGIC, NULL);
     s->geomflags = geomflags;
-    s->pdim = (s->geomflags & SKEL_4D) ? dim : dim+1;
+    s->pdim = (s->geomflags & VERT_4D) ? dim : dim+1;
     s->p = NULL;
     s->l = NULL;
     s->c = NULL;
@@ -112,7 +112,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     VVINIT(verts, int, 40);
 
 
-    k = (geomflags & SKEL_4D) ? s->pdim : s->pdim - 1;
+    k = (geomflags & VERT_4D) ? s->pdim : s->pdim - 1;
     for(i = 0, vp = s->p; i < s->nvert; i++, vp += s->pdim) {
 	vp[s->pdim - 1] = 1.0;			/* homogeneous component */
 	if(iobfgetnf(file, k, vp, binary) < k) {

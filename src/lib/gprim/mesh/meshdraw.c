@@ -59,13 +59,14 @@ draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
     }
   } else {
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
-      /* Set the point's first four components from our 4-D mesh vertex */
-      HPt3Dehomogenize(op, op);
-      *(HPoint3 *)h->v = *op;
+      /* Set the point's first THREE components from our 4-D mesh vertex */
+      HPt3Dehomogenize(op, (HPoint3 *)h->v);
+      h->v[3] = 0.0; /* otherwise we'll have a translation in w direction,
+			which has no special meaning in ND */
       colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
     }
   }
-  m.flag &= ~MESH_4D;
+  m.geomflags &= ~VERT_4D;
   if(colored) m.flag |= MESH_C;
   MeshComputeNormals(&m);
   if(_mgc->astk->useshader) {

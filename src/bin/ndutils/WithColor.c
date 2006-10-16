@@ -260,7 +260,6 @@ static void *projectCamWCQuad(int sel, Geom *g, va_list *args)
         free(hptn1);
         free(hptn2);
         g->geomflags=(g->geomflags)&(~VERT_4D);
-        ((Quad *)g)->flag=(((Quad *)g)->flag)&(~QUAD_4D);
         return (void *)g;
 }
 

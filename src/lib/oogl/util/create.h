@@ -27,6 +27,8 @@
 
 #include <stdarg.h>	/* So we only have to do it once, here. */
 
+/* This stuff should be an enum, not a define */
+
 	/* Generic attributes */
 #define	CR_END		0	/* Marks end of create list (any object) */
 #define CR_COPY		1	/* no argument  (any object)		*/
@@ -59,6 +61,7 @@
 
 	/* Hierarchy object (Inst, List, TList) attributes */
 #define CR_AXIS		20	/* Transform	(Inst)			*/
+#define CR_NDAXIS	202	/* Transform	(Inst)			*/
 #define CR_GEOM		21	/* Geom *child	(Inst,List)		*/
 #define	CR_GEOMHANDLE	22	/* Handle *childname (Inst,List)	*/
 #define CR_TLIST	23	/* Geom *tlist	   (Inst,TList)		*/
@@ -67,6 +70,7 @@
 #define CR_NELEM	26	/* int nxforms(TList), int nquads (Quad) */
 #define CR_CDR		27	/* List *	(List) (obsolescent?)	*/
 #define	CR_AXISHANDLE	28	/* Handle * to TransObj (for Inst)	*/
+#define	CR_NDAXISHANDLE	203	/* Handle * to TransObj (for Inst)	*/
 #define CR_HANDLE_GEOM  29	/* Handle *, Geom *	(Inst, List)	*/
 #define	CR_CAR		CR_GEOM	/* Geom *	(List) (obsolescent)	*/
 #define	CR_UNIT		CR_GEOM /* Geom *	(Inst) (obsolescent)	*/

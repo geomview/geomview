@@ -96,7 +96,7 @@ QuadFLoad( IOBFILE *file, char *fname )
 	token++;
     }
     if(*token == '4') {
-	q.flag |= QUAD_4D;
+	q.geomflags |= VERT_4D;
 	dimn = 4;
 	token++;
     }

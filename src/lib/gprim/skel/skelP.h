@@ -46,9 +46,6 @@ struct Skel {
 	ColorA *c;		/* Array of colors */
 };
 
-
-#define SKEL_4D		1
-
 extern Skel *SkelCreate( Skel *, GeomClass *, va_list *a_list);
 extern void  SkelDelete( Skel * );
 extern Skel *SkelCopy( Skel * );

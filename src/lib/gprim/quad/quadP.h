@@ -31,7 +31,6 @@
 #define QUAD_P VERT_P
 #define QUAD_N VERT_N
 #define QUAD_C VERT_C
-#define QUAD_4D VERT_4D
 #define QUAD_BINARY 0x8
 
 typedef HPoint3 QuadP[4];

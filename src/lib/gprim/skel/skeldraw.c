@@ -73,8 +73,8 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
 
     if (s->pdim == 4 && !(s->geomflags & VERT_4D)) {
       for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
-	HPt3Dehomogenize((HPoint3 *)op, (HPoint3 *)op);
-	h->v = op;
+	HPt3Dehomogenize((HPoint3 *)op, (HPoint3 *)h->v);
+	h->v[3] = 0.0; /* w has no special meaning in ND > 3 */
 	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
       }      
     } else {

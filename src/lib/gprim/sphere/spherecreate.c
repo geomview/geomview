@@ -75,7 +75,6 @@ va_list *a_list;
   if (exist == NULL) {
     sphere = OOGLNewE(Sphere, "SphereCreate:  new Sphere");
     GGeomInit(sphere, classp, SPHEREMAGIC, NULL);
-    sphere->instflag = 0;
     sphere->geomhandle = NULL;
     sphere->geom = NULL;
     sphere->tlisthandle = NULL;
@@ -89,9 +88,6 @@ va_list *a_list;
   } else sphere = (Sphere *)exist;
 
   while ((attr = va_arg (*a_list, int))) switch (attr) {
-  case CR_FLAG:
-    sphere->instflag = va_arg(*a_list, int );
-    break;
   case CR_CENTER:
     sphere->center = *va_arg(*a_list, HPoint3 *);
     break;

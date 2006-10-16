@@ -63,7 +63,7 @@ InstCopy( Inst *inst )
   ni->tlist = GeomCopy(inst->tlist);
   ni->tlisthandle = NULL;
   ni->axishandle = NULL;
-  ni->instflag = inst->instflag;
+  ni->geomflags = inst->geomflags;
   ni->location = inst->location;
   ni->origin = inst->origin;
   ni->originpt = inst->originpt;
@@ -117,7 +117,6 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	inst = OOGLNewE(Inst, "InstCreate inst");
 	GGeomInit (inst, classp, INSTMAGIC, NULL);
 	TmIdentity(inst->axis);
-	inst->instflag = 0;
 	inst->geomhandle = NULL;
 	inst->geom = NULL;
 	inst->tlisthandle = NULL;
@@ -132,10 +131,6 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 
     while ((attr = va_arg (*a_list, int))) {
 	switch(attr) {
-	case CR_FLAG:
-	    inst->instflag = va_arg(*a_list, int);
-	    break;
-
 	case CR_GEOMHANDLE:
 	    h = va_arg(*a_list, Handle *);
 	    if(copy) RefIncr((Ref *)h);
@@ -167,6 +162,9 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	    t = va_arg(*a_list, Transform *);
 	    InstTransformTo(inst, (*t), NULL);
 	    break;
+	    
+	case CR_NDAXIS:
+	    break;
 
 	case CR_AXISHANDLE:
 	    h = va_arg(*a_list, Handle *);
@@ -175,6 +173,9 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 		HandlePDelete(&inst->axishandle);
 	    inst->axishandle = h;
 	    HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
+	    break;
+
+	case CR_NDAXISHANDLE:
 	    break;
 
 	case CR_TLIST:
