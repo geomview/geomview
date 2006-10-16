@@ -1313,7 +1313,7 @@ static void ND_look_encompass(int objID, int camID)
     CamGet(dv->cam, CAM_C2W, &camC2W);
     CamGet(dv->cam, CAM_W2C, &camW2C);
     
-    HPt3Transform(&camW2C, &center, &fromcam);
+    HPt3Transform(camW2C, &center, &fromcam);
     HPt3Dehomogenize(&fromcam, &fromcam);
 
     if(fromcam.x < 0) fromcam.x = -fromcam.x;
