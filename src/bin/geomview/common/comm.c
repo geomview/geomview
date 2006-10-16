@@ -60,6 +60,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "lang.h"
 #include "lisp.h"
 #include "transobj.h"
+#include "ntransobj.h"
 
 extern HandleOps CamOps, GeomOps, TransOps, NTransOps, CommandOps, WindowOps;
 

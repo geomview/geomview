@@ -48,6 +48,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "list.h"		/* for ListRemove(), ListAppend() */
 #include "comment.h"
 #include "transobj.h"
+#include "ntransobj.h"
 #include "lang.h"
 #include "lispext.h"
 #include "lights.h"

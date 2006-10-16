@@ -45,6 +45,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "lang.h"
 #include "main.h"
 #include "transobj.h"
+#include "ntransobj.h"
 #include "worldio.h"
 #include <string.h>
 #include <stdlib.h>
