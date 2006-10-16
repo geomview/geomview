@@ -40,15 +40,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void
 InstDelete( inst )
-    Inst *inst;
+     Inst *inst;
 {
-    if( inst ) {
-	if(inst->geom) GeomDelete(inst->geom);
-	if(inst->geomhandle) HandlePDelete(&inst->geomhandle);
-	if(inst->tlist) GeomDelete(inst->tlist);
-	if(inst->tlisthandle) HandlePDelete(&inst->tlisthandle);
-	if(inst->axishandle) HandlePDelete(&inst->axishandle);
-    }
+  if( inst ) {
+    if(inst->geom) GeomDelete(inst->geom);
+    if(inst->geomhandle) HandlePDelete(&inst->geomhandle);
+    if(inst->tlist) GeomDelete(inst->tlist);
+    if(inst->tlisthandle) HandlePDelete(&inst->tlisthandle);
+    if(inst->axishandle) HandlePDelete(&inst->axishandle);
+    if(inst->ndaxishandle) HandlePDelete(&inst->ndaxishandle);
+    if(inst->ndaxis) TmNDelete(inst->ndaxis);
+  }
 }
 
 Inst *
@@ -59,11 +61,15 @@ InstCopy( Inst *inst )
   ni = OOGLNewE(Inst, "InstCopy: Inst");
   GGeomInit(ni, inst->Class, inst->magic, NULL);
   TmCopy(inst->axis, ni->axis);
+  if (inst->ndaxis) {
+    ni->ndaxis = TmNCopy(inst->ndaxis, NULL);
+  }
   ni->geom = GeomCopy(inst->geom);
   ni->geomhandle = NULL;
   ni->tlist = GeomCopy(inst->tlist);
   ni->tlisthandle = NULL;
   ni->axishandle = NULL;
+  ni->ndaxishandle = NULL;
   ni->geomflags = inst->geomflags;
   ni->location = inst->location;
   ni->origin = inst->origin;
@@ -75,148 +81,164 @@ InstCopy( Inst *inst )
 Geom *
 InstReplace( Inst *inst, Geom *geom )
 {
-    Geom *old;
+  Geom *old;
 
-    if(inst == NULL)
-	return NULL;
+  if(inst == NULL)
+    return NULL;
 
-    old = inst->geom;
-    inst->geom = geom;
-    return old;
+  old = inst->geom;
+  inst->geom = geom;
+  return old;
 }
 
 int
 InstGet( Inst *inst, int attr, void *attrp )
 {
-    switch(attr) {
-    case CR_GEOM: *(Geom **)attrp = inst->geom; break;
-    case CR_GEOMHANDLE: *(Handle **)attrp = inst->geomhandle; break;
-    case CR_TLIST: *(Geom **)attrp = inst->tlist; break;
-    case CR_TLISTHANDLE: *(Geom **)attrp = (Geom *)inst->tlisthandle; break;
-    case CR_AXISHANDLE: *(Handle **)attrp = inst->axishandle; break;
-    case CR_AXIS:
-	TmCopy(inst->axis, (float (*)[4])attrp);
-	return (inst->tlist == NULL && inst->tlisthandle == NULL) ? 1 : 0;
-    case CR_LOCATION: *(int *)attrp = inst->location; break;
-    default:
-	return -1;
+  switch(attr) {
+  case CR_GEOM: *(Geom **)attrp = inst->geom; break;
+  case CR_GEOMHANDLE: *(Handle **)attrp = inst->geomhandle; break;
+  case CR_TLIST: *(Geom **)attrp = inst->tlist; break;
+  case CR_TLISTHANDLE: *(Geom **)attrp = (Geom *)inst->tlisthandle; break;
+  case CR_AXISHANDLE: *(Handle **)attrp = inst->axishandle; break;
+  case CR_NDAXISHANDLE: *(Handle **)attrp = inst->ndaxishandle; break;
+  case CR_AXIS:
+    TmCopy(inst->axis, (float (*)[4])attrp);
+    return (inst->tlist == NULL && inst->tlisthandle == NULL) ? 1 : 0;
+  case CR_NDAXIS:
+    if (inst->ndaxis) {
+      TmNCopy(inst->ndaxis, *(TransformN **)attrp);
+    } else {
+      *(TransformN **)attrp = NULL;
     }
-    return 1;
+    break;
+  case CR_LOCATION: *(int *)attrp = inst->location; break;
+  default:
+    return -1;
+  }
+  return 1;
 }
 
 Inst *
 InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 {
-    Inst *inst;
-    int attr;
-    int copy = 1;
-    Transform *t;
-    TransformN *nt;
-    Geom *g;
-    Handle *h;
+  Inst *inst;
+  int attr;
+  int copy = 1;
+  Transform *t;
+  TransformN *nt;
+  Geom *g;
+  Handle *h;
 
-    if (exist == NULL) {
-	inst = OOGLNewE(Inst, "InstCreate inst");
-	GGeomInit (inst, classp, INSTMAGIC, NULL);
-	TmIdentity(inst->axis);
-	inst->geomhandle = NULL;
-	inst->geom = NULL;
-	inst->tlisthandle = NULL;
-	inst->tlist = NULL;
-	inst->axishandle = NULL;
-	inst->location = L_NONE;
-	inst->origin = L_NONE;
-    } else {
-	/* Check that exist is an inst. */
-	inst = exist;
-    }
+  if (exist == NULL) {
+    inst = OOGLNewE(Inst, "InstCreate inst");
+    GGeomInit (inst, classp, INSTMAGIC, NULL);
+    TmIdentity(inst->axis);
+    inst->ndaxis = NULL;
+    inst->geomhandle = NULL;
+    inst->geom = NULL;
+    inst->tlisthandle = NULL;
+    inst->tlist = NULL;
+    inst->axishandle = NULL;
+    inst->ndaxishandle = NULL;
+    inst->location = L_NONE;
+    inst->origin = L_NONE;
+  } else {
+    /* Check that exist is an inst. */
+    inst = exist;
+  }
 
-    while ((attr = va_arg (*a_list, int))) {
-	switch(attr) {
-	case CR_GEOMHANDLE:
-	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref *)h);
-	    if(inst->geomhandle)
-		HandlePDelete(&inst->geomhandle);
-	    inst->geomhandle = h;
-	    HandleRegister(&inst->geomhandle, (Ref *)inst, &inst->geom, HandleUpdRef);
-	    break;
+  while ((attr = va_arg (*a_list, int))) {
+    switch(attr) {
+    case CR_GEOMHANDLE:
+      h = va_arg(*a_list, Handle *);
+      if(copy) RefIncr((Ref *)h);
+      if(inst->geomhandle)
+	HandlePDelete(&inst->geomhandle);
+      inst->geomhandle = h;
+      HandleRegister(&inst->geomhandle, (Ref *)inst, &inst->geom, HandleUpdRef);
+      break;
 
-	case CR_HANDLE_GEOM:
-	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref*)h);
-	    if(inst->geomhandle)
-		HandlePDelete(&inst->geomhandle);
-	    inst->geomhandle = h;
-	    if(h) HandleRegister(&inst->geomhandle,
-			(Ref *)inst, &inst->geom, HandleUpdRef);
-	    /* Fall into CR_GEOM case */
+    case CR_HANDLE_GEOM:
+      h = va_arg(*a_list, Handle *);
+      if(copy) RefIncr((Ref*)h);
+      if(inst->geomhandle)
+	HandlePDelete(&inst->geomhandle);
+      inst->geomhandle = h;
+      if(h) HandleRegister(&inst->geomhandle,
+			   (Ref *)inst, &inst->geom, HandleUpdRef);
+      /* Fall into CR_GEOM case */
 
-	case CR_GEOM:
-	    g = va_arg(*a_list, Geom *);
-	    if(copy) RefIncr((Ref *)g);
-	    if(inst->geom)
-		GeomDelete(inst->geom);
-	    inst->geom = g;
-	    break;
+    case CR_GEOM:
+      g = va_arg(*a_list, Geom *);
+      if(copy) RefIncr((Ref *)g);
+      if(inst->geom)
+	GeomDelete(inst->geom);
+      inst->geom = g;
+      break;
 
-	case CR_AXIS:
-	    t = va_arg(*a_list, Transform *);
-	    InstTransformTo(inst, (*t), NULL);
-	    break;
+    case CR_AXIS:
+      t = va_arg(*a_list, Transform *);
+      InstTransformTo(inst, (*t), NULL);
+      break;
 	    
-	case CR_NDAXIS:
-	    nt = va_arg(*a_list, TransformN *);
-	    InstTransformTo(inst, NULL, nt);
-	    break;
+    case CR_NDAXIS:
+      nt = va_arg(*a_list, TransformN *);
+      InstTransformTo(inst, NULL, nt);
+      break;
 
-	case CR_AXISHANDLE:
-	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref *)h);
-	    if(inst->axishandle)
-		HandlePDelete(&inst->axishandle);
-	    inst->axishandle = h;
-	    HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
-	    break;
+    case CR_AXISHANDLE:
+      h = va_arg(*a_list, Handle *);
+      if(copy) RefIncr((Ref *)h);
+      if(inst->axishandle)
+	HandlePDelete(&inst->axishandle);
+      inst->axishandle = h;
+      HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
+      break;
 
-	case CR_NDAXISHANDLE:
-	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref *)h);
-	    if(inst->ndaxishandle)
-		HandlePDelete(&inst->ndaxishandle);
-	    inst->ndaxishandle = h;
-	    HandleRegister(&inst->ndaxishandle, (Ref *)inst, inst->ndaxis, NTransUpdate);
-	    break;
+    case CR_NDAXISHANDLE:
+      h = va_arg(*a_list, Handle *);
+      if(copy) RefIncr((Ref *)h);
+      if(inst->ndaxishandle)
+	HandlePDelete(&inst->ndaxishandle);
+      inst->ndaxishandle = h;
+      HandleRegister(&inst->ndaxishandle, (Ref *)inst, inst->ndaxis, NTransUpdate);
+      break;
 
-	case CR_TLIST:
-	    g = va_arg (*a_list, Geom *);
-	    if(copy) RefIncr((Ref *)g);
-	    if(inst->tlist)
-		GeomDelete(inst->tlist);
-	    inst->tlist = g;
-	    break;
+    case CR_TLIST:
+      g = va_arg (*a_list, Geom *);
+      if(copy) RefIncr((Ref *)g);
+      if(inst->tlist)
+	GeomDelete(inst->tlist);
+      inst->tlist = g;
+      break;
 
-	case CR_TLISTHANDLE:
-	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref *)h);
-	    if(inst->tlisthandle != NULL)
-		HandlePDelete(&inst->tlisthandle);
-	    inst->tlisthandle = h;
-	    HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist, HandleUpdRef);
-	    break;
+    case CR_TLISTHANDLE:
+      h = va_arg(*a_list, Handle *);
+      if(copy) RefIncr((Ref *)h);
+      if(inst->tlisthandle != NULL)
+	HandlePDelete(&inst->tlisthandle);
+      inst->tlisthandle = h;
+      HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist, HandleUpdRef);
+      break;
 
-	case CR_LOCATION:
-	    inst->location = va_arg(*a_list, int);
-	    break;
+    case CR_LOCATION:
+      inst->location = va_arg(*a_list, int);
+      break;
 
-	default:
-	    if(GeomDecorate(inst, &copy, attr, a_list)) {
-		OOGLError (0, "InstCreate: Undefined option: %d", attr);
-		if(exist == NULL) GeomDelete ((Geom *)inst);
-		return NULL;
-	    }
-	}
+    default:
+      if(GeomDecorate(inst, &copy, attr, a_list)) {
+	OOGLError (0, "InstCreate: Undefined option: %d", attr);
+	if(exist == NULL) GeomDelete ((Geom *)inst);
+	return NULL;
+      }
     }
+  }
 
-    return inst;
+  return inst;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

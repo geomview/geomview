@@ -75,11 +75,14 @@ va_list *a_list;
   if (exist == NULL) {
     sphere = OOGLNewE(Sphere, "SphereCreate:  new Sphere");
     GGeomInit(sphere, classp, SPHEREMAGIC, NULL);
+    TmIdentity(sphere->axis);
+    sphere->ndaxis = NULL;
     sphere->geomhandle = NULL;
     sphere->geom = NULL;
     sphere->tlisthandle = NULL;
     sphere->tlist = NULL;
     sphere->axishandle = NULL;
+    sphere->ndaxishandle = NULL;
     sphere->radius = 1.0;
     sphere->space = TM_EUCLIDEAN;
     sphere->location = L_NONE;
