@@ -54,25 +54,22 @@ BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
     HPointN *maxN;
     BBox *result;
 
-    if (bbox->pdim <= 4) {
-      /* actually == 4, this is the special 3d VERT_4D case */
+    if (bbox->pdim == 4 && (bbox->geomflags & VERT_4D)) {
+      /* generate a real ND bounding box without VERT_4D */
       HPointN tmp;
 
       tmp.flags = 0;
       tmp.dim = bbox->pdim+1;
       tmp.v   = alloca(tmp.dim*sizeof(HPtNCoord));
       tmp.v[tmp.dim-1] = 1.0;
-      *(HPoint3 *)tmp.v = *(HPoint3 *)bbox->min->v;
-      if (!(bbox->geomflags & VERT_4D)) {
-	HPt3Dehomogenize((HPoint3 *)tmp.v, (HPoint3 *)tmp.v);
+      for (i = 0; i < bbox->pdim; i++) {
+	tmp.v[i] = bbox->min->v[i];
       }
       minN = HPtNTransform(TN, &tmp, NULL);
-      *(HPoint3 *)tmp.v = *(HPoint3 *)bbox->max->v;
-      if (!(bbox->geomflags & VERT_4D)) {
-	HPt3Dehomogenize((HPoint3 *)tmp.v, (HPoint3 *)tmp.v);
+      for (i = 0; i < bbox->pdim; i++) {
+	tmp.v[i] = bbox->max->v[i];
       }
       maxN = HPtNTransform(TN, &tmp, NULL);
-
     } else {
       minN = HPtNTransform(TN, bbox->min, NULL);
       maxN = HPtNTransform(TN, bbox->max, NULL);
@@ -102,10 +99,9 @@ BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
   }
 
   if (T) {
-
-    if (!(bbox->geomflags & VERT_4D)) {
-      HPt3Dehomogenize((HPoint3 *)bbox->min->v, (HPoint3 *)bbox->min->v);
-      HPt3Dehomogenize((HPoint3 *)bbox->max->v, (HPoint3 *)bbox->max->v);
+    if (bbox->pdim > 4) {
+      HPtNToHPt3(bbox->min, &min, NULL);
+      HPtNToHPt3(bbox->max, &max, NULL);
     }
     HPt3Transform(T, (HPoint3 *)bbox->min->v, &min);
     HPt3Transform(T, (HPoint3 *)bbox->max->v, &max);
