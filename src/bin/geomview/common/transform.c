@@ -159,10 +159,10 @@ Geom *id_bsphere(int geomID, int coordsysID)
     }
 
     MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
-      geom2coordsys = drawer_get_ND_transform(geomObj->id, coordsysID);
       if (geomObj->Lgeom == NULL) {
 	continue;
       }
+      geom2coordsys = drawer_get_ND_transform(geomObj->id, coordsysID);
       GeomGet(geomObj->Lgeom, CR_GEOM, &obj);
       other_sphere = GeomBoundSphere(obj, NULL, geom2coordsys, NDPerm,
 				     drawerstate.space);
@@ -173,6 +173,7 @@ Geom *id_bsphere(int geomID, int coordsysID)
 		     (Sphere *)sphere);
 	GeomDelete(other_sphere);
       }
+      TmNDelete(geom2coordsys);
     }
   } else {
     Transform geom2coordsys;
