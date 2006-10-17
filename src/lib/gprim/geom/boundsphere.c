@@ -62,6 +62,8 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
     GeomDelete(bbox);
     HPtNToHPt3(minmaxN[0], &minmax[0], axes);
     HPtNToHPt3(minmaxN[1], &minmax[1], axes);
+    HPtNDelete(minmaxN[0]);
+    HPtNDelete(minmaxN[1]);
   } else {
     BBoxMinMax((BBox *)bbox, &minmax[0], &minmax[1]);
     GeomDelete(bbox);
