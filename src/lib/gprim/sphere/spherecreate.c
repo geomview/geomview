@@ -115,13 +115,31 @@ va_list *a_list;
   }
   HPt3Normalize(&(sphere->center), &(sphere->center));
 
-  quadrant = GeomCCreate(NULL, BezierMethods(), 
-			 CR_DEGU, 2, CR_DEGV, 2, 
-			 CR_DIM, 4, CR_POINT, ctrlPnts, CR_END);
-  unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, reflections,
-			  CR_END);
-  sphere->geom = GeomCCreate(NULL, InstMethods(), CR_GEOM, quadrant, CR_TLIST,
-			    unitsphere, CR_END);
+  if (sphere->geom == NULL) {
+    /* No need to generate those objects anew if we already have a
+     * sphere, they never change. Also, we need to make a copy of the
+     * control-points with malloc(); should probably change the Bezier
+     * object instead.
+     */
+    float *CPctrlPnts;
+
+    /* Bezier does not make a copy of the control points */
+    CPctrlPnts = OOGLNewNE(float, (2+1)*(2+1)*4, "copy of sphere ctrl points");
+    memcpy(CPctrlPnts, ctrlPnts, sizeof(ctrlPnts));
+    quadrant = GeomCCreate(NULL, BezierMethods(), 
+			   CR_DEGU, 2, CR_DEGV, 2, 
+			   CR_DIM, 4, CR_POINT,
+			   CPctrlPnts, CR_END);
+
+    /* TList does make a copy of the transformations */
+    unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, reflections,
+			    CR_END);
+    sphere->geom = GeomCCreate(sphere->geom,
+			       InstMethods(), CR_GEOM, quadrant, CR_TLIST,
+			       unitsphere, CR_END);
+    GeomDelete(quadrant);
+    GeomDelete(unitsphere);
+  }
 
   SphereSwitchSpace(sphere, sphere->space);
   if (nencompass_points && encompass_points != NULL) 
