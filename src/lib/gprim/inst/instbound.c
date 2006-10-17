@@ -104,6 +104,27 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
     }
   } else {
     /* FIXME, TODO */
+    /* we do not support ND-TLISTs yet, so we assume here that we have
+     * and only ND-transformation, hence we do not call GeomIterate()
+     * here.
+     */
+    if (TN) {
+      TransformN *TnewN;
+      
+      TnewN = TmNConcat(inst->ndaxis, TN, NULL);
+      geombbox = (BBox *)GeomBound(inst->geom, NULL, TnewN);
+      TmNDelete(TnewN);
+    } else {
+      TransformN *TnewN = TmNCopy(inst->ndaxis, NULL);
+      static int dflt_axes[] = { 0, 1, 2, -1 };
+      BBox *box;
+
+      TmNApplyDN(TnewN, dflt_axes, T);
+      box = (BBox *)GeomBound(inst->geom, NULL, TnewN);
+      geombbox = (BBox *)GeomBound((Geom *)box, TM_IDENTITY, NULL);
+      GeomDelete((Geom *)box);
+      TmNDelete(TnewN);
+    }   
   }
     
   return geombbox;
