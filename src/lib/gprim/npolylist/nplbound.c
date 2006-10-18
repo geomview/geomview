@@ -70,9 +70,6 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 	ptN->v += pdim;
 	HPtNMinMax(min, max, ptN, pdim);
       }
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_NMIN, min, CR_NMAX, max, CR_4D, 1,
-				   CR_END);
     } else {
       HPointN *clean = HPtNCreate(pdim, NULL);
       HPtNDehomogenize(min, min);
@@ -83,9 +80,11 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 	HPtNMinMax(min, max, clean, pdim-1);
       }
       HPtNDelete(clean);
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_MIN, &min, CR_MAX, &max, CR_END);
     }
+    result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_NMIN, min, CR_NMAX, max,
+				 CR_4D, np->geomflags & VERT_4D,
+				 CR_END);
     HPtNDelete(min);
     HPtNDelete(max);
 

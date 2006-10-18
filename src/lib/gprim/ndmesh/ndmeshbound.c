@@ -71,7 +71,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
       }
       HPtNDelete(clean);
       result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_MIN, &min, CR_MAX, &max, CR_END);
+				   CR_NMIN, &min, CR_NMAX, &max, CR_END);
     }
     HPtNDelete(min);
     HPtNDelete(max);
