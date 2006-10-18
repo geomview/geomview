@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.5 2006/07/15 19:05:59 rotdrop Exp $
+ * $Id: mg.c,v 1.6 2006/10/18 19:41:41 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -140,7 +140,7 @@ mg_newcontext(mgc)
 
     mgc->space = TM_EUCLIDEAN;
 
-    mgc->NDinfo = NULL;
+    mgc->NDctx = NULL;
     VVINIT(mgc->point, HPoint3, 7);
 
     mgc->winchange = NULL;

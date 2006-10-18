@@ -41,7 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static void
-draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
+draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 {
   Quad q = *qquad;
   HPointN *h = HPtNCreate(5, NULL);
@@ -49,6 +49,8 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
   ColorA *nc;
   int npts = 4 * qquad->maxquad;
   int i, colored = 0;
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+
   q.p = (QuadP *)alloca(npts*sizeof(HPoint3));
   q.n = NULL;
   q.c = (QuadC *)alloca(npts*sizeof(ColorA));
@@ -60,13 +62,13 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
       /* Set the point's first THREE components from our 4-D vertex */
       HPt3Dehomogenize(op, (HPoint3 *)h->v);
       h->v[3] = 0.0;
-      colored = (*NDmap)(NDinfo, h, np, nc);
+      colored = mapHPtN(NDctx, h, np, nc);
     }
   } else {
     for(i = 0; i < npts; i++, op++, np++, nc++) {
       /* Set the point's first four components from our 4-D vertex */
       *(HPoint3 *)h->v = *op;
-      colored = (*NDmap)(NDinfo, h, np, nc);
+      colored = mapHPtN(NDctx, h, np, nc);
     }
   }
 
@@ -80,12 +82,15 @@ draw_projected_quad(mgmapfunc NDmap, void *NDinfo, Quad *qquad)
 Quad *
 QuadDraw(Quad *q)
 {
+  mgNDctx *NDctx = NULL;
 
   if (q == NULL)
     return NULL;
 
-  if(_mgc->NDinfo) {
-    draw_projected_quad(_mgc->NDmap, _mgc->NDinfo, q);
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if(NDctx) {
+    draw_projected_quad(NDctx, q);
   } else if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_read_quad(q);

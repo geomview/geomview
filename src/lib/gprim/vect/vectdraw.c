@@ -53,12 +53,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static void
-draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penultimate, int hascolor)
+draw_projected_vect(mgNDctx *NDctx,
+		    Vect *v, int flags, int penultimate, int hascolor)
 {
     HPointN *h = HPtNCreate(5, NULL);
     HPoint3 *p, *op, *np, *newp;
     ColorA *lastcolor = NULL, *c, *newc;
     int i, nc = 0, colored = 0;
+    mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
     newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
     newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));
@@ -66,7 +68,7 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
     if (v->geomflags & VERT_4D) {
       for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
 	*(HPoint3 *)h->v = *op;
-	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+	colored = mapHPtN(NDctx, h, np, &newc[i]);
 	hascolor = colored;
       }
     } else {
@@ -74,7 +76,7 @@ draw_projected_vect(mgmapfunc NDmap, void *NDinfo, Vect *v, int flags, int penul
       for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
 	HPt3Dehomogenize(op, (HPoint3 *)h->v);
 	h->v[3] = 0.0;
-	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+	colored = mapHPtN(NDctx, h, np, &newc[i]);
 	hascolor = colored;
       }
     }
@@ -114,6 +116,7 @@ VectDraw(v)
 	int flags, penultimate;
 	ColorA *lastcolor=NULL;
 	Appearance *ap = mggetappearance();
+	mgNDctx *NDctx = NULL;
 
 	/* Don't draw if vect-drawing is off. */
 	if (v == NULL || (ap->flag & APF_VECTDRAW) == 0)
@@ -142,9 +145,10 @@ VectDraw(v)
 	flags = v->nvec > 1 ? 4 : 0; 	/* 4: not last mbr of batch of lines */
 	penultimate = v->nvec - 2;
 
-	if(_mgc->NDinfo) {
-	    draw_projected_vect(_mgc->NDmap, _mgc->NDinfo, v, flags,
-				penultimate, hascolor);
+	mgctxget(MG_NDCTX, &NDctx);
+
+	if(NDctx) {
+	    draw_projected_vect(NDctx, v, flags, penultimate, hascolor);
 	    return v;
 	}
 

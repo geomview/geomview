@@ -44,6 +44,7 @@ extern BBox *BBoxDelete ( BBox * );
 extern BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list);
 extern BBox *BBoxFSave( BBox *, FILE *, char * );
 extern BBox *BBoxFLoad( FILE *, char * );
+extern int BBoxGet(BBox *bbox, int attr, void *attrp);
 
 char *
 BBoxName()
@@ -68,6 +69,7 @@ BBoxMethods()
 		aBBoxMethods->transform = (GeomTransformFunc *) BBoxTransform;
 		aBBoxMethods->fsave = (GeomFSaveFunc *) BBoxFSave;
 		aBBoxMethods->fload = (GeomFLoadFunc *) BBoxFLoad;
+		/*aBBoxMethods->get = (GeomGetFunc *)BBoxGet;*/
 	}
 	return aBBoxMethods;
 }

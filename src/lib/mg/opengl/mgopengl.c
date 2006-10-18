@@ -248,8 +248,7 @@ _mgopengl_ctxset(int a1, va_list *alist)
       }
       break;
 
-    case MG_NDINFO: _mgc->NDinfo = NEXT(void *); break;
-    case MG_NDMAP:  _mgc->NDmap = NEXT(mgmapfunc); break;
+    case MG_NDCTX: _mgc->NDctx = NEXT(mgNDctx *); break;
 
     case MG_WINCHANGE: _mgc->winchange = NEXT(mgwinchfunc); break;
     case MG_WINCHANGEDATA: _mgc->winchangeinfo = NEXT(void *); break;
@@ -404,8 +403,7 @@ mgopengl_ctxget(int attr, void* value)
   case MG_SHADER:	*VALUE(mgshadefunc) = _mgc->astk->shader; break;
   case MG_SHADERDATA:	*VALUE(void *) = _mgc->astk->shaderdata; break;
   case MG_SPACE:	*VALUE(int) = _mgc->space; break;
-  case MG_NDINFO:	*VALUE(void *) = _mgc->NDinfo; break;
-  case MG_NDMAP:	*VALUE(mgmapfunc) = _mgc->NDmap; break;
+  case MG_NDCTX:	*VALUE(mgNDctx *) = _mgc->NDctx; break;
   case MG_ZNUDGE:	*VALUE(float) = _mgc->zfnudge; break;
 
   case MG_DEPTHSORT:	*VALUE(int) = MG_ZBUFFER; break;

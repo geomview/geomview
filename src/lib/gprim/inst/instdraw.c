@@ -122,6 +122,22 @@ InstDraw( Inst *inst )
     GeomIter *it;
     Transform T, tT, Tl2o;
 
+    if (inst->NDaxis) {
+      mgNDctx *NDctx = NULL;
+
+      mgctxget(MG_NDCTX, &NDctx);
+      
+      if (NDctx) {
+	mgNDctx *saved_ctx;
+	
+	saved_ctx = NDctx->saveCTXpushTN(NDctx, inst->NDaxis);
+	GeomDraw( inst->geom );
+	NDctx->restoreCTX(NDctx, saved_ctx);
+      }
+
+      return inst;
+    }
+
     it = GeomIterate((Geom *)inst, DEEP);
     while(NextTransform(it, T)) {
 	if ( inst->geomflags & VERT_4D )	{

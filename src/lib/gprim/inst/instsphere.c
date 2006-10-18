@@ -43,13 +43,13 @@ Geom *InstBoundSphere(Inst *inst,
   if (inst == NULL || inst->geom == NULL)
     return NULL;
 
-  if (T == NULL)
-    T = TM_IDENTITY;
-
   if (inst->location > L_LOCAL || inst->origin > L_LOCAL)
     return NULL;
 
-  if (inst->ndaxis == NULL) {
+  if (T == NULL)
+    T = TM_IDENTITY;
+
+  if (inst->NDaxis == NULL) {
     if (TN == NULL) {
       it = GeomIterate((Geom *)inst, DEEP);
       geomsphere = NULL;
@@ -78,7 +78,8 @@ Geom *InstBoundSphere(Inst *inst,
 	 */
 	TmNCopy(TN, TnewN);
 	TmNApplyT3TN(Tnew, dflt_axes, TnewN);
-	sphere = (Sphere *)GeomBoundSphere(inst->geom, NULL, TN,  axes, space);
+	sphere =
+	  (Sphere *)GeomBoundSphere(inst->geom, NULL, TnewN,  axes, space);
 	if (sphere != NULL) {
 	  if (geomsphere != NULL) {
 	    SphereUnion3(geomsphere, sphere, geomsphere);
@@ -90,7 +91,22 @@ Geom *InstBoundSphere(Inst *inst,
       TmNDelete(TnewN);
     }
   } else {
-    /* FIXME, todo */
+    if (TN) {
+      TransformN *TnewN;
+      
+      TnewN = TmNConcat(inst->NDaxis, TN, NULL);
+      geomsphere =
+	(Sphere *)GeomBoundSphere(inst->geom, NULL, TnewN, axes, space);
+      TmNDelete(TnewN);
+    } else {
+      TransformN *TnewN = TmNCopy(inst->NDaxis, NULL);
+      static int dflt_axes[] = { 0, 1, 2, -1 };
+
+      TmNApplyDN(TnewN, dflt_axes, T);
+      geomsphere =
+	(Sphere *)GeomBoundSphere(inst->geom, NULL, TnewN, dflt_axes, space);
+      TmNDelete(TnewN);
+    }
   }
 
   return (Geom *)geomsphere;

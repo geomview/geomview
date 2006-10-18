@@ -46,16 +46,13 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
   if( inst == NULL || inst->geom == NULL)
     return NULL;
 
-  if (T == NULL)
-    T = TM_IDENTITY;
-
   /* Insts which tie themselves to particular locations have no
    * bounding box, either.
    */
   if( inst->location > L_LOCAL || inst->origin > L_LOCAL )
     return NULL;
 
-  /* FIXME: if inst->ndaxis != NULL and/or TN != NULL we have to do
+  /* FIXME: if inst->NDaxis != NULL and/or TN != NULL we have to do
    * something here.
    *
    * If TN != NULL, then Tnew should be prepended to TN w.r.t. to
@@ -65,7 +62,10 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
    * GeomIterate() should not be necessary in this case; MMmh.
    */
 
-  if (inst->ndaxis == NULL) {
+  if (inst->NDaxis == NULL) {
+    if (T == NULL)
+      T = TM_IDENTITY;
+
     if (TN == NULL) {
       it = GeomIterate( (Geom *)inst, DEEP );
       geombbox = NULL;
@@ -103,7 +103,6 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
       TmNDelete(TnewN);
     }
   } else {
-    /* FIXME, TODO */
     /* we do not support ND-TLISTs yet, so we assume here that we have
      * and only ND-transformation, hence we do not call GeomIterate()
      * here.
@@ -111,11 +110,11 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
     if (TN) {
       TransformN *TnewN;
       
-      TnewN = TmNConcat(inst->ndaxis, TN, NULL);
+      TnewN = TmNConcat(inst->NDaxis, TN, NULL);
       geombbox = (BBox *)GeomBound(inst->geom, NULL, TnewN);
       TmNDelete(TnewN);
-    } else {
-      TransformN *TnewN = TmNCopy(inst->ndaxis, NULL);
+    } else if (T) {
+      TransformN *TnewN = TmNCopy(inst->NDaxis, NULL);
       static int dflt_axes[] = { 0, 1, 2, -1 };
       BBox *box;
 
@@ -124,7 +123,9 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
       geombbox = (BBox *)GeomBound((Geom *)box, TM_IDENTITY, NULL);
       GeomDelete((Geom *)box);
       TmNDelete(TnewN);
-    }   
+    } else {
+      geombbox = (BBox *)GeomBound(inst->geom, NULL, inst->NDaxis);
+    }
   }
     
   return geombbox;

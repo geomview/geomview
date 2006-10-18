@@ -117,8 +117,7 @@ struct mgcontext {
 	Transform	O2S, S2O; /* object-to-screen, screen-to-object xfms */
 	vvec		point;	/* outline for fat points */
 
-	void		*NDinfo; /* Opaque pointer to caller-defined ND closure */
-	mgmapfunc	NDmap;	/* NDmap(NDinfo, HPtN *, HPt3 *, ColorA *) */
+	mgNDctx         *NDctx;/* pointer to caller-defined ND closure */
 
 	mgwinchfunc	winchange; /* Callback function for mg Window etc. changes */
 	void		*winchangeinfo; /* We call (*winchange)(ctx, winchangeinfo, win, changemask) */

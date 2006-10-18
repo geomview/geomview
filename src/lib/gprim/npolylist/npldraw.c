@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.6 2006/10/13 22:20:34 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.7 2006/10/18 19:41:41 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -48,7 +48,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static void
-draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, NPolyList *pl)
+draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 {
   PolyList newpl;
   HPointN *h;
@@ -60,6 +60,7 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, NPolyList *pl)
   Vertex **vps;
   int i, j, k, colored = 0;
   float *hdata;
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
   /* Copy the PolyList onto the stack. */
   newpl.n_polys = pl->n_polys;
@@ -83,7 +84,7 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, NPolyList *pl)
   oc = pl->vcol;
   for(i = 0, ov = pl->v, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
     h->v = ov;
-    colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+    colored = mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
     ov += pl->pdim;
   }
 
@@ -111,12 +112,15 @@ NPolyList *
 NPolyListDraw( NPolyList *pl )
 {
   static int warned = 0;
+  mgNDctx *NDctx = NULL;
 
   if (pl == NULL)
     return NULL;
 
-  if(_mgc->NDinfo) {
-    draw_projected_polylist(_mgc->NDmap, _mgc->NDinfo, pl);
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if(NDctx) {
+    draw_projected_polylist(NDctx, pl);
     return pl;
   }
 

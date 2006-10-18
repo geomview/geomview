@@ -55,15 +55,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Results: returns 1 if color was set, else 0.
  */
 
-int
-map_ND_point(void *mginfo, HPointN *p, HPoint3 *np, ColorA *c)
+static int
+map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
 {
-#define iT ((struct ndstuff *)mginfo)->T
-#define iaxes ((struct ndstuff *)mginfo)->axes
-#define iTc ((struct ndstuff *)mginfo)->Tc
-#define incm ((struct ndstuff *)mginfo)->ncm
-#define icm ((struct ndstuff *)mginfo)->cm
-#define ihc ((struct ndstuff *)mginfo)->hc
+    NDstuff *nds = (NDstuff *)mgNDctx;    
+#define iT    nds->T
+#define iaxes nds->axes
+#define iTc   nds->Tc
+#define incm  nds->ncm
+#define icm   nds->cm
+#define ihc   nds->hc
     ColorA ci;
     float t;
     int i;
@@ -113,3 +114,42 @@ map_ND_point(void *mginfo, HPointN *p, HPoint3 *np, ColorA *c)
 #undef incm
 #undef ihc
 }
+
+/* push/pop could be done much more efficiently, but ND is inefficient
+ * anyway, so what.
+ */
+static void *saveCTXpushTN(mgNDctx *NDctx, TransformN *TN)
+{
+    NDstuff *nds = (NDstuff *)NDctx;
+    TransformN **savedCTX = OOGLNewNE(TransformN *, 2, "saved NDstuff");
+
+    savedCTX[0] = nds->T;
+    savedCTX[1] = nds->Tc;
+    
+    /* everything else is scratch */
+    nds->T = TmNConcat(TN, nds->T, NULL);
+    if (nds->Tc) {
+	nds->Tc = TmNConcat(TN, nds->Tc, NULL);
+    }
+
+    return savedCTX;
+}
+
+static void restoreCTX(mgNDctx *NDctx, void *vsavedCTX)
+{
+    NDstuff *nds = (NDstuff *)NDctx;
+    TransformN **savedCTX = (TransformN **)vsavedCTX;
+
+    TmNDelete(nds->T);
+    TmNDelete(nds->Tc);
+    nds->T = savedCTX[0];
+    nds->Tc = savedCTX[0];
+
+    OOGLFree(savedCTX);
+}
+
+mgNDctx NDctx_proto = {
+    map_ND_point,
+    saveCTXpushTN,
+    restoreCTX,
+};

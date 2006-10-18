@@ -45,6 +45,7 @@ DiscGrpStandardPreDraw(DiscGrp *discgrp)
 {
 	float halfy, aspect, halfx;
 	static float magic_scale = 1.2;
+
     /* we're about to mess around with the camera matrix; before doing so,
     get the current one (it's already been set for this frame) to use in
     culling later on */

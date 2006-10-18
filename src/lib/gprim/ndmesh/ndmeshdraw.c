@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mgP.h"
 
 #include "meshP.h"
-#include "mgP.h"
+#include "mg.h"
 #include "hpointn.h"
 #include <stdlib.h>
 #ifndef alloca
@@ -44,13 +44,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static void
-draw_projected_ndmesh(mgmapfunc NDmap, void *NDinfo, NDMesh *mesh)
+draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
 {
   Mesh m;
   HPointN **op;
   HPoint3 *np;
   int i, colored = 0;
   int npts = mesh->mdim[0] * mesh->mdim[1];
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
   memset(&m, 0, sizeof(m));
   m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
@@ -61,7 +62,7 @@ draw_projected_ndmesh(mgmapfunc NDmap, void *NDinfo, NDMesh *mesh)
   m.flag = mesh->flag & ~MESH_4D;
   for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
     /* Set the point's first four components from our N-D mesh vertex */
-    colored = (*NDmap)(NDinfo, *op, np, &m.c[i]);
+    colored = mapHPtN(NDctx, *op, np, &m.c[i]);
   }
   if(colored) m.flag |= MESH_C;
   MeshComputeNormals(&m);
@@ -72,8 +73,12 @@ draw_projected_ndmesh(mgmapfunc NDmap, void *NDinfo, NDMesh *mesh)
 NDMesh *
 NDMeshDraw(NDMesh *mesh)
 {
-  if(_mgc->NDinfo) {
-    draw_projected_ndmesh(_mgc->NDmap, _mgc->NDinfo, mesh);
+  mgNDctx *NDctx = NULL;
+
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if(NDctx) {
+    draw_projected_ndmesh(NDctx, mesh);
   }
   return mesh;
 }

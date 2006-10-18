@@ -2507,6 +2507,10 @@ make_bbox(DGeom *dg, int combine)
     bbox = GeomBound(dg->Lgeom, NULL, NULL);
     if(bbox) {
 	GeomReplace(dg->Lbbox, bbox);
+#if 0
+	dg->NDbboxcenter = BBoxCenterND(bbox, &dg->NDbboxcenter);
+	HPtNToHPt3(dg->NDbboxcenter, dg->bboxcenter);
+#endif
 	GeomDelete(bbox);		/* Only Lbbox needs it now */
 	dg->bboxvalid = 1;
     }
@@ -2764,8 +2768,7 @@ static void
 really_draw_view(DView *dv)
 {
     int i, j;
-    extern int map_ND_point();	/* From ndshade.c */
-
+    
     mgpushappearance();
     mgworldbegin();
 
@@ -2781,7 +2784,7 @@ really_draw_view(DView *dv)
     if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
 	NDcam *cluster = dv->cluster;
 	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-	struct ndstuff nds;
+	NDstuff nds;
 	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
 	TransformN *Tc = NULL, *W2G = NULL;
 	HPointN *caxis = NULL;
@@ -2795,6 +2798,7 @@ really_draw_view(DView *dv)
 	    W2G = TmNCreate(dim,dim, NULL);
 	}
 
+	nds.mgNDctx = dv->mgNDctx;
 	nds.axes = dv->NDPerm;
 	nds.ncm = dv->nNDcmap;
 	nds.cm = dv->NDcmap;
@@ -2825,7 +2829,7 @@ really_draw_view(DView *dv)
 		    Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
 	    }
 	}
-	mgctxset(MG_NDMAP, map_ND_point, MG_NDINFO, &nds, MG_END);
+	mgctxset(MG_NDCTX, &nds, MG_END);
 
 	for(i = 1; i < dgeom_max; i++) {
 
@@ -2854,6 +2858,7 @@ really_draw_view(DView *dv)
 	TmNDelete(O2G);
 	HPtNDelete(nds.hc);
 	HPtNDelete(caxis);
+	mgctxset(MG_NDCTX, NULL, MG_END);
 #if 1
     } else if(dv->cluster != NULL) {
 	/* (scene cam geom) works also withg ND-view. One just has to
@@ -2863,7 +2868,7 @@ really_draw_view(DView *dv)
 	 */
 	NDcam *cluster = dv->cluster;
 	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-	struct ndstuff nds;
+	NDstuff nds;
 	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
 	TransformN *Tc = NULL, *W2G = NULL;
 	HPointN *caxis = NULL;
@@ -2874,11 +2879,13 @@ really_draw_view(DView *dv)
 	W2C = TmNCopy( cluster->W2C, NULL );
 	W2G = TmNCreate(dim,dim, NULL);
 
+	nds.mgNDctx = dv->mgNDctx;
 	nds.axes = dv->NDPerm;
 	nds.ncm = dv->nNDcmap;
 	nds.cm = dv->NDcmap;
 	nds.Tc = NULL;
 	nds.hc = HPtNCreate(dim, NULL);
+
 	if(dv->nNDcmap > 0) {
 	    /* Build array of N-D-to-color projection vectors:
 	     * it becomes a matrix, multiplied by N-D row vector on the left,
@@ -2904,7 +2911,7 @@ really_draw_view(DView *dv)
 		    Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
 	    }
 	}
-	mgctxset(MG_NDMAP, map_ND_point, MG_NDINFO, &nds, MG_END);
+	mgctxset(MG_NDCTX, &nds, MG_END);
 	
 	nds.T = W2C;
 	if(Tc) {
@@ -2928,11 +2935,12 @@ really_draw_view(DView *dv)
 	TmNDelete(O2G);
 	HPtNDelete(nds.hc);
 	HPtNDelete(caxis);
+	mgctxset(MG_NDCTX, NULL, MG_END);
 #endif
     } else {
 	/* Normal case.  Just draw whatever's attached to this camera */
 
-	mgctxset(MG_NDINFO, NULL, MG_NDMAP, NULL, MG_END);
+	mgctxset(MG_NDCTX, NULL, MG_END);
 	GeomDraw(dv->Item);
     }
     

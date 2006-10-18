@@ -551,7 +551,14 @@ void apply_motion(Motion *motion, float dt)
   
   /* Find the location of the origin of T_c in T_f */
   /* location = origin . T_c . Inverse[T_f] */
-  pt.x = pt.y = pt.z = 0; pt.w = 1; 
+  pt.x = pt.y = pt.z = 0; pt.w = 1;
+
+#if 0
+  if (spaceof(motion->center_id) == TM_EUCLIDEAN && ISGEOM(motion->center_id)) {
+
+  }
+#endif
+
   if (motion->frame_id != motion->center_id) {
     TmInvert(T_f, T);
     TmConcat(T_c, T, T);

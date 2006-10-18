@@ -48,8 +48,8 @@ InstDelete( inst )
     if(inst->tlist) GeomDelete(inst->tlist);
     if(inst->tlisthandle) HandlePDelete(&inst->tlisthandle);
     if(inst->axishandle) HandlePDelete(&inst->axishandle);
-    if(inst->ndaxishandle) HandlePDelete(&inst->ndaxishandle);
-    if(inst->ndaxis) TmNDelete(inst->ndaxis);
+    if(inst->NDaxishandle) HandlePDelete(&inst->NDaxishandle);
+    if(inst->NDaxis) TmNDelete(inst->NDaxis);
   }
 }
 
@@ -61,15 +61,15 @@ InstCopy( Inst *inst )
   ni = OOGLNewE(Inst, "InstCopy: Inst");
   GGeomInit(ni, inst->Class, inst->magic, NULL);
   TmCopy(inst->axis, ni->axis);
-  if (inst->ndaxis) {
-    ni->ndaxis = TmNCopy(inst->ndaxis, NULL);
+  if (inst->NDaxis) {
+    ni->NDaxis = TmNCopy(inst->NDaxis, NULL);
   }
   ni->geom = GeomCopy(inst->geom);
   ni->geomhandle = NULL;
   ni->tlist = GeomCopy(inst->tlist);
   ni->tlisthandle = NULL;
   ni->axishandle = NULL;
-  ni->ndaxishandle = NULL;
+  ni->NDaxishandle = NULL;
   ni->geomflags = inst->geomflags;
   ni->location = inst->location;
   ni->origin = inst->origin;
@@ -100,13 +100,13 @@ InstGet( Inst *inst, int attr, void *attrp )
   case CR_TLIST: *(Geom **)attrp = inst->tlist; break;
   case CR_TLISTHANDLE: *(Geom **)attrp = (Geom *)inst->tlisthandle; break;
   case CR_AXISHANDLE: *(Handle **)attrp = inst->axishandle; break;
-  case CR_NDAXISHANDLE: *(Handle **)attrp = inst->ndaxishandle; break;
+  case CR_NDAXISHANDLE: *(Handle **)attrp = inst->NDaxishandle; break;
   case CR_AXIS:
     TmCopy(inst->axis, (float (*)[4])attrp);
     return (inst->tlist == NULL && inst->tlisthandle == NULL) ? 1 : 0;
   case CR_NDAXIS:
-    if (inst->ndaxis) {
-      TmNCopy(inst->ndaxis, *(TransformN **)attrp);
+    if (inst->NDaxis) {
+      TmNCopy(inst->NDaxis, *(TransformN **)attrp);
     } else {
       *(TransformN **)attrp = NULL;
     }
@@ -133,13 +133,13 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     inst = OOGLNewE(Inst, "InstCreate inst");
     GGeomInit (inst, classp, INSTMAGIC, NULL);
     TmIdentity(inst->axis);
-    inst->ndaxis = NULL;
+    inst->NDaxis = NULL;
     inst->geomhandle = NULL;
     inst->geom = NULL;
     inst->tlisthandle = NULL;
     inst->tlist = NULL;
     inst->axishandle = NULL;
-    inst->ndaxishandle = NULL;
+    inst->NDaxishandle = NULL;
     inst->location = L_NONE;
     inst->origin = L_NONE;
   } else {
@@ -198,10 +198,10 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     case CR_NDAXISHANDLE:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref *)h);
-      if(inst->ndaxishandle)
-	HandlePDelete(&inst->ndaxishandle);
-      inst->ndaxishandle = h;
-      HandleRegister(&inst->ndaxishandle, (Ref *)inst, inst->ndaxis, NTransUpdate);
+      if(inst->NDaxishandle)
+	HandlePDelete(&inst->NDaxishandle);
+      inst->NDaxishandle = h;
+      HandleRegister(&inst->NDaxishandle, (Ref *)inst, inst->NDaxis, NTransUpdate);
       break;
 
     case CR_TLIST:

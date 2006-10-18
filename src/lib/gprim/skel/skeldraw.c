@@ -55,8 +55,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define MAXPLINE 32	/* Temp buffer size.  Must be a power of 2! */
 
 static void
-draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
-			int penultimate, int hascolor)
+draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
+		    int penultimate, int hascolor)
 {
     HPointN *h = HPtNCreate(s->pdim, NULL);
     float *hdata = h->v;
@@ -67,6 +67,7 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
     int i, colored = 0;
     HPoint3 tv[MAXPLINE];
     ColorA tc[MAXPLINE];
+    mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
     newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
     newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
@@ -75,12 +76,12 @@ draw_projected_skel(mgmapfunc NDmap, void *NDinfo, Skel *s, int flags,
       for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
 	HPt3Dehomogenize((HPoint3 *)op, (HPoint3 *)h->v);
 	h->v[3] = 0.0; /* w has no special meaning in ND > 3 */
-	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+	colored = mapHPtN(NDctx, h, np, &newc[i]);
       }      
     } else {
       for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
 	h->v = op;
-	colored = (*NDmap)(NDinfo, h, np, &newc[i]);
+	colored = mapHPtN(NDctx, h, np, &newc[i]);
       }
     }
     if(!hascolor) colored = 0;
@@ -134,6 +135,7 @@ SkelDraw(s)
     int flags, penultimate;
     ColorA *lastcolor=NULL;
     HPoint3 tv[MAXPLINE];
+    mgNDctx *NDctx = NULL;
 
     /* Don't draw if vect-drawing is off. */
     if (s == NULL || (_mgc->astk->ap.flag & APF_VECTDRAW) == 0)
@@ -152,9 +154,10 @@ SkelDraw(s)
     penultimate = s->nlines - 2;
     flags = penultimate>0 ? 4 : 0;	/* 4: not last mbr of batch of lines */
 
-    if(_mgc->NDinfo) {
-	draw_projected_skel(_mgc->NDmap, _mgc->NDinfo, s, flags,
-			    penultimate, hascolor);
+    mgctxget(MG_NDCTX, &NDctx);
+
+    if(NDctx) {
+	draw_projected_skel(NDctx, s, flags, penultimate, hascolor);
 	return s;
     }
 

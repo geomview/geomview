@@ -32,20 +32,20 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include "bboxP.h"
-#include "mgP.h"	/* need mgP.h (instead of mg.h) for _mgc below */
+#include "mg.h"
 #include "hpointn.h"
 #include <stdlib.h>
 #ifndef alloca
 #include <alloca.h>
 #endif
 
-static void draw_projected_bbox(mgmapfunc NDmap, void *NDinfo,
-				BBox *bbox, Appearance *ap)
+static void draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, Appearance *ap)
 {
   int i, e, numvert, dim;
   ColorA edgecolor;
   HPointN *ptN;
   HPoint3 *pts3;
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
   *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
   edgecolor.a = 1;
@@ -66,7 +66,7 @@ static void draw_projected_bbox(mgmapfunc NDmap, void *NDinfo,
     for (e = 0; e < dim; e++) {
       ptN->v[e] = (i & (1 << e)) ? bbox->min->v[e] : bbox->max->v[e];
     }
-    (*NDmap)(NDinfo, ptN, &pts3[i], NULL);
+    mapHPtN(NDctx, ptN, &pts3[i], NULL);
   }
   HPtNDelete(ptN);
 
@@ -98,32 +98,35 @@ BBox *BBoxDraw(BBox *bbox)
   int i, numvert;
   int dimn;
   HPoint3 vert[16];
-  HPoint3 *min, *max;
+  HPoint3 min, max;
   ColorA edgecolor;
   Appearance *ap = mggetappearance();
+  mgNDctx *NDctx = NULL;
 
   if(!(ap->flag & APF_EDGEDRAW))
     return bbox;
 
-  if (_mgc->NDinfo) {
-    draw_projected_bbox(_mgc->NDmap, _mgc->NDinfo, bbox, ap);
+  mgctxget(MG_NDCTX, &NDctx);
+  
+  if (NDctx) {
+    draw_projected_bbox(NDctx, bbox, ap);
     return bbox;
   }
 
   dimn = (bbox->geomflags & VERT_4D) ? 4 : 3;
-  min = (HPoint3 *)bbox->min->v;
-  max = (HPoint3 *)bbox->max->v;
+  HPtNToHPt3(bbox->min, &min, NULL);
+  HPtNToHPt3(bbox->max, &max, NULL);
   if (dimn == 3)	{	/* dehomogenize min, max vals */
-    HPt3Dehomogenize(min, min);
-    HPt3Dehomogenize(max, max);
+    HPt3Dehomogenize(&min, &min);
+    HPt3Dehomogenize(&max, &max);
   }
 
   /* fill in the vertices of the (hyper) cube */
   for(i = 0; i < (1 << dimn); i++) {
-    vert[i].x = i&1 ? min->x : max->x;
-    vert[i].y = i&2 ? min->y : max->y;
-    vert[i].z = i&4 ? min->z : max->z;
-    vert[i].w = i&8 ? min->w : max->w;
+    vert[i].x = i&1 ? min.x : max.x;
+    vert[i].y = i&2 ? min.y : max.y;
+    vert[i].z = i&4 ? min.z : max.z;
+    vert[i].w = i&8 ? min.w : max.w;
   }
 
   numvert = 1 << dimn;

@@ -129,11 +129,11 @@ InstImport( Pool *p )
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
 	    expect = "ntransform matrix";
-	    if(!NTransStreamIn(p, &inst->ndaxishandle, &inst->ndaxis))
+	    if(!NTransStreamIn(p, &inst->NDaxishandle, &inst->NDaxis))
 		goto failed;
-	    if(inst->ndaxishandle)
-		HandleRegister(&inst->ndaxishandle, (Ref *)inst,
-			       inst->ndaxis, NTransUpdate);
+	    if(inst->NDaxishandle)
+		HandleRegister(&inst->NDaxishandle, (Ref *)inst,
+			       inst->NDaxis, NTransUpdate);
 	    break;
 	    
 	case 't':		/* tlist ... or transform ... */
@@ -221,8 +221,8 @@ InstExport( Inst *inst, Pool *pool )
 	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
     } else if (memcmp(inst->axis, TM_IDENTITY, sizeof(Transform)) != 0) {
 	ok &= TransStreamOut(pool, inst->axishandle, inst->axis);
-    } else if (inst->ndaxis != NULL) {
-	ok &= NTransStreamOut(pool, inst->ndaxishandle, inst->ndaxis);
+    } else if (inst->NDaxis != NULL) {
+	ok &= NTransStreamOut(pool, inst->NDaxishandle, inst->NDaxis);
     }
 
     if(inst->geom != NULL || inst->geomhandle != NULL) {

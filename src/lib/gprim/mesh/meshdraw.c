@@ -41,13 +41,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static int
-draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
+draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
 {
   Mesh m = *mesh;
   HPointN *h = HPtNCreate(5, NULL);
   HPoint3 *op, *np;
   int i, colored = 0;
   int npts = m.nu * m.nv;
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+
   m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
   m.n = NULL;
   m.c = (ColorA *)alloca(npts*sizeof(ColorA));
@@ -55,7 +57,7 @@ draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
       /* Set the point's first four components from our 4-D mesh vertex */
       *(HPoint3 *)h->v = *op;
-      colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
+      colored = mapHPtN(NDctx, h, np, &m.c[i]);
     }
   } else {
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
@@ -63,7 +65,7 @@ draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
       HPt3Dehomogenize(op, (HPoint3 *)h->v);
       h->v[3] = 0.0; /* otherwise we'll have a translation in w direction,
 			which has no special meaning in ND */
-      colored = (*NDmap)(NDinfo, h, np, &m.c[i]);
+      colored = mapHPtN(NDctx, h, np, &m.c[i]);
     }
   }
   m.geomflags &= ~VERT_4D;
@@ -91,6 +93,8 @@ draw_projected_mesh(mgmapfunc NDmap, void *NDinfo, Mesh *mesh)
 Mesh *
 MeshDraw(Mesh *mesh)
 {
+  mgNDctx *NDctx = NULL;
+
   /* We pass mesh->flag verbatim to mgmesh() -- MESH_[UV]WRAP == MM_[UV]WRAP */
 
   if(!(mesh->flag & MESH_N)) {
@@ -101,8 +105,10 @@ MeshDraw(Mesh *mesh)
       MeshComputeNormals(mesh);
   }
 
-  if(_mgc->NDinfo) {
-    draw_projected_mesh(_mgc->NDmap, _mgc->NDinfo, mesh);
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if(NDctx) {
+    draw_projected_mesh(NDctx, mesh);
   } else if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_draw_mesh(mesh);

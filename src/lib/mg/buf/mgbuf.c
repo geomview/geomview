@@ -297,12 +297,8 @@ _mgbuf_ctxset(int a1, va_list *alist)
       }
       break;
 
-    case MG_NDINFO:
-      _mgc->NDinfo = NEXT(void *);
-      break;
-
-    case MG_NDMAP:
-      _mgc->NDmap = NEXT(mgmapfunc);
+    case MG_NDCTX:
+      _mgc->NDctx = NEXT(mgNDctx *);
       break;
 
     case MG_ZNUDGE:
@@ -664,12 +660,8 @@ mgbuf_ctxget( int attr, void *value )
       *VALUE(int) = _mgc->space;
       break;
 
-    case MG_NDINFO:
-      *VALUE(void *) = _mgc->NDinfo;
-      break;
-
-    case MG_NDMAP:
-      *VALUE(mgmapfunc) = _mgc->NDmap;
+    case MG_NDCTX:
+      *VALUE(mgNDctx *) = _mgc->NDctx;
       break;
 
     case MG_ZNUDGE:

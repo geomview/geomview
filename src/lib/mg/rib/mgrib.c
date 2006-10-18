@@ -214,8 +214,7 @@ _mgrib_ctxset(int a1, va_list *alist)
       break;
 
     case MG_SPACE:   _mgc->space = va_arg(*alist, int); break;
-    case MG_NDINFO:  _mgc->NDinfo = va_arg(*alist, void *); break;
-    case MG_NDMAP:   _mgc->NDmap = va_arg(*alist, mgmapfunc); break;
+    case MG_NDCTX:  _mgc->NDctx = va_arg(*alist, mgNDctx *); break;
 
 
     /* kind of RIB-specific */
@@ -329,8 +328,7 @@ mgrib_ctxget(int attr, void* value)
     /* not implemented now */
     *VALUE(int) = 0;
   case MG_SPACE: *VALUE(int) = _mgc->space; break;
-  case MG_NDINFO: *VALUE(void *) = _mgc->NDinfo; break;
-  case MG_NDMAP:  *VALUE(mgmapfunc) = _mgc->NDmap; break;
+  case MG_NDCTX: *VALUE(mgNDctx *) = _mgc->NDctx; break;
 
   /* Attributes specific to RIB contexts: */
   case MG_RIBWINID:

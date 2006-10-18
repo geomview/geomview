@@ -28,6 +28,7 @@
 #include "common.h"
 #include "transformn.h"
 #include "pick.h"
+#include "mg.h"
 
 /* N-D color maps */
 typedef struct cent {	/* Colormap entry */
@@ -43,16 +44,17 @@ typedef struct cmap {	/* Colormap table */
 } cmap;
 #define MAXCMAP 4
 
-struct ndstuff {	/* mg info */
-    TransformN *T;	/* object-to-ND-camera transform */
-    int *axes;	   /* visible subspace: axes in N-D camera seen by cur cam */
+typedef struct NDstuff
+{
+  mgNDctx mgNDctx;
+  TransformN *T;	/* object-to-ND-camera transform */
+  int *axes;	   /* visible subspace: axes in N-D camera seen by cur cam */
 
-    TransformN *Tc;	/* object-to-coloring-space-transform */
-    int ncm;		/* number of colormaps */
-    cmap *cm;		/* colormap array */
-    HPointN *hc;	/* work area for color projections */
-};
-
+  TransformN *Tc;	/* object-to-coloring-space-transform */
+  int ncm;		/* number of colormaps */
+  cmap *cm;		/* colormap array */
+  HPointN *hc;	/* work area for color projections */
+} NDstuff;
 
 #define OBJECTFIELDS							\
   char *name[2];	/* array of names */				\
@@ -122,6 +124,7 @@ typedef struct DView {
   int stereogap;	/* gap between subwindows in stereo mode	*/
   WnPosition vp[2];	/* Subwindow viewports, if stereo != MONO	*/
   mgshadefunc shader;	/* Software shader function (NULL -> hardware)  */
+  mgNDctx mgNDctx;
   int NDPerm[4];	/* N-D -> 3-D axis permutation */
   int nNDcmap;
   cmap NDcmap[MAXCMAP];	/* N-D color map */

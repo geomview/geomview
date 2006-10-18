@@ -291,10 +291,12 @@ LDEFINE(ND_axes, LLIST,
      * cluster. NOTE: we first reset the camera to its default state.
      */
     NDcam *c = NDnewcluster(clustername);
+    extern mgNDctx NDctx_proto; /* from ndshade.c */
 
     NDdeletecluster(dv->cluster); /* a no-op yet */
     dv->cluster = c;
     memcpy(dv->NDPerm, axes, 4*sizeof(int));
+    dv->mgNDctx = NDctx_proto;
 
     CamReset(dv->cam);
 

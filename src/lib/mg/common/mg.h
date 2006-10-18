@@ -45,9 +45,18 @@ typedef struct mgcontext mgcontext;	/* Opaque typedef */
 
 typedef int (*mgshadefunc)( int npoints, HPoint3 *points, Point3 *normals,
 				ColorA *colors, ColorA *newcolors );
-typedef int (*mgmapfunc)( void *NDinfo, void *NDpoint, HPoint3 *newpoint,
-				ColorA *newcolor );
 typedef void (*mgwinchfunc)( /*mgcontext *mgc, void *data, int win_why, ...*/ );
+
+typedef struct mgNDctx mgNDctx;
+typedef int (*mgNDmapfunc)(mgNDctx *NDctx,
+			   HPointN *NDpoint, HPoint3 *newpoint,
+			   ColorA *newcolor);
+struct mgNDctx
+{
+  mgNDmapfunc mapHPtN;
+  void *(*saveCTXpushTN)(mgNDctx *NDctx, TransformN *leftTN);
+  void (*restoreCTX)(mgNDctx *NDctx, void *savedCTX);
+};
 
 struct mgfuncs {  /* mg member functions; potentially changed per device */
 
@@ -110,11 +119,7 @@ extern struct mgfuncs _mgf;
 				 */
 
 
-#define	MG_NDMAP	140	/* int (*mapfunc)(void *NDdata, HPointN*, HPoint3*, ColorA*) */
-				  /* function returns 1 if color was applied,
-				   * else 0
-				   */
-#define	MG_NDINFO	141	/* void *NDinfo */
+#define	MG_NDCTX	140	/* mgNDctx * */
 
 /* Note 140, 141, 142 used to be MG_EUCLIDEAN, MG_HYPERBOLIC, and
    MG_SPHERICAL, which are now obsolete.  These numbers may be reused now. */

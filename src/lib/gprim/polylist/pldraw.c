@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.7 2006/10/16 07:06:23 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.8 2006/10/18 19:41:41 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -48,7 +48,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 static void
-draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
+draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 {
     PolyList newpl = *pl;
     HPointN *h;
@@ -56,6 +56,7 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
     Vertex *ov, *nv;
     Vertex **vps;
     int i, j, colored = 0;
+    mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
     /* Copy the PolyList onto the stack. */
     newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
@@ -75,14 +76,14 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
       for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
 	*(HPoint3 *)h->v = ov->pt;
 	nv->vcol = ov->vcol;
-	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+	colored = mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       }
     } else {
       for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
 	HPt3Dehomogenize(&ov->pt, (HPoint3 *)h->v);
 	h->v[3] = 0; /* w-direction has no special meaning in ND */
 	nv->vcol = ov->vcol;
-	colored = (*NDmap)(NDinfo, h, &nv->pt, &nv->vcol);
+	colored = mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       }
     }
 
@@ -118,12 +119,15 @@ draw_projected_polylist(mgmapfunc NDmap, void *NDinfo, PolyList *pl)
 PolyList *
 PolyListDraw( PolyList *pl )
 {
+    mgNDctx *NDctx = NULL;
+
     if (pl == NULL)
       return NULL;
     
+    mgctxget(MG_NDCTX, &NDctx);
 
-    if(_mgc->NDinfo) {
-	draw_projected_polylist(_mgc->NDmap, _mgc->NDinfo, pl);
+    if(NDctx) {
+	draw_projected_polylist(NDctx, pl);
 	return pl;
     }
 
