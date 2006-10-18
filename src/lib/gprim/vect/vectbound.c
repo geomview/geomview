@@ -56,6 +56,8 @@ BBox *VectBound(Vect *v, Transform T, TransformN *TN)
   if(n <= 0)
     return NULL;	/* No (finite) points! */
 
+  min = *p;
+
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d vects, and a 4d bboy for 4d vects.
    */
