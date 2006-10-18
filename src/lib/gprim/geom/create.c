@@ -129,7 +129,8 @@ GGeomInit(g, Class, magic, ap)
     if(ap != NULL)	/* If it's a real Appearance, bump its ref count */
 	RefIncr((Ref *)ap);
     g->aphandle = NULL;
-    g->geomflags = 0; 
+    g->geomflags = 0;
+    g->pdim = 4;
 }
 
 /*
