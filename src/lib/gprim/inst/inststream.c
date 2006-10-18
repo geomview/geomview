@@ -219,9 +219,9 @@ InstExport( Inst *inst, Pool *pool )
     if(inst->tlist != NULL || inst->tlisthandle != NULL) {
 	fprintf(pool->outf, "  tlist ");
 	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
-    } else if (inst->axishandle != NULL) {
+    } else if (memcmp(inst->axis, TM_IDENTITY, sizeof(Transform)) != 0) {
 	ok &= TransStreamOut(pool, inst->axishandle, inst->axis);
-    } else if (inst->ndaxishandle != NULL) {
+    } else if (inst->ndaxis != NULL) {
 	ok &= NTransStreamOut(pool, inst->ndaxishandle, inst->ndaxis);
     }
 
