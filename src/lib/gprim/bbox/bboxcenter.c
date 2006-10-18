@@ -42,16 +42,6 @@ static void _BBoxCenter(BBox *bbox, HPtNCoord *center)
   }
 }
 
-void BBoxCenter(BBox *bbox, HPoint3 *center)
-{
-  if (bbox->pdim > 4) {
-    return;
-  }
-  
-  _BBoxCenter(bbox, (HPtNCoord *)center);
-}
-
-
 HPointN *BBoxCenterND(BBox *bbox, HPointN *center)
 {
   if (!center) {
@@ -66,8 +56,20 @@ HPointN *BBoxCenterND(BBox *bbox, HPointN *center)
   return center;
 }
 
+void BBoxCenter(BBox *bbox, HPoint3 *center)
+{
+  HPointN *Ncenter;
+  
+  Ncenter = BBoxCenterND(bbox, NULL);
+
+  HPtNToHPt3(Ncenter, center, NULL);
+  
+  HPtNDelete(Ncenter);
+}
+
+
 /*
  * Local Variables: ***
- * c-basic-offset: 4 ***
+ * c-basic-offset: 2 ***
  * End: ***
  */

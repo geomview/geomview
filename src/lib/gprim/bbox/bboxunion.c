@@ -86,8 +86,8 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
   
   if (bbox1->pdim == 4) {
     result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				 CR_4MIN, bbox1->min,
-				 CR_4MAX, bbox1->max,
+				 CR_4MIN, bbox1->min->v,
+				 CR_4MAX, bbox1->max->v,
 				 CR_4D, (bbox1->geomflags & VERT_4D) != 0,
 				 CR_END);
   } else {
