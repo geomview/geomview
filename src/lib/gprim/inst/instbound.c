@@ -73,7 +73,7 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
 	BBox *box;
 		
 	TmConcat( Tnew, T, Tnew );
-	if((box = (BBox *)GeomBound( inst->geom, Tnew, TN)) != NULL) {
+	if((box = (BBox *)GeomBound( inst->geom, Tnew, NULL)) != NULL) {
 	  if(geombbox) {
 	    BBoxUnion3(geombbox, box, geombbox);
 	    GeomDelete((Geom *)box);
