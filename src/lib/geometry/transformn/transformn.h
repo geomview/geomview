@@ -109,7 +109,7 @@ extern int TmNGetSize(const TransformN *T, int *idim, int *odim);
 extern void TmNPrint(FILE *f, const TransformN *T);
 
 	/* Get a TransformN, given a file pointer */
-extern TransformN *TmNRead(IOBFILE *f);
+extern TransformN *TmNRead(IOBFILE *f, int binary);
 
 	/* palar decompositon of upper NxN part */
 extern TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q);

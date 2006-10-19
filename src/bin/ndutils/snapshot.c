@@ -60,10 +60,10 @@ int DoProjection(ClientData clientdata, Tcl_Interp *interp,
         }
 	printf("(echo(ND-xform-get %s universe))\n",argv[1]);
         fflush(stdout);
-        ObjUniv=TmNRead(infile);
+        ObjUniv=TmNRead(infile, 0);
 	printf("(echo(ND-xform-get universe %s))\n",argv[2]);
         fflush(stdout);
-        CamUniv=TmNRead(infile);
+        CamUniv=TmNRead(infile, 0);
         iobfrewind(infile);
 	printf("(echo(ND-axes %s)\\n)\n",argv[2]);
         fflush(stdout);

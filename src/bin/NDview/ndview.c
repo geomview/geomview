@@ -285,16 +285,16 @@ void spanproc(int i)
 	objectflag = 1;
 	printf("(echo (ND-xform-get targetgeom))\n");
 	fflush(stdout);
-	O2W = TmNRead(infile);
+	O2W = TmNRead(infile, 0);
     }
 
     printf("(echo (ND-xform-get world))\n");
     fflush(stdout);
-    W2U = TmNRead(infile);
+    W2U = TmNRead(infile, 0);
     printf("(echo (if (real-id focus) "
 	   "(ND-xform-get focus) (ND-xform-get g0)))\n");
     fflush(stdout);
-    C2U = TmNRead(infile);
+    C2U = TmNRead(infile, 0);
 
     /* Then multiply the right ones together */
     U2C = TmNInvert(C2U, U2C);

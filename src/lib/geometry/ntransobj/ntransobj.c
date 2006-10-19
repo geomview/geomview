@@ -157,7 +157,7 @@ NTransStreamIn(Pool *p, Handle **hp, TransformN **Tptr)
 	     */
 	    if(ntobj == NULL)
 		ntobj = NTransCreate(NULL);
-	    ntobj->T = TmNRead(inf);
+	    ntobj->T = TmNRead(inf, 0);
 	    if (ntobj->T == NULL) {
 		NTransDelete(ntobj);
 		ntobj = NULL;

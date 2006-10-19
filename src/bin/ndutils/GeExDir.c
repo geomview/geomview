@@ -107,7 +107,7 @@ exist return "NoObj"*/
 
 	printf("(echo(ND-xform-get %s %s))\n",argv[2],argv[3]);
 	fflush(stdout);
-	t=TmNRead(infile);
+	t=TmNRead(infile, 0);
 
 /*Invert the transform so that it takes the world/universe to the object*/
 

@@ -164,10 +164,10 @@ int CreateClipPlane(ClientData clientdata, Tcl_Interp *interp,
         fflush(stdout);
 	printf("(echo(ND-xform-get %s universe))\n",argv[2]);
 	fflush(stdout);
-	t=TmNRead(infile);
+	t=TmNRead(infile, 0);
 	printf("(echo(ND-xform-get universe world))\n");
 	fflush(stdout);
-	tworld=TmNRead(infile);
+	tworld=TmNRead(infile, 0);
 	tfinal=TmNConcat(t,tworld,NULL);
 	printf("(ND-xform clip_plane ntransform {%d %d\n",t->idim,t->odim);
 	for(i=0;i<tfinal->idim;i++)
@@ -204,7 +204,7 @@ int GetData(ClientData clientdata, Tcl_Interp *interp,
         }
 	printf("(echo(ND-xform-get clip_plane universe)\\n)\n");
 	fflush(stdout);
-	t=TmNRead(infile);
+	t=TmNRead(infile, 0);
 	for(i=0;i<4;i++)
 		(((NDMesh *)g)->p)[i]=HPtNTransform(t,(((NDMesh *)g)->p)[i],(((NDMesh *)g)->p)[i]);
 	temp=HPtNCreate(dim+1,NULL);
@@ -212,7 +212,7 @@ int GetData(ClientData clientdata, Tcl_Interp *interp,
 		(temp->v)[i]=((((NDMesh *)g)->p)[0]->v)[i];
 	printf("(echo(ND-xform-get %s universe)\\n)\n",argv[2]);
 	fflush(stdout);
-	t=TmNRead(infile);
+	t=TmNRead(infile, 0);
 	for(i=0;i<4;i++)
                 (((NDMesh *)g)->p)[i]=HPtNTransform(t,(((NDMesh *)g)->p)[i],(((NDMesh *)g)->p)[i]);
 	dir1=HPtNCreate(dim+1,NULL);
@@ -277,7 +277,7 @@ int UpdatePicture(ClientData clientdata, Tcl_Interp *interp,
 	}
 	printf("(echo(ND-xform-get %s universe))\n",argv[3]);
 	fflush(stdout);
-	t=TmNRead(infile);
+	t=TmNRead(infile, 0);
 	iobfrewind(infile);
 	printf("(echo(ND-axes %s)\\n)\n",argv[3]);
         fflush(stdout);
@@ -364,13 +364,13 @@ int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
         }
         printf("(echo(ND-xform-get %s universe)\\n)\n",argv[1]);
         fflush(stdout);
-        t=TmNRead(infile);
+        t=TmNRead(infile, 0);
         printf("(echo(ND-xform-get universe %s)\\n)\n",argv[1]);
         fflush(stdout);
-        tinv=TmNRead(infile);
+        tinv=TmNRead(infile, 0);
         printf("(echo(ND-xform-get universe world)\\n)\n");
         fflush(stdout);
-        tworld=TmNRead(infile);
+        tworld=TmNRead(infile, 0);
 	tworld=TmNConcat(t,tworld,tworld);
 	converted=GeomtoNoff(g,t);
 	gdim=GeomDimension(converted);

@@ -68,7 +68,7 @@ void addcomponentcolor(ColorA *color, HPointN *pt, char *coordsys, dir *plex,
 	else
 	{	printf("(echo (ND-xform-get %s %s))\n",obj,coordsys);
 		fflush(stdout);
-		t=TmNRead(infile);
+		t=TmNRead(infile, 0);
 	}
 	newpt=HPtNTransform(t,pt,NULL);	/*apply transform*/
 	hgt=InnerProductN(newpt->v,plex->direction,smdim);/*get point's height*/
