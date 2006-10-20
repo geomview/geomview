@@ -1960,6 +1960,56 @@ static void compile(char *str, pattern *p)
     p->n = n;
 }
 
+/* Keep the first line unchanged and wrap the remaining lines to 80
+ * chars with 8 chars indent on the left.
+ */
+static void print_help_formatted(FILE *outf, char *message)
+{
+  char *nl;
+  int printed, wordlen, nnl;
+  
+  /* print the first line unchanged */
+  if ((nl = strchr(message, '\n')) && message[0]=='(') {
+    fprintf(outf, "%.*s", (int)(nl - message), message);
+  }
+  if (!nl) {
+    return;
+  }
+  message = nl+1;
+  while (*message) {
+    fprintf(outf, "\n       ", outf);
+    printed = 7;
+    while (*message && printed < 72) {
+      nnl = 0;
+      while (isspace(*message)) {
+	/* keep \n\n as paragraph marker */
+	if (*message++ == '\n') {
+	  ++nnl;
+	}
+      }
+      if (nnl >= 2) {
+	fprintf(outf, "\n\n       ");
+	printed = 7;
+      }
+      wordlen = 0;
+      while (message[wordlen] && !isspace(message[wordlen])) {
+	wordlen++;
+      }
+      if (printed + wordlen < 72) {
+	printed += wordlen+1;
+	putc(' ', outf);
+	while (wordlen--) {
+	  putc((int)*message++, outf);
+	}
+      } else {
+	break;
+      }
+    }
+  }
+  putc('\n', outf);
+  fflush(outf);
+}
+
 static int match(char *str, pattern *p)
 {
     int i;
@@ -2062,7 +2112,11 @@ LDEFINE(morehelp, LVOID,
   compile(pat, &p);
   for(h=helps; h!=NULL; h=h->next) {
     if(match(h->key, &p)) {
+#if 0
 	fprintf(outf, "%s\n", h->message);
+#else
+	print_help_formatted(outf, h->message);
+#endif
 	seen++;
     }
   }
