@@ -56,6 +56,7 @@
 #define CR_4MIN		1066	/* HPoint3 *	(BBox)			*/
 #define CR_NMIN		2048    /* HPointN *	(BBox)			*/
 #define CR_NMAX		2049    /* HPointN *	(BBox)			*/
+#define CR_NCENTER      2050	/* HPointN *    (return NDcenter of BBox) */
 
 #define CR_4D		19	/* is this object a true 4D item?	*/
 
@@ -113,7 +114,7 @@
 #define CR_POLYCOLOR    59	/* ColorA facecolor[npoly]		*/
 
 	/* Sphere attributes */
-#define CR_CENTER		60	/* HPoint3 *center		*/
+#define CR_CENTER		60	/* HPoint3 *center (also bbox)  */
 #define CR_RADIUS		61	/* float  radius		*/
 #define CR_SPACE		64	/* Space - TM_EUCLIDEAN is default */
 #define CR_NENCOMPASS_POINTS	65	/* int - Number of points to be
