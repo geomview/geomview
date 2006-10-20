@@ -121,35 +121,10 @@ BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
 
     /* At this point we are ready to generate a 3d bounding box */
     return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-			       CR_MIN, &min, CR_MAX, &max, CR_END);
+			       CR_4MIN, &min, CR_4MAX, &max, CR_END);
   }
   
   return NULL;  
-}
-
-BBox *
-BBox_ND_hack(BBox *b, float *p, int nfloats)
-{
-  float vmin, vmax;
-
-  if(nfloats <= 0)
-    return b;
-  if(b == NULL) {
-    b = (BBox *)GeomCCreate(NULL, BBoxMethods(), CR_END);
-    vmin = vmax = *p++;
-    nfloats--;
-  } else {
-    vmin = b->min->v[0];
-    vmax = b->max->v[0];
-  }
-  for( ; --nfloats >= 0; p++) {
-    if(vmin > *p) vmin = *p;
-    if(vmax < *p) vmax = *p;
-  }
-  b->min->v[0] = b->min->v[1] = b->min->v[2] = vmin;
-  b->max->v[0] = b->max->v[1] = b->max->v[2] = vmax;
-  b->min->v[3] = b->max->v[3] = 1;
-  return b;
 }
 
 /*

@@ -53,7 +53,7 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
       static Point Max = { -1e10,-1e10,-1e10, 1 };
       static Point Min = {  1e10, 1e10, 1e10, 1 };
       return (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				 CR_MIN, Min, CR_MAX, Max, CR_END);
+				 CR_4MIN, Min, CR_4MAX, Max, CR_END);
     }
     bbox1 = bbox2;
     bbox2 = NULL;
@@ -109,6 +109,7 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 	result->max->v[i] = bbox2->max->v[i];
       }
     }
+    result->center = BBoxCenterND(result, result->center);
   }
 	
   return result;
