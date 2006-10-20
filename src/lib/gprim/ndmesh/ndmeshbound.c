@@ -129,7 +129,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
 
     /* At this point we are ready to generate a 3d bounding box */
     return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-			       CR_MIN, &min, CR_MAX, &max, CR_END);
+			       CR_4MIN, &min, CR_4MAX, &max, CR_END);
   }
 
   return NULL;

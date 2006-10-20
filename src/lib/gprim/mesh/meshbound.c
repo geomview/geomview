@@ -68,7 +68,7 @@ BBox *MeshBound(Mesh *mesh, Transform T, TransformN *TN)
 	Pt3MinMax(&min, &max, &clean);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				 CR_MIN, &min, CR_MAX, &max, CR_END);
+				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
     }
   }
   
@@ -140,7 +140,7 @@ BBox *MeshBound(Mesh *mesh, Transform T, TransformN *TN)
     }
 
     return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-			       CR_MIN, &min, CR_MAX, &max,
+			       CR_4MIN, &min, CR_4MAX, &max,
 			       CR_END);
   }
 
