@@ -33,6 +33,35 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bboxP.h"
 #include "appearance.h"
 
+/* Retrieve min/max/center of bbox */
+int BBoxGet(BBox *bbox, int attr, void *attrp)
+{
+  HPoint3 min3, max3;
+
+  switch (attr) {
+  case CR_FLAG: *(int *)attrp = 0; break;
+  case CR_MIN:
+    HPtNToHPt3(bbox->min, &min3, NULL);
+    HPt3Dehomogenize(&min3, &min3);
+    *(Point3 *)attrp = *(Point3 *)&max3;
+    break;
+  case CR_MAX:
+    HPtNToHPt3(bbox->max, &max3, NULL);
+    HPt3Dehomogenize(&max3, &max3);
+    *(Point3 *)attrp = *(Point3 *)&max3;
+    break;
+  case CR_4MIN: HPtNToHPt3(bbox->min, (HPoint3 *)attrp, NULL); break;
+  case CR_4MAX: HPtNToHPt3(bbox->max, (HPoint3 *)attrp, NULL); break;
+  case CR_NMIN: *(HPointN **)attrp = HPtNCopy(bbox->min, NULL); break;
+  case CR_NMAX: *(HPointN **)attrp = HPtNCopy(bbox->max, NULL); break;
+  case CR_CENTER: HPtNToHPt3(bbox->center, (HPoint3 *)attrp, NULL); break;
+  case CR_NCENTER: *(HPointN **)attrp = HPtNCopy(bbox->center, NULL); break;
+  default:
+    return -1;
+  }
+  return 1;
+}
+
 /*--------------------------------------------------------------------------
  * Function:	BBoxCreate
  * Description: creates or edits a bounding box
@@ -49,13 +78,13 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 {
   HPointN *tmp;
   BBox *bbox;
-  int attr, copy = 1;
+  int attr, copy = 1, need_update = 0;
 
   if (exist == NULL) {
     bbox = OOGLNewE(BBox, "BBoxCreate BBox");
     bbox->min = HPtNCreate(4, NULL);
     bbox->max = HPtNCreate(4, NULL);
-    bbox->pdim = 4;
+    bbox->center = HPtNCreate(4, NULL);
     GGeomInit (bbox, classp, BBOXMAGIC, NULL);
   } else {
     /* FIXME: Check that exist is in fact a BBox. */
@@ -74,6 +103,7 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
 	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
       }
+      need_update = 1;
       break;
     case CR_MAX:
       Pt3ToPt4(va_arg(*a_list, Point3 *), (HPoint3 *)bbox->max->v, 1);
@@ -82,24 +112,25 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
 	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
       }
+      need_update = 1;
       break;
     case CR_4MIN:
       *(HPoint3 *)bbox->min->v = *va_arg(*a_list, HPoint3 *);
-      bbox->geomflags |= VERT_4D;
       if (bbox->pdim > 4) {
 	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
 	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
 	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
       }
+      need_update = 1;
       break;
     case CR_4MAX:
       *(HPoint3 *)bbox->max->v = *va_arg(*a_list, HPoint3 *);
-      bbox->geomflags |= VERT_4D;
       if (bbox->pdim > 4) {
 	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
 	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
 	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
       }
+      need_update = 1;
       break;
     case CR_NMIN:
       tmp = va_arg(*a_list, HPointN *);
@@ -111,7 +142,7 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	  bbox->max->dim = bbox->pdim = tmp->dim;
 	}
       }
-      bbox->geomflags |= VERT_ND;
+      need_update = 1;
       break;
     case CR_NMAX:
       tmp = va_arg(*a_list, HPointN *);
@@ -123,17 +154,22 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	  bbox->min->dim = bbox->pdim = tmp->dim;
 	}
       }
-      bbox->geomflags |= VERT_ND;
+      need_update = 1;
       break;
     default:
       if (GeomDecorate (bbox, &copy, attr, a_list)) {
 	OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
 	HPtNDelete(bbox->min);
 	HPtNDelete(bbox->max);
-	OOGLFree (bbox);
+	HPtNDelete(bbox->center);
+	OOGLFree(bbox);
 	return NULL;
       }
     }
+
+  if (need_update) {
+    bbox->center = BBoxCenterND(bbox, bbox->center);
+  }
 
   if (exist != NULL) return exist;
     
@@ -145,6 +181,7 @@ void BBoxDelete(BBox *bbox)
   if (bbox) {
     HPtNDelete(bbox->min);
     HPtNDelete(bbox->max);
+    HPtNDelete(bbox->center);
   }
 }
 

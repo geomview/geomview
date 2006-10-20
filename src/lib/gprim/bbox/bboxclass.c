@@ -69,7 +69,7 @@ BBoxMethods()
 		aBBoxMethods->transform = (GeomTransformFunc *) BBoxTransform;
 		aBBoxMethods->fsave = (GeomFSaveFunc *) BBoxFSave;
 		aBBoxMethods->fload = (GeomFLoadFunc *) BBoxFLoad;
-		/*aBBoxMethods->get = (GeomGetFunc *)BBoxGet;*/
+		aBBoxMethods->get = (GeomGetFunc *)BBoxGet;
 	}
 	return aBBoxMethods;
 }

@@ -46,11 +46,9 @@
  */
 struct BBox {
   GEOMFIELDS;
+  HPointN *center;
   HPointN *min, *max;
 };
-
-#define BBOX_ND_HACK	BBox_ND_hack
-extern BBox *BBox_ND_hack(BBox *, float *data, int nfloats);
 
 #endif /* ! BBOXPDEF */
 
