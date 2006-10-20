@@ -57,6 +57,9 @@ LObject *L0, *L1;
 static Fsa lang_fsa = NULL;
 #define REJECT -1
 
+static char **keyword_names;
+static int n_keywords;
+
 /************************************************************************
  CAMERA LISP OBJECT
  ************************************************************************/
@@ -795,13 +798,37 @@ void lispext_init()
   return;
 }
 
-void define_keyword(char *word, int value)
+void define_keyword(char *word, Keyword value)
 {
+  if (value+1 > n_keywords) {
+    char **newwords = OOGLNewNE(char *, value+1, "New keyword list");
+    memset(newwords, 0, sizeof(char *)*(value+1));
+    memcpy(newwords, keyword_names, n_keywords*sizeof(char *));
+    OOGLFree(keyword_names);
+    keyword_names = newwords;
+    keyword_names[value] = word;
+    n_keywords = value+1;
+  } else if (keyword_names[value] == NULL) {
+    /* We allow aliases, but the name-list just picks up the first
+     * name.
+     */
+    keyword_names[value] = word;
+  }
   fsa_install(lang_fsa, word, (void*)(long)value);
 }
 
 /* returns < 0 if asked to parse something that isn't a keyword. */
-int parse_keyword(char *word)
+Keyword parse_keyword(char *word)
 {
-  return (int)(long)fsa_parse(lang_fsa, word);
+  return (Keyword)(long)fsa_parse(lang_fsa, word);
 }
+
+char *keywordname(Keyword keyword)
+{
+  if (keyword < n_keywords && keyword_names[keyword] != NULL) {
+    return keyword_names[keyword];
+  } else {
+    return "???";
+  }
+}
+

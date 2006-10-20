@@ -143,6 +143,8 @@ void lang_init()
 
   define_keyword("smooth", SMOOTH_KEYWORD);
 
+  define_keyword("bbox-center", BBOX_CENTER_KEYWORD);
+  define_keyword("origin", ORIGIN_KEYWORD);
   
   /*
    * Define various synonyms
@@ -225,7 +227,7 @@ void lang_init()
 	  "TRANSFORM is an OOGL 4x4 transformation matrix.");
 }
 
-HandleOps *keyword2ops(int keyword)
+HandleOps *keyword2ops(Keyword keyword)
 {
   switch (keyword) {
   case CAMERA_KEYWORD:		return &CamOps;
@@ -235,57 +237,6 @@ HandleOps *keyword2ops(int keyword)
   case COMMAND_KEYWORD: 	return &CommandOps;
   case WINDOW_KEYWORD: 		return &WindowOps;
   default: return NULL;
-  }
-}
-
-char *keywordname(int keyword)
-{
-  switch (keyword) {
-  case NO_KEYWORD:		return "no";
-  case YES_KEYWORD:		return "yes";
-  case ON_KEYWORD:		return "on";
-  case OFF_KEYWORD:		return "off";
-  case ZERO_KEYWORD:		return "no";
-  case ONE_KEYWORD:		return "yes";
-  case NONE_KEYWORD:		return "none";
-  case EACH_KEYWORD:		return "each";
-  case KEEP_KEYWORD:		return "keep";
-  case ALL_KEYWORD:		return "all";
-  case EUCLIDEAN_KEYWORD:	return "euclidean";
-  case HYPERBOLIC_KEYWORD:	return "hyperbolic";
-  case SPHERICAL_KEYWORD:	return "spherical";
-  case VIRTUAL_KEYWORD:		return "virtual";
-  case PROJECTIVE_KEYWORD:	return "projective";
-  case CONFORMALBALL_KEYWORD:	return "conformal";
-  case TIFF_KEYWORD:		return "tiff";
-  case FRAME_KEYWORD:		return "frame";
-  case CAMERA_KEYWORD:		return "camera";
-  case GEOM_KEYWORD: 		return "geometry";
-  case TRANSFORM_KEYWORD: 	return "transform";
-  case NTRANSFORM_KEYWORD: 	return "ntransform";
-  case COMMAND_KEYWORD: 	return "command";
-  case WINDOW_KEYWORD: 		return "window";
-
-  case TRANSLATE_KEYWORD:	return "translate";
-  case E_TRANSLATE_KEYWORD:	return "e-translate";
-  case H_TRANSLATE_KEYWORD:	return "h-translate";
-  case S_TRANSLATE_KEYWORD:	return "s-translate";
-
-  case TRANSLATE_SCALED_KEYWORD:	return "translate-scaled";
-  case E_TRANSLATE_SCALED_KEYWORD:	return "e-translate-scaled";
-  case H_TRANSLATE_SCALED_KEYWORD:	return "h-translate-scaled";
-  case S_TRANSLATE_SCALED_KEYWORD:	return "s-translate-scaled";
-
-  case ROTATE_KEYWORD:		return "rotate";
-
-  case SCALE_KEYWORD:		return "scale";
-  case ZOOM_KEYWORD:		return "zoom";
-
-  case HORIZONTAL_KEYWORD:	return "horizontal";
-  case VERTICAL_KEYWORD:	return "vertical";
-  case COLORED_KEYWORD:		return "colored";
-
-  default: return "???";
   }
 }
 
@@ -339,7 +290,7 @@ LDEFINE(geomview_version, LSTRING,
   return LNew( LSTRING, &s );
 }
 
-int boolval(char *s, int keyword)
+int boolval(char *s, Keyword keyword)
 {
   switch (keyword) {
   case YES_KEYWORD:

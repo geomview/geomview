@@ -27,10 +27,6 @@
 
 extern char geomview_version[];
 
-char *keywordname(int keyword);
-int boolval(char *s, int keyword);
-HandleOps *keyword2ops(int keyword);
-
 typedef enum {
   NO_KEYWORD=0,
   YES_KEYWORD,
@@ -71,9 +67,13 @@ typedef enum {
   VERTICAL_KEYWORD,
   COLORED_KEYWORD,
   TOGGLE_KEYWORD,
-  SMOOTH_KEYWORD
+  SMOOTH_KEYWORD,
+  BBOX_CENTER_KEYWORD,
+  ORIGIN_KEYWORD,
 } Keyword;
 
 void lang_init();
+int boolval(char *s, Keyword keyword);
+HandleOps *keyword2ops(Keyword keyword);
 
 #endif

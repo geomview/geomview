@@ -29,6 +29,7 @@
 #include "appearance.h"
 #include "window.h"
 #include "transformn.h"
+#include "lang.h"
 
 typedef struct {
   Handle *h;
@@ -93,8 +94,9 @@ extern LType LWindowp;
 
 extern LObject *L0, *L1;
 
-extern int parse_keyword(char *word);
+extern Keyword parse_keyword(char *word);
 extern void lispext_init();
-extern void define_keyword(char *word, int value);
+extern void define_keyword(char *word, Keyword value);
+char *keywordname(Keyword keyword);
 
 #endif /* ! LISPEXT_H */
