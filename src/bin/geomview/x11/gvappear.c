@@ -115,8 +115,7 @@ void ui_load_appearancepanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(AppearancE, Root, False,
-		&appform);
+  shell = ui_make_panel_and_form(AppearancE, Root, False, True, &appform);
 
 /*appload = mib_load_interface(appform, "interface/Appearance.mib",
 		MI_FROMFILE);*/

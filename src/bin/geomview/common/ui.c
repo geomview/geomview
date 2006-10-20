@@ -94,6 +94,7 @@ void cui_init()
 
   uistate.targetid = WORLDGEOM;
   uistate.centerid = TARGETID;
+  uistate.bbox_center = 0;
   uistate.targetgeom = 0; /* World geom is index 0 */
   uistate.targetcam = INDEXOF(FOCUSID);
   uistate.mode_count = 0;
@@ -268,6 +269,13 @@ set_ui_center(int id)
 {
   uistate.centerid = id;
 }
+
+void
+set_ui_center_origin(int use_bbox_center)
+{
+  uistate.bbox_center = use_bbox_center; /* boolean value */
+}
+
 
 /*-----------------------------------------------------------------------
  * Function:	set_ui_target_id

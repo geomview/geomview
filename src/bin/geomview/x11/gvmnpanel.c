@@ -239,7 +239,7 @@ void ui_load_mainpanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Geomview, Root, True, NULL);
+  shell = ui_make_panel_and_form(Geomview, Root, True, True, NULL);
 
   XtVaSetValues(shell, XmNtitle, "Geomview - The Geometry Center", NULL);
 

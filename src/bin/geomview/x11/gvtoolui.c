@@ -56,10 +56,10 @@ extern Pixmap  geomicon;
 /* public methods */
 /*****************************************************************************/
 
-void   ui_load_toolpanel();
-
+void   ui_load_toolpanel(void);
 void   ui_tool_targetset(char *);
 void   ui_tool_centerset(char *);
+void   ui_tool_center_origin_set(int use_bbox);
 
 /* private methods and variables */
 /*****************************************************************************/
@@ -67,6 +67,7 @@ void   ui_tool_centerset(char *);
 static void load_tool_bitmaps(mib_Widget *);
 static void target_set(Widget, XtPointer, XmAnyCallbackStruct *);
 static void center_set(Widget, XtPointer, XmAnyCallbackStruct *);
+static void center_origin_set(Widget, XtPointer, XmAnyCallbackStruct *);
 
 #if defined(__STDC__) || defined(__ANSI_CPP__)
 #define BWH(name) (char *)name##_bits, name##_width, name##_height
@@ -97,7 +98,7 @@ static struct toolbutton {
 };
 
 static struct toolbutton *last;
-static Widget shell, TargetText, CenterText;
+static Widget shell, TargetText, CenterText, CenterOriginBBox;
 
 
 /*****************************************************************************/
@@ -113,12 +114,12 @@ void ui_load_toolpanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Tools, Root, False,
-		&toolform);
+  shell = ui_make_panel_and_form(Tools, Root, False, False, &toolform);
 
 /*toolload = mib_load_interface(toolform, "interface/Tool.mib", MI_FROMFILE);*/
   toolload = mib_load_interface(toolform, Root, MI_FROMSTRING);
- 
+  XtVaSetValues(toolload->me, XmNresizePolicy, XmRESIZE_NONE, NULL);
+
   XtManageChild(toolform);
 
 /*****************************************************************************/
@@ -127,6 +128,7 @@ void ui_load_toolpanel()
   MainButton = mib_find_name(toolload, "MainButton")->me;
   TargetText = mib_find_name(toolload, "TargetText")->me;
   CenterText = mib_find_name(toolload, "CenterText")->me;
+  CenterOriginBBox = mib_find_name(toolload, "CenterOriginBBoxToggle")->me;
 
   load_tool_bitmaps(toolload);
   XtAddCallback(HideButton, XmNactivateCallback, (XtCallbackProc) ui_hide,
@@ -137,7 +139,9 @@ void ui_load_toolpanel()
 			NULL);
   XtAddCallback(CenterText, XmNactivateCallback, (XtCallbackProc) center_set,
 			NULL);
-
+  XtAddCallback(CenterOriginBBox, XmNvalueChangedCallback,
+		(XtCallbackProc) center_origin_set,
+		NULL);
 }
 
 
@@ -296,5 +300,24 @@ void ui_tool_centerset(char *center)
 
   XtFree(str);
 }
+
+/*****************************************************************************/
+
+static void
+center_origin_set(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
+{
+  set_ui_center_origin(XmToggleButtonGetState(w));
+}
+
+/*****************************************************************************/
+
+void ui_tool_center_origin_set(int use_bbox_center)
+{
+  if (CenterOriginBBox == NULL)
+    return;
+
+  XmToggleButtonSetState(CenterOriginBBox, use_bbox_center != 0, False);
+}
+
 /*****************************************************************************/
 

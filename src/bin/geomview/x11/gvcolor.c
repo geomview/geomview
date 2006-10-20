@@ -96,8 +96,7 @@ void ui_load_colorpanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Colors, Root, False,
-		&colorform);
+  shell = ui_make_panel_and_form(Colors, Root, False, True, &colorform);
 
 /*colorload = mib_load_interface(colorform, "interface/Color.mib",
 		MI_FROMFILE);*/

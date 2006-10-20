@@ -64,8 +64,7 @@ void ui_load_loadpanel()
 
   XtAppAddActions(App, actions, 1);
 
-  shell = ui_make_panel_and_form(Load, Root, False,
-		&loadform);
+  shell = ui_make_panel_and_form(Load, Root, False, True, &loadform);
 
 /*loadload = mib_load_interface(loadform, "interface/MiniLoad.mib",
                 MI_FROMFILE);*/

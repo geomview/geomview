@@ -60,7 +60,7 @@ void ui_load_filespanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Files, Root, False, NULL);
+  shell = ui_make_panel_and_form(Files, Root, True, False, NULL);
 
   filesform = XmCreateFileSelectionBox(shell, Files, NULL, 0);
 

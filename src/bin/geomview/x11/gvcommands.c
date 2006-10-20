@@ -75,8 +75,7 @@ void ui_load_commandspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Commands, Root, False,
-		&commandsform);
+  shell = ui_make_panel_and_form(Commands, Root, False, True, &commandsform);
 
 /*commandsload = mib_load_interface(commandsform, "interface/Commands.mib",
 		MI_FROMFILE);*/

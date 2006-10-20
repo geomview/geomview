@@ -1,23 +1,24 @@
 char Root[] = "\
-TotalWidgets: 28\n\
+TotalWidgets: 29\n\
 Ref: 1\n\
 Widget: \"RootForm\"\n\
-Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Root\"\n\
-Xmwidth: 102\n\
-Xmheight: 448\n\
-XmtopAttachment: 5\n\
-XmbottomAttachment: 5\n\
-XmleftAttachment: 5\n\
-XmrightAttachment: 5\n\
+Xmwidth: 105\n\
+Xmheight: 500\n\
+XmtopAttachment: 0\n\
+XmbottomAttachment: 0\n\
+XmleftAttachment: 0\n\
+XmrightAttachment: 0\n\
 XmtopOffset: 0\n\
 XmbottomOffset: 0\n\
 XmleftOffset: 0\n\
 XmrightOffset: 0\n\
 Private-\n\
 EndWidget.\n\
+\n\
 Ref: 2\n\
 Widget: \"Button\"\n\
 Children: X\n\
@@ -30,13 +31,14 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 380\n\
-XmbottomOffset: 28\n\
-XmleftOffset: 53\n\
-XmrightOffset: 9\n\
+XmtopOffset: 430\n\
+XmbottomOffset: 30\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Reset\"\n\
 EndWidget.\n\
+\n\
 Ref: 3\n\
 Widget: \"Button\"\n\
 Children: X\n\
@@ -49,10 +51,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 380\n\
-XmbottomOffset: 28\n\
-XmleftOffset: 8\n\
-XmrightOffset: 54\n\
+XmtopOffset: 430\n\
+XmbottomOffset: 30\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"Center\"\n\
 EndWidget.\n\
@@ -68,10 +70,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 320\n\
-XmbottomOffset: 88\n\
-XmleftOffset: 53\n\
-XmrightOffset: 9\n\
+XmtopOffset: 370\n\
+XmbottomOffset: 90\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"LookAt\"\n\
 EndWidget.\n\
@@ -87,10 +89,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 320\n\
-XmbottomOffset: 88\n\
-XmleftOffset: 8\n\
-XmrightOffset: 54\n\
+XmtopOffset: 370\n\
+XmbottomOffset: 90\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"Stop\"\n\
 EndWidget.\n\
@@ -106,10 +108,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 260\n\
-XmbottomOffset: 148\n\
-XmleftOffset: 53\n\
-XmrightOffset: 9\n\
+XmtopOffset: 310\n\
+XmbottomOffset: 150\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Orbit\"\n\
 EndWidget.\n\
@@ -125,10 +127,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 260\n\
-XmbottomOffset: 148\n\
-XmleftOffset: 8\n\
-XmrightOffset: 54\n\
+XmtopOffset: 310\n\
+XmbottomOffset: 150\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"Zoom\"\n\
 EndWidget.\n\
@@ -144,10 +146,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 200\n\
-XmbottomOffset: 208\n\
-XmleftOffset: 53\n\
-XmrightOffset: 9\n\
+XmtopOffset: 250\n\
+XmbottomOffset: 210\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Fly\"\n\
 EndWidget.\n\
@@ -163,10 +165,10 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 200\n\
-XmbottomOffset: 208\n\
-XmleftOffset: 8\n\
-XmrightOffset: 54\n\
+XmtopOffset: 250\n\
+XmbottomOffset: 210\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"Scale\"\n\
 EndWidget.\n\
@@ -182,13 +184,14 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 140\n\
-XmbottomOffset: 268\n\
-XmleftOffset: 53\n\
-XmrightOffset: 9\n\
+XmtopOffset: 190\n\
+XmbottomOffset: 270\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Translate\"\n\
 EndWidget.\n\
+\n\
 Ref: 11\n\
 Widget: \"Button\"\n\
 Children: X\n\
@@ -201,13 +204,14 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 140\n\
-XmbottomOffset: 268\n\
-XmleftOffset: 8\n\
-XmrightOffset: 54\n\
+XmtopOffset: 190\n\
+XmbottomOffset: 270\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"Rotate\"\n\
 EndWidget.\n\
+\n\
 Ref: 12\n\
 Widget: \"Label\"\n\
 Children: X\n\
@@ -215,37 +219,39 @@ Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
 Xmwidth: 45\n\
-Xmheight: 30\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 414\n\
-XmbottomOffset: 4\n\
+XmtopOffset: 470\n\
+XmbottomOffset: 10\n\
 XmleftOffset: 55\n\
 XmrightOffset: 5\n\
 Private-\n\
 label: \"[W]reset\"\n\
 EndWidget.\n\
+\n\
 Ref: 13\n\
 Widget: \"Label\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 52\n\
-Xmheight: 30\n\
+Xmwidth: 51\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 414\n\
-XmbottomOffset: 4\n\
-XmleftOffset: 5\n\
-XmrightOffset: 47\n\
+XmtopOffset: 470\n\
+XmbottomOffset: 10\n\
+XmleftOffset: 3\n\
+XmrightOffset: 51\n\
 Private-\n\
 label: \"[w]center\"\n\
 EndWidget.\n\
+\n\
 Ref: 14\n\
 Widget: \"Label\"\n\
 Children: X\n\
@@ -253,14 +259,14 @@ Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
 Xmwidth: 40\n\
-Xmheight: 30\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 354\n\
-XmbottomOffset: 64\n\
-XmleftOffset: 52\n\
+XmtopOffset: 410\n\
+XmbottomOffset: 70\n\
+XmleftOffset: 55\n\
 XmrightOffset: 10\n\
 Private-\n\
 label: \"[L]ook\"\n\
@@ -271,15 +277,15 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 39\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 354\n\
-XmbottomOffset: 64\n\
-XmleftOffset: 8\n\
+XmtopOffset: 410\n\
+XmbottomOffset: 70\n\
+XmleftOffset: 10\n\
 XmrightOffset: 55\n\
 Private-\n\
 label: \"[H]alt\"\n\
@@ -290,16 +296,16 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 44\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 294\n\
-XmbottomOffset: 124\n\
-XmleftOffset: 52\n\
-XmrightOffset: 6\n\
+XmtopOffset: 350\n\
+XmbottomOffset: 130\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"[o]rbit\"\n\
 EndWidget.\n\
@@ -309,16 +315,16 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 45\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 294\n\
-XmbottomOffset: 124\n\
-XmleftOffset: 6\n\
-XmrightOffset: 51\n\
+XmtopOffset: 350\n\
+XmbottomOffset: 130\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"[z]oom\"\n\
 EndWidget.\n\
@@ -328,16 +334,16 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 37\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 233\n\
-XmbottomOffset: 185\n\
-XmleftOffset: 56\n\
-XmrightOffset: 9\n\
+XmtopOffset: 290\n\
+XmbottomOffset: 190\n\
+XmleftOffset: 55\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"[f]ly\"\n\
 EndWidget.\n\
@@ -347,16 +353,16 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 45\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 233\n\
-XmbottomOffset: 185\n\
-XmleftOffset: 6\n\
-XmrightOffset: 51\n\
+XmtopOffset: 290\n\
+XmbottomOffset: 190\n\
+XmleftOffset: 10\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"[s]cale\"\n\
 EndWidget.\n\
@@ -366,112 +372,139 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 45\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 173\n\
-XmbottomOffset: 245\n\
-XmleftOffset: 51\n\
+XmtopOffset: 230\n\
+XmbottomOffset: 250\n\
+XmleftOffset: 55\n\
 XmrightOffset: 5\n\
 Private-\n\
 label: \"[t]rans\"\n\
 EndWidget.\n\
+\n\
 Ref: 21\n\
 Widget: \"Label\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 49\n\
-Xmheight: 30\n\
+Xmwidth: 40\n\
+Xmheight: 20\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 173\n\
-XmbottomOffset: 245\n\
+XmtopOffset: 230\n\
+XmbottomOffset: 250\n\
 XmleftOffset: 5\n\
-XmrightOffset: 51\n\
+XmrightOffset: 55\n\
 Private-\n\
 label: \"[r]otate\"\n\
 EndWidget.\n\
+\n\
+Ref: 29\n\
+Widget: \"Toggle\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"CenterOriginBBoxToggle\"\n\
+Xmwidth: 0\n\
+Xmheight: 0\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 0\n\
+XmtopOffset: 150\n\
+XmbottomOffset: 330\n\
+XmleftOffset: 3\n\
+XmrightOffset: 102\n\
+Private-\n\
+label: \"[O]rigin BBox\"\n\
+indicatorSize: 0\n\
+EndWidget.\n\
+\n\
 Ref: 22\n\
 Widget: \"Label\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 55\n\
+Xmwidth: 85\n\
 Xmheight: 15\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 87\n\
-XmbottomOffset: 346\n\
-XmleftOffset: 20\n\
-XmrightOffset: 27\n\
+XmtopOffset: 100\n\
+XmbottomOffset: 385\n\
+XmleftOffset: 10\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Center\"\n\
 EndWidget.\n\
+\n\
 Ref: 23\n\
 Widget: \"TextBox\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"CenterText\"\n\
-Xmwidth: 92\n\
+Xmwidth: 95\n\
 Xmheight: 30\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 105\n\
-XmbottomOffset: 313\n\
+XmtopOffset: 120\n\
+XmbottomOffset: 350\n\
 XmleftOffset: 5\n\
 XmrightOffset: 5\n\
 Private-\n\
 EndWidget.\n\
+\n\
 Ref: 24\n\
 Widget: \"Label\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Label\"\n\
-Xmwidth: 90\n\
-Xmheight: 19\n\
+Xmwidth: 85\n\
+Xmheight: 15\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 36\n\
-XmbottomOffset: 393\n\
-XmleftOffset: 3\n\
-XmrightOffset: 9\n\
+XmtopOffset: 45\n\
+XmbottomOffset: 440\n\
+XmleftOffset: 10\n\
+XmrightOffset: 10\n\
 Private-\n\
 label: \"Target\"\n\
 EndWidget.\n\
+\n\
 Ref: 25\n\
 Widget: \"TextBox\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"TargetText\"\n\
-Xmwidth: 92\n\
+Xmwidth: 95\n\
 Xmheight: 30\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 59\n\
-XmbottomOffset: 363\n\
+XmtopOffset: 65\n\
+XmbottomOffset: 405\n\
 XmleftOffset: 5\n\
-XmrightOffset: 6\n\
+XmrightOffset: 5\n\
 Private-\n\
 EndWidget.\n\
+\n\
 Ref: 26\n\
 Widget: \"Button\"\n\
 Children: X\n\
@@ -484,27 +517,28 @@ XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
-XmtopOffset: 6\n\
-XmbottomOffset: 415\n\
+XmtopOffset: 5\n\
+XmbottomOffset: 465\n\
 XmleftOffset: 5\n\
-XmrightOffset: 57\n\
+XmrightOffset: 60\n\
 Private-\n\
 label: \"Main\"\n\
 EndWidget.\n\
+\n\
 Ref: 27\n\
 Widget: \"Button\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"HideButton\"\n\
-Xmwidth: 37\n\
+Xmwidth: 40\n\
 Xmheight: 30\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
 XmtopOffset: 5\n\
-XmbottomOffset: 413\n\
+XmbottomOffset: 465\n\
 XmleftOffset: 60\n\
 XmrightOffset: 5\n\
 Private-\n\
@@ -516,8 +550,8 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"OutFrame\"\n\
-Xmwidth: 102\n\
-Xmheight: 448\n\
+Xmwidth: 105\n\
+Xmheight: 500\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\

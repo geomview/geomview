@@ -51,6 +51,7 @@ typedef struct {
   int	targettype;		/* T_GEOM, T_CAM, or T_NONE		   */
   int   targetid;		/* id of target (geom or cam) (moving obj) */
   int   centerid;		/* id of center of motion)		   */
+  int   bbox_center;		/* use center of bbox of centerid as origin */
   int	mousefocus;		/* index of camera (window) where mouse is */
 
   int   savewhat;		/* What in the world did we want to save?

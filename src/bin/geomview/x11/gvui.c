@@ -468,7 +468,7 @@ LDEFINE(ui_target, LVOID,
 }
 
 LDEFINE(ui_center, LVOID,
-       "(ui-center      ID)\n\
+       "(ui-center ID)\n\
         Set the center for user interface (i.e. mouse) controlled\n\
         motions to object ID.")
 {
@@ -483,6 +483,37 @@ LDEFINE(ui_center, LVOID,
     set_ui_center(id);
   }
   ui_tool_centerset(drawer_id2name(id));
+  return Lt;
+}
+
+LDEFINE(ui_center_origin, LVOID,
+       "(ui-center-origin [origin|bbox-center])\n"
+	"Set the origin of the coordinate system of the center"
+	"for user interface (i.e. mouse) controlled motions."
+	"The keyword \"origin\" means to use the origin of the coordinate"
+	"system of the center object, while \"center\" means to use"
+	"the center of the bouding box of the center object. The keyword"
+	"\"center\" makes no sense if the geometry is non-Euclidean."
+	"Using either \"center\" or \"origin\" does not make a difference"
+	"if the center object is not a \"geometry\", e.g. if it is a camera.")
+{
+  int origin;
+
+  LDECLARE(("ui-center-origin", LBEGIN,
+            LKEYWORD, &origin,
+            LEND));
+
+  if (origin != BBOX_CENTER_KEYWORD && origin != ORIGIN_KEYWORD) {
+    OOGLError(1,
+	      "Wrong keyword, expected either \"%s\" or \"%s\"\n",
+	      keywordname(BBOX_CENTER_KEYWORD),
+	      keywordname(ORIGIN_KEYWORD));
+    return Lnil;
+  }
+  
+  set_ui_center_origin(origin == BBOX_CENTER_KEYWORD);
+  ui_tool_center_origin_set(origin == BBOX_CENTER_KEYWORD);
+
   return Lt;
 }
 
@@ -625,8 +656,9 @@ void ui_init()
 
 /*****************************************************************************/
 
-Widget ui_make_panel_and_form(char *title, char *rootstr, Boolean wantkeys,
-				Widget *formp)
+Widget ui_make_panel_and_form(char *title, char *rootstr,
+			      Boolean wantkeys, Boolean resizable,
+			      Widget *formp)
 {
   Arg args[20];
   int n;
@@ -637,7 +669,7 @@ Widget ui_make_panel_and_form(char *title, char *rootstr, Boolean wantkeys,
   XtSetArg(args[n], XmNtitle, title); n++;
   XtSetArg(args[n], XmNdeleteResponse, XmDO_NOTHING);n++;
   XtSetArg(args[n], XmNkeyboardFocusPolicy, XmPOINTER); n++;
-  XtSetArg(args[n], XmNallowShellResize, True); n++;
+  XtSetArg(args[n], XmNallowShellResize, resizable); n++;
 
   if(gvvisual->class & 1) {	/* If PseudoColor or other dynamic visual */
     XtSetArg(args[n], XmNvisual, gvvisual); n++;
@@ -665,7 +697,7 @@ Widget ui_make_panel_and_form(char *title, char *rootstr, Boolean wantkeys,
   if(formp != NULL) {
     n = 0;
     XtSetArg(args[n], XmNrubberPositioning, True); n++;
-    XtSetArg(args[n], XmNresizable, True); n++;
+    XtSetArg(args[n], XmNresizable, resizable); n++;
     if(wantkeys) {
 	XtSetArg(args[n], XmNaccelerators, KeyAccels); n++;
     }

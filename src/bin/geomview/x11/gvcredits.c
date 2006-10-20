@@ -93,8 +93,7 @@ void ui_load_creditspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Credits, Root, True,
-		&creditsform);
+  shell = ui_make_panel_and_form(Credits, Root, True, True, &creditsform);
 
 /*creditsload = mib_load_interface(creditsform, "interface/Credits.mib",
 		MI_FROMFILE);*/

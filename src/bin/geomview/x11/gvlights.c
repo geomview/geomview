@@ -80,8 +80,7 @@ void ui_load_lightspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Lights, Root, True,
-		&lightsform);
+  shell = ui_make_panel_and_form(Lights, Root, True, True, &lightsform);
 
 /*lightsload = mib_load_interface(lightsform, "interface/Lights.mib",
 		MI_FROMFILE);*/

@@ -82,8 +82,7 @@ void ui_load_materialpanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Material, Root, False,
-		&mattform);
+  shell = ui_make_panel_and_form(Material, Root, False, True, &mattform);
 
 /*mattload = mib_load_interface(mattform, "interface/Material.mib",
 		MI_FROMFILE);*/

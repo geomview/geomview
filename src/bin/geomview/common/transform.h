@@ -18,10 +18,19 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
+
+#include "lang.h"
+
+typedef enum MotionOrigin {
+  ORIGIN = 0,
+  BBOX_CENTER = 1
+} MotionOrigin;
+
 typedef struct Motion {
   int moving_id;
   int center_id;
   int frame_id;
+  MotionOrigin origin;
   void (*transform)();
   float amount[3];
   float timeunit;
@@ -30,17 +39,16 @@ typedef struct Motion {
   struct Motion *next;
 } Motion;
 
-void drawer_transform(
-  int moving_id, int center_id, int frame_id,
-  int transform_type,
-  float amount[3],
-  float timeunit,
-  char *repeat_type,
-  int smoothanim
-  );
+int drawer_transform(int moving_id, int center_id, int frame_id,
+		     int transform_type,
+		     float amount[3],
+		     Keyword origin,
+		     float timeunit,
+		     char *repeat_type,
+		     Keyword smoothanim);
 
-void drawer_position( int moving_id, int ref_id, char *position_type,
-		     char *center );
+void drawer_position(int moving_id, int ref_id, char *position_type,
+		     char *center);
 void drawer_zoom(int id, float amount);
 void drawer_scale(int id, float amount);
 void set_motion(Motion *motion);

@@ -101,8 +101,7 @@ void ui_load_cameraspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Cameras, Root, False,
-		&camerasform);
+  shell = ui_make_panel_and_form(Cameras, Root, False, True, &camerasform);
 
 /*camerasload = mib_load_interface(camerasform, "interface/Cameras.mib",
 		MI_FROMFILE);*/

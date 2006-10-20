@@ -387,6 +387,7 @@ DObject * drawer_next_object( int id, int *indexp, int type );
 DObject *drawer_next_bcast( int id, int *indexp, int type );
 Appearance * drawer_get_ap( int id );	/* Get net appearance for DGeom 'id' */
 
+void	drawer_make_bbox(DGeom *dg, int combine);
 int	drawer_geom_count();
 int	drawer_cam_count();
 int	drawer_idbyctx( mgcontext *ctx );

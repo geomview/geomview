@@ -109,8 +109,7 @@ void ui_load_savepanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Save, Root, False,
-		&savewrapper);
+  shell = ui_make_panel_and_form(Save, Root, False, True, &savewrapper);
 
 /*****************************************************************************/
 

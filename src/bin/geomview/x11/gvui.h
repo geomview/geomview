@@ -54,7 +54,8 @@ void ui_init_snaphelp();
 void ui_hide(Widget, XtPointer panelname, XmAnyCallbackStruct *cbs);
 void ui_show(Widget, XtPointer panelname, XmAnyCallbackStruct *cbs);
 Widget ui_make_panel_and_form(char *title, char *rootstr,
-				Boolean catchkeys, Widget *form);
+			      Boolean catchkeys, Boolean resizable,
+			      Widget *form);
 
 /* Panel Defines */
 /*****************************************************************************/

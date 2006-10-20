@@ -123,7 +123,6 @@ static void	object_changed(Handle **hp, DObject *obj, void *seqno);
 static int	object_register(Handle **hp, Ref *ignored, DObject *obj);
 static void	update_dgeom(DGeom *);
 static void	update_view(DView *);
-static void	make_bbox(DGeom *dg, int combine);
 static void	normalize(DGeom *dg, int normalization);
 static char *	unique_name(char *name, int id);
 static void	delete_geometry(DGeom *dg);
@@ -787,7 +786,8 @@ static void center_geom(int id, int center)
   DGeom *dg;
 
   MAYBE_LOOP_ALL(id, index, T_GEOM, DGeom, dg) {
-    gv_transform_set(dg->id, center, center, TRANSLATE_KEYWORD, 0,0,0);
+    gv_transform_set(dg->id, center, center,
+		     TRANSLATE_KEYWORD, 0, 0, 0, ORIGIN_KEYWORD);
     drawer_stop(dg->id);
   }
 }
@@ -1243,7 +1243,7 @@ LDEFINE(copy, LVOID,
 }
 
 LDEFINE(delete, LVOID,
-"(delete         ID)\n\
+"(delete ID)\n\
 	Delete object or camera ID.")
 {
   DObject *obj;
@@ -2480,7 +2480,7 @@ drawer_init_dgeom(DGeom *dg, int id, int citizenship)
 }
 
 /*-----------------------------------------------------------------------
- * Function:	make_bbox
+ * Function:	drawer_make_bbox
  * Description:	Make a new bounding box.
  * Args:	*dg:   parent DGeom
  *		combine: flag; if non-zero, takes union of old & new bboxes;
@@ -2493,8 +2493,8 @@ drawer_init_dgeom(DGeom *dg, int id, int citizenship)
  *              Default appearance: draw black edges, no faces.
  *		Assumes (if 'combine') that Lbbox list includes Lgeom list.
  */
-static void
-make_bbox(DGeom *dg, int combine)
+void
+drawer_make_bbox(DGeom *dg, int combine)
 {
   Geom *bbox;
 
@@ -2507,10 +2507,6 @@ make_bbox(DGeom *dg, int combine)
     bbox = GeomBound(dg->Lgeom, NULL, NULL);
     if(bbox) {
 	GeomReplace(dg->Lbbox, bbox);
-#if 0
-	dg->NDbboxcenter = BBoxCenterND(bbox, &dg->NDbboxcenter);
-	HPtNToHPt3(dg->NDbboxcenter, dg->bboxcenter);
-#endif
 	GeomDelete(bbox);		/* Only Lbbox needs it now */
 	dg->bboxvalid = 1;
     }
@@ -3055,7 +3051,7 @@ update_dgeom(DGeom *dg)
     GeomHandleScan(dg->Item, object_register, dg);
   }
   if(dg->bboxdraw || dg->normalization != NONE)
-      make_bbox(dg, dg->normalization == ALL);
+    drawer_make_bbox(dg, dg->normalization == ALL);
   ApSet(dg->bboxap, dg->bboxdraw ? AP_DO : AP_DONT, APF_EDGEDRAW, 
 	AP_OVERRIDE, APF_EDGEDRAW & uistate.apoverride, AP_END);
   GeomDice(dg->Item, dg->bezdice, dg->bezdice);
@@ -3089,7 +3085,7 @@ normalize(DGeom *dg, int normalization)
   case EACH:
   case ALL:
     if(!dg->bboxvalid)
-      make_bbox(dg, normalization == ALL);
+      drawer_make_bbox(dg, normalization == ALL);
     GeomGet(dg->Lbbox, CR_GEOM, &bbox);
     if (bbox != NULL) {
       BBoxMinMax((BBox*)bbox, &min, &max);

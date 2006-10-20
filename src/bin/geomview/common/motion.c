@@ -77,15 +77,18 @@ typedef struct boundctl {
 static int minterp_switch(Event *event, boundctl *ctls);
 
 /* Define Transform Control */
-#define DTC(name, interp, type, moving, center, frame, fx, fy, fz) \
+#define DTC(name, interp, type, moving, center, frame, fx, fy, fz)	\
 int name(int action, float x, float y, float t, float dx, float dy, float dt) \
-{									      \
-  Point3 mot;								      \
-  int useframe = interp(action, center, frame, dx, dy, &mot);		      \
-D1PRINT(("%s: action=%3d x=%8f y=%8f t=%8f dx=%8f dy=%8f dt=%8f\n", #name, action, x, y, t, dx, dy, dt)); \
-  (uistate.inertia ? gv_transform_incr : gv_transform)			      \
-	( moving, center, useframe, type, fx, fy, fz, dt, NO_KEYWORD );	      \
-  return 1;								      \
+{									\
+  Point3 mot;								\
+  int useframe = interp(action, center, frame, dx, dy, &mot);		\
+  D1PRINT(("%s: action=%3d x=%8f y=%8f t=%8f dx=%8f dy=%8f dt=%8f\n",	\
+	   #name, action, x, y, t, dx, dy, dt));			\
+  (uistate.inertia ? gv_transform_incr : gv_transform)			\
+    ( moving, center, useframe, type, fx, fy, fz,			\
+      uistate.bbox_center ? BBOX_CENTER_KEYWORD : ORIGIN_KEYWORD,	\
+      dt, NO_KEYWORD );							\
+  return 1;								\
 }
 
 /* Define Scale Control */
@@ -112,7 +115,7 @@ static void maybe_scale(int id, float s)
     /* only allow mouse scaling in Euclidean space */
     if (spaceof(id) == TM_EUCLIDEAN)
       gv_transform(id, CENTERID, FOCUSID,
-		   SCALE_KEYWORD, s, s, s, 0, NO_KEYWORD);
+		   SCALE_KEYWORD, s, s, s, NO_KEYWORD, 0, NO_KEYWORD);
     return;
   }
 }
