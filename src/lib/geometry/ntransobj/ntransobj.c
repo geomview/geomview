@@ -110,7 +110,6 @@ NTransStreamIn(Pool *p, Handle **hp, TransformN **Tptr)
     int c;
     int more = 0;
     int brack = 0;
-    int idim, odim;
     IOBFILE *inf;
 
     if(p == NULL || (inf = PoolInputFile(p)) == NULL)
