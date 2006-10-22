@@ -102,6 +102,7 @@ void   ui_select_tool(int);
 
 void   ui_tool_targetset(char *);
 void   ui_tool_centerset(char *);
+void   ui_tool_center_origin_set(int use_bbox_center);
 
 /* Appearance Panel Methods */
 /*****************************************************************************/
