@@ -79,7 +79,7 @@ TmNInvert( const TransformN *T, TransformN *Tinv )
   int i, j, k;
   HPtNCoord x;
   HPtNCoord f;
-  short dim = T->idim; 
+  int dim = T->idim; 
   TransformN *t = TmNCreate(dim,dim,T->a);
 
   if(T->odim != dim) {
@@ -150,7 +150,7 @@ TransformN *
 TmNTranspose( const TransformN *from, TransformN *to )
 {
   int i,j;
-  short idim = from->idim, odim = from->odim;
+  int idim = from->idim, odim = from->odim;
   HPtNCoord t;
 
   if( from != to) {
@@ -193,7 +193,7 @@ TransformN *
 TmNConcat( const TransformN *A, const TransformN *B, TransformN *result )
 {
   int i,j,k;
-  short dim1 = A->idim, dim2 = A->odim, dim3 = B->odim;
+  int dim1 = A->idim, dim2 = A->odim, dim3 = B->odim;
 
 #define MAKEPRODUCT(T,A,B)					\
   T->idim = dim1; T->odim = dim3;				\
@@ -296,7 +296,7 @@ TmNIdentity( TransformN *T )
     T->a[0] = 1;
   } else {
     int i;
-    short idim = T->idim, odim = T->odim;
+    int idim = T->idim, odim = T->odim;
     memset(T->a, 0, idim*odim*sizeof(HPtNCoord));
     if (idim == odim || idim < odim) {
       for(i = 0; i < idim; i++)
@@ -315,7 +315,7 @@ TransformN *
 TmNTranslateOrigin( TransformN *T, const HPointN *p )
 {
   /* old version, assumes no "w" coordinate at end of p  */
-  short dim = p->dim;
+  int dim = p->dim;
   HPointN *pt = HPtNCreate( 1+dim, NULL );
   int i;
 
@@ -335,7 +335,7 @@ TmNTranslate( TransformN *T, const HPointN *pt )
 {
   int i;
   HPointN *newpt;
-  short dim = pt->dim;
+  int dim = pt->dim;
 
   newpt = HPtNCreate(dim,pt->v);
   HPtNDehomogenize(newpt,newpt);
@@ -351,12 +351,12 @@ TmNTranslate( TransformN *T, const HPointN *pt )
       for( i=0; i<dim - 1; i++)
 	T->a[(dim-1)*dim+i] = newpt->v[i];
     } else if (T->odim > dim) {
-      short idim = T->idim, odim = T->odim;
+      int idim = T->idim, odim = T->odim;
       TmNIdentity(T);
       for( i=0; i<dim - 1; i++)
 	T->a[(idim-1)*odim+i] = newpt->v[i];
     } else if (T->odim < dim) {
-      short idim = T->idim, odim = dim;
+      int idim = T->idim, odim = dim;
       TmNPad(T,idim,odim,T);
       for( i=0; i<dim - 1; i++)
 	T->a[(idim-1)*odim+i] = newpt->v[i];
@@ -370,16 +370,15 @@ TmNTranslate( TransformN *T, const HPointN *pt )
 /* Pad the transform, with ones down the main diagonal, moving the
    last row down as if it is a translation */
 TransformN *
-TmNPad(TransformN *Tin, short idim, short odim, TransformN *Tout)
+TmNPad(TransformN *Tin, int idim, int odim, TransformN *Tout)
 {
   if(Tin == NULL) {
-    Tout = TmNCreate(idim,odim,NULL);
+    Tout = TmNCreate(idim, odim, NULL);
     TmNIdentity(Tout);
   } else if ( odim <= 0 || idim <= 0 ) {
     ;  /* do nothing */
   } else {
-
-    short oldidim = Tin->idim, oldodim = Tin->odim;
+    int oldidim = Tin->idim, oldodim = Tin->odim;
     int i;
 
     /* first pad the transform with no consideration for the last row */
@@ -392,6 +391,7 @@ TmNPad(TransformN *Tin, short idim, short odim, TransformN *Tout)
 	Tout->a[(idim-1)*odim + i] = Tout->a[(oldidim-1)*odim + i];
 	Tout->a[(oldidim-1)*odim + i] = 0;
       }
+      Tout->a[(oldidim-1)*odim + oldidim-1] = 1.0;
     }
 
   }
@@ -401,7 +401,7 @@ TmNPad(TransformN *Tin, short idim, short odim, TransformN *Tout)
 /* Pad the transform, with ones down the main diagonal, not assuming
    a homogeneous coordinate that needs special attention */
 TransformN *
-TmNPadSimple(TransformN *Tin, short idim, short odim, TransformN *Tout)
+TmNPadSimple(TransformN *Tin, int idim, int odim, TransformN *Tout)
 {
   if(Tin == NULL) {
     Tout = TmNCreate(idim,odim,NULL);
@@ -411,7 +411,7 @@ TmNPadSimple(TransformN *Tin, short idim, short odim, TransformN *Tout)
   } else {
 
 
-    short oldidim = Tin->idim, oldodim = Tin->odim;
+    int oldidim = Tin->idim, oldodim = Tin->odim;
     int i,j;
 	
     if(Tin != Tout) {
@@ -513,7 +513,7 @@ TmNPadSimple(TransformN *Tin, short idim, short odim, TransformN *Tout)
 	
 /* Pad with zeroes */
 TransformN *
-TmNPadZero(TransformN *Tin, short idim, short odim, TransformN *Tout)
+TmNPadZero(TransformN *Tin, int idim, int odim, TransformN *Tout)
 {
   if(Tin == NULL) {
     Tout = TmNCreate(idim,odim,NULL);
@@ -523,7 +523,7 @@ TmNPadZero(TransformN *Tin, short idim, short odim, TransformN *Tout)
   } else {
 
 
-    short oldidim = Tin->idim, oldodim = Tin->odim;
+    int oldidim = Tin->idim, oldodim = Tin->odim;
     int i,j;
 	
     if(Tin != Tout) {
@@ -608,7 +608,7 @@ TransformN *
 TmNScale( TransformN *T, const HPointN *amount )
 {
   int i;
-  short dim = amount->dim;
+  int dim = amount->dim;
 
   if(T == NULL) {
     T = TmNCreate(dim,dim,NULL);
@@ -616,7 +616,7 @@ TmNScale( TransformN *T, const HPointN *amount )
     for( i=0; i<dim-1; i++)
       T->a[i*dim+i] = amount->v[i];
   } else if( dim != T->idim || dim != T->odim ) {
-    short idim = T->idim, odim = T->odim;
+    int idim = T->idim, odim = T->odim;
     switch( (dim > idim) + 2*(dim>odim) + 4*(idim>odim) ) {
     case 0:  /* odim > idim > dim */
       idim = odim;
@@ -661,7 +661,7 @@ TransformN *
 TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward )
 {
   int i,j,k;
-  short dim = from->dim;
+  int dim = from->dim;
   HPtNCoord len, proj, cosA, sinA;
   HPtNCoord *planebasis1, *planebasis2; /* not homogeneous coords!*/
   HPtNCoord planecoord1, planecoord2;
@@ -809,8 +809,8 @@ TransformN *
 TmNApplyDN( TransformN *mat, int *perm, Transform3 delta)
 {
   HPtNCoord sum;
-  short n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
-  short nprime = mat->odim;
+  int n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
+  int nprime = mat->odim;
   HPtNCoord *tmp;
   int i,j,k;
   int permute[4];
@@ -857,24 +857,18 @@ TransformN *
 TmNApplyT3TN(Transform3 T3,  int *perm, TransformN *mat)
 {
   HPtNCoord sum;
-  short n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
-  short nprime = mat->odim;
+  int n = mat->idim, d = 4;  /* this is the dimension of the delta matrix */
   HPtNCoord *tmp;
   int i,j,k;
   int permute[4];
 
-  if( mat->odim != n) {
-    if(nprime > n) {
-      n = nprime;
-      TmNPad(mat,n,n,mat);    /* Note: the input matrix is changed here */
-    } else {
-      TmNPad(mat,n,n,mat);
-    }
-  }
-
   /* Map "-1" in perm[] array to dimension N-1 (homogeneous divisor) */
-  for(i = 0; i < d; i++)
-    permute[i] = (perm[i] >= 0 && perm[i] < n) ? perm[i] : n-1;
+  if (perm) {
+    for(i = 0; i < d; i++)
+      permute[i] = (perm[i] >= 0 && perm[i] < n) ? perm[i] : n-1;
+  } else {
+    permute[0] = 0; permute[1] = 1; permute[2] = 2; permute[3] = n-1;
+  }
 
   tmp = OOGLNewNE(HPtNCoord, n*d, "TmNApplyDN data");
 
@@ -916,7 +910,7 @@ void
 TmNPrint(FILE *f, const TransformN *T) 
 {
   int i, j;
-  short idim = T->idim, odim = T->odim;
+  int idim = T->idim, odim = T->odim;
 
   if( f == NULL)
     return;
@@ -961,3 +955,51 @@ TmNRead(IOBFILE *f, int binary)
   return TmNCreate(dim[0], dim[1], a);
 }
 
+/* concatenate (from the left) with a permutation matrix which maps x,
+ * y, z to the 3d sub-space described by "perm". This means that we
+ * simply have to interchange the rows of from.
+ *
+ * We assume perm[3] == -1, the permutation is stored in the first 3
+ * components of perm.
+ */
+TransformN *TmNPermute(TransformN *from, int *perm, TransformN *to)
+{
+  int idim = from->idim, odim = from->odim;
+  int row1, row2, col;
+  TransformN *mat;
+
+  if (idim < 4 || odim < 4) {
+    return NULL;
+  }
+
+  if (from == NULL) {
+    to = TmNIdentity(NULL);
+  } else {
+    to = TmNCopy(from, to);
+  } 
+
+  for (row1 = 0; row1 < 3; row1++) {
+    if ((row2 = perm[row1]) == row1)
+      continue;
+    if (row2 > idim-1) {
+      /* Resize the matrix */
+      TmNPad(to, row2+1, odim, to);
+      idim = row2+1;
+    }
+    for (col = 0; col < odim; col++) {
+      HPtNCoord swap;
+
+      swap = to->a[row1*odim+col];
+      to->a[row1*odim+col] = to->a[row2*odim+col];
+      to->a[row2*odim+col] = swap;
+    }
+  }
+
+  return mat;
+}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

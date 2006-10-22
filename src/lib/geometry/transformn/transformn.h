@@ -93,13 +93,13 @@ TmNApplyT3TN(Transform3 T3,  int *perm, TransformN *mat);
 
 	/* Add ones and zeros to a matrix to make it larger, with special treatment
 	for the last row */
-extern TransformN *TmNPad(TransformN *T1, short idim, short odim, TransformN *T2);
+extern TransformN *TmNPad(TransformN *T1, int idim, int odim, TransformN *T2);
 
 	/* Add ones and zeros to a matrix to make it larger  */
-extern TransformN *TmNPadSimple(TransformN *T1, short idim, short odim, TransformN *T2);
+extern TransformN *TmNPadSimple(TransformN *T1, int idim, int odim, TransformN *T2);
 
 	/* Add just zeros to a matrix to make it larger */
-extern TransformN *TmNPadZero(TransformN *T1, short idim, short odim, TransformN *T2);
+extern TransformN *TmNPadZero(TransformN *T1, int idim, int odim, TransformN *T2);
 
 	/* Return dimensions of a TransformN.  Value is first dimension. */
 	/* idim and/or odim may be NULL, in which case they're not returned */
@@ -114,4 +114,6 @@ extern TransformN *TmNRead(IOBFILE *f, int binary);
 	/* palar decompositon of upper NxN part */
 extern TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q);
 
-# endif
+extern TransformN *TmNPermute(TransformN *from, int *perm, TransformN *to);
+
+#endif

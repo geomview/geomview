@@ -288,140 +288,183 @@ HPointN * HPtNTransform3(Transform3 T, int *perm,
 {
   int i, dim = from->dim;
   HPt3Coord from3[4];
-  int permute[4];
 
   to = HPtNCopy(from, to);
 
-
   /* Map "-1" in perm[] array to dimension N-1 (homogeneous divisor) */
   for(i = 0; i < 4; i++) {
-    permute[i] = (perm[i] >= 0 && perm[i] < dim) ? perm[i] : dim-1;
-  }
-
-  for (i = 0; i < 4; i++) {
-    from3[i] = from->v[permute[i]];
+    if (perm[i] < 0) {
+      from3[i] = from->v[dim-1];
+    } else if (perm[i] < dim) {
+      from3[i] = from->v[perm[i]];
+    } else {
+      from3[i] = 0.0;
+    }
   }
   
   HPt3Transform(T, (HPoint3 *)from3, (HPoint3 *)from3);
 
   for (i = 0; i < 4; i++) {
-    to->v[permute[i]] = from3[i];
+    if (perm[i] < 0) {
+      to->v[dim-1] = from3[i];
+    } else if (perm[i] < dim) {
+      to->v[perm[i]] = from3[i];
+    }
   }
+
   return to;
 }
 
-	/* Apply a TransformN to an HPointN */
+/* Apply a TransformN to an HPointN */
 HPointN *
 HPtNTransform( const TransformN *T, const HPointN *from, HPointN *to )
 {
-	short idim = T->idim, odim = T->odim, dim = from->dim;
-	int i, j;
-	HPtNCoord *v = (HPtNCoord *)alloca(idim*sizeof(HPtNCoord));
+  int idim = T->idim, odim = T->odim, dim = from->dim;
+  int i, j;
+  HPtNCoord *v;
 
-	for( i=0; i<dim; i++)
-		v[i] = from->v[i];
-	for (; i<idim; i++) {
-		v[i] = 0.0;
-	}
-
-  	if(to == NULL)
-		to = HPtNCreate(odim,NULL);
-	else if(to->dim != odim) {
-	  	to->v = OOGLRenewNE(HPtNCoord, to->v, odim, "renew HPointN");
-		to->dim = odim;
-	}
-
-  if (idim == dim) {
-	for( i=0; i<odim; i++) {
-		to->v[i] = 0;
-		for( j=0; j<idim; j++)
-			to->v[i] += v[j] * T->a[j*odim+i];
-	}
-  } else if (idim > dim) { /* padding with zeroes */
-	for( i=0; i<odim; i++) {
-		to->v[i] = 0;
-		for( j=0; j<dim; j++)
-			to->v[i] += v[j] * T->a[j*odim+i];
-	}
-  } else if (idim < dim) {
-	for( i=0; i<odim; i++) {
-		to->v[i] = 0;
-		for( j=0; j<idim; j++)
-			to->v[i] += v[j] * T->a[j*odim+i];
-		if( i>idim-1)
-			to->v[i] += v[i];
-	}
+  if (from == to) {
+    v = (HPtNCoord *)alloca(idim*sizeof(HPtNCoord));
+    for (i=0; i < idim; i++) {
+      v[i] = from->v[i];
+    }
+  } else {
+    v = from->v;
   }
 
-  return(to);
-}
+  if(to == NULL) {
+    to = HPtNCreate(odim,NULL);
+  } else if (to->dim != odim) {
+    to->v = OOGLRenewNE(HPtNCoord, to->v, odim, "renew HPointN");
+    to->dim = odim;
+  }
 
-	/* Dot product of two vectors */
-HPtNCoord 
-HPtNDot( const HPointN *p1, const HPointN *p2)
-{
-	HPtNCoord result;
-	int i;
-	short dim = p1->dim;
-
-	if (p2->dim < dim) {
-		dim = p2->dim;
-	}
-
-	result = 0;
-	for( i = 0; i< dim-1; i++)
-		result += p1->v[i] * p2->v[i];
-
-	return(result);
-}
-
-    /* Return index'th component of p . T */
-    /* If index is out of range (e.g. -1), return N-1'th component
-     * (i.e. homogeneous divisor).
+  if (idim == dim) {
+    /* the easy case */
+    for (i=0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j=0; j<idim; j++) {
+	to->v[i] += v[j] * T->a[j*odim+i];
+      }
+    }
+  } else if (idim > dim) {
+    /* pad with zeroes, but handle the homogeneous component correctly. */
+    for(i=0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j = 0; j < dim-1; j++) {
+	to->v[i] += v[j] * T->a[j*odim+i];
+      }
+      j = idim-1;
+      to->v[i] += v[j] * T->a[j*odim+i];
+    }
+  } else { /* obviously the case idim < dim */
+    /* implicitly pad the matrix, i.e. T acts as unity on the missing
+     * dimensions; handle the homogeneous component correctly.
      */
-HPtNCoord *
-HPtNTransformComponents( const HPointN *p, const TransformN *T, int ncomponents, int *indices, HPtNCoord *results )
+    for (i = 0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j = 0; j < idim-1; j++) {
+	to->v[i] += v[j] * T->a[j*odim+i];
+      }
+      if (i > idim-1 && i < dim-1) {
+	to->v[i] += v[i];
+      }
+      to->v[i] += v[dim-1] * T->a[(idim-1)*odim+i];
+    }
+  }
+
+  return to;
+}
+
+/* Dot product of two vectors */
+HPtNCoord HPtNDot(const HPointN *p1, const HPointN *p2)
 {
-	short idim = T->idim, odim = T->odim, dim = p->dim;
-	int i, j, k;
-	HPtNCoord *v = p->v;
+  HPtNCoord result;
+  int i;
+  short dim = p1->dim;
+  
+  if (p2->dim < dim) {
+    dim = p2->dim;
+  }
 
-	if( ncomponents < 0 || ncomponents > odim ) {
-		return NULL;
-	}
+  result = 0;
+  for(i = 0; i< dim-1; i++)
+    result += p1->v[i] * p2->v[i];
 
-	if ( idim == dim ) {
- 		for ( k = 0; k < ncomponents; k++ ) {
-			i = indices[k];
-			if( i < 0 || i > odim )
-				i = odim-1;
-			results[k] = 0;
-			for( j=0; j<idim; j++)
-				results[k] += v[j] * T->a[j*odim+i];
-		}
-	} else if ( idim < dim ) {
- 		for ( k = 0; k < ncomponents; k++ ) {
-			i = indices[k];
-			if( i < 0 || i > odim )
-				i = odim-1;
-			results[k] = v[dim-1] * T->a[(idim-1)*odim + i];
-			for( j=0; j<idim-1; j++)
-				results[k] += v[j] * T->a[j*odim+i];
-			if( i>idim-1)
-				results[k] += v[i];
-		}
-	} else { /* idim > dim */
- 		for ( k = 0; k < ncomponents; k++ ) {
-			i = indices[k];
-			if( i < 0 || i > odim )
-				i = odim-1;
-			results[k] = v[dim-1] * T->a[(idim-1)*odim + i];
-			for( j=0; j<dim-1; j++)
-				results[k] += v[j] * T->a[j*odim+i];
-		}
-	}
+  return result / p1->v[p1->dim-1] / p2->v[p2->dim-2];
+}
 
-  return(results);
+/* Transform p by T and then project to the sub-space defined by
+ * "indices".
+ */
+HPtNCoord *
+HPtNTransformComponents(const HPointN *p,
+			const TransformN *T,
+			int ncomponents,
+			int *indices,
+			HPtNCoord *results)
+{
+  short idim = T->idim, odim = T->odim, dim = p->dim;
+  int i, j, k;
+
+  if(ncomponents < 0 || ncomponents > odim) {
+    return NULL;
+  }
+
+  if (idim == dim) {
+    for (k = 0; k < ncomponents; k++) {
+      i = indices[k];
+      if (i < 0) {
+	i = odim-1;
+      } else if (i > odim-1) {
+	/* concat with the trivial projection */
+	continue;
+      }
+      results[k] = 0;
+      for( j=0; j<idim; j++)
+	results[k] += p->v[j] * T->a[j*odim+i];
+    }
+  } else if (idim > dim) {
+    /* pad with zeroes, but handle the homogeneous component correctly. */
+    for (k = 0; k < ncomponents; k++) {
+      i = indices[k];
+      if (i < 0) {
+	i = odim-1;
+      } else if (i > odim-1) {
+	/* concat with the trivial projection */
+	continue;
+      }
+      results[i] = 0;
+      for (j = 0; j < dim-1; j++) {
+	results[i] += p->v[j] * T->a[j*odim+i];
+      }
+      j = idim-1;
+      results[i] += p->v[j] * T->a[j*odim+i];
+    }
+  } else { /* obviously the case idim < dim */
+    /* implicitly pad the matrix, i.e. T acts as unity on the missing
+     * dimensions; handle the homogeneous component correctly.
+     */
+    for (k = 0; k < ncomponents; k++) {
+      i = indices[k];
+      if (i < 0) {
+	i = odim-1;
+      } else if (i > odim-1) {
+	/* concat with the trivial projection */
+	continue;
+      }
+      results[i] = 0;
+      for (j = 0; j < idim-1; j++) {
+	results[i] += p->v[j] * T->a[j*odim+i];
+      }
+      if (i > idim-1 && i < dim-1) {
+	results[i] += p->v[i];
+      }
+      results[i] += p->v[dim-1] * T->a[(idim-1)*odim+i];      
+    }
+  }
+
+  return results;
 }
 
 /* Transform a 4-point to a 3-point according to the mapping defined
