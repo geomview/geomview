@@ -69,10 +69,7 @@ InstHandleScan( Inst *inst, int (*func)(), void *arg )
 }
 
 
-Inst *
-InstPosition( inst, T )
-    Inst *inst;
-    Transform T;
+Inst *InstPosition(Inst *inst, Transform T)
 {
     GeomIter *it;
 
