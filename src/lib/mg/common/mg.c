@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.6 2006/10/18 19:41:41 rotdrop Exp $
+ * $Id: mg.c,v 1.7 2006/10/22 01:54:45 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -134,9 +134,6 @@ mg_newcontext(mgc)
     TmIdentity(mgc->W2C); TmIdentity(mgc->C2W);
     TmIdentity(mgc->W2S); TmIdentity(mgc->S2W);
     TmIdentity(mgc->O2S); TmIdentity(mgc->S2O);
-
-    TmIdentity(mgc->T4);
-    mgc->T4_seq = 0;
 
     mgc->space = TM_EUCLIDEAN;
 
@@ -624,30 +621,6 @@ mg_poptransform( void )
   mgxfree = xfm;
   _mgc->has = 0;
   return 0;
-}
-
-
-/*
- * Handle 4D->3D transform
- * This allows the drawing routines to compute normals on 4D objects
- * by knowing how they'll appear in 3D, and also to know whether
- * the calculation must be redone (because the 4D->3D transform changed
- * since the normals were last computed).  This transform doesn't really
- * belong in the mg state, but the drawing routines need it, so this is the
- * natural place to put the data.
- */
-void
-mgset4to3( Transform T, int seq )
-{
-    TmCopy(T, MGC->T4);
-    MGC->T4_seq = seq;
-}
-
-int
-mgget4to3( Transform T )
-{
-    TmCopy(MGC->T4, T);
-    return MGC->T4_seq;
 }
 
 void

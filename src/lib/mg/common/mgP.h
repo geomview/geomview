@@ -92,9 +92,6 @@ struct mgcontext {
 	Transform	W2C;	/* World->camera transform */
 	Transform	C2W;	/* Camera->world transform */
 
-	Transform	T4;	/* 4D->3D transform */
-	int		T4_seq;	/* sequence number for T4 */
-
 	float		zfnudge; /* fraction of Z-range by which lines are
 				  * nudged closer than surfaces.
 				  */
