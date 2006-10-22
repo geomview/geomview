@@ -2831,13 +2831,13 @@ really_draw_view(DView *dv)
 
 	    if(dgeom[i] == NULL) continue;
 
-	    if(dgeom[i]->NDT) {
+	    if (dgeom[i]->NDT) {
 		nds.T = O2C = TmNConcat(dgeom[i]->NDT, W2C, O2C);
 	    } else {
 		nds.T = W2C;
 	    }
-	    if(Tc) {
-		if(dgeom[i]->NDT) {
+	    if (Tc) {
+		if (dgeom[i]->NDT) {
 		    O2G = TmNConcat(dgeom[i]->NDT, W2G, O2G);
 		    nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
 		} else {
@@ -2845,9 +2845,50 @@ really_draw_view(DView *dv)
 		}
 	    }
 
-
 	    GeomDraw(dgeom[i]->Item);
 	}
+
+	/* draw other camera's if requested; take their respective ND-transform
+	 * into account.
+	 */
+	if (drawerstate.camgeom && dv->cameradraw) {
+	  DView *otherv;
+	  int otheri;
+	  Transform T3;
+
+	  LOOPVIEWS(otheri,otherv) {
+	    if (otherv != dv && otherv->Item == drawerstate.universe) {
+
+	      if(drawerstate.camproj) {
+		/* Mmmh. ND?? */
+		Transform Tt;
+		CamView(otherv->cam, Tt);
+		TmInvert(Tt, T3);
+	      } else {
+		CamGet(otherv->cam, CAM_C2W, T3);
+	      }
+
+	      if (otherv->cluster && otherv->cluster->C2W) {
+		nds.T = O2C = TmNConcat(otherv->cluster->C2W, W2C, O2C);
+		TmNApplyT3TN(T3, otherv->NDPerm, nds.T);
+		TmNPermute(nds.T, otherv->NDPerm, nds.T);
+		if (Tc) {
+		  O2G = TmNConcat(otherv->cluster->C2W, W2G, O2G);
+		  nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
+		  TmNApplyT3TN(T3, otherv->NDPerm, nds.Tc);
+		  TmNPermute(nds.Tc, otherv->NDPerm, nds.Tc);
+		}
+	      } else {
+		nds.T = O2C = TmNCopy(W2C, O2C);
+		TmNApplyT3TN(T3, NULL, nds.T);
+		nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
+		TmNApplyT3TN(T3, NULL, nds.Tc);
+	      }
+	      GeomDraw(drawerstate.camgeom);
+	    }
+	  }
+	}
+
 	TmNDelete(W2G);
 	TmNDelete(W2C);
 	TmNDelete(O2C);
@@ -2957,8 +2998,10 @@ really_draw_view(DView *dv)
 	GeomDraw(dv->hsphere);
       }
     }
-    
-    if (drawerstate.camgeom && dv->cameradraw && dv->Item == drawerstate.universe) {
+
+    /* drawing of other cameras in ND has been handled above */
+    if (drawerstate.camgeom && dv->cameradraw && dv->cluster == NULL
+	&& dv->Item == drawerstate.universe) {
       DView *otherv;
       int otheri;
       Transform T, Tt;
