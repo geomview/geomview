@@ -118,38 +118,62 @@ map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
 /* push/pop could be done much more efficiently, but ND is inefficient
  * anyway, so what.
  */
-static void *saveCTXpushTN(mgNDctx *NDctx, TransformN *TN)
+static void *saveCTX(mgNDctx *NDctx)
 {
-    NDstuff *nds = (NDstuff *)NDctx;
-    TransformN **savedCTX = OOGLNewNE(TransformN *, 2, "saved NDstuff");
+  NDstuff *nds = (NDstuff *)NDctx;
+  TransformN **savedCTX = OOGLNewNE(TransformN *, 2, "saved NDstuff");
 
-    savedCTX[0] = nds->T;
+  savedCTX[0] = nds->T;
+  nds->T = TmNCopy(nds->T, NULL);
+  if (nds->Tc) {
     savedCTX[1] = nds->Tc;
+    nds->Tc = TmNCopy(nds->Tc, NULL);
+  } else {
+    savedCTX[1] = NULL;
+  }
     
-    /* everything else is scratch */
-    nds->T = TmNConcat(TN, nds->T, NULL);
-    if (nds->Tc) {
-	nds->Tc = TmNConcat(TN, nds->Tc, NULL);
-    }
+  return savedCTX;
+}
 
-    return savedCTX;
+static void pushTN(mgNDctx *NDctx, TransformN *TN)
+{
+  NDstuff *nds = (NDstuff *)NDctx;
+
+  TmNConcat(TN, nds->T, nds->T);
+  if (nds->Tc) {
+    TmNConcat(TN, nds->Tc, nds->Tc);
+  }
+}
+
+static void pushT(mgNDctx *NDctx, Transform T)
+{
+  NDstuff *nds = (NDstuff *)NDctx;
+
+  TmNApplyT3TN(T, NULL, nds->T);
+  if (nds->Tc) {
+    TmNApplyT3TN(T, NULL, nds->Tc);
+  }
 }
 
 static void restoreCTX(mgNDctx *NDctx, void *vsavedCTX)
 {
-    NDstuff *nds = (NDstuff *)NDctx;
-    TransformN **savedCTX = (TransformN **)vsavedCTX;
+  NDstuff *nds = (NDstuff *)NDctx;
+  TransformN **savedCTX = (TransformN **)vsavedCTX;
 
-    TmNDelete(nds->T);
+  TmNDelete(nds->T);
+  nds->T = savedCTX[0];
+  if (nds->Tc) {
     TmNDelete(nds->Tc);
-    nds->T = savedCTX[0];
-    nds->Tc = savedCTX[0];
+  }
+  nds->Tc = savedCTX[1];
 
-    OOGLFree(savedCTX);
+  OOGLFree(savedCTX);
 }
 
 mgNDctx NDctx_proto = {
-    map_ND_point,
-    saveCTXpushTN,
-    restoreCTX,
+  map_ND_point,
+  saveCTX,
+  pushTN,
+  pushT,
+  restoreCTX,
 };
