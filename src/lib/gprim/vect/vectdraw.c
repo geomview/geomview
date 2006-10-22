@@ -69,7 +69,6 @@ draw_projected_vect(mgNDctx *NDctx,
       for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
 	*(HPoint3 *)h->v = *op;
 	colored = mapHPtN(NDctx, h, np, &newc[i]);
-	hascolor = colored;
       }
     } else {
       /* w has no special meaning for ND > 3 */
@@ -77,9 +76,9 @@ draw_projected_vect(mgNDctx *NDctx,
 	HPt3Dehomogenize(op, (HPoint3 *)h->v);
 	h->v[3] = 0.0;
 	colored = mapHPtN(NDctx, h, np, &newc[i]);
-	hascolor = colored;
       }
     }
+    if (!hascolor) colored = 0;
 
     for(i = 0, p = newp, c = colored ? newc : v->c; i < v->nvec; i++) {
 	int nv;
