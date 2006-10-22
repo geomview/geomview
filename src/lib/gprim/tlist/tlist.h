@@ -41,8 +41,7 @@ extern GeomClass *TlistMethods( void );
 
 extern Geom  *TlistFLoad( FILE *, char *fname );
 extern Tlist *TlistFSave( Tlist *, FILE *, char *fname );
-extern BBox *TlistBound( Tlist *, Transform T, TransformN *TN, int *axes );
-extern Tlist *TlistTransform( Tlist *, Transform );
+extern Tlist *TlistTransform( Tlist *, Transform, TransformN * );
 extern Tlist *TlistPosition( Tlist *, Transform );
 extern Geom *TlistReplace( Tlist *tlist, Geom *newtlist );
 extern int    TlistGet( Tlist *tlist, int attr, void *attrp );

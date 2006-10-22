@@ -34,7 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "tlistP.h"
 
 Tlist *
-TlistPosition( Tlist *tlist, Transform T )
+TlistPosition(Tlist *tlist, Transform T)
 {
     TmIdentity(T);
     if( tlist ) {
@@ -47,14 +47,22 @@ TlistPosition( Tlist *tlist, Transform T )
     
 
 Tlist *
-TlistTransform( Tlist *tlist, Transform T )
+TlistTransform(Tlist *tlist, Transform T, TransformN *TN)
 {
-    if( tlist ) {
-	int i;
+  int i;
 
-	for(i = tlist->nelements; --i >= 0; )
-	    TmPreConcat( T, tlist->elements[i] );
-    }
+  if (!tlist)
+    return NULL;
 
-    return tlist;
+  if (TN) {
+    /* We would have to generate an NTlist here ... */
+    return NULL;
+  }
+  
+  if (T && T != TM_IDENTITY) {
+    for(i = tlist->nelements; --i >= 0; )
+      TmPreConcat( T, tlist->elements[i] );
+  }
+
+  return tlist;
 }
