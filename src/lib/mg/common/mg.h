@@ -54,7 +54,9 @@ typedef int (*mgNDmapfunc)(mgNDctx *NDctx,
 struct mgNDctx
 {
   mgNDmapfunc mapHPtN;
-  void *(*saveCTXpushTN)(mgNDctx *NDctx, TransformN *leftTN);
+  void *(*saveCTX)(mgNDctx *NDctx);
+  void (*pushTN)(mgNDctx *NDctx, TransformN *leftTN);
+  void (*pushT)(mgNDctx *NDctx, Transform leftT);
   void (*restoreCTX)(mgNDctx *NDctx, void *savedCTX);
 };
 
@@ -226,9 +228,6 @@ enum sortmethod {MG_NONE, MG_DEPTH, MG_ZBUFFER};
 extern mgcontext *mgcurrentcontext();		/* Get ptr to current context */
 extern int mgbegin( void );			/* Init, select default dev */
 extern int mgend( void );			/* Shut down */ 
-
-extern void mgset4to3( Transform T, int seq );	/* Set 4D->3D transform */
-extern int mgget4to3( Transform T );		/* Get 4D->3D; return seq */
 
 extern int mgclonefrom( mgcontext *other );	/* Init cur mgctx from other */
 
