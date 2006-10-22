@@ -44,8 +44,6 @@ static TmCoord (*coords2W(int system))[4]
 
     switch(system) {
 
-    default:  return _mgc->xstk->T;  /* Default is local coords: obj->world */
-
     case L_GLOBAL: return TM3_IDENTITY;
     case L_CAMERA: return _mgc->C2W;
     case L_SCREEN: return _mgc->S2W;
@@ -55,6 +53,8 @@ static TmCoord (*coords2W(int system))[4]
 		CtmTranslate(Tndc, 1.0, 1.0, 0.0);
 		TmConcat(Tndc, _mgc->S2W, Tndc);
 		return Tndc;
+    default:  return _mgc->xstk->T;  /* Default is local coords: obj->world */
+
 
     }
 }
@@ -121,67 +121,80 @@ InstDraw( Inst *inst )
 {
     GeomIter *it;
     Transform T, tT, Tl2o;
+    mgNDctx *NDctx = NULL;
+    void *saved_ctx;
+
+    mgctxget(MG_NDCTX, &NDctx);
 
     if (inst->NDaxis) {
-      mgNDctx *NDctx = NULL;
-
-      mgctxget(MG_NDCTX, &NDctx);
-      
-      if (NDctx) {
-	mgNDctx *saved_ctx;
-	
-	saved_ctx = NDctx->saveCTXpushTN(NDctx, inst->NDaxis);
-	GeomDraw( inst->geom );
-	NDctx->restoreCTX(NDctx, saved_ctx);
-      }
-
-      return inst;
+	if (NDctx) {
+	    saved_ctx = NDctx->saveCTX(NDctx);
+	    NDctx->pushTN(NDctx, inst->NDaxis);
+	    GeomDraw(inst->geom);	
+	    NDctx->restoreCTX(NDctx, saved_ctx);
+	}
+	return inst;
     }
 
-    it = GeomIterate((Geom *)inst, DEEP);
-    while(NextTransform(it, T)) {
-	if ( inst->geomflags & VERT_4D )	{
-	    if (NextTransform(it, T)) 	{
-		DestroyIter(it);
-		return NULL;/* Error -- InstDraw on a multi-element 4inst */
-	    }
-	    mgset4to3(inst->axis, 0);
-	}
-	mgpushtransform();
-
-	/* Compute origin *before* changing mg tfm */
-	if(inst->origin != L_NONE) {
-	    Point3 originwas, delta;
-	    TmCoord (*l2o)[4], (*o2W)[4];
-	    static HPoint3 zero = { 0, 0, 0, 1 };
-
-	    /* We have location2W, origin2W.
-	     * We want to translate in 'origin' coords such that
-	     * (0,0,0) in location coords maps to originpt in origin coords.
+    if (NDctx) {
+	if (inst->location > L_LOCAL) {
+	    /* temporarily disable ND-drawing, makes sense only for
+	     * L_LOCAL, really. The universe is 3d in Geomview.
 	     */
-	    o2W = coords2W(inst->origin);
-	    l2o = coordsto(inst->location, inst->origin);
-	    HPt3TransPt3(l2o, &zero, &originwas);
-	    Pt3Sub(&inst->originpt, &originwas, &delta);
-	    TmTranslate( tT, delta.x, delta.y, delta.z );
-	    TmConcat( l2o, tT, Tl2o );
-	    TmConcat( T, Tl2o, tT );
-	    TmConcat( tT, o2W, T );
-	    mgsettransform( T );
-
-	} else if(inst->location > L_LOCAL) {
-
-	    TmConcat( T, coords2W(inst->location), T );
-	    mgsettransform( T );
-
+	    mgctxset(MG_NDCTX, NULL, MG_END);
+	} else if (inst->origin != L_NONE) {
+	    OOGLError(1, "FIXME: don't know how to handle origin != L_LOCAL "
+		      "with ND-drawing.\n");
+	    return inst;
 	} else {
-
-	    /* Ordinary case */
-	    mgtransform( T );
-
+	    it = GeomIterate((Geom *)inst, DEEP);
+	    while(NextTransform(it, T)) {
+		saved_ctx = NDctx->saveCTX(NDctx);
+		NDctx->pushT(NDctx, T);
+		GeomDraw(inst->geom);
+		NDctx->restoreCTX(NDctx, saved_ctx);
+	    }
 	}
-	GeomDraw( inst->geom );
-	mgpoptransform();
+    } else {
+	it = GeomIterate((Geom *)inst, DEEP);
+	while(NextTransform(it, T)) {
+
+	    mgpushtransform();
+
+	    /* Compute origin *before* changing mg tfm */
+	    if(inst->origin != L_NONE) {
+		Point3 originwas, delta;
+		TmCoord (*l2o)[4], (*o2W)[4];
+		static HPoint3 zero = { 0, 0, 0, 1 };
+
+		/* We have location2W, origin2W. We want to translate
+		 * in 'origin' coords such that (0,0,0) in location
+		 * coords maps to originpt in origin coords.
+		 */
+		o2W = coords2W(inst->origin);
+		l2o = coordsto(inst->location, inst->origin);
+		HPt3TransPt3(l2o, &zero, &originwas);
+		Pt3Sub(&inst->originpt, &originwas, &delta);
+		TmTranslate( tT, delta.x, delta.y, delta.z );
+		TmConcat( l2o, tT, Tl2o );
+		TmConcat( T, Tl2o, tT );
+		TmConcat( tT, o2W, T );
+		mgsettransform( T );
+	    } else if(inst->location > L_LOCAL) {
+		TmConcat( T, coords2W(inst->location), T );
+		mgsettransform( T );
+	    } else {
+		mgtransform( T );
+	    }
+	    GeomDraw(inst->geom);
+	    mgpoptransform();
+	}
     }
+
+    if(NDctx) {
+	/* restore */
+	mgctxset(MG_NDCTX, NDctx, MG_END);
+    }
+
     return inst;
 }
