@@ -69,7 +69,7 @@ typedef enum {
   TOGGLE_KEYWORD,
   SMOOTH_KEYWORD,
   BBOX_CENTER_KEYWORD,
-  ORIGIN_KEYWORD,
+  ORIGIN_KEYWORD
 } Keyword;
 
 void lang_init();
