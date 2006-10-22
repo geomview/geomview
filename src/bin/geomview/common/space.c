@@ -375,7 +375,6 @@ LDEFINE(ND_xform, LTRANSFORMN,
 	ND-transform of the object (apply the ND-transform to\n\
 	object ID, as opposed to simply setting its ND-transform).")
 {
-  int index;
   int id;
   TransformN *T;
   TmNStruct *ts = NULL;
