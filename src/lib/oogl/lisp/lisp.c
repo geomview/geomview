@@ -19,6 +19,7 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#include <ctype.h>
 #include "../../../../config.h"
 
 #if 0
@@ -1977,7 +1978,7 @@ static void print_help_formatted(FILE *outf, char *message)
   }
   message = nl+1;
   while (*message) {
-    fprintf(outf, "\n       ", outf);
+    fprintf(outf, "\n       ");
     printed = 7;
     while (*message && printed < 72) {
       nnl = 0;
