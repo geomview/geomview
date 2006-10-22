@@ -186,10 +186,11 @@ extern int  ui_mode_index(char *name);
 extern emodule *ui_emodule_install(int after, char *external, PFI func);
 extern int  ui_emodule_index(char *external, emodule **emp);
 extern void ui_emodule_uninstall(int index);
-void set_ui_target(int type, int index);
-void set_ui_center(int id);
+extern void set_ui_target(int type, int index);
+extern void set_ui_center(int id);
 extern void set_ui_target_id(int id);
-void ui_cleanup();
+extern void set_ui_center_origin(int use_bbox_center);
+extern void ui_cleanup();
 
 /* in glui.c */
 
