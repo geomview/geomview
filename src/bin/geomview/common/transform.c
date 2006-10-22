@@ -295,7 +295,7 @@ int drawer_transform(int moving_id, int center_id, int frame_id,
   else {
     /* Avoid applying ineffective motions */
     if(motion.amount[0]==0 && motion.amount[1]==0 && motion.amount[2]==0)
-      return;
+      return 1;
     if (!strcmp(repeat_type, "transform")) {
       if(motion.timeunit > 0) {
 	motion.timeleft = motion.timeunit;
