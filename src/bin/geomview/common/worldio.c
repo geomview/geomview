@@ -657,24 +657,32 @@ LDEFINE(camera_prop, LVOID,
 	near and far clipping planes, with the viewing area -1<={X,Y}<=+1.\n\
 	Example:  (camera-prop { < cube } projective)")
 {
-    int proj = 0;
-    GeomStruct *gs = NULL;
+  Keyword proj = NO_KEYWORD;
+  GeomStruct *gs = NULL;
 
-    LDECLARE(("camera-prop", LBEGIN,
-	LGEOM, &gs,
-	LOPTIONAL,
-	LKEYWORD, &proj,
-	LEND));
-    if(gs && gs->geom) {
-	(void)REFINCR(Geom, gs->geom);
-	(void)REFINCR(Handle, gs->h);
-	GeomDelete(drawerstate.camgeom);
-	drawerstate.camgeom = gs->geom;
-	drawerstate.camproj = (proj == PROJECTIVE_KEYWORD);
-	drawerstate.changed = 1;
-	return Lt;
-    }
+  LDECLARE(("camera-prop", LBEGIN,
+	    LGEOM, &gs,
+	    LOPTIONAL,
+	    LKEYWORD, &proj,
+	    LEND));
+
+  if (proj != NO_KEYWORD && proj != PROJECTIVE_KEYWORD) {
+    OOGLError(1, "Expected either \"%s\" or nothing, but got \"%s\".\n",
+	      keywordname(PROJECTIVE_KEYWORD), keywordname(proj));
     return Lnil;
+  }
+  
+  if(gs && gs->geom) {
+    (void)REFINCR(Geom, gs->geom);
+    (void)REFINCR(Handle, gs->h);
+    GeomDelete(drawerstate.camgeom);
+    drawerstate.camgeom = gs->geom;
+    drawerstate.camproj = (proj == PROJECTIVE_KEYWORD);
+    drawerstate.changed = 1;
+    return Lt;
+  }
+
+  return Lnil;
 }
 
 LDEFINE(write, LVOID,
