@@ -151,7 +151,7 @@ Geom *id_bsphere(int geomID, int coordsysID)
     TransformN *geom2coordsys;
     DObject *camObj;
     int *NDPerm;
-    static const int NDPermDflt[] = { 0, 1, 2, -1 };
+    static const int NDPermDflt[] = { 1, 2, 3, 0 };
 
     if (ISCAM(coordsysID) && (camObj = drawer_get_object(coordsysID)) != NULL) {
       NDPerm = DVobj(camObj)->NDPerm;
@@ -360,7 +360,7 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
        * transform ptMoving3 by the private 3d transformation attached
        * to this camera.
        */
-      static const int NDPermDflt[] = { 0, 1, 2, -1 };
+      static const int NDPermDflt[] = { 1, 2, 3, 0 };
       int *NDPerm = NULL;
       DObject *obj;
       Point ptMoving3;
@@ -375,7 +375,7 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
       } else {
 	NDPerm = (int *)NDPermDflt;
       }
-      HPtNToHPt3(ptMoving, &ptMoving3, NDPerm);
+      HPtNToHPt3(ptMoving, NDPerm, &ptMoving3);
       HPtNDelete(ptMoving);
       TmNDelete(w2moving);
 
@@ -936,7 +936,7 @@ LDEFINE(scale, LVOID,
     int i;
     
     tsN.h = NULL;
-    for (i = 0; i < drawerstate.NDim-1; i++) {
+    for (i = 1; i < drawerstate.NDim; i++) {
       scale->v[i] = x;
     }
     tsN.tm = TmNScale(NULL, scale);
@@ -1123,7 +1123,7 @@ LDEFINE(transform, LVOID,
 }
 
 LDEFINE(transform_incr, LVOID,
-	"(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [[origin|bbox-center] [dt [smooth]]])\n\
+	"(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [[dt [smooth]]])\n\
 	Apply continuing motion: construct a transformation matrix and\n\
 	concatenate it with the current transform of objectID every\n\
 	refresh (sets objectID's incremental transform). Same syntax\n\
@@ -1152,6 +1152,7 @@ LDEFINE(transform_incr, LVOID,
 	    LFLOAT, &timeunit,
 	    LKEYWORD, &smooth,
 	    LEND));
+
   if (drawer_transform(moving_id, center_id, frame_id, transform_type,
 		       amount, origin, timeunit, "transform-incr", smooth)) {
     return Lt;
@@ -1177,8 +1178,7 @@ LDEFINE(transform_set, LVOID,
 	    LFLOAT, &amount[0],
 	    LFLOAT, &amount[1],
 	    LFLOAT, &amount[2],
-	    LOPTIONAL,
-	    LKEYWORD, &origin,
+	    LOPTIONAL, LKEYWORD, &origin,
 	    LEND));
   if (drawer_transform(moving_id, center_id, frame_id, transform_type,
 		       amount, origin, 0., "transform-set", NO_KEYWORD)) {
@@ -1979,7 +1979,7 @@ apply_ND_transform(Transform delta,
   if(ISCAM(cam) && (dv = (DView *)drawer_get_object(cam)) != NULL) {
     perm = dv->NDPerm;
   } else {
-    static const int dflt_perm[] = { 0, 1, 2, -1 };
+    static const int dflt_perm[] = { 1, 2, 3, 0 };
     perm = (int *)dflt_perm;
   }
 
@@ -2019,7 +2019,7 @@ apply_ND_transform(Transform delta,
   /* TranslateOrigin() will call Dehomogenize anyway, so negation of
    * origin is really easy, just negate the homogeneous component.
    */
-  originpt->v[drawerstate.NDim-1] = -originpt->v[drawerstate.NDim-1];
+  originpt->v[0] = -originpt->v[0];
   Tfg = TmNSpaceTranslateOrigin(NULL, originpt);
   HPtNDelete(originpt);
 

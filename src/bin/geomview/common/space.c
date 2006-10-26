@@ -239,11 +239,8 @@ NDdeletecluster(NDcam *c)
 {	/* Add this someday.  Note that there may be other references to this cluster. XXX */
 }
 
-
-
-
 LDEFINE(ND_axes, LLIST,
-	"(ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex]])\n\
+	"(ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex [Windex]]])\n\
 	In our model for N-D viewing (enabled by (dimension)), objects in\n\
 	N-space are viewed by N-dimensional \"camera clusters\".\n\
 	Each real camera window belongs to some cluster, and shows &\n\
@@ -252,18 +249,26 @@ LDEFINE(ND_axes, LLIST,
 \n	The ND-axes command configures all this.  It specifies a camera's\n\
 	cluster membership, and the set of N-space axes which become the\n\
 	3-D camera's X, Y, and Z axes.  Axes are specified by their indices,\n\
-	from 0 to N-1 for an N-dimensional space.  Cluster CLUSTERNAME is\n\
+	from 1 to N for an N-dimensional space.  Cluster CLUSTERNAME is\n\
 	implicitly created if not previously known.\n\
+	In principle it is possible to map the homogeneous component\n\
+	of a conformal 4 point to some other index; this would be done\n\
+	by specifying 0 for one of Xindex, Yindex or Zindex and giving\n\
+	Windex some positive value. This is probably not useful because\n\
+	Geomview does not support non-Euclidean geometries for in higher\n\
+	dimensions.\n\
+	\n\
 	To read a camera's configuration, use \"(echo (ND-axes CAMID))\".\n\
-        The return value is an array of 4 integers, the last one is\n\
-	to -1 (??? FIXME, cH)")
+        The return value is an array of 4 integers, the last one should\n\
+	be 0.")
 {
   int axes[4];
   char *camname, *clustername = NULL;
   int i, cam;
   DView *dv;
 
-  axes[0] = axes[1] = axes[2] = axes[3] = -1;
+  axes[0] = axes[1] = axes[2] = -1;
+  axes[3] = 0;
   LDECLARE(("ND-axes", LBEGIN,
 	    LSTRING, &camname,
 	    LOPTIONAL,
@@ -293,9 +298,21 @@ LDEFINE(ND_axes, LLIST,
     NDcam *c = NDnewcluster(clustername);
     extern mgNDctx NDctx_proto; /* from ndshade.c */
 
+    for(i = 0; i < 4; i++) {
+      if (axes[i] < 0) {
+	const char names[4] = { 'X', 'Y', 'Z', 'W' };
+	OOGLError(1,
+		  "ERROR: bogus ND-axes specification (%d %d %d %d), %c-entry "
+		  "must not be negative.\n",
+		  axes[0], axes[1], axes[2], axes[3], names[i]);
+	return Lnil;
+      }
+    }
     NDdeletecluster(dv->cluster); /* a no-op yet */
     dv->cluster = c;
-    memcpy(dv->NDPerm, axes, 4*sizeof(int));
+    for(i = 0; i < 4; i++) {
+      dv->NDPerm[i] = axes[i];
+    }
     dv->mgNDctx = NDctx_proto;
 
     CamReset(dv->cam);
@@ -331,7 +348,9 @@ LDEFINE(dimension, LLIST,
 	(Since calculations are done using homogeneous coordinates,\n\
 	this means matrices are (N+1)x(N+1).)\n\
 	With no arguments, returns the current dimension, or 0 if\n\
-	N-dimensional viewing has not been enabled.")
+	N-dimensional viewing has not been enabled. Note that N has to be"
+	"at least 4 to enable ND-viewing, otherwise ND-viewing will be"
+	"disabled.")
 {
   int i, d = -1;
 
@@ -346,7 +365,8 @@ LDEFINE(dimension, LLIST,
     return LNew(LINT, &d);
   } else {
     NDcam *c;
-    if(d == 0) {
+    if(d < 4) { /* we do not allow low-dimension ND-view */
+      d = 0;
       for(i = 0; i < dview_max; i++)
 	if(dview[i] && dview[i]->cluster) {
 	  NDdeletecluster(dview[i]->cluster);
@@ -482,12 +502,12 @@ LDEFINE(ND_xform_get, LTRANSFORMN,
 
 
 LDEFINE(ND_color, LLIST,
-	"(ND-color CAMID [ (( [ID] (x0 x1 x2 ... xn) v r g b a   v r g b a  ... )\n\
-	((x0 ... xn)  v r g b a  v r g b a ...) ...)] )\n\
+	"(ND-color CAMID [ (( [ID] (x1 x2 x3 ... xN) v r g b a   v r g b a  ... )\n\
+	((x1 ... xN)  v r g b a  v r g b a ...) ...)] )\n\
 	Specifies a function, applied to each N-D vertex, which determines the\n\
 	colors of N-dimensional objects as shown in camera CAMID.\n\
 	Each coloring function is defined by a vector (in ID's coordinate system)\n\
-	[x0 x1 ... xn] and by a sequence of value (v)/color(r g b a) tuples,\n\
+	[x1 x1 ... xN] and by a sequence of value (v)/color(r g b a) tuples,\n\
 	ordered by increasing v.  The inner product v = P.[x] is linearly\n\
 	interpolated in this table to give a color.\n\
 	If ID is omitted, the (xi) vector is assumed in universe coordinates.\n\
@@ -530,8 +550,8 @@ LDEFINE(ND_color, LLIST,
 
       dname = strdup(dname);
       l = LListAppend(NULL, LNew(LSTRING, (char *)&dname));
-      l = LListAppend(l,
-		      LMakeArray(LFLOAT, (char *)cm->axis->v, cm->axis->dim-1));
+      l = LListAppend(l, LMakeArray(LFLOAT,
+				    (char *)(cm->axis->v+1), cm->axis->dim-1));
       for(k = VVCOUNT(cm->cents), ce = VVEC(cm->cents, cent); --k > 0; ce++) {
 	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->v));
 	l = LListAppend(l, LNew(LFLOAT, (char *)&ce->c.r));
@@ -562,7 +582,7 @@ LDEFINE(ND_color, LLIST,
     /*
      * Each component of the 'ents' list looks like:
      *  LLIST         ---  v0,r0,g0,b0,a0, v1,r1,g1,b1,a1, ...
-     *    x0,x1,x2,...
+     *    x1,x2,x3,...
      */
     if(! LFROMOBJ(LLIST)(ent, &entlist)) {
       err = "ND-color: expected list of lists";
@@ -589,10 +609,10 @@ LDEFINE(ND_color, LLIST,
     cm->axis = cm->axis ? HPtNPad(cm->axis, dim + 1, cm->axis)
       : HPtNCreate(dim+1, NULL);
     /* The projection axis is a vector, so its homogeneous component is zero */
-    cm->axis->v[dim] = 0;
+    cm->axis->v[0] = 0;
     /* Extract the real components */
-    for(j = 0; j < dim; j++) {
-      if(!LFROMOBJ(LFLOAT)(LListEntry(axis, j+1), &cm->axis->v[j])) {
+    for(j = 1; j < dim+1; j++) {
+      if(!LFROMOBJ(LFLOAT)(LListEntry(axis, j), &cm->axis->v[j])) {
 	err = "Non-numeric entry in projection axis?";
 	goto no;
       }
@@ -634,3 +654,9 @@ LDEFINE(ND_color, LLIST,
   OOGLError(0, err);
   return Lnil;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

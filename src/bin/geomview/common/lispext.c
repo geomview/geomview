@@ -534,7 +534,7 @@ LObject *tmn2obj( TmNStruct **x )
 void tmnfree(TmNStruct **x)
 {
   if (*x) {
-    /*if ((*x)->tm) TmNDelete( (*x)->tm );*/
+    if ((*x)->tm) TmNDelete( (*x)->tm );
     if ((*x)->h) HandleDelete( (*x)->h );
   }
   OOGLFree(*x);

@@ -58,54 +58,54 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static int
 map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
 {
-    NDstuff *nds = (NDstuff *)mgNDctx;    
+  NDstuff *nds = (NDstuff *)mgNDctx;    
 #define iT    nds->T
 #define iaxes nds->axes
 #define iTc   nds->Tc
 #define incm  nds->ncm
 #define icm   nds->cm
 #define ihc   nds->hc
-    ColorA ci;
-    float t;
-    int i;
+  ColorA ci;
+  float t;
+  int i;
 
-    HPtNTransformComponents(p, iT, 4, iaxes, (float *)np);
-    if(np->w != 1) HPt3Dehomogenize(np, np);
+  HPtNTransformComponents(iT, p, iaxes, np);
+  if(np->w != 1) HPt3Dehomogenize(np, np);
     
-    if(incm > 0 && !(_mgc->astk->ap.flag & APF_KEEPCOLOR) && c != NULL) {
-	ci.r = ci.g = ci.b = ci.a = 0;
+  if(incm > 0 && !(_mgc->astk->ap.flag & APF_KEEPCOLOR) && c != NULL) {
+    ci.r = ci.g = ci.b = ci.a = 0;
 
-	HPtNTransform(iTc, p, ihc);
-	for(i = 0; i < incm; i++) {
-	    cent *ce = VVEC(icm[i].cents, cent);
-	    float v = ihc->v[i];
-	    if(!(v > ce->v)) {
-		ci.r += ce->c.r;
-		ci.g += ce->c.g;
-		ci.b += ce->c.b;
-		ci.a += ce->c.a;
-	    } else {
-		do ce++; while(v > ce->v);
-		if((ce-1)->interp) {
-		    t = (v - (ce-1)->v) / (ce->v - (ce-1)->v);
-		} else {
-		    t = 1;
-		}
-		ci.r += t*ce->c.r + (1-t)*(ce-1)->c.r;
-		ci.g += t*ce->c.g + (1-t)*(ce-1)->c.g;
-		ci.b += t*ce->c.b + (1-t)*(ce-1)->c.b;
-		ci.a += t*ce->c.a + (1-t)*(ce-1)->c.a;
-	    }
+    HPtNTransform(iTc, p, ihc);
+    for(i = 0; i < incm; i++) {
+      cent *ce = VVEC(icm[i].cents, cent);
+      float v = ihc->v[i];
+      if(!(v > ce->v)) {
+	ci.r += ce->c.r;
+	ci.g += ce->c.g;
+	ci.b += ce->c.b;
+	ci.a += ce->c.a;
+      } else {
+	do ce++; while(v > ce->v);
+	if((ce-1)->interp) {
+	  t = (v - (ce-1)->v) / (ce->v - (ce-1)->v);
+	} else {
+	  t = 1;
 	}
-	/* XXX Clamp colors to range 0..1 here?? */
-	if(ci.r < 0) ci.r = 0; else if(ci.r > 1) ci.r = 1;
-	if(ci.g < 0) ci.g = 0; else if(ci.g > 1) ci.g = 1;
-	if(ci.b < 0) ci.b = 0; else if(ci.b > 1) ci.b = 1;
-	if(ci.a < 0) ci.a = 0; else if(ci.a > 1) ci.a = 1;
-	*c = ci;
-	return 1;
+	ci.r += t*ce->c.r + (1-t)*(ce-1)->c.r;
+	ci.g += t*ce->c.g + (1-t)*(ce-1)->c.g;
+	ci.b += t*ce->c.b + (1-t)*(ce-1)->c.b;
+	ci.a += t*ce->c.a + (1-t)*(ce-1)->c.a;
+      }
     }
-    return 0;
+    /* XXX Clamp colors to range 0..1 here?? */
+    if(ci.r < 0) ci.r = 0; else if(ci.r > 1) ci.r = 1;
+    if(ci.g < 0) ci.g = 0; else if(ci.g > 1) ci.g = 1;
+    if(ci.b < 0) ci.b = 0; else if(ci.b > 1) ci.b = 1;
+    if(ci.a < 0) ci.a = 0; else if(ci.a > 1) ci.a = 1;
+    *c = ci;
+    return 1;
+  }
+  return 0;
 
 #undef iT
 #undef iTc
@@ -177,3 +177,10 @@ mgNDctx NDctx_proto = {
   pushT,
   restoreCTX,
 };
+
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

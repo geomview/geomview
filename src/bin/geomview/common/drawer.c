@@ -185,8 +185,8 @@ drawer_get_object( int id )
     case TARGETGEOMID: id = GEOMID(uistate.targetgeom); goto recheck;
     case CENTERID: id = uistate.centerid; goto recheck;
     default:
-	if(INDEXOF(id) < 0 || INDEXOF(id) >= dgeom_max) return NULL;
-	return (DObject *)dgeom[INDEXOF(id)];
+      if(INDEXOF(id) < 0 || INDEXOF(id) >= dgeom_max) return NULL;
+      return (DObject *)dgeom[INDEXOF(id)];
     }
   } else if(ISCAM(id)) {
     switch(id) {
@@ -194,8 +194,8 @@ drawer_get_object( int id )
     case FOCUSID: case ALLCAMS: id = CAMID(uistate.mousefocus); goto recheck;
     case TARGETCAMID: id = CAMID(uistate.targetcam); goto recheck;
     default:
-	if(INDEXOF(id) < 0 || INDEXOF(id) >= dview_max) return NULL;
-	return (DObject *)dview[INDEXOF(id)];
+      if(INDEXOF(id) < 0 || INDEXOF(id) >= dview_max) return NULL;
+      return (DObject *)dview[INDEXOF(id)];
     }
   }
   return NULL;
@@ -451,10 +451,10 @@ drawer_id2name( int id )
   case PRIMITIVE:  return "primitive";
   case NOID:  return "none";
   default:
-      if(id > 0) {
-	DObject *obj = drawer_get_object(id);
-	if(obj) return obj->name[1];
-      }
+    if(id > 0) {
+      DObject *obj = drawer_get_object(id);
+      if(obj) return obj->name[1];
+    }
   }
   OOGLError(1, "drawer_id2name unknown id %d", id);
   return "?";
@@ -481,8 +481,8 @@ drawer_next_object( int id, int *indexp, int type )
   if(id == DEFAULTCAMID && type != T_GEOM)
     return index > 0 ? NULL : (DObject *)&drawerstate.defview;
 
-    /* Calling real_id() twice handles TARGETCAMID which might 
-     * yield FOCUSID */
+  /* Calling real_id() twice handles TARGETCAMID which might 
+   * yield FOCUSID */
   if(INDEXOF(id) < 0 && INDEXOF(id) != ALLINDEX)
     id = real_id(real_id(id));
 
@@ -496,7 +496,7 @@ drawer_next_object( int id, int *indexp, int type )
 
   if(INDEXOF(id) == ALLINDEX) {
     while(index < limit && objs[index] == NULL)
-	index++;
+      index++;
     *indexp = index;
   } else if(index == 0)
     index = INDEXOF(id);
@@ -520,8 +520,8 @@ drawer_next_bcast( int id, int *indexp, int type )
     id = real_id(real_id(id));
   if(id == WORLDGEOM)
     while((obj = drawer_next_object(ALLGEOMS, indexp, type)) != NULL
-		&& DGobj(obj)->citizenship == ALIEN)
-	(*indexp)++;
+	  && DGobj(obj)->citizenship == ALIEN)
+      (*indexp)++;
   else
     obj = drawer_next_object(id, indexp, type);
   return obj;
@@ -536,24 +536,24 @@ drawer_next_bcast( int id, int *indexp, int type )
 Appearance *
 drawer_get_ap( int id )
 {
-    DGeom *dg;
-    Appearance *ap, *nap;
+  DGeom *dg;
+  Appearance *ap, *nap;
 
-    ap = drawerstate.ap;
-    nap = worldap;
-    if(nap)
-	ap = ApMerge(nap, ap, 0);
+  ap = drawerstate.ap;
+  nap = worldap;
+  if(nap)
+    ap = ApMerge(nap, ap, 0);
 
-    dg = (!ISGEOM(id) || id == GEOMID(ALLINDEX))
-		? NULL : (DGeom *)drawer_get_object(id);
-    if(dg && dg != dgeom[0] && (nap = GeomAppearance(dg->Item)) != NULL) {
-	nap = ApMerge(nap, ap, 0);
-	if(ap != drawerstate.ap) ApDelete(ap);
-	ap = nap;
-    }
-    if(ap == drawerstate.ap)
-	RefIncr((Ref *)ap);
-    return ap;
+  dg = (!ISGEOM(id) || id == GEOMID(ALLINDEX))
+    ? NULL : (DGeom *)drawer_get_object(id);
+  if(dg && dg != dgeom[0] && (nap = GeomAppearance(dg->Item)) != NULL) {
+    nap = ApMerge(nap, ap, 0);
+    if(ap != drawerstate.ap) ApDelete(ap);
+    ap = nap;
+  }
+  if(ap == drawerstate.ap)
+    RefIncr((Ref *)ap);
+  return ap;
 }
 
 
@@ -564,18 +564,18 @@ drawer_get_ap( int id )
 int
 drawer_moving()
 {
-    int i;
-    DObject *o;
+  int i;
+  DObject *o;
 
-    if (motions_exist())
+  if (motions_exist())
+    return 1;
+  for(i = 0; i < dgeom_max; i++)
+    if((o = (DObject *)dgeom[i]) != NULL && (o->moving || o->changed))
       return 1;
-    for(i = 0; i < dgeom_max; i++)
-	if((o = (DObject *)dgeom[i]) != NULL && (o->moving || o->changed))
-	    return 1;
-    for(i = 0; i < dview_max; i++)
-	if((o = (DObject *)dview[i]) != NULL && (o->moving || o->changed))
-	    return 1;
-    return 0;
+  for(i = 0; i < dview_max; i++)
+    if((o = (DObject *)dview[i]) != NULL && (o->moving || o->changed))
+      return 1;
+  return 0;
 }
 
 
@@ -622,7 +622,7 @@ drawer_name2metaid(char *name)
 
 
 LDEFINE(name_object, LVOID,
-       "(name-object    ID NAME)\n\
+	"(name-object    ID NAME)\n\
 	Assign a new NAME (a string) to ID.  A number is appended if\n\
 	that name is in use (for example, \"foo\" -> \"foo<2>\").  The new\n\
 	name, possibly with number appended, may be used as object's\n\
@@ -649,7 +649,7 @@ drawer_name_object(int id, int ni, char *name)
 }
 
 LDEFINE(update_draw, LVOID,
-       "(update-draw    CAM-ID  [timestep_in_seconds])\n\
+	"(update-draw    CAM-ID  [timestep_in_seconds])\n\
 	Apply each incremental motion once and then draw CAM-ID.\n\
 	Applies \"timestep\" seconds' worth of motion, or uses elapsed real\n\
 	time if \"timestep\" is absent or zero.")
@@ -666,7 +666,7 @@ LDEFINE(update_draw, LVOID,
 }
 
 LDEFINE(draw, LVOID,
-"(draw           CAM-ID)\n\
+	"(draw           CAM-ID)\n\
 	Draw the view in CAM-ID, if it needs redrawing.  See also \"redraw\".")
 {
   DView *dv;
@@ -684,7 +684,7 @@ LDEFINE(draw, LVOID,
 }
 
 LDEFINE(update, LVOID,
-       "(update [timestep_in_seconds])\n\
+	"(update [timestep_in_seconds])\n\
 	Apply each incremental motion once.  Uses timestep if it's present and\n\
 	nonzero; otherwise motions are proportional to elapsed real time.")
 {
@@ -714,7 +714,7 @@ drawer_updateproc(int id, PFI func)
 }
 
 LDEFINE(redraw, LVOID,
-"(redraw         CAM-ID)\n\
+	"(redraw         CAM-ID)\n\
 	States that the view in CAM-ID should be redrawn on the\n\
 	next pass through the main loop or the next invocation of \"draw\".")
 {
@@ -734,7 +734,7 @@ LDEFINE(redraw, LVOID,
 }
 
 LDEFINE(freeze, LVOID,
-       "(freeze         CAM-ID  [hard-freeze])\n\
+	"(freeze         CAM-ID  [hard-freeze])\n\
 	Freeze CAM-ID; drawing in this camera's window is turned off\n\
 	until it is explicitly redrawn with \"(redraw CAM-ID)\", after\n\
 	which time drawing resumes as normal.  hard-freeze (default false)\n\
@@ -808,7 +808,7 @@ void drawer_center(int id)
 
 
 LDEFINE(xform_set, LVOID,
-       "(xform-set      ID TRANSFORM)\n\
+	"(xform-set      ID TRANSFORM)\n\
 	Overwrite the current object transform with TRANSFORM (set\n\
 	object ID's transform to TRANSFORM).")
 {
@@ -821,33 +821,33 @@ LDEFINE(xform_set, LVOID,
 	    LTRANSFORM, &ts,
 	    LEND));
 
-    MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-      if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
-	continue;
-      if(ts->tm == TMNULL) {
-	/*
-	 * Special case for switching externally-controlled motion on & off
-	 */
-	if(ISGEOM(id))
-	  GeomSet(obj->Item, CR_AXISHANDLE, ts->h, CR_END);
-	else
-	  CamSet(DVobj(obj)->cam, CAM_C2WHANDLE, ts->h, CAM_END);
-      } else {
-	if (ISGEOM(id))
-	  GeomSet(DGobj(obj)->Item, CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
-	else 
-	  CamSet(DVobj(obj)->cam, CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
-      }
-      TmIdentity(obj->Incr);
-      obj->redraw = 1;
-      if (ts->h) obj->changed |= CH_TRANSFORM;
-      obj->moving = (obj->updateproc!=NULL);
+  MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
+    if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
+      continue;
+    if(ts->tm == TMNULL) {
+      /*
+       * Special case for switching externally-controlled motion on & off
+       */
+      if(ISGEOM(id))
+	GeomSet(obj->Item, CR_AXISHANDLE, ts->h, CR_END);
+      else
+	CamSet(DVobj(obj)->cam, CAM_C2WHANDLE, ts->h, CAM_END);
+    } else {
+      if (ISGEOM(id))
+	GeomSet(DGobj(obj)->Item, CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
+      else 
+	CamSet(DVobj(obj)->cam, CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
     }
-    return Lt;
+    TmIdentity(obj->Incr);
+    obj->redraw = 1;
+    if (ts->h) obj->changed |= CH_TRANSFORM;
+    obj->moving = (obj->updateproc!=NULL);
+  }
+  return Lt;
 }
 
 LDEFINE(xform, LVOID,
-       "(xform          ID TRANSFORM)\n\
+	"(xform          ID TRANSFORM)\n\
 	Apply TRANSFORM to object ID, as opposed to simply setting its\n\
 	transform, so the effective position\n\
 	of the object will be the concatenation of TRANSFORM with the\n\
@@ -865,7 +865,7 @@ LDEFINE(xform, LVOID,
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
     if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN)
-	continue;
+      continue;
     if (TYPEOF(id) == T_GEOM)
       GeomTransform(DGobj(obj)->Item, ts->tm, NULL);
     else 
@@ -878,7 +878,7 @@ LDEFINE(xform, LVOID,
 }
 
 LDEFINE(xform_incr, LVOID,
-       "(xform-incr     ID TRANSFORM)\n\
+	"(xform-incr     ID TRANSFORM)\n\
 	Apply continual motion: concatenate TRANSFORM with the current\n\
 	transform of the object every refresh (set object ID's\n\
 	incremental transform to TRANSFORM).")
@@ -893,23 +893,23 @@ LDEFINE(xform_incr, LVOID,
 	    LEND));
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-      stop_motions(obj->id);
-      if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
-	continue;
-      if(obj->incrhandle != NULL)
-	HandlePDelete(&obj->incrhandle);
-      if((obj->incrhandle = ts->h) != NULL) {
-	HandleRegister(&obj->incrhandle, NULL, obj->Incr, TransUpdate);
-	object_register(&obj->incrhandle, NULL, obj);
-      }
-      TmCopy(ts->tm, obj->Incr);
-      obj->moving = ( nonidentity(obj->Incr) || (obj->updateproc!=NULL) );
+    stop_motions(obj->id);
+    if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
+      continue;
+    if(obj->incrhandle != NULL)
+      HandlePDelete(&obj->incrhandle);
+    if((obj->incrhandle = ts->h) != NULL) {
+      HandleRegister(&obj->incrhandle, NULL, obj->Incr, TransUpdate);
+      object_register(&obj->incrhandle, NULL, obj);
+    }
+    TmCopy(ts->tm, obj->Incr);
+    obj->moving = ( nonidentity(obj->Incr) || (obj->updateproc!=NULL) );
   }
   return Lt;
 }
 
 LDEFINE(new_camera, LID,
-       "(new-camera     name [CAMERA])\n\
+	"(new-camera     name [CAMERA])\n\
 	Create a new camera with the given name (a string).  If a\n\
 	camera with that name already exists, the new object is given\n\
 	a unique name.  If CAMERA is omitted a default camera is used.")
@@ -940,7 +940,7 @@ LDEFINE(new_camera, LID,
 }
 
 LDEFINE(camera, LINT,
-       "(camera         CAM-ID [CAMERA])\n\
+	"(camera         CAM-ID [CAMERA])\n\
 	Specify data for CAM-ID; CAMERA is a string giving an OOGL\n\
 	camera specification.  If no camera CAM-ID exists,\n\
 	it is created; in this case, the second argument is optional,\n\
@@ -985,7 +985,7 @@ LDEFINE(camera, LINT,
 }
 
 LDEFINE(camera_reset, LVOID,
-"(camera-reset   CAM-ID)\n\
+	"(camera-reset   CAM-ID)\n\
 	Reset CAM-ID to its default value.")
 {
   DView *dv;
@@ -1039,7 +1039,7 @@ drawer_new_dgeom(char *name, GeomStruct *gs, int citizenship)
 }
 
 LDEFINE(new_alien, LID,
-       "(new-alien      name [GEOMETRY])\n\
+	"(new-alien      name [GEOMETRY])\n\
 	Create a new alien (geom not in the world) with the given name\n\
 	(a string).  GEOMETRY is a string giving an OOGL geometry\n\
 	specification.  If GEOMETRY is omitted, the new alien\n\
@@ -1066,7 +1066,7 @@ LDEFINE(new_alien, LID,
 }
 
 LDEFINE(new_geometry, LID,
-       "(new-geometry   name [GEOMETRY])\n\
+	"(new-geometry   name [GEOMETRY])\n\
 	Create a new geom with the given name (a string).  GEOMETRY is\n\
 	a string giving an OOGL geometry specification.  If\n\
 	GEOMETRY is omitted, the new object is given an empty geometry.\n\
@@ -1108,7 +1108,7 @@ drawer_dgeom(int id, GeomStruct *gs)
 }
 
 LDEFINE(geometry, LVOID,
-       "(geometry       GEOM-ID [GEOMETRY])\n\
+	"(geometry       GEOM-ID [GEOMETRY])\n\
 	Specify the geometry for GEOM-ID.  GEOMETRY is a string\n\
 	giving an OOGL geometry specification.  If no object\n\
 	called GEOM-ID exists, it is created; in this case the\n\
@@ -1173,10 +1173,10 @@ LDEFINE(replace_geometry, LVOID,
   int id;
 
   LDECLARE(("replace-geometry", LBEGIN,
-	LSTRING, &name,
-	LHOLD, LARRAY, LINT, p, &pn,
-	LGEOM, &gs,
-	LEND));
+	    LSTRING, &name,
+	    LHOLD, LARRAY, LINT, p, &pn,
+	    LGEOM, &gs,
+	    LEND));
   if ((id = drawer_idbyname(name)) != NOID)
     drawer_replace_geometry(id, p, pn, gs);
   return Lt;
@@ -1184,7 +1184,7 @@ LDEFINE(replace_geometry, LVOID,
   
     
 LDEFINE(copy, LVOID,
-"(copy [ID] [name])\n\
+	"(copy [ID] [name])\n\
 	Copies an object or camera.  If ID is not specified, it \n\
 	is assumed to be targetgeom.  If name is not specified, it \n\
 	is assumed to be the same as the name of ID.")
@@ -1243,7 +1243,7 @@ LDEFINE(copy, LVOID,
 }
 
 LDEFINE(delete, LVOID,
-"(delete ID)\n\
+	"(delete ID)\n\
 	Delete object or camera ID.")
 {
   DObject *obj;
@@ -1289,7 +1289,7 @@ LDEFINE(delete, LVOID,
 }
 
 LDEFINE(scene, LVOID,
-"(scene          CAM-ID [GEOMETRY])\n\
+	"(scene          CAM-ID [GEOMETRY])\n\
 	Make CAM-ID look at GEOMETRY instead of at the universe.")
 {
   DView *dv;
@@ -1328,7 +1328,7 @@ LDEFINE(scene, LVOID,
 }
 
 LDEFINE(winenter, LVOID,
-       "(winenter       CAM-ID)\n\
+	"(winenter       CAM-ID)\n\
 	Tell geomview that the mouse cursor is in the window\n\
 	of CAM-ID.  This function is for development purposes\n\
 	and is not intended for general use.")
@@ -1343,7 +1343,7 @@ LDEFINE(winenter, LVOID,
 }
 
 LDEFINE(merge_ap, LVOID,
-       "(merge-ap       GEOM-ID APPEARANCE)\n\
+	"(merge-ap       GEOM-ID APPEARANCE)\n\
 	Merge in some appearance characteristics to GEOM-ID.\n\
 	Appearance parameters include surface and line color, shading\n\
 	style, line width, and lighting.")
@@ -1360,10 +1360,10 @@ LDEFINE(merge_ap, LVOID,
   if (id == WORLDGEOM)
     worldap = ApMerge(as->ap, worldap, APF_INPLACE|APF_OVEROVERRIDE);
   MAYBE_LOOP(id, index, T_NONE, DObject, obj) {  
-      Appearance *thisap = GeomAppearance(obj->Item);
-      GeomSet(obj->Item, CR_NOCOPY, CR_APPEAR,
-	      ApMerge(as->ap, thisap, APF_INPLACE|APF_OVEROVERRIDE), CR_END);
-      obj->redraw = 1;
+    Appearance *thisap = GeomAppearance(obj->Item);
+    GeomSet(obj->Item, CR_NOCOPY, CR_APPEAR,
+	    ApMerge(as->ap, thisap, APF_INPLACE|APF_OVEROVERRIDE), CR_END);
+    obj->redraw = 1;
   }
   ui_maybe_refresh(id);
   return Lt;
@@ -1381,14 +1381,14 @@ drawer_set_ap(int id, Handle *h, Appearance *ap)
   }
   MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
     GeomSet(obj->Item, CR_NOCOPY, /* CR_APHANDLE, h */
-			CR_APPEAR, ap ? ApCopy(ap,NULL) : NULL, CR_END );
+	    CR_APPEAR, ap ? ApCopy(ap,NULL) : NULL, CR_END );
     obj->redraw = 1;
   }
   ui_maybe_refresh(id);
 }
 
 LDEFINE(dice, LVOID,
-"(dice           GEOM-ID N)\n\
+	"(dice           GEOM-ID N)\n\
 	Dice any Bezier patches within GEOM-ID into NxN meshes; default 10.")
 {
   int id, dice;
@@ -1401,7 +1401,7 @@ LDEFINE(dice, LVOID,
 }
 
 LDEFINE(bbox_draw, LVOID,
-"(bbox-draw      GEOM-ID [yes|no])\n\
+	"(bbox-draw      GEOM-ID [yes|no])\n\
 	Say whether GEOM-ID's bounding-box should be drawn; \"yes\" if omitted.")
 {
   int id, yes=YES_KEYWORD;
@@ -1415,7 +1415,7 @@ LDEFINE(bbox_draw, LVOID,
 }
 
 LDEFINE(camera_draw, LVOID,
-"(camera-draw    CAM-ID [yes|no])\n\
+	"(camera-draw    CAM-ID [yes|no])\n\
 	Say whether or not cameras should be drawn in CAM-ID; \"yes\" if omitted.")
 {
   int id, yes=YES_KEYWORD;
@@ -1429,7 +1429,7 @@ LDEFINE(camera_draw, LVOID,
 }
 
 LDEFINE(evert, LVOID,
-"(evert          GEOM-ID [yes|no])\n\
+	"(evert          GEOM-ID [yes|no])\n\
 	Set the normal eversion state of GEOM-ID.  If the second argument\n\
 	is omitted, toggle the eversion state.")
 {
@@ -1444,36 +1444,36 @@ LDEFINE(evert, LVOID,
 }
 
 LDEFINE(soft_shader, LVOID,
-"(soft-shader  CAM-ID  {on|off|toggle})\n\
+	"(soft-shader  CAM-ID  {on|off|toggle})\n\
 	Select whether to use software or hardware shading in that camera.")
 {
-    DView *dv;
-    int id, i, on = -1;
+  DView *dv;
+  int id, i, on = -1;
 
-    LDECLARE(("soft-shader", LBEGIN,
-	LID, &id,
-	LOPTIONAL,
-	LKEYWORD, &on,
-	LEND));
+  LDECLARE(("soft-shader", LBEGIN,
+	    LID, &id,
+	    LOPTIONAL,
+	    LKEYWORD, &on,
+	    LEND));
 
-    MAYBE_LOOP(id, i, T_CAM, DView, dv) {
-	if(on == TOGGLE_KEYWORD)
-	    on = dv->shader ? OFF_KEYWORD : ON_KEYWORD;
-	dv->shader = (on == ON_KEYWORD) ? softshader(dv->id) : NULL;
-	if(dv->mgctx) {
-	    mgctxselect(dv->mgctx);
-	    mgctxset(MG_SHADER, dv->shader, MG_END);
-	    gv_redraw(dv->id);
-	}
-	ui_maybe_refresh(dv->id);
+  MAYBE_LOOP(id, i, T_CAM, DView, dv) {
+    if(on == TOGGLE_KEYWORD)
+      on = dv->shader ? OFF_KEYWORD : ON_KEYWORD;
+    dv->shader = (on == ON_KEYWORD) ? softshader(dv->id) : NULL;
+    if(dv->mgctx) {
+      mgctxselect(dv->mgctx);
+      mgctxset(MG_SHADER, dv->shader, MG_END);
+      gv_redraw(dv->id);
     }
-    return Lt;
+    ui_maybe_refresh(dv->id);
+  }
+  return Lt;
 }
 
 
 
 LDEFINE(stereowin, LLIST,
-"(stereowin	CAM-ID  [no|horizontal|vertical|colored] [gapsize])\n\
+	"(stereowin	CAM-ID  [no|horizontal|vertical|colored] [gapsize])\n\
 	Configure CAM-ID as a stereo window.\n\
 	no: entire window is a single pane, stereo disabled\n\
 	horizontal: split left/right: left is stereo eye#0, right is #1.\n\
@@ -1487,46 +1487,46 @@ LDEFINE(stereowin, LLIST,
 	``camera'' to set the stereyes transforms, and ``merge window'' or\n\
 	``window'' to set the pixel aspect ratio & window position if needed.")
 {
-    int id;
-    int kw = -1;
-    DView *dv;
-    int gapsize = 0;
+  int id;
+  int kw = -1;
+  DView *dv;
+  int gapsize = 0;
 
-    LDECLARE(("stereowin", LBEGIN,
-	LID, &id,
-	LOPTIONAL,
-	LKEYWORD, &kw,
-	LINT, &gapsize,
-	LEND));
+  LDECLARE(("stereowin", LBEGIN,
+	    LID, &id,
+	    LOPTIONAL,
+	    LKEYWORD, &kw,
+	    LINT, &gapsize,
+	    LEND));
 
-    if(!ISCAM(id) || (dv = (DView *)drawer_get_object(id)) == NULL) {
-	OOGLError(0, "stereowin: expected camera, got %s", drawer_id2name(id));
-	return Lnil;
-    }
-    if(kw < 0) {
-	char *me = "stereowin";
-	LList *a = LListAppend(
-			LListAppend( LListAppend( LListAppend(NULL, 
-			LTOOBJ(LSTRING)(&me)),
-			LTOOBJ(LID)(&id)),
-			  LTOOBJ(LKEYWORD)(&dv->stereo)),
-			    LTOOBJ(LINT)(&dv->stereogap));
-	return LTOOBJ(LLIST)(&a);
-    }
-    if(kw != NO_KEYWORD && kw != HORIZONTAL_KEYWORD && kw != VERTICAL_KEYWORD
-		&& kw != COLORED_KEYWORD) {
-	OOGLError(0, "stereowin: expected \"no\" or \"horizontal\" or \"vertical\" or \"colored\", not \"%s\"", keywordname(kw));
-	return Lnil;
-    }
-    dv->stereo = kw;
-    dv->stereogap = gapsize;
-    gv_redraw(id);		/* Schedule redraw/window reconfiguration */
-    return Lt;
+  if(!ISCAM(id) || (dv = (DView *)drawer_get_object(id)) == NULL) {
+    OOGLError(0, "stereowin: expected camera, got %s", drawer_id2name(id));
+    return Lnil;
+  }
+  if(kw < 0) {
+    char *me = "stereowin";
+    LList *a = LListAppend(
+			   LListAppend( LListAppend( LListAppend(NULL, 
+								 LTOOBJ(LSTRING)(&me)),
+						     LTOOBJ(LID)(&id)),
+					LTOOBJ(LKEYWORD)(&dv->stereo)),
+			   LTOOBJ(LINT)(&dv->stereogap));
+    return LTOOBJ(LLIST)(&a);
+  }
+  if(kw != NO_KEYWORD && kw != HORIZONTAL_KEYWORD && kw != VERTICAL_KEYWORD
+     && kw != COLORED_KEYWORD) {
+    OOGLError(0, "stereowin: expected \"no\" or \"horizontal\" or \"vertical\" or \"colored\", not \"%s\"", keywordname(kw));
+    return Lnil;
+  }
+  dv->stereo = kw;
+  dv->stereogap = gapsize;
+  gv_redraw(id);		/* Schedule redraw/window reconfiguration */
+  return Lt;
 }
 	
 
 LDEFINE(space, LVOID,
-"(space {euclidean|hyperbolic|spherical})\n\
+	"(space {euclidean|hyperbolic|spherical})\n\
 	Set the space associated with the world.")
 {
   int space_keyword, space, id, index;
@@ -1572,7 +1572,7 @@ LDEFINE(space, LVOID,
     gv_hmodel(dv->id, VIRTUAL_KEYWORD);
 
     if(dv->shader)
-	mgctxset(MG_SHADER, dv->shader = softshader(dv->id), MG_END);
+      mgctxset(MG_SHADER, dv->shader = softshader(dv->id), MG_END);
 
   }
 
@@ -1609,17 +1609,17 @@ LDEFINE(hmodel, LVOID,
     mgspace = TM_SPACE(mgspace);
     dv->hmodel = hmodelval("hmodel", model_keyword);
     dview_set_hmodel_camspace(dv,mgspace);
-/*    if (mgspace == TM_HYPERBOLIC) */
-	switch (dv->hmodel) {
-	default:
-	case VIRTUAL:
-	  gv_hsphere_draw(id, 0);
-	  break;
-	case PROJECTIVE:
-	case CONFORMALBALL:
-	  gv_hsphere_draw(id, 1);
-	  break;
-	}
+    /*    if (mgspace == TM_HYPERBOLIC) */
+    switch (dv->hmodel) {
+    default:
+    case VIRTUAL:
+      gv_hsphere_draw(id, 0);
+      break;
+    case PROJECTIVE:
+    case CONFORMALBALL:
+      gv_hsphere_draw(id, 1);
+      break;
+    }
     switch (dv->hmodel) {
     default:
     case VIRTUAL: mgspace |= TM_VIRTUAL; break;
@@ -1629,7 +1629,7 @@ LDEFINE(hmodel, LVOID,
 
       break;
       
- break;
+      break;
     }
     mgctxset(MG_SPACE, mgspace, MG_END);
     gv_camera_reset(id);
@@ -1674,7 +1674,7 @@ dview_set_hmodel_camspace(DView *dv, int space)
 
 
 LDEFINE(hsphere_draw, LVOID,
-       "(hsphere-draw   CAMID [yes|no])\n\
+	"(hsphere-draw   CAMID [yes|no])\n\
 	Say whether to draw a unit sphere: the sphere at infinity in\n\
 	hyperbolic space, and a reference sphere in Euclidean and spherical\n\
 	spaces.  If the second argument is omitted, \"yes\" is assumed.")
@@ -1690,7 +1690,7 @@ LDEFINE(hsphere_draw, LVOID,
 }
 
 LDEFINE(pickable, LVOID,
-       "(pickable       GEOM-ID {yes|no})\n\
+	"(pickable       GEOM-ID {yes|no})\n\
 	Say whether or not GEOM-ID is included in the pool of objects\n\
 	that could be returned from the pick command.")
 {
@@ -1705,7 +1705,7 @@ LDEFINE(pickable, LVOID,
 }
 
 LDEFINE(normalization, LVOID,
-       "(normalization  GEOM-ID {each|none|all|keep})\n\
+	"(normalization  GEOM-ID {each|none|all|keep})\n\
 	Set the normalization status of GEOM-ID.\n\
 	\"none\" suppresses all normalization.\n\
 	\"each\" normalizes the object's bounding box to fit into the unit\n\
@@ -1758,29 +1758,29 @@ drawer_int(int id, DrawerKeyword key, int ival)
   case DRAWER_CONCAVE: flag = override = APF_CONCAVE; goto setflag;
   setflag:
     as.ap = ApCreate(ival ? AP_DO : AP_DONT, flag,
-			AP_OVERRIDE, override & uistate.apoverride, AP_END);
+		     AP_OVERRIDE, override & uistate.apoverride, AP_END);
     goto mergeap;
 
   case DRAWER_SHADING:
     as.ap = ApCreate(AP_SHADING, ival,
-		AP_OVERRIDE, APF_SHADING & uistate.apoverride, AP_END);
+		     AP_OVERRIDE, APF_SHADING & uistate.apoverride, AP_END);
     goto mergeap;
 
   case DRAWER_LINEWIDTH:
     as.ap = ApCreate(AP_LINEWIDTH, ival,
-		AP_OVERRIDE, APF_LINEWIDTH & uistate.apoverride, AP_END);
+		     AP_OVERRIDE, APF_LINEWIDTH & uistate.apoverride, AP_END);
     goto mergeap;
 
   case DRAWER_BEZDICE:
     as.ap = ApCreate(AP_DICE, ival, ival,
-		AP_OVERRIDE, APF_DICE & uistate.apoverride, AP_END);
+		     AP_OVERRIDE, APF_DICE & uistate.apoverride, AP_END);
     gv_merge_ap(id, &as);
     ApDelete(as.ap);
 #if 0
     MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
-        DGobj(obj)->bezdice = ival;
-        GeomDice(DGobj(obj)->Item, ival, ival);
-        obj->changed = 1;
+      DGobj(obj)->bezdice = ival;
+      GeomDice(DGobj(obj)->Item, ival, ival);
+      obj->changed = 1;
     }
 #endif
     break;
@@ -1833,14 +1833,14 @@ drawer_int(int id, DrawerKeyword key, int ival)
 
   case DRAWER_DOUBLEBUFFER:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-	int opts;
-	if(DVobj(obj)->mgctx == NULL) continue;
-	mgctxselect(DVobj(obj)->mgctx);
-	mgctxget(MG_SETOPTIONS, &opts);
-	mgctxset(ival==0 || (ival<0 && opts&MGO_DOUBLEBUFFER) ?
-			MG_UNSETOPTIONS : MG_SETOPTIONS,
-		MGO_DOUBLEBUFFER, MG_END);
-	obj->redraw = 1;
+      int opts;
+      if(DVobj(obj)->mgctx == NULL) continue;
+      mgctxselect(DVobj(obj)->mgctx);
+      mgctxget(MG_SETOPTIONS, &opts);
+      mgctxset(ival==0 || (ival<0 && opts&MGO_DOUBLEBUFFER) ?
+	       MG_UNSETOPTIONS : MG_SETOPTIONS,
+	       MGO_DOUBLEBUFFER, MG_END);
+      obj->redraw = 1;
     }
     break;
 
@@ -1851,24 +1851,24 @@ drawer_int(int id, DrawerKeyword key, int ival)
      */
     uistate.apoverride = ival ? ~0 : 0;
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-	ApUseOverrides( GeomAppearance(obj->Item), uistate.apoverride );
-	if(obj->id == WORLDGEOM) {
-	    ApUseOverrides( worldap, uistate.apoverride );
-	}
-	if(obj->id != WORLDGEOM && !uistate.apoverride) {
-	    /* Allow pre-existing World settings to win over those in children */
-	    ApLetPropagate( worldap, GeomAppearance(obj->Item) );
-	}
-	obj->redraw = 1;
+      ApUseOverrides( GeomAppearance(obj->Item), uistate.apoverride );
+      if(obj->id == WORLDGEOM) {
+	ApUseOverrides( worldap, uistate.apoverride );
+      }
+      if(obj->id != WORLDGEOM && !uistate.apoverride) {
+	/* Allow pre-existing World settings to win over those in children */
+	ApLetPropagate( worldap, GeomAppearance(obj->Item) );
+      }
+      obj->redraw = 1;
     }
     break;
 
   case DRAWER_INERTIA:
-	uistate.inertia = ival<0 ? !uistate.inertia : ival;	break;
+    uistate.inertia = ival<0 ? !uistate.inertia : ival;	break;
   case DRAWER_CONSTRAIN:
-	uistate.constrained = ival<0 ? !uistate.constrained : ival; break;
+    uistate.constrained = ival<0 ? !uistate.constrained : ival; break;
   case DRAWER_OWNMOTION:
-	uistate.ownmotion = ival<0 ? !uistate.ownmotion : ival;	break;
+    uistate.ownmotion = ival<0 ? !uistate.ownmotion : ival;	break;
 
   default: ; /* This should never happen */
 
@@ -1877,7 +1877,7 @@ drawer_int(int id, DrawerKeyword key, int ival)
 }
 
 LDEFINE(lines_closer, LVOID,
-       "(lines-closer   CAM-ID DIST)\n\
+	"(lines-closer   CAM-ID DIST)\n\
 	Draw lines (including edges) closer to the camera than polygons\n\
 	by DIST / 10^5  of the Z-buffer range.  DIST = 3.0 by default.\n\
 	If DIST is too small, a line lying on a surface may be\n\
@@ -1915,10 +1915,10 @@ drawer_float(int id, DrawerKeyword key, float fval)
   setcam:
     interested = LInterestList("merge");
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-	DVobj(obj)->cam = CamSet(DVobj(obj)->cam, attr, fval, CAM_END);
-	DVobj(obj)->redraw = 1;
-	if(interested)
-	    gv_merge(&CamOps, DVobj(obj)->id, (Ref *)DVobj(obj)->cam);
+      DVobj(obj)->cam = CamSet(DVobj(obj)->cam, attr, fval, CAM_END);
+      DVobj(obj)->redraw = 1;
+      if(interested)
+	gv_merge(&CamOps, DVobj(obj)->id, (Ref *)DVobj(obj)->cam);
     }
     break;
 
@@ -1927,15 +1927,15 @@ drawer_float(int id, DrawerKeyword key, float fval)
   case DRAWER_KS: attr = MT_Ks; over = MTF_Ks; goto domt;
   case DRAWER_SHININESS: attr = MT_SHININESS; over = MTF_SHININESS; goto domt;
   case DRAWER_ALPHA: attr = MT_ALPHA; over = MTF_ALPHA; goto domt;
-   domt:
+  domt:
     as.ap = ApCreate(AP_MtSet, attr, fval,
-		MT_OVERRIDE, over & uistate.apoverride,
-			MT_END, AP_END);
+		     MT_OVERRIDE, over & uistate.apoverride,
+		     MT_END, AP_END);
     goto mergeap;
 
   case DRAWER_NORMSCALE:
     as.ap = ApCreate(AP_NORMSCALE, fval,
-		AP_OVERRIDE, APF_NORMSCALE & uistate.apoverride, AP_END);
+		     AP_OVERRIDE, APF_NORMSCALE & uistate.apoverride, AP_END);
     goto mergeap;
   mergeap:
     gv_merge_ap(id, &as);
@@ -1949,21 +1949,21 @@ drawer_float(int id, DrawerKeyword key, float fval)
 
   case DRAWER_LINE_ZNUDGE:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-	DVobj(obj)->lineznudge = fval;
-	DVobj(obj)->redraw = 1;
+      DVobj(obj)->lineznudge = fval;
+      DVobj(obj)->redraw = 1;
     }
     drawerstate.defview.lineznudge = fval;
     break;
   default: {
-      /* report some kind of error? */
-    }
+    /* report some kind of error? */
+  }
 
   }
   ui_maybe_refresh(id);
 }
 
 LDEFINE(backcolor, LVOID,
-"(backcolor      CAM-ID R G B)\n\
+	"(backcolor      CAM-ID R G B)\n\
 	Set the background color of CAM-ID; R G B are numbers\n\
 	between 0 and 1.")
 {
@@ -1980,7 +1980,7 @@ LDEFINE(backcolor, LVOID,
 }
 
 LDEFINE(bbox_color, LVOID,
-"(bbox-color     GEOM-ID R G B)\n\
+	"(bbox-color     GEOM-ID R G B)\n\
 	Set the bounding-box color of GEOM-ID; R G B are numbers\n\
 	between 0 and 1.")
 {
@@ -2007,15 +2007,15 @@ drawer_color(int id, DrawerKeyword key, Color *col)
 
   case DRAWER_DIFFUSE: 
     as.ap = ApCreate(AP_MtSet, MT_DIFFUSE, col, MT_AMBIENT, col, 
-		  MT_OVERRIDE, MTF_DIFFUSE & uistate.apoverride, MT_END, AP_END);
+		     MT_OVERRIDE, MTF_DIFFUSE & uistate.apoverride, MT_END, AP_END);
     goto doap;	
   case DRAWER_EDGECOLOR: 
     as.ap = ApCreate(AP_MtSet, MT_EDGECOLOR, col, 
-		  MT_OVERRIDE, MTF_EDGECOLOR & uistate.apoverride, MT_END, AP_END); 
+		     MT_OVERRIDE, MTF_EDGECOLOR & uistate.apoverride, MT_END, AP_END); 
     goto doap;
   case DRAWER_NORMALCOLOR: 
     as.ap = ApCreate(AP_MtSet, MT_NORMALCOLOR, col, 
-		  MT_OVERRIDE, MTF_NORMALCOLOR & uistate.apoverride, MT_END, AP_END); 
+		     MT_OVERRIDE, MTF_NORMALCOLOR & uistate.apoverride, MT_END, AP_END); 
     goto doap;
   doap:
     gv_merge_ap(id, &as);
@@ -2049,15 +2049,15 @@ drawer_color(int id, DrawerKeyword key, Color *col)
     break;
 
   default: {
-      /* report some kind of error? */
-    }
+    /* report some kind of error? */
+  }
 
   }
   ui_maybe_refresh(id);
 }
 
 LDEFINE(window, LVOID,
-       "(window         CAM-ID  WINDOW)\n\
+	"(window         CAM-ID  WINDOW)\n\
 	Specify attributes for the window of CAM-ID, e.g. its size\n\
 	or initial position, in the OOGL Window syntax.\n\
 	The special CAM-ID \"default\" specifies\n\
@@ -2078,8 +2078,8 @@ LDEFINE(window, LVOID,
     WnDelete(dv->win);
     dv->win = WnCopy(ws->wn);
     if(dv->mgctx) {
-	mgctxselect(dv->mgctx);
-	mgctxset(MG_WINDOW, dv->win, MG_END);
+      mgctxselect(dv->mgctx);
+      mgctxset(MG_WINDOW, dv->win, MG_END);
     }
   }
   return Lt;
@@ -2111,46 +2111,46 @@ LDEFINE(window, LVOID,
 static void
 track_changes()
 {
-    int worldchange = drawerstate.changed;
-    int viewchange = 0;
-    int i;
-    DObject *o;
+  int worldchange = drawerstate.changed;
+  int viewchange = 0;
+  int i;
+  DObject *o;
 
-    for(i = 0; i < dgeom_max; i++) {
-	if((o = (DObject *)dgeom[i]) != NULL) {
-	    if(o->moving)
-		worldchange = 1;
-	    if(o->changed || o->redraw) {
-		worldchange = 1;
-		update_dgeom((DGeom*)o);
-		o->changed = o->redraw = 0;
-	    }
-	}
+  for(i = 0; i < dgeom_max; i++) {
+    if((o = (DObject *)dgeom[i]) != NULL) {
+      if(o->moving)
+	worldchange = 1;
+      if(o->changed || o->redraw) {
+	worldchange = 1;
+	update_dgeom((DGeom*)o);
+	o->changed = o->redraw = 0;
+      }
     }
-    for(i = 0; i < dview_max; i++) {
-	if((o = (DObject *)dview[i]) != NULL) {
-	    if(o->moving || ((DView *)o)->newcam
-			 || (worldchange && o->Item == drawerstate.universe))
-		o->changed = 1;
-	    if(o->changed) {
-		update_view((DView *)o);
-		viewchange = 1;
-	    }
-	    if(!((DView*)o)->frozen)
-		viewchange |= o->redraw;
-	}
+  }
+  for(i = 0; i < dview_max; i++) {
+    if((o = (DObject *)dview[i]) != NULL) {
+      if(o->moving || ((DView *)o)->newcam
+	 || (worldchange && o->Item == drawerstate.universe))
+	o->changed = 1;
+      if(o->changed) {
+	update_view((DView *)o);
+	viewchange = 1;
+      }
+      if(!((DView*)o)->frozen)
+	viewchange |= o->redraw;
     }
-    if(viewchange) {
-	for(i = 0; i < dview_max; i++)
-	    if((o = (DObject *)dview[i]) != NULL)
-		if(((DView *)o)->cameradraw)
-		    o->redraw = 1;
-    }
-    drawerstate.changed = 0;
+  }
+  if(viewchange) {
+    for(i = 0; i < dview_max; i++)
+      if((o = (DObject *)dview[i]) != NULL)
+	if(((DView *)o)->cameradraw)
+	  o->redraw = 1;
+  }
+  drawerstate.changed = 0;
 }
 
 LDEFINE(merge_baseap, LVOID,
-       "(merge-baseap   APPEARANCE)\n\
+	"(merge-baseap   APPEARANCE)\n\
 	Merge in some appearance characteristics to the base default\n\
 	appearance (applied to every geom before its own apperance).\n\
 	Lighting is typically included in the base appearance.")
@@ -2160,8 +2160,8 @@ LDEFINE(merge_baseap, LVOID,
 	    LAP, &as,
 	    LEND));
   drawerstate.ap = ApMerge(as->ap,
-	drawerstate.ap ? drawerstate.ap : base_defaultap,
-	APF_OVEROVERRIDE);
+			   drawerstate.ap ? drawerstate.ap : base_defaultap,
+			   APF_OVEROVERRIDE);
   drawerstate.apseq++;
   lights_changed_check();
   return Lt;
@@ -2188,9 +2188,9 @@ drawer_merge_window( int id, WnWindow *win )
   MAYBE_LOOP(id, index, T_CAM, DView, dv) {
     WnMerge(win, dv->win);
     if(dv->mgctx) {
-	mgctxselect(dv->mgctx);
-	mgctxset(MG_WINDOW, dv->win, MG_END);
-	dv->newcam = 1;
+      mgctxselect(dv->mgctx);
+      mgctxset(MG_WINDOW, dv->win, MG_END);
+      dv->newcam = 1;
     }
   }
 }
@@ -2212,7 +2212,7 @@ static void delete_geometry(DGeom *dg)
       /* We deleted the target -- find next lowest one */
       for (i=index; --i>=0 && dgeom[i]==NULL; );
       gv_ui_target( GEOMID(i), 
-		TYPEOF(uistate.targetid) == T_GEOM ? IMMEDIATE : NOIMMEDIATE );
+		    TYPEOF(uistate.targetid) == T_GEOM ? IMMEDIATE : NOIMMEDIATE );
     }
     break;
   case ALIEN:
@@ -2245,7 +2245,7 @@ static void delete_camera(DView *dv)
   ui_objectchange();
   if (index == uistate.mousefocus) {
     for(i = dview_max; --i > 0 && (dview[i] == NULL || dview[i]->frozen); )
-	;
+      ;
     ui_mousefocus(i);
   }
   if (drawer_get_object(TARGETCAMID) == NULL) {
@@ -2253,7 +2253,7 @@ static void delete_camera(DView *dv)
       gv_ui_target( WORLDGEOM, IMMEDIATE);
     } else {
       gv_ui_target( FOCUSID, 
-		  TYPEOF(uistate.targetid) == T_CAM ? IMMEDIATE : NOIMMEDIATE);
+		    TYPEOF(uistate.targetid) == T_CAM ? IMMEDIATE : NOIMMEDIATE);
     }
   }
 }
@@ -2272,28 +2272,28 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   if(f)
     drawerstate.ap =
       base_defaultap =
-	ApFLoad(NULL, f, "built-in appearance");
+      ApFLoad(NULL, f, "built-in appearance");
   iobfclose(f);
   RefIncr((Ref *)drawerstate.ap);
   drawerstate.apseq++;
 
-	/* Install default window position if not already set */
+  /* Install default window position if not already set */
   if(drawerstate.defview.win == NULL)
-	  comm_object(windefault, &WindowOps, NULL, (Ref **)(void *)&drawerstate.defview.win,
-	COMM_NOW);
+    comm_object(windefault, &WindowOps, NULL, (Ref **)(void *)&drawerstate.defview.win,
+		COMM_NOW);
   drawerstate.defview.backcolor = initial_defaultbackcolor;
   if(drawerstate.defview.cam == NULL)
-      drawerstate.defview.cam =
-	CamCreate(CAM_FOV, 40.0, CAM_NEAR, 0.1, CAM_FAR, 100.0, CAM_END);
+    drawerstate.defview.cam =
+      CamCreate(CAM_FOV, 40.0, CAM_NEAR, 0.1, CAM_FAR, 100.0, CAM_END);
 
   /* Create a not-quite-instantiated window */
   drawerstate.defview.mgctx = mgctxcreate(
-	MG_BACKGROUND, &drawerstate.defview.backcolor,
-	MG_CAMERA, drawerstate.defview.cam,
-	MG_APPEAR, drawerstate.ap,
-	MG_WINDOW, drawerstate.defview.win,
-	MG_SHOW, 0,
-	MG_END );
+					  MG_BACKGROUND, &drawerstate.defview.backcolor,
+					  MG_CAMERA, drawerstate.defview.cam,
+					  MG_APPEAR, drawerstate.ap,
+					  MG_WINDOW, drawerstate.defview.win,
+					  MG_SHOW, 0,
+					  MG_END );
 
   drawerstate.defview.id = DEFAULTCAMID;
   drawerstate.defview.lineznudge = 3.;
@@ -2304,7 +2304,7 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
      lest scaled motions do nothing when a moving object coincides with the
      center of motion.  (At present, the only scaled translation is Z-motion
      in [o]rbit mode.) slevy 93.10.15.
-     */
+  */
   drawerstate.motionscale = 0.03;
   name_fsa = fsa_initialize(name_fsa, NOID);
   fsa_install(name_fsa, "focus",	(void *)FOCUSID);
@@ -2327,9 +2327,9 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   fsa_install(name_fsa, ".",		(void *)SELF);
   fsa_install(name_fsa, "universe",	(void *)UNIVERSE);
   fsa_install(name_fsa, "primitive",	(void *)PRIMITIVE);
-	/* The following four names are here for backward compatibility
-	 * of the 'write' command with the midsummer '92 version.
-	 */
+  /* The following four names are here for backward compatibility
+   * of the 'write' command with the midsummer '92 version.
+   */
   fsa_install(name_fsa, "bare",		(void *)SELF);	
   fsa_install(name_fsa, "wrap",		(void *)WORLDGEOM);
   fsa_install(name_fsa, "cumulative",	(void *)UNIVERSE);
@@ -2359,9 +2359,9 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   dg->bboxap = ApCreate(AP_DONT, APF_FACEDRAW, AP_DO, APF_EDGEDRAW, 
 			AP_OVERRIDE, APF_EDGEDRAW,
 			AP_MtSet,
-			   MT_EDGECOLOR,&uistate.pickedbboxcolor,
-			   MT_OVERRIDE, MTF_EDGECOLOR,
-			   MT_END,
+			MT_EDGECOLOR,&uistate.pickedbboxcolor,
+			MT_OVERRIDE, MTF_EDGECOLOR,
+			MT_END,
 			AP_END);
   drawerstate.world = GeomCreate("inst", CR_GEOM, dg->Inorm, CR_END);
   dg->Item = drawerstate.world;
@@ -2418,7 +2418,7 @@ new_dgeom(char *from, int citizenship)
   int i;
 
   if(from != NULL)
-	  (void) comm_object(from, &GeomOps, &h, (Ref **)(void *)&g, COMM_LATER);
+    (void) comm_object(from, &GeomOps, &h, (Ref **)(void *)&g, COMM_LATER);
 
   for (i=0; i<dgeom_max && dgeom[i]!=NULL; ++i);
   if (i==dgeom_max) {
@@ -2442,10 +2442,10 @@ new_dgeom(char *from, int citizenship)
   switch (citizenship) {
   case ORDINARY:
     if(dgeom[0]->Lgeom == NULL)
-	dgeom[0]->Lgeom = GeomCreate("list", CR_NOCOPY,
-						CR_GEOM, dg->Item, CR_END);
+      dgeom[0]->Lgeom = GeomCreate("list", CR_NOCOPY,
+				   CR_GEOM, dg->Item, CR_END);
     else
-	ListAppend( dgeom[0]->Lgeom, dg->Item );
+      ListAppend( dgeom[0]->Lgeom, dg->Item );
     GeomReplace( dgeom[0]->Inorm, dgeom[0]->Lgeom );
     break;
   case ALIEN:
@@ -2503,12 +2503,12 @@ drawer_make_bbox(DGeom *dg, int combine)
 
   if(!dg->bboxvalid) {
     if(!combine)
-	GeomReplace(dg->Lbbox, NULL);
+      GeomReplace(dg->Lbbox, NULL);
     bbox = GeomBound(dg->Lgeom, NULL, NULL);
     if(bbox) {
-	GeomReplace(dg->Lbbox, bbox);
-	GeomDelete(bbox);		/* Only Lbbox needs it now */
-	dg->bboxvalid = 1;
+      GeomReplace(dg->Lbbox, bbox);
+      GeomDelete(bbox);		/* Only Lbbox needs it now */
+      dg->bboxvalid = 1;
     }
   }
 }
@@ -2567,7 +2567,7 @@ new_dview()
   if (i==dview_max) {
     int j;
     dview = OOGLRenewNE(DView *, dview, (dview_max += dview_max-1), 
-    	"enlarge DView array");
+			"enlarge DView array");
     for (j=i; j<dview_max; ++j) dview[j] = NULL;
   }
   dv = dview[i] = OOGLNewE(DView, "new view");
@@ -2614,8 +2614,8 @@ new_dview()
   }
   if(i >= nwins)
     nwins = i+1;
-  for(i = 0; i < 3; i++) dv->NDPerm[i] = i;
-  dv->NDPerm[3] = -1;
+  for(i = 0; i < 3; i++) dv->NDPerm[i] = i+1;
+  dv->NDPerm[3] = 0;
   dv->nNDcmap = 0;
   dv->cluster = NULL;
   for(i = 0; i < MAXCMAP; i++) {
@@ -2646,16 +2646,16 @@ updateit(float dt)
   }
   LOOPVIEWS(i,dv) {
     if (dv->updateproc)
-	(*(dv->updateproc))(dv->cam);
+      (*(dv->updateproc))(dv->cam);
     else
-	CamTransform(dv->cam, dv->Incr);
+      CamTransform(dv->cam, dv->Incr);
   }
 }
 
 static void
 draw_view(DView *dv)
 {
-	/* Colors for red/cyan stereo */
+  /* Colors for red/cyan stereo */
   static int lefteyemask = MGO_NOGREEN|MGO_NOBLUE;	/* Red */
   static int righteyemask = MGO_NORED;			/* Green+Blue */
   Appearance *ap;
@@ -2665,7 +2665,7 @@ draw_view(DView *dv)
     mgctxset(MG_BACKGROUND, &dv->backcolor, MG_CAMERA, dv->cam,
 	     MG_ZNUDGE, dv->lineznudge * 1.0e-5,
 	     MG_UNSETOPTIONS,
-		MGO_NORED|MGO_NOGREEN|MGO_NOBLUE|MGO_INHIBITCLEAR,
+	     MGO_NORED|MGO_NOGREEN|MGO_NOBLUE|MGO_INHIBITCLEAR,
 	     MG_END);
     if(drawerstate.apseq > dv->apseq) {
       mgsetappearance(drawerstate.ap, MG_SET);
@@ -2676,29 +2676,29 @@ draw_view(DView *dv)
       mgsetappearance(ap, MG_MERGE);
 
     if(dv->newcam)
-	reconfigure_view(dv);
+      reconfigure_view(dv);
     if(dv->stereo != NO_KEYWORD) {
-	mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[1], WN_END,
-		MG_CamSet, CAM_STEREOEYE, 1, CAM_END,
-		MG_SETOPTIONS, MGO_INHIBITSWAP, MG_END);
-	if(dv->stereo == COLORED_KEYWORD)
-	    mgctxset(MG_SETOPTIONS, lefteyemask, MG_END);
-	really_draw_view(dv);
-	mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[0], WN_END,
-		MG_CamSet, CAM_STEREOEYE, 0, CAM_END,
-		MG_UNSETOPTIONS, MGO_INHIBITSWAP|lefteyemask,
-			MG_END);
-	if(dv->stereo == COLORED_KEYWORD) {
-	    /* In Iris GL, clearing clears everything, including the
-	     * left-eye image we just drew.  In OpenGL, it doesn't.
-	     * So *only* if we're doing GL drawing, select MGO_INHIBITCLEAR
-	     * along with the right-eye image planes.
-	     */
-	    mgctxset(MG_SETOPTIONS,
-		_mgf.mg_devno == MGD_GL ? righteyemask|MGO_INHIBITCLEAR
-					: righteyemask,
-		MG_END);
-	}
+      mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[1], WN_END,
+	       MG_CamSet, CAM_STEREOEYE, 1, CAM_END,
+	       MG_SETOPTIONS, MGO_INHIBITSWAP, MG_END);
+      if(dv->stereo == COLORED_KEYWORD)
+	mgctxset(MG_SETOPTIONS, lefteyemask, MG_END);
+      really_draw_view(dv);
+      mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[0], WN_END,
+	       MG_CamSet, CAM_STEREOEYE, 0, CAM_END,
+	       MG_UNSETOPTIONS, MGO_INHIBITSWAP|lefteyemask,
+	       MG_END);
+      if(dv->stereo == COLORED_KEYWORD) {
+	/* In Iris GL, clearing clears everything, including the
+	 * left-eye image we just drew.  In OpenGL, it doesn't.
+	 * So *only* if we're doing GL drawing, select MGO_INHIBITCLEAR
+	 * along with the right-eye image planes.
+	 */
+	mgctxset(MG_SETOPTIONS,
+		 _mgf.mg_devno == MGD_GL ? righteyemask|MGO_INHIBITCLEAR
+		 : righteyemask,
+		 MG_END);
+      }
     }
     really_draw_view(dv);
     dv->changed = dv->redraw = 0;
@@ -2753,7 +2753,7 @@ reconfigure_view(DView *dv)
     mgworldbegin(); mgworldend();	/* ... of both buffers */
   }
   mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[0], WN_END,
-	  MG_CamSet, CAM_STEREO, isstereo, CAM_END, MG_END);
+	   MG_CamSet, CAM_STEREO, isstereo, CAM_END, MG_END);
   mgreshapeviewport();
   dv->newcam = 0;
   if(dv->id == CAMID(uistate.mousefocus))
@@ -2763,267 +2763,267 @@ reconfigure_view(DView *dv)
 static void
 really_draw_view(DView *dv)
 {
-    int i, j;
+  int i, j;
     
-    mgpushappearance();
-    mgworldbegin();
+  mgpushappearance();
+  mgworldbegin();
 
-    if(dv->cluster == NULL && drawerstate.NDim > 0) {
-	/* If we're in N-D mode but this camera isn't equipped,
-	 * give it a default N-D => 3-D projection now.
-	 */
-	gv_ND_axes( dv->name[0],
-		    drawerstate.NDcams ? drawerstate.NDcams->name : "default",
-		    0, 1, 2, -1 );
+  if(dv->cluster == NULL && drawerstate.NDim > 0) {
+    /* If we're in N-D mode but this camera isn't equipped,
+     * give it a default N-D => 3-D projection now.
+     */
+    gv_ND_axes(dv->name[0],
+	       drawerstate.NDcams ? drawerstate.NDcams->name : "default",
+	       1, 2, 3, 0);
+  }
+
+  if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
+    NDcam *cluster = dv->cluster;
+    int dim = TmNGetSize(cluster->C2W, NULL,NULL);
+    NDstuff nds;
+    TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
+    TransformN *Tc = NULL, *W2G = NULL;
+    HPointN *caxis = NULL;
+
+    cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
+    if(dgeom[0]->NDT) {
+      W2C = TmNConcat( dgeom[0]->NDT, cluster->W2C, NULL );
+      W2G = REFINCR(TransformN, dgeom[0]->NDT);
+    } else {
+      W2C = TmNCopy( cluster->W2C, NULL );
+      W2G = TmNCreate(dim,dim, NULL);
     }
 
-    if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
-	NDcam *cluster = dv->cluster;
-	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-	NDstuff nds;
-	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
-	TransformN *Tc = NULL, *W2G = NULL;
-	HPointN *caxis = NULL;
+    nds.mgNDctx = dv->mgNDctx;
+    nds.axes = dv->NDPerm;
+    nds.ncm = dv->nNDcmap;
+    nds.cm = dv->NDcmap;
+    nds.Tc = NULL;
+    nds.hc = HPtNCreate(dim, NULL);
+    if(dv->nNDcmap > 0) {
+      /* Build array of N-D-to-color projection vectors:
+       * it becomes a matrix, multiplied by N-D row vector on the left,
+       * yielding an array of dv->nNDcmap projections used for coloring.
+       * So it has (dimension) rows, (dv->nNDcmap) columns.
+       */
+      Tc = TmNCreate(dim, dv->nNDcmap, NULL);
+      for(i = 0; i < dv->nNDcmap; i++) {
+	cmap *cm = &dv->NDcmap[i];
+	int cdim = cm->axis->dim;
+	int mindim = (dim < cdim) ? dim : cdim;
+	HPointN *our_caxis = cm->axis;
+	TransformN *TxC;
 
-	cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
-	if(dgeom[0]->NDT) {
-	    W2C = TmNConcat( dgeom[0]->NDT, cluster->W2C, NULL );
-	    W2G = REFINCR(TransformN, dgeom[0]->NDT);
-	} else {
-	    W2C = TmNCopy( cluster->W2C, NULL );
-	    W2G = TmNCreate(dim,dim, NULL);
-	}
-
-	nds.mgNDctx = dv->mgNDctx;
-	nds.axes = dv->NDPerm;
-	nds.ncm = dv->nNDcmap;
-	nds.cm = dv->NDcmap;
-	nds.Tc = NULL;
-	nds.hc = HPtNCreate(dim, NULL);
-	if(dv->nNDcmap > 0) {
-	    /* Build array of N-D-to-color projection vectors:
-	     * it becomes a matrix, multiplied by N-D row vector on the left,
-	     * yielding an array of dv->nNDcmap projections used for coloring.
-	     * So it has (dimension) rows, (dv->nNDcmap) columns.
-	     */
-	    Tc = TmNCreate(dim, dv->nNDcmap, NULL);
-	    for(i = 0; i < dv->nNDcmap; i++) {
-		cmap *cm = &dv->NDcmap[i];
-		int cdim = cm->axis->dim;
-		int mindim = (dim < cdim) ? dim : cdim;
-		HPointN *our_caxis = cm->axis;
-		TransformN *TxC;
-
-		if(cm->coords != UNIVERSE) {
-		    TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
-		    if(TxC) {
-			our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
-			TmNDelete(TxC);
-		    }
-		}
-		for(j = 0; j < mindim; j++)
-		    Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
-	    }
-	}
-	mgctxset(MG_NDCTX, &nds, MG_END);
-
-	for(i = 1; i < dgeom_max; i++) {
-
-	    if(dgeom[i] == NULL) continue;
-
-	    if (dgeom[i]->NDT) {
-		nds.T = O2C = TmNConcat(dgeom[i]->NDT, W2C, O2C);
-	    } else {
-		nds.T = W2C;
-	    }
-	    if (Tc) {
-		if (dgeom[i]->NDT) {
-		    O2G = TmNConcat(dgeom[i]->NDT, W2G, O2G);
-		    nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
-		} else {
-		    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-		}
-	    }
-
-	    GeomDraw(dgeom[i]->Item);
-	}
-
-	/* draw other camera's if requested; take their respective ND-transform
-	 * into account.
-	 */
-	if (drawerstate.camgeom && dv->cameradraw) {
-	  DView *otherv;
-	  int otheri;
-	  Transform T3;
-
-	  LOOPVIEWS(otheri,otherv) {
-	    if (otherv != dv && otherv->Item == drawerstate.universe) {
-
-	      if(drawerstate.camproj) {
-		/* Mmmh. ND?? */
-		Transform Tt;
-		CamView(otherv->cam, Tt);
-		TmInvert(Tt, T3);
-	      } else {
-		CamGet(otherv->cam, CAM_C2W, T3);
-	      }
-
-	      if (otherv->cluster && otherv->cluster->C2W) {
-		nds.T = O2C = TmNConcat(otherv->cluster->C2W, W2C, O2C);
-		TmNApplyT3TN(T3, otherv->NDPerm, nds.T);
-		TmNPermute(nds.T, otherv->NDPerm, nds.T);
-		if (Tc) {
-		  O2G = TmNConcat(otherv->cluster->C2W, W2G, O2G);
-		  nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
-		  TmNApplyT3TN(T3, otherv->NDPerm, nds.Tc);
-		  TmNPermute(nds.Tc, otherv->NDPerm, nds.Tc);
-		}
-	      } else {
-		nds.T = O2C = TmNCopy(W2C, O2C);
-		TmNApplyT3TN(T3, NULL, nds.T);
-		nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-		TmNApplyT3TN(T3, NULL, nds.Tc);
-	      }
-	      GeomDraw(drawerstate.camgeom);
-	    }
+	if(cm->coords != UNIVERSE) {
+	  TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
+	  if(TxC) {
+	    our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
+	    TmNDelete(TxC);
 	  }
 	}
-
-	TmNDelete(W2G);
-	TmNDelete(W2C);
-	TmNDelete(O2C);
-	TmNDelete(O2G);
-	HPtNDelete(nds.hc);
-	HPtNDelete(caxis);
-	mgctxset(MG_NDCTX, NULL, MG_END);
-#if 1
-    } else if(dv->cluster != NULL) {
-	/* (scene cam geom) works also withg ND-view. One just has to
-	 * forget about the world transform. The (scene ...) command
-	 * takes care of attaching the same scene to all cameras of a
-	 * cluster.
-	 */
-	NDcam *cluster = dv->cluster;
-	int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-	NDstuff nds;
-	TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
-	TransformN *Tc = NULL, *W2G = NULL;
-	HPointN *caxis = NULL;
-	Transform CamTrans, C2W3;
-	float focallen;
-
-	cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
-	W2C = TmNCopy( cluster->W2C, NULL );
-	W2G = TmNCreate(dim,dim, NULL);
-
-	nds.mgNDctx = dv->mgNDctx;
-	nds.axes = dv->NDPerm;
-	nds.ncm = dv->nNDcmap;
-	nds.cm = dv->NDcmap;
-	nds.Tc = NULL;
-	nds.hc = HPtNCreate(dim, NULL);
-
-	if(dv->nNDcmap > 0) {
-	    /* Build array of N-D-to-color projection vectors:
-	     * it becomes a matrix, multiplied by N-D row vector on the left,
-	     * yielding an array of dv->nNDcmap projections used for coloring.
-	     * So it has (dimension) rows, (dv->nNDcmap) columns.
-	     */
-	    Tc = TmNCreate(dim, dv->nNDcmap, NULL);
-	    for(i = 0; i < dv->nNDcmap; i++) {
-		cmap *cm = &dv->NDcmap[i];
-		int cdim = cm->axis->dim;
-		int mindim = (dim < cdim) ? dim : cdim;
-		HPointN *our_caxis = cm->axis;
-		TransformN *TxC;
-
-		if(cm->coords != UNIVERSE) {
-		    TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
-		    if(TxC) {
-			our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
-			TmNDelete(TxC);
-		    }
-		}
-		for(j = 0; j < mindim; j++)
-		    Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
-	    }
-	}
-	mgctxset(MG_NDCTX, &nds, MG_END);
-	
-	nds.T = W2C;
-	if(Tc) {
-	    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-	}
-
-	mgpushtransform();
-	CamGet(dv->cam, CAM_FOCUS, &focallen);
-	TmTranslate(CamTrans, 0., 0., -focallen);
-	CamGet(dv->cam, CAM_C2W, C2W3);
-	TmConcat(CamTrans, C2W3, CamTrans);
-	mgsettransform(CamTrans);
-
-	GeomDraw(dv->Item);
-	
-	mgpoptransform();
-
-	TmNDelete(W2G);
-	TmNDelete(W2C);
-	TmNDelete(O2C);
-	TmNDelete(O2G);
-	HPtNDelete(nds.hc);
-	HPtNDelete(caxis);
-	mgctxset(MG_NDCTX, NULL, MG_END);
-#endif
-    } else {
-	/* Normal case.  Just draw whatever's attached to this camera */
-
-	mgctxset(MG_NDCTX, NULL, MG_END);
-	GeomDraw(dv->Item);
-    }
-    
-
-    /* new */
-    if (dv->hsphere != NULL) {
-      /* if we're in conformal ball model, switch to projective
-	 model for drawing the sphere at infinity, then switch back */
-
-	int mgspace;
-
-	mgctxget(MG_SPACE, &mgspace);
-	if (dv->hmodel == CONFORMALBALL) {
-	mgctxset(MG_SPACE, TM_SPACE(mgspace) | TM_PROJECTIVE, MG_END);
-	GeomDraw(dv->hsphere);
-	mgctxset(MG_SPACE, mgspace, MG_END);
-      } else {
-	GeomDraw(dv->hsphere);
+	for(j = 0; j < mindim; j++)
+	  Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
       }
     }
+    mgctxset(MG_NDCTX, &nds, MG_END);
 
-    /* drawing of other cameras in ND has been handled above */
-    if (drawerstate.camgeom && dv->cameradraw && dv->cluster == NULL
-	&& dv->Item == drawerstate.universe) {
+    for(i = 1; i < dgeom_max; i++) {
+
+      if(dgeom[i] == NULL) continue;
+
+      if (dgeom[i]->NDT) {
+	nds.T = O2C = TmNConcat(dgeom[i]->NDT, W2C, O2C);
+      } else {
+	nds.T = W2C;
+      }
+      if (Tc) {
+	if (dgeom[i]->NDT) {
+	  O2G = TmNConcat(dgeom[i]->NDT, W2G, O2G);
+	  nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
+	} else {
+	  nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
+	}
+      }
+
+      GeomDraw(dgeom[i]->Item);
+    }
+
+    /* draw other camera's if requested; take their respective ND-transform
+     * into account.
+     */
+    if (drawerstate.camgeom && dv->cameradraw) {
       DView *otherv;
       int otheri;
-      Transform T, Tt;
+      Transform T3;
+
       LOOPVIEWS(otheri,otherv) {
 	if (otherv != dv && otherv->Item == drawerstate.universe) {
-	  mgpushtransform();
+
 	  if(drawerstate.camproj) {
+	    /* Mmmh. ND?? */
+	    Transform Tt;
 	    CamView(otherv->cam, Tt);
-	    TmInvert(Tt, T);
-	  } else
-	    CamGet(otherv->cam, CAM_C2W, T);
-	  mgtransform(T);
+	    TmInvert(Tt, T3);
+	  } else {
+	    CamGet(otherv->cam, CAM_C2W, T3);
+	  }
+
+	  if (otherv->cluster && otherv->cluster->C2W) {
+	    nds.T = O2C = TmNConcat(otherv->cluster->C2W, W2C, O2C);
+	    TmNApplyT3TN(T3, otherv->NDPerm, nds.T);
+	    TmNPermute(nds.T, otherv->NDPerm, nds.T);
+	    if (Tc) {
+	      O2G = TmNConcat(otherv->cluster->C2W, W2G, O2G);
+	      nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
+	      TmNApplyT3TN(T3, otherv->NDPerm, nds.Tc);
+	      TmNPermute(nds.Tc, otherv->NDPerm, nds.Tc);
+	    }
+	  } else {
+	    nds.T = O2C = TmNCopy(W2C, O2C);
+	    TmNApplyT3TN(T3, NULL, nds.T);
+	    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
+	    TmNApplyT3TN(T3, NULL, nds.Tc);
+	  }
 	  GeomDraw(drawerstate.camgeom);
-	  mgpoptransform();
 	}
       }
     }
 
-    if (dv->extradraw) (dv->extradraw)(dv);
+    TmNDelete(W2G);
+    TmNDelete(W2C);
+    TmNDelete(O2C);
+    TmNDelete(O2G);
+    HPtNDelete(nds.hc);
+    HPtNDelete(caxis);
+    mgctxset(MG_NDCTX, NULL, MG_END);
+#if 1
+  } else if(dv->cluster != NULL) {
+    /* (scene cam geom) works also withg ND-view. One just has to
+     * forget about the world transform. The (scene ...) command
+     * takes care of attaching the same scene to all cameras of a
+     * cluster.
+     */
+    NDcam *cluster = dv->cluster;
+    int dim = TmNGetSize(cluster->C2W, NULL,NULL);
+    NDstuff nds;
+    TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
+    TransformN *Tc = NULL, *W2G = NULL;
+    HPointN *caxis = NULL;
+    Transform CamTrans, C2W3;
+    float focallen;
+
+    cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
+    W2C = TmNCopy( cluster->W2C, NULL );
+    W2G = TmNCreate(dim,dim, NULL);
+
+    nds.mgNDctx = dv->mgNDctx;
+    nds.axes = dv->NDPerm;
+    nds.ncm = dv->nNDcmap;
+    nds.cm = dv->NDcmap;
+    nds.Tc = NULL;
+    nds.hc = HPtNCreate(dim, NULL);
+
+    if(dv->nNDcmap > 0) {
+      /* Build array of N-D-to-color projection vectors:
+       * it becomes a matrix, multiplied by N-D row vector on the left,
+       * yielding an array of dv->nNDcmap projections used for coloring.
+       * So it has (dimension) rows, (dv->nNDcmap) columns.
+       */
+      Tc = TmNCreate(dim, dv->nNDcmap, NULL);
+      for(i = 0; i < dv->nNDcmap; i++) {
+	cmap *cm = &dv->NDcmap[i];
+	int cdim = cm->axis->dim;
+	int mindim = (dim < cdim) ? dim : cdim;
+	HPointN *our_caxis = cm->axis;
+	TransformN *TxC;
+
+	if(cm->coords != UNIVERSE) {
+	  TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
+	  if(TxC) {
+	    our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
+	    TmNDelete(TxC);
+	  }
+	}
+	for(j = 0; j < mindim; j++)
+	  Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
+      }
+    }
+    mgctxset(MG_NDCTX, &nds, MG_END);
+	
+    nds.T = W2C;
+    if(Tc) {
+      nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
+    }
+
+    mgpushtransform();
+    CamGet(dv->cam, CAM_FOCUS, &focallen);
+    TmTranslate(CamTrans, 0., 0., -focallen);
+    CamGet(dv->cam, CAM_C2W, C2W3);
+    TmConcat(CamTrans, C2W3, CamTrans);
+    mgsettransform(CamTrans);
+
+    GeomDraw(dv->Item);
+	
+    mgpoptransform();
+
+    TmNDelete(W2G);
+    TmNDelete(W2C);
+    TmNDelete(O2C);
+    TmNDelete(O2G);
+    HPtNDelete(nds.hc);
+    HPtNDelete(caxis);
+    mgctxset(MG_NDCTX, NULL, MG_END);
+#endif
+  } else {
+    /* Normal case.  Just draw whatever's attached to this camera */
+
+    mgctxset(MG_NDCTX, NULL, MG_END);
+    GeomDraw(dv->Item);
+  }
     
-    mgworldend();
-    mgpopappearance();
+
+  /* new */
+  if (dv->hsphere != NULL) {
+    /* if we're in conformal ball model, switch to projective
+       model for drawing the sphere at infinity, then switch back */
+
+    int mgspace;
+
+    mgctxget(MG_SPACE, &mgspace);
+    if (dv->hmodel == CONFORMALBALL) {
+      mgctxset(MG_SPACE, TM_SPACE(mgspace) | TM_PROJECTIVE, MG_END);
+      GeomDraw(dv->hsphere);
+      mgctxset(MG_SPACE, mgspace, MG_END);
+    } else {
+      GeomDraw(dv->hsphere);
+    }
+  }
+
+  /* drawing of other cameras in ND has been handled above */
+  if (drawerstate.camgeom && dv->cameradraw && dv->cluster == NULL
+      && dv->Item == drawerstate.universe) {
+    DView *otherv;
+    int otheri;
+    Transform T, Tt;
+    LOOPVIEWS(otheri,otherv) {
+      if (otherv != dv && otherv->Item == drawerstate.universe) {
+	mgpushtransform();
+	if(drawerstate.camproj) {
+	  CamView(otherv->cam, Tt);
+	  TmInvert(Tt, T);
+	} else
+	  CamGet(otherv->cam, CAM_C2W, T);
+	mgtransform(T);
+	GeomDraw(drawerstate.camgeom);
+	mgpoptransform();
+      }
+    }
+  }
+
+  if (dv->extradraw) (dv->extradraw)(dv);
+    
+  mgworldend();
+  mgpopappearance();
 }
 
 static char *
@@ -3035,7 +3035,7 @@ new_object_name(int type)
   for(i = 0; ; i++) {
     sprintf(name, "%c%d", type == T_GEOM ? 'g' : 'c', i);
     if(drawer_idbyname(name) == NOID)
-	return name;
+      return name;
   }
 }
 
@@ -3049,29 +3049,29 @@ new_object_name(int type)
  * Date:	Sat Nov 30 22:42:54 1991
  */
 /*
-static int
-ordinal(char *name)
-{
+  static int
+  ordinal(char *name)
+  {
   return( atoi( &name[1] ) );
-}
+  }
 */
 
 static void
 object_changed(Handle **hp, DObject *obj, void *seqno)
 {
-    if(obj->seqno != (long)seqno) {
-	/* Obsolete reference -- remove this Handle callback */
-	HandleUnregisterJust(hp, (Ref*)obj, seqno, object_changed);
-    } else {
-	obj->changed = CH_GEOMETRY;
-    }
+  if(obj->seqno != (long)seqno) {
+    /* Obsolete reference -- remove this Handle callback */
+    HandleUnregisterJust(hp, (Ref*)obj, seqno, object_changed);
+  } else {
+    obj->changed = CH_GEOMETRY;
+  }
 }
 
 static int
 object_register(Handle **hp, Ref *thing, DObject *o)
 {
-    HandleRegister(hp, (Ref *)o, (void *)(long)(int)o->seqno, object_changed);
-    return 0;
+  HandleRegister(hp, (Ref *)o, (void *)(long)(int)o->seqno, object_changed);
+  return 0;
 }
 
 /*
@@ -3145,7 +3145,7 @@ normalize(DGeom *dg, int normalization)
       GeomTransformTo(dg->Inorm, tmp, NULL);
     }
     break;
-  /* case KEEP: Leave normalization transform alone */
+    /* case KEEP: Leave normalization transform alone */
   }
   dg->redraw = 1;
 }    
@@ -3167,7 +3167,7 @@ drawer_nuke_cameras(int keepzero)
 }
 
 LDEFINE(exit, LVOID,
-"(exit)\n\
+	"(exit)\n\
 	Terminates geomview.")
 {
   LDECLARE(("exit", LBEGIN,
@@ -3466,8 +3466,8 @@ float scaleof(int id)
       if (bbox != NULL) {
 	BBoxMinMax((BBox*)bbox, &min, &max);
 	scale = pow( fabs((double)((max.x-min.x+1)
-				    *(max.y-min.y+1)
-				    *(max.z-min.z+1))), .333 ) - 1;
+				   *(max.y-min.y+1)
+				   *(max.z-min.z+1))), .333 ) - 1;
       }
     }
   }
@@ -3475,7 +3475,7 @@ float scaleof(int id)
 }
 
 LDEFINE(set_motionscale, LVOID,
-       "(set-motionscale X)\n\
+	"(set-motionscale X)\n\
 	Set the motion scale factor to X (default value 0.5).  These\n\
 	commands scale their motion by an amount which depends on the\n\
 	distance from the frame to the center and on the size of the\n\
@@ -3495,7 +3495,7 @@ LDEFINE(set_motionscale, LVOID,
 
 
 LDEFINE(set_conformal_refine, LVOID,
-       "(set-conformal-refine CMX [N [SHOWEDGES]])\n\
+	"(set-conformal-refine CMX [N [SHOWEDGES]])\n\
 	Sets the parameters for the refinement algorithm used in drawing\n\
 	in the conformal model.  CMX is the cosine of the maximum angle\n\
 	an edge can bend before it is refined.  Its value should be between\n\
@@ -3519,8 +3519,8 @@ LDEFINE(set_conformal_refine, LVOID,
 }
 
 static void
-  traverse(Pool *p, Geom *where, int *pickpath, int *curpath, 
-	   int *curbase, int pn)
+traverse(Pool *p, Geom *where, int *pickpath, int *curpath, 
+	 int *curbase, int pn)
 {
   Geom *new;
   char *name;
@@ -3574,13 +3574,13 @@ static void
 
 #if 0
 static void 
-  drawer_write_comments(char *fname, int id, int *pickpath, int pn)
+drawer_write_comments(char *fname, int id, int *pickpath, int pn)
 {
 }
 #endif
 
 LDEFINE(write_comments, LVOID,
-"(write-comments FILENAME GEOMID PICKPATH)\n\
+	"(write-comments FILENAME GEOMID PICKPATH)\n\
 	write OOGL COMMENT objects in the GEOMID hierarchy at the\n\
  	level of the pick path to FILENAME. Specifically, COMMENTS\n\
  	at level (a b c ... f g) will match pick paths of the form\n\
