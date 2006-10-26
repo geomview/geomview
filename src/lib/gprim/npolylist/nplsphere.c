@@ -37,7 +37,7 @@ Geom *NPolyListSphere(NPolyList *npl,
   sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
     
   SphereEncompassPoints((Sphere *)sphere,
-			npl->v, npl->pdim-1, npl->pdim, npl->n_verts,
+			npl->v, 0 /* vert_4d */, npl->pdim, npl->n_verts,
 			T, TN, axes);
 
   return sphere;

@@ -38,8 +38,8 @@ BBox *BBoxMinMax(BBox *bbox, HPoint3 *min, HPoint3 *max)
   static HPoint3 nullpoint = {0,0,0,1};
 
   if (bbox != NULL) {
-    HPtNToHPt3(bbox->min, min, NULL);
-    HPtNToHPt3(bbox->max, max, NULL);
+    HPtNToHPt3(bbox->min, NULL, min);
+    HPtNToHPt3(bbox->max, NULL, max);
   } else {
     *min = nullpoint;
     *max = nullpoint;

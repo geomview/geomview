@@ -116,7 +116,6 @@ PolyListFLoad(IOBFILE *file, char *fname)
 	dimn = 3;
     }
 
-
     pl = OOGLNewE(PolyList, "PolyListFLoad PolyList");
     GGeomInit(pl, PolyListMethods(), PLMAGIC, NULL);
     pl->p = NULL;

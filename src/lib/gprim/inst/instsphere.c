@@ -65,7 +65,7 @@ Geom *InstBoundSphere(Inst *inst,
       }
     } else {
       TransformN *TnewN = TmNCopy(TN, NULL);
-      static int dflt_axes[] = { 0, 1, 2, -1 };
+      static int dflt_axes[] = { 1, 2, 3, 0 };
 
       it = GeomIterate((Geom *)inst, DEEP);
       geomsphere = NULL;
@@ -100,7 +100,7 @@ Geom *InstBoundSphere(Inst *inst,
       TmNDelete(TnewN);
     } else {
       TransformN *TnewN = TmNCopy(inst->NDaxis, NULL);
-      static int dflt_axes[] = { 0, 1, 2, -1 };
+      static int dflt_axes[] = { 1, 2, 3, 0 };
 
       TmNApplyDN(TnewN, dflt_axes, T);
       geomsphere =

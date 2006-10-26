@@ -43,7 +43,7 @@ Geom *QuadSphere(Quad *q,
   sphere = GeomCreate("sphere", CR_SPACE, space, CR_END);
     
   SphereEncompassPoints((Sphere *)sphere,
-			(float *)q->p, (q->geomflags & VERT_4D) ? 4 : 3, 4,
+			(float *)q->p, (q->geomflags & VERT_4D) != 0, 4,
 			q->maxquad * 4,
 			T, TN, axes);
   

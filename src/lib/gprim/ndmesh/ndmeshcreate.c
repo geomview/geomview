@@ -192,7 +192,6 @@ NDMeshDelete(NDMesh *m)
     {
 	tossmesh(m);
 	OOGLFree(m->mdim);
-	OOGLFree(m);
     }
     return NULL;
 }

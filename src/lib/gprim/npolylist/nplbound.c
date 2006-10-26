@@ -63,28 +63,15 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
   if (!T && !TN) {
     HPointN *min = HPtNCreate(pdim, np->v);
     HPointN *max;
-
-    if (np->geomflags & VERT_4D) {
-      max = HPtNCopy(min, NULL);
-      while(--n > 0) {
-	ptN->v += pdim;
-	HPtNMinMax(min, max, ptN, pdim);
-      }
-    } else {
-      HPointN *clean = HPtNCreate(pdim, NULL);
-      HPtNDehomogenize(min, min);
-      max = HPtNCopy(min, NULL);
-      while(--n > 0) {
-	ptN->v += pdim;
-	HPtNDehomogenize(ptN, clean);
-	HPtNMinMax(min, max, clean, pdim-1);
-      }
-      HPtNDelete(clean);
+    
+    HPtNDehomogenize(min, min);
+    max = HPtNCopy(min, NULL);
+    while(--n > 0) {
+      ptN->v += pdim;
+      HPtNMinMax(min, max, ptN);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				 CR_NMIN, min, CR_NMAX, max,
-				 CR_4D, np->geomflags & VERT_4D,
-				 CR_END);
+				 CR_NMIN, min, CR_NMAX, max, CR_END);
     HPtNDelete(min);
     HPtNDelete(max);
 
@@ -99,21 +86,14 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
     BBox *result;
 
     minN = HPtNTransform(TN, ptN, NULL);
-    if (!(np->geomflags & VERT_4D)) {
-      HPtNDehomogenize(minN, minN);
-    }
+    HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
 
     clean = HPtNCreate(np->pdim, NULL);
     while(--n > 0) {
       ptN->v += pdim;
       HPtNTransform(TN, ptN, clean);
-      if (!(np->geomflags & VERT_4D)) {
-	HPtNDehomogenize(clean, clean);
-	HPtNMinMax(minN, maxN, clean, TN->odim-1);
-      } else {
-	HPtNMinMax(minN, maxN, clean, TN->odim);
-      }
+      HPtNMinMax(minN, maxN, clean);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
@@ -129,15 +109,13 @@ BBox *NPolyListBound(NPolyList *np, Transform T, TransformN *TN)
 
   if (T) {
     /* ordinary 3d transform */
-    HPtNToHPt3(ptN, &min, NULL);
+    HPtNToHPt3(ptN, NULL, &min);
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
     while(--n > 0) {
       ptN->v += pdim;
-      HPtNToHPt3(ptN, &tmp, NULL);
-      tmp.x = ptN->v[0]; tmp.y = ptN->v[1]; tmp.z = ptN->v[2];
-      tmp.w = ptN->v[pdim-1];
+      HPtNToHPt3(ptN, NULL, &tmp);
       HPt3Transform(T, &tmp, &clean);
       HPt3Dehomogenize(&clean, &clean);
       Pt3MinMax(&min, &max, &clean);

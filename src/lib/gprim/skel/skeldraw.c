@@ -31,15 +31,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
- /*
-  * Geometry Routines
-  * 
-  * Geometry Supercomputer Project
-  * 
-  * ROUTINE DESCRIPTION:
-  *	Draw a Vect (collection of vectors).
-  * 
-  */
+/*
+ * Geometry Routines
+ * 
+ * Geometry Supercomputer Project
+ * 
+ * ROUTINE DESCRIPTION:
+ *	Draw a Vect (collection of vectors).
+ * 
+ */
 
 #include "mgP.h"
 #include "skelP.h"
@@ -58,146 +58,160 @@ static void
 draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
 		    int penultimate, int hascolor)
 {
-    HPointN *h = HPtNCreate(s->pdim, NULL);
-    float *hdata = h->v;
-    float *op;
-    HPoint3 *np, *newp;
-    Skline *l;
-    ColorA *c, *lastcolor, *newc;
-    int i, colored = 0;
-    HPoint3 tv[MAXPLINE];
-    ColorA tc[MAXPLINE];
-    mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+  HPointN *h = HPtNCreate(s->pdim, NULL);
+  float *hdata = h->v;
+  float *op;
+  HPoint3 *np, *newp;
+  Skline *l;
+  ColorA *c, *lastcolor, *newc;
+  int i, colored = 0;
+  HPoint3 tv[MAXPLINE];
+  ColorA tc[MAXPLINE];
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
-    newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
-    newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
+  newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
+  newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
 
-    if (s->pdim == 4 && !(s->geomflags & VERT_4D)) {
+  /* VERT_4D is only honoured here if pdim == 4 */
+  if (s->pdim == 4) {
+    if (s->geomflags & VERT_4D) {
       for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
-	HPt3Dehomogenize((HPoint3 *)op, (HPoint3 *)h->v);
-	h->v[3] = 0.0; /* w has no special meaning in ND > 3 */
+	Pt4ToHPtN((HPoint3 *)op, h);
 	colored = mapHPtN(NDctx, h, np, &newc[i]);
-      }      
+      }
     } else {
       for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
-	h->v = op;
+	HPt3ToHPtN((HPoint3 *)op, NULL, h);
 	colored = mapHPtN(NDctx, h, np, &newc[i]);
       }
     }
-    if(!hascolor) colored = 0;
-
-    lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
-    for(i = 0, l = s->l, c = colored ? newc : s->c; i < s->nlines; i++, l++) {
-	int nleft = l->nv;
-	int *vleft = &s->vi[l->v0];
-	int j;
-
-	if(l->nc > 0 && hascolor)
-	    lastcolor = &s->c[l->c0];
-	while(nleft > MAXPLINE) {
-	    if(colored) {
-		for(np = tv, c = tc, j = MAXPLINE; --j >= 0; vleft++) {
-		    *np++ = newp[*vleft];
-		    *c++ = newc[*vleft];
-		}
-		mgpolyline(MAXPLINE, tv, MAXPLINE, tc, flags);
-	    } else {
-		for(np = tv, j = MAXPLINE; --j >= 0; vleft++)
-		    *np++ = newp[*vleft];
-		mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
-	    }
-	    nleft -= MAXPLINE-1;
-	    vleft--;
-	    flags = (i < penultimate) ? 6 : 2;
-	}
-	if(colored) {
-	    for(np = tv, c = tc, j = nleft; --j >= 0; vleft++) {
-		*np++ = newp[*vleft];
-		*c++ = newc[*vleft];
-	    }
-	    mgpolyline(nleft, tv, nleft, tc, flags);
-	} else {
-	    for(np = tv, j = nleft; --j >= 0; vleft++)
-		*np++ = newp[*vleft];
-	    mgpolyline(nleft, tv, 1, lastcolor, flags);
-	}
+  } else { /* Real ND case, i.e. pdim >= 5 */
+    for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+      h->v = op;
+      colored = mapHPtN(NDctx, h, np, &newc[i]);
     }
-    h->v = hdata;
-    HPtNDelete(h);
+  }
+
+  if(!hascolor) colored = 0;
+
+  lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
+  for(i = 0, l = s->l, c = colored ? newc : s->c; i < s->nlines; i++, l++) {
+    int nleft = l->nv;
+    int *vleft = &s->vi[l->v0];
+    int j;
+
+    if(l->nc > 0 && hascolor)
+      lastcolor = &s->c[l->c0];
+    while(nleft > MAXPLINE) {
+      if(colored) {
+	for(np = tv, c = tc, j = MAXPLINE; --j >= 0; vleft++) {
+	  *np++ = newp[*vleft];
+	  *c++ = newc[*vleft];
+	}
+	mgpolyline(MAXPLINE, tv, MAXPLINE, tc, flags);
+      } else {
+	for(np = tv, j = MAXPLINE; --j >= 0; vleft++)
+	  *np++ = newp[*vleft];
+	mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
+      }
+      nleft -= MAXPLINE-1;
+      vleft--;
+      flags = (i < penultimate) ? 6 : 2;
+    }
+    if(colored) {
+      for(np = tv, c = tc, j = nleft; --j >= 0; vleft++) {
+	*np++ = newp[*vleft];
+	*c++ = newc[*vleft];
+      }
+      mgpolyline(nleft, tv, nleft, tc, flags);
+    } else {
+      for(np = tv, j = nleft; --j >= 0; vleft++)
+	*np++ = newp[*vleft];
+      mgpolyline(nleft, tv, 1, lastcolor, flags);
+    }
+  }
+  h->v = hdata;
+  HPtNDelete(h);
 }
 
 Skel *
 SkelDraw(s)
      Skel *s;
 {
-    int i, hascolor;
-    Skline *l;
-    int flags, penultimate;
-    ColorA *lastcolor=NULL;
-    HPoint3 tv[MAXPLINE];
-    mgNDctx *NDctx = NULL;
+  int i, hascolor;
+  Skline *l;
+  int flags, penultimate;
+  ColorA *lastcolor=NULL;
+  HPoint3 tv[MAXPLINE];
+  mgNDctx *NDctx = NULL;
 
-    /* Don't draw if vect-drawing is off. */
-    if (s == NULL || (_mgc->astk->ap.flag & APF_VECTDRAW) == 0)
-	return NULL;
+  /* Don't draw if vect-drawing is off. */
+  if (s == NULL || (_mgc->astk->ap.flag & APF_VECTDRAW) == 0)
+    return NULL;
     
-    /* draw in conformal model if necessary */
-    if (_mgc->space & TM_CONFORMAL_BALL) {
-	cmodel_clear(_mgc->space);
-	/* cm_read_skel(s); */
-	cmodel_draw(0);
-	return s;
-    }
-
-    hascolor = !(_mgc->astk->mat.override & MTF_EDGECOLOR);
-
-    penultimate = s->nlines - 2;
-    flags = penultimate>0 ? 4 : 0;	/* 4: not last mbr of batch of lines */
-
-    mgctxget(MG_NDCTX, &NDctx);
-
-    if(NDctx) {
-	draw_projected_skel(NDctx, s, flags, penultimate, hascolor);
-	return s;
-    }
-
-    lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
-    for(i = 0, l = s->l; i < s->nlines; i++, l++) {
-	int nleft = l->nv;
-	int *vleft = &s->vi[l->v0];
-	int j;
-
-	if(l->nc > 0 && hascolor)
-	    lastcolor = &s->c[l->c0];
-	while(nleft > MAXPLINE) {
-	    for(j = 0; j < MAXPLINE; j++) {
-		tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
-		if (s->pdim < 4) {
-		    if (s->pdim < 3) {
-			tv[j].y = 0;
-		    }
-		    tv[j].z = 0;
-		    tv[j].w = 1;
-		}
-	    }
-	    mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
-	    nleft -= MAXPLINE-1;
-	    vleft--;
-	    flags = 6;
-	}
-	for(j = 0; j < nleft; j++) {
-	    tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
-	    if (s->pdim < 4) {
-		if (s->pdim < 3) {
-		    tv[j].y = 0;
-		}
-		tv[j].z = 0;
-		tv[j].w = 1;
-	    }
-	}
-	flags = (i < penultimate) ? 6 : 2;
-	mgpolyline(nleft, tv, 1, lastcolor, flags);
-    }
+  /* draw in conformal model if necessary */
+  if (_mgc->space & TM_CONFORMAL_BALL) {
+    cmodel_clear(_mgc->space);
+    /* cm_read_skel(s); */
+    cmodel_draw(0);
     return s;
+  }
+
+  hascolor = !(_mgc->astk->mat.override & MTF_EDGECOLOR);
+
+  penultimate = s->nlines - 2;
+  flags = penultimate>0 ? 4 : 0;	/* 4: not last mbr of batch of lines */
+
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if(NDctx) {
+    draw_projected_skel(NDctx, s, flags, penultimate, hascolor);
+    return s;
+  }
+
+  lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
+  for(i = 0, l = s->l; i < s->nlines; i++, l++) {
+    int nleft = l->nv;
+    int *vleft = &s->vi[l->v0];
+    int j;
+
+    if(l->nc > 0 && hascolor)
+      lastcolor = &s->c[l->c0];
+    while(nleft > MAXPLINE) {
+      for(j = 0; j < MAXPLINE; j++) {
+	tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
+	if (s->pdim < 4) {
+	  if (s->pdim < 3) {
+	    tv[j].y = 0;
+	  }
+	  tv[j].z = 0;
+	  tv[j].w = 1;
+	}
+      }
+      mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
+      nleft -= MAXPLINE-1;
+      vleft--;
+      flags = 6;
+    }
+    for(j = 0; j < nleft; j++) {
+      tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
+      if (s->pdim < 4) {
+	if (s->pdim < 3) {
+	  tv[j].y = 0;
+	}
+	tv[j].z = 0;
+	tv[j].w = 1;
+      }
+    }
+    flags = (i < penultimate) ? 6 : 2;
+    mgpolyline(nleft, tv, 1, lastcolor, flags);
+  }
+  return s;
 }
 
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

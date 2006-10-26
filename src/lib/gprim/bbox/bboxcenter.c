@@ -26,18 +26,13 @@
 
 static void _BBoxCenter(BBox *bbox, HPtNCoord *center)
 {
-  int i, dim;
+  int i;
   
-  if (bbox->geomflags & VERT_4D) {
-    dim = bbox->pdim;
-  } else {
-    HPtNDehomogenize(bbox->min, bbox->min);
-    HPtNDehomogenize(bbox->max, bbox->max);
-    dim = bbox->pdim-1;
-    center[dim] = 1.0;
-  }
+  HPtNDehomogenize(bbox->min, bbox->min);
+  HPtNDehomogenize(bbox->max, bbox->max);
+  center[0] = 1.0;
   
-  for (i = 0; i < dim; i++) {
+  for (i = 1; i < bbox->pdim; i++) {
     center[i] = 0.5 * (bbox->min->v[i] + bbox->max->v[i]);
   }
 }
@@ -62,7 +57,7 @@ void BBoxCenter(BBox *bbox, HPoint3 *center)
   
   Ncenter = BBoxCenterND(bbox, NULL);
 
-  HPtNToHPt3(Ncenter, center, NULL);
+  HPtNToHPt3(Ncenter, NULL, center);
   
   HPtNDelete(Ncenter);
 }

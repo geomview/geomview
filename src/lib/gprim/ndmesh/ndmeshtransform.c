@@ -24,17 +24,27 @@
 
 #include "ndmeshP.h"
 
-/* Hack.  Use BBox_ND_hack() to compute a bounding box that conservatively
- * covers everything -- but ignoring the transform.
- */
-NDMesh *NDMeshTransform(NDMesh *m, TransformN *T)
+/* */
+NDMesh *NDMeshTransform(NDMesh *m, Transform T, TransformN *TN)
 {
-  if (T != NULL && T != (void *)TM_IDENTITY) {
+
+  if (TN) {
     HPointN **p;
     int i, n = m->mdim[0] * m->mdim[1];
       
     for (p = m->p, i = 0; i < n; i++, p++) {
-      HPtNTransform(T, *p, *p);
+      HPtNTransform(TN, *p, *p);
+      HPtNDehomogenize(*p, *p);
+    }
+  }
+
+  if (T) {
+    HPointN **p;
+    int i, n = m->mdim[0] * m->mdim[1];
+      
+    for (p = m->p, i = 0; i < n; i++, p++) {
+      HPtNTransform3(T, NULL, *p, *p);
+      HPtNDehomogenize(*p, *p);
     }
   }
   

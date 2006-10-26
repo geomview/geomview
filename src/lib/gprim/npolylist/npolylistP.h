@@ -57,7 +57,6 @@ struct NPolyList
 #  define	  PL_HASVCOL	0x4	/* Per-vertex colors (vcol) valid */
 #  define	  PL_HASPCOL	0x8	/* Per-polygon colors (pcol) valid */
 #  define	  PL_HASST	0x20	/* texture coords */
-			/* For 4-D points, see geomflags & VERT_4D */
 };
 
 

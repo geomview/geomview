@@ -57,7 +57,6 @@ struct PolyList
 	Poly	*p;
 	Vertex	*vl;
 	int	flags;
-	int	seq;		/* for 4D->3D tforms */
 #  define	  PL_HASVN	0x1	/* Per-vertex normals (vn) valid */
 #  define	  PL_HASPN	0x2	/* Per-polygon normals (pn) valid */
 #  define	  PL_HASVCOL	0x4	/* Per-vertex colors (vcol) valid */

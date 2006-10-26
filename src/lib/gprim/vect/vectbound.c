@@ -65,16 +65,16 @@ BBox *VectBound(Vect *v, Transform T, TransformN *TN)
     if (v->geomflags & VERT_4D) {
       max = min;
       while(--n >= 0) {
-	HPt3MinMax(&min, &max, ++p);
+	Pt4MinMax(&min, &max, ++p);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
+				 CR_4MIN, &min, CR_4MAX, &max,
+				 CR_4D, 1, CR_END);
     } else {
       HPt3Dehomogenize(&min, &min);
       max = min;
       while(--n >= 0) {
-	HPt3Dehomogenize(++p, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	Pt3MinMax(&min, &max, ++p);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
@@ -90,21 +90,22 @@ BBox *VectBound(Vect *v, Transform T, TransformN *TN)
 
     ptN = HPtNCreate(5, NULL);
 
-    if (!(v->geomflags & VERT_4D)) {
-      HPt3Dehomogenize(&min, &min);
+    if (v->geomflags & VERT_4D) {
+      Pt4ToHPtN(&min, ptN);
+    } else {
+      HPt3ToHPtN(&min, NULL, ptN);
     }
-    *(HPoint3 *)ptN->v = min;
     minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
     while(--n >= 0) {
-      *(HPoint3 *)ptN->v = *(++p);
-      if (!(v->geomflags & VERT_4D)) {
-	HPt3Dehomogenize((HPoint3 *)ptN->v, (HPoint3 *)ptN->v);
+      if (v->geomflags & VERT_4D) {
+	Pt4ToHPtN(++p, ptN);
+      } else {
+	HPt3ToHPtN(++p, NULL, ptN);
       }
       HPtNTransform(TN, ptN, ptN);
-      HPtNDehomogenize(ptN, ptN);
-      HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+      HPtNMinMax(minN, maxN, ptN);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
@@ -132,8 +133,7 @@ BBox *VectBound(Vect *v, Transform T, TransformN *TN)
 	tmp = *(++p);
 	tmp.w = 1.0;
 	HPt3Transform(T, &tmp, &clean);
-	HPt3Dehomogenize(&clean, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, &clean);
       }
     } else {
       /* ordinary 3d object */
@@ -143,8 +143,7 @@ BBox *VectBound(Vect *v, Transform T, TransformN *TN)
       while(--n >= 0) {
 	tmp = *(++p);
 	HPt3Transform(T, &tmp, &clean);
-	HPt3Dehomogenize(&clean, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, &clean);
       }
     }
     /* At this point we are ready to generate a 3d bounding box */

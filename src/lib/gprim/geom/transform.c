@@ -46,7 +46,7 @@ GeomPosition(Geom *object, Transform T)
 Geom *GeomTransformTo(Geom *object, Transform T, TransformN *TN)
 {
     if( object && object->Class->transformto )
-	(*object->Class->transformto)(object,T, TN);
+	(*object->Class->transformto)(object, T, TN);
     return object;
 }
 

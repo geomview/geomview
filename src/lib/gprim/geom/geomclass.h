@@ -141,7 +141,7 @@ extern char *GeomToken(IOBFILE *f);
     struct Appearance	*ap;				\
     Handle		*aphandle;			\
     int			geomflags;			\
-    int pdim /* this really belongs here */
+    int pdim /* does this belong here? */
 
 struct Geom {	/* common data structures for all Geom's */
     GEOMFIELDS;

@@ -35,36 +35,19 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxFSave(BBox *bbox, FILE *f, char *fname)
 {
-  if ((bbox->geomflags & VERT_4D) && bbox->pdim == 4) {
-    fprintf(f, "4BBOX\n%g %g %g %g\n%g %g %g %g\n",
-	    bbox->min->v[0], bbox->min->v[1], bbox->min->v[2], bbox->min->v[3],
-	    bbox->max->v[0], bbox->max->v[1], bbox->max->v[2], bbox->max->v[3]);
-  } else if (bbox->pdim == 4) {
-    fprintf(f, "BBOX\n%g %g %g\n%g %g %g\n",
-	    bbox->min->v[0], bbox->min->v[1], bbox->min->v[2],
-	    bbox->max->v[0], bbox->max->v[1], bbox->max->v[2]);
-  } else if (bbox->geomflags & VERT_4D) {
-    int i;
+  int i;
 	
-    fprintf(f, "4nBBOX %d\n", bbox->pdim);
-    for (i = 0; i < bbox->pdim; i++) {
-      fprintf(f, " %g", bbox->min->v[i]);
-    }
-    fprintf(f, "\n");
-    for (i = 0; i < bbox->pdim; i++) {
-      fprintf(f, " %g", bbox->max->v[i]);
-    }
+  if (bbox->pdim == 4) {
+    fprintf(f, "BBOX\n");
   } else {
-    int i;
-	
-    fprintf(f, "nBBOX %d\n", bbox->pdim-1);
-    for (i = 0; i < bbox->pdim-1; i++) {
-      fprintf(f, " %g", bbox->min->v[i]);
-    }
-    fprintf(f, "\n");
-    for (i = 0; i < bbox->pdim-1; i++) {
-      fprintf(f, " %g", bbox->max->v[i]);
-    }
+    fprintf(f, "nBBOX %d\n", bbox->pdim-1);    
+  }
+  for (i = 1; i < bbox->pdim; i++) {
+    fprintf(f, " %g", bbox->min->v[i]);
+  }
+  fprintf(f, "\n");
+  for (i = 1; i < bbox->pdim; i++) {
+    fprintf(f, " %g", bbox->max->v[i]);
   }
   return bbox;
 }

@@ -46,7 +46,7 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
 
   /* The BoundSphere really is something 3-dimensional */
   if (axes == NULL) {
-    static int dflt_axes[] = { 0, 1, 2, -1 };
+    static int dflt_axes[] = { 1, 2, 3, 0 };
     axes = dflt_axes;
   }
 
@@ -60,8 +60,8 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
     
     BBoxMinMaxND((BBox *)bbox, &minmaxN[0], &minmaxN[1]);
     GeomDelete(bbox);
-    HPtNToHPt3(minmaxN[0], &minmax[0], axes);
-    HPtNToHPt3(minmaxN[1], &minmax[1], axes);
+    HPtNToHPt3(minmaxN[0], axes, &minmax[0]);
+    HPtNToHPt3(minmaxN[1], axes, &minmax[1]);
     HPtNDelete(minmaxN[0]);
     HPtNDelete(minmaxN[1]);
   } else {
@@ -69,8 +69,8 @@ Geom *GeomBoundSphereFromBBox(Geom *geom,
     GeomDelete(bbox);
   }
 
-  HPt3Normalize(&minmax[0], &minmax[0]);
-  HPt3Normalize(&minmax[1], &minmax[1]);
+  HPt3Dehomogenize(&minmax[0], &minmax[0]);
+  HPt3Dehomogenize(&minmax[1], &minmax[1]);
 
   sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, minmax,
 		      CR_NENCOMPASS_POINTS, 2, CR_SPACE, space,

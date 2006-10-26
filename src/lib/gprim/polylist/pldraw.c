@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.8 2006/10/18 19:41:41 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.9 2006/10/26 22:40:41 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -74,14 +74,15 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
     h = HPtNCreate(5, NULL);
     if (pl->geomflags & VERT_4D) {
       for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
-	*(HPoint3 *)h->v = ov->pt;
+	/* Set the point's first four components from our 4-D mesh vertex */
+	Pt4ToHPtN(&ov->pt, h);
 	nv->vcol = ov->vcol;
 	colored = mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       }
     } else {
       for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
-	HPt3Dehomogenize(&ov->pt, (HPoint3 *)h->v);
-	h->v[3] = 0; /* w-direction has no special meaning in ND */
+	/* Set the point's first THREE components from our 4-D mesh vertex */
+	HPt3ToHPtN(&ov->pt, NULL, h);
 	nv->vcol = ov->vcol;
 	colored = mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       }
@@ -232,3 +233,9 @@ PolyListDraw( PolyList *pl )
     return pl;
 
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

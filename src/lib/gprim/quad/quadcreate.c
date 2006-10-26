@@ -92,9 +92,9 @@ QuadCreate (exist, classp, a_list)
                q->maxquad = 0;
             } else if (copy) {
 		q->p = OOGLNewNE(QuadP,q->maxquad,"QuadCreate vertices");
-		Pt3ToPt4(p3, &q->p[0][0], q->maxquad * 4);
+		Pt3ToHPt3(p3, &q->p[0][0], q->maxquad * 4);
             } else {
-		Pt3ToPt4(p3, &q->p[0][0], q->maxquad * 4);
+		Pt3ToHPt3(p3, &q->p[0][0], q->maxquad * 4);
 	    }
 	    break;
 

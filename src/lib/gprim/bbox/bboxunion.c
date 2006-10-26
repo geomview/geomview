@@ -45,8 +45,6 @@ BBoxUnion(BBox *bbox1, BBox *bbox2)
 BBox *
 BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 {
-  int dim1, dim2 = 0;
-  
   /* TAKE CARE OF THE CASE OF EITHER CUBE BEING NULL */
   if (!bbox1) {
     if(!bbox2) {
@@ -59,49 +57,20 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
     bbox2 = NULL;
   }
 
-  if (bbox2) {
-    dim2 = bbox2->pdim;
-    if (!(bbox2->geomflags & VERT_4D)) {
-      HPtNDehomogenize(bbox2->min, bbox2->min);
-      HPtNDehomogenize(bbox2->max, bbox2->max);
-      --dim2;
-    }
+  /* Make sure bbox1 is the one with the larger dimension */
+  if (bbox2 && bbox2->pdim > bbox1->pdim) {
+    BBox *bboxswap = bbox1; bbox1 = bbox2; bbox2 = bboxswap;
   }
   
-  dim1 = bbox1->pdim;
-  if (!(bbox1->geomflags & VERT_4D)) {
-    HPtNDehomogenize(bbox1->min, bbox1->min);
-    HPtNDehomogenize(bbox1->max, bbox1->max);
-    --dim1;
-  }
-
-  /* Make sure bbox1 is one with the larger dimension */
-  if (dim2 > dim1) {
-    BBox *bboxswap;
-    int dimswap;
-
-    bboxswap = bbox1; bbox1 = bbox2; bbox2 = bboxswap;
-    dimswap = dim1; dim1 = dim2; dim2 = dim1;
-  }
-  
-  if (bbox1->pdim == 4) {
-    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				 CR_4MIN, bbox1->min->v,
-				 CR_4MAX, bbox1->max->v,
-				 CR_4D, (bbox1->geomflags & VERT_4D) != 0,
-				 CR_END);
-  } else {
-    result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
-				 CR_NMIN, bbox1->min,
-				 CR_NMAX, bbox1->max,
-				 CR_4D, (bbox1->geomflags & VERT_4D) != 0,
-				 CR_END);
-  }
+  result = (BBox *)GeomCCreate((Geom *)result, BBoxMethods(),
+			       CR_NMIN, bbox1->min,
+			       CR_NMAX, bbox1->max,
+			       CR_END);
 
   if (bbox2) {
     int i;
 
-    for (i = 0; i < dim2; i++) {
+    for (i = 1; i < bbox2->pdim; i++) {
       if (result->min->v[i] > bbox2->min->v[i]) {
 	result->min->v[i] = bbox2->min->v[i];
       }
@@ -114,3 +83,9 @@ BBoxUnion3(BBox *bbox1, BBox *bbox2, BBox *result)
 	
   return result;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

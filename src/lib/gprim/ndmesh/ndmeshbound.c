@@ -53,29 +53,15 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     HPointN *max;
 
     min = HPtNCopy(p[0], NULL);
-    if (mesh->geomflags & VERT_4D) {
-      max = HPtNCopy(min, NULL);
-      while(--n > 0) {
-	HPtNMinMax(min, max, *(++p), pdim);
-      }
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_NMIN, min, CR_NMAX, max, CR_4D, 1,
-				   CR_END);
-    } else {
-      HPointN *clean = HPtNCreate(pdim, NULL);
-      HPtNDehomogenize(min, min);
-      max = HPtNCopy(min, NULL);
-      while(--n > 0) {
-	HPtNDehomogenize(*(++p), clean);
-	HPtNMinMax(min, max, clean, pdim-1);
-      }
-      HPtNDelete(clean);
-      result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				   CR_NMIN, &min, CR_NMAX, &max, CR_END);
+    HPtNDehomogenize(min, min);
+    max = HPtNCopy(min, NULL);
+    while(--n > 0) {
+      HPtNMinMax(min, max, *(++p));
     }
+    result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
+				 CR_NMIN, min, CR_NMAX, max, CR_END);
     HPtNDelete(min);
     HPtNDelete(max);
-
     return result;
   }
 
@@ -87,19 +73,12 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     BBox *result;
 
     minN = HPtNTransform(TN, p[0], NULL);
-    if (!(mesh->geomflags & VERT_4D)) {
-      HPtNDehomogenize(minN, minN);
-    }
+    HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
     ptN = HPtNCreate(TN->odim, NULL);
     while(--n > 0) {
       HPtNTransform(TN, *(++p), ptN);
-      if (!(mesh->geomflags & VERT_4D)) {
-	HPtNDehomogenize(ptN, ptN);
-	HPtNMinMax(minN, maxN, ptN, TN->odim-1);
-      } else {
-	HPtNMinMax(minN, maxN, ptN, TN->odim);
-      }
+      HPtNMinMax(minN, maxN, ptN);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
@@ -114,17 +93,15 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
   /* A 3d bbox is requested, with transformations */
 
   if (T) {
-
     /* ordinary 3d transform, we simply operate on the x, y, z sub-space. */
-    HPtNToHPt3(*p, &min, NULL);
+    HPtNToHPt3(*p, NULL, &min);
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
     while(--n > 0) {
-      HPtNToHPt3(*(++p), &min, NULL);
+      HPtNToHPt3(*(++p), NULL, &min);
       HPt3Transform(T, &tmp, &clean);
-      HPt3Dehomogenize(&clean, &clean);
-      Pt3MinMax(&min, &max, &clean);
+      HPt3MinMax(&min, &max, &clean);
     }
 
     /* At this point we are ready to generate a 3d bounding box */
@@ -135,3 +112,9 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
   return NULL;
   
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

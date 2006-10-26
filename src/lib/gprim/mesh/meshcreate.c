@@ -101,7 +101,7 @@ va_list *a_list;
 	    if(mesh->p) OOGLFree(mesh->p);
 	    mesh->p = OOGLNewNE(HPoint3, npts, "mesh points");
 	    p3 = va_arg(*a_list, Point3 *);
-	    Pt3ToPt4(p3, mesh->p, npts);
+	    Pt3ToHPt3(p3, mesh->p, npts);
 	    if(!copy) OOGLFree(p3);
 	    break;
 

@@ -39,7 +39,7 @@ BBox *BBoxCopy(BBox *source_bbox)
 
   if(source_bbox == NULL) return NULL;
 
-  if ( (dest_bbox = GeomNew(BBox))== NULL) {
+  if ((dest_bbox = GeomNew(BBox)) == NULL) {
     GeomError(0, "Can't allocate space for BBox");
     return NULL;
   }

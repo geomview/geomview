@@ -56,15 +56,13 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   if (mesh->geomflags & VERT_4D) {
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
       /* Set the point's first four components from our 4-D mesh vertex */
-      *(HPoint3 *)h->v = *op;
+      Pt4ToHPtN(op, h);
       colored = mapHPtN(NDctx, h, np, &m.c[i]);
     }
   } else {
     for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
       /* Set the point's first THREE components from our 4-D mesh vertex */
-      HPt3Dehomogenize(op, (HPoint3 *)h->v);
-      h->v[3] = 0.0; /* otherwise we'll have a translation in w direction,
-			which has no special meaning in ND */
+      HPt3ToHPtN(op, NULL, h);
       colored = mapHPtN(NDctx, h, np, &m.c[i]);
     }
   }
@@ -130,4 +128,8 @@ MeshDraw(Mesh *mesh)
   return mesh;
 }
 
-
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

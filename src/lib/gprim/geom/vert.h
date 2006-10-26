@@ -29,6 +29,5 @@
 #define VERT_N  (1 << 0)
 #define VERT_C  (1 << 1)
 #define VERT_4D (1 << 2)
-#define VERT_ND (1 << 3)
 
 #endif

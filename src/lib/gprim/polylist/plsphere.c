@@ -55,36 +55,32 @@ Geom *PolyListSphere(PolyList *p,
     if(p->geomflags & VERT_4D) {
       for (i = 0; i < 2*4; i++) {
 	spanPts[i] = HPtNCreate(5, NULL);
-	*(HPoint3 *)spanPts[i]->v = p->vl[0].pt;
+	Pt4ToHPtN(&p->vl[0].pt, spanPts[i]);
       }
-      for (i = 0; i < p->n_verts; i++) {
-	*(HPoint3 *)tmp->v = p->vl[i].pt;
+      for (i = 1; i < p->n_verts; i++) {
+	Pt4ToHPtN(&p->vl[i].pt, tmp);
 	MaxDimensionalSpanHPtN(spanPts, tmp);
       }
       for (i = 0; i < 2*4; i++) {
-	HPtNTransformComponents(spanPts[i], TN, 4, axes,
-				(HPt3Coord *)&spanPts3[i]);
+	HPtNTransformComponents(TN, spanPts[i], axes, &spanPts3[i]);
 	HPtNDelete(spanPts[i]);
       }
       SphereEncompassBoundsN(sphere, spanPts3, 4);
       for (i = 0; i < p->n_verts; i++) {
-	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	Pt4ToHPtN(&p->vl[i].pt, tmp);
 	SphereAddHPtN(sphere, tmp, NULL, TN, axes);
       }
     } else {
       for (i = 0; i < 2*4; i++) {
 	spanPts[i] = HPtNCreate(5, NULL);
-	*(HPoint3 *)spanPts[i]->v = p->vl[0].pt;
-	HPt3Dehomogenize((HPoint3 *)spanPts[i]->v, (HPoint3 *)spanPts[i]->v);
+	HPt3ToHPtN(&p->vl[0].pt, NULL, spanPts[i]);
       }
       for (i = 0; i < p->n_verts; i++) {
-	*(HPoint3 *)tmp->v = p->vl[i].pt;
-	HPt3Dehomogenize((HPoint3 *)tmp->v, (HPoint3 *)tmp->v);
+	HPt3ToHPtN(&p->vl[i].pt, NULL, tmp);
 	MaxDimensionalSpanHPtN(spanPts, tmp);
       }
       for (i = 0; i < 2*4; i++) {
-	HPtNTransformComponents(spanPts[i], TN, 4, axes,
-				(HPt3Coord *)&spanPts3[i]);
+	HPtNTransformComponents(TN, spanPts[i], axes, &spanPts3[i]);
 	HPt3Dehomogenize(&spanPts3[i], &spanPts3[i]);
 	HPtNDelete(spanPts[i]);
       }
@@ -102,27 +98,23 @@ Geom *PolyListSphere(PolyList *p,
       /* 4d, but no 4d transform, act on x,y,z sub-space */
       HPoint3 tmp;
 
-      tmp   = p->vl[0].pt;
-      tmp.w = 1.0;
+      Pt4ToHPt3(&p->vl[0].pt, NULL, &tmp);
       sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &tmp,
 				    CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
 				    CR_END);
       /* For convenience (if not efficiency) assume all the vertices
        * are used */
       for (i = 0; i < 6; i++) {
-	spanPts[i] = p->vl[0].pt;
-	spanPts[i].w = 1.0;
+	Pt4ToHPt3(&p->vl[0].pt, NULL, &spanPts[i]);
       }
       for (i = 0; i < p->n_verts; i++) {
-	tmp = p->vl[i].pt;
-	tmp.w = 1.0;
+	Pt4ToHPt3(&p->vl[i].pt, NULL, &tmp);
 	MaxDimensionalSpan(spanPts, &tmp);
       }
       HPt3TransformN(T, spanPts, spanPts, 6);
       SphereEncompassBounds(sphere, spanPts);
       for (i = 0; i < p->n_verts; i++) {
-	tmp = p->vl[i].pt;
-	tmp.w = 1.0;
+	Pt4ToHPt3(&p->vl[i].pt, NULL, &tmp);
 	SphereAddHPt3(sphere, &tmp, T);
       }
     } else {
@@ -144,3 +136,8 @@ Geom *PolyListSphere(PolyList *p,
   return (Geom *)sphere;
 }
 						 
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

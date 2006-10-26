@@ -38,10 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "npolylistP.h"
 
 NPolyList *
-NPolyListFSave(pl, outf, fname)
-	NPolyList *pl;	/* Thing to save */
-	FILE *outf;			/* Stream to save it on */
-	char *fname;			/* File name for error msgs */
+NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
 {
 	int i, k;
 	NPoly *p;
@@ -54,7 +51,7 @@ NPolyListFSave(pl, outf, fname)
 	fprintf(outf, "%s%snOFF %d\n%d %d %d\n",
 		&"C"[pl->flags & PL_HASVCOL ? 0 : 1],
 		&"4"[pl->geomflags & VERT_4D ? 0 : 1],
-		pl->pdim - (pl->geomflags & VERT_4D ? 0 : 1),
+		pl->pdim - 1,
 		pl->n_verts, pl->n_polys,
 		0);
 
@@ -63,10 +60,9 @@ NPolyListFSave(pl, outf, fname)
 	    for(k = pl->pdim; --k >= 0; )
 		fprintf(outf, "%g ", *v++);
 	  } else {
-	    float denom = v[pl->pdim-1];
+	    float denom = v[0];
 	    for(k = pl->pdim; --k > 0; )
-		fprintf(outf, "%g ", *v++/denom);
-	    v++;
+		fprintf(outf, "%g ", *++v/denom);
 	  }
 	  if(pl->flags & PL_HASVCOL) {
 	    fprintf(outf, "  %g %g %g %g", c->r, c->g, c->b, c->a);

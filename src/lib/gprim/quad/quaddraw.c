@@ -57,17 +57,16 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   nc = q.c[0];
   np = q.p[0];
   op = qquad->p[0];
-  if (!(qquad->geomflags & VERT_4D)) {
+  if (qquad->geomflags & VERT_4D) {
     for(i = 0; i < npts; i++, op++, np++, nc++) {
       /* Set the point's first THREE components from our 4-D vertex */
-      HPt3Dehomogenize(op, (HPoint3 *)h->v);
-      h->v[3] = 0.0;
+      Pt4ToHPtN(op, h);
       colored = mapHPtN(NDctx, h, np, nc);
     }
   } else {
     for(i = 0; i < npts; i++, op++, np++, nc++) {
       /* Set the point's first four components from our 4-D vertex */
-      *(HPoint3 *)h->v = *op;
+      HPt3ToHPtN(op, NULL, h);	    
       colored = mapHPtN(NDctx, h, np, nc);
     }
   }
@@ -142,3 +141,9 @@ QuadDraw(Quad *q)
 
   return q;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

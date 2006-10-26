@@ -34,8 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "meshP.h"
 
 Mesh *
-MeshDelete(m)
-Mesh           *m;
+MeshDelete(Mesh *m)
 {
 	if (m)
 	{

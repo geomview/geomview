@@ -50,21 +50,18 @@ static void draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, Appearance *ap)
   *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
   edgecolor.a = 1;
 
-  if (bbox->geomflags & VERT_4D) {
-    dim = bbox->pdim;
-  } else {
-    dim = bbox->pdim-1;
-    HPtNDehomogenize(bbox->min, bbox->min);
-    HPtNDehomogenize(bbox->max, bbox->max);
-  }
+  dim = bbox->pdim-1;
+  HPtNDehomogenize(bbox->min, bbox->min);
+  HPtNDehomogenize(bbox->max, bbox->max);
+
   ptN = HPtNCreate(dim+1, NULL);
-  ptN->v[dim] = 1.0;
   numvert = 1 << dim;
   pts3 = (HPoint3 *)alloca(numvert*sizeof(HPoint3));
 
   for (i = 0; i < numvert; i++) {
-    for (e = 0; e < dim; e++) {
-      ptN->v[e] = (i & (1 << e)) ? bbox->min->v[e] : bbox->max->v[e];
+    int mask;
+    for (mask = 1, e = 1; e < dim+1; e++, mask <<= 1) {
+      ptN->v[e] = (i & mask) ? bbox->min->v[e] : bbox->max->v[e];
     }
     mapHPtN(NDctx, ptN, &pts3[i], NULL);
   }
@@ -96,7 +93,7 @@ static void draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, Appearance *ap)
 BBox *BBoxDraw(BBox *bbox)
 {
   int i, numvert;
-  int dimn;
+  const int dimn = 3;
   HPoint3 vert[16];
   HPoint3 min, max;
   ColorA edgecolor;
@@ -113,20 +110,18 @@ BBox *BBoxDraw(BBox *bbox)
     return bbox;
   }
 
-  dimn = (bbox->geomflags & VERT_4D) ? 4 : 3;
-  HPtNToHPt3(bbox->min, &min, NULL);
-  HPtNToHPt3(bbox->max, &max, NULL);
-  if (dimn == 3)	{	/* dehomogenize min, max vals */
-    HPt3Dehomogenize(&min, &min);
-    HPt3Dehomogenize(&max, &max);
-  }
+  HPtNToHPt3(bbox->min, NULL, &min);
+  HPtNToHPt3(bbox->max, NULL, &max);
+  /* dehomogenize min, max vals */
+  HPt3Dehomogenize(&min, &min);
+  HPt3Dehomogenize(&max, &max);
 
   /* fill in the vertices of the (hyper) cube */
   for(i = 0; i < (1 << dimn); i++) {
     vert[i].x = i&1 ? min.x : max.x;
     vert[i].y = i&2 ? min.y : max.y;
     vert[i].z = i&4 ? min.z : max.z;
-    vert[i].w = i&8 ? min.w : max.w;
+    vert[i].w = 1.0;
   }
 
   numvert = 1 << dimn;

@@ -160,7 +160,7 @@ VectCreate ( Vect *exist, GeomClass *classp, va_list *a_list )
                vect->nvert = 0;
             } else {
     		vect->p = OOGLNewNE(HPoint3, vect->nvert, "vect points");
-		Pt3ToPt4(v3, vect->p, vect->nvert);
+		Pt3ToHPt3(v3, vect->p, vect->nvert);
 		if(!copy) OOGLFree(v3);
 	    }
 	    break;

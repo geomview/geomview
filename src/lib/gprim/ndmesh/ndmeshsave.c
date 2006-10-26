@@ -36,64 +36,70 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 NDMesh *
 NDMeshFSave(NDMesh *m, FILE *outf)
 {
-	int  i, j, k, wdim;
-	HPointN **p = m->p;
-	ColorA *c = m->c;
-	Point3 *u = m->u;
+  int  i, j, k, wdim, offset;
+  HPointN **p = m->p;
+  ColorA *c = m->c;
+  Point3 *u = m->u;
 
-	if (!outf || !m)
-		return NULL;
-	if (m->c == NULL)
-		m->flag &= ~MESH_C;
-	if (m->u == NULL)
-		m->flag &= ~MESH_U;
-	wdim = m->pdim;
+  if (!outf || !m)
+    return NULL;
+  if (m->c == NULL)
+    m->flag &= ~MESH_C;
+  if (m->u == NULL)
+    m->flag &= ~MESH_U;
+  wdim = m->pdim;
 
-	if (m->flag & MESH_C) fputc('C', outf);
-	if (m->geomflags & VERT_4D)
-		fputc('4', outf);
-	else
-		--wdim;
-	if (m->flag & MESH_U) fputc('U', outf);
-	if (m->flag & MESH_UWRAP) fputc('u', outf);
-	if (m->flag & MESH_VWRAP) fputc('v', outf);
-	/* dim is always pdim-1, even for 4nMESH */
-	fprintf(outf, "nMESH %d", m->pdim-1);
-	if (m->flag & MESH_BINARY)    /* Hack -- should be sent by context */
-	{
-	    fprintf(outf, "BINARY\n");
-	    fwrite(&m->mdim, sizeof(int), m->meshd, outf);
-	    for (i = 0; i < m->mdim[1]; i++) {
-		for (j = 0; j < m->mdim[0]; j++) {
-		    fwrite((*p)->v, sizeof(float), wdim, outf);
-		    p++;
-		    if (m->flag & MESH_C) { fwrite(c, 4, 4, outf); c++; }
-		    if (m->flag & MESH_U) { fwrite(u, 4, 3, outf); u++; }
-		}
-	    }
+  if (m->flag & MESH_C) fputc('C', outf);
+  if (m->geomflags & VERT_4D) {
+    fputc('4', outf);
+    offset = 0;
+  } else {
+    --wdim;
+    offset = 1;
+  }
+  if (m->flag & MESH_U) fputc('U', outf);
+  if (m->flag & MESH_UWRAP) fputc('u', outf);
+  if (m->flag & MESH_VWRAP) fputc('v', outf);
+  /* dim is always pdim-1, even for 4nMESH */
+  fprintf(outf, "nMESH %d", m->pdim-1);
+  if (m->flag & MESH_BINARY) {   /* Hack -- should be sent by context */
+    fprintf(outf, "BINARY\n");
+    fwrite(&m->mdim, sizeof(int), m->meshd, outf);
+    for (i = 0; i < m->mdim[1]; i++) {
+      for (j = 0; j < m->mdim[0]; j++) {
+	fwrite((*p)->v+offset, sizeof(float), wdim, outf);
+	p++;
+	if (m->flag & MESH_C) { fwrite(c, 4, 4, outf); c++; }
+	if (m->flag & MESH_U) { fwrite(u, 4, 3, outf); u++; }
+      }
+    }
+  } else {
+    fprintf(outf, "\n%d %d\n", m->mdim[0], m->mdim[1]);
+    for (i = 0; i < m->mdim[1]; i++) {
+      for (j = 0; j < m->mdim[0]; j++) {
+	for(k = 0; k < wdim; k++)
+	  fprintf(outf, "%g ", (*p)->v[k+offset]);
+	p++;
+	if (m->flag & MESH_C) {
+	  fprintf(outf, " %.3g %.3g %.3g %.3g ",
+		  c->r, c->g, c->b, c->a);
+	  c++;
 	}
-	else
-	{
-	    fprintf(outf, "\n%d %d\n", m->mdim[0], m->mdim[1]);
-	    for (i = 0; i < m->mdim[1]; i++) {
-		for (j = 0; j < m->mdim[0]; j++) {
-		    for(k = 0; k < wdim; k++)
-			fprintf(outf, "%g ", (*p)->v[k]);
-		    p++;
-		    if (m->flag & MESH_C) {
-			    fprintf(outf, " %.3g %.3g %.3g %.3g ",
-				c->r, c->g, c->b, c->a);
-			    c++;
-		    }
-		    if (m->flag & MESH_U) {
-			    fprintf(outf, " %g %g %g", u->x, u->y, u->z);
-			    u++;
-		    }
-		    fputc('\n', outf);
-		}
-		fputc('\n', outf);
-	    }
+	if (m->flag & MESH_U) {
+	  fprintf(outf, " %g %g %g", u->x, u->y, u->z);
+	  u++;
 	}
+	fputc('\n', outf);
+      }
+      fputc('\n', outf);
+    }
+  }
 
-	return m;
+  return m;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

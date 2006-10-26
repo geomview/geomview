@@ -83,7 +83,7 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
       }
     } else {
       TransformN *TnewN = TmNCopy(TN, NULL);
-      static int dflt_axes[] = { 0, 1, 2, -1 };
+      static int dflt_axes[] = { 1, 2, 3, 0 };
 
       it = GeomIterate( (Geom *)inst, DEEP );
       geombbox = NULL;
@@ -115,7 +115,7 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
       TmNDelete(TnewN);
     } else if (T) {
       TransformN *TnewN = TmNCopy(inst->NDaxis, NULL);
-      static int dflt_axes[] = { 0, 1, 2, -1 };
+      static int dflt_axes[] = { 1, 2, 3, 0 };
       BBox *box;
 
       TmNApplyDN(TnewN, dflt_axes, T);

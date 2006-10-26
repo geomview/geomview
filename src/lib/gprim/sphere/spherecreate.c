@@ -113,7 +113,7 @@ va_list *a_list;
     OOGLError (0, "SphereCreate: Undefined option: %d",attr);
     return NULL;
   }
-  HPt3Normalize(&(sphere->center), &(sphere->center));
+  HPt3Dehomogenize(&(sphere->center), &(sphere->center));
 
   if (sphere->geom == NULL) {
     /* No need to generate those objects anew if we already have a

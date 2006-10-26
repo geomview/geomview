@@ -31,15 +31,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
- /*
-  * Geometry Routines
-  * 
-  * Geometry Supercomputer Project
-  * 
-  * ROUTINE DESCRIPTION:
-  *	Draw a Vect (collection of vectors).
-  * 
-  */
+/*
+ * Geometry Routines
+ * 
+ * Geometry Supercomputer Project
+ * 
+ * ROUTINE DESCRIPTION:
+ *	Draw a Vect (collection of vectors).
+ * 
+ */
 
 #include "mgP.h"
 #include "vectP.h"
@@ -56,154 +56,158 @@ static void
 draw_projected_vect(mgNDctx *NDctx,
 		    Vect *v, int flags, int penultimate, int hascolor)
 {
-    HPointN *h = HPtNCreate(5, NULL);
-    HPoint3 *p, *op, *np, *newp;
-    ColorA *lastcolor = NULL, *c, *newc;
-    int i, nc = 0, colored = 0;
-    mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+  HPointN *h = HPtNCreate(5, NULL);
+  HPoint3 *p, *op, *np, *newp;
+  ColorA *lastcolor = NULL, *c, *newc;
+  int i, nc = 0, colored = 0;
+  mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
-    newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
-    newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));
+  newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
+  newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));
 
-    if (v->geomflags & VERT_4D) {
-      for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
-	*(HPoint3 *)h->v = *op;
-	colored = mapHPtN(NDctx, h, np, &newc[i]);
-      }
-    } else {
-      /* w has no special meaning for ND > 3 */
-      for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
-	HPt3Dehomogenize(op, (HPoint3 *)h->v);
-	h->v[3] = 0.0;
-	colored = mapHPtN(NDctx, h, np, &newc[i]);
-      }
+  if (v->geomflags & VERT_4D) {
+    for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
+      Pt4ToHPtN(op, h);
+      colored = mapHPtN(NDctx, h, np, &newc[i]);
     }
-    if (!hascolor) colored = 0;
-
-    for(i = 0, p = newp, c = colored ? newc : v->c; i < v->nvec; i++) {
-	int nv;
-
-	nv = vcount(v->vnvert[i]);
-	if(colored) nc = nv;
-	else if (hascolor) nc = v->vncolor[i];
-
-	flags |= vwrapped(v->vnvert[i]);
-
-	if(nc==0)
-	    if(lastcolor)
-		mgpolyline(nv,p,1,lastcolor, flags);
-	    else
-		mgpolyline(nv,p,nc,c,flags);
-	else
-	    mgpolyline(nv,p,nc, lastcolor=c, flags);
-
-	p += nv;
-	if (hascolor) c += nc;
-	flags = (i < penultimate) ? 6 : 2;	/* 2: not first batch member */
+  } else {
+    /* w has no special meaning for ND > 3 */
+    for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
+      HPt3ToHPtN(op, NULL, h);
+      colored = mapHPtN(NDctx, h, np, &newc[i]);
     }
-    HPtNDelete(h);
+  }
+  if (!hascolor) colored = 0;
+
+  for(i = 0, p = newp, c = colored ? newc : v->c; i < v->nvec; i++) {
+    int nv;
+
+    nv = vcount(v->vnvert[i]);
+    if(colored) nc = nv;
+    else if (hascolor) nc = v->vncolor[i];
+
+    flags |= vwrapped(v->vnvert[i]);
+
+    if(nc==0)
+      if(lastcolor)
+	mgpolyline(nv,p,1,lastcolor, flags);
+      else
+	mgpolyline(nv,p,nc,c,flags);
+    else
+      mgpolyline(nv,p,nc, lastcolor=c, flags);
+
+    p += nv;
+    if (hascolor) c += nc;
+    flags = (i < penultimate) ? 6 : 2;	/* 2: not first batch member */
+  }
+  HPtNDelete(h);
 }
 
 Vect *
 VectDraw(v)
      Vect *v;
 {
-	HPoint3 *p;
-	ColorA *c;
-	ColorA edgecolor;
-	int n, hascolor, nc;
-	int flags, penultimate;
-	ColorA *lastcolor=NULL;
-	Appearance *ap = mggetappearance();
-	mgNDctx *NDctx = NULL;
+  HPoint3 *p;
+  ColorA *c;
+  ColorA edgecolor;
+  int n, hascolor, nc;
+  int flags, penultimate;
+  ColorA *lastcolor=NULL;
+  Appearance *ap = mggetappearance();
+  mgNDctx *NDctx = NULL;
 
-	/* Don't draw if vect-drawing is off. */
-	if (v == NULL || (ap->flag & APF_VECTDRAW) == 0)
-	    return NULL;
+  /* Don't draw if vect-drawing is off. */
+  if (v == NULL || (ap->flag & APF_VECTDRAW) == 0)
+    return NULL;
 	
-	/* draw in conformal model if necessary */
-	if (_mgc->space & TM_CONFORMAL_BALL) {
-            cmodel_clear(_mgc->space);
-            cm_read_vect(v);
-            cmodel_draw(0);
-	    return v;
-	}
+  /* draw in conformal model if necessary */
+  if (_mgc->space & TM_CONFORMAL_BALL) {
+    cmodel_clear(_mgc->space);
+    cm_read_vect(v);
+    cmodel_draw(0);
+    return v;
+  }
  
-	p = v->p;
-	c = v->c;
-	hascolor = (v->ncolor > 0) &&
-		!(ap->mat && (ap->mat->override & MTF_EDGECOLOR));
+  p = v->p;
+  c = v->c;
+  hascolor = (v->ncolor > 0) &&
+    !(ap->mat && (ap->mat->override & MTF_EDGECOLOR));
 
-	if (!hascolor && ap->mat) {
-		*(Color *)(void *)&edgecolor = ap->mat->edgecolor;
-	  edgecolor.a = 1;
-	  c = &edgecolor;
-	  nc = 1;
-	}
+  if (!hascolor && ap->mat) {
+    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.a = 1;
+    c = &edgecolor;
+    nc = 1;
+  }
 
-	flags = v->nvec > 1 ? 4 : 0; 	/* 4: not last mbr of batch of lines */
-	penultimate = v->nvec - 2;
+  flags = v->nvec > 1 ? 4 : 0; 	/* 4: not last mbr of batch of lines */
+  penultimate = v->nvec - 2;
 
-	mgctxget(MG_NDCTX, &NDctx);
+  mgctxget(MG_NDCTX, &NDctx);
 
-	if(NDctx) {
-	    draw_projected_vect(NDctx, v, flags, penultimate, hascolor);
-	    return v;
-	}
+  if(NDctx) {
+    draw_projected_vect(NDctx, v, flags, penultimate, hascolor);
+    return v;
+  }
 
-	if(_mgc->astk->ap.flag & APF_SHADELINES && _mgc->astk->useshader) {
-	    ColorA *cs = (ColorA *)alloca(v->nvert * sizeof(ColorA));
-	    HPoint3 *tp = p;
-	    ColorA *tc = c - hascolor;
-	    ColorA *tcs = cs;
-	    if(!(_mgc->has & HAS_CPOS))
-		mg_findcam();
-	    for(n = 0; n < v->nvec; n++) {
-		int i, nv = vcount(v->vnvert[n]);
-		nc = hascolor ? v->vncolor[n] : 0;
-		if(nc > 0) tc++;
-		for(i = 0; i < nv; i++, tp++, tcs++) {
-		    (*_mgc->astk->shader)(1, tp, &_mgc->camZ, tc, tcs);
-		    if(nc > 1) { tc++; nc--; }
-		}
-	    }
-	    tcs = cs;
-	    nc = v->nvert;
-	    hascolor = 0;
+  if(_mgc->astk->ap.flag & APF_SHADELINES && _mgc->astk->useshader) {
+    ColorA *cs = (ColorA *)alloca(v->nvert * sizeof(ColorA));
+    HPoint3 *tp = p;
+    ColorA *tc = c - hascolor;
+    ColorA *tcs = cs;
+    if(!(_mgc->has & HAS_CPOS))
+      mg_findcam();
+    for(n = 0; n < v->nvec; n++) {
+      int i, nv = vcount(v->vnvert[n]);
+      nc = hascolor ? v->vncolor[n] : 0;
+      if(nc > 0) tc++;
+      for(i = 0; i < nv; i++, tp++, tcs++) {
+	(*_mgc->astk->shader)(1, tp, &_mgc->camZ, tc, tcs);
+	if(nc > 1) { tc++; nc--; }
+      }
+    }
+    tcs = cs;
+    nc = v->nvert;
+    hascolor = 0;
 
-	    for(n = 0; n < v->nvec; n++) {
-		int nv = vcount(v->vnvert[n]);
-		flags |= vwrapped(v->vnvert[n]);
-		mgpolyline(nv, p, nv, tcs, flags);	/* One color per vert */
-		tcs += nv;
-		p += nv;
-		flags = (n < penultimate) ? 6 : 2;
-	    }
-	    return v;
-	}
-
-
-	for(n = 0; n < v->nvec; n++) {
-	    int nv;
-
-	    nv = vcount(v->vnvert[n]);
-	    if (hascolor) nc = v->vncolor[n];
+    for(n = 0; n < v->nvec; n++) {
+      int nv = vcount(v->vnvert[n]);
+      flags |= vwrapped(v->vnvert[n]);
+      mgpolyline(nv, p, nv, tcs, flags);	/* One color per vert */
+      tcs += nv;
+      p += nv;
+      flags = (n < penultimate) ? 6 : 2;
+    }
+    return v;
+  }
 
 
-	    flags |= vwrapped(v->vnvert[n]);
+  for(n = 0; n < v->nvec; n++) {
+    int nv;
 
-	    if(nc == 0)
-		if(lastcolor)
-		    mgpolyline(nv, p, 1, lastcolor, flags);
-		else
-		    mgpolyline(nv, p, nc, c, flags);
-	    else
-		mgpolyline(nv,p,nc,lastcolor=c, flags);
+    nv = vcount(v->vnvert[n]);
+    if (hascolor) nc = v->vncolor[n];
 
-	    p += nv;
-	    if (hascolor) c += nc;
-	    flags = (n < penultimate) ? 6 : 2;	/* 2: not first batch member */
-	}
-	return v;
+
+    flags |= vwrapped(v->vnvert[n]);
+
+    if(nc == 0)
+      if(lastcolor)
+	mgpolyline(nv, p, 1, lastcolor, flags);
+      else
+	mgpolyline(nv, p, nc, c, flags);
+    else
+      mgpolyline(nv,p,nc,lastcolor=c, flags);
+
+    p += nv;
+    if (hascolor) c += nc;
+    flags = (n < penultimate) ? 6 : 2;	/* 2: not first batch member */
+  }
+  return v;
 }
 
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

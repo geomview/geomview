@@ -78,16 +78,16 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
     if (polylist->geomflags & VERT_4D) {
       max = min;
       while(--n >= 0) {
-	HPt3MinMax(&min, &max, &(++v)->pt);
+	Pt4MinMax(&min, &max, &(++v)->pt);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
-				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
+				 CR_4MIN, &min, CR_4MAX, &max,
+				 CR_4D, 1, CR_END);
     } else {
       HPt3Dehomogenize(&min, &min);
       max = min;
       while(--n >= 0) {
-	HPt3Dehomogenize(&(++v)->pt, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, &(++v)->pt);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
@@ -103,21 +103,22 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
 
     ptN = HPtNCreate(5, NULL);
 
-    if (!(polylist->geomflags & VERT_4D)) {
-      HPt3Dehomogenize(&min, &min);
+    if (polylist->geomflags & VERT_4D) {
+      Pt4ToHPtN(&min, ptN);
+    } else {
+      HPt3ToHPtN(&min, NULL, ptN);
     }
-    *(HPoint3 *)ptN->v = min;
     minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
     while(--n >= 0) {
-      *(HPoint3 *)ptN->v = (++v)->pt;
-      if (!(polylist->geomflags & VERT_4D)) {
-	HPt3Dehomogenize((HPoint3 *)ptN->v, (HPoint3 *)ptN->v);
+      if (polylist->geomflags & VERT_4D) {
+	Pt4ToHPtN(&(++v)->pt, ptN);
+      } else {
+	HPt3ToHPtN(&(++v)->pt, NULL, ptN);
       }
       HPtNTransform(TN, ptN, ptN);
-      HPtNDehomogenize(ptN, ptN);
-      HPtNMinMax(minN, maxN, ptN, TN->odim-1);
+      HPtNMinMax(minN, maxN, ptN);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_NMIN, minN, CR_NMAX, maxN, CR_END);
@@ -145,8 +146,7 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
 	tmp = (++v)->pt;
 	tmp.w = 1.0;
 	HPt3Transform(T, &tmp, &clean);
-	HPt3Dehomogenize(&clean, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, &clean);
       }
     } else {
       /* ordinary 3d object */
@@ -156,8 +156,7 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
       while(--n >= 0) {
 	tmp = (++v)->pt;
 	HPt3Transform(T, &tmp, &clean);
-	HPt3Dehomogenize(&clean, &clean);
-	Pt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, &clean);
       }
     }
 

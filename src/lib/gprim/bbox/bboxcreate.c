@@ -33,6 +33,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bboxP.h"
 #include "appearance.h"
 
+#ifndef max
+# define max(a,b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef min
+# define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+
 /* Retrieve min/max/center of bbox */
 int BBoxGet(BBox *bbox, int attr, void *attrp)
 {
@@ -41,20 +48,20 @@ int BBoxGet(BBox *bbox, int attr, void *attrp)
   switch (attr) {
   case CR_FLAG: *(int *)attrp = 0; break;
   case CR_MIN:
-    HPtNToHPt3(bbox->min, &min3, NULL);
+    HPtNToHPt3(bbox->min, NULL, &min3);
     HPt3Dehomogenize(&min3, &min3);
     *(Point3 *)attrp = *(Point3 *)&max3;
     break;
   case CR_MAX:
-    HPtNToHPt3(bbox->max, &max3, NULL);
+    HPtNToHPt3(bbox->max, NULL, &max3);
     HPt3Dehomogenize(&max3, &max3);
     *(Point3 *)attrp = *(Point3 *)&max3;
     break;
-  case CR_4MIN: HPtNToHPt3(bbox->min, (HPoint3 *)attrp, NULL); break;
-  case CR_4MAX: HPtNToHPt3(bbox->max, (HPoint3 *)attrp, NULL); break;
+  case CR_4MIN: HPtNToHPt3(bbox->min, NULL, (HPoint3 *)attrp); break;
+  case CR_4MAX: HPtNToHPt3(bbox->max, NULL, (HPoint3 *)attrp); break;
   case CR_NMIN: *(HPointN **)attrp = HPtNCopy(bbox->min, NULL); break;
   case CR_NMAX: *(HPointN **)attrp = HPtNCopy(bbox->max, NULL); break;
-  case CR_CENTER: HPtNToHPt3(bbox->center, (HPoint3 *)attrp, NULL); break;
+  case CR_CENTER: HPtNToHPt3(bbox->center, NULL, (HPoint3 *)attrp); break;
   case CR_NCENTER: *(HPointN **)attrp = HPtNCopy(bbox->center, NULL); break;
   default:
     return -1;
@@ -76,7 +83,10 @@ int BBoxGet(BBox *bbox, int attr, void *attrp)
 
 BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 {
-  HPointN *tmp;
+  HPoint3 min3, max3;
+  int min3p = 0, max3p = 0;
+  HPointN *minN = NULL, *maxN = NULL;
+  int minNp = 0, maxNp = 0;
   BBox *bbox;
   int attr, copy = 1, need_update = 0;
 
@@ -91,74 +101,61 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
     bbox = exist;
   }
 
-  while ((attr = va_arg (*a_list, int)))
+  while ((attr = va_arg (*a_list, int))) {
     switch (attr) {
     case CR_FLAG:
-	  
       break;
     case CR_MIN:
-      Pt3ToPt4(va_arg(*a_list, Point3 *), (HPoint3 *)bbox->min->v, 1);
-      if (bbox->pdim > 4) {
-	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
-	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
-	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      if (minNp || maxNp) {
+	OOGLError(1, "BBoxCreate(): ND minimum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      Pt3ToHPt3(va_arg(*a_list, Point3 *), &min3, 1);
+      min3p = need_update = 1;
       break;
     case CR_MAX:
-      Pt3ToPt4(va_arg(*a_list, Point3 *), (HPoint3 *)bbox->max->v, 1);
-      if (bbox->pdim > 4) {
-	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
-	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
-	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      if (minNp || maxNp) {
+	OOGLError(1, "BBoxCreate(): ND maximum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      Pt3ToHPt3(va_arg(*a_list, Point3 *), &max3, 1);
+      max3p = need_update = 1;
       break;
     case CR_4MIN:
-      *(HPoint3 *)bbox->min->v = *va_arg(*a_list, HPoint3 *);
-      if (bbox->pdim > 4) {
-	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
-	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
-	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      if (minNp || maxNp) {
+	OOGLError(1, "BBoxCreate(): ND minimum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      min3 = *va_arg(*a_list, HPoint3 *);
+      min3p = need_update = 1;
       break;
     case CR_4MAX:
-      *(HPoint3 *)bbox->max->v = *va_arg(*a_list, HPoint3 *);
-      if (bbox->pdim > 4) {
-	bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, 4, "renew HPointN");
-	bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, 4, "renew HPointN");
-	bbox->min->dim = bbox->max->dim = bbox->pdim = 4;
+      if (minNp || maxNp) {
+	OOGLError(1, "BBoxCreate(): ND maximum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      max3 = *va_arg(*a_list, HPoint3 *);
+      max3p = need_update = 1;
       break;
     case CR_NMIN:
-      tmp = va_arg(*a_list, HPointN *);
-      if (tmp != bbox->min) { /* == could happen, BBoxUnion3() ... */
-	HPtNCopy(tmp, bbox->min);
-	if (bbox->pdim != tmp->dim) {
-	  bbox->max->v =
-	    OOGLRenewNE(HPtNCoord, bbox->max->v, tmp->dim, "renew HPointN");
-	  bbox->max->dim = bbox->pdim = tmp->dim;
-	}
+      if (min3p || max3p) {
+	OOGLError(1, "BBoxCreate(): 3D minimum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      minN = va_arg(*a_list, HPointN *);
+      minNp = need_update = 1;
       break;
     case CR_NMAX:
-      tmp = va_arg(*a_list, HPointN *);
-      if (tmp != bbox->max) { /* == could happen, BBoxUnion3() ... */
-	HPtNCopy(tmp, bbox->max);
-	if (bbox->pdim != tmp->dim) {
-	  bbox->min->v =
-	    OOGLRenewNE(HPtNCoord, bbox->min->v, tmp->dim, "renew HPointN");
-	  bbox->min->dim = bbox->pdim = tmp->dim;
-	}
+      if (min3p || max3p) {
+	OOGLError(1, "BBoxCreate(): 3D maximum already specified.\n");
+	goto error;
       }
-      need_update = 1;
+      maxN = va_arg(*a_list, HPointN *);
+      maxNp = need_update = 1;
       break;
     default:
       if (GeomDecorate (bbox, &copy, attr, a_list)) {
-	OOGLError (0, "BBoxCreate: Undefined attribute: %d", attr);
+	OOGLError(0, "BBoxCreate: Undefined attribute: %d", attr);
 	HPtNDelete(bbox->min);
 	HPtNDelete(bbox->max);
 	HPtNDelete(bbox->center);
@@ -166,14 +163,71 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
 	return NULL;
       }
     }
+  }
+
+  /* The VERT_4D flag is set by GeomDecorate(), so it is only now that
+   * we can decide what to do.
+   */
 
   if (need_update) {
+    int pdim = bbox->pdim;
+
+    if (min3p && max3p) {
+      if (bbox->geomflags & VERT_4D)
+	pdim = 5;
+      else
+	pdim = 4;
+    }
+    if (minNp) {
+      pdim = max(pdim, minN->dim);
+    }
+    if (maxNp) {
+      pdim = max(pdim, maxN->dim);
+    }
+    if (bbox->min->dim != pdim) {
+      bbox->min->v = OOGLRenewNE(HPtNCoord, bbox->min->v, pdim,
+				 "Renew min coords");
+      bbox->min->dim = pdim;
+    }
+    if (bbox->max->dim != pdim) {
+      bbox->max->v = OOGLRenewNE(HPtNCoord, bbox->max->v, pdim,
+				 "Renew max coords");
+      bbox->max->dim = pdim;
+    }
+    if (min3p) {
+      if (bbox->geomflags & VERT_4D)
+	Pt4ToHPtN(&min3, bbox->min);
+      else
+	HPt3ToHPtN(&min3, NULL, bbox->min);
+    }
+    if (max3p) {
+      if (bbox->geomflags & VERT_4D)
+	Pt4ToHPtN(&max3, bbox->max);
+      else
+	HPt3ToHPtN(&max3, NULL, bbox->max);
+    }
+    if (minNp) {
+      HPtNCopy(minN, bbox->min);
+    }
+    if (maxNp) {
+      HPtNCopy(maxN, bbox->max);
+    }
+    bbox->pdim = pdim;
     bbox->center = BBoxCenterND(bbox, bbox->center);
   }
 
+  bbox->geomflags &= ~VERT_4D; /* bboxes are always N-dim */
+
   if (exist != NULL) return exist;
     
-  return (bbox);
+  return bbox;
+
+ error:
+  HPtNDelete(bbox->min);
+  HPtNDelete(bbox->max);
+  HPtNDelete(bbox->center);
+  OOGLFree(bbox);
+  return NULL;
 }
 
 void BBoxDelete(BBox *bbox)

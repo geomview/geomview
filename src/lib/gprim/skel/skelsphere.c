@@ -43,7 +43,7 @@ Geom *SkelBoundSphere(Skel *skel, Transform T, TransformN *TN, int *axes,
     
   SphereEncompassPoints((Sphere *)sphere,
 			skel->p,
-			(skel->geomflags & VERT_4D) ? skel->pdim : skel->pdim-1,
+			skel->pdim == 4 && (skel->geomflags & VERT_4D) != 0,
 			skel->pdim,
 			skel->nvert,
 			T, TN, axes);

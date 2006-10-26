@@ -54,6 +54,6 @@ extern Geom     *NDMeshBoundSphere(NDMesh *mesh,
 extern NDMesh	*NDMeshDice( NDMesh *, int (*proc)() );
 extern NDMesh	*NDMeshDraw( NDMesh * );
 extern NDMesh	*NDMeshPick( NDMesh *, Pick *, Appearance *, Transform );
-extern NDMesh   *NDMeshTransform( NDMesh *, TransformN *T );
+extern NDMesh *NDMeshTransform(NDMesh *m, Transform T, TransformN *TN);
 
 #endif /*MESHDEF*/

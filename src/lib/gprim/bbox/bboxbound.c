@@ -35,9 +35,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
 {
-  HPoint3 min, max;
-  HPt3Coord tmp;
-  
   if (bbox == NULL)
     return NULL;
 
@@ -49,42 +46,19 @@ BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
   }
 
   if (TN) { /* real ND bbox */
-    int i, dim;
+    int i;
     HPointN *minN;
     HPointN *maxN;
+    HPtNCoord tmp;
     BBox *result;
 
-    if (bbox->pdim == 4 && (bbox->geomflags & VERT_4D)) {
-      /* generate a real ND bounding box without VERT_4D */
-      HPointN tmp;
-
-      tmp.flags = 0;
-      tmp.dim = bbox->pdim+1;
-      tmp.v   = alloca(tmp.dim*sizeof(HPtNCoord));
-      tmp.v[tmp.dim-1] = 1.0;
-      for (i = 0; i < bbox->pdim; i++) {
-	tmp.v[i] = bbox->min->v[i];
-      }
-      minN = HPtNTransform(TN, &tmp, NULL);
-      for (i = 0; i < bbox->pdim; i++) {
-	tmp.v[i] = bbox->max->v[i];
-      }
-      maxN = HPtNTransform(TN, &tmp, NULL);
-    } else {
-      minN = HPtNTransform(TN, bbox->min, NULL);
-      maxN = HPtNTransform(TN, bbox->max, NULL);
-    }
-     
-    if (!(bbox->geomflags & VERT_4D)) {
-      HPtNDehomogenize(minN, minN);
-      HPtNDehomogenize(maxN, maxN);
-      dim = TN->odim-1;
-    } else {
-      dim = TN->odim;
-    }
+    minN = HPtNTransform(TN, bbox->min, NULL);
+    maxN = HPtNTransform(TN, bbox->max, NULL);
+    HPtNDehomogenize(minN, minN);
+    HPtNDehomogenize(maxN, maxN);
 
     /* and now swap coordinates between min and max as necessary */
-    for (i = 0; i < dim; i++) {
+    for (i = 1; i < TN->odim; i++) {
       if (minN->v[i] > maxN->v[i]) {
 	tmp = maxN->v[i]; maxN->v[i] = minN->v[i]; minN->v[i] = tmp;
       }
@@ -99,12 +73,13 @@ BBox *BBoxBound(BBox *bbox, Transform T, TransformN *TN)
   }
 
   if (T) {
-    if (bbox->pdim > 4) {
-      HPtNToHPt3(bbox->min, &min, NULL);
-      HPtNToHPt3(bbox->max, &max, NULL);
-    }
-    HPt3Transform(T, (HPoint3 *)bbox->min->v, &min);
-    HPt3Transform(T, (HPoint3 *)bbox->max->v, &max);
+    HPoint3 min, max;
+    HPt3Coord tmp;
+  
+    HPtNToHPt3(bbox->min, NULL, &min);
+    HPtNToHPt3(bbox->max, NULL, &max);
+    HPt3Transform(T, &min, &min);
+    HPt3Transform(T, &max, &max);
     HPt3Dehomogenize(&min, &min);
     HPt3Dehomogenize(&max, &max);
       
