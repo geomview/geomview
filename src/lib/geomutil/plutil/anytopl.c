@@ -143,7 +143,7 @@ static HPoint3 *hpoints(PLData *PL)
 	if(PL->Tn) {
 	    hp.dim = v->hdim;
 	    hp.v = v->ndp;
-	    HPtNTransformComponents(&hp, PL->Tn, 4, xyzw, (float *)p);
+	    HPtNTransformComponents(PL->Tn, &hp, xyzw, p);
 	} else {
 	    /* Project to 3-space: just take first 3 and final components. */
 	    memcpy(p, v->ndp, 3*sizeof(float));
@@ -177,7 +177,7 @@ static float *ndpoints(PLData *PL)
 	    hp.dim = 4;
 	    hp.v = &v->p.x;
 	}
-	HPtNTransformComponents(&hp, PL->Tn, 4, comp, p);
+	HPtNTransformComponents(PL->Tn, &hp, comp, (HPoint3 *)p);
     } else {
 	if(v->hdim == hdim) {
 	    memcpy(p, v->ndp, hdim*sizeof(float));
