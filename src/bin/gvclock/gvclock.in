@@ -161,9 +161,9 @@ exec date | \
   printf("(transform-set hour world world rotate 0 0 %g)", \
     -(time / 43200.0) * 3.14159 * 2.0);
 
-  printf("(transform-incr hour world world rotate 0 0 -3.14159 21600)")
-  printf("(transform-incr minute world world rotate 0 0 -3.14159 1800)")
-  printf("(transform-incr second world world rotate 0 0 -3.14159 30)")
+  printf("(transform-incr hour world world rotate 0 0 -3.14159 origin 21600)")
+  printf("(transform-incr minute world world rotate 0 0 -3.14159 origin 1800)")
+  printf("(transform-incr second world world rotate 0 0 -3.14159 origin 30)")
 
   printf(")")
 }
