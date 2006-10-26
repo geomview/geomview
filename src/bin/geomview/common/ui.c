@@ -97,6 +97,7 @@ void cui_init()
   uistate.bbox_center = 0;
   uistate.targetgeom = 0; /* World geom is index 0 */
   uistate.targetcam = INDEXOF(FOCUSID);
+  uistate.cam_wm_focus = 0; /* bad idea */
   uistate.mode_count = 0;
   uistate.emod_dir = NULL;
   uistate.apoverride = ~0;	/* Enable override by default */
@@ -273,9 +274,14 @@ set_ui_center(int id)
 void
 set_ui_center_origin(int use_bbox_center)
 {
-  uistate.bbox_center = use_bbox_center; /* boolean value */
+  uistate.bbox_center = use_bbox_center != 0; /* boolean value */
 }
 
+void
+set_ui_wm_focus(int cam_wm_focus)
+{
+  uistate.cam_wm_focus = cam_wm_focus != 0;
+}
 
 /*-----------------------------------------------------------------------
  * Function:	set_ui_target_id

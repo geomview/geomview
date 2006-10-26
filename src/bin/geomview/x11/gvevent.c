@@ -383,10 +383,29 @@ D1PRINT(("cam_mouse: at 2\n"));
 /*****************************************************************************/
 
 void cam_mousecross(Widget w, XtPointer data, XEnterWindowEvent *event,
-	Boolean *cont)
+		    Boolean *cont)
 {
-  int id = (int)(long)data;
-
-  gv_winenter(id);
+  if (!uistate.cam_wm_focus) {
+    int id = (int)(long)data;
+    
+    gv_winenter(id);
+  }
 }
 
+/*****************************************************************************/
+
+void cam_focus(Widget w, XtPointer data, XFocusChangeEvent *event,
+	       Boolean *cont)
+{
+  if (uistate.cam_wm_focus && event->type == FocusIn) {
+    int id = (int)(long)data;
+
+    gv_winenter(id);
+  }
+}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

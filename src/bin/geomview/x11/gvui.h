@@ -37,6 +37,8 @@ void cam_input(Widget, XtPointer, XmDrawingAreaCallbackStruct *);
 void cam_resize(Widget, XtPointer, XmDrawingAreaCallbackStruct *);
 void cam_mouse(Widget, XtPointer , XPointerMovedEvent *, Boolean *);
 void cam_mousecross(Widget, XtPointer , XEnterWindowEvent *, Boolean *);
+void cam_focus(Widget w, XtPointer data, XFocusChangeEvent *event,
+	       Boolean *cont);
 void cam_expose(Widget w, XtPointer id, XEvent *ev, Boolean *junk);
 
 void ui_build_browser(Widget, int, char *[]);

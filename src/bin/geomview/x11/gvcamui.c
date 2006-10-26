@@ -517,28 +517,35 @@ D1PRINT(("XtAddEventHandler(... panel_input [0] ...)\n"));
   for(i = SGL; i <= DBL; i++) {
     if(camdraw[i]) {
 
-	XtAddCallback(camdraw[i], XmNexposeCallback,
-			(XtCallbackProc) cam_expose, (XtPointer)(long) id);
-	XtAddCallback(camdraw[i], XmNresizeCallback,
-			(XtCallbackProc) cam_resize, (XtPointer)(long) id);
+      XtAddCallback(camdraw[i], XmNexposeCallback,
+		    (XtCallbackProc) cam_expose, (XtPointer)(long) id);
+      XtAddCallback(camdraw[i], XmNresizeCallback,
+		    (XtCallbackProc) cam_resize, (XtPointer)(long) id);
 
-D1PRINT(("XtAddEventHandler(... cam_expose ...)\n"));
-	XtAddEventHandler(camdraw[i],
-	    ExposureMask|StructureNotifyMask,
-	    False, (XtEventHandler) cam_expose, (XtPointer)(long) id);
+      D1PRINT(("XtAddEventHandler(... cam_expose ...)\n"));
+      XtAddEventHandler(camdraw[i],
+			ExposureMask|StructureNotifyMask,
+			False, (XtEventHandler) cam_expose,
+			(XtPointer)(long) id);
 
-D1PRINT(("XtAddEventHandler(... panel_input [1] ...)\n"));
-	XtAddEventHandler(camdraw[i],
-	    KeyPressMask|ButtonPressMask|ButtonReleaseMask,
-	    False, (XtEventHandler) panel_input, (XtPointer)(long) id);
+      D1PRINT(("XtAddEventHandler(... panel_input [1] ...)\n"));
+      XtAddEventHandler(camdraw[i],
+			KeyPressMask|ButtonPressMask|ButtonReleaseMask,
+			False, (XtEventHandler) panel_input,
+			(XtPointer)(long) id);
 
-D1PRINT(("XtAddEventHandler(... cam_mouse ...)\n"));
-	XtAddEventHandler(camdraw[i], ButtonMotionMask, False,
-		(XtEventHandler) cam_mouse, (XtPointer)(long) id);
+      D1PRINT(("XtAddEventHandler(... cam_mouse ...)\n"));
+      XtAddEventHandler(camdraw[i], ButtonMotionMask, False,
+			(XtEventHandler) cam_mouse,
+			(XtPointer)(long) id);
 
-D1PRINT(("XtAddEventHandler(... cam_mousecross ...)\n"));
-	XtAddEventHandler(camdraw[i], EnterWindowMask, False,
-		(XtEventHandler) cam_mousecross, (XtPointer)(long) id);
+      D1PRINT(("XtAddEventHandler(... cam_mousecross ...)\n"));
+      XtAddEventHandler(camdraw[i], EnterWindowMask, False,
+			(XtEventHandler) cam_mousecross, (XtPointer)(long) id);
+
+      D1PRINT(("XtAddEventHandler(... cam_mousecross ...)\n"));
+      XtAddEventHandler(camdraw[i], FocusChangeMask, False,
+			(XtEventHandler) cam_focus, (XtPointer)(long) id);
     }
   }
 

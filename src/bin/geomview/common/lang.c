@@ -145,6 +145,9 @@ void lang_init()
 
   define_keyword("bbox-center", BBOX_CENTER_KEYWORD);
   define_keyword("origin", ORIGIN_KEYWORD);
+
+  define_keyword("focus-change", FOCUS_CHANGE_KEYWORD);
+  define_keyword("mouse-cross", MOUSE_CROSS_KEYWORD);
   
   /*
    * Define various synonyms

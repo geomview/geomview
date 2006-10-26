@@ -307,7 +307,37 @@ void ui_mousefocus(int index)
   if (uistate.targetcam == INDEXOF(FOCUSID)) {
     ui_select(CAMID(uistate.mousefocus));
   }
+}
 
+LDEFINE(ui_cam_focus, LVOID,
+	"(ui_cam_focus [focus-change|mouse-cross])\n"
+	"Set the focus policy for the camera windows. The default is "
+	"\"mouse-cross\": a camera is made the active camera (for interactive "
+	"mouse events) when the mouse cursor crosses the window. Because "
+	"this means it can become "
+	"complicated to activate a specific camera (in the context of multiple "
+	"camera windows) there is also the option to only change the camera "
+	"focus when the window-manager decides to give it the focus for input "
+	"events. So, after specifying \"focus-change\" it depends on the "
+	"focus-change configuration of your window-manager when a camera "
+	"becomes the active camera for mouse-interaction.")
+{
+  Keyword policy = NO_KEYWORD;
+
+  LDECLARE(("ui-cam-focus", LBEGIN,
+	    LKEYWORD, &policy,
+	    LEND));
+  
+  if (policy != FOCUS_CHANGE_KEYWORD && policy != MOUSE_CROSS_KEYWORD) {
+    OOGLError(1,
+	      "Wrong keyword, expected either \"%s\" or \"%s\"\n",
+	      keywordname(FOCUS_CHANGE_KEYWORD),
+	      keywordname(MOUSE_CROSS_KEYWORD));
+    return Lnil;
+  }
+  set_ui_wm_focus(policy == FOCUS_CHANGE_KEYWORD);
+  
+  return Lt;
 }
 
 /*****************************************************************************/
@@ -497,7 +527,7 @@ LDEFINE(ui_center_origin, LVOID,
 	"Using either \"center\" or \"origin\" does not make a difference"
 	"if the center object is not a \"geometry\", e.g. if it is a camera.")
 {
-  int origin;
+  Keyword origin = NO_KEYWORD;
 
   LDECLARE(("ui-center-origin", LBEGIN,
             LKEYWORD, &origin,
@@ -1004,3 +1034,9 @@ void ui_set_itext(Widget w, int val)
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End:
+ */

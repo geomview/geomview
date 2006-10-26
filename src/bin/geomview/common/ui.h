@@ -43,8 +43,6 @@ typedef struct _emodule {
 	char *dir;
 } emodule;
 	
-	
-
 typedef struct {
   int	targetgeom;		/* index of target Geom for user actions   */
   int	targetcam;		/* index of target Camera for user actions */
@@ -53,6 +51,10 @@ typedef struct {
   int   centerid;		/* id of center of motion)		   */
   int   bbox_center;		/* use center of bbox of centerid as origin */
   int	mousefocus;		/* index of camera (window) where mouse is */
+  int   cam_wm_focus;           /* true: activate cam-win on
+				 * FocusChange events, false: activate
+				 * cam-win on mouse-cross events.
+				 */
 
   int   savewhat;		/* What in the world did we want to save?
 					(NOID = all) */
@@ -256,3 +258,9 @@ extern int uispace(int space);
 extern void ui_windowWillOpen(DView *dv);
 extern void ui_windowDidOpen(DView *dv);
 #endif /* ! UI_H */
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
