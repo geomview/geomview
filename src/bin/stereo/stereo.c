@@ -678,7 +678,7 @@ void unqdevice(int dev)  { /* Ignored */; }
 
 static int currentmonitor = -1;	/* Initially unknown */
 
-int getmonitor(type) { return currentmonitor; }
+int getmonitor(void) { return currentmonitor; }
 
 void setmonitor(int mode) {
 #if defined(SETMON_PATH)
