@@ -3,6 +3,4 @@ EXTRA_DIST = Headers
 
 noinst_LTLIBRARIES = libhpointn.la
 
-libhpointn_la_SOURCES = \
-    hpointnb.c hpointn.c \
-    hpointn.h
+libhpointn_la_SOURCES = hpointn.c hpointn.h

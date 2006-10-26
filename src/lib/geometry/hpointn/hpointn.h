@@ -30,8 +30,8 @@
 
 typedef float HPtNCoord;
 typedef struct HPtN {
-	short dim;	/* Dimension, including homogeneous divisor */
-	short flags;	/* Space tag */
+	int dim;	/* Dimension, including homogeneous divisor */
+	int flags;	/* Space tag */
 	HPtNCoord *v;	/* Array of coordinates; v[dim-1] is the homogenous divisor */
 } HPointN;
 
@@ -42,8 +42,8 @@ typedef struct HPtN {
  */
 typedef struct TmN {
 	REFERENCEFIELDS
-	short idim, odim;
-	short flags;
+	int idim, odim;
+	int flags;
 	HPtNCoord *a;	/* Array of idim rows, odim columns */
 } TransformN;
 
@@ -55,53 +55,63 @@ typedef struct TmN {
 #define  TmNentry(T, i,j)  ((T)->a[(i)*(T)->odim + (j)])
 
 
-	/* Construct point */
+/* Construct point */
 /*skip*/
 extern HPointN *HPtNCreate(int dim, const HPtNCoord *vec);
-	/* Destroy point */
+/* Destroy point */
 /*skip*/
 extern void HPtNDelete(HPointN *pt);
-	/* Copy point */
+/* Copy point */
 extern HPointN *HPtNCopy(const HPointN *pt1, HPointN *pt2);
-	/* Sum of points */
+/* Sum of points */
 extern HPointN *HPtNAdd(const HPointN *pt1, const HPointN *pt2, HPointN *sum);
-	/* Space */
+/* Space */
 /*skip*/
 extern int HPtNSpace( const HPointN *pt );
 /*skip*/
 extern HPointN *HPtNSetSpace( HPointN *pt, int space );
 
-	/* Linear combination */
+/* Linear combination */
 extern HPointN *HPtNComb(HPtNCoord u, const HPointN *pu, HPtNCoord v, const HPointN *pv, HPointN *sum);
 
-	/* Reduce to unit vector */
+/* Reduce to unit vector */
 extern HPointN *HPtNUnit(const HPointN *from, HPointN *to);
 
-	/* Dehomogenize, returning old 'w' component */
+/* Dehomogenize, returning old 'w' component */
 extern HPtNCoord HPtNDehomogenize(const HPointN *from, HPointN *to);
 
-	/* Apply a TransformN to an HPointN */
-extern HPointN *HPtNTransform( const TransformN *T, const HPointN *from, HPointN *to );
+/* Apply a TransformN to an HPointN */
+extern HPointN *
+HPtNTransform( const TransformN *T, const HPointN *from, HPointN *to );
+
+/* Apply the transpose of a TransformN to an HPointN */
+extern HPointN *
+HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to);
 
 extern HPointN * HPtNTransform3(Transform3 T, int *axes,
 				const HPointN *from, HPointN *to);
 
-	/* Add zeros to a vector to make it a given dimension */
-extern HPointN *HPtNPad(HPointN *from, short dim, HPointN *to);
+/* Add zeros to a vector to make it a given dimension */
+extern HPointN *HPtNPad(const HPointN *pt1, int dim2, HPointN *pt2);
 
-	/* Dot product of two vectors */
+/* Dot product of two vectors */
 extern HPtNCoord HPtNDot( const HPointN *p1, const HPointN *p2);
 
-	/* Return the projection of (p . T) on the axis-aligned subspace
-	 * given by indices[0 .. ncomponents-1].
-	 * If index is out of range (e.g. -1), return N-1'th component
-	 * (i.e. homogeneous divisor).  So a typical indices[] might read
-	 *   [0 1 2 -1]
-	 */
-extern HPtNCoord *HPtNTransformComponents( const HPointN *p, const TransformN *T, int ncomponents, int *indices, HPtNCoord *results );
+/* Return the projection of (p . T) on the axis-aligned subspace
+ * given by indices[0 .. ncomponents-1].
+ * If index is out of range (e.g. -1), return N-1'th component
+ * (i.e. homogeneous divisor).  So a typical indices[] might read
+ *   [0 1 2 -1]
+ */
+extern HPoint3 *HPtNTransformComponents(const TransformN *T,
+					const HPointN *from,
+					int *perm,
+					HPoint3 *results);
 
 extern HPointN *Pt4ToHPtN(HPoint3 *v4, HPointN *vN);
-extern HPoint3 *HPtNToHPt3(HPointN *from, HPoint3 *hp3, int *axes);
-extern void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other, int dim);
+extern HPointN *Pt3ToHPtN(Point3 *v3, HPointN *vN);
+extern HPointN *HPt3ToHPtN(HPoint3 *v4, int *perm, HPointN *vN);
+extern HPoint3 *HPtNToHPt3(const HPointN *from, int *axes, HPoint3 *hp3);
+extern void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other);
 
 #endif
