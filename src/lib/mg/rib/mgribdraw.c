@@ -86,7 +86,7 @@ mgrib_polygon(int nv,  HPoint3 *V,
 	mrti(mr_P,mr_buildarray, nv*3, mr_NULL);
 	for(i = 0; i < nv; i++) {
 	    /* we cannot descibe a polygon using Pw, so we normalize */
-	    HPt3Normalize(&V[i], &hpt);
+	    HPt3Dehomogenize(&V[i], &hpt);
 	    mrti(mr_subarray3, &hpt, mr_NULL);
 	}
     }
@@ -229,7 +229,7 @@ mgrib_drawPline(HPoint3 *p1, HPoint3 *p2)
 	HPoint3 pt;
 
 	HPt3Transform(S2O, &pnts[i], &pt);
-	HPt3Normalize(&pt, &pt);
+	HPt3Dehomogenize(&pt, &pt);
 	mrti(mr_subarray3, &pt, mr_NULL);
     }
 }
@@ -246,8 +246,8 @@ mgrib_drawCline(HPoint3 *p1, HPoint3 *p2)
   float size;
   int bounded(Point3 *p);
   
-    HPt3Normalize(p1, &Hstart);
-    HPt3Normalize(p2, &Hend);
+    HPt3Dehomogenize(p1, &Hstart);
+    HPt3Dehomogenize(p2, &Hend);
     
     start.x = Hstart.x;
     start.y = Hstart.y;
@@ -437,7 +437,7 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	/* do points */
 	mrti(mr_P, mr_buildarray, p->n_vertices*3, mr_NULL);
 	for (j=0, v=p->v; j < p->n_vertices; j++, v++) {
-	  HPt3Normalize(&(*v)->pt, &hpt);
+	  HPt3Dehomogenize(&(*v)->pt, &hpt);
 	  mrti(mr_subarray3, &hpt, mr_NULL);
 	}
 	
