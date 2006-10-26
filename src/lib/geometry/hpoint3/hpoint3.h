@@ -75,12 +75,12 @@ extern int HPt3CoincidentHLn3( HPoint3 *pt, HLine3 *ln );
 extern int HPt3CoincidentHPl3( HPoint3 *pt, HPlane3 *pl );
 
 extern void HPt3Transform( Transform3 T, HPoint3 *pt1, HPoint3 *pt2 );
-extern void HPt3TransformN( Transform3 T, HPoint3 *pt1, HPoint3 *pt2, int n );
+extern int HPt3TransformN( Transform3 T, HPoint3 *pt1, HPoint3 *pt2, int n );
 extern HPt3Coord HPt3TransPt3( Transform3 T, HPoint3 *from, Point3 *into );
-extern void Pt3ToPt4( Point3 *src, HPoint3 *dst, int npoints );
+extern void Pt3ToHPt3( Point3 *src, HPoint3 *dst, int npoints );
 extern void HPt3ToPt3( HPoint3 *src, Point3 *dst );
 extern void HPt3Dehomogenize( HPoint3 *src, HPoint3 *dst );
-extern void Pt4ToHPt3(HPoint3 *pt4, HPoint3 *hp3, int *axes);
+extern void Pt4ToHPt3(HPoint3 *pt4, int *axes, HPoint3 *hp3);
 
 extern void HPt3Dual( HPoint3 *pt, HPlane3 *pl );
 
@@ -109,5 +109,6 @@ extern void HPt3HypGramSchmidt(HPoint3 *base, HPoint3 *v);
 
 extern void HPt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other);
 extern void Pt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other);
+extern void Pt4MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other);
 
 #endif

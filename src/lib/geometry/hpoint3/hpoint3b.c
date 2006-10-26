@@ -187,16 +187,17 @@ HPt3SizeOne ( HPoint3 *pt, HPoint3 *out )
     out->w = 1.;
 }
 
+/* assume that min and max are  dehomogenized */
 void HPt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other)
 {
-  if(min->x > other->x) min->x = other->x;
-  else if(max->x < other->x) max->x = other->x;
-  if(min->y > other->y) min->y = other->y;
-  else if(max->y < other->y) max->y = other->y;
-  if(min->z > other->z) min->z = other->z;
-  else if(max->z < other->z) max->z = other->z;
-  if(min->w > other->w) min->w = other->w;
-  else if(max->w < other->w) max->w = other->w;
+  HPt3Coord oc = other->w;
+
+  if(oc * min->x > other->x) min->x = other->x / oc;
+  else if(oc * max->x < other->x) max->x = other->x / oc;
+  if(oc * min->y > other->y) min->y = other->y / oc;
+  else if(oc * max->y < other->y) max->y = other->y / oc;
+  if(oc * min->z > other->z) min->z = other->z / oc;
+  else if(oc * max->z < other->z) max->z = other->z / oc;
 }
 
 void Pt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other)
@@ -208,3 +209,21 @@ void Pt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other)
   if(min->z > other->z) min->z = other->z;
   else if(max->z < other->z) max->z = other->z;
 }
+
+void Pt4MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other)
+{
+  if(min->x > other->x) min->x = other->x;
+  else if(max->x < other->x) max->x = other->x;
+  if(min->y > other->y) min->y = other->y;
+  else if(max->y < other->y) max->y = other->y;
+  if(min->z > other->z) min->z = other->z;
+  else if(max->z < other->z) max->z = other->z;
+  if(min->w > other->w) min->w = other->w;
+  else if(max->w < other->w) max->w = other->w;
+}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
