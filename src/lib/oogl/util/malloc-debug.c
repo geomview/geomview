@@ -83,6 +83,18 @@ void free_record(void *ptr)
   free(ptr);
 }
 
+char *strdup_record(const char *string,
+		    const char *file, const char *func, int line)
+{
+  size_t len = strlen(string);
+  char *newstring;
+  
+  newstring = malloc_record(len+1, file, func, line);
+  memcpy(newstring, string, len+1);
+
+  return newstring;
+}
+
 void *realloc_record(void *ptr, size_t size,
 		     const char *file, const char *func, int line)
 {
