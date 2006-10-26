@@ -787,7 +787,8 @@ LDEFINE(or, LLOBJECT,
 	    LHOLD, LLOBJECT, &expr2,
 	    LEND));
   if (expr1 != Lnil) {
-    return expr1;
+    /* arguments do not survive the life-time of a function */
+    return LRefIncr(expr1);
   } else {
     return LEval(expr2);
   }
@@ -1429,11 +1430,14 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
 	} else {
 	  arg = LEval(args->car);
 	}
+	if (argtype == LLOBJECT && arg == args->car) {
+	  LFree(arg);
+	}
 	++argsgot;
 	convok = LFROMOBJ(argtype)(arg, va_arg(a_list, void *));
 	if (!convok) {
 	  OOGLError(0,"%s: %s expected in arg position %1d (got %s)\n",
-		  name,LNAME(argtype),argsgot,LSummarize(arg));
+		    name,LNAME(argtype),argsgot,LSummarize(arg));
 	  LFree(arg);
 	  goto bad;
 	}
