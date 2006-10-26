@@ -32,24 +32,24 @@
 /*Following are the data definitions that I used to store Geomview colormaps
 in the routines I wrote dealing with those entities.*/
 
-typedef struct			
-{	float height;		/*height of mark along its direction*/
-	ColorA c;		/*color of mark*/
+typedef struct {
+  float height;			/*height of mark along its direction */
+  ColorA c;			/*color of mark */
 } mark;
 
-typedef struct
-{	int dim;		/*dimension of the direction coloring along*/
-	int np;			/*number of marks along the direction*/
-	float *direction;	/*array of floats giving the direction*/
-	mark **p;		/*array of pointer to the marks*/
+typedef struct {
+  int dim;			/*dimension of the direction coloring along */
+  int np;			/*number of marks along the direction */
+  float *direction;		/*array of floats giving the direction */
+  mark **p;			/*array of pointer to the marks */
 } dir;
 
-typedef struct
-{	char **coordsys;	/*array of strings of length numdirs giving the
-				  name of the coordinate system in which the 
-				 colormap is specified*/
-	int numdirs;		/*number of directions along which to color*/
-	dir **plex;		/*array of pointers to dirs of length numdirs*/
+typedef struct {
+  char **coordsys;		/*array of strings of length numdirs giving the
+				   name of the coordinate system in which the 
+				   colormap is specified */
+  int numdirs;			/*number of directions along which to color */
+  dir **plex;			/*array of pointers to dirs of length numdirs */
 } colormap;
 
 #endif

@@ -44,5 +44,6 @@ been seeded.*/
 
 int irand(int i1, int i2)
 {
-     return (int)(((double)(i2)-(double)(i1))*((double)rand()/RAND_MAX)+i1);
+  return (int) (((double) (i2) -
+		 (double) (i1)) * ((double) rand() / RAND_MAX) + i1);
 }

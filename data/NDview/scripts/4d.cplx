@@ -13,10 +13,10 @@
 (merge window default {position 850 1250 100 500} )
 (merge camera default { focus 10 } )
 (new-camera cluster2:3_4_2)
-(ND-axes cluster1:1_2_3 cluster1 0 1 2)
-(ND-axes cluster1:1_2_4 cluster1 0 1 3)
-(ND-axes cluster2:3_4_1 cluster2 2 3 0)
-(ND-axes cluster2:3_4_2 cluster2 2 3 1)
+(ND-axes cluster1:1_2_3 cluster1 1 2 3)
+(ND-axes cluster1:1_2_4 cluster1 1 2 4)
+(ND-axes cluster2:3_4_1 cluster2 3 4 1)
+(ND-axes cluster2:3_4_2 cluster2 3 4 2)
 (ND-color cluster1:1_2_3
         (
           (

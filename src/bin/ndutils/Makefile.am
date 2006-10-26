@@ -34,15 +34,15 @@ module_DATA = .geomview-3d-snapshot .geomview-slicer .geomview-colormap
 
 $(top_builddir)/modules/.geomview-3d-snapshot: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "3D-Snapshot" "$(subdir)/ndutils $(subdir)/$(srcdir)/3D-Snapshot")' > $@
+	echo '(emodule-define "3D-Snapshot" "$(subdir)/ndutils $(realpath $(srcdir))/3D-Snapshot")' > $@
 
 $(top_builddir)/modules/.geomview-slicer: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Slicer" "$(subdir)/ndutils $(subdir)/$(srcdir)/Slicer")' > $@
+	echo '(emodule-define "Slicer" "$(subdir)/ndutils $(realpath $(srcdir))//Slicer")' > $@
 
 $(top_builddir)/modules/.geomview-colormap: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Colormap" "$(subdir)/ndutils $(subdir)/$(srcdir)/Colormap")' > $@
+	echo '(emodule-define "Colormap" "$(subdir)/ndutils $(realpath $(srcdir))/Colormap")' > $@
 
 all-local: \
  $(top_builddir)/modules/.geomview-3d-snapshot \

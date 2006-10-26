@@ -45,22 +45,24 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 Returns the standard euclidean inner product*/
 
 float InnerProductN(float *a, float *b, int dim)
-{	float sum=0.0;
-	int i;
-	for(i=0;i<dim;i++)
-		sum+=(a[i]*b[i]);
-	return sum;
+{
+  float sum = 0.0;
+  int i;
+  for (i = 0; i < dim; i++)
+    sum += (a[i] * b[i]);
+  return sum;
 }
 
 /*Takes a pointer to a float and an integer dimension.  Returns
 the Euclidean norm of an n-dimensional vector*/
 
 float NormN(float *a, int dim)
-{	float sum=0.0;
-	int i;
-	for(i=0;i<dim;i++)
-		sum+=(a[i]*a[i]);
-	return (sqrt(sum));
+{
+  float sum = 0.0;
+  int i;
+  for (i = 0; i < dim; i++)
+    sum += (a[i] * a[i]);
+  return (sqrt(sum));
 }
 
 /*Takes a pointer to an HPoint3, a pointer to an HPointN, and an integer signifying
@@ -68,35 +70,11 @@ the inherent dimension of the HPoint3 (assumes either 3 or 4)
 Extracts point data from the HPoint3 and puts it into the place data of the HPointN.
 Assumes space has already been allocated in destination*/
 
-HPointN *extract(HPoint3 *source, HPointN *destination, int dimsource)
-{	float *temp;
-	if(dimsource==3)
-	{	temp=(float *)malloc((sizeof *temp)*4);
-		temp[0]=source->x;
-		temp[1]=source->y;
-		temp[2]=source->z;
-		temp[3]=source->w;
-	}
-	else
-	{	temp=(float *)malloc((sizeof *temp)*5);
-		temp[0]=source->x;
-                temp[1]=source->y;
-                temp[2]=source->z;
-                temp[3]=source->w;
-		temp[4]=1.0;
-	}
-	destination->v=temp;
-	return destination;
-}
-
-/*Places the first four coordinate values of an HPointN into a given HPoint3*/
-
-HPoint3 *place(HPointN *source, HPoint3 *destination)
-{	float *ptr;
-	ptr=source->v;
-	destination->x=ptr[0];
-	destination->y=ptr[1];
-	destination->z=ptr[2];
-	destination->w=ptr[3];
-	return destination;
+HPointN *extract(HPoint3 * source, HPointN * destination, int dimsource)
+{
+  if (dimsource == 3)
+    HPt3ToHPtN(source, NULL, destination);
+  else
+    Pt4ToHPtN(source, destination);
+  return destination;
 }

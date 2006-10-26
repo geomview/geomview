@@ -41,48 +41,44 @@ double heights[20];
 double slopes[20][3];
 double max, min;
 
-double *
-colorSingle(double z)
+double *colorSingle(double z)
 {
-    double r = 0, g = 0, b = 0;
-    int i;
-    double *c;
+  double r = 0, g = 0, b = 0;
+  int i;
+  double *c;
 
-    for (i=parts-1; i>=0; i--)
-    {
-	if (z == heights[i])
-	{
-	    r = colors[i][0];
-	    g = colors[i][1];
-	    b = colors[i][2];
-	    break;
-	}
-	if (z > heights[i])
-	{
-	    r = (slopes[i][0]*(z-heights[i+1])) + colors[i+1][0];
-	    g = (slopes[i][1]*(z-heights[i+1])) + colors[i+1][1];
-	    b = (slopes[i][2]*(z-heights[i+1])) + colors[i+1][2];
-	    break;
-	}
+  for (i = parts - 1; i >= 0; i--) {
+    if (z == heights[i]) {
+      r = colors[i][0];
+      g = colors[i][1];
+      b = colors[i][2];
+      break;
     }
-    c = (double *)malloc(3*sizeof(double));
-    c[0] = r; c[1] = g; c[2] = b;
-    return c;
+    if (z > heights[i]) {
+      r = (slopes[i][0] * (z - heights[i + 1])) + colors[i + 1][0];
+      g = (slopes[i][1] * (z - heights[i + 1])) + colors[i + 1][1];
+      b = (slopes[i][2] * (z - heights[i + 1])) + colors[i + 1][2];
+      break;
+    }
+  }
+  c = (double *) malloc(3 * sizeof(double));
+  c[0] = r;
+  c[1] = g;
+  c[2] = b;
+  return c;
 }
 
 int
-setphotoCmd(ClientData data, Tcl_Interp *interp,
+setphotoCmd(ClientData data, Tcl_Interp * interp,
 	    int argc, const char **argv)
 {
-  if (argc != 2)
-  {
+  if (argc != 2) {
     Tcl_AppendResult(interp, argv[0],
 		     ": argument should be <photo>", (char *) NULL);
     return TCL_ERROR;
   }
   pp = Tk_FindPhoto(interp, argv[1]);
-  if (pp == NULL)
-  {
+  if (pp == NULL) {
     Tcl_AppendResult(interp, argv[0], ": photo window ", argv[1],
 		     " not found", (char *) NULL);
     return TCL_ERROR;
@@ -90,125 +86,112 @@ setphotoCmd(ClientData data, Tcl_Interp *interp,
   blk.width = 432;
   blk.height = 20;
   blk.pixelSize = 3;
-  blk.pitch = 3*432;
+  blk.pitch = 3 * 432;
   blk.offset[0] = 0;
   blk.offset[1] = 1;
   blk.offset[2] = 2;
-  blk.pixelPtr = malloc(432*20*3);
+  blk.pixelPtr = malloc(432 * 20 * 3);
   return TCL_OK;
 }
 
 int
-colorsCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv)
+colorsCmd(ClientData data, Tcl_Interp * interp, int argc,
+	  const char **argv)
 {
-    int i, j, v;
-    double z, r = 0, g = 0, b = 0;
-    int red, green, blue;
-    int sub = 0;
-    unsigned char *buf=blk.pixelPtr;
+  int i, j, v;
+  double z, r = 0, g = 0, b = 0;
+  int red, green, blue;
+  int sub = 0;
+  unsigned char *buf = blk.pixelPtr;
 
-    if (argc==5)
-	return TCL_OK;
-    if (argc<5)
-    {
-	Tcl_AppendResult(interp,
-			 "wrong # args: should be <colors>\n",
-			 (char *) NULL);
-	return TCL_ERROR;
-    }
-    if ((argc-1)%4)
-    {
-	Tcl_AppendResult(interp,
-			 "wrong # args: should be <colors>\n",
-			 (char *) NULL);
-	return TCL_ERROR;
-    }
-
-    argc-=1;
-    argv+=1;
-    parts=argc/4;
-    for (i=0, j=0; i<parts; i++)
-    {
-        heights[j] = atof(argv[4*i]);
-	if ((j!=0) && (heights[j] == heights[j-1]))
-	{
-	    sub++;
-	    continue;
-	}
-	colors[j][0] = atof(argv[4*i+1])/255.0;
-	colors[j][1] = atof(argv[4*i+2])/255.0;
-	colors[j][2] = atof(argv[4*i+3])/255.0;
-	j++;
-    }
-    parts -= sub;
-    heights[0] = min;
-    heights[parts-1] = max;
-    for (i=0; i<parts-1; i++)
-	for (j=0; j<3; j++)
-	    slopes[i][j] = (colors[i+1][j]-colors[i][j])/
-		(heights[i+1]-heights[i]);
-    for (j=0; j<216; j++)
-    {
-	z = j*(max-min)/215.0+min;
-	for (i=parts-1; i>=0; i--)
-	{
-	    if (z == heights[i])
-	    {
-		r = colors[i][0];
-		g = colors[i][1];
-		b = colors[i][2];
-		break;
-	    }
-	    if (z > heights[i])
-	    {
-		r = (slopes[i][0]*(z-heights[i+1])) + colors[i+1][0];
-		g = (slopes[i][1]*(z-heights[i+1])) + colors[i+1][1];
-		b = (slopes[i][2]*(z-heights[i+1])) + colors[i+1][2];
-		break;
-	    }
-	}
-	red = (unsigned)(0xFFU*r);
-	green = (unsigned)(0xFFU*g);
-	blue = (unsigned)(0xFFU*b);
-	for (v=0; v<20; v++)
-	{
-	    buf[j*2*3 + v*432*3] = red;
-	    buf[j*2*3 + v*432*3 + 1] = green;
-	    buf[j*2*3 + v*432*3 + 2] = blue;
-	    buf[(j*2+1)*3 + v*432*3] = red;
-	    buf[(j*2+1)*3 + v*432*3 + 1] = green;
-	    buf[(j*2+1)*3 + v*432*3 + 2] = blue;
-	}
-    }
-    Tk_PhotoPutBlock(pp, &blk, 0, 0, 432, 20, TK_PHOTO_COMPOSITE_OVERLAY);
+  if (argc == 5)
     return TCL_OK;
+  if (argc < 5) {
+    Tcl_AppendResult(interp,
+		     "wrong # args: should be <colors>\n", (char *) NULL);
+    return TCL_ERROR;
+  }
+  if ((argc - 1) % 4) {
+    Tcl_AppendResult(interp,
+		     "wrong # args: should be <colors>\n", (char *) NULL);
+    return TCL_ERROR;
+  }
+
+  argc -= 1;
+  argv += 1;
+  parts = argc / 4;
+  for (i = 0, j = 0; i < parts; i++) {
+    heights[j] = atof(argv[4 * i]);
+    if ((j != 0) && (heights[j] == heights[j - 1])) {
+      sub++;
+      continue;
+    }
+    colors[j][0] = atof(argv[4 * i + 1]) / 255.0;
+    colors[j][1] = atof(argv[4 * i + 2]) / 255.0;
+    colors[j][2] = atof(argv[4 * i + 3]) / 255.0;
+    j++;
+  }
+  parts -= sub;
+  heights[0] = min;
+  heights[parts - 1] = max;
+  for (i = 0; i < parts - 1; i++)
+    for (j = 0; j < 3; j++)
+      slopes[i][j] = (colors[i + 1][j] - colors[i][j]) /
+	  (heights[i + 1] - heights[i]);
+  for (j = 0; j < 216; j++) {
+    z = j * (max - min) / 215.0 + min;
+    for (i = parts - 1; i >= 0; i--) {
+      if (z == heights[i]) {
+	r = colors[i][0];
+	g = colors[i][1];
+	b = colors[i][2];
+	break;
+      }
+      if (z > heights[i]) {
+	r = (slopes[i][0] * (z - heights[i + 1])) + colors[i + 1][0];
+	g = (slopes[i][1] * (z - heights[i + 1])) + colors[i + 1][1];
+	b = (slopes[i][2] * (z - heights[i + 1])) + colors[i + 1][2];
+	break;
+      }
+    }
+    red = (unsigned) (0xFFU * r);
+    green = (unsigned) (0xFFU * g);
+    blue = (unsigned) (0xFFU * b);
+    for (v = 0; v < 20; v++) {
+      buf[j * 2 * 3 + v * 432 * 3] = red;
+      buf[j * 2 * 3 + v * 432 * 3 + 1] = green;
+      buf[j * 2 * 3 + v * 432 * 3 + 2] = blue;
+      buf[(j * 2 + 1) * 3 + v * 432 * 3] = red;
+      buf[(j * 2 + 1) * 3 + v * 432 * 3 + 1] = green;
+      buf[(j * 2 + 1) * 3 + v * 432 * 3 + 2] = blue;
+    }
+  }
+  Tk_PhotoPutBlock(pp, &blk, 0, 0, 432, 20, TK_PHOTO_COMPOSITE_OVERLAY);
+  return TCL_OK;
 }
 
 int
-minCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv)
+minCmd(ClientData data, Tcl_Interp * interp, int argc, const char **argv)
 {
-    float f;
-    if (argc!=2)
-    {
-	Tcl_AppendResult(interp, "invalid min value\n", (char *) NULL);
-	return TCL_ERROR;
-    }
-    sscanf(argv[1], "%f", &f);
-    min = f;
-    return TCL_OK;
+  float f;
+  if (argc != 2) {
+    Tcl_AppendResult(interp, "invalid min value\n", (char *) NULL);
+    return TCL_ERROR;
+  }
+  sscanf(argv[1], "%f", &f);
+  min = f;
+  return TCL_OK;
 }
 
 int
-maxCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv)
+maxCmd(ClientData data, Tcl_Interp * interp, int argc, const char **argv)
 {
-    float f;
-    if (argc!=2)
-    {
-	Tcl_AppendResult(interp, "invalid max value\n", (char *) NULL);
-	return TCL_ERROR;
-    }
-    sscanf(argv[1], "%f", &f);
-    max = f;
-    return TCL_OK;
+  float f;
+  if (argc != 2) {
+    Tcl_AppendResult(interp, "invalid max value\n", (char *) NULL);
+    return TCL_ERROR;
+  }
+  sscanf(argv[1], "%f", &f);
+  max = f;
+  return TCL_OK;
 }
-

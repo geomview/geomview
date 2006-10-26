@@ -29,6 +29,6 @@
 
 extern IOBFILE *infile;
 
-int ndutils_init(Tcl_Interp *interp);
+int ndutils_init(Tcl_Interp * interp);
 
 #endif

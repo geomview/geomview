@@ -25,6 +25,6 @@
 #include	"geomclass.h"
 #include	"hpointn.h"
 
-Geom *GeomtoNoff(Geom *g, TransformN *t);
+Geom *GeomtoNoff(Geom * g, TransformN * t);
 
 #endif

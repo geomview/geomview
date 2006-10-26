@@ -2,5 +2,5 @@
 (dimension 4)
 (merge window default { position 600 900 600 900 })
 (new-camera cluster1:Y_Z_W)
-(ND-axes cluster1:Y_Z_W cluster1 1 2 3)
+(ND-axes cluster1:Y_Z_W cluster1 2 3 4)
 )

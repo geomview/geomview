@@ -212,7 +212,7 @@ proc myslider {path label command} {
 }
 
 proc setlens {val} {
-    puts "(merge cameral allcams {focus [expr $val*$val*50.0]})"
+    puts "(merge camera allcams {focus [expr $val*$val*50.0]})"
     flush stdout
 }
 
@@ -225,7 +225,7 @@ proc setrotate {which val} {
     if $val==0 {
 	puts "(transform target focus focus rotate 0 0 0)"
     } else {
-	puts [format "(transform-incr target focus focus rotate %s %f)" [lindex {{} "1.57 0 0" "0 1.57 0" "0 0 1.57"} $which] [expr 0.5/$val]]
+	puts [format "(transform-incr target focus focus rotate %s origin %f)" [lindex {{} "1.57 0 0" "0 1.57 0" "0 0 1.57"} $which] [expr 0.5/$val]]
     }
     flush stdout
 }
@@ -285,7 +285,7 @@ proc newwin_ok {} {
     puts "(new-camera $name)"
     set newwin_zerodims {}
     foreach i $newwin_dims {
-	lappend newwin_zerodims [expr $i-1]
+	lappend newwin_zerodims [expr $i]
     }
     puts "(ND-axes $name $newwin_cluster $newwin_zerodims)"
     flush stdout

@@ -23,6 +23,7 @@
 
 #include	"hpointn.h"
 
-int return_orthonormal_matrix(TransformN *T, int xdim, int ydim, int zdim, int dimension);
+int return_orthonormal_matrix(TransformN * T, int xdim, int ydim, int zdim,
+			      int dimension);
 
 #endif

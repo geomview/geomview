@@ -9,9 +9,9 @@
 (new-camera cluster1:1_4_2)
 (merge window default { position 330 630 350 650 })
 (new-camera cluster2:1_2_3)
-(ND-axes cluster1:1_2_3 cluster1 0 1 2)
-(ND-axes cluster1:1_4_2 cluster1 0 3 1)
-(ND-axes cluster2:1_2_3 cluster2 0 1 2)
+(ND-axes cluster1:1_2_3 cluster1 1 2 3)
+(ND-axes cluster1:1_4_2 cluster1 1 4 2)
+(ND-axes cluster2:1_2_3 cluster2 1 2 3)
 (transform cluster2:1_2_3 world world  rotate -.3 .5 .07)
 (ND-color cluster1:1_2_3
 	(

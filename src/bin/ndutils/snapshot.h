@@ -24,7 +24,7 @@
 #include	<tcl.h>
 #include	<tk.h>
 
-int DoProjection(ClientData clientdata, Tcl_Interp *interp,
+int DoProjection(ClientData clientdata, Tcl_Interp * interp,
 		 int argc, const char **argv);
 
 #endif

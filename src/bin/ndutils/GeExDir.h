@@ -24,9 +24,9 @@
 #include	<tcl.h>
 #include	<tk.h>
 
-int GeomExDir(ClientData clientdata, Tcl_Interp *interp,
+int GeomExDir(ClientData clientdata, Tcl_Interp * interp,
 	      int argc, const char **argv);
-int ObjExistCheck(ClientData clientdata, Tcl_Interp *interp,
+int ObjExistCheck(ClientData clientdata, Tcl_Interp * interp,
 		  int argc, const char **argv);
 
 #endif

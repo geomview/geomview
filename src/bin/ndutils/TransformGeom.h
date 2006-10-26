@@ -25,6 +25,7 @@
 #include	"geomclass.h"
 #include	"hpointn.h"
 
-Geom *GeomProjCam(Geom *g, TransformN *ObjUniv, TransformN *CamUniv, int *axes);
+Geom *GeomProjCam(Geom * g, TransformN * ObjUniv, TransformN * CamUniv,
+		  int *axes);
 
 #endif

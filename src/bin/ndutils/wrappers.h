@@ -32,16 +32,17 @@ gradiantCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv);
 */
 
 int
-setphotoCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv);
+setphotoCmd(ClientData data, Tcl_Interp * interp, int argc,
+	    const char **argv);
 
 int
-colorsCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv);
+colorsCmd(ClientData data, Tcl_Interp * interp, int argc,
+	  const char **argv);
 
 int
-minCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv);
+minCmd(ClientData data, Tcl_Interp * interp, int argc, const char **argv);
 
 int
-maxCmd(ClientData data, Tcl_Interp *interp, int argc, const char **argv);
+maxCmd(ClientData data, Tcl_Interp * interp, int argc, const char **argv);
 
 #endif
-

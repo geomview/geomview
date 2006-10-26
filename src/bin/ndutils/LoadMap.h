@@ -24,6 +24,6 @@
 #include	<stdio.h>
 #include	"ColorMapDefs.h"
 
-colormap *NDcolorFLoad(IOBFILE *fp, char *name);
+colormap *NDcolorFLoad(IOBFILE * fp, char *name);
 
 #endif

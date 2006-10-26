@@ -12,10 +12,10 @@
 (new-camera U_V__X)
 (merge window default {position 850 1250 100 500} )
 (new-camera U_V__Y)
-(ND-axes X_Y__U cluster1 0 1 2)
-(ND-axes X_Y__V cluster2 0 1 3)
-(ND-axes U_V__X cluster3 2 3 0)
-(ND-axes U_V__Y cluster4 2 3 1)
+(ND-axes X_Y__U cluster1 1 2 3)
+(ND-axes X_Y__V cluster2 1 2 4)
+(ND-axes U_V__X cluster3 3 4 1)
+(ND-axes U_V__Y cluster4 3 4 2)
 (ND-color X_Y__U
         (
           (

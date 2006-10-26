@@ -25,6 +25,6 @@
 #include	"ColorMapDefs.h"
 #include	"color.h"
 
-ColorA *colorpoint(HPointN *pt, colormap *map, char *obj);
+ColorA *colorpoint(HPointN * pt, colormap * map, char *obj);
 
 #endif

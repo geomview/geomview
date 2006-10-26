@@ -30,35 +30,40 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 
 IOBFILE *infile;
 
-int
-ndutils_init(Tcl_Interp *interp)
+int ndutils_init(Tcl_Interp * interp)
 {
-    Tk_Window w = Tk_MainWindow(interp);
+  Tk_Window w = Tk_MainWindow(interp);
 
 /*Used by all three*/
-    Tcl_CreateCommand(interp, "ObjExistCheck", ObjExistCheck, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "ObjExistCheck", ObjExistCheck, (ClientData) w,
+		    NULL);
 
 /*Used by slicer*/
-    Tcl_CreateCommand(interp, "GetData", GetData, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "GetDim", GetDim, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "CreateClipPlane", CreateClipPlane, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "UpdatePicture", UpdatePicture, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "GetFocusCam", GetFocusCam, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "SliceNDice", SliceNDice, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "GetData", GetData, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "GetDim", GetDim, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "CreateClipPlane", CreateClipPlane,
+		    (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "UpdatePicture", UpdatePicture, (ClientData) w,
+		    NULL);
+  Tcl_CreateCommand(interp, "GetFocusCam", GetFocusCam, (ClientData) w,
+		    NULL);
+  Tcl_CreateCommand(interp, "SliceNDice", SliceNDice, (ClientData) w,
+		    NULL);
 
 /*used by colormap*/
-    Tcl_CreateCommand(interp, "GeomExDir", GeomExDir, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "setphoto", setphotoCmd, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "colors", colorsCmd, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "setmin", minCmd, (ClientData) w, NULL);
-    Tcl_CreateCommand(interp, "setmax", maxCmd, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "GeomExDir", GeomExDir, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "setphoto", setphotoCmd, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "colors", colorsCmd, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "setmin", minCmd, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "setmax", maxCmd, (ClientData) w, NULL);
 
 /*used by colormap and 3dsnapshot*/
-    Tcl_CreateCommand(interp, "DoProjection", DoProjection, (ClientData) w, NULL);
+  Tcl_CreateCommand(interp, "DoProjection", DoProjection, (ClientData) w,
+		    NULL);
 
-    infile = iobfileopen(stdin);
+  infile = iobfileopen(stdin);
 
-    initSlicer();
+  initSlicer();
 
-    return TCL_OK;
-}  
+  return TCL_OK;
+}

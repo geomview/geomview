@@ -26,17 +26,17 @@
 
 void initSlicer(void);
 
-int GetFocusCam(ClientData clientdata, Tcl_Interp *interp,
+int GetFocusCam(ClientData clientdata, Tcl_Interp * interp,
 		int argc, const char **argv);
-int GetDim(ClientData clientdata, Tcl_Interp *interp,
+int GetDim(ClientData clientdata, Tcl_Interp * interp,
 	   int argc, const char **argv);
-int CreateClipPlane(ClientData clientdata, Tcl_Interp *interp,
+int CreateClipPlane(ClientData clientdata, Tcl_Interp * interp,
 		    int argc, const char **argv);
-int GetData(ClientData clientdata, Tcl_Interp *interp,
+int GetData(ClientData clientdata, Tcl_Interp * interp,
 	    int argc, const char **argv);
-int UpdatePicture(ClientData clientdata, Tcl_Interp *interp,
+int UpdatePicture(ClientData clientdata, Tcl_Interp * interp,
 		  int argc, const char **argv);
-int SliceNDice(ClientData clientdata, Tcl_Interp *interp,
+int SliceNDice(ClientData clientdata, Tcl_Interp * interp,
 	       int argc, const char **argv);
 
 #endif

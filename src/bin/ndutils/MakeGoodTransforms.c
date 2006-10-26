@@ -32,55 +32,57 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 
 #define EPSILON .000001
 
-static int gram_schmidt( TransformN *T, float **order, int dimension);
+static int gram_schmidt(TransformN * T, float **order, int dimension);
 
-int return_orthonormal_matrix(TransformN *T, int xdim, int ydim, int zdim, int dimension)
+int return_orthonormal_matrix(TransformN * T, int xdim, int ydim, int zdim,
+			      int dimension)
 {
-    float **rearranged;
-    int j = 0, k;
-    srand(time(NULL));
-    rearranged = calloc(dimension, sizeof(float *));
-    rearranged[j++] = &(T->a[zdim*(dimension+1)]);
-    rearranged[j++] = &(T->a[xdim*(dimension+1)]);
-    rearranged[j++] = &(T->a[ydim*(dimension+1)]);
-    for ( k = 0; k < dimension; k++)
-        if ( k != xdim && k != ydim && k != zdim )
-            rearranged[j++] = &(T->a[k*(dimension+1)]);
-    while ( gram_schmidt(T,rearranged,dimension) == 0) {
-        /* got an almost zero matrix, jiggle and try again! */
-        for(j=0; j< dimension; j++ )
-           for(k=0; k< dimension; k++ )
+  float **rearranged;
+  int j = 0, k;
+  srand(time(NULL));
+  rearranged = calloc(dimension, sizeof(float *));
+  rearranged[j++] = &(T->a[zdim * (dimension + 1)]);
+  rearranged[j++] = &(T->a[xdim * (dimension + 1)]);
+  rearranged[j++] = &(T->a[ydim * (dimension + 1)]);
+  for (k = 0; k < dimension; k++)
+    if (k != xdim && k != ydim && k != zdim)
+      rearranged[j++] = &(T->a[k * (dimension + 1)]);
+  while (gram_schmidt(T, rearranged, dimension) == 0) {
+    /* got an almost zero matrix, jiggle and try again! */
+    for (j = 0; j < dimension; j++)
+      for (k = 0; k < dimension; k++)
 
-                rearranged[j][k] +=  EPSILON*((float)rand())/(2147483648.0);
-  /* RAND_MAX +1 */
-    }
-    free(rearranged);
-    return 1;
+	rearranged[j][k] += EPSILON * ((float) rand()) / (2147483648.0);
+    /* RAND_MAX +1 */
+  }
+  free(rearranged);
+  return 1;
 }
 
-static int gram_schmidt( TransformN *T, float **order, int dimension)
+static int gram_schmidt(TransformN * T, float **order, int dimension)
 {
-	float *a, r, *point;
-	int i, j, k, currentrow = 0;
-	a = order[currentrow];
-	for ( k = 0; k< dimension; k++) {
-		for( r = 0.0, i = dimension; i; i--, a++)
-			r += *a * *a;
-		if ( r < EPSILON ) return 0;
-		r = sqrt(r);
-		a--;
-		for (  i = dimension; i; i--)
-			*a-- /= r;
-		point = order[currentrow];
-		for ( j = k + 1; j < dimension; j++) {
-			r = 0.0;
-			a = order[currentrow + j - k];
-			for ( i = dimension; i; i--)
-				r += *point++ * *a++;
-			for ( i = dimension; i; i--)
-				*(--a) -= *(--point) * r;
-		}
-		a = order[++currentrow];
-	}
-	return 1;
+  float *a, r, *point;
+  int i, j, k, currentrow = 0;
+  a = order[currentrow];
+  for (k = 0; k < dimension; k++) {
+    for (r = 0.0, i = dimension; i; i--, a++)
+      r += *a * *a;
+    if (r < EPSILON)
+      return 0;
+    r = sqrt(r);
+    a--;
+    for (i = dimension; i; i--)
+      *a-- /= r;
+    point = order[currentrow];
+    for (j = k + 1; j < dimension; j++) {
+      r = 0.0;
+      a = order[currentrow + j - k];
+      for (i = dimension; i; i--)
+	r += *point++ * *a++;
+      for (i = dimension; i; i--)
+	*(--a) -= *(--point) * r;
+    }
+    a = order[++currentrow];
+  }
+  return 1;
 }

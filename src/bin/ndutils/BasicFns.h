@@ -32,8 +32,8 @@ float NormN(float *a, int dim);
 
 /*Turn an HPoint3 into an HPointN.  assumes space has already been allocated in
 destination*/
-HPointN *extract(HPoint3 *source, HPointN *destination, int dimsource);
+HPointN *extract(HPoint3 * source, HPointN * destination, int dimsource);
 
-HPoint3 *place(HPointN *source, HPoint3 *destination);
+HPoint3 *place(HPointN * source, HPoint3 * destination);
 
 #endif

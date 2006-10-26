@@ -24,78 +24,70 @@
 #include <math.h>
 #include <stdio.h>
 
-#define	MAXDIM	20	/* Max allowed dimension */
-
-
 #ifndef COLORDEFS
 typedef struct Color {
-  float r,g,b;
+  float r, g, b;
 } Color;
 #endif
 
-typedef struct _vertex			/* A single vertex */
-{
-  struct _vertex	*next;		/* Pointer to next vertex */
+typedef struct _vertex {	/* A single vertex */
+  struct _vertex *next;		/* Pointer to next vertex */
 
-  float		*coord;			/* My coordinates for ND case. */
+  float *coord;			/* My coordinates for ND case. */
 
-  Color		c;			/* Vertex color if any */
-  int		clip;			/* Have I been clipped or not? */
-  float		val;			/* Function value at this vertex */
-  int		num;			/* Reference number of vertex in array */
+  Color c;			/* Vertex color if any */
+  int clip;			/* Have I been clipped or not? */
+  float val;			/* Function value at this vertex */
+  int num;			/* Reference number of vertex in array */
 } vertex;
 
-typedef struct _vertex_list		/* Global list of shared vertices */
-{
-  int		numvtx;			/* Number of vertices */
+typedef struct _vertex_list {	/* Global list of shared vertices */
+  int numvtx;			/* Number of vertices */
 
 /* private */
-  vertex	*head;			/* pointer to head of list */
-  vertex	*point;			/* pointer used while traversing list */
+  vertex *head;			/* pointer to head of list */
+  vertex *point;		/* pointer used while traversing list */
 
 } vertex_list;
 
-typedef struct _pvtx			/* vertex holder for vertex list */
-					/* of each polygon */
-{
-  int		num;			/* reference number of vertex in array */
-  struct _vertex *me;			/* Pointer to actual (shared) vertex. */
-  struct _pvtx	*next;			/* Pointer to next pvtx in polyvtx_list */
+typedef struct _pvtx
+{				/* vertex holder for vertex list */
+  /* of each polygon */
+  int num;			/* reference number of vertex in array */
+  struct _vertex *me;		/* Pointer to actual (shared) vertex. */
+  struct _pvtx *next;		/* Pointer to next pvtx in polyvtx_list */
 
 } pvtx;
 
-typedef struct _polyvtx_list		/* vertex list for each polygon */
-{
-  int numvtx;				/* number of vertices in polygon */
+typedef struct _polyvtx_list {	/* vertex list for each polygon */
+  int numvtx;			/* number of vertices in polygon */
 
-  pvtx		*head;			/* head of polygon vertex list */
-  pvtx		*point;			/* pointer used while traversing list */
+  pvtx *head;			/* head of polygon vertex list */
+  pvtx *point;			/* pointer used while traversing list */
 } polyvtx_list;
 
- 
-typedef struct _poly			/* A polygon */
-{
-  int		numvtx;			/* Number of vertices */
-  int		clipped;		/* has the whole polygon been cut away? */
-					/* 1 if it has been cut away, 0 if some */
-					/* or all of the polygon remains */
-  polyvtx_list	*me;			/* Vertex list of polygon */
-  Color		c;			/* Color of this polygon if doing per */
-					/* face coloring. */
-  struct _poly	*next;			/* Next polygon in list of polys. */
+
+typedef struct _poly {		/* A polygon */
+  int numvtx;			/* Number of vertices */
+  int clipped;			/* has the whole polygon been cut away? */
+  /* 1 if it has been cut away, 0 if some */
+  /* or all of the polygon remains */
+  polyvtx_list *me;		/* Vertex list of polygon */
+  Color c;			/* Color of this polygon if doing per */
+  /* face coloring. */
+  struct _poly *next;		/* Next polygon in list of polys. */
 } poly;
 
-typedef struct _poly_list				/* List of polygons */
-{
-  int		numpoly;		/* number of polygons */
+typedef struct _poly_list {	/* List of polygons */
+  int numpoly;			/* number of polygons */
 
 #define	HAS_VN	0x1
 #define HAS_VC	0x4
 #define	HAS_PC	0x8
-  int		has;			/* bit mask of associated data */
+  int has;			/* bit mask of associated data */
 
-  poly		*head;			/* head of list of polys */
-  poly		*point;			/* pointer for traversing list */
+  poly *head;			/* head of list of polys */
+  poly *point;			/* pointer for traversing list */
 
 } poly_list;
 
@@ -104,20 +96,20 @@ typedef struct _poly_list				/* List of polygons */
 
 
 typedef struct clip {
-    poly_list polyhedron;
-    vertex_list polyvertex;
-    int side;	/* side to cut... 0 -- less than   1 -- greater than */
-    int dim;	/* Are we working in N Dimensions. */
-    float	surf[MAXDIM];	/* Surface parameters.
+  poly_list polyhedron;
+  vertex_list polyvertex;
+  int side;			/* side to cut... 0 -- less than   1 -- greater than */
+  int dim;			/* We are working in dim Dimensions. */
+  float *surf;			/* Surface parameters.
 				 * For a plane, the plane normal vector
 				 * (or, other parameters for non-planar clip)
 				 */
 
-    float	(*clipfunc)();	/* Clipping function, whose value is zero
+  float (*clipfunc) ();		/* Clipping function, whose value is zero
 				 * along the surface where we should clip.
 				 */
-    int		nonlinear;	/* Is clipfunc an affine function of position?*/
-    float	level;		/* Value of clipfunc at clipping surface */
+  int nonlinear;		/* Is clipfunc an affine function of position? */
+  float level;			/* Value of clipfunc at clipping surface */
 
 } Clip;
 
@@ -146,4 +138,3 @@ void *getGeom(Clip *);
 void clip_init(Clip *);
 void clip_destroy(Clip *);
 void do_clip(Clip *);
-

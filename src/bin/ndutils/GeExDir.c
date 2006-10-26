@@ -64,50 +64,51 @@ it returns an approximate answer.
 The second function verifies that the currently specified camera is a 
 valid camera name*/
 
-int GeomExDir(ClientData clientdata, Tcl_Interp *interp,
+int GeomExDir(ClientData clientdata, Tcl_Interp * interp,
 	      int argc, const char **argv)
 {
-	float *results, *direction;
-	Geom *g;
-	static char str[128];
-	char *ptr[100];
-	int n=0, dimdir;
-	TransformN *t;
-	if (argc != 5)
-	{	interp->result = "wrong number of args";
-		return TCL_ERROR;
-	}
+  float *results, *direction;
+  Geom *g;
+  static char str[128];
+  char *ptr[100];
+  int n = 0, dimdir;
+  TransformN *t;
+  if (argc != 5) {
+    interp->result = "wrong number of args";
+    return TCL_ERROR;
+  }
 
 /*The following section of code parses the direction which was sent as a
 string into an array of floats*/
 
-	ptr[n]=strtok((char *)argv[1]," ");
-	while(ptr[n]!=NULL)
-	{	n++;
-		ptr[n]=strtok(NULL," ");
-	}
-	dimdir=n;
-	direction=(float *)malloc((sizeof *direction)*dimdir);
-	for(n=0;n<dimdir;n++)
-		direction[n]=atof(ptr[n]);
+  ptr[n] = strtok((char *) argv[1], " ");
+  while (ptr[n] != NULL) {
+    n++;
+    ptr[n] = strtok(NULL, " ");
+  }
+  dimdir = n;
+  direction = (float *) malloc((sizeof *direction) * dimdir);
+  for (n = 0; n < dimdir; n++)
+    direction[n] = atof(ptr[n]);
 
 /*Ask geomview for data on the specified object.  If the object does not
 exist return "NoObj"*/
 
-	printf("(if (real-id %s) (write geometry - %s self) (echo \"nada\"))\n",argv[2],argv[2]);
-	fflush(stdout);
-	g=GeomFLoad(infile, "stdin");
-	if(g==NULL)
-	{	interp->result = "NoObj";
-		iobfrewind(infile);
-		return TCL_OK;
-	}
+  printf("(if (real-id %s) (write geometry - %s self) (echo \"nada\"))\n",
+	 argv[2], argv[2]);
+  fflush(stdout);
+  g = GeomFLoad(infile, "stdin");
+  if (g == NULL) {
+    interp->result = "NoObj";
+    iobfrewind(infile);
+    return TCL_OK;
+  }
 
 /*Get the transform that takes the object to the world/universe*/
 
-	printf("(echo(ND-xform-get %s %s))\n",argv[2],argv[3]);
-	fflush(stdout);
-	t=TmNRead(infile, 0);
+  printf("(echo(ND-xform-get %s %s))\n", argv[2], argv[3]);
+  fflush(stdout);
+  t = TmNRead(infile, 0);
 
 /*Invert the transform so that it takes the world/universe to the object*/
 
@@ -116,43 +117,42 @@ exist return "NoObj"*/
 /*Get the extent of the object.  If there is a problem return error.
 Otherwise, place the results in a string*/
 
-	results = GeomExtentDir(g,t,dimdir,direction,atoi(argv[4]));
-	if (results==NULL)
-	{	interp->result = "Error";
-		return TCL_OK;
-	}
-	if (results[2]==0.0)
-		sprintf(str,"Pad %f %f",results[0],results[1]);
-	else
-		sprintf(str,"%f %f",results[0],results[1]);
-	free(results);
-	free(direction);
-	interp->result=str;
-	return TCL_OK;
+  results = GeomExtentDir(g, t, dimdir, direction, atoi(argv[4]));
+  if (results == NULL) {
+    interp->result = "Error";
+    return TCL_OK;
+  }
+  if (results[2] == 0.0)
+    sprintf(str, "Pad %f %f", results[0], results[1]);
+  else
+    sprintf(str, "%f %f", results[0], results[1]);
+  free(results);
+  free(direction);
+  interp->result = str;
+  return TCL_OK;
 }
 
 /*verifies that the currently specified object is a valid object name*/
-int ObjExistCheck(ClientData clientdata, Tcl_Interp *interp,
+int ObjExistCheck(ClientData clientdata, Tcl_Interp * interp,
 		  int argc, const char **argv)
-{	
-	char *str;
+{
+  char *str;
 
-	iobfrewind(infile);
-	printf("(if (real-id %s) (echo yes\\n) (echo no\\n))\n",argv[1]);
-	fflush(stdout);
-	str = iobftoken(infile, 0);
-	if (strcmp(str, "yes") == 0) {
-		interp->result="yes";
-	} else if (strcmp(str, "no") == 0) {
-		interp->result="no";
-	} else {
-		static char msg[1024];
+  iobfrewind(infile);
+  printf("(if (real-id %s) (echo yes\\n) (echo no\\n))\n", argv[1]);
+  fflush(stdout);
+  str = iobftoken(infile, 0);
+  if (strcmp(str, "yes") == 0) {
+    interp->result = "yes";
+  } else if (strcmp(str, "no") == 0) {
+    interp->result = "no";
+  } else {
+    static char msg[1024];
 
-		sprintf(msg, "obj: \"%s\", answer: \"%s\"",
-			argv[1], str);
+    sprintf(msg, "obj: \"%s\", answer: \"%s\"", argv[1], str);
 
-		interp->result=msg /*"Error"*/;
-		return TCL_ERROR;
-	}
-	return TCL_OK;
+    interp->result = msg /*"Error" */ ;
+    return TCL_ERROR;
+  }
+  return TCL_OK;
 }

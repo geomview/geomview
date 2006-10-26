@@ -25,6 +25,7 @@
 #include	"geomclass.h"
 #include	"hpointn.h"
 
-float *GeomExtentDir(Geom *g, TransformN *t, int dimdir, float *direction, int flag);
+float *GeomExtentDir(Geom * g, TransformN * t, int dimdir,
+		     float *direction, int flag);
 
 #endif
