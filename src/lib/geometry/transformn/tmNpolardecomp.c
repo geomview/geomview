@@ -38,16 +38,40 @@
  * if S is spd.
  *
  * We leave the translation and homogeneous part as is, that is
- * axpbyNxN() only copies the upper NxN square.
+ * axpbyNxN() only copies the lower NxN square.
  */
-
-static Tm3Coord frob_norm(TransformN *A);
-static inline void axpbytNxN(HPtNCoord a, TransformN *x,
-			     HPtNCoord b, TransformN *y, TransformN *res);
 
 #define EPS 1e-8
 
-TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q)
+static inline HPtNCoord frob_norm(TransformN *A)
+{
+  int i, j;
+  HPtNCoord res = 0.0;
+  int idim = A->idim, odim = A->odim;
+
+  for (i = 1; i < idim; i++) {
+    for (j = 1; j < odim; j++) {
+	    res += A->a[i*odim+j]* A->a[i*odim+j];
+    }
+  }
+  return sqrt(res);
+}
+
+/* a X + b Y^t */
+static inline void axpbytNxN(HPtNCoord a, TransformN *x,
+			     HPtNCoord b, TransformN *y, TransformN *res)
+{
+  int i, j;
+  int dim = x->idim;
+  
+  for (i = 1; i < dim; i++) {
+    for (j = 1; j < dim; j++) {
+      res->a[i*dim+j] = a * x->a[i*dim+j] + b * y->a[j*dim+i];
+    }
+  }
+}
+
+TransformN *TmNPolarDecomp(const TransformN *A, TransformN *Q)
 {
   HPtNCoord limit, g, f, pf;
   TransformN *a;
@@ -70,29 +94,8 @@ TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q)
   return Q;
 }
 
-static HPtNCoord frob_norm(TransformN *A)
-{
-  int i, j;
-  HPtNCoord res = 0.0;
-  int idim = A->idim, odim = A->odim;
-
-  for (i = 0; i < idim-1; i++) {
-    for (j = 0; j < odim-1; j++) {
-      res += A->a[i*odim+j]* A->a[i*odim+j];
-    }
-  }
-  return sqrt(res);
-}
-
-static inline void axpbytNxN(HPtNCoord a, TransformN *x,
-			    HPtNCoord b, TransformN *y, TransformN *res)
-{
-  int i, j;
-  int dim = x->idim;
-  
-  for (i = 0; i < dim-1; i++) {
-    for (j = 0; j < dim-1; j++) {
-      res->a[i*dim+j] = a * x->a[i*dim+j] + b * y->a[j*dim+i];
-    }
-  }
-}
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

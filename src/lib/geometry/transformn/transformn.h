@@ -36,84 +36,77 @@
  * OR of a space and a model value.
  */
 
-	/* Construct a transform.  NULL a => identity */
-/*skip*/
+/* Construct a transform.  NULL a => identity */
 extern TransformN *TmNCreate( int idim, int odim, HPtNCoord *a);
-	/* Destroy */
-/*skip*/
+
+/* Destroy */
 extern void TmNDelete( TransformN *T );
 
-	/* Get and set space */
-/*skip*/
+/* Get and set space */
 extern int TmNSpace( const TransformN *T );
-/*skip*/
+
 extern TransformN *TmNSetSpace( TransformN *T, int space );
 
-	/* Invert */
+/* Invert */
 extern TransformN *TmNInvert( const TransformN *T, TransformN *Tinv);
 
-	/* Transpose */
+/* Transpose */
 extern TransformN *TmNTranspose( const TransformN *from, TransformN *to);
 
-	/* Multiply transforms */
+/* Multiply transforms */
 extern TransformN *TmNConcat( const TransformN *A, const TransformN *B, TransformN *result);
 
-	/* Copy */
+/* Copy */
 extern TransformN *TmNCopy( const TransformN *Tsrc, TransformN *Tdst);
 
-	/* Set to identity */
+/* Set to identity */
 extern TransformN *TmNIdentity( TransformN *T);
 
-	/* Euclidean translations */
-extern TransformN *TmNTranslate( TransformN *T, const HPointN *p);
+/* Euclidean translations */
 extern TransformN *TmNTranslateOrigin( TransformN *T, const HPointN *pt);
 
-	/* Translations by the space of 'pt' */
-/*skip*/
-extern TransformN *TmNSpaceTranslate( TransformN *T, HPointN *pt);
-/*skip*/
+/* Translations by the space of 'pt' */
 extern TransformN *TmNSpaceTranslateOrigin( TransformN *T, HPointN *pt);
 
-	/* Scale by the components of 'amount' */
+/* Scale by the components of 'amount' */
 extern TransformN *TmNScale( TransformN *T, const HPointN *amount);
 
-	/* Construct a geodesic rotation taking vector 'from' to 'toward' */
-extern TransformN *TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward);
+/* Construct a geodesic rotation taking vector 'from' to 'toward' */
+extern TransformN *
+TmNRotate( TransformN *T, const HPointN *from, const HPointN *toward);
 
 /* Modify nxn matrix to accomodate usual matrix from Geomview T is
  * multiplied from the right by delta, where delta acts trivially on
  * the "missing" dimensions.
  */
-
 extern TransformN *TmNApplyDN( TransformN *T, int *permute, Transform3 delta);
 
 /* Multiply "mat" from the left by "T3" */
 TransformN *
-TmNApplyT3TN(Transform3 T3,  int *perm, TransformN *mat);
+TmNApplyT3TN(Transform3 T3, int *perm, TransformN *mat);
 
-	/* Add ones and zeros to a matrix to make it larger, with special treatment
-	for the last row */
-extern TransformN *TmNPad(TransformN *T1, int idim, int odim, TransformN *T2);
+/* Add ones and zeros to a matrix to make it larger. */
+extern TransformN *
+TmNPad(const TransformN *T1, int idim, int odim, TransformN *T2);
 
-	/* Add ones and zeros to a matrix to make it larger  */
-extern TransformN *TmNPadSimple(TransformN *T1, int idim, int odim, TransformN *T2);
+/* Add just zeros to a matrix to make it larger */
+extern TransformN *
+TmNPadZero(const TransformN *T1, int idim, int odim, TransformN *T2);
 
-	/* Add just zeros to a matrix to make it larger */
-extern TransformN *TmNPadZero(TransformN *T1, int idim, int odim, TransformN *T2);
-
-	/* Return dimensions of a TransformN.  Value is first dimension. */
-	/* idim and/or odim may be NULL, in which case they're not returned */
+/* Return dimensions of a TransformN.  Value is first dimension. */
+/* idim and/or odim may be NULL, in which case they're not returned */
 extern int TmNGetSize(const TransformN *T, int *idim, int *odim);
 
-	/* Print a TransformN */
+/* Print a TransformN */
 extern void TmNPrint(FILE *f, const TransformN *T);
 
-	/* Get a TransformN, given a file pointer */
+/* Get a TransformN, given a file pointer */
 extern TransformN *TmNRead(IOBFILE *f, int binary);
 
-	/* palar decompositon of upper NxN part */
-extern TransformN *TmNPolarDecomp(TransformN *A, TransformN *Q);
+/* palar decompositon of upper NxN part */
+extern TransformN *TmNPolarDecomp(const TransformN *A, TransformN *Q);
 
-extern TransformN *TmNPermute(TransformN *from, int *perm, TransformN *to);
+extern TransformN *
+TmNPermute(const TransformN *from, int *perm, TransformN *to);
 
 #endif
