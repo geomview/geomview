@@ -686,7 +686,7 @@ LDEFINE(camera_prop, LVOID,
 }
 
 LDEFINE(write, LVOID,
-       "(write {command,geometry,camera,transform,window} FILENAME [ID|(ID ...)] [self|world|universe|otherID])\n\
+       "(write {command|geometry|camera|transform|ntransform|window} FILENAME [ID|(ID ...)] [self|world|universe|otherID])\n\
 	write description of ID in given format to FILENAME.  Last\n\
 	parameter chooses coordinate system for geometry & transform:\n\
 	self: just the object, no transformation or appearance (geometry only)\n\
@@ -724,7 +724,7 @@ LDEFINE(write, LVOID,
 
   p = POOL(hiawatha);
   if ( (ops=str2ops(opsname)) == NULL) {
-    OOGLError(0, "write: expected one of command|geometry|camera|transform|geometry|window, got \"%s\"", opsname);
+    OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window, got \"%s\"", opsname);
     return Lnil;
   }
 
