@@ -799,7 +799,7 @@ pronunciation.
 @comment
 
 @comment ****************************************************************
-@node Overview, Interaction, Pronunciation, Top
+@node Overview, Tutorial, Pronunciation, Top
 @chapter Overview
 
 Geomview's main purpose is to display objects whose geometry is given,
@@ -1069,7 +1069,7 @@ that file will be incorporated into a future version of this manual.
 @end float
 
 @comment ****************************************************************
-@node Interaction, Customization, Overview, Top
+@node Interaction, OOGL File Formats, Tutorial, Top
 @chapter Interaction
 
 This chapter describes how you interact with Geomview through the
@@ -1442,6 +1442,15 @@ rotations is the origin of that object's coordinate system.
 It is possible, however, to select an arbitrary point of interest on
 an object as the center. For details, @pxref{Point of Interest}.
 
+It is also possible to toggle the button @emph{BBox Center} to set the
+center of motion to the center of the current object's bounding
+box. Once toggled the active geometry's bounding box center will become
+the center of motion, if you select another object, then the center of
+motion will become the center of that object's bounding box. Nothing
+#changes when a cameara or the @emph{World} is selected, you have to
+type in the word @code{target} in the @emph{Center} field the reset to
+the default.
+
 You apply a mouse motion by holding down either the left or middle mouse
 button with the cursor in a camera window and moving the mouse.  Most of
 the modes have @emph{inertia}, which means that if you let go of the
@@ -1611,6 +1620,13 @@ the @emph{Constrain Motion} button.
 
 @node Point of Interest,  , Mouse Motions, Mouse Motions
 @subsection Selecting a Point of Interest
+
+@b{The stuff below does not work (yet) in the context of ND-viewing
+because the @code{pick} command doesn't work (yet) in the context of
+ND-viewing. However, it is possible to use the center of the bounding
+box of a geometric object as center point of the motion by ticking the
+@emph{BBox Center} toggle in the @emph{Tools Panel},
+@pxref{Mouse Motions}.}
 
 It is sometimes useful to specify a particular point on some object in a
 geomview window as the center point for mouse motions.  You can do this
@@ -2284,7 +2300,7 @@ it in view, then switch to "Keep".
 @end table
 
 @comment ================================================================
-@node Keyboard Shortcuts, Conventions, Commands, Interaction
+@node Keyboard Shortcuts,  , Commands, Interaction
 @section Keyboard Shortcuts
 
 Most actions that you can do through Geomview's panels have equivalent
@@ -2560,15 +2576,17 @@ directory.
 @end menu
 
 @comment ================================================================
-@node Conventions, Object File Formats, Keyboard Shortcuts, Interaction
+@node Conventions, Object File Formats, OOGL File Formats, OOGL File Formats
 @section Conventions
 
 @menu
 * Common syntax::               Syntax Common to All OOGL File Formats.
 * File names::                  File Names.
 * Vertices::                    Vertices.
+* ND-Vertices::                 @var{N}-dimensional Vertices.
 * Surface normal directions::   Surface normal directions.
 * Transformation matrices::     Transformation matrices.
+* ND Transformation matrices::  @var{N}-dimensional transformation matrices.
 * Binary format::               Binary format.
 * References::                  Embedded objects and external-object references.
 * Appearances::                 Appearances.
@@ -2612,7 +2630,7 @@ known types of objects are tried in turn until one accepts the data as
 valid.
 
 @comment ----------------------------------------------------------------
-@node Vertices, Surface normal directions, File names, Conventions
+@node Vertices, ND-Vertices, File names, Conventions
 @subsection Vertices
 
 Several objects share a common style of representing vertices with
@@ -2665,7 +2683,38 @@ You can't change the data order by changing the header key word; an
 @samp{NCOFF} is just not recognized.
 
 @comment ----------------------------------------------------------------
-@node Surface normal directions, Transformation matrices, Vertices, Conventions
+@node ND-Vertices, Surface normal directions, Vertices, Conventions
+@subsection @var{N}-dimensional Vertices
+
+Several objects share a common style of representing vertices with
+optional per-vertex surface-normal and color.  All vertices within an
+object have the same format, specified by the header key word.
+
+All data for a vertex is grouped together (as opposed to e.g. giving
+coordinates for all vertices, then colors for all vertices, and so on).
+
+The syntax for @var{N}-dimensional vertices (@var{N} > 3) is
+
+@table @samp
+@item @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
+(@var{N} floating-point vertex coordinates) or
+@item @var{x[0]} @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
+(@var{(N+1)} floating-point vertex coordinates, if the @code{4} modifier
+has been specified in the object's header line)
+@end table
+
+Note, howerver, that @var{N}-dimensional objects internally always have
+@var{(N+1)}-dimensional points; the first component @var{x[0]} -- if
+present in the object file -- is used as homogeneous divisor. This is
+different from the ordinary 3D case where the @code{4} modifier
+generates a 4D object where the homogeneous component implicitly is set
+to 1.
+
+Color components usually can be specified like for 3D vertices,
+@pxref{Vertices}, while specifying normals does not make sense.
+
+@comment ----------------------------------------------------------------
+@node Surface normal directions, Transformation matrices, ND-Vertices, Conventions
 @subsection Surface normal directions
 
 Geomview uses normal vectors to determine how an object is shaded.
@@ -2682,7 +2731,7 @@ On parametric surfaces (Bezier patches), the normal at point P(u,v)
 is in the direction dP/du cross dP/dv.
 
 @comment ----------------------------------------------------------------
-@node Transformation matrices, Binary format, Surface normal directions, Conventions
+@node Transformation matrices, ND Transformation matrices, Surface normal directions, Conventions
 @subsection Transformation matrices
 
 Some objects incorporate 4x4 real matrices for homogeneous object
@@ -2699,7 +2748,26 @@ the fourth row (last four elements) of A.  A's last column (4th, 8th,
 12th and 16th elements) are typically 0, 0, 0, and 1 respectively.
 
 @comment ----------------------------------------------------------------
-@node Binary format, References, Transformation matrices, Conventions
+@node ND Transformation matrices, Binary format, Transformation matrices, Conventions
+@subsection ND Transformation matrices
+
+In the context of @var{N}-dimensional space (@var{N} < 3) some objects
+incorporate @var{(N+1)}x@var{(N+1)} real matrices for homogeneous object
+transformations.  These matrices act by multiplication on the right of
+vectors.  Thus, if p is an @var{(N+1)}-element row vector representing
+homogeneous coordinates of a point in the OOGL object, and A
+@var{(N+1)}x@var{(N+1)} is the matrix, then the transformed point is p'
+= p A.
+
+Note that (unlike for the 4x4 transformation matrices,
+@pxref{Transformation matrices}) the homogeneous component is located at
+index @b{zero}, so the translation components for Euclidean
+transformations appear in the @b{zero}-th row (first @var{(N+1)}
+elements). A's first column (at column index zero) is typically 1, 0,
+@dots{}, 0.
+
+@comment ----------------------------------------------------------------
+@node Binary format, References, ND Transformation matrices, Conventions
 @subsection Binary format
 
 Many OOGL objects accept binary as well as ASCII file formats.
@@ -3062,12 +3130,13 @@ transform @code{transformation-matrix}
 @end example
 
 @comment ================================================================
-@node Object File Formats, Non-geometric objects, Conventions, Interaction
+@node Object File Formats, Non-geometric objects, Conventions, OOGL File Formats
 @section Object File Formats
 
 @menu
 * QUAD::                        List of quadrilaterals.
 * MESH::                        Rectangularly-connected mesh.
+* BBOX::                        Simple bounding-boxes.
 * BBP and BEZ::                 List of Bezier surface patches.
 * OFF::                         Polyhedra: polygons with shared vertices.
 * VECT::                        List of points and lines.
@@ -3120,7 +3189,7 @@ quads in the object; following that is a series of 32-bit floats,
 arranged just as in the ASCII format.
 
 @comment ----------------------------------------------------------------
-@node MESH, BBP and BEZ, QUAD, Object File Formats
+@node MESH, BBOX, QUAD, Object File Formats
 @subsection MESH: rectangularly-connected mesh
 
 The conventional suffix for a @code{MESH} file is @file{.mesh}.
@@ -3195,7 +3264,57 @@ values of @var{Nu} and @var{Nv} are 32-bit integers; all other values
 are 32-bit floats.
 
 @comment ----------------------------------------------------------------
-@node BBP and BEZ, OFF, MESH, Object File Formats
+@node BBOX, BBP and BEZ, MESH, Object File Formats
+@subsection BBOX: simple bounding boxes
+
+This is a very simple toy-object: it takes 2 vertices and draws a
+(hyper-) cube which is the bounding box of the two vertices.
+
+Syntax:
+
+@example
+  BBOX
+  @var{x}[0] @var{y}[0] @var{z}[0]
+  @var{x}[1] @var{y}[1] @var{z}[1]
+@end example
+
+or
+
+@example
+  4BBOX
+  @var{x}[0] @var{y}[0] @var{z}[0] @var{w}[0]
+  @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1]
+@end example
+
+or
+
+@example
+  nBBOX
+  @var{Ndim} # > 3
+  @var{x}[0] @var{y}[0] @var{z}[0] @var{w}[0] @dots{}
+  @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1] @dots{}
+@end example
+
+or
+
+@example
+  4nBBOX
+  @var{Ndim} # > 3
+  @var{d}[0] @var{x}[0] @var{y}[0] @var{z}[0] @var{w}[0] @dots{}
+  @var{d}[0] @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1] @dots{}
+@end example
+
+There is no BBOX binary format. The @code{4} modifyer has different
+meanings depending on the dimension of the bounding box: @code{4BBOX}
+means that the 4 components of the vertices make up a 4-dimensionional
+bounding-box. Using @code{4} in conjunction with @code{n} --
+@code{4nBBOX @var{NDim}} -- means that the vertices specified in the
+file have @var{NDim+1} components, but the component at index 0 is the
+homogeneous divisor (in contrast to the ordinary 3d case where the
+homogeneous divisor would be the @code{w} -- the third -- component).
+
+@comment ----------------------------------------------------------------
+@node BBP and BEZ, OFF, BBOX, Object File Formats
 @subsection Bezier Surfaces
 
 The conventional file suffixes for Bezier surface files are @file{.bbp}
@@ -3562,9 +3681,9 @@ The conventional suffix for a @code{INST} file is @file{.inst}.
 
 There is no INST BINARY format.
 
-An @code{INST} applies a 4x4 transformation to another OOGL object.  It
-begins with @code{INST} followed by these sections which may appear in
-any order:
+An @code{INST} applies a 4x4 (or @var{(N+1)}x@var{(N+1)} in the context of
+ND-viewing) transformation to another OOGL object.  It begins with
+@code{INST} followed by these sections which may appear in any order:
 @example
 geom @var{oogl-object}
 @end example
@@ -3604,8 +3723,32 @@ object, though a single-membered LIST would do this more efficiently.
 
 @xref{Transformation matrices}, for the matrix format.
 
+@var{(N+1)}-dimensional transformations can be specified by
+
+@example
+ntransform ["@{"] @var{N+1} @var{N+1} @code{(N+1)x(N+1) floats} ["@}"]
+@end example
+@noindent
+This gives a single @var{N+1}-dimensional transformation matrix.  Either
+the matrix may appear literally as @var{(N+1)}x@var{(N+1)} numbers, or
+there may be a reference to a "transform" object, i.e.
+@example
+    "<" file-containing-@var{(N+1)}x@var{(N+1)}-matrix
+@end example
+or
+@example
+    ":" symbol-representing-ntransform-object>
+@end example
+
+@xref{ND Transformation matrices}, for the matrix format.
 
 Two more INST fields are accepted: @code{location} and @code{origin}.
+
+Note that @code{location} as well as @code{origin} are ignored if this
+@code{INST} object carries an @code{ntransform}. Also, if ND-viewing is
+active (@code{ND-axes} command, @pxref{GCL}) then @code{INST} objects
+with @code{origin} unequal to @code{local} will not be drawn, though the
+@code{location} stuff may work (or not).
 
 @example
 location [global or camera or ndc or screen or local]
@@ -3903,7 +4046,7 @@ with the other OOGL binary formats. @xref{Binary format}. The
 instead of data enclosed in curly braces. 
 
 @comment ================================================================
-@node Non-geometric objects,  , Object File Formats, Interaction
+@node Non-geometric objects,  , Object File Formats, OOGL File Formats
 @section Non-geometric objects
 
 
@@ -3914,12 +4057,13 @@ alternative choices.
 
 @menu
 * transform::                   Transformation matrices.
+* ntransform::                  N-dimensional transformation matrices.
 * camera::                      Cameras.
 * window::                      Windows.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node transform, camera, Non-geometric objects, Non-geometric objects
+@node transform, ntransform, Non-geometric objects, Non-geometric objects
 @subsection Transform Objects
 
 Where a single 4x4 matrix is expected -- as in the
@@ -3996,7 +4140,102 @@ Some examples, in contexts where they might be used:
 @end example
 
 @comment ----------------------------------------------------------------
-@node camera, window, transform, Non-geometric objects
+@node ntransform, camera, transform, Non-geometric objects
+@subsection ND-Transform Objects
+
+Where -- in the context of ND-viewing -- a single (N+1)x(N+1) matrix is
+expected -- as in the @code{INST} @code{ntransform} field, or the
+@code{ND-xform*} (@pxref{GCL}) commands -- use an @code{ntransform} object.
+
+@code{ntransform} are @var{NRows} x @var{NCols} transformation matrix
+where usually @var{NRows} = @var{N+1} in the context of
+@var{N}-dimensional objects and viewing. The homogeneous component of an
+@code{ntransform} sits at column zero (in contrast to ordinary
+@code{transform} objects where it is located at column
+three). @code{ntransform} objects operate on points of any dimension: if
+a point is to be transformed by an @code{ntransform} object and the
+dimension of the point does not match the number of rows of the
+@code{ntransform} object, then either the point is implicitly padded
+with zeros to match @var{NRows} or the matrix is implicitly padded with
+ones down its diagonal (and zeros everywhere else) such that it will
+operate as identity on the excess dimensions of the input point.
+
+Syntax for an @code{ntransform} object is
+
+@example
+<ntransform> ::= 
+  [ "@{" ]             (curly brace, generally needed to make
+                       the end of the object unambiguous.)
+
+   [ "ntransform" ]    (optional keyword; unnecessary if the type
+                       is determined by the context, which it
+                       usually is.)
+
+   [ "define" <name> ]
+                       (defines a transform named <name>, setting
+                       its value from the stuff which follows)
+
+     @var{NRows} @var{NCols}
+                       (number of rows and columns of the matrix,
+                       typically @var{N+1} @var{N+1}, but any dimensions
+                       are possible)
+     <@var{NRows} x @var{NCols} floating-point numbers>
+                       (interpreted as a @var{NRows} x @var{NCols}
+                       homogeneous transform given row by row, intended
+                       to apply to a row vector multiplied on its LEFT,
+                       so that e.g. Euclidean translations appear in the
+                       @b{top} row -- in contrast to the ordinary
+                       transform objects where the translations appear
+                       in the bottom row)
+   | 
+      "<" <filename>  (meaning: read transform from that file)
+   |
+      ":" <name>      (meaning: use variable <name>,
+                      defined elsewhere; if undefined the initial
+                      value is the identity transform)
+
+ [ "@}" ]             (matching curly brace)
+@end example
+
+The whole should be enclosed in @{ braces @}.  Braces are not
+necessarily essential, so e.g. two integers -- @var{NRows} @var{NCols}
+-- followed by a @var{NRows} x @var{NCols} array of floats standing alone
+may but needn't have braces.
+
+Some examples, in contexts where they might be used:
+
+@example
+# Example 1: A gcl command to define a @code{6x6} transform called
+# "fred", a mere translation by the vector @code{-3 0 1 1 0}. This
+# transform is meant for a five dimensional space, with an homogeneous
+# component a index zero.
+
+(read ntransform @{ ntransform  define fred
+         6 6
+         1 -3 0 1 1 0
+         0  1 0 0 0 0
+         0  0 1 0 0 0
+         0  0 0 1 0 0
+         0  0 0 0 1 0
+         0  0 0 0 0 1
+    @}
+)
+@end example
+
+@example
+# Example 2: Set the ND-xform of an object -- a geometry or a camera
+# cluster. Given the definition above, this puts the object at (-3 0 1 1
+# 0) in the five dimensional space.
+
+(ND-xform-set focus : fred)
+
+# or
+
+(ND-xform-set g1 : fred)
+@end example
+
+@comment ----------------------------------------------------------------
+@node camera, window, ntransform, Non-geometric objects
 @subsection cameras
 
 A camera object specifies the following properties of a camera:
@@ -4145,7 +4384,7 @@ to change those of an existing window.
 
 
 @comment ****************************************************************
-@node Customization, Modules, Interaction, Top
+@node Customization, Modules, OOGL File Formats, Top
 @chapter Customization: @file{.geomview} files
 
 When Geomview is started, it loads and executes commands in a
@@ -4177,6 +4416,21 @@ It is a good idea to enclose all the commands you put in a
 @file{.geomview} file in a @code{progn} statement in order to cause
 Geomview to execute them all at once.  Otherwise Geomview might execute
 them sequentially over the first few refresh cycles after starting up.
+
+To change, e.g. the focus policy of the camera window such that they
+pick up the focus policy of the window manager (instead of being
+activated when the mouse cursor crosses the window), you could put the
+following in your @file{~/.geomview} file:
+
+@example
+(progn
+  (ui-cam-focus focus-change)
+  @dots{} # other stuff
+)
+@end example
+
+You can put any valid @code{GCL} command into your @file{.geomview}
+files, @pxref{GCL}.
 
 @comment ****************************************************************
 @node Modules, GCL, Customization, Top
@@ -5522,7 +5776,7 @@ print all information about all commands containing the string
 * Gcl Reference::               Documentation for each gcl command.
 @end menu
 
-@node Argument Conventions,  , GCL, GCL
+@node Argument Conventions, Gcl Reference, GCL, GCL
 @section Conventions Used In Describing Argument Types
 
 The following symbols are used to describe argument types
@@ -5618,6 +5872,9 @@ arg2 @dots{} )}, where @code{func} is the name of the function and @code{arg1},
 @item @var{transform}
 is an OOGL 4x4 transformation matrix.
 
+@item @var{ntransform}
+is an OOGL (N+1)x(N+1) transformation matrix.
+
 @item @var{window}
 is an OOGL winddow specification.
 
@@ -5667,6 +5924,11 @@ Use e.g. @samp{(echo (all geometry))} to print such a list.
 @item (all camera)	returns a list of names of all cameras.
 @item (all emodule defined)  returns a list of all defined external modules.
 @item (all emodule running)  returns a list of all running external modules.
+
+@findex and
+@item (and EXPR1 EXPR2
+Evaluate @code{EXPR1} and @code{EXPR2} and return @code{t} if both
+return non-@code{nil}, otherwise return @code{nil}.
 
 @findex ap-override
 @item (ap-override [on|off])
@@ -5926,7 +6188,7 @@ Returns a string representing the version of geomview that is
 running.
 
 @findex hdefine
-@item (hdefine  @code{geometry}|@code{camera}|@code{transform}|@code{window}  name  value)
+@item (hdefine  @code{geometry}|@code{camera}|@code{transform}|@code{ntransform}|@code{ntransform}|@code{window}  name  value)
 Sets the value of a handle of a given type.
 @example
   (hdefine  <type>  <name>  <value>)
@@ -6125,7 +6387,7 @@ name, possibly with number appended, may be used as object's
 id thereafter.
 
 @findex ND-axes
-@item (ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex]])
+@item (ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex [Windex]]])
 In our model for N-D viewing (enabled by (dimension)), objects in
 N-space are viewed by N-dimensional @emph{camera clusters}.
 Each real camera window belongs to some cluster, and shows &
@@ -6134,21 +6396,28 @@ by its cluster.  Moving one camera in a cluster affects its siblings.
 
 The ND-axes command configures all this.  It specifies a camera's
 cluster membership, and the set of N-space axes which become the 3-D
-camera's X, Y, and Z axes.  Axes are specified by their indices, from 0
-to N-1 for an N-dimensional space.  Cluster CLUSTERNAME is implicitly
-created if not previously known.  To read a camera's configuration, use
-@code{(echo (ND-axes CAMID))}. Beware that in this case the return value
-is a list of @emph{4} integers; the last one seems to be tied to -1 (but
-FIXME, cH).
+camera's X, Y, and Z axes.  Axes are specified by their indices, from 1
+to N for an N-dimensional space.  Cluster CLUSTERNAME is implicitly
+created if not previously known. 
+
+In principle it is possible to map the homogeneous component of a
+conformal 4 point to some other index; this would be done by specifying
+0 for one of @code{Xindex}, @code{Yindex} or @code{Zindex} and giving
+@code{Windex} some positive value. This is probably not useful because
+Geomview does not support non-Euclidean geometries for in higher
+dimensions.
+
+To read a camera's configuration, use @code{(echo (ND-axes CAMID))}.
+The return value is an array of 4 integers, the last one should 0.
 
 @findex ND-color
 @item (ND-color CAMID
-	[ (( [ID] (x0 x1 x2 ... xn) v r g b a   v r g b a  ... )
-	   ((x0 ... xn)  v r g b a  v r g b a ...) ...)] )
+	[ (( [ID] (x1 x2 ... xN) v r g b a   v r g b a  ... )
+	   ((x1 ... xN)  v r g b a  v r g b a ...) ...)] )
 Specifies a function, applied to each N-D vertex, which determines the
 colors of N-dimensional objects as shown in camera CAMID.
 Each coloring function is defined by a vector (in ID's coordinate system)
-[x0 x1 ... xn] and by a sequence of value (v)/color(r g b a) tuples,
+[x1 ... xN] and by a sequence of value (v)/color(r g b a) tuples,
 ordered by increasing v.  The inner product v = P.[x] is linearly
 interpolated in this table to give a color.
 If ID is omitted, the (xi) vector is assumed in universe coordinates.
@@ -6164,17 +6433,30 @@ appearance attribute are shown in their natural colors.
 
 @findex ND-xform
 @item (ND-xform OBJID [ntransform @{ idim odim  ... @}])
-Sets or returns the N-D transform of the given object.
-In dimension N, this is an (N+1)x(N+1) matrix.
-Note that all cameras in a camera-cluster have the same N-D transform.
-
+Concatenate the given ND-transform with the current ND-transform of the
+object (apply the ND-transform to object ID, as opposed to simply
+setting its ND-transform). Note that ND-transforms have their
+homogeneous coordinate at index 0, while 3D transform have it at index
+3.
 
 @findex ND-xform-get
 @item (ND-xform-get ID [from-ID])
 Returns the N-D transform of the given object in the coordinate system
 of from-ID (default @code{universe}), in the sense
-  <point-in-ID-coords> * Transform = <point-in-from-ID-coords>
+  <point-in-ID-coords> * Transform = <point-in-from-ID-coords>.
+Note that ND-transforms have their
+homogeneous coordinate at index 0, while 3D transform have it at index
+3.
 
+@findex ND-xform-set
+@item (ND-xform-set OBJID [ntransform @{ idim odim  ... @}])
+Sets the N-D transform of the given object.
+In dimension N, this is an (N+1)x(N+1) matrix, so in that case
+idim and odim are expected to be both equal to (N+1). Note that
+all cameras in a camera-cluster have the same N-D transform.
+Note that ND-transforms have their
+homogeneous coordinate at index 0, while 3D transform have it at index
+3.
 
 @findex new-alien
 @item (new-alien      name [GEOMETRY])
@@ -6243,6 +6525,17 @@ when the object changes.  It may be useful to apply @code{each} or
 @code{all} normalization apply to the first version of a changing
 object to bring it in view, then switch to @code{keep}.
 @end table
+
+@findex not
+@item (not EXPR)
+Evaluates @code{EXPR}; if @code{EXPR} returns a non-@code{nil} value,
+returns nil, if @code{EXPR} returns @code{nil}, return @code{t}.
+
+@findex or
+@item (or EXPR1 EXPR2)
+Evaluates @code{EXPR1}; if @code{EXPR1} returns non-@code{nil}, return
+its value, if @code{EXPR1} returns @code{nil}, evaluate @code{EXPR2} and
+return its value.
 
 @findex pick
 @item (pick COORDSYS GEOMID G V E F P VI EI FI)
@@ -6323,7 +6616,7 @@ integer pixel coordinates.  This is a low-level procedure not
 intended for external use.
 
 @findex read
-@item (read @{geometry|camera|transform|command@} @{GEOMETRY or CAMERA or ...@})
+@item (read @{geometry|camera|transform|ntransform|command@} @{GEOMETRY or CAMERA or ...@})
 Read and interpret the text in ... as containing the
 given type of data.  Useful for defining objects using OOGL
 reference syntax, e.g.
@@ -6530,7 +6823,7 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 		   "(if (> 0 (sleep-until %g)) (" "))".
 
 @findex transform
-@item (transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt] [@code{smooth}])
+@item (transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
 Apply a motion (rotation, translation, scaling) to object @code{objectID};
 that is, construct and concatenate a transformation matrix with
 objectID's transform  The 3 IDs involved are the object
@@ -6547,7 +6840,17 @@ built-in: use the @code{space} command to change spaces.  With type
 @code{rotate} x, y, and z are floats specifying angles in RADIANS.
 For types @code{translate} and @code{translate-scaled} x, y, and z are
 floats specifying distances in the coordinate system of the
-center object.  The optional @code{dt} field allows a simple form of
+center object.
+
+The next field is optional and may consist of the keyword
+@code{bbox-center} or the keyword @code{origin} and modifies the
+location of the origin of @var{objectID}'s co-ordinate frame:
+@code{bbox-center} temporarily translates @var{objectID}'s co-ordinate
+frame to the center of @var{objectID}'s bounding box. @code{origin} is
+the default (and means not to modify @var{objectID}'s co-ordinate frame)
+and @code{bbox-center} is only valid in Euclidean space.
+
+The optional @code{dt} field allows a simple form of
 animation; if present, the object moves by just that amount during
 approximately @code{dt} seconds, then stops.  If present and followed by
 the @code{smooth} keyword, the motion is animated with a 3t^2-2t^3
@@ -6555,7 +6858,7 @@ function, so as to start and stop smoothly.  If absent, the motion is
 applied immediately.
 
 @findex transform-incr
-@item (transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt])
+@item (transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
 Apply continuing motion: construct a transformation matrix and
 concatenate it with the current transform of objectID every
 refresh (sets objectID's incremental transform). Same syntax
@@ -6567,14 +6870,48 @@ rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
 
 
 @findex transform-set
-@item (transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z)
+@item (transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])
 Set objectID's transform to the constructed transform.
 Same syntax as transform.
+
+@findex ui-cam-focus
+@item (ui-cam-focus [focus-change|mouse-cross])
+Set the focus policy for the camera windows. The default is
+@code{mouse-cross}: a camera is made the active camera (for interactive
+mouse events) when the mouse cursor crosses the window. Because this
+means it can become complicated to activate a specific camera (in the
+context of multiple camera windows) there is also the option to only
+change the camera focus when the window-manager decides to give it the
+focus for input events. So, after specifying @code{focus-change} it
+depends on the focus-change configuration of your window-manager when a
+camera becomes the active camera for mouse-interaction. To change this
+behaviour permanently you could, e.g., place the following line in your
+@file{$@{HOME@}/.geomview} file (@pxref{Customization}):
+
+@example
+(progn
+  (ui-cam-focus focus-change)
+  @dots{} # other stuff
+)
+@end example
 
 @findex ui-center
 @item (ui-center      ID)
         Set the center for user interface (i.e. mouse) controlled
         motions to object ID.
+
+@findex ui-center-origin
+@item (ui-center-origin [origin|bbox-center])
+Set the origin of the coordinate system of the @code{CENTER} object for
+user interface (i.e. mouse) controlled motions.  The keyword
+@code{origin} means to use the origin of the coordinate system of the
+currently selected object, while @code{bbox-center} means to use the
+center of the bouding box of the current object.  The keyword
+@code{bbox-center} makes no sense if the geometry is
+non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
+make a difference if the center object is not a @emph{geometry}, e.g. if
+it is a camera. Same holds if the World is the currently selected
+object.
 
 @findex ui-emotion-program
 @item ui-emotion-program is an obsolete command.
@@ -6649,7 +6986,7 @@ of CAM-ID.  This function is for development purposes
 and is not intended for general use.
 
 @findex write
-@item (write @{command,geometry,camera,transform,window@} FILENAME [ID|(ID ...)] [self|world|universe|otherID])
+@item (write @{command|geometry|camera|transform|ntransform|window@} FILENAME [ID|(ID ...)] [self|world|universe|otherID])
 write description of ID in given format to FILENAME.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the object, no transformation or appearance (geometry only)
