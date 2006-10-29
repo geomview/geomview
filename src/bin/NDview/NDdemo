@@ -89,7 +89,7 @@ proc setspeed {val} {
     if 0==$val {
 	puts "(transform g2 X_W_plane X_W_plane rotate 0 0 0)"
     } else {
-	puts [format "(transform-incr g2 X_W_plane X_W_plane rotate 0 0 1.57 origin %f)" [expr .5/($val*$val)]]
+	puts [format "(transform-incr g2 X_W_plane X_W_plane rotate 0 0 1.57 %f)" [expr .5/($val*$val)]]
     }
     flush stdout
 }

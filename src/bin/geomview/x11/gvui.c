@@ -310,7 +310,7 @@ void ui_mousefocus(int index)
 }
 
 LDEFINE(ui_cam_focus, LVOID,
-	"(ui_cam_focus [focus-change|mouse-cross])\n"
+	"(ui-cam-focus [focus-change|mouse-cross])\n"
 	"Set the focus policy for the camera windows. The default is "
 	"\"mouse-cross\": a camera is made the active camera (for interactive "
 	"mouse events) when the mouse cursor crosses the window. Because "
@@ -518,14 +518,16 @@ LDEFINE(ui_center, LVOID,
 
 LDEFINE(ui_center_origin, LVOID,
        "(ui-center-origin [origin|bbox-center])\n"
-	"Set the origin of the coordinate system of the center"
+	"Set the origin of the coordinate system of the \"CENTER\" object"
 	"for user interface (i.e. mouse) controlled motions."
 	"The keyword \"origin\" means to use the origin of the coordinate"
-	"system of the center object, while \"center\" means to use"
-	"the center of the bouding box of the center object. The keyword"
-	"\"center\" makes no sense if the geometry is non-Euclidean."
-	"Using either \"center\" or \"origin\" does not make a difference"
-	"if the center object is not a \"geometry\", e.g. if it is a camera.")
+	"system of the currently selected object, while \"bbox-center\" "
+	"means to use the center of the bouding box of the current object. "
+	"The keyword \"bbox-center\" makes no sense if the geometry is "
+	"non-Euclidean. Using either \"bbox-center\" or \"origin\" does "
+	"not make a difference if the center object is not a \"geometry\", "
+	"e.g. if it is a camera. Same holds if the World is the currently "
+	"selected object.")
 {
   Keyword origin = NO_KEYWORD;
 

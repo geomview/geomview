@@ -390,10 +390,12 @@ LDEFINE(dimension, LLIST,
 }
 
 LDEFINE(ND_xform, LTRANSFORMN,
-        "(ND-xform OBJID [ntransform { idim odim ... }]\n\
-	Concatenate the given ND-transform with the current\n\
-	ND-transform of the object (apply the ND-transform to\n\
-	object ID, as opposed to simply setting its ND-transform).")
+        "(ND-xform OBJID [ntransform { idim odim ... }]\n"
+	"Concatenate the given ND-transform with the current "
+	"ND-transform of the object (apply the ND-transform to "
+	"object ID, as opposed to simply setting its ND-transform)."
+	"Note that ND-transforms have their homogeneous coordinate at "
+	"index 0, while 3D transform have it at index 3.")
 {
   int id;
   TransformN *T;
@@ -439,7 +441,9 @@ LDEFINE(ND_xform_set, LTRANSFORMN,
 	Sets the N-D transform of the given object.\n\
 	In dimension N, this is an (N+1)x(N+1) matrix, so in that case\n\
 	idim and odim are expected to be both equal to (N+1). Note that\n\
-	all cameras in a camera-cluster have the same N-D transform.\n")
+	all cameras in a camera-cluster have the same N-D transform.\n"
+	"Note that ND-transforms have their homogeneous coordinate at "
+	"index 0, while 3D transform have it at index 3.")
 {
   int id;
   DObject *obj;
@@ -478,7 +482,9 @@ LDEFINE(ND_xform_get, LTRANSFORMN,
 	"(ND-xform-get ID [from-ID])\n\
 	Returns the N-D transform of the given object in the coordinate\n\
 	system of from-ID (default \"universe\"), in the sense\n\
-	<point-in-ID-coords> * Transform = <point-in-from-ID-coords>")
+	<point-in-ID-coords> * Transform = <point-in-from-ID-coords>"
+	"Note that ND-transforms have their homogeneous coordinate at "
+	"index 0, while 3D transform have it at index 3.")
 {
   int from_id;
   int to_id = UNIVERSE;

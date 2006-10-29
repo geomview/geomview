@@ -21,16 +21,10 @@
 
 #include "lang.h"
 
-typedef enum MotionOrigin {
-  ORIGIN = 0,
-  BBOX_CENTER = 1
-} MotionOrigin;
-
 typedef struct Motion {
   int moving_id;
   int center_id;
   int frame_id;
-  MotionOrigin origin;
   void (*transform)();
   float amount[3];
   float timeunit;
@@ -40,9 +34,8 @@ typedef struct Motion {
 } Motion;
 
 int drawer_transform(int moving_id, int center_id, int frame_id,
-		     int transform_type,
-		     float amount[3],
-		     Keyword origin,
+		     Keyword transform_type,
+		     float fx, float fy, float fz,
 		     float timeunit,
 		     char *repeat_type,
 		     Keyword smoothanim);
@@ -69,6 +62,7 @@ int motions_exist();
 int real_id(int id);
 
 void make_center(char *objname, Point3 *pt);
+void make_center_from_bbox(char *objname, int obj_id);
 void make_center_from_pick(char *objname, Pick *pick, int focalcam);
 
 void drawer_set_ND_xform(int id, TransformN *T);

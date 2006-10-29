@@ -98,7 +98,7 @@ static struct toolbutton {
 };
 
 static struct toolbutton *last;
-static Widget shell, TargetText, CenterText, CenterOriginBBox;
+static Widget shell, TargetText, CenterText, BBoxCenter;
 
 
 /*****************************************************************************/
@@ -128,7 +128,7 @@ void ui_load_toolpanel()
   MainButton = mib_find_name(toolload, "MainButton")->me;
   TargetText = mib_find_name(toolload, "TargetText")->me;
   CenterText = mib_find_name(toolload, "CenterText")->me;
-  CenterOriginBBox = mib_find_name(toolload, "CenterOriginBBoxToggle")->me;
+  BBoxCenter = mib_find_name(toolload, "BBoxCenterToggle")->me;
 
   load_tool_bitmaps(toolload);
   XtAddCallback(HideButton, XmNactivateCallback, (XtCallbackProc) ui_hide,
@@ -139,7 +139,7 @@ void ui_load_toolpanel()
 			NULL);
   XtAddCallback(CenterText, XmNactivateCallback, (XtCallbackProc) center_set,
 			NULL);
-  XtAddCallback(CenterOriginBBox, XmNvalueChangedCallback,
+  XtAddCallback(BBoxCenter, XmNvalueChangedCallback,
 		(XtCallbackProc) center_origin_set,
 		NULL);
 }
@@ -313,10 +313,10 @@ center_origin_set(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 
 void ui_tool_center_origin_set(int use_bbox_center)
 {
-  if (CenterOriginBBox == NULL)
+  if (BBoxCenter == NULL)
     return;
 
-  XmToggleButtonSetState(CenterOriginBBox, use_bbox_center != 0, False);
+  XmToggleButtonSetState(BBoxCenter, use_bbox_center != 0, False);
 }
 
 /*****************************************************************************/

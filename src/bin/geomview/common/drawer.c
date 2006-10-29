@@ -787,7 +787,7 @@ static void center_geom(int id, int center)
 
   MAYBE_LOOP_ALL(id, index, T_GEOM, DGeom, dg) {
     gv_transform_set(dg->id, center, center,
-		     TRANSLATE_KEYWORD, 0, 0, 0, ORIGIN_KEYWORD);
+		     TRANSLATE_KEYWORD, 0, 0, 0);
     drawer_stop(dg->id);
   }
 }
@@ -816,6 +816,7 @@ LDEFINE(xform_set, LVOID,
   int index;
   TransformStruct *ts;
   int id;
+
   LDECLARE(("xform-set", LBEGIN,
 	    LID, &id,
 	    LTRANSFORM, &ts,

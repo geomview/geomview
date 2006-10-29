@@ -59,7 +59,7 @@ int id_exists(int id);
 int get_parent(int id);
 void set_space(int new);
 void apply_ND_transform(Transform deltaT,
-			int moving, int center, int frame, MotionOrigin origin);
+			int moving, int center, int frame);
 void drawer_set_ND_xform(int id, TransformN *T);
 TransformN *drawer_get_ND_transform(int from_id, int to_id);
 
@@ -197,9 +197,8 @@ Geom *id_bsphere(int geomID, int coordsysID)
 }
 
 int drawer_transform(int moving_id, int center_id, int frame_id,
-		     int transform_type,
-		     float amount[3],
-		     Keyword origin,
+		     Keyword transform_type,
+		     float fx, float fy, float fz,
 		     float timeunit,
 		     char *repeat_type,
 		     Keyword smoothanim)
@@ -213,26 +212,17 @@ int drawer_transform(int moving_id, int center_id, int frame_id,
 	  keywordname(SMOOTH_KEYWORD), keywordname(smoothanim));
     return 0;
   }
-  if (origin != NO_KEYWORD
-      && origin != BBOX_CENTER_KEYWORD && origin != ORIGIN_KEYWORD) {
-    OOGLError(1, "Expected \"%s\" or \"%s\" keyword or nothing, "
-	  "but got \"%s\".\n",
-	  keywordname(BBOX_CENTER_KEYWORD), keywordname(ORIGIN_KEYWORD),
-	  keywordname(origin));
-    return 0;
-  }
 
   motion.moving_id = real_id(moving_id);
   motion.center_id = real_id(center_id);
   if (motion.center_id == SELF)
     motion.center_id = motion.moving_id;
-  motion.origin = origin == BBOX_CENTER_KEYWORD ? BBOX_CENTER : ORIGIN;
   motion.frame_id = real_id(frame_id);
   if (motion.frame_id == SELF)
     motion.frame_id = motion.moving_id;
-  motion.amount[0] = amount[0];
-  motion.amount[1] = amount[1];
-  motion.amount[2] = amount[2];
+  motion.amount[0] = fx;
+  motion.amount[1] = fy;
+  motion.amount[2] = fz;
   motion.timeunit = timeunit;
   motion.timeleft = 0;
   motion.smooth = 0;
@@ -274,7 +264,7 @@ int drawer_transform(int moving_id, int center_id, int frame_id,
      * Refuse to scale down to zero, or to change sign.
      */
     for(i = 0; i < 3; i++)
-      motion.amount[i] = amount[i] > 0 ? log(amount[i]) : 0;
+      motion.amount[i] = motion.amount[i] > 0 ? log(motion.amount[i]) : 0;
 	motion.transform = _scale;
 	break;
 
@@ -555,7 +545,6 @@ void apply_motion(Motion *motion, float dt)
   drawer_get_transform(motion->center_id, T_c, UNIVERSE);
   drawer_get_transform(motion->frame_id, T_f, UNIVERSE);
 
-
   /* If the frame is in a different space than the center, then
      translate the frame to the center of the universe.  This is
      really a hack meant to deal with Euclidean cameras looking at
@@ -569,26 +558,11 @@ void apply_motion(Motion *motion, float dt)
     TmConcat(T, T_f, T_f);
   }
   
-  /* Find the location of the origin of T_c in T_f */
-  /* location = origin . T_c . Inverse[T_f] */
-  pt.x = pt.y = pt.z = 0; pt.w = 1;
-
-  if (spaceof(motion->center_id) == TM_EUCLIDEAN
-      && motion->origin == BBOX_CENTER
-      && ISGEOM(motion->center_id) && motion->center_id != WORLDGEOM) {
-    DGeom *dg_c = (DGeom*)drawer_get_object(motion->center_id);
-    Geom *bbox;
-
-    if (dg_c) {
-      if (!dg_c->bboxvalid)
-	drawer_make_bbox(dg_c, dg_c->normalization == ALL);
-      GeomGet(dg_c->Lbbox, CR_GEOM, &bbox);
-      if (bbox)
-	GeomGet(bbox, CR_CENTER, &pt);
-    }
-  }
-
   if (motion->frame_id != motion->center_id) {
+    /* Find the location of the origin of T_c in T_f */
+    /* location = origin . T_c . Inverse[T_f] */
+    pt.x = pt.y = pt.z = 0; pt.w = 1;
+
     TmInvert(T_f, T);
     TmConcat(T_c, T, T);
     PtTransform(T, &pt, &pt);
@@ -660,8 +634,7 @@ void apply_motion(Motion *motion, float dt)
   } else {
     /* Apply subspace transform to the N-dimensional matrices. */
     apply_ND_transform(T_l,
-		       motion->moving_id, motion->center_id, motion->frame_id,
-		       motion->origin);
+		       motion->moving_id, motion->center_id, motion->frame_id);
   }
 
   if(motion->timeleft) {
@@ -1061,7 +1034,7 @@ int id_exists(int id) {
 }
 
 LDEFINE(transform, LVOID,
-	"(transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [[center|origin] [dt [\"smooth\"]]])\n"
+	"(transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt [\"smooth\"]])\n"
 	"Apply a motion (rotation, translation, scaling) to object "
 	"\"objectID\"; that is, construct and concatenate a transformation "
 	"matrix with objectID's transform. The 3 IDs involved are the object "
@@ -1082,14 +1055,6 @@ LDEFINE(transform, LVOID,
 	"floats specifying distances in the coordinate system of the "
 	"center object. "
 	"\n\n"
-	"The next field is optional and may consist of the keyword "
-	"\"bbox-center\" or the keyword \"origin\" and modifies the location "
-	"of the center of motion: "
-	"\"origin\" means that the center of the motion is the origin of "
-	"centerID's coordinate frame, while \"center\" means that the center "
-	"of motion is located at the center of centerID's bounding box. "
-	"\"origin\" is the default and \"bbox-center\" is only valid in "
-	"Euclidean space. "
 	"The optional \"dt\" field allows a simple form of animation; if "
 	"present, the object moves by just that amount during approximately "
 	"\"dt\" seconds, then stops.  If present and followed by the "
@@ -1098,24 +1063,25 @@ LDEFINE(transform, LVOID,
 	"If absent, the motion is applied immediately.")
 {
   int moving_id, center_id, frame_id, transform_type;
-  Keyword origin = NO_KEYWORD, smooth = NO_KEYWORD;
-  float amount[3], during = 0;
+  Keyword smooth = NO_KEYWORD;
+  float fx, fy, fz, during = 0;
+  LList *optional;
 
   LDECLARE(("transform", LBEGIN,
 	    LID, &moving_id,
 	    LID, &center_id,
 	    LID, &frame_id,
 	    LKEYWORD, &transform_type,
-	    LFLOAT, &amount[0],
-	    LFLOAT, &amount[1],
-	    LFLOAT, &amount[2],
+	    LFLOAT, &fx,
+	    LFLOAT, &fy,
+	    LFLOAT, &fz,
 	    LOPTIONAL,
-	    LKEYWORD, &origin,
 	    LFLOAT, &during,
 	    LKEYWORD, &smooth,
 	    LEND));
+
   if (drawer_transform(moving_id, center_id, frame_id, transform_type,
-		       amount, origin, during, "transform", smooth)) {
+		       fx, fy, fz, during, "transform", smooth)) {
     return Lt;
   } else {
     return Lnil;
@@ -1123,11 +1089,13 @@ LDEFINE(transform, LVOID,
 }
 
 LDEFINE(transform_incr, LVOID,
-	"(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [[dt [smooth]]])\n\
+	"(transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt [smooth]])\n\
 	Apply continuing motion: construct a transformation matrix and\n\
 	concatenate it with the current transform of objectID every\n\
 	refresh (sets objectID's incremental transform). Same syntax\n\
-	as transform. If the optional \"dt\" argument is present,\n\
+	as transform. "
+	"\n\n"
+	"If the optional \"dt\" argument is present,\n\
 	the object is moved at each time step such that its average motion\n\
 	equals one instance of the motion per \"dt\" seconds.  E.g.\n\
 	  (transform-incr  World World World  rotate  6.28318 0 0  10.0)\n\
@@ -1135,26 +1103,27 @@ LDEFINE(transform_incr, LVOID,
 	seconds.\n")
 {
   int moving_id, center_id, frame_id, transform_type;
-  Keyword smooth = NO_KEYWORD, origin = NO_KEYWORD;
-  float amount[3];
+  Keyword smooth = NO_KEYWORD;
+  float fx, fy, fz;
   float timeunit = 0;
+  LList *optional;
 
   LDECLARE(("transform-incr", LBEGIN,
 	    LID, &moving_id,
 	    LID, &center_id,
 	    LID, &frame_id,
 	    LKEYWORD, &transform_type,
-	    LFLOAT, &amount[0],
-	    LFLOAT, &amount[1],
-	    LFLOAT, &amount[2],
+	    LFLOAT, &fx,
+	    LFLOAT, &fy,
+	    LFLOAT, &fz,
 	    LOPTIONAL,
-	    LKEYWORD, &origin,
 	    LFLOAT, &timeunit,
 	    LKEYWORD, &smooth,
 	    LEND));
 
   if (drawer_transform(moving_id, center_id, frame_id, transform_type,
-		       amount, origin, timeunit, "transform-incr", smooth)) {
+		       fx, fy, fz,
+		       timeunit, "transform-incr", smooth)) {
     return Lt;
   } else {
     return Lnil;
@@ -1162,26 +1131,24 @@ LDEFINE(transform_incr, LVOID,
 }
 
 LDEFINE(transform_set, LVOID,
-	"(transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])\n\
+	"(transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z)\n\
 	Set objectID's transform to the constructed transform.\n\
 	Same syntax as transform.")
 {
   int moving_id, center_id, frame_id, transform_type;
-  Keyword origin = NO_KEYWORD;
-  float amount[3];
+  float fx, fy, fz;
 
   LDECLARE(("transform-set", LBEGIN,
 	    LID, &moving_id,
 	    LID, &center_id,
 	    LID, &frame_id,
 	    LKEYWORD, &transform_type,
-	    LFLOAT, &amount[0],
-	    LFLOAT, &amount[1],
-	    LFLOAT, &amount[2],
-	    LOPTIONAL, LKEYWORD, &origin,
+	    LFLOAT, &fx,
+	    LFLOAT, &fy,
+	    LFLOAT, &fz,
 	    LEND));
   if (drawer_transform(moving_id, center_id, frame_id, transform_type,
-		       amount, origin, 0., "transform-set", NO_KEYWORD)) {
+		       fx, fy, fz, 0., "transform-set", NO_KEYWORD)) {
     return Lt;
   } else {
     return Lnil;    
@@ -1593,8 +1560,10 @@ LDEFINE(look_encompass, LVOID,
     drawer_float(dv->id, DRAWER_FAR, newfar);
     drawer_float(dv->id, DRAWER_NEAR, newnear);
     drawer_float(dv->id, DRAWER_FOCALLENGTH, newzrange);
-    gv_transform(dv->id, dv->id, dv->id, TRANSLATE_KEYWORD, 0.0, 0.0,
-		 newzrange - zrange, NO_KEYWORD, 0, NO_KEYWORD);
+
+    drawer_transform(dv->id, dv->id, dv->id, TRANSLATE_KEYWORD, 0.0, 0.0,
+		     newzrange - zrange, 0, "transform",
+		     NO_KEYWORD);
   }
   return Lnil;
 }
@@ -1881,7 +1850,7 @@ drawer_get_ND_transform(int from_id, int to_id)
 	T = (obj && ((DView *)obj)->cluster) ?
 	  REFINCR(TransformN, ((DView *)obj)->cluster->C2W) : NULL;
 	return T ? T :
-	  TmNIdentity(TmNCreate(drawerstate.NDim,drawerstate.NDim,NULL));
+	  TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
       }
     }
   }
@@ -1955,7 +1924,7 @@ get_parent(int id)
 
 void
 apply_ND_transform(Transform delta,
-		   int moving, int center, int frame, MotionOrigin origin)
+		   int moving, int center, int frame)
 {
   HPointN *originpt = NULL;
   TransformN *Tgf = NULL, *Tfg = NULL, *Tcf = NULL;
@@ -1983,23 +1952,7 @@ apply_ND_transform(Transform delta,
     perm = (int *)dflt_perm;
   }
 
-  if (spaceof(center) == TM_EUCLIDEAN && origin == BBOX_CENTER
-      && ISGEOM(center) && center != WORLDGEOM) {
-    DGeom *dg_c = (DGeom*)drawer_get_object(center);
-    Geom *bbox;
-
-    if (dg_c) {
-      if (!dg_c->bboxvalid)
-	drawer_make_bbox(dg_c, dg_c->normalization == ALL);
-      GeomGet(dg_c->Lbbox, CR_GEOM, &bbox);
-      if (bbox)
-	GeomGet(bbox, CR_NCENTER, &originpt);
-    }
-  }
-  
-  if (!originpt) {
-    originpt = HPtNCreate(drawerstate.NDim, NULL);
-  }
+  originpt = HPtNCreate(drawerstate.NDim, NULL);
 
   Tcf = drawer_get_ND_transform(center, frame);
   if (ISCAM(center) && (dv = (DView *)drawer_get_object(center)) != NULL) {
@@ -2024,6 +1977,7 @@ apply_ND_transform(Transform delta,
   HPtNDelete(originpt);
 
   Tmf = drawer_get_ND_transform(moving, frame);
+
   /* We must not modify Tmf, it could be only a reference, so build up
    *  the chain in reverse order, starting with Tfg
    */
@@ -2058,7 +2012,6 @@ apply_ND_transform(Transform delta,
   TmNDelete(Tfp);
 }
 
-
 void make_center(char *objname, Point3 *pt)
 {
   TransformStruct ts;
@@ -2074,6 +2027,69 @@ void make_center(char *objname, Point3 *pt)
   TmTranslate(ts.tm, pt->x, pt->y, pt->z);
   gv_xform_set( cid, &ts );
   gv_ui_center(cid);
+}
+
+void make_ND_center(char *objname, HPointN *pt)
+{
+  TmNStruct ts;
+  int cid;
+
+  if((cid = drawer_idbyname(objname)) == NOID) {
+    GeomStruct gs;
+    gs.h = NULL;
+    gs.geom = NULL;
+    cid = gv_new_alien(objname, &gs);
+  }
+  ts.h = NULL;
+  ts.tm = TmNTranslateOrigin(NULL, pt);
+  gv_ND_xform_set( cid, &ts );
+  TmNDelete(ts.tm);
+  gv_ui_center(cid);
+}
+
+void make_center_from_bbox(char *objname, int obj_id)
+{
+  if (spaceof(obj_id) == TM_EUCLIDEAN
+      && ISGEOM(obj_id) && obj_id != WORLDGEOM) {
+    DGeom *dg = (DGeom*)drawer_get_object(obj_id);
+ 
+    if (dg) {
+      Geom *bbox;
+
+      if (!dg->bboxvalid)
+	drawer_make_bbox(dg, dg->normalization == ALL);
+      GeomGet(dg->Lbbox, CR_GEOM, &bbox);
+      if (bbox) {
+	if (drawerstate.NDim == 0) {
+	  Transform Tuni;
+	  HPoint3 pt;
+
+	  GeomGet(bbox, CR_CENTER, &pt);
+
+	  /* tansform to universe co-ordinates */
+	  drawer_get_transform(obj_id, Tuni, UNIVERSE);
+	  HPt3Transform(Tuni, &pt, &pt);
+	  HPt3Dehomogenize(&pt, &pt);
+
+	  make_center(objname, (Point3 *)&pt);
+	} else {
+	  TransformN *Tuni;
+	  HPointN *pt;
+	  GeomGet(bbox, CR_NCENTER, &pt);
+
+	  /* tansform to universe co-ordinates */
+	  Tuni = drawer_get_ND_transform(obj_id, UNIVERSE);
+	  HPtNTransform(Tuni, pt, pt);
+	  HPtNDehomogenize(pt, pt);
+
+	  make_ND_center(objname, pt);
+
+	  HPtNDelete(pt);
+	  TmNDelete(Tuni);
+	}
+      }
+    }
+  }
 }
 
 void make_center_from_pick(char *objname, Pick *pick, int camid)

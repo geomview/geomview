@@ -411,7 +411,7 @@ Widget: \"Toggle\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
-Name: \"CenterOriginBBoxToggle\"\n\
+Name: \"BBoxCenterToggle\"\n\
 Xmwidth: 0\n\
 Xmheight: 0\n\
 XmtopAttachment: 5\n\
@@ -423,7 +423,7 @@ XmbottomOffset: 330\n\
 XmleftOffset: 3\n\
 XmrightOffset: 102\n\
 Private-\n\
-label: \"[O]rigin BBox\"\n\
+label: \"[B]Box Center\"\n\
 indicatorSize: 0\n\
 EndWidget.\n\
 \n\

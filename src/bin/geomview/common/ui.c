@@ -257,12 +257,18 @@ ui_emodule_index(char *ename, emodule **emp)
 void
 set_ui_target(int type, int index)
 {
-  
-  switch (uistate.targettype = type) {
-  case T_GEOM:  uistate.targetgeom = index; break;
-  case T_CAM:	uistate.targetcam  = index; break;
-  }
   uistate.targetid = ID(type, index);
+  switch (uistate.targettype = type) {
+  case T_GEOM:
+    uistate.targetgeom = index;
+    if (uistate.bbox_center && uistate.targetid != WORLDGEOM) {
+      make_center_from_bbox("CENTER", uistate.targetid);
+    }
+    break;
+  case T_CAM:
+    uistate.targetcam = index;
+    break;
+  }
 }
 
 void
@@ -275,6 +281,9 @@ void
 set_ui_center_origin(int use_bbox_center)
 {
   uistate.bbox_center = use_bbox_center != 0; /* boolean value */
+  if (uistate.bbox_center && uistate.targetid != WORLDGEOM) {
+    make_center_from_bbox("CENTER", uistate.targetid);
+  }
 }
 
 void
@@ -386,3 +395,9 @@ uispace(int space)
   }
   return -1;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
