@@ -905,7 +905,7 @@ LDEFINE(emodule_transmit, LVOID,
 
 
 LDEFINE(read, LVOID,
-       "(read {geometry|camera|transform|command} {GEOMETRY or CAMERA or ...})\n\
+       "(read {geometry|camera|transform|ntransform|command} {GEOMETRY or CAMERA or ...})\n\
 	Read and interpret the text in ... as containing the\n\
 	given type of data.  Useful for defining objects using OOGL\n\
 	reference syntax, e.g.\n\
@@ -934,7 +934,7 @@ LDEFINE(read, LVOID,
 	(kw = LSexpr(lake)) == Lnil ||
 	!LFROMOBJ(LSTRING)(kw, &opsname) ||
 	!(ops = str2ops(opsname))) {
-      OOGLSyntax(lake->streamin, "\"read\" in \"%s\": keyword expected (command|geometry|camera|window|transform), got \"%s\"",
+      OOGLSyntax(lake->streamin, "\"read\" in \"%s\": keyword expected (command|geometry|camera|window|transform|ntransform), got \"%s\"",
 	  LakeName(lake), opsname);
       goto fail;
     }
