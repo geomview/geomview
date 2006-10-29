@@ -143,8 +143,11 @@ InstDraw( Inst *inst )
 	     */
 	    mgctxset(MG_NDCTX, NULL, MG_END);
 	} else if (inst->origin != L_NONE) {
-	    OOGLError(1, "FIXME: don't know how to handle origin != L_LOCAL "
-		      "with ND-drawing.\n");
+	    static int was_here;
+	    if (!was_here)
+		OOGLError(1,
+			  "FIXME: don't know how to handle origin != L_LOCAL "
+			  "with ND-drawing.\n");
 	    return inst;
 	} else {
 	    it = GeomIterate((Geom *)inst, DEEP);
