@@ -61,18 +61,27 @@ BBoxFLoad(IOBFILE *f, char *fname)
     ++pdim;
   }
 
-  min = HPtNCreate(pdim, NULL);
-  max = HPtNCreate(pdim, NULL);
-
-  if (dimn == 4) {
-    dimn = pdim;
-    minv = min->v;
-    maxv = max->v;
-  } else {
-    dimn = pdim-1;
+  if (pdim == 4) {
+    if (dimn == 4) {
+      pdim++;
+    }
+    min = HPtNCreate(pdim, NULL);
+    max = HPtNCreate(pdim, NULL);
     minv = min->v+1;
     maxv = max->v+1;
+  } else {
+    min = HPtNCreate(pdim, NULL);
+    max = HPtNCreate(pdim, NULL);
+    if (dimn == 4) {
+      minv = min->v;
+      maxv = max->v;
+    } else {
+      minv = min->v+1;
+      maxv = max->v+1;
+      dimn = pdim-1;
+    }
   }
+   
 
   if(iobfgetnf(f, dimn, minv, 0) != dimn ||
      iobfgetnf(f, dimn, maxv, 0) != dimn) {
