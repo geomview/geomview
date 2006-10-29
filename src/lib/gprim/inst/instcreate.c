@@ -201,7 +201,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
       if(inst->NDaxishandle)
 	HandlePDelete(&inst->NDaxishandle);
       inst->NDaxishandle = h;
-      HandleRegister(&inst->NDaxishandle, (Ref *)inst, inst->NDaxis, NTransUpdate);
+      HandleRegister(&inst->NDaxishandle, (Ref *)inst, &inst->NDaxis, NTransUpdate);
       break;
 
     case CR_TLIST:

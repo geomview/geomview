@@ -133,7 +133,7 @@ InstImport( Pool *p )
 		goto failed;
 	    if(inst->NDaxishandle)
 		HandleRegister(&inst->NDaxishandle, (Ref *)inst,
-			       inst->NDaxis, NTransUpdate);
+			       &inst->NDaxis, NTransUpdate);
 	    break;
 	    
 	case 't':		/* tlist ... or transform ... */
