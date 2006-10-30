@@ -35,11 +35,12 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 
 #include "Clip.h"
 
-
-void readVerts(Clip * clip, vertex_list * pv, Geom * g, int isnd)
+static void
+readVerts(Clip * clip, Geom * g, int isnd)
 {
   int i;
-  vertex *point = (vertex *) malloc(pv->numvtx * sizeof(vertex));
+  vertex_list *pv = &clip->polyvertex;
+  vertex *point = (vertex *) obstack_alloc(&clip->obst, pv->numvtx * sizeof(vertex));
   ColorA *colors;
   int colored = clip->polyhedron.has & HAS_VC;
 
@@ -70,18 +71,19 @@ void readVerts(Clip * clip, vertex_list * pv, Geom * g, int isnd)
 #undef npl
 }
 
-void readNDPoly(poly * p, NPolyList * pl, int polyNum)
+static void
+readNDPoly(struct obstack *obst, poly * p, NPolyList * pl, int polyNum)
 {
   int i;
   pvtx *corner = NULL;
-  polyvtx_list *pv = (polyvtx_list *) malloc(sizeof(polyvtx_list));
+  polyvtx_list *pv = (polyvtx_list *) obstack_alloc(obst, sizeof(polyvtx_list));
   pvtx **prevp = &pv->head;
   NPoly *np = &pl->p[polyNum];
 
   p->me = pv;
   pv->numvtx = np->n_vertices;
   for (i = 0; i < np->n_vertices; i++) {
-    corner = (pvtx *) malloc(sizeof(pvtx));
+    corner = (pvtx *) obstack_alloc(obst, sizeof(pvtx));
     corner->num = pl->vi[i + np->vi0];
     *prevp = corner;
     prevp = &corner->next;
@@ -94,7 +96,9 @@ void readNDPoly(poly * p, NPolyList * pl, int polyNum)
 
 
 
-void readPolyvtx(polyvtx_list * pv, int numvx, PolyList * pl, int polyNum)
+static void
+readPolyvtx(struct obstack *obst,
+	    polyvtx_list * pv, int numvx, PolyList * pl, int polyNum)
 {
   int i;
   pvtx **prevp = &pv->head;
@@ -103,7 +107,7 @@ void readPolyvtx(polyvtx_list * pv, int numvx, PolyList * pl, int polyNum)
 
   pv->numvtx = numvx;
   for (i = 0; i < pv->numvtx; i++) {
-    point = (pvtx *) malloc(sizeof(pvtx));
+    point = (pvtx *) obstack_alloc(obst, sizeof(pvtx));
     point->num = (p->v[i] - pl->vl);
     *prevp = point;
     prevp = &point->next;
@@ -114,33 +118,36 @@ void readPolyvtx(polyvtx_list * pv, int numvx, PolyList * pl, int polyNum)
   return;
 }
 
-void readPoly(poly * p, PolyList * pl, int polyNum)
+static 
+void readPoly(struct obstack *obst, poly * p, PolyList * pl, int polyNum)
 {
   p->numvtx = pl->p[polyNum].n_vertices;
 
-  p->me = (polyvtx_list *) malloc(sizeof(polyvtx_list));
-  readPolyvtx(p->me, p->numvtx, pl, polyNum);	/* read each vertex ref number. */
+  p->me = (polyvtx_list *) obstack_alloc(obst, sizeof(polyvtx_list));
+  readPolyvtx(obst, p->me, p->numvtx, pl, polyNum);	/* read each vertex ref number. */
 
   p->c = *(Color *) (void *) &pl->p[polyNum].pcol;
 }
 
-void readPolys(Clip * clip, poly_list * ph, Geom * g, int isnd)
+static
+void readPolys(Clip * clip, Geom * g, int isnd)
 {
   int i;
+  poly_list *ph = &clip->polyhedron;
   poly *point;
 
 #define pl ((PolyList *)g)
 #define npl ((NPolyList *)g)
 
   ph->numpoly = isnd ? npl->n_polys : pl->n_polys;
-  point = (poly *) malloc(ph->numpoly * sizeof(poly));
+  point = (poly *) obstack_alloc(&clip->obst, ph->numpoly * sizeof(poly));
   ph->head = point;
   for (i = 0; i < ph->numpoly; i++, point++) {
     point->next = point + 1;
     if (isnd)
-      readNDPoly(point, npl, i);
+      readNDPoly(&clip->obst, point, npl, i);
     else
-      readPoly(point, pl, i);
+      readPoly(&clip->obst, point, pl, i);
   }
   point--;
   point->next = NULL;
@@ -187,8 +194,8 @@ void setGeom(struct clip *clip, void *aGeom)
     fprintf(stderr, "clip: can't handle object of type '%s'\n", classname);
     exit(1);
   }
-  readVerts(clip, &clip->polyvertex, aGeom, isnd);
-  readPolys(clip, &clip->polyhedron, aGeom, isnd);
+  readVerts(clip, aGeom, isnd);
+  readPolys(clip, aGeom, isnd);
 }
 
 void *getGeom(Clip * clip)
@@ -205,7 +212,6 @@ void *getGeom(Clip * clip)
   Geom *aGeom = NULL;
   int dim = clip->dim;
   int hdim = (dim == 3 || dim == 4) ? 4 : dim + 1;
-  int offset = (dim == 3 || dim == 4) ? 0 : 1;
   int has = clip->polyhedron.has;
 
   if (clip->polyvertex.numvtx == 0) {

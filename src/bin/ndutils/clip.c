@@ -40,8 +40,8 @@ vertex *add_vertex(Clip * clip, vertex_list * vtxl, float *aCoord,
   vertex *head = vtxl->head;
   vertex *temp = head;
 
-  head = (vertex *) malloc(sizeof(vertex));
-  head->coord = (float *) malloc(clip->dim * sizeof(float));
+  head = (vertex *) obstack_alloc(&clip->obst, sizeof(vertex));
+  head->coord = (float *) obstack_alloc(&clip->obst, clip->dim * sizeof(float));
 
   head->next = temp;
   memcpy(head->coord, aCoord, clip->dim * sizeof(float));
@@ -180,7 +180,8 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
       /* Calculate where line between the two points cuts clipping surface */
       pcinterp(clip, intersect, p1, p2, &c, c1, c2, v1->val, v2->val);
 
-      temp = (pvtx *) malloc(sizeof(pvtx));	/* Add vertex at intersection */
+      /* Add vertex at intersection */
+      temp = (pvtx *) obstack_alloc(&clip->obst, sizeof(pvtx));
 
       temp->me = add_vertex(clip, vtxl, intersect, &c);
       me->numvtx++;		/* point to the polygon's */
@@ -207,7 +208,7 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
     if (v1->clip && v2->clip) {
       last->next = next;	/* simply delete the current */
 
-      free(me->point);
+      /*      free(me->point);*/
       me->point = NULL;
 
       me->numvtx--;
@@ -231,13 +232,13 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
     if (v1->clip && !v2->clip) {
       pcinterp(clip, intersect, p1, p2, &c, c1, c2, v1->val, v2->val);
 
-      temp = (pvtx *) malloc(sizeof(pvtx));	/* Add vertex at the */
+      temp = (pvtx *) obstack_alloc(&clip->obst, sizeof(pvtx));	/* Add vertex at the */
 
       temp->me = add_vertex(clip, vtxl, intersect, &c);
       temp->next = next;	/* intersection point to the */
       last->next = temp;	/* polygon's vertex list */
 
-      free(me->point);
+      /*free(me->point);*/
       me->point = NULL;
 
       last = temp;		/* from the list. */
@@ -277,6 +278,8 @@ void clip_init(Clip * clip)
   clip->clipfunc = dot;
 
   clip->surf = NULL;
+
+  obstack_init(&clip->obst);
 }
 
 void clip_destroy(Clip * clip)
@@ -300,6 +303,9 @@ void clip_destroy(Clip * clip)
 
   clip->polyvertex.numvtx = 0;
   clip->polyvertex.head = NULL;
+
+  obstack_free(&clip->obst, NULL);
+  obstack_init(&clip->obst);
 }
 
 void setClipPlane(Clip * clip, float *coeff, float level)
@@ -358,7 +364,7 @@ void clip_polygons(Clip * clip, vertex_list * vtxl)
 
   vertex **vertex_set;
 
-  vertex_set = (vertex **) malloc(vtxl->numvtx * sizeof(vertex));
+  vertex_set = (vertex **) obstack_alloc(&clip->obst, vtxl->numvtx * sizeof(vertex));
 
   {
     int count = 0;

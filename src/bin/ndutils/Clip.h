@@ -23,6 +23,10 @@
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
+#include <obstack.h>
+
+#define obstack_chunk_alloc malloc
+#define obstack_chunk_free  free
 
 #ifndef COLORDEFS
 typedef struct Color {
@@ -111,6 +115,10 @@ typedef struct clip {
   int nonlinear;		/* Is clipfunc an affine function of position? */
   float level;			/* Value of clipfunc at clipping surface */
 
+  struct obstack obst;          /* temporary memory is allocated through an
+				 * obstack for easy clean-up.
+				 */
+  
 } Clip;
 
 /*
@@ -138,3 +146,9 @@ void *getGeom(Clip *);
 void clip_init(Clip *);
 void clip_destroy(Clip *);
 void do_clip(Clip *);
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
