@@ -53,7 +53,8 @@ extern Geom	*MeshBoundSphere( Mesh *,
 extern Mesh	*MeshDice( Mesh *, int (*proc)() );
 extern Mesh	*MeshEvert( Mesh * );
 extern Mesh	*MeshDraw( Mesh * );
-extern Mesh	*MeshPick( Mesh *, Pick *, Appearance *, Transform );
+extern Mesh	*MeshPick( Mesh *, Pick *, Appearance *,
+			   Transform, TransformN *, int *axes );
 extern Mesh     *MeshTransform( Mesh *, Transform, TransformN * );
 
 #endif /*MESHDEF*/

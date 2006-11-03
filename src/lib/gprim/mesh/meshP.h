@@ -58,8 +58,7 @@ struct Mesh {
  * MESHPOINT(u, v, mesh, plist)
  * Returns plist[MESHINDEX(u, v, mesh)]
  */
-#define MESHPOINT(u, v, mesh, plist) \
-  ((plist)[MESHINDEX(u, v, mesh)])
+#define MESHPOINT(u, v, mesh, plist) ((plist)[MESHINDEX(u, v, mesh)])
 
 extern Mesh *MeshComputeNormals(Mesh *m);
 
