@@ -94,7 +94,7 @@ HPtNCopy(const HPointN *pt1, HPointN *pt2)
  * a 4-point. This means that we do NOT perfom dehomogenization here.
  */
 HPointN *
-Pt4ToHPtN(HPoint3 *v4, HPointN *vN)
+Pt4ToHPtN(const HPoint3 *v4, HPointN *vN)
 {
   int i;
 
@@ -114,9 +114,7 @@ Pt4ToHPtN(HPoint3 *v4, HPointN *vN)
   return vN;
 }
 
-/* Convert a Point3 into a HPointN while interpreting the Point3 as a
- * 4-point. This means that we do NOT perfom dehomogenization here.
- */
+/* Convert a Point3 into a HPointN */
 HPointN *
 Pt3ToHPtN(Point3 *v3, HPointN *vN)
 {
@@ -143,7 +141,7 @@ int i;
  * a 3-point. The homogeneous component of v4 is moved to vN->v[0].
  */
 HPointN *
-HPt3ToHPtN(HPoint3 *v4, int *perm, HPointN *vN)
+HPt3ToHPtN(const HPoint3 *v4, int *perm, HPointN *vN)
 {
   const int d3 = 4;
   int i;
@@ -509,7 +507,7 @@ HPtNTransform(const TransformN *T, const HPointN *from, HPointN *to)
       for (j = 0; j < idim; j++) {
 	to->v[i] += v[j] * T->a[j*odim+i];
       }
-      if (i >= idim) {
+      if (i >= idim && i < dim) {
 	to->v[i] += v[i];
       }
     }
@@ -572,7 +570,7 @@ HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to)
 	to->v[i] += v[j] * T->a[i*odim+j];
       }
     }
-  } else { /* obviously the case idim < dim */
+  } else { /* obviously the case odim < dim */
     /* implicitly pad the matrix, i.e. T acts as unity on the missing
      * dimens+ions.
      */
@@ -581,7 +579,7 @@ HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to)
       for (j = 0; j < odim; j++) {
 	to->v[i] += v[j] * T->a[i*odim+j];
       }
-      if (i >= odim) {
+      if (i >= odim && i < dim) {
 	to->v[i] += v[i];
       }
     }
@@ -645,6 +643,122 @@ HPtNTransformComponents(const TransformN *T,
   }
 
   return results;
+}
+
+HPointN *
+HPt3NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
+{
+  int idim, odim;
+  int i, j;
+  HPtNCoord *v;
+
+  if (!T) {
+    return HPt3ToHPtN(from, NULL, to);
+  }
+
+  v = (HPtNCoord *)from;
+
+  idim = T->idim;
+  odim = T->odim;
+
+  if(to == NULL) {
+    to = HPtNCreate(odim, NULL);
+  } else if (to->dim != odim) {
+    to->v = OOGLRenewNE(HPtNCoord, to->v, odim, "renew HPointN");
+    to->dim = odim;
+  }
+
+  if (idim == 4) {
+    /* the easy case */
+    for (i = 0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j = 0; j < idim; j++) {
+	to->v[i] += v[(j+1)%4] * T->a[j*odim+i];
+      }
+    }
+  } else if (idim > 4) {
+    /* pad with zeroes, the homogeneous component sits at index zero
+       and is automatically handled correctly. */
+    for(i = 0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j = 0; j < 4; j++) {
+	to->v[i] += v[(j+1)%4] * T->a[j*odim+i];
+      }
+    }
+  } else { /* obviously the case idim < dim */
+    /* implicitly pad the matrix, i.e. T acts as unity on the missing
+     * dimens+ions.
+     */
+    for (i = 0; i < odim; i++) {
+      to->v[i] = 0;
+      for (j = 0; j < idim; j++) {
+	to->v[i] += v[(j+1) % 4] * T->a[j*odim+i];
+      }
+      if (i >= idim && i < 4) {
+	to->v[i] += v[i];
+      }
+    }
+  }
+
+  return to;
+}
+
+HPointN *
+Pt4NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
+{
+  int idim, odim;
+  int i, j;
+  HPtNCoord *v;
+
+  if (!T) {
+    return Pt4ToHPtN(from, to);
+  }
+
+  v = (HPtNCoord *)from;
+
+  idim = T->idim;
+  odim = T->odim;
+
+  if(to == NULL) {
+    to = HPtNCreate(odim, NULL);
+  } else if (to->dim != odim) {
+    to->v = OOGLRenewNE(HPtNCoord, to->v, odim, "renew HPointN");
+    to->dim = odim;
+  }
+
+  if (idim == 5) {
+    /* the easy case */
+    for (i = 0; i < odim; i++) {
+      to->v[i] = T->a[i];
+      for (j = 1; j < idim; j++) {
+	to->v[i] += v[j-1] * T->a[j*odim+i];
+      }
+    }
+  } else if (idim > 5) {
+    /* pad with zeroes, the homogeneous component sits at index zero
+       and is automatically handled correctly. */
+    for(i = 0; i < odim; i++) {
+      to->v[i] = T->a[i];
+      for (j = 1; j < 5; j++) {
+	to->v[i] += v[j-1] * T->a[j*odim+i];
+      }
+    }
+  } else { /* obviously the case idim < dim */
+    /* implicitly pad the matrix, i.e. T acts as unity on the missing
+     * dimens+ions.
+     */
+    for (i = 0; i < odim; i++) {
+      to->v[i] = T->a[i];
+      for (j = 0; j < idim; j++) {
+	to->v[i] += v[j-1] * T->a[j*odim+i];
+      }
+      if (i >= idim && i < 5) {
+	to->v[i] += v[i-1];
+      }
+    }
+  }
+
+  return to;
 }
 
 /* Utility function for bounding box computations. We assume that min
