@@ -192,6 +192,7 @@ extern void set_ui_target(int type, int index);
 extern void set_ui_center(int id);
 extern void set_ui_target_id(int id);
 extern void set_ui_center_origin(int use_bbox_center);
+extern void set_ui_wm_focus(int cam_wm_focus);
 extern void ui_cleanup();
 
 /* in glui.c */
