@@ -57,7 +57,7 @@ Geom 		*BezierBoundSphere( Bezier *,
 				    int );
 Bezier      	*BezierEvert();
 Bezier      	*BezierDraw( Bezier *bezier );
-Geom      	*BezierPick( Bezier *, Pick *, Appearance *, Transform );
+Geom      	*BezierPick( Bezier *, Pick *, Appearance *, Transform, TransformN *, int *axes );
 Bezier      	*BezierTransform( Bezier *, Transform, TransformN * );
 
 int		 BezierExport();

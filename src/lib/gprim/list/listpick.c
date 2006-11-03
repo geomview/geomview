@@ -37,11 +37,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pickP.h"
 
 Geom *
-ListPick(List *list, Pick *p, Appearance *ap, Transform T)
+ListPick(List *list, Pick *p, Appearance *ap,
+	 Transform T, TransformN *TN, int *axes)
 {
   int elem = 0, pathInd;
   List *l;
   Geom *v = NULL;
+
+  if (TN)
+    return NULL;
   
   pathInd = VVCOUNT(p->gcur);
   vvneeds(&p->gcur, pathInd + 1);
@@ -49,9 +53,16 @@ ListPick(List *list, Pick *p, Appearance *ap, Transform T)
   for(l = list; l != NULL; l = l->cdr) {
     *VVINDEX(p->gcur, int, pathInd) = elem;
     if(l->car) 
-      if(GeomPick(l->car, p, ap, T)) v = (Geom *)list;
+      if(GeomPick(l->car, p, ap, T, NULL, NULL))
+	v = (Geom *)list;
     elem++;
   }
   VVCOUNT(p->gcur)--;
   return v;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

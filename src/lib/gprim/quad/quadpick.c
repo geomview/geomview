@@ -41,13 +41,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 
 Quad *
-QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T)
+QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T, TransformN *TN)
 {
   Point3 plist[4];
   int i;
   int found;
   unsigned int apflag = 0;
   HPt3Coord xa, xb, xc, xd;
+
+  if (TN)
+    return NULL;
 
   found = -1;
 
@@ -95,3 +98,9 @@ QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T)
 
   return q;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

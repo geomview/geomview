@@ -65,12 +65,16 @@ static TmCoord (*coordsbtwn(int from, int to, Pick *p, Transform Tl2n))[4]
 }
 
 Geom *
-InstPick(Inst *inst, Pick *p, Appearance *ap, Transform T)
+InstPick(Inst *inst, Pick *p, Appearance *ap,
+	 Transform T, TransformN *TN, int *axes)
 {
   int elem = 0, pathInd;
   Transform tT;
   GeomIter *it;
   Geom *v = NULL;
+
+  if (TN)
+    return NULL;
 
   if(inst == NULL || inst->geom == NULL)
     return NULL;
@@ -111,10 +115,16 @@ InstPick(Inst *inst, Pick *p, Appearance *ap, Transform T)
   while(NextTransform(it, tT)) {
     *VVINDEX(p->gcur, int, pathInd) = elem;
     TmConcat(tT,T, tT);
-    if(GeomPick(inst->geom, p, ap, tT)) 
+    if(GeomPick(inst->geom, p, ap, tT, NULL, NULL)) 
       v = (Geom *)inst;
     elem++;
   }
   VVCOUNT(p->gcur)--;
   return v;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

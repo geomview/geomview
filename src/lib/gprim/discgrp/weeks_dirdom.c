@@ -170,11 +170,8 @@ static int heapcount = 0;
 int proj_same_matrix();
 
 void
-do_weeks_code(wepolyhedron, oo, gen_list, n, met, slice)
-WEpolyhedron **wepolyhedron;
-point oo;
-proj_matrix *gen_list;
-int n, met;
+do_weeks_code(WEpolyhedron **wepolyhedron, point oo, proj_matrix *gen_list,
+	      int n, int met, int slice)
 {
 	int i;
 	for (i=0; i<4; ++i)	origin[i] = oo[i];

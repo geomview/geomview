@@ -35,8 +35,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bezierP.h"
 
 Geom *
-BezierPick( Bezier *bezier, Pick *pick, Appearance *ap, Transform T )
+BezierPick( Bezier *bezier, Pick *pick, Appearance *ap,
+	    Transform T, TransformN *TN, int *axes )
 {
+
     if (bezier->mesh == NULL ||
 	bezier->mesh->nu != bezier->nu ||
 	bezier->mesh->nv != bezier->nv)	
@@ -45,6 +47,12 @@ BezierPick( Bezier *bezier, Pick *pick, Appearance *ap, Transform T )
     if (bezier->flag & BEZ_REMESH) {
 		 BezierReDice(bezier);
     }	
-    return GeomPick( (Geom *)bezier->mesh, pick, ap, T );
+    return GeomPick( (Geom *)bezier->mesh, pick, ap, T, TN, axes );
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
 

@@ -104,20 +104,18 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
     ptN = HPtNCreate(5, NULL);
 
     if (polylist->geomflags & VERT_4D) {
-      Pt4ToHPtN(&min, ptN);
+      minN = Pt4NTransform(TN, &min, NULL);
     } else {
-      HPt3ToHPtN(&min, NULL, ptN);
+      minN = HPt3NTransform(TN, &min, NULL);
     }
-    minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
     while(--n >= 0) {
       if (polylist->geomflags & VERT_4D) {
-	Pt4ToHPtN(&(++v)->pt, ptN);
+	Pt4NTransform(TN, &(++v)->pt, ptN);
       } else {
-	HPt3ToHPtN(&(++v)->pt, NULL, ptN);
+	HPt3NTransform(TN, &(++v)->pt, ptN);
       }
-      HPtNTransform(TN, ptN, ptN);
       HPtNMinMax(minN, maxN, ptN);
     }
     result = (BBox *)GeomCCreate(NULL, BBoxMethods(),

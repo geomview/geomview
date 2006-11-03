@@ -38,13 +38,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #define	VDOT2(v1, v2)	( (v1).x*(v2).x + (v1).y*(v2).y )
 
-Skel *SkelPick(Skel *s, Pick *p, Appearance *ap, Transform T)
-{ return NULL; }
+Skel *SkelPick(Skel *s, Pick *p, Appearance *ap, Transform T, TransformN *TN)
+{
+  return NULL;
+}
 
 #ifdef notdef
 
 Vect *
-VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
+VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 {
   HPoint3 *hp, *hp0, *hp1;
   Point3 pt0, pt1, pv;

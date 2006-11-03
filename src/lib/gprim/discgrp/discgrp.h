@@ -44,7 +44,8 @@
 
 typedef struct DiscGrp DiscGrp ;
 
-extern DiscGrp	*DiscGrpPick( DiscGrp *, Pick *, Appearance *, Transform );
+extern DiscGrp *
+DiscGrpPick( DiscGrp *, Pick *, Appearance *, Transform, TransformN *, int * );
 extern GeomClass *DiscGrpMethods( void );
 extern char	*DiscGrpName( void );
 /*

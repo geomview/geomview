@@ -50,7 +50,7 @@ CommentName()
 }
 /* Comments should NOT be pickable... Mon Jun 20 19:46:55 1994 TMM */
 static Geom *
-CommentPick(Geom *g, Pick *p, Appearance *ap, Transform T)
+CommentPick(Geom *g, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 {
  return NULL;
 }

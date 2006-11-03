@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "appearance.h"
 
 PolyList *
-PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T)
+PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 {
   int i;
   vvec plist;
@@ -50,7 +50,10 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T)
   Poly *poly;
   unsigned int apflag = 0;
 
-  /* Make sure that vects do not as visible - otherwise they
+  if (TN)
+    return NULL;
+
+  /* Make sure that vects do not count as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */
   if (ap != NULL) {
     apflag = ap->flag;
@@ -99,3 +102,9 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T)
 
   return pl;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

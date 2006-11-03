@@ -37,12 +37,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pickP.h"
 
 DiscGrp *
-DiscGrpPick(DiscGrp *dg, Pick *p, Appearance *ap, Transform T)
+DiscGrpPick(DiscGrp *dg, Pick *p, Appearance *ap, Transform T,
+	    TransformN *TN, int *axes)
 {
   int elem = 0, pathInd;
   Transform t;
   GeomIter *it;
   DiscGrp *v = NULL;
+
+  if (TN)
+    return NULL;
 
   if(dg == NULL || dg->geom == NULL)
     return NULL;
@@ -54,10 +58,17 @@ DiscGrpPick(DiscGrp *dg, Pick *p, Appearance *ap, Transform T)
   while(NextTransform(it, t)) {
     *VVINDEX(p->gcur, int, pathInd) = elem;
     TmConcat(t,T, t);
-    if(GeomPick(dg->geom, p, ap, t)) 
+    if(GeomPick(dg->geom, p, ap, t, NULL, NULL)) 
       v = dg;
     elem++;
   }
   VVCOUNT(p->gcur)--;
   return v;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+

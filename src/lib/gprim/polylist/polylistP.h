@@ -70,7 +70,8 @@ struct PolyList
 extern PolyList *PolyListCreate(PolyList *exist, GeomClass *Class, va_list *a_list);
 extern PolyList *PolyListCopy( PolyList *poly );
 extern PolyList *PolyListDelete( PolyList *poly );
-extern PolyList *PolyListPick( PolyList *, Pick *, Appearance *, Transform );
+extern PolyList *PolyListPick( PolyList *, Pick *, Appearance *,
+			       Transform, TransformN * );
 extern GeomClass *PolyListMethods();
 extern PolyList *PolyListComputeNormals( PolyList *polyList);
 

@@ -42,12 +42,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 Vect *
-VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
+VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 {
   Point3 plist[2];
   int i, j, k, which, ok[2];
   int found;
   unsigned int apflag = 0;
+
+  if (TN)
+    return NULL;
 
   /* Make sure that the edges do not as visible - otherwise 
    * they could really mess things up */
@@ -113,3 +116,9 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T)
 
   return v;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
