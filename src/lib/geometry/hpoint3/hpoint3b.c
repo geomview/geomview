@@ -31,7 +31,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#
 /*
 **	hpoint3.c - procedural interface to 3D point geometry
 **
