@@ -1,3 +1,4 @@
+EXTRA_DIST = Headers
 noinst_LTLIBRARIES = libacgeomview.la
 
 libacgeomview_la_SOURCES =
