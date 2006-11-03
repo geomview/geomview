@@ -45,7 +45,7 @@ void addcomponentcolor(ColorA * color, HPointN * pt, char *coordsys,
 		       dir * plex, char *obj)
 {
   TransformN *t;
-  int i, j, smdim;
+  int i, smdim;
   float hgt, weight;
   HPointN *newpt;
   if (plex->np == 1) {		/*If there is only one mark color the point that color */

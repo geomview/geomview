@@ -124,7 +124,6 @@ static void *projectCamMesh(int sel, Geom * g, va_list * args)
 {
   TransformN *ObjUniv, *UnivCam, *ProjMat;
   int *axes, i, npts, dim;
-  float *ptr;
   HPointN *hptn1, *hptn2;
   HPoint3 *pts;
 
@@ -167,7 +166,6 @@ static void *projectCamQuad(int sel, Geom * g, va_list * args)
 {
   TransformN *ObjUniv, *UnivCam, *ProjMat;
   int *axes, i, npts, dim;
-  float *ptr;
   HPointN *hptn1, *hptn2;
   HPoint3 *pts;
 
@@ -210,7 +208,6 @@ static void *projectCamNDMesh(int sel, Geom * g, va_list * args)
 {
   int i, *axes, numpts = 1;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
 
   ObjUniv = va_arg(*args, TransformN *);
   UnivCam = va_arg(*args, TransformN *);
@@ -235,7 +232,6 @@ static void *projectCamSkel(int sel, Geom * g, va_list * args)
 {
   int i, j, *axes;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
   HPointN *hptn1, *hptn2, tmp;
 
   ObjUniv = va_arg(*args, TransformN *);
@@ -280,7 +276,6 @@ static void *projectCamNPolyList(int sel, Geom * g, va_list * args)
 {
   int i, j, *axes;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
   HPointN *hptn1, *hptn2, tmp;
 
   ObjUniv = va_arg(*args, TransformN *);

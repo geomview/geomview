@@ -66,7 +66,6 @@ static void *projectCamWCDefault(int sel, Geom * g, va_list * args)
 {
   TransformN *ObjUniv, *UnivCam, *ProjMat;
   int *axes, i, npts, dim;
-  float *ptr;
   HPointN *hptn1, *hptn2;
   HPoint3 *pts;
   ColorA *col;
@@ -130,7 +129,6 @@ static void *projectCamWCMesh(int sel, Geom * g, va_list * args)
 {
   TransformN *ObjUniv, *UnivCam, *ProjMat;
   int *axes, i, npts, dim;
-  float *ptr;
   HPointN *hptn1, *hptn2;
   HPoint3 *pts;
   ColorA *col;
@@ -191,7 +189,6 @@ static void *projectCamWCQuad(int sel, Geom * g, va_list * args)
 {
   TransformN *ObjUniv, *UnivCam, *ProjMat;
   int *axes, i, npts, dim;
-  float *ptr;
   HPointN *hptn1, *hptn2;
   ColorA *col;
   HPoint3 *pts;
@@ -253,7 +250,6 @@ static void *projectCamWCNDMesh(int sel, Geom * g, va_list * args)
 {
   int i, *axes, numpts = 1;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
   colormap *map;
   ColorA *col;
   char *camname, *objname;
@@ -296,7 +292,6 @@ static void *projectCamWCSkel(int sel, Geom * g, va_list * args)
 {
   int i, j, k, l, numcolors = 0, *axes, *newvi, newnvi = 0;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
   HPointN *hptn1, *hptn2, tmp;
   ColorA *col;
   colormap *map;
@@ -407,7 +402,6 @@ static void *projectCamWCNPolyList(int sel, Geom * g, va_list * args)
 {
   int i, j, *axes;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  float *ptr;
   HPointN *hptn1, *hptn2, tmp;
   ColorA *col;
   colormap *map;
