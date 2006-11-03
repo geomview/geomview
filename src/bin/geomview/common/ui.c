@@ -41,6 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "lisp.h"
 #include "lang.h"
 #include "drawer.h"
+#include "transform.h"
 #include "ui.h"
 #include "motion.h"
 #include "event.h"
