@@ -63,7 +63,8 @@ typedef Geom *GeomEvalFunc(  Geom *object, float u, float v );
 typedef Geom *GeomDiceFunc( Geom *object, int nu, int nv );
 typedef Geom *GeomSubdivideFunc( /* Geom *object */ );
 
-typedef Geom *GeomPickFunc( /* Geom *, Pick *, Appearance *, Transform */ );
+typedef Geom *
+GeomPickFunc(Geom *, Pick *, Appearance *, Transform, TransformN *, int *axes);
 
 typedef Geom *GeomFacingFunc( /* Geom *object, ... */ );
 typedef Geom *GeomDrawFunc( /* Geom *object */ );

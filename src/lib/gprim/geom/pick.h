@@ -49,9 +49,13 @@ typedef struct Pick Pick;
 #define	PA_DEPTH	103	/* float; depth (== PA_POINT's screen z component) */
 
 #define	PA_GPRIM	104	/* Geom *; geometric primitive picked if any */
-#define	PA_TPRIM	105	/* Transform; from PA_POINT, PA_VERT, etc. to
-				 *  coords in PA_GPRIM */
+#define	PA_TPRIM	105	/* Transform; from PA_GPRIM to
+				   PA_POINT, PA_VERT, etc. */
+#define	PA_TPRIMN	128	/* TransformN; from PA_GPRIM to
+				   PA_POINT, PA_VERT, etc. */
 #define	PA_TWORLD	111	/* Transform; from PA_POINT, PA_VERT, etc. to
+				 *  world coords */
+#define	PA_TWORLDN	129	/* Transform; from PA_POINT, PA_VERT, etc. to
 				 *  world coords */
 
 #define	PA_WANT		106	/* int; bitmask of desirable values */
@@ -110,8 +114,9 @@ extern void  PickDelete( Pick * );
  *	Pt3Transform(Tpick2prim, &rawpt, &pickprim);	(in leaf-level gprim's coords)
  *    }
  */
-extern Geom *GeomMousePick( Geom *g, Pick *p, Appearance *ap, Transform Tproj,
-				double xpick, double ypick );
+extern Geom *GeomMousePick(Geom *g, Pick *p, Appearance *ap,
+			   Transform Tproj, TransformN *TNproj, int *axes,
+			   double xpick, double ypick );
 
 /*
  * GeomPick() is an internal routine:
@@ -119,7 +124,7 @@ extern Geom *GeomMousePick( Geom *g, Pick *p, Appearance *ap, Transform Tproj,
  *	T is adapted for convenience in pick calculations;
  *	it is translated such that the pick goes through (x,y) = (0,0).
  */
-extern Geom *GeomPick( Geom *g, Pick *p, Appearance *ap,
-		       Transform T );
+extern Geom *GeomPick(Geom *g, Pick *p, Appearance *ap,
+		      Transform T, TransformN *TN, int *axes);
 
 #endif /*PICKDEF*/

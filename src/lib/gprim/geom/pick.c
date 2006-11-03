@@ -88,24 +88,44 @@ int PickFillIn(Pick *pick, int n_verts, Point3 *got, int vertex, int edge, Appea
 
 Geom *
 GeomMousePick(Geom *g, Pick *p, Appearance *ap,
-	      Transform Tg, double x, double y)
+	      Transform Tg, TransformN *TgN, int *axes,
+	      double x, double y)
 {
-    Pick *pick;
+    Pick *pick = NULL;
     Transform Txy, T;
+    TransformN *TN = NULL;
 
-    pick = p ? p : PickSet(NULL, PA_END);
+    if (!p)
+	pick = p = PickSet(NULL, PA_END);
     p->x0 = x;
     p->y0 = y;
-    TmTranslate(Txy, -x, -y, 0.);
-    TmConcat(Tg, Txy, T);
-    g = GeomPick(g, pick, ap, T);
-    if (g && p) {
-		/* Only bother if the caller will get to see these */
-      TmInvert(p->Tprim, p->Tmirp);
-      TmInvert(T, p->Tw);
+    if (TgN) {
+	HPointN *tmp = HPtNCreate(TgN->odim, NULL);
+
+	tmp->v[axes[0]] = -x;
+	tmp->v[axes[1]] = -y;
+	
+	TN = TmNTranslateOrigin(NULL, tmp);
+	HPtNDelete(tmp);	
+	TmNConcat(TgN, TN, TN);
+    } else {
+	TmTranslate(Txy, -x, -y, 0.);
+	TmConcat(Tg, Txy, T);
     }
-    if(p == NULL)
+    g = GeomPick(g, p, ap, T, TN, axes);
+    if (g && !pick) {
+	/* Only bother if the caller will get to see these */
+	if (TN) {
+	    p->TwN = TmNInvert(TN, p->TwN);
+	} else {
+	    TmInvert(p->Tprim, p->Tmirp); /* cH: Why? Nobody uses Tmirp */
+	    TmInvert(T, p->Tw);
+	}
+    }
+    if (pick)
 	PickDelete(pick);
+    if (TN)
+	TmNDelete(TN);
     return g;
 }
 
@@ -117,29 +137,51 @@ GeomMousePick(Geom *g, Pick *p, Appearance *ap,
  * bounding box: average of min and max depth.
  */
 static Geom *
-GenericPick(Geom *g, Pick *p, Appearance *ap, Transform T)
+GenericPick(Geom *g, Pick *p, Appearance *ap,
+	    Transform T, TransformN *TN, int axes[4])
 {
     Geom *bbox;
     HPoint3 min, max;
 
-    bbox = GeomBound(g, T, NULL);
+    if (TN) {
+	TransformN *proj;
+	int i;
+	
+	proj = TmNCreate(TN->idim, 4, NULL);
+	for (i = 0; i < TN->idim; i++) {
+	    proj->a[i*4+0] = TN->a[i*TN->odim+axes[3]];
+	    proj->a[i*4+1] = TN->a[i*TN->odim+axes[0]];
+	    proj->a[i*4+2] = TN->a[i*TN->odim+axes[1]];
+	    proj->a[i*4+3] = TN->a[i*TN->odim+axes[2]];
+	}
+	bbox = GeomBound(g, NULL, TN);
+	TmNDelete(proj);
+    } else {
+	bbox = GeomBound(g, T, NULL);
+    }
     BBoxMinMax((BBox*)bbox, &min, &max);
-    if(min.x <= 0 && max.x >= 0 && min.y <= 0 && max.y >= 0 &&
-					.5*(min.z + max.z) <= p->got.z) {
+    if (min.x <= 0 && max.x >= 0 && min.y <= 0 && max.y >= 0
+	&& .5*(min.z + max.z) <= p->got.z) {
 	p->got.x = p->got.y = 0;
 	p->got.z = .5 * (min.z + max.z);
 	p->gprim = g;
-	TmCopy(T, p->Tprim);
+	if (TN) {
+	    p->TprimN = TmNCopy(TN, p->TprimN);
+	} else {
+	    TmCopy(T, p->Tprim);
+	}
 	return g;
     }
     return NULL;
 }
 
 Geom *
-GeomPick(Geom *g, Pick *p, Appearance *ap, Transform T)
+GeomPick(Geom *g, Pick *p, Appearance *ap,
+	 Transform T, TransformN *TN, int *axes)
 {
    Appearance *nap = ap;
    Geom *result;
+
    if(g == NULL)
 	return NULL;
 
@@ -150,7 +192,7 @@ GeomPick(Geom *g, Pick *p, Appearance *ap, Transform T)
    }
    if(g->ap && (p->want & PW_VISIBLE))
 	nap = ApMerge( g->ap, ap, 0 );
-   result = (*g->Class->pick)(g, p, nap, T);
+   result = (*g->Class->pick)(g, p, nap, T, TN, axes);
    if(ap != nap)
 	ApDelete(nap);
    return result;
@@ -160,7 +202,12 @@ void
 PickDelete(Pick *p)
 {	/* Note we don't GeomDelete(p->gprim); it wasn't RefIncr'd */
   if(p) {
-    if (p->f) OOGLFree(p->f);	/* free the face list, if any */
+    if (p->f)
+	OOGLFree(p->f);	/* free the face list, if any */
+    if (p->TprimN)
+	TmNDelete(p->TprimN);
+    if (p->TwN)
+	TmNDelete(p->TwN);
     vvfree(&p->gcur);
     vvfree(&p->gpath);
     OOGLFree(p);
@@ -185,6 +232,8 @@ PickSet(Pick *p, int attr, ...)
 	VVINIT(p->gcur, int, 1);
 	VVINIT(p->gpath, int, 1);
 	p->gprim = NULL;
+	p->TprimN = NULL;
+	p->TwN = NULL;
 	HPt3From(&p->v, 0.0, 0.0, 0.0, 1.0);
 	p->vi = -1;
 	HPt3From(&p->e[0], 0.0, 0.0, 0.0, 1.0);
@@ -207,6 +256,8 @@ PickSet(Pick *p, int attr, ...)
 	case PA_DEPTH:	p->got.z = va_arg(al, double); break;
 	case PA_GPRIM:	p->gprim = va_arg(al, Geom *); break;
 	case PA_TPRIM:  TmCopy(*va_arg(al, Transform *), p->Tprim); break;
+	case PA_TPRIMN:
+	  p->TprimN = TmNCopy(*va_arg(al, TransformN **), p->TprimN); break;
 	case PA_VERT:	p->v = *va_arg(al, HPoint3 *); break;
 	case PA_EDGE: { HPoint3 *e = va_arg(al, HPoint3 *);
 			p->e[0] = e[0];
@@ -242,6 +293,9 @@ PickGet(Pick *p, int attr, void *attrp)
     case PA_DEPTH:  *(float *)attrp = p->got.z; break;
     case PA_GPRIM:  *(Geom **)attrp = p->gprim; break;
     case PA_TPRIM:  TmCopy(p->Tprim, *(Transform *)attrp); break;
+    case PA_TPRIMN:
+      *((TransformN **)attrp) = TmNCopy(p->TprimN, *((TransformN **)attrp));
+      break;
     case PA_TWORLD: TmCopy(p->Tw, *(Transform *)attrp); break;
     case PA_VERT: *(HPoint3 *)attrp = p->v; break;
     case PA_EDGE:
@@ -255,3 +309,9 @@ PickGet(Pick *p, int attr, void *attrp)
     }
     return p->found;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

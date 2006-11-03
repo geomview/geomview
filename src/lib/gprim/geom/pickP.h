@@ -52,10 +52,19 @@ struct Pick {
 	HPoint3 e[2];		/* endpoints of picked edge, if any */
 	int ei[2];		/* indices of endpoints of picked edge */
 
-	Transform Tprim;
+	Transform Tprim;	/* gprim -> screen */
 	Transform Tmirp;
 	Transform Tw;
 	Transform Tself;
+
+	/* for ND-viewing. Note that we do not bother about Tmirp and
+	 * Tself, none of them is used anywhere. Strange. cH.
+	 */
+	TransformN *TprimN;
+	int        axes[4];     /* the relevant sub-space of the output of 
+				 * TprimN.
+				 */
+	TransformN *TwN;
 
 	HPoint3 *f;		/* array of vertices of picked face, if any */
 	int fn;			/* number of vertices in array f */

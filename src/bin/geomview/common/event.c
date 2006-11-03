@@ -825,25 +825,90 @@ view_pick( DView *dv, int x, int y, Pick *pick )
     PickSet( pick, PA_TC2N, Tc2n, PA_TW2N, Tw2n, PA_TS2N, Ts2n, PA_END );
   }
 
-  CamView( dv->cam, V );	/* V = camera-to-screen matrix */
+  if (drawerstate.NDim > 0) {
+    TransformN *V, *Tnet, *Tmodel, *Tworld;
+    
+    V = drawer_ND_CamView(dv, NULL);
+    
+    if (dv->Item != drawerstate.universe) {
+      /* Picking in a window with a dedicated Scene */
+      /* We yield results in the Scene's coordinate system */
+      if (GeomMousePick(dv->Item, pick, (Appearance *)NULL,
+			NULL, V, dv->NDPerm, xpick, ypick)) {
+	chosen = dv->id;
+      }
+      return chosen;
+    }
+
+    /* Picking in the real world */
+    Tworld = drawer_get_ND_transform(WORLDGEOM, UNIVERSE);
+    TmNConcat(Tworld, V, V); /* world -> screen */
+    TmNDelete(Tworld);
+    
+    /*  Now V contains the world -> screen projection */
+    LOOPSOMEGEOMS(i,dg,ORDINARY) {
+      if (dg->pickable) {
+	Geom *g = NULL;
+	int id = GEOMID(i);
+	
+	if (dg->Lgeom) {
+	  Tmodel = drawer_get_ND_transform(id, WORLDGEOM);
+	  Tnet = TmNConcat(Tmodel, V, NULL); /* Now Tnet geom -> screen */
+	  GeomGet(dg->Lgeom, CR_GEOM, &g);
+	  ap = drawer_get_ap(dg->id);
+	  if (GeomMousePick(g, pick, ap, NULL,
+			    Tnet, dv->NDPerm, xpick, ypick)) {
+	    chosen = id;
+	    /* Arrange for things to be in world coords not Dgeom coords. */
+	    pick->TwN = TmNConcat(pick->TwN, Tmodel, pick->TwN);
+	  }
+	  TmNDelete(Tmodel);
+	  TmNDelete(Tnet);
+	  ApDelete(ap);
+	}
+      }
+    }
+
+    TmNDelete(V);
+
+    return chosen;
+  }
+
+  CamView( dv->cam, V );	/* V = camera-to-screen matrix
+				 * cH: wrong. V = universe-to-screen matrix
+				 */
 
   if(dv->Item != drawerstate.universe) {
 	/* Picking in a window with a dedicated Scene */
 	/* We yield results in the Scene's coordinate system */
+    /* Is this really correct? Why should we call GeomPosition() here? 
+     * dv->Item is just a normal geometry, only by chance a
+     * single-element INST.
+     */
+#if 0
     GeomPosition( dv->Item, T );
     TmConcat(T,V, T);		/* T = Scene to screen projection */
     if(GeomMousePick( dv->Item, pick, (Appearance *)NULL, T, xpick, ypick )) {
 	chosen = dv->id;
     }
+#else
+    if (GeomMousePick( dv->Item, pick, (Appearance *)NULL,
+		       V, NULL, NULL, xpick, ypick )) {
+	chosen = dv->id;
+    }
+#endif
     return chosen;
   }
 
-	/* Picking in the real world */
-  GeomPosition( drawerstate.world, Tworld );
-  TmConcat( Tworld,V, T );
+  /* Picking in the real world */
+  GeomPosition(drawerstate.world, Tworld); /* world -> universe */
+  TmConcat(Tworld, V, T); /* world -> screen */
   /*
    * We now assume the complete screen -> DGeom transform is in T.
    * This is true only if we have just a single level of DGeom's in the world.
+   *
+   * cH: this is wrong, T is the World -> screen projection, not the
+   * other way round. (Transforms operate from the right!).
    */
   LOOPSOMEGEOMS(i,dg,ORDINARY) {
     if (dg->pickable) {
@@ -851,19 +916,22 @@ view_pick( DView *dv, int x, int y, Pick *pick )
       if (dg->Lgeom) {
 	GeomPosition( dg->Item, Tmodel );
 	GeomPosition( dg->Inorm, Tnorm );
-	TmConcat( Tnorm,Tmodel, Tt );
-	TmConcat( Tt,T, Tnet );	/* Now Tnet = complete geom-to-screen proj'n */
+	TmConcat( Tnorm, Tmodel, Tt );
+	TmConcat( Tt, T, Tnet ); /* Now Tnet = complete geom-to-screen proj'n */
 	GeomGet( dg->Lgeom, CR_GEOM, &g );
 	ap = drawer_get_ap(dg->id);
-	if(GeomMousePick( g, pick, ap,
-			 Tnet, xpick, ypick )) {
+	if (GeomMousePick( g, pick, ap, Tnet, NULL, NULL, xpick, ypick )) {
 	  chosen = GEOMID(i);
 	  /* We remember oldTw to print out info below for debugging only */
 	  TmCopy(pick->Tw, oldTw);
-	  /* This is necessary!  Arranges for things to be in world coords
-	     not Dgeom coords. Tt is the world-to-dgeom transform 
-	     (or vice versa?) */
+	  /* This is necessary!  Arranges for things to be in world
+	   * coords not Dgeom coords. Tt is the dgeom-to-world
+	   * transform, Tw is (more or less) screen -> dgeom
+	   */
 	  TmConcat(pick->Tw, Tt, pick->Tw);
+	  /* cH: This is the single and only place where Tself is
+	   * referenced. strange.
+	   */
 	  drawer_get_transform(WORLDGEOM, pick->Tself, GEOMID(i));
 	  TmConcat(pick->Tw, pick->Tself, pick->Tself);
 	}
@@ -872,6 +940,7 @@ view_pick( DView *dv, int x, int y, Pick *pick )
     }
   }
 
+  /* Ok, everything below is just debugging stuff */
   if (chosen == NOID) {
 /*    printf("Picked nothing.\n"); */
   }
@@ -1240,3 +1309,9 @@ LDEFINE(dither, LVOID,
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
