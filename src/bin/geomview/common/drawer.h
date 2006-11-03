@@ -414,6 +414,7 @@ void	drawer_nuke_world();
 void	drawer_nuke_cameras(int keepzero);
 void	drawer_get_transform(int id, Transform T, int cumulative);
 TransformN *drawer_get_ND_transform(int from_id, int to_id);
+TransformN *drawer_ND_CamView(DView *dv, TransformN *TN);
 int	drawer_idmatch(int id1, int id2);
 mgshadefunc softshader(int camid);
 

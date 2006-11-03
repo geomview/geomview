@@ -60,6 +60,7 @@ int get_parent(int id);
 void set_space(int new);
 void apply_ND_transform(Transform deltaT,
 			int moving, int center, int frame);
+/* don't the next two belong to drawer.c? */
 void drawer_set_ND_xform(int id, TransformN *T);
 TransformN *drawer_get_ND_transform(int from_id, int to_id);
 
@@ -106,9 +107,6 @@ Geom *id_bbox(int geomID, int coordsysID) {
   }
 
   if (drawerstate.NDim > 0) {
-    /* If the reference frame is a camera then do the appropriate
-     * projection, with a fallback to the default x-y-z case.
-     */
     MAYBE_LOOP(geomID, i, T_GEOM, DGeom, geomObj) {
       geom2coordsysN = drawer_get_ND_transform(geomObj->id, coordsysID);
       other_bbox = GeomBound(geomObj->Lgeom, NULL, geom2coordsysN);
@@ -1065,7 +1063,6 @@ LDEFINE(transform, LVOID,
   int moving_id, center_id, frame_id, transform_type;
   Keyword smooth = NO_KEYWORD;
   float fx, fy, fz, during = 0;
-  LList *optional;
 
   LDECLARE(("transform", LBEGIN,
 	    LID, &moving_id,
@@ -1106,7 +1103,6 @@ LDEFINE(transform_incr, LVOID,
   Keyword smooth = NO_KEYWORD;
   float fx, fy, fz;
   float timeunit = 0;
-  LList *optional;
 
   LDECLARE(("transform-incr", LBEGIN,
 	    LID, &moving_id,
@@ -1782,6 +1778,11 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
 	CamGet(DVobj(obj)->cam, CAM_C2W, T);
 	return;
       }
+    } else if (ISCAM(to_id)) {
+      if(from_id == UNIVERSE) {
+	CamGet(DVobj(obj)->cam, CAM_W2C, T);
+	return;
+      }
     }
   }
 
@@ -1909,6 +1910,32 @@ drawer_set_ND_xform(int id, TransformN *T)
     }
   }
 }
+
+/* For ND-picking.
+ *
+ * The return value is the cluster's W2C transform with this camera's
+ * 3d CamView() transform applied to the appropriate sub-space.
+ */
+TransformN *drawer_ND_CamView(DView *dv, TransformN *T)
+{
+  Transform CV3D;
+
+  if(dv->cluster == NULL && drawerstate.NDim > 0) {
+    /* If we're in N-D mode but this camera isn't equipped,
+     * give it a default N-D => 3-D projection now.
+     */
+    gv_ND_axes(dv->name[0],
+	       drawerstate.NDcams ? drawerstate.NDcams->name : "default",
+	       1, 2, 3, 0);
+  }
+  CamView(dv->cam, CV3D);
+  dv->cluster->W2C = TmNInvert(dv->cluster->C2W, dv->cluster->W2C);
+  T = TmNCopy(dv->cluster->W2C, T);
+  TmNApplyDN(T, dv->NDPerm, CV3D);
+
+  return T;
+}
+
 
 int
 get_parent(int id)
@@ -2094,8 +2121,6 @@ void make_center_from_bbox(char *objname, int obj_id)
 
 void make_center_from_pick(char *objname, Pick *pick, int camid)
 {
-  Point3 center, fromcam;
-  Transform Tuni, Tcam;
   int index;
   DView *dv;
 
@@ -2103,14 +2128,49 @@ void make_center_from_pick(char *objname, Pick *pick, int camid)
    * XXX if we ever implement object hierarchy, a Center like this
    * should be referred to the object we picked, not the Universe.
    */
-  drawer_get_transform(WORLDGEOM, Tuni, UNIVERSE);
-  Pt3Transform(pick->Tw, &pick->got, &center);
-  Pt3Transform(Tuni, &center, &center);	/* Convert to universe coords */
-  make_center(objname, &center);
-  MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
-    drawer_get_transform(UNIVERSE, Tcam, dv->id);
-    Pt3Transform(Tcam, &center, &fromcam);
-    drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
+  if (drawerstate.NDim > 0) {
+    TransformN *Tuni, *Tcam;
+    Transform Tcam3d;
+    HPointN *center;
+    HPoint3 got4, center3d;
+    Point3 fromcam;
+    
+    if (pick->TwN == NULL || pick->axes == NULL) {
+      OOGLError(1, "3d pick for ND-viewing?");
+      return;
+    }
+    Pt3ToHPt3(&pick->got, &got4, 1);
+    /* not a loop for cameras ... */
+    MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
+      center = HPt3ToHPtN(&got4, dv->NDPerm, NULL);
+    }
+    HPtNTransform(pick->TwN, center, center);
+    Tuni = drawer_get_ND_transform(WORLDGEOM, UNIVERSE);
+    HPtNTransform(Tuni, center, center);
+    TmNDelete(Tuni);
+    make_ND_center(objname, center);
+    MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
+      Tcam = drawer_get_ND_transform(UNIVERSE, dv->id);
+      HPtNTransform(Tcam, center, center);
+      TmNDelete(Tcam);
+      drawer_get_transform(UNIVERSE, Tcam3d, dv->id);
+      HPtNToHPt3(center, dv->NDPerm, &center3d);
+      HPt3TransPt3(Tcam3d, &center3d, &fromcam);
+      drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
+    }
+  } else {
+    Point3 center, fromcam;
+    Transform Tuni, Tcam;
+
+    drawer_get_transform(WORLDGEOM, Tuni, UNIVERSE);
+    Pt3Transform(pick->Tw, &pick->got, &center);
+    Pt3Transform(Tuni, &center, &center);	/* Convert to universe coords */
+    make_center(objname, &center);
+    MAYBE_LOOP(camid, index, T_CAM, DView, dv) {
+      drawer_get_transform(UNIVERSE, Tcam, dv->id);
+      Pt3Transform(Tcam, &center, &fromcam);
+      drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
+    }
   }
 }
 
