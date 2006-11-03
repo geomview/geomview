@@ -489,7 +489,7 @@ static void pick_light(Event *ev)
     TmConcat( Tt,T, Tnet );	/* Now Tnet = complete geom-to-screen proj'n */
     mousemap(ev->x, ev->y, &xpick, &ypick, &drawerstate.winpos);
     if(GeomMousePick( lr.lightgeoms[i], pick, (Appearance *)NULL,
-			 Tnet, xpick, ypick )) {
+		      Tnet, NULL, NULL, xpick, ypick )) {
       uistate.current_light = i;
       set_light(i);
       picked = 1;
