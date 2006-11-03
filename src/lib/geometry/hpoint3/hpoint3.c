@@ -101,41 +101,6 @@ HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
   return tp.w;
 }
 
-/* Apply a TransformN to an HPoint3. Only the upper 4x4 triangle is
- * applied, and the first 4 components of the translation.
- */
-HPoint3 *
-HPt3NTransform( const TransformN *T, const HPoint3 *from, HPoint3 *to )
-{
-  short idim = T->idim, odim = T->odim;
-  int i, j;
-  HPt3Coord v[4], *fromp, *top;
-  HPtNCoord scale;
-
-  top = (HPt3Coord *)to;
-  if (from == to) {
-    for( i=0; i<4; i++)
-      v[i] = ((HPt3Coord *)from)[i];
-    fromp = v;
-  } else {
-    fromp = (HPt3Coord *)from;
-  }
-
-  for(i = 0; i < 4; i++) {
-    top[i] = 0;
-    for(j=0; j < 4; j++)
-      top[i] += v[j] * T->a[j*odim+i];
-  }
-
-  /* Add the translation */
-  scale = T->a[(idim-1)*odim + (idim-1)];
-  for (i = 0; i < 4; i++) {
-    top[i] += T->a[(idim-1)*odim + i] / scale;
-  }
-
-  return to;
-}
-
 /* 
  * Pt3ToHPt4: convert 3-vectors to 4-vectors by padding with 1.0 's.
  *
