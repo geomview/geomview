@@ -761,6 +761,49 @@ Pt4NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
   return to;
 }
 
+HPt3Coord NTransPt3(TransformN *TN, int *axes,
+		    const HPoint3 *hpt4, int v4d, Point3 *result)
+{
+  HPointN *tmp;
+  HPt3Coord retval;
+
+  /* axes[3] should be 0 */
+
+  if (v4d) {
+    tmp = Pt4NTransform(TN, hpt4, NULL);
+  } else {
+    tmp = HPt3NTransform(TN, hpt4, NULL);
+  }
+  result->x = tmp->v[axes[0]] / tmp->v[axes[3]];
+  result->y = tmp->v[axes[1]] / tmp->v[axes[3]];
+  result->z = tmp->v[axes[2]] / tmp->v[axes[3]];
+
+  retval = tmp->v[axes[3]];
+  
+  HPtNDelete(tmp);
+  
+  return retval;
+}
+
+void HPt3NTransHPt3(TransformN *TN, int *axes,
+		    const HPoint3 *hpt4, int v4d, HPoint3 *result)
+{
+  HPointN *tmp;
+
+  if (v4d) {
+    tmp = Pt4NTransform(TN, hpt4, NULL);
+  } else {
+    tmp = HPt3NTransform(TN, hpt4, NULL);
+  }
+
+  result->w = tmp->v[axes[3]];
+  result->x = tmp->v[axes[0]];
+  result->y = tmp->v[axes[1]];
+  result->z = tmp->v[axes[2]];
+
+  HPtNDelete(tmp);
+}
+
 /* Utility function for bounding box computations. We assume that min
  * and max are dehomogenized (third part of the #if clause below), and
  * that they are large enough (min->dim >= other->dim <= max->dim)
