@@ -68,8 +68,8 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap,
     ok = 0;
     if (TN) {
       for (vi=0; vi<poly->n_vertices; vi++) {
-	if (0 < NTransPt3(TN, axes,
-			  &poly->v[vi]->pt, v4d, VVINDEX(plist, Point3, vi)))
+	if (0 < HPt3NTransPt3(TN, axes, &poly->v[vi]->pt, v4d,
+			      VVINDEX(plist, Point3, vi)))
 	  ok = 1;
       }
     } else {

@@ -62,10 +62,10 @@ Quad *QuadPick(Quad *q, Pick *pick, Appearance *ap,
 
   for (i = 0; i < q->maxquad; i++) {
     if (TN) {
-      xa = NTransPt3(TN, axes, &q->p[i][0], v4d, &plist[0]);
-      xb = NTransPt3(TN, axes, &q->p[i][1], v4d, &plist[1]);
-      xc = NTransPt3(TN, axes, &q->p[i][2], v4d, &plist[2]);
-      xd = NTransPt3(TN, axes, &q->p[i][3], v4d, &plist[3]);
+      xa = HPt3NTransPt3(TN, axes, &q->p[i][0], v4d, &plist[0]);
+      xb = HPt3NTransPt3(TN, axes, &q->p[i][1], v4d, &plist[1]);
+      xc = HPt3NTransPt3(TN, axes, &q->p[i][2], v4d, &plist[2]);
+      xd = HPt3NTransPt3(TN, axes, &q->p[i][3], v4d, &plist[3]);
     } else {
       xa = HPt3TransPt3(T, &q->p[i][0], &plist[0]);
       xb = HPt3TransPt3(T, &q->p[i][1], &plist[1]);

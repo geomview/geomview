@@ -63,18 +63,18 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
 
   for (nv = 0; nv < ((mesh->flag & MESH_VWRAP) ? maxnv : maxnv - 1); nv++) {
     for (nu = 0; nu < ((mesh->flag & MESH_UWRAP) ? maxnu : maxnu - 1); nu++) {
-	/* Demand that at least 1 of the vertices be in front of the viewer.
-	 * Note: we must ensure that all four are evaluated!
-	 */
+      /* Demand that at least 1 of the vertices be in front of the viewer.
+       * Note: we must ensure that all four are evaluated!
+       */
       if (TN) {
-	xa = NTransPt3(TN, axes,
-		       &MESHPOINT(nu, nv, mesh, mesh->p), v4d, &plist[0]);
-	xb = NTransPt3(TN, axes,
-		       &MESHPOINT(nu+1, nv, mesh, mesh->p), v4d, &plist[1]);
-	xc = NTransPt3(TN, axes,
-		       &MESHPOINT(nu+1, nv+1, mesh, mesh->p), v4d, &plist[2]);
-	xd = NTransPt3(TN, axes,
-		       &MESHPOINT(nu, nv+1, mesh, mesh->p), v4d, &plist[3]);
+	xa = HPt3NTransPt3(TN, axes, &MESHPOINT(nu, nv, mesh, mesh->p), v4d,
+			   &plist[0]);
+	xb = HPt3NTransPt3(TN, axes, &MESHPOINT(nu+1, nv, mesh, mesh->p), v4d,
+			   &plist[1]);
+	xc = HPt3NTransPt3(TN, axes, &MESHPOINT(nu+1, nv+1, mesh, mesh->p), v4d,
+			   &plist[2]);
+	xd = HPt3NTransPt3(TN, axes, &MESHPOINT(nu, nv+1, mesh, mesh->p), v4d,
+			   &plist[3]);
       } else {
 	xa = HPt3TransPt3(T, &MESHPOINT(nu, nv, mesh, mesh->p), &plist[0]);
 	xb = HPt3TransPt3(T, &MESHPOINT(nu+1, nv, mesh, mesh->p), &plist[1]);
@@ -82,10 +82,10 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
 	xd = HPt3TransPt3(T, &MESHPOINT(nu, nv+1, mesh, mesh->p), &plist[3]);
       }
       if((0 < xa) || (0 < xb) || (0 < xc) || (0 < xd)) {
-	  if (PickFace(4, plist, pick, ap)) {
-	    foundu = nu;
-	    foundv = nv;
-	  }
+	if (PickFace(4, plist, pick, ap)) {
+	  foundu = nu;
+	  foundv = nv;
+	}
       }
     }
   }

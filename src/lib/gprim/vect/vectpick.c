@@ -37,10 +37,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pickP.h"
 #include "appearance.h"
 
-#ifndef alloca
-#include <alloca.h>
-#endif
-
 Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
 	       Transform T, TransformN *TN, int *axes)
 {
@@ -65,7 +61,7 @@ Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
     
     which = 0;
     if (TN)
-      ok[0] = (0 < NTransPt3(TN, axes, &v->p[k], v4d, &plist[0]));
+      ok[0] = (0 < HPt3NTransPt3(TN, axes, &v->p[k], v4d, &plist[0]));
     else
       ok[0] = (0 < HPt3TransPt3(T, &v->p[k], &plist[0]));
     if(nv == 1) {
@@ -78,7 +74,7 @@ Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
     }
     for (j = 0; j < nv - 1;) {
       if (TN)
-	ok[1] = (0 < NTransPt3(TN, axes, &v->p[k + (++j)], v4d, &plist[1]));
+	ok[1] = (0 < HPt3NTransPt3(TN, axes, &v->p[k + (++j)], v4d, &plist[1]));
       else
 	ok[1] = (0 < HPt3TransPt3(T, &v->p[k + (++j)], &plist[1]));
       if ((ok[0]||ok[1]) && PickFace(2, plist, p, ap)) {
@@ -92,7 +88,7 @@ Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
     }
     if (v->vnvert[i] < 0) {
       if (TN)
-	ok[1] = (0 < NTransPt3(TN, axes, &v->p[k], v4d, &plist[1]));
+	ok[1] = (0 < HPt3NTransPt3(TN, axes, &v->p[k], v4d, &plist[1]));
       else
 	ok[1] = (0 < HPt3TransPt3(T, &v->p[k], &plist[1]));
       if ((ok[0]||ok[1]) && PickFace(2, plist, p, ap)) {
