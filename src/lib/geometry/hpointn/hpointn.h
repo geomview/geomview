@@ -116,8 +116,10 @@ extern HPointN *Pt4ToHPtN(const HPoint3 *v4, HPointN *vN);
 extern HPointN *Pt3ToHPtN(Point3 *v3, HPointN *vN);
 extern HPointN *HPt3ToHPtN(const HPoint3 *v4, int *perm, HPointN *vN);
 extern HPoint3 *HPtNToHPt3(const HPointN *from, int *axes, HPoint3 *hp3);
-extern HPt3Coord NTransPt3(TransformN *TN, int *axes,
-			   const HPoint3 *hpt4, int v4d, Point3 *result);
+extern HPt3Coord HPt3NTransPt3(TransformN *TN, int *axes,
+			       const HPoint3 *hpt4, int v4d, Point3 *result);
+extern HPt3Coord HPtNNTransPt3(TransformN *TN, int *axes,
+			       const HPointN *ptN, Point3 *result);
 extern void HPt3NTransHPt3(TransformN *TN, int *axes,
 			   const HPoint3 *hpt4, int v4d, HPoint3 *result);
 extern void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other);

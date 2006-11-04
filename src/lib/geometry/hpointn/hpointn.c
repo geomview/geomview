@@ -761,8 +761,22 @@ Pt4NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
   return to;
 }
 
-HPt3Coord NTransPt3(TransformN *TN, int *axes,
-		    const HPoint3 *hpt4, int v4d, Point3 *result)
+HPt3Coord HPtNNTransPt3(TransformN *TN, int *axes,
+			const HPointN *ptN, Point3 *result)
+{
+  HPoint3 tmp;
+
+  HPtNTransformComponents(TN, ptN, axes, &tmp);
+
+  result->x = tmp.x / tmp.w;
+  result->y = tmp.y / tmp.w;
+  result->z = tmp.z / tmp.w;
+  
+  return tmp.w;
+}
+
+HPt3Coord HPt3NTransPt3(TransformN *TN, int *axes,
+			const HPoint3 *hpt4, int v4d, Point3 *result)
 {
   HPointN *tmp;
   HPt3Coord retval;
