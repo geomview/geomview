@@ -21,13 +21,15 @@
 @sp 1
 @center for Unix
 @sp 1
-@center November 19, 2000
+@center @value{UPDATED-MONTH}
+@comment November 19, 2000
 @sp 2
 @center Mark Phillips et al.
 @sp 4
 @vskip 0pt plus 1filll
 @center Copyright @copyright{} 1992-1998 The Geometry Center
 @center Copyright @copyright{} 1998-2006 Stuart Levy, Tamara Munzner, Mark Phillips
+@center Copyright @copyright{} 2006 Claus-Justus Heine
 
 @end titlepage
 @page
@@ -1447,7 +1449,7 @@ center of motion to the center of the current object's bounding
 box. Once toggled the active geometry's bounding box center will become
 the center of motion, if you select another object, then the center of
 motion will become the center of that object's bounding box. Nothing
-#changes when a cameara or the @emph{World} is selected, you have to
+changes when a cameara or the @emph{World} is selected, you have to
 type in the word @code{target} in the @emph{Center} field the reset to
 the default.
 
@@ -1620,13 +1622,6 @@ the @emph{Constrain Motion} button.
 
 @node Point of Interest,  , Mouse Motions, Mouse Motions
 @subsection Selecting a Point of Interest
-
-@b{The stuff below does not work (yet) in the context of ND-viewing
-because the @code{pick} command doesn't work (yet) in the context of
-ND-viewing. However, it is possible to use the center of the bounding
-box of a geometric object as center point of the motion by ticking the
-@emph{BBox Center} toggle in the @emph{Tools Panel},
-@pxref{Mouse Motions}.}
 
 It is sometimes useful to specify a particular point on some object in a
 geomview window as the center point for mouse motions.  You can do this
