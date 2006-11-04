@@ -44,16 +44,13 @@ ListPick(List *list, Pick *p, Appearance *ap,
   List *l;
   Geom *v = NULL;
 
-  if (TN)
-    return NULL;
-  
   pathInd = VVCOUNT(p->gcur);
   vvneeds(&p->gcur, pathInd + 1);
   VVCOUNT(p->gcur)++;
   for(l = list; l != NULL; l = l->cdr) {
     *VVINDEX(p->gcur, int, pathInd) = elem;
     if(l->car) 
-      if(GeomPick(l->car, p, ap, T, NULL, NULL))
+      if(GeomPick(l->car, p, ap, T, TN, axes))
 	v = (Geom *)list;
     elem++;
   }

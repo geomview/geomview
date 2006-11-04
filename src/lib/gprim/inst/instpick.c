@@ -73,16 +73,38 @@ InstPick(Inst *inst, Pick *p, Appearance *ap,
   GeomIter *it;
   Geom *v = NULL;
 
-  if (TN)
-    return NULL;
-
   if(inst == NULL || inst->geom == NULL)
     return NULL;
 
-  if(inst->origin > L_LOCAL || inst->location > L_LOCAL) {
+  if (TN && inst->origin != L_NONE) {
+    static int was_here;
+
+    if (!was_here)
+      OOGLError(1, "FIXME: \"origin\" unsupported int ND-context.\n");
+    
+    return NULL;
+  }
+
+  if (inst->NDaxis) {
+    TransformN *tT;
+
+    if (TN) {
+      pathInd = VVCOUNT(p->gcur);
+      vvneeds(&p->gcur, pathInd + 1);
+      *VVINDEX(p->gcur, int, pathInd) = elem;
+      tT = TmNConcat(inst->NDaxis, TN, NULL);
+      if (GeomPick(inst->geom, p, ap, NULL, tT, axes))
+	v = (Geom *)inst;
+      TmNDelete(tT);
+    }
+
+    return v;
+  }
+
+  if (inst->origin > L_LOCAL || inst->location > L_LOCAL) {
     TmTranslate( tT, p->x0, p->y0, 0. );
     TmConcat( T, tT, T );
-    if(inst->origin > L_LOCAL) {
+    if (inst->origin > L_LOCAL) {
 	Point3 originwas, delta;
 	TmCoord (*l2o)[4], (*o2N)[4];
 	Transform Tl2o;
@@ -108,18 +130,45 @@ InstPick(Inst *inst, Pick *p, Appearance *ap,
     TmConcat( T, tT, T );
   }
 
-  pathInd = VVCOUNT(p->gcur);
-  vvneeds(&p->gcur, pathInd + 1);
-  VVCOUNT(p->gcur)++;
-  it = GeomIterate((Geom *)inst, DEEP);
-  while(NextTransform(it, tT)) {
-    *VVINDEX(p->gcur, int, pathInd) = elem;
-    TmConcat(tT,T, tT);
-    if(GeomPick(inst->geom, p, ap, tT, NULL, NULL)) 
-      v = (Geom *)inst;
-    elem++;
+  if (!TN || inst->location > L_LOCAL) {
+    pathInd = VVCOUNT(p->gcur);
+    vvneeds(&p->gcur, pathInd + 1);
+    VVCOUNT(p->gcur)++;
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, tT)) {
+      *VVINDEX(p->gcur, int, pathInd) = elem;
+      TmConcat(tT, T, tT);
+      if (GeomPick(inst->geom, p, ap, tT, NULL, NULL)) 
+	v = (Geom *)inst;
+      elem++;
+    }
+    VVCOUNT(p->gcur)--;
+
+    return v;
+  } else {
+    TransformN *tTN = NULL;
+
+    pathInd = VVCOUNT(p->gcur);
+    vvneeds(&p->gcur, pathInd + 1);
+    VVCOUNT(p->gcur)++;
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, tT)) {
+      *VVINDEX(p->gcur, int, pathInd) = elem;
+      tTN = TmNCopy(TN, tTN);
+      TmNApplyT3TN(tT, NULL, tTN);
+      if (GeomPick(inst->geom, p, ap, NULL, tTN, axes))
+	v = (Geom *)inst;
+      elem++;
+    }
+    VVCOUNT(p->gcur)--;
+
+    if (tTN) {
+      TmNDelete(tTN);
+    }
+
+    return v;
   }
-  VVCOUNT(p->gcur)--;
+
   return v;
 }
 

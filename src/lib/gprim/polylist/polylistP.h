@@ -71,7 +71,7 @@ extern PolyList *PolyListCreate(PolyList *exist, GeomClass *Class, va_list *a_li
 extern PolyList *PolyListCopy( PolyList *poly );
 extern PolyList *PolyListDelete( PolyList *poly );
 extern PolyList *PolyListPick( PolyList *, Pick *, Appearance *,
-			       Transform, TransformN * );
+			       Transform T, TransformN *TN, int *axes );
 extern GeomClass *PolyListMethods();
 extern PolyList *PolyListComputeNormals( PolyList *polyList);
 

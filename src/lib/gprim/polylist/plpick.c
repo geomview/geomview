@@ -42,16 +42,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "appearance.h"
 
 PolyList *
-PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T, TransformN *TN)
+PolyListPick(PolyList *pl, Pick *p, Appearance *ap,
+	     Transform T, TransformN *TN, int *axes)
 {
   int i;
   vvec plist;
-  int fi, vi, ok, found = -1;
+  int fi, vi, ok, found = -1, v4d;
   Poly *poly;
   unsigned int apflag = 0;
-
-  if (TN)
-    return NULL;
 
   /* Make sure that vects do not count as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */
@@ -60,15 +58,25 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T, TransformN *TN)
     ap->flag &= ~APF_VECTDRAW;
   }
   
+  v4d = (pl->geomflags & VERT_4D) != 0;
+
   VVINIT(plist, Point3, 0);
 
   found = -1;
   for (fi=0, poly=pl->p; fi<pl->n_polys; ++fi, ++poly) {
     vvneeds(&plist, poly->n_vertices);
     ok = 0;
-    for (vi=0; vi<poly->n_vertices; vi++) {
-      if(0 < HPt3TransPt3(T, &poly->v[vi]->pt, VVINDEX(plist, Point3, vi)))
-	ok = 1;
+    if (TN) {
+      for (vi=0; vi<poly->n_vertices; vi++) {
+	if (0 < NTransPt3(TN, axes,
+			  &poly->v[vi]->pt, v4d, VVINDEX(plist, Point3, vi)))
+	  ok = 1;
+      }
+    } else {
+      for (vi=0; vi<poly->n_vertices; vi++) {
+	if (0 < HPt3TransPt3(T, &poly->v[vi]->pt, VVINDEX(plist, Point3, vi)))
+	  ok = 1;
+      }
     }
     if (ok && PickFace(poly->n_vertices, VVINDEX(plist, Point3, 0), p, ap)) 
       found = fi;
@@ -82,23 +90,40 @@ PolyListPick(PolyList *pl, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 
   if (p->found & PW_VERT) {
     p->vi = pl->p[found].v[p->vi] - pl->vl;
-    HPt3Transform(T, &pl->vl[p->vi].pt, &p->v);
+    if (TN)
+      HPt3NTransHPt3(TN, axes, &pl->vl[p->vi].pt, v4d, &p->v);
+    else
+      HPt3Transform(T, &pl->vl[p->vi].pt, &p->v);
   }
   if (p->found & PW_EDGE) {
     p->ei[0] = pl->p[found].v[p->ei[0]] - pl->vl;
     p->ei[1] = pl->p[found].v[p->ei[1]] - pl->vl;
-    HPt3Transform(T, &pl->vl[p->ei[0]].pt, &p->e[0]);
-    HPt3Transform(T, &pl->vl[p->ei[1]].pt, &p->e[1]);
+    if (TN) {
+      HPt3NTransHPt3(TN, axes, &pl->vl[p->ei[0]].pt, v4d, &p->e[0]);
+      HPt3NTransHPt3(TN, axes, &pl->vl[p->ei[1]].pt, v4d, &p->e[1]);
+    } else {
+      HPt3Transform(T, &pl->vl[p->ei[0]].pt, &p->e[0]);
+      HPt3Transform(T, &pl->vl[p->ei[1]].pt, &p->e[1]);
+    }
   }
   if (p->found & PW_FACE) {
     if(p->f) OOGLFree(p->f);
     p->f = OOGLNewNE(HPoint3, p->fn, "PolyList pick");
-    for (i = 0; i < p->fn; i++) 
-      HPt3Transform(T, &pl->p[found].v[i]->pt, &p->f[i]);
+    if (TN) {
+      for (i = 0; i < p->fn; i++)
+	HPt3NTransHPt3(TN, axes, &pl->p[found].v[i]->pt, v4d, &p->f[i]);
+    } else {
+      for (i = 0; i < p->fn; i++)
+	HPt3Transform(T, &pl->p[found].v[i]->pt, &p->f[i]);
+    }
     p->fi = found;
   }
 
-  TmCopy(T, p->Tprim);
+  if (TN) {
+    p->TprimN = TmNCopy(TN, p->TprimN);
+    memcpy(p->axes, axes, sizeof(p->axes));
+  } else
+    TmCopy(T, p->Tprim);
 
   return pl;
 }
