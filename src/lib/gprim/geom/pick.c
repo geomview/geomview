@@ -49,8 +49,8 @@ int PickFace(int n_verts, Point3 *verts, Pick *pick, Appearance *ap)
   int v, e;
 
   if (PolyNearPosZInt(n_verts, verts, pick->thresh, &got, &v, &e, &ep,
-		PICK_WANTED(pick, ap), pick->got.z))
-    return PickFillIn(pick, n_verts, &got, v, e, ap);
+		      PICK_WANTED(pick, ap), pick->got.z))
+      return PickFillIn(pick, n_verts, &got, v, e, ap);
   else return 0;
 
 }
@@ -154,7 +154,7 @@ GenericPick(Geom *g, Pick *p, Appearance *ap,
 	    proj->a[i*4+2] = TN->a[i*TN->odim+axes[1]];
 	    proj->a[i*4+3] = TN->a[i*TN->odim+axes[2]];
 	}
-	bbox = GeomBound(g, NULL, TN);
+	bbox = GeomBound(g, NULL, proj);
 	TmNDelete(proj);
     } else {
 	bbox = GeomBound(g, T, NULL);
@@ -167,6 +167,7 @@ GenericPick(Geom *g, Pick *p, Appearance *ap,
 	p->gprim = g;
 	if (TN) {
 	    p->TprimN = TmNCopy(TN, p->TprimN);
+	    memcpy(p->axes, axes, sizeof(p->axes));
 	} else {
 	    TmCopy(T, p->Tprim);
 	}
