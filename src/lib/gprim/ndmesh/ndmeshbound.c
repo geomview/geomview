@@ -41,6 +41,9 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
   HPoint3 min, max, tmp, clean;
   HPointN **p;
 
+  if (mesh->meshd > 2)
+    return NULL;
+
   n    = mesh->mdim[0]*mesh->mdim[1]; /* more is not implemented yet */
   p    = mesh->p;
   pdim = mesh->pdim;
