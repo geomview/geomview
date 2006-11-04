@@ -139,7 +139,8 @@ InstDraw( Inst *inst )
     if (NDctx) {
 	if (inst->location > L_LOCAL) {
 	    /* temporarily disable ND-drawing, makes sense only for
-	     * L_LOCAL, really. The universe is 3d in Geomview.
+	     * L_LOCAL, really. The universe is 3d in Geomview, in
+	     * some sense.
 	     */
 	    mgctxset(MG_NDCTX, NULL, MG_END);
 	} else if (inst->origin != L_NONE) {
@@ -148,7 +149,7 @@ InstDraw( Inst *inst )
 		OOGLError(1,
 			  "FIXME: don't know how to handle origin != L_LOCAL "
 			  "with ND-drawing.\n");
-	    return inst;
+	    return NULL;
 	} else {
 	    it = GeomIterate((Geom *)inst, DEEP);
 	    while(NextTransform(it, T)) {
@@ -157,41 +158,42 @@ InstDraw( Inst *inst )
 		GeomDraw(inst->geom);
 		NDctx->restoreCTX(NDctx, saved_ctx);
 	    }
+	    return inst;
 	}
-    } else {
-	it = GeomIterate((Geom *)inst, DEEP);
-	while(NextTransform(it, T)) {
+    }
+    
+    it = GeomIterate((Geom *)inst, DEEP);
+    while(NextTransform(it, T)) {
 
-	    mgpushtransform();
+	mgpushtransform();
 
-	    /* Compute origin *before* changing mg tfm */
-	    if(inst->origin != L_NONE) {
-		Point3 originwas, delta;
-		TmCoord (*l2o)[4], (*o2W)[4];
-		static HPoint3 zero = { 0, 0, 0, 1 };
+	/* Compute origin *before* changing mg tfm */
+	if(inst->origin != L_NONE) {	    
+	    Point3 originwas, delta;
+	    TmCoord (*l2o)[4], (*o2W)[4];
+	    static HPoint3 zero = { 0, 0, 0, 1 };
 
-		/* We have location2W, origin2W. We want to translate
-		 * in 'origin' coords such that (0,0,0) in location
-		 * coords maps to originpt in origin coords.
-		 */
-		o2W = coords2W(inst->origin);
-		l2o = coordsto(inst->location, inst->origin);
-		HPt3TransPt3(l2o, &zero, &originwas);
-		Pt3Sub(&inst->originpt, &originwas, &delta);
-		TmTranslate( tT, delta.x, delta.y, delta.z );
-		TmConcat( l2o, tT, Tl2o );
-		TmConcat( T, Tl2o, tT );
-		TmConcat( tT, o2W, T );
-		mgsettransform( T );
-	    } else if(inst->location > L_LOCAL) {
-		TmConcat( T, coords2W(inst->location), T );
-		mgsettransform( T );
-	    } else {
-		mgtransform( T );
-	    }
-	    GeomDraw(inst->geom);
-	    mgpoptransform();
+	    /* We have location2W, origin2W. We want to translate
+	     * in 'origin' coords such that (0,0,0) in location
+	     * coords maps to originpt in origin coords.
+	     */
+	    o2W = coords2W(inst->origin);
+	    l2o = coordsto(inst->location, inst->origin);
+	    HPt3TransPt3(l2o, &zero, &originwas);
+	    Pt3Sub(&inst->originpt, &originwas, &delta);
+	    TmTranslate( tT, delta.x, delta.y, delta.z );
+	    TmConcat( l2o, tT, Tl2o );
+	    TmConcat( T, Tl2o, tT );
+	    TmConcat( tT, o2W, T );
+	    mgsettransform( T );
+	} else if(inst->location > L_LOCAL) {
+	    TmConcat( T, coords2W(inst->location), T );
+	    mgsettransform( T );
+	} else {
+	    mgtransform( T );
 	}
+	GeomDraw(inst->geom);
+	mgpoptransform();
     }
 
     if(NDctx) {
@@ -201,3 +203,9 @@ InstDraw( Inst *inst )
 
     return inst;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
