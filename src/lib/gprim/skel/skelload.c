@@ -115,7 +115,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
   if (pdim == 4) {
     for(i = 0, vp = s->p; i < s->nvert; i++, vp += 4) {
-      vp[0] = 1.0; /* homogeneous component */
+      vp[3] = 1.0; /* homogeneous component */
       if(iobfgetnf(file, dimn, vp, binary) < dimn) {
 	OOGLSyntax(file,
 		   "Reading SKEL from \"%s\": error reading vertex %d of %d",
