@@ -160,7 +160,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 		   fname, i, pl->n_verts);
 	goto bogus;
       }
-    if (dimn == 3) v[pl->pdim-1] = 1.0;
+    if (dimn == 3) v[0] = 1.0;
   }
 
   pl->p = OOGLNewNE(NPoly, pl->n_polys, "NPolyListFLoad polygons");
