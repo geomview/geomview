@@ -36,52 +36,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "pickP.h"
 #include "appearance.h"
 
-static HPt3Coord
-NTransPt3(TransformN *TN, int *axes,
-	  const HPoint3 *hpt4, int v4d, Point3 *result)
-{
-  HPointN *tmp;
-  HPt3Coord retval;
-  
-
-  /* axes[3] should be 0 */
-
-  if (v4d) {
-    tmp = Pt4NTransform(TN, hpt4, NULL);
-  } else {
-    tmp = HPt3NTransform(TN, hpt4, NULL);
-  }
-  result->x = tmp->v[axes[0]] / tmp->v[axes[3]];
-  result->y = tmp->v[axes[1]] / tmp->v[axes[3]];
-  result->z = tmp->v[axes[2]] / tmp->v[axes[3]];
-
-  retval = tmp->v[axes[3]];
-  
-  HPtNDelete(tmp);
-  
-  return retval;
-}
-
-static void
-PickNTransform(TransformN *TN, int *axes,
-	       const HPoint3 *hpt4, int v4d, HPoint3 *result)
-{
-  HPointN *tmp;
-
-  if (v4d) {
-    tmp = Pt4NTransform(TN, hpt4, NULL);
-  } else {
-    tmp = HPt3NTransform(TN, hpt4, NULL);
-  }
-
-  result->w = tmp->v[axes[3]];
-  result->x = tmp->v[axes[0]];
-  result->y = tmp->v[axes[1]];
-  result->z = tmp->v[axes[2]];
-
-  HPtNDelete(tmp);
-}
-
 Mesh *
 MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
 	 Transform T, TransformN *TN, int *axes)
@@ -144,7 +98,7 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
     pick->vi = MESHINDEX(foundu + ((pick->vi == 1 || pick->vi == 2) ? 1 : 0), 
 			 foundv + pick->vi/2, mesh);
     if (TN)
-      PickNTransform(TN, axes, &mesh->p[pick->vi], v4d, &pick->v);
+      HPt3NTransHPt3(TN, axes, &mesh->p[pick->vi], v4d, &pick->v);
     else
       HPt3Transform(T, &mesh->p[pick->vi], &pick->v);
   }
@@ -156,8 +110,8 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
       MESHINDEX(foundu + ((pick->ei[1] == 1 || pick->ei[1] == 2) ? 1 : 0), 
 		foundv + pick->ei[1]/2, mesh);
     if (TN) {
-      PickNTransform(TN, axes, &mesh->p[pick->ei[0]], v4d, &pick->e[0]);
-      PickNTransform(TN, axes, &mesh->p[pick->ei[1]], v4d, &pick->e[1]);
+      HPt3NTransHPt3(TN, axes, &mesh->p[pick->ei[0]], v4d, &pick->e[0]);
+      HPt3NTransHPt3(TN, axes, &mesh->p[pick->ei[1]], v4d, &pick->e[1]);
     } else {
       HPt3Transform(T, &mesh->p[pick->ei[0]], &pick->e[0]);
       HPt3Transform(T, &mesh->p[pick->ei[1]], &pick->e[1]);
@@ -168,16 +122,16 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
     pick->f = OOGLNewNE(HPoint3, 4, "Mesh pick");
     pick->fi = MESHINDEX(foundu, foundv, mesh);
     if (TN) {
-      PickNTransform(TN, axes,
+      HPt3NTransHPt3(TN, axes,
 		     &MESHPOINT(foundu, foundv, mesh, mesh->p), v4d,
 		     &pick->f[0]);
-      PickNTransform(TN, axes,
+      HPt3NTransHPt3(TN, axes,
 		     &MESHPOINT(foundu+1, foundv, mesh, mesh->p), v4d,
 		     &pick->f[1]);
-      PickNTransform(TN, axes,
+      HPt3NTransHPt3(TN, axes,
 		     &MESHPOINT(foundu+1, foundv+1, mesh, mesh->p), v4d,
 		     &pick->f[2]);
-      PickNTransform(TN, axes,
+      HPt3NTransHPt3(TN, axes,
 		     &MESHPOINT(foundu, foundv+1, mesh, mesh->p), v4d,
 		     &pick->f[3]);
     } else {
@@ -192,9 +146,10 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
     }
   }
 
-  if (TN)
+  if (TN) {
     pick->TprimN = TmNCopy(TN, pick->TprimN);
-  else
+    memcpy(pick->axes, axes, sizeof(pick->axes));
+  } else
     TmCopy(T, pick->Tprim);
 
   return mesh;
