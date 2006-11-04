@@ -146,6 +146,8 @@ BBox *SkelBound(Skel *s, Transform T, TransformN *TN)
   if(n < 0)
     return NULL;
 
+  min = *p;
+
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d ss, and a 4d bboy for 4d ss.
    */
@@ -162,7 +164,7 @@ BBox *SkelBound(Skel *s, Transform T, TransformN *TN)
       HPt3Dehomogenize(&min, &min);
       max = min;
       while(--n >= 0) {
-	HPt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, ++p);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
