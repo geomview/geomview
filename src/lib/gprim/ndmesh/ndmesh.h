@@ -44,6 +44,7 @@ typedef struct NDMesh NDMesh;
 extern GeomClass *NDMeshMethods( void );
 extern char	*NDMeshName( void );
 extern NDMesh	*NDMeshFLoad( IOBFILE *, char * );
+
 extern NDMesh	*NDMeshLoad( char * );
 extern NDMesh	*NDMeshSave( NDMesh *, char * );
 extern NDMesh	*NDMeshFSave( NDMesh *, FILE * );
@@ -53,7 +54,8 @@ extern Geom     *NDMeshBoundSphere(NDMesh *mesh,
 				   int space);
 extern NDMesh	*NDMeshDice( NDMesh *, int (*proc)() );
 extern NDMesh	*NDMeshDraw( NDMesh * );
-extern NDMesh	*NDMeshPick( NDMesh *, Pick *, Appearance *, Transform );
+extern NDMesh	*NDMeshPick( NDMesh *, Pick *, Appearance *,
+			     Transform, TransformN *TN, int *axes );
 extern NDMesh *NDMeshTransform(NDMesh *m, Transform T, TransformN *TN);
 
 #endif /*MESHDEF*/

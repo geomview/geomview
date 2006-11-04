@@ -65,6 +65,7 @@ GeomClass *NDMeshMethods(void)
     aNDMeshMethods->draw = (GeomDrawFunc *) NDMeshDraw;
     aNDMeshMethods->transform = (GeomTransformFunc *) NDMeshTransform;
     aNDMeshMethods->transformto = (GeomTransformToFunc *) NDMeshTransform;
+    aNDMeshMethods->pick = (GeomPickFunc *) NDMeshPick;
   }
   return aNDMeshMethods;
 }
