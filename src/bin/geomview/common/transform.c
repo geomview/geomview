@@ -2158,6 +2158,7 @@ void make_center_from_pick(char *objname, Pick *pick, int camid)
       HPt3TransPt3(Tcam3d, &center3d, &fromcam);
       drawer_float(dv->id, DRAWER_FOCALLENGTH, Pt3Length(&fromcam));
     }
+    HPtNDelete(center);
   } else {
     Point3 center, fromcam;
     Transform Tuni, Tcam;
