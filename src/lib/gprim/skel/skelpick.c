@@ -39,7 +39,7 @@ static Skel *NSkelPick(Skel *s, Pick *p, Appearance *ap,
 {
   Point3 plist[2];
   int i, j, k, which, ok[2];
-  int found, v4d;
+  int found;
   unsigned int apflag = 0;
   HPointN ptN[1];
   
@@ -61,7 +61,7 @@ static Skel *NSkelPick(Skel *s, Pick *p, Appearance *ap,
 
   for (i = 0; i < s->nlines; i++) {
     int nv = abs(s->l[i].nv);
-    int *idx = &s->vi[s->l[i].v0];
+    int *idx = s->vi + s->l[i].v0;
     
     which = 0;
     ptN->v = s->p + idx[0]*s->pdim;
