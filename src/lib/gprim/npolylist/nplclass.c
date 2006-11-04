@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.7 2006/10/15 12:53:12 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.8 2006/11/04 19:12:56 rotdrop Exp $ */
 
 
 /*
@@ -47,6 +47,8 @@ extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *
 extern NPolyList *NPolyListCopy(NPolyList *);
 extern NPolyList *NPolyListFSave(NPolyList *, FILE *outf, char *fname);
 extern NPolyList *NPolyListDelete(NPolyList *);
+extern NPolyList *NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
+				Transform T, TransformN *TN, int *axes);
 
 int	NPolyListPresent = 1;
 
@@ -74,6 +76,7 @@ GeomClass *NPolyListMethods(void)
     aNPolyListMethods->fload = (GeomFLoadFunc *) NPolyListFLoad;
     aNPolyListMethods->transform = (GeomTransformFunc *) NPolyListTransform;
     aNPolyListMethods->transformto = (GeomTransformToFunc *) NPolyListTransform;
+    aNPolyListMethods->pick = (GeomPickFunc *) NPolyListPick;
   }
   return aNPolyListMethods;
 }
