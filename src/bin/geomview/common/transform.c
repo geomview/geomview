@@ -1213,7 +1213,7 @@ LDEFINE(position_toward, LVOID,
 
 LDEFINE(new_center, LVOID,
 	"(new-center [id])\n\
-	Stop id, then set id's transform to the identity.  Default id \n\
+	Stop id, then set id's transform to the identity. Default id \n\
 	is target.  Also, if the id is a camera, calls \n\
 	(look-recenter World id).  The main function of the call to \n\
 	(look-recenter) is to place the camera so that it is pointing \n\
@@ -1236,8 +1236,10 @@ LDEFINE(new_center, LVOID,
 	
   }
   /* This must be separate since the center of the world might change */
-  MAYBE_LOOP(id, i, T_NONE, DObject, obj) 
-    if (ISCAM(obj->id)) gv_look_recenter(WORLDGEOM, obj->id);
+  MAYBE_LOOP(id, i, T_NONE, DObject, obj) {
+    if (ISCAM(obj->id))
+      gv_look_recenter(WORLDGEOM, obj->id);
+  }
 
   return Lt;
 }
