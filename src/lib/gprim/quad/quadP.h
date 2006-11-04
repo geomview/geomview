@@ -47,7 +47,8 @@ struct Quad {
     QuadC 	*c;
 };
 
-Quad *QuadPick( Quad *, Pick *, Appearance *, Transform, TransformN * );
+Quad *QuadPick( Quad *, Pick *, Appearance *,
+		Transform, TransformN *, int *axes );
 Quad *QuadComputeNormals( Quad *q );
 
 

@@ -84,6 +84,7 @@ struct Vect {
 extern Vect *VectCreate( Vect *, GeomClass *, va_list *a_list);
 extern void  VectDelete( Vect * );
 extern Vect *VectCopy( Vect * );
-extern Vect *VectPick( Vect *, Pick *, Appearance *, Transform, TransformN * );
+extern Vect *VectPick( Vect *, Pick *, Appearance *,
+		       Transform, TransformN *, int *axes );
 
 #endif /*VECTPDEF*/

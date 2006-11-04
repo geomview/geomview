@@ -41,18 +41,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <alloca.h>
 #endif
 
-Vect *
-VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
+Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
+	       Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[2];
   int i, j, k, which, ok[2];
-  int found;
+  int found, v4d;
   unsigned int apflag = 0;
 
-  if (TN)
-    return NULL;
-
-  /* Make sure that the edges do not as visible - otherwise 
+  /* Make sure that the edges do not count as visible - otherwise 
    * they could really mess things up */
   if (ap != NULL) {
     apflag = ap->flag;
@@ -61,11 +58,16 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
     
   found = 0;
 
+  v4d = (v->geomflags & VERT_4D) != 0;
+
   for (i = k = 0; i < v->nvec; i++) {
     int nv = abs(v->vnvert[i]);
     
     which = 0;
-    ok[0] = (0 < HPt3TransPt3(T, &v->p[k], &plist[0]));
+    if (TN)
+      ok[0] = (0 < NTransPt3(TN, axes, &v->p[k], v4d, &plist[0]));
+    else
+      ok[0] = (0 < HPt3TransPt3(T, &v->p[k], &plist[0]));
     if(nv == 1) {
 	if(ok[0] && PickFace(1, &plist[0], p, ap)) {
 	    found = 1;
@@ -75,7 +77,10 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 	continue;
     }
     for (j = 0; j < nv - 1;) {
-      ok[1] = (0 < HPt3TransPt3(T, &v->p[k + (++j)], &plist[1]));
+      if (TN)
+	ok[1] = (0 < NTransPt3(TN, axes, &v->p[k + (++j)], v4d, &plist[1]));
+      else
+	ok[1] = (0 < HPt3TransPt3(T, &v->p[k + (++j)], &plist[1]));
       if ((ok[0]||ok[1]) && PickFace(2, plist, p, ap)) {
 	found = 1;
 	p->vi = p->vi ? k + j : k + j - 1;
@@ -86,7 +91,10 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
       plist[0] = plist[1];
     }
     if (v->vnvert[i] < 0) {
-      ok[1] = (0 < HPt3TransPt3(T, &v->p[k], &plist[1]));
+      if (TN)
+	ok[1] = (0 < NTransPt3(TN, axes, &v->p[k], v4d, &plist[1]));
+      else
+	ok[1] = (0 < HPt3TransPt3(T, &v->p[k], &plist[1]));
       if ((ok[0]||ok[1]) && PickFace(2, plist, p, ap)) {
 	found = 1;
 	p->vi = p->vi ? k : k + j;
@@ -101,17 +109,33 @@ VectPick(Vect *v, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 
   if (!found) return NULL;
 
-  if (p->found & PW_VERT) 
-    HPt3Transform(T, &v->p[p->vi], &p->v);
-  else p->vi = -1;
+  if (p->found & PW_VERT) {
+    if (TN)
+      HPt3NTransHPt3(TN, axes, &v->p[p->vi], v4d, &p->v);
+    else
+      HPt3Transform(T, &v->p[p->vi], &p->v);
+  } else
+    p->vi = -1;
+
   if (p->found & PW_EDGE) {
-    HPt3Transform(T, &v->p[p->ei[0]], &p->e[0]);
-    HPt3Transform(T, &v->p[p->ei[1]], &p->e[1]);
-  } else p->ei[0] = p->ei[1] = -1;
+    if (TN) {
+      HPt3NTransHPt3(TN, axes, &v->p[p->ei[0]], v4d, &p->e[0]);
+      HPt3NTransHPt3(TN, axes, &v->p[p->ei[1]], v4d, &p->e[1]);
+    } else {
+      HPt3Transform(T, &v->p[p->ei[0]], &p->e[0]);
+      HPt3Transform(T, &v->p[p->ei[1]], &p->e[1]);
+    }
+  } else
+    p->ei[0] = p->ei[1] = -1;
 
   /* It really doesn't make sense to claim that we found a face hit...*/
   p->found &= ~PW_FACE;
   p->fi = -1;
+
+  if (TN) {
+    p->TprimN = TmNCopy(TN, p->TprimN);
+    memcpy(p->axes, axes, sizeof(p->axes));
+  } else
   TmCopy(T, p->Tprim);
 
   return v;

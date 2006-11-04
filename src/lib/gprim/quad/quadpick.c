@@ -40,19 +40,18 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "appearance.h"
 
 
-Quad *
-QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T, TransformN *TN)
+Quad *QuadPick(Quad *q, Pick *pick, Appearance *ap,
+	       Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[4];
   int i;
-  int found;
+  int found, v4d;
   unsigned int apflag = 0;
   HPt3Coord xa, xb, xc, xd;
 
-  if (TN)
-    return NULL;
-
   found = -1;
+
+  v4d = (q->geomflags & VERT_4D) != 0;
 
   /* Make sure that vectors do not appear visible to the pick code - 
    * otherwise they will screw up edge picking */
@@ -61,11 +60,18 @@ QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T, TransformN *TN)
     ap->flag &= ~APF_VECTDRAW;
   }
 
-  for (i = 0; i < q->maxquad; i++) { 
-    xa = HPt3TransPt3(T, &q->p[i][0], &plist[0]);
-    xb = HPt3TransPt3(T, &q->p[i][1], &plist[1]);
-    xc = HPt3TransPt3(T, &q->p[i][2], &plist[2]);
-    xd = HPt3TransPt3(T, &q->p[i][3], &plist[3]);
+  for (i = 0; i < q->maxquad; i++) {
+    if (TN) {
+      xa = NTransPt3(TN, axes, &q->p[i][0], v4d, &plist[0]);
+      xb = NTransPt3(TN, axes, &q->p[i][1], v4d, &plist[1]);
+      xc = NTransPt3(TN, axes, &q->p[i][2], v4d, &plist[2]);
+      xd = NTransPt3(TN, axes, &q->p[i][3], v4d, &plist[3]);
+    } else {
+      xa = HPt3TransPt3(T, &q->p[i][0], &plist[0]);
+      xb = HPt3TransPt3(T, &q->p[i][1], &plist[1]);
+      xc = HPt3TransPt3(T, &q->p[i][2], &plist[2]);
+      xd = HPt3TransPt3(T, &q->p[i][3], &plist[3]);
+    }
     /* Note -- we need to be sure that all four are evaluated!! */
     if((xa > 0) || (xb > 0) || (xc > 0) || (xd > 0)) {
 	if(PickFace(4, plist, pick, ap))
@@ -78,23 +84,43 @@ QuadPick(Quad *q, Pick *pick, Appearance *ap, Transform T, TransformN *TN)
   if (found == -1) return NULL;
 
   if (pick->found & PW_VERT) {
-    HPt3Transform(T, &q->p[found][pick->vi], &pick->v);
+    if (TN) {
+      HPt3NTransHPt3(TN, axes, &q->p[found][pick->vi], v4d, &pick->v);
+    } else {
+      HPt3Transform(T, &q->p[found][pick->vi], &pick->v);
+    }
     pick->vi = found*4 + pick->vi;
   }
   if (pick->found & PW_EDGE) {
-    HPt3Transform(T, &q->p[found][pick->ei[0]], &pick->e[0]);
-    HPt3Transform(T, &q->p[found][pick->ei[1]], &pick->e[1]);
+    if (TN) {
+      HPt3NTransHPt3(TN, axes, &q->p[found][pick->ei[0]], v4d, &pick->e[0]);
+      HPt3NTransHPt3(TN, axes, &q->p[found][pick->ei[1]], v4d, &pick->e[1]);
+    } else {
+      HPt3Transform(T, &q->p[found][pick->ei[0]], &pick->e[0]);
+      HPt3Transform(T, &q->p[found][pick->ei[1]], &pick->e[1]);
+    }
     pick->ei[0] = found*4 + pick->ei[0];
     pick->ei[1] = found*4 + pick->ei[1];
   }
   if (pick->found & PW_FACE) {
-    if(pick->f) OOGLFree(pick->f);
+    if(pick->f)
+      OOGLFree(pick->f);
     pick->f = OOGLNewNE(HPoint3, 4, "Quad pick");
-    HPt3TransformN(T, q->p[found], pick->f, 4);
+    if (TN) {
+      HPt3NTransHPt3(TN, axes, &q->p[found][0], v4d, &pick->f[0]);
+      HPt3NTransHPt3(TN, axes, &q->p[found][1], v4d, &pick->f[1]);
+      HPt3NTransHPt3(TN, axes, &q->p[found][2], v4d, &pick->f[2]);
+      HPt3NTransHPt3(TN, axes, &q->p[found][3], v4d, &pick->f[3]);
+    } else
+      HPt3TransformN(T, q->p[found], pick->f, 4);
     pick->fi = found;
   }
 
-  TmCopy(T, pick->Tprim);
+  if (TN) {
+    pick->TprimN = TmNCopy(TN, pick->TprimN);
+    memcpy(pick->axes, axes, sizeof(pick->axes));    
+  } else 
+    TmCopy(T, pick->Tprim);
 
   return q;
 }
