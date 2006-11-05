@@ -194,8 +194,8 @@ void MGPS_polyline(CPoint3 *pts, int num, double width, int *col)
     if (num == 1)
     {
 	fprintf(psout, "%g %g %g %g %g %g circ\n",
-		col[0]/255.0, col[1]/255.0, col[2]/255.0, 
-		pts[0].x, pts[0].y, width);
+		pts[0].x, pts[0].y, (width + 1.0) / 2.0,
+		col[0]/255.0, col[1]/255.0, col[2]/255.0);
 	return;
     }
     for (i=0; i<num; i++)
@@ -211,8 +211,8 @@ void MGPS_spolyline(CPoint3 *pts, int num, double width)
     if (num == 1)
     {
 	fprintf(psout, "%g %g %g %g %g %g circ\n",
-		pts[0].vcol.r, pts[0].vcol.g, pts[0].vcol.b, 
-		pts[0].x, pts[0].y, width);
+		pts[0].x, pts[0].y, (width + 1.0) / 2.0,
+		pts[0].vcol.r, pts[0].vcol.g, pts[0].vcol.b);
 	return;
     }
     fprintf(psout, "%g setlinewidth\n", width);
