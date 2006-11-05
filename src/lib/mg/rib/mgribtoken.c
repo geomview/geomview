@@ -106,12 +106,12 @@ static struct _table table[] = {
     {"Illuminate",		10, 28, 0},
     {"FrameBegin",		10, 29, 0},
     {"FrameEnd",		 8, 30, 0},
+    {"ReverseOrientation",	18, 31, 0},
+    {"Curves",			 6, 32, 0},
+    {"Points",			 6, 33, 0},
 
     /* following are reserved - do not add */
     /* or remove fields, just change them! */
-    {"", 0, 255, 0},
-    {"", 0, 255, 0},
-    {"", 0, 255, 0},
     {"", 0, 255, 0},
     {"", 0, 255, 0},
     {"", 0, 255, 0},
@@ -137,26 +137,30 @@ static struct _table table[] = {
     {"Os",			 2,  4, 0},
     {"st",			 2,  5, 0},
     {"plastic",			 7,  6, 0},
-    {"hplastic",		 8,  7, 0},
-    {"eplastic",		 8,  8, 0},
-    {"heplastic",		 9,  9, 0},
-    {"constant",		 8,  10, 0},
-    {"ambientlight",		12, 11, 0},
-    {"lightcolor",		10, 12, 0},
-    {"distantlight",		12, 13, 0},
-    {"intensity",		 9, 14, 0},
-    {"file",			 4, 15, 0},
-    {"rgb",			 3, 16, 0},
-    {"rgba",			 4, 17, 0},
-    {"Ka",			 2, 18, 0},
-    {"Kd",			 2, 19, 0},
-    {"Ks",			 2, 20, 0},
-    {"specularcolor",		13, 21, 0}, 
-    {"roughness",		 9, 22, 0},
-    {"fov",			 3, 23, 0},
-    {"perspective",		11, 24, 0},
-    {"to",			 2, 25, 0},
-    {"framebuffer",		 11, 26, 0}
+    {"paintedplastic",		14,  7, 0},
+    {"hplastic",		 8,  8, 0},
+    {"eplastic",		 8,  9, 0},
+    {"heplastic",		 9, 10, 0},
+    {"constant",		 8, 11, 0},
+    {"ambientlight",		12, 12, 0},
+    {"lightcolor",		10, 13, 0},
+    {"distantlight",		12, 14, 0},
+    {"intensity",		 9, 15, 0},
+    {"file",			 4, 16, 0},
+    {"rgb",			 3, 17, 0},
+    {"rgba",			 4, 18, 0},
+    {"Ka",			 2, 19, 0},
+    {"Kd",			 2, 20, 0},
+    {"Ks",			 2, 21, 0},
+    {"specularcolor",		13, 22, 0}, 
+    {"roughness",		 9, 23, 0},
+    {"fov",			 3, 24, 0},
+    {"perspective",		11, 25, 0},
+    {"to",			 2, 26, 0},
+    {"framebuffer",		11, 27, 0},
+    {"texturename",		11, 28, 0},
+    {"width",			 5, 29, 0},
+    {"constantwidth",		13, 30, 0},
 };
 
 /* initialize tokenbuffer */
@@ -338,6 +342,21 @@ int len;
 	}
 	break;
 
+    case mr_subarray2:
+	check_buffer(16*3+7);
+	arraysize-=2;
+	/* if arraysize<0 then ERROR */
+    	floatptr = va_arg(*alist, float*);
+    	sprintf(astring,"%g %g   ",
+	    *(floatptr),*(floatptr+1));
+	cat(ptr,astring);
+	if(arraysize<=0) {
+	    expectSubArray = 0;
+	    *(ptr-=2)=0; /* get rid of unwanted spaces */
+	    cat(ptr,"] ");
+	}
+	break;
+
     case mr_int:
         number = va_arg(*alist, int);
 	check_buffer(16);
@@ -397,6 +416,7 @@ int len;
     case mr_worldbegin:
     case mr_worldend:
     case mr_frameend:
+    case mr_reverseorientation:
 	check_buffer(table[token].len);
 	cat(ptr,table[token].name);
 	/*
@@ -426,6 +446,8 @@ int len;
     case mr_shadinginterpolation:
     case mr_shadingrate:
     case mr_framebegin:
+    case mr_curves:
+    case mr_points:
 	check_buffer(table[token].len+1);
     	cat(ptr,table[token].name);
 	*(ptr++)=' ';

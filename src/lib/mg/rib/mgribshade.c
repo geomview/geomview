@@ -76,10 +76,16 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	     *
 	     */
         float roughness = (mat->shininess)? 8.0/mat->shininess : 8.0/1.0;
+	enum tokentype shader = mr_plastic;
+
         if(ap->shading == APF_CONSTANT) {
-		mrti(mr_surface, mr_constant, mr_NULL);
+	    /* ok, this has nothing to do with texture, but
+	     * we handle texture not for this case. FIXME. cH.
+	     */
+	    shader = mr_constant;
+	    mrti(mr_surface, shader, mr_NULL);
 	} else if(ap->shading == APF_FLAT) {
-	    int shader;
+	    enum tokentype shader;
 	    /* determain shader */
 	    if(_mgribc->shader==MG_RIBSTDSHADE) {
 		shader = mr_plastic;
@@ -87,6 +93,13 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	        if(_mgc->space & TM_HYPERBOLIC) shader = mr_hplastic;
 		else shader = mr_plastic;
 	    }
+
+	    if (shader == mr_plastic
+		&& (ap->flag & APF_TEXTURE)
+		&& ap->tex != NULL) {
+		shader = mr_paintedplastic;
+	    }
+
 	    /* define surface */
 	    mrti(mr_shadinginterpolation, mr_constant,
 		    mr_surface, shader, mr_Ka, mr_float, mat->ka,
@@ -94,11 +107,23 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		    mr_specularcolor, mr_parray, 3, &(mat->specular),
 		    mr_roughness, mr_float, roughness, mr_NULL);
 	} else if(ap->shading == APF_SMOOTH) {
+
+	    if (shader == mr_plastic
+		&& (ap->flag & APF_TEXTURE)
+		&& ap->tex != NULL) {
+		shader = mr_paintedplastic;
+	    }
+
 	    mrti(mr_shadinginterpolation, mr_string, "smooth",
-		    mr_surface, mr_plastic, mr_Ka, mr_float, mat->ka,
+		    mr_surface, shader, mr_Ka, mr_float, mat->ka,
 		    mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
 		    mr_specularcolor, mr_parray, 3, &(mat->specular),
 		    mr_roughness, mr_float, roughness, mr_NULL);
+	}
+
+	if (shader == mr_paintedplastic
+	    && (ap->flag & APF_TEXTURE) && ap->tex != NULL) {
+	    mrti(mr_texturename, mr_string, ap->tex->filename, mr_NULL);
 	}
     }	
 }
@@ -160,8 +185,8 @@ void mgrib_lights( LmLighting *lm, struct mgastk *astk )
 	     mr_lightsource, mr_distantlight, mr_int, light->Private,
 	     mr_intensity, mr_float, light->intensity,
 	     mr_lightcolor, mr_parray, 3, &(light->color),
-	     mr_string, "to", mr_array, 3, 0.,0.,0., /* aim at origin */
 	     mr_string, "from", mr_parray, 3, &(light->globalposition),
+	     mr_string, "to", mr_array, 3, 0.,0.,0., /* aim at origin */
 	     mr_NULL);
       } else {
 	/* point light */

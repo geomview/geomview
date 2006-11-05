@@ -38,16 +38,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #define VI_TUPLET_LIMIT 2 /* for sgi vi formatting (so we can use it!) */
 
-static void mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C );
+static void mgrib_submesh( int wrap, int nu, int nv,
+			   HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR );
 static void mgrib_prmanmesh( int wrap, int nu, int nv, HPoint3 *P );
 
 int
-mgrib_mesh( wrap, nu, nv, P, N, C)
-    int wrap;
-    int nu, nv;
-    HPoint3 *P;
-    Point3 *N;
-    ColorA *C;
+mgrib_mesh(int wrap, int nu, int nv,
+	   HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR)
 {
     Appearance *ap;
     Color   *c3;
@@ -58,7 +55,7 @@ mgrib_mesh( wrap, nu, nv, P, N, C)
     ap = &_mgc->astk->ap;
 
     if(ap->flag & APF_FACEDRAW) {
-	mgrib_submesh( wrap, nu, nv, P, N, C);
+      mgrib_submesh( wrap, nu, nv, P, N, C, STR);
     }
     
     if(ap->flag & APF_EDGEDRAW) {
@@ -82,14 +79,16 @@ mgrib_mesh( wrap, nu, nv, P, N, C)
 }
 
 static void
-mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
+mgrib_submesh( int wrap, int nu, int nv,
+	       HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR )
 {
     Appearance *ap;
     char    *uwrap,*vwrap;
     int     i;
     HPoint3 *p;
     Point3  *n;
-    ColorA	*c;
+    Point3  *str;
+    ColorA  *c;
     int     nunv;
     int     viflag = 0; /* used to insert \n into RIB file so lines */
 		    /* won't be too long for 'vi' to work well   */
@@ -98,6 +97,7 @@ mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
     p = P;
     n = N;
     c = C;
+    str = STR;
 	    
     ap = &_mgc->astk->ap;
     
@@ -131,11 +131,11 @@ mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
 	viflag = 0;
 	mrti(mr_N, mr_buildarray, 3*nunv, mr_NULL);
 	for(i=0; i<nunv; i++, n++, viflag++) {
-	    mrti(mr_subarray3, n, mr_NULL);
-	    if(viflag>=VI_TUPLET_LIMIT) {
-		viflag = 0;
-		mrti(mr_nl, mr_NULL);
-	    }
+	  mrti(mr_subarray3, n, mr_NULL);
+	  if(viflag>=VI_TUPLET_LIMIT) {
+	    viflag = 0;
+	    mrti(mr_nl, mr_NULL);
+	  }
 	}
     }
     
@@ -165,6 +165,52 @@ mgrib_submesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N, ColorA *C )
 	    }
 	}			
     }
+
+#if 1
+    /* texture??? */
+    if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
+        && _mgc->astk->ap.tex != NULL && STR) {
+      Texture *tex = _mgc->astk->ap.tex;
+      Point3 st;
+      
+      viflag = 0;
+      mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
+      for(i=0; i<nunv; i++, str++, viflag++) {
+	Pt3Transform(tex->tfm, str, &st);
+	if ((tex->flags & TXF_SCLAMP)) {
+	  if (st.x > 1.0)
+	    st.x = 1.0;
+	  else if (st.x < 0.0)
+	    st.x = 0.0;
+	} else {
+	  if (st.x > 1.0) {
+	    st.x -= (float)(int)st.x;
+	  } else if (st.x < 0.0) {
+	    st.x -= (float)((int)st.x - 1);
+	  }
+	}
+	if ((tex->flags & TXF_TCLAMP)) {
+	  if (st.y > 1.0)
+	    st.y = 1.0;
+	  else if (st.y < 0.0)
+	    st.y = 0.0;
+	} else {
+	  if (st.y > 1.0) {
+	    st.y -= (float)(int)st.y;
+	  } else if (st.x < 0.0) {
+	    st.y -= (float)((int)st.y - 1);
+	  }
+	}
+	st.y = 1.0 - st.y;
+	mrti(mr_subarray2, &st, mr_NULL);
+	if(viflag>=VI_TUPLET_LIMIT) {
+	  viflag=0;
+	  mrti(mr_nl, mr_NULL);
+	}
+      }
+    }
+#endif
+
     mrti(mr_attributeend, mr_NULL);
 }
 

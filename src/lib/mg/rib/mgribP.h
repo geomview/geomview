@@ -30,6 +30,8 @@ typedef struct mgribcontext {
   int born;			/* Has window been displayed on the screen? */
   int win;			/* window ID, or 0 */
   int world;                    /* inc/decremented by worldbegin()/end() */
+  int persp;                    /* camera projection */
+  float focallen;               /* focallen */
 
   int render_device;	/* Device Options */
 #define RMD_ASCII	0x1

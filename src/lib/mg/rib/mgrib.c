@@ -135,7 +135,7 @@ mgrib_ctxcreate(int a1, ...)
     	"mgrib_ctxcreate") ));
 
   /* Ensure some sensible default Window */
-  WnSet(_mgc->win, WN_XSIZE, 300, WN_YSIZE, 200, WN_END);
+  WnSet(_mgc->win, WN_XSIZE, 450, WN_YSIZE, 450, WN_END);
 
   /* Default RIB1.0 structure info */
   sprintf(_mgribc->ribscene, "Generic RIB file");
@@ -143,7 +143,8 @@ mgrib_ctxcreate(int a1, ...)
   sprintf(_mgribc->ribfor, getenv("USER"));
   sprintf(_mgribc->ribdate, ctime(&timedate));
   _mgribc->ribdate[24] = '\0'; /* remove the line feed */
-  
+  _mgribc->world = 0;
+
   va_start(alist, a1);
   _mgrib_ctxset(a1, &alist);
   va_end(alist);
@@ -547,10 +548,8 @@ void
 mgrib_worldbegin( void )
 {
   static Transform cam2ri = {{1, 0,0,0}, {0,1,0,0}, {0,0,-1,0},{0,0,0,1}};
-  int persp;
   float halfxfield, halfyfield, aspect, cnear, cfar, fov;
   char str[256];
-  float focallen;
   HPoint3 look;
   Point3 lookat;
   LtLight **lp;
@@ -577,8 +576,8 @@ mgrib_worldbegin( void )
      * Looking toward vector (0,0,-1)
      * nominally looking at a point (0,0,-focallen)
      */
-    CamGet(_mgc->cam, CAM_FOCUS, &focallen);
-    look.x = look.y = 0;  look.z = -focallen;   look.w = 1;
+    CamGet(_mgc->cam, CAM_FOCUS, &_mgribc->focallen);
+    look.x = look.y = 0;  look.z = -_mgribc->focallen;   look.w = 1;
     /* Transform to world coordinates */
     HPt3TransPt3(_mgc->C2W, &look, &lookat);    
     /* Now the camera is at _mgc->cpos (this is a Point3), */
@@ -588,8 +587,9 @@ mgrib_worldbegin( void )
     CamGet( _mgc->cam, CAM_NEAR, &cnear);
     CamGet( _mgc->cam, CAM_FAR, &cfar);
     mrti(mr_clipping, mr_float, cnear, mr_float, cfar, mr_NULL);
-    CamGet( _mgc->cam, CAM_PERSPECTIVE, &persp);
-    mrti(mr_projection, mr_string, persp?"perspective":"orthographic", mr_NULL);
+    CamGet( _mgc->cam, CAM_PERSPECTIVE, &_mgribc->persp);
+    mrti(mr_projection, mr_string,
+	 _mgribc->persp ? "perspective" : "orthographic", mr_NULL);
     CamGet( _mgc->cam, CAM_ASPECT, &aspect );
     CamGet( _mgc->cam, CAM_HALFYFIELD, &halfyfield );
     halfxfield = halfyfield * aspect;
@@ -609,6 +609,8 @@ mgrib_worldbegin( void )
 
     mgrib_printmatrix(_mgc->W2C);
 
+    /* otherwise explicitly specified normals would be inverted */
+    mrti(mr_reverseorientation, mr_NULL);
 
     /* RiWorldBegin...*/
     mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);

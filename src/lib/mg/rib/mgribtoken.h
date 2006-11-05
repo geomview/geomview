@@ -43,7 +43,7 @@ enum tokentype {
     mr_shadinginterpolation,
     mr_color,	    /* float *ptr (mr_array w/size=3) */
     mr_opacity,	    /* float alpha (will become an array) */
-    mr_polygon,	    /* following arrays must be decalred explicitly */
+    mr_polygon,	    /* following arrays must be declared explicitly */
     mr_patchmesh,   /* Ditto */
     mr_format,	    /* follow with mr_intseq */
     mr_projection,
@@ -63,6 +63,9 @@ enum tokentype {
     mr_illuminate,
     mr_framebegin,
     mr_frameend,
+    mr_reverseorientation,
+    mr_curves,
+    mr_points,
 
     /* Strings */
     mr_P=STRINGBASE,
@@ -72,6 +75,7 @@ enum tokentype {
     mr_Os,
     mr_st,
     mr_plastic,
+    mr_paintedplastic,
     mr_hplastic,
     mr_eplastic,
     mr_heplastic,
@@ -92,12 +96,16 @@ enum tokentype {
     mr_perspective,
     mr_to,
     mr_framebuffer,
+    mr_texturename,
+    mr_width,
+    mr_constantwidth,
 
     /* SPECIAL */    
     mr_array,		/* (full array) size, f,f,.. */
     mr_buildarray,	/* size (subarys follow w/total subsizes==size) */
     mr_parray,  	/* subsize, *float, *float, .. */
     mr_subarray3,	/* ptr to aggregate of 3 floats (most common) */
+    mr_subarray2,	/* ptr to aggregate of 2 floats (texture) */
     mr_section,		/* char *string */
     mr_comment,		/* char *string */
     mr_nl,		/* new line */

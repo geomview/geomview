@@ -242,7 +242,7 @@ mgrib_drawCline(HPoint3 *p1, HPoint3 *p2)
   Point3 start, end;
   HPoint3 Hstart, Hend;
   static float unitz[3] = {0.0, 0.0, 1.0};
-  float radius = .005;
+  float radius = 0.004;
   float size;
   int bounded(Point3 *p);
   
@@ -357,15 +357,42 @@ void mgrib_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 void
 mgrib_drawpoint(HPoint3 *p)
 {
-    float radius = 0.005;
-    float size = radius*_mgc->astk->ap.linewidth;
+  float radius = 0.004;
+  float size = radius*_mgc->astk->ap.linewidth;
+#if 0
+  /* Somehow the Points directive doesn't work well, the scaling is
+   * quite strange
+   */
+  HPoint3 tmp;
+
+  HPt3Dehomogenize(p, &tmp);
+
+  size *= 20.0;
+  mrti(mr_points,
+       mr_P, mr_parray, 3, &tmp,
+       mr_width, mr_parray, 1, &size, mr_NULL);
+#else
     
-    mrti(mr_transformbegin, mr_NULL);
-    mrti(mr_translate, mr_float, p->x, mr_float, p->y, 
-	 mr_float, p->z, mr_NULL);
-    mrti(mr_sphere, mr_float, size, mr_float, size, mr_float, -size,
-	mr_float, 360., mr_NULL);
-    mrti(mr_transformend, mr_NULL);
+  /* To have a chance to get a visible point we have to rescale the
+   * radius by the distance from the camera. Same holds, in principle,
+   * for lines.
+   */
+  if (_mgribc->persp && _mgc->space == TM_EUCLIDEAN) {
+    HPoint3 p_cam;
+    float len;
+
+    HPt3Transform(_mgc->xstk->T, p, &p_cam);
+    HPt3Transform(_mgc->W2C, &p_cam, &p_cam);
+    len = sqrt(HPt3R30Dot(&p_cam, &p_cam));
+    size *= len / _mgribc->focallen;
+  }
+
+  mrti(mr_transformbegin, mr_NULL);
+  mrti(mr_translate, mr_float, p->x, mr_float, p->y, mr_float, p->z, mr_NULL);
+  mrti(mr_sphere, mr_float, size, mr_float, size, mr_float, -size,
+       mr_float, 360., mr_NULL);
+  mrti(mr_transformend, mr_NULL);
+#endif
 }
 
 /*-----------------------------------------------------------------------
@@ -377,6 +404,7 @@ mgrib_drawpoint(HPoint3 *p)
  */
 void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 {
+  Appearance *ap;
   int i,j;
   Poly *p;
   Vertex **v, *vp;
@@ -384,8 +412,9 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
   int flag,shading,matover;
   Color *color;
   
-  flag = _mgc->astk->ap.flag;
-  shading = _mgc->astk->ap.shading;
+  ap = &_mgc->astk->ap;
+  flag = ap->flag;
+  shading = ap->shading;
   matover = _mgc->astk->mat.override;
 
   if((matover & MTF_DIFFUSE) && !_mgc->astk->useshader)
@@ -470,7 +499,51 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    mrti(mr_subarray3, &(p->pn), mr_NULL);
 	  }
 	}
+
+#if 1
+	/* texture??? */
+	if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW))
+	    == 
+	    (APF_TEXTURE|APF_FACEDRAW)
+	    && _mgc->astk->ap.tex != NULL && (plflags & PL_HASST)) {
+	  Texture *tex = _mgc->astk->ap.tex;
+	  Point3 st;
+
+	  mrti(mr_st, mr_buildarray, p->n_vertices*2, mr_NULL);
+	  for(j = 0, v = p->v; j < p->n_vertices; j++, v++) {
+	    Pt3Transform(tex->tfm, &(*v)->st, &st);
+	    if ((tex->flags & TXF_SCLAMP)) {
+	      if (st.x > 1.0)
+		st.x = 1.0;
+	      else if (st.x < 0.0)
+		st.x = 0.0;
+	    } else {
+	      if (st.x > 1.0) {
+		st.x -= (float)(int)st.x;
+	      } else if (st.x < 0.0) {
+		st.x -= (float)((int)st.x - 1);
+	      }
+	    }
+	    if ((tex->flags & TXF_TCLAMP)) {
+	      if (st.y > 1.0)
+		st.y = 1.0;
+	      else if (st.y < 0.0)
+		st.y = 0.0;
+	    } else {
+	      if (st.y > 1.0) {
+		st.y -= (float)(int)st.y;
+	      } else if (st.x < 0.0) {
+		st.y -= (float)((int)st.y - 1);
+	      }
+	    }
+	    st.y = 1.0 - st.y;
+	    mrti(mr_subarray2, &st, mr_NULL);
+	  }
+	}
+#endif
+
 	break;
+
       }
     }
     mrti(mr_attributeend, mr_NULL);
