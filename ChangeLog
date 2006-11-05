@@ -1,3 +1,593 @@
+2006-11-05  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribP.h, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Rudimentary texture support; also scale points s.t. they remain
+	visible even at large distances. Use "ReverseOrientation" to prevent
+	the renderer from inverting explicitly specified normals.
+
+	* src/lib/mg/ps/mgpstri.c: Point-plotting was broken.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribP.h:
+	Make sure Push/PopAppearance is not called outsde WorldBegin/WorldEnd
+
+	* configure.ac: Bump version to rc10.
+
+	* NEWS: Document ND changes.
+
+	* doc/version.texi: Update.
+
+2006-11-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi:
+	Picking does work now with ND viewing, so remove the note saying
+	otherwise from the documentation.
+
+	* doc/figs/tools.ps: Use a half-size screenshot.
+
+	* src/bin/geomview/common/transform.c: Cosmetics.
+
+	* src/lib/gprim/ndmesh/Makefile.am, src/lib/gprim/ndmesh/ndmesh.h, src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/ndmesh/ndmeshpick.c:
+	Native "picking" for ND-meshes.
+
+	* src/lib/gprim/ndmesh/ndmeshbound.c: Bail out if meshd > 2.
+
+	* src/lib/gprim/npolylist/Makefile.am, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/npolylist/nplpick.c:
+	Add "pick" support.
+
+	* src/lib/gprim/skel/skelpick.c: Remove an unused variable.
+
+	* src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelpick.c:
+	Pick support for SKEL, just clone the vect code (skelpick.c contains a
+	code fragment which seemingly was meant as a draft; however, the VECT
+	code works and really just naturally carries "itself" over to the SKEL
+	case).
+
+	* src/lib/gprim/skel/skelload.c:
+	Fix a 3d bug caused by moving the homogeneous component to index 0 in ND.
+
+	* src/lib/gprim/mesh/meshpick.c, src/lib/gprim/polylist/plpick.c, src/lib/gprim/quad/quadpick.c, src/lib/gprim/vect/vectpick.c:
+	Rename NTransPt3() to HPt3NTransPt3().
+
+	* src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointn.h:
+	Rename NTransPt3() to HPt3NTransPt3(), new function HPtNNTransPt3().
+
+	* data/NDview/geom/klein4d.skel, data/geom/moebius.skel:
+	Initial revision.
+
+	* src/lib/gprim/quad/quadP.h, src/lib/gprim/quad/quadpick.c, src/lib/gprim/vect/vectP.h, src/lib/gprim/vect/vectpick.c:
+	ND picking.
+
+	* src/lib/gprim/geom/pick.c: Fix GenericPick() for ND picking.
+
+	* src/lib/gprim/inst/instpick.c, src/lib/gprim/list/listpick.c:
+	ND-pick support.
+
+	* src/lib/gprim/npolylist/nplload.c:
+	Homogeneous divisor sits at index 0 for ND vectors, fix that.
+
+	* src/lib/gprim/polylist/plpick.c, src/lib/gprim/polylist/polylistP.h:
+	ND-pick support.
+
+	* src/lib/gprim/mesh/meshpick.c:
+	Move some support functions to hpointn.c
+
+	* src/lib/gprim/inst/instdraw.c: Cosmetics.
+
+	* src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointn.h:
+	New functions  NTransPt3() and HPt3NTransHPt3() to support ND-picking.
+
+	* src/lib/geometry/hpoint3/hpoint3.c: Remove a stray hash.
+
+	* src/bin/geomview/common/transform.c:
+	Forgot to delete an HPointN temporary.
+
+2006-11-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/geometry/hpoint3/hpoint3b.c: Remove a stray hash
+
+	* src/lib/gprim/list/listpick.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plpick.c, src/lib/gprim/polylist/polylistP.h, src/lib/gprim/quad/quadP.h, src/lib/gprim/quad/quadpick.c, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelpick.c, src/lib/gprim/vect/vectP.h, src/lib/gprim/vect/vectpick.c, src/lib/gprim/bezier/bezier.h, src/lib/gprim/bezier/bezpick.c, src/lib/gprim/comment/commentclass.c, src/lib/gprim/discgrp/dgpick.c, src/lib/gprim/discgrp/discgrp.h, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/inst/instpick.c, src/lib/gprim/list/listP.h:
+	Adapt to changed pick interface (ND-picking not yet working except for
+	MESHes).
+
+	* src/lib/gprim/mesh/mesh.h, src/lib/gprim/mesh/meshP.h, src/lib/gprim/mesh/meshpick.c:
+	Support ND-picking.
+
+	* src/bin/geomview/common/lights.c: Adapt to changed pick interface.
+
+	* src/bin/geomview/common/event.c, src/lib/gprim/geom/geomclass.h, src/lib/gprim/geom/pick.c, src/lib/gprim/geom/pick.h, src/lib/gprim/geom/pickP.h:
+	Support ND-picks.
+
+	* src/bin/geomview/common/drawer.h, src/bin/geomview/common/transform.c:
+	New function drawer_ND_CamView() which is the ND-equivalent for the
+	CamView() function. Allow ND-picks in make-center_from_pick().
+
+	* src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointn.h:
+	Use HPoint3 parameter-type instead of HPt3Coord * for some Pt4...() stuff.
+
+	* src/lib/geometry/hpoint3/hpoint3.c: Remove HPt3Transform().
+
+	* src/lib/aclib/Headers, src/lib/aclib/Makefile.am:
+	Symlink the obstack.h header for use by (e.g.) ndutils.
+
+	* src/bin/ndutils/ColorPoint.c, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/WithColor.c:
+	Remove some variable decl which are no longer needed.
+
+	* src/bin/geomview/common/ui.h:
+	Missing proto-type for set_ui_wm_focus().
+
+	* src/bin/geomview/common/ui.c:
+	Need to include transform.h for make_center_from_bbox().
+
+2006-10-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/ndutils/Clip.h, src/bin/ndutils/clip.c, src/bin/ndutils/clipoogl.c, src/lib/aclib/obstack.h:
+	Use an obstack to clean up after ND clipping.
+
+2006-10-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/NDview/NDdemo, src/bin/NDview/NDview, src/bin/geomview/common/drawer.c, src/bin/geomview/common/motion.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/transform.h, src/bin/geomview/common/ui.c, src/bin/geomview/x11/gvtoolui.c, src/bin/geomview/x11/gvui.c, src/bin/geomview/x11/interface/Tool.mib, src/bin/gvclock/gvclock.in:
+	The "origin/bbox-center" keyword to transform and transform-incr was a
+	bad idea. There is still a new button in the Tools-menu which
+	translates the CENTER object to the currently selected geom's bounding box.
+
+	* src/bin/geomview/common/comm.c:
+	Document ntransform keyword in online-help for (read ...) command.
+
+	* src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/inststream.c:
+	HandleRegister() needs &inst->NDaxis, not inst->NDaxis, otherwise
+	inst->NDaxis (originally NULL) cannot be modified.
+
+	* src/lib/gprim/inst/instdraw.c:
+	Insert once-only warning message if somebody wants to use origin != NONE
+	(i.e. LOCAL) with ND-drawing.
+
+	* src/lib/gprim/bbox/bboxload.c: Handle 4d/Nd correctly.
+
+	* src/bin/geomview/common/worldio.c:
+	Document "ntransform" keyword in the online help.
+
+	* doc/figs/tools.ps, doc/geomview.texi, doc/version.texi:
+	Update the documentation to the latest changes.
+
+2006-10-26  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/ndutils/GeomtoNoff.h, src/bin/ndutils/LoadMap.c, src/bin/ndutils/LoadMap.h, src/bin/ndutils/MakeGoodTransforms.c, src/bin/ndutils/MakeGoodTransforms.h, src/bin/ndutils/Makefile.am, src/bin/ndutils/Random.c, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/TransformGeom.h, src/bin/ndutils/WithColor.c, src/bin/ndutils/WithColor.h, src/bin/ndutils/clip.c, src/bin/ndutils/clipoogl.c, src/bin/ndutils/init.c, src/bin/ndutils/init.h, src/bin/ndutils/slicer.c, src/bin/ndutils/slicer.h, src/bin/ndutils/snapshot.c, src/bin/ndutils/snapshot.h, src/bin/ndutils/testwish.c, src/bin/ndutils/wrappers.c, src/bin/ndutils/wrappers.h, data/NDview/cplxview/scripts/4d.cplx, data/NDview/cplxview/scripts/startup.script, data/NDview/scripts/4d.2bigwins, data/NDview/scripts/4d.3wins, data/NDview/scripts/4d.4wins, data/NDview/scripts/4d.cplx, data/NDview/scripts/4d.xyw, data/NDview/scripts/4d.xyz, data/NDview/scripts/4d.xzw, data/NDview/scripts/4d.yzw, data/NDview/scripts/5d.123, data/NDview/scripts/5d.5wins, data/NDview/scripts/startup.big.script, data/NDview/scripts/startup.small.script, src/bin/NDview/NDdemo, src/bin/NDview/NDview, src/bin/NDview/ndview.c, src/bin/ndutils/BasicFns.c, src/bin/ndutils/BasicFns.h, src/bin/ndutils/Clip.h, src/bin/ndutils/ColorMapDefs.h, src/bin/ndutils/ColorPoint.c, src/bin/ndutils/ColorPoint.h, src/bin/ndutils/GeExDir.c, src/bin/ndutils/GeExDir.h, src/bin/ndutils/GeomExtentDirection.c, src/bin/ndutils/GeomExtentDirection.h, src/bin/ndutils/GeomtoNoff.c:
+	Fixed a BUNCH of memory leaks and other errors. But the main-work was
+	to move thehomogeneous component to index 0. And the most important
+	change was that each camera of an ND-cluster now has additionally its
+	own 3d transform.
+
+	* src/bin/gvclock/gvclock.in:
+	Calling convention for transfrom-incr has changed (will undo that later).
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/ndshade.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c:
+	Homogeneous component for ND-viewing moved to index 0. Some other
+	changes. ndshade.c changed such that INST stuff works even for ND.
+
+	* src/bin/stereo/stereo.c: fucking ugliness removement.
+
+	* src/lib/gprim/skel/skelsave.c, src/lib/gprim/skel/skelsphere.c, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/npolylist/nplsphere.c, src/lib/gprim/npolylist/npolylistP.h, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plsphere.c, src/lib/gprim/polylist/polylistP.h, src/lib/gprim/quad/quadbound.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshdelete.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/ndmesh/ndmesh.h, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/ndmesh/ndmeshtransform.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/geom/vert.h, src/lib/gprim/inst/instbound.c, src/lib/gprim/inst/instsphere.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/geom/transform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/geom/boundsphere.c, src/lib/gprim/geom/geomclass.h, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxcopy.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bbox/bboxbound.c, src/lib/gprim/bbox/bboxcenter.c:
+	The homoegenous component for ND is now at index 0. VERT_4D flag is
+	now only a mere input-flag for ND. Fixed several bugs. Forgot about
+	the rest. (but the damn thing seems to work).
+
+	* src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpoint3/hpoint3.h, src/lib/geometry/hpoint3/hpoint3b.c:
+	Some more utility functions concerning the conversion between
+	ND<->3d. ND has its homogeneous component at index 0 now.
+
+	* src/lib/mg/rib/mgribdraw.c:
+	HPt3Normalize() is dead, changed everything to HPt3Dehomogenize.
+
+	* src/lib/geometry/transformn/tmNpolardecomp.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transformn/transformn.h:
+	Moved the homogeneous component to position 0, this really MUCH more
+	handy with varying ND-dimensions.
+
+	* src/lib/geometry/hpointn/Makefile.am, src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/hpointn/hpointnb.c:
+	Move everything to hpointn.c
+
+	* src/lib/geomutil/plutil/anytopl.c:
+	Adapt to changed TransformComponents() calling convention.
+
+	* configure.ac, src/lib/oogl/util/malloc-debug.c:
+	strdup() replacement for detecting memory leaks.
+
+	* src/bin/geomview/common/ui.h, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvevent.c, src/bin/geomview/x11/gvui.c, src/bin/geomview/x11/gvui.h, src/bin/geomview/common/lang.c, src/bin/geomview/common/lang.h, src/bin/geomview/common/ui.c:
+	Optionally change the active camera only on focus-change events; this
+	is most desirable in the context of multiple windows when it starts to
+	become complicated to move the mouse cursor back to the tool panel
+	without crossing another camera window.
+
+	* src/lib/oogl/lisp/lisp.c:
+	Fix a severe memory leak in AssignArgs(): if the argument type is
+	LLOBJECT and the argument itself is either not a list or the LHOLD
+	modifyer is in effect, then the ref-count of the object would be
+	increased one times too often which had the effect that constructs
+	like (e.g.)
+
+	(if (real-id blah) (echo foo) (echo bar))
+
+	would not free there arguments lists. Very bad.
+
+2006-10-22  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/drawer.c: Correct drawing of ND cameras.
+
+	* src/bin/geomview/common/worldio.c:
+	lisp function (camera-prop ...): handle keyword args correctly,
+	including checking for the correct keyword.
+
+	* src/bin/geomview/common/ui.h: Cosmetics.
+
+	* src/bin/geomview/common/transform.c:
+	drawer_transform(): now returns success status.
+
+	* src/bin/geomview/common/space.c: Unused variable compile warning.
+
+	* src/bin/geomview/common/ndshade.c:
+	Account for changes in mgNDctx struct.
+
+	* src/bin/geomview/common/lang.h: Remove comma at end of enum.
+
+	* src/bin/geomview/x11/gvui.h:
+	Proto-type for ui_tool_center_origin_set() (to get rid of a compiler
+	warning).
+
+	* src/lib/geometry/hpointn/hpointnb.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transformn/transformn.h:
+	Do not use "short" for parameters; that doesn't make too much
+	sense. New function TmNPermute() which applies a permutations to an
+	ND-Transform (to map an x,y,z 3d sub-space to some other
+	3d-subspace). Some more fixes w.r.t. to prolongation and restriction of ND vectors/matrices.
+
+	* src/lib/gprim/inst/instdraw.c:
+	Better handling of ND-drawing; also: support non-local locations with
+	ND-drawing. Non-local origins, however, are not (and probably will not
+	be) supported with ND-drawing.
+
+	* src/lib/gprim/inst/instmisc.c: Cosmetics.
+
+	* src/lib/geometry/ntransobj/ntransobj.c: Remove unused variables.
+
+	* src/lib/gprim/tlist/tlist.h, src/lib/gprim/tlist/tltransform.c:
+	Handle TransformN argument to TListTransform().
+
+	* src/lib/gprim/vect/vectdraw.c:
+	Fix ND drawing of VECTs: use the VECTs colors of no ND cmap is defined
+	(same handling as in SKEL).
+
+	* src/lib/mg/common/mg.h:
+	restructured mgNDctx struct and hook functions; we can now push a
+	3-Transform (make INST support much easier).
+
+	* src/lib/mg/common/mg.c, src/lib/mg/common/mgP.h:
+	mgc->T4 and associated 3To4() stuff has gone because it was unused;
+	seems to be a relict of beginning ND-support.
+
+	* src/lib/oogl/lisp/lisp.c:
+	include ctype.h, fix compiler warning in print_help_formatted().
+
+2006-10-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/create.h:
+	New define CR_NCENTER to retrieve the center of a bounding box with
+	GeomGet(bbox, ...)
+
+	* src/bin/geomview/x11/gvcredits.c, src/bin/geomview/x11/gvfiles.c, src/bin/geomview/x11/gvlights.c, src/bin/geomview/x11/gvload.c, src/bin/geomview/x11/gvmaterial.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/gvtoolui.c, src/bin/geomview/x11/gvui.c, src/bin/geomview/x11/gvui.h, src/bin/geomview/x11/interface/Tool.mib, src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/motion.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/transform.h, src/bin/geomview/common/ui.c, src/bin/geomview/common/ui.h, src/bin/geomview/x11/gvappear.c, src/bin/geomview/x11/gvcameras.c, src/bin/geomview/x11/gvcolor.c, src/bin/geomview/x11/gvcommands.c:
+	New toggle "Origin BBox": if set and a geometry is the center of
+	motion (except the world), then the center of the geometry's bounding
+	box is used as origin of the coordinate system (instead of just using
+	the origin of the center-object's co-ordinate system).
+
+	The idea is that this makes it much easier to look at objects which
+	are translated out of the center of their own coordinate frame,
+	e.g. by using an INST geometry.
+
+	* src/bin/geomview/common/lang.c, src/bin/geomview/common/lang.h, src/bin/geomview/common/lispext.c, src/bin/geomview/common/lispext.h:
+	The list of keyword names is now generated on the fly in
+	define_keyword().
+
+	* src/lib/gprim/bbox/bboxP.h, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxcreate.c:
+	CR_4MIN/4MAX do not cause VERT_4D to be set (why should), but simply
+	install an HPoint3. Bounding boxes now compute their center point, it
+	can be fetched from the bounding box via GeomGet(bbox,
+	CR_CENTER/CR_NCENTER, &point) to retrieve the center as HPoint3 or HPointN.
+
+	* src/lib/gprim/bbox/bboxbound.c, src/lib/gprim/bbox/bboxunion.c:
+	Use CR_4MIN/4MAX.
+
+	* src/lib/oogl/lisp/lisp.c:
+	Automatically format the help text to be indented by 8 chars, and
+	wrapped at column 72. This simplifies modifying help texts (no need to
+	format manually). A double \n\n is interpreted as paragraph, all other
+	embedded spaces, tabs and newlines are converted to a single space.
+
+	* src/lib/gprim/bezier/bezbound.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/vect/vectbound.c:
+	Use CR_4MIN/4MAX to generate the bounding box. VERT_4D can be set
+	separately via CR_4D.
+
+2006-10-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/inst/instbound.c: Typo.
+
+	* src/bin/NDview/ndview.c, src/bin/ndutils/ColorPoint.c, src/bin/ndutils/GeExDir.c, src/bin/ndutils/slicer.c, src/bin/ndutils/snapshot.c, src/lib/geometry/ntransobj/ntransobj.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transformn/transformn.h:
+	Prepare for binary ntransform format.
+
+2006-10-18  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/ndshade.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/discgrp/dgdraw.c, src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instbound.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/instsphere.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/mg/buf/mgbuf.c, src/lib/mg/common/mg.c, src/lib/mg/common/mg.h, src/lib/mg/common/mgP.h, src/lib/mg/opengl/mgopengl.c, src/lib/mg/ps/mgps.c, src/lib/mg/rib/mgrib.c, src/lib/mg/x11/mgx11.c:
+	ND-INST support (origin and location local only, no multi-transform
+	stuff, i.e. there are no NTLISTs).
+
+	* src/lib/gprim/inst/inststream.c:
+	The attempt to introduce ND-INSTs broke saving of the transformation
+	matrix (axis), fix that.
+
+	* src/lib/gprim/vect/vectbound.c: Fogot to intialize "min".
+
+	* src/lib/gprim/vect/vectload.c: Initialize flag to 0.
+
+	* src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/skel/skelbound.c:
+	Fix previously introduced ND-bug.
+
+	* src/lib/gprim/geom/create.c: GeomInit(): set pdim to 4 by default.
+
+	* src/lib/gprim/bbox/bboxcenter.c, src/lib/gprim/bbox/bboxunion.c:
+	Fix bugs previously introduced by my ND-changes.
+
+2006-10-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/inst/instbound.c: First glimpse at ndaxis support.
+
+	* src/lib/gprim/bbox/bboxbound.c: Some ND fixes.
+
+	* src/lib/gprim/sphere/spherecreate.c:
+	Fix a long-standing memory leakage bug: a sphere's Bezier-mesh and
+	tlist were NEVER freed.
+
+	* src/bin/geomview/common/transform.c:
+	id_bsphere(): fix a memory leak (ND-case).
+
+	* src/lib/gprim/geom/boundsphere.c: Fix a memory leak (ND-case).
+
+2006-10-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/inst/instcreate.c, src/lib/gprim/sphere/spherecreate.c:
+	Forgot the initialization of inst->ndaxis in some places.
+
+	* src/bin/geomview/common/transform.c: Forgot yet another TmNDelete()
+
+	* src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/inststream.c:
+	Preparations for ND-Transform INST objects (not working yet).
+
+	* src/lib/gprim/inst/instsphere.c, src/lib/gprim/inst/instbound.c:
+	Fix handling of ND-Transform if present.
+
+	* src/lib/oogl/util/create.h, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/WithColor.c, src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instcreate.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quadP.h, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadload.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/sphere/sphereP.h, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/vect/vectdraw.c:
+	Some cleanup w.r.t. to ND drawing of 3d objects.
+
+	* src/bin/geomview/common/comm.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/worldio.c:
+	include ntransobj.h.
+
+	* src/bin/geomview/common/transform.c:
+	Pass Transfrom, not (Transform *) to HPt3Tranform.
+
+2006-10-15  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/comm.c, src/bin/geomview/common/comm.h, src/bin/geomview/common/lang.c, src/bin/geomview/common/lang.h, src/bin/geomview/common/lispext.c, src/bin/geomview/common/worldio.c:
+	Support ntransform as real lisp-object.
+
+	* src/bin/geomview/common/transform.c:
+	look-recenter: only set the 3d transform if ND-viewing is NOT enabled.
+
+	* src/lib/geometry/Makefile.am: Add ntransobj/ subdir.
+
+	* configure.ac: Add src/lib/geometry/ntransobj/Makefile
+
+	* src/lib/geometry/ntransobj/.cvsignore, src/lib/geometry/ntransobj/Headers, src/lib/geometry/ntransobj/Makefile.am, src/lib/geometry/ntransobj/ntransobj.c, src/lib/geometry/ntransobj/ntransobj.h:
+	Initial revision.
+
+	* src/bin/geomview/common/transform.c:
+	apply_ND_transform(): need to delete Tmp, drawer_set_ND_xform() just
+	makes a copy.
+
+	* src/lib/gprim/sphere/spheremisc.c:
+	Fix off-by-one loop-count errors in SphereEncompassXXXN().
+
+	* src/lib/gprim/npolylist/nplsphere.c:
+	Fix silly typos and complete the implementation (stopped somewhere in
+	middle, unnoticed because the file was never compiled).
+
+	* src/lib/gprim/npolylist/npolylistP.h:
+	Proto-type for NPolyListSphere().
+
+	* src/lib/gprim/npolylist/Makefile.am: Forgot to add nplsphere.c
+
+	* src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelclass.c:
+	Do not forget to install BoundSphere() method.
+
+	* src/lib/gprim/mesh/meshclass.c, src/lib/gprim/polylist/plclass.c:
+	Cosmetics.
+
+	* src/lib/gprim/geom/boundsphere.c:
+	GeomBoundSphereFromBBox(): handle ND-BBoxes correctly.
+
+	* src/lib/gprim/bezier/bezbound.c, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/skel/skelbound.c:
+	Array loop-count was off by one; bug introduced by myself.
+
+	* src/lib/gprim/bbox/bboxminmax.c: Handle ND-BBoxes correctly.
+
+	* src/lib/geometry/hpointn/hpointnb.c:
+	Cosmetic changes to HPtNToHPt3().
+
+	* src/bin/NDview/.cvsignore, src/bin/clipboard/.cvsignore, src/bin/ndutils/.cvsignore, src/lib/oogl/wa/.cvsignore:
+	Ignore some files generated during compilation.
+
+2006-10-14  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/geometry/transformn/transformn.c:
+	TmNRead(): release ->a array on error.
+
+2006-10-13  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c:
+	ND-stuff cleanup: just use the cameras C2W and W2C instead of using
+	additional (unmotivated ...) entries in DView. Seems to work quite nice ...
+
+	* src/lib/oogl/wa/wa.yacc.h, src/lib/gprim/quad/quadbound.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/skel/Makefile.am, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skelsave.c, src/lib/gprim/skel/skelsphere.c, src/lib/gprim/skel/skeltransform.c, src/lib/gprim/sphere/sphere.h, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectsphere.c, src/lib/oogl/wa/wa.lex.c, src/lib/oogl/wa/wa.yacc.c, src/lib/gprim/inst/instbound.c, src/lib/gprim/list/list.h, src/lib/gprim/list/listmisc.c, src/lib/gprim/mesh/mesh.h, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/ndmesh/Makefile.am, src/lib/gprim/ndmesh/ndmesh.h, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshsphere.c, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplsphere.c, src/lib/gprim/npolylist/npolylist.h, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plsphere.c, src/lib/gprim/polylist/polylist.h, src/lib/gprim/quad/quad.h, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxcopy.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezload.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/discgrp.h, src/lib/gprim/geom/bound.c, src/lib/gprim/geom/boundsphere.c, src/lib/gprim/geom/create.c, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomclass.h, src/lib/gprim/geom/pick.c, src/lib/gprim/inst/inst.h, src/lib/geomutil/dim/dim.c, src/lib/geomutil/plutil/anytopl.c, src/lib/gprim/bbox/bbox.h, src/lib/gprim/bbox/bboxP.h, src/lib/gprim/bbox/bboxbound.c, src/lib/gprim/bbox/bboxcenter.c, src/bin/geomutil/oogl2rib/oogl2rib.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/motion.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/gvclock/Makefile.am, src/bin/ndutils/GeomExtentDirection.c, src/bin/ndutils/GeomtoNoff.c, src/bin/ndutils/TransformGeom.c, src/bin/ndutils/WithColor.c, src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpoint3/hpoint3.h, src/lib/geometry/hpoint3/hpoint3b.c, src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/hpointn/hpointnb.c, src/lib/geometry/point3/point3.c, src/lib/geometry/transform3/tm3conjugate.c, src/lib/geometry/transform3/tm3polardecomp.c, src/lib/geometry/transformn/tmNpolardecomp.c, src/lib/geometry/transformn/transformn.c, src/lib/geometry/transformn/transformn.h:
+	Quite a lot of ND drawing changes:
+
+	look-encompass/-recenter etc. should work now; every camera of an
+	ND-cluster now additionally has a 3d transform attached which acts on
+	the 3d sub-space it is looking at; this is used by look-encompass. The
+	prevous ND paradigm focal-len == translation in z direction was just
+	an ugly hack.
+
+	Motions are not applied to the 3d transforms while in Nd mode.
+
+	Mouse-scaling now works while in Nd-mode, however, it is no longer
+	treated as a motion: mouse initiated scaling in Nd is never
+	incremental; changing this would require quite some more changes.
+
+	Picking still does not work in Nd.
+
+	Nd drawing honours the 3d transformations set by the xform/xform-set
+	commands. But the result may look very funny.
+
+	* src/bin/geomutil/hvectext/Makefile.am: Fix all-local: rule.
+
+	* src/bin/NDview/NDview:
+	Disable normalization, do not disable bboxes, they work in Nd now.
+
+	* src/lib/oogl/wa/.cvsignore: Ignore some files.
+
+2006-10-06  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/lf_local.m4:
+	Prefix fix for header linking was wrong. Correct that.
+
+	* src/lib/gprim/comment/commentP.h, src/lib/gprim/discgrp/discgrpP.h, src/lib/gprim/inst/instP.h, src/lib/gprim/list/listP.h, src/lib/gprim/mesh/meshP.h, src/lib/gprim/ndmesh/ndmeshP.h, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/npolylistP.h, src/lib/gprim/polylist/polylistP.h, src/lib/gprim/quad/quadP.h, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelload.c, src/lib/gprim/tlist/tlistP.h, src/lib/gprim/vect/vectP.h, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezierP.h, src/lib/gprim/geom/geomclass.h:
+	Add "pdim" component to GEOMFIELDS
+
+	* src/lib/gprim/geom/vert.h: Add new flag VERT_ND. Unused yet.
+
+	* src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/hpointn/hpointnb.c:
+	New function Pt4ToHPtN().
+
+	* src/bin/geomview/common/transform.c:
+	look-toward seems to start to work for ND objects. Maybe.
+
+	* src/lib/gprim/bbox/Makefile.am, src/lib/gprim/bbox/bbox.h, src/lib/gprim/bbox/bboxP.h, src/lib/gprim/bbox/bboxcenter.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxunion.c:
+	Support for ND bounding boxes.
+
+	* src/bin/NDview/Makefile.am:
+	Use $(realpath ..) for the in-tree emodule definitions.
+
+	* doc/version.texi: Update.
+
+	* m4/lf_local.m4:
+	Take relative/non relative source locations into account.
+
+2006-10-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/ndmesh/ndmeshtransform.c, src/lib/gprim/npolylist/npltransform.c:
+	Initial revision.
+
+	* src/lib/gprim/polylist/pltransform.c, src/lib/gprim/polylist/polylist.h, src/lib/gprim/quad/quad.h, src/lib/gprim/quad/quadbound.c, src/lib/gprim/quad/quadsphere.c, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelbound.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skeltransform.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/tlist/tlist.h, src/lib/gprim/vect/vectbound.c, src/lib/gprim/vect/vectsphere.c, src/lib/oogl/util/create.h, src/lib/gprim/list/list.h, src/lib/gprim/list/listclass.c, src/lib/gprim/list/listmisc.c, src/lib/gprim/list/listsphere.c, src/lib/gprim/mesh/mesh.h, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/mesh/meshclass.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/ndmesh/Makefile.am, src/lib/gprim/ndmesh/ndmesh.h, src/lib/gprim/ndmesh/ndmeshbound.c, src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/Makefile.am, src/lib/gprim/npolylist/nplbound.c, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/npolylist.h, src/lib/gprim/npolylist/npolylistP.h, src/lib/gprim/polylist/plbound.c, src/lib/gprim/polylist/plclass.c, src/lib/gprim/polylist/plsphere.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bbox/bboxload.c, src/lib/gprim/bbox/bboxminmax.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/bbox/bboxunion.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezclass.c, src/lib/gprim/bezier/bezier.h, src/lib/gprim/bezier/bezsphere.c, src/lib/gprim/bezier/beztransform.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/discgrp.h, src/lib/gprim/geom/bound.c, src/lib/gprim/geom/boundsphere.c, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomclass.h, src/lib/gprim/geom/pick.c, src/lib/gprim/geom/pick.h, src/lib/gprim/geom/transform.c, src/lib/gprim/inst/inst.h, src/lib/gprim/inst/instbound.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/inst/instsphere.c, data/NDview/text/axeshelp.txt, doc/version.texi, src/bin/NDview/ndview.c, src/bin/geomutil/oogl2rib/oogl2rib.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/worldio.c, src/bin/geomview/x11/gvcamui.c, src/bin/ndutils/slicer.c, src/bin/tackdown/origin.common.c, src/bin/tackdown/tackdown.main.c, src/lib/geometry/hpoint3/hpoint3.c, src/lib/geometry/hpointn/hpointn.c, src/lib/geometry/transform3/3d.h, src/lib/geometry/transformn/Makefile.am, src/lib/geometry/transformn/tmNpolardecomp.c, src/lib/geometry/transformn/transformn.h, src/lib/geomutil/plutil/plutil.h, src/lib/gprim/bbox/bbox.h, src/lib/gprim/bbox/bboxP.h, src/lib/gprim/bbox/bboxbound.c, src/lib/gprim/bbox/bboxclass.c, src/lib/gprim/bbox/bboxcopy.c:
+	Preparation for some ND-view changes; I plan support for working
+	"look" and "positioning" commands. Needed quite some changes. I tagged
+	everything with the GEOMVIEW_PRE_NDVIEW_CHANGE tag; so we can revert
+	if it does not work out.
+
+	* src/lib/mg/buf/mgbuf.c:
+	Complete my previous fix concerning the orietation of "alien" objects.
+
+2006-10-03  Mark Phillips  <mbp@geomtech.com>
+
+	* doc/geomview.5, doc/geomview.5.man, doc/geomview.texi:
+	add list of mode strings to documentation for event-mode gcl command
+
+	* src/bin/geomview/x11/gvcamui.c:
+	fixed snapshot setup code (used in ppmscreen snapshots) so that delay works on 64-bit systems
+
+2006-10-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Applied Adrian Rossiter's fix for non-concave quadrilaterals.
+
+	* src/lib/mg/buf/mgbuf.c:
+	Flipping of the the coordinate system has to be done on a per-object
+	basis because there are objects which do not belong to the world
+	(e.g. SaVI's logo). This leaves, of course, room for optimization: as
+	most objects belong to the world, we should flip the world's
+	coordinate system (y-coordinate) and only do a per-object flipping for
+	those few objects not belonging to the world.
+
+	* src/lib/mg/x11/mgx11.c:
+	Add a comment to some disabled code in mgx11_worldbegin().
+
+	* src/bin/geomview/common/space.c:
+	A more understandable help text for ND-xform.
+
+	* src/bin/geomview/common/drawer.c:
+	The previous code accessed components of obj after obj already had
+	been deleted. Gnah. Buuh.
+
+	* src/bin/geomview/common/comm.c: Cosmetics.
+
+	* src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp2.h:
+	"not", "or" and "and" functions.
+
+	* data/NDview/scripts/4d.3wins, data/NDview/scripts/4d.4wins:
+	Correct some more-or-LESS cosmetic errors.
+
+2006-10-02  Lloyd Wood  <L.Wood@surrey.ac.uk>
+
+	* ChangeLog:
+	Correcting typo in my name. Plus expanding on doc/ build note.
+
+2006-10-01  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/x11/gvmnpanel.c, src/lib/mib/mibload.c:
+	One of the more obscure features of the variable argument functions of
+	the Xt toolkit is the handling of mnemonic's (in short keyboard
+	short-cuts for menus etc): internally they are expected to be of type
+	XID, which means "unsigned long int" outside of the X-server and
+	CARD32 inside the X-server (we are talking about X-toolkits, and so we
+	are outside the X-server and have "unsigned long int"). Now, at least
+	on some 64bit archs passing 64bit variable arguments or 32bit variable
+	arguments makes a difference.
+
+	The solution is to use a type-cast to XID for mnemonic chars. This was
+	the reason for the
+
+	Warning:
+	    Name: button_0
+	    Class: XmCascadeButtonGadget
+	    Illegal mnemonic character;  Could not convert X KEYSYM to a keycode
+
+	messages received on (some, at least) 64bit systems.
+
+	* src/bin/geomview/x11/gvmnpanel.c:
+	Prevent automatic resizing of the main-panel; otherwise it will suffer
+	an unnecessary change each a module is started.
+
+2006-09-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, doc/version.texi: Bump version to post-rc9
+
+	* ChangeLog: Update.
+
+	* NEWS: Document the Nd-code bugfix.
+
+	* configure.ac, doc/version.texi: Bump version to rc9.
+
+	* src/bin/stereo/stereo.c: Fix unused variable warning.
+
+	* src/lib/geometry/transformn/transformn.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c:
+	The nD stuff was really badly broken. I'm tempted to say that it did
+	not have memory leaks, but _was_ one single big memory leak.
+
+	* doc/version.texi: Update.
+
 2006-09-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* rc9 checkpoint.
