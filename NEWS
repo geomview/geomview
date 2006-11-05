@@ -1,6 +1,4 @@
-1.8.2 October, 2006
-
-   Bugfix release.
+1.8.2 November, 2006
 
    * I/O with release <= 1.8.1 was just broken, they used internals of
      opaque data-types (e.g. the FILE handle of the stdio library)
@@ -16,9 +14,23 @@
    * fmemopen() by using temporary files (not using stdio internals)
    * I have resurrected a couple of old modules: NDview, clipboard,
      cplxview, crayola, flythrough, gvclock, hinge, labeler, ndutils.
-   * The Nd code in Geomview was ONE BIG UGLY memory leak. Fixed that.
+   * New "BBox Center" toggle in the tools menu (use the center of the
+     current object's bouding box for the CENTER object)
+   * optionally use the window-manager's idea of the focus for the camera
+     windows instead of forcing a mouse-cross policy -- new GCL function
+     (ui-cam-focus [focus-change|mouse-cross])
+   * Fixed a couple (Ups!) of long-standing memory leaks.
 
-   Otherwise no real changes.
+   * The Nd code in Geomview was one big ugly memory leak. Fixed that.
+   * ND transformations and vectors now have their homogeneous component
+     at index 0.
+   * It is now possible to define handles for "ntransform" objects, i.e.
+     "(read ntransfrom { define fred ... })" works now.
+   * Each camera of a cluster now has it's (additional) private 3d transform,
+     the focal-length hack has gone.
+   * The look commands work now in the context of ND-viewing.
+   * Basic INST support for ND transformations.
+   * Picking works now with ND-viewing.
 
    cH <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
