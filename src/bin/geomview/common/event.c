@@ -383,6 +383,12 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case '>':
 	s = "Save"; number.val = 1; goto pickpanel;	/* Save State */
 
+	/* use bounding box center as CENTER position */
+    case 'B':
+	gv_ui_center_origin(uistate.bbox_center
+			    ? ORIGIN_KEYWORD : BBOX_CENTER_KEYWORD);
+	break;
+
 		/* Halt current object */
     case 'h':
 	drawer_stop(retarget(uistate.targetid)); break;
