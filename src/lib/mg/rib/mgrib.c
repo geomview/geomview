@@ -613,6 +613,8 @@ mgrib_worldbegin( void )
     /* RiWorldBegin...*/
     mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
 
+    _mgribc->world = 1;
+    
     /* if the option is selected, add the background */
     if(_mgribc->backing == MG_RIBDOBG) {
         float halfxbg = cfar * halfxfield, halfybg = cfar * halfyfield;
@@ -671,6 +673,7 @@ mgrib_worldbegin( void )
 void
 mgrib_worldend( void )
 {
+    _mgribc->world = 0;
     mrti(mr_worldend, mr_nl, mr_NULL);
     mrti(mr_frameend, mr_nl, mr_NULL);
     /* now flush the buffer, if appropriate */
@@ -809,7 +812,8 @@ int
 mgrib_pushappearance( void )
 {
   mg_pushappearance();
-  mrti(mr_comment, "push appearance", mr_attributebegin, mr_NULL);
+  if (_mgribc->world)
+    mrti(mr_comment, "push appearance", mr_attributebegin, mr_NULL);
   return 0;
 }
 
@@ -834,7 +838,8 @@ mgrib_popappearance( void )
     return 0;
   }
 
-  mrti(mr_comment, "pop appearance", mr_attributeend, mr_NULL);
+  if (_mgribc->world)
+    mrti(mr_comment, "pop appearance", mr_attributeend, mr_NULL);
   mg_popappearance();
   return 0;
 }

@@ -29,6 +29,7 @@ typedef struct mgribcontext {
   struct mgcontext mgctx;	/* The mgcontext */
   int born;			/* Has window been displayed on the screen? */
   int win;			/* window ID, or 0 */
+  int world;                    /* inc/decremented by worldbegin()/end() */
 
   int render_device;	/* Device Options */
 #define RMD_ASCII	0x1
