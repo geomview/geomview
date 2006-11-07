@@ -353,8 +353,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
 /*****************************************************************************/
 
-  shell = XtAppCreateShell(title, "gv", topLevelShellWidgetClass,
-				dpy, args, n);
+  shell = XtAppCreateShell(title, "gv", topLevelShellWidgetClass, dpy, args, n);
 
   XtVaSetValues(shell, XmNiconPixmap, geomicon, NULL);
 
@@ -390,8 +389,9 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
 #if MGX11
   camdraw[SGL] = NULL;
-  camdraw[DBL] = XtCreateManagedWidget("camdraw",
-		    xmDrawingAreaWidgetClass, camform, args, n);
+  camdraw[DBL] =
+	  XtCreateManagedWidget("camdraw",
+				xmDrawingAreaWidgetClass, camform, args, n);
 
   XtManageChild(camdraw[DBL]);
 
@@ -414,8 +414,9 @@ Widget ui_create_camera(Widget parent, DView *dv)
   mgctxget(MG_GLXSHARECTX, &sharectx);
 
   camdraw[SGL] = NULL;
-  camdraw[DBL] = XtCreateManagedWidget("ogldraw",
-			xmDrawingAreaWidgetClass, camform, args, 0);
+  camdraw[DBL] =
+	  XtCreateManagedWidget("ogldraw",
+				xmDrawingAreaWidgetClass, camform, args, 0);
 
   n = 0;
   cmwneeded = 0;
