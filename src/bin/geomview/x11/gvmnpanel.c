@@ -246,7 +246,7 @@ void ui_load_mainpanel()
 /*****************************************************************************/
 
   mainwindow = XtCreateManagedWidget("Geomview", xmMainWindowWidgetClass,
-		  shell, args, 0);
+				     shell, args, 0);
 
 /*****************************************************************************/
 
@@ -341,12 +341,15 @@ void ui_load_mainpanel()
   EmodList   = mib_find_name(mainload, "EmoduleList")->me;
   KeyText    = mib_find_name(mainload, "KeyText")->me;
 
+  XtVaSetValues(EmodList, XmNselectionPolicy, XmSINGLE_SELECT, NULL);
+  XtVaSetValues(ObjectList, XmNselectionPolicy, XmSINGLE_SELECT, NULL);
+
   XtAddCallback(HideButton, XmNactivateCallback, (XtCallbackProc)ui_hide,
 		(XtPointer)Geomview);
 
-  XtAddCallback(ObjectList, XmNbrowseSelectionCallback,
+  XtAddCallback(ObjectList, XmNsingleSelectionCallback,
 		(XtCallbackProc)select_object, (XtPointer)NULL);
-  XtAddCallback(EmodList, XmNbrowseSelectionCallback,
+  XtAddCallback(EmodList, XmNsingleSelectionCallback,
 		(XtCallbackProc)select_module, (XtPointer)NULL);
 
   XtVaSetValues(KeyText, XmNeditable, False,
