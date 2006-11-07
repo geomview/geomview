@@ -177,13 +177,28 @@ char **argv;
     "gv*Save*fontList:    -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1",
     "Commands*fontList:    -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1",
     "Tools*fontList:    -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1",
+
+    "*XmText*blinkRate:	0",
+    /* Encourage old (???) versions of Motif to interpret our keyboard
+     * shortcuts.  It works in some situations, depending on just what
+     * the cursor overlies.
+     */
+    "*XmForm*accelerators:	<KeyPress>: GVKey()",
+    "*XmFrame*translations: #override <KeyPress>: GVKey()",
+    "Geomview*KeyText*translations: #augment <KeyPress>: GVKey()",
+    "Geomview*XmList*translations: #augment <KeyPress>: GVKey()",
+    "Appearance*XmList*translations: #augment <KeyPress>: GVKey()",
+    "Cameras*XmList*translations: #augment <KeyPress>: GVKey()",
+    "Lights*XmList*translations: #augment <KeyPress>: GVKey()",
+    "Credits*XmList*translations: #augment <KeyPress>: GVKey()",
+
     NULL
   };
 
   static XtActionsRec actions[1] = { { "GVKey", key_action } };
   static String keyaccels = { "<KeyPress>: GVKey()" };
   
-
+#if 0
   static char *argvblah[] = { "Geomview",
 	/* We turn off blinking text cursors for two reasons:
 	 * - Motif grabs the main loop if the cursor sits in a text box
@@ -211,7 +226,7 @@ char **argv;
     "-xrm", "",
   };
   int argcblah = COUNT(argvblah);
-
+#endif
 
 /* Code for TopLevel */
 /*****************************************************************************/
@@ -220,6 +235,17 @@ char **argv;
 
   set_x_application_name();
 
+#if 1
+  TopLevel = XtAppInitialize(&App,
+			     x_application_name,
+			     NULL,
+			     0,
+			     (int *)&argc,
+			     argv,
+			     fallbacks,
+			     args,
+			     n);
+#else
   if(getenv("GV_NO_X_MAGIC")) {
     TopLevel = XtAppInitialize(&App,
 			       x_application_name,
@@ -242,6 +268,7 @@ char **argv;
 			       args,
 			       n);
   }
+#endif
 
 #if 0
   if(getenv("GVXRM")) argvblah[COUNT(argvblah)-1] = getenv("GVXRM");
@@ -718,8 +745,9 @@ Widget ui_make_panel_and_form(char *title, char *rootstr,
   XtSetArg(args[n], XmNmwmFunctions, MWM_FUNC_ALL); n++;
 
   set_x_application_name();
-  shell = XtAppCreateShell(title, x_application_name, topLevelShellWidgetClass, dpy,
-                                args, n);
+  shell = XtAppCreateShell(title, x_application_name,
+			   topLevelShellWidgetClass, dpy,
+			   args, n);
 
   /* Close when requested by WM */
   AProtocol = XmInternAtom(dpy, "WM_DELETE_WINDOW", False);
