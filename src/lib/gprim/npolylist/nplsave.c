@@ -60,9 +60,9 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
 	    for(k = pl->pdim; --k >= 0; )
 		fprintf(outf, "%g ", *v++);
 	  } else {
-	    float denom = v[0];
+	    float denom = *v++;
 	    for(k = pl->pdim; --k > 0; )
-		fprintf(outf, "%g ", *++v/denom);
+		fprintf(outf, "%g ", *v++/denom);
 	  }
 	  if(pl->flags & PL_HASVCOL) {
 	    fprintf(outf, "  %g %g %g %g", c->r, c->g, c->b, c->a);
