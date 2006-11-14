@@ -372,8 +372,9 @@ static void *projectCamWCSkel(int sel, Geom * g, va_list * args)
     HPtNCopy(&tmp, hptn1);
     hptn1 = HPtNTransform(ObjUniv, hptn1, hptn1);
     hptn2 = HPtNTransform(ProjMat, hptn1, hptn2);
-    for (j = 0; j < 4; j++)
-      *(((Skel *) g)->p + i * 4 + j) = hptn2->v[j];
+    for (j = 0; j < 3; j++)
+      *(((Skel *) g)->p + i * 4 + j) = hptn2->v[j+1];
+    *(((Skel *) g)->p + i * 4 + j) = hptn2->v[0];
   }
   ((Skel *) g)->pdim = 4;
   HPtNDelete(hptn1);
@@ -427,7 +428,7 @@ static void *projectCamWCNPolyList(int sel, Geom * g, va_list * args)
     ((NPolyList *) g)->flags |= PL_HASVCOL;
     ((NPolyList *) g)->flags &= ~PL_HASPCOL;
   }
-  tmp.dim = ((Skel *) g)->pdim;
+  tmp.dim = ((NPolyList *) g)->pdim;
   tmp.flags = 0;
   for (i = 0; i < ((NPolyList *) g)->n_verts; i++) {
     tmp.v = ((NPolyList *) g)->v + i * (((NPolyList *) g)->pdim);
