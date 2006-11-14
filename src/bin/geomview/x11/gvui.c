@@ -185,12 +185,12 @@ char **argv;
      */
     "*XmForm*accelerators:	<KeyPress>: GVKey()",
     "*XmFrame*translations: #override <KeyPress>: GVKey()",
-    "Geomview*KeyText*translations: #augment <KeyPress>: GVKey()",
-    "Geomview*XmList*translations: #augment <KeyPress>: GVKey()",
-    "Appearance*XmList*translations: #augment <KeyPress>: GVKey()",
-    "Cameras*XmList*translations: #augment <KeyPress>: GVKey()",
-    "Lights*XmList*translations: #augment <KeyPress>: GVKey()",
-    "Credits*XmList*translations: #augment <KeyPress>: GVKey()",
+    "Geomview*KeyText*translations: #override <KeyPress>: GVKey()",
+    "Geomview*XmList*translations: #override <KeyPress>: GVKey()",
+    "Appearance*XmList*translations: #override <KeyPress>: GVKey()",
+    "Cameras*XmList*translations: #override <KeyPress>: GVKey()",
+    "Lights*XmList*translations: #override <KeyPress>: GVKey()",
+    "Credits*XmList*translations: #override <KeyPress>: GVKey()",
 
     NULL
   };
