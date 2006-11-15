@@ -2903,7 +2903,9 @@ appearance @{
   +evert              # do evert polygon normals where needed so as
                       #   to always face the camera
 
-  -texturing          # (Disable) texture mapping
+  +texturing          # (Enable) texture mapping
+  +mipmap             # (Enable) texture mip-mapping
+  +mipinterp          # (Enable) linear mip-mapping
   -backcull           # (Don't) discard clockwise-oriented faces
   -concave            # (Don't) expect and handle concave polygons
   -shadelines	      # (Don't) shade lines as if they were lighted cylinders
