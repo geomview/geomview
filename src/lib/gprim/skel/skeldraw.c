@@ -116,17 +116,19 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
       }
       nleft -= MAXPLINE-1;
       vleft--;
-      flags = (i < penultimate) ? 6 : 2;
+      flags = 6;
     }
     if(colored) {
       for(np = tv, c = tc, j = nleft; --j >= 0; vleft++) {
 	*np++ = newp[*vleft];
 	*c++ = newc[*vleft];
       }
+      flags = (i < penultimate) ? 6 : 2;
       mgpolyline(nleft, tv, nleft, tc, flags);
     } else {
       for(np = tv, j = nleft; --j >= 0; vleft++)
 	*np++ = newp[*vleft];
+      flags = (i < penultimate) ? 6 : 2;
       mgpolyline(nleft, tv, 1, lastcolor, flags);
     }
   }
@@ -134,9 +136,7 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
   HPtNDelete(h);
 }
 
-Skel *
-SkelDraw(s)
-     Skel *s;
+Skel *SkelDraw(Skel *s)
 {
   int i, hascolor;
   Skline *l;
@@ -164,21 +164,21 @@ SkelDraw(s)
 
   mgctxget(MG_NDCTX, &NDctx);
 
-  if(NDctx) {
+  if (NDctx) {
     draw_projected_skel(NDctx, s, flags, penultimate, hascolor);
     return s;
   }
 
   lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
-  for(i = 0, l = s->l; i < s->nlines; i++, l++) {
+  for (i = 0, l = s->l; i < s->nlines; i++, l++) {
     int nleft = l->nv;
     int *vleft = &s->vi[l->v0];
     int j;
 
-    if(l->nc > 0 && hascolor)
+    if (l->nc > 0 && hascolor)
       lastcolor = &s->c[l->c0];
-    while(nleft > MAXPLINE) {
-      for(j = 0; j < MAXPLINE; j++) {
+    while (nleft > MAXPLINE) {
+      for (j = 0; j < MAXPLINE; j++) {
 	tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
 	if (s->pdim < 4) {
 	  if (s->pdim < 3) {
