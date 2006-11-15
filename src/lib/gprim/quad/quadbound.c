@@ -58,7 +58,7 @@ BBox *QuadBound(Quad *q, Transform T, TransformN *TN)
       HPt3Dehomogenize(&min, &min);
       max = min;
       while(--n > 0) {
-	HPt3MinMax(&min, &max, &clean);
+	HPt3MinMax(&min, &max, ++p);
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_4MIN, &min, CR_4MAX, &max, CR_END);
