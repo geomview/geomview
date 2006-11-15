@@ -52,6 +52,7 @@ static char *weights[] = {
     "Bold",
     "Demibold",
     "Medium",
+    "Regular",
     NULL
 };
 
@@ -62,9 +63,9 @@ static char *slants[] = {
     NULL
 };
 
-static int sizes[] = { 18, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 68, 180, 192, 204, 216, 228, 240,  -1};
+static int sizes[] = { 12, 14, 18, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156, 180, 192, 204, 216, 228, 240,  -1};
 
-#define TABLE_SIZE 200
+#define TABLE_SIZE 500
 
 static void
 insertFont(char *fname)
@@ -131,7 +132,7 @@ getFontsCmd(ClientData clientData, Tcl_Interp *interp,
     char *prev="ping!", *current;
 
     fontnames = XListFonts(Tk_Display(clientData), 
-			   "-*-*-*-*-*-*-0-0-*-*-*-0-iso8859-1", 500, &num);
+			   "-*-*-*-*-*-*-0-0-*-*-*-0-iso8859-1", 1000, &num);
     fonts = (char **)malloc(TABLE_SIZE*sizeof(char *));
     numfonts = 0;
     for (i=0; i<TABLE_SIZE; i++)
@@ -240,7 +241,7 @@ handleFontCmd(ClientData clientData, Tcl_Interp *interp,
     }
 
     /* set font */
-    sprintf(s, "changeFont \"-*-%s-%s-%c-*-*-*-180-75-75-*-*-iso8859-1\"",
+    sprintf(s, "changeFont \"-*-%s-%s-%c-*-*-*-120-75-75-*-*-iso8859-1\"",
 	    argv[1], argv[2], argv[3][0]);
     Tcl_Eval(interp, s);
     return TCL_OK;
@@ -274,6 +275,9 @@ scanFontCmd(ClientData clientData, Tcl_Interp *interp,
     sprintf(s, "-*-%s-%s-%c-*-*-*-%d-75-75-*-*-iso8859-1", 
 	    argv[1], argv[2], argv[3][0], atoi(argv[4])*10);
     font_info = XLoadQueryFont(d, s);
+    if (!font_info)
+      return TCL_ERROR;
+    
     width = XTextWidth(font_info, argv[5], strlen(argv[5])) +
 		font_info->max_bounds.rbearing;
     height = font_info->ascent + font_info->descent + 1;
