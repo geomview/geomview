@@ -609,7 +609,9 @@ LmDeleteLights(LmLighting *lm)
     }
 }
 
-#define max(a,b) (a)>(b)?(a):(b)
+#ifndef max
+# define max(a, b) ((a) > (b) ?( a) : (b))
+#endif
 
 static void
 norm( color, coeff )

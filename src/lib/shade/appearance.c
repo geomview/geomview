@@ -789,7 +789,9 @@ MtCopy( Material *src, Material *dst )
     return dst;
 }
 
-#define max(a,b) (a)>(b)?(a):(b)
+#ifndef max
+# define max(a,b) ((a) > (b) ? (a) : (b))
+#endif
 
 #if 0
 static void
