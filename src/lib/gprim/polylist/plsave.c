@@ -60,16 +60,17 @@ PolyListFSave(polylist, outf, fname)
 
 	for(i = polylist->n_verts, v = polylist->vl; --i >= 0; v++) {
 	  if (polylist->geomflags & VERT_4D)
-	    fprintf(outf, "\n%g %g %g %g", v->pt.x, v->pt.y, v->pt.z, v->pt.w);
+	    fprintf(outf, "\n%.8g %.8g %.8g %.8g",
+		    v->pt.x, v->pt.y, v->pt.z, v->pt.w);
 	  else 
-	    fprintf(outf, "\n%g %g %g", v->pt.x, v->pt.y, v->pt.z);
+	    fprintf(outf, "\n%.8g %.8g %.8g", v->pt.x, v->pt.y, v->pt.z);
 	    if(polylist->flags & PL_HASVN)
-		fprintf(outf, "  %g %g %g", v->vn.x, v->vn.y, v->vn.z);
+		fprintf(outf, "  %.8g %.8g %.8g", v->vn.x, v->vn.y, v->vn.z);
 	    if(polylist->flags & PL_HASVCOL)
 		fprintf(outf, "  %g %g %g %g",
 			v->vcol.r, v->vcol.g, v->vcol.b, v->vcol.a);
 	    if(polylist->flags & PL_HASST)
-		fprintf(outf, "  %g %g", v->st[0], v->st[1]);
+		fprintf(outf, "  %.8g %.8g", v->st[0], v->st[1]);
 	}
 
 	fputc('\n', outf);

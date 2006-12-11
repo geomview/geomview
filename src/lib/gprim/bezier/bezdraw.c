@@ -35,8 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bezierP.h"
 
 Bezier *
-BezierDraw( bezier )
-    Bezier *bezier;
+BezierDraw(Bezier *bezier)
 {
     Appearance *ap;
     

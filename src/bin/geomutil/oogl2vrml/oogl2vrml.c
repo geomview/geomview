@@ -87,7 +87,7 @@ plisttoindface(Geom *pgeom)
 
   /* Normals */
   if (shading == APF_FLAT) {
-    PolyListComputeNormals(plist);
+    PolyListComputeNormals(plist, PL_HASPN);
     fprintf(f, "NormalBinding { value PER_FACE }\n");
     DEBUG(fprintf(stderr, " per face normals! \n"));
     fprintf(f, " Normal { vector [ ");
@@ -96,7 +96,7 @@ plisttoindface(Geom *pgeom)
     }
     fprintf(f, "] }\n");
   } else if (shading == APF_SMOOTH) {
-    PolyListComputeNormals(plist);
+    PolyListComputeNormals(plist, PL_HASVN);
     fprintf(f, "NormalBinding { value PER_VERTEX_INDEXED }\n");    
     DEBUG(fprintf(stderr, " per vertex normals! \n"));
     fprintf(f, " Normal { vector [ ");

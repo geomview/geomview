@@ -33,17 +33,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "quadP.h"
 
 Quad *
-QuadCreate (exist, classp, a_list)
-    Quad *exist;
-    GeomClass *classp;
-    va_list *a_list;
+QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
 {
     Quad *q;
     QuadP *p = (QuadP *)NULL;
     Point3 *p3;
     QuadN *n = (QuadN *)NULL;
     QuadC *c = (QuadC *)NULL;
-    int attr;
+    int attr, i;
     int copy = 1;
 
     if (exist == NULL) {
@@ -99,29 +96,49 @@ QuadCreate (exist, classp, a_list)
 	    break;
 
 	case CR_NORMAL:
+            q->flag &= ~QUAD_N;
+            if (exist && q->n)
+		OOGLFree(q->n);
+
 	    n = va_arg(*a_list, QuadN *);
-            if (exist && q->n) OOGLFree(q->n);
 	    if (n == NULL) {
 		q->n = NULL;
             } else if (copy) {
 		q->n = OOGLNewNE(QuadN,q->maxquad,"QuadCreate normals");
 		memcpy(q->n, n, q->maxquad*sizeof(QuadN));
-            } else
+		q->flag |= QUAD_N;
+            } else {
 		q->n = n;
-            q->flag |= QUAD_N;
+		q->flag |= QUAD_N;
+	    }
 	    break;
 
 	case CR_COLOR:
+            q->flag &= ~(QUAD_C|QUAD_ALPHA);
+            if (exist && q->c)
+		OOGLFree(q->c);
+
 	    c = va_arg(*a_list, QuadC *);
-            if (exist && q->c) OOGLFree(q->c);
 	    if (c == NULL) {
-               q->c = NULL;
-            } else if (copy) {
-		q->c = OOGLNewNE(QuadC, q->maxquad, "QuadCreate: colors");
-		memcpy(q->c, c, q->maxquad*sizeof(QuadC));
-            }
-            else q->c = c;
-            q->flag |= QUAD_C;
+		q->c = NULL;
+            } else {
+		q->flag |= QUAD_C;
+		if (copy) {
+		    q->c = OOGLNewNE(QuadC, q->maxquad, "QuadCreate: colors");
+		    memcpy(q->c, c, q->maxquad*sizeof(QuadC));
+		} else {
+		    q->c = c;
+		    q->flag |= QUAD_C;
+		}
+		for (i = 0; i < q->maxquad; i++) {
+		    if (q->c[i][0].a < 1.0 ||
+			q->c[i][1].a < 1.0 ||
+			q->c[i][2].a < 1.0 ||
+			q->c[i][3].a < 1.0) {
+			q->flag |= QUAD_ALPHA;
+		    }    
+		}
+	    }
 	    break;
 
 	default:
@@ -140,10 +157,6 @@ QuadCreate (exist, classp, a_list)
 	if (!exist) GeomDelete((Geom *)q);
 	return NULL;
     }
-
-    /* compute the value that flag should have */
-    if(n == NULL) q->flag &= ~QUAD_N;
-    if(c == NULL) q->flag &= ~QUAD_C;
 
     return (Quad *) q;
 }

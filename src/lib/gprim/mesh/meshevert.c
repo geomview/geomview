@@ -33,28 +33,32 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "meshP.h"
 
-Mesh           *
-MeshEvert(m)
-Mesh           *m;
+Mesh *MeshEvert(Mesh *m)
 {
-	int i;
-	Point3 *n;
+  int i;
+  Point3 *n;
 
-	if (m)
-	     {
-		     if (m->flag & MESH_EVERT)
-			  m->flag &= ~MESH_EVERT;
-		     else
-			  m->flag |= MESH_EVERT;
-		     if (m->flag & MESH_N) {
-			     for (i = 0, n = m->n; i < m->nu*m->nv; i++,n++){
-				     n->x = -n->x;
-				     n->y = -n->y;
-				     n->z = -n->z;
-			     }
-		     } else {
-			     MeshComputeNormals(m);
-		     }
-	     }
-	return m;
+  if (m)
+    {
+      if (m->flag & MESH_EVERT)
+	m->flag &= ~MESH_EVERT;
+      else
+	m->flag |= MESH_EVERT;
+      if (m->flag & MESH_N) {
+	for (i = 0, n = m->n; i < m->nu*m->nv; i++,n++){
+	  n->x = -n->x;
+	  n->y = -n->y;
+	  n->z = -n->z;
+	}
+      }
+      if (m->flag & MESH_NQ) {
+	for (i = 0, n = m->nq; i < m->nu*m->nv; i++,n++){
+	  n->x = -n->x;
+	  n->y = -n->y;
+	  n->z = -n->z;
+	}
+      }
+      MeshComputeNormals(m, MESH_N|MESH_NQ);
+    }
+  return m;
 }

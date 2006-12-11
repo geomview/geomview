@@ -30,10 +30,11 @@
 #define MESH_C		0x4
 #define MESH_N		0x8
 #define MESH_U		0x10
-#define MESH_D		0x20
+#define MESH_NQ		0x20
 #define MESH_EVERT	0x40
 #define	MESH_BINARY	0x80
 #define	MESH_Z		0x100
 #define	MESH_4D		0x200  /* Special 4-D flag to MeshCreate; not stored */
+#define MESH_ALPHA      0x400  /* Some color specs have alpha < 1.0 */
 
 #endif /*MESHFLAGDEFS*/

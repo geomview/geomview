@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -33,16 +34,45 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "listP.h"
 #include "mg.h"
+#include "bsptreeP.h"
 
-List *
-ListDraw( list )
-     List *list;
+List *ListDraw(List *list)
 {
-    List *l;
+  List *l;
 
-    for(l = list; l != NULL; l = l->cdr) {
-	GeomDraw( l->car );
+#if 0
+  if (list->bsptree == NULL) {
+    BSPTreeCreate((Geom *)list);
+    for (l = list; l != NULL; l = l->cdr) {
+      if (l->bsptree) {
+	abort();
+      }
+      l->bsptree = list->bsptree;
     }
+  }
+#endif
 
-    return list;
+  for (l = list; l != NULL; l = l->cdr) {
+    GeomDraw(l->car);
+  }
+
+#if 0
+  /* If we have a private BSP-tree, then draw it now. Software shading
+   * with transparency will not work, to be fixed.
+   */
+  if (list->bsptree->geom == (Geom *)list) {
+    if (list->bsptree->tree == NULL) {
+      BSPTreeFinalize(list->bsptree);
+    }
+    mgbsptree(list->bsptree);
+  }
+#endif
+  
+  return list;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

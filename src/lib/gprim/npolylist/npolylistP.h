@@ -22,51 +22,56 @@
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef	NPOLYLISTPDEFS
-#define	NPOLYLISTPDEFS
+#ifndef NPOLYLISTPDEFS
+#define NPOLYLISTPDEFS
 /*
  * Private definitions for PolyList's
  */
 
 #include "geom.h"
 #include "bboxP.h"
+#include "polylistP.h"
 #include "npolylist.h"
 
 #define NPLMAGIC GeomMagic ('P', 1)
 
-typedef struct NPoly
-{
-	int	n_vertices;
-	int	vi0;		/* Offset of first vertex index in vi[] array */
-	ColorA  pcol;		/* polygon color */
-}  NPoly;
-
 struct NPolyList
 {
-	GEOMFIELDS;
-	int	n_polys;
-	int	n_verts;
-	NPoly	*p;		/* array of polygon definitions */
-	int	*vi;		/* array of vertex indices (all faces) */
-	int	nvi;		/* room allocated for vertex indices */
-	float	*v;		/* v[n_verts][pdim] */
-	ColorA	*vcol;		/* vcol[n_verts] */
-	float	*st;		/* st[n_verts][2] texture coords */
-	int	flags;
-	int	seq;		/* for 4D->3D tforms */
-#  define	  PL_HASVCOL	0x4	/* Per-vertex colors (vcol) valid */
-#  define	  PL_HASPCOL	0x8	/* Per-polygon colors (pcol) valid */
-#  define	  PL_HASST	0x20	/* texture coords */
+  GEOMFIELDS;
+  int       n_polys;
+  int       n_verts;
+  int       *vi;        /* array of vertex indices (all faces) */
+  int       nvi;        /* room allocated for vertex indices */
+  int       *pv;        /* start index for each poly into vi */
+  HPtNCoord *v;         /* v[n_verts][pdim] */
+  ColorA    *vcol;      /* per vertex colors */
+  Poly      *p;         /* list of polygons, including projected vertices
+			 * when drawing the list.
+			 */
+  Vertex    *vl;        /* 3d vertex definitions, including texture
+			 * coordinates and per vertex colors,
+			 * projected vertices and normals when
+			 * drawing.
+			 */
+  int       flags;      /* same as for Polylist */
 };
 
+#define NPL_HASVLVCOL 0x00008000 /* pl->vl[i].vcol is uptodate */
 
 extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list *a_list);
 extern NPolyList *NPolyListCopy( NPolyList *poly );
 extern NPolyList *NPolyListDelete( NPolyList *poly );
 extern NPolyList *NPolyListTransform(NPolyList *np,
-				     Transform T, TransformN *TN);
+                                     Transform T, TransformN *TN);
 extern Geom *NPolyListSphere(NPolyList *npl,
-			     Transform T, TransformN *TN, int *axes, int space);
+                             Transform T, TransformN *TN, int *axes, int space);
 extern GeomClass *NPolyListMethods();
 
 #endif/*NPOLYLISTPDEFS*/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: *
+ */
+

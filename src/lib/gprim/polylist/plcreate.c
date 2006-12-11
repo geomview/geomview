@@ -34,7 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * PolyList creation, editing, and deletion.
  */
 #include "polylistP.h"
-
+#include "bsptree.h"
 
 /*
  * Free a PolyList. 
@@ -59,6 +59,8 @@ PolyListDelete( PolyList *pl )
   if(pl->vl != NULL)
     OOGLFree(pl->vl);
 
+  BSPTreeFree((Geom *)pl);
+
   return NULL;
 }
 
@@ -72,10 +74,11 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
   HPoint3 *v4 = NULL;
   Point3 *v3 = NULL, *vn = NULL, *pn = NULL;
   ColorA *vc = NULL, *pc = NULL;
+  int *pf = NULL;
   int attr, copy=1;
   int numentries=0, numvertices=0;
   int i;
-  int j,k=0, dimn = 3;
+  int j, k=0, dimn = 3;
 
   if (exist == NULL) {
     pl = OOGLNewE(PolyList,"PolyListCreate polylist");
@@ -83,8 +86,10 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     pl->flags = pl->n_polys = pl->n_verts = 0;
     pl->pdim = 4;
     pl->p = (Poly *)NULL; pl->vl = (Vertex *)NULL;
+    pl->bsptree = NULL;
   } else {
     pl = exist;
+    BSPTreeFree((Geom *)pl);
   }
 
   while ((attr = va_arg(*a_list, int))) 
@@ -118,38 +123,49 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
       v3 = va_arg(*a_list, Point3 *);
       pointflag = 1;
       dimn = 3;
-      pl->flags &= ~(PL_HASVN | PL_HASPN);
+      pl->flags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
       break;
 
     case CR_POINT4:
       v4 = va_arg(*a_list, HPoint3 *);
       pointflag = 1;
       dimn = 4;
-      pl->flags &= ~(PL_HASVN | PL_HASPN);
+      pl->flags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
       break;
 
     case CR_NORMAL:
       vn = va_arg(*a_list, Point3 *);
       /* if no normal bit has been set... */
-      if (vn && (pl->flags & (PL_HASVN | PL_HASPN)) == 0)
+      if (vn)
 	pl->flags |= PL_HASVN;
       break;
 
     case CR_COLOR:
+      pl->flags &= ~(PL_HASVCOL|PL_HASVALPHA);
       vc = va_arg(*a_list, ColorA *);
-      if(vc) pl->flags |= PL_HASVCOL;
-      else pl->flags &= ~PL_HASVCOL;
+      if (vc) {
+	pl->flags |= PL_HASVCOL;
+      }
       break;
 
     case CR_POLYNORMAL:
       pn = va_arg(*a_list, Point3 *);
-      pl->flags |= PL_HASPN;
+      if (pn)
+	pl->flags |= PL_HASPN;
+      break;
+
+    case CR_POLYFLAGS:
+      pf = va_arg(*a_list, int *);
+      if (pf)
+	pl->flags |= PL_HASPFL;
       break;
 
     case CR_POLYCOLOR:
+      pl->flags &= ~(PL_HASPCOL|PL_HASPALPHA);
       pc = va_arg(*a_list, ColorA *);
-      if(pc) pl->flags |= PL_HASPCOL;
-      else pl->flags &= ~PL_HASPCOL;
+      if (pc) {
+	pl->flags |= PL_HASPCOL;
+      }
       break;
 
     default:
@@ -168,7 +184,6 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     GeomDelete((Geom *)pl);
     return NULL;
   }
-
 
   if(nvertflag) {
     for (i=0; i<pl->n_polys; i++)
@@ -206,12 +221,13 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
 	
     pl->p = OOGLNewNE(Poly, pl->n_polys, "PolyListCreate polygons");
     k = 0;
-    for (i=0; i<pl->n_polys; i++) {
+    for (i=0; i < pl->n_polys; i++) {
       int nv = nvertperpol[i];
+
+      pl->p[i].flags = 0;
       pl->p[i].n_vertices = nv;
-      pl->p[i].v =
-	OOGLNewNE(Vertex *, nvertperpol[i],
-		  "PolyListCreate poly vert pointers");
+      pl->p[i].v = OOGLNewNE(Vertex *, nvertperpol[i],
+			     "PolyListCreate poly vert pointers");
       for (j = 0; j < nv; j++)
 	pl->p[i].v[j] = &pl->vl[verts[k++]];
     }
@@ -221,17 +237,31 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     for (i = 0, v = pl->vl; i < pl->n_verts; i++, v++)
       v->vn = vn[i];
 
-  if (vc)
-    for (i = 0, v = pl->vl; i < pl->n_verts; i++, v++)
-      v->vcol = vc[i];
-
   if (pn)
     for (i = 0; i < pl->n_polys; i++)
       pl->p[i].pn = pn[i];
 
-  if (pc)
+  if (pf)
     for (i = 0; i < pl->n_polys; i++)
+      pl->p[i].flags = pf[i];
+
+  if (vc) {
+    for (i = 0, v = pl->vl; i < pl->n_verts; i++, v++) {
+      v->vcol = vc[i];
+      if (vc[i].a != 1.0) {
+	pl->flags |= PL_HASVALPHA;
+      }
+    }
+  }
+
+  if (pc) {
+    for (i = 0; i < pl->n_polys; i++) {
       pl->p[i].pcol = pc[i];
+      if (pc[i].a != 1.0) {
+	pl->flags |= PL_HASPALPHA;
+      }
+    }
+  }
 
   return pl;
 }

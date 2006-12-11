@@ -58,6 +58,7 @@ NPolyList *
 NPolyListFLoad(IOBFILE *file, char *fname)
 {
   NPolyList *pl;
+  Vertex **vp;
   int edges;
   int i;
   float *v;
@@ -113,12 +114,8 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 
 
   pl = OOGLNewE(NPolyList, "NPolyListFLoad NPolyList");
+  memset(pl, 0, sizeof(NPolyList));
   GGeomInit(pl, NPolyListMethods(), NPLMAGIC, NULL);
-  pl->p = NULL;
-  pl->v = NULL;
-  pl->vi = NULL;
-  pl->vcol = NULL;
-  pl->st = NULL;
 
   pl->flags = flags;
   pl->geomflags  = (dimn == 4) ? VERT_4D : 0;
@@ -143,30 +140,38 @@ NPolyListFLoad(IOBFILE *file, char *fname)
   }
   VVINIT(vi, int, 5*pl->n_polys);
 
-  pl->v = OOGLNewNE(float, pl->n_verts*pl->pdim, "NPolyListFLoad vertices");
+  pl->v = OOGLNewNE(HPtNCoord, pl->n_verts*pl->pdim, "NPolyListFLoad vertices");
+  pl->vl = OOGLNewNE(Vertex, pl->n_verts, "NPolyListFLoad vertex descriptions");
   if(pl->flags & PL_HASVCOL)
     pl->vcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyListFLoad vertex colors");
-  if(pl->flags & PL_HASST)
-    pl->st = OOGLNewNE(float, 2*pl->n_verts, "NPolyListFLoad texture coords");
 
   for(v = pl->v, i = 0; i < pl->n_verts; v += pl->pdim, i++) {
     if(iobfgetnf(file, pdim, v + (pdim != pl->pdim ? 1 : 0), binary) < pdim ||
        ((flags & PL_HASVCOL) &&
 	iobfgetnf(file, 4, (float *)&pl->vcol[i], binary) < 4) ||
        ((flags & PL_HASST) &&
-	iobfgetnf(file, 2, (float *)&pl->st[2*i], binary) < 2))
-      {
-	OOGLSyntax(file, "nOFF %s: Bad vertex %d (of %d)",
-		   fname, i, pl->n_verts);
-	goto bogus;
+	iobfgetnf(file, 2, (float *)pl->vl[i].st, binary) < 2)) {
+      OOGLSyntax(file, "nOFF %s: Bad vertex %d (of %d)",
+		 fname, i, pl->n_verts);
+      goto bogus;
+    }
+    if (flags & PL_HASVCOL) {
+      pl->vl[i].vcol = pl->vcol[i];
+      if (pl->vcol[i].a != 1.0) {
+	pl->flags |= PL_HASVALPHA;
       }
+    }
     if (dimn == 3) v[0] = 1.0;
   }
+  if (flags & PL_HASVCOL) { /* vcol and vl[].vcol are in sync */
+    pl->flags |= NPL_HASVLVCOL;
+  }
 
-  pl->p = OOGLNewNE(NPoly, pl->n_polys, "NPolyListFLoad polygons");
-  for(i = 0; i < pl->n_polys; ) {
-    NPoly *p;
-    int k,index;
+  pl->pv = OOGLNewNE(int, pl->n_polys, "NPolyListFLoad polygon vertices");
+  pl->p  = OOGLNewNE(Poly, pl->n_polys, "NPolyListFLoad polygons");
+  for(i = 0; i < pl->n_polys; ++i) {
+    Poly *p;
+    int k, index;
 
     p = &pl->p[i];
     if(iobfgetni(file, 1, &p->n_vertices, binary) <= 0 || p->n_vertices <= 0) {
@@ -174,10 +179,9 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 		 fname, i, pl->n_polys);
       goto bogus_face;
     }
-    p->vi0 = VVCOUNT(vi);
+    pl->pv[i] = VVCOUNT(vi);
     VVCOUNT(vi) += p->n_vertices;
     vvneeds(&vi, VVCOUNT(vi));
-    i++;
 
     for(k = 0; k < p->n_vertices; k++) {
       int index;
@@ -188,7 +192,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 		   fname, index, i, p->n_vertices);
 	goto bogus_face;
       }
-      VVEC(vi, int)[k + p->vi0] = index;
+      VVEC(vi, int)[pl->pv[i]+k] = index;
     }
 
     /* Pick up the color, if any.
@@ -235,15 +239,36 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 	p->pcol = colormap[index];
       }				/* case 4, all components supplied */
     }
+    if ((pl->flags & PL_HASPCOL) && p->pcol.a != 1.0) {
+      pl->flags |= PL_HASPALPHA;
+    }
   }
 
   /* Hand the list of vertex-indices on to the new object */
   vvtrim(&vi);
   pl->nvi = VVCOUNT(vi);
   pl->vi = VVEC(vi, int);
+
+  /* Now generate the necessary information for pl->p[], i.e. insert
+   * the pointers to the 3d vertices in the proper places; there
+   * really is no need to do this evertime again and again when
+   * drawing the object.
+   */
+  vp = OOGLNewNE(Vertex *, pl->nvi, "NPolyList 3d connectivity");
+  for (i = 0; i < pl->n_polys; i++) {
+    Poly *p = &pl->p[i];
+    int k;
+    
+    p->v  = vp;
+    vp   += p->n_vertices;
+    
+    for (k = 0; k < p->n_vertices; k++) {
+      p->v[k] = &pl->vl[pl->vi[pl->pv[i]+k]];
+    }
+  }
+
   return pl;
 
-  
  bogus_face_color:
   OOGLSyntax(file, "PolyList %s: bad face color on face %d (of %d)",
 	     fname, i, pl->n_polys);

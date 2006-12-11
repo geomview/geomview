@@ -76,10 +76,7 @@ static struct istate *ispool;
 #define	FreeIter(it)	if(itpool) OOGLFree(it); else itpool = it
 #define	FreeIstate(is)	(is)->parent = ispool, ispool = is
 
-GeomIter *
-GeomIterate(g, flags)
-    Geom *g;
-    int flags;
+GeomIter *GeomIterate(Geom *g, int flags)
 {
     GeomIter *it;
     struct istate *is;
@@ -105,10 +102,7 @@ GeomIterate(g, flags)
  * For speed, we act as a friend to the List, TList, Inst, and Sphere
  * classes.   XXX
  */
-int
-NextTransform(it, T)
-    GeomIter *it;
-    Transform T;
+int NextTransform(GeomIter *it, Transform T)
 {
     struct istate *is;
     Geom *g;

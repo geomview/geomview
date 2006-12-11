@@ -78,13 +78,13 @@ readNDPoly(struct obstack *obst, poly * p, NPolyList * pl, int polyNum)
   pvtx *corner = NULL;
   polyvtx_list *pv = (polyvtx_list *) obstack_alloc(obst, sizeof(polyvtx_list));
   pvtx **prevp = &pv->head;
-  NPoly *np = &pl->p[polyNum];
+  Poly *np = &pl->p[polyNum];
 
   p->me = pv;
   pv->numvtx = np->n_vertices;
   for (i = 0; i < np->n_vertices; i++) {
     corner = (pvtx *) obstack_alloc(obst, sizeof(pvtx));
-    corner->num = pl->vi[i + np->vi0];
+    corner->num = pl->vi[i + pl->pv[i]];
     *prevp = corner;
     prevp = &corner->next;
   }

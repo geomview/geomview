@@ -69,7 +69,6 @@
 struct Vect {
 	GEOMFIELDS;
 	int	flag, nvec, nvert, ncolor;
-	int	seq;		/* for 4D -> 3D tforms */
 	short	*vnvert;	/* vnvert[nvec] (# p[]'s per vec) */
 	short	*vncolor;	/* vncolor[nvec] (# c[]'s per vec) */
 	    /* NOTE: vnvert and vncolor lie in a *single* malloc'ed area */

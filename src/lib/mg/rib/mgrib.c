@@ -103,7 +103,8 @@ struct mgfuncs mgribfuncs = {
   mgrib_line,
   mgrib_polyline,
   mg_quads,
-  mgrib_bezier
+  mgrib_bezier,
+  mg_bsptree
   };
 
 static mgribcontext *MGRIB;	/* For debugging */

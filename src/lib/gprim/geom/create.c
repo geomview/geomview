@@ -35,148 +35,149 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Geom *
 GeomCreate(char *type, ...)
 {
-    va_list a_list;
-    Geom *newgeom = (Geom *) NULL;
-    GeomClass *Class = (GeomClass *) NULL;
+  va_list a_list;
+  Geom *newgeom = (Geom *) NULL;
+  GeomClass *Class = (GeomClass *) NULL;
 
-    va_start (a_list, type);
-    Class = GeomClassLookup(type);
-    /* now use the create method to get a new geom ... */
-    if (Class == NULL) {
-	GeomError(0/*Unknown Class XXX*/, "GeomCreate: unknown object class %s", type);
-	va_end (a_list);
-	return NULL;
-    }
-
-    if (Class->create)
-        newgeom = (Geom *) (*Class->create)(NULL, Class, &a_list);
-    /* need error check here */
-
+  va_start (a_list, type);
+  Class = GeomClassLookup(type);
+  /* now use the create method to get a new geom ... */
+  if (Class == NULL) {
+    GeomError(0/*Unknown Class XXX*/, "GeomCreate: unknown object class %s", type);
     va_end (a_list);
-    return newgeom;
+    return NULL;
+  }
+
+  if (Class->create)
+    newgeom = (Geom *) (*Class->create)(NULL, Class, &a_list);
+  /* need error check here */
+
+  va_end (a_list);
+  return newgeom;
 }
 
 int
 GeomSet(Geom *g, ...)
 {
-    int ok = -1;
-    va_list a_list;
+  int ok = -1;
+  va_list a_list;
 
-    va_start (a_list, g);
+  va_start (a_list, g);
 
-    if (g && g->Class && g->Class->create)
-        if((*g->Class->create)(g, g->Class, &a_list))
-	    ok = 1;
+  if (g && g->Class && g->Class->create)
+    if((*g->Class->create)(g, g->Class, &a_list))
+      ok = 1;
 
-    va_end (a_list);
-    return ok;
+  va_end (a_list);
+  return ok;
 }
 
 
 int
 GeomGet(Geom *g, int attr, void *attrp)
 {
-    if(g == NULL)
-	return -1;
+  if(g == NULL)
+    return -1;
 
-    switch(attr) {
-    case CR_APPEAR:
-	*(Appearance **)attrp = g->ap;
-	break;
-    case CR_HANDLE:
-	*(Handle **)attrp = g->handle;
-	break;
-    default:
-	if(g->Class->get)
-	    return (*g->Class->get)(g, attr, attrp);
-    }
-    return 0;
+  switch(attr) {
+  case CR_APPEAR:
+    *(Appearance **)attrp = g->ap;
+    break;
+  case CR_HANDLE:
+    *(Handle **)attrp = g->handle;
+    break;
+  default:
+    if(g->Class->get)
+      return (*g->Class->get)(g, attr, attrp);
+  }
+  return 0;
 }
 
     
 Geom *
 GeomCCreate(Geom *g, GeomClass *c, ...)
 {
-    va_list a_list;
-    Geom *newgeom = g;
-    GeomClass *Class = c;
+  va_list a_list;
+  Geom *newgeom = g;
+  GeomClass *Class = c;
 
-    va_start (a_list, c);
-    if(Class == NULL && newgeom != NULL)
-	Class = newgeom->Class;
+  va_start (a_list, c);
+  if(Class == NULL && newgeom != NULL)
+    Class = newgeom->Class;
 
-    if (Class && Class->create)
-        newgeom = (Geom *) (*Class->create)(newgeom, Class, &a_list);
-    /* need error check here */
+  if (Class && Class->create)
+    newgeom = (Geom *) (*Class->create)(newgeom, Class, &a_list);
+  /* need error check here */
 
-    va_end (a_list);
-    return newgeom;
+  va_end (a_list);
+  return newgeom;
 }
 
 /*
  * Initialize common data for Geom objects
  */
 void
-GGeomInit(g, Class, magic, ap)
-    int magic;
-    Geom *g;
-    GeomClass *Class;
-    Appearance *ap;
+GGeomInit(Geom *g, GeomClass *Class, int magic, Appearance *ap)
 {
-    RefInit((Ref *)g, magic);
-    g->Class = Class;
-    g->ap = ap;
-    if(ap != NULL)	/* If it's a real Appearance, bump its ref count */
-	RefIncr((Ref *)ap);
-    g->aphandle = NULL;
-    g->geomflags = 0;
-    g->pdim = 4;
+  RefInit((Ref *)g, magic);
+  g->Class = Class;
+  g->ap = ap;
+  if(ap != NULL)	/* If it's a real Appearance, bump its ref count */
+    RefIncr((Ref *)ap);
+  g->aphandle = NULL;
+  g->geomflags = 0;
+  g->pdim = 4;
+  g->bsptree = NULL;
 }
 
 /*
  * Handle one exceptional item from a GeomCreate() arg list.
  * We know how to set common Geom fields.
  */
+/* copyp: Flag: "copy" parameters passed by reference? */
+/* feature: Attribute -- value already va_arg'ed by caller */
 int
-GeomDecorate(g, copyp, feature, ap)
-    Geom *g;
-    int *copyp;/* Flag: "copy" parameters passed by reference? */
-    int feature;	/* Attribute -- value already va_arg'ed by caller */
-    va_list *ap;
+GeomDecorate(Geom *g, int *copyp, int feature, va_list *ap)
 {
-    Appearance *nap;
-    int val;
+  Appearance *nap;
+  int val;
 
-    if(feature == 0 || g == NULL)
-	return 1;
+  if(feature == 0 || g == NULL)
+    return 1;
 
-    switch(feature) {
-    case CR_4D:		/* this is a token, value pair so it can be
-			set conditionally */
-	val = va_arg(*ap, int);
-	g->geomflags &= ~VERT_4D;
- 	g->geomflags |= val ? VERT_4D : 0;
-	break;
-    case CR_APPEAR:		/* Assign or remove Appearance.  */
-	nap = va_arg(*ap, Appearance *);
-	if(nap && *copyp) RefIncr((Ref *)nap);
-	if(g->ap) ApDelete(g->ap);
-	g->ap = nap;
-	break;
-    case CR_COPY:
-	*copyp = 1;
-	break;
-    case CR_NOCOPY:
-	*copyp = 0;
-	break;
-    default:
-	return 1; /* Unknown attribute */
-    }
-    return 0;
+  switch(feature) {
+  case CR_4D:		/* this is a token, value pair so it can be
+			   set conditionally */
+    val = va_arg(*ap, int);
+    g->geomflags &= ~VERT_4D;
+    g->geomflags |= val ? VERT_4D : 0;
+    break;
+  case CR_APPEAR:		/* Assign or remove Appearance.  */
+    nap = va_arg(*ap, Appearance *);
+    if(nap && *copyp) RefIncr((Ref *)nap);
+    if(g->ap) ApDelete(g->ap);
+    g->ap = nap;
+    break;
+  case CR_COPY:
+    *copyp = 1;
+    break;
+  case CR_NOCOPY:
+    *copyp = 0;
+    break;
+  default:
+    return 1; /* Unknown attribute */
+  }
+  return 0;
 }
 
 Appearance *
 GeomAppearance(Geom *g)
 {
-    return g ? g->ap : NULL;
+  return g ? g->ap : NULL;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

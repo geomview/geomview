@@ -158,7 +158,7 @@ plisttoindface(Geom *pgeom)
   fprintfindentinc(f, "normal Normal {\n");
   fprintfindent(f, "vector [");
   if (shading == APF_FLAT) {
-    PolyListComputeNormals(plist);
+    PolyListComputeNormals(plist, PL_HASPN);
     for (i = 0, pl= plist->p; i < plist->n_polys; i++, pl++) {
       fprintf(f, " %g %g %g", pl->pn.x, pl->pn.y, pl->pn.z);
       if (i != plist->n_polys-1) {
@@ -170,7 +170,7 @@ plisttoindface(Geom *pgeom)
       }
     }
   } else if (shading == APF_SMOOTH) {
-    PolyListComputeNormals(plist);
+    PolyListComputeNormals(plist, PL_HASVN);
     for (i = 0, v = plist->vl; i < plist->n_verts; i++, v++) {
       fprintf(f, " %g %g %g", v->vn.x, v->vn.y, v->vn.z);
       if (i != plist->n_verts-1) {

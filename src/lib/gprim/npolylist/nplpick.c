@@ -38,7 +38,7 @@ NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
   int i;
   vvec plist;
   int fi, vi, ok, found = -1;
-  NPoly *poly;
+  Poly *poly;
   unsigned int apflag = 0;
   HPointN ptN[1];
 
@@ -60,7 +60,7 @@ NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
 
   found = -1;
   for (fi = 0, poly = pl->p; fi < pl->n_polys; ++fi, ++poly) {
-    int *idx = pl->vi + poly->vi0;
+    int *idx = pl->vi + pl->pv[fi];
     
     vvneeds(&plist, poly->n_vertices);
     ok = 0;
@@ -81,13 +81,13 @@ NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
   if (found == -1) return NULL;
 
   if (p->found & PW_VERT) {
-    p->vi = pl->vi[pl->p[found].vi0+p->vi];
+    p->vi = pl->vi[pl->pv[found]+p->vi];
     ptN->v = pl->v + p->vi*pl->pdim;
     HPtNTransformComponents(TN, ptN, axes, &p->v);
   }
   if (p->found & PW_EDGE) {
-    p->ei[0] = pl->vi[pl->p[found].vi0+p->ei[0]];
-    p->ei[1] = pl->vi[pl->p[found].vi0+p->ei[1]];
+    p->ei[0] = pl->vi[pl->pv[found]+p->ei[0]];
+    p->ei[1] = pl->vi[pl->pv[found]+p->ei[1]];
     ptN->v = pl->v + p->ei[0]*pl->pdim;
     HPtNTransformComponents(TN, ptN, axes, &p->e[0]);
     ptN->v = pl->v + p->ei[1]*pl->pdim;
@@ -97,7 +97,7 @@ NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
     if(p->f) OOGLFree(p->f);
     p->f = OOGLNewNE(HPoint3, p->fn, "PolyList pick");
     for (i = 0; i < p->fn; i++) {
-      ptN->v = pl->v + pl->vi[pl->p[found].vi0+i]*pl->pdim;
+      ptN->v = pl->v + pl->vi[pl->pv[found]+i]*pl->pdim;
       HPtNTransformComponents(TN, ptN, axes, &p->f[i]);
     }
     p->fi = found;

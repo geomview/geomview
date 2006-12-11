@@ -107,7 +107,8 @@ struct mgfuncs mgbuffuncs = {
   mgbuf_line,
   mgbuf_polyline,
   mg_quads,
-  mg_bezier
+  mg_bezier,
+  mg_bsptree
   };
 
 

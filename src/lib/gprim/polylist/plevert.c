@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.6 2006/12/11 04:50:12 rotdrop Exp $ */
 /* $Source: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v $ */
 
 
@@ -44,29 +44,33 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 PolyList *
 PolyListEvert( PolyList *polylist )
 {
-	Poly	*p;
-	Vertex	*v;
-	int	i;
+  Poly	*p;
+  Vertex	*v;
+  int	i;
 
-	polylist->flags ^= PL_EVNORM;
+  polylist->flags ^= PL_EVNORM;
 
-	if ((polylist->flags & (PL_HASVN|PL_HASPN)) == 0)
-	{
-		PolyListComputeNormals(polylist);
-	} else {
-	    i = polylist->n_polys;
-	    for (p = polylist->p; --i >= 0; p++)
-	    {
-		p->pn.x = -p->pn.x;
-		p->pn.y = -p->pn.y;
-		p->pn.z = -p->pn.z;
-	    }
-	    i = polylist->n_verts;
-	    for (v = polylist->vl; --i >= 0; v++) {
-		v->vn.x = -v->vn.x;
-		v->vn.y = -v->vn.y;
-		v->vn.z = -v->vn.z;
-	    }
-	}
-	return (polylist);
+  if ((polylist->flags & (PL_HASVN|PL_HASPN)) == 0) {
+    PolyListComputeNormals(polylist, PL_HASVN|PL_HASPN|PL_HASPFL);
+  } else {
+    i = polylist->n_polys;
+    for (p = polylist->p; --i >= 0; p++) {
+      p->pn.x = -p->pn.x;
+      p->pn.y = -p->pn.y;
+      p->pn.z = -p->pn.z;
+    }
+    i = polylist->n_verts;
+    for (v = polylist->vl; --i >= 0; v++) {
+      v->vn.x = -v->vn.x;
+      v->vn.y = -v->vn.y;
+      v->vn.z = -v->vn.z;
+    }
+  }
+  return (polylist);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

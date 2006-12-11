@@ -139,9 +139,10 @@ extern void mg_identity(void);
 extern void mg_transform(Transform T);
 extern void mg_settransform(Transform T);
 extern void mg_gettransform(Transform T);
-extern void mg_quads(int nquads, HPoint3 *v, Point3 *n, ColorA *c);
+extern void mg_quads(int nquads, HPoint3 *v, Point3 *n, ColorA *c, int qflags);
 extern void mg_bezier(int du, int dv, int dimn, float *ctrlpts, float *txmapst,
-  ColorA *c);
+		      ColorA *c);
+extern void mg_bsptree(struct BSPTree *bsptree);
 extern void mg_findcam();
 extern void mg_findS2O();
 extern void mg_findO2S();
@@ -173,6 +174,10 @@ extern int     mg_find_free_shared_texture_id(int mgtype);
 
 extern void    mg_remove_txuser(TxUser *tu);
 
-
-
 #endif /*_MG_PDEFS_*/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

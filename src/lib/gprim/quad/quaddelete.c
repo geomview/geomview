@@ -34,13 +34,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "quadP.h"
 
 Quad *
-QuadDelete(q)
-	Quad *q;
+QuadDelete(Quad *q)
 {
-	if(q) {
-		if(q->p != NULL) GeomFree(q->p);
-		if(q->c != NULL) GeomFree(q->c);
-		if(q->n != NULL) GeomFree(q->n);
-	}
-	return NULL;
+  if(q) {
+    if(q->p != NULL) GeomFree(q->p);
+    if(q->c != NULL) GeomFree(q->c);
+    if(q->n != NULL) GeomFree(q->n);
+    BSPTreeFree(q);
+  }
+  return NULL;
 }

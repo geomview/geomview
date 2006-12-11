@@ -45,27 +45,29 @@ getquads(IOBFILE *file, Quad *pquad, int off, int binary, int dimn)
     p = &pquad->p[off][0];
     n = (pquad->flag & QUAD_N) ? &pquad->n[off][0] : NULL;
     c = (pquad->flag & QUAD_C) ? &pquad->c[off][0] : NULL;
-    for(k = 4 * (pquad->maxquad - off); --k >= 0; ) {
-	if(iobfgetnf(file, dimn, (float *)p, binary) < dimn)
+    for (k = 4 * (pquad->maxquad - off); --k >= 0; ) {
+	if (iobfgetnf(file, dimn, (float *)p, binary) < dimn)
 	    break;
 	/* set the w-coordinate if the points are 3 dim'nal */
 	if (dimn == 3) p->w = 1.0;
 	p++;
-	if(n != NULL) {
+	if (n != NULL) {
 	    if(iobfgetnf(file, 3, (float *)n, binary) < 3)
 		return -1;
 	    n++;
 	}
-	if(c != NULL) {
-	    if(iobfgetnf(file, 4, (float *)c, binary) < 4)
+	if (c != NULL) {
+	    if (iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return -1;
+	    if (c->a < 1.0)
+		pquad->flag |= QUAD_ALPHA;
 	    c++;
 	}
     }
     k++;
-    if(k % 4 != 0)
+    if (k % 4 != 0)
 	return(-1);
-    return(pquad->maxquad - k/4);
+    return pquad->maxquad - k/4;
 }
 
 

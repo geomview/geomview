@@ -27,18 +27,19 @@
 
 #include "geomclass.h"
 #include "mesh.h"
+#include "bsptree.h"
 
 struct Mesh {
-	GEOMFIELDS;
-	int	flag;
-	int 	seq;
-	int	nu, nv;
-	int	umin, umax, vmin, vmax;
-	HPoint3	*p;
-	Point3 	*n, *u;
-	ColorA	*c;
-	float	*d;
-	Point3	*nd;
+  GEOMFIELDS;
+  int     flag;
+  int     seq;
+  int     nu, nv;
+  int     umin, umax, vmin, vmax;
+  HPoint3 *p;
+  Point3  *n;
+  Point3  *nq; /* per quad normals */
+  Point3  *u;
+  ColorA  *c;
 };
 
 #define nuverts(m) (m)->nu
@@ -60,6 +61,12 @@ struct Mesh {
  */
 #define MESHPOINT(u, v, mesh, plist) ((plist)[MESHINDEX(u, v, mesh)])
 
-extern Mesh *MeshComputeNormals(Mesh *m);
+extern Mesh *MeshComputeNormals(Mesh *m, int need);
 
 #endif /* ! MESHPDEF */
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

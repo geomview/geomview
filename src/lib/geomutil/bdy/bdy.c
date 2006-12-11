@@ -41,9 +41,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "plutil.h"
 #include "bdy.h"
 
-
-#define min(a, b) ((a < b) ? a : b)
-#define max(a, b) ((a > b) ? a : b)
+#ifndef min
+# define min(a, b) ((a < b) ? a : b)
+#endif
+#ifndef max
+# define max(a, b) ((a > b) ? a : b)
+#endif
 
 static char msg[] = "bdy.c";
 

@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -35,85 +36,313 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Compute the normals to each surface in a polylist.
  */
 
-
 #include "polylistP.h"
 
-PolyList *
-PolyListComputeNormals( PolyList *polylist )
+void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
+		int *flagsp, int *first_concave)
 {
-	int	i, n;
-	float           len;
-	Poly	*p;
-	Vertex		**vp;
-	Vertex	*v, *v2, *v3;
-	float	x, y, z;
+  int flags = 0, n;
+  Vertex **vp;
+  Vertex *v1, *v2, *v3;
+  Pt3Coord w1, w2, w3, len;
+  Point3 nu;
 
-	if (!polylist) return NULL;
+  if (first_concave){
+    *first_concave = 0;
+  }
+  
+  nu_av->x = nu_av->y = nu_av->z = 0.0;
+  if((n = p->n_vertices) >= 3) {
+    v1 = p->v[n-2];
+    v2 = p->v[n-1];
+    vp = p->v;
 
-	if(!(polylist->flags & PL_HASPN)) {
-	    /* Create per-polygon normals */
-	    for (i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
-		x = y = z = 0.0;
-		if((n = p->n_vertices) >= 3) {
-		    v = p->v[n-2];
-		    v2 = p->v[n-1];
-		    vp = p->v;
-
-#define ANTI(P,Q)  (v2->pt.P - v->pt.P) * (v3->pt.Q - v->pt.Q) - \
-		   (v2->pt.Q - v->pt.Q) * (v3->pt.P - v->pt.P)
-
-		    do {
-			v3 = *vp;
-			x += ANTI(y,z);
-			y += ANTI(z,x);
-			z += ANTI(x,y);
-			v = v2;
-			v2 = v3;
-			vp++;
-		    } while(--n > 0);
-		    len = sqrt(x*x + y*y + z*z);
-		    if(len > 0.0) {
-			if(polylist->flags & PL_EVNORM)
-			    len = -len;
-			len = 1.0/len;
-			x *= len;
-			y *= len;
-			z *= len;
-		    }
-		    p->pn.x = x;
-		    p->pn.y = y;
-		    p->pn.z = z;
-		}
-	    }
-	    polylist->flags |= PL_HASPN;
+    if (fourd) {
+#define ANTI_4D(P,Q)							\
+      ((v2->pt.P*w2 - v1->pt.P*w1) * (v3->pt.Q*w3 - v1->pt.Q*w1) -	\
+       (v2->pt.Q*w2 - v1->pt.Q*w1) * (v3->pt.P*w3 - v1->pt.P*w1))
+      
+      w1 = !fzero(v1->pt.w) ? 1.0 / v1->pt.w : 1.0;
+      w2 = !fzero(v2->pt.w) ? 1.0 / v2->pt.w : 1.0;
+      do {
+	v3 = *vp++;
+	w3 = !fzero(v3->pt.w) ? 1.0 / v3->pt.w : 1.0;
+	nu.x = ANTI_4D(y,z);
+	nu.y = ANTI_4D(z,x);
+	nu.z = ANTI_4D(x,y);
+	if (Pt3Dot(&nu, nu_av) >= 0) {
+	  Pt3Add(nu_av, &nu, nu_av);
+	} else {
+	  Pt3Sub(nu_av, &nu, nu_av);
+	  flags |= POLY_CONCAVE;
+	  if (first_concave) {
+	    *first_concave = p->n_vertices - n;
+	    first_concave = NULL;
+	  }
 	}
+	v1 = v2;
+	w1 = w2;
+	v2 = v3;
+	w2 = w3;
+      } while(--n > 0);
+    } else {
+#define ANTI(P,Q)						\
+      ((v2->pt.P - v1->pt.P) * (v3->pt.Q - v1->pt.Q) -		\
+       (v2->pt.Q - v1->pt.Q) * (v3->pt.P - v1->pt.P))
 
-	if(!(polylist->flags & PL_HASVN)) {
-	    
-	    for(i = polylist->n_verts, v = polylist->vl; --i >= 0; v++) {
-		v->vn.x = v->vn.y = v->vn.z = 0.0;
-	    }
-	    for(i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
-		for(n = p->n_vertices, vp = p->v; --n >= 0; vp++) {
-		    v = *vp;
-		    v->vn.x += p->pn.x;
-		    v->vn.y += p->pn.y;
-		    v->vn.z += p->pn.z;
-		}
-	    }
-	    for(i = polylist->n_verts, v = polylist->vl; --i >= 0; v++) {
-		len = sqrt(v->vn.x*v->vn.x + v->vn.y*v->vn.y + v->vn.z*v->vn.z);
-		if(len > 0) {
-		    if(polylist->flags & PL_EVNORM)
-			len = -len;
-		    len = 1.0/len;
-		    v->vn.x *= len;
-		    v->vn.y *= len;
-		    v->vn.z *= len;
-		}
-	    }
-	    polylist->flags |= PL_HASVN;
+      do {
+	v3 = *vp++;
+	nu.x = ANTI(y,z);
+	nu.y = ANTI(z,x);
+	nu.z = ANTI(x,y);
+	if (Pt3Dot(&nu, nu_av) >= 0) {
+	  Pt3Add(nu_av, &nu, nu_av);
+	} else {
+	  Pt3Sub(nu_av, &nu, nu_av);
+	  flags |= POLY_CONCAVE;
+	  if (first_concave) {
+	    *first_concave = p->n_vertices - n;
+	    first_concave = NULL;
+	  }
 	}
+	v1 = v2;
+	v2 = v3;
+      } while(--n > 0);
+    }
+  }
 
-	return polylist;
+  len = Pt3Length(nu_av);
+
+#if 0
+  static Pt3Coord min_len = 1e8;
+
+  if (!fzero(len) && len < min_len) {
+    min_len = len;
+    fprintf(stderr, "min_len: %e\n", min_len);
+  }
+#endif
+
+  if (fzero(len)) {
+    /* degenerated */
+    flags |= POLY_NOPOLY;
+  } else {
+    if(evert)
+      len = -len;
+    Pt3Mul(1.0/len, nu_av, nu_av);
+
+    if (flagsp && (n = p->n_vertices) > 3) {
+      /* determine whether this polygon is flat or not */
+      Point3 diff;
+      v1 = p->v[n-1];
+      vp = p->v;
+
+      do {
+	v2 = *vp++;
+	if (fourd) {
+	  HPt3SubPt3(&v2->pt, &v1->pt, &diff);
+	} else {
+	  Pt3Sub((Point3 *)(void *)&v2->pt,
+		 (Point3 *)(void *)&v1->pt, &diff);
+	}
+	if (!fzero(Pt3Dot(nu_av, &diff))) {
+	  p->flags |= POLY_NONFLAT;
+	  break;
+	}
+	v1 = v2;
+      } while (--n > 0);
+    }
+  }
+
+  if (flagsp) {
+    *flagsp |= flags;
+  }
+
 }
+
+PolyList *
+PolyListComputeNormals(PolyList *polylist, int need)
+{
+  int	   i, n, fourd, evert;
+  Poly	   *p;
+  Vertex   **vp;
+  Pt3Coord len;
+  Point3   nu_av;
+
+  if (!polylist) return NULL;
+
+  need &= ~polylist->flags;
+  fourd = (polylist->geomflags & VERT_4D) != 0;
+  evert = (polylist->flags & PL_EVNORM) != 0;
+
+  if (need & (PL_HASPN|PL_HASPFL)) {
+    /* Create per-polygon normals */
+    for (i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
+      if((n = p->n_vertices) >= 3) {
+	if (need & PL_HASPFL) {
+	  p->flags = 0;
+	  PolyNormal(p, &nu_av, evert, fourd, &p->flags, NULL);
+	} else {
+	  PolyNormal(p, &nu_av, evert, fourd, NULL, NULL);
+	}
+	if (need & PL_HASPN) {
+	  p->pn = nu_av;
+	}
+      }
+    }
+  }
+
+  if (need & PL_HASVN) {
+
+#if 0
+    for(i = polylist->n_verts, v = polylist->vl; --i >= 0; v++) {
+      v->vn.x = v->vn.y = v->vn.z = 0.0;
+    }
+    for(i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
+      for(n = p->n_vertices, vp = p->v; --n >= 0; vp++) {
+	v = *vp;
+	if (fneg(Pt3Dot(&v->vn, &p->pn))) {
+	  Pt3Sub(&p->pn, &v->vn, &v->vn);
+	} else {
+	  Pt3Add(&p->pn, &v->vn, &v->vn);
+	}
+      }
+    }
+    for(i = polylist->n_verts, v = polylist->vl; --i >= 0; v++) {
+      len = Pt3Length(&v->vn);
+      if(fpos(len)) {
+	if(polylist->flags & PL_EVNORM)
+	  len = -len;
+	Pt3Mul(1.0/len, &v->vn, &v->vn);
+      }
+    }
+#else
+    int *e_idx =
+      OOGLNewNE(int, polylist->n_verts+1, "Adjacent edge indexes");
+    HPoint3 **edges;
+    int n_edges;
+    Vertex *vl;
+
+#define V_IDX(elem, base)						\
+    (int)((long)((char *)(elem) - (char *)(base))/sizeof(*elem))
+
+    memset(e_idx, 0, polylist->n_verts*sizeof(int));
+    for(i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
+      for(n = p->n_vertices, vp = p->v; --n >= 0; vp++) {
+	int v_idx = V_IDX(*vp, polylist->vl);
+	e_idx[v_idx] += 2;
+	n_edges += 2;
+      }
+    }
+    
+    edges = OOGLNewNE(HPoint3 *, n_edges, "Adjacent edges");
+    n_edges  = e_idx[0];
+    e_idx[0] = 0;
+    edges[e_idx[0]] = (void *)(long)(n_edges-1);
+    for (i = 1; i < polylist->n_verts; i++) {
+      int v_n_edges = e_idx[i];
+      e_idx[i] = n_edges;
+      n_edges += v_n_edges;
+      edges[e_idx[i]] = (void *)(long)(v_n_edges-1);
+    }
+    e_idx[i] = n_edges;
+
+    for(i = polylist->n_polys, p = polylist->p; --i >= 0; p++) {
+      int v_idx, cnt, j;
+
+      vp = p->v;
+      v_idx = V_IDX(*vp, polylist->vl);
+      cnt = (int)(long)edges[e_idx[v_idx]];
+      edges[e_idx[v_idx]+cnt--] = &vp[p->n_vertices-1]->pt;
+      edges[e_idx[v_idx]+cnt--] = &vp[1]->pt;
+      if (cnt > 0) {
+	edges[e_idx[v_idx]] = (void *)(long)cnt;
+      }
+      for (j = 1, ++vp; j < p->n_vertices-1; ++j, ++vp) {
+	v_idx = V_IDX(*vp, polylist->vl);
+	cnt = (int)(long)edges[e_idx[v_idx]];
+	edges[e_idx[v_idx]+cnt--] = &vp[1]->pt;
+	edges[e_idx[v_idx]+cnt--] = &vp[-1]->pt;
+	if (cnt > 0) {
+	  edges[e_idx[v_idx]] = (void *)(long)cnt;
+	}
+      }
+      v_idx = V_IDX(*vp, polylist->vl);
+      cnt = (int)(long)edges[e_idx[v_idx]];
+      edges[e_idx[v_idx]+cnt--] = &p->v[0]->pt;
+      edges[e_idx[v_idx]+cnt--] = &vp[-1]->pt;
+      if (cnt > 0) {
+	edges[e_idx[v_idx]] = (void *)(long)cnt;
+      }
+    }
+
+    for (i = 0, vl = polylist->vl; i < polylist->n_verts; ++i, ++vl) {
+      HPt3Coord w;
+      int v_idx, j;
+
+      v_idx = V_IDX(vl, polylist->vl);
+
+      vl->vn.x = vl->vn.y = vl->vn.z = 0.0;
+      if (fourd) {
+	w = 1.0/vl->pt.w;
+      }
+      for (j = e_idx[v_idx]; j < e_idx[v_idx+1]; j += 2) {
+	HPoint3 *p1, *p2;
+	Point3 nu;
+	HPt3Coord w1, w2;
+
+	p1 = edges[j];
+	p2 = edges[j+1];
+
+	if (fourd) {
+#undef ANTI_4D
+#define ANTI_4D(P, Q)						\
+	  ((p1->P*w1 - vl->pt.P*w) * (p2->Q*w2 - vl->pt.Q*w) -	\
+	   (p1->Q*w1 - vl->pt.Q*w) * (p2->P*w2 - vl->pt.P*w))
+
+	  w1 = 1.0/p1->w;
+	  w2 = 1.0/p2->w;
+	  
+	  nu.x = ANTI_4D(y,z);
+	  nu.y = ANTI_4D(z,x);
+	  nu.z = ANTI_4D(x,y);
+	} else {
+#undef ANTI
+#define ANTI(P, Q)					\
+	  ((p1->P - vl->pt.P) * (p2->Q - vl->pt.Q) -	\
+	   (p1->Q - vl->pt.Q) * (p2->P - vl->pt.P))
+
+	  w1 = 1.0/p1->w;
+	  w2 = 1.0/p2->w;
+	  
+	  nu.x = ANTI_4D(y,z);
+	  nu.y = ANTI_4D(z,x);
+	  nu.z = ANTI_4D(x,y);
+	}
+	if (Pt3Dot(&nu, &vl->vn) >= 0.0) {
+	  Pt3Add(&vl->vn, &nu, &vl->vn);
+	} else {
+	  Pt3Sub(&vl->vn, &nu, &vl->vn);
+	}
+      }
+      len = Pt3Length(&vl->vn);
+      if(len > 0.0) {
+	if(polylist->flags & PL_EVNORM)
+	  len = -len;
+	Pt3Mul(1.0/len, &vl->vn, &vl->vn);
+      }
+    }
+    OOGLFree(edges);
+    OOGLFree(e_idx);
+#endif
+  }
+  
+  polylist->flags |= need;
+
+  return polylist;
+}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

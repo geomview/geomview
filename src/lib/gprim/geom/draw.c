@@ -34,12 +34,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geomclass.h"
 #include "mg.h"
 
-Geom *
-GeomDraw(object)
-    Geom *object;
+Geom *GeomDraw(Geom *object)
 {
     if (object && object->Class->draw) {
-
 	if(object->ap != NULL) {
 	    mgpushappearance();
 	    mgsetappearance(object->ap, 1);	/* Merge into inherited ap */

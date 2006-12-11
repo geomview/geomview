@@ -36,20 +36,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Mesh *
 MeshDelete(Mesh *m)
 {
-	if (m)
-	{
-		if (m->p)
-			GeomFree(m->p);
-		if (m->n)
-			GeomFree(m->n);
-		if (m->c)
-			GeomFree(m->c);
-		if (m->u)
-			GeomFree(m->u);
-		if (m->d)
-			GeomFree(m->d);
-		if (m->nd)
-			GeomFree(m->nd);
-	}
-	return NULL;
+  if (m) {
+    if (m->p)
+      GeomFree(m->p);
+    if (m->n)
+      GeomFree(m->n);
+    if (m->c)
+      GeomFree(m->c);
+    if (m->u)
+      GeomFree(m->u);
+    BSPTreeFree((Geom *)m);
+  }
+  return NULL;
 }

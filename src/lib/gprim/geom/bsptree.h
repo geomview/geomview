@@ -1,5 +1,4 @@
-/* Copyright (C) 1992-1998 The Geometry Center
- * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+/* Copyright (C) 2006 Claus-Justus Heine 
  *
  * This file is part of Geomview.
  * 
@@ -18,41 +17,19 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
-
-
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
-
-#ifndef QUADPDEFS
-#define QUADPDEFS
+#ifndef _GV_BSPTREE_H_
+#define _GV_BSPTREE_H_
 
 #include "geomclass.h"
-#include "quad.h"
-#include "bsptree.h"
 
-#define QUAD_P      VERT_P
-#define QUAD_N      VERT_N
-#define QUAD_C      VERT_C
-#define QUAD_BINARY 0x08
-#define QUAD_ALPHA  0x10
+typedef struct BSPTree BSPTree;
 
-typedef HPoint3 QuadP[4];
-typedef Point3 QuadN[4];
-typedef ColorA QuadC[4];
+extern void BSPTreeCreate(Geom *object);
+extern void BSPTreeAddObject(BSPTree *bsp, Geom *object);
+extern void BSPTreeFinalize(BSPTree *bsp);
+extern void BSPTreeFree(Geom *object);
 
-struct Quad {
-  GEOMFIELDS;
-  int     flag;
-  int     maxquad;
-  QuadP   *p;
-  QuadN   *n;
-  QuadC   *c;
-};
-
-Quad *QuadPick(Quad *, Pick *, Appearance *,
-	       Transform, TransformN *, int *axes);
-Quad *QuadComputeNormals(Quad *q);
-
-#endif /* ! QUADPDEFS */
+#endif
 
 /*
  * Local Variables: ***

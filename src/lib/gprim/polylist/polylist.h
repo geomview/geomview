@@ -32,6 +32,11 @@
 
 typedef struct PolyList PolyList;
 
+/* Per-polygon flags, set with CR_POLYFLAGS */
+#define POLY_CONCAVE 0x00010000 /* polygon is not convex */
+#define POLY_NONFLAT 0x00020000 /* polygon is not flat   */
+#define POLY_NOPOLY  0x00040000 /* polygon is degenerated */
+
 extern PolyList *PolyListDraw( PolyList * );
 extern BBox     *PolyListBound(PolyList *polylist, Transform T, TransformN *TN);
 extern Geom 	*PolyListSphere( PolyList *,
@@ -39,7 +44,7 @@ extern Geom 	*PolyListSphere( PolyList *,
 extern PolyList *PolyListEvert( PolyList * );
 extern PolyList *PolyListLoad( char * );	/* Loads "off" files */
 extern PolyList *PolyListFLoad( IOBFILE *, char *fname );
-extern char    *PolyListName( void );
+extern char     *PolyListName( void );
 extern PolyList *PolyListSave( PolyList *, char * );
 extern PolyList *PolyListFSave( PolyList *, FILE *, char * );
 extern PolyList *PolyListTransform( PolyList *, Transform, TransformN * );

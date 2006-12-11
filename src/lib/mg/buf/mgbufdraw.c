@@ -38,7 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void	mgbuf_polygon( int nv, HPoint3 *v, int nn, Point3 *n,
 	      	          int nc, ColorA *c );
-void	mgbuf_mesh( int wrap, int nu, int nv, HPoint3 *p, Point3 *n,
+void	mgbuf_mesh( int wrap, int nu, int nv, HPoint3 *p, Point3 *n, Point3 *nq,
 			ColorA *c );
 void	mgbuf_line( HPoint3 *p1, HPoint3 *p2 );
 void	mgbuf_polyline( int nv, HPoint3 *verts, int nc, ColorA *colors,
@@ -283,7 +283,6 @@ void mgbuf_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
     mgbuf_farther();
 }
 
-
 /*-----------------------------------------------------------------------
  * Function:	mgbuf_polylist
  * Description:	draws a Polylist: collection of Polys
@@ -401,7 +400,7 @@ void mgbuf_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
 	for (p = _p, i = 0; i < np; i++, p++)
 	{
 	  for (j = 0, v = p->v; j < p->n_vertices; j++, v++)
-	    mgbuf_drawnormal(&(*v)->pt, &p->pn);
+	    mgbuf_drawnormal(&(*v)->pt, (Point3 *)&p->pn);
 	}
       }
       else
@@ -677,8 +676,8 @@ void mgbufsubmesh(int wrap, int nu, int nv, int umin, int umax, int vmin,
  * Notes:	See mg.doc.
  *
  */
-void mgbuf_mesh( int wrap, int nu, int nv, HPoint3 *P, Point3 *N,
-			ColorA *C )
+void mgbuf_mesh(int wrap, int nu, int nv, HPoint3 *P, Point3 *N, Point3 *NQ,
+		ColorA *C )
 {
   mgbufsubmesh( wrap, nu, nv, 0, nu-1, 0, nv-1, P, N, C);
 }
@@ -755,3 +754,9 @@ mgbuf_drawnormal(HPoint3 *p, Point3 *n)
   BUFmg_add(MGX_END, 0, NULL, NULL);
 
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

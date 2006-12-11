@@ -83,13 +83,13 @@ FILE           *outf;
 	    for (i = 0; i < m->nv; i++) {
 		for (j = 0; j < m->nu; j++) {
 		    if(!(m->flag & MESH_Z))
-			fprintf(outf, "%g %g ", p->x, p->y);
-		    fprintf(outf, "%g ", p->z);
+			fprintf(outf, "%.8g %.8g ", p->x, p->y);
+		    fprintf(outf, "%.8g ", p->z);
 		    if (m->geomflags & VERT_4D)
-		        fprintf(outf, "%g ", p->w);
+		        fprintf(outf, "%.8g ", p->w);
 		    p++;
 		    if (m->flag & MESH_N) {
-			    fprintf(outf, " %g %g %g ", n->x, n->y, n->z);
+			    fprintf(outf, " %.8g %.8g %.8g ", n->x, n->y, n->z);
 			    n++;
 		    }
 		    if (m->flag & MESH_C) {
@@ -98,7 +98,7 @@ FILE           *outf;
 			    c++;
 		    }
 		    if (m->flag & MESH_U) {
-			    fprintf(outf, " %g %g %g", u->x, u->y, u->z);
+			    fprintf(outf, " %.8g %.8g %.8g", u->x, u->y, u->z);
 			    u++;
 		    }
 		    fputc('\n', outf);

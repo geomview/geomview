@@ -30,40 +30,45 @@
 
 #include "bboxP.h"
 #include "polylist.h"
+#include "bsptree.h"
 
 #define PLMAGIC GeomMagic ('p', 1)
 
 typedef struct Vertex
 {
-	HPoint3	pt;
-	ColorA	vcol;
-	Point3	vn;
-	float st[2];
+  HPoint3 pt;
+  ColorA  vcol;
+  Point3  vn;
+  float   st[2];
 }  Vertex;
 
 typedef struct Poly
 {
-	int	n_vertices;
-	Vertex	**v;
-	ColorA  pcol;
-	Point3	pn;
+  int    n_vertices;
+  Vertex **v;
+  ColorA pcol;
+  Point3 pn;    /* average normal */
+  int    flags; /* the flags below are valid if PL_HASPFL is set */
 }  Poly;
 
 struct PolyList
 {
-	GEOMFIELDS;
-	int	n_polys;
-	int	n_verts;
-	Poly	*p;
-	Vertex	*vl;
-	int	flags;
-#  define	  PL_HASVN	0x1	/* Per-vertex normals (vn) valid */
-#  define	  PL_HASPN	0x2	/* Per-polygon normals (pn) valid */
-#  define	  PL_HASVCOL	0x4	/* Per-vertex colors (vcol) valid */
-#  define	  PL_HASPCOL	0x8	/* Per-polygon colors (pcol) valid */
-#  define	  PL_EVNORM	0x10	/* Normals are everted */
-#  define	  PL_HASST	0x20	/* Has s,t texture coords */
-			/* For 4-D points, see geomflags & VERT_4D */
+  GEOMFIELDS;
+  int	  n_polys;
+  int	  n_verts;
+  Poly	  *p;
+  Vertex  *vl;
+  int     flags;
+# define PL_HASVN     0x00000001 /* Per-vertex normals (vn) valid */
+# define PL_HASPN     0x00000002 /* Per-polygon normals (pn) valid */
+# define PL_HASVCOL   0x00000004 /* Per-vertex colors (vcol) valid */
+# define PL_HASPCOL   0x00000008 /* Per-polygon colors (pcol) valid */
+# define PL_EVNORM    0x00000010 /* Normals are everted */
+# define PL_HASST     0x00000020 /* Has s,t texture coords */
+# define PL_HASPFL    0x00000040 /* Has per-poly flags */
+# define PL_HASVALPHA 0x00000080 /* Has per-vertex alpha-channel */
+# define PL_HASPALPHA 0x00000080 /* Has per-polz alpha-channel */
+  /* For 4-D points, see geomflags & VERT_4D */
 };
 
 
@@ -73,6 +78,14 @@ extern PolyList *PolyListDelete( PolyList *poly );
 extern PolyList *PolyListPick( PolyList *, Pick *, Appearance *,
 			       Transform T, TransformN *TN, int *axes );
 extern GeomClass *PolyListMethods();
-extern PolyList *PolyListComputeNormals( PolyList *polyList);
+extern PolyList *PolyListComputeNormals(PolyList *polyList, int flags_needed);
+extern void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
+		       int *flagsp, int *first_concave);
 
-#endif/*POLYLISTPDEFS*/
+#endif /*POLYLISTPDEFS*/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

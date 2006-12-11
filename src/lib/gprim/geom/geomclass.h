@@ -25,7 +25,7 @@
 #ifndef GEOMCLASSDEF
 #define GEOMCLASSDEF
 
-#undef	GEOM_SM
+#undef  GEOM_SM
 
 #include "geom.h"
 #include "appearance.h"
@@ -58,7 +58,7 @@ typedef Geom *GeomScaleFunc( Geom *object, float x, float y, float z );
 typedef Geom *GeomEvertFunc( Geom *object );
 typedef Geom *GeomBoundFunc( Geom *object, Transform T, TransformN *TN );
 typedef Geom *GeomBoundSphereFunc( Geom *object, Transform T,
-				   TransformN *TN, int * axes, int space );
+                                   TransformN *TN, int * axes, int space );
 typedef Geom *GeomEvalFunc(  Geom *object, float u, float v );
 typedef Geom *GeomDiceFunc( Geom *object, int nu, int nv );
 typedef Geom *GeomSubdivideFunc( /* Geom *object */ );
@@ -69,92 +69,99 @@ GeomPickFunc(Geom *, Pick *, Appearance *, Transform, TransformN *, int *axes);
 typedef Geom *GeomFacingFunc( /* Geom *object, ... */ );
 typedef Geom *GeomDrawFunc( /* Geom *object */ );
 
-typedef	int GeomExportFunc( Geom *object, Pool *p );
+typedef int GeomExportFunc( Geom *object, Pool *p );
 typedef Geom *GeomImportFunc( Pool *p );
-typedef	Geom *GeomUnexportFunc( Handle *h );
+typedef Geom *GeomUnexportFunc( Handle *h );
 typedef Geom *GeomScanFunc( Geom *g, int (*func)(/*Geom*,Handle**,void *arg*/), void *arg );
 typedef Geom *GeomAppendFunc( Geom *g, Handle *h, Geom *newitem );
 
 struct GeomClass
 {
 
-	/* General Methods */
-	GeomClass	*super;		/* superclass of this class */
-	GeomNameFunc	*name;
-	GeomMethodsFunc *methods;
-	GeomMessageFunc *message;
+  /* General Methods */
+  GeomClass     *super;         /* superclass of this class */
+  GeomNameFunc  *name;
+  GeomMethodsFunc *methods;
+  GeomMessageFunc *message;
 
-	GeomGetFunc	*get;
-	GeomCreateFunc	*create;
-	GeomDeleteFunc	*Delete;
-	GeomCopyFunc	*copy;
-	GeomReplaceFunc *replace;
-	GeomExtFunc	**extensions;	/* Extension methods live here */
-	GeomFLoadFunc	*fload;
-	int		n_extensions;	/* Size of extensions[] array */
-	GeomFSaveFunc	*fsave;
+  GeomGetFunc   *get;
+  GeomCreateFunc        *create;
+  GeomDeleteFunc        *Delete;
+  GeomCopyFunc  *copy;
+  GeomReplaceFunc *replace;
+  GeomExtFunc   **extensions;   /* Extension methods live here */
+  GeomFLoadFunc *fload;
+  int           n_extensions;   /* Size of extensions[] array */
+  GeomFSaveFunc *fsave;
 
-	/* Geometric Methods */
-	GeomPositionFunc *position;
-	GeomTransformFunc *transform;
-	GeomTransformToFunc *transformto;
+  /* Geometric Methods */
+  GeomPositionFunc *position;
+  GeomTransformFunc *transform;
+  GeomTransformToFunc *transformto;
 
-	GeomEvertFunc  *evert;
-	GeomBoundFunc  *bound;
-	GeomEvalFunc   *eval;
-	GeomDiceFunc   *dice;
-	GeomSubdivideFunc *subdivide;
+  GeomEvertFunc  *evert;
+  GeomBoundFunc  *bound;
+  GeomEvalFunc   *eval;
+  GeomDiceFunc   *dice;
+  GeomSubdivideFunc *subdivide;
 
-	/* Picking methods */
-	GeomPickFunc	*pick;
-	GeomBoundSphereFunc *boundsphere;
-	GeomIterateFunc	*iterate;
-	GeomAppendFunc	*append;	/* Append new item to hierarchy object */
-	GeomScanFunc	*scan;
+  /* Picking methods */
+  GeomPickFunc  *pick;
+  GeomBoundSphereFunc *boundsphere;
+  GeomIterateFunc       *iterate;
+  GeomAppendFunc        *append;        /* Append new item to hierarchy object */
+  GeomScanFunc  *scan;
 
-	/* Graphics Methods */
-	GeomFacingFunc	*facing;
-	GeomDrawFunc	*draw;
+  /* Graphics Methods */
+  GeomFacingFunc        *facing;
+  GeomDrawFunc  *draw;
 
-	/* Communications methods */
-	GeomExportFunc	*export;
-	GeomImportFunc	*import;
-	GeomUnexportFunc *unexport;
+  /* Communications methods */
+  GeomExportFunc        *export;
+  GeomImportFunc        *import;
+  GeomUnexportFunc *unexport;
 };
 
 extern GeomClass *GeomClassCreate();
 extern GeomClass *GeomSubClassCreate();
 extern GeomClass *GeomClassLookup(char *classname);
-extern void	 *GeomClassIterate();
+extern void      *GeomClassIterate();
 extern GeomClass *GeomNextClass( void *iter );
 extern GeomClass *GeomFName2Class( char *fname );
 
 extern Geom *GeomBoundSphereFromBBox(Geom *, Transform, TransformN *, int *axes,
-				     int space);
+                                     int space);
 
 /* internal routine used by file-reading routines */
 extern char *GeomToken(IOBFILE *f);
 
 /* This is the "common" geom stuff which starts every geom */
-#define GEOMFIELDS					\
-    REFERENCEFIELDS	/* magic, ref_count, handle */	\
-    struct GeomClass	*Class;				\
-    struct Appearance	*ap;				\
-    Handle		*aphandle;			\
-    int			geomflags;			\
-    int pdim /* does this belong here? */
+#define GEOMFIELDS                                      \
+  REFERENCEFIELDS       /* magic, ref_count, handle */  \
+  struct GeomClass  *Class;				\
+  struct Appearance *ap;				\
+  Handle            *aphandle;				\
+  int               geomflags;				\
+  int               pdim; /* does this belong here? */	\
+  struct BSPTree    *bsptree /* dito */
 
-struct Geom {	/* common data structures for all Geom's */
-    GEOMFIELDS;
+struct Geom { /* common data structures for all Geom's */
+  GEOMFIELDS;
 } ;
 
-typedef struct HGeom {	/* This tuple appears in hierarchy objects */
-    Handle *h;
-    Geom *g;
+typedef struct HGeom {  /* This tuple appears in hierarchy objects */
+  Handle *h;
+  Geom *g;
 } HGeom;
 
-	/* 32-bit magic numbers for OOGL data types */
-#define	GeomMagic(key, ver)	OOGLMagic('g', ((key) << 8) | ((ver)&0xff))
-#define GeomIsMagic(magic)	(((magic) & 0xffff0000) == GeomMagic(0,0))
+/* 32-bit magic numbers for OOGL data types */
+#define GeomMagic(key, ver)     OOGLMagic('g', ((key) << 8) | ((ver)&0xff))
+#define GeomIsMagic(magic)      (((magic) & 0xffff0000) == GeomMagic(0,0))
 
 #endif /*GEOMCLASSDEF*/
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

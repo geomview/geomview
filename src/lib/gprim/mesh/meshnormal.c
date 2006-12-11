@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -28,22 +29,26 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
-
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
+/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips, Claus-Justus Heine */
 
 #include "meshP.h"
-static void mnorm();
+static void mnorm(HPoint3 *ap, Point3 *an, int nu, int nv,
+		  int uwrap, int vwrap, int evert);
+static void mnormq(HPoint3 *ap, Point3 *an, int nu, int nv,
+		   int uwrap, int vwrap, int evert);
 
 Mesh *
-MeshComputeNormals(Mesh *m)
+MeshComputeNormals(Mesh *m, int need)
 {
   HPoint3 *normp = NULL, *normptr, *pptr;
   int i;
-  if(m->n) {
-    GeomFree(m->n);
+
+  need &= ~m->flag;
+
+  if (!(need & (MESH_N|MESH_NQ))) {
+    return m;
   }
-  m->n = GeomNewN(Point3, m->nu * m->nv);
-  m->flag |= MESH_N;
+
   /* if this a '4D' mesh, we need to truncate (temporarily)
    * before computing the normals
    */
@@ -59,27 +64,109 @@ MeshComputeNormals(Mesh *m)
 #endif
     }
   }
-  mnorm(m->geomflags & VERT_4D ? normp : m->p, m->n, m->nu, m->nv,
-	m->flag & MESH_UWRAP, m->flag & MESH_VWRAP, m->flag & MESH_EVERT);
+
+  if (need & MESH_N) {
+    if(m->n) {
+      GeomFree(m->n);
+    }
+    m->n = GeomNewN(Point3, m->nu * m->nv);
+    m->flag |= MESH_N;
+    mnorm(m->geomflags & VERT_4D ? normp : m->p, m->n, m->nu, m->nv,
+	  m->flag & MESH_UWRAP, m->flag & MESH_VWRAP, m->flag & MESH_EVERT);
+  }
+  
+  if (need & MESH_NQ) {
+    if(m->nq) {
+      GeomFree(m->nq);
+    }
+    m->nq = GeomNewN(Point3, m->nu * m->nv);
+    m->flag |= MESH_NQ;
+    mnormq(m->geomflags & VERT_4D ? normp : m->p, m->nq, m->nu, m->nv,
+	   m->flag & MESH_UWRAP, m->flag & MESH_VWRAP, m->flag & MESH_EVERT);
+  }
+
   if (m->geomflags & VERT_4D) GeomFree(normp);
   return m;
 }
 
+static void QuadNormal(HPoint3 *v[4], Point3 *nu_av)
+{
+  int n;
+  HPoint3 *v1, *v2, *v3, **vp;
+  Point3 nu;
+
+  nu_av->x = nu_av->y = nu_av->z = 0.0;
+
+  n = 4;
+  v1 = v[n-2];
+  v2 = v[n-1];
+  vp = v;
+  
+#define ANTI(P,Q)						\
+  ((v2->P - v1->P) * (v3->Q - v1->Q) -				\
+   (v2->Q - v1->Q) * (v3->P - v1->P))
+
+  do {
+    v3 = *vp++;
+    nu.x = ANTI(y,z);
+    nu.y = ANTI(z,x);
+    nu.z = ANTI(x,y);
+    if (Pt3Dot(&nu, nu_av) >= 0) {
+      Pt3Add(nu_av, &nu, nu_av);
+    } else {
+      Pt3Sub(nu_av, &nu, nu_av);
+    }  
+    v1 = v2;
+    v2 = v3;
+  } while(--n > 0);
+  Pt3Unit(nu_av);
+}
 
 static void
-mnorm(ap, an, nu, nv, uwrap, vwrap, evert)
-     HPoint3	*ap;
-     Point3	*an;
-     int	nu, nv;
-     int	uwrap, vwrap;
-     int	evert;
+mnormq(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
+{
+  int v0 = 1, prev0v = 0;
+  int u0 = 1, prev0u = 0;
+  int u, v, prevu, prevv;
+  HPoint3 *vq[4];
+
+  if(uwrap) {
+    v0 = 0, prev0v = nv-1;
+  }
+  if(vwrap) { 
+    u0 = 0, prev0u = nu-1;
+  }
+
+#define MESHIDX(u, v) ((v)*nu + (u))
+  for(prevv = prev0v, v = v0; v < nv; prevv = v, v++) {
+    for(prevu = prev0u, u = u0; u < nu; prevu = u, u++) {
+      /* quad normals are ordered according to the least-numbered
+       * vertex, i.e. the normal of the quad 
+       *
+       * (v,u)   (v,u+1)
+       * (v+1,u) (v+1,u+1)
+       *
+       * is to be found at position MESHIDX(v, u)
+       */
+      vq[0] = ap + MESHIDX(prevu, prevv);
+      vq[1] = ap + MESHIDX(u, prevv);
+      vq[2] = ap + MESHIDX(u, v);
+      vq[3] = ap + MESHIDX(prevu, v);
+      QuadNormal(vq, an + MESHIDX(u, prevv /*prevu, prevv*/));
+    }
+  }
+#undef MESHIDX
+}
+
+static void
+mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
 {
   HPoint3 *prev, *next;
   Point3 *n;
   int k;
   int u, v;
-  float x,y,z, norm;
-  float unit;
+  Pt3Coord x,y,z, norm;
+  Pt3Coord unit;
 
   /*
    * We set the normal at each point to be the mean of the

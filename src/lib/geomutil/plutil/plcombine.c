@@ -55,8 +55,9 @@ Geom *PLCombine(Geom *a1, Geom *b1)
   int i, j, k;
   HPoint3 *point4;
   ColorA *color, *polycolor;
-  Point3 *normal, *polynormal;
-  int *vert, nvertices, *nvert;
+  Point3 *normal;
+  Point3 *polynormal;
+  int *vert, nvertices, *nvert, *polyflags;
   Geom *new;
   int flags, fourd = 0;
 
@@ -68,13 +69,13 @@ Geom *PLCombine(Geom *a1, Geom *b1)
 
   nvertices = a->n_verts + b->n_verts;
 
-
   /* Copy points, normals, colors. */
   point4 = (HPoint3 *)OOG_NewE(nvertices * sizeof(HPoint3), msg);
   color = (ColorA *)OOG_NewE(nvertices * sizeof(ColorA), msg);
   normal = (Point3 *)OOG_NewE(nvertices * sizeof(Point3), msg);
+
   for (i = 0; i < a->n_verts; i++) {
-    HPt3Copy(&a->vl[i].pt, &point4[i]);
+    point4[i] = a->vl[i].pt;
     color[i] = a->vl[i].vcol;
     normal[i] = a->vl[i].vn;
   }
@@ -90,6 +91,8 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     (ColorA *)OOG_NewE((a->n_polys + b->n_polys) * sizeof(ColorA), msg);
   polynormal =
     (Point3 *)OOG_NewE((a->n_polys + b->n_polys) * sizeof(Point3), msg);
+  polyflags =
+    (int *)OOG_NewE((a->n_polys + b->n_polys) * sizeof(int), msg);
   for (i = j = 0; i < a->n_polys; i++) j += a->p[i].n_vertices;
   for (i = 0; i < b->n_polys; i++) j += b->p[i].n_vertices;
   vert = (int *)OOG_NewE(j * sizeof(int), msg);
@@ -97,6 +100,7 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     nvert[i] = a->p[i].n_vertices;
     polycolor[i] = a->p[i].pcol;
     polynormal[i] = a->p[i].pn;
+    polyflags[i] = a->p[i].flags;
     for (j = 0; j < a->p[i].n_vertices; j++) 
       vert[k++] = a->p[i].v[j] - a->vl;
   }
@@ -104,6 +108,7 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     nvert[a->n_polys + i] = b->p[i].n_vertices;
     polycolor[a->n_polys + i] = b->p[i].pcol;
     polynormal[a->n_polys + i] = b->p[i].pn;
+    polyflags[a->n_polys + i] = b->p[i].flags;
     for (j = 0; j < b->p[i].n_vertices; j++)
       vert[k++] = a->n_verts + b->p[i].v[j] - b->vl;
   }
@@ -152,10 +157,11 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     }
   }
 
-  if ((a->flags & PL_HASVN) && !(b->flags & PL_HASVN)) flags ^= PL_HASVN;
-  if ((a->flags & PL_HASPN) && !(b->flags & PL_HASPN)) flags ^= PL_HASPN;
-  if ((a->geomflags & VERT_4D) && !(b->geomflags & VERT_4D)) 
-    fourd = 0;
+  if ((a->flags & PL_HASVN)  && !(b->flags & PL_HASVN))  flags ^= PL_HASVN;
+  if ((a->flags & PL_HASPN)  && !(b->flags & PL_HASPN))  flags ^= PL_HASPN;
+  if ((a->flags & PL_HASPFL) && !(b->flags & PL_HASPFL)) flags ^= PL_HASPFL;
+  if ((a->geomflags & VERT_4D) || (b->geomflags & VERT_4D))
+    fourd = 1;
 
   new = GeomCreate("polylist", 
 		   CR_NPOLY, a->n_polys + b->n_polys,
@@ -165,6 +171,7 @@ Geom *PLCombine(Geom *a1, Geom *b1)
 		   CR_NVERT, nvert,
 		   CR_VERT, vert,
 		   CR_POLYNORMAL, polynormal,
+		   CR_POLYFLAGS, polyflags,
 		   CR_POLYCOLOR, polycolor,
 		   CR_FLAG, flags,
 		   CR_4D, fourd,
@@ -176,6 +183,7 @@ Geom *PLCombine(Geom *a1, Geom *b1)
   OOGLFree(nvert);
   OOGLFree(polycolor);
   OOGLFree(polynormal);
+  OOGLFree(polyflags);
   OOGLFree(vert);
 
   return(new);

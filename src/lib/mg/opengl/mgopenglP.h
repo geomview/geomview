@@ -33,6 +33,7 @@
 # include <GL/glx.h>
 #endif
 
+#include "bsptree.h"
 
 enum { SGL=0, DBL=1 };
 
@@ -89,8 +90,17 @@ typedef struct mgopenglcontext {
   TxUser *curtex;              /* Currently-bound texture (NULL if none) */
   int dither;			/* Dither enabled? */
   TxUser *bgimage;		/* Background image (not really a texture) */
+
+  GLuint *light_lists;
+  int n_light_lists;
+  GLuint *texture_lists;
+  int n_texture_lists;
+  GLuint *translucent_lists;
+  int n_translucent_lists;
+  int translucent_seq;
 } mgopenglcontext;
 
+#define DPYLIST_INCR 100
 
 #define	MAXZNUDGE	8	/* Max possible depth of mgopengl_closer()/farther() calls */
 
@@ -126,6 +136,10 @@ extern void mgopengl_lights(LmLighting *lm, struct mgastk *astk);
 
 extern void mgopengl_appearance( struct mgastk *ma, int mask );
 
+extern GLuint *mgopengl_realloc_lists(GLuint *lists, int *n_lists);
+extern GLuint mgopengl_new_translucent(void);
+extern void mgopengl_end_translucent(void);
+extern void mgopengl_bsptree(BSPTree *bsptree);
 
 #ifdef _WIN32
 extern void mgopengl_c4f(float *);
@@ -147,3 +161,9 @@ extern void mgopengl_n3f(float *);
 		_mgopenglc->is_lighting = 0; \
 	    } \
 	}
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

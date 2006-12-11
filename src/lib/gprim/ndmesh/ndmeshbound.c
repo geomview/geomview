@@ -102,7 +102,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
     HPt3Dehomogenize(&min, &min);
     max = min;
     while(--n > 0) {
-      HPtNToHPt3(*(++p), NULL, &min);
+      HPtNToHPt3(*(++p), NULL, &tmp);
       HPt3Transform(T, &tmp, &clean);
       HPt3MinMax(&min, &max, &clean);
     }

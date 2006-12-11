@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.4 2006/07/14 17:47:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.5 2006/12/11 04:50:12 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -43,29 +43,56 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "npolylistP.h"
 
 NPolyList *
-NPolyListCopy(NPolyList *p)
+NPolyListCopy(NPolyList *pl)
 {
-	NPolyList *newpl;
-	NPoly *newp;
-	float *newv;
-	int *newvi;
-	ColorA *newvc;
+  
+  NPolyList *newpl;
+  Poly *newp;
+  Vertex *newvl;
+  HPtNCoord *newv;
+  int *newvi;
+  int *newpv;
+  ColorA *newvcol;
+  Vertex **newvp;
+  int i, k;
 
-	if(p == NULL) return NULL;
+  if (pl == NULL)
+    return NULL;
+	
+  newv = OOGLNewNE(HPtNCoord, pl->pdim*pl->n_verts, "NPolyList verts");
+  newvl = OOGLNewNE(Vertex, pl->n_verts, "NPolyList verts description");
+  newp = OOGLNewNE(Poly, pl->n_polys, "NPolyList polygons");
+  newvi = OOGLNewNE(int, pl->nvi, "NPolyList vert indices");
+  newpv = OOGLNewNE(int, pl->n_polys, "NPolyList polygon vertices");
+  newvcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyList vertex colors");
+  newpl = OOGLNewE(NPolyList, "NPolyList");
+  *newpl = *pl;
 
-	newv = OOGLNewNE(float, p->pdim*p->n_verts, "NPolyList verts");
-	newp = OOGLNewNE(NPoly, p->n_polys, "NPolyList polygons");
-	newvc = p->vcol ? OOGLNewNE(ColorA, p->n_verts, "NPolyList vcolors") : NULL;
-	newvi = OOGLNewNE(int, p->nvi, "NPolyList vert indices");
-	newpl = OOGLNewE(NPolyList, "NPolyList");
-	*newpl = *p;
-	newpl->p = newp;
-	newpl->v = newv;
-	newpl->vcol = newvc;
-	memcpy(newv, p->v, p->n_verts * p->pdim * sizeof(float));
-	memcpy(newp, p->p, p->n_polys * sizeof(NPoly));
-	memcpy(newvi, p->vi, p->nvi * sizeof(int));
-	if(newvc) memcpy(newvc, p->vcol, p->n_verts * sizeof(ColorA));
+  newpl->vi   = newvi;
+  newpl->pv   = newpv;
+  newpl->v    = newv;
+  newpl->vcol = newvcol;
+  newpl->p    = newp;
+  newpl->vl   = newvl;
 
-	return (newpl);
+  memcpy(newvi, pl->vi, pl->nvi * sizeof(int));
+  memcpy(newpv, pl->pv, pl->n_polys * sizeof(int));
+  memcpy(newv, pl->v, pl->n_verts * pl->pdim * sizeof(HPtNCoord));
+  memcpy(newvcol, pl->vcol, pl->n_verts * sizeof(ColorA));
+  memcpy(newp, pl->p, pl->n_polys * sizeof(Poly));
+  memcpy(newvl, pl->vl, pl->n_verts * sizeof(Vertex));
+  
+  newvp = OOGLNewNE(Vertex *, pl->nvi, "NPolyList 3d connectivity");
+  for (i = 0; i < newpl->n_polys; i++) {
+    Poly *p = &newpl->p[i];
+    
+    p->v   = newvp;
+    newvp += p->n_vertices;
+    
+    for (k = 0; k < p->n_vertices; k++) {
+      p->v[k] = &newpl->vl[newpl->vi[newpl->pv[i]+k]];
+    }
+  }
+
+  return newpl;
 }

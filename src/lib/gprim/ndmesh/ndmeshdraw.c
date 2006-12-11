@@ -52,6 +52,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   int i, colored = 0;
   int npts = mesh->mdim[0] * mesh->mdim[1];
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+  Appearance *ap = &_mgc->astk->ap;
+  Material *mat = &_mgc->astk->mat;
+  int normal_need;
 
   memset(&m, 0, sizeof(m));
   m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
@@ -65,9 +68,57 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     colored = mapHPtN(NDctx, *op, np, &m.c[i]);
   }
   if(colored) m.flag |= MESH_C;
-  MeshComputeNormals(&m);
-  mgmesh(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c);
-  OOGLFree(m.n);
+  /* The drawing routines might need either polygon or vertex normals,
+   * so if either is missing and either might be needed, we force it
+   * to be computed.
+   */  
+  normal_need = 0;    
+  m.flag &= ~(MESH_N|MESH_NQ);
+  if (ap->flag & APF_NORMALDRAW) {
+    normal_need = MESH_N|MESH_NQ;
+  } else if (ap->flag & APF_FACEDRAW) {
+    if (ap->shading == APF_FLAT) {
+      normal_need |= MESH_NQ;
+    }
+    if (ap->shading == APF_SMOOTH) {
+      normal_need |= MESH_N;
+    }
+  }
+  MeshComputeNormals(&m, normal_need);
+
+  if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
+    BSPTreeCreate((Geom *)&m);
+    BSPTreeAddObject(m.bsptree, (Geom *)&m);
+    BSPTreeFinalize(m.bsptree);
+  }
+
+  if(_mgc->astk->useshader) {
+    ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;
+    if(c) {
+      (*_mgc->astk->shader)(npts, m.p, m.n ? m.n : m.nq, c, mesh->c);
+    } else {
+      for(i = 0; i < npts; i++) {
+	(*_mgc->astk->shader)(1, m.p + i, m.n + i,
+			      (ColorA *)&_mgc->astk->mat.diffuse, m.c + i);
+      }
+    }
+    colored = 1;
+  }
+  if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
+    BSPTreeCreate((Geom *)&m);    
+  }
+  mgmesh(m.flag, m.nu, m.nv, m.p, m.n, m.nq, colored ? m.c : mesh->c,
+	 m.flag);
+
+  if (m.bsptree) {
+    mgbsptree(m.bsptree);
+    BSPTreeFree((Geom *)&m);
+  }
+
+  if (m.n)
+    OOGLFree(m.n);
+  if (m.nq)
+    OOGLFree(m.nq);
 }
 
 NDMesh *
@@ -83,4 +134,8 @@ NDMeshDraw(NDMesh *mesh)
   return mesh;
 }
 
-
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

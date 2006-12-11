@@ -59,6 +59,7 @@ static void tossmesh(NDMesh *m)
     if(m->p) OOGLFree(m->p);
     if(m->c) OOGLFree(m->c);
     if(m->u) OOGLFree(m->u);
+    BSPTreeFree((Geom *)m);
     m->p = NULL;
     m->c = NULL;
     m->u = NULL;
@@ -66,10 +67,7 @@ static void tossmesh(NDMesh *m)
 
 
 NDMesh *
-NDMeshCreate (exist, classp, a_list)
-NDMesh *exist;
-GeomClass *classp;
-va_list *a_list;
+NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 {
     NDMesh *m;
     int		attr, copy = 1;
@@ -92,6 +90,7 @@ va_list *a_list;
     } else {
 	/* Check that exist is a NDMesh... */
 	m = exist;
+	BSPTreeFree((Geom *)m);
     }
 
     npts = ndmeshsize( m );

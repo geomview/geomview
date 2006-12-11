@@ -83,17 +83,5 @@ MeshCopy(obj)
 	} else
                 m->u = NULL;
 
-	if (m->flag & MESH_D) {
-	   if ((m->d = GeomNewN(float, n)) == NULL
-		    || (m->nd = GeomNewN(Point3, n)) == NULL) {
-              GeomError(0,"Can't allocate space for mesh d/nd");
-              return(NULL);
-           }
-	   memcpy(m->nd, om->nd, n * sizeof(Point3));
-	   memcpy(m->d, om->d, n * sizeof(float));
-	} else {
-		m->d = NULL;
-		m->nd = NULL;
-	}
 	return m;
 }

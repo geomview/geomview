@@ -260,7 +260,7 @@ Geom *PLDataToGeom(PLData *PL, int want, int unwant)
 		CR_POLYCOLOR, pc,
 		CR_END);
     if(want & PL_N)
-	PolyListComputeNormals((PolyList *)pl);
+	PolyListComputeNormals((PolyList *)pl, PL_HASPN|PL_HASPFL);
     return pl;
   }
 }
@@ -421,10 +421,11 @@ static void *ndmeshtoPL(int sel, NDMesh *ndm, va_list *args) {
 }
 
 
-static void *npolylisttoPL(int sel, NPolyList *npl, va_list *args) {
+static void *npolylisttoPL(int sel, NPolyList *npl, va_list *args)
+{
   PLData *PL = va_arg(*args, PLData *);
   int base;
-  NPoly *p;
+  Poly *p;
   int i, vi;
 #define VMAX 100
   int face[VMAX];
@@ -438,7 +439,7 @@ static void *npolylisttoPL(int sel, NPolyList *npl, va_list *args) {
 	vip = OOGLNewNE(int, p->n_vertices, "npolylist face");
 
     for(vi = 0; vi < p->n_vertices; vi++)
-	vip[vi] = base + npl->vi[vi + p->vi0];
+      vip[vi] = base + npl->vi[vi + npl->pv[i]];
 
     PLaddface(PL, p->n_vertices, vip,
 			npl->flags & PL_HASPCOL ? &p->pcol : NULL);

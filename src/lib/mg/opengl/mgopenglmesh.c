@@ -40,26 +40,29 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include <mgP.h>
 #include <mgopenglP.h>
+#include <meshflag.h>
 
 #undef P
 /* ^^^ evil kludge XXX to get the P variables here to not get confused
  * with the P prototype macro. -nils */
-#define	HAS_N	0x1
-#define	HAS_C	0x2
-#define	HAS_SMOOTH 0x4
-#define	HAS_STR 0x8
+#define HAS_N      0x01
+#define HAS_NQ     0x02
+#define HAS_C      0x04
+#define HAS_SMOOTH 0x08
+#define HAS_STR    0x10
 
 void
-mgopenglsubmesh( int wrap, int nu, int nv,
-		 int umin, int umax,
-		 int vmin, int vmax,
-		 HPoint3 *meshP, Point3 *meshN,
-		 ColorA *meshC, Point3 *meshSTR)
+mgopenglsubmesh(int wrap, int nu, int nv,
+		int umin, int umax,
+		int vmin, int vmax,
+		HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
+		ColorA *meshC, Point3 *meshSTR,
+		int mflags)
 {
   int u, v;
   int ucnt, vcnt;
   HPoint3 *P;
-  Point3 *N;
+  Point3 *N, *NQ;
   ColorA *C;
   Point3 *STR;
   int prev;
@@ -78,23 +81,37 @@ mgopenglsubmesh( int wrap, int nu, int nv,
     meshC = 0;
 
   has = 0;
-  if(meshN && !_mgc->astk->useshader)
-    has = HAS_N;
-  if(meshC)
+  if (meshN && !_mgc->astk->useshader)
+    has |= HAS_N;
+  if (meshNQ && !_mgc->astk->useshader)
+    has |= HAS_NQ;
+  if (meshC)
     has |= HAS_C;
-  if(IS_SMOOTH(ap->shading))
+  if (IS_SMOOTH(ap->shading)) {
     has |= HAS_SMOOTH;
-  if((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
-        && _mgc->astk->ap.tex != NULL) {
-    if(meshSTR != NULL)
-        has |= HAS_STR;
-    if(has&HAS_STR) {
-        mgopengl_needtexture();
+    has &= ~HAS_NQ;
+  } else if (has & HAS_NQ) {
+    has &= ~HAS_N;
+  }
+  if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
+     && _mgc->astk->ap.tex != NULL) {
+    if (meshSTR != NULL)
+      has |= HAS_STR;
+    if (has&HAS_STR) {
+      mgopengl_needtexture();
+    }
+  }
+  if ((_mgc->astk->mat.override & MTF_ALPHA) &&
+      (_mgc->astk->mat.valid & MTF_ALPHA)) {
+    if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
+      mflags |= MESH_ALPHA;
+    } else {
+      mflags &= ~MESH_ALPHA;
     }
   }
 
-
-  if( ap->flag & APF_FACEDRAW && nu > 1 && nv > 1 ) {	/* Draw faces */
+  if (ap->flag & APF_FACEDRAW && nu > 1 && nv > 1 &&
+      !((ap->flag & APF_TRANSP) && (mflags & MESH_ALPHA))) {
 
     /* We triangulate strips of (v,u) mesh points:
      *  (v,u)    (v,u+1)    (v,u+2) ...
@@ -107,11 +124,12 @@ mgopenglsubmesh( int wrap, int nu, int nv,
      */
 
 
-    glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
+    glEnable(GL_COLOR_MATERIAL);
     MAY_LIGHT();
 
     if(!(has & HAS_C))
-	D4F(&ap->mat->diffuse);
+      D4F(&ap->mat->diffuse);
 
     v = vmax - vmin + 1;
     du = umin + vmin * nu;
@@ -127,14 +145,15 @@ mgopenglsubmesh( int wrap, int nu, int nv,
     }
 
     do {					/* Loop over V */
-     P = meshP + du;
-     N = meshN + du;
-     C = meshC + du;
-     STR = meshSTR + du;
-     ucnt = umax - umin + 1;
-     glBegin(GL_TRIANGLE_STRIP);
-     douwrap = (wrap & MM_UWRAP);
-     do {
+      P  = meshP + du;
+      N  = meshN + du;
+      NQ = meshNQ + du;
+      C  = meshC + du;
+      STR = meshSTR + du;
+      ucnt = umax - umin + 1;
+      glBegin(GL_TRIANGLE_STRIP);
+      douwrap = (wrap & MM_UWRAP);
+      do {
 	/* Loop over U */
 	u = ucnt;
 	ucnt = 0;
@@ -166,6 +185,15 @@ mgopenglsubmesh( int wrap, int nu, int nv,
 	  } while(--u);
 	  break;
 
+	case HAS_NQ:
+	  do {
+	    N3F(NQ+prev,P+prev);
+	    glVertex4fv((float *)(P+prev));
+	    glVertex4fv((float *)P);
+	    NQ++; P++;
+	  } while(--u);
+	  break;
+
 	case HAS_N:
 	  do {
 	    N3F(N+prev,P); glVertex4fv((float *)(P+prev));
@@ -179,6 +207,14 @@ mgopenglsubmesh( int wrap, int nu, int nv,
 	    N3F(N+prev,P); glVertex4fv((float *)(P+prev));
 	    N3F(N,P); glVertex4fv((float *)P);
 	    N++; P++;
+	  } while(--u);
+	  break;
+
+	case HAS_C|HAS_NQ:
+	  do {
+	    D4F(C+prev); N3F(NQ+prev,P+prev); glVertex4fv((float *)(P+prev));
+	    glVertex4fv((float *)P);
+	    C++; NQ++; P++;
 	  } while(--u);
 	  break;
 
@@ -231,6 +267,17 @@ mgopenglsubmesh( int wrap, int nu, int nv,
           } while(--u);
           break;
 
+        case HAS_NQ|HAS_STR:
+          do {
+	    N3F(NQ+prev,P+prev);
+	    glTexCoord2fv((float *)(STR+prev));
+	    glVertex4fv((float *)(P+prev));
+            glTexCoord2fv((float *)STR);
+	    glVertex4fv((float *)P);
+            NQ++; P++; STR++;
+          } while(--u);
+          break;
+
         case HAS_N|HAS_STR:
           do {
             N3F(N+prev,P);
@@ -251,6 +298,18 @@ mgopenglsubmesh( int wrap, int nu, int nv,
 	    glTexCoord2fv((float *)STR);
 	    glVertex4fv((float *)P);
             N++; P++; STR++;
+          } while(--u);
+          break;
+
+        case HAS_C|HAS_NQ|HAS_STR:
+	  do {
+	    N3F(NQ+prev,P+prev);
+            D4F(C+prev);
+	    glTexCoord2fv((float *)(STR+prev));
+	    glVertex4fv((float *)(P+prev));
+            glTexCoord2fv((float *)STR);
+	    glVertex4fv((float *)P);
+            C++; NQ++; P++; STR++;
           } while(--u);
           break;
 
@@ -284,6 +343,7 @@ mgopenglsubmesh( int wrap, int nu, int nv,
             ucnt = 1;
             P = meshP + du;
             N = meshN + du;
+            NQ = meshNQ + du;
             C = meshC + du;
             STR = meshSTR + du;
           }
@@ -292,80 +352,96 @@ mgopenglsubmesh( int wrap, int nu, int nv,
           glBegin(GL_TRIANGLE_STRIP);
           C--; N--; P--; STR--; /* Redraw last vertex */
         }
-     } while(ucnt);
+      } while(ucnt);
 
-     glEnd();
-     prev = -nu;
-     du += nu;
-   } while(--v > 0);
+      glEnd();
+      prev = -nu;
+      du += nu;
+    } while(--v > 0);
   }
 
   if(ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)
-	|| (ap->flag & APF_FACEDRAW && (nu == 1 || nv == 1))) {
+     || (ap->flag & APF_FACEDRAW && (nu == 1 || nv == 1))) {
     glDisable(GL_COLOR_MATERIAL);
     DONT_LIGHT();
     if(_mgopenglc->znudge) mgopengl_closer();
     if(ap->flag & APF_EDGEDRAW) {			/* Draw edges */
-	glColor3fv((float *)&ap->mat->edgecolor);
+      glColor3fv((float *)&ap->mat->edgecolor);
 
-	du = umin + vmin * nu;
-	ucnt = umax - umin + 1;
-	vcnt = vmax - vmin + 1;
-	v = vcnt;
-	do {
-	    if(wrap & MM_UWRAP)
-		glBegin(GL_LINE_LOOP);
-	    else
-		glBegin(GL_LINE_STRIP);
-	    u = ucnt;
-	    P = meshP + du;
-	    do {
-		glVertex4fv((float *)P);
-		P++;
-	    } while(--u > 0);
-	    if(wrap & MM_UWRAP)
-		glEnd();
-	    else
-		glEnd();
-	    du += nu;
-	} while(--v > 0);
-
-	du = umin + vmin * nu;
+      du = umin + vmin * nu;
+      ucnt = umax - umin + 1;
+      vcnt = vmax - vmin + 1;
+      v = vcnt;
+      do {
+	if(wrap & MM_UWRAP)
+	  glBegin(GL_LINE_LOOP);
+	else
+	  glBegin(GL_LINE_STRIP);
 	u = ucnt;
+	P = meshP + du;
 	do {
-	    v = vcnt;
-	    if(wrap & MM_VWRAP)
-		glBegin(GL_LINE_LOOP);
-	    else
-		glBegin(GL_LINE_STRIP);
-	    P = meshP + du;
-	    do {
-		glVertex4fv((float *)P);
-		P += nu;
-	    } while(--v > 0);
-	    if(wrap & MM_VWRAP)
-		glEnd();
-	    else
-		glEnd();
-	    du++;
+	  glVertex4fv((float *)P);
+	  P++;
 	} while(--u > 0);
+	if(wrap & MM_UWRAP)
+	  glEnd();
+	else
+	  glEnd();
+	du += nu;
+      } while(--v > 0);
+
+      du = umin + vmin * nu;
+      u = ucnt;
+      do {
+	v = vcnt;
+	if(wrap & MM_VWRAP)
+	  glBegin(GL_LINE_LOOP);
+	else
+	  glBegin(GL_LINE_STRIP);
+	P = meshP + du;
+	do {
+	  glVertex4fv((float *)P);
+	  P += nu;
+	} while(--v > 0);
+	if(wrap & MM_VWRAP)
+	  glEnd();
+	else
+	  glEnd();
+	du++;
+      } while(--u > 0);
     }
 
-    if(ap->flag & APF_NORMALDRAW && meshN != NULL) {
+    if(ap->flag & APF_NORMALDRAW) {
+      if (has & HAS_N) {
 	glColor3fv((float *)&ap->mat->normalcolor);
 
 	for (i = nu*nv, P=meshP, N=meshN; --i >= 0; P++, N++) {
-	    mgopengl_drawnormal(P, N);
+	  mgopengl_drawnormal(P, N);
 	}
+      } else if (has & HAS_NQ) {
+	glColor3fv((float *)&ap->mat->normalcolor);
+
+	for (i = nu*nv, P=meshP, NQ=meshNQ; --i >= 0; P++, NQ++) {
+	  mgopengl_drawnormal(P, NQ);
+	}
+      }
     }
     if(_mgopenglc->znudge) mgopengl_farther();
   }
 }
 
 void
-mgopengl_mesh( int wrap, int nu, int nv,
-		 HPoint3 *meshP, Point3 *meshN,
-		 ColorA *meshC, Point3 *meshSTR)
+mgopengl_mesh(int wrap, int nu, int nv,
+	      HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
+	      ColorA *meshC, Point3 *meshSTR,
+	      int mflags)
 {
-  mgopenglsubmesh( wrap, nu, nv, 0, nu-1, 0, nv-1, meshP, meshN, meshC, meshSTR);
+  mgopenglsubmesh(wrap, nu, nv, 0, nu-1, 0, nv-1, meshP,
+		  meshN, meshNQ, meshC, meshSTR, mflags);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

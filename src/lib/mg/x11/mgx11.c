@@ -103,7 +103,8 @@ struct mgfuncs mgx11funcs = {
   mgx11_line,
   mgx11_polyline,
   mg_quads,
-  mg_bezier
+  mg_bezier,
+  mg_bsptree
   };
 
 

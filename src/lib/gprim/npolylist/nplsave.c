@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -29,10 +30,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
 
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
+/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips, Claus-Justus Heine */
 
 /*
- * Save a PolyList (in .off format).
+ * Save a NPolyList (in .off format).
  */
 
 #include "npolylistP.h"
@@ -40,48 +41,77 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 NPolyList *
 NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
 {
-	int i, k;
-	NPoly *p;
-	float *v;
-	ColorA *c;
+  int i, k;
+  HPtNCoord *v;
+  ColorA *c;
 
-	/* We don't really know the number of edges and it's a pain to count.
-	 * Assume Euler number 2.
-	 */
-	fprintf(outf, "%s%snOFF %d\n%d %d %d\n",
-		&"C"[pl->flags & PL_HASVCOL ? 0 : 1],
-		&"4"[pl->geomflags & VERT_4D ? 0 : 1],
-		pl->pdim - 1,
-		pl->n_verts, pl->n_polys,
-		0);
+  /* We don't really know the number of edges and it's a pain to count.
+   * Assume Euler number 2.
+   */
+  if (pl->pdim == 4) {
+    fprintf(outf, "%s%s%sOFF\n%d %d %d\n",
+	    pl->flags & PL_HASST ? "ST" : "",
+	    pl->flags & PL_HASVCOL ? "C" : "",
+	    pl->geomflags & VERT_4D ? "4" : "",
+	    pl->n_verts, pl->n_polys,
+	    0);
+  } else {
+    fprintf(outf, "%s%s%snOFF %d\n%d %d %d\n",
+	    pl->flags & PL_HASST ? "ST" : "",
+	    pl->flags & PL_HASVCOL ? "C" : "",
+	    pl->geomflags & VERT_4D ? "4" : "",
+	    pl->pdim - 1,
+	    pl->n_verts, pl->n_polys,
+	    0);
+  }
 
-	for(i = pl->n_verts, v = pl->v, c = pl->vcol; --i >= 0; ) {
-	  if(pl->geomflags & VERT_4D) {
-	    for(k = pl->pdim; --k >= 0; )
-		fprintf(outf, "%g ", *v++);
-	  } else {
-	    float denom = *v++;
-	    for(k = pl->pdim; --k > 0; )
-		fprintf(outf, "%g ", *v++/denom);
-	  }
-	  if(pl->flags & PL_HASVCOL) {
-	    fprintf(outf, "  %g %g %g %g", c->r, c->g, c->b, c->a);
-	    c++;
-	  }
-	  fputc('\n', outf);
+  for(i = 0, v = pl->v, c = pl->vcol; i < pl->n_verts; ++i, ++c) {
+    if(pl->geomflags & VERT_4D) {
+      if (pl->pdim == 4) {
+	float denom = *v++;
+	for(k = pl->pdim-1; --k >= 0; ) {
+	  fprintf(outf, "%.8g ", *v++);
 	}
+	fprintf(outf, "%.8g ", denom);
+      } else {
+	for(k = pl->pdim; --k >= 0; )
+	  fprintf(outf, "%.8g ", *v++);
+      }
+    } else {
+      float denom = *v++;
+      for(k = pl->pdim; --k > 0; )
+	fprintf(outf, "%.8g ", *v++/denom);
+    }
+    
+    if(pl->flags & PL_HASVCOL) {
+      fprintf(outf, "  %.8g %.8g %.8g %.8g", c->r, c->g, c->b, c->a);
+    }
 
-	fputc('\n', outf);
-	for(i = pl->n_polys, p = pl->p; --i >= 0; p++) {
-	    fprintf(outf, "\n%d	", p->n_vertices);
-	    for(k = 0; k < p->n_vertices; k++)
-		fprintf(outf, " %d", pl->vi[p->vi0 + k]);
-	    if((pl->flags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
-		fprintf(outf, "\t%g %g %g %g",
-			p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
-	    }
-	}
-	fputc('\n', outf);
+    if (pl->flags & PL_HASST) {
+      fprintf(outf, "  %.8g %.8g", pl->vl[i].st[0], pl->vl[i].st[1]);
+    }
+    fputc('\n', outf);
+  }
 
-	return (ferror(outf) ? NULL : pl);
+  fputc('\n', outf);
+  for(i = 0; i < pl->n_polys; i++) {
+    Poly *p = &pl->p[i];
+    fprintf(outf, "\n%d	", p->n_vertices);
+    for(k = 0; k < p->n_vertices; k++)
+      fprintf(outf, " %d", pl->vi[pl->pv[i] + k]);
+    if((pl->flags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
+      fprintf(outf, "\t%.8g %.8g %.8g %.8g",
+	      p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
+    }
+  }
+  fputc('\n', outf);
+
+  return (ferror(outf) ? NULL : pl);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: *
+ */
+

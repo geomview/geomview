@@ -31,59 +31,129 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
+#ifndef alloca
+#include <alloca.h>
+#endif
+#include <stdlib.h>
 #include "meshP.h"
 #include "mgP.h"
 #include "hpointn.h"
 #include "cmodel.h"
-#include <stdlib.h>
-#ifndef alloca
-#include <alloca.h>
-#endif
+#include "bsptreeP.h"
 
 static int
 draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
 {
   Mesh m = *mesh;
-  HPointN *h = HPtNCreate(5, NULL);
+  HPointN *h;
   HPoint3 *op, *np;
-  int i, colored = 0;
+  int i, colored = 0, alpha = 0;
   int npts = m.nu * m.nv;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+  Appearance *ap = &_mgc->astk->ap;
+  Material *mat = &_mgc->astk->mat;
+  int normal_need;
 
-  m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
-  m.n = NULL;
-  m.c = (ColorA *)alloca(npts*sizeof(ColorA));
-  if (mesh->geomflags & VERT_4D) {
-    for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
+  m.p  = (HPoint3 *)alloca(npts*sizeof(HPoint3));
+  m.n  = NULL;
+  m.nq = NULL;
+  m.c  = (ColorA *)alloca(npts*sizeof(ColorA));
+  m.bsptree = NULL;
+
+  h = HPtNCreate(5, NULL);
+  if (ap->flag & APF_KEEPCOLOR) {
+    colored = 0;
+  } else {
+    HPoint3 dummyv;
+    ColorA dummyc;
+    /* Dummy transform to determine whether we have ND colors or not */
+    colored = mapHPtN(NDctx, h, &dummyv, &dummyc);
+  }
+
+  m.geomflags &= ~VERT_4D;
+  for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
+    if (mesh->geomflags & VERT_4D) {
       /* Set the point's first four components from our 4-D mesh vertex */
       Pt4ToHPtN(op, h);
-      colored = mapHPtN(NDctx, h, np, &m.c[i]);
-    }
-  } else {
-    for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
+    } else {
       /* Set the point's first THREE components from our 4-D mesh vertex */
       HPt3ToHPtN(op, NULL, h);
-      colored = mapHPtN(NDctx, h, np, &m.c[i]);
+    }
+    if (colored) {
+      mapHPtN(NDctx, h, np, &m.c[i]);
+      if (m.c[i].a < 1.0) {
+	alpha = 1;
+      }
+    } else {
+      mapHPtN(NDctx, h, np, NULL);
     }
   }
-  m.geomflags &= ~VERT_4D;
-  if(colored) m.flag |= MESH_C;
-  MeshComputeNormals(&m);
+
+  if (colored) {
+    m.flag &= ~MESH_ALPHA;
+    m.flag |= alpha ? MESH_C|MESH_ALPHA : MESH_C;
+  }
+
+  /* The drawing routines might need either polygon or vertex normals,
+   * so if either is missing and either might be needed, we force it
+   * to be computed.
+   */
+  m.flag &= ~(MESH_N|MESH_NQ);
+  normal_need = (ap->flag & APF_NORMALDRAW) ? MESH_N|MESH_NQ : 0;
+  if (ap->flag & APF_FACEDRAW) {
+    if (ap->shading == APF_FLAT) {
+      normal_need |= MESH_NQ;
+    }
+    if (ap->shading == APF_SMOOTH) {
+      normal_need |= MESH_N;
+    }
+    if (ap->flag & APF_TRANSP) {
+      if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
+	if (mat->diffuse.a != 1.0) {
+	  m.flag |= MESH_ALPHA;
+	} else {
+	  m.flag &= ~MESH_ALPHA;
+	}
+      }
+    }
+  }
+  MeshComputeNormals(&m, normal_need);
+
+  /* Generate a BSP-tree if the object or parts of it might be
+   * translucent.
+   */
+  if ((ap->flag & APF_FACEDRAW) &&
+      (ap->flag & APF_TRANSP) &&
+      (m.flag & MESH_ALPHA)) {
+    BSPTreeCreate((Geom *)&m);
+    BSPTreeAddObject(m.bsptree, (Geom *)&m);
+    BSPTreeFinalize(m.bsptree);
+  }
+
   if(_mgc->astk->useshader) {
-    ColorA *c = colored ? m.c :
-      (_mgc->astk->mat.override & MTF_DIFFUSE) ? NULL : mesh->c;
+    ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;
     if(c) {
-      (*_mgc->astk->shader)(npts, mesh->p, mesh->n, c, m.c);
+      (*_mgc->astk->shader)(npts, m.p, m.n ? m.n : m.nq, c, m.c);
     } else {
       for(i = 0; i < npts; i++) {
-	(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
+	(*_mgc->astk->shader)(1, m.p + i, m.n + i,
 			      (ColorA *)&_mgc->astk->mat.diffuse, m.c + i);
       }
     }
     colored = 1;
   }
-  mgmeshst(m.flag, m.nu, m.nv, m.p, m.n, colored ? m.c : mesh->c, mesh->u);
-  OOGLFree(m.n);
+  mgmeshst(m.flag, m.nu, m.nv, m.p, m.n, m.nq,
+	   colored ? m.c : mesh->c, mesh->u, m.flag);
+
+  if (m.bsptree) {
+    mgbsptree(m.bsptree);
+    BSPTreeFree((Geom *)&m);
+  }
+
+  if (m.n)
+    OOGLFree(m.n);
+  if (m.nq)
+    OOGLFree(m.nq);
   HPtNDelete(h);
   return 0;
 }
@@ -95,21 +165,45 @@ MeshDraw(Mesh *mesh)
 
   /* We pass mesh->flag verbatim to mgmesh() -- MESH_[UV]WRAP == MM_[UV]WRAP */
 
-  if(!(mesh->flag & MESH_N)) {
-    Appearance *ap;
-
-    ap = mggetappearance();
-    if(ap->shading != APF_CONSTANT || ap->flag & APF_NORMALDRAW)
-      MeshComputeNormals(mesh);
-  }
-
   mgctxget(MG_NDCTX, &NDctx);
 
   if(NDctx) {
     draw_projected_mesh(NDctx, mesh);
-  } else if (_mgc->space & TM_CONFORMAL_BALL) {
+    return mesh;
+  }
+
+  if ((mesh->flag & (MESH_N|MESH_NQ)) != (MESH_N|MESH_NQ)) {
+    Appearance *ap = mggetappearance();
+    int need = 0;
+      
+    if (ap->flag & APF_NORMALDRAW) {
+      need = MESH_N|MESH_NQ;
+    } else if (ap->flag & APF_FACEDRAW) {
+      if (ap->shading == APF_FLAT) {
+	need |= MESH_NQ;
+      }
+      if (ap->shading == APF_SMOOTH) {
+	need |= MESH_N;
+      }
+    }
+    MeshComputeNormals(mesh, need);
+  }
+
+  if (mesh->bsptree == NULL) {
+    /* This means we are a top-level drawing node (will never happen ...) */
+    BSPTreeCreate((Geom *)mesh);
+  }
+  if (mesh->bsptree->tree == NULL) {
+    /* This means we are an inferior drawing node and may add our
+     * polygons to the tree, do that.
+     */
+    BSPTreeAddObject(mesh->bsptree, (Geom *)mesh);
+  }
+
+  if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_draw_mesh(mesh);
+    return mesh;
   } else if(_mgc->astk->useshader) {
     int i, npts = mesh->nu * mesh->nv;
     ColorA *c = (ColorA *)alloca(npts * sizeof(ColorA));
@@ -121,10 +215,23 @@ MeshDraw(Mesh *mesh)
 			      (ColorA *)&_mgc->astk->mat.diffuse, c + i);
       }
     }
-    mgmeshst(mesh->flag | MESH_C, mesh->nu, mesh->nv, mesh->p, mesh->n, c, mesh->u);
+    mgmeshst(mesh->flag | MESH_C, mesh->nu, mesh->nv, mesh->p,
+	     mesh->n, mesh->nq, c, mesh->u, mesh->flag);
   } else {
-    mgmeshst(mesh->flag, mesh->nu, mesh->nv, mesh->p, mesh->n, mesh->c, mesh->u);
+    mgmeshst(mesh->flag, mesh->nu, mesh->nv, mesh->p,
+	     mesh->n, mesh->nq, mesh->c, mesh->u, mesh->flag);
   }
+
+  /* If we have a private BSP-tree, then draw it now. Software shading
+   * & transparency will not work, to be fixed.
+   */
+  if (mesh->bsptree->geom == (Geom *)mesh) {
+    if (mesh->bsptree->tree == NULL) {
+      BSPTreeFinalize(mesh->bsptree);
+    }
+    mgbsptree(mesh->bsptree);
+  }
+
   return mesh;
 }
 

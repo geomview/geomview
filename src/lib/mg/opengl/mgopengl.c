@@ -48,6 +48,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # define  Window  int
 #endif
 
+#include "polylistP.h"
+
 mgcontext * mgopengl_ctxcreate(int a1, ...);
 void	    mgopengl_ctxset( int a1, ...  );
 int	    mgopengl_feature( int feature );
@@ -73,13 +75,15 @@ int	    mgopengl_setwindow( WnWindow *win, int final );
 mgopenglcontext *mgopengl_newcontext( mgopenglcontext *ctx );
 
 extern void mgopengl_polygon();
-extern void mgopengl_mesh();
 extern void mgopengl_line();
 extern void mgopengl_polyline();
-extern void mgopengl_polylist();
-extern void mgopengl_quads();
-
-
+extern void mgopengl_polylist(int np, Poly *p, int nv, Vertex *v, int plflags);
+extern void mgopengl_mesh(int wrap, int nu, int nv,
+			  HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
+			  ColorA *meshC, Point3 *meshSTR,
+			  int mflags);
+extern void mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C,
+			   int qflags);
 
 void _mgopengl_ctxset(int a1, va_list *alist);
 static void mgopengl_choosewin(void), mgopengl_initwin(void);
@@ -121,11 +125,12 @@ struct mgfuncs mgopenglfuncs = {
   mgopengl_line,
   mgopengl_polyline,
   mgopengl_quads,
-  mg_bezier
-  };
+  mg_bezier,
+  mgopengl_bsptree
+};
 
 int
-  mgdevice_OPENGL()
+mgdevice_OPENGL()
 {
   _mgf = mgopenglfuncs;
   if (_mgc != NULL && _mgc->devno != MGD_OPENGL)
@@ -254,68 +259,68 @@ _mgopengl_ctxset(int a1, va_list *alist)
     case MG_WINCHANGEDATA: _mgc->winchangeinfo = NEXT(void *); break;
 
     case MG_ZNUDGE:
-	_mgc->zfnudge = NEXT(double);
-	if(_mgopenglc->born) mgopengl_init_zrange();
-	break;
+      _mgc->zfnudge = NEXT(double);
+      if(_mgopenglc->born) mgopengl_init_zrange();
+      break;
 
     case MG_BITDEPTH:
-	/*ignored*/ NEXT(int);
-	break;
+      /*ignored*/ NEXT(int);
+      break;
 
     case MG_DITHER:
-	_mgopenglc->dither = NEXT(int);
-	break;
+      _mgopenglc->dither = NEXT(int);
+      break;
 
     case MG_DEPTHSORT:
-	/*ignored*/ NEXT(int);
-	break;
+      /*ignored*/ NEXT(int);
+      break;
 
-    /* Open GL-specific */
+      /* Open GL-specific */
     case MG_GLWINID:
-	_mgopenglc->win = NEXT(int);
-	break;
+      _mgopenglc->win = NEXT(int);
+      break;
 
 #ifndef GLUT
     case MG_GLXDISPLAY:
-	_mgopenglc->GLXdisplay = NEXT(void *);
-	break;
+      _mgopenglc->GLXdisplay = NEXT(void *);
+      break;
     case MG_GLXSINGLECTX:
-	_mgopenglc->cam_ctx[SGL] = NEXT(GLXContext);
-	break;
+      _mgopenglc->cam_ctx[SGL] = NEXT(GLXContext);
+      break;
     case MG_GLXDOUBLECTX:
-	_mgopenglc->cam_ctx[DBL] = NEXT(GLXContext);
-	break;
+      _mgopenglc->cam_ctx[DBL] = NEXT(GLXContext);
+      break;
 #endif
 
     case MG_GLXSINGLEWIN:
-	_mgopenglc->winids[SGL] = NEXT(int);
-	break;
+      _mgopenglc->winids[SGL] = NEXT(int);
+      break;
     case MG_GLXDOUBLEWIN:
-	_mgopenglc->winids[DBL] = NEXT(int);
-	break;
+      _mgopenglc->winids[DBL] = NEXT(int);
+      break;
 
     case MG_BGIMAGEFILE:
-	{
-	   char *fname = NEXT(char *);
-	   TxUser *tu = NULL;
+      {
+	char *fname = NEXT(char *);
+	TxUser *tu = NULL;
 
-	   if(fname != NULL) {
-		/* Need to pad image to 4-channel RGBA, lest
-		 * Indy/Indigo graphics slow down by a factor of ~30!
-		 */
-		Texture *tex = TxCreate(TX_FILE, fname, TX_CHANNELS, 4, TX_END);
-		tu = mg_find_shared_texture(tex, MGD_OPENGL);
-		if(tu == NULL) {
-		    tu = TxAddUser(tex, 0, NULL, mgopengl_txpurge);
-		    tu->ctx = _mgc;
-		}
-	   }
-	   if(_mgopenglc->bgimage && (tu == NULL ||
-			!mg_same_texture(tu->tx, _mgopenglc->bgimage->tx)))
-		mg_remove_txuser(_mgopenglc->bgimage);
-	   _mgopenglc->bgimage = tu;
+	if(fname != NULL) {
+	  /* Need to pad image to 4-channel RGBA, lest
+	   * Indy/Indigo graphics slow down by a factor of ~30!
+	   */
+	  Texture *tex = TxCreate(TX_FILE, fname, TX_CHANNELS, 4, TX_END);
+	  tu = mg_find_shared_texture(tex, MGD_OPENGL);
+	  if(tu == NULL) {
+	    tu = TxAddUser(tex, 0, NULL, mgopengl_txpurge);
+	    tu->ctx = _mgc;
+	  }
 	}
-	break;
+	if(_mgopenglc->bgimage && (tu == NULL ||
+				   !mg_same_texture(tu->tx, _mgopenglc->bgimage->tx)))
+	  mg_remove_txuser(_mgopenglc->bgimage);
+	_mgopenglc->bgimage = tu;
+      }
+      break;
 
 
     default:
@@ -360,38 +365,38 @@ mgopengl_ctxget(int attr, void* value)
 
   switch (attr) {
 
-  /* Attributes common to all MG contexts: */
+    /* Attributes common to all MG contexts: */
   case MG_APPEAR: *VALUE(Appearance*) = &(_mgc->astk->ap); break;
   case MG_CAMERA: *VALUE(Camera*) = _mgc->cam; break;
   case MG_WINDOW:
-	/* In GLUT case, we demand that the caller use mgctxset(MG_WINDOW, ...)
-	 * whenever our window size changes.  Under GLX/X11, we do it ourselves.
-	 */
+    /* In GLUT case, we demand that the caller use mgctxset(MG_WINDOW, ...)
+     * whenever our window size changes.  Under GLX/X11, we do it ourselves.
+     */
 #ifndef GLUT
 
-	if(_mgopenglc->win > 0) {
-	    int x0, y0;
-	    WnPosition wp;
-	    unsigned int xsize, ysize, border_width, depth;
-	    Window dpyroot, toss;
+    if(_mgopenglc->win > 0) {
+      int x0, y0;
+      WnPosition wp;
+      unsigned int xsize, ysize, border_width, depth;
+      Window dpyroot, toss;
 
-	    XGetGeometry((Display *) (_mgopenglc->GLXdisplay),
-		(Window) _mgopenglc->win, &dpyroot, &x0, &y0, &xsize,
-		&ysize, &border_width, &depth);
-	    XTranslateCoordinates((Display *) (_mgopenglc->GLXdisplay),
-		(Window) _mgopenglc->win, dpyroot, 0, ysize-1,
-                                   &x0, &y0, &toss);
-	    y0 = HeightOfScreen(
-		DefaultScreenOfDisplay((Display *) (_mgopenglc->GLXdisplay)))
-		- y0 - 1;
+      XGetGeometry((Display *) (_mgopenglc->GLXdisplay),
+		   (Window) _mgopenglc->win, &dpyroot, &x0, &y0, &xsize,
+		   &ysize, &border_width, &depth);
+      XTranslateCoordinates((Display *) (_mgopenglc->GLXdisplay),
+			    (Window) _mgopenglc->win, dpyroot, 0, ysize-1,
+			    &x0, &y0, &toss);
+      y0 = HeightOfScreen(
+			  DefaultScreenOfDisplay((Display *) (_mgopenglc->GLXdisplay)))
+	- y0 - 1;
 
-	    wp.xmin = (long)x0; wp.xmax = (long)(x0+xsize-1);
-	    wp.ymin = (long)y0; wp.ymax = (long)(y0+ysize-1);
-	    WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
-	}
+      wp.xmin = (long)x0; wp.xmax = (long)(x0+xsize-1);
+      wp.ymin = (long)y0; wp.ymax = (long)(y0+ysize-1);
+      WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
+    }
 #endif
-	*VALUE(WnWindow*) = _mgc->win;
-	break;
+    *VALUE(WnWindow*) = _mgc->win;
+    break;
 
   case MG_PARENT:	*VALUE(mgcontext*) = _mgc->parent; break;
 
@@ -413,7 +418,7 @@ mgopengl_ctxget(int attr, void* value)
   case MG_WINCHANGE:	*VALUE(mgwinchfunc) = _mgc->winchange; break;
   case MG_WINCHANGEDATA: *VALUE(void *) = _mgc->winchangeinfo; break;
 
-  /* Attributes specific to GL contexts: */
+    /* Attributes specific to GL contexts: */
   case MG_GLWINID: *VALUE(int) = _mgopenglc->win; break;
   case MG_GLBORN: *VALUE(int) = _mgopenglc->born; break;
   case MG_GLZMAX: *VALUE(double) = _mgopenglc->zmax; break;
@@ -432,7 +437,7 @@ mgopengl_ctxget(int attr, void* value)
 
   case MG_BGIMAGEFILE:
     *VALUE(char *) = _mgopenglc->bgimage && _mgopenglc->bgimage->tx
-		   ? _mgopenglc->bgimage->tx->filename : NULL;
+      ? _mgopenglc->bgimage->tx->filename : NULL;
     break;
 
   default:
@@ -475,8 +480,8 @@ mgopengl_sharectx(void)
   for(another = _mgclist; another != NULL; another = another->next) {
     if(another->devno == MGD_OPENGL) {
       if((shareable = ((mgopenglcontext *)another)->cam_ctx[SGL]) != NULL
-       || (shareable = ((mgopenglcontext *)another)->cam_ctx[DBL]) != NULL)
-	    break;
+	 || (shareable = ((mgopenglcontext *)another)->cam_ctx[DBL]) != NULL)
+	break;
     }
   }
   return shareable;
@@ -534,30 +539,37 @@ void mgopengl_ctxdelete( mgcontext *ctx )
     mgctxselect(ctx);
     mgctxdelete(ctx);
     if(was != ctx)
-	mgctxselect(was);
+      mgctxselect(was);
   } else {
 #define mgoglc  ((mgopenglcontext *)ctx)
 
 #ifdef GLUT
     if(mgoglc->winids[0] > 0)
-	glutDestroyWindow(mgoglc->winids[0]);
+      glutDestroyWindow(mgoglc->winids[0]);
     if(mgoglc->winids[1] > 0)
-	glutDestroyWindow(mgoglc->winids[1]);
+      glutDestroyWindow(mgoglc->winids[1]);
 #else /*GLX*/
     if(mgoglc->born) {
       int i;
       for(i = SGL; i <= DBL; i++) {
-	  if(mgoglc->cam_ctx[i] && mgoglc->win > 0)
-	      glXDestroyContext( (Display *)(mgoglc->GLXdisplay),
-                         mgoglc->cam_ctx[i]);
+	if(mgoglc->cam_ctx[i] && mgoglc->win > 0)
+	  glXDestroyContext( (Display *)(mgoglc->GLXdisplay),
+			     mgoglc->cam_ctx[i]);
       }
     }
 #endif
 
     vvfree(&((mgopenglcontext *)ctx)->room);
+    if (mgoglc->light_lists)
+      free(mgoglc->light_lists);
+    if (mgoglc->texture_lists)
+      free(mgoglc->texture_lists);
+    if (mgoglc->translucent_lists)
+      free(mgoglc->translucent_lists);
+
     mg_ctxdelete(ctx);
     if(ctx == _mgc)
-	_mgc = NULL;
+      _mgc = NULL;
   }
 }
 
@@ -580,9 +592,9 @@ mgopengl_ctxselect( mgcontext *ctx )
   if(_mgopenglc->win) {
 #ifdef GLUT
     if(_mgopenglc->win <= 0)
-	mgopengl_choosewin();
+      mgopengl_choosewin();
     if(_mgopenglc->win > 0)
-	glutSetWindow(_mgopenglc->win);
+      glutSetWindow(_mgopenglc->win);
 
 #else /* GLX */
     if(_mgopenglc->GLXdisplay != NULL) {
@@ -590,8 +602,8 @@ mgopengl_ctxselect( mgcontext *ctx )
       _mgopenglc->curctx = _mgopenglc->cam_ctx[ _mgc->opts & MGO_DOUBLEBUFFER ? DBL : SGL ];
       if(_mgopenglc->win > 0)
         glXMakeCurrent( (Display *)_mgopenglc->GLXdisplay,
-	 	      (Window) _mgopenglc->win,
-		      _mgopenglc->curctx);
+			(Window) _mgopenglc->win,
+			_mgopenglc->curctx);
     }
 #endif /*GLX*/
   }
@@ -630,9 +642,9 @@ mgopengl_makewin(int which)
     glut_initted = 0;
   }
   if(WnGet(_mgc->win, WN_XSIZE, &xsize) <= 0 ||
-			WnGet(_mgc->win, WN_YSIZE, &ysize) <= 0) {
-	xsize = ysize = 200;
-	WnSet(_mgc->win, WN_XSIZE, xsize, WN_YSIZE, 200, WN_END);
+     WnGet(_mgc->win, WN_YSIZE, &ysize) <= 0) {
+    xsize = ysize = 200;
+    WnSet(_mgc->win, WN_XSIZE, xsize, WN_YSIZE, 200, WN_END);
   }
   if(WnGet(_mgc->win, WN_PREFPOS, &wp) > 0) {
     glutInitWindowPosition(wp.xmin, wp.ymin);
@@ -645,7 +657,7 @@ mgopengl_makewin(int which)
   static int dblBuf[] = {
     GLX_DOUBLEBUFFER,
     GLX_RGBA, GLX_DEPTH_SIZE, 23,
-    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1,
+    GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1, GLX_ALPHA_SIZE, 1,
     None
   };
   XSetWindowAttributes xswa;
@@ -659,32 +671,32 @@ mgopengl_makewin(int which)
   }
 
   _mgopenglc->cam_ctx[which] =
-	glXCreateContext(dpy, vi, mgopengl_sharectx(), GL_TRUE);
+    glXCreateContext(dpy, vi, mgopengl_sharectx(), GL_TRUE);
 
-    xswa.colormap = (vi->visual == XDefaultVisual(dpy, scr)) ?
-	XDefaultColormap(dpy, scr) :
-	XCreateColormap(dpy, root, vi->visual, AllocNone);
+  xswa.colormap = (vi->visual == XDefaultVisual(dpy, scr)) ?
+    XDefaultColormap(dpy, scr) :
+    XCreateColormap(dpy, root, vi->visual, AllocNone);
 
-    xswa.event_mask = KeyPressMask|ButtonPressMask
-                        |ButtonReleaseMask|ButtonMotionMask
-                        |EnterWindowMask|StructureNotifyMask|ExposureMask;
+  xswa.event_mask = KeyPressMask|ButtonPressMask
+    |ButtonReleaseMask|ButtonMotionMask
+    |EnterWindowMask|StructureNotifyMask|ExposureMask;
 
-    xswa.border_pixel = xswa.background_pixel = xswa.backing_pixel =
-      xswa.background_pixmap = None;
+  xswa.border_pixel = xswa.background_pixel = xswa.backing_pixel =
+    xswa.background_pixmap = None;
 
-    if(WnGet(_mgc->win, WN_XSIZE, &xsize) <= 0 ||
-			WnGet(_mgc->win, WN_YSIZE, &ysize) <= 0) {
-	xsize = ysize = 200;
-	WnSet(_mgc->win, WN_XSIZE, xsize, WN_YSIZE, 200, WN_END);
-    }
+  if(WnGet(_mgc->win, WN_XSIZE, &xsize) <= 0 ||
+     WnGet(_mgc->win, WN_YSIZE, &ysize) <= 0) {
+    xsize = ysize = 200;
+    WnSet(_mgc->win, WN_XSIZE, xsize, WN_YSIZE, 200, WN_END);
+  }
 
-    _mgopenglc->winids[which] = XCreateWindow( dpy, root,
-              0, 0, xsize, ysize, 0/*border*/, vi->depth,
-              InputOutput, vi->visual,
-              CWEventMask|CWColormap|CWBorderPixel
-              |CWBackPixel|CWBackPixmap, &xswa);
+  _mgopenglc->winids[which] = XCreateWindow( dpy, root,
+					     0, 0, xsize, ysize, 0/*border*/, vi->depth,
+					     InputOutput, vi->visual,
+					     CWEventMask|CWColormap|CWBorderPixel
+					     |CWBackPixel|CWBackPixmap, &xswa);
 
-    XMapWindow(dpy, _mgopenglc->winids[which]);
+  XMapWindow(dpy, _mgopenglc->winids[which]);
 
 #undef dpy
 
@@ -703,12 +715,12 @@ mgopengl_choosewin(void)
   if(_mgopenglc->winids[which] == 0) {
     mgopengl_makewin(which);
     if(_mgopenglc->winids[which] == 0)
-	which = 1-which;
+      which = 1-which;
   }
 
   if(_mgc->winchange)
     (*_mgc->winchange)(_mgc, _mgc->winchangeinfo,
-	MGW_DOUBLEBUF, (which == DBL));
+		       MGW_DOUBLEBUF, (which == DBL));
 
   _mgopenglc->win = _mgopenglc->winids[which];
   glutSetWindow(_mgopenglc->win);
@@ -717,8 +729,8 @@ mgopengl_choosewin(void)
 
   if(_mgopenglc->GLXdisplay == NULL && _mgopenglc->winids[which] == 0) {
     if((_mgopenglc->GLXdisplay = XOpenDisplay(NULL)) == NULL) {
-	OOGLError(1, "Can't open X display");
-	return;
+      OOGLError(1, "Can't open X display");
+      return;
     }
   }
 
@@ -726,26 +738,37 @@ mgopengl_choosewin(void)
   /* Switch back to the other buffer if need be */
   if(_mgopenglc->cam_ctx[which] == NULL) {
     if(_mgopenglc->cam_ctx[1-which] == NULL) {
-	mgopengl_makewin(which);
+      mgopengl_makewin(which);
     } else {
-	which = 1-which;
+      which = 1-which;
     }
   }
 
   if(_mgc->winchange)
-	(*_mgc->winchange)(_mgc, _mgc->winchangeinfo, MGW_DOUBLEBUF,
-				(which == DBL));
+    (*_mgc->winchange)(_mgc, _mgc->winchangeinfo, MGW_DOUBLEBUF,
+		       (which == DBL));
 
   _mgopenglc->curctx = _mgopenglc->cam_ctx[which];
   _mgopenglc->win = _mgopenglc->winids[which];
   if(_mgopenglc->win > 0) {
     XRaiseWindow( (Display *)_mgopenglc->GLXdisplay, (Window) _mgopenglc->win );
     glXMakeCurrent( (Display *)_mgopenglc->GLXdisplay,
-	(Window) _mgopenglc->win,
-	_mgopenglc->curctx);
+		    (Window) _mgopenglc->win,
+		    _mgopenglc->curctx);
   }
 
 #endif /* GLX */
+
+  if (_mgopenglc->n_light_lists == 0)
+    _mgopenglc->light_lists =
+      mgopengl_realloc_lists(NULL, &_mgopenglc->n_light_lists);
+  if (_mgopenglc->n_texture_lists == 0)
+    _mgopenglc->texture_lists =
+      mgopengl_realloc_lists(NULL, &_mgopenglc->n_texture_lists);
+  if (_mgopenglc->n_translucent_lists == 0)
+    _mgopenglc->translucent_lists = 
+      mgopengl_realloc_lists(NULL, &_mgopenglc->n_translucent_lists);
+
 }
 
 static void
@@ -757,11 +780,11 @@ mgopengl_setviewport()
   glViewport(vp.xmin, vp.ymin, vp.xmax-vp.xmin+1, vp.ymax-vp.ymin+1);
   glScissor(vp.xmin, vp.ymin, vp.xmax-vp.xmin+1, vp.ymax-vp.ymin+1);
   if(WnGet(_mgc->win, WN_CURPOS, &whole) <= 0 ||
-			vp.xmax-vp.xmin < whole.xmax-whole.xmin ||
-			vp.ymax-vp.ymin < whole.ymax-whole.ymin) {
-	glEnable(GL_SCISSOR_TEST);
+     vp.xmax-vp.xmin < whole.xmax-whole.xmin ||
+     vp.ymax-vp.ymin < whole.ymax-whole.ymin) {
+    glEnable(GL_SCISSOR_TEST);
   } else {
-	glDisable(GL_SCISSOR_TEST);
+    glDisable(GL_SCISSOR_TEST);
   }
   _mgc->win->changed &= ~WNF_HASVP;
 }
@@ -788,7 +811,7 @@ mgopengl_initwin()
 
   glClearDepth(_mgopenglc->zmax);
   glClearColor(_mgc->background.r, _mgc->background.g, _mgc->background.b,
-		_mgc->background.a);
+	       _mgc->background.a);
   glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
 
   if((_mgc->opts&MGO_DOUBLEBUFFER) && !(_mgc->opts&MGO_INHIBITSWAP) ) {
@@ -796,7 +819,7 @@ mgopengl_initwin()
     glutSwapBuffers();
 #else
     if(_mgopenglc->win > 0)
-	glXSwapBuffers((Display *) (_mgopenglc->GLXdisplay), (Window) _mgopenglc->win);
+      glXSwapBuffers((Display *) (_mgopenglc->GLXdisplay), (Window) _mgopenglc->win);
 #endif
   }
 
@@ -829,77 +852,77 @@ mgopengl_worldbegin( void )
 
   if(
 #ifndef GLUT
-	_mgopenglc->curctx != _mgopenglc->cam_ctx[which] ||
+     _mgopenglc->curctx != _mgopenglc->cam_ctx[which] ||
 #endif
-		(_mgc->opts ^ _mgopenglc->oldopts) & MGO_DOUBLEBUFFER) {
+     (_mgc->opts ^ _mgopenglc->oldopts) & MGO_DOUBLEBUFFER) {
     mgopengl_choosewin();
     mgopengl_initwin();
     _mgopenglc->oldopts = _mgc->opts;
   }
 
-  glColorMask(  _mgc->opts & MGO_NORED ? GL_FALSE : GL_TRUE,
-		_mgc->opts & MGO_NOGREEN ? GL_FALSE : GL_TRUE,
-		_mgc->opts & MGO_NOBLUE ? GL_FALSE : GL_TRUE,
-		GL_TRUE );
+  glColorMask(_mgc->opts & MGO_NORED ? GL_FALSE : GL_TRUE,
+	      _mgc->opts & MGO_NOGREEN ? GL_FALSE : GL_TRUE,
+	      _mgc->opts & MGO_NOBLUE ? GL_FALSE : GL_TRUE,
+	      GL_TRUE );
 
   if(_mgc->win->changed & WNF_HASVP)
     mgopengl_setviewport();
 
   /* Erase to background color & initialize z-buffer */
   if (_mgc->opts & MGO_INHIBITCLEAR) {
-	glClearDepth(1.);
-	glClear(GL_DEPTH_BUFFER_BIT);
+    glClearDepth(1.);
+    glClear(GL_DEPTH_BUFFER_BIT);
   }
   else { 
     Texture *btx;
     glClearDepth( _mgopenglc->zmax);
     glClearColor(_mgc->background.r,
-	_mgc->background.g, _mgc->background.b, _mgc->background.a);
+		 _mgc->background.g, _mgc->background.b, _mgc->background.a);
 
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     if(_mgopenglc->bgimage && (btx = _mgopenglc->bgimage->tx)) {
-	static GLint formats[] =
-	    { 0, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
-	if(btx->data == NULL)
-	    mg_inhaletexture(btx, TXF_RGBA);
-	if(btx->data != NULL) {
-	    static GLdouble pos[] = {0.0, 0.0, -1.0};
-	    int xsize, ysize, off;
-	    btx->flags |= TXF_USED;
-	    /* Could resize the image to fit the window here,
-	     * (or force the window to fit the image!)
-	     * but let's make that the user's problem.
-	     */
-	    glMatrixMode(GL_PROJECTION);
-	    glLoadIdentity();
-	    WnGet(_mgc->win, WN_XSIZE, &xsize);
-	    WnGet(_mgc->win, WN_YSIZE, &ysize);
-	    glOrtho(0, xsize, 0, ysize, -1, 1);
-	    glMatrixMode(GL_MODELVIEW);
-	    glLoadIdentity();
-	    if(xsize >= btx->xsize) {
-		pos[0] = (xsize - btx->xsize)/2;
-		off = 0;
-	    } else {
-		pos[0] = 0;
-		off = (btx->xsize - xsize) / 2;
-		glPixelStorei(GL_PACK_ROW_LENGTH, xsize);
-	    }
-	    if(ysize >= btx->ysize) {
-		pos[1] = (ysize - btx->ysize)/2;
-	    } else {
-		pos[1] = 0;
-		off += btx->xsize * ((btx->ysize - ysize) / 2);
-	    }
-	    glRasterPos3dv(pos);
-	    glDepthMask(GL_FALSE);
-	    glDisable(GL_DEPTH_TEST);
-	    glDrawPixels( btx->xsize, ysize < btx->ysize ? ysize : btx->ysize,
-			formats[btx->channels],
-			GL_UNSIGNED_BYTE, btx->data + btx->channels*off );
-	    glDepthMask(GL_TRUE);
-	    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+      static GLint formats[] =
+	{ 0, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
+      if(btx->data == NULL)
+	mg_inhaletexture(btx, TXF_RGBA);
+      if(btx->data != NULL) {
+	static GLdouble pos[] = {0.0, 0.0, -1.0};
+	int xsize, ysize, off;
+	btx->flags |= TXF_USED;
+	/* Could resize the image to fit the window here,
+	 * (or force the window to fit the image!)
+	 * but let's make that the user's problem.
+	 */
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	WnGet(_mgc->win, WN_XSIZE, &xsize);
+	WnGet(_mgc->win, WN_YSIZE, &ysize);
+	glOrtho(0, xsize, 0, ysize, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	if(xsize >= btx->xsize) {
+	  pos[0] = (xsize - btx->xsize)/2;
+	  off = 0;
+	} else {
+	  pos[0] = 0;
+	  off = (btx->xsize - xsize) / 2;
+	  glPixelStorei(GL_PACK_ROW_LENGTH, xsize);
 	}
+	if(ysize >= btx->ysize) {
+	  pos[1] = (ysize - btx->ysize)/2;
+	} else {
+	  pos[1] = 0;
+	  off += btx->xsize * ((btx->ysize - ysize) / 2);
+	}
+	glRasterPos3dv(pos);
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+	glDrawPixels( btx->xsize, ysize < btx->ysize ? ysize : btx->ysize,
+		      formats[btx->channels],
+		      GL_UNSIGNED_BYTE, btx->data + btx->channels*off );
+	glDepthMask(GL_TRUE);
+	glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+      }
     }
   }
 
@@ -915,11 +938,11 @@ mgopengl_worldbegin( void )
   /* Interpret the camera: load the proper matrices onto the GL matrix
      stacks.  */
   if(!(_mgc->opts & MGO_INHIBITCAM)) {
-      glMatrixMode(GL_PROJECTION);
-      CamViewProjection( _mgc->cam, V );
-      glLoadMatrixf( (GLfloat *) V);
-      glMatrixMode(GL_MODELVIEW);
-      glLoadMatrixf( (GLfloat *) _mgc->W2C);
+    glMatrixMode(GL_PROJECTION);
+    CamViewProjection( _mgc->cam, V );
+    glLoadMatrixf( (GLfloat *) V);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf( (GLfloat *) _mgc->W2C);
 
   }
 
@@ -940,6 +963,51 @@ mgopengl_worldbegin( void )
 void
 mgopengl_worldend( void )
 {
+  GLuint list;
+  
+  /* Execute and delete and pending translucent display lists. */
+
+  glEnable(GL_BLEND);
+
+  /*first pass*/
+  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE); /*disable alpha channel*/
+  glDepthMask(GL_FALSE);                            /*disable Z buffer*/
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  /*render the object here*/
+  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
+    glCallList(_mgopenglc->translucent_lists[list]);
+  }
+
+  /*second pass*/
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE); /*enable alpha channel*/
+  glDepthMask(GL_FALSE);                              /*disable Z buffer*/
+  glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ZERO);
+  /*render the object with alpha replaced with 1-a*/
+
+  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
+    glCallList(_mgopenglc->translucent_lists[list]);
+  }
+
+  /*third pass*/
+  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE); /*enable alpha channel*/
+  glDepthMask(GL_TRUE);                               /*enable Z buffer*/
+  glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ZERO);
+
+  /*render the object with alpha replaced with 1*/
+  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
+    glCallList(_mgopenglc->translucent_lists[list]);
+  }
+
+  glDisable(GL_BLEND);
+  
+  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
+    /* Destroy the contents. */
+    glNewList(_mgopenglc->translucent_lists[list], GL_COMPILE);
+    glEndList();
+  }
+  _mgopenglc->translucent_seq = 0;
+
   if((_mgc->opts&MGO_DOUBLEBUFFER) && !(_mgc->opts&MGO_INHIBITSWAP)) {
 #ifdef GLUT
     glutSwapBuffers();
@@ -971,9 +1039,9 @@ mgopengl_reshapeviewport( void )
   WnGet(_mgc->win, WN_VIEWPORT, &vp);
   mgopengl_setviewport();
   CamSet(_mgc->cam, CAM_ASPECT,
-	pixasp * (double)(vp.xmax-vp.xmin+1) /
-		 (double)(vp.ymax-vp.ymin+1),
-	CAM_END);
+	 pixasp * (double)(vp.xmax-vp.xmin+1) /
+	 (double)(vp.ymax-vp.ymin+1),
+	 CAM_END);
 }
 
 /*-----------------------------------------------------------------------
@@ -1096,6 +1164,66 @@ mgopengl_settransform( Transform T )
 }
 
 /*-----------------------------------------------------------------------
+ * Function:	mgopengl_new_translucent
+ * Description: start a display-list which stores a translucent object,
+ *              the dpy-list will be called later after all opaque objects
+ *              have been drawn.
+ * Returns:	the display list.
+ * Author:	cH
+ * Date:	Fri Nov 17 2006
+ */
+GLuint mgopengl_new_translucent(void)
+{
+  
+  if (_mgopenglc->n_translucent_lists <= _mgopenglc->translucent_seq) {
+    _mgopenglc->translucent_lists =
+      mgopengl_realloc_lists(_mgopenglc->translucent_lists,
+			     &_mgopenglc->n_translucent_lists);
+  }
+
+  glNewList(_mgopenglc->translucent_lists[_mgopenglc->translucent_seq],
+	    GL_COMPILE /* do not execute now */);
+
+  /* Load the current transformation matrix into the display list */
+  glLoadMatrixf((GLfloat *) _mgc->W2C);
+  glMultMatrixf((GLfloat *) _mgc->xstk->T);
+
+  /* Load the current material definitions, pretend everything has changed */
+  mgopengl_material(_mgc->astk, ~0);
+
+  /* Load the appearance definition */
+  mgopengl_appearance(_mgc->astk, ~0);
+
+#if 0
+  /* Use a proper blend function to simulate some sort of
+   * transparency, disable writing to the depth-buffer.
+   */
+  glDepthMask(GL_FALSE);
+  glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+#endif
+
+  return _mgopenglc->translucent_lists[_mgopenglc->translucent_seq++];
+}
+
+/*-----------------------------------------------------------------------
+ * Function:	mgopengl_end_translucent
+ * Description: end the definition of a translucent object.
+ * Returns:	the display list.
+ * Author:	cH
+ * Date:	Fri Nov 17 2006
+ */
+void mgopengl_end_translucent(void)
+{
+  glEndList();
+
+  /* Disable alpha-blending */
+  glDepthMask(GL_TRUE);
+  glBlendFunc(GL_ONE,  GL_ZERO);
+  glDisable(GL_BLEND);
+}
+
+/*-----------------------------------------------------------------------
  * Function:	mgopengl_pushappearance
  * Description:	push the MG context appearance stack
  * Returns:	nothing
@@ -1132,11 +1260,11 @@ mgopengl_popappearance( void )
 
   if ( ( (mastk->light_seq != mastk_next->light_seq)	/* lighting changed */
 #ifndef TRUE_EMISSION
-	|| ((mastk->mat.valid ^ mastk_next->mat.valid) & MTF_EMISSION)
-							/* GL_LIGHT_MODEL_TWO_SIDE changed */
+	 || ((mastk->mat.valid ^ mastk_next->mat.valid) & MTF_EMISSION)
+	 /* GL_LIGHT_MODEL_TWO_SIDE changed */
 #endif
-       ) && IS_SHADED(mastk->next->ap.shading))    /* lighting on */
-      mgopengl_lighting(mastk_next, mastk_next->lighting.valid);
+	 ) && IS_SHADED(mastk->next->ap.shading))    /* lighting on */
+    mgopengl_lighting(mastk_next, mastk_next->lighting.valid);
   mgopengl_appearance(mastk_next, mastk_next->ap.valid);
 
   mg_popappearance();
@@ -1181,7 +1309,7 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
       ap->mat ? ap->mat->valid &~ (ma->mat->override &~ ap->mat->override) : 0;
     lng_changed =
       ap->lighting ? ap->lighting->valid &~ 
-	(ma->lighting->override &~ ap->lighting->override) : 0;
+      (ma->lighting->override &~ ap->lighting->override) : 0;
   }
   else {
     changed = ap->valid;
@@ -1214,37 +1342,44 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
     if ((ap->lighting) && (mastk->next)) {
       if (mastk->light_seq == mastk->next->light_seq) {
 	mastk->light_seq++;
+	if (_mgopenglc->n_light_lists <= mastk->light_seq) {
+	  _mgopenglc->light_lists =
+	    mgopengl_realloc_lists(_mgopenglc->light_lists,
+				   &_mgopenglc->n_light_lists);
+	}	
 	/*
 	 * We need a new lighting model.
 	 * To ensure we don't have any leftover garbage in GL's copy of this
 	 * lighting model, we force GL to reset to defaults, then
 	 * reinitialize everything.
 	 */
-	glNewList( mastk->light_seq, GL_COMPILE); glMaterialf(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, * nullarray); glEndList();;
+	glNewList(_mgopenglc->light_lists[mastk->light_seq], GL_COMPILE);
+	glMaterialf(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, *nullarray);
+	glEndList();;
 	lng_changed |= ma->lighting->valid;	/* "All fields changed" */
       }
     }
     if (ma->shading != APF_CONSTANT &&
-		(ap->lighting != NULL 
+	(ap->lighting != NULL 
 #ifndef TRUE_EMISSION
-			/* Hack: must enable GL_LIGHT_MODEL_TWO_SIDE lighting if so */
-		|| (mastk->next && 
-		    (mastk->mat.valid ^ mastk->next->mat.valid) & MTF_EMISSION)
+	 /* Hack: must enable GL_LIGHT_MODEL_TWO_SIDE lighting if so */
+	 || (mastk->next && 
+	     (mastk->mat.valid ^ mastk->next->mat.valid) & MTF_EMISSION)
 #endif
-					)) {
+	 )) {
       mgopengl_lighting( mastk, lng_changed );
     }
 
-	/* Let mgopengl_material() decide if we need a new material */
+    /* Let mgopengl_material() decide if we need a new material */
     if (ap->mat)
       mgopengl_material( mastk, mat_changed );
 
     mgopengl_appearance( mastk, changed );
 
-        /* Ensure that, at least, we don't have the *wrong* texture bound. */
+    /* Ensure that, at least, we don't have the *wrong* texture bound. */
     if(ap->tex) {
-        if(_mgopenglc->tevbound)
-            mgopengl_notexture();
+      if(_mgopenglc->tevbound)
+	mgopengl_notexture();
     }
 
   }
@@ -1264,7 +1399,7 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
 Appearance *
 mgopengl_getappearance()
 {
-    return &(_mgc->astk->ap);
+  return &(_mgc->astk->ap);
 }
 
 
@@ -1312,7 +1447,23 @@ mgopengl_setwindow( WnWindow *win, int final )
   return 1;
 }
 
+GLuint *mgopengl_realloc_lists(GLuint *lists, int *n_lists)
+{
+  int i;
+  GLuint new_lists;
 
+  if ((new_lists = glGenLists(DPYLIST_INCR)) == 0) {
+    OOGLError(0, "mgopengl_realloc_lists: no new lists available.");
+    return NULL;
+  }
+  lists = realloc(lists, (*n_lists + DPYLIST_INCR)*sizeof(GLuint));
+  for (i = *n_lists; i < *n_lists + DPYLIST_INCR; i++) {
+    lists[i] = new_lists++;
+  }
+  *n_lists = i;
+  
+  return lists;
+}
 
 /*-----------------------------------------------------------------------
  * Function:	mgopengl_newcontext
@@ -1328,9 +1479,9 @@ mgopengl_newcontext( mgopenglcontext *ctx )
   mg_newcontext(&(ctx->mgctx));
   ctx->mgctx.devfuncs = &mgopenglfuncs;
   ctx->mgctx.devno = MGD_OPENGL;
-  ctx->mgctx.astk->ap_seq = 1;
-  ctx->mgctx.astk->mat_seq = 1;
-  ctx->mgctx.astk->light_seq = 1;
+  ctx->mgctx.astk->ap_seq = 0;
+  ctx->mgctx.astk->mat_seq = 0;
+  ctx->mgctx.astk->light_seq = 0;
   ctx->mgctx.zfnudge = 40.e-6;
   ctx->born = 0;
   ctx->win = 0;
@@ -1354,6 +1505,16 @@ mgopengl_newcontext( mgopenglcontext *ctx )
   ctx->should_lighting = ctx->is_lighting = 0;
   ctx->dither = 1;
   ctx->bgimage = NULL;
+
+  /* reserve a number of display list numbers */
+  ctx->n_light_lists = 0;
+  ctx->light_lists = NULL;
+  ctx->n_texture_lists = 0;
+  ctx->texture_lists = NULL;
+  ctx->n_translucent_lists = 0;
+  ctx->translucent_lists = NULL;
+  ctx->translucent_seq = 0;
+  
   return ctx;
 }
 
@@ -1372,7 +1533,13 @@ mgopengl_findctx( int winid )
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_OPENGL && ((mgopenglcontext *)mgc)->win == winid)
-	return mgc;
+      return mgc;
   }
   return NULL;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

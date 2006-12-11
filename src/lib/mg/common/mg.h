@@ -40,6 +40,9 @@
 struct Poly;
 struct Vertex;
 #endif
+#ifndef _GV_BSPTREE_P_H_
+struct BSPTree;
+#endif
 
 typedef struct mgcontext mgcontext;	/* Opaque typedef */
 
@@ -87,17 +90,20 @@ struct mgfuncs {  /* mg member functions; potentially changed per device */
   Appearance *	(*mg_getappearance)(void);
   int		(*mg_setcamera)(Camera* cam);
   void		(*mg_polygon)(int nv, HPoint3 *v, int nn,
-			        Point3 *n, int nc,ColorA *c);
+			      Point3 *n, int nc,ColorA *c);
   void		(*mg_polylist)(int np, struct Poly *p,
-				  int nv, struct Vertex *v, int plflags);
+			       int nv, struct Vertex *v, int plflags);
   void		(*mg_mesh)(int wrap,int nu,int nv,HPoint3 *p,
-		             Point3 *n,ColorA *c, Point3 *STR);
+			   Point3 *n, Point3 *nq, ColorA *c, Point3 *STR,
+			   int mflags);
   void		(*mg_line)(HPoint3 *p1, HPoint3 *p2);
   void		(*mg_polyline)(int nv, HPoint3 *v, int nc, ColorA *c, 
-				  int wrapped);
-  void		(*mg_quads)(int nquads, HPoint3 *v, Point3 *n, ColorA *c);
+			       int wrapped);
+  void		(*mg_quads)(int nquads, HPoint3 *v, Point3 *n, ColorA *c,
+			    int qflags);
   void		(*mg_bezier)(int du, int dv, int dimn, float *ctrlpts,
-  				float *txmapst, ColorA *c);
+			     float *txmapst, ColorA *c);
+  void          (*mg_bsptree)(struct BSPTree *bsptree);
 };
 
 extern struct mgfuncs _mgf;
@@ -214,15 +220,25 @@ enum sortmethod {MG_NONE, MG_DEPTH, MG_ZBUFFER};
 #define	mgsync( )			(*_mgf.mg_sync)()
 #define	mgworldend()			(*_mgf.mg_worldend)()
 
-#define	mgpolygon( nv,v, nn,n, nc,c )	(*_mgf.mg_polygon)( nv,v, nn,n, nc,c )
-#define	mgpolylist( np,p, nv,v, flags )	(*_mgf.mg_polylist)( np,p, nv,v, flags )
-#define	mgmesh( style, nu,nv, v,n,c )	(*_mgf.mg_mesh)( style, nu,nv, v,n,c,NULL )
-#define	mgmeshst( style, nu,nv, v,n,c,st ) (*_mgf.mg_mesh)( style, nu,nv, v,n,c,st )
-#define	mgline( p1, p2 )		(*_mgf.mg_line)( p1, p2 )
-#define	mgpolyline( nv,v, nc,c, wrap )	(*_mgf.mg_polyline)( nv,v, nc,c, wrap )
-#define	mgquads( nquad, v, n, c )	(*_mgf.mg_quads)( nquad, v, n, c )
-#define mgbezier( du,dv, dimn, ctrlpts, tx, c )	(*_mgf.mg_bezier)( du, dv, \
-						  dimn, ctrlpts, tx, c )
+#define	mgpolygon(nv,v, nn, n, nc, c)		\
+  (*_mgf.mg_polygon)( nv,v, nn,n, nc,c )
+#define	mgpolylist(np, p, nv, v, flags)		\
+  (*_mgf.mg_polylist)(np, p, nv, v, flags)
+#define	mgmesh(style, nu, nv, v, n, nq, c, mflags)		\
+  (*_mgf.mg_mesh)(style, nu, nv, v, n, nq, c, NULL, mflags)
+#define	mgmeshst(style, nu, nv, v, n, nq, c ,st, mflags)	\
+  (*_mgf.mg_mesh)(style, nu, nv, v, n, nq, c, st, mflags)
+#define	mgline(p1, p2)				\
+  (*_mgf.mg_line)( p1, p2 )
+#define	mgpolyline(nv, v, nc,c, wrap)		\
+  (*_mgf.mg_polyline)(nv, v, nc, c, wrap )
+#define	mgquads(nquad, v, n, c, qflags)	\
+  (*_mgf.mg_quads)(nquad, v, n, c, qflags)
+#define mgbezier(du, dv, dimn, ctrlpts, tx, c )	\
+  (*_mgf.mg_bezier)(du, dv, dimn, ctrlpts, tx, c)
+#define mgbsptree(bsptree)			\
+  (*_mgf.mg_bsptree)(bsptree)
+
 #define mgfeature( feature )		(*_mgf.mg_feature)( feature )
 
 extern mgcontext *mgcurrentcontext();		/* Get ptr to current context */
@@ -284,3 +300,9 @@ extern int mgdevice( int deviceno );	/* Alternative to the above */
 #define	 MGD_PRIM	10	/* geometric data */
 
 #endif
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

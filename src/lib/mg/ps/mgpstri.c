@@ -40,7 +40,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #define TOL 0.05
 #define AREA 25000
-#define max(a,b) ((a)>(b)?(a):(b))
+#ifndef max
+# define max(a,b) ((a) > (b) ? (a) : (b))
+#endif
 
 static double areaThreshold;
 static FILE *psout;

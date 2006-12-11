@@ -42,8 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # include <GL/gl.h>
 #endif
 
-#define MAXDEF 50
-#define ID_OFFSET 100
+#define ID_OFFSET 0
 
 /* materialno, lightmodelno, and lightno between 1 and 65535 are
  * legal. p 9-9 GL PROG GUIDE (munzner 9/17/91)
@@ -58,19 +57,15 @@ mgopengl_appearance( struct mgastk *ma, int mask )
 
   if (mask & APF_TRANSP) {
     if (ap->flag & APF_TRANSP) {
+#if 0
       glDepthMask(GL_FALSE);
       glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
-      if((GL_SRC_ALPHA) == GL_ONE && ( GL_ONE_MINUS_SRC_ALPHA) == GL_ZERO)
-	glDisable(GL_BLEND);
-      else
-	glEnable(GL_BLEND);
+      glEnable(GL_BLEND);
+#endif
     } else {
       glDepthMask(GL_TRUE);
       glBlendFunc(GL_ONE,  GL_ZERO);
-      if((GL_ONE) == GL_ONE && ( GL_ZERO) == GL_ZERO)
-	glDisable(GL_BLEND);
-      else
-	glEnable(GL_BLEND);
+      glDisable(GL_BLEND);
     }
   }
 
@@ -109,7 +104,7 @@ mgopengl_appearance( struct mgastk *ma, int mask )
 	glShadeModel( IS_SMOOTH(ap->shading) ? GL_SMOOTH : GL_FLAT );
 
 	if (ap->lighting->valid)
-	    glCallList(ma->light_seq);
+	    glCallList(_mgopenglc->light_lists[ma->light_seq]);
 
 	mgopengl_material( ma, ma->mat.valid );
 
@@ -259,7 +254,7 @@ void mgopengl_lighting(struct mgastk *astk, int mask)
 
   if (lm->valid) {
     mgopengl_lightmodeldef( astk->light_seq, lm, lm->valid & mask, astk );
-    glCallList( astk->light_seq);
+    glCallList(_mgopenglc->light_lists[astk->light_seq]);
   }
 
   glMatrixMode(GL_MODELVIEW);
@@ -346,7 +341,7 @@ mgopengl_lightmodeldef(int lightmodel, LmLighting *lgt, int mask, struct mgastk 
 {
     GLfloat f[4];
 
-    glNewList( lightmodel, GL_COMPILE);
+    glNewList(_mgopenglc->light_lists[lightmodel], GL_COMPILE);
 
     f[3] = 1.0;
     if( mask & LMF_AMBIENT) {
@@ -416,15 +411,22 @@ static void glDeleteTexturesEXT(GLsizei n, GLuint *textures) { }
 
 #endif
 
-static void tex_predef( GLuint id ) {
+static void tex_predef(GLuint id)
+{
   if(has_texture_object()) {
-    glBindTextureEXT( GL_TEXTURE_2D, id );
+    glBindTextureEXT(GL_TEXTURE_2D, id);
   } else {
-    glNewList(id, GL_COMPILE_AND_EXECUTE);
+    if (_mgopenglc->n_texture_lists <= id) {
+      _mgopenglc->texture_lists =
+	mgopengl_realloc_lists(_mgopenglc->texture_lists,
+			       &_mgopenglc->n_texture_lists);
+    }
+    glNewList(_mgopenglc->texture_lists[id], GL_COMPILE_AND_EXECUTE);
   }
 }
 
-static void tex_postdef() {
+static void tex_postdef(void)
+{
   if(has_texture_object()) {
     /* Nothing -- leave things as they are */
   } else {
@@ -432,19 +434,19 @@ static void tex_postdef() {
   }
 }
 
-static void tex_bind( GLuint id ) {
+static void tex_bind(GLuint id) {
   if(has_texture_object()) {
     glBindTextureEXT( GL_TEXTURE_2D, id );
   } else {
-    glCallList( id );
+    glCallList(_mgopenglc->texture_lists[id]);
   }
 }
 
-static void tex_delete( GLuint id ) {
+static void tex_delete(GLuint id) {
   if(has_texture_object()) {
-    glDeleteTexturesEXT( 1, &id );
+    glDeleteTexturesEXT(1, &id);
   } else {
-    glDeleteLists( id, 1 );
+    glDeleteLists(_mgopenglc->texture_lists[id], 1);
   }
 }
 
@@ -701,8 +703,7 @@ mgopengl_needtexture()
  *		c4f call.
  */
 void
-mgopengl_d4f(c)
-    float c[4];
+mgopengl_d4f(float c[4])
 {
     float d[4];
     d[0] = c[0] * kd;
@@ -753,3 +754,9 @@ mgopengl_v4fcloser(HPoint3 *p)
     tp.w = p->w + wn;
     glVertex4fv((float *)&tp);
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

@@ -112,6 +112,7 @@
 #define CR_VERT         57	/* int vertindex[sum(nvertperpol[])]	*/
 #define CR_POLYNORMAL   58	/* Point3 facenormal[npoly]		*/
 #define CR_POLYCOLOR    59	/* ColorA facecolor[npoly]		*/
+#define CR_POLYFLAGS   300      /* per poly concave/not-flat flags      */
 
 	/* Sphere attributes */
 #define CR_CENTER		60	/* HPoint3 *center (also bbox)  */

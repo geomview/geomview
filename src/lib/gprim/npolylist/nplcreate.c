@@ -36,186 +36,233 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "npolylistP.h"
 
 
- /*
-  * Free a NPolyList. 
-  */
+/*
+ * Free a NPolyList. 
+ */
 
 #include "npolylistP.h"
 
 NPolyList *
 NPolyListDelete( NPolyList *np )
 {
-    if (np == NULL)
-	return NULL;
-
-    OOGLFree(np->vi);
-    OOGLFree(np->p);
-    OOGLFree(np->v);
-    if(np->vcol) OOGLFree(np->vcol);
+  if (np == NULL)
     return NULL;
+
+  OOGLFree(np->vi);
+  OOGLFree(np->pv);
+  OOGLFree(np->v);
+  OOGLFree(np->vcol);
+  OOGLFree(np->p[0].v);
+  OOGLFree(np->p);
+  OOGLFree(np->vl);
+  BSPTreeFree((Geom *)np);
+
+  np->vi   = NULL;
+  np->pv   = NULL;
+  np->v    = NULL;
+  np->vcol = NULL;
+  np->p    = NULL;
+  np->vl   = NULL;
+    
+  return NULL;
 }
 
 NPolyList *
 NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
 {
-   NPolyList *pl;
-   int *nvertperpol=NULL, *verts=NULL;
-   int npolyflag=0, nvertflag=0, vertflag=0, pointflag=0, pointhomog = 0, colorflag = 0;
-   float *v = NULL;
-   ColorA *vc = NULL, *pc = NULL;
-   int attr, copy=1;
-   int numentries=0, numvertices=0;
-   int i;
-   int j,k=0, pdim = 4;
+  NPolyList *pl;
+  int *nvertperpol=NULL, *verts=NULL;
+  int npolyflag=0, nvertflag=0, vertflag=0, pointflag=0, pointhomog = 0;
+  float *v = NULL;
+  ColorA *vc = NULL, *pc = NULL;
+  int attr, copy=1;
+  int numentries=0, numvertices=0;
+  int i;
+  int j,k=0, pdim = 4;
 
-   if (exist == NULL) {
-	pl = OOGLNewE(NPolyList,"NPolyListCreate npolylist");
-	GGeomInit(pl, classp, NPLMAGIC, NULL);
-	pl->flags = pl->n_polys = pl->n_verts = 0;
-	pl->p = NULL;
-	pl->v = NULL;
-	pl->vi = NULL;
-	pl->vcol = NULL;
-	pl->pdim = 4;	/* 3-D plus homogeneous component */
-   } else {
-	pl = exist;
-	pdim = pl->pdim;
-   }
+  if (exist == NULL) {
+    pl = OOGLNewE(NPolyList,"NPolyListCreate npolylist");
+    memset(pl, 0, sizeof(NPolyList));
+    GGeomInit(pl, classp, NPLMAGIC, NULL);
+    pl->pdim = 4;	/* 3-D plus homogeneous component */
+  } else {
+    pl = exist;
+    pdim = pl->pdim;
+    BSPTreeFree((Geom *)pl);
+  }
 
 
-   while ((attr = va_arg(*a_list, int))) 
-     switch (attr) {
+  while ((attr = va_arg(*a_list, int))) 
+    switch (attr) {
 
-       case CR_NOCOPY:
-          OOGLError(0,"Note: NOCOPY option not used by NPolyListCreate()");
-          break;
+    case CR_NOCOPY:
+      OOGLError(0,"Note: NOCOPY option not used by NPolyListCreate()");
+      break;
 
-       case CR_FLAG:
-          pl->flags = va_arg(*a_list, int);
-          break;
+    case CR_FLAG:
+      pl->flags = va_arg(*a_list, int);
+      break;
 
-       case CR_NPOLY:
-          pl->n_polys = va_arg(*a_list, int);
-          npolyflag = 1;
-          break;
+    case CR_NPOLY:
+      pl->n_polys = va_arg(*a_list, int);
+      npolyflag = 1;
+      break;
 
-       case CR_NVERT:	/* number of verts of each polygon */
-          nvertperpol = va_arg(*a_list, int*);
-          nvertflag = 1;
-          break;
+    case CR_NVERT:	/* number of verts of each polygon */
+      nvertperpol = va_arg(*a_list, int*);
+      nvertflag = 1;
+      break;
 
-       case CR_VERT:	/* indices of all verts of all polygons, concatenated */
+    case CR_VERT:	/* indices of all verts of all polygons, concatenated */
 			/* verts[] contains sum(nvertperpol[]) elements */
-          verts = va_arg(*a_list, int*);
-          vertflag = 1;
-          break;
+      verts = va_arg(*a_list, int*);
+      vertflag = 1;
+      break;
 
-	case CR_DIM:
-	  pl->pdim = va_arg(*a_list, int) + 1;
-	  break;
+    case CR_DIM:
+      pl->pdim = va_arg(*a_list, int) + 1;
+      break;
 
-	case CR_POINT4:	   /* CR_POINT4, <points including homog. components> */
-	  pointhomog = 1;
-	  /* Fall into CR_POINT */
+    case CR_POINT4:	   /* CR_POINT4, <points including homog. components> */
+      pointhomog = 1;
+      /* Fall into CR_POINT */
 
-	case CR_POINT:	   /* CR_POINT, <points without homog. components> */
+    case CR_POINT:	   /* CR_POINT, <points without homog. components> */
 	
-          v = va_arg(*a_list, float *);
-          pointflag = 1;
-          break;
+      v = va_arg(*a_list, HPtNCoord *);
+      pointflag = 1;
+      break;
 
-       case CR_COLOR:	   /* CR_COLOR, <ColorA's, one per vertex */
-	  pl->flags &= ~PL_HASVCOL;
-          vc = va_arg(*a_list, ColorA *);
-          if ( vc && (pl->flags & (PL_HASVCOL | PL_HASPCOL)) == 0)
-          	pl->flags |= PL_HASVCOL;
-	  colorflag = 1;
-          break;
+    case CR_COLOR:	   /* CR_COLOR, <ColorA's, one per vertex */
+      pl->flags &= ~(PL_HASVCOL|PL_HASVALPHA);
+      vc = va_arg(*a_list, ColorA *);
+      if (vc) {
+	pl->flags |= PL_HASVCOL;
+      }
+      break;
 
-       case CR_POLYCOLOR:
-	  pl->flags &= ~PL_HASPCOL;
-          pc = va_arg(*a_list, ColorA *);
-          if(pc) pl->flags |= PL_HASPCOL;
-          break;
+    case CR_POLYCOLOR:
+      pl->flags &= ~(PL_HASPCOL|PL_HASPALPHA);
+      pc = va_arg(*a_list, ColorA *);
+      if (pc) {
+	pl->flags |= PL_HASPCOL;
+      }
+      break;
 
-       default:
-          if (GeomDecorate(pl, &copy, attr, a_list)) {
-             OOGLError(0,"Undefined PolyList option: %d", attr);
-             if (!exist) GeomDelete((Geom *)pl);
-             return NULL;
-	}
-    }
-
-    if (!exist && (!npolyflag || !nvertflag || !vertflag || !pointflag)) {
-	if (!npolyflag) OOGLError(0,"Must specify number of polygons");
-	if (!nvertflag) OOGLError(0,"Must specify NVERT array");
-	if (!vertflag) OOGLError(0,"Must specify VERT array");
-	if (!pointflag) OOGLError(0,"Must specify vertices");
-	if (pl->pdim < 5)OOGLError(0, "Dimension %d too small, "
-				   "please use ordinary OFF format",
-				   pl->pdim-1);
-	GeomDelete((Geom *)pl);
+    default:
+      if (GeomDecorate(pl, &copy, attr, a_list)) {
+	OOGLError(0,"Undefined PolyList option: %d", attr);
+	if (!exist) GeomDelete((Geom *)pl);
 	return NULL;
+      }
     }
 
+  if (!exist && (!npolyflag || !nvertflag || !vertflag || !pointflag)) {
+    if (!npolyflag) OOGLError(0,"Must specify number of polygons");
+    if (!nvertflag) OOGLError(0,"Must specify NVERT array");
+    if (!vertflag) OOGLError(0,"Must specify VERT array");
+    if (!pointflag) OOGLError(0,"Must specify vertices");
+    if (pl->pdim < 5)OOGLError(0, "Dimension %d too small, "
+			       "please use ordinary OFF format",
+			       pl->pdim-1);
+    GeomDelete((Geom *)pl);
+    return NULL;
+  }
 
-    if(nvertflag && vertflag) {
-	numentries = 0;
-	for (i=0; i<pl->n_polys; i++)
-	    numentries += nvertperpol[i];
-	for (i=0; i<numentries; i++) 
-	    if (verts[i] > numvertices)
-		numvertices = verts[i];
-	pl->n_verts = numvertices + 1;
-	if(pl->v)
-	    OOGLFree(pl->v);
-	pl->v = OOGLNewNE(float, pl->n_verts * pl->pdim, "polylist vertices");
-    }
-    if(pointflag) {
-	/* if dimn == 3, copy over into 4-vector area and add a '1' in
-	 * the 4th coordinate */
-	if (pointhomog) {
-	    memcpy(pl->v, v, pl->pdim*pl->n_verts*sizeof(float));
-	} else {
-	    float *pv;
-	    for(i = pl->n_verts, pv = pl->v; --i >= 0; ) {
-		for(j = pl->pdim; --j > 0; )
-		    *pv++ = *v++;
-		*pv++ = 1.0;	/* Add homogenous '1' */
-	    }
-	}
-    }
-    if(npolyflag) {
-	if(pl->p)
-	    OOGLFree(pl->p);
-	pl->p = OOGLNewNE(NPoly, pl->n_polys, "nPolyListCreate polygons");
-    }
-    if(nvertflag && vertflag) {
-	k = 0;
-	for (i=0; i<pl->n_polys; i++) {
-	    pl->p[i].vi0 = k;
-	    k += (pl->p[i].n_vertices = nvertperpol[i]);
-	}
-	if(pl->vi)
-	    OOGLFree(pl->vi);
-	pl->vi = OOGLNewNE(int, numentries, "nPolyListCreate vertex indices");
-	pl->nvi = k;
-	memcpy(pl->vi, verts, k*sizeof(int));
-    }
 
-    if (colorflag) {
-	if(pl->vcol)
-	    OOGLFree(pl->vcol);
-	pl->vcol = NULL;
-	if(vc) {
-	    pl->vcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyList vert colors");
-	    memcpy(pl->vcol, vc, pl->n_verts * sizeof(ColorA));
-	}
+  if(nvertflag && vertflag) {
+    numentries = 0;
+    for (i=0; i<pl->n_polys; i++)
+      numentries += nvertperpol[i];
+    for (i=0; i<numentries; i++) 
+      if (verts[i] > numvertices)
+	numvertices = verts[i];
+    pl->n_verts = numvertices + 1;
+    if(pl->v)
+      OOGLFree(pl->v);
+    pl->v = OOGLNewNE(HPtNCoord,
+		      pl->n_verts * pl->pdim, "polylist vertices");
+    if (pl->vl)
+      OOGLFree(pl->vl);
+    pl->vl = OOGLNewNE(Vertex, pl->n_verts, "polylist vertex info");
+  }
+  if(pointflag) {
+    /* if dimn == 3, copy over into 4-vector area and add a '1' in
+     * the 4th coordinate */
+    if (pointhomog) {
+      memcpy(pl->v, v, pl->pdim*pl->n_verts*sizeof(HPtNCoord));
+    } else {
+      float *pv;
+      for(i = pl->n_verts, pv = pl->v; --i >= 0; ) {
+	for(j = pl->pdim; --j > 0; )
+	  *pv++ = *v++;
+	*pv++ = 1.0;	/* Add homogenous '1' */
+      }
     }
+  }
+  if(npolyflag) {
+    if(pl->p) {
+      if (pl->p[0].v) {
+	OOGLFree(pl->p[0].v);
+      }
+      OOGLFree(pl->p);
+    }
+    pl->p = OOGLNewNE(Poly, pl->n_polys, "nPolyListCreate polygons");
+    if (pl->pv)
+      OOGLFree(pl->pv);
+    pl->pv = OOGLNewNE(int, pl->n_polys, "nPolyListCreate polygon verts");
+  }
+  if(nvertflag && vertflag) {
+    Vertex **vp;
+    k = 0;
+    for (i=0; i<pl->n_polys; i++) {
+      pl->pv[i] = k;
+      k += (pl->p[i].n_vertices = nvertperpol[i]);
+    }
+    if(pl->vi)
+      OOGLFree(pl->vi);
+    pl->vi = OOGLNewNE(int, numentries, "nPolyListCreate vertex indices");
+    pl->nvi = k;
+    memcpy(pl->vi, verts, k*sizeof(int));
 
-    if (pc)
-        for (i = 0; i < pl->n_polys; i++)
-	    pl->p[i].pcol = pc[i];
+    /* Also update the connectivity info stored in pl->p[] */
+    vp = OOGLNewNE(Vertex *, numentries, "nPolyListCreate connectivity");
+    for (i = 0; i < pl->n_polys; i++) {
+      Poly *p = &pl->p[i];
+      
+      p->v  = vp;
+      vp   += p->n_vertices;
+    
+      for (k = 0; k < p->n_vertices; k++) {
+	p->v[k] = &pl->vl[pl->vi[pl->pv[i]+k]];
+      }
+    }
+  }
 
-    return pl;
+  if(vc) {
+    for (i = 0; i < pl->n_verts; i++) {
+      pl->vcol[i] = pl->vl[i].vcol = vc[i];
+      if (vc[i].a != 1.0) {
+	pl->flags |= PL_HASVALPHA;
+      }
+    }
+    pl->flags |= NPL_HASVLVCOL;
+  }
+
+  if (pc) {
+    for (i = 0; i < pl->n_polys; i++) {
+      pl->p[i].pcol = pc[i];
+      if (pc[i].a != 1.0) {
+	pl->flags |= PL_HASPALPHA;
+      }
+    }
+  }
+
+  return pl;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

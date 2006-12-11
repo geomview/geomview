@@ -71,7 +71,6 @@ draw_projected_vect(mgNDctx *NDctx,
       colored = mapHPtN(NDctx, h, np, &newc[i]);
     }
   } else {
-    /* w has no special meaning for ND > 3 */
     for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
       HPt3ToHPtN(op, NULL, h);
       colored = mapHPtN(NDctx, h, np, &newc[i]);

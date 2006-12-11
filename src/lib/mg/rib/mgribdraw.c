@@ -39,7 +39,8 @@ void mgrib_drawCline(HPoint3 *p1, HPoint3 *p2);
 
 void	mgrib_polygon( int nv, HPoint3 *v, int nn, Point3 *n,
 	      	          int nc,ColorA *c );
-void	mgrib_mesh( int wrap,int nu,int nv,HPoint3 *p, Point3 *n,ColorA *c );
+void	mgrib_mesh(int wrap,int nu,int nv,HPoint3 *p, Point3 *n, Point3 *nq,
+		   ColorA *c );
 void	mgrib_line( HPoint3 *p1, HPoint3 *p2 );
 void	mgrib_polyline( int nv, HPoint3 *verts, int nc, ColorA *colors,
 				int wrapped );
@@ -511,7 +512,10 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 
 	  mrti(mr_st, mr_buildarray, p->n_vertices*2, mr_NULL);
 	  for(j = 0, v = p->v; j < p->n_vertices; j++, v++) {
-	    Pt3Transform(tex->tfm, &(*v)->st, &st);
+	    st.x = (*v)->st[0];
+	    st.y = (*v)->st[1];
+	    st.z = 0.0;
+	    Pt3Transform(tex->tfm, &st, &st);
 	    if ((tex->flags & TXF_SCLAMP)) {
 	      if (st.x > 1.0)
 		st.x = 1.0;

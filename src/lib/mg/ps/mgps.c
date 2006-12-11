@@ -105,7 +105,8 @@ struct mgfuncs mgpsfuncs = {
   mgps_line,
   mgps_polyline,
   mg_quads,
-  mg_bezier
+  mg_bezier,
+  mg_bsptree
   };
 
 
