@@ -19,49 +19,202 @@
  * USA, or visit http://www.gnu.org.
  */
 
+/*
+**	hplane3.c - procedural interface to 3D plane geometry
+**
+**	pat hanrahan
+*/
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef HPLANE3DEF
-#define HPLANE3DEF
+#ifndef _GV_HPLANE3_H_
+#define _GV_HPLANE3_H_
 
-#ifndef HPOINT3DEF
-# include "hpoint3.h"
+#if HAVE_CONFIG_H
+# include "config.h"
 #endif
 
-extern HPlane3 *HPl3Create();
-extern void HPl3Delete( HPlane3 *pl );
-
-extern void HPl3Print( HPlane3 *pl );
-extern void HPl3Copy( HPlane3 *pl1, HPlane3 *pl2 );
-extern void HPl3From( HPlane3 *pl, HPl3Coord a, HPl3Coord b, HPl3Coord c, HPl3Coord d );
-extern int HPl3From3HPt3s( HPlane3 *pl, HPoint3 *pt1, HPoint3 *pt2, HPoint3 *pt3 );
-extern int HPl3From2HLn3s( HPlane3 *pl, HLine3 *ln1, HLine3 *ln2 );
-
-extern int HPl3IntersectHPl3( HPlane3 *pl1, HPlane3 *pl2, HLine3 *ln );
-extern void HPl3Pencil( HPl3Coord t1, HPlane3 *pl1, HPl3Coord t2, HPlane3 *pl2, HPlane3 *pl );
-
-extern float HPl3DotHPt3( HPlane3 *pl, HPoint3 *pt );
-
-/* Not used?  mbp Tue May 16 16:51:17 2000 */
-/*extern void HPl3Normalize( HPlane3 *pl1, HPlane3 *pl2 );*/
-
-extern int HPl3Undefined( HPlane3 *pl );
-extern int HPl3Infinity( HPlane3 *pl );
-extern int HPl3Compare( HPlane3 *pl1, HPlane3 *pl2 );
-
-extern int HPl3CoincidentHPt3( HPlane3 *pl, HPoint3 *pt );
-extern int HPl3CoincidentHLn3( HPlane3 *pl, HLine3 *ln );
-extern int HPl3CoincidentHPl3( HPlane3 *pl1, HPlane3 *pl2 );
-
-extern void HPl3Transform( Transform3 T, HPlane3 *pl1, HPlane3 *pl2 );
-extern void HPl3TransformN( Transform3 T, HPlane3 *pl1, HPlane3 *pl2, int n );
-
-extern void HPl3Dual( HPlane3 *pl, HPoint3 *pt );
-
-/* Identify ideal plane */
-extern HPlane3 HPl3Ideal;
-extern void HPl3Perp( HPlane3 *pl, HPoint3 *pt );
-extern HPl3Coord HPl3Angle( HPlane3 *pl1, HPlane3 *pl2 );
-
+#if 0
+static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
+Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
+
+#include <math.h>
+#include "tolerance.h"
+#include "geomtypes.h"
+
+static inline HPlane3 *HPl3Create(void);
+static inline void HPl3Delete(HPlane3 *pl);
+static inline void HPl3Print(HPlane3 *pl);
+static inline void HPl3Copy(HPlane3 *pl1, HPlane3 *pl2);
+static inline void HPl3From(HPlane3 *pl,
+			    HPl3Coord a, HPl3Coord b, HPl3Coord c, HPl3Coord d);
+static inline int HPl3From3HPt3s(HPlane3 *pl,
+				 HPoint3 *pt1, HPoint3 *pt2, HPoint3 *pt3);
+static inline int HPl3From2HLn3s(HPlane3 *pl, HLine3 *ln1, HLine3 *ln2);
+static inline int HPl3IntersectHPl3(HPlane3 *pl1, HPlane3 *pl2, HLine3 *ln);
+static inline void HPl3Pencil( HPl3Coord t1, HPlane3 *pl1,
+			       HPl3Coord t2, HPlane3 *pl2, HPlane3 *pl3 );
+static inline HPt3Coord HPl3DotHPt3(HPlane3 *pl, HPoint3 *pt);
+static inline int HPl3Undefined(HPlane3 *pl);
+static inline int HPl3Infinity(HPlane3 *pl);
+static inline int HPl3Compare(HPlane3 *pl1, HPlane3 *pl2);
+static inline int HPl3CoincidentHPt3(HPlane3 *pl, HPoint3 *pt);
+static inline int HPl3CoincidentHLn3(HPlane3 *pl, HLine3 *ln);
+static inline int HPl3CoincidentHPl3( HPlane3 *pl1, HPlane3 *pl2 );
+static inline void HPl3Transform(Transform3 T, HPlane3 *pl1, HPlane3 *pl2);
+static inline void HPl3TransformN(Transform3 T,
+				  HPlane3 *pl1, HPlane3 *pl2, int n );
+static inline void HPl3Dual(HPlane3 *pl, HPoint3 *pt);
+static inline void HPl3Perp(HPlane3 *pl, HPoint3 *pt);
+
+#include "hg4.h"
+#include "hline3.h"
+#include "transform3.h"
+
+static const HPlane3 HPl3Ideal = { 0., 0., 0., 1. };
+
+static inline HPlane3 *
+HPl3Create(void)
+{
+    return (HPlane3 *) Hg4Create();
+}
+
+static inline void
+HPl3Delete( HPlane3 *pl )
+{
+    Hg4Delete( (Hg4Tensor1Ptr)pl );
+}
+
+static inline void
+HPl3Print( HPlane3 *pl )
+{
+    Hg4Print( (Hg4Tensor1Ptr)pl );
+}
+
+static inline void
+HPl3Copy( HPlane3 *pl1, HPlane3 *pl2 )
+{
+    Hg4Copy( (Hg4Tensor1Ptr)pl1, (Hg4Tensor1Ptr)pl2 );
+}
+
+static inline void
+HPl3From( HPlane3 *pl, HPl3Coord a, HPl3Coord b, HPl3Coord c, HPl3Coord d )
+{
+    Hg4From( (Hg4Tensor1Ptr)pl, a, b, c, d );
+}
+
+static inline int
+HPl3From3HPt3s( HPlane3 *pl, HPoint3 *pt1, HPoint3 *pt2, HPoint3 *pt3 )
+{
+    return Hg4Intersect3( 
+	(Hg4Tensor1Ptr)pt1, (Hg4Tensor1Ptr)pt2, (Hg4Tensor1Ptr)pt3,
+	(Hg4Tensor1Ptr)pl, 1 );
+}
+
+static inline int
+HPl3From2HLn3s( HPlane3 *pl, HLine3 *ln1, HLine3 *ln2 )
+{
+    HPoint3 pt;
+
+    return HLn3IntersectHLn3( ln1, ln2, pl, &pt );
+}
+
+static inline int
+HPl3IntersectHPl3( HPlane3 *pl1, HPlane3 *pl2, HLine3 *ln )
+{
+    return HLn3From2HPl3s( ln, pl1, pl2 );
+}
+
+static inline void
+HPl3Pencil( HPl3Coord t1, HPlane3 *pl1, HPl3Coord t2, HPlane3 *pl2, HPlane3 *pl3 )
+{
+    Hg4Pencil( t1, (Hg4Tensor1Ptr)pl1, t2, (Hg4Tensor1Ptr)pl2, 
+	       (Hg4Tensor1Ptr)pl3 );
+}
+
+static inline HPt3Coord
+HPl3DotHPt3( HPlane3 *pl, HPoint3 *pt )
+{
+    return Hg4ContractPiQi( (Hg4Tensor1Ptr)pl, (Hg4Tensor1Ptr)pt );
+}
+
+static inline int
+HPl3Undefined( HPlane3 *pl )
+{
+    return Hg4Undefined( (Hg4Tensor1Ptr)pl );
+}
+
+static inline int
+HPl3Infinity( HPlane3 *pl )
+{
+    return Hg4Infinity( (Hg4Tensor1Ptr) pl, 1 );
+}
+
+static inline int
+HPl3Compare( HPlane3 *pl1, HPlane3 *pl2 )
+{
+    return Hg4Compare( (Hg4Tensor1Ptr)pl1, (Hg4Tensor1Ptr)pl2 );
+}
+
+static inline int
+HPl3CoincidentHPt3( HPlane3 *pl, HPoint3 *pt )
+{
+    return fzero(HPl3DotHPt3(pl,pt));
+}
+
+static inline int
+HPl3CoincidentHLn3( HPlane3 *pl, HLine3 *ln )
+{
+    HPoint3 pt;
+
+    return HLn3IntersectHPl3( ln, pl, &pt );
+}
+
+static inline int
+HPl3CoincidentHPl3( HPlane3 *pl1, HPlane3 *pl2 )
+{
+    return Hg4Coincident( (Hg4Tensor1Ptr)pl1, (Hg4Tensor1Ptr)pl2 );
+}
+
+static inline void
+HPl3Transform( Transform3 T, HPlane3 *pl1, HPlane3 *pl2 )
+{
+    Hg4Transform( T, (Hg4Tensor1Ptr)pl1, (Hg4Tensor1Ptr)pl2 );
+}
+
+static inline void
+HPl3TransformN( Transform3 T, HPlane3 *pl1, HPlane3 *pl2, int n )
+{
+    while( n-- )
+	Hg4Transform( T, (Hg4Tensor1Ptr)pl1++, (Hg4Tensor1Ptr)pl2++ );
+}
+
+static inline void
+HPl3Dual( HPlane3 *pl, HPoint3 *pt )
+{
+    pt->x = pl->a;
+    pt->y = pl->b;
+    pt->z = pl->c;
+    pt->w = pl->d;
+}
+
+static inline void
+HPl3Perp( HPlane3 *pl, HPoint3 *pt )
+{
+/*
+    HLine3 ln, lndual;
+    HQuadric Q;
+
+    HLn3From2HPl3s( &ln, pl, &HPl3Ideal );
+    HLn3CorrelateHLn3( &ln, Q, &lndual );
+    HLn3Perp( &lndual, pt ):
+*/
+    /* if HPl3Ideal == (0,0,0,1) */
+    pt->x = pl->a;
+    pt->y = pl->b;
+    pt->z = pl->c;
+    pt->w = 0;
+}
+
+#endif /* _GV_HPLANE3_H_ */

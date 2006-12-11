@@ -22,11 +22,10 @@
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef TRANSFORM3DEF
-#define TRANSFORM3DEF
+#ifndef _GV_TRANSFORM3_H_
+#define _GV_TRANSFORM3_H_
 
-#include "point3.h"
-#include "hpoint3.h"
+#include "geomtypes.h"
 
 /*
  * Space & model flags; used to specify what space we're in, and
@@ -44,15 +43,17 @@
 #define TM_PROJECTIVE		0x0200
 #define TM_CONFORMAL_BALL	0x0400
 
-typedef	Tm3Coord (*TransformPtr)[4];
 #define TMNULL  ((TransformPtr)0)     /* How to pass a NULL Transform3 ptr */
 
-#ifndef TMX
 #define TMX 0
 #define TMY 1
 #define TMZ 2
 #define TMW 3
-#endif
+
+extern Point3 TM3_XAXIS;
+extern Point3 TM3_YAXIS;
+extern Point3 TM3_ZAXIS;
+extern Transform3 TM3_IDENTITY;
 
 extern void Tm3Adjoint( Transform3, Transform3 );
 extern float Tm3Invert( Transform3 T, Transform3 Tinv );
@@ -139,8 +140,9 @@ extern void Ctm3Perspective( Transform3 T,
     float l, float r, float b, float t, float n, float f );
 extern void Ctm3Window( Transform3 T, float l, float r, float b, float t );
 
-extern Point3 TM3_XAXIS;
-extern Point3 TM3_YAXIS;
-extern Point3 TM3_ZAXIS;
-extern Transform3 TM3_IDENTITY;
-# endif
+/* include it after defining all prototypes */
+
+#include "point3.h"
+#include "hpoint3.h"
+
+#endif /* _GV_TRANSFORM3_H_ */

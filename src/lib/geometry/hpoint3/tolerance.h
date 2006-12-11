@@ -22,14 +22,17 @@
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-# ifndef TOLERANCEDEF
-# define TOLERANCEDEF
+#ifndef _GV_TOLERANVE_H_
+# define _GV_TOLERANVE_H_
+
+/* FLT_EPSILON: 1.19209290e-7F */
 
 # define TOLERANCE 1e-6
 
-# define fneg(a) ((a)<-TOLERANCE)
-# define fpos(a) ((a)> TOLERANCE)
-# define fz(a) (((a)<TOLERANCE)&&((a)>-TOLERANCE))
+# define fneg(a)  ((a)<-TOLERANCE)
+# define fpos(a)  ((a)> TOLERANCE)
 # define fzero(a) (((a)<TOLERANCE)&&((a)>-TOLERANCE))
+# define fz(a)    fzero(a)
+# define fnz(a)   (!fzero(a))
 
-# endif
+#endif

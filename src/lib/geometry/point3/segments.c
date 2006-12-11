@@ -58,12 +58,12 @@ static int LnPlIntersect(HPoint3 *pl, Point3 *a, Point3 *dir, float *t);
  * Notes:	This procedure is totally general; either or both
  *		segments may in fact be points.
  */
-float SgSgDistance(Point3 *a1, Point3 *a2,
-		   Point3 *b1, Point3 *b2)
+Pt3Coord SgSgDistance(Point3 *a1, Point3 *a2,
+		      Point3 *b1, Point3 *b2)
 {
   Point3 adir, bdir, amin, bmin, na, nb;
   HPoint3 aplane, bplane;
-  float alen, blen, d, cosang;
+  Pt3Coord alen, blen, d, cosang;
 
   Pt3Sub(a2,a1, &adir);
   alen = Pt3Length( &adir );
@@ -177,12 +177,12 @@ static void Orth(Point3 *a, Point3 *b, Point3 *ans)
  *		  the caller has already computed it, and we need it
  *		  here, so why recompute it?!!
  */
-static float ParSgSgDistance(Point3 *a1, Point3 *a2, Point3 *adir,
+static Pt3Coord ParSgSgDistance(Point3 *a1, Point3 *a2, Point3 *adir,
 			     Point3 *b1, Point3 *b2)
 {
   Point3 b1p,b2p;
   HPoint3 b1plane, b2plane;
-  float d,t1 = 0.0 ,t2 = 0.0;
+  Pt3Coord d,t1 = 0.0 ,t2 = 0.0;
 
   Pt3Sub(a2,a1,adir);
   PtNormalPlane(b1, adir, &b1plane);
@@ -222,11 +222,11 @@ static float ParSgSgDistance(Point3 *a1, Point3 *a2, Point3 *adir,
  * Date:	Mon Dec 23 15:15:19 1991
  * Notes:	dir must be a2 - a1 upon input
  */
-static float SgPtDistance(Point3 *p, Point3 *a1, Point3 *a2, Point3 *dir)
+static Pt3Coord SgPtDistance(Point3 *p, Point3 *a1, Point3 *a2, Point3 *dir)
 {
   HPoint3 pl;
   Point3 min;
-  float d;
+  Pt3Coord d;
 
   PtNormalPlane(p, dir, &pl);
   SgPlMinPoint(&pl, a1, a2, dir, &min);
@@ -250,7 +250,7 @@ static float SgPtDistance(Point3 *p, Point3 *a1, Point3 *a2, Point3 *dir)
 static void SgPlMinPoint(HPoint3 *pl, Point3 *a, Point3 *b,
 			 Point3 *dir, Point3 *ans)
 {
-  float t = 0.0;
+  Pt3Coord t = 0.0;
 
   LnPlIntersect(pl, a, dir, &t);
   if (t <= 0)
@@ -270,7 +270,7 @@ static void SgPlMinPoint(HPoint3 *pl, Point3 *a, Point3 *b,
  * Author:	mbp
  * Date:	Mon Dec 23 15:20:43 1991
  */
-static void TComb(Point3 *a, float t, Point3 *dir, Point3 *b)
+static void TComb(Point3 *a, Pt3Coord t, Point3 *dir, Point3 *b)
 {
   b->x = a->x + t * dir->x;
   b->y = a->y + t * dir->y;
@@ -289,9 +289,9 @@ static void TComb(Point3 *a, float t, Point3 *dir, Point3 *b)
  * Date:	Mon Dec 23 15:22:25 1991
  * Notes:	return value of 0 means line is parallel to plane
  */
-static int LnPlIntersect(HPoint3 *pl, Point3 *a, Point3 *dir, float *t)
+static int LnPlIntersect(HPoint3 *pl, Point3 *a, Point3 *dir, Pt3Coord *t)
 {
-  float d;
+  Pt3Coord d;
 
   d = pl->x*dir->x + pl->y*dir->y + pl->z*dir->z;
   if (d == 0) return 0;

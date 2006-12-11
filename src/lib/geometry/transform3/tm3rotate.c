@@ -35,6 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <math.h>
 #include "radians.h"
 #include "transform3.h"
+#include "point3.h"
 
 Point3 TM3_XAXIS = { 1.0, 0.0, 0.0 };
 Point3 TM3_YAXIS = { 0.0, 1.0, 0.0 };
