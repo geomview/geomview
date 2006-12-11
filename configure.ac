@@ -865,6 +865,7 @@ LF_LINK_HEADERS(src/lib/oogl/lisp		\
 		src/lib/oogl/refcomm		\
 		src/lib/oogl/util		\
 		src/lib/oogl/wa			\
+		src/lib/geometry/		\
 		src/lib/geometry/cmodel		\
 		src/lib/geometry/hpoint3	\
 		src/lib/geometry/hpointn	\
