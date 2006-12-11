@@ -1,4 +1,4 @@
-@set UPDATED 4 November 2006
+@set UPDATED 15 November 2006
 @set UPDATED-MONTH November 2006
 @set EDITION 1.8.2-rc10
 @set VERSION 1.8.2-rc10
