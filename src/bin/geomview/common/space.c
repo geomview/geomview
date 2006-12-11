@@ -296,7 +296,6 @@ LDEFINE(ND_axes, LLIST,
      * cluster. NOTE: we first reset the camera to its default state.
      */
     NDcam *c = NDnewcluster(clustername);
-    extern mgNDctx NDctx_proto; /* from ndshade.c */
 
     for(i = 0; i < 4; i++) {
       if (axes[i] < 0) {
@@ -313,7 +312,6 @@ LDEFINE(ND_axes, LLIST,
     for(i = 0; i < 4; i++) {
       dv->NDPerm[i] = axes[i];
     }
-    dv->mgNDctx = NDctx_proto;
 
     CamReset(dv->cam);
 
@@ -398,7 +396,7 @@ LDEFINE(ND_xform, LTRANSFORMN,
 	"index 0, while 3D transform have it at index 3.")
 {
   int id;
-  TransformN *T;
+  TransformN *T = NULL;
   TmNStruct *ts = NULL;
   DObject *obj;
   NDcam *cl = NULL;

@@ -796,8 +796,6 @@ view_pick( DView *dv, int x, int y, Pick *pick )
   DGeom *dg;
   Appearance *ap;
   WnPosition wp;
-
-  Point3 got,v,e[2],wgot,wv,we[2], owgot, owv, owe[2];
   
   if(dv == NULL)
     return NOID;
@@ -949,8 +947,7 @@ view_pick( DView *dv, int x, int y, Pick *pick )
   /* Ok, everything below is just debugging stuff */
   if (chosen == NOID) {
 /*    printf("Picked nothing.\n"); */
-  }
-  else {
+  } else {
 /*    printf("Picked dgeom #%d\n", INDEXOF(chosen)); */
     
 /* pick->got is in mouse coords.
@@ -959,71 +956,67 @@ view_pick( DView *dv, int x, int y, Pick *pick )
    got is raw object coords. (the kind of numbers in geom data file!)
     
 */
-      if (pick && getenv("VERBOSE_PICK")) {
+    if (pick && getenv("VERBOSE_PICK")) {
+      Point3 got, v, e[2], wgot, wv, we[2], owgot, owv, owe[2];
 	
-	Pt3Transform(pick->Tmirp, &(pick->got), &got);
-	if (pick->found&PW_VERT)
-	  Pt3Transform(pick->Tmirp, &(pick->v), &v);
-	if (pick->found&PW_EDGE) {
-	  Pt3Transform(pick->Tmirp, &(pick->e[0]), &(e[0]));
-	  Pt3Transform(pick->Tmirp, &(pick->e[1]), &(e[1]));
-	}
+      Pt3Transform(pick->Tmirp, &(pick->got), &got);
+      Pt3Transform(pick->Tw, &(pick->got), &wgot);
+      Pt3Transform(oldTw, &(pick->got), &owgot);
 	
-	Pt3Transform(pick->Tw, &(pick->got), &wgot);
-	if (pick->found&PW_VERT)
-	  Pt3Transform(pick->Tw, &(pick->v), &wv);
-	if (pick->found&PW_EDGE) {
-	  Pt3Transform(pick->Tw, &(pick->e[0]), &(we[0]));
-	  Pt3Transform(pick->Tw, &(pick->e[1]), &(we[1]));
-	}
+      printf("pick->\n");
+      printf("  got = (%f %f %f)\n",
+	     pick->got.x, pick->got.y, pick->got.z);
+      if (pick->found&PW_VERT)
+	printf("    v = (%f %f %f)\n",
+	       pick->v.x, pick->v.y, pick->v.z);
+      if (pick->found&PW_EDGE) {
+	printf(" e[0] = (%f %f %f)\n",
+	       pick->e[0].x, pick->e[0].y, pick->e[0].z);
+	printf(" e[1] = (%f %f %f)\n",
+	       pick->e[1].x, pick->e[1].y, pick->e[1].z);
+      }
 	
-	Pt3Transform(oldTw, &(pick->got), &owgot);
-	if (pick->found&PW_VERT)
-	  Pt3Transform(oldTw, &(pick->v), &owv);
-	if (pick->found&PW_EDGE) {
-	  Pt3Transform(oldTw, &(pick->e[0]), &(owe[0]));
-	  Pt3Transform(oldTw, &(pick->e[1]), &(owe[1]));
-	}
+      printf("Transformed pick [raw]->\n");
+      printf("  got = (%f %f %f)\n", got.x, got.y, got.z);
+      if (pick->found&PW_VERT) {
+	HPt3TransPt3(pick->Tmirp, &(pick->v), &v);
+	printf("    v = (%f %f %f)\n", v.x, v.y, v.z);
+      }
+      if (pick->found&PW_EDGE) {
+	HPt3TransPt3(pick->Tmirp, &(pick->e[0]), &(e[0]));
+	HPt3TransPt3(pick->Tmirp, &(pick->e[1]), &(e[1]));
+	printf(" e[0] = (%f %f %f)\n", e[0].x, e[0].y, e[0].z);
+	printf(" e[1] = (%f %f %f)\n", e[1].x, e[1].y, e[1].z);
+      }
 	
-	printf("pick->\n");
-	printf("  got = (%f %f %f)\n", pick->got.x, pick->got.y, pick->got.z);
-	if (pick->found&PW_VERT)
-	  printf("    v = (%f %f %f)\n", pick->v.x, pick->v.y, pick->v.z);
-	if (pick->found&PW_EDGE) {
-	  printf(" e[0] = (%f %f %f)\n", pick->e[0].x, pick->e[0].y, pick->e[0].z);
-	  printf(" e[1] = (%f %f %f)\n", pick->e[1].x, pick->e[1].y, pick->e[1].z);
-	}
-	
-	
-	printf("Transformed pick [raw]->\n");
-	printf("  got = (%f %f %f)\n", got.x, got.y, got.z);
-	if (pick->found&PW_VERT)
-	  printf("    v = (%f %f %f)\n", v.x, v.y, v.z);
-	if (pick->found&PW_EDGE) {
-	  printf(" e[0] = (%f %f %f)\n", e[0].x, e[0].y, e[0].z);
-	  printf(" e[1] = (%f %f %f)\n", e[1].x, e[1].y, e[1].z);
-	}
-	
-	printf("Transformed pick [old world]->\n");
-	printf("  got = (%f %f %f)\n", owgot.x, owgot.y, owgot.z);
-	if (pick->found&PW_VERT)
-	  printf("    v = (%f %f %f)\n", owv.x, owv.y, owv.z);
-	if (pick->found&PW_EDGE) {
-	  printf(" e[0] = (%f %f %f)\n", owe[0].x, owe[0].y, owe[0].z);
-	  printf(" e[1] = (%f %f %f)\n", owe[1].x, owe[1].y, owe[1].z);
+      printf("Transformed pick [old world]->\n");
+      printf("  got = (%f %f %f)\n", owgot.x, owgot.y, owgot.z);
+      if (pick->found&PW_VERT) {
+	HPt3TransPt3(oldTw, &(pick->v), &owv);
+	printf("    v = (%f %f %f)\n", owv.x, owv.y, owv.z);
+      }
+      if (pick->found&PW_EDGE) {
+	HPt3TransPt3(oldTw, &(pick->e[0]), &(owe[0]));
+	HPt3TransPt3(oldTw, &(pick->e[1]), &(owe[1]));
+	printf(" e[0] = (%f %f %f)\n", owe[0].x, owe[0].y, owe[0].z);
+	printf(" e[1] = (%f %f %f)\n", owe[1].x, owe[1].y, owe[1].z);
 
 	printf("Transformed pick [world]->\n");
 	printf("  got = (%f %f %f)\n", wgot.x, wgot.y, wgot.z);
-	if (pick->found&PW_VERT)
+	if (pick->found&PW_VERT) {
+	  HPt3TransPt3(pick->Tw, &(pick->v), &wv);
 	  printf("    v = (%f %f %f)\n", wv.x, wv.y, wv.z);
+	}
 	if (pick->found&PW_EDGE) {
+	  HPt3TransPt3(pick->Tw, &(pick->e[0]), &(we[0]));
+	  HPt3TransPt3(pick->Tw, &(pick->e[1]), &(we[1]));
 	  printf(" e[0] = (%f %f %f)\n", we[0].x, we[0].y, we[0].z);
 	  printf(" e[1] = (%f %f %f)\n", we[1].x, we[1].y, we[1].z);
 	}
 
 
-	}
       }
+    }
   }
   return chosen;
 }

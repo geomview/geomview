@@ -2764,7 +2764,7 @@ reconfigure_view(DView *dv)
 static void
 really_draw_view(DView *dv)
 {
-  int i, j;
+  int i;
     
   mgpushappearance();
   mgworldbegin();
@@ -2781,71 +2781,26 @@ really_draw_view(DView *dv)
   if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
     NDcam *cluster = dv->cluster;
     int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-    NDstuff nds;
-    TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
-    TransformN *Tc = NULL, *W2G = NULL;
-    HPointN *caxis = NULL;
+    NDstuff *nds;
+    TransformN *W2C = NULL, *W2U = NULL;
 
     cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
     if(dgeom[0]->NDT) {
       W2C = TmNConcat( dgeom[0]->NDT, cluster->W2C, NULL );
-      W2G = REFINCR(TransformN, dgeom[0]->NDT);
+      W2U = REFINCR(TransformN, dgeom[0]->NDT);
     } else {
       W2C = TmNCopy( cluster->W2C, NULL );
-      W2G = TmNCreate(dim,dim, NULL);
+      W2U = TmNIdentity(TmNCreate(dim, dim, NULL));
     }
 
-    nds.mgNDctx = dv->mgNDctx;
-    nds.axes = dv->NDPerm;
-    nds.ncm = dv->nNDcmap;
-    nds.cm = dv->NDcmap;
-    nds.Tc = NULL;
-    nds.hc = HPtNCreate(dim, NULL);
-    if(dv->nNDcmap > 0) {
-      /* Build array of N-D-to-color projection vectors:
-       * it becomes a matrix, multiplied by N-D row vector on the left,
-       * yielding an array of dv->nNDcmap projections used for coloring.
-       * So it has (dimension) rows, (dv->nNDcmap) columns.
-       */
-      Tc = TmNCreate(dim, dv->nNDcmap, NULL);
-      for(i = 0; i < dv->nNDcmap; i++) {
-	cmap *cm = &dv->NDcmap[i];
-	int cdim = cm->axis->dim;
-	int mindim = (dim < cdim) ? dim : cdim;
-	HPointN *our_caxis = cm->axis;
-	TransformN *TxC;
-
-	if(cm->coords != UNIVERSE) {
-	  TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
-	  if(TxC) {
-	    our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
-	    TmNDelete(TxC);
-	  }
-	}
-	for(j = 0; j < mindim; j++)
-	  Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
-      }
-    }
-    mgctxset(MG_NDCTX, &nds, MG_END);
+    nds = drawer_init_ndstuff(dv, W2C, W2U);
+    mgctxset(MG_NDCTX, nds, MG_END);
 
     for(i = 1; i < dgeom_max; i++) {
 
       if(dgeom[i] == NULL) continue;
 
-      if (dgeom[i]->NDT) {
-	nds.T = O2C = TmNConcat(dgeom[i]->NDT, W2C, O2C);
-      } else {
-	nds.T = W2C;
-      }
-      if (Tc) {
-	if (dgeom[i]->NDT) {
-	  O2G = TmNConcat(dgeom[i]->NDT, W2G, O2G);
-	  nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
-	} else {
-	  nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-	}
-      }
-
+      drawer_transform_ndstuff(nds, dgeom[i]->NDT);
       GeomDraw(dgeom[i]->Item);
     }
 
@@ -2856,8 +2811,9 @@ really_draw_view(DView *dv)
       DView *otherv;
       int otheri;
       Transform T3;
+      TransformN *ovC2W = NULL;
 
-      LOOPVIEWS(otheri,otherv) {
+      LOOPVIEWS(otheri, otherv) {
 	if (otherv != dv && otherv->Item == drawerstate.universe) {
 
 	  if(drawerstate.camproj) {
@@ -2870,34 +2826,26 @@ really_draw_view(DView *dv)
 	  }
 
 	  if (otherv->cluster && otherv->cluster->C2W) {
-	    nds.T = O2C = TmNConcat(otherv->cluster->C2W, W2C, O2C);
-	    TmNApplyT3TN(T3, otherv->NDPerm, nds.T);
-	    TmNPermute(nds.T, otherv->NDPerm, nds.T);
-	    if (Tc) {
-	      O2G = TmNConcat(otherv->cluster->C2W, W2G, O2G);
-	      nds.Tc = TmNConcat(O2G, Tc, nds.Tc);
-	      TmNApplyT3TN(T3, otherv->NDPerm, nds.Tc);
-	      TmNPermute(nds.Tc, otherv->NDPerm, nds.Tc);
-	    }
+	    ovC2W = TmNCopy(otherv->cluster->C2W, ovC2W);
 	  } else {
-	    nds.T = O2C = TmNCopy(W2C, O2C);
-	    TmNApplyT3TN(T3, NULL, nds.T);
-	    nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-	    TmNApplyT3TN(T3, NULL, nds.Tc);
+	    ovC2W = TmNIdentity(ovC2W);
 	  }
+	  TmNApplyT3TN(T3, otherv->NDPerm, ovC2W);
+	  TmNMap(ovC2W, otherv->NDPerm, ovC2W);
+
+	  drawer_transform_ndstuff(nds, ovC2W);
 	  GeomDraw(drawerstate.camgeom);
 	}
       }
+
+      TmNDelete(ovC2W);
     }
 
-    TmNDelete(W2G);
+    TmNDelete(W2U);
     TmNDelete(W2C);
-    TmNDelete(O2C);
-    TmNDelete(O2G);
-    HPtNDelete(nds.hc);
-    HPtNDelete(caxis);
+    drawer_destroy_ndstuff(nds);
+    
     mgctxset(MG_NDCTX, NULL, MG_END);
-#if 1
   } else if(dv->cluster != NULL) {
     /* (scene cam geom) works also withg ND-view. One just has to
      * forget about the world transform. The (scene ...) command
@@ -2906,75 +2854,25 @@ really_draw_view(DView *dv)
      */
     NDcam *cluster = dv->cluster;
     int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-    NDstuff nds;
-    TransformN *W2C = NULL, *O2C = NULL, *O2G = NULL;
-    TransformN *Tc = NULL, *W2G = NULL;
-    HPointN *caxis = NULL;
-    Transform CamTrans, C2W3;
-    float focallen;
+    NDstuff *nds;
+    TransformN *W2C = NULL, *W2U = NULL;
 
     cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
     W2C = TmNCopy( cluster->W2C, NULL );
-    W2G = TmNCreate(dim,dim, NULL);
+    W2U = TmNIdentity(TmNCreate(dim, dim, NULL));
 
-    nds.mgNDctx = dv->mgNDctx;
-    nds.axes = dv->NDPerm;
-    nds.ncm = dv->nNDcmap;
-    nds.cm = dv->NDcmap;
-    nds.Tc = NULL;
-    nds.hc = HPtNCreate(dim, NULL);
+    nds = drawer_init_ndstuff(dv, W2C, W2U);
 
-    if(dv->nNDcmap > 0) {
-      /* Build array of N-D-to-color projection vectors:
-       * it becomes a matrix, multiplied by N-D row vector on the left,
-       * yielding an array of dv->nNDcmap projections used for coloring.
-       * So it has (dimension) rows, (dv->nNDcmap) columns.
-       */
-      Tc = TmNCreate(dim, dv->nNDcmap, NULL);
-      for(i = 0; i < dv->nNDcmap; i++) {
-	cmap *cm = &dv->NDcmap[i];
-	int cdim = cm->axis->dim;
-	int mindim = (dim < cdim) ? dim : cdim;
-	HPointN *our_caxis = cm->axis;
-	TransformN *TxC;
-
-	if(cm->coords != UNIVERSE) {
-	  TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
-	  if(TxC) {
-	    our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
-	    TmNDelete(TxC);
-	  }
-	}
-	for(j = 0; j < mindim; j++)
-	  Tc->a[j*dv->nNDcmap + i] = our_caxis->v[j];
-      }
-    }
-    mgctxset(MG_NDCTX, &nds, MG_END);
-	
-    nds.T = W2C;
-    if(Tc) {
-      nds.Tc = TmNConcat(W2G, Tc, nds.Tc);
-    }
-
-    mgpushtransform();
-    CamGet(dv->cam, CAM_FOCUS, &focallen);
-    TmTranslate(CamTrans, 0., 0., -focallen);
-    CamGet(dv->cam, CAM_C2W, C2W3);
-    TmConcat(CamTrans, C2W3, CamTrans);
-    mgsettransform(CamTrans);
-
+    mgctxset(MG_NDCTX, nds, MG_END);
+    drawer_transform_ndstuff(nds, NULL);
     GeomDraw(dv->Item);
 	
-    mgpoptransform();
 
-    TmNDelete(W2G);
+    TmNDelete(W2U);
     TmNDelete(W2C);
-    TmNDelete(O2C);
-    TmNDelete(O2G);
-    HPtNDelete(nds.hc);
-    HPtNDelete(caxis);
+    drawer_destroy_ndstuff(nds);
+
     mgctxset(MG_NDCTX, NULL, MG_END);
-#endif
   } else {
     /* Normal case.  Just draw whatever's attached to this camera */
 

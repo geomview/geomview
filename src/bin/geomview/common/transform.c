@@ -350,7 +350,7 @@ static void drawer_ND_position(int moving_id, int ref_id, char *position_type,
        */
       static const int NDPermDflt[] = { 1, 2, 3, 0 };
       int *NDPerm = NULL;
-      DObject *obj;
+      DObject *obj = NULL;
       Point ptMoving3;
       Transform T3;
 
@@ -2100,7 +2100,7 @@ void make_center_from_bbox(char *objname, int obj_id)
 	  HPt3Transform(Tuni, &pt, &pt);
 	  HPt3Dehomogenize(&pt, &pt);
 
-	  make_center(objname, (Point3 *)&pt);
+	  make_center(objname, (Point3 *)(void *)&pt);
 	} else {
 	  TransformN *Tuni;
 	  HPointN *pt;
@@ -2133,7 +2133,7 @@ void make_center_from_pick(char *objname, Pick *pick, int camid)
   if (drawerstate.NDim > 0) {
     TransformN *Tuni, *Tcam;
     Transform Tcam3d;
-    HPointN *center;
+    HPointN *center = NULL;
     HPoint3 got4, center3d;
     Point3 fromcam;
     

@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  *  mginfo - pointer to an "ndstuff" structure (from drawer.h), containing:
  *     T - transformation from object to N-D camera space
  *     axes - array of 4 axis indices, giving the subspace seen by this view
- *     Tc - (dimension) x (n-color-axes) transform from object space to
+  *     Tc - (dimension) x (n-color-axes) transform from object space to
  *		color axis space.  Use NULL if not projecting colors.
  *		Given vectors in camera space, could get Tc with:
  *		Tc = TmNConcat(T, {matrix of projection vectors}, NULL)
@@ -60,7 +60,6 @@ map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
 {
   NDstuff *nds = (NDstuff *)mgNDctx;    
 #define iT    nds->T
-#define iaxes nds->axes
 #define iTc   nds->Tc
 #define incm  nds->ncm
 #define icm   nds->cm
@@ -69,8 +68,17 @@ map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
   float t;
   int i;
 
-  HPtNTransformComponents(iT, p, iaxes, np);
-  if(np->w != 1) HPt3Dehomogenize(np, np);
+  /* cH: here is still room for optimization: provided that iT has
+   * maximal rank (i.e. rank 4) it would be possible to factor out an
+   * ordinary Transform and handle that one over to the MG layer. The
+   * remaining N-Transform would act as identity on a 4x4 sub-space
+   * which would reduce the number of floating point operations to
+   * perform the projection. The MG layer uses an object-camera
+   * transform anyway, so this would speed up things.
+   */
+  HPtNTransProj(iT, p, np);
+  if(np->w != 1)
+    HPt3Dehomogenize(np, np);
     
   if(incm > 0 && !(_mgc->astk->ap.flag & APF_KEEPCOLOR) && c != NULL) {
     ci.r = ci.g = ci.b = ci.a = 0;
@@ -170,7 +178,7 @@ static void restoreCTX(mgNDctx *NDctx, void *vsavedCTX)
   OOGLFree(savedCTX);
 }
 
-mgNDctx NDctx_proto = {
+static mgNDctx NDctx_proto = {
   map_ND_point,
   saveCTX,
   pushTN,
@@ -178,6 +186,89 @@ mgNDctx NDctx_proto = {
   restoreCTX,
 };
 
+NDstuff *drawer_init_ndstuff(DView *dv, TransformN *W2C, TransformN *W2U)
+{
+  NDstuff *nds = OOGLNewE(NDstuff, "new NDstuff");
+  int dim = W2C->idim;
+
+  nds->mgNDctx = NDctx_proto;
+
+  /* Initialize the color transform */
+  nds->ncm = dv->nNDcmap;
+  nds->cm  = dv->NDcmap;
+  nds->W2c = NULL;
+  nds->Tc  = NULL;
+  nds->hc  = NULL;
+
+  if(dv->nNDcmap > 0) {
+    HPointN *caxis = NULL;
+    int i, j;
+
+    /* Build array of N-D-to-color projection vectors: it becomes a
+     * matrix, multiplied by N-D row vector on the left, yielding an
+     * array of dv->nNDcmap projections used for coloring.  So it has
+     * (dimension) rows, (dv->nNDcmap) columns.
+     */
+    nds->W2c = TmNCreate(dim, dv->nNDcmap, NULL);
+    nds->hc = HPtNCreate(dim, NULL);
+
+    for(i = 0; i < dv->nNDcmap; i++) {
+      cmap *cm = &dv->NDcmap[i];
+      int cdim = cm->axis->dim;
+      int mindim = (dim < cdim) ? dim : cdim;
+      HPointN *our_caxis = cm->axis;
+      TransformN *TxC;
+      
+      if(cm->coords != UNIVERSE) {
+	TxC = drawer_get_ND_transform(cm->coords, UNIVERSE);
+	if(TxC) {
+	    our_caxis = caxis = HPtNTransform(TxC, cm->axis, caxis);
+	    TmNDelete(TxC);
+	}
+      }
+      for(j = 0; j < mindim; j++)
+	nds->W2c->a[j*dv->nNDcmap + i] = our_caxis->v[j];
+    }
+    TmNConcat(W2U, nds->W2c, nds->W2c);
+    HPtNDelete(caxis);
+  }
+  
+  /* initialize the W2C geometry transform. Note that nds->W2C is a
+   * projection matrix, i.e. it includes the mapping defined in
+   * dv->NDperm. This spares a lot of unnecessary floating point
+   * operations.
+   */
+  nds->T   = NULL;
+  nds->W2C = TmNProject(W2C, dv->NDPerm, NULL);
+  
+  return nds;
+}
+
+void drawer_destroy_ndstuff(NDstuff *nds)
+{
+  TmNDelete(nds->Tc);
+  TmNDelete(nds->W2c);
+
+  TmNDelete(nds->T);
+  TmNDelete(nds->W2C);
+
+  HPtNDelete(nds->hc);
+
+  /* ... and finally do not forget to destroy nds. Gnah. */
+  OOGLFree(nds);
+}
+
+/* install a new object transformation, this is simply a matter of
+ * matrix multiplication; the resulting O2C transfrom will contain the
+ * proper sub-space projection.
+ */
+void drawer_transform_ndstuff(NDstuff *nds, TransformN *T)
+{
+  nds->T = TmNConcat(T, nds->W2C, nds->T);
+  if (nds->W2c) {
+    nds->Tc = TmNConcat(T, nds->W2c, nds->Tc);
+  }
+}
 
 /*
  * Local Variables: ***

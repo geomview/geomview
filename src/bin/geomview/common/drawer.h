@@ -47,9 +47,13 @@ typedef struct cmap {	/* Colormap table */
 typedef struct NDstuff
 {
   mgNDctx mgNDctx;
-  TransformN *T;	/* object-to-ND-camera transform */
-  int *axes;	   /* visible subspace: axes in N-D camera seen by cur cam */
+  TransformN *W2C;      /* World-to-Camera transform */
+  TransformN *T;	/* object-to-ND-camera transform, including
+			 * the projection to the lower-dimensional
+			 * sub-space.
+			 */
 
+  TransformN *W2c;      /* Universe-to-Color transform */
   TransformN *Tc;	/* object-to-coloring-space-transform */
   int ncm;		/* number of colormaps */
   cmap *cm;		/* colormap array */
@@ -124,7 +128,6 @@ typedef struct DView {
   int stereogap;	/* gap between subwindows in stereo mode	*/
   WnPosition vp[2];	/* Subwindow viewports, if stereo != MONO	*/
   mgshadefunc shader;	/* Software shader function (NULL -> hardware)  */
-  mgNDctx mgNDctx;
   int NDPerm[4];	/* N-D -> 3-D axis permutation */
   int nNDcmap;
   cmap NDcmap[MAXCMAP];	/* N-D color map */
@@ -418,6 +421,9 @@ TransformN *drawer_ND_CamView(DView *dv, TransformN *TN);
 int	drawer_idmatch(int id1, int id2);
 mgshadefunc softshader(int camid);
 
+NDstuff *drawer_init_ndstuff(DView *dv, TransformN *W2C, TransformN *W2U);
+void drawer_destroy_ndstuff(NDstuff *nds);
+void drawer_transform_ndstuff(NDstuff *nds, TransformN *T);
 
 void	drawer_float(int id, DrawerKeyword key, float fval);
    /* key = DRAWER_NEAR, DRAWER_FAR, DRAWER_KA, DRAWER_KS,
