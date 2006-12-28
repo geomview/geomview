@@ -1,3 +1,8 @@
+2006-12-27  Steve M. Robbins  <smr@sumost.ca>
+
+	* configure.ac: Use ${TCL_ALL_LIB}, not "-ltcl", to check for
+	function Tcl_CreateFileHandler.
+
 2006-11-05  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribP.h, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:

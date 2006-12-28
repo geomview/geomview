@@ -680,7 +680,7 @@ AM_CONDITIONAL(HAVE_TCLTK, [test -n "${TCL_LIB}" -a -n "${TK_LIB}"])
 #
 if test -n "${TCL_LIB}" -a -n "${TK_LIB}"; then
     ac_save_LIBS="${LIBS}"
-    LIBS="-ltcl ${LIBS}"
+    LIBS="${TCL_ALL_LIB} ${LIBS}"
     AC_CHECK_FUNCS([Tcl_CreateFileHandler],
 	[TCLFILEHANDLER=yes],
 	[TCLFILEHANDLER=no])
