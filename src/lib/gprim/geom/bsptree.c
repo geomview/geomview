@@ -759,8 +759,17 @@ static inline void SplitPolyNode(PolyListNode *plnode,
       (*front)->poly  = new_poly(nv[0], NULL, scratch);
     }
     
-    savedp.v = savedv;
+    /* Attention: gcc had problems with this code snippet with
+     * -fstrict-aliasing, the "#if 1" stuff seems to work. In the
+     * "#else" version gcc somehow lost the "savedp.v = savedv"
+     * assignment. I think this is a comiler bug.
+     */
     poly = &savedp;
+#if 1
+    poly->v = savedv;
+#else
+    savedp.v = savedv;
+#endif
   } else {
     (*front)->poly  = new_poly(nv[0], NULL, scratch);
     (*back)->poly  = new_poly(nv[1], NULL, scratch);
