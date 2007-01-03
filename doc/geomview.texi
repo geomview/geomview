@@ -775,7 +775,7 @@ before the Center shut down.
 
 If you would like to see a version of Geomview for Windows, 
 you can contribute to its development in several ways.
-@pxref{Contributing} for details.
+@xref{Contributing}, for details.
 
 There is also no version of Geomview for Macintosh.
 
@@ -872,9 +872,9 @@ geomview tetra dodec @key{Enter}
 
 This command starts up Geomview and loads two example objects, a
 tetrahedron and a dodecahedron.  After a few seconds three windows
-should appear as shown in Figure @xref{fig:initial}.
+should appear; @pxref{figinitial, Figure}.
 
-@float Figure,fig:initial
+@float Figure,figinitial
 @image{figs/initial}
 @caption{Initial Geomview display.}
 @end float
@@ -945,12 +945,11 @@ should see the dodecahedron in the middle of the window and maybe part
 of the tetrahedron off to one side.  Go back to the @emph{Targets}
 browser in the @emph{Main} panel and click on "World" to select the
 whole world again.  Now click on the @emph{Look At} button in the
-@emph{Tools} panel.  You should see something like Figure
-@pxref{fig:lookatworld} --- the dodecahedron and the tetrahedron in the
-middle of the window next to each other.  The @emph{Look At} button
-positions the camera in such a way that the target object is centered in
-the window.
-@float Figure,fig:lookatworld
+@emph{Tools} panel. You should see the dodecahedron and the tetrahedron
+in the middle of the window next to each other (@pxref{figlookatworld,
+Figure}).  The @emph{Look At} button positions the camera in such a way
+that the target object is centered in the window.
+@float Figure,figlookatworld
 @image{figs/fig2}
 @caption{Looking at the world.}
 @end float
@@ -961,7 +960,7 @@ object; you can see this in the @emph{Targets} browser in the
 @emph{Main} panel.  Double-clicking the right mouse button on an object
 is another way to make it the target object.
 
-@float Figure,fig:appearance
+@float Figure,figappearance
 @image{figs/ap}
 @caption{The Appearance Panel.}
 @end float
@@ -980,10 +979,9 @@ come and go.  When you've had enough of this, leave the edges on
 and click the @emph{[af] Faces} button.  This toggles the faces
 on and off.  Click the button again to turn them back on.
 
-Now click on the @emph{[Cf] Faces} button under the word
-@emph{COLOR}.   A color chooser panel like the one in Figure
-@pxref{fig:colorchooser} should appear.
-@float Figure,fig:colorchooser
+Now click on the @emph{[Cf] Faces} button under the word @emph{COLOR}. A
+color chooser panel should appear (@pxref{figcolorchooser, Figure}).
+@float Figure,figcolorchooser
 @image{figs/color}
 @caption{Color Chooser Panel.}
 @end float
@@ -1040,22 +1038,20 @@ The @emph{Files} panel will appear.
 @c
 Below the middle of this panel is a browser with three lines in it; the
 second line is a directory with lots of Geomview example files in it.
-Click on that second line.  Your @emph{Files} panel should then look
-something like Figure @xref{fig:filespanel}.  Scroll down in the list of
-files until you see @file{tref.off}.  Click on that line, and then click
-on the @emph{Add} button.  A large trefoil-shaped tube will appear in
-your window.  Click the @emph{Done} button in the @emph{Files} panel to
-dismiss the panel.
+Click on that second line; @pxref{figfilespanel, Figure}. Scroll down in
+the list of files until you see @file{tref.off}.  Click on that line,
+and then click on the @emph{Add} button.  A large trefoil-shaped tube
+will appear in your window.  Click the @emph{Done} button in the
+@emph{Files} panel to dismiss the panel.
 
-@float Figure,fig:filespanel
+@float Figure,figfilespanel
 @image{figs/secondlinelist}
 @caption{The Files Panel.}
 @end float
 
 Now click on the @emph{Reset} button in the @emph{Tools} panel.  This
-causes everything to return to its home position.  You should see
-something like Figure @pxref{fig:trefdodec} at this point: a
-dodecahedron and a trefoil knot.
+causes everything to return to its home position.  You should see a
+dodecahedron and a trefoil knot (@pxref{figtrefdodec, Figure}).
 
 Play around with the trefoil knot and the dodecahedron.  Experiment with
 some of the other buttons in the @emph{Tools} panel.  Try coloring the
@@ -1065,7 +1061,7 @@ For a tutorial on how to create your own objects to load into Geomview,
 see file @file{doc/oogltour} distributed with Geomview.  The things in
 that file will be incorporated into a future version of this manual.
 
-@float Figure,fig:trefdodec
+@float Figure,figtrefdodec
 @image{figs/trefdodecinter}
 @caption{Trefoil and Dodecahedron.}
 @end float
@@ -1186,7 +1182,7 @@ three and so by default the others do not appear.  This section of the
 manual introduces some basic concepts that are used throughout the rest
 of the manual and describes the @emph{Main} panel.
 @c
-@float Figure,fig:mainpanel
+@float Figure,figmainpanel
 @image{figs/main}
 @caption{The Main Panel}
 @end float
@@ -1335,7 +1331,7 @@ There are several ways to load an object into Geomview.
 If you click the @emph{Load} button in Geomview's @emph{Main} panel,
 the @emph{Files} panel will appear. 
 
-@float Figure,fig:myfilelist
+@float Figure,figmyfilelist
 @image{figs/myfilelist}
 @caption{The Files Panel.}
 @end float
@@ -1388,7 +1384,7 @@ load the file as if you had loaded it with the @emph{Add} button in
 the @emph{Files} panel.  If, after bringing up the small load panel
 with @kbd{<}, you decide you want to use the larger @emph{Files} panel
 after all, press the @emph{File Browser} button.
-@float Figure,fig:loadpanel
+@float Figure,figloadpanel
 @image{figs/load}
 @caption{The Load Panel.}
 @end float
@@ -1415,7 +1411,7 @@ select these through the @emph{Motion Mode} browser on the
 This section describes basic mouse interaction.  For details,
 @pxref{Commands}.
 
-@float Figure,fig:tools
+@float Figure,figtools
 @image{figs/tools}
 @caption{The Tools Panel.}
 @end float
@@ -1721,7 +1717,7 @@ Geomview has three panels which let you modify appearances.
 
 The @emph{Appearance} panel lets you change most common appearance
 properties of the target object.
-@float Figure,fig:ap
+@float Figure,figap
 @image{figs/ap}
 @caption{The Appearance Panel.}
 @end float
@@ -1762,7 +1758,7 @@ The four buttons under @emph{Color} labeled @emph{Faces}, @emph{Edges},
 @emph{Normals}, and @emph{BBox} let you specify the color of
 the corresponding aspect of the target geom.  Clicking on one
 of them brings up a color chooser panel.
-@float Figure,fig:colorchooserpanel
+@float Figure,figcolorchooserpanel
 @image{figs/color}
 @caption{Color Chooser Panel.}
 @end float
@@ -1872,7 +1868,7 @@ and to all appearance-related panels.
 The @emph{Materials} panel controls material properties of surfaces.
 It works with the target object in the same way that the
 @emph{Appearance} panel does.
-@float Figure,fig:matpanel
+@float Figure,figmatpanel
 @image{figs/mat}
 @caption{The Materials Panel.}
 @end float
@@ -1987,7 +1983,7 @@ A camera in Geomview is the object that corresponds to a camera window.
 By default there is only one camera, but it is possible to have as many
 as you want.  You can control certain aspects of the way the world is
 drawn in each camera window via the @emph{Cameras} panel.
-@float Figure,fig:camerapanel
+@float Figure,figcamerapanel
 @image{figs/cam}
 @caption{The Cameras Panel.}
 @end float
@@ -2124,7 +2120,7 @@ This button dismisses the @emph{Cameras} panel.
 Geomview's @emph{Save} panel lets you store Geomview objects and other
 information in files that you can read back into Geomview or other
 programs.
-@float Figure,fig:savepanel
+@float Figure,figsavepanel
 @image{figs/save}
 @caption{The Save Panel.}
 @end float
@@ -2241,7 +2237,7 @@ text and hit @kbd{@key{Enter}} as many times as you like, in general,
 whenever you hit @kbd{@key{Enter}} with the cursor in the @emph{Commands}
 panel, Geomview tries to interpret whatever text you have typed in the
 text field as a command.
-@float Figure,fig:commandpanel
+@float Figure,figcommandpanel
 @image{figs/command}
 @caption{The Commands Panel.}
 @end float
@@ -2252,7 +2248,7 @@ really belong on any of the other panels.  In the present version of
 Geomview, the @emph{Obscure} panel includes the @emph{NORMALIZE GEOMETRY}
 browser, which controls the kind of geometry normalization that Geomview does,
 and several buttons affecting motion style.
-@float Figure,fig:obscurepanel
+@float Figure,figobscurepanel
 @image{figs/obscure}
 @caption{The Obscure Panel.}
 @end float
@@ -3550,7 +3546,7 @@ Here @var{NLines} is the number of polylines in the file,
 @var{NVertices} the total number of vertices, and @var{NColors} the
 number of colors as explained below.
 
-Next come @var{NLines} integers
+Next come @var{NLines} @b{16-bit} integers
 
 @center @var{Nv[0]} @var{Nv[1]} @var{Nv[2]} @dots{} @var{Nv[NLines-1]}
 
@@ -3558,8 +3554,8 @@ giving the number of vertices in each polyline.  A negative number
 indicates a closed polyline; 1 denotes a single-pixel point.  The sum
 (of absolute values) of the @var{Nv[i]} must equal @var{NVertices}.
 
-Next come @var{NLines} more integers Nc[i]: the number of colors in
-each polyline.  Normally one of three values:
+Next come @var{NLines} more @b{16-bit} integers @var{Nc[i]}: the number
+of colors in each polyline.  Normally one of three values:
 
 @table @asis
 @item 0
@@ -3574,8 +3570,6 @@ corresponding color, or the colors are smoothly interpolated along the
 line segments, depending on the implementation.
 @end table
 
-The sum of the @var{Nc[i]} must equal @var{NColors}.
-
 Next come @var{NVertices} groups of 3 or 4 floating-point numbers: the
 coordinates of all the vertices.  If the keyword is @var{4VECT} then
 there are 4 values per vertex.  The first abs(@var{Nv[0]}) of them form
@@ -3585,11 +3579,13 @@ Finally @var{NColors} groups of 4 floating-point numbers give red,
 green, blue and alpha (opacity) values.  The first @var{Nc[0]} of them
 apply to the first polyline, and so on.
 
-A @var{VECT BINARY} format is accepted; @xref{Binary format}.  The
-binary format exactly follows the ASCII format, with 32-bit ints where
-integers appear, and 32-bit floats where real values appear.
-
-
+A @var{VECT BINARY} format is accepted; @pxref{Binary format}.  The
+binary format exactly follows the ASCII format, with 32-bit Big-Endian
+integers where ordinary integer numbers appear, and with @b{16-bit}
+Big-Endian integers where 16-bit integers appear; 32-bit Big-Endian
+floats where real values appear.  @b{BIG FAT NOTE:} The vertex counts
+@var{Nv[i]} and the color counts @var{Nc[i]} are @b{16-bit} Big-Endian
+integers.
 
 @comment ----------------------------------------------------------------
 @node SKEL, SPHERE, VECT, Object File Formats
