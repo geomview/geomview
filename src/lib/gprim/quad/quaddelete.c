@@ -40,7 +40,7 @@ QuadDelete(Quad *q)
     if(q->p != NULL) GeomFree(q->p);
     if(q->c != NULL) GeomFree(q->c);
     if(q->n != NULL) GeomFree(q->n);
-    BSPTreeFree(q);
+    BSPTreeFree((Geom *)q);
   }
   return NULL;
 }

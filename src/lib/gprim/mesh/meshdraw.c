@@ -125,8 +125,8 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   if ((ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (m.flag & MESH_ALPHA)) {
-    BSPTreeCreate((Geom *)&m);
-    BSPTreeAddObject(m.bsptree, (Geom *)&m);
+    BSPTreeCreate((Geom *)(void *)&m);
+    BSPTreeAddObject(m.bsptree, (Geom *)(void *)&m);
     BSPTreeFinalize(m.bsptree);
   }
 
@@ -147,7 +147,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
 
   if (m.bsptree) {
     mgbsptree(m.bsptree);
-    BSPTreeFree((Geom *)&m);
+    BSPTreeFree((Geom *)(void *)&m);
   }
 
   if (m.n)

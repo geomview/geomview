@@ -38,6 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "meshP.h"
 #include "mg.h"
 #include "hpointn.h"
+#include "bsptree.h"
 #include <stdlib.h>
 #ifndef alloca
 #include <alloca.h>
@@ -87,8 +88,8 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   MeshComputeNormals(&m, normal_need);
 
   if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
-    BSPTreeCreate((Geom *)&m);
-    BSPTreeAddObject(m.bsptree, (Geom *)&m);
+    BSPTreeCreate((Geom *)(void *)&m);
+    BSPTreeAddObject(m.bsptree, (Geom *)(void *)&m);
     BSPTreeFinalize(m.bsptree);
   }
 
@@ -105,14 +106,14 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     colored = 1;
   }
   if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
-    BSPTreeCreate((Geom *)&m);    
+    BSPTreeCreate((Geom *)(void *)&m);
   }
   mgmesh(m.flag, m.nu, m.nv, m.p, m.n, m.nq, colored ? m.c : mesh->c,
 	 m.flag);
 
   if (m.bsptree) {
     mgbsptree(m.bsptree);
-    BSPTreeFree((Geom *)&m);
+    BSPTreeFree((Geom *)(void *)&m);
   }
 
   if (m.n)

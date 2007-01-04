@@ -111,8 +111,8 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
       }
     }
     if ((ap->flag & APF_TRANSP) && (q.flag & QUAD_ALPHA)) {
-      BSPTreeCreate((Geom *)&q);
-      BSPTreeAddObject(q.bsptree, (Geom *)&q);
+      BSPTreeCreate((Geom *)(void *)&q);
+      BSPTreeAddObject(q.bsptree, (Geom *)(void *)&q);
       BSPTreeFinalize(q.bsptree);
     }
   }
@@ -120,7 +120,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 
   if (q.bsptree) {
     mgbsptree(q.bsptree);
-    BSPTreeFree((Geom *)&q);
+    BSPTreeFree((Geom *)(void *)&q);
   }
 
   OOGLFree(q.n);

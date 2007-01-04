@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.10 2006/12/11 04:50:12 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.11 2007/01/04 03:53:09 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -145,8 +145,8 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   if ((ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (newpl.flags & (PL_HASVALPHA|PL_HASPALPHA))) {
-    BSPTreeCreate((Geom *)&newpl);
-    BSPTreeAddObject(newpl.bsptree, (Geom *)&newpl);
+    BSPTreeCreate((Geom *)(void *)&newpl);
+    BSPTreeAddObject(newpl.bsptree, (Geom *)(void *)&newpl);
     BSPTreeFinalize(newpl.bsptree);
   }
 
@@ -172,7 +172,7 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 
   if (newpl.bsptree) {
     mgbsptree(newpl.bsptree);
-    BSPTreeFree((Geom *)&newpl);
+    BSPTreeFree((Geom *)(void *)&newpl);
   }
 
   HPtNDelete(h);

@@ -31,6 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include "ndmeshP.h"
+#include "bsptree.h"
 
 static int ndmeshfield(int copy, int amount,
 		void **fieldp, void *value, char *name);
