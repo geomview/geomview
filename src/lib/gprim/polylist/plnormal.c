@@ -219,7 +219,7 @@ PolyListComputeNormals(PolyList *polylist, int need)
     int *e_idx =
       OOGLNewNE(int, polylist->n_verts+1, "Adjacent edge indexes");
     HPoint3 **edges;
-    int n_edges;
+    int n_edges = 0;
     Vertex *vl;
 
 #define V_IDX(elem, base)						\
@@ -276,7 +276,7 @@ PolyListComputeNormals(PolyList *polylist, int need)
     }
 
     for (i = 0, vl = polylist->vl; i < polylist->n_verts; ++i, ++vl) {
-      HPt3Coord w;
+      HPt3Coord w = 0.0;
       int v_idx, j;
 
       v_idx = V_IDX(vl, polylist->vl);
