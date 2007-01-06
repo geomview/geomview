@@ -702,7 +702,7 @@ static inline void SplitPolyNode(PolyListNode *plnode,
     HPt3LinSum(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
     if (!finite(v1->pt.x + v1->pt.y + v1->pt.z))
       abort();
-    CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v0->vcol);
+    CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v1->vcol);
     Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
     Pt3Unit(&v1->vn);
     v1->st[0] = mu0 * V0->st[0] + mu1 * V1->st[0];
