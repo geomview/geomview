@@ -58,6 +58,7 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
     vp = p->v;
 
     if (fourd) {
+#undef ANTI_4D
 #define ANTI_4D(P,Q)							\
       ((v2->pt.P*w2 - v1->pt.P*w1) * (v3->pt.Q*w3 - v1->pt.Q*w1) -	\
        (v2->pt.Q*w2 - v1->pt.Q*w1) * (v3->pt.P*w3 - v1->pt.P*w1))
@@ -85,7 +86,9 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 	v2 = v3;
 	w2 = w3;
       } while(--n > 0);
+#undef ANTI_4D
     } else {
+#undef ANTI
 #define ANTI(P,Q)						\
       ((v2->pt.P - v1->pt.P) * (v3->pt.Q - v1->pt.Q) -		\
        (v2->pt.Q - v1->pt.Q) * (v3->pt.P - v1->pt.P))
@@ -108,6 +111,7 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 	v1 = v2;
 	v2 = v3;
       } while(--n > 0);
+#undef ANTI
     }
   }
 
@@ -305,18 +309,17 @@ PolyListComputeNormals(PolyList *polylist, int need)
 	  nu.x = ANTI_4D(y,z);
 	  nu.y = ANTI_4D(z,x);
 	  nu.z = ANTI_4D(x,y);
+#undef ANTI_4D
 	} else {
 #undef ANTI
 #define ANTI(P, Q)					\
 	  ((p1->P - vl->pt.P) * (p2->Q - vl->pt.Q) -	\
 	   (p1->Q - vl->pt.Q) * (p2->P - vl->pt.P))
 
-	  w1 = 1.0/p1->w;
-	  w2 = 1.0/p2->w;
-	  
-	  nu.x = ANTI_4D(y,z);
-	  nu.y = ANTI_4D(z,x);
-	  nu.z = ANTI_4D(x,y);
+	  nu.x = ANTI(y,z);
+	  nu.y = ANTI(z,x);
+	  nu.z = ANTI(x,y);
+#undef ANTI
 	}
 	if (Pt3Dot(&nu, &vl->vn) >= 0.0) {
 	  Pt3Add(&vl->vn, &nu, &vl->vn);
