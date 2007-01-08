@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justs Heine
  *
  * This file is part of Geomview.
  * 
@@ -46,20 +47,27 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Skel *SkelFLoad(IOBFILE *file, char *fname)
 {
   Skel *s;
-  int	 binary = 0;
-  int nd = 0, dimn = 3, pdim = 4;
+  int binary = 0;
+  int nd = 0, dimn = 3, pdim = 4, vc = 0;
   char *token;
   float *vp;
   Skline *lp;
   int i, k, v0;
   ColorA *cp;
+  ColorA *vcp;
   static ColorA black = { 0,0,0,1 };
+  vvec vcolors;
   vvec colors;
   vvec verts;
 
   if (file == NULL) return NULL;
 
   token = GeomToken(file);
+
+  if (*token == 'C') {
+    vc = 1;
+    token++;
+  }
   if(*token == '4') {		/* Really means "homogeneous coords" */
     dimn = 4;
     token++;
@@ -99,6 +107,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
   s->p = NULL;
   s->l = NULL;
   s->c = NULL;
+  s->vc = NULL;
   s->vi = NULL;
   s->nvi = s->nc = 0;
 
@@ -110,22 +119,34 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
   s->p = OOGLNewNE(float, s->nvert * s->pdim, "SKEL vertices");
   s->l = OOGLNewNE(Skline, s->nlines, "SKEL lines");
+  if (vc) {
+    s->vc = OOGLNewNE(ColorA, s->nvert, "SKEL vertex colors");
+  }
   VVINIT(colors, ColorA, 10);
   VVINIT(verts, int, 40);
 
   if (pdim == 4) {
-    for(i = 0, vp = s->p; i < s->nvert; i++, vp += 4) {
+    for (i = 0, vp = s->p; i < s->nvert; i++, vp += 4) {
       vp[3] = 1.0; /* homogeneous component */
-      if(iobfgetnf(file, dimn, vp, binary) < dimn) {
+      if (iobfgetnf(file, dimn, vp, binary) < dimn) {
 	OOGLSyntax(file,
 		   "Reading SKEL from \"%s\": error reading vertex %d of %d",
 		   fname, i, s->nvert);
 	goto bogus;
       }
+      if (vc) {
+	if (iobfgetnf(file, 4, (float *)&s->vc[i], binary) < 4) {
+	  OOGLSyntax(file,
+		     "Reading SKEL from \"%s\": "
+		     "error reading vertex color %d of %d",
+		     fname, i, s->nvert);
+	  goto bogus;
+	}
+      }
     }
   } else {
     dimn = dimn == 4 ? s->pdim : s->pdim - 1;
-    for(i = 0, vp = s->p; i < s->nvert; i++, vp += s->pdim) {
+    for (i = 0, vp = s->p; i < s->nvert; i++, vp += s->pdim) {
       vp[0] = 1.0; /* homogeneous component */
       if(iobfgetnf(file, dimn, vp + (pdim == dimn+1), binary) < dimn) {
 	OOGLSyntax(file,
@@ -133,10 +154,19 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 		   fname, i, s->nvert);
 	goto bogus;
       }
+      if (vc) {
+	if (iobfgetnf(file, 4, (float *)&s->vc[i], binary) < 4) {
+	  OOGLSyntax(file,
+		     "Reading SKEL from \"%s\": "
+		     "error reading vertex color %d of %d",
+		     fname, i, s->nvert);
+	  goto bogus;
+	}
+      }
     }
   }
 
-  for(i = 0, v0 = 0, lp = s->l; i < s->nlines; i++, lp++) {
+  for (i = 0, v0 = 0, lp = s->l; i < s->nlines; i++, lp++) {
     /* Read one polyline
      */
     if(iobfgetni(file, 1, &lp->nv, binary) <= 0 || lp->nv <= 0) {
@@ -174,9 +204,10 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     } else {
       int ncol;
 
-      if(iobfgetni(file, 1, &ncol, 1) <= 0
-	 || iobfgetnf(file, ncol, (float *)cp, 1) < ncol) {
-	OOGLSyntax(file, "Reading binary SKEL from \"%s\": polyline %d of %d: expected color component",
+      if (iobfgetni(file, 1, &ncol, 1) <= 0
+	  || iobfgetnf(file, ncol, (float *)cp, 1) < ncol) {
+	OOGLSyntax(file, "Reading binary SKEL from \"%s\": "
+		   "polyline %d of %d: expected color component",
 		   fname, i, s->nlines);
 	goto bogus;
       }
@@ -184,7 +215,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     }
 
     lp->c0 = VVCOUNT(colors);
-    if(k > 0) {
+    if (k > 0) {
       lp->nc = 1;
       VVCOUNT(colors)++;
     } else {

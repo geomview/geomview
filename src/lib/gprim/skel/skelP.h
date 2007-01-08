@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -29,21 +30,22 @@
 #include "skel.h"
 
 typedef struct Skline {
-	int nv;			/* Number of vertices for this polyline */
-	int v0;			/* offset into vi[] of all vertices on line */
-	int nc;			/* Number of colors for this polyline */
- 	int c0;			/* index into c[] of first color */
+  int nv;			/* Number of vertices for this polyline */
+  int v0;			/* offset into vi[] of all vertices on line */
+  int nc;			/* Number of colors for this polyline */
+  int c0;			/* index into c[] of first color */
 } Skline;
 
 struct Skel {
-	GEOMFIELDS;
-	int nvert, nlines;
-	float *p;		/* Array[nvert][pdim] of point coords */
-	Skline *l;		/* nl[nlines] */
-	int nvi;		/* Total number of vertex indices */
-	int *vi;		/* All vertex index lists */
-	int nc;			/* Total number of colors */
-	ColorA *c;		/* Array of colors */
+  GEOMFIELDS;
+  int nvert, nlines;
+  float *p;		/* Array[nvert][pdim] of point coords */
+  Skline *l;		/* nl[nlines] */
+  int nvi;		/* Total number of vertex indices */
+  int *vi;		/* All vertex index lists */
+  int nc;			/* Total number of colors */
+  ColorA *c;		/* Array of per-polyline colors */
+  ColorA *vc;           /* Array of per-vertex colors */
 };
 
 extern Skel *SkelCreate( Skel *, GeomClass *, va_list *a_list);

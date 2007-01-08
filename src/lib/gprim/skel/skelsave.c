@@ -42,8 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "skelP.h"
 
-Skel *
-SkelFSave(Skel *s, FILE *f)
+Skel *SkelFSave(Skel *s, FILE *f)
 {
   int i, j, d, o;
   float *p;
@@ -57,20 +56,30 @@ SkelFSave(Skel *s, FILE *f)
 
   d = s->geomflags & VERT_4D ? s->pdim : s->pdim-1;
   o = s->geomflags & VERT_4D ? 0 : 1;
+  if (s->vc)
+    fprintf(f, "C");
   if (s->geomflags & VERT_4D)
     fprintf(f, "4");
   fprintf(f, s->pdim==4 ? "SKEL" : "nSKEL %d", s->pdim-1);
   fprintf(f, "\n%d %d\n\n", s->nvert, s->nlines);
 	
   if (s->pdim == 4) {
-    for(i = 0, p = s->p; i < s->nvert; i++, p += s->pdim) {
+    for (i = 0, p = s->p; i < s->nvert; i++, p += s->pdim) {
       fputnf(f, d, p, 0);
+      if (s->vc) {
+	fputc(' ', f);
+	fputnf(f, 4, (float *)&s->vc[i], 0);
+      }
       fputc('\n', f);
     }
     fputc('\n', f);
   } else {
     for(i = 0, p = s->p; i < s->nvert; i++, p += s->pdim) {
       fputnf(f, d, p + o, 0);
+      if (s->vc) {
+	fputc(' ', f);
+	fputnf(f, 4, (float *)&s->vc[i], 0);
+      }
       fputc('\n', f);
     }
     fputc('\n', f);

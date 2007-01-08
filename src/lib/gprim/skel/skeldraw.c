@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -58,8 +59,7 @@ static void
 draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
 		    int penultimate, int hascolor)
 {
-  HPointN *h = HPtNCreate(s->pdim, NULL);
-  float *hdata = h->v;
+  HPointN *h;
   float *op;
   HPoint3 *np, *newp;
   Skline *l;
@@ -68,31 +68,61 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
   HPoint3 tv[MAXPLINE];
   ColorA tc[MAXPLINE];
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
+  Appearance *ap = &_mgc->astk->ap;
+  Material *mat = &_mgc->astk->mat;
 
   newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
-  newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
+
+  h = HPtNCreate(s->pdim, NULL);
+  if (ap->flag & APF_KEEPCOLOR) {
+    colored = 0;
+  } else {
+    HPoint3 dummyv;
+    ColorA dummyc;
+    /* Dummy transform to determine whether we have ND colors or not */
+    colored = mapHPtN(NDctx, h, &dummyv, &dummyc);
+  }
+
+  if (colored) {
+    newc = (ColorA *)alloca(s->nvert*sizeof(ColorA));
+  } else {
+    newc = s->vc;
+  }
 
   /* VERT_4D is only honoured here if pdim == 4 */
   if (s->pdim == 4) {
-    if (s->geomflags & VERT_4D) {
-      for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+    for (i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+      if (s->geomflags & VERT_4D) {
 	Pt4ToHPtN((HPoint3 *)op, h);
-	colored = mapHPtN(NDctx, h, np, &newc[i]);
-      }
-    } else {
-      for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+      } else {
 	HPt3ToHPtN((HPoint3 *)op, NULL, h);
-	colored = mapHPtN(NDctx, h, np, &newc[i]);
+      }
+      if (colored) {
+	mapHPtN(NDctx, h, np, &newc[i]);
+      } else {
+	mapHPtN(NDctx, h, np, NULL);
       }
     }
   } else { /* Real ND case, i.e. pdim >= 5 */
-    for(i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
-      h->v = op;
-      colored = mapHPtN(NDctx, h, np, &newc[i]);
-    }
-  }
+    float *hdata= h->v;
 
-  if(!hascolor) colored = 0;
+    for (i = 0, op = s->p, np = newp; i < s->nvert; i++, op += s->pdim, np++) {
+      h->v = op;
+      if (colored) {
+	mapHPtN(NDctx, h, np, &newc[i]);
+      } else {
+	mapHPtN(NDctx, h, np, NULL);
+      }
+    }
+    h->v = hdata;
+  }
+  HPtNDelete(h);
+
+  if (!hascolor) {
+    colored = 0;
+  } else if (newc) {
+    colored = 1;
+  }
 
   lastcolor = (ColorA *)(void *)&_mgc->astk->mat.edgecolor;
   for(i = 0, l = s->l, c = colored ? newc : s->c; i < s->nlines; i++, l++) {
@@ -132,8 +162,6 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
       mgpolyline(nleft, tv, 1, lastcolor, flags);
     }
   }
-  h->v = hdata;
-  HPtNDelete(h);
 }
 
 Skel *SkelDraw(Skel *s)
@@ -143,6 +171,7 @@ Skel *SkelDraw(Skel *s)
   int flags, penultimate;
   ColorA *lastcolor=NULL;
   HPoint3 tv[MAXPLINE];
+  ColorA tc[MAXPLINE];
   mgNDctx *NDctx = NULL;
 
   /* Don't draw if vect-drawing is off. */
@@ -179,6 +208,8 @@ Skel *SkelDraw(Skel *s)
       lastcolor = &s->c[l->c0];
     while (nleft > MAXPLINE) {
       for (j = 0; j < MAXPLINE; j++) {
+	if (hascolor && s->vc)
+	  tc[j] = s->vc[*vleft];
 	tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
 	if (s->pdim < 4) {
 	  if (s->pdim < 3) {
@@ -188,12 +219,17 @@ Skel *SkelDraw(Skel *s)
 	  tv[j].w = 1;
 	}
       }
-      mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
+      if (hascolor && s->vc)
+	mgpolyline(MAXPLINE, tv, MAXPLINE, tc, flags);
+      else
+	mgpolyline(MAXPLINE, tv, 1, lastcolor, flags);
       nleft -= MAXPLINE-1;
       vleft--;
       flags = 6;
     }
     for(j = 0; j < nleft; j++) {
+      if (hascolor && s->vc)
+	tc[j] = s->vc[*vleft];
       tv[j] = *(HPoint3 *)&(s->p)[(*vleft++)*s->pdim];
       if (s->pdim < 4) {
 	if (s->pdim < 3) {
@@ -204,7 +240,10 @@ Skel *SkelDraw(Skel *s)
       }
     }
     flags = (i < penultimate) ? 6 : 2;
-    mgpolyline(nleft, tv, 1, lastcolor, flags);
+    if (hascolor && s->vc)
+      mgpolyline(nleft, tv, nleft, tc, flags);
+    else
+      mgpolyline(nleft, tv, 1, lastcolor, flags);
   }
   return s;
 }

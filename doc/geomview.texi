@@ -3598,12 +3598,15 @@ The conventional suffix for @code{SKEL} files is @file{.skel}.
 Syntax:
 
 @example
-[4][n]SKEL
+[C][4][n]SKEL
 [@var{NDim}]                    # Vertex dimension, present only if nSKEL
 @var{NVertices}  @var{NPolylines}
 
-@var{x}[0]  @var{y}[0]  @var{z}[0]      # Vertices
-				    # (if nSKEL, each vertex has NDim components)
+@var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
+				    # if 4SKEL, each vertex has 4 components
+				    # if nSKEL, each vertex has NDim components
+                                    # if C[4][n]SKEL vertex coordinates are
+                                    # followed by an RGBA color specification
 @dots{}
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
