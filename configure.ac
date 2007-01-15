@@ -205,6 +205,7 @@ AC_CONFIG_LIBOBJ_DIR([src/lib/aclib])
 AC_FUNC_CLOSEDIR_VOID
 AC_FUNC_FORK
 AC_FUNC_MEMCMP
+AC_FUNC_OBSTACK
 #AC_FUNC_MALLOC  It is ok when malloc(0) returns NULL. Why not?
 #AC_FUNC_REALLOC It is ok when realloc(0, 0) returns NULL. Why not?
 AC_FUNC_SETPGRP
