@@ -1208,7 +1208,7 @@ LDEFINE(position_toward, LVOID,
  * new 
  */
 
-/* What kind of brain-damaged idiot did code the following line???? */
+/* cH: What kind of brain-damaged idiot did code the following line???? */
 /* #define TmNDelete(x) */
 
 LDEFINE(new_center, LVOID,
