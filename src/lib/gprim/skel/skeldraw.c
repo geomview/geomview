@@ -69,7 +69,6 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
   ColorA tc[MAXPLINE];
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
-  Material *mat = &_mgc->astk->mat;
 
   newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
 

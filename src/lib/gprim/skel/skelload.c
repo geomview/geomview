@@ -54,9 +54,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
   Skline *lp;
   int i, k, v0;
   ColorA *cp;
-  ColorA *vcp;
   static ColorA black = { 0,0,0,1 };
-  vvec vcolors;
   vvec colors;
   vvec verts;
 
