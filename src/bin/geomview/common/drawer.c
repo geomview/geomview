@@ -799,6 +799,7 @@ void drawer_center(int id)
     center_geom(ALLGEOMS, WORLDGEOM);
     center_geom(WORLDGEOM, UNIVERSE);
     gv_camera_reset(ALLCAMS);
+    gv_ui_center_origin(ORIGIN_KEYWORD);
   } else if (TYPEOF(id) == T_CAM) {
     gv_camera_reset(id);
   } else if (TYPEOF(id) == T_GEOM) {
