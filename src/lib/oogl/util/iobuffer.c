@@ -94,6 +94,8 @@ typedef struct IOBufferList
 struct IOBFILE
 {
   FILE     *istream;  /**< The underlying stdio FILE */
+  IOBLIST  ioblist;
+  IOBLIST  ioblist_mark;
   int      can_seek:1;
   int      mark_wrap:1; /**< Set when the buffer no longer covers the
 			     position of the mark. */
@@ -101,9 +103,9 @@ struct IOBFILE
   int      eof:2;
   int      ungetc;
   fpos_t   stdiomark;
-  IOBLIST  ioblist;
-  IOBLIST  ioblist_mark;
   size_t   mark_pos;
+  int      mark_ungetc; /**< Copy of what ungetc was when setmark() was called
+			 */
   int      fd;
 #if HAVE_FCNTL
   int      fflags;
@@ -725,9 +727,10 @@ int iobfsetmark(IOBFILE *iobf)
 
   iob_flush_buffer(ioblist);
   
-  iobf->mark_set  = ~0;
-  iobf->mark_wrap = 0;
-  iobf->mark_pos  = ioblist->tot_pos;
+  iobf->mark_set    = ~0;
+  iobf->mark_wrap   = 0;
+  iobf->mark_pos    = ioblist->tot_pos;
+  iobf->mark_ungetc = iobf->ungetc;
 
   if (iobf->can_seek) {
     result = fgetpos(iobf->istream, &iobf->stdiomark);
@@ -760,8 +763,9 @@ int iobfseekmark(IOBFILE *iobf)
   ioblist->tot_pos = iobf->mark_pos;
   ioblist->buf_pos = iobf->mark_pos % BUFFER_SIZE;
 
+  iobf->ungetc = iobf->mark_ungetc;
+
   /* Clear status flags on success */
-  iobf->ungetc = EOF;
   if (iobf->eof == -1) {
     iobf->eof = 1;
   }
@@ -777,8 +781,8 @@ int iobfclearmark(IOBFILE *iobf)
     return -1;
   }
   
-  iobf->mark_set  = 0;
-  iobf->mark_wrap = 0;
+  iobf->mark_set    = 0;
+  iobf->mark_wrap   = 0;
 
   if (iobf->ioblist_mark.buf_head != NULL) {
     iob_release_buffer(&iobf->ioblist_mark);
