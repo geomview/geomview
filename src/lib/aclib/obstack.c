@@ -56,7 +56,6 @@
 
 #ifndef ELIDE_CODE
 
-
 # if HAVE_INTTYPES_H
 #  include <inttypes.h>
 # endif
@@ -105,12 +104,17 @@ void (*obstack_alloc_failed_handler) (void) = print_and_abort;
 
 /* Exit value used when `print_and_abort' is used.  */
 # include <stdlib.h>
+
+#if OUTSIDE_GEOMVIEW
 # ifdef _LIBC
 int obstack_exit_failure = EXIT_FAILURE;
 # else
 #  include "exitfail.h"
 #  define obstack_exit_failure exit_failure
 # endif
+#else
+int obstack_exit_failure = 1;
+#endif
 
 # ifdef _LIBC
 #  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
@@ -400,6 +404,8 @@ _obstack_memory_used (struct obstack *h)
   return nbytes;
 }
 
+
+#if OUTSIDE_GEOMVIEW
 /* Define the error handler.  */
 # ifdef _LIBC
 #  include <libintl.h>
@@ -409,6 +415,11 @@ _obstack_memory_used (struct obstack *h)
 # ifndef _
 #  define _(msgid) gettext (msgid)
 # endif
+#else
+# ifndef _
+#  define _(msgid) msgid
+# endif
+#endif
 
 # ifdef _LIBC
 #  include <libio/iolibio.h>
