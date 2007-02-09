@@ -782,7 +782,7 @@ general_snapshot(char *fname, int id, DView *view,
 		 int (*function)(void))
 {
     Camera *cam = NULL;
-    Appearance *ap;
+    const Appearance *ap;
     mgcontext *ctx;
     FILE *f = NULL;
     WnPosition vp;
@@ -795,8 +795,12 @@ general_snapshot(char *fname, int id, DView *view,
 
     mgctxget(MG_CAMERA, &cam);
     mgctxget(MG_SPACE, &mgspace);
+#if 0
     /* Copy so that changed flags are set */
-    ap = ApCopy(mggetappearance(), NULL);
+    ap = ApCopy(mggetappearance(NULL), NULL);
+#else
+    ap = mggetappearance();
+#endif
     mgctxget(MG_WINDOW, &win);
     win = WnCopy(win);
     vp.xmin = vp.ymin = 0;
@@ -832,7 +836,9 @@ general_snapshot(char *fname, int id, DView *view,
     fflush(f);
     
     mgctxdelete(ctx);
+#if 0
     ApDelete(ap);
+#endif
     mgctxselect(view->mgctx);	/* Revert to previous device */
     
     failed = (fname[0] != '|') ? fclose(f) : pclose(f);

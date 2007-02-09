@@ -143,7 +143,7 @@ LDEFINE(rib_snapshot, LVOID,
   DView *view;
   Camera *cam = NULL;
   WnWindow *win;
-  Appearance *ap;
+  const Appearance *ap;
   mgcontext *ctx;
   char fname[1024];
   char displayname[1024];
@@ -199,8 +199,12 @@ LDEFINE(rib_snapshot, LVOID,
   mgctxselect(view->mgctx);
   mgctxget(MG_CAMERA, &cam);
   mgctxget(MG_SPACE, &mgspace);
-  /* Copy so that changed flags are set */
-  ap = ApCopy(mggetappearance(), NULL);
+#if 0
+  /* Copy so that changed flags are set <- cH: what does that mean ???? */
+  ap = ApCopy(mggetappearance(NULL), NULL);
+#else
+  ap = mggetappearance();
+#endif
   mgctxget(MG_WINDOW, &win);
   if(cam == NULL || ap == NULL || win == NULL) {
     OOGLError(1, "rib-snapshot: trouble, %x %x %x", cam,ap,win);
@@ -242,7 +246,9 @@ LDEFINE(rib_snapshot, LVOID,
   mgrib_flushbuffer(); /* now necessary to flush buffer to file */
   
   mgctxdelete(ctx);
+#if 0
   ApDelete(ap);
+#endif
   mgctxselect(view->mgctx);	/* Revert to previous device */
   
   if (f != stdout) 
