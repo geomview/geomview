@@ -39,9 +39,10 @@ int NDMeshPresent = 1;
 
 static char ndmeshName[] = "ndmesh";
 
-extern NDMesh      *NDMeshCreate( va_list );
-extern NDMesh      *NDMeshDelete( NDMesh * );
-extern NDMesh      *NDMeshCopy( NDMesh * );
+extern NDMesh *NDMeshCreate( va_list );
+extern NDMesh *NDMeshDelete( NDMesh * );
+extern NDMesh *NDMeshCopy( NDMesh * );
+extern NDMesh *NDMeshBSPTree(NDMesh *mesh, BSPTree *tree, int action);
 
 char *
 NDMeshName()
@@ -63,6 +64,7 @@ GeomClass *NDMeshMethods(void)
     aNDMeshMethods->bound = (GeomBoundFunc *) NDMeshBound;
     aNDMeshMethods->boundsphere = (GeomBoundSphereFunc *) NDMeshBoundSphere;
     aNDMeshMethods->draw = (GeomDrawFunc *) NDMeshDraw;
+    aNDMeshMethods->bsptree = (GeomBSPTreeFunc *)NDMeshBSPTree;    
     aNDMeshMethods->transform = (GeomTransformFunc *) NDMeshTransform;
     aNDMeshMethods->transformto = (GeomTransformToFunc *) NDMeshTransform;
     aNDMeshMethods->pick = (GeomPickFunc *) NDMeshPick;

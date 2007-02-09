@@ -38,7 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "meshP.h"
 #include "mg.h"
 #include "hpointn.h"
-#include "bsptree.h"
+#include "bsptreeP.h"
 #include <stdlib.h>
 #ifndef alloca
 #include <alloca.h>
@@ -50,7 +50,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   Mesh m;
   HPointN **op;
   HPoint3 *np;
-  int i, colored = 0;
+  int i, colored = 0, alpha = 0;
   int npts = mesh->mdim[0] * mesh->mdim[1];
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
@@ -64,11 +64,37 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   m.nu = mesh->mdim[0];
   m.nv = mesh->mdim[1];
   m.geomflags = mesh->geomflags & ~MESH_4D;
+
+  if (ap->flag & APF_KEEPCOLOR) {
+    colored = 0;
+  } else {
+    HPoint3 dummyv;
+    ColorA dummyc;
+    /* Dummy transform to determine whether we have ND colors or not */
+    colored = mapHPtN(NDctx, *mesh->p, &dummyv, &dummyc);
+  }
+
   for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
     /* Set the point's first four components from our N-D mesh vertex */
-    colored = mapHPtN(NDctx, *op, np, &m.c[i]);
+    if (colored) {
+      mapHPtN(NDctx, *op, np, &m.c[i]);
+      if (m.c[i].a < 1.0) {
+	alpha = 1;
+      }
+    } else {
+      mapHPtN(NDctx, *op, np, NULL);
+    }
   }
-  if(colored) m.geomflags |= MESH_C;
+
+  if (colored) {
+    if (alpha) {
+      m.geomflags |= COLOR_ALPHA;
+    } else {
+      m.geomflags &= ~COLOR_ALPHA;
+    }
+    m.geomflags |= MESH_C;
+  }
+
   /* The drawing routines might need either polygon or vertex normals,
    * so if either is missing and either might be needed, we force it
    * to be computed.
@@ -105,16 +131,21 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     }
     colored = 1;
   }
-  if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
-    BSPTreeCreate((Geom *)(void *)&m);
-  }
+
   mgmesh(MESH_MGWRAP(m.geomflags),
 	 m.nu, m.nv, m.p, m.n, m.nq, colored ? m.c : mesh->c,
 	 m.geomflags);
 
-  if (m.bsptree) {
-    mgbsptree(m.bsptree);
-    BSPTreeFree((Geom *)(void *)&m);
+  /* Generate a BSP-tree if the object or parts of it might be
+   * translucent.
+   */
+  if (m.bsptree &&
+      (ap->flag & APF_FACEDRAW) &&
+      (ap->flag & APF_TRANSP) &&
+      (m.geomflags & COLOR_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh, ap);
+    GeomBSPTree((Geom *)(void *)&m, m.bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance((Geom *)mesh, old_tagged_app);
   }
 
   if (m.n)
@@ -131,8 +162,20 @@ NDMeshDraw(NDMesh *mesh)
   mgctxget(MG_NDCTX, &NDctx);
 
   if(NDctx) {
+
+    if (mesh->bsptree != NULL) {
+      BSPTreeSetAppearance((Geom *)mesh);
+    }
+
     draw_projected_ndmesh(NDctx, mesh);
   }
+
+  return mesh;
+}
+
+/* A dummy, just to make GeomBSPTree() not bail out. */
+NDMesh *NDMeshBSPTree(NDMesh *mesh, BSPTree *tree, int action)
+{
   return mesh;
 }
 

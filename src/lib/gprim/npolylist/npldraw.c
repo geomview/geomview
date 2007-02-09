@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.10 2007/02/09 17:01:59 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.11 2007/02/09 17:40:13 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -41,6 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"	/* Need plain PolyList, too, for mgpolylist() */
 #include "appearance.h"
 #include "mgP.h"	/* need mgP.h (instead of mg.h) for _mgc below */
+#include "bsptreeP.h"
 #include "hpointn.h"
 #include <stdlib.h>
 #ifndef alloca
@@ -64,13 +65,13 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
   int normal_need;
 
   /* Copy the PolyList onto the stack. */
+  memset(&newpl, 0, sizeof(PolyList));
   newpl.magic   = PLMAGIC;
   newpl.n_polys = pl->n_polys;
   newpl.n_verts = pl->n_verts;
   newpl.geomflags = pl->geomflags;
   newpl.vl = pl->vl;
   newpl.p = pl->p;
-  newpl.bsptree = NULL;
 
   h = HPtNCreate(pl->pdim, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -143,17 +144,6 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
   }
   PolyListComputeNormals(&newpl, normal_need);
 
-  /* Generate a BSP-tree if the object or parts of it might be
-   * translucent.
-   */
-  if ((ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (newpl.geomflags & COLOR_ALPHA)) {
-    BSPTreeCreate((Geom *)(void *)&newpl);
-    BSPTreeAddObject(newpl.bsptree, (Geom *)(void *)&newpl);
-    BSPTreeFinalize(newpl.bsptree);
-  }
-
   if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = !colored && (mat->override & MTF_DIFFUSE)
       ? (ColorA *)&mat->diffuse : NULL;
@@ -175,22 +165,29 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 
   mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.geomflags);
 
-  if (newpl.bsptree) {
-    mgbsptree(newpl.bsptree);
-    BSPTreeFree((Geom *)(void *)&newpl);
+  /* Generate a BSP-tree if the object or parts of it might be
+   * translucent.
+   */
+  if (newpl.bsptree &&
+      (ap->flag & APF_FACEDRAW) &&
+      (ap->flag & APF_TRANSP) &&
+      (newpl.geomflags & COLOR_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl, ap);
+    GeomBSPTree((Geom *)(void *)&newpl, newpl.bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance((Geom *)pl, old_tagged_app);
   }
+
   h->v = hdata;
   HPtNDelete(h);
 }
 
-NPolyList *
-NPolyListDraw( NPolyList *pl )
+NPolyList *NPolyListDraw(NPolyList *pl)
 {
-  static int warned = 0;
   mgNDctx *NDctx = NULL;
 
-  if (pl == NULL)
-    return NULL;
+  if (pl->bsptree != NULL) {
+    BSPTreeSetAppearance((Geom *)pl);
+  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -199,11 +196,13 @@ NPolyListDraw( NPolyList *pl )
     return pl;
   }
 
-  if(!warned) {
-    OOGLError(0,"Sorry, need to turn on N-D mode before nOFF objects become visible.");
-    warned = 1;
-  }
   return NULL;
+}
+
+/* A dummy, just to make GeomBSPTree() not bail out. */
+NPolyList *NPolyListBSPTree(NPolyList *pl, BSPTree *tree, int action)
+{
+  return pl;
 }
 
 /*

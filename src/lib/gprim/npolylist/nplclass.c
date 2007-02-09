@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.8 2006/11/04 19:12:56 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplclass.c,v 1.9 2007/02/09 17:40:13 rotdrop Exp $ */
 
 
 /*
@@ -49,6 +49,7 @@ extern NPolyList *NPolyListFSave(NPolyList *, FILE *outf, char *fname);
 extern NPolyList *NPolyListDelete(NPolyList *);
 extern NPolyList *NPolyListPick(NPolyList *pl, Pick *p, Appearance *ap,
 				Transform T, TransformN *TN, int *axes);
+extern NPolyList *NPolyListBSPTree(NPolyList *mesh, BSPTree *tree, int action);
 
 int	NPolyListPresent = 1;
 
@@ -67,6 +68,7 @@ GeomClass *NPolyListMethods(void)
     aNPolyListMethods->name = (GeomNameFunc *) NPolyListName;
     aNPolyListMethods->methods = (GeomMethodsFunc *) NPolyListMethods;
     aNPolyListMethods->draw = (GeomDrawFunc *) NPolyListDraw;
+    aNPolyListMethods->bsptree = (GeomBSPTreeFunc *) NPolyListBSPTree;
     aNPolyListMethods->bound = (GeomBoundFunc *) NPolyListBound;
     aNPolyListMethods->boundsphere = (GeomBoundSphereFunc *) NPolyListSphere;
     aNPolyListMethods->create = (GeomCreateFunc *) NPolyListCreate;

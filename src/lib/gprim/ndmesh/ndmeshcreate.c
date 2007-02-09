@@ -146,10 +146,11 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 	    break;
 
 	case CR_COLOR:
+	    m->geomflags &= ~COLOR_ALPHA;
 	    m->geomflags = (m->geomflags & ~MESH_C) |
 		(MESH_C & ndmeshfield(copy, npts*sizeof(ColorA),
 				      (void **)(void *)&m->c,
-				(void *)va_arg (*a_list, ColorA *),
+				      (void *)(c = va_arg (*a_list, ColorA *)),
 				"ndmesh colors"));
 	    break;
 
@@ -160,6 +161,17 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 		return NULL;
 	    }
     }
+
+    if (c) {
+	int i;
+    
+	for (i = 0; i < m->mdim[0]*m->mdim[1]; i++) {
+	    if (m->c[i].a < 1.0) {
+		m->geomflags |= COLOR_ALPHA;
+	    }
+	}
+    }
+
     return m;
 }
 
@@ -195,3 +207,10 @@ NDMeshDelete(NDMesh *m)
     }
     return NULL;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
