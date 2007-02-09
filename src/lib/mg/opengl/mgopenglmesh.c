@@ -77,13 +77,14 @@ mgopenglsubmesh(int wrap, int nu, int nv,
     return;
 
   ap = &_mgc->astk->ap;
-  if ((_mgc->astk->mat.override & MTF_DIFFUSE) && !_mgc->astk->useshader)
+  if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
+      !(_mgc->astk->flags & MGASTK_SHADER))
     meshC = 0;
 
   has = 0;
-  if (meshN && !_mgc->astk->useshader)
+  if (meshN && !(_mgc->astk->flags & MGASTK_SHADER))
     has |= HAS_N;
-  if (meshNQ && !_mgc->astk->useshader)
+  if (meshNQ && !(_mgc->astk->flags & MGASTK_SHADER))
     has |= HAS_NQ;
   if (meshC)
     has |= HAS_C;
@@ -101,17 +102,19 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       mgopengl_needtexture();
     }
   }
-  if ((_mgc->astk->mat.override & MTF_ALPHA) &&
-      (_mgc->astk->mat.valid & MTF_ALPHA)) {
+
+  if ((_mgc->astk->mat.valid & MTF_ALPHA)
+      &&
+      (_mgc->astk->mat.override & MTF_ALPHA) || !(has & HAS_C)) {
     if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
-      mflags |= MESH_ALPHA;
+      mflags |= COLOR_ALPHA;
     } else {
-      mflags &= ~MESH_ALPHA;
+      mflags &= ~COLOR_ALPHA;
     }
   }
 
   if (ap->flag & APF_FACEDRAW && nu > 1 && nv > 1 &&
-      !((ap->flag & APF_TRANSP) && (mflags & MESH_ALPHA))) {
+      !((ap->flag & APF_TRANSP) && (mflags & COLOR_ALPHA))) {
 
     /* We triangulate strips of (v,u) mesh points:
      *  (v,u)    (v,u+1)    (v,u+2) ...

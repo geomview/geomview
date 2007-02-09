@@ -78,7 +78,7 @@ mgrib_polygon(int nv,  HPoint3 *V,
     shading = _mgc->astk->ap.shading;
     matover = _mgc->astk->mat.override;
     ninc = (nn > 1);
-    if ((matover & MTF_DIFFUSE) && !_mgc->astk->useshader) nc = 0;
+    if ((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) nc = 0;
     
     mrti(mr_polygon,mr_NULL);
     
@@ -418,7 +418,7 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
   shading = ap->shading;
   matover = _mgc->astk->mat.override;
 
-  if((matover & MTF_DIFFUSE) && !_mgc->astk->useshader)
+  if((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER))
     plflags &= ~(PL_HASVCOL | PL_HASPCOL);
   
   if (shading & APF_CONSTANT) plflags &= ~(PL_HASVN|PL_HASPN);
@@ -663,7 +663,8 @@ mgrib_bezier( int du, int dv, int dimn, float *CtrlPnts, float *txmapst, ColorA 
     /* free(uknot); */
     /* free(vknot); */
     
-    if(c && !( (matover & MTF_DIFFUSE) && !_mgc->astk->useshader) ) {
+    if (c &&
+	!((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) ) {
         mrti(mr_Cs, mr_buildarray,  12, mr_NULL);
 	for (i = 0; i < 4; i++) {
 	    mrti(mr_subarray3, (float *)&c[i], mr_NULL);

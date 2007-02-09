@@ -140,7 +140,9 @@ mgrib_submesh( int wrap, int nu, int nv,
     }
     
     /* use colors if supplied and not overridden */
-    if(C && !( (ap->mat->override & MTF_DIFFUSE) && !_mgc->astk->useshader) ) {
+    if(C &&
+       !((ap->mat->override & MTF_DIFFUSE) &&
+	 !(_mgc->astk->flags & MGASTK_SHADER))) {
 	viflag = 0;
 	mrti(mr_Cs, mr_buildarray, 3*nunv, mr_NULL);
 	for(i=0; i<nunv; i++, c++, viflag++) {

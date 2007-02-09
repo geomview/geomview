@@ -89,7 +89,8 @@ mgopengl_polygon(int nv,  HPoint3 *V,
 
 
   flag = _mgc->astk->ap.flag;
-  if ((_mgc->astk->mat.override & MTF_DIFFUSE) && !_mgc->astk->useshader)
+  if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
+      !(_mgc->astk->flags & MGASTK_SHADER))
     nc = 0;
   cinc = (nc > 1);
   ninc = (nn > 1);
@@ -156,22 +157,25 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
     return;
 
   flag = _mgc->astk->ap.flag;
-  if ((_mgc->astk->mat.override & MTF_DIFFUSE) && !_mgc->astk->useshader) {
+  if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
+      !(_mgc->astk->flags & MGASTK_SHADER)) {
     C = NULL;
   }
-  if ((_mgc->astk->mat.override & MTF_ALPHA) &&
-      (_mgc->astk->mat.valid & MTF_ALPHA)) {
+
+  if ((_mgc->astk->mat.valid & MTF_ALPHA)
+      &&
+      ((_mgc->astk->mat.override & MTF_ALPHA) || C == NULL)) {
     if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
-      qflags |= QUAD_ALPHA;
+      qflags |= COLOR_ALPHA;
     } else {
-      qflags &= ~QUAD_ALPHA;
+      qflags &= ~COLOR_ALPHA;
     }
   }
   
   /* reestablish correct drawing color if necessary */
 
   if ((flag & APF_FACEDRAW) &&
-      !((flag & APF_TRANSP) && (qflags & QUAD_ALPHA))) {
+      !((flag & APF_TRANSP) && (qflags & COLOR_ALPHA))) {
 
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
@@ -391,14 +395,16 @@ mgopengl_trickypolygon( Poly *p, int plflags )
  */
 static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 				       Point3 *camera,
-				       int plfl_and,
-				       int plfl_or)
+				       int *plfl_and,
+				       int *plfl_or,
+				       const void **cur_app)
 {
   HPt3Coord scp;
   int sign;
   BSPTreeNode *first, *last;
   PolyListNode *plist;
-  struct mgastk *ma = _mgc->astk;
+  const Appearance *ap;
+  Material *mat;
 
   scp = Pt3Dot(camera, (Point3 *)(void *)&tree->plane) - tree->plane.w;
   sign = fpos(scp) - fneg(scp);
@@ -412,35 +418,91 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
   }
   
   /* render all polygons back of us */
-  if (first)
-    mgopengl_bsptree_recursive(first, camera, plfl_and, plfl_or);
-  
-  /* render our polygons */
-  glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
-  glEnable(GL_COLOR_MATERIAL);
-  MAY_LIGHT();
+  if (first) {
+    mgopengl_bsptree_recursive(first, camera, plfl_and, plfl_or, cur_app);
+  }
 
   for (plist = tree->polylist; plist; plist = plist->next) {
     Vertex **v;
     Poly   *p      = plist->poly;
     int    j       = p->n_vertices;
     int    plflags = p->flags;
+    
+    if (*cur_app != *plist->tagged_app) {
 
-    plflags &= plfl_and;
-    plflags |= plfl_or;
+      glDepthMask(GL_TRUE);
+      glBlendFunc(GL_ONE,  GL_ZERO);
+      glDisable(GL_BLEND);
 
-    /* We may want to do something else here if ever we should start
-       to use BSP-tress for the buffer etc. render engines. For now we
-       only render translucent objects here, and leave the rest to the
-       ordinary drawing engines.
+      /* set our appearance now */
+      mgtaggedappearance(*plist->tagged_app);
+
+      /* record our appearance as the current one */
+      *cur_app = *plist->tagged_app;
+
+      ap = mggetappearance();
+      mat = ap->mat;
+
+      glDepthMask(GL_FALSE);
+      glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
+      glEnable(GL_BLEND);
+
+      /* set new plfl_and/_or values */
+      *plfl_and = ~0;
+      *plfl_or  =  0;
+      switch(ap->shading) {
+      case APF_FLAT:   *plfl_and &= ~PL_HASVN; break;
+      case APF_SMOOTH: *plfl_and &= ~PL_HASPN; break;
+      default:         *plfl_and &= ~(PL_HASVN|PL_HASPN); break;
+      }
+      if (mat->override & MTF_DIFFUSE) {
+	if (!(_mgc->astk->flags & MGASTK_SHADER)) {
+	  /* software shading will not work yet */
+	  *plfl_and &= ~(PL_HASVCOL|PL_HASPCOL);
+	}
+      }
+      if ((mat->valid & MTF_ALPHA)
+	  &&
+	  ((mat->override & MTF_ALPHA) ||
+	   !((plflags & *plfl_and) & (PL_HASVCOL|PL_HASPCOL)))) {	
+	if (mat->diffuse.a < 1.0) {
+	  *plfl_or  |= COLOR_ALPHA;
+	} else {
+	  *plfl_and &= ~COLOR_ALPHA;
+	}
+      }
+      if (!(ap->flag & APF_TEXTURE) || (ap->tex == NULL)) {
+	*plfl_and &= ~PL_HASST;
+      }
+
+      glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
+      glEnable(GL_COLOR_MATERIAL);
+      MAY_LIGHT();
+      
+    } else {
+      ap = mggetappearance();
+      mat = ap->mat;
+    }
+
+    if (!(ap->flag & APF_FACEDRAW) || !(ap->flag & APF_TRANSP)) {
+      continue;
+    }
+
+    plflags &= *plfl_and;
+    plflags |= *plfl_or;
+
+    /* We may want to do  something else here  if ever we should start
+     * to use BSP-tress for the buffer etc. render engines. For now we
+     * only render translucent objects here, and leave the rest to the
+     * ordinary drawing engines.
      */
-    if (!(plflags & (PL_HASPALPHA|PL_HASVALPHA))) {
+    if (!(plflags & COLOR_ALPHA)) {
       continue;
     }
 
     /* reestablish correct drawing color if necessary*/
     if (!(plflags & (PL_HASPCOL|PL_HASVCOL)))
-      D4F(&(ma->ap.mat->diffuse));
+      D4F(&(mat->diffuse));
     if(plflags & PL_HASST)
       mgopengl_needtexture();
 
@@ -452,7 +514,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 
     /* normal algorithm */
     glBegin(GL_POLYGON);
-    switch(plflags & (PL_HASVCOL|PL_HASVN|PL_HASST)) {
+    switch (plflags & (PL_HASVCOL|PL_HASVN|PL_HASST)) {
     case 0:
       do {
 	glVertex4fv((float *)&(*v)->pt);
@@ -493,10 +555,11 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     }
     glEnd(); /* GL_POLYGON */
   }
-
+  
   /* Render everything in front of us */
-  if (last)
-    mgopengl_bsptree_recursive(last, camera, plfl_and, plfl_or);
+  if (last) {
+    mgopengl_bsptree_recursive(last, camera, plfl_and, plfl_or, cur_app);
+  }
 }
 
 /*-----------------------------------------------------------------------
@@ -508,60 +571,43 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 
 void mgopengl_bsptree(BSPTree *bsptree)
 {
-  int plfl_and, plfl_or;
-  Appearance *ap  = &_mgc->astk->ap;
-  Material   *mat = &_mgc->astk->mat;
+  int plfl_and = ~0, plfl_or = 0;
+  const void *ap;
 
   if (!bsptree->tree) {
+    /* The tree can be empty, e.g. when no object had a translucent
+     * polygon, or when translucent objects are disabled globally.
+     */
     return;
   }
-  if (!(ap->flag & APF_FACEDRAW)) {
-    return;
+
+  if (!(bsptree->geomflags & COLOR_ALPHA)) {
+    return; /* no need to traverse the tree */
   }
-  if (!(ap->flag & APF_TRANSP)) {
-    return;
-  }
+
+  mgpushappearance();
 
   mgopengl_new_translucent();
 
   /* First determine the position of the camera in the _current_
    * coordinate system. We do assume that all tree nodes share the
    * same coordinate system.
+   *
+   * This means that transparent INSTs with fancy co-ordinate systems
+   * are not handled correctly here; or that the high-level code has
+   * to convert them first.
    */
-  if(!(_mgc->has & HAS_CPOS))
+  if(!(_mgc->has & HAS_CPOS)) {
     mg_findcam();
-
-  /* This is crap, each object can have its own appearance, so we need
-   * to store the appearances in the list-nodes to support
-   * multi-geometry BSP trees. This means that a BSP tree has to
-   * maintain its own set of appearances. TODO.
-   */
-  plfl_and = ~0;
-  plfl_or  =  0;
-  switch(ap->shading) {
-  case APF_FLAT:   plfl_and &= ~PL_HASVN; break;
-  case APF_SMOOTH: plfl_and &= ~PL_HASPN; break;
-  default:         plfl_and &= ~(PL_HASVN|PL_HASPN); break;
-  }
-  if (mat->override & MTF_DIFFUSE) {
-    if (!_mgc->astk->useshader) { /* will not work yet */
-      plfl_and &= ~(PL_HASVCOL|PL_HASPCOL);
-    }
-  }
-  if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
-    if (mat->diffuse.a < 1.0) {
-      plfl_or  |= (PL_HASVALPHA|PL_HASPALPHA);
-    } else {
-      plfl_and &= ~(PL_HASVALPHA|PL_HASPALPHA);      
-    }
-  }
-  if (!(ap->flag & APF_TEXTURE) || (ap->tex == NULL)) {
-    plfl_and &= ~PL_HASST;
   }
 
-  mgopengl_bsptree_recursive(bsptree->tree, &_mgc->cpos, plfl_and, plfl_or);
+  ap = NULL;
+  mgopengl_bsptree_recursive(bsptree->tree, &_mgc->cpos,
+			     &plfl_and, &plfl_or, &ap);
 
   mgopengl_end_translucent();
+
+  mgpopappearance();
 }
 
 /*-----------------------------------------------------------------------
@@ -577,7 +623,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   Poly *p;
   Vertex **v, *vp;
   struct mgastk *ma = _mgc->astk;
-  int flag,shading;
+  int flag, shading;
   int nonsurf = -1;
 
   flag = ma->ap.flag;
@@ -590,21 +636,22 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   }
 
   if ((_mgc->astk->mat.override & MTF_DIFFUSE)) {
-    if (!_mgc->astk->useshader) {
-      plflags &= ~(PL_HASVCOL | PL_HASPCOL);
+    if (!(_mgc->astk->flags & MGASTK_SHADER)) {
+      plflags &= ~GEOM_COLOR;
     }
   }
-  if ((_mgc->astk->mat.override & MTF_ALPHA) &&
-      (_mgc->astk->mat.valid & MTF_ALPHA)) {
+  if ((_mgc->astk->mat.valid & MTF_ALPHA)
+      &&
+      ((_mgc->astk->mat.override & MTF_ALPHA) || !(plflags & GEOM_COLOR))) {
     if (ma->ap.mat->diffuse.a != 1.0) {
-      plflags |= (PL_HASVALPHA|PL_HASPALPHA);
+      plflags |= COLOR_ALPHA;
     } else {
-      plflags &= ~(PL_HASVALPHA|PL_HASPALPHA);      
+      plflags &= ~COLOR_ALPHA;
     }
   }
 
   if ((flag & APF_FACEDRAW) &&
-      !((flag & APF_TRANSP) && (plflags & (PL_HASPALPHA|PL_HASVALPHA)))) {
+      !((flag & APF_TRANSP) && (plflags & COLOR_ALPHA))) {
 
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);

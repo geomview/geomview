@@ -57,8 +57,7 @@ int	    mgrib_poptransform( void );
 void	    mgrib_settransform( Transform T );
 int	    mgrib_pushappearance( void );
 int	    mgrib_popappearance( void );
-Appearance  *mgrib_setappearance( Appearance* app, int merge);
-Appearance  *mgrib_getappearance( void );
+const Appearance *mgrib_setappearance(const Appearance* app, int merge);
 int	    mgrib_setcamera( Camera* cam );
 mgribcontext *mgrib_newcontext( mgribcontext *ctx );
 
@@ -95,7 +94,7 @@ struct mgfuncs mgribfuncs = {
   mgrib_pushappearance,
   mgrib_popappearance,
   mgrib_setappearance,
-  mgrib_getappearance,
+  mg_getappearance,
   mgrib_setcamera,
   mgrib_polygon,
   mgrib_polylist,
@@ -104,7 +103,10 @@ struct mgfuncs mgribfuncs = {
   mgrib_polyline,
   mg_quads,
   mgrib_bezier,
-  mg_bsptree
+  mg_bsptree,
+  mg_tagappearance,
+  mg_untagappearance,
+  mg_taggedappearance
   };
 
 static mgribcontext *MGRIB;	/* For debugging */
@@ -855,8 +857,8 @@ mgrib_popappearance( void )
  *		since shaders depend on both appearance and material 
  *		settings. (4/1/93 TMM)
  */
-Appearance *
-mgrib_setappearance( Appearance* ap, int mergeflag )
+const Appearance *
+mgrib_setappearance(const Appearance* ap, int mergeflag )
 {
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
@@ -889,22 +891,6 @@ mgrib_setappearance( Appearance* ap, int mergeflag )
     mgrib_lighting(_mgc->astk, lng_changed);
   }
   return ap;
-}
-
-
-/*-----------------------------------------------------------------------
- * Function:	mgrib_getappearance
- * Description:	return a ptr to current appearance
- * Returns:	ptr to current appearance
- * Author:	mbp
- * Date:	Fri Sep 20 13:00:41 1991
- * Notes:	Applications should not modify the returned appearance
- *		in any way.
- */
-Appearance *
-mgrib_getappearance()
-{
-    return &(_mgc->astk->ap);
 }
 
 /*-----------------------------------------------------------------------

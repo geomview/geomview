@@ -367,15 +367,20 @@ mgps_appearance( struct mgastk *ma, int mask )
 
     if (mask & APF_SHADING)
     {
-	if(!IS_SHADED(ap->shading) || ma->shader != NULL)
-	{
+	if (IS_SHADED(ap->shading) && ma->shader != NULL) {
 	    /* Use software shader if one exists and user wants lighting */
-	    ma->useshader = (ma->shader != NULL) && IS_SHADED(ap->shading);
-	}
-	else
-	{
+	    ma->flags |= MGASTK_SHADER;
+	} else {
 	    /* No software shading, just use raw colors */
-	    ma->useshader = 0;
+	    ma->flags &= ~MGASTK_SHADER;
 	}
     }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
+    

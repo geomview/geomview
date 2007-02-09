@@ -68,11 +68,11 @@ void	    mgopengl_gettransform( Transform T );
 void	    mgopengl_settransform( Transform T );
 int	    mgopengl_pushappearance( void );
 int	    mgopengl_popappearance( void );
-Appearance *mgopengl_setappearance( Appearance* app, int merge );
-Appearance *mgopengl_getappearance( void );
+const Appearance *mgopengl_setappearance(const Appearance* app, int merge );
 int	    mgopengl_setcamera( Camera* cam );
 int	    mgopengl_setwindow( WnWindow *win, int final );
 mgopenglcontext *mgopengl_newcontext( mgopenglcontext *ctx );
+void mgopengl_taggedappearance(const void *tag);
 
 extern void mgopengl_polygon();
 extern void mgopengl_line();
@@ -117,7 +117,7 @@ struct mgfuncs mgopenglfuncs = {
   mgopengl_pushappearance,
   mgopengl_popappearance,
   mgopengl_setappearance,
-  mgopengl_getappearance,
+  mg_getappearance,
   mgopengl_setcamera,
   mgopengl_polygon,
   mgopengl_polylist,
@@ -126,7 +126,10 @@ struct mgfuncs mgopenglfuncs = {
   mgopengl_polyline,
   mgopengl_quads,
   mg_bezier,
-  mgopengl_bsptree
+  mgopengl_bsptree,
+  mg_tagappearance,
+  mg_untagappearance,
+  mgopengl_taggedappearance
 };
 
 int
@@ -965,44 +968,13 @@ mgopengl_worldend( void )
 {
   GLuint list;
   
-  /* Execute and delete and pending translucent display lists. */
-
-  glEnable(GL_BLEND);
-
-  /*first pass*/
-  glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE); /*disable alpha channel*/
-  glDepthMask(GL_FALSE);                            /*disable Z buffer*/
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  /*render the object here*/
+  /* Execute and delete any pending translucent display lists. */
   for (list = 0; list < _mgopenglc->translucent_seq; list++) {
     glCallList(_mgopenglc->translucent_lists[list]);
   }
 
-  /*second pass*/
-  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE); /*enable alpha channel*/
-  glDepthMask(GL_FALSE);                              /*disable Z buffer*/
-  glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ZERO);
-  /*render the object with alpha replaced with 1-a*/
-
   for (list = 0; list < _mgopenglc->translucent_seq; list++) {
-    glCallList(_mgopenglc->translucent_lists[list]);
-  }
-
-  /*third pass*/
-  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE); /*enable alpha channel*/
-  glDepthMask(GL_TRUE);                               /*enable Z buffer*/
-  glBlendFunc(GL_ONE_MINUS_DST_ALPHA, GL_ZERO);
-
-  /*render the object with alpha replaced with 1*/
-  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
-    glCallList(_mgopenglc->translucent_lists[list]);
-  }
-
-  glDisable(GL_BLEND);
-  
-  for (list = 0; list < _mgopenglc->translucent_seq; list++) {
-    /* Destroy the contents. */
+    /* Destroy the contents of the dpy lists for translucent objects. */
     glNewList(_mgopenglc->translucent_lists[list], GL_COMPILE);
     glEndList();
   }
@@ -1194,14 +1166,12 @@ GLuint mgopengl_new_translucent(void)
   /* Load the appearance definition */
   mgopengl_appearance(_mgc->astk, ~0);
 
-#if 0
   /* Use a proper blend function to simulate some sort of
    * transparency, disable writing to the depth-buffer.
    */
   glDepthMask(GL_FALSE);
-  glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-#endif
 
   return _mgopenglc->translucent_lists[_mgopenglc->translucent_seq++];
 }
@@ -1269,7 +1239,7 @@ mgopengl_popappearance( void )
 
   mg_popappearance();
 
-  if(_mgopenglc->curtex && _mgopenglc->curtex->tx != mastk_next->ap.tex)
+  if (_mgopenglc->curtex && _mgopenglc->curtex->tx != mastk_next->ap.tex)
     mgopengl_notexture();           /* Unbind our no-longer-needed texture */
   return 1;
 }
@@ -1292,8 +1262,8 @@ mgopengl_popappearance( void )
  *		things not set here: normals (drawing, scaling,
  *		  everting), drawing faces vs. edges
  */
-Appearance *
-mgopengl_setappearance( Appearance* ap, int mergeflag )
+const Appearance *
+mgopengl_setappearance(const Appearance *ap, int mergeflag )
 {
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
@@ -1341,7 +1311,7 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
      */
     if ((ap->lighting) && (mastk->next)) {
       if (mastk->light_seq == mastk->next->light_seq) {
-	mastk->light_seq++;
+	mastk->light_seq = next_light_seq(_mgc, mastk);	
 	if (_mgopenglc->n_light_lists <= mastk->light_seq) {
 	  _mgopenglc->light_lists =
 	    mgopengl_realloc_lists(_mgopenglc->light_lists,
@@ -1386,22 +1356,36 @@ mgopengl_setappearance( Appearance* ap, int mergeflag )
   return ap;
 }
 
-
-/*-----------------------------------------------------------------------
- * Function:	mgopengl_getappearance
- * Description:	return a ptr to current appearance
- * Returns:	ptr to current appearance
- * Author:	mbp
- * Date:	Fri Sep 20 13:00:41 1991
- * Notes:	Applications should not modify the returned appearance
- *		in any way.
- */
-Appearance *
-mgopengl_getappearance()
+void mgopengl_taggedappearance(const void *tag)
 {
-  return &(_mgc->astk->ap);
-}
+  struct mgastk *astk = (struct mgastk *)tag;
+  Appearance *ap = &astk->ap;
+  LmLighting *lm = &astk->lighting;
 
+  mg_setappearance(ap, 0);
+
+  if (lm->valid) {
+    glCallList(_mgopenglc->light_lists[astk->light_seq]);
+  }
+
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadMatrixf(&_mgc->W2C[0][0] );
+  mgopengl_lights(lm, astk);
+  glPopMatrix();
+
+  /* Let mgopengl_material() decide if we need a new material */
+  if (ap->mat)
+    mgopengl_material(astk, ap->mat->valid);
+
+  mgopengl_appearance(astk, ap->valid);
+
+  /* Ensure that, at least, we don't have the *wrong* texture bound. */
+  if(ap->tex) {
+    if(_mgopenglc->tevbound)
+      mgopengl_notexture();
+  }
+}
 
 /*-----------------------------------------------------------------------
  * Function:	mgopengl_setcamera

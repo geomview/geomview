@@ -53,8 +53,7 @@ void        mgx11_gettransform( Transform T );
 void        mgx11_settransform( Transform T );
 int         mgx11_pushappearance( void );
 int         mgx11_popappearance( void );
-Appearance *mgx11_setappearance( Appearance* app, int merge );
-Appearance *mgx11_getappearance( void );
+const Appearance *mgx11_setappearance(const Appearance* app, int merge );
 int         mgx11_setcamera( Camera* cam );
 int         mgx11_setwindow( WnWindow *win, int final );
 mgx11context *mgx11_newcontext( mgx11context *ctx );
@@ -95,7 +94,7 @@ struct mgfuncs mgx11funcs = {
   mgx11_pushappearance,
   mgx11_popappearance,
   mgx11_setappearance,
-  mgx11_getappearance,
+  mg_getappearance,
   mgx11_setcamera,
   mgx11_polygon,
   mgx11_polylist,
@@ -104,7 +103,10 @@ struct mgfuncs mgx11funcs = {
   mgx11_polyline,
   mg_quads,
   mg_bezier,
-  mg_bsptree
+  mg_bsptree,
+  mg_tagappearance,
+  mg_untagappearance,
+  mg_taggedappearance
   };
 
 
@@ -605,8 +607,8 @@ mgx11_popappearance()
  *		than mgx11_setappearance currently does???  This
  *		seems common to all devices.
  */
-Appearance *
-mgx11_setappearance( Appearance *ap, int mergeflag )
+const Appearance *
+mgx11_setappearance(const Appearance *ap, int mergeflag )
 {
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
@@ -642,24 +644,6 @@ mgx11_setappearance( Appearance *ap, int mergeflag )
   mgx11_appearance( mastk, changed);
   return 0;
 }
-
-/*-----------------------------------------------------------------------
- * Function:	mgx11_getappearance
- * Description:	get the current appearance
- * Returns:	ptr to the current appearance
- * DEVICE USE:	optional
- * Notes:	The pointer returned points to the context's private copy
- *		of the appearance.  Don't modify it!
- *
- *		Should we allow this?  Or should this copy the appearance
- *		to an address passed as an argument ???
- */
-Appearance *
-mgx11_getappearance()
-{
-  return( &(_mgc->astk->ap) );
-}
-
 
 /*-----------------------------------------------------------------------
  * Function:	mgx11_setcamera

@@ -73,7 +73,7 @@ mgx11_polygon(int nv,  HPoint3 *V,
 
   flag = _mgc->astk->ap.flag;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) && 
-	!_mgc->astk->useshader) nc = 0;
+      !(_mgc->astk->flags & MGASTK_SHADER)) nc = 0;
   cinc = (nc > 1);
   ninc = (nn > 1);
   smooth = IS_SMOOTH(_mgc->astk->ap.shading);
@@ -319,7 +319,7 @@ void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
   }
 
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
-	!_mgc->astk->useshader)
+      !(_mgc->astk->flags & MGASTK_SHADER))
     plflags &= ~(PL_HASVCOL | PL_HASPCOL);
 
   if (flag & APF_FACEDRAW)
@@ -609,11 +609,11 @@ void mgx11submesh(int wrap, int nu, int nv, int umin, int umax, int vmin,
 
   ap = &_mgc->astk->ap;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
-	!_mgc->astk->useshader)
+      !(_mgc->astk->flags & MGASTK_SHADER))
     meshC = 0;
 
   has = 0;
-  if (meshN && !_mgc->astk->useshader)
+  if (meshN && !(_mgc->astk->flags & MGASTK_SHADER))
     has = HAS_N;
   if (meshC)
     has |= HAS_C;

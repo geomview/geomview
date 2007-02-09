@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.8 2006/12/11 04:50:13 rotdrop Exp $
+ * $Id: mg.c,v 1.9 2007/02/09 17:13:57 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -62,7 +62,7 @@ static struct mgxstk *mgxfree = NULL;
  * Returns NULL if no context is selected.
  */
 mgcontext *
-mgcurrentcontext()
+mgcurrentcontext(void)
 {
   return _mgc;
 }
@@ -77,7 +77,7 @@ mgcurrentcontext()
  * Notes:
  */
 int
-mgdevice_NULL()
+mgdevice_NULL(void)
 {
   if(MGC != NULL && MGC->devno != MGD_NULL)
     MGC = NULL;
@@ -96,9 +96,7 @@ mgdevice_NULL()
  *              after allocating a new mgcontext structure.
  * Notes:       Further device-specific initialization is normally required.
  */
-mgcontext *
-mg_newcontext(mgc)
-     mgcontext *mgc;
+mgcontext *mg_newcontext(mgcontext *mgc)
 {
   memset((char *)mgc, 0, sizeof(*mgc));
   RefInit((Ref *)mgc, MGCONTEXTMAGIC);
@@ -119,6 +117,8 @@ mg_newcontext(mgc)
     ApDefault(&(ma->ap));
     ma->ap.mat = &(ma->mat);
     ma->ap.lighting = &(ma->lighting);
+    ma->flags |= MGASTK_ACTIVE;
+    RefInit((Ref *)ma, 'a');
   }
   {
     struct mgxstk *mx;
@@ -142,6 +142,10 @@ mg_newcontext(mgc)
 
   mgc->winchange = NULL;
   mgc->winchangeinfo = NULL;
+
+  mgc->ap_min_tag =
+    mgc->mat_min_tag =
+    mgc->light_min_tag = ~0;
 
   mgc->next = _mgclist;
   _mgclist = mgc;
@@ -277,19 +281,114 @@ mg_transform( Transform T )
  * DEVICE USE:  required --- all devices must maintain this stack
  */
 int
-mg_pushappearance()
+mg_pushappearance(void)
 {
   struct mgastk *ma;
 
-  if(mgafree) ma = mgafree, mgafree = ma->next;
-  else ma = OOGLNew(struct mgastk);
+  if (mgafree) {
+    ma = mgafree;
+    mgafree = ma->next;
+  } else {
+    ma = OOGLNew(struct mgastk);
+  }
   *ma = *_mgc->astk;
+  ma->flags &= ~MGASTK_TAGGED; /* active and shader flags are inherited */
+  RefInit((Ref *)ma, 'a');
   ma->next = _mgc->astk;
   LmCopy(&_mgc->astk->lighting, &ma->lighting);
   ma->ap.lighting = &(ma->lighting);
   ma->ap.mat = &(ma->mat);
   _mgc->astk = ma;
   return 0;
+}
+
+/* Three support function to support BSP-trees with multiple
+ * appearances: in the worst case every tree-node could have its own
+ * appearance; this cannot be efficiently modelled with the
+ * appearance stack approach.
+ */
+
+/* Make the current appearance persistent. */
+const void *mg_tagappearance(void)
+{
+  struct mgastk *astk = _mgc->astk;
+
+  astk->flags |= MGASTK_TAGGED;
+  RefIncr((Ref *)astk);
+
+  /* update excluded sequence region */
+  if ((unsigned)_mgc->ap_min_tag > (unsigned)astk->ap_seq) {
+    _mgc->ap_min_tag = astk->ap_seq;
+  }
+  if (_mgc->ap_max_tag < astk->ap_seq) {
+    _mgc->ap_max_tag = astk->ap_seq;
+  }
+  if ((unsigned)_mgc->mat_min_tag > (unsigned)astk->mat_seq) {
+    _mgc->mat_min_tag = astk->mat_seq;
+  }
+  if (_mgc->mat_max_tag < astk->mat_seq) {
+    _mgc->mat_max_tag = astk->mat_seq;
+  }
+  if ((unsigned)_mgc->light_min_tag > (unsigned)astk->light_seq) {
+    _mgc->light_min_tag = astk->light_seq;
+  }
+  if (_mgc->light_max_tag < astk->light_seq) {
+    _mgc->light_max_tag = astk->light_seq;
+  }
+
+  return _mgc->astk;
+}
+
+/* Un-tag the appearance described by "tag" (i.e. undo its
+ * persistency). This function should perform a clean-up, i.e. release
+ * all resources associated with the corresponding appearance.
+ */
+void mg_untagappearance(const void *tag)
+{
+  struct mgastk *astk = (struct mgastk *)tag, *pos;
+  struct mgcontext *ctx = astk->tag_ctx;  
+
+  RefDecr((Ref *)astk);
+  if (RefCount((Ref *)astk) > 1) {
+    return;
+  }
+  
+  /* undo RefIncr() and possibly delete the resources */
+  if (astk->ap.tex != NULL) {
+    TxDelete(ctx->astk->ap.tex);
+  }
+  LmDeleteLights(&astk->lighting);
+
+  if (!(astk->flags & MGASTK_ACTIVE)) {
+    /* Move to free-list if not active */
+    if (ctx->ap_tagged == astk) {
+      ctx->ap_tagged = astk->next;
+      if (ctx->ap_tagged == NULL) {
+	ctx->ap_min_tag =
+	  ctx->mat_min_tag = 
+	  ctx->light_min_tag = -1;
+	ctx->ap_max_tag =
+	  ctx->mat_max_tag =
+	  ctx->light_max_tag = 0;
+      }
+    } else {
+      for (pos = ctx->ap_tagged; pos->next != astk; pos = pos->next);
+      pos->next = astk->next;
+    }
+    astk->tag_ctx = NULL;
+    astk->next = mgafree;
+    mgafree = astk;
+  }
+
+  astk->flags &= ~MGASTK_TAGGED;
+}
+
+/* Insert a persistent apearance into the current appearance model */
+void mg_taggedappearance(const void *tag)
+{
+  struct mgastk *astk = (struct mgastk *)tag;
+
+  mg_setappearance(&astk->ap, 0);
 }
 
 /*-----------------------------------------------------------------------
@@ -302,22 +401,35 @@ mg_pushappearance()
  * DEVICE USE:  required --- all devices must maintain this stack
  */
 int
-mg_popappearance()
+mg_popappearance(void)
 {
   struct mgastk *mp;
-  struct mgcontext *ms = _mgc;
+  struct mgcontext *ctx = _mgc;
 
-  mp = ms->astk->next;
-  if(mp == NULL)
+  mp = ctx->astk->next;
+  if(mp == NULL) {
     return -1;
-  if(ms->astk->ap_seq != mp->ap_seq) ms->changed |= MC_AP;
-  if(ms->astk->mat_seq != mp->mat_seq) ms->changed |= MC_MAT;
-  if(ms->astk->light_seq != mp->light_seq) ms->changed |= MC_LIGHT;
-  if(ms->astk->ap.tex != NULL && ms->astk->ap.tex != mp->ap.tex)
-    TxDelete(ms->astk->ap.tex);
-  LmDeleteLights(&ms->astk->lighting);
-  ms->astk->next = mgafree; mgafree = ms->astk;
-  ms->astk = mp;
+  }
+  if(ctx->astk->ap_seq != mp->ap_seq) ctx->changed |= MC_AP;
+  if(ctx->astk->mat_seq != mp->mat_seq) ctx->changed |= MC_MAT;
+  if(ctx->astk->light_seq != mp->light_seq) ctx->changed |= MC_LIGHT;
+
+  ctx->astk->flags &= ~MGASTK_ACTIVE;
+  if (ctx->astk->flags & MGASTK_TAGGED) {
+    ctx->astk->next = ctx->ap_tagged;
+    ctx->ap_tagged = ctx->astk;
+    ctx->ap_tagged->tag_ctx = ctx;
+    ctx->astk = mp;
+  } else {
+    if(ctx->astk->ap.tex != NULL && ctx->astk->ap.tex != mp->ap.tex) {
+      TxDelete(ctx->astk->ap.tex);
+    }
+    LmDeleteLights(&ctx->astk->lighting);
+    ctx->astk->next = mgafree;
+    mgafree = ctx->astk;
+    ctx->astk = mp;
+  }
+
   return 0;
 }
 
@@ -371,8 +483,8 @@ mg_globallights( LmLighting *lm, int worldbegin )
  *              than mggl_setappearance currently does???  This
  *              seems common to all devices.
  */
-Appearance *
-mg_setappearance( Appearance *ap, int mergeflag )
+const Appearance *
+mg_setappearance(const Appearance *ap, int mergeflag)
 {
   Appearance *nap;
   struct mgastk *ma = _mgc->astk;
@@ -406,10 +518,9 @@ mg_setappearance( Appearance *ap, int mergeflag )
  *              Should we allow this?  Or should this copy the appearance
  *              to an address passed as an argument ???
  */
-Appearance *
-mg_getappearance()
+const Appearance *mg_getappearance(void)
 {
-  return( &(_mgc->astk->ap) );
+  return &_mgc->astk->ap;
 }
 
 
@@ -654,13 +765,13 @@ mg_worldbegin( void )
 }
 
 void
-mg_findO2S()
+mg_findO2S(void)
 {
   TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
 }
 
 void
-mg_findS2O()
+mg_findS2O(void)
 {
   if(!(_mgc->has & HAS_S2O)) {
     if(!_mgc->xstk->hasinv) {
@@ -677,7 +788,7 @@ mg_findS2O()
  * Curiously, we can do this independently of the position of the point,
  * if we operate in homogeneous space.
  */
-void mg_makepoint()
+void mg_makepoint(void)
 {
   int i, n;
   float t, r, c, s;
@@ -784,9 +895,9 @@ mg_bsptree(struct BSPTree *bsptree)
     MGD_NODEV,								\
       mgdevice_NULL,          /* mg_setdevice        */			\
       mg_feature,             /* mg_feature          */			\
-      (mgcontext *(*)())mg_ctxcreate,         /* mg_ctxcreate        */ \
+      (mgcontext *(*)(void))mg_ctxcreate,         /* mg_ctxcreate        */ \
       mg_ctxdelete,           /* mg_ctxdelete        */			\
-      (void (*)())mg_ctxset,          /* mg_ctxset           */		\
+      (void (*)(void))mg_ctxset,          /* mg_ctxset           */	\
       mg_ctxget,              /* mg_ctxget           */			\
       mg_ctxselect,           /* mg_ctxselect        */			\
       mg_sync,                /* mg_sync             */			\
@@ -812,6 +923,9 @@ mg_bsptree(struct BSPTree *bsptree)
       mg_quads,               /* mg_quads            */			\
       mg_bezier,              /* mg_bezier           */			\
       mg_bsptree,             /* mg_bsptree          */			\
+      mg_tagappearance,       /* mg_tagappearance    */			\
+      mg_untagappearance,     /* mg_untagappearance  */			\
+      mg_taggedappearance,    /* mg_taggedappearance */			\
       }
 
 struct mgfuncs mgnullfuncs =    /* mgfuncs for null (default) output device */

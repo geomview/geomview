@@ -56,8 +56,7 @@ void        mgbuf_gettransform( Transform T );
 void        mgbuf_settransform( Transform T );
 int         mgbuf_pushappearance( void );
 int         mgbuf_popappearance( void );
-Appearance *mgbuf_setappearance( Appearance* app, int merge );
-Appearance *mgbuf_getappearance( void );
+const Appearance *mgbuf_setappearance(const Appearance* app, int merge );
 int         mgbuf_setcamera( Camera* cam );
 int         mgbuf_setwindow( WnWindow *win, int final );
 mgbufcontext *mgbuf_newcontext( mgbufcontext *ctx );
@@ -99,7 +98,7 @@ struct mgfuncs mgbuffuncs = {
   mgbuf_pushappearance,
   mgbuf_popappearance,
   mgbuf_setappearance,
-  mgbuf_getappearance,
+  mg_getappearance,
   mgbuf_setcamera,
   mgbuf_polygon,
   mgbuf_polylist,
@@ -108,7 +107,10 @@ struct mgfuncs mgbuffuncs = {
   mgbuf_polyline,
   mg_quads,
   mg_bezier,
-  mg_bsptree
+  mg_bsptree,
+  mg_tagappearance,
+  mg_untagappearance,
+  mg_taggedappearance
   };
 
 
@@ -512,8 +514,8 @@ mgbuf_popappearance()
  *		than mgbuf_setappearance currently does???  This
  *		seems common to all devices.
  */
-Appearance *
-mgbuf_setappearance( Appearance *ap, int mergeflag )
+const Appearance *
+mgbuf_setappearance(const Appearance *ap, int mergeflag )
 {
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
@@ -548,24 +550,6 @@ mgbuf_setappearance( Appearance *ap, int mergeflag )
   mgbuf_appearance( mastk, changed);
   return ap;
 }
-
-/*-----------------------------------------------------------------------
- * Function:	mgbuf_getappearance
- * Description:	get the current appearance
- * Returns:	ptr to the current appearance
- * DEVICE USE:	optional
- * Notes:	The pointer returned points to the context's private copy
- *		of the appearance.  Don't modify it!
- *
- *		Should we allow this?  Or should this copy the appearance
- *		to an address passed as an argument ???
- */
-Appearance *
-mgbuf_getappearance()
-{
-  return( &(_mgc->astk->ap) );
-}
-
 
 /*-----------------------------------------------------------------------
  * Function:	mgbuf_setcamera
@@ -1122,17 +1106,13 @@ mgbuf_appearance( struct mgastk *ma, int mask )
 	_mgc->has &= ~HAS_POINT;
     }
 
-    if (mask & APF_SHADING)
-    {
-	if(!IS_SHADED(ap->shading) || ma->shader != NULL)
-	{
+    if (mask & APF_SHADING) {
+	if (IS_SHADED(ap->shading) && ma->shader != NULL) {
 	    /* Use software shader if one exists and user wants lighting */
-	    ma->useshader = (ma->shader != NULL) && IS_SHADED(ap->shading);
-	}
-	else
-	{
+	    ma->flags |= MGASTK_SHADER;
+	} else {
 	    /* No software shading, just use raw colors */
-	    ma->useshader = 0;
+	    ma->flags &= ~MGASTK_SHADER;
 	}
     }
 }
@@ -1142,10 +1122,21 @@ void
 mgbuf_setshader(mgshadefunc shader)
 {
     struct mgastk *ma = _mgc->astk;
-    int wasusing = ma->useshader;
+    unsigned short wasusing = ma->flags & MGASTK_SHADER;
 
     ma->shader = shader;
-    ma->useshader = (shader != NULL && IS_SHADED(ma->ap.shading)) ? 1 : 0;
-    if(ma->useshader != wasusing)
+    if (shader != NULL && IS_SHADED(ma->ap.shading)) {
+	ma->flags |= MGASTK_SHADER;
+    } else {
+	ma->flags &= ~MGASTK_SHADER;
+    }
+    if((ma->flags & MGASTK_SHADER) != wasusing)
 	mgbuf_appearance(_mgc->astk, APF_SHADING);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

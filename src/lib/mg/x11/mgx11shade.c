@@ -53,13 +53,12 @@ mgx11_appearance( struct mgastk *ma, int mask )
       ap->shading = APF_FLAT;
   bye bye to kludge in non-gouraud shading mgx11
 */
-    if(!IS_SHADED(ap->shading) || ma->shader != NULL) {
-	/* Use software shader if one exists and user wants lighting */
-	ma->useshader = (ma->shader != NULL) && IS_SHADED(ap->shading);
-    }
-    else {
+    if (ma->shader != NULL && IS_SHADED(ap->shading)) {
+      /* Use software shader if one exists and user wants lighting */
+      ma->flags |= MGASTK_SHADER;
+    } else {
 	/* No software shading, just use raw colors */
-	ma->useshader = 0;
+      ma->flags &= ~MGASTK_SHADER;
     }
   }
 
@@ -69,10 +68,21 @@ void
 mgx11_setshader(mgshadefunc shader)
 {
     struct mgastk *ma = _mgc->astk;
-    int wasusing = ma->useshader;
+    unsigned short int wasusing = ma->flags & MGASTK_SHADER;
 
     ma->shader = shader;
-    ma->useshader = (shader != NULL && IS_SHADED(ma->ap.shading)) ? 1 : 0;
-    if(ma->useshader != wasusing)
+    if (shader != NULL && IS_SHADED(ma->ap.shading)) {
+      ma->flags |= MGASTK_SHADER;
+    } else {
+      ma->flags &= ~MGASTK_SHADER;
+    }
+    if((ma->flags & MGASTK_SHADER) != wasusing)
 	mgx11_appearance(_mgc->astk, APF_SHADING);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

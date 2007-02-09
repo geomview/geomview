@@ -55,8 +55,7 @@ void        mgps_gettransform( Transform T );
 void        mgps_settransform( Transform T );
 int         mgps_pushappearance( void );
 int         mgps_popappearance( void );
-Appearance *mgps_setappearance( Appearance* app, int merge );
-Appearance *mgps_getappearance( void );
+const Appearance *mgps_setappearance(const Appearance* app, int merge );
 int         mgps_setcamera( Camera* cam );
 int         mgps_setwindow( WnWindow *win, int final );
 mgpscontext *mgps_newcontext( mgpscontext *ctx );
@@ -97,7 +96,7 @@ struct mgfuncs mgpsfuncs = {
   mgps_pushappearance,
   mgps_popappearance,
   mgps_setappearance,
-  mgps_getappearance,
+  mg_getappearance,
   mgps_setcamera,
   mgps_polygon,
   mgps_polylist,
@@ -106,7 +105,10 @@ struct mgfuncs mgpsfuncs = {
   mgps_polyline,
   mg_quads,
   mg_bezier,
-  mg_bsptree
+  mg_bsptree,
+  mg_tagappearance,
+  mg_untagappearance,
+  mg_taggedappearance
   };
 
 
@@ -481,8 +483,8 @@ mgps_popappearance()
  *		than mgps_setappearance currently does???  This
  *		seems common to all devices.
  */
-Appearance *
-mgps_setappearance( Appearance *ap, int mergeflag )
+const Appearance *
+mgps_setappearance(const Appearance *ap, int mergeflag )
 {
   int changed, mat_changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
@@ -517,24 +519,6 @@ mgps_setappearance( Appearance *ap, int mergeflag )
   mgps_appearance( mastk, changed);
   return ap;
 }
-
-/*-----------------------------------------------------------------------
- * Function:	mgps_getappearance
- * Description:	get the current appearance
- * Returns:	ptr to the current appearance
- * DEVICE USE:	optional
- * Notes:	The pointer returned points to the context's private copy
- *		of the appearance.  Don't modify it!
- *
- *		Should we allow this?  Or should this copy the appearance
- *		to an address passed as an argument ???
- */
-Appearance *
-mgps_getappearance()
-{
-  return( &(_mgc->astk->ap) );
-}
-
 
 /*-----------------------------------------------------------------------
  * Function:	mgps_setcamera
@@ -799,10 +783,14 @@ void
 mgps_setshader(mgshadefunc shader)
 {
     struct mgastk *ma = _mgc->astk;
-    int wasusing = ma->useshader;
+    unsigned short wasusing = ma->flags & MGASTK_SHADER;    
 
     ma->shader = shader;
-    ma->useshader = (shader != NULL && IS_SHADED(ma->ap.shading)) ? 1 : 0;
-    if(ma->useshader != wasusing)
+    if (shader != NULL && IS_SHADED(ma->ap.shading)) {
+	ma->flags |= MGASTK_SHADER;
+    } else {
+	ma->flags &= ~MGASTK_SHADER;
+    }
+    if((ma->flags & MGASTK_SHADER) != wasusing)
 	mgps_appearance(_mgc->astk, APF_SHADING);
 }
