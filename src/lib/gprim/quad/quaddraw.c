@@ -55,10 +55,11 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   Appearance *ap = &_mgc->astk->ap;
   Material *mat = &_mgc->astk->mat;
 
-  q.p = (QuadP *)alloca(npts*sizeof(HPoint3));
-  q.n = NULL;
-  q.c = (QuadC *)alloca(npts*sizeof(ColorA));
-  q.bsptree = NULL;
+  /* TODO: do NOT use alloca */
+  q.p  = (QuadP *)alloca(npts*sizeof(HPoint3));
+  q.n  = NULL;
+  q.c  = (QuadC *)alloca(npts*sizeof(ColorA));
+  q.ap = NULL;
   nc = q.c[0];
   np = q.p[0];
   op = qquad->p[0];
@@ -93,8 +94,12 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   }
 
   if(colored) {
-    q.flag &= ~QUAD_ALPHA;
-    q.flag |=  alpha ? QUAD_C|QUAD_ALPHA : QUAD_C;
+    if (alpha) {
+      q.geomflags |= COLOR_ALPHA;
+    } else {
+      q.geomflags &= ~COLOR_ALPHA;
+    }
+    q.geomflags |=  QUAD_C;
   }
   
   if (ap->flag & APF_FACEDRAW) {
@@ -104,23 +109,23 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
     if (ap->flag & APF_TRANSP) {
       if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
 	if (mat->diffuse.a != 1.0) {
-	  q.flag |=  QUAD_ALPHA;
+	  q.geomflags |= COLOR_ALPHA;
 	} else {
-	  q.flag &= ~QUAD_ALPHA;
+	  q.geomflags &= ~COLOR_ALPHA;
 	}
       }
     }
-    if ((ap->flag & APF_TRANSP) && (q.flag & QUAD_ALPHA)) {
-      BSPTreeCreate((Geom *)(void *)&q);
-      BSPTreeAddObject(q.bsptree, (Geom *)(void *)&q);
-      BSPTreeFinalize(q.bsptree);
-    }
   }
-  mgquads(q.maxquad, q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0], q.flag);
+  mgquads(q.maxquad,
+	  q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0], q.geomflags);
 
-  if (q.bsptree) {
-    mgbsptree(q.bsptree);
-    BSPTreeFree((Geom *)(void *)&q);
+  if (q.bsptree &&
+      (ap->flag & APF_FACEDRAW) &&
+      (ap->flag & APF_TRANSP) &&
+      (q.geomflags & COLOR_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)qquad, ap);
+    GeomBSPTree((Geom *)(void *)&q, q.bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance((Geom *)qquad, old_tagged_app);
   }
 
   OOGLFree(q.n);
@@ -132,8 +137,9 @@ QuadDraw(Quad *q)
 {
   mgNDctx *NDctx = NULL;
 
-  if (q == NULL)
-    return NULL;
+  if (q->bsptree != NULL) {
+    BSPTreeSetAppearance((Geom *)q);
+  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -142,32 +148,21 @@ QuadDraw(Quad *q)
     return q;
   }
   
-  if ((((Quad *)q)->flag & VERT_N) == 0) {
-    Appearance *ap = mggetappearance();
+  if ((((Quad *)q)->geomflags & VERT_N) == 0) {
+    const Appearance *ap = mggetappearance();
     
     if(ap->valid & APF_NORMSCALE ||
        (ap->flag & APF_FACEDRAW && ap->shading != APF_CONSTANT)) {
       QuadComputeNormals(q);
-      q->flag |= VERT_N;
+      q->geomflags |= VERT_N;
     }
-  }
-
-  if (q->bsptree == NULL) {
-    /* This means we are a top-level drawing node (will never happen ...) */
-    BSPTreeCreate((Geom *)q);
-  }
-  if (q->bsptree->tree == NULL) {
-    /* This means we are an inferior drawing node and may add our
-     * polygons to the tree, do that.
-     */
-    BSPTreeAddObject(q->bsptree, (Geom *)q);
   }
 
   if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_read_quad(q);
     cmodel_draw(PL_HASVN|PL_HASPN|PL_HASVCOL);
-  } else if(_mgc->astk->useshader) {
+  } else if(_mgc->astk->flags & MGASTK_SHADER) {
     /*
      * Special software shading
      */
@@ -192,22 +187,21 @@ QuadDraw(Quad *q)
 	v++; n++; tc++;
       }
     }
-    mgquads(q->maxquad, q->p[0], q->n[0], c, q->flag);
+    mgquads(q->maxquad, q->p[0], q->n[0], c, q->geomflags);
   } else {
     /*
      * Ordinary shading
      */
-    mgquads(q->maxquad, q->p[0], q->n[0], q->c[0], q->flag);
+    mgquads(q->maxquad, q->p[0], q->n[0], q->c[0], q->geomflags);
   }
 
-  /* If we have a private BSP-tree, then draw it now. Software shading
-   * & transparency will not work, to be fixed.
-   */
-  if (q->bsptree->geom == (Geom *)q) {
-    if (q->bsptree->tree == NULL) {
-      BSPTreeFinalize(q->bsptree);
-    }
-    mgbsptree(q->bsptree);
+  return q;
+}
+
+Quad *QuadBSPTree(Quad *q, BSPTree *tree, int action)
+{
+  if (q->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+    BSPTreeAddObject(tree, (Geom *)q);
   }
 
   return q;

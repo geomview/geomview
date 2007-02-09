@@ -46,7 +46,7 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
     if (exist == NULL) {
 	q = OOGLNewE(Quad, "QuadCreate: new Quad");
         GGeomInit (q, classp, QUADMAGIC, NULL);
-	q->flag = q->maxquad = 0;
+	q->geomflags = q->maxquad = 0;
         q->p = (QuadP *)NULL;
         q->n = (QuadN *)NULL;
         q->c = (QuadC *)NULL;
@@ -60,7 +60,7 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
     while ((attr = va_arg(*a_list, int)))   /* parse argument list */
       switch (attr) {
 	case CR_FLAG:
-            q->flag = va_arg(*a_list, int);
+            q->geomflags = va_arg(*a_list, int);
 	    break;
 
 	case CR_NELEM:
@@ -96,7 +96,7 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
 	    break;
 
 	case CR_NORMAL:
-            q->flag &= ~QUAD_N;
+            q->geomflags &= ~QUAD_N;
             if (exist && q->n)
 		OOGLFree(q->n);
 
@@ -106,15 +106,16 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
             } else if (copy) {
 		q->n = OOGLNewNE(QuadN,q->maxquad,"QuadCreate normals");
 		memcpy(q->n, n, q->maxquad*sizeof(QuadN));
-		q->flag |= QUAD_N;
+		q->geomflags |= QUAD_N;
             } else {
 		q->n = n;
-		q->flag |= QUAD_N;
+		q->geomflags |= QUAD_N;
 	    }
 	    break;
 
 	case CR_COLOR:
-            q->flag &= ~(QUAD_C|QUAD_ALPHA);
+	    q->geomflags &= ~COLOR_ALPHA;
+	    q->geomflags &= ~QUAD_C;
             if (exist && q->c)
 		OOGLFree(q->c);
 
@@ -122,20 +123,20 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
 	    if (c == NULL) {
 		q->c = NULL;
             } else {
-		q->flag |= QUAD_C;
+		q->geomflags |= QUAD_C;
 		if (copy) {
 		    q->c = OOGLNewNE(QuadC, q->maxquad, "QuadCreate: colors");
 		    memcpy(q->c, c, q->maxquad*sizeof(QuadC));
 		} else {
 		    q->c = c;
-		    q->flag |= QUAD_C;
+		    q->geomflags |= QUAD_C;
 		}
 		for (i = 0; i < q->maxquad; i++) {
 		    if (q->c[i][0].a < 1.0 ||
 			q->c[i][1].a < 1.0 ||
 			q->c[i][2].a < 1.0 ||
 			q->c[i][3].a < 1.0) {
-			q->flag |= QUAD_ALPHA;
+			q->geomflags |= COLOR_ALPHA;
 		    }    
 		}
 	    }
@@ -160,3 +161,10 @@ QuadCreate (Quad *exist, GeomClass *classp, va_list *a_list)
 
     return (Quad *) q;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

@@ -53,7 +53,6 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     memset(mesh, 0, sizeof(Mesh));
     GGeomInit (mesh, classp, MESHMAGIC, NULL);
     mesh->bsptree = NULL;
-    mesh->flag = 0;
     mesh->nu = 1;
     mesh->nv = 1;
     mesh->umin = -1;
@@ -71,7 +70,7 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
 
   while ((attr = va_arg (*a_list, int))) switch (attr) {
   case CR_FLAG:
-    mesh->flag = va_arg (*a_list, int);
+    mesh->geomflags = va_arg (*a_list, int);
     break;
   case CR_NU:
     mesh->nu = va_arg (*a_list, int);
@@ -96,7 +95,7 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     mesh->vmax = va_arg (*a_list, int);
     break;
   case CR_POINT:
-    mesh->flag &= ~MESH_NQ;
+    mesh->geomflags &= ~MESH_NQ;
     if(mesh->p) OOGLFree(mesh->p);
     mesh->p = OOGLNewNE(HPoint3, npts, "mesh points");
     p3 = va_arg(*a_list, Point3 *);
@@ -105,13 +104,13 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     break;
 
   case CR_POINT4:
-    mesh->flag &= ~MESH_NQ;
+    mesh->geomflags &= ~MESH_NQ;
     meshfield(copy, npts*sizeof(HPoint3), (void **)(void *)&mesh->p,
 	      (void *)va_arg (*a_list, HPoint3 *), "mesh points");
     break;
 
   case CR_NORMAL:
-    mesh->flag = (mesh->flag & ~MESH_N) |
+    mesh->geomflags = (mesh->geomflags & ~MESH_N) |
       (MESH_N & meshfield(copy, npts*sizeof(Point3),
 			  (void **)(void *)&mesh->n,
 			  (void *)va_arg (*a_list, Point3 *),
@@ -119,7 +118,7 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     break;
 
   case CR_U:
-    mesh->flag = (mesh->flag & ~MESH_U) |
+    mesh->geomflags = (mesh->geomflags & ~MESH_U) |
       (MESH_U & meshfield(copy, npts*sizeof(Point3),
 			  (void **)(void *)&mesh->u,
 			  (void *)va_arg (*a_list, Point3 *),
@@ -127,7 +126,8 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     break;
 
   case CR_COLOR:
-    mesh->flag = (mesh->flag & ~(MESH_C|MESH_ALPHA)) |
+    mesh->geomflags &= ~COLOR_ALPHA;
+    mesh->geomflags = (mesh->geomflags & ~MESH_C) |
       (MESH_C & meshfield(copy, npts*sizeof(ColorA),
 			  (void **)(void *)&mesh->c,
 			  (void *)(c = va_arg (*a_list, ColorA *)),
@@ -152,7 +152,7 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
     
     for (i = 0; i < mesh->nu+mesh->nv; i++) {
       if (mesh->c[i].a < 1.0) {
-	mesh->flag |= MESH_ALPHA;
+	mesh->geomflags |= COLOR_ALPHA;
       }
     }
   }
@@ -175,7 +175,7 @@ tossmesh(Mesh *m)
   m->c  = NULL;
   m->u  = NULL;
   m->umin = m->umax = m->vmin = m->vmax = -1;
-  m->flag &= ~MESH_NQ;
+  m->geomflags &= ~MESH_NQ;
   return 0;
 }
 

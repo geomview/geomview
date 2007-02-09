@@ -304,7 +304,7 @@ static void *beziertoPL(int sel, Bezier *bez, va_list *args) {
   PLData *PL = va_arg(*args, PLData *);
   if(PL->ap && (PL->ap->flag & APF_DICE))
     BezierDice( bez, PL->ap->dice[0], PL->ap->dice[1] );
-  if(bez->mesh == NULL || bez->flag & BEZ_REMESH)
+  if(bez->mesh == NULL || bez->geomflags & BEZ_REMESH)
     BezierReDice(bez);
   return GeomCall(sel, (Geom *)bez->mesh, PL);
 }
@@ -395,7 +395,8 @@ static void *meshtoPL(int sel, Mesh *m, va_list *args) {
   PLData *PL = va_arg(*args, PLData *);
 
   base = PLaddverts(PL, m->nu*m->nv, m->p, m->c, m->n);
-  putmesh(PL, base, m->nu, m->nv, m->flag & MESH_UWRAP, m->flag & MESH_VWRAP);
+  putmesh(PL, base, m->nu, m->nv,
+	  m->geomflags & MESH_UWRAP, m->geomflags & MESH_VWRAP);
   return PL;
 }
 
@@ -442,7 +443,7 @@ static void *npolylisttoPL(int sel, NPolyList *npl, va_list *args)
       vip[vi] = base + npl->vi[vi + npl->pv[i]];
 
     PLaddface(PL, p->n_vertices, vip,
-			npl->flags & PL_HASPCOL ? &p->pcol : NULL);
+			npl->geomflags & PL_HASPCOL ? &p->pcol : NULL);
     if(p->n_vertices > VMAX)
 	OOGLFree(vip);
   }
@@ -459,8 +460,8 @@ static void *polylisttoPL(int sel, PolyList *pl, va_list *args) {
   base = PLnextvert(PL);
   for(i = 0; i < pl->n_verts; i++, v++) {
     PLaddverts(PL, 1, &v->pt,
-		pl->flags & PL_HASVCOL ? &v->vcol : NULL,
-		pl->flags & PL_HASVN ? &v->vn : NULL);
+		pl->geomflags & PL_HASVCOL ? &v->vcol : NULL,
+		pl->geomflags & PL_HASVN ? &v->vn : NULL);
   }
 
   p = pl->p;
@@ -470,7 +471,8 @@ static void *polylisttoPL(int sel, PolyList *pl, va_list *args) {
 	vip = OOGLNewNE(int, p->n_vertices, "polylist face");
     for(vi = 0; vi < p->n_vertices; vi++)
 	vip[vi] = base + (p->v[vi] - pl->vl);
-    PLaddface(PL, p->n_vertices, vip, pl->flags & PL_HASPCOL ? &p->pcol : NULL);
+    PLaddface(PL, p->n_vertices, vip,
+	      pl->geomflags & PL_HASPCOL ? &p->pcol : NULL);
     if(p->n_vertices > VMAX)
 	OOGLFree(vip);
   }

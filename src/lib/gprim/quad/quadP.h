@@ -29,11 +29,9 @@
 #include "quad.h"
 #include "bsptree.h"
 
-#define QUAD_P      VERT_P
 #define QUAD_N      VERT_N
 #define QUAD_C      VERT_C
-#define QUAD_BINARY 0x08
-#define QUAD_ALPHA  0x10
+#define QUAD_BINARY GEOMFLAG(0x01)
 
 typedef HPoint3 QuadP[4];
 typedef Point3 QuadN[4];
@@ -41,7 +39,6 @@ typedef ColorA QuadC[4];
 
 struct Quad {
   GEOMFIELDS;
-  int     flag;
   int     maxquad;
   QuadP   *p;
   QuadN   *n;

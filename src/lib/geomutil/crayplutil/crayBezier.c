@@ -70,7 +70,7 @@ cray_bezier_init() {
 
 void *cray_bezier_HasVColor(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
-  return (void *)(long)(b->flag & BEZ_C);
+  return (void *)(long)(b->geomflags & BEZ_C);
 }
 
 void *cray_bezier_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -83,7 +83,7 @@ void *cray_bezier_UseVColor(int sel, Geom *geom, va_list *args) {
   def = va_arg(*args, ColorA *);
   for (i = 0; i < 4; i++) b->c[i] = *def; 
 
-  b->flag |= BEZ_C;
+  b->geomflags |= BEZ_C;
 
   return (void *)geom;
 }
@@ -92,7 +92,7 @@ void *cray_bezier_EliminateColor(int sel, Geom *geom, va_list *args) {
   Bezier *b = (Bezier *)geom;
 
   if (!crayHasColor(geom, NULL)) return NULL;
-  b->flag ^= BEZ_C;
+  b->geomflags ^= BEZ_C;
   return (void *)geom;
 }
 

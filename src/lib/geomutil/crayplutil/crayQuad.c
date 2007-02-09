@@ -79,7 +79,7 @@ cray_quad_init() {
 
 void *cray_quad_HasVColor(int sel, Geom *geom, va_list *args) {
   Quad *q = (Quad *)geom;
-  return (void *)(long)(q->flag & QUAD_C);
+  return (void *)(long)(q->geomflags & QUAD_C);
 }
 
 void *cray_quad_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -92,7 +92,7 @@ void *cray_quad_UseVColor(int sel, Geom *geom, va_list *args) {
   q->c = OOGLNewNE(QuadC, q->maxquad, msg);
   for (i = 0; i < q->maxquad; i++) 
     q->c[i][0] = q->c[i][1] = q->c[i][2] = q->c[i][3] = *color;
-  q->flag |= QUAD_C;
+  q->geomflags |= QUAD_C;
   return (void *)geom;
 }
 
@@ -102,7 +102,7 @@ void *cray_quad_EliminateColor(int sel, Geom *geom, va_list *args) {
   if (!crayHasVColor(geom, NULL)) return 0;
   OOGLFree(q->c);
   q->c = NULL;
-  q->flag &= ~QUAD_C;
+  q->geomflags &= ~QUAD_C;
   return (void *)geom;
 }
 

@@ -84,7 +84,7 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 	m = OOGLNewE(NDMesh, "NDMeshCreate mesh");
 	memset(m, 0, sizeof(NDMesh));
 	GGeomInit (m, classp, NDMESHMAGIC, NULL);
-	m->flag = 0;
+	m->geomflags = 0;
 	m->meshd = 2;
 	m->mdim = OOGLNewNE(int, m->meshd, "NDMesh dim");
 	memset(m->mdim, 0, m->meshd * sizeof(int));
@@ -98,7 +98,7 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 
     while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    m->flag = va_arg (*a_list, int);
+	    m->geomflags = va_arg (*a_list, int);
 	    break;
 
 	case CR_MESHDIM:
@@ -138,7 +138,7 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 	    break;
 
 	case CR_U:
-	    m->flag = (m->flag & ~MESH_U) |
+	    m->geomflags = (m->geomflags & ~MESH_U) |
 		(MESH_U & ndmeshfield(copy, npts*sizeof(Point3),
 				      (void **)(void *)&m->u,
 				(void *)va_arg (*a_list, Point3 *),
@@ -146,7 +146,7 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 	    break;
 
 	case CR_COLOR:
-	    m->flag = (m->flag & ~MESH_C) |
+	    m->geomflags = (m->geomflags & ~MESH_C) |
 		(MESH_C & ndmeshfield(copy, npts*sizeof(ColorA),
 				      (void **)(void *)&m->c,
 				(void *)va_arg (*a_list, ColorA *),

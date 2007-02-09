@@ -69,7 +69,7 @@ cray_mesh_init() {
 
 void *cray_mesh_HasVColor(int sel, Geom *geom, va_list *args) {
   Mesh *m = (Mesh *)geom;
-  return (void *)(long)(m->flag & MESH_C);
+  return (void *)(long)(m->geomflags & MESH_C);
 }
 
 void *cray_mesh_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -88,7 +88,7 @@ void *cray_mesh_UseVColor(int sel, Geom *geom, va_list *args) {
     m->c[i].b = def->b;
     m->c[i].a = def->a;
   }
-  m->flag |= MESH_C;
+  m->geomflags |= MESH_C;
   return (void *)geom;
 }
 
@@ -99,7 +99,7 @@ void *cray_mesh_EliminateColor(int sel, Geom *geom, va_list *args) {
   
   OOGLFree(m->c);
   m->c = NULL;
-  m->flag ^= MESH_C;
+  m->geomflags ^= MESH_C;
   return (void *)geom;
 }
 

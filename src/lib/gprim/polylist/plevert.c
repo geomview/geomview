@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.6 2006/12/11 04:50:12 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v 1.7 2007/02/09 17:02:35 rotdrop Exp $ */
 /* $Source: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plevert.c,v $ */
 
 
@@ -48,9 +48,9 @@ PolyListEvert( PolyList *polylist )
   Vertex	*v;
   int	i;
 
-  polylist->flags ^= PL_EVNORM;
+  polylist->geomflags ^= PL_EVNORM;
 
-  if ((polylist->flags & (PL_HASVN|PL_HASPN)) == 0) {
+  if ((polylist->geomflags & (PL_HASVN|PL_HASPN)) == 0) {
     PolyListComputeNormals(polylist, PL_HASVN|PL_HASPN|PL_HASPFL);
   } else {
     i = polylist->n_polys;

@@ -53,10 +53,9 @@ struct NPolyList
 			 * projected vertices and normals when
 			 * drawing.
 			 */
-  int       flags;      /* same as for Polylist */
 };
 
-#define NPL_HASVLVCOL 0x00008000 /* pl->vl[i].vcol is uptodate */
+#define NPL_HASVLVCOL GEOMFLAG(0x8000) /* pl->vl[i].vcol is uptodate */
 
 extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list *a_list);
 extern NPolyList *NPolyListCopy( NPolyList *poly );

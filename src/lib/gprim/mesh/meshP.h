@@ -31,7 +31,6 @@
 
 struct Mesh {
   GEOMFIELDS;
-  int     flag;
   int     seq;
   int     nu, nv;
   int     umin, umax, vmin, vmax;

@@ -44,7 +44,7 @@ QuadTransform( q, T )
   int i;
   for (i = 0; i < q->maxquad; i++)
     HPt3TransformN(T, q->p[i], q->p[i], 4);
-  if (q->flag & QUAD_N)
+  if (q->geomflags & QUAD_N)
     for (i = 0; i < q->maxquad; i++)
       NormalTransformN(T, q->n[i], q->n[i], 4);
   return(q);

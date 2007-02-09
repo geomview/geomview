@@ -163,9 +163,9 @@ void setGeom(struct clip *clip, void *aGeom)
     clip->polyhedron.has = 0;
     if(strcmp(classname, "polylist") == 0) {
 	PolyList *pl = (PolyList *)aGeom;
-	if(pl->flags & PL_HASVCOL)
+	if(pl->geomflags & PL_HASVCOL)
 	    clip->polyhedron.has = HAS_VC;
-	if(pl->flags & PL_HASPCOL)
+	if(pl->geomflags & PL_HASPCOL)
 	    clip->polyhedron.has |= HAS_PC;
 	isnd = 0;
 	clip->dim = pl->geomflags & VERT_4D ? 4 : 3;
@@ -180,9 +180,9 @@ void setGeom(struct clip *clip, void *aGeom)
 (change MAXDIM, now %d, and recompile)\n", clip->dim, MAXDIM);
 	    exit(1);
 	}
-	if(npl->flags & PL_HASVCOL)
+	if(npl->geomflags & PL_HASVCOL)
 	    clip->polyhedron.has = HAS_VC;
-	if(npl->flags & PL_HASPCOL)
+	if(npl->geomflags & PL_HASPCOL)
 	    clip->polyhedron.has |= HAS_PC;
 	isnd = 1;
 	clip->polyvertex.numvtx = npl->n_verts;

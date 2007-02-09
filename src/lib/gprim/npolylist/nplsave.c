@@ -50,15 +50,15 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
    */
   if (pl->pdim == 4) {
     fprintf(outf, "%s%s%sOFF\n%d %d %d\n",
-	    pl->flags & PL_HASST ? "ST" : "",
-	    pl->flags & PL_HASVCOL ? "C" : "",
+	    pl->geomflags & PL_HASST ? "ST" : "",
+	    pl->geomflags & PL_HASVCOL ? "C" : "",
 	    pl->geomflags & VERT_4D ? "4" : "",
 	    pl->n_verts, pl->n_polys,
 	    0);
   } else {
     fprintf(outf, "%s%s%snOFF %d\n%d %d %d\n",
-	    pl->flags & PL_HASST ? "ST" : "",
-	    pl->flags & PL_HASVCOL ? "C" : "",
+	    pl->geomflags & PL_HASST ? "ST" : "",
+	    pl->geomflags & PL_HASVCOL ? "C" : "",
 	    pl->geomflags & VERT_4D ? "4" : "",
 	    pl->pdim - 1,
 	    pl->n_verts, pl->n_polys,
@@ -83,11 +83,11 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
 	fprintf(outf, "%.8g ", *v++/denom);
     }
     
-    if(pl->flags & PL_HASVCOL) {
+    if(pl->geomflags & PL_HASVCOL) {
       fprintf(outf, "  %.8g %.8g %.8g %.8g", c->r, c->g, c->b, c->a);
     }
 
-    if (pl->flags & PL_HASST) {
+    if (pl->geomflags & PL_HASST) {
       fprintf(outf, "  %.8g %.8g", pl->vl[i].st[0], pl->vl[i].st[1]);
     }
     fputc('\n', outf);
@@ -99,7 +99,7 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
     fprintf(outf, "\n%d	", p->n_vertices);
     for(k = 0; k < p->n_vertices; k++)
       fprintf(outf, " %d", pl->vi[pl->pv[i] + k]);
-    if((pl->flags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
+    if((pl->geomflags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
       fprintf(outf, "\t%.8g %.8g %.8g %.8g",
 	      p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
     }

@@ -76,7 +76,7 @@ getheader(IOBFILE *file)
   int i, flag;
   char *token;
   static char keys[] = "UCNZ4Uuv";
-  static short bit[] =
+  static int bit[] =
     { MESH_U, MESH_C, MESH_N, MESH_Z, MESH_4D, MESH_U, MESH_UWRAP, MESH_VWRAP };
 
   /* Parse [ST][C][N][Z][4][U][u][v]MESH[ BINARY]\n */
@@ -113,10 +113,10 @@ MeshFLoad(IOBFILE *file, char *fname)
   if (!file)
     return NULL;
 
-  if((m.flag = getheader(file)) == -1)
+  if((m.geomflags = getheader(file)) == -1)
     return NULL;
 
-  binary = m.flag & MESH_BINARY;
+  binary = m.geomflags & MESH_BINARY;
 
   if (iobfgetni(file, 1, &m.nu, binary) <= 0 ||
       iobfgetni(file, 1, &m.nv, binary) <= 0) {
@@ -136,16 +136,16 @@ MeshFLoad(IOBFILE *file, char *fname)
   m.u = NULL;
   m.c = NULL;
 
-  if (m.flag & MESH_N)
+  if (m.geomflags & MESH_N)
     m.n = OOGLNewNE(Point3, n, "MeshFLoad: normals");
-  if (m.flag & MESH_C)
+  if (m.geomflags & MESH_C)
     m.c = OOGLNewNE(ColorA, n, "MeshFLoad: colors");
-  if (m.flag & MESH_U)
+  if (m.geomflags & MESH_U)
     m.u = OOGLNewNE(Point3, n, "MeshFLoad: texture coords");
 
   for (i = 0, v = 0; v < m.nv; v++) {
     for (u = 0; u < m.nu; u++, i++) {
-      if (getmeshvert(file, m.flag, u, v,
+      if (getmeshvert(file, m.geomflags, u, v,
 		      &m.p[i], &m.n[i], &m.c[i], &m.u[i]) == 0) {
 	OOGLSyntax(file,
 		   "Reading MESH from \"%s\": bad element (%d,%d) of (%d,%d)",
@@ -156,8 +156,8 @@ MeshFLoad(IOBFILE *file, char *fname)
   }
   return 
     (Mesh *)GeomCCreate (NULL, MeshMethods(), CR_NOCOPY,
-			 CR_4D, (m.flag & MESH_4D),
-			 CR_FLAG, m.flag, CR_NU, m.nu,
+			 CR_4D, (m.geomflags & MESH_4D),
+			 CR_FLAG, m.geomflags, CR_NU, m.nu,
 			 CR_NV, m.nv, CR_POINT4, m.p, CR_COLOR, m.c,
 			 CR_NORMAL, m.n, CR_U, m.u, NULL);
 }

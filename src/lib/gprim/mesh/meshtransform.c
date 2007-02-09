@@ -41,11 +41,11 @@ Mesh *MeshTransform(Mesh *m, Transform T, TransformN *TN)
   if (!T)
     return m;
 
-  m->flag &= ~MESH_Z;
+  m->geomflags &= ~MESH_Z;
   if (HPt3TransformN(T, m->p, m->p, m->nu * m->nv)) {
     m->geomflags |= VERT_4D;
   }
-  if (m->flag & MESH_N)
+  if (m->geomflags & MESH_N)
     NormalTransformN(T, m->n, m->n, m->nu * m->nv);
 
   return m;

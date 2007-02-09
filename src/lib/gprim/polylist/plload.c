@@ -123,8 +123,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
   pl->p = NULL;
   pl->vl = NULL;
   pl->n_verts = preread;  /* In case prefetched token was our vert count */
-  pl->flags = flags;
-  pl->geomflags = (dimn == 4) ? VERT_4D : 0;
+  pl->geomflags = flags | ((dimn == 4) ? VERT_4D : 0);
   pl->pdim = 4;
 
   if((!preread && iobfgetni(file, 1, &pl->n_verts, binary) <= 0) ||
@@ -151,7 +150,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
     }
     if (dimn == 3)  v->pt.w = 1.0;
     if ((flags & PL_HASVCOL) && v->vcol.a != 1.0) {
-      pl->flags |= PL_HASVALPHA;
+      pl->geomflags |= COLOR_ALPHA;
     }
   }
 
@@ -205,7 +204,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
 
     if((flags & PL_HASVCOL) == 0) {
       if(k > 0)
-	pl->flags |= PL_HASPCOL;
+	pl->geomflags |= PL_HASPCOL;
 
       if(k != 1 && (p->pcol.r>1||p->pcol.g>1||p->pcol.b>1||p->pcol.a>1)) {
 	p->pcol.r /= 255, p->pcol.g /= 255,
@@ -230,14 +229,14 @@ PolyListFLoad(IOBFILE *file, char *fname)
       }				/* case 4, all components supplied */
     }
 
-    if ((pl->flags & PL_HASPCOL) && p->pcol.a != 1.0) {
-      pl->flags |= PL_HASPALPHA;
+    if ((pl->geomflags & PL_HASPCOL) && p->pcol.a != 1.0) {
+      pl->geomflags |= COLOR_ALPHA;
     }
   }
 
   if(makenorm && !(flags & PL_HASVN)) {
-    pl->flags |= PL_HASVN;
-    pl->flags &= ~PL_HASPN;		/* Leave vertex-normals only */
+    pl->geomflags |= PL_HASVN;
+    pl->geomflags &= ~PL_HASPN;		/* Leave vertex-normals only */
   }
   return pl;
 

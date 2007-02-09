@@ -136,7 +136,7 @@ plisttoindface(Geom *pgeom)
   fprintfindent(f, "normalPerVertex %s\n",
 		    shading == APF_FLAT ? "FALSE" : "TRUE");
   fprintfindent(f, "colorPerVertex %s\n",
-	 plist->flags & PL_HASVCOL ? "TRUE" : "FALSE");
+	 plist->geomflags & PL_HASVCOL ? "TRUE" : "FALSE");
 
   /* Vertices */
   fprintfindentinc(f, "coord Coordinate {\n");
@@ -186,9 +186,9 @@ plisttoindface(Geom *pgeom)
   fprintfdecindent(f, "}\n");
 
   /* Colors */
-  if (plist->flags & PL_HASVCOL && plist->flags & PL_HASPCOL) {
-    if (shading == APF_FLAT) { plist->flags &= ~PL_HASVCOL; }
-    else { plist->flags &= ~PL_HASPCOL; }
+  if (plist->geomflags & PL_HASVCOL && plist->geomflags & PL_HASPCOL) {
+    if (shading == APF_FLAT) { plist->geomflags &= ~PL_HASVCOL; }
+    else { plist->geomflags &= ~PL_HASPCOL; }
   }
   /* Appearance diffuse color overrides object colors */
 
@@ -197,10 +197,10 @@ plisttoindface(Geom *pgeom)
    */
 
   if (toplap->ap->mat && toplap->ap->mat->valid & MTF_DIFFUSE) {
-    plist->flags &= ~(PL_HASPCOL|PL_HASVCOL);
+    plist->geomflags &= ~(PL_HASPCOL|PL_HASVCOL);
   }
 
-  if (plist->flags & PL_HASPCOL) {
+  if (plist->geomflags & PL_HASPCOL) {
     fprintfindentinc(f, "color Color {\n");
     fprintfindent(f, "RGB [");
     for (i = 0, pl= plist->p; i < plist->n_polys; i++, pl++) {
@@ -215,7 +215,7 @@ plisttoindface(Geom *pgeom)
     }
     fprintf(f, " ]\n");
     fprintfdecindent(f, "}\n");
-  } else if (plist->flags & PL_HASVCOL) {
+  } else if (plist->geomflags & PL_HASVCOL) {
     fprintfindentinc(f, "color Color {\n");
     fprintfindent(f, "RGB [");
     for (i = 0, v = plist->vl; i < plist->n_verts; i++, v++) {

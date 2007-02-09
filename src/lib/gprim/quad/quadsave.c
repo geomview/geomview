@@ -43,13 +43,13 @@ QuadFSave(Quad *q, FILE *f, char *fname)
 
 	if(q == NULL || f == NULL)
 		return(NULL);
-	if(q->flag & QUAD_C) fputc('C', f);
-	if(q->flag & QUAD_N) fputc('N', f);
+	if(q->geomflags & QUAD_C) fputc('C', f);
+	if(q->geomflags & QUAD_N) fputc('N', f);
 	if(q->geomflags & VERT_4D) fputc('4', f);
 	fprintf(f, "QUAD\n");
 	p = &q->p[0][0];
-	n = (q->flag & QUAD_N) ? &q->n[0][0] : NULL;
-	c = (q->flag & QUAD_C) ? &q->c[0][0] : NULL;
+	n = (q->geomflags & QUAD_N) ? &q->n[0][0] : NULL;
+	c = (q->geomflags & QUAD_C) ? &q->c[0][0] : NULL;
 	for(i = 4 * q->maxquad; --i >= 0 && !ferror(f); ) {
 	    if (q->geomflags & VERT_4D) fprintf(f, "%g %g %g %g",
 			p->x, p->y, p->z, p->w);

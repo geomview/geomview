@@ -31,7 +31,6 @@
 
 struct NDMesh {
 	GEOMFIELDS;
-	int	flag;
 	int 	seq;
 	int	meshd;		/* mesh dimension */
 	int	*mdim;		/* mesh size, indexed 0..meshd-1 */

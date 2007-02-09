@@ -72,23 +72,23 @@ BezierListFSave(bezierlist, f)
 	    continue;
 	}
 
-	if(bez->dimn != dimwas || bez->flag != flagwas
+	if(bez->dimn != dimwas || bez->geomflags != flagwas
 	   || bez->degree_u != uwas || bez->degree_v != vwas) {
 
 	    if(bez->dimn == 3 && bez->degree_u == 3 && bez->degree_v == 3
-						   && !(bez->flag & BEZ_C)) {
-		fputs(bez->flag & BEZ_ST ? "STBBP" : "BBP", f);
+	       && !(bez->geomflags & BEZ_C)) {
+		    fputs(bez->geomflags & BEZ_ST ? "STBBP" : "BBP", f);
 	    } else {
-		if(bez->flag & BEZ_C)
+		if(bez->geomflags & BEZ_C)
 		    fputc('C', f);
 		fprintf(f, "BEZ%c%c%c", bez->degree_u + '0',
 					bez->degree_v + '0',
 					bez->dimn + '0');
-		if(bez->flag & BEZ_ST)
+		if(bez->geomflags & BEZ_ST)
 		    fputs("_ST", f);
 	    }
 	    dimwas = bez->dimn;
-	    flagwas = bez->flag;
+	    flagwas = bez->geomflags;
 	    uwas = bez->degree_u;
 	    vwas = bez->degree_v;
 	}
@@ -105,12 +105,12 @@ BezierListFSave(bezierlist, f)
 		p += 3;
 	    }
 	}
-	if(bez->flag & BEZ_ST && bez->STCords != NULL) {
+	if(bez->geomflags & BEZ_ST && bez->STCords != NULL) {
 	    fputc('\n', f);
 	    for(u = 0, p = bez->STCords; u < 4; u++, p += 2)
 		fprintf(f, "%8g %8g  ", p[0], p[1]);
 	}
-	if(bez->flag & BEZ_C && bez->c != NULL) {
+	if(bez->geomflags & BEZ_C && bez->c != NULL) {
 	    fputc('\n', f);
 	    for(u = 0, p = (float *)bez->c; u < 4; u++, p += 4)
 		fprintf(f, "%6g %6g %6g %6g\n", p[0], p[1], p[2], p[3]);
@@ -119,3 +119,10 @@ BezierListFSave(bezierlist, f)
     return bezierlist;
 
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

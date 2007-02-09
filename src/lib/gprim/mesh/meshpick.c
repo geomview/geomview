@@ -61,8 +61,8 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
     ap->flag &= ~APF_VECTDRAW;
   }
 
-  for (nv = 0; nv < ((mesh->flag & MESH_VWRAP) ? maxnv : maxnv - 1); nv++) {
-    for (nu = 0; nu < ((mesh->flag & MESH_UWRAP) ? maxnu : maxnu - 1); nu++) {
+  for (nv = 0; nv < ((mesh->geomflags & MESH_VWRAP) ? maxnv : maxnv-1); nv++) {
+    for (nu =0; nu < ((mesh->geomflags & MESH_UWRAP) ? maxnu : maxnu-1); nu++) {
       /* Demand that at least 1 of the vertices be in front of the viewer.
        * Note: we must ensure that all four are evaluated!
        */

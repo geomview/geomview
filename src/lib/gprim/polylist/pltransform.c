@@ -44,10 +44,10 @@ PolyList *PolyListTransform(PolyList *p, Transform T, TransformN *TN)
 
   for (i = 0; i < p->n_verts; i++)
     HPt3Transform(T, &p->vl[i].pt, &p->vl[i].pt);
-  if (p->flags & PL_HASVN)
+  if (p->geomflags & PL_HASVN)
     for (i = 0; i < p->n_verts; i++)
       NormalTransform(T, &p->vl[i].vn, &p->vl[i].vn);
-  if (p->flags & PL_HASPN)
+  if (p->geomflags & PL_HASPN)
     for (i = 0; i < p->n_polys; i++)
       NormalTransform(T, &p->p[i].pn, &p->p[i].pn);
 

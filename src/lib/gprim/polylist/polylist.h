@@ -33,9 +33,9 @@
 typedef struct PolyList PolyList;
 
 /* Per-polygon flags, set with CR_POLYFLAGS */
-#define POLY_CONCAVE 0x00010000 /* polygon is not convex */
-#define POLY_NONFLAT 0x00020000 /* polygon is not flat   */
-#define POLY_NOPOLY  0x00040000 /* polygon is degenerated */
+#define POLY_CONCAVE GEOMFLAG(0x0100) /* polygon is not convex */
+#define POLY_NONFLAT GEOMFLAG(0x0200) /* polygon is not flat   */
+#define POLY_NOPOLY  GEOMFLAG(0x0400) /* polygon is degenerated */
 
 extern PolyList *PolyListDraw( PolyList * );
 extern BBox     *PolyListBound(PolyList *polylist, Transform T, TransformN *TN);

@@ -117,8 +117,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
   memset(pl, 0, sizeof(NPolyList));
   GGeomInit(pl, NPolyListMethods(), NPLMAGIC, NULL);
 
-  pl->flags = flags;
-  pl->geomflags  = (dimn == 4) ? VERT_4D : 0;
+  pl->geomflags = flags | ((dimn == 4) ? VERT_4D : 0);
 
 #if 0
   /* wrong: the Ndim number of the nOFF and 4nOFF file formats does
@@ -142,7 +141,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 
   pl->v = OOGLNewNE(HPtNCoord, pl->n_verts*pl->pdim, "NPolyListFLoad vertices");
   pl->vl = OOGLNewNE(Vertex, pl->n_verts, "NPolyListFLoad vertex descriptions");
-  if(pl->flags & PL_HASVCOL)
+  if(pl->geomflags & PL_HASVCOL)
     pl->vcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyListFLoad vertex colors");
 
   for(v = pl->v, i = 0; i < pl->n_verts; v += pl->pdim, i++) {
@@ -158,13 +157,13 @@ NPolyListFLoad(IOBFILE *file, char *fname)
     if (flags & PL_HASVCOL) {
       pl->vl[i].vcol = pl->vcol[i];
       if (pl->vcol[i].a != 1.0) {
-	pl->flags |= PL_HASVALPHA;
+	pl->geomflags |= COLOR_ALPHA;
       }
     }
     if (dimn == 3) v[0] = 1.0;
   }
   if (flags & PL_HASVCOL) { /* vcol and vl[].vcol are in sync */
-    pl->flags |= NPL_HASVLVCOL;
+    pl->geomflags |= NPL_HASVLVCOL;
   }
 
   pl->pv = OOGLNewNE(int, pl->n_polys, "NPolyListFLoad polygon vertices");
@@ -215,7 +214,7 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 
     if((flags & PL_HASVCOL) == 0) {
       if(k > 0)
-	pl->flags |= PL_HASPCOL;
+	pl->geomflags |= PL_HASPCOL;
 
       if(k != 1 && (p->pcol.r>1||p->pcol.g>1||p->pcol.b>1||p->pcol.a>1)) {
 	p->pcol.r /= 255, p->pcol.g /= 255,
@@ -239,8 +238,8 @@ NPolyListFLoad(IOBFILE *file, char *fname)
 	p->pcol = colormap[index];
       }				/* case 4, all components supplied */
     }
-    if ((pl->flags & PL_HASPCOL) && p->pcol.a != 1.0) {
-      pl->flags |= PL_HASPALPHA;
+    if ((pl->geomflags & PL_HASPCOL) && p->pcol.a != 1.0) {
+      pl->geomflags |= COLOR_ALPHA;
     }
   }
 

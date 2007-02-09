@@ -48,10 +48,10 @@ BezierCopy( Bezier *ob )
 	*b = *ob;	/* Copy all fields */
 	GGeomInit(b, BezierMethods(), BEZIERMAGIC, NULL);
 
-	if(b->flag & BEZ_ST) {
+	if(b->geomflags & BEZ_ST) {
 	    if(ob->STCords == NULL) {
                OOGLError(0,"Inconsistency in BEZ_ST field of flag");
-	       b->flag &= ~BEZ_ST;
+	       b->geomflags &= ~BEZ_ST;
             } else {
 		b->STCords = OOGLNewNE(float, 4*2, "Bezier ST coords");
 		memcpy(b->STCords, ob->STCords, 4*2*sizeof(float));
@@ -65,7 +65,7 @@ BezierCopy( Bezier *ob )
 	    memcpy(b->CtrlPnts, ob->CtrlPnts, n * sizeof(float));
 	}
 
-	if(b->flag & BEZ_REMESH)
+	if(b->geomflags & BEZ_REMESH)
 	    b->mesh = (Mesh *) GeomCCreate (NULL, MeshMethods(), CR_END);
 	else if(ob->mesh != NULL)
 	    b->mesh = (Mesh *) GeomCopy((Geom *)ob->mesh);
@@ -100,7 +100,6 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 	bezier = OOGLNewE(Bezier, "BezierCreate Bezier");
 	memset(bezier, 0, sizeof(Bezier));
         GGeomInit (bezier, classp, BEZIERMAGIC, NULL);
-	bezier->flag = BEZ_P;
 	bezier->mesh = NULL;
 	bezier->CtrlPnts = NULL;
 	bezier->STCords = NULL;
@@ -114,7 +113,7 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 
     while ((attr = va_arg (*a_list, int))) switch (attr) {
 	case CR_FLAG:
-	    bezier->flag = va_arg (*a_list, int);
+	    bezier->geomflags = va_arg (*a_list, int);
 	    break;
 	case CR_DEGU:
 	    bezier->degree_u = va_arg (*a_list, int);

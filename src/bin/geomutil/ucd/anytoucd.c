@@ -344,12 +344,12 @@ int main(int argc, char **argv)
 
     num_nodes = thispl->n_verts;
     num_cells = thispl->n_polys;
-    if (thispl->flags & PL_HASVCOL) {
+    if (thispl->geomflags & PL_HASVCOL) {
 	node_data_comp[0] = 4;	/* ColorA's : 4 component */
 	num_node_data_comp += 1;
 	total_node_comp += 4;
 	}
-    if (thispl->flags & PL_HASVN) {
+    if (thispl->geomflags & PL_HASVN) {
 	node_data_comp[num_node_data_comp] = 3;
 	num_node_data_comp += 1;
 	total_node_comp += 3;
@@ -361,12 +361,12 @@ int main(int argc, char **argv)
 	total_node_comp += 1;
 	}
 #endif
-    if (thispl->flags & PL_HASPCOL) {
+    if (thispl->geomflags & PL_HASPCOL) {
 	cell_data_comp[0] = 4;	/* ColorA's : 4 component */
 	num_cell_data_comp += 1;
 	total_cell_comp += 4;
 	}
-    if (thispl->flags & PL_HASPN) {
+    if (thispl->geomflags & PL_HASPN) {
 	cell_data_comp[num_cell_data_comp] = 3;
 	num_cell_data_comp += 1;
 	total_cell_comp += 3;
@@ -415,18 +415,18 @@ int main(int argc, char **argv)
             fprintf(fp,"%d ", node_data_comp[i]);
       fprintf(fp,"\n");
 
-      if (thispl->flags & PL_HASVCOL)	fprintf(fp,"rgba, NULL\n");
-      if (thispl->flags & PL_HASVN)	fprintf(fp,"normal, NULL\n"); 
+      if (thispl->geomflags & PL_HASVCOL)	fprintf(fp,"rgba, NULL\n");
+      if (thispl->geomflags & PL_HASVN)	fprintf(fp,"normal, NULL\n"); 
       if (thispl->geomflags & VERT_4D)	fprintf(fp,"w, NULL\n");
 
       for (v = thispl->vl, i=0; i<thispl->n_verts; ++i, ++v)	{
         /* print vertex colors */
 	fprintf(fp,"%d ", i+1);
-        if (thispl->flags & PL_HASVCOL)		{
+        if (thispl->geomflags & PL_HASVCOL)		{
 	    fprintf(fp,"%g %g %g %g", v->vcol.r, v->vcol.g, v->vcol.b, v->vcol.a);
 	    }
         /* print vertex normals */
-        if (thispl->flags & PL_HASVN)		{
+        if (thispl->geomflags & PL_HASVN)		{
 	    fprintf(fp," %g %g %g", v->vn.x, v->vn.y, v->vn.z);
 	    }
 #ifdef FOURD
@@ -447,17 +447,17 @@ int main(int argc, char **argv)
       fprintf(fp,"\n");
 	
       /* print labels */
-      if (thispl->flags & PL_HASPCOL)		fprintf(fp,"rgba, NULL\n");
-      if (thispl->flags & PL_HASPN)		fprintf(fp,"normal, NULL\n");
+      if (thispl->geomflags & PL_HASPCOL) fprintf(fp,"rgba, NULL\n");
+      if (thispl->geomflags & PL_HASPN)   fprintf(fp,"normal, NULL\n");
 
       for (p = thispl->p, i=0; i<thispl->n_polys; ++i, ++p)	{
 	fprintf(fp,"%d ",i+1);
         /* print face colors */
-        if (thispl->flags & PL_HASPCOL)		{
+        if (thispl->geomflags & PL_HASPCOL)		{
 	    fprintf(fp," %g %g %g %g", p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
 	}
         /* print face normals */
-        if (thispl->flags & PL_HASPN)		{
+        if (thispl->geomflags & PL_HASPN)		{
 	    fprintf(fp," %g %g %g", p->pn.x, p->pn.y, p->pn.z);
 	    }
 	fprintf(fp,"\n");

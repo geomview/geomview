@@ -46,7 +46,7 @@ Geom *VectBoundSphere(Vect *vect,
     
     SphereEncompassPoints((Sphere *)sphere,
 			  (float *)vect->p,
-			  (vect->flag & VERT_4D) ? 4 : 3, 4, vect->nvert,
+			  (vect->geomflags & VERT_4D) ? 4 : 3, 4, vect->nvert,
 			  T, TN, axes);
 
   } else {

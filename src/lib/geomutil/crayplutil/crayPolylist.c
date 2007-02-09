@@ -88,12 +88,12 @@ void *cray_polylist_HasColor(int sel, Geom *geom, va_list *args) {
 
 void *cray_polylist_HasVColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
-  return (void *)(long)(p->flags & PL_HASVCOL);
+  return (void *)(long)(p->geomflags & PL_HASVCOL);
 }
 
 void *cray_polylist_HasFColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
-  return (void *)(long)(p->flags & PL_HASPCOL);
+  return (void *)(long)(p->geomflags & PL_HASPCOL);
 }
 
 void *cray_polylist_UseVColor(int sel, Geom *geom, va_list *args) {
@@ -104,14 +104,14 @@ void *cray_polylist_UseVColor(int sel, Geom *geom, va_list *args) {
   def = va_arg(*args, ColorA *);
   for (i = 0; i < p->n_verts; i++) p->vl[i].vcol = *def;
 
-  if (p->flags & PL_HASPCOL) {
+  if (p->geomflags & PL_HASPCOL) {
     for (i = 0; i < p->n_polys; i++) 
       for (j = 0; j < p->p[i].n_vertices; j++) 
 	p->p[i].v[j]->vcol = p->p[i].pcol;
-    p->flags ^= PL_HASPCOL;
+    p->geomflags ^= PL_HASPCOL;
   }
 
-  p->flags |= PL_HASVCOL;
+  p->geomflags |= PL_HASVCOL;
   return (void *)p;
 }
 
@@ -122,21 +122,21 @@ void *cray_polylist_UseFColor(int sel, Geom *geom, va_list *args) {
 
   def = va_arg(*args, ColorA *);
   for (i = 0; i < p->n_polys; i++) p->p[i].pcol = *def;
-  if (p->flags & PL_HASVCOL) {
+  if (p->geomflags & PL_HASVCOL) {
     for (i = 0; i < p->n_polys; i++) 
       if (p->p[i].n_vertices) p->p[i].pcol = p->p[i].v[0]->vcol;
-    p->flags ^= PL_HASVCOL;
+    p->geomflags ^= PL_HASVCOL;
   }
 
-  p->flags |= PL_HASPCOL;
+  p->geomflags |= PL_HASPCOL;
   return (void *)p;
 }
 
 void *cray_polylist_EliminateColor(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   if (!crayHasColor(geom, NULL)) return 0;
-  p->flags &= ~PL_HASVCOL;
-  p->flags &= ~PL_HASPCOL;
+  p->geomflags &= ~PL_HASVCOL;
+  p->geomflags &= ~PL_HASPCOL;
   return (void *)p;
 }
 

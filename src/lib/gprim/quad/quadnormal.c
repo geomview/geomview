@@ -45,7 +45,7 @@ QuadComputeNormals( Quad *q )
     /*
      * Only compute if not present!
      */
-    if( !(q->flag & QUAD_N) ) {
+    if( !(q->geomflags & QUAD_N) ) {
 	if(q->n == NULL)
 	    q->n = OOGLNewNE(QuadN, q->maxquad, "QuadComputeNormals normals");
 	p = &q->p[0][0];
@@ -72,7 +72,7 @@ QuadComputeNormals( Quad *q )
 	    *n++ = nor;
 	    *n++ = nor;
 	}
-	q->flag |= QUAD_N;
+	q->geomflags |= QUAD_N;
     }
     return q;
 }

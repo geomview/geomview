@@ -60,7 +60,7 @@ Bezier *bezier;
 		    }
 		}
 #endif
-    if (bezier->flag & BEZ_REMESH || bezier->mesh == NULL)
+    if (bezier->geomflags & BEZ_REMESH || bezier->mesh == NULL)
 	BezierReDice(bezier);
     MeshEvert(bezier->mesh);
 

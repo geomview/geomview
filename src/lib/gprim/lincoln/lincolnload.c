@@ -95,7 +95,7 @@ LincolnFLoad(IOBFILE *inf)
 
 	memset(v_list, 0, header.nvertices * sizeof(Vertex));
 
-	new->flags = PL_HASPCOL;   /* We have a color-per-face, no normals */
+	new->geomflags = PL_HASPCOL; /* We have a color-per-face, no normals */
 	new->n_polys = header.nfaces;
 	new->n_verts = header.nvertices;
 	v_list = new->vl;

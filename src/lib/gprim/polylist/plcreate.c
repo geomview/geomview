@@ -83,7 +83,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
   if (exist == NULL) {
     pl = OOGLNewE(PolyList,"PolyListCreate polylist");
     GGeomInit(pl, classp, PLMAGIC, NULL);
-    pl->flags = pl->n_polys = pl->n_verts = 0;
+    pl->geomflags = pl->n_polys = pl->n_verts = 0;
     pl->pdim = 4;
     pl->p = (Poly *)NULL; pl->vl = (Vertex *)NULL;
     pl->bsptree = NULL;
@@ -100,7 +100,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
       break;
 
     case CR_FLAG:
-      pl->flags = va_arg(*a_list, int);
+      pl->geomflags = va_arg(*a_list, int);
       break;
 
     case CR_NPOLY:
@@ -123,48 +123,48 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
       v3 = va_arg(*a_list, Point3 *);
       pointflag = 1;
       dimn = 3;
-      pl->flags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
+      pl->geomflags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
       break;
 
     case CR_POINT4:
       v4 = va_arg(*a_list, HPoint3 *);
       pointflag = 1;
       dimn = 4;
-      pl->flags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
+      pl->geomflags &= ~(PL_HASVN | PL_HASPN | PL_HASPFL);
       break;
 
     case CR_NORMAL:
       vn = va_arg(*a_list, Point3 *);
       /* if no normal bit has been set... */
       if (vn)
-	pl->flags |= PL_HASVN;
+	pl->geomflags |= PL_HASVN;
       break;
 
     case CR_COLOR:
-      pl->flags &= ~(PL_HASVCOL|PL_HASVALPHA);
+      pl->geomflags &= ~COLOR_ALPHA;
       vc = va_arg(*a_list, ColorA *);
       if (vc) {
-	pl->flags |= PL_HASVCOL;
+	pl->geomflags |= PL_HASVCOL;
       }
       break;
 
     case CR_POLYNORMAL:
       pn = va_arg(*a_list, Point3 *);
       if (pn)
-	pl->flags |= PL_HASPN;
+	pl->geomflags |= PL_HASPN;
       break;
 
     case CR_POLYFLAGS:
       pf = va_arg(*a_list, int *);
       if (pf)
-	pl->flags |= PL_HASPFL;
+	pl->geomflags |= PL_HASPFL;
       break;
 
     case CR_POLYCOLOR:
-      pl->flags &= ~(PL_HASPCOL|PL_HASPALPHA);
+      pl->geomflags &= ~COLOR_ALPHA;
       pc = va_arg(*a_list, ColorA *);
       if (pc) {
-	pl->flags |= PL_HASPCOL;
+	pl->geomflags |= PL_HASPCOL;
       }
       break;
 
@@ -249,7 +249,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     for (i = 0, v = pl->vl; i < pl->n_verts; i++, v++) {
       v->vcol = vc[i];
       if (vc[i].a != 1.0) {
-	pl->flags |= PL_HASVALPHA;
+	pl->geomflags |= COLOR_ALPHA;
       }
     }
   }
@@ -258,7 +258,7 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     for (i = 0; i < pl->n_polys; i++) {
       pl->p[i].pcol = pc[i];
       if (pc[i].a != 1.0) {
-	pl->flags |= PL_HASPALPHA;
+	pl->geomflags |= COLOR_ALPHA;
       }
     }
   }

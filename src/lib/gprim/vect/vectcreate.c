@@ -85,7 +85,6 @@ VectCreate ( Vect *exist, GeomClass *classp, va_list *a_list )
     if (exist == NULL) {
 	vect = OOGLNewE(Vect, "new vect");
         GGeomInit (vect, classp, VECTMAGIC, NULL);
-	vect->flag = 0;
 	vect->nvec = 0;
 	vect->nvert = 0;
 	vect->ncolor = 0;
@@ -109,7 +108,7 @@ VectCreate ( Vect *exist, GeomClass *classp, va_list *a_list )
 	    break;
 
 	case CR_FLAG:
-	    vect->flag = va_arg (*a_list, int);
+	    vect->geomflags = va_arg (*a_list, int);
 	    break;
 
 	case CR_NVECT:

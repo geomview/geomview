@@ -74,7 +74,7 @@ VectFLoad(IOBFILE *file, char *fname)
 
     GGeomInit(v, VectMethods(), VECTMAGIC, NULL);
     v->geomflags = (dimn == 4) ? VERT_4D : 0;
-    v->flag = 0;
+    v->geomflags = 0;
     v->vnvert = NULL;
     v->vncolor = NULL;
     v->p = NULL;

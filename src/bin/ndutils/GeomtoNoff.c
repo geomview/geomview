@@ -169,7 +169,7 @@ static void *toNoffNDMesh(int sel, Geom * g, va_list * args)
     indexlist = (int *) malloc(sizeof *indexlist);
     *indexlist = 1;
     noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				     CR_FLAG, m->flag,
+				     CR_FLAG, m->geomflags,
 				     CR_NPOLY, npoly,
 				     CR_NVERT, numvertsperpoly,
 				     CR_VERT, indexlist,
@@ -201,7 +201,7 @@ static void *toNoffNDMesh(int sel, Geom * g, va_list * args)
       indexlist[i + 1] = i / 2 + 1;
     }
     noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				     CR_FLAG, m->flag,
+				     CR_FLAG, m->geomflags,
 				     CR_NPOLY, npoly,
 				     CR_NVERT, numvertsperpoly,
 				     CR_VERT, indexlist,
@@ -233,7 +233,7 @@ static void *toNoffNDMesh(int sel, Geom * g, va_list * args)
       indexlist[i + 1] = i / 2 + 1;
     }
     noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				     CR_FLAG, m->flag,
+				     CR_FLAG, m->geomflags,
 				     CR_NPOLY, npoly,
 				     CR_NVERT, numvertsperpoly,
 				     CR_VERT, indexlist,
@@ -267,7 +267,7 @@ static void *toNoffNDMesh(int sel, Geom * g, va_list * args)
       indexlist[k++] = (i + 1) * (m->mdim)[0] + j;
     }
   noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				   CR_FLAG, m->flag,
+				   CR_FLAG, m->geomflags,
 				   CR_NPOLY, npoly,
 				   CR_NVERT, numvertsperpoly,
 				   CR_VERT, indexlist,
@@ -412,20 +412,20 @@ static void *toNoffPolyList(int sel, Geom * g, va_list * args)
       indexlist[k++] =
 	  (((long) (((l->p) + i)->v)[j]) -
 	   ((long) (l->vl))) / (sizeof *(l->vl));
-  if ((l->flags) & (PL_HASVCOL)) {
+  if ((l->geomflags) & (PL_HASVCOL)) {
     vertcolors = (ColorA *) malloc((sizeof *vertcolors) * (l->n_verts));
     for (i = 0; i < l->n_verts; i++)
       memcpy(vertcolors + i, &(((l->vl) + i)->vcol), (sizeof *vertcolors));
   } else
     vertcolors = NULL;
-  if ((l->flags) & (PL_HASPCOL)) {
+  if ((l->geomflags) & (PL_HASPCOL)) {
     facecolors = (ColorA *) malloc((sizeof *facecolors) * (l->n_polys));
     for (i = 0; i < l->n_polys; i++)
       memcpy(facecolors + i, &(((l->p) + i)->pcol), (sizeof *facecolors));
   } else
     facecolors = NULL;
   noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				   CR_FLAG, l->flags,
+				   CR_FLAG, l->geomflags,
 				   CR_NPOLY, npoly,
 				   CR_NVERT, numvertsperpoly,
 				   CR_VERT, indexlist,

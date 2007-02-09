@@ -43,8 +43,8 @@ getquads(IOBFILE *file, Quad *pquad, int off, int binary, int dimn)
     int k;
 
     p = &pquad->p[off][0];
-    n = (pquad->flag & QUAD_N) ? &pquad->n[off][0] : NULL;
-    c = (pquad->flag & QUAD_C) ? &pquad->c[off][0] : NULL;
+    n = (pquad->geomflags & QUAD_N) ? &pquad->n[off][0] : NULL;
+    c = (pquad->geomflags & QUAD_C) ? &pquad->c[off][0] : NULL;
     for (k = 4 * (pquad->maxquad - off); --k >= 0; ) {
 	if (iobfgetnf(file, dimn, (float *)p, binary) < dimn)
 	    break;
@@ -60,7 +60,7 @@ getquads(IOBFILE *file, Quad *pquad, int off, int binary, int dimn)
 	    if (iobfgetnf(file, 4, (float *)c, binary) < 4)
 		return -1;
 	    if (c->a < 1.0)
-		pquad->flag |= QUAD_ALPHA;
+		pquad->geomflags |= COLOR_ALPHA;
 	    c++;
 	}
     }
@@ -80,7 +80,7 @@ QuadFLoad( IOBFILE *file, char *fname )
     int ngot;
     int dimn = 3;
 
-    q.flag = 0;
+    q.geomflags = 0;
     q.p = NULL;
     q.n = NULL;
     q.c = NULL;
@@ -90,11 +90,11 @@ QuadFLoad( IOBFILE *file, char *fname )
     /* Parse [C][N][4]{QUAD|POLY}[ BINARY]\n */
 
     if(*token == 'C') {
-	q.flag = QUAD_C;
+	q.geomflags = QUAD_C;
 	token++;
     }
     if(*token == 'N') {
-	q.flag |= QUAD_N;
+	q.geomflags |= QUAD_N;
 	token++;
     }
     if(*token == '4') {
@@ -130,8 +130,8 @@ QuadFLoad( IOBFILE *file, char *fname )
 	    return NULL;
 	}
 	q.p = OOGLNewNE(QuadP, q.maxquad, "QuadFLoad: vertices");
-	if(q.flag & QUAD_N) q.n = OOGLNewNE(QuadN, q.maxquad, "QuadFLoad: normals");
-	if(q.flag & QUAD_C) q.c = OOGLNewNE(QuadC, q.maxquad, "QuadFLoad: colors");
+	if(q.geomflags & QUAD_N) q.n = OOGLNewNE(QuadN, q.maxquad, "QuadFLoad: normals");
+	if(q.geomflags & QUAD_C) q.c = OOGLNewNE(QuadC, q.maxquad, "QuadFLoad: colors");
 	ngot = getquads(file, &q, 0, 1, dimn);
 	if(ngot != q.maxquad) {
 	    OOGLFree(q.p);
@@ -153,11 +153,11 @@ QuadFLoad( IOBFILE *file, char *fname )
 
 	VVINIT(vp, QuadP, TRYQUADS);
 	vvuse(&vp, qp, TRYQUADS);
-	if(q.flag & QUAD_N) {
+	if(q.geomflags & QUAD_N) {
 	    VVINIT(vn, QuadN, TRYQUADS);
 	    vvuse(&vn, qn, TRYQUADS);
 	}
-	if(q.flag & QUAD_C) {
+	if(q.geomflags & QUAD_C) {
 	    VVINIT(vc, QuadC, TRYQUADS);
 	    vvuse(&vc, qc, TRYQUADS);
 	}
@@ -165,8 +165,8 @@ QuadFLoad( IOBFILE *file, char *fname )
 	ngot = 0;
 	for(;;) {
 	    q.p = VVEC(vp, QuadP);
-	    if(q.flag & QUAD_N) q.n = VVEC(vn, QuadN);
-	    if(q.flag & QUAD_C) q.c = VVEC(vc, QuadC);
+	    if(q.geomflags & QUAD_N) q.n = VVEC(vn, QuadN);
+	    if(q.geomflags & QUAD_C) q.c = VVEC(vc, QuadC);
 
 	    ngot = getquads(file, &q, ngot, 0, dimn);
 
@@ -177,8 +177,8 @@ QuadFLoad( IOBFILE *file, char *fname )
 
 	    q.maxquad *= 2;
 	    vvneeds(&vp, q.maxquad);
-	    if(q.flag & QUAD_N) vvneeds(&vn, q.maxquad);
-	    if(q.flag & QUAD_C) vvneeds(&vc, q.maxquad);
+	    if(q.geomflags & QUAD_N) vvneeds(&vn, q.maxquad);
+	    if(q.geomflags & QUAD_C) vvneeds(&vc, q.maxquad);
 	}
 	if(ngot <= 0) {
 	    vvfree(&vp);
@@ -192,11 +192,11 @@ QuadFLoad( IOBFILE *file, char *fname )
 	q.maxquad = ngot;
 	vvtrim(&vp);
 	q.p = VVEC(vp, QuadP);
-	if (q.flag & QUAD_N) {
+	if (q.geomflags & QUAD_N) {
 	    vvtrim(&vn);
 	    q.n = VVEC(vn, QuadN);
 	}
-	if (q.flag & QUAD_C) {
+	if (q.geomflags & QUAD_C) {
 	    vvtrim(&vc);
 	    q.c = VVEC(vc, QuadC);
 	}
@@ -204,7 +204,7 @@ QuadFLoad( IOBFILE *file, char *fname )
 
     return (Quad *) GeomCCreate(NULL, QuadMethods(),
 	CR_4D, (dimn == 4) ? 1 : 0,
-	CR_NOCOPY, CR_FLAG, q.flag, CR_NELEM, q.maxquad,
+	CR_NOCOPY, CR_FLAG, q.geomflags, CR_NELEM, q.maxquad,
 	CR_POINT4, q.p, CR_NORMAL, q.n, CR_COLOR, q.c, 0);
 
   fail:

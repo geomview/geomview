@@ -68,7 +68,7 @@
 
 struct Vect {
 	GEOMFIELDS;
-	int	flag, nvec, nvert, ncolor;
+	int	nvec, nvert, ncolor;
 	short	*vnvert;	/* vnvert[nvec] (# p[]'s per vec) */
 	short	*vncolor;	/* vncolor[nvec] (# c[]'s per vec) */
 	    /* NOTE: vnvert and vncolor lie in a *single* malloc'ed area */
@@ -76,9 +76,6 @@ struct Vect {
 	HPoint3	*p;		/* p[nvert] */
 	ColorA	*c;		/* c[ncolor] */
 };
-
-
-#define VECT_4D		1
 
 extern Vect *VectCreate( Vect *, GeomClass *, va_list *a_list);
 extern void  VectDelete( Vect * );

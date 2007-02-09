@@ -163,7 +163,7 @@ static void *projectCamWCMesh(int sel, Geom * g, va_list * args)
   if (map->numdirs != 0) {
     free(((Mesh *) g)->c);
     ((Mesh *) g)->c = (ColorA *) malloc((sizeof *col) * npts);
-    ((Mesh *) g)->flag |= MESH_C;
+    ((Mesh *) g)->geomflags |= MESH_C;
   }
   for (i = 0; i < npts; i++) {
     hptn1 = extract(pts + i, hptn1, dim);
@@ -181,7 +181,7 @@ static void *projectCamWCMesh(int sel, Geom * g, va_list * args)
   TmNDelete(ProjMat);
   g->pdim = 4;
   g->geomflags = (g->geomflags) & (~VERT_4D);
-  ((Mesh *) g)->flag = (((Mesh *) g)->flag) & (~MESH_4D);
+  ((Mesh *) g)->geomflags = (((Mesh *) g)->geomflags) & (~MESH_4D);
   return (void *) g;
 }
 
@@ -224,7 +224,7 @@ static void *projectCamWCQuad(int sel, Geom * g, va_list * args)
     free(((Quad *) g)->c);
     ((Quad *) g)->c = (QuadC *) malloc((sizeof *(((Quad *) g)->c)) *
 				       (((Quad *) g)->maxquad));
-    ((Quad *) g)->flag |= QUAD_C;
+    ((Quad *) g)->geomflags |= QUAD_C;
   }
   for (i = 0; i < npts; i++) {
     hptn1 = extract(pts + i, hptn1, dim);
@@ -270,7 +270,7 @@ static void *projectCamWCNDMesh(int sel, Geom * g, va_list * args)
   if (map->numdirs != 0) {
     free(((NDMesh *) g)->c);
     ((NDMesh *) g)->c = (ColorA *) malloc((sizeof *col) * numpts);
-    ((NDMesh *) g)->flag |= MESH_C;
+    ((NDMesh *) g)->geomflags |= MESH_C;
   }
   for (i = 0; i < numpts; i++) {
     if (map->numdirs != 0) {
@@ -425,8 +425,8 @@ static void *projectCamWCNPolyList(int sel, Geom * g, va_list * args)
     free(((NPolyList *) g)->vcol);
     ((NPolyList *) g)->vcol = (ColorA *) malloc
 	((sizeof *col) * ((NPolyList *) g)->n_verts);
-    ((NPolyList *) g)->flags |= PL_HASVCOL;
-    ((NPolyList *) g)->flags &= ~PL_HASPCOL;
+    ((NPolyList *) g)->geomflags |= PL_HASVCOL;
+    ((NPolyList *) g)->geomflags &= ~PL_HASPCOL;
   }
   tmp.dim = ((NPolyList *) g)->pdim;
   tmp.flags = 0;

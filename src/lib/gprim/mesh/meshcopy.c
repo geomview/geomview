@@ -56,7 +56,7 @@ MeshCopy(obj)
         }
 	memcpy(m->p, om->p, n * sizeof(HPoint3));
 
-	if (m->flag & MESH_N) {
+	if (m->geomflags & MESH_N) {
            if ((m->n = GeomNewN(Point3, n)) == NULL) {
                 GeomError(0,"Can't allocate space for mesh normals");
                 return(NULL);
@@ -65,7 +65,7 @@ MeshCopy(obj)
 	} else
 		m->n = NULL;
 
-	if (m->flag & MESH_C) {
+	if (m->geomflags & MESH_C) {
            if ((m->c = GeomNewN(ColorA, n)) == NULL) {
                 GeomError(0,"Can't allocate space for mesh colors");
                 return(NULL);
@@ -74,7 +74,7 @@ MeshCopy(obj)
 	} else
 		m->c = NULL;
 
-	if (m->flag & MESH_U) {
+	if (m->geomflags & MESH_U) {
            if ((m->u = GeomNewN(Point3, n)) == NULL) {
                 GeomError(0,"Can't allocate space for mesh texture");
                 return(NULL);

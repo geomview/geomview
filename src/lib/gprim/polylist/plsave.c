@@ -51,9 +51,9 @@ PolyListFSave(polylist, outf, fname)
 	 * Assume Euler number 2.
 	 */
 	fprintf(outf, "%s%s%s%sOFF\n%d %d %d\n",
-		&"ST"[polylist->flags & PL_HASST ? 0 : 2],
-		&"C"[polylist->flags & PL_HASVCOL ? 0 : 1],
-		&"N"[polylist->flags & PL_HASVN ? 0 : 1],
+		&"ST"[polylist->geomflags & PL_HASST ? 0 : 2],
+		&"C"[polylist->geomflags & PL_HASVCOL ? 0 : 1],
+		&"N"[polylist->geomflags & PL_HASVN ? 0 : 1],
 		&"4"[polylist->geomflags & VERT_4D ? 0 : 1],
 		polylist->n_verts, polylist->n_polys,
 		polylist->n_verts + polylist->n_polys - 2);
@@ -64,12 +64,12 @@ PolyListFSave(polylist, outf, fname)
 		    v->pt.x, v->pt.y, v->pt.z, v->pt.w);
 	  else 
 	    fprintf(outf, "\n%.8g %.8g %.8g", v->pt.x, v->pt.y, v->pt.z);
-	    if(polylist->flags & PL_HASVN)
+	    if(polylist->geomflags & PL_HASVN)
 		fprintf(outf, "  %.8g %.8g %.8g", v->vn.x, v->vn.y, v->vn.z);
-	    if(polylist->flags & PL_HASVCOL)
+	    if(polylist->geomflags & PL_HASVCOL)
 		fprintf(outf, "  %g %g %g %g",
 			v->vcol.r, v->vcol.g, v->vcol.b, v->vcol.a);
-	    if(polylist->flags & PL_HASST)
+	    if(polylist->geomflags & PL_HASST)
 		fprintf(outf, "  %.8g %.8g", v->st[0], v->st[1]);
 	}
 
@@ -79,7 +79,7 @@ PolyListFSave(polylist, outf, fname)
 	    fprintf(outf, "\n%d	", n);
 	    for(vp = p->v; --n >= 0; vp++)
 		    fprintf(outf, " %d", (int)((*vp) - polylist->vl));
-	    if((polylist->flags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
+	    if((polylist->geomflags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
 		fprintf(outf, "\t%g %g %g %g",
 			p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
 	    }

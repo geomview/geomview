@@ -45,13 +45,13 @@ Geom *MeshBoundSphere(Mesh *mesh, Transform T, TransformN *TN, int *axes,
     
     SphereEncompassPoints((Sphere *)sphere,
 			  (float *)mesh->p,
-			  (mesh->flag & MESH_4D) != 0, 4,
+			  (mesh->geomflags & MESH_4D) != 0, 4,
 			  mesh->nu * mesh->nv,
 			  NULL, TN, axes);
 
   } else {
 
-    if(mesh->flag & MESH_4D)
+    if(mesh->geomflags & MESH_4D)
       return GeomBoundSphereFromBBox((Geom *)mesh, T, TN, axes, space);
 
     sphere = GeomCreate("sphere", CR_ENCOMPASS_POINTS, mesh->p, 

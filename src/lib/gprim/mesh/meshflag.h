@@ -25,16 +25,20 @@
 #ifndef MESHFLAGDEFS
 #define MESHFLAGDEFS
 
-#define MESH_UWRAP	0x1
-#define MESH_VWRAP	0x2
-#define MESH_C		0x4
-#define MESH_N		0x8
-#define MESH_U		0x10
-#define MESH_NQ		0x20
-#define MESH_EVERT	0x40
-#define	MESH_BINARY	0x80
-#define	MESH_Z		0x100
-#define	MESH_4D		0x200  /* Special 4-D flag to MeshCreate; not stored */
-#define MESH_ALPHA      0x400  /* Some color specs have alpha < 1.0 */
+#include "mg.h"
+#include "geomclass.h"
+
+#define MESH_C		VERT_C
+#define MESH_N		VERT_N
+#define	MESH_4D		VERT_4D
+#define MESH_U		VERT_ST
+#define MESH_UWRAP	GEOMFLAG(0x001)
+#define MESH_VWRAP	GEOMFLAG(0x002)
+#define MESH_NQ		GEOMFLAG(0x020)
+#define MESH_EVERT	GEOMFLAG(0x040)
+#define	MESH_BINARY	GEOMFLAG(0x080)
+#define	MESH_Z		GEOMFLAG(0x100)
+
+#define MESH_MGWRAP(mfl) ((mfl) >> GEOMFL_SHIFT)
 
 #endif /*MESHFLAGDEFS*/

@@ -112,7 +112,7 @@ VectDraw(v)
   int n, hascolor, nc;
   int flags, penultimate;
   ColorA *lastcolor=NULL;
-  Appearance *ap = mggetappearance();
+  const Appearance *ap = &_mgc->astk->ap;
   mgNDctx *NDctx = NULL;
 
   /* Don't draw if vect-drawing is off. */
@@ -149,7 +149,8 @@ VectDraw(v)
     return v;
   }
 
-  if(_mgc->astk->ap.flag & APF_SHADELINES && _mgc->astk->useshader) {
+  if(_mgc->astk->ap.flag & APF_SHADELINES &&
+     _mgc->astk->flags & MGASTK_SHADER) {
     ColorA *cs = (ColorA *)alloca(v->nvert * sizeof(ColorA));
     HPoint3 *tp = p;
     ColorA *tc = c - hascolor;

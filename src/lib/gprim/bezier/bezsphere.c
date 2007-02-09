@@ -36,7 +36,7 @@ Geom *BezierBoundSphere(Bezier *bezier,
 			Transform T, TransformN *TN, int *axes,
 			int space)
 {
-  if(bezier->flag & BEZ_REMESH ||
+  if(bezier->geomflags & BEZ_REMESH ||
      bezier->mesh == NULL || bezier->mesh->p == NULL) {
     if(BezierReDice(bezier) == NULL)
       return NULL;            /* Oh no */

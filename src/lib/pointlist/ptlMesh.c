@@ -85,7 +85,7 @@ void *mesh_PointList_set(int sel, Geom *geom, va_list *args) {
 
   /* This will make the mesh no longer a z-mesh (in general, this
    * is desirable although we may regret it later */
-  m->flag &= ~MESH_Z;
+  m->geomflags &= ~MESH_Z;
 
   (void)va_arg(*args, int);
   plist = va_arg(*args, HPoint3 *);

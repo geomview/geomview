@@ -43,17 +43,17 @@ QuadCopy(oq)
         q = OOGLNewE(Quad, "new Quad");
 	q->p = OOGLNewNE(QuadP, oq->maxquad, "quad verts");
 
-	q->flag = oq->flag;
+	q->geomflags = oq->geomflags;
 	q->maxquad = oq->maxquad;
 	memcpy(q->p, oq->p, oq->maxquad * sizeof(QuadP));
 
-	if(oq->flag & QUAD_N) {
+	if(oq->geomflags & QUAD_N) {
 	    q->n = OOGLNewNE(QuadN, oq->maxquad, "quad normals");
 	    memcpy(q->n, oq->n, oq->maxquad * sizeof(QuadN));
 	} else
 	    q->n = NULL;
 
-	if(oq->flag & QUAD_C) {
+	if(oq->geomflags & QUAD_C) {
 	    q->c = OOGLNewNE(QuadC, oq->maxquad, "quad colors");
 	    memcpy(q->c, oq->c, oq->maxquad * sizeof(QuadC));
 	} else

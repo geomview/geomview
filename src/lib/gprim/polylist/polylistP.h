@@ -58,19 +58,15 @@ struct PolyList
   int	  n_verts;
   Poly	  *p;
   Vertex  *vl;
-  int     flags;
-# define PL_HASVN     0x00000001 /* Per-vertex normals (vn) valid */
-# define PL_HASPN     0x00000002 /* Per-polygon normals (pn) valid */
-# define PL_HASVCOL   0x00000004 /* Per-vertex colors (vcol) valid */
-# define PL_HASPCOL   0x00000008 /* Per-polygon colors (pcol) valid */
-# define PL_EVNORM    0x00000010 /* Normals are everted */
-# define PL_HASST     0x00000020 /* Has s,t texture coords */
-# define PL_HASPFL    0x00000040 /* Has per-poly flags */
-# define PL_HASVALPHA 0x00000080 /* Has per-vertex alpha-channel */
-# define PL_HASPALPHA 0x00000080 /* Has per-polz alpha-channel */
+# define PL_HASVN   VERT_N         /* Per-vertex normals (vn) valid */
+# define PL_HASVCOL VERT_C         /* Per-vertex colors (vcol) valid */
+# define PL_HASST   VERT_ST        /* Has s,t texture coords */
+# define PL_HASPCOL FACET_C        /* Per-polygon colors (pcol) valid */
+# define PL_HASPN   GEOMFLAG(0x01) /* Per-polygon normals (pn) valid */
+# define PL_EVNORM  GEOMFLAG(0x04) /* Normals are everted */
+# define PL_HASPFL  GEOMFLAG(0x08) /* Has per-poly flags */
   /* For 4-D points, see geomflags & VERT_4D */
 };
-
 
 extern PolyList *PolyListCreate(PolyList *exist, GeomClass *Class, va_list *a_list);
 extern PolyList *PolyListCopy( PolyList *poly );
@@ -81,6 +77,7 @@ extern GeomClass *PolyListMethods();
 extern PolyList *PolyListComputeNormals(PolyList *polyList, int flags_needed);
 extern void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 		       int *flagsp, int *first_concave);
+extern PolyList *PolyListBSPTree(PolyList *poly, BSPTree *bsptree, int action);
 
 #endif /*POLYLISTPDEFS*/
 

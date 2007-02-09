@@ -27,15 +27,16 @@
 
 #include "mesh.h"
 #include "list.h"
+#include "bsptree.h"
 
 #define BEZIERMAGIC	GeomMagic ('b', 1)
-#define BEZ_P 		00
-#define BEZ_ST 		01
-#define	BEZ_C		02
-#define BEZ_PST 	(BEZ_P | BEZ_ST)
-#define BEZ_BINARY 	0x4
-#define BEZ_REMESH 	0x8		/* need to recompute mesh */
-#define BEZ_4D		0x10
+
+#define BEZ_ST 		VERT_ST
+#define	BEZ_C		VERT_C
+#define BEZ_4D		VERT_4D
+#define BEZ_BINARY 	GEOMFLAG(0x01)
+#define BEZ_REMESH 	GEOMFLAG(0x02) /* need to recompute mesh */
+
 #define MAX_BEZ_DEGREE	12
 #define MAX_BEZ_DIMN	4
 #define BEZ_DEFAULT_MESH_SIZE	10
@@ -57,6 +58,7 @@ Geom 		*BezierBoundSphere( Bezier *,
 				    int );
 Bezier      	*BezierEvert();
 Bezier      	*BezierDraw( Bezier *bezier );
+Bezier      	*BezierBSPTree(Bezier *bezier, BSPTree *tree, int action);
 Geom      	*BezierPick( Bezier *, Pick *, Appearance *, Transform, TransformN *, int *axes );
 Bezier      	*BezierTransform( Bezier *, Transform, TransformN * );
 

@@ -113,11 +113,11 @@ Geom *PLCombine(Geom *a1, Geom *b1)
       vert[k++] = a->n_verts + b->p[i].v[j] - b->vl;
   }
 
-  flags = a->flags;
+  flags = a->geomflags;
   fourd = (a->geomflags & VERT_4D) ? 1 : 0;
   
-  if ((a->flags & PL_HASVCOL) && !(b->flags & PL_HASVCOL)) {
-    if (b->flags & PL_HASPCOL) {
+  if ((a->geomflags & PL_HASVCOL) && !(b->geomflags & PL_HASVCOL)) {
+    if (b->geomflags & PL_HASPCOL) {
       for (i = 0; i < a->n_polys; i++) 
 	polycolor[i] = a->p[i].v[0]->vcol;
       flags ^= PL_HASVCOL;
@@ -129,8 +129,8 @@ Geom *PLCombine(Geom *a1, Geom *b1)
       color[a->n_verts + i].a = 1.0;
     } 
   }
-  if ((a->flags & PL_HASPCOL) && !(b->flags & PL_HASPCOL)) {
-    if (b->flags & PL_HASVCOL) {
+  if ((a->geomflags & PL_HASPCOL) && !(b->geomflags & PL_HASPCOL)) {
+    if (b->geomflags & PL_HASVCOL) {
       for (i = 0; i < b->n_polys; i++) 
 	polycolor[a->n_polys + i] = b->p[i].v[0]->vcol;
     }
@@ -141,14 +141,14 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     }
   }
   if (!(flags & PL_HASVCOL) && !(flags & PL_HASPCOL)) {
-    if (b->flags & PL_HASPCOL) {
+    if (b->geomflags & PL_HASPCOL) {
       for (i = 0; i < a->n_polys; i++) {
 	polycolor[i].r = polycolor[i].g = polycolor[i].b = 0.15;
 	polycolor[i].a = 1.0;
       }
       flags |= PL_HASPCOL;
     }
-    if (b->flags & PL_HASVCOL) {
+    if (b->geomflags & PL_HASVCOL) {
       for (i = 0; i < a->n_verts; i++) {
 	color[i].r = color[i].g = color[i].b = 0.15;
 	color[i].a = 1.0;
@@ -157,9 +157,12 @@ Geom *PLCombine(Geom *a1, Geom *b1)
     }
   }
 
-  if ((a->flags & PL_HASVN)  && !(b->flags & PL_HASVN))  flags ^= PL_HASVN;
-  if ((a->flags & PL_HASPN)  && !(b->flags & PL_HASPN))  flags ^= PL_HASPN;
-  if ((a->flags & PL_HASPFL) && !(b->flags & PL_HASPFL)) flags ^= PL_HASPFL;
+  if ((a->geomflags & PL_HASVN)  && !(b->geomflags & PL_HASVN))
+    flags ^= PL_HASVN;
+  if ((a->geomflags & PL_HASPN)  && !(b->geomflags & PL_HASPN))
+    flags ^= PL_HASPN;
+  if ((a->geomflags & PL_HASPFL) && !(b->geomflags & PL_HASPFL))
+    flags ^= PL_HASPFL;
   if ((a->geomflags & VERT_4D) || (b->geomflags & VERT_4D))
     fourd = 1;
 
@@ -189,3 +192,10 @@ Geom *PLCombine(Geom *a1, Geom *b1)
   return(new);
 
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

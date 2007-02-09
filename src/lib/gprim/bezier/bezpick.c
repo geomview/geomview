@@ -42,9 +42,9 @@ BezierPick( Bezier *bezier, Pick *pick, Appearance *ap,
     if (bezier->mesh == NULL ||
 	bezier->mesh->nu != bezier->nu ||
 	bezier->mesh->nv != bezier->nv)	
-	    bezier->flag |= BEZ_REMESH; 
+	    bezier->geomflags |= BEZ_REMESH; 
 
-    if (bezier->flag & BEZ_REMESH) {
+    if (bezier->geomflags & BEZ_REMESH) {
 		 BezierReDice(bezier);
     }	
     return GeomPick( (Geom *)bezier->mesh, pick, ap, T, TN, axes );

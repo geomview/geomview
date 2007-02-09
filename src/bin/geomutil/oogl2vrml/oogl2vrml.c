@@ -107,9 +107,9 @@ plisttoindface(Geom *pgeom)
   }
 
   /* Colors */
-  if (plist->flags & PL_HASVCOL && plist->flags & PL_HASPCOL) {
-    if (shading == APF_FLAT) { plist->flags &= ~PL_HASVCOL; }
-    else { plist->flags &= ~PL_HASPCOL; }
+  if (plist->geomflags & PL_HASVCOL && plist->geomflags & PL_HASPCOL) {
+    if (shading == APF_FLAT) { plist->geomflags &= ~PL_HASVCOL; }
+    else { plist->geomflags &= ~PL_HASPCOL; }
   }
   /* Appearance diffuse color overrides object colors */
 
@@ -118,17 +118,17 @@ plisttoindface(Geom *pgeom)
    */
 
   if (toplap->ap->mat && toplap->ap->mat->valid & MTF_DIFFUSE) {
-    plist->flags &= ~(PL_HASPCOL|PL_HASVCOL);
+    plist->geomflags &= ~(PL_HASPCOL|PL_HASVCOL);
   }
 
-  if (plist->flags & PL_HASPCOL) {
+  if (plist->geomflags & PL_HASPCOL) {
     fprintf(f, "MaterialBinding { value PER_FACE }\n");
     fprintf(f, " Material { diffuseColor [ ");
     for (i = 0, pl= plist->p; i < plist->n_polys; i++, pl++) {
       fprintf(f, " %g %g %g,  ", pl->pcol.r, pl->pcol.g, pl->pcol.b);
     }
     fprintf(f, "] }\n");
-  } else if (plist->flags & PL_HASVCOL) {
+  } else if (plist->geomflags & PL_HASVCOL) {
     fprintf(f, "MaterialBinding { value PER_VERTEX_INDEXED }\n");    
     fprintf(f, " Material { diffuseColor [ ");
     for (i = 0, v = plist->vl; i < plist->n_verts; i++, v++) {
@@ -153,7 +153,7 @@ plisttoindface(Geom *pgeom)
     fprintf(f, " normalIndex [ \n");
     faceindex(plist);
     fprintf(f, " ] # end normalIndex \n "); 
-    if (plist->flags & PL_HASVCOL) {
+    if (plist->geomflags & PL_HASVCOL) {
       fprintf(f, " materialIndex [ \n");
       faceindex(plist);
       fprintf(f, " ] # end materialIndex \n "); 

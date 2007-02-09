@@ -104,7 +104,7 @@ void cm_read_quad(Quad *q)
 
   mggettransform(T);
    
-  if (q->flag & VERT_C) {
+  if (q->geomflags & QUAD_C) {
     while (i-- > 0)
       make_new_quad(T, (HPoint3 *)qp++, (ColorA *)qc++);
   } 
@@ -189,7 +189,7 @@ void cm_draw_mesh(Mesh *m)
   n = m->n;
   newpt = ppt = (HPoint3 *)alloca(npt * sizeof(HPoint3));
   newn = pn = (Point3 *)alloca(npt * sizeof(Point3));
-  if(_mgc->astk->useshader) {
+  if(_mgc->astk->flags & MGASTK_SHADER) {
     newc = pc = (ColorA *)alloca(npt * sizeof(ColorA));
     c = m->c ? m->c : (ColorA *)&_mgc->astk->mat.diffuse;
   }
@@ -203,7 +203,8 @@ void cm_draw_mesh(Mesh *m)
     }
     ++pt; ++n; ++ppt; ++pn;
   }
-  mgmesh(m->flag, m->nu, m->nv, newpt, newn, NULL, newc ? newc : m->c, m->flag);
+  mgmesh(MESH_MGWRAP(m->geomflags),
+	 m->nu, m->nv, newpt, newn, NULL, newc ? newc : m->c, m->geomflags);
   mgpoptransform();
 }
 
@@ -264,8 +265,8 @@ void cm_read_polylist(PolyList *polylist)
 
   p = polylist->p;
   n = polylist->n_polys;
-  vertcolors = (polylist->flags & (PL_HASVCOL|PL_HASPCOL)) == PL_HASVCOL;
-  facecolors = (polylist->flags & PL_HASPCOL);
+  vertcolors = (polylist->geomflags & (PL_HASVCOL|PL_HASPCOL)) == PL_HASVCOL;
+  facecolors = (polylist->geomflags & PL_HASPCOL);
   col = (ColorA*)&_mgc->astk->mat.diffuse;
   for (i = 0; i < n; i++) {
     if(facecolors) col = &p->pcol;
@@ -373,7 +374,7 @@ void cmodel_draw(int plflags)
     verts = Vertp = (Vertex *)alloca(nverts * sizeof(Vertex));
 
   shading = _mgc->astk->ap.shading;
-  useshader = _mgc->astk->useshader;
+  useshader = _mgc->astk->flags & MGASTK_SHADER;
   shader = _mgc->astk->shader;
 
   vp = first_vertex();

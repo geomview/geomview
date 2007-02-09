@@ -43,7 +43,7 @@ MeshComputeNormals(Mesh *m, int need)
   HPoint3 *normp = NULL, *normptr, *pptr;
   int i;
 
-  need &= ~m->flag;
+  need &= ~m->geomflags;
 
   if (!(need & (MESH_N|MESH_NQ))) {
     return m;
@@ -70,9 +70,10 @@ MeshComputeNormals(Mesh *m, int need)
       GeomFree(m->n);
     }
     m->n = GeomNewN(Point3, m->nu * m->nv);
-    m->flag |= MESH_N;
+    m->geomflags |= MESH_N;
     mnorm(m->geomflags & VERT_4D ? normp : m->p, m->n, m->nu, m->nv,
-	  m->flag & MESH_UWRAP, m->flag & MESH_VWRAP, m->flag & MESH_EVERT);
+	  m->geomflags & MESH_UWRAP, m->geomflags & MESH_VWRAP,
+	  m->geomflags & MESH_EVERT);
   }
   
   if (need & MESH_NQ) {
@@ -80,9 +81,10 @@ MeshComputeNormals(Mesh *m, int need)
       GeomFree(m->nq);
     }
     m->nq = GeomNewN(Point3, m->nu * m->nv);
-    m->flag |= MESH_NQ;
+    m->geomflags |= MESH_NQ;
     mnormq(m->geomflags & VERT_4D ? normp : m->p, m->nq, m->nu, m->nv,
-	   m->flag & MESH_UWRAP, m->flag & MESH_VWRAP, m->flag & MESH_EVERT);
+	   m->geomflags & MESH_UWRAP, m->geomflags & MESH_VWRAP,
+	   m->geomflags & MESH_EVERT);
   }
 
   if (m->geomflags & VERT_4D) GeomFree(normp);

@@ -100,7 +100,7 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
       break;
 
     case CR_FLAG:
-      pl->flags = va_arg(*a_list, int);
+      pl->geomflags = va_arg(*a_list, int);
       break;
 
     case CR_NPOLY:
@@ -134,18 +134,18 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
       break;
 
     case CR_COLOR:	   /* CR_COLOR, <ColorA's, one per vertex */
-      pl->flags &= ~(PL_HASVCOL|PL_HASVALPHA);
+      pl->geomflags &= ~COLOR_ALPHA;
       vc = va_arg(*a_list, ColorA *);
       if (vc) {
-	pl->flags |= PL_HASVCOL;
+	pl->geomflags |= PL_HASVCOL;
       }
       break;
 
     case CR_POLYCOLOR:
-      pl->flags &= ~(PL_HASPCOL|PL_HASPALPHA);
+      pl->geomflags &= ~COLOR_ALPHA;
       pc = va_arg(*a_list, ColorA *);
       if (pc) {
-	pl->flags |= PL_HASPCOL;
+	pl->geomflags |= PL_HASPCOL;
       }
       break;
 
@@ -243,17 +243,17 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
     for (i = 0; i < pl->n_verts; i++) {
       pl->vcol[i] = pl->vl[i].vcol = vc[i];
       if (vc[i].a != 1.0) {
-	pl->flags |= PL_HASVALPHA;
+	pl->geomflags |= COLOR_ALPHA;
       }
     }
-    pl->flags |= NPL_HASVLVCOL;
+    pl->geomflags |= NPL_HASVLVCOL;
   }
 
   if (pc) {
     for (i = 0; i < pl->n_polys; i++) {
       pl->p[i].pcol = pc[i];
       if (pc[i].a != 1.0) {
-	pl->flags |= PL_HASPALPHA;
+	pl->geomflags |= COLOR_ALPHA;
       }
     }
   }

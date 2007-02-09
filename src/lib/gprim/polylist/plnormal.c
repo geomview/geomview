@@ -174,9 +174,9 @@ PolyListComputeNormals(PolyList *polylist, int need)
 
   if (!polylist) return NULL;
 
-  need &= ~polylist->flags;
+  need &= ~polylist->geomflags;
   fourd = (polylist->geomflags & VERT_4D) != 0;
-  evert = (polylist->flags & PL_EVNORM) != 0;
+  evert = (polylist->geomflags & PL_EVNORM) != 0;
 
   if (need & (PL_HASPN|PL_HASPFL)) {
     /* Create per-polygon normals */
@@ -329,7 +329,7 @@ PolyListComputeNormals(PolyList *polylist, int need)
       }
       len = Pt3Length(&vl->vn);
       if(len > 0.0) {
-	if(polylist->flags & PL_EVNORM)
+	if(polylist->geomflags & PL_EVNORM)
 	  len = -len;
 	Pt3Mul(1.0/len, &vl->vn, &vl->vn);
       }
@@ -339,7 +339,7 @@ PolyListComputeNormals(PolyList *polylist, int need)
 #endif
   }
   
-  polylist->flags |= need;
+  polylist->geomflags |= need;
 
   return polylist;
 }

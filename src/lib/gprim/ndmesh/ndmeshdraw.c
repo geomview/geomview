@@ -63,18 +63,18 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   m.c = (ColorA *)alloca(npts*sizeof(ColorA));
   m.nu = mesh->mdim[0];
   m.nv = mesh->mdim[1];
-  m.flag = mesh->flag & ~MESH_4D;
+  m.geomflags = mesh->geomflags & ~MESH_4D;
   for(i = 0, op = mesh->p, np = m.p; i < npts; i++, op++, np++) {
     /* Set the point's first four components from our N-D mesh vertex */
     colored = mapHPtN(NDctx, *op, np, &m.c[i]);
   }
-  if(colored) m.flag |= MESH_C;
+  if(colored) m.geomflags |= MESH_C;
   /* The drawing routines might need either polygon or vertex normals,
    * so if either is missing and either might be needed, we force it
    * to be computed.
    */  
   normal_need = 0;    
-  m.flag &= ~(MESH_N|MESH_NQ);
+  m.geomflags &= ~(MESH_N|MESH_NQ);
   if (ap->flag & APF_NORMALDRAW) {
     normal_need = MESH_N|MESH_NQ;
   } else if (ap->flag & APF_FACEDRAW) {
@@ -93,7 +93,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     BSPTreeFinalize(m.bsptree);
   }
 
-  if(_mgc->astk->useshader) {
+  if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;
     if(c) {
       (*_mgc->astk->shader)(npts, m.p, m.n ? m.n : m.nq, c, mesh->c);
@@ -108,8 +108,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
     BSPTreeCreate((Geom *)(void *)&m);
   }
-  mgmesh(m.flag, m.nu, m.nv, m.p, m.n, m.nq, colored ? m.c : mesh->c,
-	 m.flag);
+  mgmesh(MESH_MGWRAP(m.geomflags),
+	 m.nu, m.nv, m.p, m.n, m.nq, colored ? m.c : mesh->c,
+	 m.geomflags);
 
   if (m.bsptree) {
     mgbsptree(m.bsptree);

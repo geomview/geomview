@@ -47,33 +47,33 @@ FILE           *outf;
 	if (!outf || !m)
 		return NULL;
 	if (m->n == NULL)
-		m->flag &= ~MESH_N;
+		m->geomflags &= ~MESH_N;
 	if (m->c == NULL)
-		m->flag &= ~MESH_C;
+		m->geomflags &= ~MESH_C;
 	if (m->u == NULL)
-		m->flag &= ~MESH_U;
+		m->geomflags &= ~MESH_U;
 
-	if (m->flag & MESH_C) fputc('C', outf);
-	if (m->flag & MESH_N) fputc('N', outf);
-	if (m->flag & MESH_Z) fputc('Z', outf);
+	if (m->geomflags & MESH_C) fputc('C', outf);
+	if (m->geomflags & MESH_N) fputc('N', outf);
+	if (m->geomflags & MESH_Z) fputc('Z', outf);
 	if (m->geomflags & VERT_4D) fputc('4', outf);
-	if (m->flag & MESH_U) fputc('U', outf);
-	if (m->flag & MESH_UWRAP) fputc('u', outf);
-	if (m->flag & MESH_VWRAP) fputc('v', outf);
-	if (m->flag & MESH_BINARY)    /* Hack -- should be sent by context */
+	if (m->geomflags & MESH_U) fputc('U', outf);
+	if (m->geomflags & MESH_UWRAP) fputc('u', outf);
+	if (m->geomflags & MESH_VWRAP) fputc('v', outf);
+	if (m->geomflags & MESH_BINARY) /* Hack -- should be sent by context */
 	{
 	    fprintf(outf, "MESH BINARY\n");
 	    fwrite(&m->nu, 4, 1, outf);
 	    fwrite(&m->nv, 4, 1, outf);
 	    for (i = 0; i < m->nv; i++) {
 		for (j = 0; j < m->nu; j++) {
-		    if (m->flag & MESH_Z) fwrite(&p->z, 4, 1, outf);
-		    else if (m->flag & MESH_4D) fwrite(p, 4, 4, outf);
+		    if (m->geomflags & MESH_Z) fwrite(&p->z, 4, 1, outf);
+		    else if (m->geomflags & MESH_4D) fwrite(p, 4, 4, outf);
 		    else fwrite(p, 4, 3, outf);
 		    p++;
-		    if (m->flag & MESH_N) { fwrite(n, 4, 3, outf); n++; }
-		    if (m->flag & MESH_C) { fwrite(c, 4, 4, outf); c++; }
-		    if (m->flag & MESH_U) { fwrite(u, 4, 3, outf); u++; }
+		    if (m->geomflags & MESH_N) { fwrite(n, 4, 3, outf); n++; }
+		    if (m->geomflags & MESH_C) { fwrite(c, 4, 4, outf); c++; }
+		    if (m->geomflags & MESH_U) { fwrite(u, 4, 3, outf); u++; }
 		}
 	    }
 	}
@@ -82,22 +82,22 @@ FILE           *outf;
 	    fprintf(outf, "MESH\n%d %d\n", m->nu, m->nv);
 	    for (i = 0; i < m->nv; i++) {
 		for (j = 0; j < m->nu; j++) {
-		    if(!(m->flag & MESH_Z))
+		    if(!(m->geomflags & MESH_Z))
 			fprintf(outf, "%.8g %.8g ", p->x, p->y);
 		    fprintf(outf, "%.8g ", p->z);
 		    if (m->geomflags & VERT_4D)
 		        fprintf(outf, "%.8g ", p->w);
 		    p++;
-		    if (m->flag & MESH_N) {
+		    if (m->geomflags & MESH_N) {
 			    fprintf(outf, " %.8g %.8g %.8g ", n->x, n->y, n->z);
 			    n++;
 		    }
-		    if (m->flag & MESH_C) {
+		    if (m->geomflags & MESH_C) {
 			    fprintf(outf, " %.3g %.3g %.3g %.3g ",
 				c->r, c->g, c->b, c->a);
 			    c++;
 		    }
-		    if (m->flag & MESH_U) {
+		    if (m->geomflags & MESH_U) {
 			    fprintf(outf, " %.8g %.8g %.8g", u->x, u->y, u->z);
 			    u++;
 		    }

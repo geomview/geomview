@@ -114,12 +114,12 @@ NDMeshFLoad(IOBFILE *file, char *fname)
   if (!file)
     return NULL;
 
-  if((m.flag = getheader(file, fname, &m.pdim)) == -1)
+  if((m.geomflags = getheader(file, fname, &m.pdim)) == -1)
     return NULL;
 
   m.meshd = 2;	/* Hack.  Should allow general meshes */
 
-  binary = m.flag & MESH_BINARY;
+  binary = m.geomflags & MESH_BINARY;
 
   if (iobfgetni(file, m.meshd, size, binary) < 2) {
     OOGLSyntax(file,"Reading nMESH from \"%s\": expected mesh grid size", fname);
@@ -137,14 +137,14 @@ NDMeshFLoad(IOBFILE *file, char *fname)
   m.u = NULL;
   m.c = NULL;
 
-  if (m.flag & MESH_C)
+  if (m.geomflags & MESH_C)
     m.c = OOGLNewNE(ColorA, n, "NDMeshFLoad: colors");
-  if (m.flag & MESH_U)
+  if (m.geomflags & MESH_U)
     m.u = OOGLNewNE(Point3, n, "NDMeshFLoad: texture coords");
 
   for (i = 0, v = 0; v < size[1]; v++) {
     for (u = 0; u < size[0]; u++, i++) {
-      if(getmeshvert(file, m.flag, m.pdim, u, v,
+      if(getmeshvert(file, m.geomflags, m.pdim, u, v,
 		     &m.p[i], &m.c[i], &m.u[i]) == 0) {
 	OOGLSyntax(file,
 		   "Reading nMESH from \"%s\": bad element (%d,%d) of (%d,%d)",
@@ -154,9 +154,12 @@ NDMeshFLoad(IOBFILE *file, char *fname)
     }
   }
   return (NDMesh *) GeomCCreate (NULL, NDMeshMethods(), CR_NOCOPY,
-				 CR_MESHDIM, 2, CR_MESHSIZE, size, CR_DIM, m.pdim-1,
-				 CR_4D, (m.flag & MESH_4D), CR_FLAG, m.flag,
-				 CR_POINT4, m.p, CR_COLOR, m.c, CR_U, m.u, CR_END);
+				 CR_MESHDIM, 2, CR_MESHSIZE, size,
+				 CR_DIM, m.pdim-1,
+				 CR_4D, (m.geomflags & MESH_4D),
+				 CR_FLAG, m.geomflags,
+				 CR_POINT4, m.p, CR_COLOR, m.c,
+				 CR_U, m.u, CR_END);
 }
 
 /*

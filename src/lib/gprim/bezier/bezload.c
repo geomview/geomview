@@ -46,7 +46,7 @@ bezierheader(IOBFILE *file, Bezier *bezier)
     char *token;
 		/* Parse {BBP|STBBP|BEZuvn[_ST]} [BINARY] */
 
-    bezier->flag = BEZ_P | BEZ_REMESH;
+    bezier->geomflags = BEZ_REMESH;
     bezier->dimn = 3;
     bezier->degree_u = bezier->degree_v = 3;	/* Default bicubic 3-D patch */
 
@@ -55,11 +55,11 @@ bezierheader(IOBFILE *file, Bezier *bezier)
     token = GeomToken(file);
 
     if(strncmp(token, "ST", 2) == 0) {
-	bezier->flag |= BEZ_ST;
+	bezier->geomflags |= BEZ_ST;
 	token += 2;
     }
     if(*token == 'C') {
-	bezier->flag |= BEZ_C;
+	bezier->geomflags |= BEZ_C;
 	token++;
     }
     if(strncmp(token, "BEZ", 3) == 0) {
@@ -73,7 +73,7 @@ bezierheader(IOBFILE *file, Bezier *bezier)
 	}
 	if(strcmp(token, "_ST") == 0) {
 	    token += 3;
-	    bezier->flag |= BEZ_ST;
+	    bezier->geomflags |= BEZ_ST;
 	}
 	if(!haveuvn) {
 		/* [C]BEZ[_ST] u v n -- expect u, v, n as separate numbers */
@@ -157,12 +157,12 @@ BezierListFLoad(IOBFILE *file, char *fname)
 	    break;
 	}
 
-	if (bez.flag & BEZ_ST) {
+	if (bez.geomflags & BEZ_ST) {
 	    bez.STCords = OOGLNewNE(float,8, "Bez ST coords");
 	    if(iobfgetnf(file, 8, bez.STCords, binary) != 8)
 		break;
 	}
-	if (bez.flag & BEZ_C) {
+	if (bez.geomflags & BEZ_C) {
 	    /* Load 4 colors, for the 4 corners of the patch, v-major order. */
 	    if(iobfgetnf(file, 16, (float *)bez.c, binary) != 16)
 		break;
@@ -170,7 +170,7 @@ BezierListFLoad(IOBFILE *file, char *fname)
 
 	/* successful read; append to list */
 	geom = GeomCCreate (NULL,BezierMethods(),  CR_NOCOPY,
-		  CR_FLAG, bez.flag | BEZ_REMESH,
+		  CR_FLAG, bez.geomflags | BEZ_REMESH,
 		  CR_DEGU, bez.degree_u, CR_DEGV, bez.degree_v,
 		  CR_DIM, bez.dimn, CR_POINT, bez.CtrlPnts,
 		  CR_ST, bez.STCords, CR_COLOR, bez.c, CR_END);
