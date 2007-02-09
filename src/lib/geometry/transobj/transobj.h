@@ -32,7 +32,7 @@
 #define	TRANSMAGIC	OOGLMagic('t', 1)
 
 typedef struct TransObj {
-	REFERENCEFIELDS
+	REFERENCEFIELDS;
 	Transform T;
 } TransObj;
 

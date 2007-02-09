@@ -47,7 +47,7 @@
 #define	WNF_HASPIXASPECT 0x200	/* pixel aspect ratio? */
 
 struct WnWindow {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     long	flag;		/* Which fields are set?	 */
     long	xsize, ysize;	/* Window size			 */
     WnPosition	pref;		/* Requested abs win position	 */
@@ -64,3 +64,10 @@ extern WnWindow *_WnSet(WnWindow *, int firstattr, va_list *alist);
 #define	WINDOWMAGIC	OOGLMagic('w', 1)
 
 #endif	/* WINDOWPDEF */
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

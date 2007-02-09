@@ -87,7 +87,7 @@ typedef struct HPtN {
 #include "reference.h"
 
 typedef struct TmN {
-	REFERENCEFIELDS
+	REFERENCEFIELDS;
 	int idim, odim;
 	int flags;
 	HPtNCoord *a;	/* Array of idim rows, odim columns */

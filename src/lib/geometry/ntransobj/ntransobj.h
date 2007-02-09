@@ -29,7 +29,7 @@
 #define	NTRANSMAGIC	OOGLMagic('n', 1)
 
 typedef struct NTransObj {
-	REFERENCEFIELDS
+	REFERENCEFIELDS;
 	TransformN *T;
 } NTransObj;
 

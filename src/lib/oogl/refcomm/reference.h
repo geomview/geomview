@@ -30,21 +30,27 @@
  */
 
 #define REFERENCEFIELDS	\
-    int magic;		\
-    int ref_count;	\
-    struct Handle *handle;
+  int magic;		\
+  int ref_count;	\
+  struct Handle *handle
 
 typedef struct Ref  {
-    REFERENCEFIELDS
+  REFERENCEFIELDS;
 } Ref ;
 
 #define	REFINCR(type, obj)	(type *)RefIncr((Ref *)(obj))
 #define	REFDECR(obj)		RefDecr((Ref *)(obj))
 
-extern void RefInit( Ref *, long magic );	/* Initializes a Reference */
+extern void RefInit( Ref *, int magic );/* Initializes a Reference */
 extern int  RefCount( Ref * );		/* Returns current ref count */
 extern Ref *RefIncr( Ref * );		/* Increments count, returns object */
 extern int  RefDecr( Ref * );		/* Decrements count, returns it  */
 extern int  RefMagic( Ref * );		/* Returns magic number */
 
 #endif
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

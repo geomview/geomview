@@ -42,7 +42,7 @@ typedef struct HRef {
 } HRef;
 
 struct Handle {
-	REFERENCEFIELDS
+	REFERENCEFIELDS;
 	HandleOps *ops;		/* Comm-related operations on our datatype */
 	char	*name;		/* Char-string name */
 	Ref	*object;	/* Current object value if any */

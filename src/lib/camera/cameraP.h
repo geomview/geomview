@@ -30,7 +30,7 @@
 #define	CAMMAGIC	0x9c816301
 
 struct Camera {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     Handle	*c2whandle;	/* Handle for external camtoworld's */
     Transform	camtoworld;	/* this moves the camera to its spot */
     Handle	*w2chandle;	/* Handle for external worldtocam's */
@@ -73,3 +73,10 @@ struct Camera {
 void CamTransUpdate(Handle **, Camera *, Transform);
 
 #endif /* !CAMERAP_H */
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
