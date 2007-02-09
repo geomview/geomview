@@ -1106,6 +1106,10 @@ drawer_dgeom(int id, GeomStruct *gs)
   /* Caller expects us to consume the objects */
   GeomDelete(gs->geom);
   HandleDelete(gs->h);
+
+  /* (re-)generate the BSP-tree for this object */
+  GeomBSPTree(gs->geom, NULL, BSPTREE_CREATE);
+
   return id;
 }
 
