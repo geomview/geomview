@@ -43,6 +43,7 @@ extern List *ListImport( Pool * );
 extern int   ListExport( List *, Pool * );
 extern Geom *ListPick(List *list, Pick *p, Appearance *ap,
 		      Transform T, TransformN *TN, int *axes);
+extern List *ListBSPTree(List *list, BSPTree *bsptree, int action);
 extern List *ListDice(List *list, int nu, int nv);
 
 #endif /*LISTPDEF*/

@@ -33,19 +33,35 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "geomclass.h"
 #include "mg.h"
+#include "bsptreeP.h"
 
-Geom *GeomDraw(Geom *object)
+Geom *GeomDraw(Geom *geom)
 {
-    if (object && object->Class->draw) {
-	if(object->ap != NULL) {
-	    mgpushappearance();
-	    mgsetappearance(object->ap, 1);	/* Merge into inherited ap */
-	}
-
-	(*object->Class->draw)(object);
-
-	if(object->ap != NULL)
-	    mgpopappearance();
+  if (geom && geom->Class->draw) {
+    if(geom->ap != NULL) {
+      mgpushappearance();
+      mgsetappearance(geom->ap, 1);	/* Merge into inherited ap */
     }
-    return object;
+
+    (*geom->Class->draw)(geom);
+
+    if(geom->ap != NULL) {
+      mgpopappearance();
+    }
+
+    if (geom->bsptree != NULL &&
+	geom->bsptree->geom == (Geom *)geom &&
+	(geom->bsptree->geomflags & COLOR_ALPHA)) {
+      GeomBSPTreeDraw(geom);
+    }
+  }
+
+  return geom;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

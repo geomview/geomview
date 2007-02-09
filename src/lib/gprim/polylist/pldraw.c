@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.11 2007/01/04 03:53:09 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.12 2007/02/09 17:15:35 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -62,10 +62,10 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   Material *mat = &_mgc->astk->mat;
   int normal_need;
     
-  /* Copy the PolyList onto the stack. */
+  /* Copy the PolyList onto the stack. TODO: do NOT do this. */
   newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
-  newpl.p = (Poly *)alloca(pl->n_polys * sizeof(Poly));
-  newpl.bsptree = NULL;
+  newpl.p  = (Poly *)alloca(pl->n_polys * sizeof(Poly));
+  newpl.ap = NULL;
 
   for(i = 0, op = pl->p, np = newpl.p; i < pl->n_polys; i++, op++, np++) {
     *np = *op;
@@ -107,15 +107,20 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   }
 
   if (colored) {
-    newpl.flags &= ~(PL_HASPCOL|PL_HASPALPHA|PL_HASVALPHA);
-    newpl.flags |= alpha ? PL_HASVCOL|PL_HASVALPHA : PL_HASVCOL;
+    if (alpha) {
+      newpl.geomflags |= COLOR_ALPHA;
+    } else {
+      newpl.geomflags &= ~COLOR_ALPHA;
+    }
+    newpl.geomflags &= ~PL_HASPCOL;
+    newpl.geomflags |= PL_HASVCOL;    
   }
 
   /* The drawing routines might need either polygon or vertex normals,
    * so if either is missing and either might be needed, we force it
    * to be computed.
    */
-  newpl.flags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
+  newpl.geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
   normal_need = (ap->flag & APF_NORMALDRAW) ? PL_HASPN|PL_HASVN : 0;
   if (ap->flag & APF_FACEDRAW) {
     if (ap->shading == APF_FLAT) {
@@ -127,30 +132,19 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
     if (ap->flag & APF_TRANSP) {
       if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
 	if (mat->diffuse.a != 1.0) {
-	  newpl.flags |= (PL_HASVALPHA|PL_HASPALPHA);
+	  newpl.geomflags |= COLOR_ALPHA;
 	} else {
-	  newpl.flags &= ~(PL_HASVALPHA|PL_HASPALPHA);
+	  newpl.geomflags &= COLOR_ALPHA;
 	}
       }
-      if (newpl.flags & (PL_HASVALPHA|PL_HASPALPHA)) {
+      if (newpl.geomflags & COLOR_ALPHA) {
 	normal_need |= PL_HASPFL;
       }
     }
   }
   PolyListComputeNormals(&newpl, normal_need);
 
-  /* Generate a BSP-tree if the object or parts of it might be
-   * translucent.
-   */
-  if ((ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (newpl.flags & (PL_HASVALPHA|PL_HASPALPHA))) {
-    BSPTreeCreate((Geom *)(void *)&newpl);
-    BSPTreeAddObject(newpl.bsptree, (Geom *)(void *)&newpl);
-    BSPTreeFinalize(newpl.bsptree);
-  }
-
-  if(_mgc->astk->useshader) {
+  if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = !colored && (mat->override & MTF_DIFFUSE)
       ? (ColorA *)&mat->diffuse : NULL;
 	
@@ -159,33 +153,40 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 	(*_mgc->astk->shader)(1, &nv->pt, &nv->vn,
 			      c ? c : &nv->vcol, &nv->vcol);
       }
-      newpl.flags |= PL_HASVCOL;
+      newpl.geomflags |= PL_HASVCOL;
     } else {
       for(i = 0, np = newpl.p; i < newpl.n_polys; i++, np++) {
 	(*_mgc->astk->shader)(1, &np->v[0]->pt, (Point3 *)&np->pn,
 			      c ? c : &np->pcol, &np->pcol);
       }
-      newpl.flags |= PL_HASPCOL;
+      newpl.geomflags |= PL_HASPCOL;
     }
   }
-  mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.flags);
+  mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.geomflags);
 
-  if (newpl.bsptree) {
-    mgbsptree(newpl.bsptree);
-    BSPTreeFree((Geom *)(void *)&newpl);
+  /* Generate a BSP-tree if the object or parts of it might be
+   * translucent.
+   */
+  if (newpl.bsptree &&
+      (ap->flag & APF_FACEDRAW) &&
+      (ap->flag & APF_TRANSP) &&
+      (newpl.geomflags & COLOR_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl, ap);
+    GeomBSPTree((Geom *)(void *)&newpl, newpl.bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance((Geom *)pl, old_tagged_app);
   }
 
   HPtNDelete(h);
 }
 
-PolyList *
-PolyListDraw( PolyList *pl )
+PolyList *PolyListDraw(PolyList *pl)
 {
   mgNDctx *NDctx = NULL;
 
-  if (pl == NULL)
-    return NULL;
-    
+  if (pl->bsptree != NULL) {
+    BSPTreeSetAppearance((Geom *)pl);
+  }
+  
   mgctxget(MG_NDCTX, &NDctx);
 
   if(NDctx) {
@@ -197,7 +198,7 @@ PolyListDraw( PolyList *pl )
    * so if either is missing and either might be needed, we force it
    * to be computed.
    */
-  if ((pl->flags & (PL_HASVN|PL_HASPN|PL_HASPFL))
+  if ((pl->geomflags & (PL_HASVN|PL_HASPN|PL_HASPFL))
       !=
       (PL_HASVN|PL_HASPN|PL_HASPFL)) {
     Appearance *ap = &_mgc->astk->ap;
@@ -216,29 +217,18 @@ PolyListDraw( PolyList *pl )
     PolyListComputeNormals(pl, need);
   }
     
-  if (pl->bsptree == NULL) {
-    /* This means we are a top-level drawing node (will never happen ...) */
-    BSPTreeCreate((Geom *)pl);
-  }
-  if (pl->bsptree->tree == NULL) {
-    /* This means we are an inferior drawing node and may add our
-     * polygons to the tree, do that.
-     */
-    BSPTreeAddObject(pl->bsptree, (Geom *)pl);
-  }
-
   if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_read_polylist(pl);
-    cmodel_draw(pl->flags);
-  } else if(_mgc->astk->useshader) {
+    cmodel_draw(pl->geomflags);
+  } else if(_mgc->astk->flags & MGASTK_SHADER) {
     /*
      * Software shading
      */
     ColorA *c0 = (ColorA *)&_mgc->astk->mat.diffuse;
     ColorA pc, *nc = NULL, *savedc = NULL;
     int i, j;
-    int flags = pl->flags;
+    int flags = pl->geomflags;
 
     if(_mgc->astk->mat.override & MTF_DIFFUSE)
       flags &= ~(PL_HASVCOL | PL_HASPCOL);
@@ -306,17 +296,17 @@ PolyListDraw( PolyList *pl )
     /*
      * Ordinary shading
      */
-    mgpolylist(pl->n_polys, pl->p, pl->n_verts, pl->vl, pl->flags);
+    mgpolylist(pl->n_polys, pl->p, pl->n_verts, pl->vl, pl->geomflags);
   }
 
-  /* If we have a private BSP-tree, then draw it now. Software shading
-   * with transparency will not work, to be fixed.
-   */
-  if (pl->bsptree->geom == (Geom *)pl) {
-    if (pl->bsptree->tree == NULL) {
-      BSPTreeFinalize(pl->bsptree);
-    }
-    mgbsptree(pl->bsptree);
+  return pl;
+}
+
+PolyList *PolyListBSPTree(PolyList *pl, BSPTree *tree, int action)
+{
+
+  if (pl->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+    BSPTreeAddObject(tree, (Geom *)pl);
   }
 
   return pl;

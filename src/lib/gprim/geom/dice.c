@@ -36,13 +36,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Geom *
 GeomDice( Geom *g, int nu, int nv )
 {
-    if( g && g->ap && g->ap->valid & APF_DICE) {
+    if (g == NULL) {
+	return NULL;
+    }
+    
+    if(g->ap && g->ap->valid & APF_DICE) {
 	nu = g->ap->dice[0];	/* Propagate "dice" appearance values */
 	nv = g->ap->dice[1];	/* Note we ignore overrides, so this may not be
 				 * correct in some cases.
 				 */
     }
-    if( g && g->Class->dice )
+    if(g->Class->dice ) {
 	(*g->Class->dice)(g, nu, nv);
+    }
+    
     return g;
 }
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
+	    

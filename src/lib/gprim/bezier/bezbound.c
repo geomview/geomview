@@ -37,7 +37,7 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
 {
   float *p;
   int n;
-  HPoint3 min, max, tmp, clean;
+  HPoint3 min, max, clean;
 
   p = bezier->CtrlPnts;
   n = (bezier->degree_u + 1) * (bezier->degree_v + 1);

@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.6 2006/10/15 12:52:30 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plclass.c,v 1.7 2007/02/09 17:15:35 rotdrop Exp $ */
 
 
 /*
@@ -60,6 +60,7 @@ GeomClass *PolyListMethods(void)
     aPolyListMethods->name = (GeomNameFunc *) PolyListName;
     aPolyListMethods->methods = (GeomMethodsFunc *) PolyListMethods;
     aPolyListMethods->draw = (GeomDrawFunc *) PolyListDraw;
+    aPolyListMethods->bsptree = (GeomBSPTreeFunc *) PolyListBSPTree;
     aPolyListMethods->bound = (GeomBoundFunc *) PolyListBound;
     aPolyListMethods->boundsphere = (GeomBoundSphereFunc *) PolyListSphere;
     aPolyListMethods->evert = (GeomEvertFunc *) PolyListEvert;

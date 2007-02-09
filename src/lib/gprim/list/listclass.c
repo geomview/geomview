@@ -39,16 +39,14 @@ int ListPresent = 1;
 
 static char listName[] = "list";
 
-char *
-ListName()
+char *ListName(void)
 {
-	return listName;
+    return listName;
 }
 
 extern void ListHandleScan( List *, int (*func)(), void *arg );
 
-GeomClass *
-ListMethods()
+GeomClass *ListMethods(void)
 {
     if( !ListClass ) {
         ListClass = GeomClassCreate(listName);
@@ -60,7 +58,7 @@ ListMethods()
         ListClass->Delete = (GeomDeleteFunc *)ListDelete;
         ListClass->bound = (GeomBoundFunc *)ListBound;
 	ListClass->boundsphere = 
-	  (GeomBoundSphereFunc *)ListBoundSphere;
+	    (GeomBoundSphereFunc *)ListBoundSphere;
         ListClass->evert = (GeomEvertFunc *)ListEvert;
 	ListClass->dice = (GeomDiceFunc *)ListDice;
         ListClass->transform = (GeomTransformFunc *)ListTransform;
@@ -68,6 +66,7 @@ ListMethods()
 	ListClass->pick = (GeomPickFunc *)ListPick;
 	ListClass->copy = (GeomCopyFunc *)ListCopy;
         ListClass->draw = (GeomDrawFunc *)ListDraw;
+        ListClass->bsptree = (GeomBSPTreeFunc *)ListBSPTree;
 	ListClass->replace = (GeomReplaceFunc *)ListReplace;
 	ListClass->scan = (GeomScanFunc *)ListHandleScan;
 
@@ -77,3 +76,10 @@ ListMethods()
 
     return ListClass;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

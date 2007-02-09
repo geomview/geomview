@@ -37,6 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  */
 #include "instP.h"
 #include "mgP.h"
+#include "bsptreeP.h"
 
 static TmCoord (*coords2W(int system))[4]
 {
@@ -120,7 +121,12 @@ Inst *InstDraw(Inst *inst)
   GeomIter *it;
   Transform T, tT, Tl2o;
   mgNDctx *NDctx = NULL;
+  const void **old_tagged_app = NULL;
   void *saved_ctx;
+
+  if (inst->bsptree != NULL) {
+    BSPTreeSetAppearance((Geom *)inst);
+  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -198,6 +204,57 @@ Inst *InstDraw(Inst *inst)
     /* restore */
     mgctxset(MG_NDCTX, NDctx, MG_END);
   }
+
+  return inst;
+}
+
+Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
+{
+  TransformPtr oldT;
+  GeomIter *it;
+  Transform T, tT, Tl2o;
+
+  if (inst->NDaxis) {
+    /* No need to add to the BSPTree here, will be handled by the
+     * various draw_projected_BLAH() stuff.
+     */
+    return inst;
+  }
+
+  oldT = bsptree->T;
+
+  it = GeomIterate((Geom *)inst, DEEP);
+  while (NextTransform(it, T)) {
+
+    /* Compute origin *before* changing mg tfm */
+    if (inst->origin != L_NONE) {	    
+      Point3 originwas, delta;
+      TmCoord (*l2o)[4], (*o2W)[4];
+      static HPoint3 zero = { 0, 0, 0, 1 };
+
+      /* We have location2W, origin2W. We want to translate
+       * in 'origin' coords such that (0,0,0) in location
+       * coords maps to originpt in origin coords.
+       */
+      o2W = coords2W(inst->origin);
+      l2o = coordsto(inst->location, inst->origin);
+      HPt3TransPt3(l2o, &zero, &originwas);
+      Pt3Sub(&inst->originpt, &originwas, &delta);
+      TmTranslate(tT, delta.x, delta.y, delta.z);
+      TmConcat(l2o, tT, Tl2o);
+      TmConcat(T, Tl2o, tT);
+      TmConcat(tT, o2W, T);
+    } else if (inst->location > L_LOCAL) {
+      TmConcat(T, coords2W(inst->location), T);
+    } else {
+      TmConcat(T, oldT, T);
+    }
+    bsptree->T = T;
+    inst->geom->bsptree = inst->bsptree;
+    GeomBSPTree(inst->geom, bsptree, action);
+  }
+  
+  bsptree->T = oldT;
 
   return inst;
 }

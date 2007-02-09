@@ -65,6 +65,7 @@ GeomClass *MeshMethods(void)
     aMeshMethods->boundsphere = (GeomBoundSphereFunc *) MeshBoundSphere;
     aMeshMethods->evert = (GeomEvertFunc *) MeshEvert;
     aMeshMethods->draw = (GeomDrawFunc *) MeshDraw;
+    aMeshMethods->bsptree = (GeomBSPTreeFunc *) MeshBSPTree;
     aMeshMethods->pick = (GeomPickFunc *) MeshPick;
     aMeshMethods->transform = (GeomTransformFunc *) MeshTransform;
     aMeshMethods->transformto = (GeomTransformToFunc *) MeshTransform;

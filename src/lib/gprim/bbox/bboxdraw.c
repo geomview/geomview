@@ -39,7 +39,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <alloca.h>
 #endif
 
-static void draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, Appearance *ap)
+static void
+draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
 {
   int i, e, numvert, dim;
   ColorA edgecolor;
@@ -97,7 +98,7 @@ BBox *BBoxDraw(BBox *bbox)
   HPoint3 vert[16];
   HPoint3 min, max;
   ColorA edgecolor;
-  Appearance *ap = mggetappearance();
+  const Appearance *ap = mggetappearance();
   mgNDctx *NDctx = NULL;
 
   if(!(ap->flag & APF_EDGEDRAW))

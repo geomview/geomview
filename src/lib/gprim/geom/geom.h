@@ -32,12 +32,16 @@
 
 
 #ifndef __cplusplus
-typedef struct Geom		Geom;		/* Complete OOGL object */
-typedef struct GeomClass	GeomClass;	/* Virtual func tbl for Geom */
-typedef struct GeomIter		GeomIter;	/* opaque iteration handle */
+typedef struct Geom      Geom;		/* Complete OOGL object */
+typedef struct GeomClass GeomClass;	/* Virtual func tbl for Geom */
+typedef struct GeomIter  GeomIter;	/* opaque iteration handle */
 #else
-struct Geom; struct GeomClass; struct GeomIter;
+struct Geom;
+struct GeomClass;
+struct GeomIter;
 #endif
+
+struct BSPTree;
 
 extern char    *GeomName( Geom *obj );
 extern GeomClass *GeomMethods( Geom * );
@@ -73,6 +77,8 @@ extern int	GeomGet( Geom *g, int attr, void *attrp );
 extern void	GeomHandleScan( Geom *g, int (*func)(), void *arg );
 
 extern Geom    *GeomDraw( Geom *obj );	/* Using current mg context */
+extern Geom    *GeomBSPTree(Geom *obj, struct BSPTree *bsptree, int action);
+extern Geom    *GeomBSPTreeDraw(Geom *geom); /* only for transparency */
 
 	/* Extensions.  These are roughly objective-C style.
  	 * Extension-functions are named with ASCII strings; for efficiency,

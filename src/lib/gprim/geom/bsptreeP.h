@@ -36,13 +36,10 @@ struct PolyListNode
 		     * the parent to avoid numerical instabilities
 		     * caused by increasingly degenerated polygons.
 		     */
-#if 0
-  /* To really support merging different geometries into a single BSP
-   * tree we would need to keep track of the possibly different
-   * apperances. Only afterwards we can support INSTs and LISTs. TODO.
-   */
-  Appearance   *ap;
-#endif
+
+  const void   **tagged_app; /* pointer to shared storage for the
+			      * return value of mgtagappearance().
+			      */
 };
 
 typedef struct BSPTreeNode BSPTreeNode;
@@ -57,6 +54,11 @@ struct BSPTreeNode
 struct BSPTree {
   BSPTreeNode    *tree;     /* The root of the BSPtree itself */
   Geom           *geom;     /* The top-level Geom we belong to */
+  int            geomflags; /* COLOR_ALPHA set if any component of the
+			     * tree has an alpha channel. Filled by
+			     * BSPTreeSetAppearance().
+			     */
+
   TransformPtr   T;         /* INST support: transform polygons during
 			     * tree generation, i.e. before adding
 			     * them to init_lpl.
@@ -64,8 +66,32 @@ struct BSPTree {
   PolyListNode   *init_lpl; /* While tree == NULL elements can be
 			     * added to this list
 			     */
+  const void **tagged_app;
+
   struct obstack obst;  /* Scratch space for new polygons etc */
 };
+
+static inline const void **BSPTreePushAppearance(Geom *geom,
+						 const Appearance *ap)
+{
+  if (!ap) {
+    ap = geom->ap;
+  }
+  if (geom->bsptree != NULL && ap != NULL) {
+    const void **tagged_app = geom->bsptree->tagged_app;
+    geom->bsptree->tagged_app = &geom->tagged_ap;
+    return tagged_app;
+  } else {
+    return NULL;
+  }
+}
+
+static inline void BSPTreePopAppearance(Geom *geom, const void **old_tagged_app)
+{
+  if (geom->bsptree != NULL && old_tagged_app != NULL) {
+    geom->bsptree->tagged_app = old_tagged_app;
+  }
+}
 
 #endif
 

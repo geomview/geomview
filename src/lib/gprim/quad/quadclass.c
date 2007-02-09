@@ -68,6 +68,7 @@ QuadMethods()
 	  (GeomBoundSphereFunc *)QuadSphere;
         aQuadMethods->evert = (GeomEvertFunc *)QuadEvert;
         aQuadMethods->draw = (GeomDrawFunc *)QuadDraw;
+        aQuadMethods->bsptree = (GeomBSPTreeFunc *)QuadBSPTree;
 	aQuadMethods->pick = (GeomPickFunc *) QuadPick;
 	aQuadMethods->transform = (GeomTransformFunc *) QuadTransform;
 	aQuadMethods->transformto = (GeomTransformToFunc *) QuadTransformTo;

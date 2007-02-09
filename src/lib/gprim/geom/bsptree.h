@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Claus-Justus Heine 
+/* Copyright (C) 2006-2007 Claus-Justus Heine 
  *
  * This file is part of Geomview.
  * 
@@ -20,14 +20,16 @@
 #ifndef _GV_BSPTREE_H_
 #define _GV_BSPTREE_H_
 
-#include "geomclass.h"
+#include "geom.h"
 
 typedef struct BSPTree BSPTree;
 
-extern void BSPTreeCreate(Geom *object);
-extern void BSPTreeAddObject(BSPTree *bsp, Geom *object);
+extern BSPTree *BSPTreeCreate(Geom *object);
+extern void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object);
 extern void BSPTreeFinalize(BSPTree *bsp);
 extern void BSPTreeFree(Geom *object);
+extern void BSPTreeFreeTree(BSPTree *tree);
+extern void BSPTreeSetAppearance(Geom *object);
 
 #endif
 

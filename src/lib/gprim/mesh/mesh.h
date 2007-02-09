@@ -27,6 +27,7 @@
 
 #include "bbox.h"
 #include "meshflag.h"
+#include "bsptree.h"
 
 #ifndef NULL
 #define NULL 0
@@ -53,6 +54,7 @@ extern Geom	*MeshBoundSphere( Mesh *,
 extern Mesh	*MeshDice( Mesh *, int (*proc)() );
 extern Mesh	*MeshEvert( Mesh * );
 extern Mesh	*MeshDraw( Mesh * );
+extern Mesh     *MeshBSPTree(Mesh *mesh, BSPTree *bsptree, int action);
 extern Mesh	*MeshPick( Mesh *, Pick *, Appearance *,
 			   Transform, TransformN *, int *axes );
 extern Mesh     *MeshTransform( Mesh *, Transform, TransformN * );

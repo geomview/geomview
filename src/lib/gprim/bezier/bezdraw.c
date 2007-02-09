@@ -33,17 +33,23 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "mg.h"
 #include "bezierP.h"
+#include "bsptreeP.h"
 
 Bezier *
 BezierDraw(Bezier *bezier)
 {
-    Appearance *ap;
+    const Appearance *ap = mggetappearance();
+    const void **old_tagged_app = NULL;
+    mgNDctx *NDctx = NULL;
     
-    ap = mggetappearance();
-    if(mgfeature(MGF_BEZIER)>0) {
-	mgbezier( bezier->degree_u, bezier->degree_v , bezier->dimn,
+    if (bezier->bsptree != NULL) {
+	BSPTreeSetAppearance((Geom *)bezier);
+    }
+
+    if (mgfeature(MGF_BEZIER)>0) {
+	mgbezier (bezier->degree_u, bezier->degree_v , bezier->dimn,
 		  bezier->CtrlPnts, bezier->STCords, 
-		  bezier->flag & BEZ_C ? bezier->c : NULL );
+		  bezier->geomflags & BEZ_C ? bezier->c : NULL);
     } else {
 	if (ap->valid & APF_DICE) {
 	    bezier->nu = ap->dice[0];
@@ -52,14 +58,40 @@ BezierDraw(Bezier *bezier)
 	if (bezier->mesh == NULL ||
 	    bezier->mesh->nu != bezier->nu ||
 	    bezier->mesh->nv != bezier->nv) 
-		bezier->flag |= BEZ_REMESH; 
+		bezier->geomflags |= BEZ_REMESH; 
     
-	if (bezier->flag & BEZ_REMESH) {
+	if (bezier->geomflags & BEZ_REMESH) {
 		BezierReDice(bezier);
 	}  
 	GeomDraw( (Geom *)bezier->mesh );
     }
-        
+
     return bezier;
 }
 
+Bezier *BezierBSPTree(Bezier *bezier, BSPTree *tree, int action)
+{
+    if (bezier->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+
+	if (bezier->mesh == NULL ||
+	    bezier->mesh->nu != bezier->nu ||
+	    bezier->mesh->nv != bezier->nv) {
+	    bezier->geomflags |= BEZ_REMESH;
+	}
+    
+	if (bezier->geomflags & BEZ_REMESH) {
+	    BezierReDice(bezier);
+	}
+
+	BSPTreeAddObject(tree, (Geom *)bezier->mesh);
+    }
+
+    return bezier;
+}
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

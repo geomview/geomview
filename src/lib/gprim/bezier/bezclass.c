@@ -70,8 +70,9 @@ BezierMethods()
 	aBezierMethods->boundsphere = 
 	  (GeomBoundSphereFunc *)BezierBoundSphere;
         aBezierMethods->draw = (GeomDrawFunc *)BezierDraw;
+        aBezierMethods->bsptree = (GeomBSPTreeFunc *)BezierBSPTree;
 	aBezierMethods->copy = (GeomCopyFunc *)BezierCopy;
-        aBezierMethods->pick = (GeomDrawFunc *)BezierPick;
+        aBezierMethods->pick = (GeomPickFunc *)BezierPick;
 	aBezierMethods->dice = (GeomDiceFunc *)BezierDice;
 	aBezierMethods->transform = 
 	  (GeomTransformFunc *)BezierTransform;

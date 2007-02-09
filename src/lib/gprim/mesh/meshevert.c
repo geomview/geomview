@@ -40,18 +40,18 @@ Mesh *MeshEvert(Mesh *m)
 
   if (m)
     {
-      if (m->flag & MESH_EVERT)
-	m->flag &= ~MESH_EVERT;
+      if (m->geomflags & MESH_EVERT)
+	m->geomflags &= ~MESH_EVERT;
       else
-	m->flag |= MESH_EVERT;
-      if (m->flag & MESH_N) {
+	m->geomflags |= MESH_EVERT;
+      if (m->geomflags & MESH_N) {
 	for (i = 0, n = m->n; i < m->nu*m->nv; i++,n++){
 	  n->x = -n->x;
 	  n->y = -n->y;
 	  n->z = -n->z;
 	}
       }
-      if (m->flag & MESH_NQ) {
+      if (m->geomflags & MESH_NQ) {
 	for (i = 0, n = m->nq; i < m->nu*m->nv; i++,n++){
 	  n->x = -n->x;
 	  n->y = -n->y;

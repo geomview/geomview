@@ -128,6 +128,7 @@ GGeomInit(Geom *g, GeomClass *Class, int magic, Appearance *ap)
   g->geomflags = 0;
   g->pdim = 4;
   g->bsptree = NULL;
+  g->tagged_ap = NULL;
 }
 
 /*

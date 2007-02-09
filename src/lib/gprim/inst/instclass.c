@@ -71,6 +71,7 @@ InstMethods()
         InstClass->transform = (GeomTransformFunc *)InstTransform;
 	InstClass->pick = (GeomPickFunc *)InstPick;
         InstClass->draw = (GeomDrawFunc *)InstDraw;
+	InstClass->bsptree = (GeomBSPTreeFunc *)InstBSPTree;
 	InstClass->replace = (GeomReplaceFunc *)InstReplace;
 	InstClass->get = (GeomGetFunc *)InstGet;
 	InstClass->scan = (GeomScanFunc *)InstHandleScan;

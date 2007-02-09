@@ -40,34 +40,25 @@ List *ListDraw(List *list)
 {
   List *l;
 
-#if 0
-  if (list->bsptree == NULL) {
-    BSPTreeCreate((Geom *)list);
-    for (l = list; l != NULL; l = l->cdr) {
-      if (l->bsptree) {
-	abort();
-      }
-      l->bsptree = list->bsptree;
-    }
+  if (list->bsptree != NULL) {
+    BSPTreeSetAppearance((Geom *)list);
   }
-#endif
-
+  
   for (l = list; l != NULL; l = l->cdr) {
     GeomDraw(l->car);
   }
 
-#if 0
-  /* If we have a private BSP-tree, then draw it now. Software shading
-   * with transparency will not work, to be fixed.
-   */
-  if (list->bsptree->geom == (Geom *)list) {
-    if (list->bsptree->tree == NULL) {
-      BSPTreeFinalize(list->bsptree);
-    }
-    mgbsptree(list->bsptree);
+  return list;
+}
+
+List *ListBSPTree(List *list, BSPTree *bsptree, int action)
+{
+  List *l;
+
+  for (l = list; l != NULL; l = l->cdr) {
+    GeomBSPTree(l->car, bsptree, action);
   }
-#endif
-  
+
   return list;
 }
 

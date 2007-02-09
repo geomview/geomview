@@ -30,6 +30,7 @@
  */
 
 #include "bbox.h"
+#include "bsptree.h"
 
 enum InstLocation {		/* Coordinate system where inst lives */
 	L_NONE = 0,
@@ -64,5 +65,6 @@ extern Inst *InstTransform( Inst *, Transform T, TransformN *TN );
 extern Inst *InstEvert( Inst * );
 extern Inst *InstDraw( Inst * );
 extern Geom *InstReplace( Inst *, Geom * );
+extern Inst *InstBSPTree(Inst *inst, BSPTree *tree, int action);
 
 #endif /*INSTDEFS*/

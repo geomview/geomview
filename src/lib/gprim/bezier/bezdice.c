@@ -34,6 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "math.h"
 #include "bezierP.h"
+#include "bsptreeP.h"
 
 void bezier_interp();
 
@@ -43,7 +44,7 @@ BezierDice( Bezier *bezier, int nu, int nv )
     if(nu < 2) nu = BEZ_DEFAULT_MESH_SIZE;
     if(nv < 2) nv = BEZ_DEFAULT_MESH_SIZE;
     if(nu != bezier->nu || nv != bezier->nv) {
-	bezier->flag |= BEZ_REMESH;
+	bezier->geomflags |= BEZ_REMESH;
 	bezier->nu = nu;
 	bezier->nv = nv;
     }
@@ -52,9 +53,7 @@ BezierDice( Bezier *bezier, int nu, int nv )
 
 /* this gets called when it's time to remesh, so the current mesh is destroyed
    and a new one is allocated */
-Mesh *
-BezierReDice(bezier)
-    Bezier *bezier;
+Mesh *BezierReDice(Bezier *bezier)
 {
     int      u, v, d;
     int      dimn, nu, nv, degree_u, degree_v;
@@ -77,10 +76,11 @@ BezierReDice(bezier)
 
     m.nu = nv;
     m.nv = nu;
-    m.flag = 0;
-    m.geomflags = 0;
-    m.flag |= MESH_N;
-    if (bezier->flag & BEZ_C)	m.flag |= MESH_C;
+    m.geomflags = MESH_N;
+    if (bezier->geomflags & BEZ_C) {
+	m.geomflags |= MESH_C;
+    }
+    
     m.p = NULL;
     m.c = NULL;
     m.n = NULL;
@@ -88,9 +88,9 @@ BezierReDice(bezier)
 
     m.p = OOGLNewNE(HPoint3, nu*nv, "BezierReDice: mesh points");
     m.n = OOGLNewNE(Point3, nu*nv, "BezierReDice: mesh normals");
-    if(bezier->flag & BEZ_C)
+    if(bezier->geomflags & BEZ_C)
       m.c = OOGLNewNE(ColorA, nu*nv,  "BezierReDice: mesh colors");
-    if(bezier->flag & BEZ_ST)
+    if(bezier->geomflags & BEZ_ST)
       m.u = OOGLNewNE(Point3, nu*nv, "BezierReDice: mesh txcoords");
 
 
@@ -230,9 +230,9 @@ printf("this is tmpdu0\n");
     GeomFree(tmpdv0);
     GeomFree(tmpdv1);
     GeomFree(tmpdv2);
-    bezier->flag &= ~BEZ_REMESH;        /* turn off this bit */
+    bezier->geomflags &= ~BEZ_REMESH;        /* turn off this bit */
 
-    if(bezier->flag & BEZ_C) {
+    if(bezier->geomflags & BEZ_C) {
         float fu, unu, fv, unv;
         ColorA u0, u1;
         ColorA *cp;
@@ -263,19 +263,29 @@ printf("this is tmpdu0\n");
 /* 	For now, assume these are rational beziers hence belong in 3-space
 		CR_4D, (dimn == 4) ? 1 : 0,
 */
-		CR_FLAG,m.flag,
-		CR_NU,m.nu,
-		CR_NV,m.nv, 
-		CR_POINT4,m.p,
-		CR_NORMAL,m.n,
-		CR_COLOR,m.c,
+		CR_FLAG, m.geomflags,
+		CR_NU, m.nu,
+		CR_NV, m.nv, 
+		CR_POINT4, m.p,
+		CR_NORMAL, m.n,
+		CR_COLOR, m.c,
 		CR_U, m.u,
 		CR_END)) == NULL) {
 	OOGLError(1, "BezierReDice: can't create Mesh");
 	return NULL;
     }
+    /*GeomCCreate(bezier->mesh, NULL, CR_COPY, CR_APPEAR, bezier->ap, CR_END);*/
 
-    return(bezier->mesh);
+    if (bezier->bsptree != NULL && bezier->bsptree->tree != NULL) {
+	int oldgeomflags = bezier->bsptree->geomflags;/* old transparency info*/
+
+	/* simply free the tree */
+	BSPTreeFreeTree(bezier->bsptree);
+	
+	bezier->bsptree->geomflags = oldgeomflags;
+    }
+
+    return bezier->mesh;
 }
 
 
@@ -321,3 +331,10 @@ for (j=0; j<n; ++j)
   printf("\n");
 */
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Claus-Justus Heine 
+/* Copyright (C) 2006-2007 Claus-Justus Heine 
  *
  * This file is part of Geomview.
  * 
@@ -27,23 +27,9 @@
  * MESHes too. Not for ND-objects, would probably not work.
  */
 
-#if 1
-#define _GV_TOLERANVE_H_
-
-/* FLT_EPSILON: 1.19209290e-7F */
-
-/* TODO: find a more stable way ... */
-# define TOLERANCE 1e-5 /* 1e-6 */
-
-# define fneg(a)  ((a)<-TOLERANCE)
-# define fpos(a)  ((a)> TOLERANCE)
-# define fzero(a) (((a)<TOLERANCE)&&((a)>-TOLERANCE))
-# define fz(a)    fzero(a)
-# define fnz(a)   (!fzero(a))
-#endif
-
 #include "geomclass.h"
 #include "polylistP.h"
+#include "mg.h"
 #include "mesh.h"
 #include "meshP.h"
 #include "quadP.h"
@@ -73,7 +59,6 @@ static void check_poly(Poly *poly)
     }
   }
 }
-
 #define ListPush(head, new_node)		\
   {						\
     PolyListNode *_lp_tmp_ = (new_node);	\
@@ -127,16 +112,19 @@ static inline Poly *new_poly(int nv, Vertex **v, struct obstack *scratch)
   return newp;
 }
 
-static inline PolyListNode *new_poly_list_node(struct obstack *scratch)
+static inline PolyListNode *new_poly_list_node(const void **tagged_app,
+					       struct obstack *scratch)
 {
   PolyListNode *new_pn;
 
-  new_pn      = obstack_alloc(scratch, sizeof(PolyListNode));
-  new_pn->pn  = NULL;
+  new_pn             = obstack_alloc(scratch, sizeof(PolyListNode));
+  new_pn->pn         = NULL;
+  new_pn->tagged_app = tagged_app;
 
   return new_pn;
 }
 
+/* Generate a transformed copy of poly. */
 static inline Poly *transform_poly(Transform T, Poly *poly,
 				   struct obstack *scratch)
 {
@@ -147,9 +135,26 @@ static inline Poly *transform_poly(Transform T, Poly *poly,
   for (i = 0; i < poly->n_vertices; i++) {
     newp->v[i] = obstack_alloc(scratch, sizeof(Vertex));
     HPt3Transform(T, &poly->v[i]->pt, &newp->v[i]->pt);
-    NormalTransform(T, &poly->v[i]->vn, &newp->v[i]->vn);
+    if (poly->flags & PL_HASVCOL) {
+      newp->v[i]->vcol = poly->v[i]->vcol;
+    }
+    if (1 || (poly->flags & PL_HASVN)) {
+      NormalTransform(T, &poly->v[i]->vn, &newp->v[i]->vn);
+    }
+    if (poly->flags & PL_HASST) {
+      newp->v[i]->st[0] = poly->v[i]->st[0];
+      newp->v[i]->st[1] = poly->v[i]->st[1];
+    }
   }
-  NormalTransform(T, &poly->pn, &newp->pn);
+
+  if (poly->flags & PL_HASPCOL) {
+    newp->pcol = poly->pcol;
+  }
+  if (1 || poly->flags & PL_HASPN) {
+    NormalTransform(T, &poly->pn, &newp->pn);
+  }
+  
+  newp->flags = poly->flags;
 
   return newp;
 }
@@ -160,6 +165,7 @@ static inline Poly *transform_poly(Transform T, Poly *poly,
  */
 static inline void split_quad_poly(int vertex, Poly *poly0,
 				   PolyListNode **plist,
+				   const void **tagged_app,
 				   struct obstack *scratch)
 {
   PolyListNode *new_pn;
@@ -173,14 +179,14 @@ static inline void split_quad_poly(int vertex, Poly *poly0,
     savedp = *poly0;
     savedp.v = savedv;
     memcpy(savedp.v, poly0->v, 4*sizeof(Vertex *));
-    new_pn = new_poly_list_node(scratch);
+    new_pn = new_poly_list_node(tagged_app, scratch);
     new_pn->poly = poly[0] = poly0;
     poly[0]->n_vertices = 3;
     ListPush(*plist, new_pn);
     poly0 = &savedp;
   }
   for (i = (poly0->flags & POLY_SCRATCH) != 0; i < 2; i++) {
-    new_pn = new_poly_list_node(scratch);
+    new_pn = new_poly_list_node(tagged_app, scratch);
     new_pn->poly = poly[i] = new_poly(3, NULL, scratch);
     ListPush(*plist, new_pn);
   }
@@ -216,13 +222,13 @@ static inline void meshv_to_polyv(Vertex *pv, Mesh *mesh, int vidx)
 #else
   Pt3ToHPt3((Point3 *)(void *)&pv->pt, &pv->pt, 1);
 #endif
-  if (mesh->flag & MESH_N) {
+  if (mesh->geomflags & MESH_N) {
     pv->vn = mesh->n[vidx];
   }
-  if (mesh->flag & MESH_C) {
+  if (mesh->geomflags & MESH_C) {
     pv->vcol = mesh->c[vidx];
   }
-  if (mesh->flag & MESH_U) {
+  if (mesh->geomflags & MESH_U) {
     pv->st[0] = mesh->u[vidx].x;
     pv->st[1] = mesh->u[vidx].y;
   }
@@ -238,20 +244,20 @@ meshv_to_polyv_trans(Transform T, Vertex *pv, Mesh *mesh, int vidx)
 #else
   Pt3ToHPt3((Point3 *)(void *)&pv->pt, &pv->pt, 1);
 #endif
-  if (mesh->flag & MESH_N) {
+  if (mesh->geomflags & MESH_N) {
     NormalTransform(T, &mesh->n[vidx], &pv->vn);
   }
-  if (mesh->flag & MESH_C) {
+  if (mesh->geomflags & MESH_C) {
     pv->vcol = mesh->c[vidx];
   }
-  if (mesh->flag & MESH_U) {
+  if (mesh->geomflags & MESH_U) {
     pv->st[0] = mesh->u[vidx].x;
     pv->st[1] = mesh->u[vidx].y;
   }
 }
 
 static PolyListNode *
-QuadToLinkedPolyList(Transform T,
+QuadToLinkedPolyList(Transform T, const void **tagged_app,
 		     PolyListNode **plistp, Quad *quad, struct obstack *scratch)
 {
   PolyListNode *plist = NULL;
@@ -262,7 +268,7 @@ QuadToLinkedPolyList(Transform T,
     plistp = &plist;
   }
 
-  if(!(quad->flag & QUAD_N)) {
+  if(!(quad->geomflags & QUAD_N)) {
     QuadComputeNormals(quad);
   }
   
@@ -291,14 +297,14 @@ QuadToLinkedPolyList(Transform T,
       }
     }
     qpoly->flags |= PL_HASVN;
-    if (quad->flag & QUAD_C) {
+    if (quad->geomflags & QUAD_C) {
       qpoly->flags |= PL_HASVCOL;
       for (j = 0; j < 4; j++) {
 	qpoly->v[j]->vcol = quad->c[i][j];
       }
     }
-    if (quad->flag & QUAD_ALPHA) {
-      qpoly->flags |= PL_HASVALPHA;
+    if (quad->geomflags & COLOR_ALPHA) {
+      qpoly->flags |= COLOR_ALPHA;
     }
     PolyNormal(qpoly, &qpoly->pn, 0, quad->geomflags & VERT_4D, &qpoly->flags,
 	       &concave);
@@ -308,12 +314,12 @@ QuadToLinkedPolyList(Transform T,
       qpoly->flags = 0;
     } else if (qpoly->flags & (POLY_CONCAVE|POLY_NONFLAT)) {
       /* we need to split it */
-      split_quad_poly(concave, qpoly, plistp, scratch);
+      split_quad_poly(concave, qpoly, plistp, tagged_app, scratch);
       qpoly = NULL;
     } else {
       PolyListNode *new_pn;
       
-      new_pn = new_poly_list_node(scratch);
+      new_pn = new_poly_list_node(tagged_app, scratch);
       new_pn->poly = qpoly;
       ListPush(*plistp, new_pn);
       qpoly = NULL;
@@ -327,7 +333,7 @@ QuadToLinkedPolyList(Transform T,
  * non-flat or concave quadrilaterals.
  */
 static PolyListNode *
-MeshToLinkedPolyList(Transform T,
+MeshToLinkedPolyList(Transform T, const void **tagged_app,
 		     PolyListNode **plistp, Mesh *mesh, struct obstack *scratch)
 {
   PolyListNode *plist = NULL;
@@ -344,10 +350,10 @@ MeshToLinkedPolyList(Transform T,
 
   MeshComputeNormals(mesh, MESH_N);
 
-  if(mesh->flag & MESH_UWRAP) {
+  if(mesh->geomflags & MESH_UWRAP) {
     v0 = 0, prev0v = mesh->nv-1;
   }
-  if(mesh->flag & MESH_VWRAP) {
+  if(mesh->geomflags & MESH_VWRAP) {
     u0 = 0, prev0u = mesh->nu-1;
   }
 
@@ -376,16 +382,16 @@ MeshToLinkedPolyList(Transform T,
 	meshv_to_polyv(qpoly->v[3], mesh, MESHIDX(prevu, v, mesh));
       }
 
-      if (mesh->flag & MESH_C) {
+      if (mesh->geomflags & MESH_C) {
 	qpoly->flags |= PL_HASVCOL;
       }
-      if (mesh->flag & MESH_ALPHA) {
-	qpoly->flags |= PL_HASVALPHA;
+      if (mesh->geomflags & COLOR_ALPHA) {
+	qpoly->flags |= COLOR_ALPHA;
       }
-      if (mesh->flag & MESH_N) {
+      if (mesh->geomflags & MESH_N) {
 	qpoly->flags |= PL_HASVN;
       }
-      if (mesh->flag & MESH_U) {
+      if (mesh->geomflags & MESH_U) {
 	qpoly->flags |= PL_HASST;
       }
 
@@ -400,12 +406,12 @@ MeshToLinkedPolyList(Transform T,
 	qpoly->flags = 0;
       } else if (qpoly->flags & (POLY_CONCAVE|POLY_NONFLAT)) {
 	/* we need to split it */
-	split_quad_poly(concave, qpoly, plistp, scratch);
+	split_quad_poly(concave, qpoly, plistp, tagged_app, scratch);
 	qpoly = NULL;
       } else {
 	PolyListNode *new_pn;
 	
-	new_pn = new_poly_list_node(scratch);
+	new_pn = new_poly_list_node(tagged_app, scratch);
 	new_pn->poly = qpoly;
 	ListPush(*plistp, new_pn);
 	qpoly = NULL;
@@ -422,7 +428,8 @@ MeshToLinkedPolyList(Transform T,
  * non-flat or concave polgons
  */
 static PolyListNode *
-PolyListToLinkedPoyList(Transform T, PolyListNode **plistp,
+PolyListToLinkedPoyList(Transform T, const void **tagged_app,
+			PolyListNode **plistp,
 			PolyList *pl, struct obstack *scratch)
 {
   PolyListNode *plist = NULL;
@@ -442,17 +449,16 @@ PolyListToLinkedPoyList(Transform T, PolyListNode **plistp,
       continue;
     }
 
-    if (T && T != TM_IDENTITY) {
-      poly = transform_poly(T, &pl->p[pnr], scratch);
-    } else {
-      poly = &pl->p[pnr];
-    }
+    poly = &pl->p[pnr];
+    poly->flags |= pl->geomflags;
 
-    poly->flags |= pl->flags;
+    if (T && T != TM_IDENTITY) {
+      poly = transform_poly(T, poly, scratch);
+    }
 
     switch (pl->p[pnr].n_vertices) {
     case 3: /* ok */
-      new_pn = new_poly_list_node(scratch);
+      new_pn = new_poly_list_node(tagged_app, scratch);
       new_pn->poly = poly;
       ListPush(*plistp, new_pn);
       break;
@@ -472,9 +478,9 @@ PolyListToLinkedPoyList(Transform T, PolyListNode **plistp,
 	} else {
 	  concave= 0;
 	}
-	split_quad_poly(concave, poly, plistp, scratch);
+	split_quad_poly(concave, poly, plistp, tagged_app, scratch);
       } else {
-	new_pn = new_poly_list_node(scratch);
+	new_pn = new_poly_list_node(tagged_app, scratch);
 	new_pn->poly = poly;
 	ListPush(*plistp, new_pn);
       }
@@ -488,7 +494,7 @@ PolyListToLinkedPoyList(Transform T, PolyListNode **plistp,
 	  was_here = 1;
 	}
       }
-      new_pn = new_poly_list_node(scratch);
+      new_pn = new_poly_list_node(tagged_app, scratch);
       new_pn->poly = poly;
       ListPush(*plistp, new_pn);
       break;
@@ -498,31 +504,35 @@ PolyListToLinkedPoyList(Transform T, PolyListNode **plistp,
 }
 
 /* Create an empty BSP-tree and attach "object" to it. */
-void BSPTreeCreate(Geom *object)
+BSPTree *BSPTreeCreate(Geom *object)
 {
-  if (object->bsptree) {
-    BSPTreeFree(object);
-  }
+  BSPTree *bsptree;
+  
+  BSPTreeFree(object);
 
-  object->bsptree = OOGLNewE(BSPTree, "new BSP tree root");
-  memset(object->bsptree, 0, sizeof(BSPTree));
+  object->bsptree = bsptree = OOGLNewE(BSPTree, "new BSP tree root");
+  memset(bsptree, 0, sizeof(BSPTree));
 
-  object->bsptree->geom = object;
-  object->bsptree->T    = TM_IDENTITY;
-  obstack_init(&object->bsptree->obst);
+  bsptree->geom = object;
+  bsptree->T    = TM_IDENTITY;
+  obstack_init(&bsptree->obst);
+
+  bsptree->tagged_app = &object->tagged_ap;
+
+  return bsptree;
 }
 
-/* Add "object" to "bsp_tree"'s _INITIAL_ list of polygons;
- * bsp_tree->tree has to be NULL at this point, otherwise this is a
+/* Add "object" to "bsptree"'s _INITIAL_ list of polygons;
+ * bsptree->tree has to be NULL at this point, otherwise this is a
  * no-op.
  *
  * BUG: this should probably converted into a "method" which is
  * attached to each instance of a Geom. Do that later. If I find the
  * time. Never do that ...
  */
-void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object)
+void BSPTreeAddObject(BSPTree *bsptree, Geom *object)
 {
-  if (bsp_tree->tree) {
+  if (bsptree->tree) {
     static int was_here;
     
     if (!was_here ) {
@@ -532,20 +542,28 @@ void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object)
     }
     return; /* Cannot add to finalized tree */
   }
-  
+
   /* Make a linked list of polyhedrons from object */
   switch (object->magic) {
   case PLMAGIC:
-    PolyListToLinkedPoyList(bsp_tree->T, &bsp_tree->init_lpl,
-			    (PolyList *)object, &bsp_tree->obst);
+    PolyListToLinkedPoyList(bsptree->T,
+			    bsptree->tagged_app,
+			    &bsptree->init_lpl,
+			    (PolyList *)object,
+			    &bsptree->obst);
     break;
   case MESHMAGIC:
-    MeshToLinkedPolyList(bsp_tree->T, &bsp_tree->init_lpl,
-			 (Mesh *)object, &bsp_tree->obst);
+    MeshToLinkedPolyList(bsptree->T,
+			 bsptree->tagged_app,
+			 &bsptree->init_lpl,
+			 (Mesh *)object, &bsptree->obst);
     break;
   case QUADMAGIC:
-    QuadToLinkedPolyList(bsp_tree->T, &bsp_tree->init_lpl,
-			 (Quad *)object, &bsp_tree->obst);
+    QuadToLinkedPolyList(bsptree->T,
+			 bsptree->tagged_app,
+			 &bsptree->init_lpl,
+			 (Quad *)object,
+			 &bsptree->obst);
     break;
   default:
     /* Do nothing */
@@ -557,34 +575,145 @@ void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object)
  * We build a complete bsp-tree, i.e. each leaf-node contains only
  * co-planar polygons.
  */
-void BSPTreeFinalize(BSPTree *bsp_tree)
+void BSPTreeFinalize(BSPTree *bsptree)
 {
-  if (bsp_tree->tree || !bsp_tree->init_lpl) {
+  if (bsptree->tree) {
     return; 
   }
 
-  /* After bsp_tree->tree has been allocated adding to the tree is no
+  /* After bsptree->tree has been allocated adding to the tree is no
    * longer possible.
    */
-  bsp_tree->tree = obstack_alloc(&bsp_tree->obst, sizeof(BSPTreeNode));
+  bsptree->tree = obstack_alloc(&bsptree->obst, sizeof(BSPTreeNode));
 
+  if (!bsptree->init_lpl) {
+    /* create an empty tree */
+    memset(bsptree->tree, 0, sizeof(BSPTreeNode));
+    return;
+  }
+  
   /* Do it. */
-  BSPTreeCreateRecursive(bsp_tree->tree, bsp_tree->init_lpl, &bsp_tree->obst);
+  BSPTreeCreateRecursive(bsptree->tree, bsptree->init_lpl, &bsptree->obst);
 
   /* We build a complete tree, and discard all degenerated polygons,
    * so the polygon list is empty after creating the tree.
    */
-  bsp_tree->init_lpl = NULL;
+  bsptree->init_lpl = NULL;
+}
+
+void BSPTreeFreeTree(BSPTree *tree)
+{
+  obstack_free(&tree->obst, NULL);
+  tree->tree      = NULL;
+  tree->init_lpl  = NULL;
+  tree->T         = TM_IDENTITY;
+  tree->geomflags = 0;
+  obstack_init(&tree->obst);
 }
 
 /* This is really easy, 'cause we are using an obstack. */
 void BSPTreeFree(Geom *g)
 {
   if (g->bsptree && g->bsptree->geom == g) {
-    obstack_free(&g->bsptree->obst, NULL);
+    BSPTreeFreeTree(g->bsptree);
     OOGLFree(g->bsptree);
     g->bsptree = NULL;
   }
+}
+
+void BSPTreeSetAppearance(Geom *geom)
+{
+  BSPTree *tree = geom->bsptree;
+  const Appearance *ap;
+
+  if (tree != NULL) {
+    if (tree->geom == (Geom *)geom) {
+      tree->geomflags = 0;
+    }
+    if (geom->ap != NULL || geom->bsptree->geom == (Geom *)geom) {
+      if (geom->tagged_ap) {
+	mguntagappearance(geom->tagged_ap);
+      }
+      geom->tagged_ap = mgtagappearance();
+    }
+    ap = mggetappearance();
+    if (ap->flag & APF_TRANSP) {
+      if ((ap->mat->valid & MTF_ALPHA)
+	  &&
+	  ((ap->mat->override & MTF_ALPHA) ||
+	   !(geom->geomflags & GEOM_COLOR))) {
+	if (ap->mat->diffuse.a != 1.0) {
+	  tree->geomflags |= COLOR_ALPHA;
+	}
+      } else {
+	tree->geomflags |= geom->geomflags & COLOR_ALPHA;
+      }
+    }
+  }
+}
+
+Geom *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
+{
+  const void **tagged_app = NULL;
+
+  if (!geom) {
+    return NULL;
+  }
+
+  if (!geom->Class->bsptree) {
+    return NULL;
+  }
+
+  switch (action) {
+  case BSPTREE_CREATE:
+    if (tree == NULL) {
+      tree = BSPTreeCreate(geom);
+    } else {
+      geom->bsptree = tree;
+    }
+    break;
+  case BSPTREE_ADDGEOM:
+    tagged_app = BSPTreePushAppearance(geom, NULL);
+    break;
+  default:
+    break;
+  }
+  
+  (*geom->Class->bsptree)(geom, tree, action);
+
+  if (action == BSPTREE_ADDGEOM) {
+    BSPTreePopAppearance(geom, tagged_app);
+  }
+
+  return geom;
+}
+
+Geom *GeomBSPTreeDraw(Geom *geom)
+{
+  /* If we have a private BSP-tree, then draw it now. */
+  mgNDctx *NDctx = NULL;
+
+  mgctxget(MG_NDCTX, &NDctx);
+
+  if (geom->bsptree->tree == NULL) {
+    if (NDctx == NULL) {
+      /* we assume that the various draw_projected_blah() routines
+       * have added to the bsptree for themselves as needed.
+       */
+      GeomBSPTree((Geom *)geom, geom->bsptree, BSPTREE_ADDGEOM);
+    }
+
+    BSPTreeFinalize(geom->bsptree);
+  }
+
+  mgbsptree(geom->bsptree);
+	    
+  if (NDctx != NULL) {
+    /* Clean up for next round */
+    BSPTreeFreeTree(geom->bsptree);
+  }
+
+  return geom;
 }
 
 static inline void CoLinSum(float a, ColorA *ca, float b, ColorA *cb,
@@ -607,6 +736,7 @@ static inline void SplitPolyNode(PolyListNode *plnode,
 				 EdgeIntersection edges[2],
 				 struct obstack *scratch)
 {
+  const void **tagged_app = plnode->tagged_app;
   Poly *poly, savedp;
   Vertex *v0, *v1, **vpos, **savedv;
   int istart[2], iend[2], i, nv[2];
@@ -720,7 +850,7 @@ static inline void SplitPolyNode(PolyListNode *plnode,
   }
 
   ListPush(*front, plnode);
-  ListPush(*back, new_poly_list_node(scratch));
+  ListPush(*back, new_poly_list_node(tagged_app, scratch));
 
   if ((poly->flags & POLY_NONFLAT)) {
     if (!(*front)->pn) {

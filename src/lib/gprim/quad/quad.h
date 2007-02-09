@@ -26,6 +26,7 @@
 #define QUADDEFS
 
 #include "bbox.h"
+#include "bsptree.h"
 
 #define QUADMAGIC GeomMagic ('q', 1)
 
@@ -43,6 +44,7 @@ extern Geom *QuadSphere(Quad *q,
 			int space);
 extern Quad *QuadEvert( Quad * );
 extern Quad *QuadDraw( Quad * );
+extern Quad *QuadBSPTree(Quad *quad, BSPTree *bsptree, int action);
 extern Quad *QuadTransform( Quad *, Transform );
 extern Quad *QuadTransformTo( Quad *, Transform );
 

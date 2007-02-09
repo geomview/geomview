@@ -31,6 +31,7 @@
 #include "appearance.h"
 #include "ooglutil.h"
 #include "pick.h"
+#include "bsptree.h"
 
 typedef char   *GeomNameFunc( void );
 typedef GeomClass   *GeomMethodsFunc( Geom *object );
@@ -67,7 +68,11 @@ typedef Geom *
 GeomPickFunc(Geom *, Pick *, Appearance *, Transform, TransformN *, int *axes);
 
 typedef Geom *GeomFacingFunc( /* Geom *object, ... */ );
-typedef Geom *GeomDrawFunc( /* Geom *object */ );
+typedef Geom *GeomDrawFunc(Geom *object);
+typedef Geom *GeomBSPTreeFunc(Geom *object, BSPTree *tree, int action);
+/* GeomBSPTree action flag values */
+#define BSPTREE_CREATE   0 /* simply record tree in geom-struct */
+#define BSPTREE_ADDGEOM  1 /* add polyhedrons to the tree's poly-list */
 
 typedef int GeomExportFunc( Geom *object, Pool *p );
 typedef Geom *GeomImportFunc( Pool *p );
@@ -79,46 +84,47 @@ struct GeomClass
 {
 
   /* General Methods */
-  GeomClass     *super;         /* superclass of this class */
-  GeomNameFunc  *name;
+  GeomClass       *super;         /* superclass of this class */
+  GeomNameFunc    *name;
   GeomMethodsFunc *methods;
   GeomMessageFunc *message;
 
-  GeomGetFunc   *get;
-  GeomCreateFunc        *create;
-  GeomDeleteFunc        *Delete;
-  GeomCopyFunc  *copy;
+  GeomGetFunc     *get;
+  GeomCreateFunc  *create;
+  GeomDeleteFunc  *Delete;
+  GeomCopyFunc    *copy;
   GeomReplaceFunc *replace;
-  GeomExtFunc   **extensions;   /* Extension methods live here */
-  GeomFLoadFunc *fload;
-  int           n_extensions;   /* Size of extensions[] array */
-  GeomFSaveFunc *fsave;
+  GeomFLoadFunc   *fload;
+  GeomFSaveFunc   *fsave;
+  GeomExtFunc     **extensions;   /* Extension methods live here */
+  int             n_extensions;   /* Size of extensions[] array */
 
   /* Geometric Methods */
-  GeomPositionFunc *position;
-  GeomTransformFunc *transform;
+  GeomPositionFunc    *position;
+  GeomTransformFunc   *transform;
   GeomTransformToFunc *transformto;
 
-  GeomEvertFunc  *evert;
-  GeomBoundFunc  *bound;
-  GeomEvalFunc   *eval;
-  GeomDiceFunc   *dice;
+  GeomEvertFunc     *evert;
+  GeomBoundFunc     *bound;
+  GeomEvalFunc      *eval;
+  GeomDiceFunc      *dice;
   GeomSubdivideFunc *subdivide;
 
   /* Picking methods */
-  GeomPickFunc  *pick;
+  GeomPickFunc        *pick;
   GeomBoundSphereFunc *boundsphere;
-  GeomIterateFunc       *iterate;
-  GeomAppendFunc        *append;        /* Append new item to hierarchy object */
-  GeomScanFunc  *scan;
+  GeomIterateFunc     *iterate;
+  GeomAppendFunc      *append;        /* Append new item to hierarchy object */
+  GeomScanFunc        *scan;
 
   /* Graphics Methods */
-  GeomFacingFunc        *facing;
-  GeomDrawFunc  *draw;
+  GeomFacingFunc  *facing;
+  GeomDrawFunc    *draw;
+  GeomBSPTreeFunc *bsptree;
 
   /* Communications methods */
-  GeomExportFunc        *export;
-  GeomImportFunc        *import;
+  GeomExportFunc   *export;
+  GeomImportFunc   *import;
   GeomUnexportFunc *unexport;
 };
 
@@ -135,19 +141,34 @@ extern Geom *GeomBoundSphereFromBBox(Geom *, Transform, TransformN *, int *axes,
 /* internal routine used by file-reading routines */
 extern char *GeomToken(IOBFILE *f);
 
+/* flag values for "geomflags" */
+#define VERT_N       (1 << 0)
+#define VERT_C       (1 << 1)
+#define VERT_4D      (1 << 2)
+#define VERT_ST      (1 << 3) /* texture */
+#define FACET_C      (1 << 4)
+#define COLOR_ALPHA  (1 << 5)
+#define GEOM_COLOR   (VERT_C|FACET_C)
+#define GEOMFL_SHIFT 8
+#define GEOMFL_MASK  ~(~0U << GEOMFL_SHIFT)
+
+/* per class additions should be defined using this macro: */
+#define GEOMFLAG(bits) ((bits) << GEOMFL_SHIFT)
+
 /* This is the "common" geom stuff which starts every geom */
 #define GEOMFIELDS                                      \
-  REFERENCEFIELDS       /* magic, ref_count, handle */  \
-  struct GeomClass  *Class;				\
-  struct Appearance *ap;				\
-  Handle            *aphandle;				\
-  int               geomflags;				\
-  int               pdim; /* does this belong here? */	\
-  struct BSPTree    *bsptree /* dito */
+  REFERENCEFIELDS;       /* magic, ref_count, handle */	\
+  struct GeomClass *Class;				\
+  Appearance       *ap;					\
+  Handle           *aphandle;				\
+  int              geomflags;				\
+  int              pdim; /* does this belong here? */	\
+  struct BSPTree   *bsptree; /* dito */			\
+  const void       *tagged_ap /* tagged (sticky) appearance pointer */
 
 struct Geom { /* common data structures for all Geom's */
   GEOMFIELDS;
-} ;
+};
 
 typedef struct HGeom {  /* This tuple appears in hierarchy objects */
   Handle *h;
