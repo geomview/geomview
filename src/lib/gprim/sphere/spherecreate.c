@@ -59,16 +59,13 @@ static Transform reflections[] = {
   {{-1,0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}}
 };
 
-Sphere *SphereCreate(exist, classp, a_list) 
-Geom *exist;
-GeomClass *classp;
-va_list *a_list;
+Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
 {
   Geom *quadrant;
   Geom *unitsphere;
   Sphere *sphere;
   int nencompass_points = 0;
-  int attr;
+  int attr, copy = 1;
   Transform *axis = NULL;
   HPoint3 *encompass_points = NULL;
 
@@ -110,8 +107,14 @@ va_list *a_list;
     axis = va_arg(*a_list, Transform *);
     break;
   default:
-    OOGLError (0, "SphereCreate: Undefined option: %d",attr);
-    return NULL;
+    if (GeomDecorate(sphere, &copy, attr, a_list)) {
+      OOGLError (0, "ListCreate: Undefined attribute: %d", attr);
+
+      if(exist == NULL)
+	GeomDelete ((Geom *)sphere);
+      return NULL;
+    }
+    break;
   }
   HPt3Dehomogenize(&(sphere->center), &(sphere->center));
 
@@ -145,5 +148,21 @@ va_list *a_list;
   if (nencompass_points && encompass_points != NULL) 
     SphereEncompassHPt3N(sphere, encompass_points, nencompass_points, 
 			 (axis == NULL) ? TM_IDENTITY : *axis);
+
+  if (sphere->ap && sphere->ap->mat &&
+      (sphere->ap->mat->valid & MTF_ALPHA) &&
+      sphere->ap->mat->diffuse.a != 1.0) {
+    sphere->geomflags |= COLOR_ALPHA;
+  } else {
+    sphere->geomflags &= ~COLOR_ALPHA;
+  }
+
   return sphere;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
