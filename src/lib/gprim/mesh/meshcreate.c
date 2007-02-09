@@ -150,7 +150,7 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
   if (c) {
     int i;
     
-    for (i = 0; i < mesh->nu+mesh->nv; i++) {
+    for (i = 0; i < mesh->nu*mesh->nv; i++) {
       if (mesh->c[i].a < 1.0) {
 	mesh->geomflags |= COLOR_ALPHA;
       }
