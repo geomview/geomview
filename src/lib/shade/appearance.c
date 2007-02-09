@@ -199,7 +199,7 @@ ApDelete(Appearance *ap)
  * incremented.  The caller MUST either RefIncr() or reassign mat and lighting.
  */
 Appearance *
-ApCopyShallow( Appearance *ap, Appearance *into )
+ApCopyShallow(const Appearance *ap, Appearance *into )
 {
     if(ap == NULL)
 	return NULL;
@@ -225,7 +225,7 @@ ApCopyShallow( Appearance *ap, Appearance *into )
 }
     
 Appearance *
-ApCopy( Appearance *ap, Appearance *into )
+ApCopy(const Appearance *ap, Appearance *into )
 {
     if (ap == NULL) return into;
     into = ApCopyShallow( ap, into );
@@ -237,7 +237,7 @@ ApCopy( Appearance *ap, Appearance *into )
 }
 
 Appearance *
-ApCopyShared( Appearance *ap, Appearance *into )
+ApCopyShared(const Appearance *ap, Appearance *into )
 {
     if (ap == NULL) return into;
     into = ApCopyShallow( ap, into );
@@ -270,7 +270,7 @@ ApCopyShared( Appearance *ap, Appearance *into )
  * when finished with it.
  */
 Appearance *
-ApMerge( Appearance *src, Appearance *dst, int mergeflags )
+ApMerge(const Appearance *src, Appearance *dst, int mergeflags )
 {
     int mask;
     Material *mt, *bmt;
@@ -956,7 +956,11 @@ MtMerge(Material *src, Material *dst, int mergeflags)
     dst->override = (src->override & mask) | (dst->override & ~mask);
     if(mask & MTF_EMISSION) dst->emission = src->emission;
     if(mask & MTF_AMBIENT) dst->ambient = src->ambient;
-    if(mask & MTF_DIFFUSE) dst->diffuse = src->diffuse;
+    if(mask & MTF_DIFFUSE) {
+	dst->diffuse.r = src->diffuse.r;
+	dst->diffuse.g = src->diffuse.g;
+	dst->diffuse.b = src->diffuse.b;
+    }
     if(mask & MTF_SPECULAR) dst->specular = src->specular;
     if(mask & MTF_Ka) dst->ka = src->ka;
     if(mask & MTF_Kd) dst->kd = src->kd;
@@ -1622,3 +1626,10 @@ TxMerge(Texture *src, Texture *dst, int mergeflags)
     RefIncr((Ref *)src);
     return src;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

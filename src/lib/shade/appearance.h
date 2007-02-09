@@ -31,7 +31,7 @@
 */
 
 #include "ooglutil.h"
-#include "vert.h"
+/*#include "vert.h"*/
 #include "3d.h"
 #include "color.h"
 #include "streampool.h"
@@ -41,7 +41,7 @@
 #define ANOTHER 2
 
 typedef struct LtLight {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     Color ambient;
     Color color;
     Point position;		/* application-specified light position */
@@ -63,7 +63,7 @@ typedef struct LtLight {
 #define	AP_MAXLIGHTS	8
 
 typedef struct LmLighting {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     int valid, override;	 /* LMF_* inheritance bits */
     Color ambient;
     int	localviewer;
@@ -79,7 +79,7 @@ typedef struct LmLighting {
 			(i)<AP_MAXLIGHTS && *(lp) != NULL; (i)++, (lp)++)
 
 typedef struct Material {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     int valid, override;	/* MTF_* inheritance bits */
     Color emission;
     Color ambient;
@@ -109,7 +109,7 @@ struct TxUser {
 };
 
 typedef struct Texture {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     char *filename;		/* ppm or pgm (.Z) file */
     char *alphafilename;	/* If present, this is a .pgm (.Z) file */
     char *data;			/* Raw data, top to bottom, read from file */
@@ -128,7 +128,7 @@ typedef struct Texture {
 extern Texture *AllLoadedTextures;	/* List of em */
 
 typedef struct Appearance {
-    REFERENCEFIELDS
+    REFERENCEFIELDS;
     Material	*mat, *backmat;	    /* material properties */
     LmLighting	*lighting;  /* attached lighting */
     Texture	*tex;	    /* Texture-map object */
@@ -268,11 +268,11 @@ Appearance *	_ApSet(Appearance *ap, int attr1, va_list *alist);
 int		ApGet( Appearance *ap, int attr, void *valuep );
 void		ApDelete( Appearance *ap );
 Appearance *	ApDefault( Appearance *ap );
-Appearance *	ApCopy( Appearance *from, Appearance *into );
-Appearance *	ApMerge( Appearance *src, Appearance *dst, int inplace );
+Appearance *	ApCopy(const Appearance *from, Appearance *into );
+Appearance *	ApMerge(const Appearance *src, Appearance *dst, int inplace );
 Appearance *	ApFLoad( Appearance *into, IOBFILE *f, char *stream );
 Appearance *	ApLoad( Appearance *into, char *stream );
-Appearance *    ApCopyShared( Appearance *ap, Appearance *into );
+Appearance *    ApCopyShared(const Appearance *ap, Appearance *into );
 
 
 		/* Force 'override' bits on (for all valid fields)
@@ -506,4 +506,9 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap);
 
 #endif /* APPEARANCEDEF */
 
-
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
