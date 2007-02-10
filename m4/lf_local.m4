@@ -62,14 +62,7 @@ AC_DEFUN([LF_LINK_HEADERS],[
       for lf_file in `(cd $srcdir/$lf_dir; cat Headers)`
       do
         rm -f $lf_directory/$lf_file
-#        $LN_S "`pwd`/$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
-	if test -e "`pwd`/$srcdir/$lf_dir/$lf_file"; then
-	    $LN_S "`pwd`/$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
-	else
-	    if test -e "$srcdir/$lf_dir/$lf_file"; then
-		$LN_S "$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
-	    fi
-	fi
+        $LN_S "`pwd`/$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
       done
     else
       echo "Warning: No Headers file for $srcdir/$lf_dir"
