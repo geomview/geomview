@@ -51,6 +51,12 @@ AC_DEFUN([LF_LINK_HEADERS],[
 #  ${srcdir}/mkinstalldirs "$lf_directory"
   mkdir $lf_directory
 
+  if test -d "`pwd`/$srcdir"; then
+    lf_srcdir="`pwd`/$srcdir"
+  else
+    lf_srcdir="$srcdir"
+  fi
+
   # Link them
   lf_subdirs="`echo $1`"
   for lf_dir in $lf_subdirs
@@ -62,7 +68,7 @@ AC_DEFUN([LF_LINK_HEADERS],[
       for lf_file in `(cd $srcdir/$lf_dir; cat Headers)`
       do
         rm -f $lf_directory/$lf_file
-        $LN_S "`pwd`/$srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
+        $LN_S "$lf_srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
       done
     else
       echo "Warning: No Headers file for $srcdir/$lf_dir"
