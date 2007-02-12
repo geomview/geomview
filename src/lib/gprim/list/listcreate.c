@@ -35,10 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /*
  * List editing, deletion and creation.
  */
-Geom *
-ListReplace( list, geom )
-    List *list;
-    Geom *geom;
+Geom *ListReplace(List *list, Geom *geom)
 {
     Geom *g;
 

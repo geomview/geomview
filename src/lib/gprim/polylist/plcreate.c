@@ -59,8 +59,6 @@ PolyListDelete( PolyList *pl )
   if(pl->vl != NULL)
     OOGLFree(pl->vl);
 
-  BSPTreeFree((Geom *)pl);
-
   return NULL;
 }
 

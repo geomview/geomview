@@ -614,10 +614,12 @@ void BSPTreeFreeTree(BSPTree *tree)
 /* This is really easy, 'cause we are using an obstack. */
 void BSPTreeFree(Geom *g)
 {
-  if (g->bsptree && g->bsptree->geom == g) {
+  if (g->bsptree) {
     BSPTreeFreeTree(g->bsptree);
-    OOGLFree(g->bsptree);
-    g->bsptree = NULL;
+    if (g->bsptree->geom == g) {
+      OOGLFree(g->bsptree);
+      g->bsptree = NULL;
+    }
   }
 }
 

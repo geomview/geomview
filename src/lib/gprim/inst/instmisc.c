@@ -111,6 +111,11 @@ InstTransformTo(Inst *inst, Transform T, TransformN *TN)
 	}
 	TmCopy( T ? T : TM_IDENTITY, inst->axis );
     }
+
+    if (inst->bsptree) {
+	BSPTreeFreeTree(inst->bsptree);
+    }
+
     return inst;
 }
 
@@ -152,5 +157,17 @@ InstTransform(Inst *inst, Transform T, TransformN *TN)
 	    inst->tlisthandle = NULL;
 	}
     }
+
+    if (inst->bsptree) {
+	BSPTreeFreeTree(inst->bsptree);
+    }
+
     return inst;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

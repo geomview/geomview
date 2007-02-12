@@ -45,7 +45,6 @@ MeshDelete(Mesh *m)
       GeomFree(m->c);
     if (m->u)
       GeomFree(m->u);
-    BSPTreeFree((Geom *)m);
   }
   return NULL;
 }

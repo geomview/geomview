@@ -36,9 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 int PoolDoCacheFiles;
 
-void
-GeomDelete( object )
-    Geom *object;
+void GeomDelete(Geom *object)
 {
     if (object == NULL)
 	return;
@@ -62,7 +60,8 @@ GeomDelete( object )
 	}
 	return;
     default:
-	if(object->ref_count < 0 || object->ref_count > 100000) { /* XXX debug */
+	if(object->ref_count < 0 || object->ref_count > 100000) {
+	    /* XXX debug */
 	    OOGLError(1, "GeomDelete(%x) -- ref count %d?", object,
 		object->ref_count);
 	    return;
@@ -81,8 +80,18 @@ GeomDelete( object )
     if(object->Class->Delete) {
 	(*object->Class->Delete)(object);
     }
+
+    BSPTreeFree(object);
+
     if(object->handle && HandleObject(object->handle) == (Ref *)object)
 	HandleDelete(object->handle);
     object->magic ^= 0x80000000;
     OOGLFree(object);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

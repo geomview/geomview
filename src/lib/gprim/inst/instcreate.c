@@ -39,8 +39,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ntransobj.h"
 
 void
-InstDelete( inst )
-     Inst *inst;
+InstDelete(Inst *inst)
 {
   if( inst ) {
     if(inst->geom) GeomDelete(inst->geom);
@@ -124,6 +123,7 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
   Inst *inst;
   int attr;
   int copy = 1;
+  int del_tree = 0;
   Transform *t;
   TransformN *nt;
   Geom *g;
@@ -152,8 +152,9 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     case CR_GEOMHANDLE:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref *)h);
-      if(inst->geomhandle)
+      if(inst->geomhandle) {
 	HandlePDelete(&inst->geomhandle);
+      }
       inst->geomhandle = h;
       HandleRegister(&inst->geomhandle, (Ref *)inst, &inst->geom, HandleUpdRef);
       break;
@@ -161,8 +162,9 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     case CR_HANDLE_GEOM:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref*)h);
-      if(inst->geomhandle)
+      if(inst->geomhandle) {
 	HandlePDelete(&inst->geomhandle);
+      }
       inst->geomhandle = h;
       if(h) HandleRegister(&inst->geomhandle,
 			   (Ref *)inst, &inst->geom, HandleUpdRef);
@@ -189,36 +191,44 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     case CR_AXISHANDLE:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref *)h);
-      if(inst->axishandle)
+      if(inst->axishandle) {
 	HandlePDelete(&inst->axishandle);
+      }
       inst->axishandle = h;
       HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
+      del_tree = 1;
       break;
 
     case CR_NDAXISHANDLE:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref *)h);
-      if(inst->NDaxishandle)
+      if(inst->NDaxishandle) {
 	HandlePDelete(&inst->NDaxishandle);
+      }
       inst->NDaxishandle = h;
       HandleRegister(&inst->NDaxishandle, (Ref *)inst, &inst->NDaxis, NTransUpdate);
+      del_tree = 1;
       break;
 
     case CR_TLIST:
       g = va_arg (*a_list, Geom *);
       if(copy) RefIncr((Ref *)g);
-      if(inst->tlist)
+      if(inst->tlist) {
 	GeomDelete(inst->tlist);
+      }
       inst->tlist = g;
+      del_tree = 1;
       break;
 
     case CR_TLISTHANDLE:
       h = va_arg(*a_list, Handle *);
       if(copy) RefIncr((Ref *)h);
-      if(inst->tlisthandle != NULL)
+      if(inst->tlisthandle != NULL) {
 	HandlePDelete(&inst->tlisthandle);
+      }
       inst->tlisthandle = h;
       HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist, HandleUpdRef);
+      del_tree = 1;
       break;
 
     case CR_LOCATION:
@@ -232,6 +242,10 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	return NULL;
       }
     }
+  }
+
+  if (del_tree && inst->bsptree) {
+    BSPTreeFreeTree(inst->bsptree);
   }
 
   return inst;
