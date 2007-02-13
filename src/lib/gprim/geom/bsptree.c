@@ -77,7 +77,7 @@ typedef enum PolyPos {
 typedef struct EdgeIntersection
 {
   int v[2];         /* The vertex number of the enclosing points */
-#if DOUBLD_SCP
+#if DOUBLE_SCP
   double scp[2];    /* The position of the vertices relative to the
 		     * intersection plane.
 		     */
@@ -903,7 +903,7 @@ static inline void SplitPolyNode(PolyListNode *plnode,
     /* Attention: gcc had problems with this code snippet with
      * -fstrict-aliasing, the "#if 1" stuff seems to work. In the
      * "#else" version gcc somehow lost the "savedp.v = savedv"
-     * assignment. I think this is a comiler bug.
+     * assignment. I think this is a compiler bug.
      */
     poly = &savedp;
 #if 1
@@ -978,7 +978,7 @@ static inline double mydot(HPoint3 *plane, HPoint3 *pt)
 	  +
 	  (double)(pt)->z*(double)(plane)->z
 	  -
-	  (double)(plane)->w*(double)(plane)->w);  
+	  (double)(pt)->w*(double)(plane)->w);  
 }
 #endif
 
@@ -1002,6 +1002,8 @@ static inline HPt3Coord PlaneDistance(HPoint3 *plane, HPoint3 *v)
   double dist;
   
   dist = mydot(plane, v);
+
+  return dist;
 }
 #endif
 
@@ -1056,8 +1058,8 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
       return sign1;
     }
     /* At this point we have sign0 == 0 != sign1 == sign2 != sign3. If
-     * sign3 == 0, then the next may also be located on the plane =>
-     * sign1 == sign2 determine the side we are located on.
+     * sign3 == 0, then the next vertex may also be located on the
+     * plane => sign1 == sign2 determine the side we are located on.
      *
      * Otherwise sign3 must be != sign1 and we have to sub-divide this
      * polygon.
@@ -1072,6 +1074,12 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
       sign3 = fpos(scp3) - fneg(scp3);
       if (sign3 == COPLANAR) {
 	return sign1;
+      } else if (sign3 == sign1) {
+	/* impossible case with exact arithmetic; this should mean
+	 * that we are in the COPLANAR case. Assume that? Or retry
+	 * with increased telerance?
+	 */
+	return COPLANAR; /* FIXME */
       }
     }
     /* At this point we have sign0 == 0 != sign1. sign2 may be 0, then
