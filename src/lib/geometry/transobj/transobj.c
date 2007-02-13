@@ -45,7 +45,9 @@ TransPosition(TransObj *tobj, Transform T)	/* Get transform into T */
 
 void
 TransTransformTo(TransObj *tobj, Transform T)	/* Set transform from T */
-{ TmCopy(T, tobj->T); }
+{
+    TmCopy(T, tobj->T);
+}
 
 void
 TransDelete(TransObj *tobj)
@@ -62,11 +64,13 @@ TransDelete(TransObj *tobj)
 }
 
 TransObj *
-TransCreate( Transform T )
+TransCreate(Transform T)
 {
     TransObj *tobj = OOGLNewE(TransObj, "TransObj");
     RefInit((Ref*)tobj, TRANSMAGIC);
-    if(T != TMNULL) TmCopy(T, tobj->T);
+    if (T != TMNULL) {
+	TmCopy(T, tobj->T);
+    }
     return tobj;
 }
 
@@ -85,12 +89,13 @@ HandleOps TransOps = {
 };
 
 void
-TransUpdate( Handle **hp, Ref *ignored, Transform Tfixme )
+TransUpdate(Handle **hp, Ref *ignored, Transform Tfixme)
 {
     Handle *h = *hp;
 
-    if(h != NULL && h->object != NULL)
+    if (h != NULL && h->object != NULL) {
 	TmCopy( ((TransObj *)(h->object))->T, Tfixme );
+    }
 }
 
 
@@ -106,9 +111,9 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
     int brack = 0;
     IOBFILE *inf;
 
-    if(p == NULL || (inf = PoolInputFile(p)) == NULL)
+    if(p == NULL || (inf = PoolInputFile(p)) == NULL) {
 	return 0;
-
+    }
 
     do {
 	more = 0;
@@ -116,14 +121,16 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 	case '{': brack++; iobfgetc(inf); break;
 	case '}': if(brack--) iobfgetc(inf); break;
 	case 't':
-	    if(iobfexpectstr(inf, "transform"))
+	    if(iobfexpectstr(inf, "transform")) {
 		return 0;
+	    }
 	    more = 1;
 	    break;
 
 	case 'd':
-	    if(iobfexpectstr(inf, "define"))
+	    if(iobfexpectstr(inf, "define")) {
 		return 0;
+	    }
 	    hname = HandleAssign(iobftoken(inf, 0), &TransOps, NULL);
 	    break;
 
@@ -140,36 +147,42 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 		}
 	    }
 	    h = HandleReferringTo(c, w, &TransOps, NULL);
-	    if(h)
+	    if(h) {
 		tobj = (TransObj *)h->object;
+	    }
 	    break;
 
 	default:
 	    /*
 	     * Anything else should be a 4x4 matrix
 	     */
-	    if(tobj == NULL)
+	    if(tobj == NULL) {
 		tobj = TransCreate( TMNULL );
-	    if(iobfgettransform(inf, 1, &tobj->T[0][0], 0) <= 0)
+	    }
+	    if(iobfgettransform(inf, 1, &tobj->T[0][0], 0) <= 0) {
 		return 0;
+	    }
 	}
     } while(brack || more);
 
     if(hname != NULL) {
-	if(tobj)
+	if(tobj) {
 	    HandleSetObject(hname, (Ref *)tobj);
+	}
 	h = hname;
     }
 
-    if(h == NULL && tobj != NULL && p->ops == &TransOps)
+    if(h == NULL && tobj != NULL && p->ops == &TransOps) {
 	h = HandleAssign(PoolName(p), &TransOps, (Ref *)tobj);
+    }
 
-
-    if(h != NULL && tobj != NULL)
+    if(h != NULL && tobj != NULL) {
 	HandleSetObject(h, (Ref *)tobj);
+    }
 
-    if(tobj != NULL && T != TMNULL)
+    if(tobj != NULL && T != TMNULL) {
 	TmCopy(tobj->T, T);
+    }
 
     if(h != NULL && hp != NULL) {
 	if(*hp != h) {
@@ -196,8 +209,9 @@ TransStreamOut( Pool *p, Handle *h, Transform T )
     fprintf(outf, "transform {\n");
 
     putdata = PoolStreamOutHandle( p, h, T != TMNULL );
-    if(putdata)
+    if(putdata) {
 	fputtransform(outf, 1, &T[0][0], 0);
+    }
     fputs("}\n", outf);
     return !ferror(outf);
 }

@@ -44,8 +44,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Notes:	dual = transpose of adjoint matrix
  */
 void
-Tm3Dual( T, Tdual )
-    Transform3 T, Tdual;
+Tm3Dual(Transform3 T, Transform3 Tdual)
 {
     Tm3Adjoint( T, Tdual );
     Tm3Transpose( Tdual, Tdual );

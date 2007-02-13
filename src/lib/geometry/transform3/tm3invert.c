@@ -44,8 +44,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * Date:	Sat Jul 18 12:04:19 CDT 1992
  */
 float
-Tm3Invert(m, mi)
-Transform3 m, mi;
+Tm3Invert(Transform3 m, Transform3 mi)
 {
 	int i, j;
 	int k;

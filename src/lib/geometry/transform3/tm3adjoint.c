@@ -36,11 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define det( a1, a2, a3, b1, b2, b3, c1, c2, c3 ) \
     (a1*(b2*c3-c2*b3) - a2*(b1*c3-c1*b3) + a3*(b1*c2-c1*b2))
 
-static
-float 
-cofactor( T, x, y )
-    Tm3Coord T[4][4];
-    int x, y;
+static float cofactor(Transform3 T, int x, int y)
 {
     static Tm3Coord mat3x3[3][3];
     Tm3Coord *dst = mat3x3[0];
@@ -61,10 +57,7 @@ cofactor( T, x, y )
 }
 
 
-static
-void
-adjoint( T, Tadj )
-    Transform3 T, Tadj;
+static void adjoint(Transform3 T, Transform3 Tadj)
 {
     int x, y;
     float cof;
@@ -87,17 +80,16 @@ adjoint( T, Tadj )
  * Notes:	
  */
 void
-Tm3Adjoint( T, Tadj )
-    Transform3 T, Tadj;
+Tm3Adjoint(Transform3 T, Transform3 Tadj)
 {
     if( T == Tadj ) {
 	Transform3 Ttmp;
 
 	adjoint( T, Ttmp );
 	Tm3Copy( Ttmp, Tadj );
-    }
-    else
+    } else {
 	adjoint( T, Tadj );
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -132,8 +124,7 @@ determinant( T, Tadj )
  * Notes:	
  */
 float
-Tm3Determinant( T )
-    Transform3 T;
+Tm3Determinant(Transform3 T)
 {
     Transform3 Tadj;
 
@@ -141,3 +132,10 @@ Tm3Determinant( T )
 
     return determinant( T, Tadj );
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
