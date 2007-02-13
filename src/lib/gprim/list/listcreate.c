@@ -53,25 +53,22 @@ Geom *ListRemove(Geom *list, Geom *g)
     List *l;
     List **prev;
 
-    if(list == NULL)
+    if (list == NULL) {
 	return NULL;
+    }
 
-    if(list->Class != ListClass) {
+    if (list->Class != ListClass) {
 	OOGLError(1,
 		  "ListRemove: %x is a %s not a List!", list, GeomName(list));
 	return NULL;
     }
-    for(prev = (List **)(void *)&list; (l = *prev) != NULL; prev = &l->cdr) {
-	if(l->car == g) {
+    for (prev = (List **)(void *)&list; (l = *prev) != NULL; prev = &l->cdr) {
+	if (l->car == g) {
 	    *prev = l->cdr;
 	    l->cdr = NULL;
 	    GeomDelete( (Geom *)l );
 	    break;
 	}
-    }
-
-    if (list->bsptree) {
-	BSPTreeFreeTree(list->bsptree);
     }
 
     return list;
@@ -85,9 +82,9 @@ Geom *ListRemove(Geom *list, Geom *g)
 void
 ListDelete(List *l)
 {
-    if(l->cdr) GeomDelete((Geom *)l->cdr);
-    if(l->car) GeomDelete(l->car);
-    if(l->carhandle) HandlePDelete(&l->carhandle);
+    if (l->cdr) GeomDelete((Geom *)l->cdr);
+    if (l->car) GeomDelete(l->car);
+    if (l->carhandle) HandlePDelete(&l->carhandle);
 }
 
 List *ListCopy(List *list)
@@ -97,9 +94,9 @@ List *ListCopy(List *list)
     List *newlist;
     List **tailp = &newlist;
 
-    for(l = list; l != NULL; l = l->cdr) {
+    for (l = list; l != NULL; l = l->cdr) {
 	newcar = GeomCopy(l->car);
-	if(newcar == NULL)
+	if (newcar == NULL)
 	    continue;
 	nl = OOGLNewE(List, "ListCopy: List");
 	GGeomInit(nl, list->Class, list->magic, NULL);
@@ -126,33 +123,28 @@ int ListGet(List *l, int attr, void *attrp)
 
 Geom *ListAppend(Geom *lg, Geom *g)
 {
-  List *new = OOGLNewE(List, "ListAppend: List");
-  List *l = (List*)lg;
+    List *new = OOGLNewE(List, "ListAppend: List");
+    List *l = (List*)lg;
 
-  if(l && l->Class->Delete != (GeomDeleteFunc *)ListDelete) {
-    OOGLError(0, "ListAppend: attempt to append to a %s, not a List",
-	GeomName((Geom *)l));
-    return NULL;
-  }
+    if (l && l->Class->Delete != (GeomDeleteFunc *)ListDelete) {
+	OOGLError(0, "ListAppend: attempt to append to a %s, not a List",
+		  GeomName((Geom *)l));
+	return NULL;
+    }
 
-  new->car = g;
-  new->cdr = NULL;
-  if (l) {
-    while (l->cdr) l = l->cdr;
-    l->cdr = new;
-    GGeomInit(new, lg->Class, lg->magic, NULL);
-  }
-  else {
-    l = new;
-    GGeomInit(new, ListClass, LISTMAGIC, NULL);
-  }
-  new->carhandle = NULL;
+    new->car = g;
+    new->cdr = NULL;
+    if (l) {
+	while (l->cdr) l = l->cdr;
+	l->cdr = new;
+	GGeomInit(new, lg->Class, lg->magic, NULL);
+    } else {
+	l = new;
+	GGeomInit(new, ListClass, LISTMAGIC, NULL);
+    }
+    new->carhandle = NULL;
 
-  if (l->bsptree) {
-    BSPTreeFreeTree(l->bsptree);
-  }
-
-  return lg ? lg : (Geom *)new;
+    return lg ? lg : (Geom *)new;
 }
 
 void ListHandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
@@ -180,7 +172,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	list->carhandle = NULL;
 	list->car = NULL;
     } else {
-	if(exist->Class != Classp) {
+	if (exist->Class != Classp) {
 	    OOGLError(0, "ListCreate: existing_value %x (magic %x) not a List",
 		exist, exist->magic);
 	    return NULL;
@@ -195,23 +187,23 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	     */
 	    h = va_arg(*a_list, Handle *);
 	    g = va_arg(*a_list, Geom *);
-	    if(g == NULL && h != NULL)
+	    if (g == NULL && h != NULL)
 		g = (Geom *)HandleObject(h);
-	    if(copy) {
-		if(h) RefIncr((Ref *)h);
+	    if (copy) {
+		if (h) RefIncr((Ref *)h);
 		RefIncr((Ref *)g);
 	    }
 	    GeomDelete(list->car);
 	    HandlePDelete(&list->carhandle);
 	    list->car = g;
 	    list->carhandle = h;
-	    if(h) {
+	    if (h) {
 		HandleRegister(&list->carhandle,
 			       (Ref *)list, &list->car, ListHandleUpdRef);
 	    }
 	    break;
 	case CR_GEOM:	/* == CR_CAR */
-	    if(list->car != NULL || list->carhandle != NULL) {
+	    if (list->car != NULL || list->carhandle != NULL) {
 		l = OOGLNewE(List, "ListCreate: List");
 		GGeomInit(l, Classp, LISTMAGIC, NULL);
 		l->car = list->car;
@@ -221,7 +213,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		list->cdr = l;
 	    }
 	    list->car = va_arg (*a_list, Geom *);
-	    if(copy) {
+	    if (copy) {
 		RefIncr((Ref *)list->car);
 	    }
 	    if (list->bsptree) {
@@ -229,7 +221,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    }
 	    break;
 	case CR_GEOMHANDLE:
-	    if(list->car != NULL || list->carhandle != NULL) {
+	    if (list->car != NULL || list->carhandle != NULL) {
 		l = OOGLNewE(List, "ListCreate: List");
 		l->car = list->car;
 		l->carhandle = list->carhandle;
@@ -237,7 +229,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		list->car = NULL;
 	    }
 	    h = va_arg(*a_list, Handle *);
-	    if(copy) RefIncr((Ref *)h);
+	    if (copy) RefIncr((Ref *)h);
 	    HandlePDelete(&list->carhandle);
 	    list->carhandle = h;
 	    HandleRegister(&list->carhandle,
@@ -245,15 +237,15 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    break;
 	case CR_CDR:
 	    l = va_arg (*a_list, List *);
-	    if(l && l->Class != Classp) {
+	    if (l && l->Class != Classp) {
 		OOGLError(0, "ListCreate: CDR %x (magic %x) not a List",
 			l, l->magic);
 		goto fail;
 	    }
-	    if(list->cdr) {
+	    if (list->cdr) {
 		GeomDelete((Geom *)list->cdr);
 	    }
-	    if(copy) {
+	    if (copy) {
 		RefIncr((Ref *)l);
 	    }
 	    list->cdr = l;
@@ -266,7 +258,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		OOGLError (0, "ListCreate: Undefined attribute: %d", attr);
 
 	      fail:
-		if(exist == NULL)
+		if (exist == NULL)
 		    GeomDelete ((Geom *)list);
 		return NULL;
 	    }
