@@ -60,8 +60,8 @@ void	mgrib_drawnormal(HPoint3 *p, Point3 *n);
  */
 void
 mgrib_polygon(int nv,  HPoint3 *V, 
-	     int nn,  Point3 *N, 
-	     int nc,  ColorA *C)
+	      int nn,  Point3 *N, 
+	      int nc,  ColorA *C)
 {
   int i;	
   HPoint3 *v;
