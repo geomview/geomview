@@ -39,8 +39,6 @@ Bezier *
 BezierDraw(Bezier *bezier)
 {
     const Appearance *ap = mggetappearance();
-    const void **old_tagged_app = NULL;
-    mgNDctx *NDctx = NULL;
     
     if (bezier->bsptree != NULL) {
 	BSPTreeSetAppearance((Geom *)bezier);
