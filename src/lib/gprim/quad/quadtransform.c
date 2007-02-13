@@ -36,25 +36,34 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "point3.h"
 #include "quadP.h"
 
-Quad *
-QuadTransform( q, T )
-     Quad *q;
-     Transform T;
+Quad *QuadTransform(Quad *q, Transform T)
 {
   int i;
-  for (i = 0; i < q->maxquad; i++)
+
+  for (i = 0; i < q->maxquad; i++) {
     HPt3TransformN(T, q->p[i], q->p[i], 4);
-  if (q->geomflags & QUAD_N)
-    for (i = 0; i < q->maxquad; i++)
-      NormalTransformN(T, q->n[i], q->n[i], 4);
-  return(q);
+  }
+  
+  if (q->geomflags & QUAD_N) {
+    Transform Tit;
+
+    TmDual(T, Tit);
+    for (i = 0; i < q->maxquad; i++) {
+      NormalTransformN(Tit, q->n[i], q->n[i], 4);
+    }
+  }
+
+  return q;
 }
 
-Quad *
-QuadTransformTo( q, T )
-     Quad *q;
-     Transform T;
+Quad *QuadTransformTo(Quad *q, Transform T)
 {
-  return(QuadTransform(q, T));
+  return QuadTransform(q, T);
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

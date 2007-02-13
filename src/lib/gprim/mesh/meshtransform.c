@@ -38,15 +38,20 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 Mesh *MeshTransform(Mesh *m, Transform T, TransformN *TN)
 {
-  if (!T)
+  if (!T) {
     return m;
+  }
 
   m->geomflags &= ~MESH_Z;
   if (HPt3TransformN(T, m->p, m->p, m->nu * m->nv)) {
     m->geomflags |= VERT_4D;
   }
-  if (m->geomflags & MESH_N)
-    NormalTransformN(T, m->n, m->n, m->nu * m->nv);
+  if (m->geomflags & MESH_N) {
+    Transform Tit;
+
+    TmDual(T, Tit);
+    NormalTransformN(Tit, m->n, m->n, m->nu * m->nv);
+  }
 
   return m;
 }

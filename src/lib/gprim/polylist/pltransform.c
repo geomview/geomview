@@ -39,17 +39,35 @@ PolyList *PolyListTransform(PolyList *p, Transform T, TransformN *TN)
 {
   int i;
 
-  if (!T)
+  if (!T) {
     return p;
+  }
 
-  for (i = 0; i < p->n_verts; i++)
+  for (i = 0; i < p->n_verts; i++) {
     HPt3Transform(T, &p->vl[i].pt, &p->vl[i].pt);
-  if (p->geomflags & PL_HASVN)
-    for (i = 0; i < p->n_verts; i++)
-      NormalTransform(T, &p->vl[i].vn, &p->vl[i].vn);
-  if (p->geomflags & PL_HASPN)
-    for (i = 0; i < p->n_polys; i++)
-      NormalTransform(T, &p->p[i].pn, &p->p[i].pn);
+  }
+  if (p->geomflags & (PL_HASVN|PL_HASPN)) {
+    Transform Tit;
+
+    TmDual(T, Tit);
+    if (p->geomflags & PL_HASVN) {
+      for (i = 0; i < p->n_verts; i++) {
+	NormalTransform(Tit, &p->vl[i].vn, &p->vl[i].vn);
+      }
+    }
+    if (p->geomflags & PL_HASPN) {
+      for (i = 0; i < p->n_polys; i++) {
+	NormalTransform(T, &p->p[i].pn, &p->p[i].pn);
+      }
+    }
+  }
 
   return p;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
