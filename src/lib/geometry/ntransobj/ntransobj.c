@@ -90,7 +90,7 @@ HandleOps NTransOps = {
 };
 
 void
-NTransUpdate( Handle **hp, Ref *ignored, TransformN **Tfixme )
+NTransUpdate(Handle **hp, Ref *ignored, TransformN **Tfixme)
 {
     Handle *h = *hp;
 
