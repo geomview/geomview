@@ -63,6 +63,9 @@ struct BSPTree {
 			     * tree generation, i.e. before adding
 			     * them to init_lpl.
 			     */
+  Transform      Tdual;     /* We need the dual of T to transform the normals
+			     * correctly ( y^t x = 0 <=> y^t T T^{-tr}x = 0).
+			     */
   PolyListNode   *init_lpl; /* While tree == NULL elements can be
 			     * added to this list
 			     */
@@ -90,6 +93,42 @@ static inline void BSPTreePopAppearance(Geom *geom, const void **old_tagged_app)
 {
   if (geom->bsptree != NULL && old_tagged_app != NULL) {
     geom->bsptree->tagged_app = old_tagged_app;
+  }
+}
+
+static inline TransformPtr BSPTreePushTransform(BSPTree *tree, TransformPtr T)
+{
+  TransformPtr old_T;
+
+  if (tree != NULL) {
+    old_T = tree->T;
+    tree->T = T;
+    if (T != TM_IDENTITY) {
+      TmDual(T, tree->Tdual);
+    }
+    return old_T;
+  } else {
+    return TM_IDENTITY;
+  }
+}
+
+static inline void BSPTreeSetTransform(BSPTree *tree, TransformPtr T)
+{
+  if (tree != NULL) {
+    tree->T = T;
+    if (T != TM_IDENTITY) {
+      TmDual(T, tree->Tdual);
+    }
+  }
+}
+
+static inline void BSPTreePopTransform(BSPTree *tree, TransformPtr old_T)
+{
+  if (tree != NULL) {
+    tree->T = old_T;
+    if (old_T != TM_IDENTITY) {
+      TmDual(old_T, tree->Tdual);
+    }
   }
 }
 
