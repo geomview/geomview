@@ -285,13 +285,28 @@ void Pt3TransformN( Transform3 T, Point3 *p1, Point3 *p2, int n )
     Pt3Transform( T, p1++, p2++ );
 }
 
+/* Behold: if T is not orthogonal, then this function has to be called
+ * with T^{-tr}, or the adj(T)^{tr}, otherwise the result will be
+ * wrong.
+ */
 static inline
-void NormalTransform( Transform3 T, Point3 *a, Point3 *b )
+void NormalTransform(Transform3 Tdual, Point3 *a, Point3 *b)
 {
+#if 0
   Pt3Transform(T, a, b);
   b->x -= T[TMW][TMX];
   b->y -= T[TMW][TMY];
   b->z -= T[TMW][TMZ];
+#else
+  Pt3Coord x, y, z;
+
+  x = a->x;
+  y = a->y;
+  z = a->z;
+  b->x = x*Tdual[TMX][TMX] + y*Tdual[TMY][TMX] + z*Tdual[TMZ][TMX];
+  b->y = x*Tdual[TMX][TMY] + y*Tdual[TMY][TMY] + z*Tdual[TMZ][TMY];
+  b->z = x*Tdual[TMX][TMZ] + y*Tdual[TMY][TMZ] + z*Tdual[TMZ][TMZ];
+#endif
   Pt3Unit(b);
 }
 
