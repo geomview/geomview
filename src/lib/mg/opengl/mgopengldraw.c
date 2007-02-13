@@ -427,12 +427,16 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     Poly   *p      = plist->poly;
     int    j       = p->n_vertices;
     int    plflags = p->flags;
+    int    apchg   = 0;
     
     if (*cur_app != *plist->tagged_app) {
 
+      apchg = 1;
+#if 0
       glDepthMask(GL_TRUE);
       glBlendFunc(GL_ONE,  GL_ZERO);
       glDisable(GL_BLEND);
+#endif
 
       /* set our appearance now */
       mgtaggedappearance(*plist->tagged_app);
@@ -443,9 +447,11 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       ap = mggetappearance();
       mat = ap->mat;
 
+#if 0
       glDepthMask(GL_FALSE);
       glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
       glEnable(GL_BLEND);
+#endif
 
       /* set new plfl_and/_or values */
       *plfl_and = ~0;
@@ -500,16 +506,22 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       continue;
     }
 
-    /* reestablish correct drawing color if necessary*/
-    if (!(plflags & (PL_HASPCOL|PL_HASVCOL)))
-      D4F(&(mat->diffuse));
-    if(plflags & PL_HASST)
+    /* Load textures if ap has changed */
+    if (apchg && (plflags & PL_HASST)) {
       mgopengl_needtexture();
+    }
 
-    if (plflags & PL_HASPCOL)
+    /* reestablish correct drawing color if necessary*/
+    if (!(plflags & (PL_HASPCOL|PL_HASVCOL))) {
+      D4F(&(mat->diffuse));
+    }
+
+    if (plflags & PL_HASPCOL) {
       D4F(&p->pcol);
-    if (plflags & PL_HASPN)
+    }
+    if (plflags & PL_HASPN) {
       N3F(&p->pn, &(*p->v)->pt);
+    }
     v = p->v;
 
     /* normal algorithm */
