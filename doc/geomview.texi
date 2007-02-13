@@ -2900,6 +2900,7 @@ appearance @{
                       #   to always face the camera
 
   +texturing          # (Enable) texture mapping
+  +linear             # (Enable) linear average of closest texture elements
   +mipmap             # (Enable) texture mip-mapping
   +mipinterp          # (Enable) linear mip-mapping
   -backcull           # (Don't) discard clockwise-oriented faces
