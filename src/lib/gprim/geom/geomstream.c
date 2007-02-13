@@ -401,9 +401,8 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		 */
 		if(!first && !PoolSeekMark(p)) {
 		    /* No luck.  Might as well give up right now. */
-		    OOGLSyntax(f,
-			"Error reading \"%s\": can't seek back far enough (on pipe?)",
-				PoolName(p));
+		    OOGLSyntax(f, "Error reading \"%s\": PoolSetMark() failed.",
+			       PoolName(p));
 			break;
 		}
 
