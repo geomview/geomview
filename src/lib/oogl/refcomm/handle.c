@@ -40,50 +40,55 @@ Handle *AllHandles = NULL;
 void
 HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
 {
-    Handle *h;
+  Handle *h;
 
-    if((h = *hp) != NULL && objp != NULL && h->object != *objp) {
-	if(h->ops->Delete) {
-	    RefIncr((Ref *)h->object);
-	    if(*objp) (*h->ops->Delete)(*objp);
-	}
-	*objp = h->object;
+  if((h = *hp) != NULL && objp != NULL && h->object != *objp) {
+    if(h->ops->Delete) {
+      RefIncr((Ref *)h->object);
+      if(*objp) {
+	(*h->ops->Delete)(*objp);
+      }
     }
+    *objp = h->object;
+  }
 }
 	    
 void HandleUnregister(Handle **hp)
 {
-    Handle *h;
-    HRef *rp;
-    int i;
+  Handle *h;
+  HRef *rp;
+  int i;
 
-    if(hp == NULL || (h = *hp) == NULL)
-	return;
-    for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-	rp--;
-	if(rp->hp == hp)
-	    *rp = h->refs[--h->nrefs];
+  if(hp == NULL || (h = *hp) == NULL) {
+    return;
+  }
+  for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
+    rp--;
+    if(rp->hp == hp) {
+      *rp = h->refs[--h->nrefs];
     }
+  }
 }
 
 void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    Handle *h;
-    HRef *rp;
-    int i;
+  Handle *h;
+  HRef *rp;
+  int i;
 
-    if(hp == NULL || (h = *hp) == NULL)
-	return;
+  if(hp == NULL || (h = *hp) == NULL) {
+    return;
+  }
 
-    for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-	rp--;
-	if(rp->hp == hp &&
-			(obj == NULL || rp->parentobj == obj) &&
-			(info == NULL || rp->info == info) &&
-			(update == NULL || rp->update == update)) {
-	    *rp = h->refs[--h->nrefs];
-	}
+  for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
+    rp--;
+    if(rp->hp == hp &&
+       (obj == NULL || rp->parentobj == obj) &&
+       (info == NULL || rp->info == info) &&
+       (update == NULL || rp->update == update)) {
+      *rp = h->refs[--h->nrefs];
     }
+  }
 }
 
 /*
@@ -91,101 +96,103 @@ void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((H
  */
 void HandleUnregisterAll(Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    Handle *h;
-    HRef *rp;
-    int i;
+  Handle *h;
+  HRef *rp;
+  int i;
 
-    for(h = AllHandles; h != NULL; h = h->next) {
-	for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-	    rp--;
-	    if((obj == NULL || rp->parentobj == obj) &&
-			(info == NULL || rp->info == info) &&
-			(update == NULL || rp->update == update)) {
-		*rp = h->refs[--h->nrefs];
-	    }
-	}
+  for(h = AllHandles; h != NULL; h = h->next) {
+    for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
+      rp--;
+      if((obj == NULL || rp->parentobj == obj) &&
+	 (info == NULL || rp->info == info) &&
+	 (update == NULL || rp->update == update)) {
+	*rp = h->refs[--h->nrefs];
+      }
     }
+  }
 }
 
 static
 void handleupdate(Handle *h, HRef *rp)
 {
-    if(rp->update && h == *rp->hp)
-	(*rp->update)(rp->hp, rp->parentobj, rp->info);
-    else { /* BUG */
-	OOGLError(1, "handleupdate mismatch: h %x %s, rp->hp %x, *rp->hp %x, rp->parentobj %x, rp->update %x",
-		h, h->name, rp->hp, *rp->hp, rp->parentobj, rp->update);
-	if(*rp->hp)
-	    OOGLError(1, "... *rp->hp->name %s", (*rp->hp)->name);
+  if(rp->update && h == *rp->hp) {
+    (*rp->update)(rp->hp, rp->parentobj, rp->info);
+  } else { /* BUG */
+    OOGLError(1, "handleupdate mismatch: h %x %s, rp->hp %x, *rp->hp %x, rp->parentobj %x, rp->update %x",
+	      h, h->name, rp->hp, *rp->hp, rp->parentobj, rp->update);
+    if(*rp->hp) {
+      OOGLError(1, "... *rp->hp->name %s", (*rp->hp)->name);
     }
+  }
 }
 
 int HandleRegister(Handle **hp, Ref *parentobj, void *info, void (*update) P((Handle **, Ref *, void *)))
 {
-    Handle *h;
-    HRef *rp;
-    int i;
+  Handle *h;
+  HRef *rp;
+  int i;
 
-    if(hp == NULL || (h = *hp) == NULL)
-	return 0;
-    for(i = h->nrefs, rp = h->refs; --i > 0; rp++) {
-	if(rp->hp == hp && rp->parentobj == parentobj && rp->info == info)
-	    goto doit;
-    }
+  if(hp == NULL || (h = *hp) == NULL)
+    return 0;
+  for(i = h->nrefs, rp = h->refs; --i > 0; rp++) {
+    if(rp->hp == hp && rp->parentobj == parentobj && rp->info == info)
+      goto doit;
+  }
 
-    if(h->nrefs >= h->maxrefs) {
-	h->refs = h->maxrefs == 0 ?
-		OOGLNewNE(HRef, (h->maxrefs = 3), "HandleRegister") :
-		OOGLRenewNE(HRef, h->refs, (h->maxrefs += h->maxrefs+1),
-				"HandleRegister");
-    }
-    rp = &h->refs[h->nrefs++];
+  if(h->nrefs >= h->maxrefs) {
+    h->refs = h->maxrefs == 0 ?
+      OOGLNewNE(HRef, (h->maxrefs = 3), "HandleRegister") :
+      OOGLRenewNE(HRef, h->refs, (h->maxrefs += h->maxrefs+1),
+		  "HandleRegister");
+  }
+  rp = &h->refs[h->nrefs++];
 
-    rp->hp = hp;
-  doit:
-    rp->parentobj = parentobj;
-    rp->info = info;
-    rp->update = update;
-    /* handleupdate(h, rp);	Do we need this?  I hope not. - slevy */
-    return 1;
+  rp->hp = hp;
+ doit:
+  rp->parentobj = parentobj;
+  rp->info = info;
+  rp->update = update;
+  /* handleupdate(h, rp);	Do we need this?  I hope not. - slevy */
+  return 1;
 }
 
 char *
 HandleName(Handle *h)
 {
-   return h ? h->name : NULL;
+  return h ? h->name : NULL;
 }
 
 Handle *
 HandleByName(char *name, HandleOps *ops)
 {
-    Handle *h;
+  Handle *h;
 
-    for(h = AllHandles; h != NULL; h = h->next) {
-	if(h->ops == ops && strcmp(h->name, name) == 0)
-	    return h;
+  for(h = AllHandles; h != NULL; h = h->next) {
+    if(h->ops == ops && strcmp(h->name, name) == 0) {
+      return h;
     }
-    return NULL;
+  }
+  return NULL;
 }
 
 static Handle *
 handlecreate(char *name, HandleOps *ops)
 {
-    Handle *h;
+  Handle *h;
 
-    h = OOGLNewE(Handle, "new Handle");
-    RefInit((Ref *)h, HANDLEMAGIC);
-    h->ops = ops;
-    h->name = strdup(name);
-    h->object = NULL;
-    h->maxrefs = 0;
-    h->nrefs = 0;
-    h->refs = NULL;
-    h->whence = NULL;
-    h->permanent = 1;
-    h->next = AllHandles;
-    AllHandles = h;
-    return h;
+  h = OOGLNewE(Handle, "new Handle");
+  RefInit((Ref *)h, HANDLEMAGIC);
+  h->ops = ops;
+  h->name = strdup(name);
+  h->object = NULL;
+  h->maxrefs = 0;
+  h->nrefs = 0;
+  h->refs = NULL;
+  h->whence = NULL;
+  h->permanent = 1;
+  h->next = AllHandles;
+  AllHandles = h;
+  return h;
 }
 
 /*
@@ -194,29 +201,32 @@ handlecreate(char *name, HandleOps *ops)
 int
 HandleSetObject(Handle *h, Ref *object)
 {
-    int i;
-    Ref *oldobj;
+  int i;
+  Ref *oldobj;
 
-    if(h == NULL)
-	return 0;
+  if(h == NULL)
+    return 0;
 
-    if(h->object == object)
-	return 1;
-
-    oldobj = h->object;
-    h->object = object;
-    if(h->ops->Delete != NULL) {
-	if(oldobj) (*h->ops->Delete)(oldobj);
-	RefIncr(object);
-    }
-
-    if(object != NULL && object->handle == NULL)
-	object->handle = h;
-
-    for(i = h->nrefs; --i >= 0; )
-	handleupdate(h, &h->refs[i]);
-
+  if(h->object == object)
     return 1;
+
+  oldobj = h->object;
+  h->object = object;
+  if(h->ops->Delete != NULL) {
+    if(oldobj) {
+      (*h->ops->Delete)(oldobj);
+    }
+	    
+    RefIncr(object);
+  }
+
+  if(object != NULL && object->handle == NULL)
+    object->handle = h;
+
+  for(i = h->nrefs; --i >= 0; )
+    handleupdate(h, &h->refs[i]);
+
+  return 1;
 }
 
 /*
@@ -225,11 +235,11 @@ HandleSetObject(Handle *h, Ref *object)
 Handle *
 HandleCreate(char *name, HandleOps *ops)
 {
-    Handle *h;
+  Handle *h;
 
-    h = HandleByName(name, ops);
-    if(h == NULL) h = handlecreate(name, ops);
-    return h;
+  h = HandleByName(name, ops);
+  if(h == NULL) h = handlecreate(name, ops);
+  return h;
 }
 
 /*
@@ -238,13 +248,13 @@ HandleCreate(char *name, HandleOps *ops)
 Handle *
 HandleAssign(char *name, HandleOps *ops, Ref *object)
 {
-    Handle *h;
+  Handle *h;
 
-    h = HandleByName(name, ops);
-    if(h == NULL)
-	h = handlecreate(name, ops);
-    HandleSetObject(h, object);
-    return h;
+  h = HandleByName(name, ops);
+  if(h == NULL)
+    h = handlecreate(name, ops);
+  HandleSetObject(h, object);
+  return h;
 }
 
 /*
@@ -256,10 +266,10 @@ HandleObject(Handle *h)
 
 void HandlePDelete(Handle **hp)
 {
-    if(hp && *hp) {
-	HandleUnregister(hp);
-	HandleDelete(*hp);
-    }
+  if(hp && *hp) {
+    HandleUnregister(hp);
+    HandleDelete(*hp);
+  }
 }
 
 void HandleDelete(Handle *h)
@@ -270,7 +280,7 @@ void HandleDelete(Handle *h)
     return;
   if(h->magic != HANDLEMAGIC) {
     OOGLWarn("Internal warning: HandleDelete of non-Handle %x (%x != %x)",
-	h, h->magic, HANDLEMAGIC);
+	     h, h->magic, HANDLEMAGIC);
     return;
   }
   /*
@@ -302,8 +312,8 @@ void HandleDelete(Handle *h)
   }
   for(hp = &AllHandles; *hp != NULL; hp = &(*hp)->next) {
     if(*hp == h) {
-	*hp = h->next;
-	break;
+      *hp = h->next;
+      break;
     }
   }
 
@@ -330,3 +340,10 @@ void HandleDelete(Handle *h)
   h->object = (Ref *)((long)h->object | 1);
 #endif
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
