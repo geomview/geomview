@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.9 2007/02/09 17:13:57 rotdrop Exp $
+ * $Id: mg.c,v 1.10 2007/02/13 12:43:18 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -51,8 +51,9 @@ extern struct mgfuncs mgnullfuncs;      /* Forward */
 mgcontext *_mgc = NULL;
 mgcontext *_mgclist = NULL;
 
-static struct mgastk *mgafree = NULL;
-static struct mgxstk *mgxfree = NULL;
+static struct mgastk *mgafree  = NULL;
+static struct mgastk *mgatfree = NULL; /* tagged free-list */
+static struct mgxstk *mgxfree  = NULL;
 
 #define MGC     _mgc
 
@@ -79,7 +80,7 @@ mgcurrentcontext(void)
 int
 mgdevice_NULL(void)
 {
-  if(MGC != NULL && MGC->devno != MGD_NULL)
+  if (MGC != NULL && MGC->devno != MGD_NULL)
     MGC = NULL;
   _mgf = mgnullfuncs;
   return 1;
@@ -361,19 +362,29 @@ void mg_untagappearance(const void *tag)
 
   if (!(astk->flags & MGASTK_ACTIVE)) {
     /* Move to free-list if not active */
-    if (ctx->ap_tagged == astk) {
-      ctx->ap_tagged = astk->next;
-      if (ctx->ap_tagged == NULL) {
-	ctx->ap_min_tag =
-	  ctx->mat_min_tag = 
-	  ctx->light_min_tag = -1;
-	ctx->ap_max_tag =
-	  ctx->mat_max_tag =
-	  ctx->light_max_tag = 0;
+    if (ctx) {
+      if (ctx->ap_tagged == astk) {
+	ctx->ap_tagged = astk->next;
+	if (ctx->ap_tagged == NULL) {
+	  ctx->ap_min_tag =
+	    ctx->mat_min_tag = 
+	    ctx->light_min_tag = -1;
+	  ctx->ap_max_tag =
+	    ctx->mat_max_tag =
+	    ctx->light_max_tag = 0;
+	}
+      } else {
+	for (pos = ctx->ap_tagged; pos->next != astk; pos = pos->next);
+	pos->next = astk->next;
       }
     } else {
-      for (pos = ctx->ap_tagged; pos->next != astk; pos = pos->next);
-      pos->next = astk->next;
+      if (astk == mgatfree) {
+	mgatfree = astk->next;
+      } else {
+	for (pos = mgatfree; pos->next != astk; pos = pos->next) {
+	  pos->next = astk->next;
+	}
+      }
     }
     astk->tag_ctx = NULL;
     astk->next = mgafree;
@@ -407,12 +418,12 @@ mg_popappearance(void)
   struct mgcontext *ctx = _mgc;
 
   mp = ctx->astk->next;
-  if(mp == NULL) {
+  if (mp == NULL) {
     return -1;
   }
-  if(ctx->astk->ap_seq != mp->ap_seq) ctx->changed |= MC_AP;
-  if(ctx->astk->mat_seq != mp->mat_seq) ctx->changed |= MC_MAT;
-  if(ctx->astk->light_seq != mp->light_seq) ctx->changed |= MC_LIGHT;
+  if (ctx->astk->ap_seq != mp->ap_seq) ctx->changed |= MC_AP;
+  if (ctx->astk->mat_seq != mp->mat_seq) ctx->changed |= MC_MAT;
+  if (ctx->astk->light_seq != mp->light_seq) ctx->changed |= MC_LIGHT;
 
   ctx->astk->flags &= ~MGASTK_ACTIVE;
   if (ctx->astk->flags & MGASTK_TAGGED) {
@@ -421,7 +432,7 @@ mg_popappearance(void)
     ctx->ap_tagged->tag_ctx = ctx;
     ctx->astk = mp;
   } else {
-    if(ctx->astk->ap.tex != NULL && ctx->astk->ap.tex != mp->ap.tex) {
+    if (ctx->astk->ap.tex != NULL && ctx->astk->ap.tex != mp->ap.tex) {
       TxDelete(ctx->astk->ap.tex);
     }
     LmDeleteLights(&ctx->astk->lighting);
@@ -444,7 +455,7 @@ mg_globallights( LmLighting *lm, int worldbegin )
   HPoint3 oldpos;
   int i;
 
-  for(i = 0, lp = &lm->lights[0]; i < AP_MAXLIGHTS && *lp != NULL; i++, lp++) {
+  for (i = 0, lp = &lm->lights[0]; i < AP_MAXLIGHTS && *lp != NULL; i++, lp++) {
     lt = *lp;
     oldpos = lt->globalposition;
     switch(lt->location) {
@@ -460,7 +471,7 @@ mg_globallights( LmLighting *lm, int worldbegin )
       lt->location = LTF_GLOBAL;
       break;
     }
-    if(memcmp(&oldpos, &lt->globalposition, sizeof(HPoint3)) != 0)
+    if (memcmp(&oldpos, &lt->globalposition, sizeof(HPoint3)) != 0)
       lt->changed = 1;
   }
 }
@@ -489,7 +500,7 @@ mg_setappearance(const Appearance *ap, int mergeflag)
   Appearance *nap;
   struct mgastk *ma = _mgc->astk;
 
-  if(mergeflag == MG_MERGE) {
+  if (mergeflag == MG_MERGE) {
     nap = ApMerge(ap, &ma->ap, 1);  /* Merge, in place */
     ma->changed |= MC_AP;
     ma->ap = *nap;
@@ -498,9 +509,9 @@ mg_setappearance(const Appearance *ap, int mergeflag)
     ApCopyShared(ap, &ma->ap);
     ma->changed |= MC_AP | MC_MAT | MC_LIGHT;
   }
-  if(ap->lighting)
+  if (ap->lighting)
     mg_globallights(&ma->lighting, 0);
-  if(ap->tex)
+  if (ap->tex)
     ap->tex->flags |= TXF_USED;
   return &_mgc->astk->ap;
 }
@@ -635,35 +646,58 @@ mg_ctxdelete( mgcontext *ctx )
   struct mgastk *astk, *nextastk;
   struct mgxstk *xstk, *nextxstk;
 
-  if(ctx == NULL)
+  if (ctx == NULL)
     return;
 
-  if(ctx->winchange)
+  if (ctx->winchange) {
     (*ctx->winchange)(ctx, ctx->winchangeinfo, MGW_WINDELETE, ctx->win);
+  }
 
-  for(mp = &_mgclist; *mp != NULL; mp = &(*mp)->next) {
-    if(*mp == ctx) {
+  for (mp = &_mgclist; *mp != NULL; mp = &(*mp)->next) {
+    if (*mp == ctx) {
       *mp = ctx->next;
       break;
     }
   }
 
-  for(xstk = ctx->xstk; xstk != NULL; xstk = nextxstk) {
+  for (xstk = ctx->xstk; xstk != NULL; xstk = nextxstk) {
     nextxstk = xstk->next;
-    OOGLFree(xstk);
+    xstk->next = mgxfree;
+    mgxfree = xstk;
   }
 
-  for(astk = ctx->astk; astk != NULL; astk = nextastk) {
+  for (astk = ctx->astk; astk != NULL; astk = nextastk) {
     nextastk = astk->next;
-    LmDeleteLights(&astk->lighting);
-    OOGLFree(astk);
+    if (!(astk->flags & MGASTK_TAGGED)) {
+      if (astk->ap.tex != NULL &&
+	  (nextastk == NULL || astk->ap.tex != nextastk->ap.tex)) {
+	TxDelete(ctx->astk->ap.tex);
+      }
+      LmDeleteLights(&astk->lighting);
+      astk->next = mgafree;
+      mgafree = astk;
+    }
+  }
+
+  /* Move the tagged appearances to the global tagged free-list; the
+   * ap's are moved to the real free list when they are finally
+   * untagged.
+   */
+  for (astk = ctx->ap_tagged; astk != NULL; astk = nextastk) {
+    nextastk = astk->next;
+    astk->tag_ctx = NULL;
+    astk->flags &= ~MGASTK_ACTIVE; /* should already have been cleared */
+    astk->next = mgatfree;
+    mgatfree = astk;
   }
 
   WnDelete(ctx->win);
 
   /* Free other data here someday XXX */
-  if(_mgc == ctx)
+  if (_mgc == ctx) {
     _mgc = NULL;
+  }
+  
   OOGLFree(ctx);
 }
 
@@ -681,7 +715,7 @@ mg_ctxdelete( mgcontext *ctx )
 int
 mg_ctxselect( mgcontext *ctx )
 {
-  if(ctx != NULL && _mgf.mg_devno != ctx->devno) {
+  if (ctx != NULL && _mgf.mg_devno != ctx->devno) {
     /*
      * For another device.
      * Install that device's function pointers, and
@@ -706,7 +740,7 @@ int
 mg_pushtransform( void )
 {
   struct mgxstk *xfm;
-  if(mgxfree) xfm = mgxfree, mgxfree = xfm->next;
+  if (mgxfree) xfm = mgxfree, mgxfree = xfm->next;
   else xfm = OOGLNewE(struct mgxstk, "mgpushtransform");
   *xfm = *MGC->xstk;
   xfm->next = MGC->xstk;
@@ -725,7 +759,7 @@ mg_pushtransform( void )
 int
 mg_poptransform( void )
 { struct mgxstk *xfm = MGC->xstk;
-  if(xfm->next == NULL)
+  if (xfm->next == NULL)
     return -1;
   MGC->xstk = xfm->next;
   xfm->next = mgxfree;
@@ -773,8 +807,8 @@ mg_findO2S(void)
 void
 mg_findS2O(void)
 {
-  if(!(_mgc->has & HAS_S2O)) {
-    if(!_mgc->xstk->hasinv) {
+  if (!(_mgc->has & HAS_S2O)) {
+    if (!_mgc->xstk->hasinv) {
       TmInvert(_mgc->xstk->T, _mgc->xstk->Tinv);
       _mgc->xstk->hasinv = 1;
     }
@@ -795,15 +829,15 @@ void mg_makepoint(void)
   HPoint3 *p;
   static float nsides = 3.0;
 
-  if(!(_mgc->has & HAS_S2O))
+  if (!(_mgc->has & HAS_S2O))
     mg_findS2O();
 
-  if(_mgc->astk->ap.linewidth <= 3) n = 4;
+  if (_mgc->astk->ap.linewidth <= 3) n = 4;
   else n = nsides * sqrt((double)_mgc->astk->ap.linewidth);
   vvneeds(&_mgc->point, n);
   VVCOUNT(_mgc->point) = n;
   r = .5 * _mgc->astk->ap.linewidth;
-  for(i = 0, p = VVEC(_mgc->point, HPoint3);  i < n;  i++, p++) {
+  for (i = 0, p = VVEC(_mgc->point, HPoint3);  i < n;  i++, p++) {
     t = 2*M_PI*i/n; s = r * sin(t); c = r * cos(t);
     p->x = _mgc->S2O[0][0]*c + _mgc->S2O[1][0]*s;
     p->y = _mgc->S2O[0][1]*c + _mgc->S2O[1][1]*s;
@@ -819,7 +853,7 @@ void mg_findcam(void)
   /*
    * Figure out where the camera is in the current coordinate system
    */
-  if(!_mgc->xstk->hasinv) {
+  if (!_mgc->xstk->hasinv) {
     TmInvert(_mgc->xstk->T, _mgc->xstk->Tinv);
     _mgc->xstk->hasinv = 1;
   }
@@ -876,7 +910,7 @@ mg_quads(int nquads, HPoint3 *verts, Point3 *normals, ColorA *colors,
   int dn = normals ? 4 : 0;
   int dc = colors ? 4 : 0;
 
-  for(i = 0; i < nquads; i++, v += 4, n += dn, c += dc)
+  for (i = 0; i < nquads; i++, v += 4, n += dn, c += dc)
     mgpolygon(4, v, dn, n, dc, c);
 }
 
