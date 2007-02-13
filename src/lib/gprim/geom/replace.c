@@ -33,13 +33,21 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "geomclass.h"
 
-void
-GeomReplace( parent, newchild )
-    Geom *parent;
-    Geom *newchild;
+void GeomReplace(Geom *parent, Geom *newchild)
 {
     if(parent != NULL && parent->Class->replace != NULL) {
 	RefIncr((Ref *)newchild);
 	GeomDelete((*parent->Class->replace)(parent, newchild));
+
+	if (parent->bsptree) {
+	    BSPTreeFreeTree(parent->bsptree);
+	}
     }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
