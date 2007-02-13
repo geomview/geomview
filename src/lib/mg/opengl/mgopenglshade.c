@@ -459,16 +459,12 @@ static void tex_delete(GLuint id) {
 }
 
 /* Is this texture loaded adequately for the given texture-quality setting? */
-static int tex_adequate( int apflags, Texture *wanttx )
+static int tex_adequate(int apflags, Texture *wanttx)
 {
-  if((apflags&APF_TXMIPMAP) && !(wanttx->qualflags&APF_TXMIPMAP)) {
-    return 0;
-  }
-  return 0;
-  /* Note: final return 0 added by mbp Wed May 17 22:35:19 2000.  Prior to this there
-     was no final return from this function.  Note that this means that this
-     function always returns 0, which can't possibly be correct.  But at least this
-     way it doesn't generate compiler warnings and the behavior is the same as before. */
+  return
+    (apflags & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR))
+    ==
+    (wanttx->qualflags & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR));
 }
   
 
