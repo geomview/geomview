@@ -49,16 +49,17 @@ static char *locations[] = {
 
 static int getlocation(char *name)
 {
-  int i;
-  if(name == NULL)
-    return -1;
-  for(i = COUNT(locations); --i >= 0 && strcasecmp(name, locations[i]) != 0; )
-    ;
-  return i;	/* Return location number, or -1 if not found. */
+    int i;
+    if(name == NULL)
+	return -1;
+    for(i = COUNT(locations); --i >= 0 && strcasecmp(name, locations[i]) != 0; )
+	;
+    return i;	/* Return location number, or -1 if not found. */
 }
 
-Geom *
-InstImport( Pool *p )
+
+
+Geom *InstImport(Pool *p)
 {
     Inst *inst = NULL;
     IOBFILE *file;
@@ -112,7 +113,7 @@ InstImport( Pool *p )
 	    if(iobfexpectstr(file, expect = "geom"))
 		goto syntax;
 
-	  geom:
+	geom:
 	    if(inst == NULL)
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
 	    expect = "geometry";
@@ -120,7 +121,7 @@ InstImport( Pool *p )
 		goto failed;
 	    if(inst->geomhandle)
 		HandleRegister(&inst->geomhandle, (Ref *)inst,
-				&inst->geom, HandleUpdRef);
+			       &inst->geom, InstHandleUpdRef);
 	    break;
 
 	case 'n': /* ntransform */
@@ -133,7 +134,7 @@ InstImport( Pool *p )
 		goto failed;
 	    if(inst->NDaxishandle)
 		HandleRegister(&inst->NDaxishandle, (Ref *)inst,
-			       &inst->NDaxis, NTransUpdate);
+			       &inst->NDaxis, InstNDAxisUpdate);
 	    break;
 	    
 	case 't':		/* tlist ... or transform ... */
@@ -144,7 +145,7 @@ InstImport( Pool *p )
 	    case 'l':
 		if(iobfexpectstr(file, (expect = "tlist")+2)) 	/* "tlist" */
 		    goto syntax;
-	     transforms:
+	    transforms:
 		if(inst == NULL)
 		    inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
 		expect = "TLIST object";
@@ -152,7 +153,7 @@ InstImport( Pool *p )
 		    goto failed;
 		if(inst->tlisthandle)
 		    HandleRegister(&inst->tlisthandle, (Ref *)inst,
-				&inst->tlist, HandleUpdRef);
+				   &inst->tlist, InstHandleUpdRef);
 		break;
 
 	    case 'r':
@@ -167,7 +168,7 @@ InstImport( Pool *p )
 		    goto failed;
 		if(inst->axishandle)
 		    HandleRegister(&inst->axishandle, (Ref *)inst,
-				inst->axis, TransUpdate);
+				   inst->axis, InstAxisUpdate);
 		break;
 
 	    default:
@@ -179,21 +180,21 @@ InstImport( Pool *p )
 
 	default:
 	syntax:
-	  OOGLSyntax(file, "Couldn't read INST in \"%s\": syntax error, expected %s, got char %c",
-		     p->poolname, expect, c);
-	  goto bogus;
+	    OOGLSyntax(file, "Couldn't read INST in \"%s\": syntax error, expected %s, got char %c",
+		       p->poolname, expect, c);
+	    goto bogus;
 
 	failed:
-	  OOGLSyntax(file, "Couldn't read INST in \"%s\": expected %s",
-			PoolName(p), expect);
+	    OOGLSyntax(file, "Couldn't read INST in \"%s\": expected %s",
+		       PoolName(p), expect);
 
         bogus:
-	  GeomDelete((Geom *)inst);
-	  return NULL;
+	    GeomDelete((Geom *)inst);
+	    return NULL;
 	}
     }
 
-  done:
+ done:
     return (Geom *)inst;
 }
 
@@ -213,7 +214,7 @@ InstExport( Inst *inst, Pool *pool )
     }
 
     if(inst->location != L_LOCAL && inst->location != L_NONE &&
-			(unsigned)inst->location < COUNT(locations))
+       (unsigned)inst->location < COUNT(locations))
 	fprintf(pool->outf, "  location %s\n", locations[inst->location]);
 
     if(inst->tlist != NULL || inst->tlisthandle != NULL) {
@@ -231,3 +232,10 @@ InstExport( Inst *inst, Pool *pool )
     }
     return ok;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

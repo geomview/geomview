@@ -39,15 +39,16 @@ Geom *ListReplace(List *list, Geom *geom)
 {
     Geom *g;
 
-    if(list == NULL)
+    if(list == NULL) {
 	return NULL;
+    }
     g = list->car;
     list->car = geom;
+
     return g;
 }
 
-Geom *
-ListRemove( Geom *list, Geom *g )
+Geom *ListRemove(Geom *list, Geom *g)
 {
     List *l;
     List **prev;
@@ -56,7 +57,8 @@ ListRemove( Geom *list, Geom *g )
 	return NULL;
 
     if(list->Class != ListClass) {
-	OOGLError(1, "ListRemove: %x is a %s not a List!", list, GeomName(list));
+	OOGLError(1,
+		  "ListRemove: %x is a %s not a List!", list, GeomName(list));
 	return NULL;
     }
     for(prev = (List **)(void *)&list; (l = *prev) != NULL; prev = &l->cdr) {
@@ -67,6 +69,11 @@ ListRemove( Geom *list, Geom *g )
 	    break;
 	}
     }
+
+    if (list->bsptree) {
+	BSPTreeFreeTree(list->bsptree);
+    }
+
     return list;
 }
 
@@ -83,8 +90,7 @@ ListDelete(List *l)
     if(l->carhandle) HandlePDelete(&l->carhandle);
 }
 
-List *
-ListCopy( List *list )
+List *ListCopy(List *list)
 {
     List *l, *nl;
     Geom *newcar;
@@ -107,8 +113,7 @@ ListCopy( List *list )
 }
 
 
-int
-ListGet(List *l, int attr, void *attrp)
+int ListGet(List *l, int attr, void *attrp)
 {
     switch(attr) {
     case CR_GEOM: *(Geom **)attrp = l->car; break;
@@ -119,8 +124,7 @@ ListGet(List *l, int attr, void *attrp)
     return 1;
 }
 
-Geom *
-ListAppend(Geom *lg, Geom *g)
+Geom *ListAppend(Geom *lg, Geom *g)
 {
   List *new = OOGLNewE(List, "ListAppend: List");
   List *l = (List*)lg;
@@ -143,11 +147,26 @@ ListAppend(Geom *lg, Geom *g)
     GGeomInit(new, ListClass, LISTMAGIC, NULL);
   }
   new->carhandle = NULL;
+
+  if (l->bsptree) {
+    BSPTreeFreeTree(l->bsptree);
+  }
+
   return lg ? lg : (Geom *)new;
 }
 
-List *
-ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
+void ListHandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
+{
+    List *list = (List *)parent;
+
+    HandleUpdRef(hp, parent, objp);
+
+    if (list->bsptree) {
+	BSPTreeFreeTree(list->bsptree);
+    }
+}
+
+List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 {
     List *list, *l;
     int attr, copy = 1;
@@ -186,10 +205,11 @@ ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    HandlePDelete(&list->carhandle);
 	    list->car = g;
 	    list->carhandle = h;
-	    if(h)
-		HandleRegister(&list->carhandle, (Ref *)list, &list->car, HandleUpdRef);
+	    if(h) {
+		HandleRegister(&list->carhandle,
+			       (Ref *)list, &list->car, ListHandleUpdRef);
+	    }
 	    break;
-	    
 	case CR_GEOM:	/* == CR_CAR */
 	    if(list->car != NULL || list->carhandle != NULL) {
 		l = OOGLNewE(List, "ListCreate: List");
@@ -201,9 +221,13 @@ ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		list->cdr = l;
 	    }
 	    list->car = va_arg (*a_list, Geom *);
-	    if(copy) RefIncr((Ref *)list->car);
+	    if(copy) {
+		RefIncr((Ref *)list->car);
+	    }
+	    if (list->bsptree) {
+		BSPTreeFreeTree(list->bsptree);
+	    }
 	    break;
-
 	case CR_GEOMHANDLE:
 	    if(list->car != NULL || list->carhandle != NULL) {
 		l = OOGLNewE(List, "ListCreate: List");
@@ -216,9 +240,9 @@ ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    if(copy) RefIncr((Ref *)h);
 	    HandlePDelete(&list->carhandle);
 	    list->carhandle = h;
-	    HandleRegister(&list->carhandle, (Ref *)list, &list->car, HandleUpdRef);
+	    HandleRegister(&list->carhandle,
+			   (Ref *)list, &list->car, ListHandleUpdRef);
 	    break;
-
 	case CR_CDR:
 	    l = va_arg (*a_list, List *);
 	    if(l && l->Class != Classp) {
@@ -226,10 +250,16 @@ ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 			l, l->magic);
 		goto fail;
 	    }
-	    if(list->cdr)
+	    if(list->cdr) {
 		GeomDelete((Geom *)list->cdr);
-	    if(copy) RefIncr((Ref *)l);
+	    }
+	    if(copy) {
+		RefIncr((Ref *)l);
+	    }
 	    list->cdr = l;
+	    if (list->bsptree) {
+		BSPTreeFreeTree(list->bsptree);
+	    }
 	    break;
 	default:
 	    if (GeomDecorate (list, &copy, attr, a_list)) {
@@ -244,3 +274,10 @@ ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 
     return list;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

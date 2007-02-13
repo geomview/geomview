@@ -121,7 +121,6 @@ Inst *InstDraw(Inst *inst)
   GeomIter *it;
   Transform T, tT, Tl2o;
   mgNDctx *NDctx = NULL;
-  const void **old_tagged_app = NULL;
   void *saved_ctx;
 
   if (inst->bsptree != NULL) {
@@ -221,7 +220,8 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     return inst;
   }
 
-  oldT = bsptree->T;
+  
+  oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
 
   it = GeomIterate((Geom *)inst, DEEP);
   while (NextTransform(it, T)) {
@@ -249,12 +249,12 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     } else {
       TmConcat(T, oldT, T);
     }
-    bsptree->T = T;
+    BSPTreeSetTransform(bsptree, T);
     inst->geom->bsptree = inst->bsptree;
     GeomBSPTree(inst->geom, bsptree, action);
   }
-  
-  bsptree->T = oldT;
+
+  BSPTreePopTransform(bsptree, oldT);
 
   return inst;
 }

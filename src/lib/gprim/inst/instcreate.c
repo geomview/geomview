@@ -52,8 +52,7 @@ InstDelete(Inst *inst)
   }
 }
 
-Inst *
-InstCopy( Inst *inst ) 
+Inst *InstCopy(Inst *inst) 
 {
   Inst *ni;
 
@@ -73,12 +72,12 @@ InstCopy( Inst *inst )
   ni->location = inst->location;
   ni->origin = inst->origin;
   ni->originpt = inst->originpt;
-  return(ni);
+
+  return ni;
 
 }
 
-Geom *
-InstReplace( Inst *inst, Geom *geom )
+Geom *InstReplace(Inst *inst, Geom *geom)
 {
   Geom *old;
 
@@ -87,11 +86,11 @@ InstReplace( Inst *inst, Geom *geom )
 
   old = inst->geom;
   inst->geom = geom;
+
   return old;
 }
 
-int
-InstGet( Inst *inst, int attr, void *attrp )
+int InstGet(Inst *inst, int attr, void *attrp)
 {
   switch(attr) {
   case CR_GEOM: *(Geom **)attrp = inst->geom; break;
@@ -117,13 +116,48 @@ InstGet( Inst *inst, int attr, void *attrp )
   return 1;
 }
 
-Inst *
-InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
+/* A version of TransUpdate() which takes care of any BSP-tree which
+ * might be attached to an inst; the INST-object is passed via the
+ * "parentobj" argument.
+ */
+void InstAxisUpdate(Handle **hp, Ref *parentobj, Transform Tfixme)
+{
+  Inst *inst = (Inst *)parentobj;
+
+  TransUpdate(hp, parentobj, Tfixme);
+
+  if (inst->bsptree) {
+    BSPTreeFreeTree(inst->bsptree);
+  }
+}
+
+void InstNDAxisUpdate(Handle **hp, Ref *parentobj, TransformN **Tfixme)
+{
+  Inst *inst = (Inst *)parentobj;
+
+  NTransUpdate(hp, parentobj, Tfixme);
+
+  if (inst->bsptree) {
+    BSPTreeFreeTree(inst->bsptree);
+  }
+}
+
+void InstHandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
+{
+  Inst *inst = (Inst *)parent;
+
+  HandleUpdRef(hp, parent, objp);
+
+  if (inst->bsptree) {
+    BSPTreeFreeTree(inst->bsptree);
+  }
+}
+
+Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
 {
   Inst *inst;
   int attr;
   int copy = 1;
-  int del_tree = 0;
   Transform *t;
   TransformN *nt;
   Geom *g;
@@ -151,90 +185,100 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
     switch(attr) {
     case CR_GEOMHANDLE:
       h = va_arg(*a_list, Handle *);
-      if(copy) RefIncr((Ref *)h);
-      if(inst->geomhandle) {
+      if (copy) {
+	RefIncr((Ref *)h);
+      }
+      if (inst->geomhandle) {
 	HandlePDelete(&inst->geomhandle);
       }
       inst->geomhandle = h;
-      HandleRegister(&inst->geomhandle, (Ref *)inst, &inst->geom, HandleUpdRef);
+      HandleRegister(&inst->geomhandle,
+		     (Ref *)inst, &inst->geom, InstHandleUpdRef);
       break;
-
     case CR_HANDLE_GEOM:
       h = va_arg(*a_list, Handle *);
-      if(copy) RefIncr((Ref*)h);
+      if (copy) {
+	RefIncr((Ref*)h);
+      }
       if(inst->geomhandle) {
 	HandlePDelete(&inst->geomhandle);
       }
       inst->geomhandle = h;
-      if(h) HandleRegister(&inst->geomhandle,
-			   (Ref *)inst, &inst->geom, HandleUpdRef);
+      if (h) {
+	HandleRegister(&inst->geomhandle,
+		       (Ref *)inst, &inst->geom, InstHandleUpdRef);
+      }
       /* Fall into CR_GEOM case */
-
     case CR_GEOM:
       g = va_arg(*a_list, Geom *);
-      if(copy) RefIncr((Ref *)g);
-      if(inst->geom)
+      if (copy) {
+	RefIncr((Ref *)g);
+      }
+      if (inst->geom) {
 	GeomDelete(inst->geom);
+      }
       inst->geom = g;
       break;
-
     case CR_AXIS:
       t = va_arg(*a_list, Transform *);
       InstTransformTo(inst, (*t), NULL);
       break;
-	    
     case CR_NDAXIS:
       nt = va_arg(*a_list, TransformN *);
       InstTransformTo(inst, NULL, nt);
       break;
-
     case CR_AXISHANDLE:
       h = va_arg(*a_list, Handle *);
-      if(copy) RefIncr((Ref *)h);
-      if(inst->axishandle) {
+      if (copy) {
+	RefIncr((Ref *)h);
+      }
+      if (inst->axishandle) {
 	HandlePDelete(&inst->axishandle);
       }
       inst->axishandle = h;
-      HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
-      del_tree = 1;
+      HandleRegister(&inst->axishandle,
+		     (Ref *)inst, inst->axis, InstAxisUpdate);
       break;
-
     case CR_NDAXISHANDLE:
       h = va_arg(*a_list, Handle *);
-      if(copy) RefIncr((Ref *)h);
+      if(copy) {
+	RefIncr((Ref *)h);
+      }
       if(inst->NDaxishandle) {
 	HandlePDelete(&inst->NDaxishandle);
       }
       inst->NDaxishandle = h;
-      HandleRegister(&inst->NDaxishandle, (Ref *)inst, &inst->NDaxis, NTransUpdate);
-      del_tree = 1;
+      HandleRegister(&inst->NDaxishandle,
+		     (Ref *)inst, &inst->NDaxis, InstNDAxisUpdate);
       break;
-
     case CR_TLIST:
       g = va_arg (*a_list, Geom *);
-      if(copy) RefIncr((Ref *)g);
+      if(copy) {
+	RefIncr((Ref *)g);
+      }
       if(inst->tlist) {
 	GeomDelete(inst->tlist);
       }
+      if (inst->bsptree) {
+	BSPTreeFreeTree(inst->bsptree);
+      }
       inst->tlist = g;
-      del_tree = 1;
       break;
-
     case CR_TLISTHANDLE:
       h = va_arg(*a_list, Handle *);
-      if(copy) RefIncr((Ref *)h);
+      if(copy) {
+	RefIncr((Ref *)h);
+      }
       if(inst->tlisthandle != NULL) {
 	HandlePDelete(&inst->tlisthandle);
       }
       inst->tlisthandle = h;
-      HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist, HandleUpdRef);
-      del_tree = 1;
+      HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist,
+		     InstHandleUpdRef);
       break;
-
     case CR_LOCATION:
       inst->location = va_arg(*a_list, int);
       break;
-
     default:
       if(GeomDecorate(inst, &copy, attr, a_list)) {
 	OOGLError (0, "InstCreate: Undefined option: %d", attr);
@@ -242,10 +286,6 @@ InstCreate ( Inst *exist, GeomClass *classp, va_list *a_list )
 	return NULL;
       }
     }
-  }
-
-  if (del_tree && inst->bsptree) {
-    BSPTreeFreeTree(inst->bsptree);
   }
 
   return inst;
