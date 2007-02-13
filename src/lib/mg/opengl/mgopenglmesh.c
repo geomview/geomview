@@ -103,9 +103,9 @@ mgopenglsubmesh(int wrap, int nu, int nv,
     }
   }
 
-  if ((_mgc->astk->mat.valid & MTF_ALPHA)
-      &&
-      (_mgc->astk->mat.override & MTF_ALPHA) || !(has & HAS_C)) {
+  if (((_mgc->astk->mat.valid & MTF_ALPHA)
+       &&
+       (_mgc->astk->mat.override & MTF_ALPHA)) || !(has & HAS_C)) {
     if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
       mflags |= COLOR_ALPHA;
     } else {
