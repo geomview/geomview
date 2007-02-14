@@ -17,13 +17,15 @@ nodist_pkginclude_HEADERS = $(wildcard include/*[^P].h)
 
 geomview: geomview.sh Makefile
 	echo top_builddir is $(top_builddir)
-	sed -e 's|%GEOMROOT%|$(top_srcdir)|g'                              \
+	sed -e 's|%GEOMROOT%|$(top_srcdir)|g' \
 	    -e 's|%GEOMVIEW_GVX%|$(top_builddir)/src/bin/geomview/x11/gvx|g' \
 	    -e 's|%GEOMVIEW_LTGVX%|$(top_builddir)/src/bin/geomview/x11/.libs/lt-gvx|g' \
-	    -e 's|%MACHTYPE%|$(MACHTYPE)|g'                                  \
-	    -e 's|%GEOMDATA%|$(top_srcdir)/data|g'                           \
-	    -e 's|%MODULESDIR%|$(top_builddir)/modules|g'                    \
-	    -e "s|%LD_LIBRARY_PATH_SETTINGS%|$(LD_LIBRARY_PATH_SETTINGS)|"   \
+	    -e 's|%MACHTYPE%|$(MACHTYPE)|g' \
+	    -e 's|%GEOMDATA%|$(top_srcdir)/data|g' \
+	    -e 's|%MODULESDIR%|$(top_builddir)/modules|g' \
+	    -e "s|%LD_LIBRARY_PATH_SETTINGS%|$(LD_LIBRARY_PATH_SETTINGS)|g" \
+	    -e "s|%GEOMVIEW_LIB%|$(libdir)|g" \
+	    -e "s|%GEOMVIEW_INCLUDE%|$(pkgincludedir)|g" \
 	    < $(top_srcdir)/geomview.sh > geomview
 	chmod +x geomview
 
