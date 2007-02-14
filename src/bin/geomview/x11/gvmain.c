@@ -82,11 +82,11 @@ int main(int argc, char **argv)
   signal(SIGFPE, SIG_IGN);   /* Ignore e.g. divide-by-zero traps */
 			     /* (Need this at least for Alpha/OSF & FreeBSD) */
 
-  cam_mgdevice();		/* in gvcamui.c */
-
   load_interface(argc,argv);
 
   init_geomview(argc, argv);
+
+  cam_mgdevice();		/* in gvcamui.c */
 
   parse_args(argc, argv);	/* load command & data file(s) */
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
   cs.h = NULL;
   cs.cam = NULL;
 
-  for (i=0; i < nwins; i++)
+  for (i=0; i < gv_nwins; i++)
     if (!dview[i])
     {/*
       ui_windowWillOpen((DView *)NULL);

@@ -33,4 +33,5 @@ extern vvec vv_emodule_path;
 #define emodule_path VVEC(vv_emodule_path, char *)
 #define emodule_path_count VVCOUNT(vv_emodule_path)
 
-extern int nwins;
+extern int gv_nwins;
+extern int gv_no_opengl;

@@ -6,10 +6,10 @@ Geomview \- interactive geometry viewer
 .nh
 .in +5
 .ti -5
-geomview [\-opengl] [\-b\ \fIr\ g\ b\fP]
+geomview [\-b\ \fIr\ g\ b\fP]
 [\-c\ \fIcommandfile\fP]
 [\-wins\ \fI#windows\fP]
-[\-nopanels]
+[\-nopanels] [\-noopengl]
 [\-wpos\ \fIxmin\ ymin\ xsize\ ysize\fP]
 [\-wpos\ \fIxsize,ysize\fP[@\fIxmin,ymin\fP]]
 [\-e\ \fIexternal-module-name\fP]
@@ -52,11 +52,11 @@ external modules in the "src/bin/example" directory.
 
 .SH OPTIONS
 .TP
--opengl
-Some geomview distributions include two gvx executables -- one which displays
-images using only X windows graphics, and another which uses Open GL.
-The \fB\-opengl\fP (or \fB-OGL\fP) option selects the latter, if it
-exists.  If used, this option \fBmust be the first option given to geomview\fP.
+-noopengl
+Disable the use of OpenGL for (possibly) hardware
+accelerated rendering, even if the Geomview binary has support for
+OpenGL compiled in. This also disables the support for transparency
+and and textures
 .TP
 -b
 Set the window background color to the given r g b values.
@@ -281,10 +281,6 @@ The ``geomview'' shell script sets these internally by default;
 if you set them before invoking geomview, the values you set will
 be used instead of the built-in defaults.
 .in +5
-.ti -5
-GEOMROOT \- main directory under which geomview finds its data files,
-modules, and gvx executable.
-.br
 .ti -5
 GEOMVIEW_GVX \- geomview executable
 .br
