@@ -395,15 +395,23 @@ Default to int])
 
 # If --with-motif=DIR was specified, set MOTIF_DIR to DIR
 AC_ARG_WITH(motif,
-  AC_HELP_STRING([--with-motif=DIR], [set DIR to motif installation prefix]),
+  AC_HELP_STRING([--with-motif=DIR],
+[Set DIR to motif installation prefix. It is not possible to compile Geomview
+without Motif.]),
   [MOTIF_DIR=$withval])
 
 AC_ARG_WITH(opengl,
-  AC_HELP_STRING([--with-opengl=DIR], [set DIR to opengl installation prefix]),
+  AC_HELP_STRING([--with-opengl=DIR],
+[Set DIR to opengl installation prefix. OpenGL is optional. The default is to
+auto-detect OpenGL and use it if available. Use `--without-opengl' to disable
+OpenGL.]),
   [OPENGL_DIR=$withval])
 
 AC_ARG_WITH(xforms,
-  AC_HELP_STRING([--with-xforms=DIR], [set DIR to xforms installation dir]),
+  AC_HELP_STRING([--with-xforms=DIR],
+[Set DIR to xforms installation dir. xforms is only used for some of the add-on
+modules, so it is optional. The default is to auto-detect the xforms library.
+Use `--without-xforms' to disable the use of the xforms library.]),
   [
 if test "$withval" = "no" ; then
     TRY_XFORMS=false
@@ -569,6 +577,15 @@ See the file INSTALL.Geomview for details.
 
   AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
 
+  #############################################################################
+
+  # Check for the OSMesa library which can be used for high quality
+  # off-screen snapshots, including texture. This is beneficial over
+  # making a snapshot of a window, because the latter only works when
+  # the window is mapped and not obscured by other windows.
+
+  # AC_CHECK_LIB([OSMesa], [OSMesaCreateContext])
+
 fi # without-opengl
 
 #
@@ -590,13 +607,18 @@ else
   MGX11=1
 fi
 
+MGGL=0
+
 AM_CONDITIONAL([MGOPENGL],[test "${MGOPENGL}" = 1])
 AC_DEFINE_UNQUOTED([MGOPENGL],${MGOPENGL},
   [Define to 1 if OpenGL (or Mesa or anything equivalent) is available and should be used for rendering])
 
 AM_CONDITIONAL([MGX11],[test "${MGX11}" = 1])
 AC_DEFINE_UNQUOTED([MGX11],${MGX11},
-  [Define to 1 if all rendering should be performed through the X library (i.e. no accelerated 3D rendering)])
+  [Define to 1 if all rendering should be performed through the X library (i.e. no accelerated 3D rendering, no textures)])
+
+AM_CONDITIONAL([MGGL],[test "${MGGL}" = 1])
+AC_DEFINE_UNQUOTED([MGGL],${MGGL}, [Leave this at 0])
 
 ########################################################################
 
