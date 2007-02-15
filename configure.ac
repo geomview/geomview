@@ -590,7 +590,7 @@ See the file INSTALL.Geomview for details.
   LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
   AC_CHECK_FUNCS([glXAllocateMemoryMESA],[MESAGL=1],[MESAGL=0])
   LIBS="${ac_gv_save_LIBS}"
-  if test "${MESA}" = "1"; then
+  if test "${MESAGL}" = "1"; then
 	AC_CHECK_LIB([OSMesa], [OSMesaCreateContext],,[${OPENGLLIBS}])
   fi
   AC_DEFINE_UNQUOTED([MESAGL],${MESAGL},
