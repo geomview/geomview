@@ -76,7 +76,8 @@ static struct saveops {
     { SAVE_WIO, &GeomOps,       UNIVERSE,       "Geometry [in universe]"},
     { SAVE_RMan, NULL,          TIFF_KEYWORD,   "RMan [->tiff]"         },
     { SAVE_RMan, NULL,          FRAME_KEYWORD,  "RMan [->frame]"        },
-    { SAVE_SNAP, NULL,          3,              "PPM OSMesa snapshot"   },
+    { SAVE_SNAP, NULL,          4,              "PPM GLX off-screen snapshot"},
+    { SAVE_SNAP, NULL,          3,              "PPM Mesa off-screen snapshot"},
     { SAVE_SNAP, NULL,		2,		"SGI screen snapshot"   },
     { SAVE_SNAP, NULL,		1,		"PPM screen snapshot"   },
     { SAVE_SNAP, NULL,          0,		"PPM software snapshot" },
@@ -89,7 +90,7 @@ static struct saveops {
 
 /* Indexed by save[].flag value. "ppm" must come first (hard-coded below) */
 static char *snaptypenames[] = {
-    "ppm", "ppmscreen", "sgi", "ppmmesa"
+    "ppm", "ppmscreen", "sgi", "ppmosmesa", "ppmosglx"
 };
 
 extern snap_entry snapshot_table[];

@@ -132,6 +132,9 @@ struct cursor {
 struct camwins {
   Window shellwin;
   Window wins[BUFTYPES];
+#if MGOPENGL
+  XVisualInfo *vi[BUFTYPES];
+#endif
   int curs;
 };
 
@@ -167,13 +170,16 @@ static Widget camshellof(int id, struct camwins **cwp)
 {
   struct camwins *cw;
   Widget w;
-  if (id < 0 || INDEXOF(id) >= VVCOUNT(camshells))
+  if (id < 0 || INDEXOF(id) >= VVCOUNT(camshells)) {
     return NULL;
+  }
   cw = VVINDEX(camshells, struct camwins, INDEXOF(id));
-  if ((w = XtWindowToWidget(dpy, cw->shellwin)) == NULL)
+  if ((w = XtWindowToWidget(dpy, cw->shellwin)) == NULL) {
     return NULL;
-  if (cwp)
+  }
+  if (cwp) {
     *cwp = cw;
+  }
   return w;
 }
 
@@ -300,7 +306,6 @@ Widget ui_create_camera(Widget parent, DView *dv)
     int setGLXwin, setGLXctx;
     int *attribs;
     GLXContext cx;
-    XVisualInfo *vi;
     Colormap cm;
   };
   static int dblBuf[] = {
@@ -438,15 +443,20 @@ Widget ui_create_camera(Widget parent, DView *dv)
       oglp = &ogl[i];
       oglp->cx = NULL;
       oglp->cm = None;
-      oglp->vi = glXChooseVisual(dpy, XScreenNumberOfScreen(XtScreen(camform)), oglp->attribs);
-      if (oglp->vi == NULL)
+      cw->vi[i] = glXChooseVisual(dpy,
+				  XScreenNumberOfScreen(XtScreen(camform)),
+				  oglp->attribs);
+      if (cw->vi[i] == NULL) {
 	continue;
-      if (oglcmap[i] == 0)
-	oglcmap[i] = getcmapfor(oglp->vi);
+      }
+      if (oglcmap[i] == 0) {
+	oglcmap[i] = getcmapfor(cw->vi[i]);
+      }
       
-      oglp->cx = glXCreateContext(dpy, oglp->vi, sharectx, GL_TRUE);
-      if (oglp->cx)
+      oglp->cx = glXCreateContext(dpy, cw->vi[i], sharectx, GL_TRUE);
+      if (oglp->cx) {
 	sharectx = oglp->cx;
+      }
 
       xswa.colormap = oglcmap[i];
       xswa.event_mask =
@@ -460,8 +470,8 @@ Widget ui_create_camera(Widget parent, DView *dv)
 
       cw->wins[i] = XCreateWindow(dpy, XtWindow(camdraw[DBL]),
 				  0, 0, size[0], size[1], 0/*border*/,
-				  oglp->vi->depth,
-				  InputOutput, oglp->vi->visual,
+				  cw->vi[i]->depth,
+				  InputOutput, cw->vi[i]->visual,
 				  CWEventMask|CWColormap|CWBorderPixel
 				  |CWBackPixel|CWBackPixmap, &xswa);
 
@@ -473,8 +483,8 @@ Widget ui_create_camera(Widget parent, DView *dv)
 	cmw[cmwneeded++] = cw->wins[i];
       }
 
-      mgctxset( oglp->setGLXwin, cw->wins[i],
-		oglp->setGLXctx, oglp->cx, MG_END );
+      mgctxset(oglp->setGLXwin, cw->wins[i],
+	       oglp->setGLXctx, oglp->cx, MG_END );
       n++;
     }
 
@@ -622,8 +632,9 @@ void ui_raise_window( int camid )
 {
   struct camwins *cw;
   Widget w = camshellof( camid, &cw );
-  if (w != NULL && XtWindow(w) != None)
+  if (w != NULL && XtWindow(w) != None) {
     XRaiseWindow( dpy, XtWindow( w ) );
+  }
 }
 
 /*****************************************************************************/
@@ -673,21 +684,19 @@ static int snapsetup(DView *dv)
 
   mgctxselect(dv->mgctx);
   mgctxget(MG_SETOPTIONS, &opts);
-  if (!gv_no_opengl) {
 #if MGOPENGL
-    glGetIntegerv(GL_RED_BITS, &bitsdeep);
-    if ((opts & MGO_DOUBLEBUFFER) && bitsdeep < 8) {
-      mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
-      unset = MGO_DOUBLEBUFFER;
-    }
+  glGetIntegerv(GL_RED_BITS, &bitsdeep);
+  if ((opts & MGO_DOUBLEBUFFER) && bitsdeep < 8) {
+    mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
+    unset = MGO_DOUBLEBUFFER;
+  }
 #endif
 #if MGGL
-    if ((opts & MGO_DOUBLEBUFFER) && (getgdesc(GD_BITS_NORM_DBL_RED) < 8)) {
-      mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
-      unset = MGO_DOUBLEBUFFER;
-    }
-#endif/*MGGL*/
+  if ((opts & MGO_DOUBLEBUFFER) && (getgdesc(GD_BITS_NORM_DBL_RED) < 8)) {
+    mgctxset(MG_UNSETOPTIONS, MGO_DOUBLEBUFFER, MG_END);
+    unset = MGO_DOUBLEBUFFER;
   }
+#endif/*MGGL*/
 
   XRaiseWindow(dpy, cw->shellwin);	/* Ensure window fully visible */
   XSync(dpy, False);			/* Raise it right now */
@@ -793,11 +802,11 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
 
 #include <GL/osmesa.h>
 
-static OSMesaContext osmctx, sharectx;
-static mgcontext *osmmgctx;
-
-int ui_ppmmesasnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
+int
+ui_ppmmesasnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 {
+  static OSMesaContext osmctx, sharectx;
+  static mgcontext *osmmgctx;
   FILE *f;
   int opts;
   char *data;
@@ -915,6 +924,152 @@ int ui_ppmmesasnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition 
 }
 #endif /*MESA -- ppmmesasnapshot*/
 
+#if MGOPENGL && HAVE_GLXCREATEGLXPIXMAP
+
+int
+ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
+{
+  static mgcontext *osglxmgctx;
+  struct camwins *cw;
+  GLXContext osglxctx;
+  Pixmap pixmap;
+  GLXPixmap glxpixmap;
+  FILE *f;
+  int opts;
+  char *data;
+  int xsize, ysize, row, i, j;
+  mgcontext *oldmgctx = dv->mgctx;
+  Camera *cam = NULL;
+  Appearance *ap;
+  WnWindow *win;
+  WnPosition vp;
+  int mgspace;
+  float pixaspect, frameaspect;
+  mgshadefunc shader = NULL;
+  int failed = 1;
+
+  if (gv_no_opengl) {
+    OOGLError(0,
+	      "OpenGL disabled via command-line switch. "
+	      "Screen snapshots are only implemented for OpenGL.\n");
+    return failed;
+  }
+
+  if (camshellof(dv->id, &cw) == NULL) {
+    OOGLError(1, "snapshot: no window for camera %s?", dv->name[1]);
+    return -1;
+  }
+
+  xsize = wp->xmax - wp->xmin + 1;
+  ysize = wp->ymax - wp->ymin + 1;
+
+  mgctxget(MG_CAMERA, &cam);
+  mgctxget(MG_SPACE, &mgspace);
+  mgctxget(MG_SHADER, &shader);
+  mgctxget(MG_GLXSINGLECTX, &osglxctx);
+  mgctxget(MG_WINDOW, &win);
+
+  ap = ApCopy(mggetappearance(), NULL);
+
+  win = WnCopy(win);
+  vp.xmin = vp.ymin = 0;
+  vp.xmax = xsize;
+  vp.ymax = ysize;
+  WnSet(win, WN_CURPOS, wp, WN_VIEWPORT, &vp, WN_END);
+
+  /* Create an X11 pixmap and a GLX pixmap to render to */
+  pixmap = XCreatePixmap(dpy, cw->shellwin, xsize, ysize, cw->vi[SGL]->depth);
+  if (pixmap == 0) {
+    return failed;
+  }
+  glxpixmap = glXCreateGLXPixmap(dpy, cw->vi[SGL], pixmap);
+  if (glxpixmap == 0) {
+    XFreePixmap(dpy, pixmap);    
+    return failed;
+  }
+
+  if (!glXMakeCurrent(dpy, glxpixmap, osglxctx)) {
+    XFreePixmap(dpy, pixmap);    
+    glXDestroyGLXPixmap(dpy, glxpixmap);
+    return failed;
+  }
+
+  if (fname[0] == '|') {
+    f = popen(fname+1, "w");
+  } else {
+    f = fopen(fname, "w");
+  }
+  if (f == NULL) { 
+    OOGLError(0, "snapshot ... ppmmesa: can't create %s: %s",
+	      fname, sperror());
+    XFreePixmap(dpy, pixmap);    
+    glXDestroyGLXPixmap(dpy, glxpixmap);
+    return failed;
+  }
+
+
+  mgdevice_OPENGL();
+  if (osglxmgctx == NULL) {
+    osglxmgctx = mgctxcreate(MG_GLXDOUBLEWIN, -1,
+			     MG_GLXSINGLEWIN, -1,
+			     MG_GLXSINGLECTX, osglxctx,
+			     MG_UNSETOPTIONS, MGO_DOUBLEBUFFER,
+			     MG_END);
+  } else {
+    mgctxselect(osglxmgctx);
+  }
+  dv->mgctx = osglxmgctx;
+  mgctxset(MG_GLXSINGLECTX, osglxctx,
+	   MG_CAMERA, cam,
+	   MG_APPEAR, ap,
+	   MG_WINDOW, win,
+	   MG_BACKGROUND, &dv->backcolor,
+	   MG_SPACE, mgspace,
+	   MG_SHADER, shader,
+	   MG_END);
+
+  mgreshapeviewport();	/* Make camera aspect match window */
+  {
+    /* Try to be as realistic as possible when dumping a snapshot.
+     * Create a drawing context, install (hopefully) all the
+     * attributes that draw_view() doesn't reset on its own,
+     * plug the ctx into the camera, and force a redraw.
+     * Then undo the subterfuge.
+     */
+    int oldredraw = dv->redraw;
+    int oldchanged = dv->changed;
+    gv_redraw(dv->id);
+    gv_draw(dv->id);
+    dv->redraw = oldredraw, dv->changed = oldchanged;
+  }
+
+  fprintf(f, "P6\n# Geomview Snapshot of %s\n%d %d\n255\n",
+	  dv->name[1], xsize, ysize);
+  row = xsize*3;
+  data = OOGLNewNE(char, row*ysize, "snapshot data");
+  glPixelStorei(GL_PACK_ALIGNMENT, 1);
+  glReadPixels(0, 0, xsize, ysize, GL_RGB, GL_UNSIGNED_BYTE, data);
+  for(i = ysize; --i >= 0; ) {
+    if (fwrite(data+i*row, row, 1, f) <= 0) {
+      break;
+    }
+  }
+
+  OOGLFree(data);
+  XFreePixmap(dpy, pixmap);    
+  glXDestroyGLXPixmap(dpy, glxpixmap);
+  ApDelete(ap);
+  dv->mgctx = oldmgctx;
+
+  failed = (fname[0] == '|') ? pclose(f) : fclose(f);
+  if (failed) {
+    OOGLError(0, "snapshot: Error writing to %s: %s", fname, sperror());
+  }
+
+  return failed;
+}
+#endif /* GLX offscreen snapshot */
+
 #include <signal.h>
 int ui_sgisnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 {
@@ -955,9 +1110,12 @@ int ui_sgisnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 
 snap_entry snapshot_table[] = {
   { ui_ppmscreensnapshot, "ppmscreen" },
-  { ui_sgisnapshot, "sgi" },
+  { ui_sgisnapshot, "sgiscreen" },
 #if MGOPENGL && MESAGL && HAVE_LIBOSMESA
-  { ui_ppmmesasnapshot, "ppmmesa" },
+  { ui_ppmmesasnapshot, "ppmosmesa" },
+#endif
+#if MGOPENGL && HAVE_GLXCREATEGLXPIXMAP
+  { ui_ppmglxsnapshot, "ppmosglx" },
 #endif
   { NULL, NULL }
 };
@@ -967,22 +1125,28 @@ ui_init_snaphelp()
 {
   LHelpRedef("snapshot",
 	     "(snapshot       CAM-ID     FILENAME [FORMAT [XSIZE [YSIZE]]])\n"
-	     "Save a snapshot of CAM-ID in the FILENAME (a string).  The\n"
-	     "FORMAT argument is optional; it may be \"ppmscreen\" (the default),\n"
-	     "\"ps\", \"ppm\", \"sgi\" (on SGI machines) or \"ppmmesa\" (if built with MESA).\n"
-	     "A \"ppmscreen\" snapshot is created by reading the image\n"
-	     "directly from the given window; the window is popped above\n"
-	     "other windows and redrawn first, then its contents are written as a\n"
-	     "PPM format image.  With \"ps\", dumps a Postscript picture representing\n"
-	     "the view from that window; hidden-surface removal might be incorrect.\n"
-	     "With \"ppm\", dumps a PPM-format image produced by geomview's internal\n"
-	     "software renderer; this may be of arbitrary size.\n"
-	     "If the FILENAME argument begins with \"|\", it's interpreted as a /bin/sh\n"
-	     "command to which the PPM or PS data should be piped.\n"
-	     "Optional XSIZE and YSIZE values are relevant only for \"ppm\" formats,\n"
-	     "and render to a window of that size (or scaled to that size,\n"
-	     "with aspect fixed, if only XSIZE is given)"
-	     );
+	     "Save a snapshot of CAM-ID in the FILENAME (a string). The FORMAT \
+argument is optional; it may be \"ppmscreen\" (the default), \"ps\",	\
+\"ppm\", \"sgi\" (on SGI machines), \"ppmosmesa\" (if built with	\
+libOSMesa) or \"ppmosglx\".  A \"ppmscreen\" snapshot is created by	\
+reading the image directly from the given window; the window is popped	\
+above other windows and redrawn first, then its contents are written	\
+as a PPM format image. A \"ppmosmesa\" snapshot is drawn by Mesa's	\
+software renderer into a memory buffer in RAM. A \"ppmosglx\" snapshot	\
+is rendered into a GLX Pixmap buffer, which is also off-screen but	\
+may or may not reside in video RAM. Rendering may or may not be		\
+accelerated. The problem with on-screen snapshots is that the window	\
+must be mapped and not obscured by other windows. So on-screen		\
+snapshots will not work in the background, or when a screen safer is	\
+active. With \"ps\", dumps a Postscript picture representing the view	\
+from that window; hidden-surface removal might be incorrect.  With	\
+\"ppm\", dumps a PPM-format image produced by geomview's internal	\
+software renderer; this may be of arbitrary size.  If the FILENAME	\
+argument begins with \"|\", it's interpreted as a /bin/sh command to	\
+which the PPM or PS data should be piped.  Optional XSIZE and YSIZE	\
+values are relevant only for \"ppm\" formats, and render to a window	\
+of that size (or scaled to that size, with aspect fixed, if only XSIZE	\
+is given)");
 }
 
 #else /* only MGX11 */

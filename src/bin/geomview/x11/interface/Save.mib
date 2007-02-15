@@ -79,7 +79,8 @@ item: \"Geometry [in world]\"\n\
 item: \"Geometry [in universe]\"\n\
 item: \"RMan [->tiff]\"\n\
 item: \"RMan [->frame]\"\n\
-item: \"PPM OSMesa snapshot\"\n\
+item: \"PPM GLX off-screen snapshot\"\n\
+item: \"PPM Mesa off-screen snapshot\"\n\
 item: \"SGI Screen snapshot\"\n\
 item: \"PPM Screen snapshot\"\n\
 item: \"PPM software snapshot\"\n\

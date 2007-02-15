@@ -597,6 +597,13 @@ See the file INSTALL.Geomview for details.
 	  [Define to 1 if your are using the Mesa OpenGL implementation])
   AC_SUBST(MESAGL)
 
+  # Even without libOSMesa it is possible to generate off-screen snapshots
+  # by using glXCrateGLXPixmap().
+  ac_gv_save_LIBS="${LIBS}"
+  LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
+  AC_CHECK_FUNCS([glXCreateGLXPixmap])
+  LIBS="${ac_gv_save_LIBS}"
+
 fi # without-opengl
 
 #
