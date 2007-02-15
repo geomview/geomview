@@ -1,5 +1,3 @@
-#!./testwish
-
 emodule_init ndview
 
 if [catch {set ndroot $env(NDVIEWROOT)}] {
