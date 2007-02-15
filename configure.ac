@@ -588,7 +588,7 @@ See the file INSTALL.Geomview for details.
 
   ac_gv_save_LIBS="${LIBS}"
   LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
-  AC_CHECK_FUNCS([GLX_MESA_allocate_memory],[MESAGL=1],[MESAGL=0])
+  AC_CHECK_FUNCS([glXAllocateMemoryMESA],[MESAGL=1],[MESAGL=0])
   LIBS="${ac_gv_save_LIBS}"
   if test "${MESA}" = "1"; then
 	AC_CHECK_LIB([OSMesa], [OSMesaCreateContext],,[${OPENGLLIBS}])
