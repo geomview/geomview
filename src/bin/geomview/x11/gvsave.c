@@ -73,11 +73,12 @@ static struct saveops {
     { SAVE_WIO, &CommandOps,    0,              "Commands"              },
     { SAVE_WIO, &GeomOps,       SELF,           "Geometry alone"        },
     { SAVE_WIO, &GeomOps,       WORLDGEOM,      "Geometry [in world]"   },
-    { SAVE_WIO, &GeomOps,       UNIVERSE,       "Geometry [in universe]" },
+    { SAVE_WIO, &GeomOps,       UNIVERSE,       "Geometry [in universe]"},
     { SAVE_RMan, NULL,          TIFF_KEYWORD,   "RMan [->tiff]"         },
     { SAVE_RMan, NULL,          FRAME_KEYWORD,  "RMan [->frame]"        },
-    { SAVE_SNAP, NULL,		2,		"SGI Screen snapshot"   },
-    { SAVE_SNAP, NULL,		1,		"PPM Screen snapshot"   },
+    { SAVE_SNAP, NULL,          3,              "PPM OSMesa snapshot"   },
+    { SAVE_SNAP, NULL,		2,		"SGI screen snapshot"   },
+    { SAVE_SNAP, NULL,		1,		"PPM screen snapshot"   },
     { SAVE_SNAP, NULL,          0,		"PPM software snapshot" },
     { SAVE_PS,  NULL,		0,		"PostScript snapshot"	},
     { SAVE_WIO, &CamOps,        UNIVERSE,       "Camera"                },
@@ -86,8 +87,9 @@ static struct saveops {
     { SAVE_WIO, &WindowOps,     UNIVERSE,       "Window"                },
 };
 
-static char *snaptypenames[] = {	/* Indexed by save[].flag value */
-    "ppm", "ppmscreen", "sgi"
+/* Indexed by save[].flag value. "ppm" must come first (hard-coded below) */
+static char *snaptypenames[] = {
+    "ppm", "ppmscreen", "sgi", "ppmmesa"
 };
 
 extern snap_entry snapshot_table[];
@@ -289,3 +291,10 @@ static void save_selection(Widget w, XtPointer data,
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

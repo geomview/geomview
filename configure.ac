@@ -582,9 +582,20 @@ See the file INSTALL.Geomview for details.
   # Check for the OSMesa library which can be used for high quality
   # off-screen snapshots, including texture. This is beneficial over
   # making a snapshot of a window, because the latter only works when
-  # the window is mapped and not obscured by other windows.
+  # the window is mapped and not obscured by other windows. However,
+  # this can only work if libGL is indeed based on Mesa because
+  # libOSMesa overrides the OpenGL API entries.
 
-  # AC_CHECK_LIB([OSMesa], [OSMesaCreateContext])
+  ac_gv_save_LIBS="${LIBS}"
+  LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
+  AC_CHECK_FUNCS([GLX_MESA_allocate_memory],[MESAGL=1],[MESAGL=0])
+  LIBS="${ac_gv_save_LIBS}"
+  if test "${MESA}" = "1"; then
+	AC_CHECK_LIB([OSMesa], [OSMesaCreateContext],,[${OPENGLLIBS}])
+  fi
+  AC_DEFINE_UNQUOTED([MESAGL],${MESAGL},
+	  [Define to 1 if your are using the Mesa OpenGL implementation])
+  AC_SUBST(MESAGL)
 
 fi # without-opengl
 

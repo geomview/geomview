@@ -789,7 +789,7 @@ int ui_ppmscreensnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPositio
   return failed;
 }
 
-#if defined(MESA) && MGOPENGL
+#if MGOPENGL && MESAGL && HAVE_LIBOSMESA
 
 #include <GL/osmesa.h>
 
@@ -956,7 +956,7 @@ int ui_sgisnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 snap_entry snapshot_table[] = {
   { ui_ppmscreensnapshot, "ppmscreen" },
   { ui_sgisnapshot, "sgi" },
-#ifdef MESA	/* Defined in GL/gl.h, if we're using Mesa */
+#if MGOPENGL && MESAGL && HAVE_LIBOSMESA
   { ui_ppmmesasnapshot, "ppmmesa" },
 #endif
   { NULL, NULL }
