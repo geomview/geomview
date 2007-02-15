@@ -1,10 +1,6 @@
 AC_PREREQ(2.59)
 AC_INIT(geomview, [1.8.2-post-rc10], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
-if test "z${cache_file}" = "z/dev/null"; then
-  cache_file=config.cache
-  AC_CACHE_LOAD
-fi
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE([dist-bzip2 foreign 1.9])
 AM_MAINTAINER_MODE
@@ -127,7 +123,7 @@ AC_PROG_CPP
 AC_PROG_LEX
 #AC_PROG_RANLIB
 AC_PROG_YACC
-AC_DISABLE_SHARED
+#AC_DISABLE_SHARED
 AM_CONDITIONAL([INSTALL_LIBGEOMVIEW],[true || test  "z${enable_shared}" = "zyes"])
 AC_PROG_LIBTOOL
 # Search path for "find" executable.  Use "find" unless
@@ -956,16 +952,6 @@ LF_LINK_HEADERS(src/lib/aclib			\
 		)
 
 LF_SET_INCLUDES
-
-
-module_srcdirs=`( cd $srcdir ; $FIND src/bin \( -name 'configure.in' -o -name 'configure.ac' \) -a -print ) | sed -e 's/\/configure.in$//g' -e 's/\/configure.ac$//g'`
-module_srcdirs=`echo $module_srcdirs`
-src_bin_module_subdirs=`echo $module_srcdirs | sed -e 's/src\/bin\///g'`
-
-AC_SUBST(src_bin_module_subdirs)
-
-AC_CONFIG_SUBDIRS($module_srcdirs)
-
 
 AC_CONFIG_FILES([Makefile
 	  data/Makefile
