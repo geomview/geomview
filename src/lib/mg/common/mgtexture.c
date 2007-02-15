@@ -73,9 +73,10 @@ gimme(char *fname, int *dopclose, struct xyc *size)
     char *prefix = NULL;
     char *msg = NULL;
     IOBFILE *f = NULL;
-    static char *suffixes[] = {
+    static const char *suffixes[] = {
 	"\0zcat ", "Z",
 	"\0gzip -dc ", "z", "gz",
+	"\0bzip2 -dc ", "bz2",
 	"\0tifftopnm ", "tiff", "tif",
 	"\0giftoppm ", "gif",
 	"\0",
@@ -401,6 +402,7 @@ mg_reassign_shared_textures(mgcontext *ctx, int mgdtype)
     mgcontext *another;
     Texture *tx;
     TxUser *tu, **tup;
+
     for(another = _mgclist; another != NULL; another = another->next) {
 	if(another != ctx && another->devno == mgdtype)
 	    break;
@@ -543,8 +545,9 @@ mg_inhaletexture(Texture *tx, int rgba)
 	return (tx->data != NULL);
 
     tx->flags |= TXF_LOADED;		/* Even if we fail, don't retry */
-    if(tx->data)
+    if(tx->data) {
 	OOGLFree(tx->data);
+    }
     tx->data = NULL;
 
     wantchans = tx->channels;
@@ -583,8 +586,9 @@ mg_inhaletexture(Texture *tx, int rgba)
 
     pixels = tx->xsize * tx->ysize;
 
-    if(tx->channels < wantchans)
+    if(tx->channels < wantchans) {
 	tx->channels = wantchans;
+    }
 
     rowsize = tx->xsize * tx->channels;
     rowsize = (rowsize + 3) & ~3;	/* Round up to 4-byte boundary */
@@ -593,8 +597,9 @@ mg_inhaletexture(Texture *tx, int rgba)
     failfile = tx->filename;
     ok = readimage(tx, 0, rowsize, &size, f, tx->filename);
     if(alphaf)
-	ok &= readimage(tx, tx->channels - alphasize.channels, rowsize, &alphasize,
-				alphaf, tx->alphafilename);
+	ok &= readimage(tx, tx->channels - alphasize.channels,
+			rowsize, &alphasize,
+			alphaf, tx->alphafilename);
     if(!ok) {
 	OOGLFree(tx->data);
 	tx->data = NULL;
@@ -620,8 +625,9 @@ mg_inhaletexture(Texture *tx, int rgba)
 	    }
 	} else {
 	    OOGLError(0,
-	    "mg_inhaletexture: warning: dunno how to inhale %d+%d images into %d-chan image",
-		size.channels, alphasize.channels, tx->channels);
+		      "mg_inhaletexture: warning: "
+		      "dunno how to inhale %d+%d images into %d-chan image",
+		      size.channels, alphasize.channels, tx->channels);
 	}
     }
 
