@@ -54,9 +54,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
  * All compile-time dependencies on graphics type (X11/GL/OPENGL)
  * reside in this file.
  */
+
+/* Don't worry about that #error stuff, configure makes sure that at
+ * least MGX11 is defined (look in config.h)
+ */
 #if !MGGL && !MGX11 && !MGOPENGL
-/* default to MGOPENGL */
-# error Need at least one graphics type (X11/OpengGL/GL) to render with
+# error Need at least one graphics type (X11/OpenGL/GL) to render with!
 #endif
 
 #include "mg.h"
@@ -69,8 +72,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # include "mggl.h"
 # include <gl/gl.h>
 # include <X11/Xirisw/GlxMDraw.h>
-#else
-# define MGGL 0
 #endif
 
 #if MGOPENGL
@@ -84,8 +85,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # else
 #  define OPENGL_BUILDINFOGRAPHICS "OpenGL"
 # endif /*!MESA*/
-#else
-# define MGOPENGL 0
 #endif
 
 #ifdef OPENGL_BUILDINFOGRAPHICS
