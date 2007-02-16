@@ -64,6 +64,7 @@ struct xyc {
     char *rledata;	/* For TF_SGIRLE: all data (don't fseek so we can read from pipe)*/
 };
 
+
 static IOBFILE *
 gimme(char *fname, int *dopclose, struct xyc *size)
 {
@@ -82,7 +83,6 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	"\0",
 	NULL
     };
-    
 
     size->rleoff = NULL;  size->rledata = NULL;
     if(fname == NULL)
@@ -260,10 +260,6 @@ readimage(Texture *tx, int offset, int rowsize, struct xyc *size, IOBFILE *f, ch
 	    }
 	}
     } else {
-	/* PNM, if only Geomview was distributed under the GPL we
-	 * could just call a library routine of the netpbm
-	 * package. But so what.
-	 */
 	for(i = 0; i < size->ysize; i++) {
 	    char *row = tx->data + rowsize * (size->ysize - i - 1) + offset;
 	    if(tx->channels == size->channels && size->format == TF_BYTE) {
