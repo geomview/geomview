@@ -45,7 +45,6 @@ static TmCoord (*coords2W(int system))[4]
   static Transform Tndc;
 
   switch(system) {
-
   case L_GLOBAL: return TM3_IDENTITY;
   case L_CAMERA: return _mgc->C2W;
   case L_SCREEN: return _mgc->S2W;
@@ -220,6 +219,13 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     return inst;
   }
 
+  if (action == BSPTREE_CREATE) {
+    /* No need to loop over all transformation unless action ==
+     * BSPTREE_ADDGEOM
+     */
+    GeomBSPTree(inst->geom, bsptree, action);
+    return inst;
+  }
   
   oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
 
