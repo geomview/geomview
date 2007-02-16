@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.10 2007/02/13 12:43:18 rotdrop Exp $
+ * $Id: mg.c,v 1.11 2007/02/16 09:15:33 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -354,13 +354,13 @@ void mg_untagappearance(const void *tag)
     return;
   }
   
-  /* undo RefIncr() and possibly delete the resources */
-  if (astk->ap.tex != NULL) {
-    TxDelete(ctx->astk->ap.tex);
-  }
-  LmDeleteLights(&astk->lighting);
-
   if (!(astk->flags & MGASTK_ACTIVE)) {
+
+    if (astk->ap.tex != NULL) {
+      TxDelete(astk->ap.tex);
+    }
+    LmDeleteLights(&astk->lighting);
+
     /* Move to free-list if not active */
     if (ctx) {
       if (ctx->ap_tagged == astk) {
