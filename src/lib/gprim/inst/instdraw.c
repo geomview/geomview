@@ -199,7 +199,13 @@ Inst *InstDraw(Inst *inst)
   }
 
   if(NDctx) {
-    /* restore */
+    /* restore the ND-context, also: if we have a BSP-tree, then we
+     * need to add our object to the tree, because GeomBSPTreeDraw()
+     * does not do so for ND drawing.
+     */
+    if (inst->bsptree != NULL && (inst->bsptree->geomflags & COLOR_ALPHA)) {
+      GeomBSPTree((Geom *)inst, inst->bsptree, BSPTREE_ADDGEOM);
+    }
     mgctxset(MG_NDCTX, NDctx, MG_END);
   }
 
@@ -212,13 +218,6 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
   GeomIter *it;
   Transform T, tT, Tl2o;
 
-  if (inst->NDaxis) {
-    /* No need to add to the BSPTree here, will be handled by the
-     * various draw_projected_BLAH() stuff.
-     */
-    return inst;
-  }
-
   if (action == BSPTREE_CREATE) {
     /* No need to loop over all transformation unless action ==
      * BSPTREE_ADDGEOM
@@ -227,6 +226,13 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     return inst;
   }
   
+  if (inst->NDaxis) {
+    /* No need to add to the BSPTree here, will be handled by the
+     * various draw_projected_BLAH() stuff.
+     */
+    return inst;
+  }
+
   oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
 
   it = GeomIterate((Geom *)inst, DEEP);
