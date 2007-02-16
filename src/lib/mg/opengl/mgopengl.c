@@ -1166,12 +1166,7 @@ GLuint mgopengl_new_translucent(void)
   /* Load the appearance definition */
   mgopengl_appearance(_mgc->astk, ~0);
 
-  /* Use a proper blend function to simulate some sort of
-   * transparency, disable writing to the depth-buffer.
-   */
-  glDepthMask(GL_FALSE);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_BLEND);
+  /* alpha-blending will be enabled on-demand in mgopengl_bsptree(). */
 
   return _mgopenglc->translucent_lists[_mgopenglc->translucent_seq++];
 }
@@ -1186,11 +1181,9 @@ GLuint mgopengl_new_translucent(void)
 void mgopengl_end_translucent(void)
 {
   glEndList();
-
-  /* Disable alpha-blending */
-  glDepthMask(GL_TRUE);
-  glBlendFunc(GL_ONE,  GL_ZERO);
-  glDisable(GL_BLEND);
+  /* No need to disable alpha-blending because the corresponding
+   * enable-commands are wrapped into a GL_COMPILE display list.
+   */
 }
 
 /*-----------------------------------------------------------------------

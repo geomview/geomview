@@ -432,11 +432,6 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     if (*cur_app != *plist->tagged_app) {
 
       apchg = 1;
-#if 0
-      glDepthMask(GL_TRUE);
-      glBlendFunc(GL_ONE,  GL_ZERO);
-      glDisable(GL_BLEND);
-#endif
 
       /* set our appearance now */
       mgtaggedappearance(*plist->tagged_app);
@@ -446,12 +441,6 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 
       ap = mggetappearance();
       mat = ap->mat;
-
-#if 0
-      glDepthMask(GL_FALSE);
-      glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
-      glEnable(GL_BLEND);
-#endif
 
       /* set new plfl_and/_or values */
       *plfl_and = ~0;
@@ -497,7 +486,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     plflags &= *plfl_and;
     plflags |= *plfl_or;
 
-    /* We may want to do  something else here  if ever we should start
+    /* We may want to do something else here if ever we should start
      * to use BSP-tress for the buffer etc. render engines. For now we
      * only render translucent objects here, and leave the rest to the
      * ordinary drawing engines.
@@ -506,9 +495,20 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       continue;
     }
 
-    /* Load textures if ap has changed */
-    if (apchg && (plflags & PL_HASST)) {
-      mgopengl_needtexture();
+    if (apchg) {
+      /* Disable write access to the depth buffer and enable
+       * alpha-blending. The blend function used here will work
+       * without alpha-buffer support, because only the source alpha
+       * value is used.
+       */
+      glDepthMask(GL_FALSE);
+      glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
+      glEnable(GL_BLEND);
+
+      /* Load textures if ap has changed */
+      if (plflags & PL_HASST) {
+	mgopengl_needtexture();
+      }
     }
 
     /* reestablish correct drawing color if necessary*/

@@ -51,13 +51,20 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static float kd = 1.0;
 
 void
-mgopengl_appearance( struct mgastk *ma, int mask )
+mgopengl_appearance(struct mgastk *ma, int mask)
 {
   Appearance *ap = &(ma->ap);
 
   if (mask & APF_TRANSP) {
     if (ap->flag & APF_TRANSP) {
 #if 0
+      /* Do not do this here; alpha-blending will be enabled as needed
+       * in mgopengl_bsptree(). This is for the sake of efficiency: if
+       * a geometry does not have any translucent component it is much
+       * more efficient to use the depth buffer instead of alpha
+       * blending, especially when there is no hardware rendering
+       * support.
+       */
       glDepthMask(GL_FALSE);
       glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
       glEnable(GL_BLEND);
