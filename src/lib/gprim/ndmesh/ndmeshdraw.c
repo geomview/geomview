@@ -64,6 +64,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   m.nu = mesh->mdim[0];
   m.nv = mesh->mdim[1];
   m.geomflags = mesh->geomflags & ~MESH_4D;
+  m.Class = MeshMethods();
 
   if (ap->flag & APF_KEEPCOLOR) {
     colored = 0;
@@ -143,7 +144,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
       (ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (m.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh, ap);
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh);
     GeomBSPTree((Geom *)(void *)&m, m.bsptree, BSPTREE_ADDGEOM);
     BSPTreePopAppearance((Geom *)mesh, old_tagged_app);
   }

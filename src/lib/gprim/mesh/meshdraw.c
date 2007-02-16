@@ -59,6 +59,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   m.nq = NULL;
   m.c  = (ColorA *)alloca(npts*sizeof(ColorA));
   m.ap = NULL;
+  m.tagged_ap = NULL;
 
   h = HPtNCreate(5, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -145,7 +146,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
       (ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (m.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh, ap);
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh);
     GeomBSPTree((Geom *)(void *)&m, m.bsptree, BSPTREE_ADDGEOM);
     BSPTreePopAppearance((Geom *)mesh, old_tagged_app);
   }

@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.12 2007/02/09 17:15:35 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.13 2007/02/16 22:43:34 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -171,7 +171,7 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
       (ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (newpl.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl, ap);
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl);
     GeomBSPTree((Geom *)(void *)&newpl, newpl.bsptree, BSPTREE_ADDGEOM);
     BSPTreePopAppearance((Geom *)pl, old_tagged_app);
   }

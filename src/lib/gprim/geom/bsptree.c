@@ -684,7 +684,7 @@ Geom *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
     }
     break;
   case BSPTREE_ADDGEOM:
-    tagged_app = BSPTreePushAppearance(geom, NULL);
+    tagged_app = BSPTreePushAppearance(geom);
     break;
   default:
     break;

@@ -60,6 +60,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   q.n  = NULL;
   q.c  = (QuadC *)alloca(npts*sizeof(ColorA));
   q.ap = NULL;
+  q.tagged_ap = NULL;
   nc = q.c[0];
   np = q.p[0];
   op = qquad->p[0];
@@ -123,7 +124,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
       (ap->flag & APF_FACEDRAW) &&
       (ap->flag & APF_TRANSP) &&
       (q.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)qquad, ap);
+    void *old_tagged_app = BSPTreePushAppearance((Geom *)qquad);
     GeomBSPTree((Geom *)(void *)&q, q.bsptree, BSPTREE_ADDGEOM);
     BSPTreePopAppearance((Geom *)qquad, old_tagged_app);
   }

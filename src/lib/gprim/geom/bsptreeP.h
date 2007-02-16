@@ -74,13 +74,9 @@ struct BSPTree {
   struct obstack obst;  /* Scratch space for new polygons etc */
 };
 
-static inline const void **BSPTreePushAppearance(Geom *geom,
-						 const Appearance *ap)
+static inline const void **BSPTreePushAppearance(Geom *geom)
 {
-  if (!ap) {
-    ap = geom->ap;
-  }
-  if (geom->bsptree != NULL && ap != NULL) {
+  if (geom->bsptree != NULL && geom->tagged_ap != NULL) {
     const void **tagged_app = geom->bsptree->tagged_app;
     geom->bsptree->tagged_app = &geom->tagged_ap;
     return tagged_app;
