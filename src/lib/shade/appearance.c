@@ -1589,7 +1589,7 @@ TxStreamOut(Pool *p, Handle *h, Texture *tx)
     if(tx->filename)
 	fprintf(f, "	file %s\n", tx->filename);
     if(tx->alphafilename)
-	fprintf(f, "	file %s\n", tx->alphafilename);
+	fprintf(f, "	alphafile %s\n", tx->alphafilename);
     fprintf(f, "	apply %s\n",
 		(unsigned)tx->apply < COUNT(applies) ? applies[tx->apply]
 				: "???");
