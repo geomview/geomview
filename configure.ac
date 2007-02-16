@@ -582,13 +582,22 @@ See the file INSTALL.Geomview for details.
   # this can only work if libGL is indeed based on Mesa because
   # libOSMesa overrides the OpenGL API entries.
 
-  ac_gv_save_LIBS="${LIBS}"
-  LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
-  AC_CHECK_FUNCS([glXAllocateMemoryMESA],[MESAGL=1],[MESAGL=0])
-  LIBS="${ac_gv_save_LIBS}"
-  if test "${MESAGL}" = "1"; then
-	AC_CHECK_LIB([OSMesa], [OSMesaCreateContext],,[${OPENGLLIBS}])
-  fi
+  ###
+  ### unluckily, this just does not seem to work. Sad story. Disable the
+  ### stuff. The good news: we can use glXCreateGLXPixmap() and render
+  ### into that pixmap.
+  ###
+
+#  ac_gv_save_LIBS="${LIBS}"
+#  LIBS="${OPENGLLIBS} ${XLIBS} ${LIBS}"
+#  AC_CHECK_FUNCS([glXAllocateMemoryMESA],[MESAGL=1],[MESAGL=0])
+#  if test "${MESAGL}" = "1"; then
+#  	AC_CHECK_LIB([OSMesa], [OSMesaCreateContext],
+#		[OPENGLLIBS="$GL_L_OPTION -lOSMesa -lGL $GLU_L_OPTION -lGLU"],
+#		[],[${OPENGLLIBS}])
+#  fi
+#  LIBS="${ac_gv_save_LIBS}"
+  MESAGL=0
   AC_DEFINE_UNQUOTED([MESAGL],${MESAGL},
 	  [Define to 1 if your are using the Mesa OpenGL implementation])
   AC_SUBST(MESAGL)
