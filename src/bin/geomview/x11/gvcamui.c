@@ -62,6 +62,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # error Need at least one graphics type (X11/OpenGL/GL) to render with!
 #endif
 
+/* Define the global option variabl `gv_no_opengl' to be always
+ * logical true if we have no OpenGL available. This simplifies some
+ * if-cases in this file which otherwise would have to be wrapped into
+ * some more preprocessor `#if'-constructs.
+ */
+#if !MGGL && !MGOPENGL
+# define gv_no_opengl 1
+#endif
+
 #include "mg.h"
 
 #if MGX11
@@ -145,9 +154,6 @@ static Colormap oglcmap[2];
 
 void cam_mgdevice()
 {
-  /* give the switch the right value */
-  gv_no_opengl = gv_no_opengl || !MGGL && !MGOPENGL;
-
   if (gv_no_opengl) {
 #if MGX11
     mgdevice_X11();
@@ -357,7 +363,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   n = setwinargs(args, n, dv->win, ~0, size, &title, NULL);
 
 #if MGGL || MGX11
-  if (!MGOPENGL || gv_no_opengl) {
+  if (MGGL || gv_no_opengl) { /* ... but not for MGOPENGL */
     XtSetArg(args[n], XmNvisual, gvvisual); n++;
     XtSetArg(args[n], XmNdepth, gvbitdepth); n++;
     XtSetArg(args[n], XmNcolormap, gvcolormap); n++;
@@ -391,7 +397,7 @@ Widget ui_create_camera(Widget parent, DView *dv)
   n = 0;
 
 #if MGX11 || MGOPENGL
-  if (!MGGL || gv_no_opengl) {
+  if (MGOPENGL || gv_no_opengl) { /* ... but not for MGGL */
     XtSetArg(args[n], XmNtitle, title); n++;
     XtSetArg(args[n], XmNrubberPositioning, False); n++;
   }
@@ -402,8 +408,8 @@ Widget ui_create_camera(Widget parent, DView *dv)
   XtSetArg(args[n], XmNwidth, size[0]); n++;
   XtSetArg(args[n], XmNheight, size[1]); n++;
 
-#if MGX11
   if (gv_no_opengl) {
+#if MGX11
     camdraw[SGL] = NULL;
     camdraw[DBL] =
       XtCreateManagedWidget("camdraw",
@@ -419,11 +425,9 @@ Widget ui_create_camera(Widget parent, DView *dv)
 	     MG_X11PARENT, XtWindow(shell),
 	     MG_X11SIZELOCK, 1,
 	     MG_END);
-  }
 #endif
-
+  } else { /* gv_no_opengl */
 #if MGOPENGL
-  if (!gv_no_opengl) {
     /* In case we're not the first GLX context in town, find another
      * so we can share our display lists promiscuously.
      */
@@ -503,11 +507,9 @@ Widget ui_create_camera(Widget parent, DView *dv)
       }
       XSetWMColormapWindows(dpy, XtWindow(shell), cmw, cmwneeded);
     }
-  } /* !gv_no_opengl */
-#endif /*MGOPENGL*/
+#endif /* MGOPENGL */
 
 #if MGGL
-  if (!gv_no_opengl) {
     XtSetArg (args[n], GlxNglxConfig, db_rgb_desc); n++;
 
     camdraw[DBL] = XtCreateManagedWidget("camdrawdbl",
@@ -521,8 +523,8 @@ Widget ui_create_camera(Widget parent, DView *dv)
 	     MG_GLXSINGLEWIN, XtWindow(camdraw[SGL]),
 	     MG_GLXDOUBLEWIN, XtWindow(camdraw[DBL]),
 	     MG_END);
+#endif /* MGGL */
   } /* !gv_no_opengl */
-#endif
 
   /*****************************************************************************/
 
@@ -1229,13 +1231,12 @@ void cam_expose(Widget w, XtPointer data, XEvent *ev, Boolean *cont)
   if (!ISCAM(id) || dv == NULL || dv->mgctx == NULL)
     return;
 
-#if MGX11
   if (gv_no_opengl) {
+#if MGX11
     mgctxselect(dv->mgctx);
     mgctxset(MG_X11EXPOSE, MG_END);
-  }
 #endif
-
+  }
 
   gv_redraw(id);
 }
@@ -1267,6 +1268,7 @@ void ui_find_visual()
     gvbitdepth = DefaultDepth(dpy, DefaultScreen(dpy));
 #endif
   } else {
+#if MGX11
     result = mgx11_getvisual(dpy, &gvvisual, &gvcolormap, &gvbitdepth);
 
     if (result == MG_X11VISFAIL) {
@@ -1282,6 +1284,7 @@ void ui_find_visual()
 	return;
       }
     }
+#endif
   }
 }
 
