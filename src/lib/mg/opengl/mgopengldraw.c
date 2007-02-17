@@ -338,6 +338,33 @@ void tessvert(Vertex *vp)
   glVertex4fv(&vp->pt.x);
 }
 
+void tesscombine(GLdouble coords[3], GLdouble *vertex_data[4],
+                GLfloat weight[4], Vertex **dataOut, Vertex ***ptr_extra_verts)
+{
+   Vertex *vertex;
+   int list_len, alloc_cnt, realloc_cnt;
+
+   vertex = OOGLNewE(Vertex, "extra vertex");
+   vertex->pt.x = coords[0];
+   vertex->pt.y = coords[1];
+   vertex->pt.z = coords[2];
+   vertex->pt.w = 1;
+   *dataOut = vertex;
+
+   /* Keep list of pointers to allocated Vertex's. 
+    * First Vertex is a dummy, list length in pt.x, allocated size in pt.y */
+   list_len = (*ptr_extra_verts)[0]->pt.x + 0.5;
+   alloc_cnt = (*ptr_extra_verts)[0]->pt.y + 0.5;
+   if(list_len == alloc_cnt) {
+      realloc_cnt = alloc_cnt * 2; /* Double allocated size */
+      (*ptr_extra_verts)[0]->pt.y = realloc_cnt;
+      *ptr_extra_verts = OOGLRenewNE(Vertex *, *ptr_extra_verts, realloc_cnt,
+				     "renew extra vertex pointers");
+   }
+   (*ptr_extra_verts)[list_len] = vertex;
+   (*ptr_extra_verts)[0]->pt.x = list_len + 1;
+}
+
 
 /*
  * Called when we're asked to deal with a possibly-concave polygon.
@@ -349,36 +376,52 @@ void tessvert(Vertex *vp)
 static void
 mgopengl_trickypolygon( Poly *p, int plflags ) 
 {
-  int i;
-  Vertex *vp;
-  static GLUtriangulatorObj *glutri;
+  int i, list_len;
+  const int init_alloc_sz=2;
+  Vertex *vp, **extra_verts;
+  static GLUtesselator *glutess;
   double *dpts = (double *)alloca(3*p->n_vertices*sizeof(double));
   double *dp;
 
-  if(glutri == NULL) {
+  if(glutess == NULL) {
     /* Create GLU-library triangulation handle, just once */
-    glutri = gluNewTess();
+    glutess = gluNewTess();
+    gluTessProperty(glutess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
 #ifdef _WIN32	/* Windows idiocy.  We shouldn't need to cast standard funcs! */
-    gluTessCallback(glutri, GLU_BEGIN, (GLUtessBeginProc)glBegin);
-    gluTessCallback(glutri, GLU_VERTEX, (GLUtessVertexProc)tessvert);
-    gluTessCallback(glutri, GLU_END, (GLUtessEndProc)glEnd);
+    gluTessCallback(glutess, GLU_BEGIN, (GLUtessBeginProc)glBegin);
+    gluTessCallback(glutess, GLU_VERTEX, (GLUtessVertexProc)tessvert);
+    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, (GLUtessCombineDataProc)tesscombine);
+    gluTessCallback(glutess, GLU_END, (GLUtessEndProc)glEnd);
 #else		/* Any reasonable OpenGL implementation */
-    gluTessCallback(glutri, GLU_BEGIN, glBegin);
-    gluTessCallback(glutri, GLU_VERTEX, tessvert);
-    gluTessCallback(glutri, GLU_END, glEnd);
+    gluTessCallback(glutess, GLU_BEGIN, glBegin);
+    gluTessCallback(glutess, GLU_VERTEX, tessvert);
+    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tesscombine);
+    gluTessCallback(glutess, GLU_END, glEnd);
 #endif
   }
   
+  extra_verts = OOGLNewNE(Vertex *, init_alloc_sz, "extra vertices");
+  extra_verts[0] = OOGLNewE(Vertex, "Dummy Header Vertex");
+  extra_verts[0]->pt.x = 1;             /* Holder for list length */
+  extra_verts[0]->pt.y = init_alloc_sz; /* Holder for allocation size */
   tessplflags = plflags;
-  gluBeginPolygon(glutri);
+  gluTessBeginPolygon(glutess, &extra_verts);
+  gluTessBeginContour(glutess);
   for(i = 0, dp = dpts; i < p->n_vertices; i++, dp += 3) {
     vp = (p->v)[i];
     dp[0] = vp->pt.x / vp->pt.w;
     dp[1] = vp->pt.y / vp->pt.w;
     dp[2] = vp->pt.z / vp->pt.w;
-    gluTessVertex(glutri, dp, vp);
+    gluTessVertex(glutess, dp, vp);
   }
-  gluEndPolygon(glutri);
+  gluTessEndContour(glutess);
+  gluTessEndPolygon(glutess);
+
+  list_len = extra_verts[0]->pt.x;
+  for(i=0; i<list_len; i++) {
+    OOGLFree(extra_verts[i]);
+  }
+  OOGLFree(extra_verts);
 }
 
 /* The work-horse for mgopengl_bsptree():
@@ -686,7 +729,8 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       v = p->v;
       if((j = p->n_vertices) <= 2) {
 	nonsurf = i;
-      } else if ((p->flags & POLY_CONCAVE) && (flag & APF_CONCAVE)) {
+      } else if ((p->flags & POLY_CONCAVE) ||
+		 (p->n_vertices > 4 && (flag & APF_CONCAVE))) {
 	mgopengl_trickypolygon(p, plflags);
       } else { /* normal algorithm */
 	glBegin(GL_POLYGON);
