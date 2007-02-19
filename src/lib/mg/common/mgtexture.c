@@ -79,14 +79,16 @@ gimme(char *fname, int *dopclose, struct xyc *size)
 	"\0gzip -dc ", "z", "gz",
 	"\0bzip2 -dc ", "bz2",
 	"\0tifftopnm ", "tiff", "tif",
+	"\0pngtopnm ", "png",
 	"\0giftoppm ", "gif",
 	"\0",
 	NULL
     };
 
     size->rleoff = NULL;  size->rledata = NULL;
-    if(fname == NULL)
+    if(fname == NULL) {
 	goto nope;
+    }
     len = strlen(fname);
     for(i = 0; (suf = suffixes[i]) != NULL; i++) {
 	if(suf[0] == '\0') {
