@@ -34,15 +34,27 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 #include "transform3.h"
 
-void
-Tm3Print( T )
-    Transform3 T;
+void Tm3Print(FILE *f, Transform3 T)
 {
     int i, j;
 
-    printf( "[" );
-    for( i=0; i<4; i++ )
-	for( j=0; j<4; j++ )
+    if (f == NULL) {
+	return;
+    }
+    fprintf(f, "transform {\n");
+    for( i=0; i<4; i++ ) {
+	printf( "  " );
+	for( j=0; j<4; j++) {
 	    printf( "%g ", T[i][j] );
-    printf( "]\n" );
+	}
+	printf( "\n" );
+    }
+    printf( "}\n" );
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
