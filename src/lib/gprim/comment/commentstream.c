@@ -71,15 +71,16 @@ Geom *
 CommentImport( Pool *p )
 {
     char *str;
-    Comment *comment =
-	(Comment *)GeomCCreate(NULL, CommentMethods(), NULL);
+    Comment *comment;
     IOBFILE *file;
 
-    if(p == NULL || (file = PoolInputFile(p)) == NULL)
+    if (p == NULL || (file = PoolInputFile(p)) == NULL)
 	return NULL;
 
-    if(strcmp(GeomToken(file), "COMMENT"))
+    if (strcmp(GeomToken(file), "COMMENT"))
 	return NULL;
+
+    comment = (Comment *)GeomCCreate(NULL, CommentMethods(), NULL);
 
     if ((str = iobftoken(file, 0)) == NULL) return NULL;
     comment->name = OOGLNewNE(char, strlen(str)+1, "Comment name");
@@ -102,7 +103,7 @@ CommentImport( Pool *p )
 int
 CommentExport( Comment *comment, Pool *pool )
 {
-    if(comment == NULL || pool == NULL || pool->outf == NULL)
+    if (comment == NULL || pool == NULL || pool->outf == NULL)
 	return 0;
 
     (void) CommentFSave(comment, pool->outf, "");
