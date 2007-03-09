@@ -1,6 +1,7 @@
 /* GNAH. Nothing more to be said ... */
 
 #include <stdlib.h>
+#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -21,6 +22,7 @@ static struct alloc_record records[N_RECORDS];
 
 unsigned long malloc_seq;
 int n_alloc;
+size_t alloc_size;
 
 static void record_alloc(void *ptr, size_t size,
 			 const char *file, const char *func, int line)
@@ -46,14 +48,20 @@ static void record_alloc(void *ptr, size_t size,
   records[seq_min_i].line = line;
 
   ++n_alloc;
+  alloc_size += size;
 }
 
 static void record_free(void *ptr)
 {
   int i;
 
+  if (ptr == NULL) {
+    return;
+  }
+
   for (i = 0; i < N_RECORDS; i++) {
     if (ptr == records[i].ptr) {
+      alloc_size -= records[i].size;
       memset(&records[i], 0, sizeof(records[i]));
       records[i].seq = REC_FREE;
       --n_alloc;
@@ -65,6 +73,10 @@ static void record_free(void *ptr)
 void *malloc_record(size_t size, const char *file, const char *func, int line)
 {
   void *ptr;
+
+  if (size == 0) {
+    return NULL;
+  }
 
   ptr = malloc(size);
 
@@ -149,3 +161,15 @@ void print_alloc_records(void)
   }
   fprintf(stderr, "#records: %d\n", i);
 }
+
+struct mallinfo gv_mallinfo(void)
+{
+  return mallinfo();
+}
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
