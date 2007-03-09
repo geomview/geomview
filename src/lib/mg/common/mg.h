@@ -35,6 +35,7 @@
 #include "window.h"
 #include "camera.h"
 #include "appearance.h"
+#include "bsptree.h"
 
 #ifndef POLYLISTPDEFS
 struct Poly;
@@ -61,6 +62,7 @@ struct mgNDctx
   void (*pushTN)(mgNDctx *NDctx, TransformN *leftTN);
   void (*pushT)(mgNDctx *NDctx, Transform leftT);
   void (*restoreCTX)(mgNDctx *NDctx, void *savedCTX);
+  BSPTree *bsptree;
 };
 
 struct mgfuncs {  /* mg member functions; potentially changed per device */
