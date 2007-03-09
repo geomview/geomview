@@ -8,6 +8,7 @@ noinst_LTLIBRARIES = libgeomview.la
 endif
 
 libgeomview_la_SOURCES =
-libgeomview_la_LIBADD = $(OOGLLIBS) $(OPENGLLIBS) $(SOCKETLIBS) $(XLIBS)
-libgeomview_la_DEPENDENCIES = $(OOGLLIBS)
+libgeomview_la_LIBADD = \
+ $(OOGLLIBS) $(OPENGLLIBS) $(SOCKETLIBS) $(XLIBS) $(ZLIB_LIB)
+libgeomview_la_DEPENDENCIES = $(OOGLLIBS) Makefile.am
 
