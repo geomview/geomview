@@ -41,10 +41,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transobj.h"
 
 void
-CommentDelete( comment )
-    Comment *comment;
+CommentDelete(Comment *comment)
 {
-    if( comment ) {
+    if (comment) {
 	if (comment->name) OOGLFree(comment->name);
 	if (comment->type) OOGLFree(comment->type);
 	if (comment->data) OOGLFree(comment->data);
@@ -52,7 +51,7 @@ CommentDelete( comment )
 }
 
 Comment *
-CommentCopy( Comment *comment ) 
+CommentCopy(Comment *comment) 
 {
   Comment *nc;
   int datalength = comment->length;
@@ -71,7 +70,7 @@ CommentCopy( Comment *comment )
 }
 
 Comment *
-CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
+CommentCreate (Comment *exist, GeomClass *classp, va_list *a_list)
 {
     Comment *comment;
     int attr;
@@ -92,9 +91,9 @@ CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
     while ((attr = va_arg (*a_list, int))) {
 	switch(attr) {
 	default:
-	    if(GeomDecorate(comment, &copy, attr, a_list)) {
+	    if (GeomDecorate(comment, &copy, attr, a_list)) {
 		OOGLError (0, "CommentCreate: Undefined option: %d", attr);
-		if(exist == NULL) GeomDelete ((Geom *)comment);
+		if (exist == NULL) GeomDelete ((Geom *)comment);
 		return NULL;
 	    }
 	}
@@ -102,3 +101,10 @@ CommentCreate ( Comment *exist, GeomClass *classp, va_list *a_list )
 
     return comment;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
