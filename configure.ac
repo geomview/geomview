@@ -56,6 +56,22 @@ char *alloca ();
 # define fstat(fd, buf) gv_fstat(fd, buf)
 #endif
 
+#ifdef HAVE_STDBOOL_H
+# include <stdbool.h>
+#else
+# ifndef HAVE__BOOL
+#  ifdef __cplusplus
+typedef bool _Bool;
+#  else
+#   define _Bool signed char
+#  endif
+# endif
+# define bool _Bool
+# define false 0
+# define true 1
+# define __bool_true_false_are_defined 1
+#endif
+
 #if 0
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -89,9 +105,21 @@ extern void free_record(void *ptr);
 #define strdup(str) strdup_record(str, __FILE__, __FUNCTION__, __LINE__)
 #define free(ptr) free_record(ptr)
 
+#define OOG_NewP(size)            malloc(size)
+#define OOG_RenewP(p, size)       realloc(p, size)
 #define OOG_NewE(size, blah)      malloc(size)
 #define OOG_RenewE(p, size, blah) realloc(p, size)
 #define OOGLFree(p)               free(p)
+
+#define	OOGLNew(t)		(t *)OOG_NewP(sizeof(t))
+#define	OOGLNewN(t,N)		(t *)OOG_NewP(sizeof(t)*(N))
+#define	OOGLRenewN(t,p,N)	(t *)OOG_RenewP(p, sizeof(t)*(N))
+#define	OOGLRealloc(t,p)	(t *)OOG_RenewP(p, sizeof(t))
+
+#define	OOGLNewE(t, errmsg)	(t *)OOG_NewE(sizeof(t), errmsg)
+#define	OOGLNewNE(t,N, errmsg)	(t *)OOG_NewE(sizeof(t)*(N), errmsg)
+#define	OOGLRenewNE(t,p,N, errmsg) (t *)OOG_RenewE(p, sizeof(t)*(N), errmsg)
+
 #endif
 
 #endif /* CONFIG_H_INCLUDED */
@@ -160,8 +188,7 @@ if test -n "$SETMON_PATH"; then
 fi
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-lm':
-AC_CHECK_LIB([m], [main])
+AC_CHECK_LIB([m], [cos])
 
 # Checks for header files.
 AC_PATH_XTRA
@@ -195,6 +222,12 @@ AC_COMPILE_IFELSE(
 AC_DEFINE(HAVE_M_PI, 1, [Define to 1 if M_PI is defined])],
 [AC_MSG_RESULT([no])])
 AC_LANG_POP([C])
+AC_CHECK_TYPES([dev_t ino_t time_t])
+AC_CHECK_SIZEOF([dev_t])
+AC_CHECK_SIZEOF([ino_t])
+AC_CHECK_SIZEOF([time_t])
+AC_CHECK_SIZEOF([long])
+AC_CHECK_SIZEOF([int])
 
 # Checks for library functions
 AC_CONFIG_LIBOBJ_DIR([src/lib/aclib])
@@ -712,6 +745,10 @@ AC_SUBST(XFORMSINCLUDE)
 AC_SUBST(XFORMSLIBS)
 
 ########################################################################
+
+# Check for zlib and bzlib (image compression/decompression)
+GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
+GEOMVIEW_CHECK_PACKAGE(zlib, z, , , zlib.h, , , optional)
 
 # Check for Tcl/Tk with new CHECK_PACKAGE macro:
 
