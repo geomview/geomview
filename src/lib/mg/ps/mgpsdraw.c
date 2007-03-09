@@ -726,7 +726,7 @@ mgps_drawnormal(HPoint3 *p, Point3 *n)
 {
   Point3 tp;
   HPoint3 end;
-  float scale;
+  Pt3Coord scale, w, s;
 
 /*  fprintf(stderr,"X11: draw a normal\n"); */
   if (p->w <= 0.0) return;
@@ -736,14 +736,19 @@ mgps_drawnormal(HPoint3 *p, Point3 *n)
   }
 
   scale = _mgc->astk->ap.nscale;
-  if (_mgc->astk->ap.flag & APF_EVERT)
-  {
-    Point3 *cp = &_mgc->cpos;
-    if (!(_mgc->has & HAS_CPOS))
+  if (_mgc->astk->ap.flag & APF_EVERT) {
+    HPoint3 *cp = &_mgc->cpos;
+    if (!(_mgc->has & HAS_CPOS)) {
       mg_findcam();
-    if ((p->x - cp->x) * n->x + (p->y - cp->y) * n->y +
-		(p->z - cp->z) * n->z > 0)
+    }
+    if ((w = cp->w) != 1.0 && w != 0.0) {
+      s = (p->x*w-cp->x)*n->x + (p->y*w-cp->y)*n->y + (p->z*w-cp->z)*n->z;
+    } else {
+      s = (p->x-cp->x)*n->x + (p->y-cp->y)*n->y + (p->z-cp->z)*n->z;
+    }
+    if (s > 0) {
       scale = -scale;
+    }
   }
   end.x = p->x + scale*n->x;
   end.y = p->y + scale*n->y;
