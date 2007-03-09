@@ -603,9 +603,17 @@ mgrib_worldbegin( void )
     mrti(mr_comment, str, mr_NULL);
     mrti(mr_framebegin, mr_int, 1, mr_nl, mr_NULL);
     
-    sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
-    	    _mgc->cpos.x,_mgc->cpos.y,_mgc->cpos.z,
-	    lookat.x,lookat.y,lookat.z);
+    if (_mgc->cpos.w != 0.0 && _mgc->cpos.w != 1.0) {
+	sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+		_mgc->cpos.x/_mgc->cpos.w,
+		_mgc->cpos.y/_mgc->cpos.w,
+		_mgc->cpos.z/_mgc->cpos.w,
+		lookat.x,lookat.y,lookat.z);
+    } else {
+	sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+		_mgc->cpos.x,_mgc->cpos.y,_mgc->cpos.z,
+		lookat.x,lookat.y,lookat.z);
+    }
     mrti(mr_header, str, mr_nl, mr_NULL);
     mrti(mr_identity, mr_NULL);
     mgrib_printmatrix(cam2ri);
@@ -890,7 +898,8 @@ mgrib_setappearance(const Appearance* ap, int mergeflag )
     /* interpret lights ... */
     mgrib_lighting(_mgc->astk, lng_changed);
   }
-  return ap;
+
+  return &_mgc->astk->ap;
 }
 
 /*-----------------------------------------------------------------------

@@ -548,7 +548,8 @@ mgbuf_setappearance(const Appearance *ap, int mergeflag )
   }
 
   mgbuf_appearance( mastk, changed);
-  return ap;
+
+  return &_mgc->astk->ap;
 }
 
 /*-----------------------------------------------------------------------

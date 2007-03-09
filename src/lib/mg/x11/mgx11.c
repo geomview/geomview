@@ -642,7 +642,8 @@ mgx11_setappearance(const Appearance *ap, int mergeflag )
     }
   }
   mgx11_appearance( mastk, changed);
-  return 0;
+
+  return &_mgc->astk->ap;
 }
 
 /*-----------------------------------------------------------------------
