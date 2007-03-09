@@ -151,8 +151,8 @@ BBox *SkelBound(Skel *s, Transform T, TransformN *TN)
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d ss, and a 4d bboy for 4d ss.
    */
-  if (!T && !TN) {
-    if (s->geomflags & VERT_4D) {
+  if ((T == TM_IDENTITY || !T) && !TN) {
+    if (!T && (s->geomflags & VERT_4D)) {
       max = min;
       while(--n >= 0) {
 	Pt4MinMax(&min, &max, ++p);
@@ -213,7 +213,7 @@ BBox *SkelBound(Skel *s, Transform T, TransformN *TN)
 
     /* ordinary 3d transform */
 
-    if (s->geomflags & VERT_4D) {
+    if (false && (s->geomflags & VERT_4D)) {
       /* We operate on the 3x3 x,y,z space */
       min.w = 1.0;
       HPt3Transform(T, &min, &min);

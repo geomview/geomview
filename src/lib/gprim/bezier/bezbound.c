@@ -45,9 +45,9 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d beziers, and a 4d bbox for 4d beziers.
    */
-  if (!T && !TN) {
+  if ((T == TM_IDENTITY || !T) && !TN) {
     min = *(HPoint3 *)p;
-    if (bezier->dimn == 4) {
+    if (!T && (bezier->dimn == 4)) {
       max = min;
       while(--n > 0) {
 	p += 4;

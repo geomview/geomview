@@ -104,7 +104,7 @@ InstBound(Inst *inst, Transform T, TransformN *TN)
     }
   } else {
     /* we do not support ND-TLISTs yet, so we assume here that we have
-     * and only ND-transformation, hence we do not call GeomIterate()
+     * only one ND-transformation, hence we do not call GeomIterate()
      * here.
      */
     if (TN) {

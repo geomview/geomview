@@ -52,8 +52,8 @@ BBox *MeshBound(Mesh *mesh, Transform T, TransformN *TN)
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d meshs, and a 4d bboy for 4d meshs.
    */
-  if (!T && !TN) {
-    if (mesh->geomflags & VERT_4D) {
+  if ((T == TM_IDENTITY || !T) && !TN) {
+    if (!T && (mesh->geomflags & VERT_4D)) {
       max = min;
       while(--n >= 0) {
 	Pt4MinMax(&min, &max, ++p);
@@ -114,7 +114,7 @@ BBox *MeshBound(Mesh *mesh, Transform T, TransformN *TN)
 
     /* ordinary 3d transform */
 
-    if (mesh->geomflags & VERT_4D) {
+    if (false && (mesh->geomflags & VERT_4D)) {
       /* We operate on the 3d x,y,z space */
       min.w = 1.0;
       HPt3Transform(T, &min, &min);

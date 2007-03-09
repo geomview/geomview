@@ -74,8 +74,8 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
   /* First handle the case without transformations, this means that we
      return a 3d bbox for 3d polylists, and a 4d bboy for 4d polylists.
    */
-  if (!T && !TN) {
-    if (polylist->geomflags & VERT_4D) {
+  if ((T == TM_IDENTITY || !T) && !TN) {
+    if (!T && (polylist->geomflags & VERT_4D)) {
       max = min;
       while(--n >= 0) {
 	Pt4MinMax(&min, &max, &(++v)->pt);
@@ -132,7 +132,7 @@ BBox *PolyListBound(PolyList *polylist, Transform T, TransformN *TN)
 
   if (T) {
     /* ordinary 3d transform */
-    if (polylist->geomflags & VERT_4D) {
+    if (false && polylist->geomflags & VERT_4D) {
       /* We operate on the 3x3 x,y,z space, this means that we just
        * have to omit the "w" coordinate.
        */
