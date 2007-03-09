@@ -36,12 +36,6 @@
 
 typedef struct IOBFILE IOBFILE;
 
-/* This data structure is opaque, do not meddle with its
- * components. It is defined here s.t. IOBVanilla streams can be
- * implemented efficiently with macros, taking their shortcut into
- * stdio without an additional function call.
- */
-
 extern IOBFILE *iobfileopen(FILE *istream);
 extern int iobfileclose(IOBFILE *iobf);
 extern IOBFILE *iobfopen(const char *name, const char *mode);

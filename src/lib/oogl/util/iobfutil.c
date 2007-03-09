@@ -740,17 +740,19 @@ iobfcontext(IOBFILE *f)
   char base[CONTEXT_SIZE], *ptr;
   int cnt;
 
-  if(f == NULL)
+  if (f == NULL)
     return dflt;
-  if(iobfeof(f))
+  if (iobfeof(f)) {
     return "> END OF IOBFILE\n";
+  }
 
   cnt = iobfgetbuffer(f, base, sizeof(base), -1);
 
-  if(cnt <= 0)
+  if(cnt <= 0) {
     return dflt;
+  }
 
-  ptr = base + sizeof(base);
+  ptr = base + cnt;
   p = ptr;
   for(npre = nlpre = 0; --p >= base && npre < CONTEXT_SIZE; npre++) {
     if(*p == '\n') {
@@ -758,8 +760,9 @@ iobfcontext(IOBFILE *f)
 	predots = 0;
 	break;
       }
-    } else if(*p & 0x80 || *p == 0)		/* binary data? */
+    } else if(*p & 0x80 || *p == 0) { /* binary data? */
       break;
+    }
   }
   strcpy(buf, "> ... ");
   q = buf + 2 + predots;
@@ -802,7 +805,9 @@ iobfcontext(IOBFILE *f)
     while(--tab > 0) *q++ = '-';
     strcpy(q, "^\n");
   }
-  if(cont) free(cont);
+  if(cont) {
+    free(cont);
+  }
   return (cont = strdup(buf));
 }
 
@@ -877,3 +882,9 @@ async_iobfnextc(IOBFILE *f, int flags)
   }
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
