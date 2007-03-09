@@ -82,6 +82,9 @@ static inline void HPt3Dual(HPoint3 *pt, HPlane3 *pl);
 static inline void
 HPt3LinSum(HPt3Coord scale1, HPoint3 *in1,
 	   HPt3Coord scale2, HPoint3 *in2, HPoint3 *out);
+static inline void
+HPt3LinSumDenorm(HPt3Coord scale1, HPoint3 *in1,
+		 HPt3Coord scale2, HPoint3 *in2, HPoint3 *out);
 static inline void HPt3SizeOne(HPoint3 *pt, HPoint3 *out);
 static inline HPt3Coord HPt3R40Dot(HPoint3 *a, HPoint3 *b);
 static inline HPt3Coord HPt3R31Dot(HPoint3 *a, HPoint3 *b);
@@ -384,6 +387,24 @@ HPt3LinSum (HPt3Coord scale1, HPoint3 *in1, HPt3Coord scale2, HPoint3 *in2, HPoi
   out->x = scale1 * (in1->x/in1->w) + scale2 * (in2->x/in2->w);
   out->y = scale1 * (in1->y/in1->w) + scale2 * (in2->y/in2->w);
   out->z = scale1 * (in1->z/in1->w) + scale2 * (in2->z/in2->w);
+}
+
+static inline void
+HPt3LinSumDenorm(HPt3Coord scale1, HPoint3 *in1, HPt3Coord scale2, HPoint3 *in2, HPoint3 *out)
+{
+  if ((in1->w == 0) || (in2->w == 0)) {
+    out->w = 0;
+    out->x = scale1 * in1->x + scale2 * in2->x;
+    out->y = scale1 * in1->y + scale2 * in2->y;
+    out->z = scale1 * in1->z + scale2 * in2->z;
+    return;
+  }
+  out->w = scale1 * in1->w + scale2 * in2->w;
+  scale1 = scale1 * out->w / in1->w;
+  scale2 = scale2 * out->w / in2->w;
+  out->x = scale1 * in1->x + scale2 * in2->x;
+  out->y = scale1 * in1->y + scale2 * in2->y;
+  out->z = scale1 * in1->z + scale2 * in2->z;
 }
 
 static inline void
