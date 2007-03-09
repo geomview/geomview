@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.11 2007/02/16 09:15:33 rotdrop Exp $
+ * $Id: mg.c,v 1.12 2007/03/09 23:54:49 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -108,6 +108,7 @@ mgcontext *mg_newcontext(mgcontext *mgc)
   mgc->background.g = 0.0;
   mgc->background.b = 0.0;
   mgc->background.a = 1.0;
+  mgc->bgimage = NULL;
   {
     struct mgastk *ma;
 
@@ -299,6 +300,7 @@ mg_pushappearance(void)
   LmCopy(&_mgc->astk->lighting, &ma->lighting);
   ma->ap.lighting = &(ma->lighting);
   ma->ap.mat = &(ma->mat);
+  ma->ap.tex = REFGET(Texture, ma->ap.tex);
   _mgc->astk = ma;
   return 0;
 }
@@ -356,9 +358,8 @@ void mg_untagappearance(const void *tag)
   
   if (!(astk->flags & MGASTK_ACTIVE)) {
 
-    if (astk->ap.tex != NULL) {
-      TxDelete(astk->ap.tex);
-    }
+    TxDelete(astk->ap.tex);
+    astk->ap.tex = NULL;
     LmDeleteLights(&astk->lighting);
 
     /* Move to free-list if not active */
@@ -432,9 +433,8 @@ mg_popappearance(void)
     ctx->ap_tagged->tag_ctx = ctx;
     ctx->astk = mp;
   } else {
-    if (ctx->astk->ap.tex != NULL && ctx->astk->ap.tex != mp->ap.tex) {
-      TxDelete(ctx->astk->ap.tex);
-    }
+    TxDelete(ctx->astk->ap.tex);
+    ctx->astk->ap.tex = NULL;
     LmDeleteLights(&ctx->astk->lighting);
     ctx->astk->next = mgafree;
     mgafree = ctx->astk;
@@ -503,16 +503,30 @@ mg_setappearance(const Appearance *ap, int mergeflag)
   if (mergeflag == MG_MERGE) {
     nap = ApMerge(ap, &ma->ap, 1);  /* Merge, in place */
     ma->changed |= MC_AP;
-    ma->ap = *nap;
+    /* ma->ap = *nap; */ /* <- not necessary, ApMerge(a, b) returns b
+     * unless b would be NULL on entry, which canot be the case here.
+     */
     /* Assign mat and light too? */
   } else {
+    /* Kludge: map->ap->tex is only a pointer, calling copy would
+     * override its contents (now that TxCopy() has been
+     * implemented). So get rid of ma->ap->tex before calling
+     * ApCopyShared(). This is ok, because we always call REFGET(tex)
+     * before hanging any texture into our appearance stack, so if
+     * ap->tex == ma->ap.tex then the texture won't actually be
+     * deleted.
+     */
+    TxDelete(ma->ap.tex);
+    ma->ap.tex = NULL;
     ApCopyShared(ap, &ma->ap);
     ma->changed |= MC_AP | MC_MAT | MC_LIGHT;
   }
-  if (ap->lighting)
+  if (ap->lighting) {
     mg_globallights(&ma->lighting, 0);
-  if (ap->tex)
+  }
+  if (ap->tex) {
     ap->tex->flags |= TXF_USED;
+  }
   return &_mgc->astk->ap;
 }
 
@@ -692,6 +706,7 @@ mg_ctxdelete( mgcontext *ctx )
   }
 
   WnDelete(ctx->win);
+  CamDelete(ctx->cam);
 
   /* Free other data here someday XXX */
   if (_mgc == ctx) {
@@ -781,6 +796,8 @@ mg_worldbegin( void )
   _mgc->changed |= MC_USED;
   CamGet(_mgc->cam, CAM_W2C, _mgc->W2C);
   CamGet(_mgc->cam, CAM_C2W, _mgc->C2W);
+  CamGet(_mgc->cam, CAM_BGCOLOR, &_mgc->background);
+  CamGet(_mgc->cam, CAM_BGIMAGE, &_mgc->bgimage);
   CamView(_mgc->cam, V);
   WnGet(_mgc->win, WN_VIEWPORT, &vp);
   /* V maps world to [-1..1],[-1..1],[-1..1] */
@@ -858,7 +875,7 @@ void mg_findcam(void)
     _mgc->xstk->hasinv = 1;
   }
   /* XXX assumes left multiplication: we take C2W[3] as a point! */
-  HPt3TransPt3(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[3][0], &_mgc->cpos);
+  HPt3Transform(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[3][0], &_mgc->cpos);
   HPt3Transform(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[2][0], &camZ);
   camZ.w = Pt3Length((Point3 *)(void *)&camZ);
   HPt3ToPt3(&camZ, &_mgc->camZ);

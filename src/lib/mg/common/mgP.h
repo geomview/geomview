@@ -55,7 +55,7 @@
  */
 struct mgastk {
 	REFERENCEFIELDS;         /* use count for sticky elements */ 
-	struct mgastk   *next;   /* stack link, actually the previous element */
+	struct mgastk   *next;   /* stack link */
 	mgcontext       *tag_ctx;/* back-pointer for ap_tagged list */
 	unsigned short  flags;   /* sticky flag */
 	unsigned short  changed;
@@ -98,6 +98,7 @@ struct mgcontext {
 	short           light_min_tag, light_max_tag;
 	int             shown;  /* Is window 'visible'? */
 	ColorA          background; /* Background color */
+	Image           *bgimage;
 
 	int             opts;   /* MG_SETOPTIONS flag mask */
 
@@ -121,7 +122,7 @@ struct mgcontext {
 #define HAS_POINT  0x4             /* Outline for generic fat point */
 
 	/* Cached values, computed when needed: */
-	Point3          cpos;     /* Location of camera in object coordinates */
+	HPoint3         cpos;     /* Location of camera in object coordinates */
 	Point3          camZ;     /* Direction of camera +Z vector */
 	Transform       O2S, S2O; /* object-to-screen, screen-to-object xfms */
 	vvec            point;  /* outline for fat points */
@@ -195,7 +196,7 @@ extern void mg_worldbegin( void );
 extern int mg_inhaletexture( Texture *tx, int rgba );
 
 extern TxUser *mg_find_shared_texture(Texture *tx, int mgtype);
-extern int     mg_same_texture(Texture *tx1, Texture *tx2);
+extern bool    mg_same_texture(Texture *tx1, Texture *tx2, bool really);
 extern void    mg_reassign_shared_textures(mgcontext *ctx, int mgtype);
 extern int     mg_find_free_shared_texture_id(int mgtype);
 

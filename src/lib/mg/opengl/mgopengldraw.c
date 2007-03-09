@@ -437,7 +437,7 @@ mgopengl_trickypolygon( Poly *p, int plflags )
  * node's plflags to implement appearance overrides.
  */
 static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
-				       Point3 *camera,
+				       HPoint3 *camera,
 				       int *plfl_and,
 				       int *plfl_or,
 				       const void **cur_app)
@@ -449,7 +449,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
   const Appearance *ap;
   Material *mat;
 
-  scp = Pt3Dot(camera, (Point3 *)(void *)&tree->plane) - tree->plane.w;
+  scp = HPt3DotPt3(camera, (Point3 *)(void *)&tree->plane) - tree->plane.w;
   sign = fpos(scp) - fneg(scp);
   
   if (sign >= 0) {
@@ -471,6 +471,10 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     int    j       = p->n_vertices;
     int    plflags = p->flags;
     int    apchg   = 0;
+
+    if (*plist->tagged_app == NULL) {
+      continue;
+    }
     
     if (*cur_app != *plist->tagged_app) {
 
@@ -526,6 +530,9 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       continue;
     }
 
+
+
+
     plflags &= *plfl_and;
     plflags |= *plfl_or;
 
@@ -538,6 +545,41 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       continue;
     }
 
+#if DEBUG_BSPTREE /* make the sub-division visible */
+    if (ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)) {
+      if(_mgopenglc->znudge) mgopengl_closer();
+      glDisable(GL_COLOR_MATERIAL);
+      DONT_LIGHT();
+
+      if (ap->flag & APF_EDGEDRAW) {
+	glColor3fv((float *)&ap->mat->edgecolor);
+	glBegin(GL_LINE_LOOP);
+	for (j=0, v=p->v; j < p->n_vertices; j++, v++) {
+	  mgopengl_v4ffunc(&(*v)->pt);
+	}
+	glEnd();
+      }
+
+      if (ap->flag & APF_NORMALDRAW) {
+	glColor3fv((float *)&_mgc->astk->ap.mat->normalcolor);
+	if (plflags & PL_HASPN) {
+	  for (j=0, v = p->v; j < p->n_vertices; j++, v++)
+	    mgopengl_drawnormal(&(*v)->pt, &p->pn);
+	} else if (plflags & PL_HASVN) {
+	  for (v = p->v, j = 0; j < p->n_vertices; j++, v++) {
+	    mgopengl_drawnormal(&(*v)->pt, &(*v)->vn);
+	  }
+	}
+      }
+      if(_mgopenglc->znudge) mgopengl_farther();
+
+      apchg = 1;
+      glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
+      glEnable(GL_COLOR_MATERIAL);
+      MAY_LIGHT();
+    }
+#endif
+
     if (apchg) {
       /* Disable write access to the depth buffer and enable
        * alpha-blending. The blend function used here will work
@@ -545,7 +587,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
        * value is used.
        */
       glDepthMask(GL_FALSE);
-      glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glEnable(GL_BLEND);
 
       /* Load textures if ap has changed */
@@ -636,13 +678,7 @@ void mgopengl_bsptree(BSPTree *bsptree)
     return;
   }
 
-  if (!(bsptree->geomflags & COLOR_ALPHA)) {
-    return; /* no need to traverse the tree */
-  }
-
-  mgpushappearance();
-
-  mgopengl_new_translucent();
+  mgopengl_new_translucent(_mgc->xstk->T);
 
   /* First determine the position of the camera in the _current_
    * coordinate system. We do assume that all tree nodes share the
@@ -661,8 +697,6 @@ void mgopengl_bsptree(BSPTree *bsptree)
 			     &plfl_and, &plfl_or, &ap);
 
   mgopengl_end_translucent();
-
-  mgpopappearance();
 }
 
 /*-----------------------------------------------------------------------
@@ -707,13 +741,13 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
 
   if ((flag & APF_FACEDRAW) &&
       !((flag & APF_TRANSP) && (plflags & COLOR_ALPHA))) {
-
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
     MAY_LIGHT();
     /* reestablish correct drawing color if necessary*/
-    if (!(plflags & (PL_HASPCOL | PL_HASVCOL)))
-      D4F (&(ma->ap.mat->diffuse));
+    if (!(plflags & (PL_HASPCOL | PL_HASVCOL))) {
+      D4F(&(ma->ap.mat->diffuse));
+    }
     if ((_mgc->astk->ap.flag & APF_TEXTURE) && (_mgc->astk->ap.tex != NULL)) {
       if (plflags & PL_HASST)
 	mgopengl_needtexture();
@@ -882,7 +916,7 @@ void
 mgopengl_drawnormal(HPoint3 *p, Point3 *n)
 {
   Point3 end, tp;
-  float scale;
+  HPt3Coord scale, w, s;
 
   if (p->w <= 0.0) return;
   if(p->w != 1) {
@@ -892,11 +926,18 @@ mgopengl_drawnormal(HPoint3 *p, Point3 *n)
 
   scale = _mgc->astk->ap.nscale;
   if(_mgc->astk->ap.flag & APF_EVERT) {
-    Point3 *cp = &_mgc->cpos;
-    if(!(_mgc->has & HAS_CPOS))
+    HPoint3 *cp = &_mgc->cpos;
+    if (!(_mgc->has & HAS_CPOS)) {
       mg_findcam();
-    if((p->x-cp->x) * n->x + (p->y-cp->y) * n->y + (p->z-cp->z) * n->z > 0)
+    }
+    if ((w = cp->w) != 1.0 && w != 0.0) {
+      s = (p->x*w-cp->x)*n->x + (p->y*w-cp->y)*n->y + (p->z*w-cp->z)*n->z;
+    } else {
+      s = (p->x-cp->x)*n->x + (p->y-cp->y)*n->y + (p->z-cp->z)*n->z;
+    }
+    if (s > 0) {
       scale = -scale;
+    }
   }
 
   end.x = p->x + scale*n->x;
@@ -905,6 +946,11 @@ mgopengl_drawnormal(HPoint3 *p, Point3 *n)
 
   DONT_LIGHT();
 
+  /* cH: This is wrong. The current transformation need not be an
+   * affine motion in which case the direction of the normals will
+   * just come out wrong. I also wonder whether OpenGL's drawing stuff
+   * does the right thing?
+   */
   glBegin(GL_LINE_STRIP);
   glVertex3fv((float *)p);
   glVertex3fv((float *)&end);

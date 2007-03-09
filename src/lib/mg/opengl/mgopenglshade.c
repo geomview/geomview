@@ -50,6 +50,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /*static int lightno = 1;*/
 static float kd = 1.0;
 
+/* Additional data needed if the image dimensions are not a power of 2. */
+struct mgopengl_tudata 
+{
+  char *data;
+  int xsize, ysize, channels;
+  int qualflags;    /* APF_TX{MIPMAP,MIPINTERP,LINEAR}: if loaded, how? */
+};
+
 void
 mgopengl_appearance(struct mgastk *ma, int mask)
 {
@@ -451,7 +459,7 @@ static void tex_postdef(void)
 
 static void tex_bind(GLuint id) {
   if(has_texture_object()) {
-    glBindTextureEXT( GL_TEXTURE_2D, id );
+    glBindTextureEXT(GL_TEXTURE_2D, id);
   } else {
     glCallList(_mgopenglc->texture_lists[id]);
   }
@@ -466,12 +474,14 @@ static void tex_delete(GLuint id) {
 }
 
 /* Is this texture loaded adequately for the given texture-quality setting? */
-static int tex_adequate(int apflags, Texture *wanttx)
+static bool tex_adequate(int apflags, TxUser *tu)
 {
+  struct mgopengl_tudata *tudata = tu->data;
+
   return
     (apflags & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR))
     ==
-    (wanttx->qualflags & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR));
+    tudata->qualflags;
 }
   
 
@@ -503,6 +513,7 @@ void
 mgopengl_txpurge(TxUser *tu)
 {
   mgcontext *ctx, *oldctx = _mgc;
+  struct mgopengl_tudata *tudata;
 
   for(ctx = _mgclist; ctx != NULL; ctx = ctx->next) {
     if(ctx->devno == MGD_OPENGL) {
@@ -514,16 +525,31 @@ mgopengl_txpurge(TxUser *tu)
 	}
 	mgoglc->curtex = NULL;
       }
-      if(mgoglc->bgimage == tu)
+#if 0
+      if(mgoglc->bgimage == tu) {
 	mgoglc->bgimage = NULL;
+      }
+#endif
 #undef mgoglc
     }
   }
-  if(tu->id > 0)
+  if(tu->id > 0) {
     tex_delete(tu->id + ID_OFFSET);
+  }
+
+  if ((tudata = tu->data)) {
+    if (tudata->data != tu->tx->image->data) {
+      OOGLFree(tudata->data);
+    }
+    OOGLFree(tudata);
+    tu->data = NULL;
+  }
+
   /* Could also purge the current 2D texture, but maybe it's not worth it. */
-  if(_mgc != oldctx)
+  if (_mgc != oldctx) {
     mgctxselect(oldctx);
+  }
+
 }
 
 
@@ -543,14 +569,14 @@ mgopengl_txpurge(TxUser *tu)
  *                 mgopengl_needtexture();
  */
 
-void
-mgopengl_needtexture()
+void mgopengl_needtexture(void)
 {
   Texture *wanttx = _mgc->astk->ap.tex;
   int apflag = _mgc->astk->ap.flag;
   TxUser *tu;
+  struct mgopengl_tudata *tudata;
+  Image *image;
   int id, mustload = 0;
-  int adequate;
 
   static GLint formats[] =
     { 0, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA };
@@ -562,83 +588,95 @@ mgopengl_needtexture()
     GL_LINEAR_MIPMAP_NEAREST, GL_LINEAR_MIPMAP_LINEAR
   };
 
-  if(wanttx == NULL) {
+  if(wanttx == NULL || wanttx->image == NULL) {
+#if 1
+    mgopengl_notexture();
+#else
     /* Remove any texture */
     glDisable(GL_TEXTURE_2D);
     _mgopenglc->tevbound = 0;
+#endif
     /* Let's leave the texture bound, in case we need it again soon. */
     return;
   }
 
-  adequate = tex_adequate( apflag, wanttx );
+  image = wanttx->image;
 
-  if((tu = _mgopenglc->curtex) && mg_same_texture(tu->tx, wanttx) && adequate) {
-    /* We just need to bind the texture environment */
-    _mgopenglc->tevbound = tu->id;
+  if ((tu = _mgopenglc->curtex) &&
+      mg_same_texture(tu->tx, wanttx, true) && tex_adequate(apflag, tu)) {
 
-    tex_bind(tu->id + ID_OFFSET);
+    if (_mgopenglc->tevbound != tu->id) {
+      /* We just need to bind the texture environment */
+      _mgopenglc->tevbound = tu->id;
 
-    if(wanttx->channels == 2 || wanttx->channels == 4) {
-      glAlphaFunc(GL_NOTEQUAL, 0);
-      glEnable(GL_ALPHA_TEST);
+      tex_bind(tu->id + ID_OFFSET);
+
+      if (image->channels == 2 || image->channels == 4) {
+	glAlphaFunc(GL_NOTEQUAL, 0);
+	glEnable(GL_ALPHA_TEST);
+      }
+      
+      glMatrixMode(GL_TEXTURE);
+      glLoadMatrixf( (GLfloat *) tu->tx->tfm);
+      glMatrixMode(GL_MODELVIEW);
     }
-
-    glMatrixMode(GL_TEXTURE);
-    glLoadMatrixf( (GLfloat *) tu->tx->tfm);
-    glMatrixMode(GL_MODELVIEW);
     glEnable(GL_TEXTURE_2D);
     return;
   }
 
-
   /* Is our texture in the cache? */
   tu = mg_find_shared_texture(wanttx, MGD_OPENGL);
 
-  if(tu == NULL) {
-    /* No -- load it, and put it there. */
-    if(mg_inhaletexture(wanttx, TXF_RGBA) == 0) {
-      _mgopenglc->curtex = NULL; /* In case of load error, just fake it.*/
-      return;
-    }
+  if (tu == NULL || !tex_adequate(apflag, tu)) {
     /* Find a free texture id. */
     id = mg_find_free_shared_texture_id(MGD_OPENGL);
     tu = TxAddUser(wanttx, id, NULL, mgopengl_txpurge);
-    tu->ctx = _mgc;
+    tu->ctx  = _mgc;
+    tudata   = OOGLNewE(struct mgopengl_tudata, "OpengGL TxUser Data");
+    tudata->data     = image->data;
+    tudata->xsize    = image->width;
+    tudata->ysize    = image->height;
+    tudata->channels = image->channels;
+    tu->data = tudata;
     mustload = 1;
+  } else {
+    tudata = tu->data;
+    if (!mg_same_texture(tu->tx, wanttx, true)) {
+      /* force the texture parameters to be reprogrammed */
+      _mgopenglc->tevbound = 0;
+    }
   }
 
-  mustload |= !adequate;
-
-  /* Configure texturing as described in wanttx, except for the data.
-   */
-  if(_mgopenglc->tevbound != tu->id || mustload) {
-
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    switch(wanttx->apply) {
+  /* Configure texturing as described in wanttx, except for the data. */
+  if (_mgopenglc->tevbound != tu->id || mustload) {
+    switch (wanttx->apply) {
     case TXF_BLEND:
       glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
       break;
     case TXF_DECAL:
       glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
       break;
+    default:
+      glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+      break;
     }
     glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR,
 	       (GLfloat *)&wanttx->background);
     _mgopenglc->tevbound = tu->id;
 
-    if(wanttx->channels == 2 || wanttx->channels == 4) {
+    if (image->channels == 2 || image->channels == 4) {
       glAlphaFunc(GL_NOTEQUAL, 0);
       glEnable(GL_ALPHA_TEST);
     }
 
     glMatrixMode(GL_TEXTURE);
-    glLoadMatrixf( (GLfloat *) tu->tx->tfm);
+    glLoadMatrixf( (GLfloat *) wanttx->tfm);
     glMatrixMode(GL_MODELVIEW);
-
   }
-  if(mustload) {
+
+  if (mustload) {
     /* Stuff texture data into GL */
-    GLint format = formats[wanttx->channels];
+    GLint format = formats[image->channels];
 
     tex_predef(tu->id + ID_OFFSET);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
@@ -653,41 +691,40 @@ mgopengl_needtexture()
 		    (apflag & APF_TXLINEAR) ? GL_LINEAR : GL_NEAREST);
 
     if(apflag & APF_TXMIPMAP) {
-      gluBuild2DMipmaps( GL_TEXTURE_2D, wanttx->channels,
-			 wanttx->xsize, wanttx->ysize,
-			 format, GL_UNSIGNED_BYTE,
-			 (unsigned long *)wanttx->data);
+      gluBuild2DMipmaps(GL_TEXTURE_2D,
+			tudata->channels, tudata->xsize, tudata->ysize,
+			format, GL_UNSIGNED_BYTE,
+			tudata->data);
     } else {
-
-      if (((wanttx->xsize & (wanttx->xsize - 1)) != 0) ||
-	  ((wanttx->ysize & (wanttx->ysize - 1)) != 0)) {
-
+      if (tudata->data == image->data &&
+	  ((image->width & (image->width - 1)) != 0 ||
+	   (image->height & (image->height - 1)) != 0)) {
 	GLint newx = 4, newy = 4;
-	unsigned long *tempdata = (unsigned long *) wanttx->data;
 
 	/* Approximate round-to-nearest */
-	while (newx*3 < wanttx->xsize*2) newx *= 2;
-	while (newy*3 < wanttx->ysize*2) newy *= 2;
-	wanttx->data = (char *)malloc(newx * newy * wanttx->channels);
+	while (newx*3 < tudata->xsize*2) newx *= 2;
+	while (newy*3 < tudata->ysize*2) newy *= 2;
 
-	gluScaleImage(format, wanttx->xsize, wanttx->ysize,
-		      GL_UNSIGNED_BYTE, tempdata, newx, newy,
-		      GL_UNSIGNED_BYTE, wanttx->data);
-	wanttx->xsize = newx; wanttx->ysize = newy;
-	free(tempdata);
+	tudata->data = (char *)malloc(newx * newy * tudata->channels);
+
+	gluScaleImage(format, tudata->xsize, tudata->ysize,
+		      GL_UNSIGNED_BYTE, image->data, newx, newy,
+		      GL_UNSIGNED_BYTE, tudata->data);
+	tudata->xsize = newx;
+	tudata->ysize = newy;
       }
 
-      glTexImage2D( GL_TEXTURE_2D, 0, wanttx->channels,
-		    wanttx->xsize, wanttx->ysize,
-		    0, format, GL_UNSIGNED_BYTE, wanttx->data);
+      glTexImage2D(GL_TEXTURE_2D, 0, image->channels,
+		   tudata->xsize, tudata->ysize,
+		   0, format, GL_UNSIGNED_BYTE, tudata->data);
     }
     tex_postdef();
     /* Remember the conditions under which we loaded this texture. */
-    wanttx->qualflags = apflag & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR);
+    tudata->qualflags = apflag & (APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR);
     _mgopenglc->curtex = tu;
   }
 
-  if(_mgopenglc->curtex != tu) {
+  if (_mgopenglc->curtex != tu) {
     /* Now bind the texture and select display mode. */
     tex_bind(tu->id + ID_OFFSET);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
@@ -732,13 +769,19 @@ mgopengl_d4f(float c[4])
 void
 mgopengl_n3fevert(Point3 *n, HPoint3 *p)
 {
-  Point3 tn;
-  Point3 *cp;
+  Point3 tn, diff;
+  HPoint3 *cp;
 
-  if(!(_mgc->has & HAS_CPOS))
+  if (!(_mgc->has & HAS_CPOS)) {
     mg_findcam();
+  }
   cp = &_mgc->cpos;
-  if( (p->x-cp->x) * n->x + (p->y-cp->y) * n->y + (p->z-cp->z) * n->z > 0) {
+  /* we must not assume that p is normalized here. Why should this be
+   * the case? cp is a Point3, but p is a fully qualified HPoint3
+   * here.
+   */
+  HPt3SubPt3(p, cp, &diff);
+  if ((cp->w != 0 ? cp->w : 1.0) * Pt3Dot(&diff, n) > 0) {
     tn.x = -n->x;
     tn.y = -n->y;
     tn.z = -n->z;
@@ -753,12 +796,15 @@ void
 mgopengl_v4fcloser(HPoint3 *p)
 {
   HPoint3 tp;
-  Point3 *cp = &_mgc->cpos;
-  float wn = p->w * _mgc->zfnudge;
+  HPoint3 *cp = &_mgc->cpos;
+  HPt3Coord wn = _mgc->zfnudge * p->w;
     
-  if(!(_mgc->has & HAS_CPOS))
+  if(!(_mgc->has & HAS_CPOS)) {
     mg_findcam();
-
+  }
+  if (cp->w != 0.0) {
+    wn /= cp->w;
+  }
   tp.x = p->x + wn * cp->x;
   tp.y = p->y + wn * cp->y;
   tp.z = p->z + wn * cp->z;

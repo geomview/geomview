@@ -87,9 +87,9 @@ typedef struct mgopenglcontext {
   int should_lighting, is_lighting; /* Lighting flags so we can turn off
 					lighting for points&lines */
   int tevbound;                 /* Texturing currently enabled? */
-  TxUser *curtex;              /* Currently-bound texture (NULL if none) */
+  TxUser *curtex;		/* Currently-bound texture (NULL if none) */
   int dither;			/* Dither enabled? */
-  TxUser *bgimage;		/* Background image (not really a texture) */
+  char *bgimagefile;            /* compatibility: bgimage file name */
 
   GLuint *light_lists;
   int n_light_lists;
@@ -100,7 +100,7 @@ typedef struct mgopenglcontext {
   int translucent_seq;
 } mgopenglcontext;
 
-#define DPYLIST_INCR 100
+#define DPYLIST_INCR 10
 
 #define	MAXZNUDGE	8	/* Max possible depth of mgopengl_closer()/farther() calls */
 
@@ -137,7 +137,7 @@ extern void mgopengl_lights(LmLighting *lm, struct mgastk *astk);
 extern void mgopengl_appearance( struct mgastk *ma, int mask );
 
 extern GLuint *mgopengl_realloc_lists(GLuint *lists, int *n_lists);
-extern GLuint mgopengl_new_translucent(void);
+extern GLuint mgopengl_new_translucent(Transform T);
 extern void mgopengl_end_translucent(void);
 extern void mgopengl_bsptree(BSPTree *bsptree);
 
