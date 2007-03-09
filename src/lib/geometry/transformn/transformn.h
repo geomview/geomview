@@ -266,7 +266,7 @@ TmNTranspose(const TransformN *from, TransformN *to)
 /* Multiply transforms
  *
  * We pad as necessary, filling diagonals down with 1's as
- * appropriate. We do not use PadZero(), because the the concatenation
+ * appropriate. We do not use PadZero(), because the concatenation
  * would not commute with the matrix operation; i.e. (v A) B should be
  * the same as v (A B).
  */
@@ -370,14 +370,17 @@ TmNConcat(const TransformN *A, const TransformN *B, TransformN *result)
 static inline TransformN *
 TmNCopy(const TransformN *Tsrc, TransformN *Tdst)
 {
-  if (Tdst == NULL) {
-    Tdst = TmNCreate(Tsrc->idim, Tsrc->odim, Tsrc->a);
-  } else {
-    if (Tdst->idim != Tsrc->idim || Tdst->odim != Tsrc->odim) {
-      Tdst->a = OOGLRenewNE(HPtNCoord, Tdst->a, Tsrc->idim*Tsrc->odim, "renew TransformN");
-      Tdst->idim = Tsrc->idim; Tdst->odim = Tsrc->odim;
+  if (Tsrc != Tdst) {
+    if (Tdst == NULL) {
+      Tdst = TmNCreate(Tsrc->idim, Tsrc->odim, Tsrc->a);
+    } else {
+      if (Tdst->idim != Tsrc->idim || Tdst->odim != Tsrc->odim) {
+	Tdst->a = OOGLRenewNE(HPtNCoord, Tdst->a, Tsrc->idim*Tsrc->odim,
+			      "renew TransformN");
+	Tdst->idim = Tsrc->idim; Tdst->odim = Tsrc->odim;
+      }
+      memcpy(Tdst->a, Tsrc->a, Tsrc->idim*Tsrc->odim*sizeof(HPtNCoord));
     }
-    memcpy(Tdst->a, Tsrc->a, Tsrc->idim*Tsrc->odim*sizeof(HPtNCoord));
   }
   return Tdst;
 }
@@ -953,7 +956,7 @@ TmNApplyT3TN(Transform3 T3, int *perm, TransformN *mat)
     perm = (int *)dflt_perm;
   }
 
-  /* As TransfromN's are virtually inifinite (i.e. act as identity if
+  /* As TransfromN's are virtually infinite (i.e. act as identity if
    * the input dimensions do not match), we only have to make sure
    * that "mat" has enough space such that perm can be applied.
    */
@@ -978,8 +981,8 @@ TmNApplyT3TN(Transform3 T3, int *perm, TransformN *mat)
   }
 
   /* Make a "copy" of mat, copying only the ROWS mentioned in perm.
-   * As delta operates from the right, we need only those columns, but
-   * all rows of mat.
+   * As delta operates from the right, we need only those rows, but
+   * all columns of mat.
    */
   tmp = OOGLNewNE(HPtNCoord, odim*d3, "TmNApplyDN data");
 
@@ -1009,7 +1012,7 @@ TmNApplyT3TN(Transform3 T3, int *perm, TransformN *mat)
  * simply have to interchange the rows of from.
  *
  * This is meant to map a 3d object to another 3d sub-space,
- * e.g. a camera geometetry. This means that we really want to use 
+ * e.g. a camera geometry. This means that we really want to use 
  *
  * dflt_perm^{-1} perm
  *
@@ -1118,12 +1121,12 @@ TmNProject(const TransformN *from, int *perm, TransformN *to)
     odim = from->odim;
   }
   if (to == NULL) {
-    to = TmNCreate(idim, d3, NULL);
+    to = TmNCreate(max(perm_dim, idim), d3, NULL);
   } else {
-    to->a = OOGLRenewNE(HPtNCoord, to->a, idim*d3, "renew TransformN");
-    to->idim = idim;
+    to->idim = max(perm_dim, idim);
     to->odim = d3;
-    memset(to->a, 0, idim*d3*sizeof(HPtNCoord));
+    to->a = OOGLRenewNE(HPtNCoord, to->a, to->idim*d3, "renew TransformN");
+    memset(to->a, 0, perm_dim*d3*sizeof(HPtNCoord));
   }
   for (j = 0; j < d3; j++) {
     if (perm[j] < odim) {
@@ -1157,8 +1160,9 @@ TmNPrint(FILE *f, const TransformN *T)
   int i, j;
   int idim = T->idim, odim = T->odim;
 
-  if ( f == NULL)
+  if (f == NULL) {
     return;
+  }
   fprintf(f, "ntransform { %d %d\n", idim, odim);
   for(i = 0; i < idim; i++) {
     for(j = 0; j < odim; j++) {
