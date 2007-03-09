@@ -497,7 +497,7 @@ HPtNTransform3(Transform3 T, int *perm, const HPointN *from, HPointN *to)
 
 /* Apply a TransformN to an HPointN.
  *
- * If from->dim < T->idim, then form is implicitly padded with zeros,
+ * If from->dim < T->idim, then from is implicitly padded with zeros,
  * if from->dim > T->idim, then T is interpreted as identity on the
  * sub-space defined by T->idim < idx < T->odim, the remaining input
  * components are mapped to zero.
