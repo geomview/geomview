@@ -63,6 +63,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ntransobj.h"
 
 extern HandleOps CamOps, GeomOps, TransOps, NTransOps, CommandOps, WindowOps;
+extern HandleOps ImageOps, AppearanceOps;
 
 int gv_debug = 0;
 
@@ -76,89 +77,89 @@ static void MyPoolDelete(Pool *p);
 
 
 HandleOps CommandOps = {
-	"command_language",
-	commandimport,
-	NULL,
-	NULL,
-	NULL,
-	commandclose
+  "command_language",
+  commandimport,
+  NULL,
+  NULL,
+  NULL,
+  commandclose
 };
 
 static HandleOps emoduleCommandOps = {
-	"command_language",
-	commandimport,
-	NULL,
-	NULL,
-	NULL,
-	emodule_commandclose,
+  "command_language",
+  commandimport,
+  NULL,
+  NULL,
+  NULL,
+  emodule_commandclose,
 };
 
 #if HAVE_UNIX_SOCKETS
 static HandleOps listenOps = {	/* "Ops" structure for listening sockets */
-	"socket_listener",
-	listenimport,	/* "read" routine really spawns a new connection's data socket */
-	NULL,
-	NULL,
-	NULL,
-	NULL
+  "socket_listener",
+  listenimport,	/* "read" routine really spawns a new connection's data socket */
+  NULL,
+  NULL,
+  NULL,
+  NULL
 };
 #endif
 
 static int 
 commandimport(Pool *p, Handle **unused, Ref **unused_too )
 {
-    char *w, *raww;
-    int c;
-    int ok = 0;
-    IOBFILE *inf;
-    Lake *lake;
+  char *w, *raww;
+  int c;
+  int ok = 0;
+  IOBFILE *inf;
+  Lake *lake;
 
-    if((inf = PoolInputFile(p)) == NULL)
+  if ((inf = PoolInputFile(p)) == NULL)
+    goto done;
+
+  if ((c = async_iobfnextc(inf,0)) == NODATA)
+    return 1;		/* pretend we got something. */
+
+  if ((lake=(Lake*)PoolClientData(p)) == NULL) {
+    lake = LakeDefine(p->inf, p->outf, p);
+    PoolSetClientData(p, (void*)lake);
+  } else if (lake->streamin != inf) {
+    lake->streamin = inf;
+    lake->streamout = PoolOutputFile(p);
+  }
+
+  switch(c) {
+  case '<':
+    iobfgetc(inf);
+    w = iobfdelimtok("()", inf, 0);
+    if (w == NULL)
       goto done;
-
-    if((c = async_iobfnextc(inf,0)) == NODATA)
-      return 1;		/* pretend we got something. */
-
-    if ((lake=(Lake*)PoolClientData(p)) == NULL) {
-	lake = LakeDefine(p->inf, p->outf, p);
-	PoolSetClientData(p, (void*)lake);
-    } else if(lake->streamin != inf) {
-	lake->streamin = inf;
-	lake->streamout = PoolOutputFile(p);
+    if (strcmp(w, "-") && (w = findfile(PoolName(p), raww = w)) == NULL) {
+      OOGLSyntax(inf, "Reading commands from \"%s\": can't find command file %s",
+		 PoolName(p), raww);
+      goto done;
     }
-
-    switch(c) {
-    case '<':
-	iobfgetc(inf);
-	w = iobfdelimtok("()", inf, 0);
-	if(w == NULL)
-	  goto done;
-	if(strcmp(w, "-") && (w = findfile(PoolName(p), raww = w)) == NULL) {
-	    OOGLSyntax(inf, "Reading commands from \"%s\": can't find command file %s",
-		PoolName(p), raww);
-	    goto done;
-	}
-	p = PoolStreamOpen(w, NULL, 0, &CommandOps);
-	if (iobfile(PoolInputFile(p)) == stdin && !PoolOutputFile(p))
-	  p = PoolStreamOpen(PoolName(p), stdout, 1, &CommandOps);
-	if(p != NULL && inf != NULL)
-	  ok = comm_object(w, &CommandOps, NULL, NULL, COMM_LATER);
-	break;
-    case '(':
-	{
-	  LObject *val;
-	  val = LEvalSexpr(lake);
-	  ok = (val != Lnil) ? 1 : -1;
-	  LFree(val);
-	}
-	break;
-    default:
-	{
-	  LFree( LEvalSexpr(lake) );
-	}
+    p = PoolStreamOpen(w, NULL, 0, &CommandOps);
+    if (iobfile(PoolInputFile(p)) == stdin && !PoolOutputFile(p))
+      p = PoolStreamOpen(PoolName(p), stdout, 1, &CommandOps);
+    if (p != NULL && inf != NULL)
+      ok = comm_object(w, &CommandOps, NULL, NULL, COMM_LATER);
+    break;
+  case '(':
+    {
+      LObject *val;
+      val = LEvalSexpr(lake);
+      ok = (val != Lnil) ? 1 : -1;
+      LFree(val);
     }
-  done:
-    return ok;
+    break;
+  default:
+    {
+      LFree( LEvalSexpr(lake) );
+    }
+  }
+ done:
+  return ok;
 }
 
 /*
@@ -170,92 +171,98 @@ commandimport(Pool *p, Handle **unused, Ref **unused_too )
 static int
 ispipe(char *fname)
 {
-    struct stat st;
+  struct stat st;
 
-    if(stat(fname, &st) < 0)
-	return -1;
-    return (st.st_mode & S_IFMT) != S_IFREG;
+  if (stat(fname, &st) < 0)
+    return -1;
+  return (st.st_mode & S_IFMT) != S_IFREG;
 }
 
 int
 comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 {
-    int c, ok = 0;
-    Pool *p;
+  int c, ok = 0;
+  Pool *p;
 
-    if(str == NULL)
-	return 0;
-    if(strcmp(str, "-") == 0 || access(str, 0) == 0) {
-	Handle *h = HandleReferringTo('<', str, ops, hp);
-	/*
-	 * If we haven't read something from this file yet,
-	 * forget it.
-	 */
-	if(h) {
-	    if(HandleObject(h)) {
-		ok = 1;
-		if(rp) HandleUpdRef(&h, NULL, rp);
-	    } else if(((p = PoolByName(HandleName(h)))) == NULL ||
-			(p->flags & PF_ANY) || (!p->seekable && !now)) {
+  if (str == NULL)
+    return 0;
+  if (strcmp(str, "-") == 0 || access(str, 0) == 0) {
+    Handle *h = HandleReferringTo('<', str, ops, hp);
+    /*
+     * If we haven't read something from this file yet,
+     * forget it.
+     */
+    if (h) {
+      if (HandleObject(h)) {
+	ok = 1;
+	if (rp) {
+	  HandleUpdRef(&h, NULL, rp);
+	}
+      } else if (((p = PoolByName(HandleName(h), ops))) == NULL ||
+		 (p->flags & PF_ANY) || (!p->seekable && !now)) {
 		
-		/* When reading plain files, always demand an object.
-		 * When reading others (pipe, tty), demand one if 'now' set.
-		 * Use PF_ANY flag as an alternate hint of reading an object,
-		 *  since reading commands leaves no object attached to h.
-		 */
-		ok = 1;
-	    } else {
-		/* Failed */
-		HandleDelete(h);
-	    }
-	}
-	/* If not ok, close the file.
-	 * If 'now' and not some sort of pipe, also close the file.
+	/* When reading plain files, always demand an object. When
+	 * reading others (pipe, tty), demand one if 'now' set. Use
+	 * PF_ANY flag as an alternate hint of reading an object,
+	 * since reading commands leaves no object attached to h.
 	 */
-	if((p = PoolByName(str)) != NULL && (!ok || (now && p->seekable))) {
-	    if(now && ok) {
-		/* Read as much as possible if we need it right now. */
-		while(PoolInputFile(p) != NULL &&
-		      (c = async_iobfnextc(PoolInputFile(p), 0)) != NODATA &&
-		      c != EOF && (*ops->strmin)(p, hp, rp))
-		  ;
-	    }
-	    PoolClose(p);
-	    MyPoolDelete(p);
-	} else if (iobfile(PoolInputFile(p)) == stdin
-		   && PoolOutputFile(p) == NULL)
-	  p = PoolStreamOpen(PoolName(p), stdout, 1, ops);
-	return ok;
-    } else if(strpbrk(str, "({ \t\n")) {
-	static Pool *pcache;	/* Cache a pool for handling strings */
-	static int inuse = 0;	/* Use cached pool unless already in use */
-	IOBFILE *inf = iobfileopen(fmemopen(str, strlen(str), "rb"));
-		    /* Caching implies this first pool has a long lifetime;
-		     * suitable for expressing (interest (...)) 
-		     */
-	if(!inuse) {
-	    if((p = pcache) == NULL)
-		p = pcache = PoolStreamTemp(str, inf, NULL, 0, ops);
-	    inuse = 1;
-	} else {
-	    p = PoolStreamTemp(str, inf, NULL, 0, ops);
+	ok = 1;
+      } else {
+	/* Failed */
+	HandleDelete(h);
+	if (hp) {
+	  *hp = NULL;
 	}
-	if(p == NULL)
-	    return 0;		/* Failed */
-	p->inf = inf;
-	p->outf = stdout;	/* Attach default output stream */
-	while(iobfnextc(inf, 0) != EOF)
-	    ok = (*ops->strmin)(p, hp, rp);
-	PoolClose(p);
-	if(p == pcache)
-	    inuse = 0;
-	else
-	    MyPoolDelete(p); /* Delete temp pool unless it's our cached one */
-    } else {
-	/* Print the "No such file..." error left by access() */
-	fprintf(stderr, "%s: %s\n", str, sperror());
+      }
+    }
+    /* If not ok, close the file.
+     * If 'now' and not some sort of pipe, also close the file.
+     */
+    if ((p = PoolByName(str, ops)) != NULL && (!ok || (now && p->seekable))) {
+      if (now && ok) {
+	/* Read as much as possible if we need it right now. */
+	while(PoolInputFile(p) != NULL &&
+	      (c = async_iobfnextc(PoolInputFile(p), 0)) != NODATA &&
+	      c != EOF && (*ops->strmin)(p, hp, rp))
+	  ;
+      }
+      PoolClose(p);
+      MyPoolDelete(p);
+    } else if (iobfile(PoolInputFile(p)) == stdin 
+	       && PoolOutputFile(p) == NULL) {
+      p = PoolStreamOpen(PoolName(p), stdout, 1, ops);
     }
     return ok;
+  } else if (strpbrk(str, "({ \t\n")) {
+    static Pool *pcache;	/* Cache a pool for handling strings */
+    static int inuse = 0;	/* Use cached pool unless already in use */
+    IOBFILE *inf = iobfileopen(fmemopen(str, strlen(str), "rb"));
+    /* Caching implies this first pool has a long lifetime;
+     * suitable for expressing (interest (...)) 
+     */
+    if (!inuse) {
+      if ((p = pcache) == NULL)
+	p = pcache = PoolStreamTemp(str, inf, NULL, 0, ops);
+      inuse = 1;
+    } else {
+      p = PoolStreamTemp(str, inf, NULL, 0, ops);
+    }
+    if (p == NULL)
+      return 0;		/* Failed */
+    p->inf = inf;
+    p->outf = stdout;	/* Attach default output stream */
+    while(iobfnextc(inf, 0) != EOF)
+      ok = (*ops->strmin)(p, hp, rp);
+    PoolClose(p);
+    if (p == pcache)
+      inuse = 0;
+    else
+      MyPoolDelete(p); /* Delete temp pool unless it's our cached one */
+  } else {
+    /* Print the "No such file..." error left by access() */
+    fprintf(stderr, "%s: %s\n", str, sperror());
+  }
+  return ok;
 }
 
 
@@ -265,46 +272,46 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 static int
 commandclose(Pool *p)
 {
-    PoolDoReread(p);
-    PoolClose(p);
-    return 0;
+  PoolDoReread(p);
+  PoolClose(p);
+  return 0;
 }
 
 
 LDEFINE(setenv, LVOID,
-"(setenv  name string)  sets the environment variable ``name'' to the value\n\
+	"(setenv  name string)  sets the environment variable ``name'' to the value\n\
 ``string''; the name is visible to geomview (as in pathnames containing $name)\n\
 and to processes it creates, e.g. external modules.")
 {
-    char *name, *string = NULL;
-    char buf[10240];
+  char *name, *string = NULL;
+  char buf[10240];
 
-    LDECLARE(("setenv", LBEGIN,
-	LSTRING, &name,
-	LSTRING, &string,
-	LEND));
-    sprintf(buf, "%s=%s", name, string);
-    envexpand(buf+strlen(name)+1);
-    putenv(strdup(buf));
-    return Lt;
+  LDECLARE(("setenv", LBEGIN,
+	    LSTRING, &name,
+	    LSTRING, &string,
+	    LEND));
+  sprintf(buf, "%s=%s", name, string);
+  envexpand(buf+strlen(name)+1);
+  putenv(strdup(buf));
+  return Lt;
 }
 
 
 LDEFINE(input_translator, LVOID,
-"(input-translator  \"#prefix_string\"  \"Bourne-shell-command\")\n\
+	"(input-translator  \"#prefix_string\"  \"Bourne-shell-command\")\n\
 Defines an external translation program for special input types.\n\
 When asked to read a file which begins with the specified string,\n\
 geomview invokes that program with standard input coming from the given file.\n\
 The program is expected to emit OOGL geometric data to its standard output.\n\
 In this implementation, only prefixes beginning with # are recognized.")
 {
-    char *prefix, *cmd;
-    LDECLARE(("input-translator", LBEGIN,
-	LSTRING, &prefix,
-	LSTRING, &cmd,
-	LEND));
-    GeomAddTranslator(prefix, cmd);
-    return Lt;
+  char *prefix, *cmd;
+  LDECLARE(("input-translator", LBEGIN,
+	    LSTRING, &prefix,
+	    LSTRING, &cmd,
+	    LEND));
+  GeomAddTranslator(prefix, cmd);
+  return Lt;
 }
 
 /************************************************************************/
@@ -333,14 +340,14 @@ comm_sigchld(int sig)
 # error FIXME
 #endif
 
-  if(WIFEXITED(status) || WIFSIGNALED(status)) {
+  if (WIFEXITED(status) || WIFSIGNALED(status)) {
     emodule *em = VVEC(uistate.emod, emodule);
     int i;
     for(i = 0; i < VVCOUNT(uistate.emod); i++, em++) {
-	if(em->pid == pid) {
-	    em->pid = -pid;
-	    uistate.emod_check = 1;
-	}
+      if (em->pid == pid) {
+	em->pid = -pid;
+	uistate.emod_check = 1;
+      }
     }
   }
   signal(SIGCHLD, comm_sigchld);
@@ -353,8 +360,8 @@ comm_sigchld(int sig)
 static void
 comm_sigttin(int sig)
 {
-  Pool *p = PoolByName("-");
-  if(p != NULL)
+  Pool *p = PoolByName("-", NULL);
+  if (p != NULL)
     PoolSleepFor(p, 2.);
 
   signal(SIGTTIN, comm_sigttin);
@@ -364,9 +371,9 @@ comm_sigttin(int sig)
 			 */
   {
     struct sigaction sa;
-    if(sigaction(SIGTTIN, NULL, &sa) >= 0) {
-	sa.sa_flags &= ~SA_RESTART;
-	sigaction(SIGTTIN, &sa, NULL);
+    if (sigaction(SIGTTIN, NULL, &sa) >= 0) {
+      sa.sa_flags &= ~SA_RESTART;
+      sigaction(SIGTTIN, &sa, NULL);
     }
   }
 #endif
@@ -402,8 +409,8 @@ fatalsig(int sig)
   read(2, &die, 1);
   fprintf(stderr, "got answer %c\n", (int)die % 0xff);
   fflush(stderr);
-  if(die != 'y' && die != 'Y')
-	gv_exit();
+  if (die != 'y' && die != 'Y')
+    gv_exit();
   /* else return, and hope the OS gives us a core dump. */
   signal(sig, SIG_DFL);
 }
@@ -413,9 +420,9 @@ typedef void (*mysigfunc_t)();
 static void
 catchsig(int sig, mysigfunc_t func)
 {
-   mysigfunc_t oldfunc = (mysigfunc_t)signal(sig, func);
-   if(oldfunc == (mysigfunc_t)SIG_IGN)
-	signal(sig, oldfunc);
+  mysigfunc_t oldfunc = (mysigfunc_t)signal(sig, func);
+  if (oldfunc == (mysigfunc_t)SIG_IGN)
+    signal(sig, oldfunc);
 }
 
 
@@ -425,7 +432,7 @@ comm_init()
   signal(SIGCHLD, comm_sigchld);
   signal(SIGTTIN, comm_sigttin);
   signal(SIGPIPE, SIG_IGN);	/* Write on broken pipe -> I/O error */
-  if(!gv_debug) {
+  if (!gv_debug) {
     catchsig(SIGINT, (mysigfunc_t)gv_exit);
     catchsig(SIGSEGV, (mysigfunc_t)fatalsig);
     catchsig(SIGBUS, (mysigfunc_t)fatalsig);
@@ -441,8 +448,8 @@ comm_init()
 int 
 comm_route( char *str )
 {
-    comm_object( str, &CommandOps, NULL, NULL, COMM_LATER );
-    return 0;
+  comm_object( str, &CommandOps, NULL, NULL, COMM_LATER );
+  return 0;
 }
 
 
@@ -453,9 +460,9 @@ emodule_commandclose(Pool *p)
   emodule *em;
 
   for(i = 0, em = VVEC(uistate.emod, emodule); i < VVCOUNT(uistate.emod); i++, em++) {
-    if(em->link == p && em->pid <= 0) {
-	emodule_reap(em);
-	return 1;
+    if (em->link == p && em->pid <= 0) {
+      emodule_reap(em);
+      return 1;
     }
   }
   return 0;
@@ -467,7 +474,7 @@ emodule_reap(emodule *em)
   Lake *lake;
   Pool *p = em->link;
 
-  if(p != NULL) {
+  if (p != NULL) {
     em->link = NULL;
     if ((lake=(Lake*)PoolClientData(p)) != NULL) {
       RemoveLakeInterests(lake);
@@ -487,7 +494,7 @@ emodule_kill(emodule *em)
    * but put this check here, just in case, since we're having trouble on the
    * SGI.
    */
-  if(kill(em->pid, SIGHUP) < 0 && errno == ESRCH) {
+  if (kill(em->pid, SIGHUP) < 0 && errno == ESRCH) {
     em->pid = -abs(em->pid);
     uistate.emod_check = 1;
   }
@@ -495,7 +502,7 @@ emodule_kill(emodule *em)
 }
 
 LDEFINE(emodule_run, LVOID,
-       "(emodule-run  SHELL-COMMAND ARGS...)\n\
+	"(emodule-run  SHELL-COMMAND ARGS...)\n\
 	Runs the given SHELL-COMMAND (a string containing a UNIX shell\n\
 	command) as an external module.  The module's standard output\n\
 	is taken as geomview commands; responses (written to filename\n\
@@ -532,9 +539,9 @@ LDEFINE(emodule_run, LVOID,
  */
 static int matches(char *template, int len, char *str)
 {
-   if(str == NULL) return 0;
-   return (strncasecmp(template, str, len) == 0 &&
-		(str[len] == '\0' || isspace(str[len])));
+  if (str == NULL) return 0;
+  return (strncasecmp(template, str, len) == 0 &&
+	  (str[len] == '\0' || isspace(str[len])));
 }
 
 /* This routine searches through the running emodules and returns the index
@@ -559,7 +566,7 @@ int emodule_running_index(char *modname)
       if (name == NULL) name = em->name;
       else name++;
       if (matches(modname, len, name) || matches(modname, len, em->name)
-		|| matches(modname, len, em->text))
+	  || matches(modname, len, em->text))
 	return i;
     }
   return -1;
@@ -592,20 +599,20 @@ LDEFINE(emodule_isrunning, LVOID,
 static char *
 truepath(char *program, char *dir)
 {
-    static char *buf = NULL;
-    int len;
-    char path[10240];
+  static char *buf = NULL;
+  int len;
+  char path[10240];
 
-    len = strcspn(program, "()<> \t;");
-    if(len == 0) return program;
-    sprintf(path, "%s/%.*s", dir, len, program);
-    envexpand(path);
-    if(access(path, X_OK) == 0) {
-	if(buf) free(buf);
-	strcat(path, program + len);
-	program = buf = strdup(path);
-    }
-    return program;
+  len = strcspn(program, "()<> \t;");
+  if (len == 0) return program;
+  sprintf(path, "%s/%.*s", dir, len, program);
+  envexpand(path);
+  if (access(path, X_OK) == 0) {
+    if (buf) free(buf);
+    strcat(path, program + len);
+    program = buf = strdup(path);
+  }
+  return program;
 }
 	
 
@@ -621,14 +628,14 @@ emodule_run(emodule *em)
   char seqname[128];
 
   program = em->text;
-  if(program[0] == '!') {
+  if (program[0] == '!') {
     program++;
     otherpgrp = 0;
   }
 
   /* create the communication pipes */
   pfrom.r = pfrom.w = -1;
-  if(pipe((int *)&pfrom) < 0 || pipe((int *)&pto) < 0) {
+  if (pipe((int *)&pfrom) < 0 || pipe((int *)&pto) < 0) {
     OOGLError(1, "Can't create pipe to external module: %s", sperror());
     close(pfrom.r); close(pfrom.w);
     return NULL;
@@ -638,53 +645,53 @@ emodule_run(emodule *em)
   /* invoke external module */
   switch(pid = fork()) {
   case -1:
-	OOGLError(1, "Can't fork external module: %s", sperror());
-	return NULL;
+    OOGLError(1, "Can't fork external module: %s", sperror());
+    return NULL;
 
   case 0: {
-	static char rats[] = "Can't exec external module: ";
-	char envbuf[10240];
+    static char rats[] = "Can't exec external module: ";
+    char envbuf[10240];
 
-	if(otherpgrp) {
+    if (otherpgrp) {
 #if SETPGRP_VOID
-	    setpgrp();
+      setpgrp();
 #else
-	    setpgrp(0,getpid());
+      setpgrp(0,getpid());
 #endif
-	}
-	if (em->dir) {
-	  program = truepath(program, em->dir);
-	  sprintf(envbuf, "PATH=%s:%s", em->dir, getenv("PATH"));
-	  envexpand(envbuf);
-	} else {
-	  /* Append known module directories to the subprocess' PATH.
-	   * This lets us emodule-run an existing module program with
-	   * special arguments, without having to specify its full path.
-	   */
-	  char *p = envbuf;
-	  sprintf(envbuf, "PATH=%s", getenv("PATH"));
-	  for(i = 0; i < emodule_path_count; i++) {
-	    p += strlen(p);
-	    *p++ = ':';
-	    strcpy(p, VVEC(vv_emodule_path, char *)[i]);
-	  }
-	}
-	putenv(envbuf);
-
-	close(pfrom.r);
-	close(pto.w);
-	dup2(pto.r, 0);
-	close(pto.r);
-	dup2(pfrom.w, 1);
-	close(pfrom.w);
-	signal(SIGPIPE, SIG_DFL);
-	signal(SIGCHLD, SIG_DFL);
-	execl("/bin/sh", "sh", "-c", program, NULL);
-
-	write(2, rats, sizeof(rats)-1);
-	perror(em->text);
-	exit(1);
+    }
+    if (em->dir) {
+      program = truepath(program, em->dir);
+      sprintf(envbuf, "PATH=%s:%s", em->dir, getenv("PATH"));
+      envexpand(envbuf);
+    } else {
+      /* Append known module directories to the subprocess' PATH.
+       * This lets us emodule-run an existing module program with
+       * special arguments, without having to specify its full path.
+       */
+      char *p = envbuf;
+      sprintf(envbuf, "PATH=%s", getenv("PATH"));
+      for(i = 0; i < emodule_path_count; i++) {
+	p += strlen(p);
+	*p++ = ':';
+	strcpy(p, VVEC(vv_emodule_path, char *)[i]);
       }
+    }
+    putenv(envbuf);
+
+    close(pfrom.r);
+    close(pto.w);
+    dup2(pto.r, 0);
+    close(pto.r);
+    dup2(pfrom.w, 1);
+    close(pfrom.w);
+    signal(SIGPIPE, SIG_DFL);
+    signal(SIGCHLD, SIG_DFL);
+    execl("/bin/sh", "sh", "-c", program, NULL);
+
+    write(2, rats, sizeof(rats)-1);
+    perror(em->text);
+    exit(1);
+  }
   }
 
   close(pto.r);
@@ -692,8 +699,8 @@ emodule_run(emodule *em)
 
   for(i=1; ; i++) {
     sprintf(seqname, "[%d]%.100s", i, em->name);
-    if(ui_emodule_index(seqname,NULL) < 0)
-	break;
+    if (ui_emodule_index(seqname,NULL) < 0)
+      break;
   }
 
   /*
@@ -704,22 +711,22 @@ emodule_run(emodule *em)
    * otherwise at the beginning of the table.
    */
   i = em - VVEC(uistate.emod, emodule);
-  if(i < 0 || i > VVCOUNT(uistate.emod))
+  if (i < 0 || i > VVCOUNT(uistate.emod))
     i = 0;
   newem = ui_emodule_install(i, seqname, emodule_kill);
 
   newem->link = PoolStreamOpen( seqname, fdopen(pfrom.r, "rb"), 0, &emoduleCommandOps );
-  if(newem->link) {
-	/* Attach output stream, too. */
+  if (newem->link) {
+    /* Attach output stream, too. */
     PoolStreamOpen(seqname, fdopen(pto.w, "w"), 1, &emoduleCommandOps);
 
-	/* Kludge.  We want to ensure that EOF indications are "hard", i.e.
-	 * that we cease reading and drop the emodule as soon as we see EOF.
-	 * Unfortunately I can't find any way in the refcomm library
-	 * to distinguish nameless pipes (-> hard eof) from named ones
-	 * (where eof may be a temporary condition).  So the library
-	 * guesses they're soft.  We need to tell it otherwise. -slevy 921005
-	 */
+    /* Kludge.  We want to ensure that EOF indications are "hard", i.e.
+     * that we cease reading and drop the emodule as soon as we see EOF.
+     * Unfortunately I can't find any way in the refcomm library
+     * to distinguish nameless pipes (-> hard eof) from named ones
+     * (where eof may be a temporary condition).  So the library
+     * guesses they're soft.  We need to tell it otherwise. -slevy 921005
+     */
     newem->link->softEOF = 0;
   }
   newem->pid = pid;
@@ -728,7 +735,7 @@ emodule_run(emodule *em)
 }
 
 LDEFINE(command, LVOID,
-       "(command        INFILE [OUTFILE])\n\
+	"(command        INFILE [OUTFILE])\n\
 	Read commands from INFILE; send corresponding responses\n\
 	(e.g. anything written to filename \"-\") to OUTFILE, stdout\n\
 	by default.")
@@ -739,13 +746,13 @@ LDEFINE(command, LVOID,
 	    LOPTIONAL,
 	    LSTRING, &ofile,
 	    LEND));
-  if(PoolStreamOpen(file, NULL, 0, &CommandOps) == NULL) {
+  if (PoolStreamOpen(file, NULL, 0, &CommandOps) == NULL) {
     OOGLError(0,"command: cannot open input %s: %s\n", file, sperror());
     return Lnil;
-    }
+  }
   if (ofile) {
     FILE *outf = (strcmp(ofile, "-")) ? fopen(ofile, "w") : stdout;
-    if(outf == NULL) {
+    if (outf == NULL) {
       OOGLError(0,"command: cannot open output %s: %s\n", ofile, sperror());
       return Lnil;
     }
@@ -765,9 +772,9 @@ LDEFINE(sleep_for, LVOID,
   float time;
 
   LDECLARE(("sleep-for", LBEGIN,
-	LLAKE, &sweenie,
-	LFLOAT, &time,
-	LEND));
+	    LLAKE, &sweenie,
+	    LFLOAT, &time,
+	    LEND));
   PoolSleepFor(POOL(sweenie), time);
   return Lt;
 }
@@ -786,9 +793,9 @@ LDEFINE(sleep_until, LFLOAT,
   float time;
 
   LDECLARE(("sleep-until", LBEGIN,
-	LLAKE, &bass,
-	LFLOAT, &time,
-	LEND));
+	    LLAKE, &bass,
+	    LFLOAT, &time,
+	    LEND));
   PoolSleepUntil(POOL(bass), time);
   time -= PoolTimeAt(POOL(bass), NULL);	/* NULL => now. */
   return LNew(LFLOAT, &time);
@@ -802,9 +809,9 @@ LDEFINE(set_clock, LVOID,
   Lake *bass;
   float time;
   LDECLARE(("set-clock", LBEGIN,
-	LLAKE, &bass,
-	LFLOAT, &time,
-	LEND));
+	    LLAKE, &bass,
+	    LFLOAT, &time,
+	    LEND));
   PoolSetTime(POOL(bass), NULL, time);
   return Lt;
 }
@@ -817,8 +824,8 @@ LDEFINE(clock, LVOID,
   Lake *rainy;
   float time;
   LDECLARE(("clock", LBEGIN,
-	LLAKE, &rainy,
-	LEND));
+	    LLAKE, &rainy,
+	    LEND));
   time = PoolTimeAt(POOL(rainy), NULL);
   return LNew(LFLOAT, &time);
 }
@@ -830,29 +837,29 @@ void echo_to_fp(LList *arglist, FILE *fp)
 {
   LObject *arg, *val;
 
-  if(arglist == NULL) {
+  if (arglist == NULL) {
     fputs("\n", fp);
   } else {
     for(;;) {
-	arg = arglist->car;
-	if(arg->type == LSTRING)
-	    fputs(LSTRINGVAL(arg), fp);
-	else if(arg->type == LLIST) {
-	    val = LEval(arg);
-	    LWrite(fp, val);
-	    LFree(val);
-	} else
-	    LWrite(fp, arg);
-	if((arglist = arglist->cdr) == NULL)
-	    break;
-	fputs(" ", fp);
+      arg = arglist->car;
+      if (arg->type == LSTRING)
+	fputs(LSTRINGVAL(arg), fp);
+      else if (arg->type == LLIST) {
+	val = LEval(arg);
+	LWrite(fp, val);
+	LFree(val);
+      } else
+	LWrite(fp, arg);
+      if ((arglist = arglist->cdr) == NULL)
+	break;
+      fputs(" ", fp);
     }
   }
   fflush(fp);
 }
 
 LDEFINE(echo, LVOID,
-       "(echo          ...)\n\
+	"(echo          ...)\n\
 	Write the given data to the special file \"-\".  Strings are written\n\
 	literally; lisp expressions are evaluated and their values written.\n\
 	If received from an external program, \"echo\" sends to the program's\n\
@@ -895,7 +902,7 @@ LDEFINE(emodule_transmit, LVOID,
   i = emodule_running_index(modname);
   if (i == -1) return Lnil;
   em = VVINDEX(uistate.emod, emodule, i);
-  if(em->link && em->link->outf) {
+  if (em->link && em->link->outf) {
     echo_to_fp(message, em->link->outf);
     return Lt;
   }
@@ -905,14 +912,14 @@ LDEFINE(emodule_transmit, LVOID,
 
 
 LDEFINE(read, LVOID,
-       "(read {geometry|camera|transform|ntransform|command} {GEOMETRY or CAMERA or ...})\n\
-	Read and interpret the text in ... as containing the\n\
-	given type of data.  Useful for defining objects using OOGL\n\
-	reference syntax, e.g.\n\
-\n\
-	  (geometry  thing { INST  transform : T    geom : fred })\n\
-	  (read  geometry  { define fred QUAD 1 0 0  0 1 0  0 0 1  1 0 0 })\n\
-	  (read  transform { define T <myfile})")
+	"(read {geometry|camera|command|transform|ntransform|image|appearance} {GEOMETRY or CAMERA or ...})\n"
+	"Read and interpret the text in ... as containing the "
+	"given type of data.  Useful for defining objects using OOGL "
+	"reference syntax, e.g. "
+	"\n\n"
+	"(geometry  thing { INST  transform : T    geom : fred })\n\n"
+	"(read  geometry  { define fred QUAD 1 0 0  0 1 0  0 0 1  1 0 0 })\n\n"
+	"(read  transform { define T <myfile})")
 /*
   NO LDECLARE !
   There is currently no C interface to this function.  Perhaps we
@@ -934,17 +941,17 @@ LDEFINE(read, LVOID,
 	(kw = LSexpr(lake)) == Lnil ||
 	!LFROMOBJ(LSTRING)(kw, &opsname) ||
 	!(ops = str2ops(opsname))) {
-      OOGLSyntax(lake->streamin, "\"read\" in \"%s\": keyword expected (command|geometry|camera|window|transform|ntransform), got \"%s\"",
-	  LakeName(lake), opsname);
+      OOGLSyntax(lake->streamin, "\"read\" in \"%s\": keyword expected {command|geometry|camera|window|transform|ntransform|image|appearance}, got \"%s\"",
+		 LakeName(lake), opsname);
       goto fail;
     }
 
     /* parse 2nd arg, using ops determined by 1st arg.
        Note: we don't actually store the 1st arg because this function's
        work is all done during parsing.  */
-    if(!LakeMore(lake,c) || (*ops->strmin)(POOL(lake), NULL, NULL) == 0) {
+    if (!LakeMore(lake,c) || (*ops->strmin)(POOL(lake), NULL, NULL) == 0) {
       OOGLSyntax(lake->streamin, "\"read %s\" in \"%s\": error reading %s's",
-		opsname, PoolName(POOL(lake)), opsname);
+		 opsname, PoolName(POOL(lake)), opsname);
       goto fail;
     }
   }
@@ -960,18 +967,21 @@ LDEFINE(read, LVOID,
 void gv_merge(HandleOps *ops, int camid, Ref *object)
 {
   CameraStruct cs;		/* Might be either camera or window, really */
+
   cs.h = NULL;
-  cs.cam = REFINCR(Camera, object);     /* Since (merge ...) will delete it */
+#if 0
+  cs.cam = REFGET(Camera, object);     /* Since (merge ...) will delete it */
+#endif
 
   LFree( LEvalFunc("merge",
-		LSTRING, ops == &CamOps ? "camera" : "window",
-		LID, camid,
-		ops == &CamOps ? LCAMERA : LWINDOW, &cs,
-		LEND) );
+		   LSTRING, ops == &CamOps ? "camera" : "window",
+		   LID, camid,
+		   ops == &CamOps ? LCAMERA : LWINDOW, &cs,
+		   LEND) );
 }
 
 LDEFINE(merge, LVOID,
-       "(merge          {window|camera} CAM-ID  { WINDOW or CAMERA ... } )\n\
+	"(merge          {window|camera} CAM-ID  { WINDOW or CAMERA ... } )\n\
 	Modify the given window or camera, changing just those properties\n\
 	specified in the last argument.  E.g.\n\
 		(merge camera \"Camera\" { far 20 })\n\
@@ -991,24 +1001,24 @@ LDEFINE(merge, LVOID,
     /* parse first arg [ops]: */
     if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
 	!LFROMOBJ(LSTRING)(kw, &opsname) ||
-	  ((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
+	((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
       OOGLSyntax(lake->streamin,
-	"\"merge\" in \"%s\": expected \"camera\" or \"window\", got \"%s\"", LakeName(lake), opsname);
+		 "\"merge\" in \"%s\": expected \"camera\" or \"window\", got \"%s\"", LakeName(lake), opsname);
       goto parsefail;
     }
 
     /* parse 2nd arg; it's a string (id) */
     if (! LakeMore(lake,c) || (idarg = LEvalSexpr(lake)) == Lnil) {
       OOGLSyntax(lake->streamin,"\"merge\" in \"%s\": expected CAM-ID",
-	LakeName(lake));
+		 LakeName(lake));
       goto parsefail;
     }
 
     item = LPARSE(((ops == &CamOps) ? LCAMERA : LWINDOW))(lake);
-    if(item == Lnil) {
-	OOGLSyntax(lake->streamin, "\"merge\" in \"%s\": error reading %s",
-	    LakeName(lake), LSTRINGVAL(kw));
-	goto parsefail;
+    if (item == Lnil) {
+      OOGLSyntax(lake->streamin, "\"merge\" in \"%s\": error reading %s",
+		 LakeName(lake), LSTRINGVAL(kw));
+      goto parsefail;
     }
     LListAppend(args, kw);
     LListAppend(args, idarg);
@@ -1019,15 +1029,15 @@ LDEFINE(merge, LVOID,
   kw = LListEntry(args, 1);
   idarg = LListEntry(args, 2);
   item = LListEntry(args, 3);
-  if(!LFROMOBJ(LSTRING)(kw, &opsname) ||
-	((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
+  if (!LFROMOBJ(LSTRING)(kw, &opsname) ||
+     ((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
     OOGLError(0, "\"merge\": expected \"camera\" or \"window\", got %s",
-	LSummarize(idarg));
+	      LSummarize(idarg));
     return Lnil;
   }
   if (!LFROMOBJ(LID)(idarg, &id) || !ISCAM(id)) {
     OOGLError(0, "\"merge\": expected CAM-ID in arg position 2, got %s",
-	LSummarize(idarg));
+	      LSummarize(idarg));
     return Lnil;
   }
   if (ops == &CamOps) {
@@ -1037,7 +1047,7 @@ LDEFINE(merge, LVOID,
       return Lnil;
     }
     drawer_merge_camera(id, cs->cam);
-    CamDelete(cs->cam);
+    /* CamDelete(cs->cam); */
   }
   else {
     WindowStruct *ws;
@@ -1046,7 +1056,7 @@ LDEFINE(merge, LVOID,
       return Lnil;
     }
     drawer_merge_window(id, ws->wn);
-    WnDelete(ws->wn);
+    /* WnDelete(ws->wn); */
   }
   return Lt;
 
@@ -1071,25 +1081,30 @@ MyPoolDelete(Pool *p)
 HandleOps *
 str2ops(char *str)
 {
-  if(str == NULL) return NULL;
-  else if(!strncmp(str, "cam", 3)) return &CamOps;
-  else if(!strncmp(str, "geom", 4)) return &GeomOps;
-  else if(!strncmp(str, "comm", 4)) return &CommandOps;
-  else if(!strncmp(str, "trans", 5)) return &TransOps;
-  else if(!strncmp(str, "ntrans", 6)) return &NTransOps;
-  else if(!strncmp(str, "win", 3)) return &WindowOps;
+  if (str == NULL) return NULL;
+  else if (!strncmp(str, "cam", 3)) return &CamOps;
+  else if (!strncmp(str, "geom", 4)) return &GeomOps;
+  else if (!strncmp(str, "comm", 4)) return &CommandOps;
+  else if (!strncmp(str, "trans", 5)) return &TransOps;
+  else if (!strncmp(str, "ntrans", 6)) return &NTransOps;
+  else if (!strncmp(str, "win", 3)) return &WindowOps;
+  else if (!strncmp(str, "image", sizeof("image")-1)) return &ImageOps;
+  else if (!strncmp(str, "appearance",
+		    sizeof("appearance")-1)) return &AppearanceOps;
   else return NULL;
 }
 
 LType *
 ops2ltype(HandleOps *ops)
 {
-  if(ops == &CamOps) return LCAMERA;
-  else if(ops == &GeomOps) return LGEOM;
-  else if(ops == &WindowOps) return LWINDOW;
-  else if(ops == &TransOps) return LTRANSFORM;
-  else if(ops == &NTransOps) return LTRANSFORMN;
-  else if(ops == &CommandOps) return LLOBJECT;
+  if (ops == &CamOps) return LCAMERA;
+  else if (ops == &GeomOps) return LGEOM;
+  else if (ops == &WindowOps) return LWINDOW;
+  else if (ops == &TransOps) return LTRANSFORM;
+  else if (ops == &NTransOps) return LTRANSFORMN;
+  else if (ops == &CommandOps) return LLOBJECT;
+  else if (ops == &ImageOps) return LIMAGE;
+  else if (ops == &AppearanceOps) return LAP;
   else return NULL;
 }
 
@@ -1115,12 +1130,12 @@ LDEFINE(load, LINT,
 	    LSTRING, &opsname,
 	    LEND));
 
-  if(opsname != NULL) {
+  if (opsname != NULL) {
     guess = 0;
     ops = str2ops(opsname);
-    if(ops != &CommandOps && ops != &GeomOps && ops != &CamOps) {
-	OOGLError(0, "load: expected \"command\" or \"geometry\" or \"camera\", got \"%s\"", opsname);
-	return Lnil;
+    if (ops != &CommandOps && ops != &GeomOps && ops != &CamOps) {
+      OOGLError(0, "load: expected \"command\" or \"geometry\" or \"camera\", got \"%s\"", opsname);
+      return Lnil;
     }
   }
   loadfile(file, ops, guess);
@@ -1136,12 +1151,12 @@ loadfile(char *name, HandleOps *defops, int guess)
   char *pathname;
   int freename = 0;
   
-  if(strcmp(name, "-") == 0) {
+  if (strcmp(name, "-") == 0) {
     guess = 0;
   } else if ((pathname=findfile(NULL, name))) {
     name = strdup(pathname);
     freename = 1;
-  } else if(strchr(name, ' ') == NULL && strchr(name, '(') == NULL
+  } else if (strchr(name, ' ') == NULL && strchr(name, '(') == NULL
 	    && strchr(name, '<') == NULL) {
     OOGLError(0, "Can't find file %s", name);
     return;
@@ -1150,36 +1165,39 @@ loadfile(char *name, HandleOps *defops, int guess)
   if (ispipe(name)) {
     guess = 0;
   }
-  if(!guess) {
-    if(comm_object(name, defops, &h, &obj, COMM_LATER)) {
-	ops = defops;
+  if (!guess) {
+    if (comm_object(name, defops, &h, &obj, COMM_LATER)) {
+      ops = defops;
     } else {
-	OOGLError(0, "Can't load %s's from %s", defops->prefix, name);
-	return;
+      OOGLError(0, "Can't load %s's from %s", defops->prefix, name);
+      return;
     }
   } else if (comm_object(name, &GeomOps, &h, &obj, COMM_LATER)) {
     ops = &GeomOps;
   } else if (comm_object(name, &CamOps, &h, &obj, COMM_LATER)) {
     ops = &CamOps;
-  } else if (!(comm_object(name, &CommandOps, NULL, NULL, COMM_LATER))) {
+  } else if (!(comm_object(name, &CommandOps, &h, NULL, COMM_LATER))) {
     OOGLError(0,"Can't load %s",name);
     return;
   }
   useconnection( name, ops, h, obj, 1 );
-  if(freename) free(name);
+  if (freename) {
+    free(name);
+  }
   return;
 }
 
 LDEFINE(hdefine, LVOID,
-	"(hdefine  \"geometry\"|\"camera\"|\"transform\"|\"ntransform\"|\"window\"  name  value)\n\
-	Sets the value of a handle of a given type.\n\
-	  (hdefine  <type>  <name>  <value>)  is generally equivalent to\n\
-	  (read <type>  { define <name> <value> })\n\
-	except that the assignment is done when hdefine is executed,\n\
-	(possibly not at all if inside a conditional statement),\n\
-	while the ``read ... define'' performs assignment as soon as the\n\
-	text is read.\n")
+	"(hdefine  \"geometry\"|\"camera\"|\"window\"|\"transform\"|\"ntransform\"|\"image\"|\"appearance\"  name  value)\n"
+	"Sets the value of a handle of a given type."
+	"(hdefine  <type>  <name>  <value>)  is generally equivalent to"
+	"(read <type>  { define <name> <value> })"
+	"except that the assignment is done when hdefine is executed,"
+	"(possibly not at all if inside a conditional statement),"
+	"while the ``read ... define'' performs assignment as soon as the"
+	"text is read.")
 {
+  Handle *h = NULL;
   HandleOps *ops = NULL;
   LType *ltype;
   char *hname;
@@ -1194,6 +1212,7 @@ LDEFINE(hdefine, LVOID,
     TmNStruct tns;
     WindowStruct ws;
     ApStruct as;
+    ImgStruct img;
     LObject lobj;
   } *s;
 
@@ -1201,25 +1220,31 @@ LDEFINE(hdefine, LVOID,
     /* parse first arg [ops]: */
     if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
 	!LFROMOBJ(LSTRING)(kw, &opsname) ||
-	  (ops = str2ops(opsname)) == NULL ||
-	  (ltype = ops2ltype(ops)) == NULL) {
+	(ops = str2ops(opsname)) == NULL ||
+	(ltype = ops2ltype(ops)) == NULL) {
       OOGLSyntax(lake->streamin,
-	"\"hdefine\" in \"%s\": expected \"camera\" or \"window\" or \"transform\" or \"ntransform\" or \"geometry\", got \"%s\"", LakeName(lake), opsname);
+		 "\"hdefine\" in \"%s\": "
+		 "expected \"camera\" or \"window\" or \"geometry\" or "
+		 "\"transform\" or \"ntransform\" or "
+		 "\"image\" or \"appearance\", got \"%s\"",
+		 LakeName(lake), opsname);
       goto parsefail;
     }
 
     /* parse 2nd arg; it's a string (id) */
     if (! LakeMore(lake,c) || (name = LEvalSexpr(lake)) == Lnil) {
-      OOGLSyntax(lake->streamin,"\"hdefine %s\" in \"%s\": expected handle name",
-	LakeName(lake), opsname);
+      OOGLSyntax(lake->streamin,
+		 "\"hdefine %s\" in \"%s\": expected handle name",
+		 LakeName(lake), opsname);
       goto parsefail;
     }
 
     item = LPARSE(ltype)(lake);
-    if(item == Lnil) {
-	OOGLSyntax(lake->streamin, "\"hdefine\" in \"%s\": error reading %s",
-	    LakeName(lake), LSTRINGVAL(kw));
-	goto parsefail;
+    if (item == Lnil) {
+      OOGLSyntax(lake->streamin,
+		 "\"hdefine\" in \"%s\": error reading %s",
+		 LakeName(lake), LSTRINGVAL(kw));
+      goto parsefail;
     }
     LListAppend(args, kw);
     LListAppend(args, name);
@@ -1230,27 +1255,31 @@ LDEFINE(hdefine, LVOID,
   kw = LListEntry(args, 1);
   name = LListEntry(args, 2);
   item = LListEntry(args, 3);
-  if(!LFROMOBJ(LSTRING)(kw, &opsname) ||
-	(ops = str2ops(opsname)) == NULL ||
-	(ltype = ops2ltype(ops)) == NULL) {
+  if (!LFROMOBJ(LSTRING)(kw, &opsname) ||
+     (ops = str2ops(opsname)) == NULL ||
+     (ltype = ops2ltype(ops)) == NULL) {
     OOGLError(0, "\"hdefine\": expected data type, got %s",
-	LSummarize(kw));
+	      LSummarize(kw));
     return Lnil;
   }
   if (!LFROMOBJ(LSTRING)(name, &hname)) {
     OOGLError(0, "\"hdefine\": expected handle name, got %s", LSummarize(name));
     return Lnil;
   }
-  if(!LFROMOBJ(ltype)(item, &s)) {
+  if (!LFROMOBJ(ltype)(item, &s)) {
     OOGLError(0, "\"hdefine\": Can't extract %s from %s",
-	ltype->name, LSummarize(item));
+	      ltype->name, LSummarize(item));
     return Lnil;
   }
-  if(ops == &TransOps) obj = (Ref *)TransCreate( s->ts.tm );
-  else if(ops == &NTransOps) obj = (Ref *)NTransCreate( s->tns.tm );
-  else if(ops == &CommandOps) obj = NULL; /* (Ref *)LispCreate( s->lobj ) */
-  else obj = (Ref *)s->gs.geom;	/* All other types resemble geoms */
-  HandleAssign(hname, ops, obj);
+  if (ops == &CommandOps) {
+    obj = NULL; /* (Ref *)LispCreate( s->lobj ) */
+  } else {
+    obj = (Ref *)s->gs.geom; /* All other types resemble geoms */
+  }
+  h = HandleCreateGlobal(hname, ops);
+  REFPUT(h);
+  HandleSetObject(h, obj);
+
   return Lt;
 
  parsefail:
@@ -1279,21 +1308,21 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 static int
 makesocket(char *name)
 {
-    struct sockaddr_un un;
-    int s;
+  struct sockaddr_un un;
+  int s;
 
-    unlink(name);
-    strcpy(un.sun_path, name);
-    un.sun_family = AF_UNIX;
-    if((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-	OOGLError(0, "geomview: can't make UNIX domain socket: %s", sperror());
-	return -1;
-    }
-    if(bind(s, (struct sockaddr *)&un, sizeof(un)) < 0 || listen(s, 4) < 0) {
-	OOGLError(0, "geomview: can't listen on socket %s: %s",name,sperror());
-	return -1;
-    }
-    return s;
+  unlink(name);
+  strcpy(un.sun_path, name);
+  un.sun_family = AF_UNIX;
+  if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+    OOGLError(0, "geomview: can't make UNIX domain socket: %s", sperror());
+    return -1;
+  }
+  if (bind(s, (struct sockaddr *)&un, sizeof(un)) < 0 || listen(s, 4) < 0) {
+    OOGLError(0, "geomview: can't listen on socket %s: %s",name,sperror());
+    return -1;
+  }
+  return s;
 }
 
 
@@ -1304,37 +1333,37 @@ makesocket(char *name)
 int
 listenimport(Pool *listenp, Handle **hp, Ref **rp)
 {
-    struct sockaddr_un un;
-    ACCEPT_ARG3_TYPE len = sizeof(un);
-    char conname[10240];
-    int i, ds;
-    Pool *p;
-    HandleOps *ops = (HandleOps *)PoolClientData(listenp);
+  struct sockaddr_un un;
+  ACCEPT_ARG3_TYPE len = sizeof(un);
+  char conname[10240];
+  int i, ds;
+  Pool *p;
+  HandleOps *ops = (HandleOps *)PoolClientData(listenp);
 
-    if((ds =
-	accept(
-	       iobfileno(listenp->inf),
-	       (struct sockaddr *)&un,
-	       &len)
-	) < 0) {
-	OOGLError(0, "geomview: couldn't accept connection on %s: %s",
-		listenp->poolname, sperror());
-	return 0;
-    }
-    for(i=1; ; i++) {	/* Construct unique connection name */
-	sprintf(conname, "[%d]%.500s", i, listenp->poolname);
-	if(PoolByName(conname) == NULL)
-	    break;
-    }
-    p = PoolStreamOpen(conname, fdopen(ds, "rb"), 0, ops);
-    /*
-     * Reply on the same pipe's return stream.
-     * Don't do this yet; only user so far is "togeomview",
-     * which isn't prepared to receive data back from us.
-     * PoolStreamOpen(conname, fdopen(ds, "w"), 1, (HandleOps*)PoolClientData(listenp));
-     */
-    useconnection( listenp->poolname, ops, HandleCreate(conname, ops), NULL, 0 );
-    return 1;
+  if ((ds =
+      accept(
+	     iobfileno(listenp->inf),
+	     (struct sockaddr *)&un,
+	     &len)
+      ) < 0) {
+    OOGLError(0, "geomview: couldn't accept connection on %s: %s",
+	      listenp->poolname, sperror());
+    return 0;
+  }
+  for(i=1; ; i++) {	/* Construct unique connection name */
+    sprintf(conname, "[%d]%.500s", i, listenp->poolname);
+    if (PoolByName(conname, ops) == NULL)
+      break;
+  }
+  p = PoolStreamOpen(conname, fdopen(ds, "rb"), 0, ops);
+  /*
+   * Reply on the same pipe's return stream.
+   * Don't do this yet; only user so far is "togeomview",
+   * which isn't prepared to receive data back from us.
+   * PoolStreamOpen(conname, fdopen(ds, "w"), 1, (HandleOps*)PoolClientData(listenp));
+   */
+  useconnection( listenp->poolname, ops, HandleCreate(conname, ops), NULL, 0 );
+  return 1;
 }
 
 #endif
@@ -1348,65 +1377,65 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
 void
 usepipe(char *pipedir, char *suffix, char *pipetype)
 {
-    HandleOps *ops = &GeomOps;
-    int s, usepipe = -1;
-    char *tail;
-    char pipename[10240];
-    char pdir[10240];
+  HandleOps *ops = &GeomOps;
+  int s, usepipe = -1;
+  char *tail;
+  char pipename[10240];
+  char pdir[10240];
 
-    if(suffix[0] == '/') {
-	strcpy(pdir, suffix);
-	tail = strrchr(pdir, '/');
-	*tail = '\0';
-	pipedir = pdir;
-	suffix = tail + 1;
-    }
-    sprintf(pipename, "%s/%s", pipedir, suffix);
-    mkdir(pipedir, 0777);
-    chmod(pipedir, 0777);
+  if (suffix[0] == '/') {
+    strcpy(pdir, suffix);
+    tail = strrchr(pdir, '/');
+    *tail = '\0';
+    pipedir = pdir;
+    suffix = tail + 1;
+  }
+  sprintf(pipename, "%s/%s", pipedir, suffix);
+  mkdir(pipedir, 0777);
+  chmod(pipedir, 0777);
 
-    while(*pipetype) switch(*pipetype++) {
-	case 's': usepipe = 0; break;
-	case 'p': usepipe = 1; break;
-	case 'c': ops = &CommandOps; break;
-	case 'g': ops = &GeomOps; break;
-	default: OOGLError(0, "Unknown character '%c' in pipe type string; expected s, p, c, g", pipetype[-1]);
-    }
-    if(usepipe < 0) {
+  while(*pipetype) switch(*pipetype++) {
+  case 's': usepipe = 0; break;
+  case 'p': usepipe = 1; break;
+  case 'c': ops = &CommandOps; break;
+  case 'g': ops = &GeomOps; break;
+  default: OOGLError(0, "Unknown character '%c' in pipe type string; expected s, p, c, g", pipetype[-1]);
+  }
+  if (usepipe < 0) {
 #ifdef NeXT
-	usepipe = 0;
+    usepipe = 0;
 #else
-	usepipe = 1;
+    usepipe = 1;
 #endif
-    }
+  }
 
-    if(usepipe) {
-	/* Establish System-V style named pipe.
-	 * Expect data on it of type 'ops'.
-	 * If there's a non-pipe with that name, trash it.
-	 */
-	struct stat st;
-	if(stat(pipename, &st) == 0 && (st.st_mode & S_IFMT) != S_IFIFO)
-	    unlink(pipename);
-	if(access(pipename, 0) < 0) {
-	    if(mknod(pipename, S_IFIFO, 0) < 0)
-		OOGLError(1, "Can't make pipe: %s: %s", suffix, sperror());
-	    chmod(pipename, 0666);
-	}
-	loadfile(pipename, ops, 0);
-#if HAVE_UNIX_SOCKETS
-    } else {
-	/* Establish UNIX-domain listener socket.
-	 * When we get connections to it, expect data of type 'ops'.
-	 */
-	s = makesocket(pipename);
-	if(s >= 0) {
-	    Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
-	    if(p) PoolSetClientData(p, ops);
-	    p->flags |= PF_NOPREFETCH;
-	}
-#endif
+  if (usepipe) {
+    /* Establish System-V style named pipe.
+     * Expect data on it of type 'ops'.
+     * If there's a non-pipe with that name, trash it.
+     */
+    struct stat st;
+    if (stat(pipename, &st) == 0 && (st.st_mode & S_IFMT) != S_IFIFO)
+      unlink(pipename);
+    if (access(pipename, 0) < 0) {
+      if (mknod(pipename, S_IFIFO, 0) < 0)
+	OOGLError(1, "Can't make pipe: %s: %s", suffix, sperror());
+      chmod(pipename, 0666);
     }
+    loadfile(pipename, ops, 0);
+#if HAVE_UNIX_SOCKETS
+  } else {
+    /* Establish UNIX-domain listener socket.
+     * When we get connections to it, expect data of type 'ops'.
+     */
+    s = makesocket(pipename);
+    if (s >= 0) {
+      Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
+      if (p) PoolSetClientData(p, ops);
+      p->flags |= PF_NOPREFETCH;
+    }
+#endif
+  }
 }
 
 /*
@@ -1417,26 +1446,51 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
  * increasing its reference count, we decr the ref count after handing it over.
  */
 void
-useconnection( char *name, HandleOps *ops, Handle *h, Ref *obj, int unique )
+useconnection(char *name, HandleOps *ops, Handle *h, Ref *obj, int unique)
 {
-    char *tail;
-    tail = strrchr(name, '/');
-    if(tail) tail++; else tail = name;
+  char *tail;
+  tail = strrchr(name, '/');
+  if (tail)
+    tail++;
+  else
+    tail = name;
 
-    if(ops == &GeomOps) {
-	GeomStruct gs;
-	gs.h = h;
-	gs.geom = (Geom *)obj;
-	if(unique) gv_new_geometry( tail, &gs );
-	else gv_geometry( tail, &gs );
-	GeomDelete((Geom *)obj);	/* Maintain ref count */
-    } else if(ops == &CamOps) {
-	CameraStruct cs;
-	cs.h = h;
-	cs.cam = (Camera *)obj;
-	if(unique) gv_new_camera( tail, &cs );
-	else gv_camera( tail, &cs );
-	CamDelete((Camera *)obj);	/* Maintain ref count */
+  if (ops == &GeomOps) {
+    GeomStruct gs;
+    if(h && !h->permanent) {
+      /* same logic as in geomparse() */
+      HandleDelete(h);
+      h = NULL;
     }
-    HandleDelete(h);			/* Maintain ref count */
+    gs.h = h;
+    gs.geom = (Geom *)obj;
+    if (unique)
+      gv_new_geometry( tail, &gs );
+    else
+      gv_geometry( tail, &gs );
+    GeomDelete((Geom *)obj);	/* Maintain ref count */
+    HandleDelete(h); /* Maintain ref count */
+  } else if (ops == &CamOps) {
+    CameraStruct cs;
+    if(h && !h->permanent) {
+      /* same logic as in geomparse() */
+      HandleDelete(h);
+      h = NULL;
+    }
+    cs.h = h;
+    cs.cam = (Camera *)obj;
+    if (unique)
+      gv_new_camera( tail, &cs );
+    else
+      gv_camera( tail, &cs );
+    CamDelete((Camera *)obj);	/* Maintain ref count */
+    HandleDelete(h); /* Maintain ref count */
+  }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
