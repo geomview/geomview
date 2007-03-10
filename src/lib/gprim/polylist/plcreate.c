@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -92,6 +93,8 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     pl->plproj = NULL;
   } else {
     pl = exist;
+    PolyListDelete(pl->plproj); /* better delete it. */
+    pl->plproj = NULL;
   }
 
   while ((attr = va_arg(*a_list, int))) 
