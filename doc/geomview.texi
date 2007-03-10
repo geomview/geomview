@@ -2816,7 +2816,6 @@ The general syntax is
  <oogl-object>  ::=
 	[ "@{" ]
 	    [ "define" @code{symbolname} ]
-	    [ "appearance" @code{appearance} ]
 	    [ ["="] @code{object-keyword} @dots{}
 		 | "<" @code{filename}
 		 | ":" @code{symbolname} ]
@@ -2834,6 +2833,8 @@ For example, each of the following three lines:
 @example
 	@{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
+	@{ define fred = QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
+
 	@{ appearance @{ +edge @} LIST @{ < "file1" @} @{ : fred @} @}
 
 	VECT 1 2 0   2 0   0 0 0   1 1 2
@@ -2841,6 +2842,15 @@ For example, each of the following three lines:
 @noindent
 is a valid OOGL object.  The last example is only valid when it is
 delimited unambiguously by residing in its own disk file.
+
+The ":" construct allows references to symbols, created with
+@code{define}. A symbol's initial value is a null object.  When a
+symbol is (re)defined, all references to it are automatically changed.
+
+The "@code{define} NAME" construct allows to define a global symbol for
+the given object. If "NAME" already references an object, then the old
+object is discarded and replaced by the new definition. See also the Gcl
+commands @code{read} and @code{hdefine}.
 
 The "<" construct causes a disk file to be read.  Note that this isn't a
 general textual "include" mechanism; a complete OOGL object must appear
@@ -2850,12 +2860,6 @@ Files read using "<" are sought first in the directory of the file which
 referred to them, if any; failing that, the normal search path (set by
 Geomview's @code{load-path} command) is used.  The default search looks
 first in the current directory, then in the Geomview data directories.
-
-The ":" construct allows references to symbols, created with
-@code{define}.  A symbol's initial value is a null object.  When a
-symbol is (re)defined, all references to it are automatically changed;
-this is a crucial part of the support for interprocess communication.
-Some future version of the documentation should explain this better@dots{}
 
 Again, white space and line breaks are insignificant, and "#" comments
 may appear anywhere.
@@ -2871,9 +2875,22 @@ display, and so on.  Appearances are inherited through object
 hierarchies, e.g. attaching an appearance to a @code{LIST} means that the
 appearance is applied to all the @code{LIST}'s members.
 
-Some appearance-related properties are relegated to "material" and
-"lighting" substructures.  Take care to note which properties belong to
-which structure.
+Some appearance-related properties are relegated to "material",
+"lighting" and "texture" substructures.  Take care to note which
+properties belong to which structure.
+
+Any geometric object can be preceeded by an appearance definintion like
+in the following example:
+
+@example
+@{ 
+   appearance @{ +edge @}
+   LIST @{ < "file1" @} @{ QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
+@}
+@end example
+
+Appearances are also OOGL objects in their own right and can be
+given symbolic names and referenced by them (@pxref{References}).
 
 Here's an example appearance structure including values for all
 attributes.  Order of attributes is unimportant.  As usual, white space
@@ -4046,13 +4063,14 @@ instead of data enclosed in curly braces.
 @node Non-geometric objects,  , Object File Formats, OOGL File Formats
 @section Non-geometric objects
 
-
 The syntax of these objects is given in the form used in
 @xref{References}, where "quoted" items should appear literally but
 without quotes, square bracketed ([ ]) items are optional, and | separates
 alternative choices.
 
 @menu
+* appearance::                  Appearance objects.
+* image::                       Image objects.
 * transform::                   Transformation matrices.
 * ntransform::                  N-dimensional transformation matrices.
 * camera::                      Cameras.
@@ -4060,7 +4078,14 @@ alternative choices.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node transform, ntransform, Non-geometric objects, Non-geometric objects
+@node appearance, image, Non-geometric objects, Non-geometric objects
+@subsection Appearance Objects
+@xref{Appearances}. @xref{References}.
+
+@node image, transform, appearance, Non-geometric objects
+@subsection Image Objects
+
+@node transform, ntransform, image, Non-geometric objects
 @subsection Transform Objects
 
 Where a single 4x4 matrix is expected -- as in the
@@ -6185,7 +6210,7 @@ Returns a string representing the version of geomview that is
 running.
 
 @findex hdefine
-@item (hdefine  @code{geometry}|@code{camera}|@code{transform}|@code{ntransform}|@code{ntransform}|@code{window}  name  value)
+@item (hdefine @code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform} name value)
 Sets the value of a handle of a given type.
 @example
   (hdefine  <type>  <name>  <value>)
@@ -6613,7 +6638,7 @@ integer pixel coordinates.  This is a low-level procedure not
 intended for external use.
 
 @findex read
-@item (read @{geometry|camera|transform|ntransform|command@} @{GEOMETRY or CAMERA or ...@})
+@item (read @{geometry|camera|appearance|image|ntransform|transform|command@} @{GEOMETRY or CAMERA or ...@})
 Read and interpret the text in ... as containing the
 given type of data.  Useful for defining objects using OOGL
 reference syntax, e.g.
