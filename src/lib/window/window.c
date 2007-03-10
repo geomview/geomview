@@ -278,7 +278,6 @@ WnCopy(WnWindow *win)
     if(win) {
 	*nw = *win;
 	RefInit((Ref *)nw, WINDOWMAGIC);
-	nw->handle = NULL;
 	/*
 	 * This code assumes there are no (other) pointers in a WnWindow,
 	 * i.e. a bitwise copy is enough.
