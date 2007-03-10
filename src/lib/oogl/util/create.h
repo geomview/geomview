@@ -33,7 +33,6 @@
 #define	CR_END		0	/* Marks end of create list (any object) */
 #define CR_COPY		1	/* no argument  (any object)		*/
 #define CR_NOCOPY	2	/* no argument  (any object)		*/
-#define CR_HANDLE	3	/* Handle *	(any object)		*/
 
 	/* Generic Geom attributes */
 #define CR_APPEAR	8	/* marks beginning of Appearance create list) */
