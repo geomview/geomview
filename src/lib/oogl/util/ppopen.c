@@ -126,9 +126,9 @@ ppclose(FILE *frompgm, FILE *topgm)
   fd = fileno(frompgm);
   fclose(frompgm);
   if(fd < npps && pps[fd] != 0) {
-	pps[fd] = 0;
 	while((pid = wait(&w)) != pps[fd] && pid > 0)
 	    ;
+	pps[fd] = 0;
   }
   return 0;
 }
