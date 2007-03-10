@@ -48,15 +48,15 @@
 
 struct WnWindow {
     REFERENCEFIELDS;
-    long	flag;		/* Which fields are set?	 */
-    long	xsize, ysize;	/* Window size			 */
+    int		flag;		/* Which fields are set?	 */
+    int		xsize, ysize;	/* Window size			 */
     WnPosition	pref;		/* Requested abs win position	 */
     WnPosition	cur;		/* Current position		 */
     WnPosition	viewport;	/* Relative viewport in win	 */
     char	*win_name;	/* Window title			 */
     float	aspect;		/* X/Y Aspect ratio (of cur pos) */
     float	pixaspect;	/* Aspect ratio of hardware pixels */
-    long	changed;	/* These fields changed		 */
+    int		changed;	/* These fields changed		 */
 };
 
 extern WnWindow *_WnSet(WnWindow *, int firstattr, va_list *alist);
