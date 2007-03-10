@@ -936,16 +936,14 @@ ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
   Pixmap pixmap;
   GLXPixmap glxpixmap;
   FILE *f;
-  int opts;
   char *data;
-  int xsize, ysize, row, i, j;
+  int xsize, ysize, row, i;
   mgcontext *oldmgctx = dv->mgctx;
   Camera *cam = NULL;
   Appearance *ap;
   WnWindow *win;
   WnPosition vp;
   int mgspace;
-  float pixaspect, frameaspect;
   mgshadefunc shader = NULL;
   int failed = 1;
 
