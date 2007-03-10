@@ -150,7 +150,7 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
     GeomGet( dgeom[0]->Item, CR_AXISHANDLE, &h );
     maybe_save_xform(p, "xform-set", "worldgeom", h, T);
     maybe_save_xform(p, "xform-incr", "worldgeom",
-	dgeom[0]->incrhandle, dgeom[0]->Incr);
+		     dgeom[0]->incrhandle, dgeom[0]->Incr);
 
     GeomGet( dgeom[0]->Item, CR_APPEAR, &ap );
     if (ap != NULL) {
@@ -673,8 +673,8 @@ LDEFINE(camera_prop, LVOID,
   }
   
   if(gs && gs->geom) {
-    (void)REFINCR(Geom, gs->geom);
-    (void)REFINCR(Handle, gs->h);
+    REFINCR(gs->geom);
+    REFINCR(gs->h);
     GeomDelete(drawerstate.camgeom);
     drawerstate.camgeom = gs->geom;
     drawerstate.camproj = (proj == PROJECTIVE_KEYWORD);
@@ -724,7 +724,7 @@ LDEFINE(write, LVOID,
 
   p = POOL(hiawatha);
   if ( (ops=str2ops(opsname)) == NULL) {
-    OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window, got \"%s\"", opsname);
+    OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window|image, got \"%s\"", opsname);
     return Lnil;
   }
 
@@ -907,3 +907,10 @@ LDEFINE(snapshot, LINT,
 	OOGLError(0, "snapshot: unknown file format %s", format);
     return failed ? Lnil : Lt;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

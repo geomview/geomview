@@ -416,7 +416,7 @@ LDEFINE(ND_xform, LTRANSFORMN,
   }
 
   if (!T) {
-    T = REFINCR(TransformN, ts->tm);
+    T = REFGET(TransformN, ts->tm);
   } else {
     TmNConcat(ts->tm, T, T);
   }
@@ -467,10 +467,10 @@ LDEFINE(ND_xform_set, LTRANSFORMN,
   /* (ND-xform-set id transformn { ... }) -> set transform */
   TmNDelete(T);
   if(ISGEOM(obj->id)) {
-    ((DGeom *)obj)->NDT = REFINCR(TransformN, ts->tm);
+    ((DGeom *)obj)->NDT = REFGET(TransformN, ts->tm);
     obj->changed |= 1;
   } else if(cl != NULL) {
-    cl->C2W = REFINCR(TransformN, ts->tm);
+    cl->C2W = REFGET(TransformN, ts->tm);
     drawerstate.changed = 1;
   }
   return Lt;
