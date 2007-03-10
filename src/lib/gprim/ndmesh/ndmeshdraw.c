@@ -58,7 +58,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   int normal_need;
 
   memset(&m, 0, sizeof(m));
-  GGeomInit((Geom *)&m, MeshMethods(), MESHMAGIC, NULL);
+  GGeomInit((Geom *)(void *)&m, MeshMethods(), MESHMAGIC, NULL);
   m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
   m.n = NULL;
   m.c = (ColorA *)alloca(npts*sizeof(ColorA));
@@ -111,7 +111,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= MESH_N;
     }
-    if (GeomHasAlpha((Geom *)&m, ap)) {
+    if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
       /* could re-use per quad normals here */
     }
   }

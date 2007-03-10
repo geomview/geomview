@@ -59,7 +59,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   q.n  = NULL;
   q.c  = (QuadC *)alloca(npts*sizeof(ColorA));
   q.ap = NULL;
-  RefInit((Ref *)&q, qquad->magic);
+  RefInit((Ref *)(void *)&q, qquad->magic);
   DblListInit(&q.pernode);
   
   nc = q.c[0];
@@ -108,7 +108,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
     if (ap->shading != APF_CONSTANT) {
       QuadComputeNormals(&q);
     }
-    if (GeomHasAlpha((Geom *)&q, ap)) {
+    if (GeomHasAlpha((Geom *)(void *)&q, ap)) {
       /* could re-use per quad normals here ? */
     }
   }

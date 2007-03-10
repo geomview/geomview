@@ -318,10 +318,11 @@ LDEFINE(dump_handles, LVOID,
 	"Dump the list of currently active handles to stdout."
 	"This function is intended for internal debugging use only.")
 {
+  extern void handle_dump(void);
+
   LDECLARE(("dump-handles", LBEGIN,
 	    LEND));
 
-  extern void handle_dump(void);
   handle_dump();
 
   return Lt;

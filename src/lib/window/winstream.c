@@ -253,7 +253,7 @@ WnStreamOut( Pool *p, Handle *h, WnWindow *win )
 		    continue;
 		fprintf(f, " %s", wn_kw[i].kw);
 		switch(i) {
-		case 2: fprintf(f, " %ld %ld", win->xsize, win->ysize);
+		case 2: fprintf(f, " %d %d", win->xsize, win->ysize);
 			break;
 		case 3: wp = &win->pref; goto dowp;
 		case 6: fprintf(f, " %g", win->pixaspect); break;

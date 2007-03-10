@@ -67,7 +67,7 @@ struct imgheader {
     IMGF_BIT,
     IMGF_ASCII,
     IMGF_SGIRLE,  /* SGI RLE image */
-    IMGF_SGIRAW,  /* for (z) for (y=bottom to top) { data } */
+    IMGF_SGIRAW   /* for (z) for (y=bottom to top) { data } */
   } format;
   int *rleoff;   /* For IMGF_SGIRLE: offsets[z][y], then lengths[z][y] */
   char *rledata; /* For IMGF_SGIRLE: all data
@@ -106,7 +106,7 @@ Image *_ImgSet(Image *img, int attr1, va_list *alist)
   char *chanfile, *filter;
   int chmask;
   void *chandata;
-  int chansize;
+  int chansize = 0;
 #undef NEXT
 #define NEXT(type) va_arg(*alist, type)
 	
@@ -262,13 +262,13 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
   Handle *h = NULL;
   Handle *hname = NULL;
   Image *img = NULL;
-  char *w, *raww;
+  char *w, *raww = NULL;
   int c, i, val;
   int moredata;
   int brack = 0;
   IOBFILE *inf;
   char *fname, *imgfname = NULL, *filter, *imgdata = NULL;
-  long datasize;
+  long datasize = 0;
   long chmask;
   bool have_chdata;
   static const struct imgkw {

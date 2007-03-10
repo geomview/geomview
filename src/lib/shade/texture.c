@@ -827,6 +827,7 @@ TxCopy(Texture *src, Texture *dst)
       if (dst->imghandle) HandlePDelete(&dst->imghandle);
       if (dst->image) ImgDelete(dst->image);
     }
+    r = *(Ref *)dst;
     *dst = *src;
     *(Ref *)dst = r;
     if (dst->filename) dst->filename = strdup(dst->filename);

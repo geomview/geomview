@@ -279,7 +279,7 @@ printf("this is tmpdu0\n");
 	OOGLError(1, "BezierReDice: can't create Mesh");
 	return NULL;
     }
-    HandleSetObject(bezier->meshhandle, bezier->mesh);
+    HandleSetObject(bezier->meshhandle, (Ref *)bezier->mesh);
 
     /*GeomCCreate(bezier->mesh, NULL, CR_COPY, CR_APPEAR, bezier->ap, CR_END);*/
 

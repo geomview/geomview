@@ -59,7 +59,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   m.nq = NULL;
   m.c  = (ColorA *)alloca(npts*sizeof(ColorA));
   m.ap = NULL;
-  RefInit((Ref *)&m, mesh->magic);
+  RefInit((Ref *)(void *)&m, mesh->magic);
   DblListInit(&m.pernode);
 
   h = HPtNCreate(5, NULL);
@@ -113,7 +113,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= MESH_N;
     }
-    if (GeomHasAlpha((Geom *)&m, ap)) {
+    if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
       /* could re-use per quad normals here */
     }
   }

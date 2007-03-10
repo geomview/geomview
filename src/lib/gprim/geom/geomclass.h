@@ -76,7 +76,7 @@ typedef Geom *GeomBSPTreeFunc(Geom *object, BSPTree *tree, int action);
 enum {
   BSPTREE_CREATE  = 0, /* simply record tree in geom-struct */
   BSPTREE_DELETE  = 1, /* delete the tree or the reference to it */
-  BSPTREE_ADDGEOM = 2, /* add polyhedrons to the tree's poly-list */
+  BSPTREE_ADDGEOM = 2  /* add polyhedrons to the tree's poly-list */
 };
 
 typedef int GeomExportFunc( Geom *object, Pool *p );

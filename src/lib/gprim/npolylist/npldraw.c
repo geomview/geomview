@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.13 2007/03/10 13:12:07 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.14 2007/03/10 19:37:29 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -66,7 +66,7 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 
   /* Copy the PolyList onto the stack. */
   memset(&newpl, 0, sizeof(PolyList));
-  GGeomInit((Geom *)&newpl, PolyListMethods(), PLMAGIC, NULL);
+  GGeomInit((Geom *)(void *)&newpl, PolyListMethods(), PLMAGIC, NULL);
   newpl.n_polys   = pl->n_polys;
   newpl.n_verts   = pl->n_verts;
   newpl.geomflags = pl->geomflags;
@@ -129,7 +129,7 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= PL_HASVN;
     }
-    if (GeomHasAlpha((Geom *)&newpl, ap)) {
+    if (GeomHasAlpha((Geom *)(void *)&newpl, ap)) {
       normal_need |= PL_HASPFL|PL_HASPN;
     }
   }

@@ -912,7 +912,7 @@ LDEFINE(emodule_transmit, LVOID,
 
 
 LDEFINE(read, LVOID,
-	"(read {geometry|camera|command|transform|ntransform|image|appearance} {GEOMETRY or CAMERA or ...})\n"
+	"(read {geometry|camera|image|appearance|transform|ntransform|command} {GEOMETRY or CAMERA or ...})\n"
 	"Read and interpret the text in ... as containing the "
 	"given type of data.  Useful for defining objects using OOGL "
 	"reference syntax, e.g. "
@@ -1188,7 +1188,7 @@ loadfile(char *name, HandleOps *defops, int guess)
 }
 
 LDEFINE(hdefine, LVOID,
-	"(hdefine  \"geometry\"|\"camera\"|\"window\"|\"transform\"|\"ntransform\"|\"image\"|\"appearance\"  name  value)\n"
+	"(hdefine {geometry|camera|window|image|appearance|transform|ntransform} name value)\n"
 	"Sets the value of a handle of a given type."
 	"(hdefine  <type>  <name>  <value>)  is generally equivalent to"
 	"(read <type>  { define <name> <value> })"

@@ -35,7 +35,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mg.h"
 #include "bsptreeP.h"
 
-static inline void maybe_tag_appearance(Geom *geom, Appearance *ap)
+static inline void maybe_tag_appearance(Geom *geom, const Appearance *ap)
 {
   NodeData *data;
 
