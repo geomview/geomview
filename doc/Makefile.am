@@ -6,6 +6,8 @@ EPSIMAGES = $(PSIMAGES:.ps=.eps)
 PDFIMAGES = $(PSIMAGES:.ps=.pdf)
 PNGIMAGES = $(PSIMAGES:.ps=.png)
 
+man_MANS = geomview.5 lisp.3 oogl.5
+
 EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
   example1.c example2.c example3.c example4.tcl \
   geomview.5 lisp.3 oogl.5 OOGL.m.txt \
