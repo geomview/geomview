@@ -33,7 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "instP.h"
 #include "tlistP.h"
-
+#include "ntransobj.h"
 
 Inst *
 InstDice( Inst *inst, int nu, int nv )
@@ -86,6 +86,9 @@ Inst *InstPosition(Inst *inst, Transform T)
 /*
  * Force a single transform equal to T.
  * We discard any tlist/tlisthandle and just assign to axis.
+ *
+ * Note: setting T leaves any installed TN alone, setting TN lets T
+ * settings alone.
  */
 Inst *
 InstTransformTo(Inst *inst, Transform T, TransformN *TN)
@@ -98,18 +101,26 @@ InstTransformTo(Inst *inst, Transform T, TransformN *TN)
 	HandlePDelete(&inst->tlisthandle);
 	inst->tlisthandle = NULL;
     }
+    if (T && inst->axishandle) {
+	HandlePDelete(&inst->axishandle);
+	inst->axishandle = NULL;
+    }
+    if (TN && inst->NDaxishandle) {
+	HandlePDelete(&inst->NDaxishandle);
+	inst->NDaxishandle = NULL;
+    }
     if (TN) {
-	if (inst->axishandle) {
-	    HandlePDelete(&inst->axishandle);
-	    inst->axishandle = NULL;
+	if (inst->NDaxis && RefCount((Ref *)inst->NDaxis) > 1) {
+	    NTransDelete(inst->NDaxis);
+	    inst->NDaxis = NULL;
 	}
 	inst->NDaxis = TmNCopy(TN, inst->NDaxis);
     } else {
-	if (inst->NDaxishandle) {
-	    HandlePDelete(&inst->NDaxishandle);
-	    inst->NDaxishandle = NULL;
+	if (0 && inst->NDaxis) {
+	    NTransDelete(inst->NDaxis);
+	    inst->NDaxis = NULL;
 	}
-	TmCopy( T ? T : TM_IDENTITY, inst->axis );
+	TmCopy(T ? T : TM_IDENTITY, inst->axis);
     }
 
     if (inst->bsptree) {
@@ -132,10 +143,11 @@ InstTransform(Inst *inst, Transform T, TransformN *TN)
 {
     Tlist *tl;
 
-    if (TN == NULL && (T == NULL || T == TM_IDENTITY))
+    if (TN == NULL && (T == NULL || T == TM_IDENTITY)) {
 	return inst;
+    }
 
-    if(inst->tlist == NULL && inst->tlisthandle == NULL) {
+    if (inst->tlist == NULL && inst->tlisthandle == NULL) {
 	if (TN) {
 	    if (inst->NDaxis) {
 		TmNConcat(inst->NDaxis, TN, inst->NDaxis);
@@ -143,17 +155,18 @@ InstTransform(Inst *inst, Transform T, TransformN *TN)
 		inst->NDaxis = TmNCopy(TN, NULL);
 	    }
 	} else {
-	    TmConcat( inst->axis, T, inst->axis );
+	    TmConcat(inst->axis, T, inst->axis);
 	}
     } else if (TN == NULL) {
 	tl = (Tlist *)inst->tlist;
 	if(tl != NULL && tl->Class == TlistClass && tl->nelements == 1
-			&& tl->ref_count == 1) {
+	   && tl->ref_count == 1) {
 	    TmConcat( tl->elements[0], T, tl->elements[0] );
 	} else {
 	    inst->tlist = GeomCCreate(NULL, TlistMethods(),
-			CR_NELEM, 1, CR_ELEM, T, 
-			CR_HANDLE_GEOM, inst->tlisthandle, tl, NULL);
+				      CR_NELEM, 1, CR_ELEM, T, 
+				      CR_HANDLE_GEOM, inst->tlisthandle, tl,
+				      CR_END);
 	    inst->tlisthandle = NULL;
 	}
     }
