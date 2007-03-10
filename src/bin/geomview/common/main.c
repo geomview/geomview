@@ -70,8 +70,6 @@ int gv_no_opengl = 0;
 vvec vv_load_path;
 vvec vv_emodule_path;
 
-extern HandleOps GeomOps, CamOps, CommandOps;
-
 /* Default backstop appearance */
 static char apdefault[] = "\
 appearance { \
