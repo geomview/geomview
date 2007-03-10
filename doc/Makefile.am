@@ -8,7 +8,7 @@ PNGIMAGES = $(PSIMAGES:.ps=.png)
 
 EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
   example1.c example2.c example3.c example4.tcl \
-  geomview.1 geomview.5 geomview.5.man lisp.3 oogl.5 oogl.5.man OOGL.m.txt \
+  geomview.5 lisp.3 oogl.5 OOGL.m.txt \
   motion.tex \
   $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)
 
