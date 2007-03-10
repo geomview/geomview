@@ -28,8 +28,6 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
-
-
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include "mg.h"
@@ -111,7 +109,7 @@ extern HandleOps GeomOps, WindowOps;
 static char *	_name_object(DObject *obj, int ni, char *name);
 static void	track_changes();
 static void	winmoved(int camid);
-static int	nonidentity(Transform T);
+static bool     nonidentity(Transform T);
 static DGeom *	new_dgeom(char *from, int citizenship);
 static DView *	new_dview();
 static void	updateit(float dt);
@@ -826,7 +824,7 @@ LDEFINE(xform_set, LVOID,
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
     if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
       continue;
-    if(ts->tm == TMNULL) {
+    if (ts->tm == NULL) {
       /*
        * Special case for switching externally-controlled motion on & off
        */
@@ -836,13 +834,17 @@ LDEFINE(xform_set, LVOID,
 	CamSet(DVobj(obj)->cam, CAM_C2WHANDLE, ts->h, CAM_END);
     } else {
       if (ISGEOM(id))
-	GeomSet(DGobj(obj)->Item, CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
+	GeomSet(DGobj(obj)->Item,
+		CR_AXIS, ts->tm, CR_AXISHANDLE, ts->h, CR_END);
       else 
-	CamSet(DVobj(obj)->cam, CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
+	CamSet(DVobj(obj)->cam,
+	       CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
     }
     TmIdentity(obj->Incr);
     obj->redraw = 1;
-    if (ts->h) obj->changed |= CH_TRANSFORM;
+    if (ts->h) {
+      obj->changed |= CH_TRANSFORM;
+    }
     obj->moving = (obj->updateproc!=NULL);
   }
   return Lt;
@@ -866,12 +868,14 @@ LDEFINE(xform, LVOID,
 	    LEND));
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
-    if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN)
+    if (id == ALLGEOMS && DGobj(obj)->citizenship==ALIEN) {
       continue;
-    if (TYPEOF(id) == T_GEOM)
+    }
+    if (TYPEOF(id) == T_GEOM) {
       GeomTransform(DGobj(obj)->Item, ts->tm, NULL);
-    else 
+    } else {
       CamTransform(DVobj(obj)->cam, ts->tm);
+    }
     TmIdentity(obj->Incr);
     obj->redraw = 1;
     obj->moving = (obj->updateproc!=NULL);
@@ -896,15 +900,18 @@ LDEFINE(xform_incr, LVOID,
 
   MAYBE_LOOP_ALL(id, index, T_NONE, DObject, obj) {
     stop_motions(obj->id);
-    if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN)
+    if (id == ALLGEOMS && DGobj(obj)->citizenship == ALIEN) {
       continue;
-    if(obj->incrhandle != NULL)
+    }
+    if(obj->incrhandle != NULL) {
       HandlePDelete(&obj->incrhandle);
+    }
     if((obj->incrhandle = ts->h) != NULL) {
       HandleRegister(&obj->incrhandle, NULL, obj->Incr, TransUpdate);
       object_register(&obj->incrhandle, NULL, obj);
+    } else {
+      TmCopy(ts->tm, obj->Incr);
     }
-    TmCopy(ts->tm, obj->Incr);
     obj->moving = ( nonidentity(obj->Incr) || (obj->updateproc!=NULL) );
   }
   return Lt;
@@ -958,9 +965,9 @@ LDEFINE(camera, LINT,
 	    LOPTIONAL,
 	    LCAMERA, &cs,
 	    LEND));
-  if((id = drawer_idbyname(name)) == NOID)
+  if((id = drawer_idbyname(name)) == NOID) {
     id=gv_new_camera( name, cs );
-  else {
+  } else {
     MAYBE_LOOP(id, index, T_CAM, DView, dv) {
       /* if cam is NULL stick with whatever camera id already has */
       if (cs->cam) {
@@ -975,8 +982,9 @@ LDEFINE(camera, LINT,
 	  object_register(&dv->camhandle, NULL, (DObject *)dv);
 	}
       }
-      if(dv->cam == NULL) 
+      if(dv->cam == NULL) {
 	dv->cam = CamCopy(drawerstate.defview.cam, NULL);
+      }
       TmIdentity(dv->Incr);
       dv->moving = (dv->updateproc!=NULL);
       dv->newcam = 1;
@@ -1012,7 +1020,6 @@ LDEFINE(camera_reset, LVOID,
        */
       drawer_set_ND_xform(dv->id, NULL);
     }
-
     TmIdentity(dv->Incr);
     dv->moving = (dv->updateproc!=NULL);
     dv->redraw = 1;
@@ -1085,7 +1092,7 @@ LDEFINE(new_geometry, LID,
 	    LEND));
   if (gs->geom) RefIncr((Ref*)(gs->geom));
   if (gs->h) RefIncr((Ref*)(gs->h));
-  id=drawer_new_dgeom(name, gs, ORDINARY);
+  id = drawer_new_dgeom(name, gs, ORDINARY);
   return LNew( LID, &id );
 }
 
@@ -1101,14 +1108,15 @@ drawer_dgeom(int id, GeomStruct *gs)
     MAYBE_LOOP(id, index, T_GEOM, DGeom, dg) {  
       GeomSet(dg->Lgeom, CR_HANDLE_GEOM, gs->h, gs->geom, CR_END);
       dg->changed = CH_GEOMETRY;
+
+      /* (re-)generate the BSP-tree for this object */
+      GeomBSPTree(dg->Item, dg->Item->bsptree, BSPTREE_CREATE);
     }
   }
+
   /* Caller expects us to consume the objects */
   GeomDelete(gs->geom);
   HandleDelete(gs->h);
-
-  /* (re-)generate the BSP-tree for this object */
-  GeomBSPTree(gs->geom, NULL, BSPTREE_CREATE);
 
   return id;
 }
@@ -1132,12 +1140,17 @@ LDEFINE(geometry, LVOID,
 	    LEND));
   /* we RefIncr() because gv_geometry() (& gv_new_geometry())
      expect to own the geom and handle passed in, but the lisp
-     interpreter actually owns these */
-  if (gs->geom) RefIncr((Ref*)(gs->geom));
-  if (gs->h) RefIncr((Ref*)(gs->h));
-  if((id = drawer_idbyname(name)) == NOID)
+     interpreter actually owns these
+
+     cH: this is wrong, only drawer[_new]_dgeom() expects to own the
+     object. As gv_new_geometry() increases the ref-count itself we
+     must not do it here.
+  */
+  if((id = drawer_idbyname(name)) == NOID) {
     gv_new_geometry( name, gs );
-  else {
+  } else {
+    if (gs->geom) RefIncr((Ref*)(gs->geom));
+    if (gs->h) RefIncr((Ref*)(gs->h));
     drawer_dgeom(id, gs);
   }
   return Lt;
@@ -1245,6 +1258,7 @@ LDEFINE(copy, LVOID,
     }
     gv_xform_set(newid, &transformstruct);
   }
+
   return Lt;
 }
 
@@ -1750,6 +1764,8 @@ drawer_int(int id, DrawerKeyword key, int ival)
   int flag, override;
   ApStruct as;
 
+  as.h = NULL;
+
   switch (key) {
   case DRAWER_FACEDRAW: flag = override = APF_FACEDRAW; goto setflag;
   case DRAWER_EDGEDRAW: flag = override = APF_EDGEDRAW; goto setflag;
@@ -1912,6 +1928,8 @@ drawer_float(int id, DrawerKeyword key, float fval)
   int attr, over;
   LInterest *interested;
 
+  as.h = NULL;
+
   switch (key) {
 
   case DRAWER_NEAR: attr = CAM_NEAR; goto setcam;
@@ -2008,6 +2026,8 @@ drawer_color(int id, DrawerKeyword key, Color *col)
   int index;
   ApStruct as;
   DObject *obj;
+
+  as.h = NULL;
   
   switch (key) {
 
@@ -2272,20 +2292,21 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   IOBFILE *f;
 
   ts_identity.h = NULL;
-  TmCopy(TM_IDENTITY, ts_identity.tm);
+  TmIdentity(ts_identity.tm);
 
   f = iobfileopen(fmemopen(apdefault, strlen(apdefault), "rb"));
   if(f)
     drawerstate.ap =
       base_defaultap =
-      ApFLoad(NULL, f, "built-in appearance");
+      ApFLoad(f, "built-in appearance");
   iobfclose(f);
   RefIncr((Ref *)drawerstate.ap);
   drawerstate.apseq++;
 
   /* Install default window position if not already set */
   if(drawerstate.defview.win == NULL)
-    comm_object(windefault, &WindowOps, NULL, (Ref **)(void *)&drawerstate.defview.win,
+    comm_object(windefault,
+		&WindowOps, NULL, (Ref **)(void *)&drawerstate.defview.win,
 		COMM_NOW);
   drawerstate.defview.backcolor = initial_defaultbackcolor;
   if(drawerstate.defview.cam == NULL)
@@ -2293,13 +2314,13 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
       CamCreate(CAM_FOV, 40.0, CAM_NEAR, 0.1, CAM_FAR, 100.0, CAM_END);
 
   /* Create a not-quite-instantiated window */
-  drawerstate.defview.mgctx = mgctxcreate(
-					  MG_BACKGROUND, &drawerstate.defview.backcolor,
-					  MG_CAMERA, drawerstate.defview.cam,
-					  MG_APPEAR, drawerstate.ap,
-					  MG_WINDOW, drawerstate.defview.win,
-					  MG_SHOW, 0,
-					  MG_END );
+  drawerstate.defview.mgctx =
+    mgctxcreate(MG_CAMERA, drawerstate.defview.cam,
+		MG_BACKGROUND, &drawerstate.defview.backcolor,
+		MG_APPEAR, drawerstate.ap,
+		MG_WINDOW, drawerstate.defview.win,
+		MG_SHOW, 0,
+		MG_END );
 
   drawerstate.defview.id = DEFAULTCAMID;
   drawerstate.defview.lineznudge = 3.;
@@ -2409,10 +2430,9 @@ winmoved(int camid)
 }
 
 
-static int
-nonidentity(Transform T)
+static bool nonidentity(Transform T)
 {
-  return memcmp(T, TM_IDENTITY, sizeof(Transform));
+  return memcmp(T, TM_IDENTITY, sizeof(Transform)) != 0;
 }
 
 static DGeom *
@@ -2482,7 +2502,11 @@ drawer_init_dgeom(DGeom *dg, int id, int citizenship)
   dg->changed = 0;
   dg->redraw = 0;
   dg->seqno = 0;
-  dg->NDT = NULL;  dg->NDTinv = NULL;
+  dg->NDT = NULL;
+  dg->NDTinv = NULL;
+#if 0
+  GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
+#endif
 }
 
 /*-----------------------------------------------------------------------
@@ -2510,7 +2534,7 @@ drawer_make_bbox(DGeom *dg, int combine)
   if(!dg->bboxvalid) {
     if(!combine)
       GeomReplace(dg->Lbbox, NULL);
-    bbox = GeomBound(dg->Lgeom, NULL, NULL);
+    bbox = GeomBound(dg->Lgeom, TM_IDENTITY, NULL);
     if(bbox) {
       GeomReplace(dg->Lbbox, bbox);
       GeomDelete(bbox);		/* Only Lbbox needs it now */
@@ -2608,8 +2632,8 @@ new_dview()
   dv->stereogap = 0;
   dv->shader = NULL;
   dv->mgctx =
-    mgctxcreate(MG_BACKGROUND, &dv->backcolor,
-		MG_CAMERA, dv->cam,
+    mgctxcreate(MG_CAMERA, dv->cam,
+		MG_BACKGROUND, &dv->backcolor,
 		MG_APPEAR, drawerstate.ap,
 		MG_WINDOW, dv->win,
 		MG_SHOW, 0,	/* Don't show window until we set its name */
@@ -2668,7 +2692,7 @@ draw_view(DView *dv)
 
   if(!dv->frozen && (dv->redraw || dv->changed || dv->newcam)) {
     mgctxselect(dv->mgctx);
-    mgctxset(MG_BACKGROUND, &dv->backcolor, MG_CAMERA, dv->cam,
+    mgctxset(MG_CAMERA, dv->cam, MG_BACKGROUND, &dv->backcolor,
 	     MG_ZNUDGE, dv->lineznudge * 1.0e-5,
 	     MG_UNSETOPTIONS,
 	     MGO_NORED|MGO_NOGREEN|MGO_NOBLUE|MGO_INHIBITCLEAR,
@@ -2769,8 +2793,6 @@ reconfigure_view(DView *dv)
 static void
 really_draw_view(DView *dv)
 {
-  int i;
-    
   mgpushappearance();
   mgworldbegin();
 
@@ -2783,34 +2805,28 @@ really_draw_view(DView *dv)
 	       1, 2, 3, 0);
   }
 
-  if(dv->cluster != NULL && dv->Item == drawerstate.universe) {
+  if(dv->cluster != NULL) {
+    /* ND-drawing, works also with scenes; the (scene ...) command
+     * takes care of attaching all cameras of a cluster to the same
+     * scene.
+     */
     NDcam *cluster = dv->cluster;
     int dim = TmNGetSize(cluster->C2W, NULL,NULL);
     NDstuff *nds;
     TransformN *W2C = NULL, *W2U = NULL;
 
     cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
-    if(dgeom[0]->NDT) {
-      W2C = TmNConcat( dgeom[0]->NDT, cluster->W2C, NULL );
-      W2U = REFINCR(TransformN, dgeom[0]->NDT);
-    } else {
-      W2C = TmNCopy( cluster->W2C, NULL );
-      W2U = TmNIdentity(TmNCreate(dim, dim, NULL));
-    }
+    W2C = TmNCopy(cluster->W2C, NULL);
+    W2U = TmNIdentity(TmNCreate(dim, dim, NULL));
 
     nds = drawer_init_ndstuff(dv, W2C, W2U);
+    drawer_transform_ndstuff(nds, NULL);
     mgctxset(MG_NDCTX, nds, MG_END);
 
-    for(i = 1; i < dgeom_max; i++) {
+    GeomDraw(dv->Item);
 
-      if(dgeom[i] == NULL) continue;
-
-      drawer_transform_ndstuff(nds, dgeom[i]->NDT);
-      GeomDraw(dgeom[i]->Item);
-    }
-
-    /* draw other camera's if requested; take their respective ND-transform
-     * into account.
+    /* draw other camera's if requested; take their respective
+     * ND-transform into account.
      */
     if (drawerstate.camgeom && dv->cameradraw) {
       DView *otherv;
@@ -2819,7 +2835,7 @@ really_draw_view(DView *dv)
       TransformN *ovC2W = NULL;
 
       LOOPVIEWS(otheri, otherv) {
-	if (otherv != dv && otherv->Item == drawerstate.universe) {
+	if (otherv != dv && otherv->Item == dv->Item) {
 
 	  if(drawerstate.camproj) {
 	    /* Mmmh. ND?? */
@@ -2833,13 +2849,18 @@ really_draw_view(DView *dv)
 	  if (otherv->cluster && otherv->cluster->C2W) {
 	    ovC2W = TmNCopy(otherv->cluster->C2W, ovC2W);
 	  } else {
-	    ovC2W = TmNIdentity(ovC2W);
+	    ovC2W = ovC2W
+	      ? TmNIdentity(ovC2W)
+	      : TmNIdentity(TmNCreate(drawerstate.NDim,
+				      drawerstate.NDim, NULL));
 	  }
 	  TmNApplyT3TN(T3, otherv->NDPerm, ovC2W);
 	  TmNMap(ovC2W, otherv->NDPerm, ovC2W);
 
 	  drawer_transform_ndstuff(nds, ovC2W);
 	  GeomDraw(drawerstate.camgeom);
+
+	  /* we assume that cameras have no translucent component */
 	}
       }
 
@@ -2851,75 +2872,45 @@ really_draw_view(DView *dv)
     drawer_destroy_ndstuff(nds);
     
     mgctxset(MG_NDCTX, NULL, MG_END);
-  } else if(dv->cluster != NULL) {
-    /* (scene cam geom) works also withg ND-view. One just has to
-     * forget about the world transform. The (scene ...) command
-     * takes care of attaching the same scene to all cameras of a
-     * cluster.
-     */
-    NDcam *cluster = dv->cluster;
-    int dim = TmNGetSize(cluster->C2W, NULL,NULL);
-    NDstuff *nds;
-    TransformN *W2C = NULL, *W2U = NULL;
-
-    cluster->W2C = TmNInvert(cluster->C2W, cluster->W2C);
-    W2C = TmNCopy( cluster->W2C, NULL );
-    W2U = TmNIdentity(TmNCreate(dim, dim, NULL));
-
-    nds = drawer_init_ndstuff(dv, W2C, W2U);
-
-    mgctxset(MG_NDCTX, nds, MG_END);
-    drawer_transform_ndstuff(nds, NULL);
-    GeomDraw(dv->Item);
-	
-
-    TmNDelete(W2U);
-    TmNDelete(W2C);
-    drawer_destroy_ndstuff(nds);
-
-    mgctxset(MG_NDCTX, NULL, MG_END);
   } else {
     /* Normal case.  Just draw whatever's attached to this camera */
-
-    mgctxset(MG_NDCTX, NULL, MG_END);
     GeomDraw(dv->Item);
-  }
-    
 
-  /* new */
-  if (dv->hsphere != NULL) {
-    /* if we're in conformal ball model, switch to projective
-       model for drawing the sphere at infinity, then switch back */
+    /* new */
+    if (dv->hsphere != NULL) {
+      /* if we're in conformal ball model, switch to projective
+	 model for drawing the sphere at infinity, then switch back */
 
-    int mgspace;
-
-    mgctxget(MG_SPACE, &mgspace);
-    if (dv->hmodel == CONFORMALBALL) {
-      mgctxset(MG_SPACE, TM_SPACE(mgspace) | TM_PROJECTIVE, MG_END);
-      GeomDraw(dv->hsphere);
-      mgctxset(MG_SPACE, mgspace, MG_END);
-    } else {
-      GeomDraw(dv->hsphere);
+      int mgspace;
+      
+      mgctxget(MG_SPACE, &mgspace);
+      if (dv->hmodel == CONFORMALBALL) {
+	mgctxset(MG_SPACE, TM_SPACE(mgspace) | TM_PROJECTIVE, MG_END);
+	GeomDraw(dv->hsphere);
+	mgctxset(MG_SPACE, mgspace, MG_END);
+      } else {
+	GeomDraw(dv->hsphere);
+      }
     }
-  }
 
-  /* drawing of other cameras in ND has been handled above */
-  if (drawerstate.camgeom && dv->cameradraw && dv->cluster == NULL
-      && dv->Item == drawerstate.universe) {
-    DView *otherv;
-    int otheri;
-    Transform T, Tt;
-    LOOPVIEWS(otheri,otherv) {
-      if (otherv != dv && otherv->Item == drawerstate.universe) {
-	mgpushtransform();
-	if(drawerstate.camproj) {
-	  CamView(otherv->cam, Tt);
-	  TmInvert(Tt, T);
-	} else
-	  CamGet(otherv->cam, CAM_C2W, T);
-	mgtransform(T);
-	GeomDraw(drawerstate.camgeom);
-	mgpoptransform();
+    /* drawing of other cameras in ND has been handled above */
+    if (drawerstate.camgeom &&
+	dv->cameradraw && dv->Item == drawerstate.universe) {
+      DView *otherv;
+      int otheri;
+      Transform T, Tt;
+      LOOPVIEWS(otheri,otherv) {
+	if (otherv != dv && otherv->Item == drawerstate.universe) {
+	  mgpushtransform();
+	  if(drawerstate.camproj) {
+	    CamView(otherv->cam, Tt);
+	    TmInvert(Tt, T);
+	  } else
+	    CamGet(otherv->cam, CAM_C2W, T);
+	  mgtransform(T);
+	  GeomDraw(drawerstate.camgeom);
+	  mgpoptransform();
+	}
       }
     }
   }

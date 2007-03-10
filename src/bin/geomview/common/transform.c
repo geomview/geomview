@@ -511,8 +511,10 @@ void drawer_position(int moving_id, int ref_id, char *position_type,
 void set_motion(Motion *motion)
 {
   TransformStruct ts;
+
   ts.h = NULL;
   TmIdentity(ts.tm);
+
   gv_xform_set(motion->moving_id, &ts);
   /* Note: the following resets the *entire* N-D xform to the identity,
    * not just that in the subspace we're looking through.
@@ -918,8 +920,12 @@ LDEFINE(scale, LVOID,
     TransformStruct ts;
 
     ts.h = NULL;
-    if (y != 0.0 && z != 0.0) TmScale(ts.tm, x, y, z);
-    else TmScale(ts.tm, x, x, x);
+
+    if (y != 0.0 && z != 0.0) {
+      TmScale(ts.tm, x, y, z);
+    } else {
+      TmScale(ts.tm, x, x, x);
+    }
     gv_xform(id, &ts);
   }
 
@@ -950,7 +956,12 @@ void drawer_post_xform(int id, Transform T)
   TransformStruct ts;
   Transform N, NInv;
   DObject *dobj;
-  if((dobj = drawer_get_object(id)) == NULL) return;
+
+  if((dobj = drawer_get_object(id)) == NULL) {
+    return;
+  }
+
+  ts.h = NULL;
 
   if (ISGEOM(id)) {
     GeomGet(((DGeom *)dobj)->Item, CR_AXIS, ts.tm);
@@ -964,7 +975,6 @@ void drawer_post_xform(int id, Transform T)
     CamGet(((DView *)dobj)->cam, CAM_C2W, ts.tm);
   }
   TmConcat(T, ts.tm, ts.tm);
-  ts.h = NULL;
   gv_xform_set(id, &ts);
 }
 
@@ -1230,8 +1240,9 @@ LDEFINE(new_center, LVOID,
     drawer_stop(obj->id);
     gv_xform_set(obj->id, &ts_identity);
     if(ISGEOM(obj->id) && ((DGeom *)obj)->NDT != NULL) {
-      TmNDelete( ((DGeom *)obj)->NDT );  ((DGeom *)obj)->NDT = NULL;
-      TmNDelete( ((DGeom *)obj)->NDTinv );  ((DGeom *)obj)->NDTinv = NULL;
+      TmNDelete(DGobj(obj)->NDT);     DGobj(obj)->NDT = NULL;
+      TmNDelete(DGobj(obj)->NDTinv ); DGobj(obj)->NDTinv = NULL;
+      GeomSet(DGobj(obj)->Item, CR_NDAXIS, DGobj(obj)->NDT, CR_END);
     }
 	
   }
@@ -1689,9 +1700,9 @@ LDEFINE(look_recenter, LVOID,
   }
 
   /* It is probably not a good idea to deform the camera geometry (in
-   * general the spectator remains undeformed or suffers serious
-   * injuries ...). So we keep only the orthogonal part and throw
-   * away the deformations.
+   * general the spectator remains undeformed or would suffer serious
+   * injuries ...). So we keep only the orthogonal part and throw away
+   * the deformations.
    */
   obj2univ.h = NULL;
   drawer_get_transform(objID, obj2univtm,  UNIVERSE);
@@ -1802,9 +1813,11 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
 static TransformN *
 get_geom_ND_transform(DGeom *dg)
 {
-  if(dg->NDT == NULL && drawerstate.NDim > 0)
+  if(dg->NDT == NULL && drawerstate.NDim > 0) {
     dg->NDT = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
-  return REFINCR(TransformN, dg->NDT);
+    GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
+  }
+  return REFGET(TransformN, dg->NDT);
 }
 
 TransformN *
@@ -1851,7 +1864,7 @@ drawer_get_ND_transform(int from_id, int to_id)
     } else if (ISCAM(from_id)) {
       if(to_id == UNIVERSE) {
 	T = (obj && ((DView *)obj)->cluster) ?
-	  REFINCR(TransformN, ((DView *)obj)->cluster->C2W) : NULL;
+	  REFGET(TransformN, ((DView *)obj)->cluster->C2W) : NULL;
 	return T ? T :
 	  TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
       }
@@ -1890,26 +1903,25 @@ void
 drawer_set_ND_xform(int id, TransformN *T)
 {
   DObject *obj;
-  TransformN **tp = NULL;
 
   if((obj = drawer_get_object(id)) != NULL) {
-    if(ISCAM(obj->id)) {
-      if(((DView *)obj)->cluster == NULL)	/* N-D camera? */
-	return;
-      tp = &((DView *)obj)->cluster->C2W;
-      drawerstate.changed |= 1;
-    } else {
-      tp = &DGobj(obj)->NDT;
-      obj->changed |= 1;
-    }
-  }
-  if(tp) {
     if (!T) {
       T = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
+    } else {
+      T = REFGET(TransformN, T);
     }
-    if (T != *tp) {
-      *tp = TmNCopy(T, *tp);
+    if(ISCAM(obj->id)) {
+      if(DVobj(obj)->cluster == NULL) { /* N-D camera? */
+	return;
+      }
+      DVobj(obj)->cluster->C2W = TmNCopy(T, DVobj(obj)->cluster->C2W);
+      drawerstate.changed |= 1;
+    } else {
+      DGobj(obj)->NDT = TmNCopy(T, DGobj(obj)->NDT);
+      GeomSet(DGobj(obj)->Item, CR_NDAXIS, DGobj(obj)->NDT, CR_END);
+      obj->changed |= 1;
     }
+    TmNDelete(T);
   }
 }
 
@@ -2015,7 +2027,7 @@ apply_ND_transform(Transform delta,
     CamGet(dv->cam, CAM_W2C, &camW2C);
     Tfg = TmNApplyT3TN(camW2C, dv->NDPerm, Tfg);
   }
-  Tmg = Tmf ? TmNConcat( Tmf, Tfg, NULL ) : REFINCR(TransformN, Tfg);
+  Tmg = Tmf ? TmNConcat( Tmf, Tfg, NULL ) : REFGET(TransformN, Tfg);
 
   /* ... and here it comes ... */
   TmNApplyDN(Tmg, perm, delta);
@@ -2028,7 +2040,7 @@ apply_ND_transform(Transform delta,
     Tmf = TmNApplyDN(Tmf, dv->NDPerm, camC2W);
   }
   Tfp = drawer_get_ND_transform(frame, get_parent(moving));
-  Tmp = Tfp ? TmNConcat(Tmf, Tfp, NULL) : REFINCR(TransformN, Tmf);
+  Tmp = Tfp ? TmNConcat(Tmf, Tfp, NULL) : REFGET(TransformN, Tmf);
 
   drawer_set_ND_xform(moving, Tmp);
 
@@ -2055,6 +2067,7 @@ void make_center(char *objname, Point3 *pt)
   ts.h = NULL;
   TmTranslate(ts.tm, pt->x, pt->y, pt->z);
   gv_xform_set( cid, &ts );
+
   gv_ui_center(cid);
 }
 

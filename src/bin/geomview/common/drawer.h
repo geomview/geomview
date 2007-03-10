@@ -75,14 +75,14 @@ typedef struct NDstuff
   char seqno;		/* sequence no for keeping track of changes */	\
   char redraw;		/* object needs redrawing */			\
   char changed;		/* Something about this obj changed; redraw */	\
-  char moving;		/* moving -> Incr != identity || updateproc != NULL */
+  char moving		/* moving -> Incr != identity || updateproc != NULL */
 
 typedef struct DObject {
-  OBJECTFIELDS
+  OBJECTFIELDS;
 } DObject;
 
 typedef struct DGeom {
-  OBJECTFIELDS
+  OBJECTFIELDS;
   Geom *Inorm;		/* Inst holding normalization transform */
   Geom *Lgeom;		/* List node holding pointer to user's Geom */
   Geom *Lbbox;		/* List node holding pointer to our Bbox */
@@ -106,9 +106,9 @@ typedef struct DGeom {
 
 
 typedef struct DView {
-  OBJECTFIELDS
-  Handle *camhandle;	/* Handle to above */
+  OBJECTFIELDS;
   Camera *cam;		/* The camera itself */
+  Handle *camhandle;	/* Handle to above */
   WnWindow *win;	/* The (abstract) window */
   short frozen;		/* flag: frozen: Don't attempt to redraw this view */
   short newcam;		/* flag: need to mgreshapeviewport() */

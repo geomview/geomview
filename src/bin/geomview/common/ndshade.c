@@ -77,8 +77,7 @@ map_ND_point(mgNDctx *mgNDctx, HPointN *p, HPoint3 *np, ColorA *c)
    * transform anyway, so this would speed up things.
    */
   HPtNTransProj(iT, p, np);
-  if(np->w != 1)
-    HPt3Dehomogenize(np, np);
+  HPt3Dehomogenize(np, np);
     
   if(incm > 0 && !(_mgc->astk->ap.flag & APF_KEEPCOLOR) && c != NULL) {
     ci.r = ci.g = ci.b = ci.a = 0;
@@ -184,6 +183,7 @@ static mgNDctx NDctx_proto = {
   pushTN,
   pushT,
   restoreCTX,
+  NULL,
 };
 
 NDstuff *drawer_init_ndstuff(DView *dv, TransformN *W2C, TransformN *W2U)
