@@ -32,6 +32,7 @@
 #include "ooglutil.h"
 #include "pick.h"
 #include "bsptree.h"
+#include "dbllist.h"
 
 typedef char   *GeomNameFunc( void );
 typedef GeomClass   *GeomMethodsFunc( Geom *object );
@@ -70,9 +71,13 @@ GeomPickFunc(Geom *, Pick *, Appearance *, Transform, TransformN *, int *axes);
 typedef Geom *GeomFacingFunc( /* Geom *object, ... */ );
 typedef Geom *GeomDrawFunc(Geom *object);
 typedef Geom *GeomBSPTreeFunc(Geom *object, BSPTree *tree, int action);
-/* GeomBSPTree action flag values */
-#define BSPTREE_CREATE   0 /* simply record tree in geom-struct */
-#define BSPTREE_ADDGEOM  1 /* add polyhedrons to the tree's poly-list */
+
+/* GeomBSPTree action values */
+enum {
+  BSPTREE_CREATE  = 0, /* simply record tree in geom-struct */
+  BSPTREE_DELETE  = 1, /* delete the tree or the reference to it */
+  BSPTREE_ADDGEOM = 2, /* add polyhedrons to the tree's poly-list */
+};
 
 typedef int GeomExportFunc( Geom *object, Pool *p );
 typedef Geom *GeomImportFunc( Pool *p );
@@ -147,7 +152,8 @@ extern char *GeomToken(IOBFILE *f);
 #define VERT_4D      (1 << 2)
 #define VERT_ST      (1 << 3) /* texture */
 #define FACET_C      (1 << 4)
-#define COLOR_ALPHA  (1 << 5)
+#define COLOR_ALPHA  (1 << 5) /* VERT_C or FACET_C have alpha != 1 */
+#define GEOM_ALPHA   (1 << 6) /* geom color or mat. color have alpha != 1 */
 #define GEOM_COLOR   (VERT_C|FACET_C)
 #define GEOMFL_SHIFT 8
 #define GEOMFL_MASK  ~(~0U << GEOMFL_SHIFT)
@@ -155,16 +161,37 @@ extern char *GeomToken(IOBFILE *f);
 /* per class additions should be defined using this macro: */
 #define GEOMFLAG(bits) ((bits) << GEOMFL_SHIFT)
 
+/* 32-bit magic numbers for OOGL data types */
+#define GeomMagic(key, ver)     OOGLMagic('g', ((key) << 8) | ((ver)&0xff))
+#define GeomIsMagic(magic)      (((magic) & 0xffff0000) == GeomMagic(0,0))
+
 /* This is the "common" geom stuff which starts every geom */
-#define GEOMFIELDS                                      \
-  REFERENCEFIELDS;       /* magic, ref_count, handle */	\
-  struct GeomClass *Class;				\
-  Appearance       *ap;					\
-  Handle           *aphandle;				\
-  int              geomflags;				\
-  int              pdim; /* does this belong here? */	\
-  struct BSPTree   *bsptree; /* dito */			\
-  const void       *tagged_ap /* tagged (sticky) appearance pointer */
+#define GEOMFIELDS							\
+  REFERENCEFIELDS;       /* magic, ref_count, handle */			\
+  struct GeomClass *Class;						\
+  Appearance       *ap;							\
+  Handle           *aphandle;						\
+  int              geomflags;						\
+  int              pdim; /* does this belong here? */			\
+  /* The following three fields are used to attach data to a geometry	\
+   * objects which depends on the position of the Geom in the object	\
+   * hierarchy. As a Geom object can be referenced by Handles the Geom	\
+   * might occur in many positions inside the hierarchy. See also the	\
+   * comment in front of "struct NodeData" below.			\
+   *									\
+   * The components "ppath" and "ppathlen"   newpl.ppath     = pl->ppath;
+  newpl.ppathlen  = pl->ppathlen;
+are non-persistent and only	\
+   * valid through tree traversal with GeomDraw().			\
+   */									\
+  DblListNode      pernode;  /* per-node data */			\
+  char             *ppath;   /* parent path */				\
+  int              ppathlen; /* its length */				\
+  /* Also a non-persistent entry: the bsptree for correct rendering of	\
+   * translucent objects with alpha-blending. If non-NULL, this is the	\
+   * tree for the object sub-hierarchy starting at this object.		\
+   */									\
+  BSPTree          *bsptree
 
 struct Geom { /* common data structures for all Geom's */
   GEOMFIELDS;
@@ -175,9 +202,92 @@ typedef struct HGeom {  /* This tuple appears in hierarchy objects */
   Geom *g;
 } HGeom;
 
-/* 32-bit magic numbers for OOGL data types */
-#define GeomMagic(key, ver)     OOGLMagic('g', ((key) << 8) | ((ver)&0xff))
-#define GeomIsMagic(magic)      (((magic) & 0xffff0000) == GeomMagic(0,0))
+/* a hierarchy may refer aribitrarily often to the same Geometry
+ * object via "Handle" references. In some cases, however, we need
+ * data which is attached to a node in the hierarchy tree. For the
+ * time being the only case is the "tagged apperance" handle used to
+ * refer to appearances out of BSPTree nodes.
+ *
+ * "path" is a unique tag and is computed during hierarchy
+ * traversal. 'L' stands for a list element, 'I' for Inst.
+ *
+ * L -> (L) -> nil
+ * |     |
+ * G1    I
+ *       |
+ *       G2
+ *
+ * The the leaf-nodes of the hierarchy will have the paths "L" and
+ * "LI". This should be a unique id for earch hierarchy node, because
+ * it records the history of the path through the hierarchy to the
+ * node. Only the head of a list is included in the path, so the
+ * second id is "LI" and not "LLI" in the example above.
+ */
+typedef struct NodeData {
+  DblListNode node;       /* Link into Geom->pernode */
+  char        *ppath;     /* The path to this geom in the hierarchy (copy).*/
+  const void  *tagged_ap; /* tagged appearance pointer */
+} NodeData;
+
+#define GeomMakePath(geom, c, path, pathlen)		\
+  int pathlen = (geom)->ppathlen+1;			\
+  char *path = alloca(pathlen+1);			\
+  							\
+  memcpy(path, (geom)->ppath, (geom)->ppathlen);	\
+  path[pathlen-1] = c;					\
+  path[pathlen] = '\0'
+
+static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
+{
+  NodeData *pos;
+  
+  if (!ppath) {
+    ppath = geom->ppath;
+  }
+  DblListIterateNoDelete(&geom->pernode, NodeData, node, pos) {
+    if (strcmp(pos->ppath, ppath) == 0) {
+      return pos;
+    }
+  }
+
+  return NULL;
+}
+
+static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
+{
+  NodeData *data;
+
+  if (!ppath) {
+    ppath = geom->ppath;
+  }
+  data = GeomNodeDataByPath(geom, ppath);
+  if (data == NULL) {
+    data = OOGLNewE(NodeData, "new per hierarchy-node data");
+    data->ppath = strdup(ppath);
+    data->tagged_ap = NULL;
+    DblListAdd(&geom->pernode, &data->node);
+  }
+
+  return data;
+}
+
+static inline bool GeomHasAlpha(Geom *geom, const Appearance *ap)
+{
+  if ((ap->flag & APF_TRANSP) && (ap->flag & APF_FACEDRAW)) {
+    if ((ap->mat->valid & MTF_ALPHA) &&
+	((ap->mat->override & MTF_ALPHA) || !(geom->geomflags & GEOM_COLOR))) {
+      if (ap->mat->diffuse.a != 1.0) {
+	geom->geomflags |= GEOM_ALPHA;
+	return true;
+      }
+    } else if (geom->geomflags & COLOR_ALPHA) {
+      geom->geomflags |= GEOM_ALPHA;
+      return true;
+    }
+  }
+  geom->geomflags &= ~GEOM_ALPHA;
+  return false;
+}
 
 #endif /*GEOMCLASSDEF*/
 

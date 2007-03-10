@@ -1,4 +1,4 @@
-/* Copyright (C) 2006 Claus-Justus Heine 
+/* Copyright (C) 2006-2007 Claus-Justus Heine 
  *
  * This file is part of Geomview.
  * 
@@ -52,13 +52,32 @@ struct BSPTreeNode
 };
 
 struct BSPTree {
-  BSPTreeNode    *tree;     /* The root of the BSPtree itself */
-  Geom           *geom;     /* The top-level Geom we belong to */
-  int            geomflags; /* COLOR_ALPHA set if any component of the
-			     * tree has an alpha channel. Filled by
-			     * BSPTreeSetAppearance().
+  BSPTreeNode  *tree;     /* The root of the BSPtree itself */
+  Geom         *geom;     /* The top-level Geom we belong to */
+  bool         oneshot;   /* Tree is destroyed after drawing; useful
+			   * for location/oring != LOCAL INSTs and
+			   * during ND-drawing. The oneshot flag is
+			   * reset after it took affect.
+			   */
+#if 0
+  int          geomflags; /* COLOR_ALPHA set if any component of the
+			   * tree has an alpha channel. Filled by
+			   * BSPTreeSetAppearance().
+			   */
+#endif
+  PolyListNode   *init_lpl; /* While tree == NULL elements can be
+			     * added to this list
 			     */
-
+  TransformPtr Tid;       /* INST support: to support absolute
+			   * positioning (location and origin !=
+			   * LOCAL) we need the position of the
+			   * top-level geometry (the one who owns the
+			   * tree, i.e. tree->geom).
+			   *
+			   * The low-level mg code should load Tid
+			   * before trying to draw the BSP-tree.
+			   */
+  TransformPtr   Tidinv;    /* Inverse of Tid, only computed on demand */
   TransformPtr   T;         /* INST support: transform polygons during
 			     * tree generation, i.e. before adding
 			     * them to init_lpl.
@@ -66,29 +85,51 @@ struct BSPTree {
   Transform      Tdual;     /* We need the dual of T to transform the normals
 			     * correctly ( y^t x = 0 <=> y^t T T^{-tr}x = 0).
 			     */
-  PolyListNode   *init_lpl; /* While tree == NULL elements can be
-			     * added to this list
-			     */
   const void **tagged_app;
 
   struct obstack obst;  /* Scratch space for new polygons etc */
 };
 
-static inline const void **BSPTreePushAppearance(Geom *geom)
+/* if we have an appearance (but no handle to an appearance ) which
+ * overrides the transparency flag to false _or_ a material which
+ * overrides the alpha value to 1.0 (and no own color spec with alpha
+ * != 1.0) then we need not add ourselves to the BSP-tree: no facet of
+ * the mesh will ever be translucent.
+ *
+ * This does, of course, not work with INSTs or LISTs, but only with
+ * "atomic" Geom's
+ */
+static inline bool never_translucent(Geom *geom)
 {
-  if (geom->bsptree != NULL && geom->tagged_ap != NULL) {
-    const void **tagged_app = geom->bsptree->tagged_app;
-    geom->bsptree->tagged_app = &geom->tagged_ap;
+  Appearance *ap = geom->ap;
+
+  return (ap && !geom->aphandle &&
+	  (((ap->override & APF_FACEDRAW) && (ap->flag & APF_FACEDRAW) == 0)
+	   ||
+	   ((ap->override & APF_TRANSP) && (ap->flag & APF_TRANSP) == 0)
+	   ||
+	   ((geom->geomflags & COLOR_ALPHA) == 0 && ap->mat &&
+	    (ap->mat->override & MTF_ALPHA) && ap->mat->diffuse.a == 1.0)));
+}
+
+static inline const void **BSPTreePushAppearance(BSPTree *bsptree, Geom *geom)
+{
+  NodeData *data = GeomNodeDataByPath(geom, NULL);
+
+  if (data != NULL) {
+    const void **tagged_app = bsptree->tagged_app;
+    bsptree->tagged_app = &data->tagged_ap;
     return tagged_app;
   } else {
     return NULL;
   }
 }
 
-static inline void BSPTreePopAppearance(Geom *geom, const void **old_tagged_app)
+static inline void
+BSPTreePopAppearance(BSPTree *bsptree, const void **old_tagged_app)
 {
-  if (geom->bsptree != NULL && old_tagged_app != NULL) {
-    geom->bsptree->tagged_app = old_tagged_app;
+  if (bsptree != NULL && old_tagged_app != NULL) {
+    bsptree->tagged_app = old_tagged_app;
   }
 }
 

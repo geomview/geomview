@@ -35,21 +35,22 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* this needs to be here so that the shared memory code can work */
 Geom *
-GGeomCopy(g, object )
-Geom *g, *object;
+GGeomCopy(Geom *g, Geom *object)
 {
     RefInit((Ref *)g, object->magic);
     g->Class = object->Class;
     g->ap = object->ap;
-    if(g->ap != NULL)
+    if(g->ap != NULL) {
 	g->ap = ApCopy(g->ap, NULL);
+    }
     g->aphandle = NULL;
+    DblListInit(&g->handles);
+    DblListInit(&g->pernode);
     return g;
 }
 
 Geom *
-GeomCopy( object )
-Geom *object;
+GeomCopy(Geom *object)
 {
     Geom *g;
 
@@ -58,8 +59,9 @@ Geom *object;
 	return NULL;
     if( object->Class->copy ) {
 	g = (*object->Class->copy)(object);
-	if(g != NULL)
+	if(g != NULL) {
 	    GGeomCopy(g, object);
+	}
     } else {
 	GeomError(1/*Warning-unimpl*/,"GeomCopy: no copy method for %s: %x",
 		GeomName(object), object);
@@ -69,3 +71,9 @@ Geom *object;
     return g;
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

@@ -40,8 +40,6 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free  free
 
-#define DOUBLE_SCP 0
-
 #define POLY_SCRATCH 0x80000000 /* Flag indicates that this poly lives
 				 * on our obstack
 				 */
@@ -77,15 +75,9 @@ typedef enum PolyPos {
 typedef struct EdgeIntersection
 {
   int v[2];         /* The vertex number of the enclosing points */
-#if DOUBLE_SCP
-  double scp[2];    /* The position of the vertices relative to the
-		     * intersection plane.
-		     */
-#else
   HPt3Coord scp[2]; /* The position of the vertices relative to the
 		     * intersection plane.
 		     */
-#endif
 } EdgeIntersection;
 
 static void BSPTreeCreateRecursive(BSPTreeNode *tree,
@@ -138,7 +130,7 @@ static inline Poly *transform_poly(Transform T, Transform Tdual, Poly *poly,
     if (poly->flags & PL_HASVCOL) {
       newp->v[i]->vcol = poly->v[i]->vcol;
     }
-    if (1 || (poly->flags & PL_HASVN)) {
+    if (poly->flags & PL_HASVN) {
       NormalTransform(Tdual, &poly->v[i]->vn, &newp->v[i]->vn);
     }
     if (poly->flags & PL_HASST) {
@@ -150,7 +142,7 @@ static inline Poly *transform_poly(Transform T, Transform Tdual, Poly *poly,
   if (poly->flags & PL_HASPCOL) {
     newp->pcol = poly->pcol;
   }
-  if (1 || poly->flags & PL_HASPN) {
+  if (poly->flags & PL_HASPN) {
     NormalTransform(Tdual, &poly->pn, &newp->pn);
   }
   
@@ -216,11 +208,14 @@ static inline void split_quad_poly(int vertex, Poly *poly0,
 static inline void meshv_to_polyv(Vertex *pv, Mesh *mesh, int vidx)
 {
   memset(pv, 0, sizeof(Vertex));
+
   pv->pt = mesh->p[vidx];
+#if 0
 #if 0
   HPt3Dehomogenize(&pv->pt, &pv->pt);
 #else
   Pt3ToHPt3((Point3 *)(void *)&pv->pt, &pv->pt, 1);
+#endif
 #endif
   if (mesh->geomflags & MESH_N) {
     pv->vn = mesh->n[vidx];
@@ -240,10 +235,12 @@ meshv_to_polyv_trans(Transform T, Transform Tdual,
 {
   memset(pv, 0, sizeof(Vertex));
   HPt3Transform(T, &mesh->p[vidx], &pv->pt);
+#if 0 /* why should we */
 #if 0
   HPt3Dehomogenize(&pv->pt, &pv->pt);
 #else
   Pt3ToHPt3((Point3 *)(void *)&pv->pt, &pv->pt, 1);
+#endif
 #endif
   if (mesh->geomflags & MESH_N) {
     NormalTransform(Tdual, &mesh->n[vidx], &pv->vn);
@@ -307,8 +304,8 @@ QuadToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
     if (quad->geomflags & COLOR_ALPHA) {
       qpoly->flags |= COLOR_ALPHA;
     }
-    PolyNormal(qpoly, &qpoly->pn, 0, quad->geomflags & VERT_4D, &qpoly->flags,
-	       &concave);
+    PolyNormal(qpoly, &qpoly->pn,
+	       quad->geomflags & VERT_4D, false, &qpoly->flags, &concave);
     qpoly->flags |= PL_HASPN;
     if (qpoly->flags & POLY_NOPOLY) {
       /* degenerated, skip it, but reuse the memory region.  */
@@ -400,7 +397,7 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
 	qpoly->flags |= PL_HASST;
       }
 
-      PolyNormal(qpoly, &qpoly->pn, 0, mesh->geomflags & VERT_4D,
+      PolyNormal(qpoly, &qpoly->pn, mesh->geomflags & VERT_4D, false,
 		 &qpoly->flags, &concave);
       qpoly->flags |= PL_HASPN;
       if (qpoly->flags & POLY_NOPOLY) {
@@ -479,7 +476,7 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual,
 	  Point3 nu;
 
 	  /* We need to determine the concave vertex */
-	  PolyNormal(poly, &nu, 0, pl->geomflags & VERT_4D, NULL,
+	  PolyNormal(poly, &nu, pl->geomflags & VERT_4D, false, NULL,
 		     &concave);
 	} else {
 	  concave= 0;
@@ -510,22 +507,21 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual,
 }
 
 /* Create an empty BSP-tree and attach "object" to it. */
-BSPTree *BSPTreeCreate(Geom *object)
+BSPTree *BSPTreeCreate(BSPTree *tree, Geom *object)
 {
-  BSPTree *bsptree;
-  
-  BSPTreeFree(object);
+  if (tree) {
+    BSPTreeFreeTree(tree);
+  } else {
+    tree = OOGLNewE(BSPTree, "new BSP tree root");
+    memset(tree, 0, sizeof(BSPTree));
+    obstack_init(&tree->obst);
+  }
 
-  object->bsptree = bsptree = OOGLNewE(BSPTree, "new BSP tree root");
-  memset(bsptree, 0, sizeof(BSPTree));
+  tree->geom       = object;
+  tree->T          = TM_IDENTITY;
+  tree->tagged_app = NULL;
 
-  bsptree->geom = object;
-  bsptree->T    = TM_IDENTITY;
-  obstack_init(&bsptree->obst);
-
-  bsptree->tagged_app = &object->tagged_ap;
-
-  return bsptree;
+  return tree;
 }
 
 /* Add "object" to "bsptree"'s _INITIAL_ list of polygons;
@@ -615,55 +611,57 @@ void BSPTreeFreeTree(BSPTree *tree)
   if (tree->tree != NULL || tree->init_lpl != NULL) {
     obstack_free(&tree->obst, NULL);
     obstack_init(&tree->obst);
-    tree->tree      = NULL;
-    tree->init_lpl  = NULL;
+    tree->tree       = NULL;
+    tree->init_lpl   = NULL;
+    tree->Tid        = NULL;
+    tree->Tidinv     = NULL;
+    tree->tagged_app = NULL;
+    tree->oneshot    = false;
   }
+}
+
+/* Geometries attached to INSTs or LISTs can be deleted underneath the
+ * BSP-tree; so INSTs and LISTs must register a callback with their
+ * handles.
+ */
+void BSPTreeInvalidate(Handle **chp, Ref *unused, BSPTree *self)
+{
+  BSPTreeFreeTree(self);
 }
 
 /* This is really easy, 'cause we are using an obstack. */
-void BSPTreeFree(Geom *g)
+void BSPTreeFree(BSPTree *tree)
 {
-  if (g->bsptree) {
-    BSPTreeFreeTree(g->bsptree);
-    if (g->bsptree->geom == g) {
-      OOGLFree(g->bsptree);
-      g->bsptree = NULL;
-    }
-  }
-}
-
-void BSPTreeSetAppearance(Geom *geom)
-{
-  BSPTree *tree = geom->bsptree;
-  const Appearance *ap;
-
   if (tree != NULL) {
-    if (tree->geom == (Geom *)geom) {
-      tree->geomflags &= ~COLOR_ALPHA;
-    }
-    if (geom->ap != NULL || geom->bsptree->geom == (Geom *)geom) {
-      if (geom->tagged_ap) {
-	mguntagappearance(geom->tagged_ap);
-      }
-      geom->tagged_ap = mgtagappearance();
-    }
-    ap = mggetappearance();
-    if (ap->flag & APF_TRANSP) {
-      if ((ap->mat->valid & MTF_ALPHA)
-	  &&
-	  ((ap->mat->override & MTF_ALPHA) ||
-	   !(geom->geomflags & GEOM_COLOR))) {
-	if (ap->mat->diffuse.a != 1.0) {
-	  tree->geomflags |= COLOR_ALPHA;
-	}
-      } else {
-	tree->geomflags |= geom->geomflags & COLOR_ALPHA;
-      }
-    }
+    obstack_free(&tree->obst, NULL);
+    OOGLFree(tree);
   }
 }
 
-Geom *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
+BSPTree *BSPTreeSet(BSPTree *tree, int attr1, ...)
+{
+  int attr;
+  va_list alist;
+#undef NEXT
+#define NEXT(type) va_arg(alist, type)
+
+  va_start(alist, attr1);
+  for (attr = attr1; attr != BSPTREE_END; attr = NEXT(int)) {
+    switch (attr) {
+    case BSPTREE_ONESHOT:
+      tree->oneshot = NEXT(int);
+      break;
+    default:
+      OOGLError(1, "BSPTreeSet: unknown attribute %d", attr);
+      break;
+    }
+  }
+  va_end(alist);
+
+  return tree;
+}
+
+BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
 {
   const void **tagged_app = NULL;
 
@@ -678,50 +676,80 @@ Geom *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
   switch (action) {
   case BSPTREE_CREATE:
     if (tree == NULL) {
-      tree = BSPTreeCreate(geom);
-    } else {
-      geom->bsptree = tree;
+      geom->bsptree = tree = BSPTreeCreate(geom->bsptree, geom);
     }
     break;
   case BSPTREE_ADDGEOM:
-    tagged_app = BSPTreePushAppearance(geom);
+    tagged_app = BSPTreePushAppearance(tree, geom);
+    if (geom == tree->geom) {
+      Transform T;
+      
+      mggettransform(T);
+      if (memcmp(T, TM_IDENTITY, sizeof(Transform)) != 0) {
+	tree->Tid = obstack_alloc(&tree->obst, sizeof(Transform));
+	TmCopy(T, tree->Tid);
+      } else {
+	tree->Tid = TM_IDENTITY;
+      }
+      tree->Tidinv = NULL;
+    }
+    break;
+  case BSPTREE_DELETE:
+    if (tree == NULL || (tree = geom->bsptree) == NULL) {
+      return NULL;
+    }
     break;
   default:
     break;
   }
   
   (*geom->Class->bsptree)(geom, tree, action);
-
-  if (action == BSPTREE_ADDGEOM) {
-    BSPTreePopAppearance(geom, tagged_app);
+  
+  switch (action) {    
+  case BSPTREE_DELETE:
+    if (tree->geom == geom) {
+      BSPTreeFree(tree);
+      tree = geom->bsptree = NULL;
+    }
+    break;
+  case BSPTREE_ADDGEOM:
+    BSPTreePopAppearance(tree, tagged_app);
+    break;
+  default:
+    break;
   }
 
-  return geom;
+  return tree;
 }
 
 Geom *GeomBSPTreeDraw(Geom *geom)
 {
-  /* If we have a private BSP-tree, then draw it now. */
-  mgNDctx *NDctx = NULL;
-
-  mgctxget(MG_NDCTX, &NDctx);
-
-  if (geom->bsptree->tree == NULL) {
-    if (NDctx == NULL) {
-      /* we assume that the various draw_projected_blah() routines
-       * have added to the bsptree for themselves as needed.
-       */
-      GeomBSPTree((Geom *)geom, geom->bsptree, BSPTREE_ADDGEOM);
-    }
-
-    BSPTreeFinalize(geom->bsptree);
+  BSPTree *tree = geom->bsptree;
+  
+  if (tree == NULL || !(geom->geomflags & GEOM_ALPHA)) {
+    return NULL;
   }
 
-  mgbsptree(geom->bsptree);
-	    
-  if (NDctx != NULL) {
-    /* Clean up for next round */
-    BSPTreeFreeTree(geom->bsptree);
+  /* 3d-view: tree might be persistent, but is only created on
+   * demand. Do that now.
+   *
+   * Nd-view: tree is not persistent, but tree->init_lpl should be !=
+   * NULL at this stage.
+   */
+  if (tree->tree == NULL) {
+    if (tree->init_lpl == NULL) {
+      GeomBSPTree((Geom *)geom, tree, BSPTREE_ADDGEOM);
+    }
+    BSPTreeFinalize(tree);
+  }
+
+  mgbsptree(tree);
+
+  if (tree->oneshot) {
+    /* This means we have an INST with location/origin != LOCAL; or
+     * ND-drawing. Free the tree now.
+     */
+    BSPTreeFreeTree(tree);
   }
 
   return geom;
@@ -778,22 +806,35 @@ static inline void SplitPolyNode(PolyListNode *plnode,
       iend[1]   = edges[0].v[1]; 
     }
   } else {
-#if DOUBLE_SCP
-    double mu0, mu1;
-#else
     HPt3Coord mu0, mu1;
-#endif
     Vertex *V0 = poly->v[edges[0].v[0]];
     Vertex *V1 = poly->v[edges[0].v[1]];
     
     v0 = obstack_alloc(scratch, sizeof(Vertex));
     mu0 = edges[0].scp[1]/(edges[0].scp[1]-edges[0].scp[0]);
+#if 0
     mu1 = edges[0].scp[0]/(edges[0].scp[0]-edges[0].scp[1]);
-    HPt3LinSum(mu0, &V0->pt, mu1, &V1->pt, &v0->pt);
-    if (!finite(v0->pt.x + v0->pt.y + v0->pt.z))
+#else
+    mu1 = 1.0 - mu0;
+#endif
+    /* Use denormalized variant; otherwise textures may come out wrong
+     * because the homogeneous divisor is used for perspective
+     * corrections.
+     */
+    HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v0->pt);
+    if (!finite(v0->pt.x + v0->pt.y + v0->pt.z)){
       abort();
+    }
     CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v0->vcol);
-    Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+    /* The averaged vertex normals do not have an orientation, so try
+     * so orient them w.r.t. the polygon normal before computing the
+     * linear combination.
+     */
+    if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
+      Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+    } else {
+      Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+    }
     Pt3Unit(&v0->vn);
     v0->st[0] = mu0 * V0->st[0] + mu1 * V1->st[0];
     v0->st[1] = mu0 * V0->st[1] + mu1 * V1->st[1];
@@ -829,22 +870,26 @@ static inline void SplitPolyNode(PolyListNode *plnode,
       iend[1]   = edges[1].v[1]; 
     }
   } else {
-#if DOUBLE_SCP
-    double mu0, mu1;
-#else
     HPt3Coord mu0, mu1;
-#endif
     Vertex *V0 = poly->v[edges[1].v[0]];
     Vertex *V1 = poly->v[edges[1].v[1]];
     
     v1 = obstack_alloc(scratch, sizeof(Vertex));
     mu0 = edges[1].scp[1]/(edges[1].scp[1]-edges[1].scp[0]);
+#if 0
     mu1 = edges[1].scp[0]/(edges[1].scp[0]-edges[1].scp[1]);
-    HPt3LinSum(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
+#else
+    mu1 = 1.0 - mu0;
+#endif
+    HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
     if (!finite(v1->pt.x + v1->pt.y + v1->pt.z))
       abort();
     CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v1->vcol);
-    Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+    if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
+      Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+    } else {
+      Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+    }
     Pt3Unit(&v1->vn);
     v1->st[0] = mu0 * V0->st[0] + mu1 * V1->st[0];
     v1->st[1] = mu0 * V0->st[1] + mu1 * V1->st[1];
@@ -869,7 +914,8 @@ static inline void SplitPolyNode(PolyListNode *plnode,
        * instabilities on increasingly degenerated polygons.
        */
       (*front)->pn = obstack_alloc(scratch, sizeof(Point3));
-      PolyNormal(poly, (*front)->pn, 0, 1, NULL, NULL);
+      PolyNormal(poly, (*front)->pn,
+		 true /* 4d */, false /* evert */, NULL, NULL);
     }
     (*back)->pn = (*front)->pn;
   }
@@ -962,50 +1008,24 @@ static inline void PolyPlane(PolyListNode *plnode, HPoint3 *plane)
      * when this function is called, then plnode has found its "home"
      * tree-node.
      */
-    PolyNormal(plnode->poly, (Point3 *)(void *)plane, 0, 1, NULL, NULL);
+    PolyNormal(plnode->poly, (Point3 *)(void *)plane,
+	       true /* fourd */, false /* evert */, NULL, NULL);
   } else {
     *(Point3 *)plane = plnode->poly->pn;
   }
   plane->w = HPt3DotPt3(&plnode->poly->v[0]->pt, (Point3 *)(void *)plane);
 }
 
-#if DOUBLE_SCP
-static inline double mydot(HPoint3 *plane, HPoint3 *pt)
-{
-  return ((double)(pt)->x*(double)(plane)->x
-	  +
-	  (double)(pt)->y*(double)(plane)->y
-	  +
-	  (double)(pt)->z*(double)(plane)->z
-	  -
-	  (double)(pt)->w*(double)(plane)->w);  
-}
-#endif
-
-#if !DOUBLE_SCP
 static inline HPt3Coord PlaneDistance(HPoint3 *plane, HPoint3 *v)
 {
   HPt3Coord dist;
   
-  dist = Pt3Dot((Point3 *)plane, (Point3 *)v) - plane->w;
-  if (v->w != 0.0 && v->w != 1.0) {
-    dist /= v->w;
-    if (!finite(dist)) {
-      dist = 1e8; /* infinity */
-    }
+  dist = HPt3DotPt3(v, (Point3 *)plane) - plane->w;
+  if (!finite(dist)) {
+    dist = 1e8; /* infinity */
   }
   return dist;
 }
-#else
-static inline HPt3Coord PlaneDistance(HPoint3 *plane, HPoint3 *v)
-{
-  double dist;
-  
-  dist = mydot(plane, v);
-
-  return dist;
-}
-#endif
 
 /* Loop over all vertices and determine on which side of the plane
  * defined by "n" we live, if not on both sides. We assume at this
@@ -1016,11 +1036,7 @@ static inline HPt3Coord PlaneDistance(HPoint3 *plane, HPoint3 *v)
 static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
 				   EdgeIntersection edges[2])
 {
-#if DOUBLE_SCP
-  double scp0, scp1, scp2, scp3;
-#else
   HPt3Coord scp0, scp1, scp2, scp3;
-#endif
   PolyPos sign0, sign1, sign2, sign3;
   int i, i0, i2;
 

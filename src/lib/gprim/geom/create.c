@@ -83,9 +83,11 @@ GeomGet(Geom *g, int attr, void *attrp)
   case CR_APPEAR:
     *(Appearance **)attrp = g->ap;
     break;
+#if 0
   case CR_HANDLE:
     *(Handle **)attrp = g->handle;
     break;
+#endif
   default:
     if(g->Class->get)
       return (*g->Class->get)(g, attr, attrp);
@@ -122,13 +124,16 @@ GGeomInit(Geom *g, GeomClass *Class, int magic, Appearance *ap)
   RefInit((Ref *)g, magic);
   g->Class = Class;
   g->ap = ap;
-  if(ap != NULL)	/* If it's a real Appearance, bump its ref count */
+  if(ap != NULL) { /* If it's a real Appearance, bump its ref count */
     RefIncr((Ref *)ap);
+  }
   g->aphandle = NULL;
   g->geomflags = 0;
   g->pdim = 4;
   g->bsptree = NULL;
-  g->tagged_ap = NULL;
+  g->ppath = NULL;
+  g->ppathlen = 0;
+  DblListInit(&g->pernode);
 }
 
 /*

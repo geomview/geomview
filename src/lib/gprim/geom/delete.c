@@ -33,13 +33,35 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "geomclass.h"
 #include "handleP.h"
+#include "mg.h"
 
 int PoolDoCacheFiles;
 
+static inline void GeomNodeDataPrune(Geom *geom)
+{
+  NodeData *data, *data_next;
+
+  DblListIterate(&geom->pernode, NodeData, node, data, data_next) {
+    DblListDelete(&data->node);
+    if (data->tagged_ap) {
+      mguntagappearance(data->tagged_ap);
+    }
+    if (data->ppath) {
+	free(data->ppath);
+    }
+    OOGLFree(data);
+  }
+}
+
 void GeomDelete(Geom *object)
 {
-    if (object == NULL)
+    Handle *h;
+    Pool *p;
+    int np;
+
+    if (object == NULL) {
 	return;
+    }
 
     if (!GeomIsMagic(object->magic)) {
 	OOGLWarn("Internal warning: GeomDelete of non-Geom %x (%x !~ %xxxxx)",
@@ -50,41 +72,53 @@ void GeomDelete(Geom *object)
      * from a file, and the sole reference to it is from the Handle,
      * delete it now (and delete the handle and possibly close the file).
      */
-    switch (RefDecr((Ref *)object)) {
-    case 1:
-	if(object->handle && object->handle->whence
-		&& object->handle->object == (Ref *)object
-		&& !PoolDoCacheFiles) {
-
-	    HandleDelete(object->handle);
+    for (np = 0, h = HandleRefIterate((Ref *)object, NULL);
+	 h;
+	 h = HandleRefIterate((Ref *)object, h)) {
+	if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
+	    np++;
+	}
+	REFPUT(h);
+    }
+    if (REFPUT(object) == np && np > 0) {
+	/* can this happen??? at all ??? */
+	for (h = HandleRefIterate((Ref *)object, NULL);
+	     h;
+	     h = HandleRefIterate((Ref *)object, h)) {
+	    REFPUT(h);
+	    if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
+		HandleDelete(h);
+	    }
 	}
 	return;
-    default:
-	if(object->ref_count < 0 || object->ref_count > 100000) {
-	    /* XXX debug */
-	    OOGLError(1, "GeomDelete(%x) -- ref count %d?", object,
-		object->ref_count);
-	    return;
-	}
+    } else if (REFCNT(object) < 0 || REFCNT(object) > 100000) {
+	/* XXX debug */
+	OOGLError(1, "GeomDelete(%x) -- ref count %d?", object, REFCNT(object));
 	return;
-    case 0:
-	/* Actually delete it */;
+    } else if (REFCNT(object) > 0) {
+	return;
     }
 
+    /* Actually delete it */;
+
+    /* we may need to iterate over a list, or access INST->geom, so
+     * call the destructor for the BSP-tree before calling
+     * Class->Delete()
+     */
+    GeomBSPTree(object, NULL, BSPTREE_DELETE);
+    GeomNodeDataPrune(object);
+
+    if(object->aphandle) {
+	HandlePDelete(&object->aphandle);
+    }
     if(object->ap) {
 	ApDelete(object->ap);
 	object->ap = NULL;
     }
-    if(object->aphandle)
-	HandlePDelete(&object->aphandle);
     if(object->Class->Delete) {
 	(*object->Class->Delete)(object);
     }
 
-    BSPTreeFree(object);
-
-    if(object->handle && HandleObject(object->handle) == (Ref *)object)
-	HandleDelete(object->handle);
     object->magic ^= 0x80000000;
     OOGLFree(object);
 }

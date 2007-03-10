@@ -24,12 +24,23 @@
 
 typedef struct BSPTree BSPTree;
 
-extern BSPTree *BSPTreeCreate(Geom *object);
+extern BSPTree *BSPTreeCreate(BSPTree *tree, Geom *object);
 extern void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object);
 extern void BSPTreeFinalize(BSPTree *bsp);
-extern void BSPTreeFree(Geom *object);
+extern void BSPTreeFree(BSPTree *bsp);
 extern void BSPTreeFreeTree(BSPTree *tree);
 extern void BSPTreeSetAppearance(Geom *object);
+extern BSPTree *BSPTreeSet(BSPTree *tree, int attr1, ...);
+
+/* Geometries attached to INSTs or LISTs can be deleted underneath the
+ * BSP-tree; so INSTs and LISTs must register a callback with their
+ * handles.
+ */
+extern void BSPTreeInvalidate(Handle **chp, Ref *unused, BSPTree *tree);
+
+/* Attributes for BSPTreeSet */
+#define BSPTREE_ONESHOT 42001
+#define BSPTREE_END     42999
 
 #endif
 
