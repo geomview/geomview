@@ -25,6 +25,7 @@
 #ifndef _GV_TRANSFORM3_H_
 #define _GV_TRANSFORM3_H_
 
+#include <stdio.h>
 #include "geomtypes.h"
 
 /*
@@ -43,7 +44,7 @@
 #define TM_PROJECTIVE		0x0200
 #define TM_CONFORMAL_BALL	0x0400
 
-#define TMNULL  ((TransformPtr)0)     /* How to pass a NULL Transform3 ptr */
+#define TMNULL  ((TransformPtr)NULL)     /* How to pass a NULL Transform3 ptr */
 
 #define TMX 0
 #define TMY 1
@@ -65,7 +66,7 @@ extern void Tm3PreConcat( Transform3 Ta, Transform3 Tb );
 extern void Tm3Concat( Transform3 Ta, Transform3 Tb, Transform3 Tc );
 extern void Tm3PolarDecomp( Transform3, Transform3 );
 
-extern void Tm3Print( Transform3 T );
+extern void Tm3Print(FILE *f, Transform3 T);
 extern void Tm3Copy( Transform3 Tsrc, Transform3 Tdst );
 extern int  Tm3Compare( Transform3 T1, Transform3 T2, float tol );
 extern void Tm3Push( Transform3 T );
