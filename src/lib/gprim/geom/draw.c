@@ -66,8 +66,10 @@ Geom *GeomDraw(Geom *geom)
     if (geom->ap != NULL) {
       mgpushappearance();
       ap = mgsetappearance(geom->ap, 1);	/* Merge into inherited ap */
-      maybe_tag_appearance(geom, ap);
+    } else {
+      ap = mggetappearance();
     }
+    maybe_tag_appearance(geom, ap);
     
     (*geom->Class->draw)(geom);
 
