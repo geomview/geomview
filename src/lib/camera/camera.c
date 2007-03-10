@@ -34,12 +34,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geomclass.h"
 #include "cameraP.h"
 #include "mg.h"
+#include "reference.h"
 
 Camera * _CamSet(Camera *cam, int attr, va_list *a_list);
 
-#define SETFLAG(flag, bit, value)	\
-	if (value) flag |= bit;		\
-	else	 flag &= ~bit
+#define SETFLAG(flag, bit, value)		\
+  if (value) flag |= bit;			\
+  else	 flag &= ~bit
 
 #define GETFLAG(flag, bit)	( (flag & bit) != 0 )
 
@@ -83,6 +84,9 @@ CamDefault(Camera *cam)
   CamStereoCompute(cam);
   cam->whicheye = 0;		/* only applies to stereo */
   cam->space = TM_EUCLIDEAN;
+  cam->bgcolor.r = cam->bgcolor.g = cam->bgcolor.b = 0.0; cam->bgcolor.a = 1.0;
+  cam->bgimage = NULL;
+  cam->bgimghandle = NULL;
   CamReset( cam );
 }
 
@@ -111,147 +115,178 @@ _CamSet(Camera *cam, int attr, va_list *alist)
     bit = unbit = 0;
     switch(attr) {
     case CAM_ABLOCK:
-        ablock = NEXT(char**);
-        break;
+      ablock = NEXT(char**);
+      break;
     case CAM_C2W:
-	tt = NEXT(TransformPtr);
-	bit = CAMF_NEWC2W, unbit = CAMF_W2C;
-	TmCopy(tt, cam->camtoworld);
-	TmInvert( cam->camtoworld, cam->worldtocam);
-	break;
+      tt = NEXT(TransformPtr);
+      bit = CAMF_NEWC2W, unbit = CAMF_W2C;
+      TmCopy(tt, cam->camtoworld);
+      TmInvert(cam->camtoworld, cam->worldtocam);
+      break;
     case CAM_W2C:
-	tt = NEXT(TransformPtr);
-	bit = CAMF_W2C, unbit = CAMF_NEWC2W;
-	TmCopy(tt, cam->worldtocam);
-	TmInvert(cam->worldtocam, cam->camtoworld);
-	break;
+      tt = NEXT(TransformPtr);
+      bit = CAMF_W2C, unbit = CAMF_NEWC2W;
+      TmCopy(tt, cam->worldtocam);
+      TmInvert(cam->worldtocam, cam->camtoworld);
+      break;
     case  CAM_FOV:
-	v = NEXT(double) / 2;
-	bit = CAMF_FOV;
-	if(cam->flag & CAMF_PERSP) {
-	    if(v >= 180/2) v = 120/2;
-	    v = tan( RADIANS(v) );
-	}
-	halffield = v;
-	sethalffield = 1;
-	break;
+      v = NEXT(double) / 2;
+      bit = CAMF_FOV;
+      if(cam->flag & CAMF_PERSP) {
+	if(v >= 180/2) v = 120/2;
+	v = tan( RADIANS(v) );
+      }
+      halffield = v;
+      sethalffield = 1;
+      break;
     case  CAM_HALFYFIELD:
-	cam->halfyfield = NEXT(double);
-	if(cam->flag & CAMF_PERSP)
-	    cam->halfyfield *= cam->focus;
-	bit = CAMF_FOV;
-	break;
+      cam->halfyfield = NEXT(double);
+      if(cam->flag & CAMF_PERSP)
+	cam->halfyfield *= cam->focus;
+      bit = CAMF_FOV;
+      break;
     case  CAM_HALFFIELD:
-	halffield = NEXT(double);
-	sethalffield = 1;
-	bit = CAMF_FOV;
-	break;
+      halffield = NEXT(double);
+      sethalffield = 1;
+      bit = CAMF_FOV;
+      break;
     case  CAM_ASPECT:
-	if((v = NEXT(double)) > 0.) {
-	    if (!sethalffield)
-		halffield = GetHalfField(cam);
-	    cam->frameaspect = v;
-	    bit = CAMF_ASPECT;
-	    setaspect = 1;
-	}
-	break;
+      if((v = NEXT(double)) > 0.) {
+	if (!sethalffield)
+	  halffield = GetHalfField(cam);
+	cam->frameaspect = v;
+	bit = CAMF_ASPECT;
+	setaspect = 1;
+      }
+      break;
     case  CAM_FOCUS:
-	if((v = NEXT(double)) > 0) {
-	    if(cam->flag & CAMF_PERSP)
-		cam->halfyfield *= v / cam->focus;
-	    cam->focus = v;
-	    bit = CAMF_FOCUS;
-	}
-	break;
+      if((v = NEXT(double)) > 0) {
+	if(cam->flag & CAMF_PERSP)
+	  cam->halfyfield *= v / cam->focus;
+	cam->focus = v;
+	bit = CAMF_FOCUS;
+      }
+      break;
     case  CAM_NEAR:
-	cam->cnear = NEXT(double);
-	bit = CAMF_NEAR;
-	break;
+      cam->cnear = NEXT(double);
+      bit = CAMF_NEAR;
+      break;
     case  CAM_FAR:
-	cam->cfar = NEXT(double);
-	bit = CAMF_FAR;
-	break;
+      cam->cfar = NEXT(double);
+      bit = CAMF_FAR;
+      break;
     case  CAM_STEREOSEP:
-	cam->stereo_sep = NEXT(double);
-	bit = CAMF_STEREOGEOM, unbit = CAMF_STEREOXFORM;
-	setstereogeom = 1;
-	break;
+      cam->stereo_sep = NEXT(double);
+      bit = CAMF_STEREOGEOM, unbit = CAMF_STEREOXFORM;
+      setstereogeom = 1;
+      break;
     case  CAM_STEREOANGLE:
-	cam->stereo_angle = NEXT(double);
-	bit = CAMF_STEREOGEOM, unbit = CAMF_STEREOXFORM;
-	setstereogeom = 1;
-	break;
+      cam->stereo_angle = NEXT(double);
+      bit = CAMF_STEREOGEOM, unbit = CAMF_STEREOXFORM;
+      setstereogeom = 1;
+      break;
     case  CAM_STEREOEYE:
-	cam->whicheye = NEXT(int);
-	bit = CAMF_EYE;
-	break;
+      cam->whicheye = NEXT(int);
+      bit = CAMF_EYE;
+      break;
     case CAM_PERSPECTIVE:  bit = CAMF_PERSP; goto flagbit;
     case CAM_STEREO: 	   bit = CAMF_STEREO; goto flagbit;
-     flagbit:
-	SETFLAG(cam->flag, bit, NEXT(int));
-	break;
+    flagbit:
+      SETFLAG(cam->flag, bit, NEXT(int));
+      break;
     case CAM_STEREYES:
-	memcpy(cam->stereyes, NEXT(TransformPtr), 2*sizeof(Transform));
-	bit = CAMF_STEREOXFORM, unbit = CAMF_STEREOGEOM;
-	break;
+      memcpy(cam->stereyes, NEXT(TransformPtr), 2*sizeof(Transform));
+      bit = CAMF_STEREOXFORM, unbit = CAMF_STEREOGEOM;
+      break;
     case CAM_STERHANDLES:
-	memcpy(cam->sterhandle, NEXT(Handle **), 2*sizeof(Handle *));
-	bit = CAMF_STEREOXFORM, unbit = CAMF_STEREOGEOM;
-	break;
+      memcpy(cam->sterhandle, NEXT(Handle **), 2*sizeof(Handle *));
+      bit = CAMF_STEREOXFORM, unbit = CAMF_STEREOGEOM;
+      break;
     case CAM_C2WHANDLE:
-	h = NEXT(Handle *);
-	if(cam->c2whandle && cam->c2whandle != h)
-	    HandlePDelete(&cam->c2whandle);
-	cam->c2whandle = h;
-	HandleRegister(&cam->c2whandle, (Ref *)cam, cam->camtoworld, CamTransUpdate);
-	bit = CAMF_NEWC2W, unbit = CAMF_W2C;
-	break;
+      h = NEXT(Handle *);
+      if (cam->c2whandle) {
+	HandlePDelete(&cam->c2whandle);
+      }
+      cam->c2whandle = REFGET(Handle, h);
+      if (h) {
+	HandleRegister(&cam->c2whandle,
+		       (Ref *)cam, cam->camtoworld, CamTransUpdate);
+      }
+      bit = CAMF_NEWC2W, unbit = CAMF_W2C;
+      break;
 
     case CAM_W2CHANDLE:
-	h = NEXT(Handle *);
+      h = NEXT(Handle *);
+      if (cam->w2chandle) {
 	HandlePDelete(&cam->w2chandle);
-	cam->w2chandle = h;
-	HandleRegister(&cam->w2chandle, (Ref *)cam, cam->worldtocam, CamTransUpdate);
-	bit = CAMF_W2C, unbit = CAMF_NEWC2W;
-	break;
+      }
+      cam->w2chandle = REFGET(Handle, h);
+      if (h) {
+	HandleRegister(&cam->w2chandle,
+		       (Ref *)cam, cam->worldtocam, CamTransUpdate);
+      }
+      bit = CAMF_W2C, unbit = CAMF_NEWC2W;
+      break;
     case CAM_SPACE:
-	{
-	  int space = NEXT(int);
-	  if (   space != TM_EUCLIDEAN
-	      && space != TM_HYPERBOLIC
-	      && space != TM_SPHERICAL) {
-	    OOGLError(0,"illegal space value %1d\n", space);
-	  } else {
-	    cam->space = space;
-	    bit = CAMF_SPACE;
-	  }
+      {
+	int space = NEXT(int);
+	if (   space != TM_EUCLIDEAN
+	       && space != TM_HYPERBOLIC
+	       && space != TM_SPHERICAL) {
+	  OOGLError(0,"illegal space value %1d\n", space);
+	} else {
+	  cam->space = space;
+	  bit = CAMF_SPACE;
 	}
-	break;
+      }
+      break;
+    case CAM_BGCOLOR:
+      cam->bgcolor = *NEXT(ColorA *);
+      break;
+    case CAM_BGIMAGE:
+      if (cam->bgimghandle) {
+	HandlePDelete(&cam->bgimghandle);
+      }
+      if (cam->bgimage) {
+	ImgDelete(cam->bgimage);
+      }
+      cam->bgimage = REFGET(Image, NEXT(Image *));
+      break;
+    case CAM_BGIMGHANDLE:
+      if (cam->bgimghandle) {
+	HandlePDelete(&cam->bgimghandle);
+      }
+      cam->bgimghandle = REFGET(Handle, NEXT(Handle *));
+      if (cam->bgimghandle) {
+	HandleRegister(&cam->bgimghandle,
+		       (Ref *)cam, &cam->bgimage, HandleUpdRef);
+      }
+      break;      
     default:
-	OOGLError (0, "CamSet: Undefined attribute: %d", attr);
-	return NULL;
+      OOGLError (0, "CamSet: Undefined attribute: %d", attr);
+      return NULL;
     }
     cam->changed &= ~unbit;
     cam->changed |= bit;
     attr = NEXT(int);
   }
 
-/*
-  (sethalffield) means we have a new halffield value, stored in local
-  var "halffield". (setaspect) means we have a new aspect ratio, and the
-  halffield must be updated in accordance with this.  In this case,
-  "halffield" holds either the original halffield value, if a new one
-  hasn't been explicitly set with CAM_HALFFIELD or CAM_FOV, or the
-  new value, if it was explicitly set.  All of these cases are dealt with
-  by the following call to SetHalfField.
-*/
+  /*
+    (sethalffield) means we have a new halffield value, stored in local
+    var "halffield". (setaspect) means we have a new aspect ratio, and the
+    halffield must be updated in accordance with this.  In this case,
+    "halffield" holds either the original halffield value, if a new one
+    hasn't been explicitly set with CAM_HALFFIELD or CAM_FOV, or the
+    new value, if it was explicitly set.  All of these cases are dealt with
+    by the following call to SetHalfField.
+  */
   if (setaspect || sethalffield)
     SetHalfField(cam, halffield);
 
   /* following works since the only way to change stereo parameters is
      by using this routine */
   if (setstereogeom)
-	CamStereoCompute(cam);
+    CamStereoCompute(cam);
   
   return cam;
 
@@ -293,14 +328,14 @@ CamGet(Camera *cam, int attr, void *value)
 
   case CAM_C2W:
     /* camtoworld is always up to date, so just copy */
-    TmCopy( cam->camtoworld, (TransformPtr)value );
+    TmCopy(cam->camtoworld, (TransformPtr)value);
     break;
 
   case CAM_W2C:
     /* worldtocam is not always up to date, so update if necessary ... */
     if (cam->flag & CAMF_NEWC2W ) {
-	TmInvert( cam->camtoworld, cam->worldtocam );
-	cam->flag &= ~CAMF_NEWC2W;
+      TmInvert( cam->camtoworld, cam->worldtocam );
+      cam->flag &= ~CAMF_NEWC2W;
     }
     /* ... then copy */
     TmCopy( cam->worldtocam, (TransformPtr)value );
@@ -314,7 +349,7 @@ CamGet(Camera *cam, int attr, void *value)
 
   case CAM_HALFYFIELD:
     *VALUE(float) = (cam->flag & CAMF_PERSP) ? cam->halfyfield / cam->focus
-					     : cam->halfyfield;
+      : cam->halfyfield;
     break;
 
   case CAM_HALFFIELD:
@@ -369,6 +404,18 @@ CamGet(Camera *cam, int attr, void *value)
     *VALUE(int) = cam->space;
     break;
 
+  case CAM_BGCOLOR:
+    *VALUE(ColorA) = cam->bgcolor;
+    break;
+    
+  case CAM_BGIMAGE:
+    *VALUE(Image *) = cam->bgimage;
+    break;
+    
+  case CAM_BGIMGHANDLE:
+    *VALUE(Handle *) = cam->bgimghandle;
+    break;
+
   default:
     return -1;
     break;
@@ -381,36 +428,42 @@ CamGet(Camera *cam, int attr, void *value)
 void
 CamDelete( Camera *cam )
 {
-    if(cam == NULL)
-	return;
-    if(cam->magic != CAMMAGIC) {
-	OOGLWarn("Internal warning: trying to CamDelete non-Camera %x (%x != %x)",
-		cam, cam->magic, CAMMAGIC);
-	return;
-    }
-    if(RefDecr((Ref *)cam) <= 0) {
-	cam->magic ^= 0x80000000;	/* Invalidate */
-	if(cam->c2whandle) HandlePDelete( &cam->c2whandle );
-	if(cam->w2chandle) HandlePDelete( &cam->w2chandle );
-	if(cam->sterhandle[0]) HandlePDelete( &cam->sterhandle[0] );
-	if(cam->sterhandle[1]) HandlePDelete( &cam->sterhandle[1] );
-	OOGLFree(cam);
-    }
+  if(cam == NULL)
+    return;
+  if(cam->magic != CAMMAGIC) {
+    OOGLWarn("Internal warning: trying to CamDelete non-Camera %x (%x != %x)",
+	     cam, cam->magic, CAMMAGIC);
+    return;
+  }
+  if(RefDecr((Ref *)cam) <= 0) {
+    cam->magic ^= 0x80000000;	/* Invalidate */
+    if(cam->c2whandle) HandlePDelete( &cam->c2whandle );
+    if(cam->w2chandle) HandlePDelete( &cam->w2chandle );
+    if(cam->sterhandle[0]) HandlePDelete( &cam->sterhandle[0] );
+    if(cam->sterhandle[1]) HandlePDelete( &cam->sterhandle[1] );
+    if (cam->bgimghandle) HandlePDelete(&cam->bgimghandle);
+    if (cam->bgimage) ImgDelete(cam->bgimage);
+    OOGLFree(cam);
+  }
 }
 
 Camera *
 CamCopy( Camera *src, Camera *dst )
 {
-    if(src == NULL)
-	return NULL;
-    if(dst == NULL)
-	dst = OOGLNewE(Camera, "CamCopy Camera");
-    else
-	HandleDelete(dst->handle);
-    *dst = *src;
-    dst->ref_count = 1;
-    dst->handle = NULL;
-    return dst;
+  if (src == NULL) {
+    return NULL;
+  }
+  if (dst == NULL) {
+    dst = OOGLNewE(Camera, "CamCopy Camera");
+  }
+#if 0  
+  else
+    HandleDelete(dst->handle);
+#endif
+  *dst = *src;
+  dst->ref_count = 1;
+  /*dst->handle = NULL;*/
+  return dst;
 }
 
 void
@@ -425,29 +478,29 @@ CamReset( Camera *cam )
 
   case TM_EUCLIDEAN:
     CamSet( cam,
-	   CAM_NEAR,		.07,
-	   CAM_FAR,		100.0,
-	   CAM_FOCUS,		3.0,
-	   CAM_FOV,		persp ? 40.0 : 2.2,
-	   CAM_END);
+	    CAM_NEAR,		.07,
+	    CAM_FAR,		100.0,
+	    CAM_FOCUS,		3.0,
+	    CAM_FOV,		persp ? 40.0 : 2.2,
+	    CAM_END);
     break;
 
   case TM_HYPERBOLIC:
     CamSet( cam,
-	   CAM_NEAR,		.07,
-	   CAM_FAR,		100.0,
-	   CAM_FOCUS,		2.5, 
-	   CAM_FOV,		persp ? 40.0 : 2.2,
-	   CAM_END);
+	    CAM_NEAR,		.07,
+	    CAM_FAR,		100.0,
+	    CAM_FOCUS,		2.5, 
+	    CAM_FOV,		persp ? 40.0 : 2.2,
+	    CAM_END);
     break;
 
   case TM_SPHERICAL:
     CamSet( cam,
-	   CAM_NEAR,		.05,
-	   CAM_FAR,		-.05,
-	   CAM_FOCUS,		0.5,
-	   CAM_FOV,		persp ? 90.0 : 2.2,
-	   CAM_END);
+	    CAM_NEAR,		.05,
+	    CAM_FAR,		-.05,
+	    CAM_FOCUS,		0.5,
+	    CAM_FOV,		persp ? 90.0 : 2.2,
+	    CAM_END);
     break;
   }
 
@@ -462,21 +515,21 @@ CamReset( Camera *cam )
 void
 CamViewProjection( Camera *cam, Transform proj )
 {
-    float y;
-    float x;
+  float y;
+  float x;
 
-    y = cam->halfyfield;
-    if(cam->flag & CAMF_PERSP)
-	y *= cam->cnear / cam->focus;
-    x = cam->frameaspect * y;
+  y = cam->halfyfield;
+  if(cam->flag & CAMF_PERSP)
+    y *= cam->cnear / cam->focus;
+  x = cam->frameaspect * y;
 
-    if(cam->flag & CAMF_PERSP) {
-	TmPerspective( proj, -x, x, -y, y, cam->cnear, cam->cfar );
-    } else {
-	TmOrthographic( proj, -x, x, -y, y, cam->cnear, cam->cfar );
-    }
-    if (cam->flag & CAMF_STEREO)
-	TmConcat( cam->stereyes[cam->whicheye], proj, proj );
+  if(cam->flag & CAMF_PERSP) {
+    TmPerspective( proj, -x, x, -y, y, cam->cnear, cam->cfar );
+  } else {
+    TmOrthographic( proj, -x, x, -y, y, cam->cnear, cam->cfar );
+  }
+  if (cam->flag & CAMF_STEREO)
+    TmConcat( cam->stereyes[cam->whicheye], proj, proj );
 }
 
 /*
@@ -488,35 +541,35 @@ CamViewProjection( Camera *cam, Transform proj )
 void
 CamView( Camera *cam, Transform T )
 {
-    Transform t;
+  Transform t;
 
-    CamViewProjection( cam, t );
-    if(cam->flag & CAMF_NEWC2W) {
-	TmInvert( cam->camtoworld, cam->worldtocam );
-	cam->flag &= ~CAMF_NEWC2W;
-    }
-    TmConcat( cam->worldtocam, t, T );
+  CamViewProjection( cam, t );
+  if(cam->flag & CAMF_NEWC2W) {
+    TmInvert( cam->camtoworld, cam->worldtocam );
+    cam->flag &= ~CAMF_NEWC2W;
+  }
+  TmConcat( cam->worldtocam, t, T );
 }
 
 void
 CamRotateX( Camera *cam, float angle )
 {
-    CtmRotateX( cam->camtoworld, angle );
-    cam->flag |= CAMF_NEWC2W;
+  CtmRotateX( cam->camtoworld, angle );
+  cam->flag |= CAMF_NEWC2W;
 }
 
 void
 CamRotateY( Camera *cam, float angle )
 {
-    CtmRotateY( cam->camtoworld, angle );
-    cam->flag |= CAMF_NEWC2W;
+  CtmRotateY( cam->camtoworld, angle );
+  cam->flag |= CAMF_NEWC2W;
 }
 
 void
 CamRotateZ( Camera *cam, float angle )
 {
-    CtmRotateZ( cam->camtoworld, angle );
-    cam->flag |= CAMF_NEWC2W;
+  CtmRotateZ( cam->camtoworld, angle );
+  cam->flag |= CAMF_NEWC2W;
 }
 
 /* translate the camera, using the camera's notion of what space it
@@ -544,13 +597,13 @@ CamScale( Camera *cam, float sx, float sy, float sz )
 void
 CamAlignZ( Camera *cam, float x, float y, float z )
 {
-    Point3 axis;
+  Point3 axis;
 
-    axis.x = x;
-    axis.y = y;
-    axis.z = z;
-    CtmAlignZ( cam->camtoworld, &axis );
-    cam->flag |= CAMF_NEWC2W;
+  axis.x = x;
+  axis.y = y;
+  axis.z = z;
+  CtmAlignZ( cam->camtoworld, &axis );
+  cam->flag |= CAMF_NEWC2W;
 }
 
 /*
@@ -559,18 +612,18 @@ CamAlignZ( Camera *cam, float x, float y, float z )
 void
 CamTransform( Camera *cam, Transform T )
 {
-    TmConcat(T, cam->camtoworld, cam->camtoworld);
-    cam->flag |= CAMF_NEWC2W;
+  TmConcat(T, cam->camtoworld, cam->camtoworld);
+  cam->flag |= CAMF_NEWC2W;
 }
 
 static void
 CamStereoCompute( Camera *cam )
 {
-    float tanconv = tan(cam->stereo_angle);
-    TmTranslate( cam->stereyes[CAM_RIGHT], cam->stereo_sep, 0., 0. );
-    TmTranslate( cam->stereyes[CAM_LEFT], -cam->stereo_sep, 0., 0. );
-    cam->stereyes[CAM_RIGHT][TMZ][TMX] = -tanconv;
-    cam->stereyes[CAM_LEFT][TMZ][TMX] = tanconv;
+  float tanconv = tan(cam->stereo_angle);
+  TmTranslate( cam->stereyes[CAM_RIGHT], cam->stereo_sep, 0., 0. );
+  TmTranslate( cam->stereyes[CAM_LEFT], -cam->stereo_sep, 0., 0. );
+  cam->stereyes[CAM_RIGHT][TMZ][TMX] = -tanconv;
+  cam->stereyes[CAM_LEFT][TMZ][TMX] = tanconv;
 }
 
 /*-----------------------------------------------------------------------
@@ -591,8 +644,8 @@ SetHalfField( Camera *cam, float halffield )
 {
   cam->halfyfield =
     (cam->frameaspect < 1 && cam->frameaspect > 0)
-	? halffield / cam->frameaspect
-	: halffield;
+    ? halffield / cam->frameaspect
+    : halffield;
   if(cam->flag & CAMF_PERSP)
     cam->halfyfield *= cam->focus;
 }
@@ -633,16 +686,16 @@ CamMerge(Camera *src, Camera *dst)
   chg = src->changed;
 
   if(chg & CAMF_NEWC2W)
-	CamSet(dst, CAM_C2WHANDLE, src->c2whandle, CAM_C2W, src->camtoworld, CAM_END);
+    CamSet(dst, CAM_C2WHANDLE, src->c2whandle, CAM_C2W, src->camtoworld, CAM_END);
   if(chg & CAMF_STEREOGEOM)
-	CamSet(dst, CAM_STEREOSEP, src->stereo_sep,
-		    CAM_STEREOANGLE, src->stereo_angle, CAM_END);
+    CamSet(dst, CAM_STEREOSEP, src->stereo_sep,
+	   CAM_STEREOANGLE, src->stereo_angle, CAM_END);
   if(chg & CAMF_STEREOXFORM)
-	CamSet(dst, CAM_STEREYES, src->stereyes,
-		    CAM_STERHANDLES, src->sterhandle, CAM_END);
+    CamSet(dst, CAM_STEREYES, src->stereyes,
+	   CAM_STERHANDLES, src->sterhandle, CAM_END);
   if(chg & CAMF_W2C)
-	CamSet(dst, CAM_W2CHANDLE, src->w2chandle,
-		    CAM_W2C, src->worldtocam, CAM_END);
+    CamSet(dst, CAM_W2CHANDLE, src->w2chandle,
+	   CAM_W2C, src->worldtocam, CAM_END);
   CamGet(src, CAM_FOV, &fov);
   if(chg & CAMF_FOCUS) CamSet(dst, CAM_FOCUS, src->focus, CAM_END);
   if(chg & CAMF_PERSP) CamSet(dst,CAM_PERSPECTIVE,src->flag&CAMF_PERSP,CAM_END);
@@ -655,3 +708,11 @@ CamMerge(Camera *src, Camera *dst)
   if(chg & CAMF_SPACE) dst->space = src->space;
   return dst;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+ 
