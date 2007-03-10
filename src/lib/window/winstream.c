@@ -62,6 +62,9 @@ static struct winkeyword {
 	{ "title", WNF_HASNAME },
 };
 
+/* See the comments in src/lib/gprim/geom/geomstream.c for the logic
+ * behind HandleDelete(), RefIncr(), RefDecr() etc.
+ */
 int
 WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 {
@@ -91,17 +94,21 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 	case '@':
 	    iobfgetc(inf);
 	    w = iobfdelimtok("{}()", inf, 0);
-	    if(c == '<' && HandleByName(w, &WindowOps) == NULL) {
+	    if(c == '<' && (h = HandleByName(w, &WindowOps)) == NULL) {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
 		    OOGLSyntax(inf, "Reading window from \"%s\": can't find file \"%s\"",
 			PoolName(p), raww);
 		    break;
 		}
+	    } else if (h) {
+		HandleDelete(h); /* undo HandleByName() */
 	    }
 	    h = HandleReferringTo(c, w, &WindowOps, NULL);
-	    if(h)
+	    if(h) {
 		win = (WnWindow *)HandleObject(h);
+		RefIncr((Ref *)win);
+	    }
 	    break;
 
 	case '-':
@@ -127,7 +134,7 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 	    switch(i) {
 	    case 0: more = 1; break;		/* window */
 	    case 1:				/* define */
-		hname = HandleAssign(iobftoken(inf, 0), &WindowOps, NULL);
+		hname = HandleCreateGlobal(iobftoken(inf, 0), &WindowOps);
 		more = 1;
 		break;
 	    case 2:				/* size */
@@ -181,29 +188,48 @@ WnStreamIn( Pool *p, Handle **hp, WnWindow **wp )
 		WnDelete(win);
 	    return 0;
 	}
-    } while(brack || more);
+    } while (brack || more);
 
-    if(hname != NULL) {
-	if(win)
+    if (hname != NULL) {
+	if (win) {
 	    HandleSetObject(hname, (Ref *)win);
+	}
+	if (h) {
+	    HandleDelete(h);
+	}
 	h = hname;
     }
 
+    /* Pass the ownership of h and win to the caller if requested */
 
-    if(h != NULL && hp != NULL && *hp != h) {
-	if(*hp != NULL)
-	    HandlePDelete(hp);
+    if (hp != NULL) {
+	/* pass on ownership of the handle h to the caller of this function */
+	if (*hp != NULL) {
+	    if (*hp != h) {
+		HandlePDelete(hp);
+	    } else {
+		HandleDelete(*hp);
+	    }
+	}
 	*hp = h;
+    } else if (h) {
+	/* Otherwise delete h because we are its owner. Note that
+	 * HandleReferringTo() has passed the ownership of h to us;
+	 * explicitly defined handles (hdefine and define constructs)
+	 * will not be deleted by this call.
+	 */
+	HandleDelete(h);
     }
 
-    if(win != NULL && wp != NULL) {
-	RefIncr((Ref *)win);
-	if(*wp) WnDelete(*wp);
+    /* same logic as for hp */
+    if (wp != NULL) {
+	if (*wp != NULL) {
+	    WnDelete(*wp);
+	}
 	*wp = win;
+    } else if(win) {
+	WnDelete(win);
     }
-
-    if(h != NULL && win != NULL)
-	HandleSetObject(h, (Ref *)win);
 
     return (h != NULL || win != NULL);
 }
@@ -246,3 +272,10 @@ WnStreamOut( Pool *p, Handle *h, WnWindow *win )
     fputs(" }\n", f);
     return 1;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

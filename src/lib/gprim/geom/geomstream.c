@@ -255,7 +255,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     void *it;
     int i, first;
     int empty = 1, braces = 0;
-    int defining = 0;
     Geom **tgp;
     Handle **thp;
     int c;
@@ -310,23 +309,30 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	case ':':
 	case '@':
 	    w = iobfdelimtok("{}()", f, 0);
-	    /*
-	     * Consider doing a path search.
+	    /* Consider doing a path search.
 	     * Do this before calling HandleReferringTo()
 	     * to prevent spurious error messages.
 	     */
-	    if(c == '<' && (h = HandleByName(w, &GeomOps)) == NULL && w[0] != '/') {
+	    if (c == '<' &&
+	       (h = HandleByName(w, &GeomOps)) == NULL && w[0] != '/') {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
 		    OOGLSyntax(f,
 			"Error reading \"%s\": can't find file \"%s\"",
 			PoolName(p), raww);
 		}
+	    } else if (h) {
+		/* HandleByName() increases the ref. count s.t. the
+		 * caller of HandleByName() owns the returned handle.
+		 */
+		HandleDelete(h);
 	    }
 	    h = HandleReferringTo(c, w, &GeomOps, NULL);
-	    if(h != NULL) {
-		g = (Geom *)HandleObject(h);
-		RefIncr((Ref*)g);
+	    if (h != NULL) {
+		/* Increment the ref. count. This way we can call
+		 * HandleDelete() and GeomDelete() independently.
+		 */
+		g = REFGET(Geom, HandleObject(h));
 	    }
 	    break;
 
@@ -349,13 +355,17 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    }
 	    if(strcmp(w, "define") == 0) {
 		more = 1;
-		hname = HandleCreate( iobftoken(f, 0), &GeomOps );
-		defining = 1;
+		hname = HandleCreateGlobal(iobftoken(f, 0), &GeomOps);
 		break;
 	    }
 	    if(strcmp(w, "appearance") == 0) {
 		more = 1;
-		ap = ApFLoad(ap, f, PoolName(p));
+		if (!ApStreamIn(p, &aphandle, &ap)) {
+		    OOGLSyntax(f, "%s: appearnce definition expected",
+			       PoolName(p));
+		    GeomDelete(g);
+		    return false;
+		}
 		break;
 	    }
 
@@ -418,50 +428,83 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 		return 0;
 	    }
 	}
-    } while(brack > 0 || more);
+    } while (brack > 0 || more);
 
+    /* Leave results where we're told to */
 
-    if(hname != NULL) {
-	if(g)
-	    HandleSetObject(hname, (Ref *)g);
-	h = hname;
-    }
-
-    /*
-     * Leave results where we're told to
-     */
-    if(ap != NULL || aphandle != NULL) {
+    if (ap != NULL || aphandle != NULL) {
+	Geom *container;
 	/* If we're given an appearance and a reference to a handle,
 	 * insert an INST to hang the appearance onto.
 	 * (But still allow  { define X  appearance { ... } } to bind
 	 * an appearance to a handle.  Just disallow it when referring to
 	 * an existing handle.)
 	 */
-	if(h != NULL && !defining) {
-	   g = GeomCreate("inst", CR_HANDLE_GEOM, h, g, CR_END);
-	   HandleDelete(h);	/* Decr ref count; the INST now owns it. */
-	   h = NULL;
+	if (h != NULL) {
+	    container = GeomCreate("inst", CR_HANDLE_GEOM, h, g, CR_END);
+	    HandleDelete(h); /* Decr ref count; the INST now owns it. */
+	    GeomDelete(g);
+	    g = container;
+	    h = NULL;
+	} else if (g == NULL) {
+	    g = GeomCreate("inst", CR_END);
 	}
-	else if(g == NULL)
-	   g = GeomCreate("inst", CR_END);
-	if(g->ap)
+	if (g->ap) {
 	    ApDelete(g->ap);
-	if(g->aphandle)
+	}
+	if (g->aphandle) {
 	    HandlePDelete(&g->aphandle);
+	}
 	g->ap = ap;
 	g->aphandle = aphandle;
+	if (g->aphandle) {
+	    HandleRegister(&g->aphandle, (Ref *)g, &g->ap, HandleUpdRef);
+	}
     }
-    if(h != NULL && hp != NULL && *hp != h) {
-	if(*hp)
-	    HandlePDelete(hp);
+
+    if (hname != NULL) {
+	if (g) {
+	    HandleSetObject(hname, (Ref *)g);
+	}
+	if (h) {
+	    /* HandleReferringTo() has passed the ownership to us, so
+	     * delete h because we do not need it anymore.
+	     */
+	    HandleDelete(h);
+	}
+	h = hname;
+    }
+
+    /* Pass the ownership of h and g to the caller if requested */
+
+    if (hp != NULL) {
+	/* pass on ownership of the handle h to the caller of this function */
+	if (*hp != NULL) {
+	    if (*hp != h) {
+		HandlePDelete(hp);
+	    } else {
+		HandleDelete(*hp);
+	    }
+	}
 	*hp = h;
+    } else if (h) {
+	/* Otherwise delete h because we are its owner. Note that
+	 * HandleReferringTo() has passed the ownership of h to us;
+	 * explicitly defined handles (hdefine and define constructs)
+	 * will not be deleted by this call.
+	 */
+	HandleDelete(h);
     }
-    if(g != NULL && gp != NULL && *gp != g) {
-	if(*gp != NULL)
+
+    /* same logic as for hp */
+    if (gp != NULL) {
+	if (*gp != NULL) {
 	    GeomDelete(*gp);
+	}
 	*gp = g;
-    } else if(g)		/* Maintain ref count */
+    } else if(g) {
 	GeomDelete(g);
+    }
 
     PoolClearMark(p);
 
@@ -494,7 +537,7 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
     if(p->otype & 4) fprintf(PoolOutputFile(p), "# %d refs\n", g->ref_count); /* debug */
 
     if(g && (g->ap || g->aphandle))
-	ApFSave(g->ap, g->aphandle, PoolOutputFile(p), PoolName(p));
+	ApStreamOut(p, g->aphandle, g->ap);
 
     putdata = PoolStreamOutHandle( p, h, g != NULL );
     if(g != NULL && putdata) {
@@ -509,3 +552,10 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 	fprintf(PoolOutputFile(p), "}\n");
     return !ferror(PoolOutputFile(p));
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
