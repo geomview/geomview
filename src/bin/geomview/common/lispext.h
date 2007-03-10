@@ -61,12 +61,19 @@ typedef struct {
   TransformN *tm;
 } TmNStruct;
 
+typedef struct
+{
+  Handle *h;
+  Image *img;
+} ImgStruct;
+
 #define LAPVAL(obj)		((ApStruct*)       (obj->cell.p))
 #define LCAMERAVAL(obj)		((CameraStruct*)   (obj->cell.p))
 #define LGEOMVAL(obj)		((GeomStruct*)     (obj->cell.p))
-#define LTRANSFORMVAL(obj)	((TransformStruct*)(obj->cell.p))
 #define LWINDOWVAL(obj)		((WindowStruct*)   (obj->cell.p))
+#define LTRANSFORMVAL(obj)	((TransformStruct*)(obj->cell.p))
 #define LTRANSFORMNVAL(obj)	((TmNStruct*)	   (obj->cell.p))
+#define LIMAGEVAL(obj)          ((ImgStruct*)      (obj->cell.p))
 
 #define LSTRINGSVAL(obj)	LSTRINGVAL(obj)
 #define LIDVAL(obj)		(obj->cell.i)
@@ -81,6 +88,8 @@ extern LType LStringsp;
 extern LType LTransformp;
 extern LType LTransformNp;
 extern LType LWindowp;
+extern LType LImagep;
+extern LType LApp;
 
 #define LAP		(&LApp)
 #define LCAMERA 	(&LCamerap)
@@ -91,6 +100,7 @@ extern LType LWindowp;
 #define LTRANSFORM	(&LTransformp)
 #define LTRANSFORMN	(&LTransformNp)
 #define LWINDOW		(&LWindowp)
+#define LIMAGE          (&LImagep)
 
 extern LObject *L0, *L1;
 
@@ -100,3 +110,10 @@ extern void define_keyword(char *word, Keyword value);
 char *keywordname(Keyword keyword);
 
 #endif /* ! LISPEXT_H */
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

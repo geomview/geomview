@@ -119,6 +119,8 @@ void lang_init()
   define_keyword("ntransform", NTRANSFORM_KEYWORD);
   define_keyword("command", COMMAND_KEYWORD);
   define_keyword("window", WINDOW_KEYWORD);
+  define_keyword("image", IMAGE_KEYWORD);
+  define_keyword("appearance", APPEARANCE_KEYWORD);
   
   define_keyword("translate", TRANSLATE_KEYWORD);
   define_keyword("e-translate", E_TRANSLATE_KEYWORD);
@@ -233,12 +235,14 @@ void lang_init()
 HandleOps *keyword2ops(Keyword keyword)
 {
   switch (keyword) {
-  case CAMERA_KEYWORD:		return &CamOps;
-  case GEOM_KEYWORD: 		return &GeomOps;
-  case TRANSFORM_KEYWORD: 	return &TransOps;
-  case NTRANSFORM_KEYWORD: 	return &NTransOps;
-  case COMMAND_KEYWORD: 	return &CommandOps;
-  case WINDOW_KEYWORD: 		return &WindowOps;
+  case CAMERA_KEYWORD:     return &CamOps;
+  case GEOM_KEYWORD:       return &GeomOps;
+  case TRANSFORM_KEYWORD:  return &TransOps;
+  case NTRANSFORM_KEYWORD: return &NTransOps;
+  case COMMAND_KEYWORD:    return &CommandOps;
+  case WINDOW_KEYWORD:     return &WindowOps;
+  case APPEARANCE_KEYWORD: return &AppearanceOps;
+  case IMAGE_KEYWORD:      return &ImageOps;
   default: return NULL;
   }
 }
@@ -278,6 +282,51 @@ LDEFINE(write_sexpr, LVOID,
   return Lt;
 }
 
+LDEFINE(write_handle, LVOID,
+	"(write-handle PREFIX FILENAME HANDLE)\n"
+	"Writes the object underlying the given handle to FILENAME."
+	"This function is intended for internal debugging use only.")
+{
+  char *prefix, *filename, *handle;
+  Handle *h;
+  HandleOps *ops;
+  Pool *p;
+  
+  LDECLARE(("write-handle", LBEGIN,
+	    LSTRING, &prefix,
+	    LSTRING, &filename,
+	    LSTRING, &handle,
+	    LEND));
+
+  if ((ops = HandleOpsByName(prefix)) != NULL &&
+      (h = HandleByName(handle, ops)) != NULL) {
+    REFPUT(h);
+    if (h->ops->strmout) {
+      p = PoolStreamTemp(filename, NULL, NULL, 1, &CommandOps);
+      h->ops->strmout(p, h, HandleObject(h));
+      PoolClose(p);
+    }
+  } else {
+    OOGLWarn("Cannot find handle \"%s@%s\"", handle, prefix);
+  }
+  
+  return Lt;
+}
+
+LDEFINE(dump_handles, LVOID,
+	"(dump-handles)\n"
+	"Dump the list of currently active handles to stdout."
+	"This function is intended for internal debugging use only.")
+{
+  LDECLARE(("dump-handles", LBEGIN,
+	    LEND));
+
+  extern void handle_dump(void);
+  handle_dump();
+
+  return Lt;
+}
+
 LDEFINE(geomview_version, LSTRING,
 	"(geomview-version)\n\
 	Returns a string representing the version of geomview that is\n\
@@ -311,3 +360,9 @@ int boolval(char *s, Keyword keyword)
   }
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
