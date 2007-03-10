@@ -168,7 +168,6 @@ tossmesh(Mesh *m)
   if(m->nq) OOGLFree(m->nq);
   if(m->c) OOGLFree(m->c);
   if(m->u) OOGLFree(m->u);
-  BSPTreeFree((Geom *)m);
   m->p  = NULL;
   m->n  = NULL;
   m->nq = NULL;

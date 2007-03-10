@@ -31,7 +31,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include "ndmeshP.h"
-#include "bsptree.h"
 
 static int ndmeshfield(int copy, int amount,
 		void **fieldp, void *value, char *name);
@@ -60,7 +59,7 @@ static void tossmesh(NDMesh *m)
     if(m->p) OOGLFree(m->p);
     if(m->c) OOGLFree(m->c);
     if(m->u) OOGLFree(m->u);
-    BSPTreeFree((Geom *)m);
+
     m->p = NULL;
     m->c = NULL;
     m->u = NULL;
@@ -91,7 +90,6 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
     } else {
 	/* Check that exist is a NDMesh... */
 	m = exist;
-	BSPTreeFree((Geom *)m);
     }
 
     npts = ndmeshsize( m );

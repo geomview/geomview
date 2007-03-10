@@ -55,7 +55,6 @@ NPolyListDelete( NPolyList *np )
   OOGLFree(np->p[0].v);
   OOGLFree(np->p);
   OOGLFree(np->vl);
-  BSPTreeFree((Geom *)np);
 
   np->vi   = NULL;
   np->pv   = NULL;
@@ -88,9 +87,7 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
   } else {
     pl = exist;
     pdim = pl->pdim;
-    BSPTreeFree((Geom *)pl);
   }
-
 
   while ((attr = va_arg(*a_list, int))) 
     switch (attr) {

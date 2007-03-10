@@ -43,21 +43,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 
 PolyList *
-PolyListDelete( PolyList *pl )
+PolyListDelete(PolyList *pl)
 {
   int i;
   Poly *p;
     
-  if (pl == NULL)
+  if (pl == NULL) {
     return NULL;
+  }
 
   if((p = pl->p) != NULL) {
-    for(i = pl->n_polys; --i >= 0; p++)
+    for(i = pl->n_polys; --i >= 0; p++) {
       if(p->v != NULL) OOGLFree(p->v);
+    }
     OOGLFree(pl->p);
   }
-  if(pl->vl != NULL)
+  if(pl->vl != NULL) {
     OOGLFree(pl->vl);
+  }
+
+  PolyListDelete(pl->plproj);
 
   return NULL;
 }
@@ -84,10 +89,9 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     pl->geomflags = pl->n_polys = pl->n_verts = 0;
     pl->pdim = 4;
     pl->p = (Poly *)NULL; pl->vl = (Vertex *)NULL;
-    pl->bsptree = NULL;
+    pl->plproj = NULL;
   } else {
     pl = exist;
-    BSPTreeFree((Geom *)pl);
   }
 
   while ((attr = va_arg(*a_list, int))) 
