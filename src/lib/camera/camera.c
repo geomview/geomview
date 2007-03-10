@@ -84,7 +84,8 @@ CamDefault(Camera *cam)
   CamStereoCompute(cam);
   cam->whicheye = 0;		/* only applies to stereo */
   cam->space = TM_EUCLIDEAN;
-  cam->bgcolor.r = cam->bgcolor.g = cam->bgcolor.b = 0.0; cam->bgcolor.a = 1.0;
+  cam->bgcolor.r = cam->bgcolor.g = cam->bgcolor.b = 1.0/3.0;
+  cam->bgcolor.a = 1.0;
   cam->bgimage = NULL;
   cam->bgimghandle = NULL;
   CamReset( cam );
