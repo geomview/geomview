@@ -242,7 +242,7 @@ static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
   NodeData *pos;
   
   if (!ppath) {
-    ppath = geom->ppath;
+    ppath = geom->ppath ? geom->ppath : "";
   }
   DblListIterateNoDelete(&geom->pernode, NodeData, node, pos) {
     if (strcmp(pos->ppath, ppath) == 0) {
@@ -258,7 +258,7 @@ static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
   NodeData *data;
 
   if (!ppath) {
-    ppath = geom->ppath;
+    ppath = geom->ppath ? geom->ppath : "";
   }
   data = GeomNodeDataByPath(geom, ppath);
   if (data == NULL) {
