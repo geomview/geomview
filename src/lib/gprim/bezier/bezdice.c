@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -39,7 +40,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void bezier_interp();
 
 Bezier *
-BezierDice( Bezier *bezier, int nu, int nv )
+BezierDice(Bezier *bezier, int nu, int nv)
 {
     if(nu < 2) nu = BEZ_DEFAULT_MESH_SIZE;
     if(nv < 2) nv = BEZ_DEFAULT_MESH_SIZE;
@@ -258,31 +259,33 @@ printf("this is tmpdu0\n");
         }
     }
     GeomDelete((Geom *)bezier->mesh);
-    if((bezier->mesh = (Mesh *) GeomCreate("mesh",
-		CR_NOCOPY,
-/* 	For now, assume these are rational beziers hence belong in 3-space
-		CR_4D, (dimn == 4) ? 1 : 0,
-*/
-		CR_FLAG, m.geomflags,
-		CR_NU, m.nu,
-		CR_NV, m.nv, 
-		CR_POINT4, m.p,
-		CR_NORMAL, m.n,
-		CR_COLOR, m.c,
-		CR_U, m.u,
-		CR_END)) == NULL) {
+    HandleSetObject(bezier->meshhandle, NULL);
+    bezier->mesh = (Mesh *) GeomCreate("mesh",
+				       CR_NOCOPY,
+				       /* For now, assume these are
+					  rational beziers hence
+					  belong in 3-space CR_4D,
+					  (dimn == 4) ? 1 : 0,
+				       */
+				       CR_FLAG, m.geomflags,
+				       CR_NU, m.nu,
+				       CR_NV, m.nv, 
+				       CR_POINT4, m.p,
+				       CR_NORMAL, m.n,
+				       CR_COLOR, m.c,
+				       CR_U, m.u,
+				       CR_END);
+    if (bezier->mesh  == NULL) {
 	OOGLError(1, "BezierReDice: can't create Mesh");
 	return NULL;
     }
+    HandleSetObject(bezier->meshhandle, bezier->mesh);
+
     /*GeomCCreate(bezier->mesh, NULL, CR_COPY, CR_APPEAR, bezier->ap, CR_END);*/
 
     if (bezier->bsptree != NULL && bezier->bsptree->tree != NULL) {
-	int oldgeomflags = bezier->bsptree->geomflags;/* old transparency info*/
-
 	/* simply free the tree */
 	BSPTreeFreeTree(bezier->bsptree);
-	
-	bezier->bsptree->geomflags = oldgeomflags;
     }
 
     return bezier->mesh;

@@ -31,13 +31,13 @@
 
 struct Bezier {
   GEOMFIELDS;
-  int		degree_u, degree_v, dimn;
-  int		nu, nv;	/* these must match mesh dimensions or remake mesh */
-  float		*CtrlPnts;
-  float		*STCords;
-  Mesh 		*mesh;
-  ColorA	c[4];		/* if flag & BEZ_C */
-
+  int    degree_u, degree_v, dimn;
+  int    nu, nv; /* these must match mesh dimensions or remake mesh */
+  float  *CtrlPnts;
+  float  *STCords;
+  Mesh   *mesh;
+  Handle *meshhandle; /* to be able to define call-backs when remeshing */
+  ColorA c[4];  /* if flag & BEZ_C */
 };
 
 /*
@@ -48,3 +48,10 @@ extern void  BezierDelete( Bezier * );
 extern Bezier *BezierCopy( Bezier * );
 
 #endif /* ! BEZIERPDEFS */
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

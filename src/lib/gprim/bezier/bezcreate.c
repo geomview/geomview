@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -35,75 +36,100 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /*
  * Bezier creation, deletion and editing.
  */
-Bezier *
-BezierCopy( Bezier *ob )
+
+static inline void bez_make_meshhandle(Bezier *bezier)
 {
-	Bezier *b;
-	int n;
+    char meshhname[sizeof("\aBezier::")+sizeof(void *)*2];
+    extern HandleOps GeomOps;
 
-	if(ob == NULL) return NULL;
+    sprintf(meshhname, "\aBezier::%lx", (unsigned long)bezier);
+    bezier->meshhandle = HandleCreate(meshhname, &GeomOps);
+    HandleSetObject(bezier->meshhandle, (Ref *)bezier->mesh);
+}
 
-	b = OOGLNewE(Bezier, "new Bezier");
+Bezier *
+BezierCopy(Bezier *ob)
+{
+    Bezier *b;
+    int n;
 
-	*b = *ob;	/* Copy all fields */
-	GGeomInit(b, BezierMethods(), BEZIERMAGIC, NULL);
+    if (ob == NULL) {
+	return NULL;
+    }
 
-	if(b->geomflags & BEZ_ST) {
-	    if(ob->STCords == NULL) {
-               OOGLError(0,"Inconsistency in BEZ_ST field of flag");
-	       b->geomflags &= ~BEZ_ST;
-            } else {
-		b->STCords = OOGLNewNE(float, 4*2, "Bezier ST coords");
-		memcpy(b->STCords, ob->STCords, 4*2*sizeof(float));
-	    }
-	} else
-	    b->STCords = NULL;
-	
-	if(ob->CtrlPnts != NULL) {
-	    n = (b->degree_u + 1) * (b->degree_v + 1) * b->dimn;
-	    b->CtrlPnts = OOGLNewNE(float, n, "Bezier control points");
-	    memcpy(b->CtrlPnts, ob->CtrlPnts, n * sizeof(float));
+    b = OOGLNewE(Bezier, "new Bezier");
+
+    *b = *ob;	/* Copy all fields */
+    GGeomInit(b, BezierMethods(), BEZIERMAGIC, NULL);
+
+    if (b->geomflags & BEZ_ST) {
+	if (ob->STCords == NULL) {
+	    OOGLError(0,"Inconsistency in BEZ_ST field of flag");
+	    b->geomflags &= ~BEZ_ST;
+	} else {
+	    b->STCords = OOGLNewNE(float, 4*2, "Bezier ST coords");
+	    memcpy(b->STCords, ob->STCords, 4*2*sizeof(float));
 	}
+    } else {
+	b->STCords = NULL;
+    }
+	
+    if (ob->CtrlPnts != NULL) {
+	n = (b->degree_u + 1) * (b->degree_v + 1) * b->dimn;
+	b->CtrlPnts = OOGLNewNE(float, n, "Bezier control points");
+	memcpy(b->CtrlPnts, ob->CtrlPnts, n * sizeof(float));
+    }
 
-	if(b->geomflags & BEZ_REMESH)
-	    b->mesh = (Mesh *) GeomCCreate (NULL, MeshMethods(), CR_END);
-	else if(ob->mesh != NULL)
-	    b->mesh = (Mesh *) GeomCopy((Geom *)ob->mesh);
-
-	return(b);
+    if (ob->mesh != NULL && (b->geomflags & BEZ_REMESH) == 0) {
+	/* just increment the refcount, no need to do a real copy
+	 * here; the mesh will be regenerated on demand as needed.
+	 */
+	b->mesh = REFGET(Mesh, ob->mesh);
+    } else {
+	b->mesh = NULL;
+    }
+    bez_make_meshhandle(b);
+    
+    return b;
 }
 
 void
-BezierDelete( Bezier *bezier )
+BezierDelete(Bezier *bezier)
 {
-	if(bezier) {
-	    if(bezier->CtrlPnts != NULL)
-		OOGLFree(bezier->CtrlPnts);
-	    if(bezier->STCords != NULL)
-		OOGLFree(bezier->STCords);
-	    if(bezier->mesh != NULL)
-		GeomDelete((Geom *)bezier->mesh);
+    if (bezier) {
+	if (bezier->CtrlPnts != NULL) {
+	    OOGLFree(bezier->CtrlPnts);
 	}
+	if (bezier->STCords != NULL) {
+	    OOGLFree(bezier->STCords);
+	}
+	if (bezier->mesh != NULL) {
+	    GeomDelete((Geom *)bezier->mesh);
+	}
+	if (bezier->meshhandle != NULL) {
+	    HandlePDelete(&bezier->meshhandle);
+	}
+    }
 }
 
 /* ZZZ: note:  BezierCreate doesn't observe the copy directive: always
-copies pointers */
+   copies pointers */
 Bezier *
-BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
+BezierCreate( Bezier *exist, GeomClass *classp, va_list *a_list )
 {
     Bezier *bezier;
-    int attr, copy = 1;
+    int attr, copy = 1, i;
     ColorA *color = NULL;
-    int i;
 
     if (exist == NULL) {
 	bezier = OOGLNewE(Bezier, "BezierCreate Bezier");
 	memset(bezier, 0, sizeof(Bezier));
         GGeomInit (bezier, classp, BEZIERMAGIC, NULL);
-	bezier->mesh = NULL;
 	bezier->CtrlPnts = NULL;
 	bezier->STCords = NULL;
 	bezier->nu = bezier->nv = 0;	/* no mesh yet */
+	bezier->mesh = NULL;
+	bez_make_meshhandle(bezier);
     } else {
 	/* Check that exist is a Bezier. */
 	bezier = exist;
@@ -112,46 +138,46 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
     bezier->pdim = 4; /* hard-wired */
 
     while ((attr = va_arg (*a_list, int))) switch (attr) {
-	case CR_FLAG:
-	    bezier->geomflags = va_arg (*a_list, int);
-	    break;
-	case CR_DEGU:
-	    bezier->degree_u = va_arg (*a_list, int);
-	    break;
-	case CR_DEGV:
-	    bezier->degree_v = va_arg (*a_list, int);
-	    break;
-	case CR_DIM:
-	    bezier->dimn = va_arg (*a_list, int);
-	    if (bezier->dimn == bezier->pdim) {
-	      bezier->geomflags |= VERT_4D;
-	    }
-	    break;
-	case CR_NU:
-	    bezier->nu = va_arg (*a_list, int);
-	    break;
-	case CR_NV:
-	    bezier->nv = va_arg (*a_list, int);
-	    break;
-	case CR_POINT:
-	    bezier->CtrlPnts = va_arg (*a_list, float *);
-	    break;
-	case CR_MESH:
-	    bezier->mesh = va_arg (*a_list, Mesh *);
-	    break;
-	case CR_ST:
-	    bezier->STCords = va_arg(*a_list, float *);
-	    break;
-	case CR_COLOR:
-	    color = va_arg (*a_list, ColorA *);
-	    if (color != NULL) for (i=0; i<4; i++) bezier->c[i] = color[i];
-	    break;
-	default:
-	    if (GeomDecorate (bezier, &copy, attr, a_list)) {
-		OOGLError (0, "BezierCreate: undefined option: %d", attr);
-		OOGLFree (bezier);
-		return NULL;
-	    }
+    case CR_FLAG:
+	bezier->geomflags = va_arg (*a_list, int);
+	break;
+    case CR_DEGU:
+	bezier->degree_u = va_arg (*a_list, int);
+	break;
+    case CR_DEGV:
+	bezier->degree_v = va_arg (*a_list, int);
+	break;
+    case CR_DIM:
+	bezier->dimn = va_arg (*a_list, int);
+	if (bezier->dimn == bezier->pdim) {
+	    bezier->geomflags |= VERT_4D;
+	}
+	break;
+    case CR_NU:
+	bezier->nu = va_arg (*a_list, int);
+	break;
+    case CR_NV:
+	bezier->nv = va_arg (*a_list, int);
+	break;
+    case CR_POINT:
+	bezier->CtrlPnts = va_arg (*a_list, float *);
+	break;
+    case CR_MESH:
+	bezier->mesh = va_arg (*a_list, Mesh *);
+	break;
+    case CR_ST:
+	bezier->STCords = va_arg(*a_list, float *);
+	break;
+    case CR_COLOR:
+	color = va_arg (*a_list, ColorA *);
+	if (color != NULL) for (i=0; i<4; i++) bezier->c[i] = color[i];
+	break;
+    default:
+	if (GeomDecorate (bezier, &copy, attr, a_list)) {
+	    OOGLError (0, "BezierCreate: undefined option: %d", attr);
+	    OOGLFree (bezier);
+	    return NULL;
+	}
     }
 
     if (bezier->dimn > MAX_BEZ_DIMN) {
@@ -164,3 +190,10 @@ BezierCreate ( Bezier *exist, GeomClass *classp, va_list *a_list )
 
     return bezier;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

@@ -40,15 +40,14 @@ BezierDraw(Bezier *bezier)
 {
     const Appearance *ap = mggetappearance();
     
-    if (bezier->bsptree != NULL) {
-	BSPTreeSetAppearance((Geom *)bezier);
-    }
-
     if (mgfeature(MGF_BEZIER)>0) {
 	mgbezier (bezier->degree_u, bezier->degree_v , bezier->dimn,
 		  bezier->CtrlPnts, bezier->STCords, 
 		  bezier->geomflags & BEZ_C ? bezier->c : NULL);
     } else {
+
+	GeomMakePath(bezier, 'B', path, pathlen);
+
 	if (ap->valid & APF_DICE) {
 	    bezier->nu = ap->dice[0];
 	    bezier->nv = ap->dice[1];
@@ -60,31 +59,45 @@ BezierDraw(Bezier *bezier)
     
 	if (bezier->geomflags & BEZ_REMESH) {
 		BezierReDice(bezier);
-	}  
+	}
+
+	bezier->mesh->ppath = path;
+	bezier->mesh->ppathlen = pathlen;
+	
 	GeomDraw( (Geom *)bezier->mesh );
     }
 
     return bezier;
 }
 
-Bezier *BezierBSPTree(Bezier *bezier, BSPTree *tree, int action)
+Bezier *BezierBSPTree(Bezier *bezier, BSPTree *bsptree, int action)
 {
-    if (bezier->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+    if (never_translucent((Geom *)bezier)) {
+	return bezier;
+    }
 
+    switch (action) {
+    case BSPTREE_CREATE:
+	HandleRegister(&bezier->meshhandle,
+		       (Ref *)bezier, bsptree, BSPTreeInvalidate);
+	return bezier;
+    case BSPTREE_DELETE:
+	HandleUnregisterJust(&bezier->meshhandle,
+			     (Ref *)bezier, bsptree,BSPTreeInvalidate);
+	return bezier;
+    case BSPTREE_ADDGEOM:
 	if (bezier->mesh == NULL ||
-	    bezier->mesh->nu != bezier->nu ||
-	    bezier->mesh->nv != bezier->nv) {
+	    bezier->mesh->nu != bezier->nu || bezier->mesh->nv != bezier->nv) {
 	    bezier->geomflags |= BEZ_REMESH;
-	}
-    
+	}    
 	if (bezier->geomflags & BEZ_REMESH) {
 	    BezierReDice(bezier);
 	}
-
-	BSPTreeAddObject(tree, (Geom *)bezier->mesh);
+	BSPTreeAddObject(bsptree, (Geom *)bezier->mesh);
+	return bezier;
+    default:
+	return NULL;
     }
-
-    return bezier;
 }
 
 /*
