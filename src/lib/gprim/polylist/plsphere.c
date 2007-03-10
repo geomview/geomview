@@ -94,7 +94,7 @@ Geom *PolyListSphere(PolyList *p,
   } else {
     HPoint3 spanPts[6];
     
-    if(p->geomflags & VERT_4D) {
+    if(false && (p->geomflags & VERT_4D)) {
       /* 4d, but no 4d transform, act on x,y,z sub-space */
       HPoint3 tmp;
 
