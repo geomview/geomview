@@ -27,6 +27,8 @@
 
 #include "3d.h"
 #include "handle.h"
+#include "color.h"
+
 #include <stdarg.h>
 
 typedef struct Camera Camera;
@@ -63,8 +65,11 @@ Camera *CamMerge( Camera *src, Camera *dst );
 #define CAM_STEREYES	817	/* Transform [2]	Transform [2]	*/
 #define	CAM_STERHANDLES	818	/* Handle *[2]		Handle *[2]	*/
 #define CAM_SPACE	819	/* int			int *		*/
+#define CAM_BGCOLOR     820	/* ColorA *		ColorA *	*/
+#define CAM_BGIMAGE     821	/* Image *		Image **	*/
+#define CAM_BGIMGHANDLE 822	/* Handle *		Handle **	*/
 
-#define CAM_ABLOCK	820	/* void **ablock */
+#define CAM_ABLOCK	899	/* void **ablock */
 
 /*
   CAM_END:		end of attribute list
