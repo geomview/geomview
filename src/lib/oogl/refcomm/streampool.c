@@ -57,7 +57,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 int FD_ISSET(SOCKET fd, fd_set *fds) {
   int i = fds->fd_count;
   while(--i >= 0) {
-    if(fds->fd_array[i] == fd) return 1;
+    if (fds->fd_array[i] == fd) return 1;
   }
   return 0;
 }
@@ -86,8 +86,8 @@ static const int o_nonblock =
 #endif
     0;
 
-static Pool *AllPools = NULL;
-static Pool *FreePools = NULL;
+static DBLLIST(AllPools);
+static DBLLIST(FreePools);
 
 static fd_set poolwatchfds;
 static int poolmaxfd = 0;
@@ -98,8 +98,6 @@ static int poolnready = 0;
 static struct timeval nexttowake = { FOREVER };
 
 static Pool *newPool(char *name);
-
-extern Handle *AllHandles;	/* From handle.c */
 
 /*
  * Does the whole job of handling stream references to named objects.
@@ -114,78 +112,99 @@ extern Handle *AllHandles;	/* From handle.c */
  *
  * In the first two cases, we open (as a Pool) the specified file and
  * attempt to read it using the functions in *ops.
+ *
+ * The caller of this function owns the returned handle and should
+ * call HandleDelete() when it doesn't need the return value.
  */
 Handle *
 HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 {
     Pool *p = NULL;
-    Handle *h = NULL;
-    Handle *hknown;
+    Handle *h = NULL, *ph = NULL;
+    Handle *hknown = NULL;
     char *sep;
     char *fname;
     char *name;
     char nb[128];
 
-    if(str == NULL || ops == NULL)
+    if (str == NULL || ops == NULL)
 	return 0;
 
     sep = strrchr(str, ':');
-    if(prefixch == ':') {	/*   :  name   -- take 'name' from anywhere */
+    if (prefixch == ':') {	/*   :  name   -- take 'name' from anywhere */
 	name = str;
 	fname = NULL;
-    } else if(sep == NULL) {	/*   <  file   -- read from file 'name' */
+    } else if (sep == NULL) {	/*   <  file   -- read from file 'name' */
 	fname = str;
-	name = str;
+	name = NULL;
     } else {			/*   <  file:name */
 	name = sep+1;
 	fname = nb;
-	if(sep-str >= sizeof(nb))
+	if (sep-str >= sizeof(nb)) {
 	    sep = &str[sizeof(nb)-1];
+	}
 	memcpy(fname, str, sep-str);
 	fname[sep-str] = '\0';
     }
-    h = hknown = HandleByName(name, ops);
 
-    if(fname != NULL)
+    if (fname != NULL && *fname != '\0') {
 	p = PoolStreamOpen(fname, NULL, 0, ops);
+	hknown = HandleByName(fname, ops);
+	REFPUT(hknown);
+    }
 
-    if((p || prefixch == ':') && h == NULL) {
+    if (p && ((p->flags & (PF_ANY|PF_REREAD)) != PF_ANY || hknown != NULL)) {
+	ph  = PoolIn(p);	/* Try reading one item. */
+    }
+
+    if (name) {
 	h = HandleCreate(name, ops);
-	if(h == NULL) {
-	    OOGLError(1, "Can't make handle for '%s'", str);
-	    return NULL;
+    }
+    
+    if (ph) {
+	if (h) {
+	    /* If we were told to assign to a specific named handle
+	     * then do so and get rid of the handle returned by
+	     * PoolIn().
+	     */
+	    HandleSetObject(h, HandleObject(ph));
+	    HandleDelete(ph);
+	} else {
+	    h = ph; /* otherwise we return the handle returned by PoolIn(). */
 	}
     }
-    if(p && (((p->flags & (PF_ANY|PF_REREAD)) != PF_ANY) || hknown != NULL)) {
-	Handle *th = PoolIn(p);	/* Try reading one item. */
-	if(th) {		/* Read anything? */
-	   h = th;		/* Return that if so */
-	   h->whence = p;
+
+    if (hp) {
+	if (*hp) {
+	    if (*hp != h) {
+		HandlePDelete(hp);
+	    } else {
+		HandleDelete(*hp);
+	    }
 	}
-    }
-    if(hknown == NULL && prefixch == '<' && h != NULL && p && p->seekable)
-	h->permanent = 0;
-    if(hp && h && h->permanent) {
-	if(*hp && *hp != h)
-	    HandlePDelete(hp);
 	*hp = h;
     }
+
     return h;
 }
 
 char *
 PoolName(Pool *p)
-{ return p ? p->poolname : NULL;
+{
+    return p ? p->poolname : NULL;
 }
 
 Pool *
-PoolByName(char *fname)
+PoolByName(char *fname, HandleOps *ops)
 {
     Pool *p;
 
-    for(p = AllPools; p != NULL; p = p->next)
-	if(strcmp(fname, p->poolname) == 0)
+    DblListIterateNoDelete(&AllPools, Pool, node, p) {
+	if ((ops == NULL || p->ops == ops) && strcmp(fname, p->poolname) == 0) {
 	    return p;
+	}
+    }
+    
     return NULL;
 }
 
@@ -193,11 +212,11 @@ PoolByName(char *fname)
 static
 void watchfd(int fd)
 {
-    if(fd < 0 || fd >= FD_SETSIZE || FD_ISSET(fd, &poolwatchfds))
+    if (fd < 0 || fd >= FD_SETSIZE || FD_ISSET(fd, &poolwatchfds))
 	return;
 
     FD_SET(fd, &poolwatchfds);
-    if(poolmaxfd <= fd)
+    if (poolmaxfd <= fd)
 	poolmaxfd = fd+1;
 }
 
@@ -206,18 +225,18 @@ void unwatchfd(int fd)
 {
     int i;
 
-    if(fd < 0 || fd >= FD_SETSIZE)
+    if (fd < 0 || fd >= FD_SETSIZE)
 	return;
 
-    if(FD_ISSET(fd, &poolwatchfds)) {
+    if (FD_ISSET(fd, &poolwatchfds)) {
 	FD_CLR(fd, &poolwatchfds);
     }
-    if(fd+1 >= poolmaxfd) {
+    if (fd+1 >= poolmaxfd) {
 	for(i = poolmaxfd; --i >= 0 && !FD_ISSET(i, &poolwatchfds); )
 	    ;
 	poolmaxfd = i+1;
     }
-    if(FD_ISSET(fd, &poolreadyfds)) {
+    if (FD_ISSET(fd, &poolreadyfds)) {
 	FD_CLR(fd, &poolreadyfds);
 	poolnready--;
     }
@@ -228,11 +247,15 @@ newPool(char *name)
 {
     Pool *p;
 
-    if((p = FreePools) != NULL)
-	FreePools = p->next;
-    else
+    if (DblListEmpty(&FreePools)) {
 	p = OOGLNewE(Pool, "Pool");
+    } else {
+	p = DblListContainer(FreePools.next, Pool, node);
+	DblListDelete(&p->node);
+    }
     memset(p, 0, sizeof(Pool));
+    DblListInit(&p->node);
+    DblListInit(&p->handles);
     p->poolname = strdup(name);
     return p;
 }
@@ -244,12 +267,14 @@ PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
     char dummy[12];
     FILE *f = NULL;
     
-    if(name==NULL) sprintf(name=dummy, "_p%p",
-			   (void *)inf ? (void *)inf : (void *)outf);
+    if (name==NULL) {
+	sprintf(name=dummy, "_p%p",
+		(void *)inf ? (void *)inf : (void *)outf);
+    }
 
-    if(inf == NULL && outf == NULL && name != NULL) {
+    if (inf == NULL && outf == NULL && name != NULL) {
 	f = fopen(name, rw ? (rw>1 ? "w+b":"wb") : "rb");
-	if(f == NULL) {
+	if (f == NULL) {
 	    OOGLError(0, "Can't open %s: %s", name, sperror());
 	    return NULL;
 	}
@@ -294,10 +319,9 @@ PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
     p->inf  = inf;
     p->infd = p->inf ? iobfileno(p->inf) : -1;
 
-    p->handles = NULL;
+    /*p->handles = NULL;*/
     p->resyncing = NULL;
     p->otype = PO_ALL;
-    p->next = NULL;
     p->mode = inf && outf ? 2 : (outf ? 1 : 0);
     p->seekable = (p->inf && lseek(iobfileno(p->inf),0,SEEK_CUR) != -1 &&
 		   !isatty(iobfileno(p->inf)));
@@ -327,9 +351,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
     Pool *p;
     struct stat st;
 
-    p = PoolByName(name);
+    p = PoolByName(name, ops);
 
-    if(p == NULL) {
+    if (p == NULL) {
 	p = newPool(name);
 	p->ops = ops;
 	p->type = P_STREAM;
@@ -337,19 +361,16 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	p->infd = -1;
 	p->outf = NULL;
 	p->mode = rw;
-	p->handles = NULL;
+	/*p->handles = NULL;*/
 	p->resyncing = NULL;
 	p->otype = PO_ALL;
 	p->level = 0;
 	p->flags = 0;
-	p->next = AllPools;
 	p->client_data = NULL;
     } else {
-	if(rw == 0 && p->mode == 0 && p->inf != NULL
-		&& p->softEOF == 0
-		&& (p->flags & PF_REREAD) == 0
-		&& stat(name, &st) == 0
-		&& st.st_mtime == p->inf_mtime) {
+	if (rw == 0 && p->mode == 0 && p->inf != NULL
+	    && p->softEOF == 0 && (p->flags & PF_REREAD) == 0
+	    && stat(name, &st) == 0 && st.st_mtime == p->inf_mtime) {
 	    iobfrewind(p->inf);
 	    return p;
 	}
@@ -358,7 +379,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	 * Combine modes.  Allows e.g. adding write stream to read-only pool.
 	 */
 	p->mode = ((p->mode+1) | (rw+1)) - 1;
-	if(p->inf && rw != 1) {
+	if (p->inf && rw != 1) {
 	    if (iobfile(p->inf) == stdin) {
 		iobfileclose(p->inf); /* leaves stdin open */
 	    } else {
@@ -368,9 +389,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	}
     }
 
-    if(f == NULL || f == (FILE *)-1) {
-	if(rw != 1) {
-	    if(strcmp(name, "-") == 0) {
+    if (f == NULL || f == (FILE *)-1) {
+	if (rw != 1) {
+	    if (strcmp(name, "-") == 0) {
 		f = stdin;
 	    } else {
 		/* Try opening read/write first in case it's a Linux named pipe */
@@ -405,19 +426,19 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 
 #if defined(unix) || defined(__unix)
 		/* Unix-domain socket? */
-		if(fd < 0 && errno == EOPNOTSUPP) {
+		if (fd < 0 && errno == EOPNOTSUPP) {
 		    struct sockaddr_un sa;
 		    sa.sun_family = AF_UNIX;
 		    strncpy(sa.sun_path, name, sizeof(sa.sun_path));
 		    fd = socket(AF_UNIX, SOCK_STREAM, 0);
-		    if(connect(fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
+		    if (connect(fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
 			close(fd);
 			fd = -1;
 		    }
 		}
 #endif /*unix*/
 
-		if(fd < 0)
+		if (fd < 0)
  		    OOGLError(0, "Cannot open file \"%s\": %s",
 			      name, sperror());
 		else
@@ -425,42 +446,43 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	    }
 	    p->inf = iobfileopen(f);
 	}
-	if(rw > 0) {
-	    if(strcmp(name, "-") == 0)
+	if (rw > 0) {
+	    if (strcmp(name, "-") == 0)
 		p->outf = stdout;
-	    else if((p->outf = fopen(name, "wb")) == NULL)
+	    else if ((p->outf = fopen(name, "wb")) == NULL)
 		OOGLError(0, "Cannot create \"%s\": %s", name, sperror());
 	}
     } else {
 	if (rw != 1) {
 	    p->inf = iobfileopen(f);
 	}
-	if(rw > 0)
+	if (rw > 0)
 	    p->outf = (rw == 2) ? fdopen(dup(fileno(f)), "wb") : f;
     }
 
-    if(p->inf == NULL && p->outf == NULL) {
+    if (p->inf == NULL && p->outf == NULL) {
 	PoolDelete(p);
 	return NULL;
     }
 
 	/* We're committed now. */
-    if(p->next == AllPools)
-	AllPools = p;
-    p->seekable = 0;
-    p->softEOF = 0;
-    if(p->inf != NULL) {
+    if (DblListEmpty(&p->node)) {
+	DblListAddTail(&AllPools, &p->node);
+    }
+    p->seekable = false;
+    p->softEOF = false;
+    if (p->inf != NULL) {
 	if (p->infd == -1) {
 	    p->infd = iobfileno(p->inf);
 	}
 	if (p->infd != -1) {
-	    if(isatty(p->infd)) {
-		p->softEOF = 1;
-	    } else if(lseek(p->infd,0,SEEK_CUR) != -1) {
-		p->seekable = 1;
+	    if (isatty(p->infd)) {
+		p->softEOF = true;
+	    } else if (lseek(p->infd,0,SEEK_CUR) != -1) {
+		p->seekable = true;
 	    }
-	    if(fstat(p->infd, &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO) {
-		p->softEOF = 1;
+	    if (fstat(p->infd, &st) < 0 || (st.st_mode & S_IFMT) == S_IFIFO) {
+		p->softEOF = true;
 	    }
 	    p->inf_mtime = st.st_mtime;
 	    watchfd(p->infd);
@@ -475,7 +497,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~o_nonblock);
     }
 #endif /*unix*/
-    if(p->level == 0 && p->outf &&
+    if (p->level == 0 && p->outf &&
 	  (lseek(fileno(p->outf),0,SEEK_CUR) == -1 || isatty(fileno(p->outf))))
 	p->level = 1;
 
@@ -550,14 +572,14 @@ PoolDoReread(Pool *p)
 
 void PoolClose(Pool *p)
 {
-    if(p->ops->close && !(p->flags & PF_CLOSING)) {
+    if (p->ops->close && !(p->flags & PF_CLOSING)) {
 	p->flags |= PF_CLOSING;
-	if((*p->ops->close)(p))
+	if ((*p->ops->close)(p))
 	    return;
     }
 
-    if(p->type == P_STREAM) {
-	if(p->inf != NULL) {
+    if (p->type == P_STREAM) {
+	if (p->inf != NULL) {
 	    unwatchfd(iobfileno(p->inf));
 	    if (iobfile(p->inf) == stdin) {
 		iobfileclose(p->inf);
@@ -566,36 +588,34 @@ void PoolClose(Pool *p)
 	    }
 	    p->inf = NULL;
 	}
-	if(p->outf != NULL) {
-	    if(p->outf != stdout) fclose(p->outf);
+	if (p->outf != NULL) {
+	    if (p->outf != stdout) fclose(p->outf);
 	    p->outf = NULL;
 	}
+	PoolDelete(p); /* Shouldn't we delete the Pool? */
     }
 }
 
 void PoolDelete(Pool *p)
 {
-    Pool **pp;
-    Handle *h;
+    Handle *h, *hn;
 
-    if(p == NULL || p->flags & PF_DELETED) return;
+    if (p == NULL || (p->flags & PF_DELETED) != 0) {
+	return;
+    }
     p->flags |= PF_DELETED;
 
-    if((p->flags & PF_TEMP) == 0) {
-	for(pp = &AllPools; *pp != NULL; pp = &(*pp)->next) {
-	    if(*pp == p) {
-		*pp = p->next;
-		for(h = AllHandles; h != NULL; h = h->next)
-		    if(h->whence == p)
-			h->whence = NULL;
-		break;
-	    }
+    if ((p->flags & PF_TEMP) == 0) {
+	DblListDelete(&p->node);
+	DblListIterate(&p->handles, Handle, poolnode, h, hn) {
+	    h->whence = NULL;
+	    DblListDelete(&h->poolnode);
+	    HandleDelete(h);
 	}
     }
 
     free(p->poolname);
-    p->next = FreePools;
-    FreePools = p;
+    DblListAdd(&FreePools, &p->node);
 }
 
 /*
@@ -607,9 +627,9 @@ awaken(Pool *p)
 {
     p->flags &= ~PF_ASLEEP;
     timerclear(&p->awaken);    
-    if(p->infd >= 0) {
+    if (p->infd >= 0) {
 	watchfd(p->infd);
-	if(iobfhasdata(p->inf) && !FD_ISSET(p->infd, &poolreadyfds)) {
+	if (iobfhasdata(p->inf) && !FD_ISSET(p->infd, &poolreadyfds)) {
 	   FD_SET(p->infd, &poolreadyfds);
 	   poolnready++;
 	}
@@ -622,11 +642,11 @@ awaken_until(struct timeval *until)
     Pool *p;
 
     nexttowake.tv_sec = FOREVER;
-    for(p = AllPools; p; p = p->next) {
-	if(p->flags & PF_ASLEEP) {
-	    if(timercmp(&p->awaken, until, <)) {
+    DblListIterateNoDelete(&AllPools, Pool, node, p) {
+	if (p->flags & PF_ASLEEP) {
+	    if (timercmp(&p->awaken, until, <)) {
 		awaken(p);
-	    } else if(p->inf != NULL && timercmp(&p->awaken, &nexttowake, <)) {
+	    } else if (p->inf != NULL && timercmp(&p->awaken, &nexttowake, <)) {
 		nexttowake = p->awaken;
 	    }
 	}
@@ -647,10 +667,10 @@ PoolInputFDs(fd_set *fds, int *maxfd)
     float timeleft = FOREVER;
 
 #if defined(unix) || defined(__unix)
-    if(nexttowake.tv_sec != FOREVER) {
+    if (nexttowake.tv_sec != FOREVER) {
 	struct timeval now;
 	gettimeofday(&now, NULL);
-	if(timercmp(&nexttowake, &now, <))
+	if (timercmp(&nexttowake, &now, <))
 	   awaken_until(&now);
 	timeleft = (nexttowake.tv_sec - now.tv_sec)
 			+ .000001 * (nexttowake.tv_usec - now.tv_usec);
@@ -679,21 +699,23 @@ PoolInAll(fd_set *fds, int *nfds)
     Pool *p, *nextp;
     int got = 0;
 
-    for(p = AllPools; p != NULL; p = nextp) {
-	nextp = p->next;	/* Grab it now, in case we PoolDelete(p) */
-	if(p->type != P_STREAM || p->inf == NULL || p->infd < 0)
+    DblListIterate(&AllPools, Pool, node, p, nextp) {
+	if (p->type != P_STREAM || p->inf == NULL || p->infd < 0) {
 	    continue;
+	}
 
-	if(FD_ISSET(p->infd, &poolreadyfds)) {
+	if (FD_ISSET(p->infd, &poolreadyfds)) {
 	    FD_CLR(p->infd, &poolreadyfds);
 	    poolnready--;
-	    if(PoolIn(p))
+	    if (PoolIn(p)) {
 		got++;
-	} else if(FD_ISSET(p->infd, fds)) {
+	    }
+	} else if (FD_ISSET(p->infd, fds)) {
 	    FD_CLR(p->infd, fds);
 	    (*nfds)--;
-	    if(PoolIn(p))
+	    if (PoolIn(p)) {
 		got++;
+	    }
 	}
     }
     return got;
@@ -706,7 +728,7 @@ static struct timeval *
 timeof(struct timeval *when)
 {
    static struct timeval now;
-   if((when == NULL && (when = &now)) || !timerisset(when))
+   if ((when == NULL && (when = &now)) || !timerisset(when))
 	gettimeofday(when, NULL);
    return when;
 }
@@ -729,14 +751,14 @@ asleep(Pool *p, struct timeval *base, double offset)
     struct timeval until;
 
     base = timeof(base);
-    if(p->inf != NULL) {
+    if (p->inf != NULL) {
 	p->flags |= PF_ASLEEP;
 	addtime(base, offset, &until);
-	if(timercmp(&until, &nexttowake, <))
+	if (timercmp(&until, &nexttowake, <))
 	    nexttowake = until;
 	if (p->infd >= 0) {
 	    unwatchfd(p->infd);
-	    if(FD_ISSET(p->infd, &poolreadyfds)) {
+	    if (FD_ISSET(p->infd, &poolreadyfds)) {
 		FD_CLR(p->infd, &poolreadyfds);
 		poolnready--;
 	    }
@@ -766,7 +788,7 @@ PoolSetTime(Pool *p, struct timeval *base, double time_at_base)
 double
 PoolTimeAt(Pool *p, struct timeval *then)
 {
-    if(p->timebase.tv_sec == 0) timeof(&p->timebase);
+    if (p->timebase.tv_sec == 0) timeof(&p->timebase);
     then = timeof(then);
     return then->tv_sec - p->timebase.tv_sec +
 		.000001*(then->tv_usec - p->timebase.tv_usec);
@@ -776,7 +798,7 @@ void
 PoolAwaken(Pool *p)
 {
     awaken(p);
-    if(timercmp(&p->awaken, &nexttowake, <=))
+    if (timercmp(&p->awaken, &nexttowake, <=))
 	awaken_until(&nexttowake);
 }
 
@@ -790,39 +812,66 @@ poolresync(Pool *p, int (*resync)())
 #define	CBRA	'{'
 #define	CKET	'}'
 
-Handle *
-PoolIn(Pool *p)
+/* The caller of this functions owns the returned handle and must call
+ * HandleDelete() to get rid of the handle.
+ */
+Handle *PoolIn(Pool *p)
 {
     int c = 0;
     Handle *h = NULL;
     Ref *r = NULL;
 
-    if(p->type != P_STREAM)
+    if (p->type != P_STREAM) {
 	return NULL;		/* Do shared memory here someday XXX */
-    if(p->inf == NULL || p->ops == NULL || p->ops->strmin == NULL)
+    }
+    if (p->inf == NULL || p->ops == NULL || p->ops->strmin == NULL) {
 	return NULL;		/* No way to read */
+    }
 
-    if((p->flags & PF_NOPREFETCH) ||
+    if ((p->flags & PF_NOPREFETCH) ||
        ((c = async_iobfnextc(p->inf, 3)) != NODATA && c != EOF)) {
-	/* Kludge.  The interface to TransStreamIn really needs to change. */
-
-	if((*p->ops->strmin)(p, &h,
-			(strcmp(p->ops->prefix,"trans")==0) ? NULL : &r)) {
-
-	    /*
-	     * Attach nameless objects to a handle named for the Pool.
-	     * Putting this code here in PoolIn() ensures we just bind names to
-	     * top-level objects, not those nested inside a hierarchy.
+	if ((*p->ops->strmin)(p, &h, &r)) {
+	    /* Attach nameless objects to a handle named for the Pool.
+	     * Putting this code here in PoolIn() ensures we just bind
+	     * names to top-level objects, not those nested inside a
+	     * hierarchy.
 	     */
-	    if(h == NULL && r != NULL) {
-		h = HandleAssign(p->poolname, p->ops, r);
+	    if (h == NULL) {
+		if ((h = HandleByName(p->poolname, p->ops)) == NULL) {
+		    h = HandleCreate(p->poolname, p->ops);
+		}
+		if (r != NULL) {
+		    HandleSetObject(h, r);
 		    /* Decrement reference count since we're handing
 		     * ownership of the object to the Handle.
 		     */
-		RefDecr(r);
+		    REFPUT(r);
+		    /* Increment the reference count lest PoolDelete()
+		     * will also consume the attached object.
+		     */
+		    REFGET(Handle, h);
+		}
+	    } else {
+		/* Increment the count such that the calling function
+		 * can safely HandleDelete(retval) without destroying a
+		 * handle explicitly declared in the pool (with define
+		 * or hdefine).
+		 */
+		REFGET(Handle, h);
 	    }
-
-
+	    if (h->whence) {
+		if (h->whence != p) {
+		    /* steal the pool pointer */
+		    DblListDelete(&h->poolnode);
+		    h->whence = p;
+		    DblListAdd(&p->handles, &h->poolnode);
+		}
+		REFPUT(h); /* no need to call HandleDelete() */
+	    } else {
+		h->whence = p;
+		DblListAdd(&p->handles, &h->poolnode);
+	    }
+	    
 	    /* Remember whether we've read (PF_ANY) at least one and
 	     * (PF_REREAD) at least two objects from this pool.
 	     * There'll be a nontrivial side effect of rereading a file
@@ -830,15 +879,15 @@ PoolIn(Pool *p)
 	     */
 	    p->flags |= (p->flags & PF_ANY) ? PF_REREAD : PF_ANY;
 	} else {
-	    if(p->flags & PF_DELETED)
+	    if (p->flags & PF_DELETED)
 		return NULL;
-	    if(p->ops->resync) {
+	    if (p->ops->resync) {
 		(*p->ops->resync)(p);
-	    } else if(p->softEOF) {
+	    } else if (p->softEOF) {
 		iobfrewind(p->inf);
-	    } else if(p->inf != NULL) {	/* Careful lest already PoolClose()d */
+	    } else if (p->inf != NULL) {	/* Careful lest already PoolClose()d */
 		if (p->infd >= 0) {
-		    if(FD_ISSET(p->infd, &poolreadyfds)) {
+		    if (FD_ISSET(p->infd, &poolreadyfds)) {
 			FD_CLR(p->infd, &poolreadyfds);
 			poolnready--;
 		    }
@@ -847,11 +896,11 @@ PoolIn(Pool *p)
 		return NULL;
 	    }
 	}
-	if(p->seekable && p->inf != NULL)
+	if (p->seekable && p->inf != NULL)
 	    c = iobfnextc(p->inf, 0);	/* Notice EOF if appropriate */
     }
-    if(c == EOF && iobfeof(p->inf)) {
-	if(p->softEOF) {
+    if (c == EOF && iobfeof(p->inf)) {
+	if (p->softEOF) {
 	    iobfrewind(p->inf);
 	    /* cH: opening O_RDWR should fix this, as this leaves one
 	     * active writer attached to the FIFO: ourselves.
@@ -871,18 +920,18 @@ PoolIn(Pool *p)
 	}
     }
 
-    if(p->inf && !(p->flags & PF_ASLEEP) && p->infd >= 0) {
+    if (p->inf && !(p->flags & PF_ASLEEP) && p->infd >= 0) {
 	/*
 	 * Anything left in stdio buffer?  If so,
 	 * remember to try reading next time without waiting for select().
 	 */
-	if(iobfhasdata(p->inf)) {
-	    if(!FD_ISSET(p->infd, &poolreadyfds)) {
+	if (iobfhasdata(p->inf)) {
+	    if (!FD_ISSET(p->infd, &poolreadyfds)) {
 		FD_SET(p->infd, &poolreadyfds);
 		poolnready++;
 	    }
 	} else {
-	    if(FD_ISSET(p->infd, &poolreadyfds)) {
+	    if (FD_ISSET(p->infd, &poolreadyfds)) {
 		FD_CLR(p->infd, &poolreadyfds);
 		poolnready--;
 	    }
@@ -900,16 +949,16 @@ PoolIn(Pool *p)
 int
 PoolStreamOutHandle(Pool *p, Handle *h, int havedata)
 {
-    if(p == NULL || p->outf == NULL)
+    if (p == NULL || p->outf == NULL)
 	return 0;
 
-    if(h == NULL || p->otype&PO_DATA ||
-				(p->otype&PO_HANDLES && havedata))
+    if (h == NULL || p->otype&PO_DATA || (p->otype&PO_HANDLES && havedata)) {
 	return havedata;
+    }
 
-    if(h->whence != NULL && h->whence->seekable) {
+    if (h->whence != NULL && h->whence->seekable) {
 	fprintf(p->outf, " < \"");
-	if(strcmp(h->name, p->poolname) == 0) {
+	if (strcmp(h->name, p->poolname) == 0) {
 	    fprintf(p->outf, "%s\"\n", h->whence->poolname);
 	} else {
 	    fprintf(p->outf, "%s:%s\"\n", h->whence->poolname, h->name);

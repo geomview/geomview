@@ -4,6 +4,5 @@ EXTRA_DIST = Headers
 noinst_LTLIBRARIES = librefcomm.la
 
 librefcomm_la_SOURCES = \
-    handle.c reference.c streampool.c \
-    handle.h handleP.h reference.h streampool.h
+    handle.c streampool.c handle.h handleP.h reference.h streampool.h
 #librefcomm_la_LDFLAGS = -r

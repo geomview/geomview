@@ -31,47 +31,45 @@
  */
 
 void
-NTransPosition(NTransObj *ntobj, TransformN *T)	/* Get transform into T */
+NTransPosition(TransformN *ntobj, TransformN *T) /* Get transform into T */
 {
-    if (ntobj->T)
-	TmNCopy(ntobj->T, T);
+    TmNCopy(ntobj, T);
 }
 
 void
-NTransTransformTo(NTransObj *ntobj, TransformN *T) /* Set transform from T */
+NTransTransformTo(TransformN *ntobj, TransformN *T) /* Set transform from T */
 {
-    TmNCopy(T, ntobj->T);
+    TmNCopy(T, ntobj);
 }
 
 void
-NTransDelete(NTransObj *ntobj)
+NTransDelete(TransformN *ntobj)
 {
-    if(ntobj == NULL)
+    if (ntobj == NULL) {
 	return;
-    if(ntobj->magic != NTRANSMAGIC) {
+    }
+    if (ntobj->magic != TMNMAGIC) {
 	OOGLWarn("Internal warning: "
-		 "NTransDelete'ing non-NTransObj %x (%x != %x)",
-		 ntobj, ntobj->magic, NTRANSMAGIC);
+		 "NTransDelete'ing non-TransformN %x (%x != %x)",
+		 ntobj, ntobj->magic, TMNMAGIC);
 	return;
     }
-    if(ntobj != NULL && RefDecr((Ref *)ntobj) <= 0) {
-	if (ntobj->T) {
-	    TmNDelete(ntobj->T);
-	}
-	OOGLFree(ntobj);
+    if (ntobj != NULL && RefDecr((Ref *)ntobj) <= 0) {
+	TmNDelete(REFGET(TransformN, ntobj));
     }
 }
 
-NTransObj *
-NTransCreate( TransformN *T )
+TransformN *
+NTransCreate(TransformN *T)
 {
-    NTransObj *ntobj = OOGLNewE(NTransObj, "NTransObj");
-    RefInit((Ref*)ntobj, NTRANSMAGIC);
-    if(T != NULL) {
-	ntobj->T = TmNCopy(T, ntobj->T);
+    TransformN *ntobj;
+
+    if (T) {
+	ntobj = TmNCopy(T, NULL);
     } else {
-	ntobj->T = NULL;
+	ntobj = TmNCreate(0, 0, NULL);
     }
+
     return ntobj;
 }
 
@@ -89,47 +87,38 @@ HandleOps NTransOps = {
 	NULL
 };
 
-void
-NTransUpdate(Handle **hp, Ref *ignored, TransformN **Tfixme)
-{
-    Handle *h = *hp;
-
-    if(h != NULL && h->object != NULL) {
-	*Tfixme = TmNCopy( ((NTransObj *)(h->object))->T, *Tfixme );
-    }
-}
-
-
 int
-NTransStreamIn(Pool *p, Handle **hp, TransformN **Tptr)
+NTransStreamIn(Pool *p, Handle **hp, TransformN **ntobjp)
 {
     Handle *h = NULL;
     Handle *hname = NULL;
-    NTransObj *ntobj = NULL;
+    TransformN *ntobj = NULL;
+    TransformN *tmp = NULL;
     char *w, *raww;
     int c;
     int more = 0;
     int brack = 0;
     IOBFILE *inf;
 
-    if(p == NULL || (inf = PoolInputFile(p)) == NULL)
+    if (p == NULL || (inf = PoolInputFile(p)) == NULL)
 	return 0;
 
     do {
 	more = 0;
 	switch(c = iobfnextc(inf, 0)) {
 	case '{': brack++; iobfgetc(inf); break;
-	case '}': if(brack--) iobfgetc(inf); break;
+	case '}': if (brack--) iobfgetc(inf); break;
 	case 'n':
-	    if(iobfexpectstr(inf, "ntransform"))
+	    if (iobfexpectstr(inf, "ntransform"))
 		return 0;
 	    more = 1;
 	    break;
 
 	case 'd':
-	    if(iobfexpectstr(inf, "define"))
+	    if (iobfexpectstr(inf, "define")) {
 		return 0;
-	    hname = HandleAssign(iobftoken(inf, 0), &NTransOps, NULL);
+	    }
+	    hname = HandleCreateGlobal(iobftoken(inf, 0), &NTransOps);
 	    break;
 
 	case '<':
@@ -137,9 +126,9 @@ NTransStreamIn(Pool *p, Handle **hp, TransformN **Tptr)
 	case '@':
 	    iobfgetc(inf);
 	    w = iobfdelimtok("{}()", inf, 0);
-	    if(c == '<' && HandleByName(w, &NTransOps) == NULL) {
+	    if (c == '<' && (h = HandleByName(w, &NTransOps)) == NULL) {
 		w = findfile(PoolName(p), raww = w);
-		if(w == NULL) {
+		if (w == NULL) {
 		    OOGLSyntax(inf,
 			       "Reading ntransform from \"%s\": "
 			       "can't find file \"%s\"",
@@ -147,64 +136,96 @@ NTransStreamIn(Pool *p, Handle **hp, TransformN **Tptr)
 		}
 	    }
 	    h = HandleReferringTo(c, w, &NTransOps, NULL);
-	    if(h)
-		ntobj = (NTransObj *)h->object;
+	    if (h) {
+		ntobj = (TransformN *)HandleObject(h);
+		/* Increment the ref. count. This way we can call
+		 * HandleDelete() and NTransDelete() independently.
+		 */
+		RefIncr((Ref*)ntobj);
+	    }
 	    break;
 	default:
 	    /*
-	     * Anything else should be a the ntransform data.
+	     * Anything else should be the ntransform data.
 	     */
-	    if(ntobj == NULL)
-		ntobj = NTransCreate(NULL);
-	    ntobj->T = TmNRead(inf, 0);
-	    if (ntobj->T == NULL) {
-		NTransDelete(ntobj);
-		ntobj = NULL;
+	    if (ntobj != NULL) {
+		tmp = ntobj;
 	    }
+	    ntobj = TmNRead(inf, 0);
+	    if (ntobj == NULL) {
+		OOGLSyntax(inf,
+			   "Reading ntransform from \"%s\": "
+			   "can't read ntransform data", PoolName(p));
+	    } else if (tmp) {
+		TmNCopy(ntobj, tmp);
+		TmNDelete(ntobj);
+		ntobj = tmp;
+	    }
+	    break;
 	}
-    } while(brack || more);
+    } while (brack || more);
 
-    if(hname != NULL) {
-	if(ntobj != NULL)
+    if (hname != NULL) {
+	if (ntobj != NULL) {
 	    HandleSetObject(hname, (Ref *)ntobj);
+	}
+	if (h) {
+	    /* HandleReferringTo() has passed the ownership to use, so
+	     * delete h because we do not need it anymore.
+	     */
+	    HandleDelete(h);
+	}
 	h = hname;
     }
 
-    if(h == NULL && ntobj != NULL && p->ops == &NTransOps)
-	h = HandleAssign(PoolName(p), &NTransOps, (Ref *)ntobj);
+    /* Pass the ownership of h and ntobj to the caller if requested */
 
-
-    if(h != NULL && ntobj != NULL)
-	HandleSetObject(h, (Ref *)ntobj);
-
-    if(ntobj != NULL && ntobj->T != NULL && Tptr != NULL)
-	*Tptr = TmNCopy(ntobj->T, *Tptr);
-
-    if(h != NULL && hp != NULL) {
-	if(*hp != h) {
-	    if(*hp != NULL)
+    if (hp != NULL) {
+	/* pass on ownership of the handle h to the caller of this function */
+	if (*hp) {
+	    if (*hp != h) {
 		HandlePDelete(hp);
-	    *hp = h;
+	    } else {
+		HandleDelete(*hp);
+	    }
 	}
-    } else {
-	NTransDelete(ntobj);	/* Maintain ref count */
+	*hp = h;
+    } else if (h) {
+	/* Otherwise delete h because we are its owner. Note that
+	 * HandleReferringTo() has passed the ownership of h to us;
+	 * explicitly defined handles (hdefine and define constructs)
+	 * will not be deleted by this call.
+	 */
+	HandleDelete(h);
+    }
+
+    /* same logic as for hp */
+    if (ntobjp != NULL) {
+	if (*ntobjp) {
+	    NTransDelete(*ntobjp);
+	}
+	*ntobjp = ntobj;
+    } else if(ntobj) {
+	NTransDelete(ntobj);
     }
 
     return (h != NULL || ntobj != NULL);
 }
 
 int
-NTransStreamOut( Pool *p, Handle *h, TransformN *T )
+NTransStreamOut(Pool *p, Handle *h, TransformN *T)
 {
     int putdata;
     FILE *outf;
 
-    if((outf = PoolOutputFile(p)) == NULL)
+    if ((outf = PoolOutputFile(p)) == NULL) {
 	return 0;
+    }
 
-    putdata = PoolStreamOutHandle( p, h, T != NULL );
-    if(putdata)
+    putdata = PoolStreamOutHandle(p, h, T != NULL);
+    if (putdata) {
 	TmNPrint(outf, T);
+    }
     return !ferror(outf);
 }
 

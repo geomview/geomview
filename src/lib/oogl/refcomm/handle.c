@@ -34,8 +34,45 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include "handleP.h"
 
+static DBLLIST(AllHandles);
+static DBLLIST(FreeRefs);
+static DBLLIST(FreeHandles);
 
-Handle *AllHandles = NULL;
+#define HANDLE_DEBUG 0
+
+void handle_dump(void);
+
+static HandleOps NullOps = {
+  "null",
+};
+
+/* iterate over Ref->handles */
+Handle *HandleRefIterate(Ref *r, Handle *pos)
+{
+  if (pos == NULL) {
+    return DblListEmpty(&r->handles)
+      ? NULL
+      : REFGET(Handle, DblListContainer(r->handles.next, Handle, objnode));
+  } else {
+    return pos->objnode.next == &r->handles
+      ? NULL
+      : REFGET(Handle, DblListContainer(pos->objnode.next, Handle, objnode));
+  }
+}
+
+/* iterate over Pool->handles */
+Handle *HandlePoolIterate(Pool *pool, Handle *pos)
+{
+  if (pos == NULL) {
+    return DblListEmpty(&pool->handles)
+      ? NULL
+      : REFGET(Handle, DblListContainer(pool->handles.next, Handle, poolnode));
+  } else {
+    return pos->objnode.next == &pool->handles
+      ? NULL
+      : REFGET(Handle, DblListContainer(pos->poolnode.next, Handle, poolnode));
+  }
+}
 
 void
 HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
@@ -43,50 +80,53 @@ HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
   Handle *h;
 
   if((h = *hp) != NULL && objp != NULL && h->object != *objp) {
-    if(h->ops->Delete) {
-      RefIncr((Ref *)h->object);
-      if(*objp) {
-	(*h->ops->Delete)(*objp);
+    if (*objp) {
+      if (h->ops->delete) {
+	(*h->ops->delete)(*objp);
+      } else {
+	REFPUT(*objp);
       }
     }
-    *objp = h->object;
+    *objp = REFGET(Ref, h->object);
   }
 }
 	    
 void HandleUnregister(Handle **hp)
 {
   Handle *h;
-  HRef *rp;
-  int i;
+  HRef *r, *rn;
 
-  if(hp == NULL || (h = *hp) == NULL) {
+  if (hp == NULL || (h = *hp) == NULL) {
     return;
   }
-  for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-    rp--;
-    if(rp->hp == hp) {
-      *rp = h->refs[--h->nrefs];
+
+  DblListIterate(&h->refs, HRef, node, r, rn) {
+    if(r->hp == hp) {
+      DblListDelete(&r->node);
+      DblListAdd(&FreeRefs, &r->node);
+      REFPUT(h);
     }
   }
 }
 
-void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
+void HandleUnregisterJust(Handle **hp, Ref *obj, void *info,
+			  void (*update) P((Handle **, Ref *, void *)))
 {
   Handle *h;
-  HRef *rp;
-  int i;
+  HRef *rp, *rnext;
 
   if(hp == NULL || (h = *hp) == NULL) {
     return;
   }
 
-  for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-    rp--;
+  DblListIterate(&h->refs, HRef, node, rp, rnext) {
     if(rp->hp == hp &&
        (obj == NULL || rp->parentobj == obj) &&
        (info == NULL || rp->info == info) &&
        (update == NULL || rp->update == update)) {
-      *rp = h->refs[--h->nrefs];
+      DblListDelete(&rp->node);
+      DblListAdd(&FreeRefs, &rp->node);
+      REFPUT(h);
     }
   }
 }
@@ -94,19 +134,24 @@ void HandleUnregisterJust(Handle **hp, Ref *obj, void *info, void (*update) P((H
 /*
  * Remove all callbacks on any handle with the given properties.
  */
-void HandleUnregisterAll(Ref *obj, void *info, void (*update) P((Handle **, Ref *, void *)))
+void HandleUnregisterAll(Ref *obj,
+			 void *info,
+			 void (*update) P((Handle **, Ref *, void *)))
 {
+  HandleOps *ops;
   Handle *h;
-  HRef *rp;
-  int i;
+  HRef *r, *rn;
 
-  for(h = AllHandles; h != NULL; h = h->next) {
-    for(i = h->nrefs, rp = &h->refs[i]; --i >= 0; ) {
-      rp--;
-      if((obj == NULL || rp->parentobj == obj) &&
-	 (info == NULL || rp->info == info) &&
-	 (update == NULL || rp->update == update)) {
-	*rp = h->refs[--h->nrefs];
+  DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
+    DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
+      DblListIterate(&h->refs, HRef, node, r, rn) {
+	if((obj == NULL || r->parentobj == obj) &&
+ 	   (info == NULL || r->info == info) &&
+	   (update == NULL || r->update == update)) {
+	  DblListDelete(&r->node);
+	  DblListAdd(&FreeRefs, &r->node);
+	  REFPUT(h);
+	}
       }
     }
   }
@@ -126,34 +171,43 @@ void handleupdate(Handle *h, HRef *rp)
   }
 }
 
-int HandleRegister(Handle **hp, Ref *parentobj, void *info, void (*update) P((Handle **, Ref *, void *)))
+int HandleRegister(Handle **hp,
+		   Ref *parentobj,
+		   void *info,
+		   void (*update) P((Handle **, Ref *, void *)))
 {
   Handle *h;
   HRef *rp;
-  int i;
 
-  if(hp == NULL || (h = *hp) == NULL)
-    return 0;
-  for(i = h->nrefs, rp = h->refs; --i > 0; rp++) {
-    if(rp->hp == hp && rp->parentobj == parentobj && rp->info == info)
-      goto doit;
+  if (hp == NULL || (h = *hp) == NULL) {
+    return false;
+  }
+  
+  DblListIterateNoDelete(&h->refs, HRef, node, rp) {
+    if (rp->hp == hp && rp->parentobj == parentobj && rp->info == info) {
+      goto update_out;
+    }
   }
 
-  if(h->nrefs >= h->maxrefs) {
-    h->refs = h->maxrefs == 0 ?
-      OOGLNewNE(HRef, (h->maxrefs = 3), "HandleRegister") :
-      OOGLRenewNE(HRef, h->refs, (h->maxrefs += h->maxrefs+1),
-		  "HandleRegister");
+  if (DblListEmpty(&FreeRefs)) {
+    rp = OOGLNewE(HRef, "HandleRegister");
+  } else {
+    rp = DblListContainer(FreeRefs.next, HRef, node);
+    DblListDelete(&rp->node);
   }
-  rp = &h->refs[h->nrefs++];
+
+  REFINCR(h);
 
   rp->hp = hp;
- doit:
   rp->parentobj = parentobj;
   rp->info = info;
+  
+  DblListAdd(&h->refs, &rp->node);
+
+ update_out:
   rp->update = update;
-  /* handleupdate(h, rp);	Do we need this?  I hope not. - slevy */
-  return 1;
+  handleupdate(h, rp);
+  return true;
 }
 
 char *
@@ -162,14 +216,40 @@ HandleName(Handle *h)
   return h ? h->name : NULL;
 }
 
+HandleOps *HandleOpsByName(char *name)
+{
+  HandleOps *ops;
+
+  DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
+    if (strcmp(name, ops->prefix)) {
+      return ops;
+    }
+  }
+  return NULL;
+}
+
 Handle *
 HandleByName(char *name, HandleOps *ops)
 {
   Handle *h;
 
-  for(h = AllHandles; h != NULL; h = h->next) {
-    if(h->ops == ops && strcmp(h->name, name) == 0) {
-      return h;
+  if (ops == NULL) {
+    DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
+      DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
+	if (strcmp(h->name, name) == 0) {
+	  return REFGET(Handle, h);
+	}
+      }
+    }
+  } else {
+    if (ops->handles.next == NULL) {
+      DblListInit(&ops->handles);
+      DblListAdd(&AllHandles, &ops->node);
+    }
+    DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
+      if (strcmp(h->name, name) == 0) {
+	return REFGET(Handle, h);
+      }
     }
   }
   return NULL;
@@ -180,18 +260,39 @@ handlecreate(char *name, HandleOps *ops)
 {
   Handle *h;
 
-  h = OOGLNewE(Handle, "new Handle");
+#if HANDLE_DEBUG  
+  OOGLWarn("Creating handle with name \"%s\"", name);
+#endif
+
+  if (DblListEmpty(&FreeHandles)) {
+    h = OOGLNewE(Handle, "new Handle");
+  } else {
+    h = DblListContainer(FreeHandles.next, Handle, opsnode);
+    DblListDelete(&h->opsnode);
+  }
   RefInit((Ref *)h, HANDLEMAGIC);
-  h->ops = ops;
+  h->ops = ops = ops ? ops : &NullOps;
   h->name = strdup(name);
   h->object = NULL;
-  h->maxrefs = 0;
-  h->nrefs = 0;
-  h->refs = NULL;
   h->whence = NULL;
-  h->permanent = 1;
-  h->next = AllHandles;
-  AllHandles = h;
+  h->permanent = false;
+
+  DblListInit(&h->refs);
+
+  /* The following two are nodes, not list-heads, but this way we can
+   * safely call DblListDelete(), even if there is no associated list.
+   */
+  DblListInit(&h->objnode);
+  DblListInit(&h->poolnode);
+
+  if (ops->handles.next == NULL) {
+    DblListInit(&ops->handles);
+    DblListAdd(&AllHandles, &ops->node);
+  }
+  DblListAddTail(&ops->handles, &h->opsnode);
+
+  /*  handle_dump();*/
+  
   return h;
 }
 
@@ -201,32 +302,35 @@ handlecreate(char *name, HandleOps *ops)
 int
 HandleSetObject(Handle *h, Ref *object)
 {
-  int i;
-  Ref *oldobj;
+  HRef *ref;
 
-  if(h == NULL)
-    return 0;
-
-  if(h->object == object)
-    return 1;
-
-  oldobj = h->object;
-  h->object = object;
-  if(h->ops->Delete != NULL) {
-    if(oldobj) {
-      (*h->ops->Delete)(oldobj);
-    }
-	    
-    RefIncr(object);
+  if(h == NULL) {
+    return false;
   }
 
-  if(object != NULL && object->handle == NULL)
-    object->handle = h;
+  if(h->object == object) {
+    return true;
+  }
 
-  for(i = h->nrefs; --i >= 0; )
-    handleupdate(h, &h->refs[i]);
+  DblListDelete(&h->objnode);
 
-  return 1;
+  if (h->object) {
+    if (h->ops->delete != NULL) {
+      (*h->ops->delete)(h->object);
+    } else {
+      REFPUT(h->object);
+    }
+  }
+  h->object = REFGET(Ref, object);
+  if (object) {
+    DblListAddTail(&object->handles, &h->objnode);
+  }
+
+  DblListIterateNoDelete(&h->refs, HRef, node, ref) {
+    handleupdate(h, ref);
+  }
+
+  return true;
 }
 
 /*
@@ -238,8 +342,27 @@ HandleCreate(char *name, HandleOps *ops)
   Handle *h;
 
   h = HandleByName(name, ops);
-  if(h == NULL) h = handlecreate(name, ops);
+  if (h == NULL) {
+    h = handlecreate(name, ops);
+  }
   return h;
+}
+
+/*
+ * Global handle: increase the ref-count twice.
+ */
+Handle *
+HandleCreateGlobal(char *name, HandleOps *ops)
+{
+  Handle *h;
+  
+  h = HandleAssign(name, ops, NULL);
+  if (!h->permanent) {
+    h->permanent = true;
+    return REFGET(Handle, h);
+  } else {
+    return h;
+  }
 }
 
 /*
@@ -250,9 +373,7 @@ HandleAssign(char *name, HandleOps *ops, Ref *object)
 {
   Handle *h;
 
-  h = HandleByName(name, ops);
-  if(h == NULL)
-    h = handlecreate(name, ops);
+  h = HandleCreate(name, ops);
   HandleSetObject(h, object);
   return h;
 }
@@ -262,83 +383,101 @@ HandleAssign(char *name, HandleOps *ops, Ref *object)
  */
 Ref *
 HandleObject(Handle *h)
-{ return h->object; }
+{
+  return h->object;
+}
+
+Pool *
+HandlePool(Handle *h)
+{
+  return h->whence;
+}
 
 void HandlePDelete(Handle **hp)
 {
   if(hp && *hp) {
     HandleUnregister(hp);
     HandleDelete(*hp);
+    *hp = NULL;
   }
 }
 
+/* Simple debugging aid: dump the list of currently defined handles
+ * and their ref-counts, and the ref. counts of the attached object
+ * (if any).
+ */
+void handle_dump(void)
+{
+  HandleOps *ops;
+  Handle *h;
+
+  OOGLWarn("Active handles:");
+
+  DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
+    DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
+      OOGLWarn("  %s@%s (h: #%d, o: #%d )",
+	       h->name,
+	       ops->prefix,
+	       RefCount((Ref *)h),
+	       h->object ? RefCount((Ref *)h->object) : -1);
+    }
+  }
+}
+
+/* In principle, it is not necessary to distinguish between permanent
+ * and non-permanent handles IF the ref-counts are kept up to date.
+ */
 void HandleDelete(Handle *h)
 {
-  Handle **hp;
-
-  if(h == NULL)
+  if (h == NULL) {
     return;
-  if(h->magic != HANDLEMAGIC) {
+  }
+
+  if (h->magic != HANDLEMAGIC) {
     OOGLWarn("Internal warning: HandleDelete of non-Handle %x (%x != %x)",
 	     h, h->magic, HANDLEMAGIC);
     return;
   }
-  /*
-   * Don't delete a Handle if it still has active references.
-   * Also don't delete Handles marked "permanent"; those loaded with '<'
-   * aren't permanent, but others are.
-   */
-  if(h->nrefs > 0 || h->permanent) {
-    if(h->ref_count > 0) RefDecr((Ref *)h);
+
+  if (REFPUT(h) > 0) {
     return;
   }
-#ifdef HANDLE_REF_COUNTS_OK
-  if(RefDecr((Ref*)h) > 0)
-    return;
-#else
-  /* Avoid RefDecr() error messages.
-   * We're not correctly maintaining Handle ref counts in the rest of the code.
-   * Until we do, avoid spurious RefDecr() error messages.
-   * Note that we never actually free a Handle under this ifdef case,
-   * so there's no danger of reusing freed memory.  -SL 92.08.31
-   */
-  if(h->ref_count == 0 || RefDecr((Ref *)h) > 0)
-    return;
+  
+#if HANDLE_DEBUG
+  OOGLWarn("Deleting handle with name \"%s\"", h->name);
+  if (!DblListEmpty(&h->refs)) {
+    OOGLWarn("Deleting handle with active back references.");
+    abort();
+  }
 #endif
 
-  if(h->object && h->object->handle == h && h->ops->Delete && h->object->ref_count > 0) {
-    h->object->handle = NULL;
-    (*h->ops->Delete)(h->object);
-  }
-  for(hp = &AllHandles; *hp != NULL; hp = &(*hp)->next) {
-    if(*hp == h) {
-      *hp = h->next;
-      break;
+  /* remove ourselves from various lists */
+  DblListDelete(&h->objnode);
+  DblListDelete(&h->opsnode);
+  DblListDelete(&h->poolnode);
+
+  if (h->object) {
+    /* undo RefIncr() from HandleSetObject() */
+    if (h->ops->delete) {
+      (*h->ops->delete)(h->object);
+    } else {
+      REFPUT(h->object);
     }
   }
 
-  /* Don't let Pool code think we have something cached in this handle! */
-  if(h->whence && h->whence->seekable) {
+   /* Don't let Pool code think we have something cached in this handle! */
+  if (h->whence && h->whence->seekable) {
     h->whence->flags &= ~PF_ANY;
     PoolClose(h->whence);
-    h->whence = 0;
   }
-#ifdef HANDLE_REF_COUNTS_OK
-  h->object = NULL;
-  if(h->refs)
-    OOGLFree(h->refs);
-  if(h->name)
+
+  if(h->name) {
     free(h->name);
-  h->magic &= ~0x80000000;
-  OOGLFree(h);
-#else
-  /* Suspect that some Handles are being used after deletion.
-   * Invalidate the object pointer to cause a likely crash,
-   * but leave the Handle in memory as a debugging aid.  -slevy 92.07.27
-   */
-  h->magic &= ~0x80000000;
-  h->object = (Ref *)((long)h->object | 1);
-#endif
+  }
+
+  DblListAdd(&FreeHandles, &h->opsnode);
+
+  /*  handle_dump();*/
 }
 
 /*

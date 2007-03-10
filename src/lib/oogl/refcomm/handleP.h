@@ -35,6 +35,7 @@
 #define	HANDLEMAGIC	OOGLMagic('h',1)
 
 typedef struct HRef {
+	DblListNode node;
 	Handle	**hp;
 	Ref	*parentobj;
 	void	*info;
@@ -46,14 +47,17 @@ struct Handle {
 	HandleOps *ops;		/* Comm-related operations on our datatype */
 	char	*name;		/* Char-string name */
 	Ref	*object;	/* Current object value if any */
-	Handle	*next;		/* Link in list of all handles */
+	DblListNode opsnode;    /* node in list of all handles with given ops */
+	DblListNode poolnode;   /* node in list of all handles with given pool*/
+	DblListNode objnode;    /* node in list of all handles pointing to a
+				   given object */
 	Pool	*whence;	/* Where did this handle's value come from? */
 
-	int	maxrefs;	/* Resizable array of references */
-	int	nrefs;		/*  to this Handle, which we update */
-	HRef	*refs;		/*  when the Handle's object changes. */
-
-	int	permanent;	/* Retain even when last reference goes away? */
+	DblListNode refs;       /* list of references to this Handle,
+				 * which we update
+				 * when the Handle's object changes.
+				 */
+	bool	permanent;	/* Retain even when last reference goes away? */
 	/*
 	 * Pool-type-specific state
 	 */
@@ -70,9 +74,9 @@ struct Handle {
 
 struct Pool {
 	int	type;		/* P_SM or P_STREAM */
-	Pool	*next;		/* Link in list of all Pools */
+	DblListNode node;       /* Link in list of all Pools (or free pools) */
 	char	*poolname;	/* Name of this pool: typically a filename */
-	Handle	*handles;	/* All handles using this Pool */
+	DblListNode handles;	/* All handles using this Pool */
 	HandleOps *ops;		/* I/O operations */
 
 	long	await;		/* Unix time until which we should wait */

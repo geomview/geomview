@@ -40,38 +40,3 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #ifndef NULL
 # define NULL 0
 #endif
-
-void
-RefInit(Ref *ref, int magic)
-{
-    ref->ref_count = 1;
-    ref->magic = magic;
-    ref->handle = NULL;
-}
-
-int
-RefCount(Ref *ref)
-{
-    return ref ? ref->ref_count : 0;
-}
-
-Ref *
-RefIncr(Ref *ref)
-{
-    if(ref) ++ref->ref_count;
-    return ref;
-}
-
-int
-RefDecr(Ref *ref)
-{
-    if(ref == NULL) return 0;
-    if(--ref->ref_count < 0) {
-	OOGLError(1, "RefDecr: ref %x count %d < 0!", ref, ref->ref_count);
-    }
-    return ref->ref_count;
-}
-
-int
-RefMagic(Ref *ref) { return ref->magic; }
-

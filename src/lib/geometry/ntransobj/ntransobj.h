@@ -26,21 +26,13 @@
 #  include "handle.h"
 #endif /*_HANDLE_*/
 
-#define	NTRANSMAGIC	OOGLMagic('n', 1)
+extern void NTransPosition(TransformN *tobj, TransformN *Tinto);
+extern void NTransTransformTo(TransformN *tobj, TransformN *Tfrom);
+extern void NTransDelete(TransformN *ntobj);
 
-typedef struct NTransObj {
-	REFERENCEFIELDS;
-	TransformN *T;
-} NTransObj;
-
-extern void NTransPosition( NTransObj *tobj, TransformN *Tinto);
-extern void NTransTransformTo( NTransObj *tobj, TransformN *Tfrom);
-extern void NTransDelete( NTransObj *ntobj );
-extern void NTransUpdate( Handle **ntranshandle, Ref *ignored, TransformN ** );
-
-extern int NTransStreamIn( Pool *, Handle **, TransformN **);
-extern int NTransStreamOut( Pool *, Handle *, TransformN * );
-extern NTransObj *NTransCreate( TransformN * );
+extern int NTransStreamIn(Pool *, Handle **, TransformN **);
+extern int NTransStreamOut(Pool *, Handle *, TransformN *);
+extern TransformN *NTransCreate(TransformN *);
 
 
 

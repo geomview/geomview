@@ -79,6 +79,12 @@ extern Pool *PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw,
 	 */
 extern float PoolInputFDs( fd_set *fds, int *maxfd );
 
+	/* Try to read something from the pool, in case of success a
+	 * handle is returned, possibly with an object attached to it.
+	 * The caller of this function owns the handle.
+	 */
+extern Handle *PoolIn(Pool *p);
+
 	/*
 	 * Given the fd mask returned by select(), call import() on
 	 * all pools which have input.  Removes used fd's from *fds;
@@ -119,7 +125,7 @@ extern void  PoolDoReread(Pool *);
 extern void PoolClose(Pool *p);
 extern int   PoolOType(Pool *, int otype);
 extern void  PoolSetOType(Pool *, int otype);
-extern Pool *PoolByName(char *name);
+extern Pool *PoolByName(char *name, HandleOps *ops);
 extern char *PoolName(Pool *);
 
 extern void PoolSleepFor(Pool *, double seconds);

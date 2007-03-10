@@ -41,7 +41,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 void
 TransPosition(TransObj *tobj, Transform T)	/* Get transform into T */
-{ TmCopy(tobj->T, T); }
+{
+    TmCopy(tobj->T, T);
+}
 
 void
 TransTransformTo(TransObj *tobj, Transform T)	/* Set transform from T */
@@ -52,23 +54,26 @@ TransTransformTo(TransObj *tobj, Transform T)	/* Set transform from T */
 void
 TransDelete(TransObj *tobj)
 {
-    if(tobj == NULL)
+    if(tobj == NULL) {
 	return;
+    }
     if(tobj->magic != TRANSMAGIC) {
 	OOGLWarn("Internal warning: TransDelete'ing non-TransObj %x (%x != %x)",
 	    tobj, tobj->magic, TRANSMAGIC);
 	return;
     }
-    if(tobj != NULL && RefDecr((Ref *)tobj) <= 0)
+    if(tobj != NULL && RefDecr((Ref *)tobj) <= 0) {
 	OOGLFree(tobj);
+    }
 }
 
 TransObj *
 TransCreate(Transform T)
 {
     TransObj *tobj = OOGLNewE(TransObj, "TransObj");
+
     RefInit((Ref*)tobj, TRANSMAGIC);
-    if (T != TMNULL) {
+    if (T != NULL) {
 	TmCopy(T, tobj->T);
     }
     return tobj;
@@ -81,26 +86,38 @@ TransCreate(Transform T)
 
 HandleOps TransOps = {
 	"trans",
-	(int ((*)()))TransStreamIn,
-	(int ((*)()))TransStreamOut,
+	(int ((*)()))TransObjStreamIn,
+	(int ((*)()))TransObjStreamOut,
 	(void ((*)()))TransDelete,
 	NULL,
 	NULL
 };
 
-void
-TransUpdate(Handle **hp, Ref *ignored, Transform Tfixme)
+void TransUpdate(Handle **hp, Ref *ignored, Transform Tfixme)
 {
     Handle *h = *hp;
-
+    
     if (h != NULL && h->object != NULL) {
-	TmCopy( ((TransObj *)(h->object))->T, Tfixme );
+	TmCopy(((TransObj *)(h->object))->T, Tfixme);
     }
 }
 
 
 int
-TransStreamIn( Pool *p, Handle **hp, Transform T )
+TransStreamIn(Pool *p, Handle **hp, Transform T)
+{
+    TransObj *tobj = NULL;
+    
+    if (TransObjStreamIn(p, hp, &tobj)) {
+	TmCopy(tobj->T, T);
+	TransDelete(tobj);
+	return true;
+    }
+    return false;
+}
+
+int
+TransObjStreamIn(Pool *p, Handle **hp, TransObj **tobjp)
 {
     Handle *h = NULL;
     Handle *hname = NULL;
@@ -131,7 +148,8 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 	    if(iobfexpectstr(inf, "define")) {
 		return 0;
 	    }
-	    hname = HandleAssign(iobftoken(inf, 0), &TransOps, NULL);
+	    w = iobftoken(inf, 0);
+	    hname = HandleCreateGlobal(w, &TransOps);
 	    break;
 
 	case '<':
@@ -139,16 +157,21 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 	case '@':
 	    iobfgetc(inf);
 	    w = iobfdelimtok("{}()", inf, 0);
-	    if(c == '<' && HandleByName(w, &TransOps) == NULL) {
+	    if (c == '<' && (h = HandleByName(w, &TransOps)) == NULL) {
 		w = findfile(PoolName(p), raww = w);
 		if(w == NULL) {
 		    OOGLSyntax(inf, "Reading transform from \"%s\": can't find file \"%s\"",
 			PoolName(p), raww);
 		}
+	    } else if (h) {
+		HandleDelete(h);
 	    }
 	    h = HandleReferringTo(c, w, &TransOps, NULL);
-	    if(h) {
-		tobj = (TransObj *)h->object;
+	    if (h) {
+		/* Increment the ref. count. This way we can call
+		 * HandleDelete() and TransDelete() independently.
+		 */
+		tobj = REFGET(TransObj, HandleObject(h));
 	    }
 	    break;
 
@@ -157,7 +180,7 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
 	     * Anything else should be a 4x4 matrix
 	     */
 	    if(tobj == NULL) {
-		tobj = TransCreate( TMNULL );
+		tobj = TransCreate(NULL);
 	    }
 	    if(iobfgettransform(inf, 1, &tobj->T[0][0], 0) <= 0) {
 		return 0;
@@ -166,54 +189,103 @@ TransStreamIn( Pool *p, Handle **hp, Transform T )
     } while(brack || more);
 
     if(hname != NULL) {
-	if(tobj) {
+	if (tobj) {
 	    HandleSetObject(hname, (Ref *)tobj);
+	}
+	if (h) {
+	    /* HandleReferringTo() has passed the ownership to use, so
+	     * delete h because we do not need it anymore.
+	     */
+	    HandleDelete(h);
 	}
 	h = hname;
     }
 
-    if(h == NULL && tobj != NULL && p->ops == &TransOps) {
-	h = HandleAssign(PoolName(p), &TransOps, (Ref *)tobj);
-    }
+    /* Pass the ownership of h and tobj to the caller if requested */
 
-    if(h != NULL && tobj != NULL) {
-	HandleSetObject(h, (Ref *)tobj);
-    }
-
-    if(tobj != NULL && T != TMNULL) {
-	TmCopy(tobj->T, T);
-    }
-
-    if(h != NULL && hp != NULL) {
-	if(*hp != h) {
-	    if(*hp != NULL)
+    if (hp != NULL) {
+	/* pass on ownership of the handle h to the caller of this function */
+	if (*hp) {
+	    if (*hp != h) {
 		HandlePDelete(hp);
-	    *hp = h;
+	    } else {
+		HandleDelete(*hp);
+	    }
 	}
-    } else {
-	TransDelete(tobj);	/* Maintain ref count */
+	*hp = h;
+    } else if (h) {
+	/* Otherwise delete h because we are its owner. Note that
+	 * HandleReferringTo() has passed the ownership of h to us;
+	 * explicitly defined handles (hdefine and define constructs)
+	 * will not be deleted by this call.
+	 */
+	HandleDelete(h);
     }
+
+    /* same logic as for hp */
+    if (tobjp != NULL) {
+	if (*tobjp) {
+	    TransDelete(*tobjp);
+	}
+	*tobjp = tobj;
+    } else if(tobj) {
+	TransDelete(tobj);
+    }
+
 
     return (h != NULL || tobj != NULL);
 }
 
+int TransObjStreamOut(Pool *p, Handle *h, TransObj *tobj)
+{
+    return TransStreamOut(p, h, tobj->T);
+}
+
 int
-TransStreamOut( Pool *p, Handle *h, Transform T )
+TransStreamOut(Pool *p, Handle *h, Transform T)
 {
     int putdata;
     FILE *outf;
 
-    if((outf = PoolOutputFile(p)) == NULL)
-	return 0;
+    if ((outf = PoolOutputFile(p)) == NULL) {
+	return false;
+    }
 
     fprintf(outf, "transform {\n");
 
-    putdata = PoolStreamOutHandle( p, h, T != TMNULL );
+    putdata = PoolStreamOutHandle(p, h, true);
     if(putdata) {
 	fputtransform(outf, 1, &T[0][0], 0);
     }
     fputs("}\n", outf);
+
     return !ferror(outf);
+}
+
+TransObj *TransObjFSave(TransObj *t, FILE *outf, char *fname)
+{
+  Pool *p;
+  int ok;
+
+  p = PoolStreamTemp(fname, NULL, outf, 1, NULL);
+  PoolSetOType(p, PO_DATA);
+  PoolIncLevel(p, 1);
+  ok = TransObjStreamOut(p, NULL, t);
+  PoolDelete(p);
+  return ok ? t : NULL;
+}
+
+TransformPtr TransFSave(Transform T, FILE *outf, char *fname)
+{
+  Pool *p;
+  int ok;
+
+  p = PoolStreamTemp(fname, NULL, outf, 1, NULL);
+  PoolSetOType(p, PO_DATA);
+  PoolIncLevel(p, 1);
+  ok = TransStreamOut(p, NULL, T);
+  PoolDelete(p);
+  return ok ? T : NULL;
 }
 
 /*

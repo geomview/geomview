@@ -22,30 +22,72 @@
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef REFCOMMDEF
-#define REFCOMMDEF
+#ifndef _GV_REFERENCE_H_
+#define _GV_REFERENCE_H_
+
+#include "ooglutil.h"
+#include "dbllist.h"
 
 /*
  * Public definitions for Reference & Communications package
  */
 
-#define REFERENCEFIELDS	\
-  int magic;		\
-  int ref_count;	\
-  struct Handle *handle
+#define REFERENCEFIELDS				\
+  int magic;					\
+  int ref_count;				\
+  DblListNode handles
 
 typedef struct Ref  {
   REFERENCEFIELDS;
 } Ref ;
 
-#define	REFINCR(type, obj)	(type *)RefIncr((Ref *)(obj))
-#define	REFDECR(obj)		RefDecr((Ref *)(obj))
+#define REFCNT(obj)       RefCount((Ref *)(obj))
+#define	REFINCR(obj)      RefIncr((Ref *)(obj))
+#define	REFDECR(obj)      RefDecr((Ref *)(obj))
+#define REFGET(type, obj) (REFINCR((obj)), (type *)(obj))
+#define REFPUT(obj)       REFDECR(obj)
 
-extern void RefInit( Ref *, int magic );/* Initializes a Reference */
-extern int  RefCount( Ref * );		/* Returns current ref count */
-extern Ref *RefIncr( Ref * );		/* Increments count, returns object */
-extern int  RefDecr( Ref * );		/* Decrements count, returns it  */
-extern int  RefMagic( Ref * );		/* Returns magic number */
+/* Initializes a Reference */
+static inline void RefInit(Ref *ref, int magic)
+{
+  ref->ref_count = 1;
+  ref->magic = magic;
+  DblListInit(&ref->handles);
+}
+
+/* Returns current ref count */
+static inline int RefCount(Ref *ref)
+{
+  return ref != NULL ? ref->ref_count : 0;
+}
+
+/* Increments count, returns object */
+static inline int RefIncr(Ref *ref)
+{
+  if (ref != NULL) {
+    return ++ref->ref_count;
+  } else {
+    return 0;
+  }
+}
+
+/* Decrements count, returns it  */
+static inline int RefDecr(Ref *ref)
+{
+  if (ref == NULL) {
+    return 0;
+  }
+  if (--ref->ref_count < 0) {
+    OOGLError(1, "RefDecr: ref %x count %d < 0!", ref, ref->ref_count);
+    abort();
+  }
+  return ref->ref_count;
+}
+
+/* Returns magic number */
+static inline int RefMagic(Ref *ref) {
+  return ref->magic;
+}
 
 #endif
 

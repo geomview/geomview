@@ -22,12 +22,12 @@
 
 /* Authors: Charlie Gunn, Pat Hanrahan, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef _TRANSOBJ_
-#define _TRANSOBJ_
+#ifndef _GV_TRANSOBJ_H_
+#define _GV_TRANSOBJ_H_
 
-#ifndef _HANDLE_
-#  include "handle.h"
-#endif /*_HANDLE_*/
+#include "reference.h"
+#include "handle.h"
+#include "transform.h"
 
 #define	TRANSMAGIC	OOGLMagic('t', 1)
 
@@ -36,15 +36,18 @@ typedef struct TransObj {
 	Transform T;
 } TransObj;
 
-extern void TransPosition( TransObj *tobj, Transform Tinto );
-extern void TransTransformTo( TransObj *tobj, Transform Tfrom );
-extern void TransDelete( TransObj *tobj );
+extern void TransPosition(TransObj *tobj, Transform Tinto);
+extern void TransTransformTo(TransObj *tobj, Transform Tfrom);
+extern void TransDelete(TransObj *tobj);
 
-extern int TransStreamIn( Pool *, Handle **, Transform );
-extern int TransStreamOut( Pool *, Handle *, Transform );
-extern TransObj *TransCreate( Transform );
+extern int TransStreamIn(Pool *, Handle **, Transform T);
+extern int TransStreamOut(Pool *, Handle *, Transform T);
+extern TransformPtr TransFSave(Transform T, FILE *outf, char *fname);
+extern int TransObjStreamIn(Pool *p, Handle **hp, TransObj **tobjp);
+extern int TransObjStreamOut(Pool *, Handle *, TransObj *tobj);
+extern TransObj *TransObjFSave(TransObj *t, FILE *outf, char *fname);
+extern void TransUpdate(Handle **hp, Ref *ignored, Transform Tfixme);
 
-extern void TransUpdate( Handle **transhandle, Ref *ignored, Transform );
-
+extern TransObj *TransCreate(Transform);
 
 #endif /*_TRANSOBJ_*/

@@ -30,6 +30,7 @@
 
 #include "ooglutil.h"
 #include "reference.h"
+#include "dbllist.h"
 
 
 typedef struct Handle	Handle;
@@ -44,7 +45,11 @@ void	 HandlePDelete(Handle **hp);
 char	*HandleName( Handle * );
 void	 HandleDelete( Handle * );
 Pool	*HandlePool( Handle * );
+Handle  *HandleRefIterate(Ref *r, Handle *pos);
+Handle  *HandlePoolIterate(Pool *p, Handle *pos);
 
+#if 0
+/* stuff which is nowhere defined nor referenced */
 #define	IO_HANDLES	1
 #define	IO_COMPLETE	2		
 
@@ -52,8 +57,9 @@ int	 HandleExport( Handle *, Pool * ); /* Export */
 int	 HandleUnExport( Handle * );	/* Cancel exported object if possible */
 int	 HandleImport( Handle * );	/* Import now (possibly blocking) */
 
-Handle *PoolIn(Pool *p);
 int	 PoolOutMode( int poflags );	/* Returns old IO mode */
+
+#endif
 
 
 	/*
@@ -63,9 +69,11 @@ typedef struct HandleOps {
     char *prefix;			/* Prefix for unique external naming */
     int (*strmin) P((Pool *, Handle **, Ref **)); /* Read from stream */
     int (*strmout) P((Pool *, Handle *, Ref *));	/* Write */
-    void (*Delete) P((Ref *));		/* Delete object */
+    void (*delete) P((Ref *));		/* Delete object */
     int	(*resync) P((Pool *));		/* Resync pool on import err */
     int	(*close) P((Pool *));		/* Close pool */
+    DblListNode handles;                /* list of all handles with these ops */
+    DblListNode node;                   /* node into list of all ops */
 } HandleOps;
 
 	/*
@@ -74,26 +82,50 @@ typedef struct HandleOps {
 	 * do whatever's necessary to create and return a handle to it.
 	 * Might entail a lookup of an existing handle,
 	 * or opening and possibly reading a file (as a stream-type Pool).
+	 *
+	 * The caller of this functions owns the returned handle and
+	 * must call HandleDelete() to get rid of the returned handle.
 	 */
 extern Handle *HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp);
 
 
 	/*
+	 * Search for ops matching prefix.
+	 */
+extern HandleOps *HandleOpsByName(char *prefix);
+
+	/*
  	 * Given a Handle's name and type (as given by HandleOps),
 	 * return it or NULL if it doesn't exist.
+	 *
+	 * The caller owns the returned handle, i.e. the reference
+	 * count of the handle is incremented by this function.
 	 */
 extern Handle *HandleByName( char *, HandleOps * );
 
 	/*
 	 * If a Handle with this name already exists, return it;
 	 * otherwise, create a new one with NULL value.
+	 *
+	 * If the handle already exists then its reference count is
+	 * incremented by this function.
 	 */
 extern Handle *HandleCreate( char *name, HandleOps *ops );
+
+	/*
+	 * Same as HandleCreate() for an existing global handle, but
+	 * if the handle does not already exist increment the
+	 * ref-count twice s.t. the handle cannot be deleted.
+	 */
+extern Handle *HandleCreateGlobal( char *name, HandleOps *ops);
 
 	/*
 	 * Set a Handle's object to obj, creating the Handle if necessary.
 	 * Update all registered references to the Handle's value.
 	 * Return the (possibly new) Handle.
+	 *
+	 * If the handle already exists then its reference count is
+	 * incremented by this function.
 	 */
 extern Handle *HandleAssign( char *name, HandleOps *ops, Ref *obj );
 
@@ -137,3 +169,10 @@ extern void HandleUnregisterAll(Ref *par, void *info, void (*upd)());
 extern void HandleUpdRef(Handle **hp, Ref *parent, Ref **objp);
 
 #endif /*_HANDLE_*/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
