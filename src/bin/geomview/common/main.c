@@ -61,7 +61,7 @@ static char *initfilename = ".geomview";
 char *geomview_system_initfile = NULL;
 int do_init = 1;
 
-Color initial_defaultbackcolor = {.33, .33, .33 };
+Color initial_defaultbackcolor = {1.0/3.0, 1.0/3.0, 1.0/3.0 };
 static char *pipedir = "/tmp/geomview";
 
 int gv_nwins = 1;
