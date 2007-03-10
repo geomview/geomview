@@ -58,13 +58,13 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   int normal_need;
 
   memset(&m, 0, sizeof(m));
+  GGeomInit((Geom *)&m, MeshMethods(), MESHMAGIC, NULL);
   m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
   m.n = NULL;
   m.c = (ColorA *)alloca(npts*sizeof(ColorA));
   m.nu = mesh->mdim[0];
   m.nv = mesh->mdim[1];
   m.geomflags = mesh->geomflags & ~MESH_4D;
-  m.Class = MeshMethods();
 
   if (ap->flag & APF_KEEPCOLOR) {
     colored = 0;
@@ -111,14 +111,11 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= MESH_N;
     }
+    if (GeomHasAlpha((Geom *)&m, ap)) {
+      /* could re-use per quad normals here */
+    }
   }
   MeshComputeNormals(&m, normal_need);
-
-  if ((ap->flag & APF_FACEDRAW) && (ap->flag & APF_TRANSP)) {
-    BSPTreeCreate((Geom *)(void *)&m);
-    BSPTreeAddObject(m.bsptree, (Geom *)(void *)&m);
-    BSPTreeFinalize(m.bsptree);
-  }
 
   if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;
@@ -140,19 +137,18 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
    */
-  if (m.bsptree &&
-      (ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (m.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh);
-    GeomBSPTree((Geom *)(void *)&m, m.bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance((Geom *)mesh, old_tagged_app);
+  if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)mesh);
+    GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
   }
 
-  if (m.n)
+  if (m.n) {
     OOGLFree(m.n);
-  if (m.nq)
+  }
+  if (m.nq) {
     OOGLFree(m.nq);
+  }
 }
 
 NDMesh *
@@ -163,11 +159,6 @@ NDMeshDraw(NDMesh *mesh)
   mgctxget(MG_NDCTX, &NDctx);
 
   if(NDctx) {
-
-    if (mesh->bsptree != NULL) {
-      BSPTreeSetAppearance((Geom *)mesh);
-    }
-
     draw_projected_ndmesh(NDctx, mesh);
   }
 

@@ -40,12 +40,19 @@ List *ListDraw(List *list)
 {
   List *l;
 
-  if (list->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)list);
-  }
-  
+  GeomMakePath(list, 'L', path, pathlen);
+
+  list->geomflags &= ~GEOM_ALPHA;
+
   for (l = list; l != NULL; l = l->cdr) {
-    GeomDraw(l->car);
+    if (l->car) {
+      l->car->ppath = path;
+      l->car->ppathlen = pathlen;
+      GeomDraw(l->car);
+      if (l->car->geomflags & GEOM_ALPHA) {
+	list->geomflags |= GEOM_ALPHA;
+      }
+    }
   }
 
   return list;
@@ -55,11 +62,44 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 {
   List *l;
 
-  for (l = list; l != NULL; l = l->cdr) {
-    GeomBSPTree(l->car, bsptree, action);
-  }
+  GeomMakePath(list, 'L', path, pathlen);
 
-  return list;
+  switch (action) {
+  case BSPTREE_CREATE:
+    for (l = list; l != NULL; l = l->cdr) {
+      if (l->car) {
+	l->car->ppath = path;
+	l->car->ppathlen = pathlen;
+	GeomBSPTree(l->car, bsptree, action);
+      }
+      HandleRegister(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
+    }
+    return list;
+    
+  case BSPTREE_DELETE:
+    for (l = list; l != NULL; l = l->cdr) {
+      if (l->car) {
+	l->car->ppath = path;
+	l->car->ppathlen = pathlen;
+	GeomBSPTree(l->car, bsptree, action);
+      }
+      HandleUnregisterJust(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
+    }
+    return list;
+    
+  case BSPTREE_ADDGEOM:
+    for (l = list; l != NULL; l = l->cdr) {
+      if (l->car) {
+	l->car->ppath = path;
+	l->car->ppathlen = pathlen;
+	GeomBSPTree(l->car, bsptree, action);
+      }
+    }
+    return list;
+    
+  default:
+    return NULL;
+  }
 }
 
 /*

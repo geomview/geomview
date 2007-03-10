@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.13 2007/02/16 22:43:34 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.14 2007/03/10 13:12:07 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -51,29 +51,22 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static void
 draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 {
-  PolyList newpl = *pl;
+  PolyList *npl;
   HPointN *h;
-  Poly *op, *np;
+  Poly *np;
   Vertex *ov, *nv;
-  Vertex **vps;
-  int i, j, colored = 0, alpha = 0;
+  int i, colored = 0, alpha = 0;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
   Material *mat = &_mgc->astk->mat;
   int normal_need;
-    
-  /* Copy the PolyList onto the stack. TODO: do NOT do this. */
-  newpl.vl = (Vertex *)alloca(pl->n_verts * sizeof(Vertex));
-  newpl.p  = (Poly *)alloca(pl->n_polys * sizeof(Poly));
-  newpl.ap = NULL;
 
-  for(i = 0, op = pl->p, np = newpl.p; i < pl->n_polys; i++, op++, np++) {
-    *np = *op;
-    vps = (Vertex **)alloca(np->n_vertices * sizeof(Vertex *));
-    np->v = vps;
-    for(j = 0; j < np->n_vertices; j++)
-      np->v[j] = newpl.vl + (op->v[j] - pl->vl);
+  if (pl->plproj == NULL) {
+    pl->plproj = (PolyList *)GeomCopy((Geom *)pl);
+    ApDelete(pl->plproj->ap);
   }
+
+  npl = pl->plproj;
 
   h = HPtNCreate(5, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -86,8 +79,8 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   }
 
   /* Transform vertices */
-  newpl.geomflags &= ~VERT_4D;
-  for(i = 0, ov = pl->vl, nv = newpl.vl; i < pl->n_verts; i++, ov++, nv++) {
+  npl->geomflags &= ~VERT_4D;
+  for(i = 0, ov = pl->vl, nv = npl->vl; i < pl->n_verts; i++, ov++, nv++) {
     if (pl->geomflags & VERT_4D) {
       /* Set the point's first four components from our 4-D vertex */
       Pt4ToHPtN(&ov->pt, h);
@@ -108,19 +101,19 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 
   if (colored) {
     if (alpha) {
-      newpl.geomflags |= COLOR_ALPHA;
+      npl->geomflags |= COLOR_ALPHA;
     } else {
-      newpl.geomflags &= ~COLOR_ALPHA;
+      npl->geomflags &= ~COLOR_ALPHA;
     }
-    newpl.geomflags &= ~PL_HASPCOL;
-    newpl.geomflags |= PL_HASVCOL;    
+    npl->geomflags &= ~PL_HASPCOL;
+    npl->geomflags |= PL_HASVCOL;    
   }
 
   /* The drawing routines might need either polygon or vertex normals,
    * so if either is missing and either might be needed, we force it
    * to be computed.
    */
-  newpl.geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
+  npl->geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
   normal_need = (ap->flag & APF_NORMALDRAW) ? PL_HASPN|PL_HASVN : 0;
   if (ap->flag & APF_FACEDRAW) {
     if (ap->shading == APF_FLAT) {
@@ -129,51 +122,39 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= PL_HASVN;
     }
-    if (ap->flag & APF_TRANSP) {
-      if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
-	if (mat->diffuse.a != 1.0) {
-	  newpl.geomflags |= COLOR_ALPHA;
-	} else {
-	  newpl.geomflags &= COLOR_ALPHA;
-	}
-      }
-      if (newpl.geomflags & COLOR_ALPHA) {
-	normal_need |= PL_HASPFL;
-      }
+    if (GeomHasAlpha((Geom *)npl, ap)) {
+      normal_need |= PL_HASPFL|PL_HASPN;
     }
   }
-  PolyListComputeNormals(&newpl, normal_need);
+  PolyListComputeNormals(npl, normal_need);
 
   if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = !colored && (mat->override & MTF_DIFFUSE)
       ? (ColorA *)&mat->diffuse : NULL;
 	
     if(IS_SMOOTH(ap->shading)) {
-      for(i = 0, nv = newpl.vl; i < newpl.n_verts; i++, nv++) {
+      for(i = 0, nv = npl->vl; i < npl->n_verts; i++, nv++) {
 	(*_mgc->astk->shader)(1, &nv->pt, &nv->vn,
 			      c ? c : &nv->vcol, &nv->vcol);
       }
-      newpl.geomflags |= PL_HASVCOL;
+      npl->geomflags |= PL_HASVCOL;
     } else {
-      for(i = 0, np = newpl.p; i < newpl.n_polys; i++, np++) {
+      for(i = 0, np = npl->p; i < npl->n_polys; i++, np++) {
 	(*_mgc->astk->shader)(1, &np->v[0]->pt, (Point3 *)&np->pn,
 			      c ? c : &np->pcol, &np->pcol);
       }
-      newpl.geomflags |= PL_HASPCOL;
+      npl->geomflags |= PL_HASPCOL;
     }
   }
-  mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.geomflags);
+  mgpolylist(npl->n_polys, npl->p, npl->n_verts, npl->vl, npl->geomflags);
 
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
    */
-  if (newpl.bsptree &&
-      (ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (newpl.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl);
-    GeomBSPTree((Geom *)(void *)&newpl, newpl.bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance((Geom *)pl, old_tagged_app);
+  if (NDctx->bsptree && (npl->geomflags & GEOM_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)pl);
+    GeomBSPTree((Geom *)(void *)npl, NDctx->bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
   }
 
   HPtNDelete(h);
@@ -183,10 +164,6 @@ PolyList *PolyListDraw(PolyList *pl)
 {
   mgNDctx *NDctx = NULL;
 
-  if (pl->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)pl);
-  }
-  
   mgctxget(MG_NDCTX, &NDctx);
 
   if(NDctx) {
@@ -304,8 +281,7 @@ PolyList *PolyListDraw(PolyList *pl)
 
 PolyList *PolyListBSPTree(PolyList *pl, BSPTree *tree, int action)
 {
-
-  if (pl->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+  if (!never_translucent((Geom *)pl) && action == BSPTREE_ADDGEOM) {
     BSPTreeAddObject(tree, (Geom *)pl);
   }
 

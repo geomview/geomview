@@ -53,14 +53,15 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   int i, colored = 0, alpha = 0;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
-  Material *mat = &_mgc->astk->mat;
 
   /* TODO: do NOT use alloca */
   q.p  = (QuadP *)alloca(npts*sizeof(HPoint3));
   q.n  = NULL;
   q.c  = (QuadC *)alloca(npts*sizeof(ColorA));
   q.ap = NULL;
-  q.tagged_ap = NULL;
+  RefInit((Ref *)&q, qquad->magic);
+  DblListInit(&q.pernode);
+  
   nc = q.c[0];
   np = q.p[0];
   op = qquad->p[0];
@@ -107,26 +108,18 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
     if (ap->shading != APF_CONSTANT) {
       QuadComputeNormals(&q);
     }
-    if (ap->flag & APF_TRANSP) {
-      if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
-	if (mat->diffuse.a != 1.0) {
-	  q.geomflags |= COLOR_ALPHA;
-	} else {
-	  q.geomflags &= ~COLOR_ALPHA;
-	}
-      }
+    if (GeomHasAlpha((Geom *)&q, ap)) {
+      /* could re-use per quad normals here ? */
     }
   }
+
   mgquads(q.maxquad,
 	  q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0], q.geomflags);
 
-  if (q.bsptree &&
-      (ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (q.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)qquad);
-    GeomBSPTree((Geom *)(void *)&q, q.bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance((Geom *)qquad, old_tagged_app);
+  if (NDctx->bsptree && (q.geomflags & GEOM_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)qquad);
+    GeomBSPTree((Geom *)(void *)&q, NDctx->bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
   }
 
   OOGLFree(q.n);
@@ -137,10 +130,6 @@ Quad *
 QuadDraw(Quad *q)
 {
   mgNDctx *NDctx = NULL;
-
-  if (q->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)q);
-  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -201,7 +190,7 @@ QuadDraw(Quad *q)
 
 Quad *QuadBSPTree(Quad *q, BSPTree *tree, int action)
 {
-  if (q->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+  if (!never_translucent((Geom *)q) && action == BSPTREE_ADDGEOM) {
     BSPTreeAddObject(tree, (Geom *)q);
   }
 

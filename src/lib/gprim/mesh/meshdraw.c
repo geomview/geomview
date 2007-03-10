@@ -59,7 +59,8 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   m.nq = NULL;
   m.c  = (ColorA *)alloca(npts*sizeof(ColorA));
   m.ap = NULL;
-  m.tagged_ap = NULL;
+  RefInit((Ref *)&m, mesh->magic);
+  DblListInit(&m.pernode);
 
   h = HPtNCreate(5, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -112,14 +113,8 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= MESH_N;
     }
-    if (ap->flag & APF_TRANSP) {
-      if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
-	if (mat->diffuse.a != 1.0) {
-	  m.geomflags |= COLOR_ALPHA;
-	} else {
-	  m.geomflags &= ~COLOR_ALPHA;
-	}
-      }
+    if (GeomHasAlpha((Geom *)&m, ap)) {
+      /* could re-use per quad normals here */
     }
   }
   MeshComputeNormals(&m, normal_need);
@@ -142,20 +137,20 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
    */
-  if (m.bsptree &&
-      (ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (m.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)mesh);
-    GeomBSPTree((Geom *)(void *)&m, m.bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance((Geom *)mesh, old_tagged_app);
+  if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)mesh);
+    GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
   }
 
-  if (m.n)
+  if (m.n) {
     OOGLFree(m.n);
-  if (m.nq)
+  }
+  if (m.nq) {
     OOGLFree(m.nq);
+  }
   HPtNDelete(h);
+
   return 0;
 }
 
@@ -165,10 +160,6 @@ MeshDraw(Mesh *mesh)
   mgNDctx *NDctx = NULL;
 
   /* We pass mesh->flag verbatim to mgmesh() -- MESH_[UV]WRAP == MM_[UV]WRAP */
-
-  if (mesh->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)mesh);
-  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -221,7 +212,7 @@ MeshDraw(Mesh *mesh)
 
 Mesh *MeshBSPTree(Mesh *mesh, BSPTree *tree, int action)
 {
-  if (mesh->bsptree != NULL && action == BSPTREE_ADDGEOM) {
+  if (!never_translucent((Geom *)mesh) && action == BSPTREE_ADDGEOM) {
     BSPTreeAddObject(tree, (Geom *)mesh);
   }
 

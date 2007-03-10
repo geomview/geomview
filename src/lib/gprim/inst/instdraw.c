@@ -122,21 +122,18 @@ Inst *InstDraw(Inst *inst)
   mgNDctx *NDctx = NULL;
   void *saved_ctx;
 
-  if (inst->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)inst);
-  }
+  GeomMakePath(inst, 'I', path, pathlen);
 
-  mgctxget(MG_NDCTX, &NDctx);
-
-  if (inst->NDaxis) {
-    if (NDctx) {
-      saved_ctx = NDctx->saveCTX(NDctx);
-      NDctx->pushTN(NDctx, inst->NDaxis);
-      GeomDraw(inst->geom);	
-      NDctx->restoreCTX(NDctx, saved_ctx);
-    }
+  if (inst->geom == NULL) {
     return inst;
   }
+
+  inst->geom->ppath = path;
+  inst->geom->ppathlen = pathlen;
+
+  inst->geomflags &= ~GEOM_ALPHA;
+
+  mgctxget(MG_NDCTX, &NDctx);
 
   if (NDctx) {
     if (inst->location > L_LOCAL) {
@@ -153,12 +150,22 @@ Inst *InstDraw(Inst *inst)
 		  "with ND-drawing.\n");
       return NULL;
     } else {
-      it = GeomIterate((Geom *)inst, DEEP);
-      while(NextTransform(it, T)) {
+      if (inst->NDaxis) {
 	saved_ctx = NDctx->saveCTX(NDctx);
-	NDctx->pushT(NDctx, T);
-	GeomDraw(inst->geom);
+	NDctx->pushTN(NDctx, inst->NDaxis);
+	GeomDraw(inst->geom);	
 	NDctx->restoreCTX(NDctx, saved_ctx);
+      } else {
+	it = GeomIterate((Geom *)inst, DEEP);
+	while(NextTransform(it, T)) {
+	  saved_ctx = NDctx->saveCTX(NDctx);
+	  NDctx->pushT(NDctx, T);
+	  GeomDraw(inst->geom);
+	  NDctx->restoreCTX(NDctx, saved_ctx);
+	}
+      }
+      if (inst->geom->geomflags & GEOM_ALPHA) {
+	inst->geomflags |= GEOM_ALPHA;
       }
       return inst;
     }
@@ -203,10 +210,14 @@ Inst *InstDraw(Inst *inst)
      * need to add our object to the tree, because GeomBSPTreeDraw()
      * does not do so for ND drawing.
      */
-    if (inst->bsptree != NULL && (inst->bsptree->geomflags & COLOR_ALPHA)) {
-      GeomBSPTree((Geom *)inst, inst->bsptree, BSPTREE_ADDGEOM);
+    if (NDctx->bsptree != NULL && (inst->geom->geomflags & GEOM_ALPHA)) {
+      GeomBSPTree((Geom *)inst, NDctx->bsptree, BSPTREE_ADDGEOM);
     }
     mgctxset(MG_NDCTX, NDctx, MG_END);
+  }
+
+  if (inst->geom->geomflags & GEOM_ALPHA) {
+    inst->geomflags |= GEOM_ALPHA;
   }
 
   return inst;
@@ -218,57 +229,106 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
   GeomIter *it;
   Transform T, tT, Tl2o;
 
-  if (action == BSPTREE_CREATE) {
-    /* No need to loop over all transformation unless action ==
-     * BSPTREE_ADDGEOM
-     */
+  if (inst->geom) {
+    GeomMakePath(inst, 'I', path, pathlen);
+    inst->geom->ppath = path;
+    inst->geom->ppathlen = pathlen;
+  }
+
+  /* No need to loop over all transforms unless action == BSPTREE_ADDGEOM */
+  switch (action) {
+  case BSPTREE_CREATE:
+    GeomBSPTree(inst->geom, bsptree, action);
+    HandleRegister(&inst->geomhandle,
+		   (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleRegister(&inst->tlisthandle,
+		   (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleRegister(&inst->axishandle,
+		   (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleRegister(&inst->NDaxishandle,
+		   (Ref *)inst, bsptree, BSPTreeInvalidate);
+    return inst;
+
+  case BSPTREE_DELETE:
+    /* unregister any pending callback */
+    HandleUnregisterJust(&inst->geomhandle,
+			 (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleUnregisterJust(&inst->tlisthandle,
+			 (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleUnregisterJust(&inst->axishandle,
+			 (Ref *)inst, bsptree, BSPTreeInvalidate);
+    HandleUnregisterJust(&inst->NDaxishandle,
+			 (Ref *)inst, bsptree, BSPTreeInvalidate);
     GeomBSPTree(inst->geom, bsptree, action);
     return inst;
-  }
-  
-  if (inst->NDaxis) {
-    /* No need to add to the BSPTree here, will be handled by the
-     * various draw_projected_BLAH() stuff.
-     */
-    return inst;
-  }
 
-  oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
-
-  it = GeomIterate((Geom *)inst, DEEP);
-  while (NextTransform(it, T)) {
-
-    /* Compute origin *before* changing mg tfm */
-    if (inst->origin != L_NONE) {	    
-      Point3 originwas, delta;
-      TmCoord (*l2o)[4], (*o2W)[4];
-      static HPoint3 zero = { 0, 0, 0, 1 };
-
-      /* We have location2W, origin2W. We want to translate
-       * in 'origin' coords such that (0,0,0) in location
-       * coords maps to originpt in origin coords.
+  case BSPTREE_ADDGEOM:
+    if (inst->NDaxis) {
+      /* No need to add to the BSPTree here, will be handled by the
+       * various draw_projected_BLAH() stuff.
        */
-      o2W = coords2W(inst->origin);
-      l2o = coordsto(inst->location, inst->origin);
-      HPt3TransPt3(l2o, &zero, &originwas);
-      Pt3Sub(&inst->originpt, &originwas, &delta);
-      TmTranslate(tT, delta.x, delta.y, delta.z);
-      TmConcat(l2o, tT, Tl2o);
-      TmConcat(T, Tl2o, tT);
-      TmConcat(tT, o2W, T);
-    } else if (inst->location > L_LOCAL) {
-      TmConcat(T, coords2W(inst->location), T);
-    } else {
-      TmConcat(T, oldT, T);
+      return inst;
     }
-    BSPTreeSetTransform(bsptree, T);
-    inst->geom->bsptree = inst->bsptree;
-    GeomBSPTree(inst->geom, bsptree, action);
+
+    if ((inst->origin != L_NONE || inst->location > L_LOCAL)) {
+      BSPTreeSet(bsptree, BSPTREE_ONESHOT, true, BSPTREE_END);
+      if (bsptree->Tidinv == NULL) {
+	if (bsptree->Tid != TM_IDENTITY) {
+	  bsptree->Tidinv = obstack_alloc(&bsptree->obst, sizeof(Transform));
+	  TmInvert(bsptree->Tid, bsptree->Tidinv);
+	} else {
+	  bsptree->Tidinv = TM_IDENTITY;
+	}
+      }
+    }
+
+    oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
+
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, T)) {
+
+      /* Compute origin *before* changing mg tfm */
+      if (inst->origin != L_NONE) {	    
+	Point3 originwas, delta;
+	TmCoord (*l2o)[4], (*o2W)[4];
+	static HPoint3 zero = { 0, 0, 0, 1 };
+
+	/* We have location2W, origin2W. We want to translate
+	 * in 'origin' coords such that (0,0,0) in location
+	 * coords maps to originpt in origin coords.
+	 */
+	o2W = coords2W(inst->origin);
+	l2o = coordsto(inst->location, inst->origin);
+	HPt3TransPt3(l2o, &zero, &originwas);
+	Pt3Sub(&inst->originpt, &originwas, &delta);
+	TmTranslate(tT, delta.x, delta.y, delta.z);
+	TmConcat(l2o, tT, Tl2o);
+	TmConcat(T, Tl2o, tT);
+	TmConcat(tT, o2W, T);
+	/* finally concat with tree->Tid^{-1} to get the correct
+	 * absolute positioning.
+	 */
+	if (bsptree->Tid != TM_IDENTITY) {
+	  TmConcat(T, bsptree->Tidinv, T);
+	}
+      } else if (inst->location > L_LOCAL) {
+	TmConcat(T, coords2W(inst->location), T);
+	if (bsptree->Tid != TM_IDENTITY) {
+	  TmConcat(T, bsptree->Tidinv, T);
+	}
+      } else {
+	TmConcat(T, oldT, T);
+      }
+      BSPTreeSetTransform(bsptree, T);
+      GeomBSPTree(inst->geom, bsptree, action);
+    }
+
+    BSPTreePopTransform(bsptree, oldT);
+
+    return inst;
+  default:
+    return NULL;
   }
-
-  BSPTreePopTransform(bsptree, oldT);
-
-  return inst;
 }
 
 /*

@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.12 2007/02/16 22:43:34 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.13 2007/03/10 13:12:07 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -66,14 +66,12 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 
   /* Copy the PolyList onto the stack. */
   memset(&newpl, 0, sizeof(PolyList));
-  newpl.magic     = PLMAGIC;
+  GGeomInit((Geom *)&newpl, PolyListMethods(), PLMAGIC, NULL);
   newpl.n_polys   = pl->n_polys;
   newpl.n_verts   = pl->n_verts;
   newpl.geomflags = pl->geomflags;
   newpl.vl        = pl->vl;
   newpl.p         = pl->p;
-  newpl.bsptree   = pl->bsptree;
-  newpl.Class     = PolyListMethods();
 
   h = HPtNCreate(pl->pdim, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -131,17 +129,8 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
     if (ap->shading == APF_SMOOTH) {
       normal_need |= PL_HASVN;
     }
-    if (ap->flag & APF_TRANSP) {
-      if ((mat->override & MTF_ALPHA) && (mat->valid & MTF_ALPHA)) {
-	if (mat->diffuse.a != 1.0) {
-	  newpl.geomflags |= COLOR_ALPHA;
-	} else {
-	  newpl.geomflags &= ~COLOR_ALPHA;
-	}
-      }
-      if (newpl.geomflags & COLOR_ALPHA) {
-	normal_need |= PL_HASPFL;
-      }
+    if (GeomHasAlpha((Geom *)&newpl, ap)) {
+      normal_need |= PL_HASPFL|PL_HASPN;
     }
   }
   PolyListComputeNormals(&newpl, normal_need);
@@ -170,13 +159,10 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
    */
-  if (newpl.bsptree &&
-      (ap->flag & APF_FACEDRAW) &&
-      (ap->flag & APF_TRANSP) &&
-      (newpl.geomflags & COLOR_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance((Geom *)pl);
-    GeomBSPTree((Geom *)(void *)&newpl, newpl.bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance((Geom *)pl, old_tagged_app);
+  if (NDctx->bsptree && (newpl.geomflags & GEOM_ALPHA)) {
+    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)pl);
+    GeomBSPTree((Geom *)(void *)&newpl, NDctx->bsptree, BSPTREE_ADDGEOM);
+    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
   }
 
   h->v = hdata;
@@ -186,10 +172,6 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 NPolyList *NPolyListDraw(NPolyList *pl)
 {
   mgNDctx *NDctx = NULL;
-
-  if (pl->bsptree != NULL) {
-    BSPTreeSetAppearance((Geom *)pl);
-  }
 
   mgctxget(MG_NDCTX, &NDctx);
 
