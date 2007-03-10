@@ -680,10 +680,12 @@ BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
     }
     break;
   case BSPTREE_ADDGEOM:
-    tagged_app = BSPTreePushAppearance(tree, geom);
     if (geom == tree->geom) {
       Transform T;
       
+      /* make sure the top-level geom has per-node data */
+      GeomNodeDataCreate(geom, NULL);
+
       mggettransform(T);
       if (memcmp(T, TM_IDENTITY, sizeof(Transform)) != 0) {
 	tree->Tid = obstack_alloc(&tree->obst, sizeof(Transform));
@@ -693,6 +695,7 @@ BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
       }
       tree->Tidinv = NULL;
     }
+    tagged_app = BSPTreePushAppearance(tree, geom);
     break;
   case BSPTREE_DELETE:
     if (tree == NULL || (tree = geom->bsptree) == NULL) {

@@ -35,37 +35,38 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mg.h"
 #include "bsptreeP.h"
 
-static inline void GeomTagAppearance(Geom *geom)
+static inline void maybe_tag_appearance(Geom *geom, Appearance *ap)
 {
   NodeData *data;
-  
+
   data = GeomNodeDataCreate(geom, NULL);
   if (data->tagged_ap) {
     mguntagappearance(data->tagged_ap);
+    data->tagged_ap = NULL;
   }
-  data->tagged_ap = mgtagappearance();
+  if (GeomHasAlpha(geom, ap)) {
+    data->tagged_ap = mgtagappearance();
+  }
 }
 
 Geom *GeomDraw(Geom *geom)
 {
   if (geom && geom->Class->draw) {
     const Appearance *ap;
-    mgNDctx *NDctx = NULL;
 
-    mgctxget(MG_NDCTX, &NDctx);
-    if (NDctx != NULL && geom->bsptree != NULL) {
-      NDctx->bsptree = geom->bsptree;
-      BSPTreeSet(NDctx->bsptree, BSPTREE_ONESHOT, true, BSPTREE_END);
+    if (geom->bsptree != NULL) {
+      mgNDctx *NDctx = NULL;
+      mgctxget(MG_NDCTX, &NDctx);
+      if (NDctx != NULL) {
+	NDctx->bsptree = geom->bsptree;
+	BSPTreeSet(NDctx->bsptree, BSPTREE_ONESHOT, true, BSPTREE_END);
+      }
     }
 
     if (geom->ap != NULL) {
       mgpushappearance();
       ap = mgsetappearance(geom->ap, 1);	/* Merge into inherited ap */
-    } else {
-      ap = mggetappearance();
-    }
-    if (GeomHasAlpha(geom, ap)) {
-      GeomTagAppearance(geom);
+      maybe_tag_appearance(geom, ap);
     }
     
     (*geom->Class->draw)(geom);
