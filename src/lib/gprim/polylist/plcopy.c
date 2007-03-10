@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plcopy.c,v 1.5 2006/07/15 19:05:58 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/plcopy.c,v 1.6 2007/03/10 12:57:54 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -42,33 +42,41 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "polylistP.h"
 
-PolyList *
-PolyListCopy(polylist)
-	PolyList *polylist;
+PolyList *PolyListCopy(PolyList *polylist)
 {
-	PolyList *newpl;
-	Poly *newp;
-	Vertex *newvl;
-	int i, j;
-	Poly *op, *np;
+  PolyList *newpl;
+  Poly *newp;
+  Vertex *newvl;
+  int i, j;
+  Poly *op, *np;
 
-	if(polylist == NULL) return NULL;
+  if(polylist == NULL) return NULL;
 
-	newvl = OOGLNewNE(Vertex, polylist->n_verts, "PolyList verts");
-	newp = OOGLNewNE(Poly, polylist->n_polys, "PolyList polygons");
-	newpl = OOGLNewE(PolyList, "PolyList");
-	*newpl = *polylist;
-	newpl->p = newp;
-	newpl->vl = newvl;
-	memcpy(newvl, polylist->vl, polylist->n_verts * sizeof(Vertex));
-	memcpy(newp, polylist->p, polylist->n_polys * sizeof(Poly));
+  newvl = OOGLNewNE(Vertex, polylist->n_verts, "PolyList verts");
+  newp = OOGLNewNE(Poly, polylist->n_polys, "PolyList polygons");
+  newpl = OOGLNewE(PolyList, "PolyList");
+  *newpl = *polylist;
+  newpl->p = newp;
+  newpl->vl = newvl;
+  memcpy(newvl, polylist->vl, polylist->n_verts * sizeof(Vertex));
+  memcpy(newp, polylist->p, polylist->n_polys * sizeof(Poly));
 
-	for(i = polylist->n_polys, op = polylist->p, np = newp;
-			--i >= 0;
-			op++, np++) {
-	   np->v = OOGLNewNE(Vertex *, op->n_vertices, "PolyList vert list");
-	   for(j = op->n_vertices; --j >= 0; )
-	      np->v[j] = &newvl[ op->v[j] - polylist->vl ];
-	}
-	return (newpl);
+  for(i = polylist->n_polys, op = polylist->p, np = newp;
+      --i >= 0;
+      op++, np++) {
+    np->v = OOGLNewNE(Vertex *, op->n_vertices, "PolyList vert list");
+    for(j = op->n_vertices; --j >= 0; )
+      np->v[j] = &newvl[ op->v[j] - polylist->vl ];
+  }
+
+  newpl->plproj = NULL;
+
+  return newpl;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

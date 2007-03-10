@@ -119,12 +119,12 @@ PolyListFLoad(IOBFILE *file, char *fname)
 
   pl = OOGLNewE(PolyList, "PolyListFLoad PolyList");
   GGeomInit(pl, PolyListMethods(), PLMAGIC, NULL);
-  pl->bsptree = NULL;
   pl->p = NULL;
   pl->vl = NULL;
   pl->n_verts = preread;  /* In case prefetched token was our vert count */
   pl->geomflags = flags | ((dimn == 4) ? VERT_4D : 0);
   pl->pdim = 4;
+  pl->plproj = NULL;
 
   if((!preread && iobfgetni(file, 1, &pl->n_verts, binary) <= 0) ||
      iobfgetni(file, 1, &pl->n_polys, binary) <= 0 ||

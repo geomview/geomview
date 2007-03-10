@@ -54,10 +54,15 @@ typedef struct Poly
 struct PolyList
 {
   GEOMFIELDS;
-  int	  n_polys;
-  int	  n_verts;
-  Poly	  *p;
-  Vertex  *vl;
+  int	   n_polys;
+  int	   n_verts;
+  Poly	   *p;
+  Vertex   *vl;
+  PolyList *plproj; /* Projected list during ND-drawing. The idea is
+		     * to get rid of alloca() and not to have to
+		     * regenerated the connectivity structure all the
+		     * time.
+		     */
 # define PL_HASVN   VERT_N         /* Per-vertex normals (vn) valid */
 # define PL_HASVCOL VERT_C         /* Per-vertex colors (vcol) valid */
 # define PL_HASST   VERT_ST        /* Has s,t texture coords */
