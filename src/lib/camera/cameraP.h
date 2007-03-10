@@ -26,6 +26,7 @@
 #define CAMERAP_H
 
 #include "camera.h"
+#include "appearance.h"
 
 #define	CAMMAGIC	0x9c816301
 
@@ -47,6 +48,25 @@ struct Camera {
     int		whicheye;	/* Current stereo eye selection */
     int		changed;	/* Mask of "changed" fields, for CamMerge */
     int		space;		/* TM_EUCLIDEAN, TM_HYPERBOLIC, or TM_SPHERICAL */
+#if 1
+    /* cH: Background information. Does this belong here? I think
+     * so. The background layout is clearly no property of the drawing
+     * routines (mg-layer), and it has nothing to do with the window
+     * system. Arguably it also has nothing to do with the camera, but
+     * would be a global property of the entire scene. OTH, it is nice
+     * to have cameras with different backgrounds, at least with
+     * different background colours.
+     *
+     * Note that this image is not scaled, it just sits at the center
+     * of the window (if the underlying mg-routines support a
+     * background image at all). The mg-layer may or may not use alpha
+     * blending with the background color if this is a four channel
+     * image.
+     */
+    ColorA      bgcolor;       /* background color */
+    Image       *bgimage;      /* background image, potentionally with alpha */
+    Handle      *bgimghandle;  /* handle for background image */
+#endif
 };
 
 /* bits for 'flag' and 'changed' fields */
