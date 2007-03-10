@@ -60,8 +60,5 @@ extern Inst *InstCreate( Inst *exist, GeomClass *Class, va_list *attrs );
 extern void  InstDelete( Inst * );
 extern Inst *InstCopy( Inst * );
 extern Inst *InstDice( Inst *, int nu, int nv );
-extern void InstAxisUpdate(Handle **hp, Ref *parentobj, Transform Tfixme);
-extern void InstNDAxisUpdate(Handle **hp, Ref *parentobj, TransformN **Tfixme);
-extern void InstHandleUpdRef(Handle **hp, Ref *parent, Ref **objp);
 
 #endif /*INSTPDEFS*/

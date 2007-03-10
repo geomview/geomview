@@ -147,17 +147,6 @@ Geom *ListAppend(Geom *lg, Geom *g)
     return lg ? lg : (Geom *)new;
 }
 
-void ListHandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
-{
-    List *list = (List *)parent;
-
-    HandleUpdRef(hp, parent, objp);
-
-    if (list->bsptree) {
-	BSPTreeFreeTree(list->bsptree);
-    }
-}
-
 List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 {
     List *list, *l;
@@ -195,11 +184,12 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    }
 	    GeomDelete(list->car);
 	    HandlePDelete(&list->carhandle);
-	    list->car = g;
 	    list->carhandle = h;
+	    list->car = g;
 	    if (h) {
 		HandleRegister(&list->carhandle,
-			       (Ref *)list, &list->car, ListHandleUpdRef);
+			       (Ref *)list, &list->car, HandleUpdRef);
+		HandleSetObject(list->carhandle, (Ref *)g);
 	    }
 	    break;
 	case CR_GEOM:	/* == CR_CAR */
@@ -233,7 +223,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    HandlePDelete(&list->carhandle);
 	    list->carhandle = h;
 	    HandleRegister(&list->carhandle,
-			   (Ref *)list, &list->car, ListHandleUpdRef);
+			   (Ref *)list, &list->car, HandleUpdRef);
 	    break;
 	case CR_CDR:
 	    l = va_arg (*a_list, List *);

@@ -45,6 +45,5 @@ extern Geom *ListPick(List *list, Pick *p, Appearance *ap,
 		      Transform T, TransformN *TN, int *axes);
 extern List *ListBSPTree(List *list, BSPTree *bsptree, int action);
 extern List *ListDice(List *list, int nu, int nv);
-extern void ListHandleUpdRef(Handle **hp, Ref *parent, Ref **objp);
 
 #endif /*LISTPDEF*/

@@ -83,8 +83,9 @@ ListImport( Pool *p )
 		*tailp = new;
 		tailp = &new->cdr;
 		if(new->carhandle)
-		    HandleRegister(&new->carhandle, (Ref *)new,
-				   (Ref **)(void *)&new->car, ListHandleUpdRef);
+		    HandleRegister(&new->carhandle,
+				   (Ref *)new, (Ref **)(void *)&new->car,
+				   HandleUpdRef);
 	    } else {
 		OOGLSyntax(file,
 		 "Couldn't read LIST in \"%s\": error reading embedded object",

@@ -50,14 +50,14 @@ static char *locations[] = {
 static int getlocation(char *name)
 {
     int i;
-    if(name == NULL)
+
+    if(name == NULL) {
 	return -1;
+    }
     for(i = COUNT(locations); --i >= 0 && strcasecmp(name, locations[i]) != 0; )
 	;
     return i;	/* Return location number, or -1 if not found. */
 }
-
-
 
 Geom *InstImport(Pool *p)
 {
@@ -66,11 +66,13 @@ Geom *InstImport(Pool *p)
     char *expect = NULL;
     int c;
 
-    if(p == NULL || (file = PoolInputFile(p)) == NULL)
+    if(p == NULL || (file = PoolInputFile(p)) == NULL) {
 	return 0;
+    }
 
-    if(strcmp(GeomToken(file), "INST"))
+    if(strcmp(GeomToken(file), "INST")) {
 	return 0;
+    }
 
     for(;;) {
 	switch((c = iobfnextc(file, 0))) {
@@ -79,34 +81,42 @@ Geom *InstImport(Pool *p)
 	    goto done;
 
 	case 'l':
-	    if(iobfexpectstr(file, expect = "location"))
+	    if(iobfexpectstr(file, expect = "location")) {
 		goto syntax;
-	    if(inst == NULL)
+	    }
+	    if(inst == NULL) {
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    }
 	    inst->location = getlocation( iobfdelimtok("(){}", file, 0) );
 	    expect = "location [local|global|camera|ndc|screen]";
-	    if(inst->location < 0)
+	    if(inst->location < 0) {
 		goto syntax;
+	    }
 	    break;
 
 	case 'o':
-	    if(iobfexpectstr(file, expect = "origin"))
+	    if(iobfexpectstr(file, expect = "origin")) {
 		goto syntax;
-	    if(inst == NULL)
+	    }	    
+	    if(inst == NULL) {
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    }
 
 	    expect = "origin [local|global|camera|ndc|screen] X Y Z";
 	    inst->origin = getlocation( iobfdelimtok("(){}", file, 0) );
-	    if(inst->origin < 0)
+	    if(inst->origin < 0) {
 		goto syntax;
-	    if(iobfgetnf(file, 3, &inst->originpt.x, 0) < 3)
+	    }
+	    if(iobfgetnf(file, 3, &inst->originpt.x, 0) < 3) {
 		goto syntax;
+	    }
 	    break;
 	    
 	    
 	case 'u':
-	    if(iobfexpectstr(file, expect = "unit"))
+	    if(iobfexpectstr(file, expect = "unit")) {
 		goto syntax;
+	    }
 	    goto geom;
 
 	case 'g':
@@ -114,63 +124,81 @@ Geom *InstImport(Pool *p)
 		goto syntax;
 
 	geom:
-	    if(inst == NULL)
+	    if(inst == NULL) {
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    }
 	    expect = "geometry";
-	    if(!GeomStreamIn(p, &inst->geomhandle, &inst->geom))
+	    if(!GeomStreamIn(p, &inst->geomhandle, &inst->geom)) {
 		goto failed;
-	    if(inst->geomhandle)
-		HandleRegister(&inst->geomhandle, (Ref *)inst,
-			       &inst->geom, InstHandleUpdRef);
+	    }
+	    if(inst->geomhandle) {
+		HandleRegister(&inst->geomhandle,
+			       (Ref *)inst, &inst->geom, HandleUpdRef);
+	    }
 	    break;
 
 	case 'n': /* ntransform */
-	    if(iobfexpectstr(file, (expect = "ntransform")))
+	    if(iobfexpectstr(file, (expect = "ntransform"))) {
 		goto syntax;
-	    if(inst == NULL)
+	    }
+	    if(inst == NULL) {
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    }
 	    expect = "ntransform matrix";
-	    if(!NTransStreamIn(p, &inst->NDaxishandle, &inst->NDaxis))
+	    if(!NTransStreamIn(p, &inst->NDaxishandle, &inst->NDaxis)) {
 		goto failed;
-	    if(inst->NDaxishandle)
-		HandleRegister(&inst->NDaxishandle, (Ref *)inst,
-			       &inst->NDaxis, InstNDAxisUpdate);
+	    }
+	    if(inst->NDaxishandle) {
+		HandleRegister(&inst->NDaxishandle,
+			       (Ref *)inst, &inst->NDaxis, HandleUpdRef);
+	    }
 	    break;
 	    
 	case 't':		/* tlist ... or transform ... */
-	    if(inst == NULL)
+	    if(inst == NULL) {
 		inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+	    }
 	    iobfgetc(file);
 	    switch((c = iobfgetc(file))) {
 	    case 'l':
-		if(iobfexpectstr(file, (expect = "tlist")+2)) 	/* "tlist" */
+		if(iobfexpectstr(file, (expect = "tlist")+2)) { /* "tlist" */
 		    goto syntax;
+		}
 	    transforms:
-		if(inst == NULL)
+		if(inst == NULL) {
 		    inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+		}
 		expect = "TLIST object";
-		if(!GeomStreamIn(p, &inst->tlisthandle, &inst->tlist))
+		if(!GeomStreamIn(p, &inst->tlisthandle, &inst->tlist)) {
 		    goto failed;
-		if(inst->tlisthandle)
-		    HandleRegister(&inst->tlisthandle, (Ref *)inst,
-				   &inst->tlist, InstHandleUpdRef);
+		}
+		if(inst->tlisthandle) {
+		    HandleRegister(&inst->tlisthandle,
+				   (Ref *)inst, &inst->tlist, HandleUpdRef);
+		}
 		break;
 
 	    case 'r':
-		if(iobfexpectstr(file, (expect = "transform")+2))		/* "transform" */
+		if(iobfexpectstr(file, (expect = "transform")+2)) {
+		    /* "transform" */
 		    goto syntax;
-		if(iobfexpectstr(file, "s") == 0)	/* transforms = tlist */
+		}
+		if(iobfexpectstr(file, "s") == 0) { /* transforms = tlist */
 		    goto transforms;
-		if(inst == NULL)
+		}
+		if(inst == NULL) {
 		    inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+		}
 		expect = "transform matrix";
-		if(!TransStreamIn(p, &inst->axishandle, inst->axis))
+		if (!TransStreamIn(p, &inst->axishandle, inst->axis)) {
 		    goto failed;
-		if(inst->axishandle)
-		    HandleRegister(&inst->axishandle, (Ref *)inst,
-				   inst->axis, InstAxisUpdate);
+		}
+		if (inst->axishandle) {
+		    HandleRegister(&inst->axishandle,
+				   (Ref *)inst, inst->axis, TransUpdate);
+		}
 		break;
-
+		
 	    default:
 		expect = "something";
 		goto syntax;
@@ -180,7 +208,8 @@ Geom *InstImport(Pool *p)
 
 	default:
 	syntax:
-	    OOGLSyntax(file, "Couldn't read INST in \"%s\": syntax error, expected %s, got char %c",
+	    OOGLSyntax(file, "Couldn't read INST in \"%s\": "
+		       "syntax error, expected %s, got char %c",
 		       p->poolname, expect, c);
 	    goto bogus;
 
@@ -195,6 +224,7 @@ Geom *InstImport(Pool *p)
     }
 
  done:
+
     return (Geom *)inst;
 }
 
