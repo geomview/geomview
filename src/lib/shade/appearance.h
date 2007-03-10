@@ -30,12 +30,14 @@
   debugging
 */
 
+#include <stdarg.h>
+
 #include "ooglutil.h"
-/*#include "vert.h"*/
+#include "transobj.h"
 #include "3d.h"
 #include "color.h"
 #include "streampool.h"
-#include <stdarg.h>
+#include "dbllist.h"
 
 #define DONE 1
 #define ANOTHER 2
@@ -51,16 +53,16 @@ typedef struct LtLight {
     int Private;		/* private part; used only by mg */
 
     short location;		/* How to interpret the "position": */
-#define	LTF_GLOBAL	0x0		/* global coordinate system */
-#define	LTF_CAMERA	0x1		/* camera coordinates */
-#define	LTF_LOCAL	0x2		/* local coordinates
+#define LTF_GLOBAL	0x0		/* global coordinate system */
+#define LTF_CAMERA	0x1		/* camera coordinates */
+#define LTF_LOCAL	0x2		/* local coordinates
 					 * where appearance is attached. */
 
     short changed;
 } LtLight;
 
 
-#define	AP_MAXLIGHTS	8
+#define AP_MAXLIGHTS	8
 
 typedef struct LmLighting {
     REFERENCEFIELDS;
@@ -74,7 +76,7 @@ typedef struct LmLighting {
     int changed;
 } LmLighting;
 
-#define	LM_ANY_LIGHTS(lm)  ((lm)->lights[0] != NULL)
+#define LM_ANY_LIGHTS(lm)  ((lm)->lights[0] != NULL)
 #define LM_FOR_ALL_LIGHTS(lm, i,lp)  for((i)=0, (lp) = &(lm)->lights[0]; \
 			(i)<AP_MAXLIGHTS && *(lp) != NULL; (i)++, (lp)++)
 
@@ -94,38 +96,65 @@ typedef struct Material {
     int changed;
 } Material;
 
+/* The pixmap image underlying a texture. We define a separate
+ * Lisp-object such that sharing of image data is possible (and can be
+ * implemented more cleanly than before).
+ *
+ * The image format does not interprete the image data, it just
+ * records the number of channels. However: the corresponding I/O
+ * routines always read data in RGB(A) format, or LUMINANCE(-ALPHA)
+ * format.
+ *
+ * The pixmap is in Cartesian coordinates, i.e. row 0/col 0
+ * corresponds to the LOWER-LEFT corner.
+ */
+typedef struct Image {
+    REFERENCEFIELDS;
+    int width;     /* width in pixels */
+    int height;    /* height in pixels */
+    int channels;  /* number of channels */
+    int maxval;    /* maximum intensity value of a channel */
+    char *data;    /* image data, row by row, if depth > 8 then most
+		    * significant bytes come first (BIG-ENDIAN).
+		    */
+} Image;
+
 typedef struct TxUser TxUser;
 
 			/* Textures are bulky and need active management! */
 struct TxUser {
     struct TxUser *next;	/* Next user in tx->users list */
     struct Texture *tx;		/* Which texture is ours? */
-    long id;			/* Slot for e.g. graphics-system texture id */
+    int id;			/* Slot for e.g. graphics-system texture id */
     void *ctx;			/* Slot for e.g. mg context */
     void *data;			/* Any other data the user needs */
-    long flags;			/* flags for user to determine usage */
+    int flags;			/* flags for user to determine usage */
     int (*needed)(TxUser *);	/* user answers "d'you still need this?" */
     void (*purge)(TxUser *);	/* request to user to purge this texture */
 };
 
 typedef struct Texture {
     REFERENCEFIELDS;
-    char *filename;		/* ppm or pgm (.Z) file */
-    char *alphafilename;	/* If present, this is a .pgm (.Z) file */
-    char *data;			/* Raw data, top to bottom, read from file */
-    int xsize, ysize, channels;
-    unsigned int flags;		/* clamp, etc. */
-    int apply;			/* Application style (TXF_DECAL, TXF_MODULATE, TXF_BLEND) */
-    int coords;			/* Texture-coord auto generation */
-    int qualflags;		/* APF_TX{MIPMAP,MIPINTERP,LINEAR}: if loaded, how? */
-    ColorA background;		/* background color: outside of clamped texture */
+    Image *image;         /* underlying pixmap */
+    Handle *imghandle;
+    Transform tfm;	  /* texture-coord transformation */
     Handle *tfmhandle;
-    Transform tfm;		/* texture-coord transformation */
-    TxUser *users;		/* Users of this texture register here */
-    struct Texture *next;	/* Link in list of all loaded textures */
+    unsigned int flags;   /* clamp, etc. */
+    int apply;		  /* Application style
+			   * (TXF_DECAL, TXF_MODULATE, TXF_BLEND)
+			   */
+    int coords;		  /* Texture-coord auto generation (not implemented) */
+    ColorA background;	  /* background color: outside of clamped texture */
+    TxUser *users;	  /* Users of this texture register here */
+    /*****************************************/
+    /* the old and deprecated way to do stuff */
+    char *filename;       /* ppm or pgm (.Z) file */
+    char *alphafilename;  /* If present, this is a .pgm (.Z) file */
+    /*****************************************/
+    DblListNode loadnode;
 } Texture;
 
-extern Texture *AllLoadedTextures;	/* List of em */
+extern DblListNode AllLoadedTextures;	/* List of em */
 
 typedef struct Appearance {
     REFERENCEFIELDS;
@@ -142,27 +171,28 @@ typedef struct Appearance {
 }  Appearance;
 
 
-extern HandleOps  ApOps;
-extern HandleOps  TextureOps;
+extern HandleOps AppearanceOps;
+extern HandleOps ImageOps;
+extern HandleOps TextureOps;
 
 /* the following tokens are used in LtSet and LtGet */
 #define LT_END		700
-#define	LT_AMBIENT	701	/* Color ambient */
-#define	LT_COLOR	702	/* Color color */
-#define	LT_POSITION	703	/* Point position */
-#define	LT_INTENSITY	704	/* double intensity */
-#define	LT_LOCATION	705	/* int location: LTF_{GLOBAL,CAMERA,LOCAL} */
+#define LT_AMBIENT	701	/* Color ambient */
+#define LT_COLOR	702	/* Color color */
+#define LT_POSITION	703	/* Point position */
+#define LT_INTENSITY	704	/* double intensity */
+#define LT_LOCATION	705	/* int location: LTF_{GLOBAL,CAMERA,LOCAL} */
 
-#define LT_ABLOCK	706	/* void **ablock */
+#define LT_ABLOCK	706	/* void **ablock ??? cH: unimplemented ??? */
 
 
 /* the following tokens are used in LmSet and LmGet */
 #define LM_END		  600	
-#define	LM_AMBIENT	  601	/* Color ambient */
-#define	LM_LOCALVIEWER	  602	/* int localviewer */
-#define	LM_ATTENC	  603	/* double attenconst */
-#define	LM_ATTENM	  604	/* double attenmult */
-#define	LM_ATTEN2	  612	/* double attenmult2 */
+#define LM_AMBIENT	  601	/* Color ambient */
+#define LM_LOCALVIEWER	  602	/* int localviewer */
+#define LM_ATTENC	  603	/* double attenconst */
+#define LM_ATTENM	  604	/* double attenmult */
+#define LM_ATTEN2	  612	/* double attenmult2 */
 #define LM_LtSet	  605	/* ... */
 #define LM_LIGHT	  606	/* LtLight *light */
 #define LM_VALID	  607	/* int mask (Get only) */
@@ -171,28 +201,28 @@ extern HandleOps  TextureOps;
 #define LM_NOOVERRIDE	  610	/* int mask (unsets override bits) */
 #define LM_REPLACELIGHTS  611	/* int replace */
 
-#define LM_ABLOCK	  613	/* void **ablock */
+#define LM_ABLOCK	  613	/* void **ablock ??? cH: unimplemented ??? */
 
 
 /* the following tokens are used in MtSet and MtGet */
 #define MT_END		500	
 #define MT_EMISSION	501	/* Color *emission */
-#define	MT_AMBIENT	502	/* Color *ambient */
-#define	MT_DIFFUSE	503	/* Color *diffuse */
-#define	MT_SPECULAR	504	/* Color *specular */
-#define	MT_Ka		505	/* double ka */
-#define	MT_Kd		506	/* double kd */
-#define	MT_Ks		507	/* double ks */
-#define	MT_ALPHA	508	/* double alpha */
-#define	MT_SHININESS	509	/* double shininess */
-#define	MT_EDGECOLOR	510	/* Color *edgecolor (for edges & vectors) */
-#define	MT_NORMALCOLOR	511	/* Color *normalcolor (for surface normals) */
+#define MT_AMBIENT	502	/* Color *ambient */
+#define MT_DIFFUSE	503	/* Color *diffuse */
+#define MT_SPECULAR	504	/* Color *specular */
+#define MT_Ka		505	/* double ka */
+#define MT_Kd		506	/* double kd */
+#define MT_Ks		507	/* double ks */
+#define MT_ALPHA	508	/* double alpha */
+#define MT_SHININESS	509	/* double shininess */
+#define MT_EDGECOLOR	510	/* Color *edgecolor (for edges & vectors) */
+#define MT_NORMALCOLOR	511	/* Color *normalcolor (for surface normals) */
 #define MT_VALID	512	/* int mask (Get only) */
 #define MT_INVALID	513	/* int mask (unsets valid bits) */
 #define MT_OVERRIDE	514	/* int mask (sets override bits) */
 #define MT_NOOVERRIDE	515	/* int mask (unsets override bits) */
 
-#define MT_ABLOCK	516	/* void **ablock */
+#define MT_ABLOCK	516	/* void **ablock ??? cH: unimplemented ??? */
 
 
 /* the following tokens are used in ApSet and ApGet */
@@ -210,16 +240,16 @@ extern HandleOps  TextureOps;
 #define AP_OVERRIDE	411	/* int mask (sets override bits) */
 #define AP_NOOVERRIDE	412	/* int mask (unsets override bits) */
 #define AP_SHADING	413	/* int shading (set to APF_{CONSTANT,FLAT,SMOOTH} */
-#define	AP_BACKMAT	414	/* Material *backmaterial */
+#define AP_BACKMAT	414	/* Material *backmaterial */
 
-#define AP_ABLOCK	415	/* void **ablock */
-#define	AP_DICE		416	/* int udice, vdice (set); int dice[2] (get) */
-#define	AP_TEXTURE	417	/* Texture *tx */
-#define	AP_TxSet	418	/* ... */
+#define AP_ABLOCK	415	/* void **ablock ??? cH: unimplemented ??? */
+#define AP_DICE		416	/* int udice, vdice (set); int dice[2] (get) */
+#define AP_TEXTURE	417	/* Texture *tx */
+#define AP_TxSet	418	/* ... */
 
 				/* Flags to ApMerge, etc. */
-#define	APF_INPLACE	 0x1	/* Merge in place */
-#define	APF_OVEROVERRIDE 0x2	/* src replaces dst even without src override */
+#define APF_INPLACE	 0x1	/* Merge in place */
+#define APF_OVEROVERRIDE 0x2	/* src replaces dst even without src override */
 
 
 
@@ -227,40 +257,63 @@ extern HandleOps  TextureOps;
 			 * from GL/Open-GL
 			 */
 
-#define	TXMAGIC		OOGLMagic('t', 1)
+#define TXMAGIC		OOGLMagic('t', 1)
 
-#define	TX_DOCLAMP	450
-#define	  TXF_SCLAMP	  0x1	/* Clamp if s outside 0..1 (else wrap) */
-#define	  TXF_TCLAMP	  0x2	/* Clamp if t outside 0..1 (else wrap) */
+#define TX_DOCLAMP  450
+#define TXF_SCLAMP  0x1	 /* Clamp if s outside 0..1 (else wrap) */
+#define TXF_TCLAMP  0x2	 /* Clamp if t outside 0..1 (else wrap) */
 
-#define	  TXF_LOADED	  0x4	/* Has this texture been loaded?
-				 * (tried to read those files yet?)
-				 */
-#define	  TXF_RGBA	  0x8	/* In loaded data, is R first byte? (else ABGR) */
-#define	  TXF_USED	  0x10	/* "Recently rendered a geom containing this texture" */
+#define TXF_LOADED  0x4	 /* Has this texture been loaded?
+			  * (tried to read those files yet?)
+			  */
+#define TXF_RGBA    0x8  /* In loaded data, is R first byte? (else ABGR) */
+#define TXF_USED    0x10 /* "Recently rendered a geom containing this texture"*/
 
-#define	TX_APPLY	451	/* Interpret texture values to... */
-#define	  TXF_MODULATE	  0
-#define	  TXF_BLEND	  1
-#define	  TXF_DECAL	  2
+#define TX_APPLY	451	/* Interpret texture values to... */
+#define   TXF_MODULATE	  0
+#define   TXF_BLEND	  1
+#define   TXF_DECAL	  2
 
-#define	TX_FILE		452
-#define	TX_ALPHAFILE	453
-#define	TX_DATA		454
-#define	TX_XSIZE	455
-#define	TX_YSIZE	456
-#define	TX_CHANNELS	457
-#define	TX_COORDS	458 /* Texture coordinates come from... */
-#define	  TXF_COORD_GIVEN	0   /* given as part of object (default) */
-				    /* In fact, only TXF_COORD_GIVEN works now. */
-#define	  TXF_COORD_LOCAL	1   /* In coord system of texture map */
-#define	  TXF_COORD_CAMERA	2   /* In camera coords */
-#define	  TXF_COORD_NORMAL	3   /* Taken from surface-normal, for env map */
-#define	TX_BACKGROUND	459
-#define	TX_HANDLE_TRANSFORM	460
+#define TX_HANDLE_IMAGE     452
+#define TX_HANDLE_TRANSFORM 453
+#define TX_BACKGROUND       454
 
-#define	TX_ABLOCK	464
-#define	TX_END		465
+#define TX_FILE		    455 /* deprecated (really?) */
+#define TX_ALPHAFILE	    456 /* deprecated (really?) */
+#define TX_CHANNELS         457 /* deprecated (really?) */
+#define TX_XSIZE            458 /* deprecated (really?) */
+#define TX_YSIZE            459 /* deprecated (really?) */
+
+#if 0 /* not implemented */
+#define TX_COORDS         458 /* Texture coordinates come from... */
+#define TXF_COORD_GIVEN     0 /* given as part of object (default) In
+			       * fact, only TXF_COORD_GIVEN works now.
+			       */
+# define TXF_COORD_LOCAL    1 /* In coord system of texture map */
+# define TXF_COORD_CAMERA   2 /* In camera coords */
+# define TXF_COORD_NORMAL   3 /* Taken from surface-normal, for env map */
+#endif
+
+#define TX_ABLOCK 464 /* ??? cH: unimplemented ??? */
+#define TX_END    465
+
+#define IMGMAGIC OOGLMagic('i', 1)
+
+/* ImgSet() commands */
+#define IMG_WIDTH          1000
+#define IMG_HEIGHT         1001
+#define IMG_CHANNELS       1002
+#define IMG_MAXVAL         1003
+#define IMG_DATA           1004
+#define IMG_DATA_CHAN_FILE 1005 /* CHMASK, FILTER/NULL, FILENAME */
+#define IMG_DATA_CHAN_DATA 1006 /* CHMASK, FILTER/NULL, DATA, DATASZ */
+#define   IMGF_LUMINANCE       0x1
+#define   IMGF_LUMINANCE_ALPHA 0x3
+#define   IMGF_RGB             0x7
+#define   IMGF_RGBA            0xf
+#define   IMGF_ALPHA           0x100
+#define   IMGF_AUTO            0x200
+#define IMG_END            1042
 
 Appearance *	ApCreate( int attr, ... );
 Appearance *	ApSet( Appearance *ap, int attr, ... );
@@ -270,10 +323,11 @@ void		ApDelete( Appearance *ap );
 Appearance *	ApDefault( Appearance *ap );
 Appearance *	ApCopy(const Appearance *from, Appearance *into );
 Appearance *	ApMerge(const Appearance *src, Appearance *dst, int inplace );
-Appearance *	ApFLoad( Appearance *into, IOBFILE *f, char *stream );
-Appearance *	ApLoad( Appearance *into, char *stream );
+Appearance *    ApFLoad(IOBFILE *inf, char *fname);
 Appearance *    ApCopyShared(const Appearance *ap, Appearance *into );
-
+Appearance *    ApFSave(Appearance *ap, FILE *f, char *fname);
+int ApStreamIn(Pool *p, Handle **hp, Appearance **app);
+int ApStreamOut(Pool *p, Handle *h, Appearance *ap);
 
 		/* Force 'override' bits on (for all valid fields)
 		 * or off, in an Appearance.
@@ -290,15 +344,23 @@ int	TxStreamIn( Pool *, Handle **, Texture ** );
 int	TxStreamOut( Pool *, Handle *, Texture * );
 void	TxDelete( Texture * );
 
+int ImgStreamIn(Pool *p, Handle **hp, Image **imgp);
+int ImgStreamOut(Pool *p, Handle *h, Image *tx);
+Image *ImgFSave(Image *img, FILE *outf, char *fname);
+void ImgDelete(Image *img);
+Image *ImgCreate(int a1, ...);
+
 Texture * TxFLoad( IOBFILE *inf, char *fname );
+Texture * TxFSave(Texture *tx, FILE *outf, char *fname);
 Texture * TxSet( Texture *, int attr, ... );
 Texture * TxCreate( int attr, ... );
 Texture * TxCopy( Texture *src, Texture *dst );
 Texture * TxMerge( Texture *src, Texture *dst, int mergeflags );
 
 void	TxPurge( Texture * );
-TxUser *TxAddUser( Texture *, long id, int (*needed)(TxUser *),
-					void (*purge)(TxUser *));
+TxUser *TxAddUser(Texture *, int id,
+		  int (*needed)(TxUser *), void (*purge)(TxUser *));
+void    TxRemoveUser(TxUser *user);
 
 #ifndef AP_IDEBUG
 Material *	MtCreate( int attr, ... );
@@ -329,7 +391,7 @@ LtLight *	LtDefault( LtLight * );
 void 		LtProperties( LtLight *, float, Color *, Point * );
 LtLight *     	LtFLoad( LtLight *, IOBFILE *, char *filename);
 
-#define	LTMAGIC	OOGLMagic('l', 2)
+#define LTMAGIC	OOGLMagic('l', 2)
 
 #ifndef AP_IDEBUG
 LmLighting *	LmCreate( int attr, ... );
@@ -350,64 +412,64 @@ void		LmRemoveLight( LmLighting *dst, LtLight *light );
 void		LmCopyLights( LmLighting *src, LmLighting *dst );
 void		LmDeleteLights( LmLighting *lm );
 
-#define	LIGHTINGMAGIC	OOGLMagic('l', 1)
+#define LIGHTINGMAGIC	OOGLMagic('l', 1)
 
-#define	LMF_LOCALVIEWER	0x1   /* Local viewer (flag valid) */
-#define	LMF_AMBIENT	0x2   /* Ambient light color */
-#define	LMF_ATTENC	0x4   /* attenuation constant factor */
-#define	LMF_ATTENM	0x8   /* attenuation linear factor */
-#define	LMF_ATTEN2	0x20  /* 1/r^2 attenuation factor */
-#define	LMF_REPLACELIGHTS	0x10  /* When merging, use only new lights, not union */
+#define LMF_LOCALVIEWER	0x1   /* Local viewer (flag valid) */
+#define LMF_AMBIENT	0x2   /* Ambient light color */
+#define LMF_ATTENC	0x4   /* attenuation constant factor */
+#define LMF_ATTENM	0x8   /* attenuation linear factor */
+#define LMF_ATTEN2	0x20  /* 1/r^2 attenuation factor */
+#define LMF_REPLACELIGHTS 0x10  /* When merging, use only new lights, not union */
 
-#define	MATMAGIC	OOGLMagic('m', 1)
+#define MATMAGIC	OOGLMagic('m', 1)
 
 #define MTF_EMISSION	0x1
-#define	MTF_AMBIENT	0x2
-#define	MTF_DIFFUSE	0x4
-#define	MTF_SPECULAR	0x8
-#define	MTF_Ka		0x10
-#define	MTF_Kd		0x20
-#define	MTF_Ks		0x40
-#define	MTF_ALPHA	0x80
-#define	MTF_SHININESS	0x100
-#define	MTF_EDGECOLOR	0x200
-#define	MTF_NORMALCOLOR	0x400
+#define MTF_AMBIENT	0x2
+#define MTF_DIFFUSE	0x4
+#define MTF_SPECULAR	0x8
+#define MTF_Ka		0x10
+#define MTF_Kd		0x20
+#define MTF_Ks		0x40
+#define MTF_ALPHA	0x80
+#define MTF_SHININESS	0x100
+#define MTF_EDGECOLOR	0x200
+#define MTF_NORMALCOLOR	0x400
 
 
 
-#define	APMAGIC		OOGLMagic('a', 1)
+#define APMAGIC		OOGLMagic('a', 1)
 
 /* The following bits are used in 'flag', 'valid', 'override' */
-#define	APF_FACEDRAW	0x2	/* Draw faces */
-#define	APF_EDGEDRAW	0x10	/* Draw edges */
-#define	APF_TRANSP	0x20	/* Enable transparency */
-#define	APF_EVERT	0x40	/* Evert surface normals */
-#define	APF_NORMALDRAW	0x80	/* Draw surface normals */
-#define	APF_VECTDRAW	0x100	/* Draw vectors/points */
-#define	APF_KEEPCOLOR	0x200	/* Not susceptible to N-D coloring */
-#define	APF_TEXTURE	0x400	/* Enable texture mapping */
-#define	APF_BACKCULL	0x800	/* Enable back-face culling */
-#define	APF_SHADELINES	0x2000	/* Enable line (edge & vect) lighting&shading */
-#define	APF_CONCAVE	0x4000	/* Expect concave polygons */
-#define	APF_TXMIPMAP	0x8000	/* Mip-mapped textures */
-#define	APF_TXMIPINTERP	0x10000	/* Interpolate between mipmaps */
-#define	APF_TXLINEAR	0x20000	/* Interpolate between texture pixels */
+#define APF_FACEDRAW	0x2	/* Draw faces */
+#define APF_EDGEDRAW	0x10	/* Draw edges */
+#define APF_TRANSP	0x20	/* Enable transparency */
+#define APF_EVERT	0x40	/* Evert surface normals */
+#define APF_NORMALDRAW	0x80	/* Draw surface normals */
+#define APF_VECTDRAW	0x100	/* Draw vectors/points */
+#define APF_KEEPCOLOR	0x200	/* Not susceptible to N-D coloring */
+#define APF_TEXTURE	0x400	/* Enable texture mapping */
+#define APF_BACKCULL	0x800	/* Enable back-face culling */
+#define APF_SHADELINES	0x2000	/* Enable line (edge & vect) lighting&shading */
+#define APF_CONCAVE	0x4000	/* Expect concave polygons */
+#define APF_TXMIPMAP	0x8000	/* Mip-mapped textures */
+#define APF_TXMIPINTERP	0x10000	/* Interpolate between mipmaps */
+#define APF_TXLINEAR	0x20000	/* Interpolate between texture pixels */
 
 /* The following bits are used in 'valid', 'override' */
-#define	APF_SHADING	0x1     /* Use 'shading' value */
-#define	APF_NORMSCALE	0x4	/* Use 'nscale' value to draw normals */
-#define	APF_LINEWIDTH	0x8	/* Use 'linewidth' value  */
-#define	APF_DICE	0x1000	/* Dicing (use udice, vdice fields) */
+#define APF_SHADING	0x1     /* Use 'shading' value */
+#define APF_NORMSCALE	0x4	/* Use 'nscale' value to draw normals */
+#define APF_LINEWIDTH	0x8	/* Use 'linewidth' value  */
+#define APF_DICE	0x1000	/* Dicing (use udice, vdice fields) */
 
 /* Possible values for ap->shading field; these MUST be consecutive !!
    (code outside the appearance library depends on this fact) */
-#define	APF_CONSTANT	0	/* constant-colored (unlighted) faces */
+#define APF_CONSTANT	0	/* constant-colored (unlighted) faces */
 #define APF_FLAT	1	/* Flat-shaded, lighted faces */
-#define	APF_SMOOTH	2	/* Gouraud-shaded faces, with lighting */
-#define	APF_CSMOOTH	3	/* Gouraud-shaded faces, without lighting */
+#define APF_SMOOTH	2	/* Gouraud-shaded faces, with lighting */
+#define APF_CSMOOTH	3	/* Gouraud-shaded faces, without lighting */
 
-#define	IS_SMOOTH(shading)  ((shading) >= APF_SMOOTH)
-#define	IS_SHADED(shading)  ((1<<(shading)) & ((1<<APF_FLAT)|(1<<APF_SMOOTH)))
+#define IS_SMOOTH(shading)  ((shading) >= APF_SMOOTH)
+#define IS_SHADED(shading)  ((1<<(shading)) & ((1<<APF_FLAT)|(1<<APF_SMOOTH)))
 
 
 #ifdef AP_IDEBUG
@@ -499,10 +561,6 @@ int apf_flat = APF_FLAT;
 int apf_smooth = APF_SMOOTH;
 
 #endif /* AP_IDEBUG */
-
-void ApFSave( Appearance *ap, Handle *aphandle, FILE *f, char *fname );
-int ApStreamIn(Pool *p, Handle **hp, Appearance **app);
-int ApStreamOut(Pool *p, Handle *h, Appearance *ap);
 
 #endif /* APPEARANCEDEF */
 
