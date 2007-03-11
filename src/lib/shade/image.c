@@ -536,11 +536,16 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
 	     : ImgSet(img, IMG_DATA_CHAN_DATA,
 		      chmask, filter, imgdata, (int)datasize, IMG_END))
 	    == NULL) {
+#if 1
+	  OOGLSyntax(inf, "%s: unable to read data for channelmask 0x%x, "
+		     "continuing anyway", fname, (int)chmask);
+#else
 	  ImgDelete(img);
 	  if (imgdata) { /* free buffer for embedded data */
 	    OOGLFree(imgdata);
 	  }
 	  return false;
+#endif
 	}
 		
 	if (imgdata) { /* free buffer for embedded data */
