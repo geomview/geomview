@@ -59,12 +59,6 @@ struct BSPTree {
 			   * during ND-drawing. The oneshot flag is
 			   * reset after it took affect.
 			   */
-#if 0
-  int          geomflags; /* COLOR_ALPHA set if any component of the
-			   * tree has an alpha channel. Filled by
-			   * BSPTreeSetAppearance().
-			   */
-#endif
   PolyListNode   *init_lpl; /* While tree == NULL elements can be
 			     * added to this list
 			     */
