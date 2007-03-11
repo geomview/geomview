@@ -9,7 +9,7 @@ Geomview \- interactive geometry viewer
 geomview [\-b\ \fIr\ g\ b\fP]
 [\-c\ \fIcommandfile\fP]
 [\-wins\ \fI#windows\fP]
-[\-nopanels] [\-noopengl]
+[\-noinit] [\-nopanels] [\-noopengl]
 [\-wpos\ \fIxmin\ ymin\ xsize\ ysize\fP]
 [\-wpos\ \fIxsize,ysize\fP[@\fIxmin,ymin\fP]]
 [\-e\ \fIexternal-module-name\fP]
@@ -52,12 +52,6 @@ external modules in the "src/bin/example" directory.
 
 .SH OPTIONS
 .TP
--noopengl
-Disable the use of OpenGL for (possibly) hardware
-accelerated rendering, even if the Geomview binary has support for
-OpenGL compiled in. This also disables the support for transparency
-and and textures
-.TP
 -b
 Set the window background color to the given r g b values.
 .TP
@@ -99,6 +93,12 @@ the connection should use a named pipe (the default on the Iris),
 while 's' implies using a UNIX-domain socket (default on the NeXT).
 So \fB\-Mcs fred\fP selects reading commands from the UNIX-domain socket named
 \fB/tmp/geomview/fred\fP.
+.TP
+-noopengl
+Disable the use of OpenGL for (possibly) hardware
+accelerated rendering, even if the Geomview binary has support for
+OpenGL compiled in. This also disables the support for transparency
+and and textures
 .TP
 -nopanels
 Start up displaying no panels, only graphics windows.  Panels may be
