@@ -2561,7 +2561,7 @@ Examples of most file types live in Geomview's @file{data/geom}
 directory.
 
 @menu
-* Conventions::                 Conventions.
+* Conventions::                 Conventions and general remarks.
 * Object File Formats::         Object File Formats.
 * Non-geometric objects::       Non-geometric objects.
 @end menu
@@ -2877,7 +2877,8 @@ appearance is applied to all the @code{LIST}'s members.
 
 Some appearance-related properties are relegated to "material",
 "lighting" and "texture" substructures.  Take care to note which
-properties belong to which structure.
+properties belong to which structure. There is a separate section
+concerning the definition of textures (@pxref{Texture Mapping}).
 
 Any geometric object can be preceeded by an appearance definintion like
 in the following example:
@@ -2889,8 +2890,9 @@ in the following example:
 @}
 @end example
 
-Appearances are also OOGL objects in their own right and can be
-given symbolic names and referenced by them (@pxref{References}).
+Appearances are also OOGL objects in their own right and can be given
+symbolic names and referenced by them
+(@pxref{References}). @xref{appearance, Appearance objects}.
 
 Here's an example appearance structure including values for all
 attributes.  Order of attributes is unimportant.  As usual, white space
@@ -3049,15 +3051,15 @@ override status set, that property will be immune to Geomview's controls.
 @node Texture Mapping,  , Appearances, Conventions
 @subsection Texture Mapping
 
-Some platforms support texture-mapped objects.
-(On those which don't, attempts to use texture mapping are silently
-ignored.)  A texture is specified as part of an appearance structure,
-as in @xref{Appearances}.  Briefly, one provides a texture image,
-which is considered to lie in a square in @code{(s,t)} parameter space in
-the range 0 <= s <= 1, 0 <= t <= 1.  Then one provides a geometric primitive,
-with each vertex tagged with @code{(s,t)} texture coordinates.  If texturing
-is enabled, the appropriate portion of the texture image is pasted onto
-each face of the textured object.
+Some platforms support texture-mapped objects.  (On those which don't,
+attempts to use texture mapping are silently ignored.)  A texture is
+specified as part of an appearance structure (@pxref{Appearances}).
+Briefly, one provides a texture image (@pxref{image, Image objects}),
+which is considered to lie in a square in @code{(s,t)} parameter space
+in the range 0 <= s <= 1, 0 <= t <= 1.  Then one provides a geometric
+primitive, with each vertex tagged with @code{(s,t)} texture
+coordinates.  If texturing is enabled, the appropriate portion of the
+texture image is pasted onto each face of the textured object.
 
 There is (currently) no provision for inheritance of part of a texture
 structure; if the @code{texture} keyword is mentioned in an appearance,
@@ -3070,7 +3072,7 @@ defined when texturing is off.
 The available fields are:
 
 @example
-clamp	none  -or-  s  -or-  t  -or-  st
+clamp   none  -or-  s  -or-  t  -or-  st
   Determines the meaning of texture coordinates outside the range 0..1.
   With @code{clamp none}, the default, coordinates are interpreted
   modulo 1, so (s,t) = (1.25,0), (.25,0), and (-.75,0) all refer to
@@ -3078,22 +3080,39 @@ clamp	none  -or-  s  -or-  t  -or-  st
   @code{st}, either or both of s- or t-coordinates less than 0 or
   greater than 1 are clamped to 1 or 0, respectively.
 
-file	filename
-alphafile	filename
+image @{ <image specification> (@pxref{image, Image objects}) @}
+  Specify the actual texture image. Images can have 1, 2, 3 or 4 channels:
+    1 channel:  luminance
+    2 channels: luminance and alpha
+    3 channels: RGB data
+    4 channels: RGBA data
+
+  @xref{image, Image objects}, for the actual definition of image
+  objects. The alpha-channel is only interpreted as mask: where the mask
+  is zero, pixels are simply not drawn. An exception is the case where
+  @emph{apply} is equal to @emph{modulate} and translucency is enabled:
+  in this case the resulting alpha value is the result of the
+  multiplication of the surface color with the alpha value of the
+  texture's alph channel.
+
+file      filename
+alphafile filename
+  @emph{This is considered obsolete, and only kept for compatibility,
+  the modern way is to use the new OOGL image object. @xref{image, Image objects}.
+  The stuff documented here should still work, though}
+
   Specifies image file(s) containing the texture.
-  The @code{file} file's image specifies color or lightness information;
-  the @code{alphafile} if present, specifies a transparency ("alpha") mask;
+       
+  The @emph{file} keyword specifies a file with color or lightness information;
+  @emph{alphafile} if present, specifies a transparency ("alpha") mask;
   where the mask is zero, pixels are simply not drawn.
   Several image file formats are available; the file type must be
   indicated by the last few characters of the file name:
     .ppm or .ppm.Z or .ppm.gz  24-bit 3-color image in PPM format
     .pgm or .pgm.Z or .pgm.gz  8-bit grayscale image in PGM format
     .sgi or .sgi.Z or .sgi.gz  8-bit, 24-bit, or 32-bit SGI image
-    .tiff 		       8-bit or 24-bit TIFF image
-    .gif		       GIF image
-  (Though 4-channel TIFF images are possible, and could
-  represent both color and transparency information in one image,
-  that's not supported in geomview at present.)
+    .tiff                      8-bit or 24-bit TIFF image
+    .gif                       GIF image
   For this feature to work, some programs must be available in
   geomview's search path:
     zcat  for .Z files
@@ -3104,8 +3123,10 @@ alphafile	filename
   If an @code{alphafile} image is supplied, it must be the same size
   as the @code{file} image.
 
+  @emph{Image objects provide a more flexible way to specify texture
+  data. @xref{image, Image objects}.}
 
-apply	modulate  -or-  blend  -or-  decal
+apply   modulate  -or-  blend  -or-  decal
   Indicates how the texture image is applied to the surface.
   Here the "surface color" means the color that surface would have
   in the absence of texture mapping.
@@ -4080,17 +4101,266 @@ alternative choices.
 @comment ----------------------------------------------------------------
 @node appearance, image, Non-geometric objects, Non-geometric objects
 @subsection Appearance Objects
-@xref{Appearances}. @xref{References}.
+Appearances are OOGL objects of their own right, which simply means that
+it is possible to give them symbolic names (@pxref{References}). There
+are other sections dealing with appearance
+details. @xref{Appearances}.
 
 @node image, transform, appearance, Non-geometric objects
 @subsection Image Objects
 
+Image objects are used to specify pixmap data for either textures
+(@pxref{Texture Mapping}), or for background images of cameras
+(@pxref{camera, Camera objects}).
+
+At the time of this writing images are comprised of 1 to 4 channels, a
+channel provides a single number in the range from 0 to @code{maxval}
+for each pixel; and @code{maxval} is tied to 255. The interpretation of the image data depending on the number of channels is like follows:
+
+@multitable @columnfractions 0.2 0.2 0.6
+@headitem #Channels @tab Channel No. @tab Interpretation
+@item 1
+@tab 1
+@tab greyscale or luminance data
+@item 2
+@tab 1
+@tab greyscale or luminance data
+@item @code{ }
+@tab 2
+@tab alpha channel (0: transparent, @code{maxval}: opaque)
+@item 3
+@tab 1
+@tab red channel
+@item @code{}
+@tab 2
+@tab green channel
+@item @code{}
+@tab 3
+@tab blue channel
+@item 4
+@tab 1
+@tab red channel
+@item @code{}
+@tab 2
+@tab green channel
+@item @code{}
+@tab 3
+@tab blue channel
+@item @code{}
+@tab 4
+@tab alpha channel (0: transparent, @code{maxval}: opaque)
+@end multitable
+
+Image data can be spefied inline (embedded into the current data stream)
+or via file references; in both cases the data is read in and
+interpreted at the time the image object is parsed. @emph{This is
+different from the old (and deprecated) texture image specification,
+where the the image data on-disk would eventually be re-read by
+Geomview}.
+
+The general syntax of image objects is like follows:
+@example
+<image> ::= 
+  [ "@{" ]             (curly brace, generally needed to make
+                        the end of the object unambiguous.)
+  [ "image" ]          (optional keyword; unnecessary if the type
+                        is determined by the context, which it
+                        usually is.)
+  [ "define" <name> ]
+                       (defines an image named <name>, setting
+                        its value from the stuff which follows)
+  | 
+      "<" <filename>   (meaning: read image from that file)
+  |
+      ":" <name>       (meaning: use variable <name>,
+                        defined elsewhere; if undefined the image
+                        carries no data)
+  |
+                       (actual stuff defining the image; image data
+                        must come last, after defining the width and
+                        height and number of channels)
+
+      "width"          (width of the image, auto-detected from image data
+                        if possible)
+
+      "height"         (height of the image, auto-detected from image data
+                        if possible)
+
+      "channels"       (number of channels, auto-detected from image data
+                        if possible)
+
+      "maxval"         (unsupported, must be @code{255} if specified)
+
+      "data DESTMASK [FILTER] [@{] < FILENAME [@}]"
+      "data DESTMASK [FILTER] DATASIZE [@{][\n]LITERAL_IMAGE_DATA[@}]"
+                       (either external or embedded image data, see below
+                        for a detailed description of the meaning of
+                        @emph{MASK} and @emph{FILTER}. An image can (and
+                        has, in general) multiple data sections.)
+
+  [ "@}" ]             (matching curly brace)
+@end example
+
+@b{Details concerning the image data specification:}
+
+@table @samp
+@item DESTMASK
+This is a bit-field describing where the specified image data should be
+placed in the destination pixmap. The bit-field is specified by an
+integer in one of the known formats (decimal, octal, hexadecimal). The
+channels of the source data are always enumbered consecutively. If,
+e.g. @samp{FILENAME} or @samp{LITERAL_IMAGE_DATA} specify a
+three-channel (probably RGB ...) image and @samp{DESTMASK} equals
+@code{0xD} (i.e. bit 1 is 0), then the 3rd channel of the source pixmap
+would be placed in the 4th channel of the destination image object (the
+alpha channel), the 2nd source channel would determine the @samp{blue}
+destination value and the 1st source channel the @samp{red} destination
+value.
+
+The number of source channels always has to match the number of
+destination channels. @b{Exception:} if the source pixmap has only one
+channel, then it can be used to fill any number of destination channels;
+all channels specified in @samp{DESTMASK} are filled with the data of
+the single source channel.
+
+Geomview knows the following symbolic constants instead of specifying
+the @samp{DESTMASK} bit-field numerically:
+@table @code
+@item LUMINANCE
+same as @samp{1}, @samp{0x1}, @samp{\01}
+@item LUMINANCE_ALPHA
+same as @samp{3}, @samp{0x3}, @samp{\03}
+@item RGB
+same as @samp{7}, @samp{0x7}, @samp{\07}
+@item RGBA
+same as @samp{15}, @samp{0xf}, @samp{\017}
+@item ALPHA
+depends on the context: the absolute number of channels must be known;
+i.e. @code{data ALPHA ...} must be prepended by something determining
+the number of channels of the image, e.g.
+@example
+...
+data RGB ...
+data ALPHA
+...
+@end example
+is valid, but
+@example
+<no other channel or image data specification>
+data ALPHA ...
+<whatever else ...>
+@end example
+is not valid, because Geomview has not means to determine the
+destination channel from the context.
+@item AUTO
+PGM image data is interpreted as single grey-scale channel, RGB PNM data
+as RGB image data. @code{AUTO} cannot work with @samp{raw} image data.
+@end table
+
+@item FILTER
+The @samp{FILTER} specification is optional. If it is missing, then
+Geomview tries to determine the image type from the @samp{FILENAME}
+suffix. If there is no suffix of the suffix is unknown, or for embedded
+image data, Geomview is able to auto-detectc SGI image file formats (for
+historical reasons ...) and NetPBM image formats (for practical
+reasons). Likewise, the final output of any of the specified filters
+must either be in SGI image file format, or specify a PNM or PGM image.
+If the image file format cannot be determined by either the filenmae
+suffix or the filter specification or by auto-deteciong of SGI or NetPBM
+data, then Geomview assume that it is raw-data. See below.
+
+The decompression filters may be prepended to either one of the know
+image formats or an explicitly specified filter, e.g. the following is
+valid:
+@example
+data LUMINANCE raw.gzip @{ < gzippedgreymapfile @}
+@end example
+The above should be equivalent to
+@example
+data LUMINANCE raw @{ < greymapfile @},
+@end example
+provided that the decompressed data carries single channel data, with
+the first pixel corresponding to the lower-left corner (because of the
+@samp{raw} image format, see below).
+
+Geomview has builtin knowledge for the following filters/suffixes:
+@table @b
+@item Data Decompression
+@table @samp
+@item z
+@item gz
+@item gzip
+data is piped through @code{gzip -dc}
+@item bz2
+@item bzip2
+data is piped through @code{bzip2 -dc}
+@end table
+
+@item Image Formats
+@table @samp
+@item tiff
+@item tif
+@code{TIFF} image file format. Only supported if the @code{tifftopnm}
+executable can be fond in the current excution path.
+@item png
+@code{PNG} image file format. Only supported if the @code{pngtopnm}
+executable can be fond in the current excution path.
+@item jpg
+@item jpeg
+@code{JPEG} image file format. Only supported if the @code{jpegtopnm}
+executable can be fond in the current excution path.
+@item gif
+@code{GIF} image file format. Only supported if the @code{giftoppm}
+executable can be fond in the current excution path.
+@item raw
+Raw image data; the number of channels must match the number of bits set
+in @samp{DESTMASK}. Pixels are specified with 1 byte per channel. @b{BIG
+FAT NOTE:} Geomviews co-ordinate system has its origin in the lower-left
+corner, so the first pixel specified by raw image data corresponds to
+the lower-left corner of the image.
+@end table
+@item Explicitly Specified Filters
+If none of the suffixes specified above should match, then the
+suffix/filter is interpreted as an external filter program; the filter
+program must read from @code{STDIN} and write to @code{STDOUT}. The
+output must either be in SGI image format, or in PNM or PGM
+format. Otherwise the output data is interpreted as raw image data (see
+above).
+
+Something like the following should work, provided that the program
+@file{$@{HOME@}/bin/bububfilter} exists, is executable and does
+something useful:
+@example
+...
+data RGB "$@{HOME@}/bin/bububfilter.bzip2" 7 @{ # binary data follows
+bububub
+@}
+...
+@end example
+
+Note that -- prior to feeding the data to the @samp{bububfilter} --
+Geomview will try to decompress the stuff with @samp{bzip2 -dc}.
+
+@end table
+
+@end table
+
+@b{Missing image data:} Normally, the number of image channels is
+determined automatically from the image @code{data} specifications; if
+the image specification carries an explicit number of channels via the
+@code{channels} keyword which exceeds the number of channels found in
+the image @code{data} specifications, or if the union of all
+@samp{DESTMASK} specfications has holes, then missing luminance and RGB
+channels are initialized to 0, and a missing alpha-channel is
+initialized to @code{maxval}, i.e. omitting the alpha channel data for
+an RGBA image is just the same as defining an RGB image.
+
 @node transform, ntransform, image, Non-geometric objects
 @subsection Transform Objects
 
-Where a single 4x4 matrix is expected -- as in the
-@code{INST} @code{transform} field, the camera's @code{camtoworld} transform
-and the Geomview @code{xform*} commands -- use a transform object.
+Where a single 4x4 matrix is expected -- as in the @code{INST}
+@code{transform} field, the camera's @code{camtoworld} transform and the
+Geomview @code{xform*} commands -- use a transform object.
 
 Note that a transform is distinct from a @code{TLIST}, which is a type
 of geometry.  @code{TLIST}s can contain one or more 4x4 transformations;
@@ -4303,6 +4573,19 @@ while for an orthographic one it's simply:
 
 This odd-seeming definition is (a) easy to calculate with and
 (b) well-defined in both orthographic and perspective views.
+
+@item background color
+Arguably not a property of a camera, but of the scene. Nevertheless, as
+there is no "background" OOGL object, and the background color should
+not be a property of the drawing device, it can be specified here. At
+the time of this writing, however, the GUI always overrides the
+background color with its own settings.
+
+@item background image
+Same reasoning as above, only that the GUI does not override this
+setting. The image is centered at NDC co-ordinates @code{(0,0,-1)}; it
+is not resized, just painted behind everything else as is. @xref{image, Image objects}.
+
 @end table
 
 
@@ -4311,50 +4594,53 @@ The syntax for a camera is:
 @example
 <camera> ::=
 
-   [ "camera" ]			(optional keyword)
-    [ "@{" ]			(opening brace, generally required)
-	[ "define" <name> ]
+   [ "camera" ]                 (optional keyword)
+    [ "@{" ]                    (opening brace, generally required)
+        [ "define" <name> ]
 
-	"<" <filename>
+        "<" <filename>
       |
-	":" <name>
+        ":" <name>
       |
-				(or any number of the following,
-				 in any order@dots{})
+                                (or any number of the following,
+                                 in any order@dots{})
 
-	"perspective"  @{"0" | "1"@}		(default 1)
-					(otherwise orthographic)
+        "perspective"  @{"0" | "1"@}            (default 1)
+                                        (otherwise orthographic)
 
-	"stereo"       @{"0" | "1"@}		(default 0)
-					(otherwise mono)
+        "stereo"       @{"0" | "1"@}            (default 0)
+                                        (otherwise mono)
 
-	"worldtocam" <transform>	(see transform syntax above)
+        "worldtocam" <transform>        (see transform syntax above)
 
-	"camtoworld" <transform>
-				(no point in specifying both
-				 camtoworld and worldtocam; one is
-				 constrained to be the inverse of						 the other)
+        "camtoworld" <transform>
+                                (no point in specifying both
+                                 camtoworld and worldtocam; one is
+                                 constrained to be the inverse of                                                the other)
 
-	"halfyfield" <half-linear-Y-field-at-unit-distance>
-				(default tan 40/2 degrees)
+        "halfyfield" <half-linear-Y-field-at-unit-distance>
+                                (default tan 40/2 degrees)
 
-	"fov"		(angular field-of-view if perspective,
-			 linear field-of-view otherwise.
-			 Measured in whichever direction is smaller,
-			 given the aspect ratio.  When aspect ratio
-			 changes -- e.g. when a window is reshaped --
-			 "fov" is preserved.)
+        "fov"           (angular field-of-view if perspective,
+                         linear field-of-view otherwise.
+                         Measured in whichever direction is smaller,
+                         given the aspect ratio.  When aspect ratio
+                         changes -- e.g. when a window is reshaped --
+                         "fov" is preserved.)
 
-	"frameaspect" <aspect-ratio>	(X/Y) (default 1.333)
+        "frameaspect" <aspect-ratio>    (X/Y) (default 1.333)
 
-	"near"  <near-clipping-distance>	(default 0.1)
-	
-	"far"	<far-clipping-distance>		(default 10.0)
+        "near"  <near-clipping-distance>        (default 0.1)
+        
+        "far"   <far-clipping-distance>         (default 10.0)
 
-	"focus" <focus-distance>		(default 3.0)
+        "focus" <focus-distance>                (default 3.0)
 
-	
-     [ "@}" ]				(matching closebrace)
+        "bgcolor" <float RGB(A) color>          (default 1/3 1/3 1/3 1)
+
+        "bgimage" @{ <image specification> @}     (default no background image)
+
+     [ "@}" ]                           (matching closebrace)
 @end example
 
 
