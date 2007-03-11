@@ -39,12 +39,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define VI_TUPLET_LIMIT 2 /* for sgi vi formatting (so we can use it!) */
 
 static void mgrib_submesh( int wrap, int nu, int nv,
-			   HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR );
+			   HPoint3 *P, Point3 *N, Point3 *NQ,
+			   ColorA *C, Point3 *STR, int mflags );
 static void mgrib_prmanmesh( int wrap, int nu, int nv, HPoint3 *P );
 
 int
 mgrib_mesh(int wrap, int nu, int nv,
-	   HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR)
+	   HPoint3 *P, Point3 *N, Point3 *NQ, ColorA *C, Point3 *STR,
+	   int mflags)
 {
     Appearance *ap;
     Color   *c3;
@@ -55,7 +57,7 @@ mgrib_mesh(int wrap, int nu, int nv,
     ap = &_mgc->astk->ap;
 
     if(ap->flag & APF_FACEDRAW) {
-      mgrib_submesh( wrap, nu, nv, P, N, C, STR);
+	mgrib_submesh( wrap, nu, nv, P, N, NQ, C, STR, mflags);
     }
     
     if(ap->flag & APF_EDGEDRAW) {
@@ -80,7 +82,8 @@ mgrib_mesh(int wrap, int nu, int nv,
 
 static void
 mgrib_submesh( int wrap, int nu, int nv,
-	       HPoint3 *P, Point3 *N, ColorA *C, Point3 *STR )
+	       HPoint3 *P, Point3 *N, Point3 *meshNQ,
+	       ColorA *C, Point3 *STR, int mflags )
 {
     Appearance *ap;
     char    *uwrap,*vwrap;
@@ -239,3 +242,10 @@ mgrib_prmanmesh( int wrap, int nu, int nv, HPoint3 *P )
 	}
     }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

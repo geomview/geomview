@@ -623,6 +623,10 @@ mgrib_worldbegin( void )
     /* otherwise explicitly specified normals would be inverted */
     mrti(mr_reverseorientation, mr_NULL);
 
+    /* TODO: mark the position in the token buffer, because this is
+     * the point where we can place texture commands later on.
+     */
+
     /* RiWorldBegin...*/
     mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
 
