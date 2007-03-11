@@ -115,7 +115,7 @@ ListImport( Pool *p )
 }
 
 int
-ListExport( List *l, Pool *p )
+ListExport(List *l, Pool *p)
 {
     if(p == NULL || p->outf == NULL) {
 	return 0;
@@ -123,6 +123,7 @@ ListExport( List *l, Pool *p )
 
     PoolFPrint(p, p->outf, "LIST\n");
     while(l != NULL) {
+	PoolFPrint(p, p->outf, "");
 	if(!GeomStreamOut( p, l->carhandle, l->car )) {
 	    return 0;
 	}
