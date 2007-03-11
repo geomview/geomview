@@ -229,35 +229,38 @@ Geom *InstImport(Pool *p)
 }
 
 int
-InstExport( Inst *inst, Pool *pool )
+InstExport(Inst *inst, Pool *pool)
 {
+    FILE *outf;
     int ok = 1;
 
-    if(inst == NULL || pool == NULL || pool->outf == NULL)
+    if(inst == NULL || pool == NULL || (outf = PoolOutputFile(pool)) == NULL)
 	return 0;
 
-    fprintf(pool->outf, "INST\n");
+    PoolFPrint(pool, outf, "INST\n");
     if(inst->origin != L_NONE && (unsigned)inst->origin < COUNT(locations)) {
-	fprintf(pool->outf, "  origin %s ", locations[inst->origin]);
+	PoolFPrint(pool, outf, "origin %s ", locations[inst->origin]);
 	fputnf(pool->outf, 3, &inst->originpt.x, 0);
 	fputc('\n', pool->outf);
     }
 
     if(inst->location != L_LOCAL && inst->location != L_NONE &&
        (unsigned)inst->location < COUNT(locations))
-	fprintf(pool->outf, "  location %s\n", locations[inst->location]);
+	PoolFPrint(pool, outf, "location %s\n", locations[inst->location]);
 
     if(inst->tlist != NULL || inst->tlisthandle != NULL) {
-	fprintf(pool->outf, "  tlist ");
+	PoolFPrint(pool, outf, "tlist ");
 	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
     } else if (memcmp(inst->axis, TM_IDENTITY, sizeof(Transform)) != 0) {
+	PoolFPrint(pool, outf, "");
 	ok &= TransStreamOut(pool, inst->axishandle, inst->axis);
     } else if (inst->NDaxis != NULL) {
+	PoolFPrint(pool, outf, "");
 	ok &= NTransStreamOut(pool, inst->NDaxishandle, inst->NDaxis);
     }
 
     if(inst->geom != NULL || inst->geomhandle != NULL) {
-	fprintf(pool->outf, "  geom ");
+	PoolFPrint(pool, outf, "geom ");
 	ok &= GeomStreamOut(pool, inst->geomhandle, inst->geom);
     }
     return ok;

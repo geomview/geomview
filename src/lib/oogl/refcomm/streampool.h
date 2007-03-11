@@ -41,6 +41,8 @@
 # include <winsock.h>
 #endif
 
+#include <stdarg.h>
+
 #include "handle.h"
 
 
@@ -140,4 +142,14 @@ extern int PoolSetMark(Pool *p);
 extern int PoolSeekMark(Pool *p);
 extern int PoolClearMark(Pool *p);
 
+extern void PoolFPrint(Pool *p, FILE *f, const char *format, ...);
+extern void PoolPrint(Pool *p, const char *format, ...);
+
 #endif /*_STREAMPOOL_*/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

@@ -30,7 +30,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
-extern int Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f);
+extern int Apsavepfx(int valid, int override, int mask, char *keyword,
+		     FILE *f, Pool *p);
 
 Material *
 _MtSet(Material *mat, int attr1, va_list *alist)
@@ -316,7 +317,7 @@ int MtSave(Material *mat, char *name)
     perror(name);
     return -1;
   }
-  ok = MtFSave(mat, f);
+  ok = MtFSave(mat, f, NULL);
   fclose(f);
   return ok;
 }
@@ -432,14 +433,14 @@ MtFLoad(Material *mat, IOBFILE *f, char *fname)
   return MtCopy(&m, mat);
 }
 
-int MtFSave(Material *mat, FILE *f)
+int MtFSave(Material *mat, FILE *f, Pool *p)
 {
   int i;
   float v;
   Color *c;
 
   for (i = 0; i < sizeof(mt_kw)/sizeof(mt_kw[0]); i++) {
-    if (Apsavepfx(mat->valid, mat->override, mt_flags[i], mt_kw[i], f)) {
+    if (Apsavepfx(mat->valid, mat->override, mt_flags[i], mt_kw[i], f, p)) {
       switch(mt_flags[i]) {
       case MTF_Ka: v = mat->ka; goto pfloat;
       case MTF_Kd: v = mat->kd; goto pfloat;

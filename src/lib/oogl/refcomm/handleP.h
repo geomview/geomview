@@ -54,10 +54,16 @@ struct Handle {
 	Pool	*whence;	/* Where did this handle's value come from? */
 
 	DblListNode refs;       /* list of references to this Handle,
-				 * which we update
-				 * when the Handle's object changes.
+				 * which we update when the Handle's
+				 * object changes.
 				 */
 	bool	permanent;	/* Retain even when last reference goes away? */
+	bool    obj_saved;      /* Set during saving of objects when
+				 * the handle has been dumped as
+				 * reference to indicate that its
+				 * objects also already has been
+				 * saved.
+				 */
 	/*
 	 * Pool-type-specific state
 	 */

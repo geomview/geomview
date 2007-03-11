@@ -40,7 +40,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 extern LmLighting * _LmSet(LmLighting *, int attr1, va_list *);
 extern Material * _MtSet(Material *, int attr1, va_list *);
-int Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f);
 
 Appearance *
 _ApSet(Appearance *ap, int attr1, va_list *alist)

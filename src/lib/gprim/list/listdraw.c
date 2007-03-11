@@ -45,14 +45,23 @@ List *ListDraw(List *list)
   list->geomflags &= ~GEOM_ALPHA;
 
   for (l = list; l != NULL; l = l->cdr) {
+    int lpathlen = pathlen+1;
+    char *lpath = alloca(lpathlen+1);
+
+    memcpy(lpath, path, pathlen);
+    lpath[lpathlen-1] = 'l';
+    lpath[lpathlen] = '\0';
+
     if (l->car) {
-      l->car->ppath = path;
-      l->car->ppathlen = pathlen;
+      l->car->ppath = lpath;
+      l->car->ppathlen = lpathlen;
       GeomDraw(l->car);
       if (l->car->geomflags & GEOM_ALPHA) {
 	list->geomflags |= GEOM_ALPHA;
       }
     }
+    path = lpath;
+    pathlen = lpathlen;
   }
 
   return list;
@@ -67,33 +76,63 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
   switch (action) {
   case BSPTREE_CREATE:
     for (l = list; l != NULL; l = l->cdr) {
+      int lpathlen = pathlen+1;
+      char *lpath = alloca(lpathlen+1);
+      
+      memcpy(lpath, path, pathlen);
+      lpath[lpathlen-1] = 'l';
+      lpath[lpathlen] = '\0';
+
       if (l->car) {
-	l->car->ppath = path;
-	l->car->ppathlen = pathlen;
+	l->car->ppath = lpath;
+	l->car->ppathlen = lpathlen;
 	GeomBSPTree(l->car, bsptree, action);
       }
       HandleRegister(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
+
+      path = lpath;
+      pathlen = lpathlen;
     }
     return list;
     
   case BSPTREE_DELETE:
     for (l = list; l != NULL; l = l->cdr) {
+      int lpathlen = pathlen+1;
+      char *lpath = alloca(lpathlen+1);
+      
+      memcpy(lpath, path, pathlen);
+      lpath[lpathlen-1] = 'l';
+      lpath[lpathlen] = '\0';
+
       if (l->car) {
-	l->car->ppath = path;
-	l->car->ppathlen = pathlen;
+	l->car->ppath = lpath;
+	l->car->ppathlen = lpathlen;
 	GeomBSPTree(l->car, bsptree, action);
       }
       HandleUnregisterJust(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
+
+      path = lpath;
+      pathlen = lpathlen;
     }
     return list;
     
   case BSPTREE_ADDGEOM:
     for (l = list; l != NULL; l = l->cdr) {
+      int lpathlen = pathlen+1;
+      char *lpath = alloca(lpathlen+1);
+      
+      memcpy(lpath, path, pathlen);
+      lpath[lpathlen-1] = 'l';
+      lpath[lpathlen] = '\0';
+
       if (l->car) {
-	l->car->ppath = path;
-	l->car->ppathlen = pathlen;
+	l->car->ppath = lpath;
+	l->car->ppathlen = lpathlen;
 	GeomBSPTree(l->car, bsptree, action);
       }
+
+      path = lpath;
+      pathlen = lpathlen;
     }
     return list;
     

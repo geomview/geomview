@@ -46,6 +46,18 @@ static HandleOps NullOps = {
   "null",
 };
 
+void HandlesSetObjSaved(bool obj_saved)
+{
+  HandleOps *ops;
+  Handle *h;
+
+  DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
+    DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
+      h->obj_saved = obj_saved;
+    }
+  }
+}
+
 /* iterate over Ref->handles */
 Handle *HandleRefIterate(Ref *r, Handle *pos)
 {

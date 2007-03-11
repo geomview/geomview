@@ -313,56 +313,58 @@ CamStreamIn(Pool *p, Handle **hp, Camera **camp)
 int
 CamStreamOut(Pool *p, Handle *h, Camera *cam)
 {
-  int putdata;
   float fov;
   FILE *outf;
 
-  if ((outf = PoolOutputFile(p)) == NULL)
+  if ((outf = PoolOutputFile(p)) == NULL) {
     return 0;
+  }
 
   fprintf(outf, "camera {\n");
- 
-  if (cam == NULL && h != NULL && h->object != NULL)
-    cam = (Camera *)h->object;
+  PoolIncLevel(p, 1);  
 
-  putdata = PoolStreamOutHandle( p, h, cam != NULL );
-  if (cam != NULL && putdata) {
+  if (cam == NULL && h != NULL && h->object != NULL) {
+    cam = (Camera *)h->object;
+  }
+
+  if (PoolStreamOutHandle(p, h, cam != NULL)) {
     if (cam->w2chandle) {
-      fprintf(outf, "worldtocam ");
+      PoolFPrint(p, outf, "worldtocam ");
       TransStreamOut(p, cam->w2chandle, cam->worldtocam);
     } else {
-      fprintf(outf, "camtoworld ");
+      PoolFPrint(p, outf, "camtoworld ");
       TransStreamOut(p, cam->c2whandle, cam->camtoworld);
     }
-    fprintf(outf, "\tperspective %d  stereo %d\n",
+    PoolFPrint(p, outf, "perspective %d  stereo %d\n",
 	    cam->flag & CAMF_PERSP ? 1 : 0,
 	    cam->flag & CAMF_STEREO ? 1 : 0);
     CamGet(cam, CAM_FOV, &fov);
-    fprintf(outf, "\tfov %g\n", fov);
-    fprintf(outf, "\tframeaspect %g\n", cam->frameaspect);
-    fprintf(outf, "\tfocus %g\n", cam->focus);
-    fprintf(outf, "\tnear %g\n", cam->cnear);
-    fprintf(outf, "\tfar %g\n", cam->cfar);
+    PoolFPrint(p, outf, "fov %g\n", fov);
+    PoolFPrint(p, outf, "frameaspect %g\n", cam->frameaspect);
+    PoolFPrint(p, outf, "focus %g\n", cam->focus);
+    PoolFPrint(p, outf, "near %g\n", cam->cnear);
+    PoolFPrint(p, outf, "far %g\n", cam->cfar);
     if (cam->flag & CAMF_STEREOGEOM) {
-      fprintf(outf, "\tstereo_sep %g\n", cam->stereo_sep);
-      fprintf(outf, "\tstereo_angle %g\n", cam->stereo_angle);
+      PoolFPrint(p, outf, "stereo_sep %g\n", cam->stereo_sep);
+      PoolFPrint(p, outf, "stereo_angle %g\n", cam->stereo_angle);
     }
     if (cam->flag & CAMF_EYE)
-      fprintf(outf, "\twhicheye %d\n", cam->whicheye);
+      PoolFPrint(p, outf, "whicheye %d\n", cam->whicheye);
     if (cam->flag & CAMF_STEREOXFORM) {
-      fprintf(outf, "stereyes\n");
+      PoolFPrint(p, outf, "stereyes\n");
       TransStreamOut(p, cam->sterhandle[0], cam->stereyes[0]);
       fputc('\n', outf);
       TransStreamOut(p, cam->sterhandle[1], cam->stereyes[1]);
     }
-    fprintf(outf, "\tbgcolor %g %g %g %g\n",
+    PoolFPrint(p, outf, "bgcolor %g %g %g %g\n",
 	    cam->bgcolor.r, cam->bgcolor.g, cam->bgcolor.b, cam->bgcolor.a);
     if (cam->bgimage) {
-      fprintf(outf, "\tbg");
+      PoolFPrint(p, outf, "bg");
       ImgStreamOut(p, cam->bgimghandle, cam->bgimage);
     }
   }
-  fprintf(outf, "}\n");
+  PoolIncLevel(p, -1);  
+  PoolFPrint(p, outf, "}\n");
   return !ferror(outf);
 }
  

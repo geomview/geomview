@@ -48,6 +48,9 @@ Pool	*HandlePool( Handle * );
 Handle  *HandleRefIterate(Ref *r, Handle *pos);
 Handle  *HandlePoolIterate(Pool *p, Handle *pos);
 
+	/* set obj_saved flag of all handles */
+void     HandlesSetObjSaved(bool obj_saved);
+
 #if 0
 /* stuff which is nowhere defined nor referenced */
 #define	IO_HANDLES	1

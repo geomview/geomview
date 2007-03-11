@@ -525,7 +525,7 @@ int PoolClearMark(Pool *p)
 int
 PoolIncLevel(Pool *p, int incr)
 {
-    return (p->level += incr);
+    return p ? (p->level += incr) : incr;
 }
 
 int
@@ -942,31 +942,67 @@ Handle *PoolIn(Pool *p)
 
 /*
  * Support routine for writing {handle, object} pairs to Pools.
- * Checks the Pool's output type (PO_HANDLES/PO_DATA/PO_ALL).
- * If appropriate, writes something to the Pool representing the given Handle.
- * Returns nonzero if the associated object should also be written literally.
+ * Checks the Pool's output type (PO_HANDLES/PO_DATA/PO_ALL).  If
+ * appropriate, writes something to the Pool representing the given
+ * Handle.  Returns nonzero if the associated object should also be
+ * written literally.
+ *
+ * For global handles: also emit a "define" statement.
  */
 int
 PoolStreamOutHandle(Pool *p, Handle *h, int havedata)
 {
-    if (p == NULL || p->outf == NULL)
+    if (p == NULL || p->outf == NULL) {
 	return 0;
+    }
 
-    if (h == NULL || p->otype&PO_DATA || (p->otype&PO_HANDLES && havedata)) {
+    if (h == NULL || (p->otype & PO_DATA)) {
 	return havedata;
     }
 
+    if (havedata && !h->obj_saved) {
+	h->obj_saved = true;
+	PoolFPrint(p, p->outf, "define \"%s\"\n", h->name);
+	return true;
+    }
+
     if (h->whence != NULL && h->whence->seekable) {
-	fprintf(p->outf, " < \"");
+	PoolFPrint(p, p->outf, " < \"");
 	if (strcmp(h->name, p->poolname) == 0) {
 	    fprintf(p->outf, "%s\"\n", h->whence->poolname);
 	} else {
 	    fprintf(p->outf, "%s:%s\"\n", h->whence->poolname, h->name);
 	}
     } else {
-	fprintf(p->outf, ": \"%s\"\n", h->name);
+	PoolFPrint(p, p->outf, ": \"%s\"\n", h->name);
     }
-    return ((p->otype & (PO_DATA|PO_HANDLES)) == PO_ALL);
+    
+    return havedata && !h->obj_saved &&
+	(p->otype & (PO_DATA|PO_HANDLES)) == PO_ALL;
+}
+
+void PoolFPrint(Pool *p, FILE *f, const char *format, ...)
+{
+  va_list alist;
+
+  if (p) {
+      fprintf(f, "%*s", p->level*2, "");
+  }
+  va_start(alist, format);
+  vfprintf(f, format, alist);
+  va_end(alist);
+}
+
+void PoolPrint(Pool *p, const char *format, ...)
+{
+  va_list alist;
+  
+  if (p) {
+      fprintf(PoolOutputFile(p), "%*s", p->level*2, "");
+  }
+  va_start(alist, format);
+  vfprintf(PoolOutputFile(p), format, alist);
+  va_end(alist);
 }
 
 /*

@@ -244,7 +244,6 @@ int TransObjStreamOut(Pool *p, Handle *h, TransObj *tobj)
 int
 TransStreamOut(Pool *p, Handle *h, Transform T)
 {
-    int putdata;
     FILE *outf;
 
     if ((outf = PoolOutputFile(p)) == NULL) {
@@ -252,12 +251,12 @@ TransStreamOut(Pool *p, Handle *h, Transform T)
     }
 
     fprintf(outf, "transform {\n");
-
-    putdata = PoolStreamOutHandle(p, h, true);
-    if(putdata) {
+    PoolIncLevel(p, 1);
+    if (PoolStreamOutHandle(p, h, true)) {
 	fputtransform(outf, 1, &T[0][0], 0);
     }
-    fputs("}\n", outf);
+    PoolIncLevel(p, -1);
+    PoolFPrint(p, outf, "}\n");
 
     return !ferror(outf);
 }

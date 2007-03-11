@@ -292,27 +292,26 @@ LtFLoad(LtLight *lite, IOBFILE *f, char *fname)
   return lite;
 }
 
-void
-LtFSave( LtLight *l, FILE *f )
+void LtFSave(LtLight *l, FILE *f, Pool *p)
 {
-    fprintf(f,"\t\tambient %f %f %f\n",
+    PoolFPrint(p, f, "ambient %f %f %f\n",
 	l->ambient.r,
 	l->ambient.g,
 	l->ambient.b);
-    fprintf(f,"\t\tcolor %f %f %f\n",
+    PoolFPrint(p, f, "color %f %f %f\n",
 	l->intensity*l->color.r,
 	l->intensity*l->color.g,
 	l->intensity*l->color.b);
-    fprintf(f,"\t\tposition %f %f %f %f\n",
+    PoolFPrint(p, f, "position %f %f %f %f\n",
 	l->position.x,
 	l->position.y,
 	l->position.z,
 	l->position.w);
     if(l->location != LTF_GLOBAL)
-	fprintf(f, "\t\tlocation %s\n",
-		l->location == LTF_CAMERA ? "camera" : "local");
+	PoolFPrint(p, f, "location %s\n",
+		   l->location == LTF_CAMERA ? "camera" : "local");
     /*
-    fprintf(f,"intensity %f\n", la->intensity);
+    PoolFPrint(p, f,"intensity %f\n", la->intensity);
     */
 }
 
@@ -736,23 +735,36 @@ LmFLoad(LmLighting *lgt, IOBFILE *f, char *fname)
  */
 
 void
-LmFSave(LmLighting *li, FILE *f, char *fname)
+LmFSave(LmLighting *li, FILE *f, char *fname, Pool *p)
 {
     LtLight **lp;
     int i;
 
-    fprintf(f,"\tambient %g %g %g\n", 
+    PoolFPrint(p, f, "ambient %g %g %g\n", 
 	li->ambient.r,
 	li->ambient.g,
 	li->ambient.b);
-    fprintf(f,"\tlocalviewer %d\n",li->localviewer);
-    fprintf(f,"\tattenconst %g\n",li->attenconst);
-    fprintf(f,"\tattenmult %g\n",li->attenmult);
-    if(li->valid & LMF_ATTEN2) fprintf(f,"\tattenmult2 %g\n",li->attenmult2);
-    if (li->valid & LMF_REPLACELIGHTS) fprintf(f,"\treplacelights\n");
+    PoolFPrint(p, f, "localviewer %d\n", li->localviewer);
+    PoolFPrint(p, f, "attenconst %g\n", li->attenconst);
+    PoolFPrint(p, f, "attenmult %g\n", li->attenmult);
+    if(li->valid & LMF_ATTEN2) {
+	PoolFPrint(p, f,"attenmult2 %g\n", li->attenmult2);
+    }
+    if (li->valid & LMF_REPLACELIGHTS) {
+	PoolFPrint(p, f, "replacelights\n");
+    }
     LM_FOR_ALL_LIGHTS(li, i,lp) {
-	fprintf(f, "\tlight {\n");
-	LtFSave( *lp, f );
-	fprintf(f, "\t}\n");
+	PoolFPrint(p, f, "light {\n");
+	PoolIncLevel(p, 1);	
+	LtFSave( *lp, f, p );	
+	PoolIncLevel(p, -1);
+	PoolFPrint(p, f, "}\n");
     }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

@@ -781,25 +781,29 @@ TxStreamOut(Pool *p, Handle *h, Texture *tx)
   if (f == NULL) {
     return 0;
   }
-    
-  fprintf(f, "texture {\n");
-  fprintf(f, "	clamp %s\n", clamps[tx->apply & (TXF_SCLAMP|TXF_TCLAMP)]);
-  if (tx->filename) {
-    fprintf(f, "	file %s\n", tx->filename);
-  }
-  if (tx->alphafilename) {
-    fprintf(f, "	alphafile %s\n", tx->alphafilename);
-  }
-  fprintf(f, "	apply %s\n",
-	  (unsigned)tx->apply < COUNT(applies) ? applies[tx->apply]
-	  : "???");
-  fprintf(f, "	background %g %g %g %g\n",
-	  tx->background.r, tx->background.g,
-	  tx->background.b, tx->background.a);
-  fprintf(f, "	");
-  ImgStreamOut(p, tx->imghandle, tx->image);
+
+  PoolFPrint(p, f, "texture {\n");
+  PoolIncLevel(p, 1);
+  PoolFPrint(p, f, "clamp %s\n", clamps[tx->apply & (TXF_SCLAMP|TXF_TCLAMP)]);
+  PoolFPrint(p, f, "apply %s\n",
+	     (unsigned)tx->apply < COUNT(applies) ? applies[tx->apply]
+	     : "???");
+  PoolFPrint(p, f, "background %g %g %g %g\n",
+	     tx->background.r, tx->background.g,
+	     tx->background.b, tx->background.a);
+  PoolFPrint(p, f, "");
   TransStreamOut(p, tx->tfmhandle, tx->tfm);
-  fprintf(f, "}\n");
+  if (tx->filename) {
+    PoolFPrint(p, f, "file %s\n", tx->filename);
+    if (tx->alphafilename) {
+      PoolFPrint(p, f, "alphafile %s\n", tx->alphafilename);
+    }
+  } else {
+    PoolFPrint(p, f, "");
+    ImgStreamOut(p, tx->imghandle, tx->image);
+  }
+  PoolIncLevel(p, -1);
+  PoolFPrint(p, f, "}\n");
 
   return !ferror(f);
 }

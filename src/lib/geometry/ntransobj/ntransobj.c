@@ -215,17 +215,28 @@ NTransStreamIn(Pool *p, Handle **hp, TransformN **ntobjp)
 int
 NTransStreamOut(Pool *p, Handle *h, TransformN *T)
 {
-    int putdata;
+    int i, j;
+    int idim = T->idim, odim = T->odim;
     FILE *outf;
 
     if ((outf = PoolOutputFile(p)) == NULL) {
 	return 0;
     }
 
-    putdata = PoolStreamOutHandle(p, h, T != NULL);
-    if (putdata) {
-	TmNPrint(outf, T);
+    fprintf(outf, "ntransform {\n");
+    PoolIncLevel(p, 1);
+    if (PoolStreamOutHandle(p, h, T != NULL)) {
+	PoolFPrint(p, outf, "%d %d\n", idim, odim);
+	for(i = 0; i < idim; i++) {
+	    PoolFPrint(p, outf, "");
+	    for(j = 0; j < odim; j++) {
+		fprintf(outf, "%10.7f ", T->a[i*odim+j]);
+	    }
+	    fprintf(outf, "\n");
+	}
     }
+    PoolIncLevel(p, -1);
+    PoolFPrint(p, outf, "\n");
     return !ferror(outf);
 }
 

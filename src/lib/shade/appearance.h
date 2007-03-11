@@ -375,7 +375,7 @@ Material *	MtCopy( Material *from, Material *into );
 Material *	MtMerge( Material *src, Material *dst, int inplace );
 Material *	MtFLoad( Material *into, IOBFILE *stream, char *filename );
 int		MtSave( Material *, char *filename );
-int		MtFSave( Material *mat, FILE *stream );
+int		MtFSave( Material *mat, FILE *stream, Pool *p );
 void		MtPrint( Material * );
 
 
@@ -404,7 +404,7 @@ void 		LmDefault( LmLighting * );
 LmLighting *	LmLoad( LmLighting *, char *filename );
 LmLighting *	LmFLoad( LmLighting *, IOBFILE *, char *filename );
 void 		LmSave( LmLighting *, char *filename );
-void 		LmFSave( LmLighting *, FILE *, char *filename );
+void 		LmFSave( LmLighting *, FILE *, char *filename, Pool *p );
 LmLighting *	LmMerge( LmLighting *src, LmLighting *dst, int inplace );
 LmLighting *	LmCopy( LmLighting *src, LmLighting *dst );
 void		LmAddLight( LmLighting *dst, LtLight *light );

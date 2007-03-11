@@ -622,44 +622,53 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
   }
 
   fprintf(f, "image {\n");
-  fprintf(f, "  width %d\n", img->width);
-  fprintf(f, "  height %d\n", img->height);
-  fprintf(f, "  channels %d\n", img->channels);
-  fprintf(f, "  maxval %d\n", img->maxval);
-  /* For convenience we dump the stuff in pnm/pgm format with separate
-   * alpha channel.
-   */
-  switch (img->channels) {
-  case 2: /* two greymaps, luminance and alpha */
-    olen = write_pgm(&obuf, img, 1, HAVE_LIBZ);
-    fprintf(f, "  data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-    fwrite(obuf, olen, 1, f);
-    fprintf(f, "  \n}\n");
-    OOGLFree(obuf);
-    /* fall through to luminance only */
-  case 1: /* greymap, luminance */
-    olen = write_pgm(&obuf, img, 0, HAVE_LIBZ);
-    fprintf(f, "  data LUMINANCE %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-    fwrite(obuf, olen, 1, f);
-    fprintf(f, "  \n}\n");
-    OOGLFree(obuf);
-    break;
-  case 4: /* RGBA */
-    olen = write_pgm(&obuf, img, 3, HAVE_LIBZ);
-    fprintf(f, "  data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-    fwrite(obuf, olen, 1, f);
-    fprintf(f, "  \n}\n");
-    OOGLFree(obuf);
-    /* fall through to RGB */
-  case 3: /* RGB only */
-    olen = write_pnm(&obuf, img, 0x07, HAVE_LIBZ);
-    fprintf(f, "  data RGB %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-    fwrite(obuf, olen, 1, f);
-    fprintf(f, "  \n}\n");
-    OOGLFree(obuf);
-    break;
+  PoolIncLevel(p, 1);
+  if (PoolStreamOutHandle(p, h, img != NULL)) {
+    PoolFPrint(p, f, "width %d\n", img->width);
+    PoolFPrint(p, f, "height %d\n", img->height);
+    PoolFPrint(p, f, "channels %d\n", img->channels);
+    PoolFPrint(p, f, "maxval %d\n", img->maxval);
+    /* For convenience we dump the stuff in pnm/pgm format with separate
+     * alpha channel.
+     */
+    switch (img->channels) {
+    case 2: /* two greymaps, luminance and alpha */
+      olen = write_pgm(&obuf, img, 1, HAVE_LIBZ);
+      PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      /* fall through to luminance only */
+    case 1: /* greymap, luminance */
+      olen = write_pgm(&obuf, img, 0, HAVE_LIBZ);
+      PoolFPrint(p, f,
+		 "data LUMINANCE %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      break;
+    case 4: /* RGBA */
+      olen = write_pgm(&obuf, img, 3, HAVE_LIBZ);
+      PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      /* fall through to RGB */
+    case 3: /* RGB only */
+      olen = write_pnm(&obuf, img, 0x07, HAVE_LIBZ);
+      PoolFPrint(p, f, "data RGB %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      break;
+    }
   }
-  fprintf(f, "}\n");
+  PoolIncLevel(p, -1);
+  PoolFPrint(p, f, "}\n");
   return !ferror(f);
 }
 	

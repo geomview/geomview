@@ -361,7 +361,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    if(strcmp(w, "appearance") == 0) {
 		more = 1;
 		if (!ApStreamIn(p, &aphandle, &ap)) {
-		    OOGLSyntax(f, "%s: appearnce definition expected",
+		    OOGLSyntax(f, "%s: appearance definition expected",
 			       PoolName(p));
 		    GeomDelete(g);
 		    return false;
@@ -515,7 +515,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 int
 GeomStreamOut(Pool *p, Handle *h, Geom *g)
 {
-    int putdata;
     int brack;
 
     if(PoolOutputFile(p) == NULL)
@@ -531,25 +530,36 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 
     brack = (p->level > 0 || (g && (g->ap || g->aphandle)) || h != NULL);
 
-    if(brack)
-	fprintf(PoolOutputFile(p), "{ ");
+    if(brack) {
+	fprintf(PoolOutputFile(p), "{");
+    }
 
-    if(p->otype & 4) fprintf(PoolOutputFile(p), "# %d refs\n", g->ref_count); /* debug */
+    if (p->otype & 4) {
+	fprintf(PoolOutputFile(p), " # %d refs\n", g->ref_count); /* debug */
+    } else {
+	fprintf(PoolOutputFile(p), "\n");
+    }
 
-    if(g && (g->ap || g->aphandle))
+    PoolIncLevel(p, 1);
+
+    if(g && (g->ap || g->aphandle)) {
+	PoolPrint(p, ""); /* use the proper indentation */
 	ApStreamOut(p, g->aphandle, g->ap);
+    }
 
-    putdata = PoolStreamOutHandle( p, h, g != NULL );
-    if(g != NULL && putdata) {
-	PoolIncLevel(p, 1);
+    if (PoolStreamOutHandle(p, h, g != NULL)) {
 	if(g->Class->export)
 	    (*g->Class->export)(g, p);
 	else if(g->Class->fsave)
 	    (*g->Class->fsave)(g, PoolOutputFile(p), PoolName(p));
-	PoolIncLevel(p, -1);
     }
-    if(brack)
-	fprintf(PoolOutputFile(p), "}\n");
+
+    PoolIncLevel(p, -1);
+
+    if(brack) {
+	PoolPrint(p, "}\n");
+    }
+
     return !ferror(PoolOutputFile(p));
 }
 

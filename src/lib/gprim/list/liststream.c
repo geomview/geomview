@@ -117,14 +117,24 @@ ListImport( Pool *p )
 int
 ListExport( List *l, Pool *p )
 {
-    if(p == NULL || p->outf == NULL)
+    if(p == NULL || p->outf == NULL) {
 	return 0;
+    }
 
-    fprintf(p->outf, "LIST\n");
+    PoolFPrint(p, p->outf, "LIST\n");
     while(l != NULL) {
-	if(!GeomStreamOut( p, l->carhandle, l->car ))
+	if(!GeomStreamOut( p, l->carhandle, l->car )) {
 	    return 0;
+	}
 	l = l->cdr;
     }
     return 1;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
+	

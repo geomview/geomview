@@ -294,14 +294,18 @@ int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
 }
 
 int
-Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f)
+Apsavepfx(int valid, int override, int mask, char *keyword, FILE *f, Pool *p)
 {
-  if ((valid & mask) == 0)
+  if ((valid & mask) == 0) {
     return 0;
-  fputc('\t', f);
-  if (override & mask)
+  }
+  PoolFPrint(p, f, "");
+  if (override & mask) {
     fputc('*', f);
-  fprintf(f, "%s ", keyword);
+  }
+  if (keyword && *keyword) {
+    fprintf(f, "%s ", keyword);
+  }
   return 1;
 }
 
@@ -320,61 +324,70 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap)
 
   valid = ap->valid;
   fprintf(f, "appearance {\n");
-
-  for (i = 0; i < sizeof(ap_kw)/sizeof(ap_kw[0]); i++) {
-    mask = ap_kw[i].amask;
-    if ((valid & mask) == 0)
-      continue;
-    Apsavepfx(valid, ap->override, mask, "", f);
-    if (ap_kw[i].aval == 0) {
-      if ((mask & ap->flag) == 0)
-	fputc('-', f);
-      fputs(ap_kw[i].word, f);
-    }
-    valid &= ~mask;
-    switch(mask) {
-    case APF_SHADING:
-      fputs(" shading ", f);
-      switch(ap->shading) {
-      case APF_SMOOTH:	fputs("smooth", f);	break;
-      case APF_FLAT:	fputs("flat", f);	break;
-      case APF_CONSTANT:	fputs("constant", f);	break;
-      case APF_CSMOOTH:   fputs("csmooth", f);	break;
-      default:		fprintf(f, "%d", ap->shading); break;
+  PoolIncLevel(p, 1);
+  if (PoolStreamOutHandle(p, h, ap != NULL)) {
+    for (i = 0; i < sizeof(ap_kw)/sizeof(ap_kw[0]); i++) {
+      mask = ap_kw[i].amask;
+      if ((valid & mask) == 0)
+	continue;
+      Apsavepfx(valid, ap->override, mask, "", f, p);
+      if (ap_kw[i].aval == 0) {
+	if ((mask & ap->flag) == 0)
+	  fputc('-', f);
+	fputs(ap_kw[i].word, f);
       }
-      break;
-    case APF_NORMSCALE:
-      fprintf(f, "  normscale %g", ap->nscale);
-      break;
-    case APF_LINEWIDTH:
-      fprintf(f, "  linewidth %d ", ap->linewidth);
-      break;
-    case APF_DICE:
-      fprintf(f, "  patchdice %d %d", ap->dice[0], ap->dice[1]);
-      break;
+      valid &= ~mask;
+      switch(mask) {
+      case APF_SHADING:
+	fputs("shading ", f);
+	switch(ap->shading) {
+	case APF_SMOOTH:   fputs("smooth", f);	break;
+	case APF_FLAT:     fputs("flat", f);	break;
+	case APF_CONSTANT: fputs("constant", f);	break;
+	case APF_CSMOOTH:  fputs("csmooth", f);	break;
+	default:           fprintf(f, "%d", ap->shading); break;
+	}
+	break;
+      case APF_NORMSCALE:
+	fprintf(f, "normscale %g", ap->nscale);
+	break;
+      case APF_LINEWIDTH:
+	fprintf(f, "linewidth %d ", ap->linewidth);
+	break;
+      case APF_DICE:
+	fprintf(f, "patchdice %d %d", ap->dice[0], ap->dice[1]);
+	break;
+      }
+      fputc('\n', f);
     }
-    fputc('\n', f);
-  }
 
-  if (ap->mat) {
-    fprintf(f, "  material {\n");
-    MtFSave(ap->mat, f);
-    fprintf(f, "  }\n");
+    if (ap->mat) {
+      PoolFPrint(p, f, "material {\n");
+      PoolIncLevel(p, 1);
+      MtFSave(ap->mat, f, p);
+      PoolIncLevel(p, -1);
+      PoolFPrint(p, f, "}\n");
+    }
+    if (ap->backmat) {
+      PoolFPrint(p, f, "backmaterial {\n");
+      PoolIncLevel(p, 1);      
+      MtFSave(ap->backmat, f, p);
+      PoolIncLevel(p, -1);
+      PoolFPrint(p, f, "}\n");
+    }
+    if (ap->lighting) {
+      PoolFPrint(p, f, "lighting {\n");
+      PoolIncLevel(p, 1);      
+      LmFSave(ap->lighting, f, p->poolname, p);
+      PoolIncLevel(p, -1);
+      PoolFPrint(p, f, "}\n");
+    }
+    if (ap->tex) {
+      TxStreamOut(p, NULL, ap->tex);
+    }
   }
-  if (ap->backmat) {
-    fprintf(f, "  backmaterial {\n");
-    MtFSave(ap->backmat, f);
-    fprintf(f, "  }\n");
-  }
-  if (ap->lighting) {
-    fprintf(f, "  lighting {\n");
-    LmFSave(ap->lighting, f, p->poolname);
-    fprintf(f, "  }\n");
-  }
-  if (ap->tex) {
-    TxStreamOut(p, NULL, ap->tex);
-  }
-  fprintf(f, "}\n");
+  PoolIncLevel(p, -1);
+  PoolFPrint(p, f, "}\n");
 
   return !ferror(f);
 }
