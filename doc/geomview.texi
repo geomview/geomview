@@ -1149,10 +1149,20 @@ executing the gcl command:
 Like @samp{-M} above, but expects gcl commands, rather than OOGL
 geometry data, on the connection.
 
+@item -noopengl
+Disable the use of OpenGL for (possibly) hardware accelerated rendering,
+even if the Geomview binary has support for OpenGL compiled in. This
+also disables the support for transparency and and textures
+
 @item -nopanels
 Start up displaying no panels, only graphics windows.  Panels may be
 invoked later as usual with the @kbd{Px} keyboard shortcuts or with
 the @code{ui-panel} command.
+
+@item -noinit
+Read no initialization files. By default, geomview reads the system-wide
+@file{.geomview} file, followed by those in @file{$@{HOME@}/.geomview} and
+@file{./.geomview}.
 
 @item -e @var{module}
 Start an external module; @var{module} is the name associated with the
@@ -2876,12 +2886,9 @@ hierarchies, e.g. attaching an appearance to a @code{LIST} means that the
 appearance is applied to all the @code{LIST}'s members.
 
 Some appearance-related properties are relegated to "material",
-"lighting" and "texture" substructures.  Take care to note which
-properties belong to which structure. There is a separate section
-concerning the definition of textures (@pxref{Texture Mapping}).
-
-Any geometric object can be preceeded by an appearance definintion like
-in the following example:
+"lighting" and "texture" substructures. Take care to note which
+properties belong to which structure. Any geometric object can be
+preceded by an appearance definintion like in the following example:
 
 @example
 @{ 
@@ -2893,6 +2900,21 @@ in the following example:
 Appearances are also OOGL objects in their own right and can be given
 symbolic names and referenced by them
 (@pxref{References}). @xref{appearance, Appearance objects}.
+
+@table @b
+@item Texture Mapping
+There is a separate section concerning the definition of textures
+(@pxref{Texture Mapping}).
+
+@item Transparency
+Rendering translucent objects is not supported by all drawing back
+ends. The OpenGL renderer has limited support for it: top-level objects
+(i.e. those which appear in the object browser of the main panel
+(@pxref{Basic Interaction, The Main Panel}) are rendered correctly by
+means of alpha-blending, provided they are composed of nothing more
+complicated than triangles, quadrilaterals (not necessarily flat or
+convex) or convex and flat polygons.
+@end table
 
 Here's an example appearance structure including values for all
 attributes.  Order of attributes is unimportant.  As usual, white space
@@ -2909,9 +2931,10 @@ appearance @{
   +face               # (Do) draw faces of polygons.  On by default.
   -edge               # (Don't) draw edges of polygons
   +vect               # (Do) draw VECTs.  On by default.
-  -transparent        # (Disable) transparency. enabling transparency 
-                      # does NOT result in a correct Geomview picture, 
-                      # but alpha values are used in RenderMan snapshots.
+  -transparent        # (Disable) transparency. Enabling transparency 
+                      # does not (necessarily) result in a correct Geomview
+                      # pictures, but alpha values are used in RenderMan
+                      # snapshots.
   -normal             # (Do) draw surface-normal vectors
   normscale 1         # @dots{} with length 1.0 in object coordinates
 
@@ -4217,14 +4240,14 @@ alpha channel), the 2nd source channel would determine the @samp{blue}
 destination value and the 1st source channel the @samp{red} destination
 value.
 
-The number of source channels always has to match the number of
-destination channels. @b{Exception:} if the source pixmap has only one
-channel, then it can be used to fill any number of destination channels;
-all channels specified in @samp{DESTMASK} are filled with the data of
-the single source channel.
+The number of channels of the source data always has to match the number
+of bits set in @samp{DESTMASK}. @b{Exception:} if the source pixmap has
+only one channel, then it can be used to fill any number of destination
+channels; all channels specified in @samp{DESTMASK} are filled with the
+data of the single channel source pixmap.
 
-Geomview knows the following symbolic constants instead of specifying
-the @samp{DESTMASK} bit-field numerically:
+Geomview knows the following symbolic constants, which can be used
+instead of specifying the @samp{DESTMASK} bit-field numerically:
 @table @code
 @item LUMINANCE
 same as @samp{1}, @samp{0x1}, @samp{\01}
@@ -4236,7 +4259,7 @@ same as @samp{7}, @samp{0x7}, @samp{\07}
 same as @samp{15}, @samp{0xf}, @samp{\017}
 @item ALPHA
 depends on the context: the absolute number of channels must be known;
-i.e. @code{data ALPHA ...} must be prepended by something determining
+i.e. @samp{data ALPHA ...} must be prepended by something determining
 the number of channels of the image, e.g.
 @example
 ...
@@ -4260,7 +4283,7 @@ as RGB image data. @code{AUTO} cannot work with @samp{raw} image data.
 @item FILTER
 The @samp{FILTER} specification is optional. If it is missing, then
 Geomview tries to determine the image type from the @samp{FILENAME}
-suffix. If there is no suffix of the suffix is unknown, or for embedded
+suffix. If there is no suffix or the suffix is unknown, or for embedded
 image data, Geomview is able to auto-detectc SGI image file formats (for
 historical reasons ...) and NetPBM image formats (for practical
 reasons). Likewise, the final output of any of the specified filters
@@ -4290,10 +4313,10 @@ Geomview has builtin knowledge for the following filters/suffixes:
 @item z
 @item gz
 @item gzip
-data is piped through @code{gzip -dc}
+data is piped through @samp{gzip -dc}
 @item bz2
 @item bzip2
-data is piped through @code{bzip2 -dc}
+data is piped through @samp{bzip2 -dc}
 @end table
 
 @item Image Formats
@@ -8202,3 +8225,5 @@ Thank you.
 @listoffloats Figure
 
 @bye
+
+@c  LocalWords:  Geomview RenderMan
