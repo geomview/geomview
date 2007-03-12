@@ -501,8 +501,20 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	  }
 	}
 
-#if 1
-	/* texture??? */
+	/* Texture support, to some extend. We dump all (different)
+	 * texture images to files, enumerated by a sequence
+	 * number. Then we insert for each image a line
+
+	 ``MakeTexture "ourfile" "ribtxfile" "none" "none" "gaussian" 1.0 1.0''
+	 
+	 * in front of WorldBegin (unluckily all texture must be
+	 * defined before the call to WorldBegin, meaning the
+	 * RIB-command).
+	 *
+	 * We do all the clamping and transformation ourselves. FIXME:
+	 * is there as texture transformation in the RenderMan shading
+	 * language??
+	 */
 	if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW))
 	    == 
 	    (APF_TEXTURE|APF_FACEDRAW)
@@ -544,7 +556,6 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    mrti(mr_subarray2, &st, mr_NULL);
 	  }
 	}
-#endif
 
 	break;
 

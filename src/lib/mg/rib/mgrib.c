@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -107,7 +108,7 @@ struct mgfuncs mgribfuncs = {
   mg_tagappearance,
   mg_untagappearance,
   mg_taggedappearance
-  };
+};
 
 static mgribcontext *MGRIB;	/* For debugging */
 
@@ -135,7 +136,7 @@ mgrib_ctxcreate(int a1, ...)
     
   _mgc =
     (mgcontext*)(MGRIB = mgrib_newcontext( OOGLNewE(mgribcontext,
-    	"mgrib_ctxcreate") ));
+						    "mgrib_ctxcreate") ));
 
   /* Ensure some sensible default Window */
   WnSet(_mgc->win, WN_XSIZE, 450, WN_YSIZE, 450, WN_END);
@@ -151,6 +152,7 @@ mgrib_ctxcreate(int a1, ...)
   va_start(alist, a1);
   _mgrib_ctxset(a1, &alist);
   va_end(alist);
+
   return _mgc;
 }
 
@@ -221,60 +223,60 @@ _mgrib_ctxset(int a1, va_list *alist)
     case MG_NDCTX:  _mgc->NDctx = va_arg(*alist, mgNDctx *); break;
 
 
-    /* kind of RIB-specific */
+      /* kind of RIB-specific */
     case MG_RIBFILE:
-/*        if(_mgribc->rib) fclose(_mgribc->rib); */
-	_mgribc->rib = va_arg(*alist, FILE*);
-	break;
+      /*        if(_mgribc->rib) fclose(_mgribc->rib); */
+      _mgribc->rib = va_arg(*alist, FILE*);
+      break;
 
-    /* really RIB-specific */
+      /* really RIB-specific */
     case MG_RIBLINEMODE:
-	_mgribc->line_mode = va_arg(*alist, int);
-	break;
+      _mgribc->line_mode = va_arg(*alist, int);
+      break;
     case MG_RIBFORMAT:
-	switch( va_arg(*alist, int) ) {
-	case MG_RIBASCII:
-	    _mgribc->render_device |= RMD_ASCII;
-	    _mgribc->render_device &= ~RMD_BINARY; break;
-	case MG_RIBBINARY:
-	    _mgribc->render_device |= RMD_BINARY;
-	    _mgribc->render_device &= ~RMD_ASCII; break;
-	}
-	break;
+      switch( va_arg(*alist, int) ) {
+      case MG_RIBASCII:
+	_mgribc->render_device |= RMD_ASCII;
+	_mgribc->render_device &= ~RMD_BINARY; break;
+      case MG_RIBBINARY:
+	_mgribc->render_device |= RMD_BINARY;
+	_mgribc->render_device &= ~RMD_ASCII; break;
+      }
+      break;
     case MG_RIBFILEPATH:
-	if(_mgribc->rib) fclose(_mgribc->rib);
-	strcpy(_mgribc->filepath, va_arg(*alist, char*));
-	_mgribc->rib = fopen(_mgribc->filepath,"w+");
-	break;
+      if(_mgribc->rib) fclose(_mgribc->rib);
+      strcpy(_mgribc->filepath, va_arg(*alist, char*));
+      _mgribc->rib = fopen(_mgribc->filepath,"w+");
+      break;
     case MG_RIBDISPLAY:
-        _mgribc->display = va_arg(*alist, int);
-        break;
+      _mgribc->display = va_arg(*alist, int);
+      break;
     case MG_RIBDISPLAYNAME:
-	strcpy(_mgribc->displayname, va_arg(*alist, char*));
-        break;
+      strcpy(_mgribc->displayname, va_arg(*alist, char*));
+      break;
     case MG_RIBBACKING:
-        _mgribc->backing = va_arg(*alist, int);
-	break;
+      _mgribc->backing = va_arg(*alist, int);
+      break;
     case MG_RIBSHADER:
-        _mgribc->shader = va_arg(*alist, int);
-	break;
+      _mgribc->shader = va_arg(*alist, int);
+      break;
     case MG_RIBSCENE:
-    	strcpy(_mgribc->ribscene, va_arg(*alist, char*));
-	break;
+      strcpy(_mgribc->ribscene, va_arg(*alist, char*));
+      break;
     case MG_RIBCREATOR:
-    	strcpy(_mgribc->ribcreator, va_arg(*alist, char*));
-	break;
+      strcpy(_mgribc->ribcreator, va_arg(*alist, char*));
+      break;
     case MG_RIBFOR:
-    	strcpy(_mgribc->ribfor, va_arg(*alist, char*));
-	break;
+      strcpy(_mgribc->ribfor, va_arg(*alist, char*));
+      break;
     case MG_RIBDATE:
-    	strcpy(_mgribc->ribdate, va_arg(*alist, char*));
-	break;
+      strcpy(_mgribc->ribdate, va_arg(*alist, char*));
+      break;
     default:
     
-    	OOGLError (0, "_mgrib_ctxset: undefined option: %d\n", attr);
-    	return;
-    	break;
+      OOGLError (0, "_mgrib_ctxset: undefined option: %d\n", attr);
+      return;
+      break;
     }
   }
 
@@ -305,7 +307,7 @@ mgrib_ctxget(int attr, void* value)
 
   switch (attr) {
 
-  /* Attributes common to all MG contexts: */
+    /* Attributes common to all MG contexts: */
   case MG_APPEAR:
     *VALUE(Appearance*) = &(_mgc->astk->ap);
     break;
@@ -314,7 +316,7 @@ mgrib_ctxget(int attr, void* value)
     break;
   case  MG_WINDOW:
     if(_mgribc->born) {
-    /* IT DOESN'T MAKE SENSE TO DO THIS, DOES IT? */
+      /* IT DOESN'T MAKE SENSE TO DO THIS, DOES IT? */
     }
     *VALUE(WnWindow*) = _mgc->win;
     break;
@@ -334,49 +336,49 @@ mgrib_ctxget(int attr, void* value)
   case MG_SPACE: *VALUE(int) = _mgc->space; break;
   case MG_NDCTX: *VALUE(mgNDctx *) = _mgc->NDctx; break;
 
-  /* Attributes specific to RIB contexts: */
+    /* Attributes specific to RIB contexts: */
   case MG_RIBWINID:
     *VALUE(int) = _mgribc->win;
     break;
   case MG_RIBFILE:
     *VALUE(FILE*) = _mgribc->rib;
-     break;
+    break;
 
-  /* Attributes really specific to RI contexts: */
+    /* Attributes really specific to RI contexts: */
   case MG_RIBLINEMODE:
-     *VALUE(int) = _mgribc->line_mode;
-	 break;
+    *VALUE(int) = _mgribc->line_mode;
+    break;
   case MG_RIBFORMAT:
-     if(_mgribc->render_device & RMD_ASCII) *VALUE(int) = MG_RIBASCII;
-     if(_mgribc->render_device & RMD_BINARY) *VALUE(int) = MG_RIBBINARY;
-	 break;
+    if(_mgribc->render_device & RMD_ASCII) *VALUE(int) = MG_RIBASCII;
+    if(_mgribc->render_device & RMD_BINARY) *VALUE(int) = MG_RIBBINARY;
+    break;
   case MG_RIBFILEPATH:
-     *VALUE(char *) = _mgribc->filepath;
-	 break;
+    *VALUE(char *) = _mgribc->filepath;
+    break;
   case MG_RIBDISPLAY:
-     *VALUE(int) = _mgribc->display;
-	 break;
+    *VALUE(int) = _mgribc->display;
+    break;
   case MG_RIBDISPLAYNAME:
-     *VALUE(char *) = _mgribc->displayname;
-	 break;
+    *VALUE(char *) = _mgribc->displayname;
+    break;
   case MG_RIBBACKING:
-     *VALUE(int) = _mgribc->backing;
-     break;
+    *VALUE(int) = _mgribc->backing;
+    break;
   case MG_RIBSHADER:
-     *VALUE(int) = _mgribc->shader;
-     break;
+    *VALUE(int) = _mgribc->shader;
+    break;
   case MG_RIBSCENE:
-     *VALUE(char *) = _mgribc->ribscene;
-     break;
+    *VALUE(char *) = _mgribc->ribscene;
+    break;
   case MG_RIBCREATOR:
-     *VALUE(char *) = _mgribc->ribcreator;
-     break;
+    *VALUE(char *) = _mgribc->ribcreator;
+    break;
   case MG_RIBFOR:
-     *VALUE(char *) = _mgribc->ribfor;
-     break;
+    *VALUE(char *) = _mgribc->ribfor;
+    break;
   case MG_RIBDATE:
-     *VALUE(char *) = _mgribc->ribdate;
-     break;
+    *VALUE(char *) = _mgribc->ribdate;
+    break;
   default:
     OOGLError (0, "mgrib_ctxget: undefined option: %d\n", attr);
     return -1;
@@ -405,43 +407,43 @@ mgribwindow(WnWindow *win)
   int xsize, ysize;
   char fullscene[280], fullcreator[280], fullfor[280], fulldate[280];
 
-    /* RIB 1.0 structure comments */
-    sprintf(fullscene,"Scene %s",_mgribc->ribscene);
-    sprintf(fullcreator,"Creator %s",_mgribc->ribcreator);
-    sprintf(fullfor,"For %s",_mgribc->ribfor);
-    sprintf(fulldate,"CreationDate %s",_mgribc->ribdate);
-    mrti(mr_header,"RenderMan RIB-Structure 1.0", mr_nl,
-    	 mr_header, fullscene, mr_nl,
-	 mr_header, fullcreator, mr_nl,
-	 mr_header, fulldate, mr_nl,
-	 mr_header, fullfor, mr_nl,
-	 mr_header, "Frames 1", mr_nl,	/* always 1 frame*/
-	 mr_NULL);
+  /* RIB 1.0 structure comments */
+  sprintf(fullscene,"Scene %s",_mgribc->ribscene);
+  sprintf(fullcreator,"Creator %s",_mgribc->ribcreator);
+  sprintf(fullfor,"For %s",_mgribc->ribfor);
+  sprintf(fulldate,"CreationDate %s",_mgribc->ribdate);
+  mrti(mr_header,"RenderMan RIB-Structure 1.0", mr_nl,
+       mr_header, fullscene, mr_nl,
+       mr_header, fullcreator, mr_nl,
+       mr_header, fulldate, mr_nl,
+       mr_header, fullfor, mr_nl,
+       mr_header, "Frames 1", mr_nl,	/* always 1 frame*/
+       mr_NULL);
 
-    /* options */
-    if(_mgribc->shader && _mgribc->shadepath) {
-	mrti(mr_header, "CapabilitiesNeeded ShadingLanguage", mr_nl,
-	     mr_embed, "version 3.03", mr_nl,
-	     mr_option, mr_string, "searchpath", mr_string, "shader",
-		mr_nl, mr_embed, "[", mr_string, _mgribc->shadepath,
-		mr_embed, "]", mr_nl, mr_nl, mr_NULL);
-    } else {
-        mrti(mr_embed, "version 3.03", mr_nl, mr_nl, mr_NULL);
-    }
+  /* options */
+  if(_mgribc->shader && _mgribc->shadepath) {
+    mrti(mr_header, "CapabilitiesNeeded ShadingLanguage", mr_nl,
+	 mr_embed, "version 3.03", mr_nl,
+	 mr_option, mr_string, "searchpath", mr_string, "shader",
+	 mr_nl, mr_embed, "[", mr_string, _mgribc->shadepath,
+	 mr_embed, "]", mr_nl, mr_nl, mr_NULL);
+  } else {
+    mrti(mr_embed, "version 3.03", mr_nl, mr_nl, mr_NULL);
+  }
         
-    /* set display characteristics...*/
-    mrti(mr_display, mr_string, _mgribc->displayname, 
-         (_mgribc->display == MG_RIBFRAME) ? mr_framebuffer : mr_file, 
-         (_mgribc->backing == MG_RIBDOBG) ? mr_rgb : mr_rgba, mr_NULL);
+  /* set display characteristics...*/
+  mrti(mr_display, mr_string, _mgribc->displayname, 
+       (_mgribc->display == MG_RIBFRAME) ? mr_framebuffer : mr_file, 
+       (_mgribc->backing == MG_RIBDOBG) ? mr_rgb : mr_rgba, mr_NULL);
 
-    /* window size */
-    WnGet(_mgc->win, WN_CURPOS, &wp);
-    xsize = wp.xmax - wp.xmin + 1;
-    ysize = wp.ymax - wp.ymin + 1;
-    mrti(mr_format, mr_int, xsize, mr_int, ysize, mr_float, 1., mr_NULL);
+  /* window size */
+  WnGet(_mgc->win, WN_CURPOS, &wp);
+  xsize = wp.xmax - wp.xmin + 1;
+  ysize = wp.ymax - wp.ymin + 1;
+  mrti(mr_format, mr_int, xsize, mr_int, ysize, mr_float, 1., mr_NULL);
 
-    _mgribc->born = 1;
-    return(win);
+  _mgribc->born = 1;
+  return(win);
 }
 
 /*-----------------------------------------------------------------------
@@ -490,20 +492,25 @@ int mgrib_feature( int feature )
  */
 void mgrib_ctxdelete( mgcontext *ctx )
 {
-/*  if(_mgribc->rib) fclose(_mgribc->rib); */
+  /*  if(_mgribc->rib) fclose(_mgribc->rib); */
 
   if(ctx->devno != MGD_RIB) {
     mgcontext *was = _mgc;
     mgctxselect(ctx);
     mgctxdelete(ctx);
-    if(was != ctx)
-	mgctxselect(was);
+    if(was != ctx) {
+      mgctxselect(was);
+    }
   } else {
-    if(((mgribcontext *)ctx)->shadepath)
-        free(((mgribcontext *)ctx)->shadepath);
+    if(((mgribcontext *)ctx)->shadepath) {
+      free(((mgribcontext *)ctx)->shadepath);
+    }
+    if (_mgribc->tximg) {
+      OOGLFree(_mgribc->tximg);
+    }
     mg_ctxdelete(ctx);
     if(ctx == _mgc)
-	_mgc = NULL;
+      _mgc = NULL;
   }
 }
 
@@ -558,126 +565,126 @@ mgrib_worldbegin( void )
   LtLight **lp;
   int i;
 
-    /* first, check to see if we need to open the default rib file    */
-    /* IT'S NOW POSSIBLE THAT THIS WON'T GET SENT TO A FILE (streams) */
-    /* IN WHICH CASE IT WOULD BE WRONG TO OPEN A FILE. MOVE THIS!!    */
-    if(!_mgribc->rib)
-    	_mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
+  /* first, check to see if we need to open the default rib file    */
+  /* IT'S NOW POSSIBLE THAT THIS WON'T GET SENT TO A FILE (streams) */
+  /* IN WHICH CASE IT WOULD BE WRONG TO OPEN A FILE. MOVE THIS!!    */
+  if(!_mgribc->rib)
+    _mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
 	
-    /* interpret options...(none exist now) */
+  /* interpret options...(none exist now) */
 
 
-    mg_worldbegin();
-    mg_findcam();
+  mg_worldbegin();
+  mg_findcam();
 
-    LM_FOR_ALL_LIGHTS( _mgc->astk->ap.lighting, i,lp ) {
-	(*lp)->changed = 1;	/* We'll need to emit all the lights once */
-    }
+  LM_FOR_ALL_LIGHTS( _mgc->astk->ap.lighting, i,lp ) {
+    (*lp)->changed = 1;	/* We'll need to emit all the lights once */
+  }
 
-
-    /* Camera is at (in its own coordinates)  (0,0,0).
-     * Looking toward vector (0,0,-1)
-     * nominally looking at a point (0,0,-focallen)
-     */
-    CamGet(_mgc->cam, CAM_FOCUS, &_mgribc->focallen);
-    look.x = look.y = 0;  look.z = -_mgribc->focallen;   look.w = 1;
-    /* Transform to world coordinates */
-    HPt3TransPt3(_mgc->C2W, &look, &lookat);    
-    /* Now the camera is at _mgc->cpos (this is a Point3), */
-    /* looking at lookat (another Point3) */
+  /* Camera is at (in its own coordinates)  (0,0,0).
+   * Looking toward vector (0,0,-1)
+   * nominally looking at a point (0,0,-focallen)
+   */
+  CamGet(_mgc->cam, CAM_FOCUS, &_mgribc->focallen);
+  look.x = look.y = 0;  look.z = -_mgribc->focallen;   look.w = 1;
+  /* Transform to world coordinates */
+  HPt3TransPt3(_mgc->C2W, &look, &lookat);    
+  /* Now the camera is at _mgc->cpos (this is a Point3), */
+  /* looking at lookat (another Point3) */
    
-    /* interpret camera ...*/
-    CamGet( _mgc->cam, CAM_NEAR, &cnear);
-    CamGet( _mgc->cam, CAM_FAR, &cfar);
-    mrti(mr_clipping, mr_float, cnear, mr_float, cfar, mr_NULL);
-    CamGet( _mgc->cam, CAM_PERSPECTIVE, &_mgribc->persp);
-    mrti(mr_projection, mr_string,
-	 _mgribc->persp ? "perspective" : "orthographic", mr_NULL);
-    CamGet( _mgc->cam, CAM_ASPECT, &aspect );
-    CamGet( _mgc->cam, CAM_HALFYFIELD, &halfyfield );
-    halfxfield = halfyfield * aspect;
-    mrti(mr_screenwindow, mr_float, -halfxfield, mr_float, halfxfield,
-    	mr_float, -halfyfield, mr_float, halfyfield, mr_NULL);
-    CamGet( _mgc->cam, CAM_FOV, &fov);
-    sprintf(str, "Field of view %g", fov);
-    mrti(mr_comment, str, mr_NULL);
-    mrti(mr_framebegin, mr_int, 1, mr_nl, mr_NULL);
+  /* interpret camera ...*/
+  CamGet( _mgc->cam, CAM_NEAR, &cnear);
+  CamGet( _mgc->cam, CAM_FAR, &cfar);
+  mrti(mr_clipping, mr_float, cnear, mr_float, cfar, mr_NULL);
+  CamGet( _mgc->cam, CAM_PERSPECTIVE, &_mgribc->persp);
+  mrti(mr_projection, mr_string,
+       _mgribc->persp ? "perspective" : "orthographic", mr_NULL);
+  CamGet( _mgc->cam, CAM_ASPECT, &aspect );
+  CamGet( _mgc->cam, CAM_HALFYFIELD, &halfyfield );
+  halfxfield = halfyfield * aspect;
+  mrti(mr_screenwindow, mr_float, -halfxfield, mr_float, halfxfield,
+       mr_float, -halfyfield, mr_float, halfyfield, mr_NULL);
+  CamGet( _mgc->cam, CAM_FOV, &fov);
+  sprintf(str, "Field of view %g", fov);
+  mrti(mr_comment, str, mr_NULL);
+  mrti(mr_framebegin, mr_int, 1, mr_nl, mr_NULL);
     
-    if (_mgc->cpos.w != 0.0 && _mgc->cpos.w != 1.0) {
-	sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
-		_mgc->cpos.x/_mgc->cpos.w,
-		_mgc->cpos.y/_mgc->cpos.w,
-		_mgc->cpos.z/_mgc->cpos.w,
-		lookat.x,lookat.y,lookat.z);
-    } else {
-	sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
-		_mgc->cpos.x,_mgc->cpos.y,_mgc->cpos.z,
-		lookat.x,lookat.y,lookat.z);
-    }
-    mrti(mr_header, str, mr_nl, mr_NULL);
-    mrti(mr_identity, mr_NULL);
-    mgrib_printmatrix(cam2ri);
+  if (_mgc->cpos.w != 0.0 && _mgc->cpos.w != 1.0) {
+    sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+	    _mgc->cpos.x/_mgc->cpos.w,
+	    _mgc->cpos.y/_mgc->cpos.w,
+	    _mgc->cpos.z/_mgc->cpos.w,
+	    lookat.x,lookat.y,lookat.z);
+  } else {
+    sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+	    _mgc->cpos.x,_mgc->cpos.y,_mgc->cpos.z,
+	    lookat.x,lookat.y,lookat.z);
+  }
+  mrti(mr_header, str, mr_nl, mr_NULL);
+  mrti(mr_identity, mr_NULL);
+  mgrib_printmatrix(cam2ri);
 
-    mgrib_printmatrix(_mgc->W2C);
+  mgrib_printmatrix(_mgc->W2C);
 
-    /* otherwise explicitly specified normals would be inverted */
-    mrti(mr_reverseorientation, mr_NULL);
+  /* otherwise explicitly specified normals would be inverted */
+  mrti(mr_reverseorientation, mr_NULL);
 
-    /* TODO: mark the position in the token buffer, because this is
-     * the point where we can place texture commands later on.
-     */
+  /* Mark the position in the token buffer, because this is
+   * the point where we can place texture commands later on.
+   */
+  worldptr = ptr;
 
-    /* RiWorldBegin...*/
-    mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
+  /* RiWorldBegin...*/
+  mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
 
-    _mgribc->world = 1;
+  _mgribc->world = 1;
     
-    /* if the option is selected, add the background */
-    if(_mgribc->backing == MG_RIBDOBG) {
-        float halfxbg = cfar * halfxfield, halfybg = cfar * halfyfield;
-	float farz = -.99 * cfar;
-	Point3 bg[4];
+  /* if the option is selected, add the background */
+  if(_mgribc->backing == MG_RIBDOBG) {
+    float halfxbg = cfar * halfxfield, halfybg = cfar * halfyfield;
+    float farz = -.99 * cfar;
+    Point3 bg[4];
 
-	bg[0].x = -halfxbg; bg[0].y = -halfybg; bg[0].z = farz;
-	bg[1].x = -halfxbg; bg[1].y =  halfybg; bg[1].z = farz;
-	bg[2].x =  halfxbg; bg[2].y =  halfybg; bg[2].z = farz;
-	bg[3].x =  halfxbg; bg[3].y = -halfybg; bg[3].z = farz;
+    bg[0].x = -halfxbg; bg[0].y = -halfybg; bg[0].z = farz;
+    bg[1].x = -halfxbg; bg[1].y =  halfybg; bg[1].z = farz;
+    bg[2].x =  halfxbg; bg[2].y =  halfybg; bg[2].z = farz;
+    bg[3].x =  halfxbg; bg[3].y = -halfybg; bg[3].z = farz;
 	
-	mrti(mr_comment, "simulate background color via polygon", mr_NULL);
-	mrti(mr_attributebegin, mr_NULL);
-	mgrib_printmatrix(_mgc->C2W);
-	mrti(mr_surface, mr_constant, mr_NULL);
-	mrti(mr_color, mr_parray, 3, &_mgc->background, mr_NULL);
-	mrti(mr_polygon, mr_P, mr_parray, 4*3, bg, mr_NULL);
-	mrti(mr_attributeend, mr_NULL);
-    }			
+    mrti(mr_comment, "simulate background color via polygon", mr_NULL);
+    mrti(mr_attributebegin, mr_NULL);
+    mgrib_printmatrix(_mgc->C2W);
+    mrti(mr_surface, mr_constant, mr_NULL);
+    mrti(mr_color, mr_parray, 3, &_mgc->background, mr_NULL);
+    mrti(mr_polygon, mr_P, mr_parray, 4*3, bg, mr_NULL);
+    mrti(mr_attributeend, mr_NULL);
+  }			
 
-    /* bring ri state into accordance with appearance state */
+  /* bring ri state into accordance with appearance state */
   
-    {
-      Appearance *ap = ApCopy( &(_mgc->astk->ap), NULL );
-      mgrib_setappearance( ap, MG_SET );
-      ApDelete(ap);
-    }
+  {
+    Appearance *ap = ApCopy( &(_mgc->astk->ap), NULL );
+    mgrib_setappearance( ap, MG_SET );
+    ApDelete(ap);
+  }
 
-    /* NOW DONE BY mg_worldbegin()
-     *CamView(_mgc->cam, _mgribc->W2S);
-     *TmTranslate(T, 1.0, 1.0, 0);
-     *TmConcat(_mgribc->W2S,T, _mgribc->W2S);
-     */
+  /* NOW DONE BY mg_worldbegin()
+   *CamView(_mgc->cam, _mgribc->W2S);
+   *TmTranslate(T, 1.0, 1.0, 0);
+   *TmConcat(_mgribc->W2S,T, _mgribc->W2S);
+   */
      
 
-    /* NOW DONE BY mg_worldbegin()
-     *mgrib_ctxget(MG_WINDOW, &win);
-     *WnGet(_mgc->win, WN_CURPOS, &wp);
-     *xsize = wp.xmax - wp.xmin + 1;
-     *ysize = wp.ymax - wp.ymin + 1;
-     *
-     *TmScale(T, (double)xsize*.5, (double)ysize*.5, 1.0);
-     *TmConcat(_mgribc->W2S,T, _mgribc->W2S);
-     *
-     *TmCopy(_mgribc->W2S, _mgribc->O2S);
-     */
+  /* NOW DONE BY mg_worldbegin()
+   *mgrib_ctxget(MG_WINDOW, &win);
+   *WnGet(_mgc->win, WN_CURPOS, &wp);
+   *xsize = wp.xmax - wp.xmin + 1;
+   *ysize = wp.ymax - wp.ymin + 1;
+   *
+   *TmScale(T, (double)xsize*.5, (double)ysize*.5, 1.0);
+   *TmConcat(_mgribc->W2S,T, _mgribc->W2S);
+   *
+   *TmCopy(_mgribc->W2S, _mgribc->O2S);
+   */
 }
 
 /*-----------------------------------------------------------------------
@@ -690,11 +697,11 @@ mgrib_worldbegin( void )
 void
 mgrib_worldend( void )
 {
-    _mgribc->world = 0;
-    mrti(mr_worldend, mr_nl, mr_NULL);
-    mrti(mr_frameend, mr_nl, mr_NULL);
-    /* now flush the buffer, if appropriate */
-    /* mgrib_flushbuffer(); NOW DONE AT HIGHER LEVEL */
+  _mgribc->world = 0;
+  mrti(mr_worldend, mr_nl, mr_NULL);
+  mrti(mr_frameend, mr_nl, mr_NULL);
+  /* now flush the buffer, if appropriate */
+  /* mgrib_flushbuffer(); NOW DONE AT HIGHER LEVEL */
 
 }
 
@@ -711,18 +718,18 @@ mgrib_worldend( void )
 void
 mgrib_reshapeviewport( void )
 {
-    WnWindow *win;
-    WnPosition wp;
-    int xsize, ysize;
+  WnWindow *win;
+  WnPosition wp;
+  int xsize, ysize;
 
-    mgrib_ctxget(MG_WINDOW, &win);	/* Get window; force it to ask
+  mgrib_ctxget(MG_WINDOW, &win);	/* Get window; force it to ask
 					 * NeXTStep how big the window is
 					 */
-    WnGet(win, WN_CURPOS, &wp);
-    xsize = wp.xmax - wp.xmin + 1;
-    ysize = wp.ymax - wp.ymin + 1;
+  WnGet(win, WN_CURPOS, &wp);
+  xsize = wp.xmax - wp.xmin + 1;
+  ysize = wp.ymax - wp.ymin + 1;
 
-    CamSet(_mgc->cam, CAM_ASPECT, (double)xsize/(double)ysize, CAM_END);
+  CamSet(_mgc->cam, CAM_ASPECT, (double)xsize/(double)ysize, CAM_END);
 }
 
 /*-----------------------------------------------------------------------
@@ -737,7 +744,7 @@ mgrib_reshapeviewport( void )
 void
 mgrib_identity( void )
 {
-    mgrib_settransform( TM_IDENTITY );
+  mgrib_settransform( TM_IDENTITY );
 }
 
 /*-----------------------------------------------------------------------
@@ -754,9 +761,9 @@ mgrib_identity( void )
 void
 mgrib_transform( Transform T )
 {
-    mg_transform(T);
-    mgrib_printmatrix(T);
-    TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
+  mg_transform(T);
+  mgrib_printmatrix(T);
+  TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
 }
 
 /*-----------------------------------------------------------------------
@@ -773,9 +780,9 @@ mgrib_transform( Transform T )
 int
 mgrib_pushtransform( void )
 {
-    mg_pushtransform();
-    mrti(mr_transformbegin, mr_NULL);
-    return 0;
+  mg_pushtransform();
+  mrti(mr_transformbegin, mr_NULL);
+  return 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -792,10 +799,10 @@ mgrib_pushtransform( void )
 int
 mgrib_poptransform( void )
 {
-    mg_poptransform();
-    mrti(mr_transformend, mr_NULL);
-    TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
-    return 0;
+  mg_poptransform();
+  mrti(mr_transformend, mr_NULL);
+  TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
+  return 0;
 }
 
 
@@ -811,11 +818,11 @@ mgrib_poptransform( void )
 void
 mgrib_settransform( Transform T )
 {
-    mrti(mr_identity, mr_NULL);
-    mg_settransform( T );
-    TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
-    if(T != TM_IDENTITY)
-	mgrib_printmatrix(T);
+  mrti(mr_identity, mr_NULL);
+  mg_settransform( T );
+  TmConcat(_mgc->xstk->T, _mgc->W2S, _mgc->O2S);
+  if(T != TM_IDENTITY)
+    mgrib_printmatrix(T);
 }
 
 /*-----------------------------------------------------------------------
@@ -937,7 +944,7 @@ mgribcontext *
 mgrib_newcontext( mgribcontext *ctx )
 {
   static char stdshaderpaths[] =
-	".:shaders:/usr/local/prman/prman/lib/shaders:/NextLibrary/Shaders";
+    ".:shaders:/usr/local/prman/prman/lib/shaders:/NextLibrary/Shaders";
 
   char *geomdata = getenv("GEOMDATA");
 
@@ -952,7 +959,7 @@ mgrib_newcontext( mgribcontext *ctx )
   ctx->backing = MG_RIBDOBG;
   ctx->shader = MG_RIBSTDSHADE;
   ctx->shadepath = NULL;		/* should add context field */
-  if(geomdata) {
+  if (geomdata) {
     char path[512];
     sprintf(path, "%s:%s/shaders:&", stdshaderpaths, geomdata);
     ctx->shadepath = strdup(path);
@@ -964,6 +971,9 @@ mgrib_newcontext( mgribcontext *ctx )
 
   ctx->render_device = RMD_ASCII;
   ctx->line_mode = MG_RIBCYLINDER;
+
+  ctx->tximg = NULL;
+  ctx->n_tximg = ctx->n_txdumped = 0;
 
   return ctx;
 }
@@ -983,7 +993,7 @@ mgrib_findctx( long winid )
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_RIB && ((mgribcontext *)mgc)->win == winid)
-	return mgc;
+      return mgc;
   }
   return NULL;
 }
@@ -999,19 +1009,46 @@ mgrib_findctx( long winid )
 void
 mgrib_flushbuffer()
 {
-    unsigned char *buffer = tokenbuffer;
-    /* do we even want a buffer anymore? why? */
-    if(!_mgribc->rib)
-    	_mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
-    while(buffer<ptr) putc(*(buffer++), _mgribc->rib);
-    fflush(_mgribc->rib);
-    mrti_reset(_mgribc->rib);
+  /* do we even want a buffer anymore? why? */
+  if(!_mgribc->rib) {
+    _mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
+  }
+  if (_mgribc->tximg) {
+    size_t size = (size_t)worldptr - (size_t)tokenbuffer;
+    int i;
+    char tifftxname[1024], txtxname[1024];
+
+    if (fwrite(tokenbuffer, size, 1, _mgribc->rib) != 1) {
+      OOGLError(1, "Error flushing RIB tokenbuffer (prologue)");
+    } 
+    fprintf(_mgribc->rib, "\n");
+    for (i = _mgribc->n_txdumped; i < _mgribc->n_tximg; i++) {
+      mgrib_mktexname(tifftxname, i, "tiff");
+      mgrib_mktexname(txtxname, i, "tx");
+      fprintf(_mgribc->rib,
+	      "\nMakeTexture "
+	      "\"%s\" \"%s\" \"none\" \"none\" \"gaussian\" 1.0 1.0",
+	      tifftxname, txtxname);
+    }
+    _mgribc->n_txdumped = _mgribc->n_tximg;
+    size = (size_t)ptr - (size_t)worldptr;
+    if (fwrite(worldptr, size, 1, _mgribc->rib) != 1) {
+      OOGLError(1, "Error flushing RIB tokenbuffer (world): %d");
+    }
+  } else {
+    size_t size = (size_t)ptr - (size_t)tokenbuffer;
+    if (fwrite(tokenbuffer, size, 1, _mgribc->rib) != 1) {
+      OOGLError(1, "Error flushing RIB tokenbuffer");
+    }
+  }
+  fflush(_mgribc->rib);
+  mrti_reset(_mgribc->rib);
 }
 
 /*-----------------------------------------------------------------------
  * Function:	mgrib_terminatebuffer
  * Description: NULL terminates the tokenbuffer, required to support
- 		NeXTs render panel 
+ NeXTs render panel 
  * Returns:	nothing
  * Author:	wisdom
  * Date:	Mon Jul 26 12:35:45 CDT 1993
@@ -1020,12 +1057,12 @@ mgrib_flushbuffer()
 void
 mgrib_terminatebuffer()
 {
-    *(ptr++) = 0;
+  *(ptr++) = 0;
 }
 
 /*-----------------------------------------------------------------------
  * Function:	mgrib_tokenbuffer
- * Description: returns through indirection the tokenbuffer an size 
+ * Description: returns through indirection the tokenbuffer and size 
  * Returns:	char pointer to tokenbuffer
  * Author:	wisdom
  * Date:	Mon Jul 26 12:35:45 CDT 1993
@@ -1034,6 +1071,13 @@ mgrib_terminatebuffer()
 void
 mgrib_tokenbuffer(char **buffer, int *size)
 {
-    *buffer = (char *)tokenbuffer;
-    *size = ptr - tokenbuffer;
+  *buffer = (char *)tokenbuffer;
+  *size = ptr - tokenbuffer;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

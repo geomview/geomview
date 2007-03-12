@@ -25,6 +25,7 @@ void mrti( int a1, ... );
 void mrti_reset();
 
 extern unsigned char *tokenbuffer;
+extern unsigned char *worldptr;
 extern unsigned char *ptr;
 
 #define STRINGBASE	50     /* strings start at 50 */

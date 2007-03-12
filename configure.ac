@@ -204,7 +204,8 @@ AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 
-AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libintl.h limits.h malloc.h \
+AC_CHECK_HEADERS([errno.h fcntl.h inttypes.h libgen.h libintl.h limits.h \
+ malloc.h \
  netinet/in.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h \
  sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h])
 
@@ -278,7 +279,7 @@ AC_CHECK_DECLS([errno],[],[],[
 #if HAVE_ERRNO_H
 # include <errno.h>
 #endif])
-AC_CHECK_FUNCS([alarm bzero bcopy dup2 floor fcntl finite gethostname \
+AC_CHECK_FUNCS([alarm basename bzero bcopy dup2 floor fcntl finite gethostname \
   gettimeofday isascii memset mkdir pow rint select sqrt strcasecmp strchr \
   strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo \
   waitpid wait3])

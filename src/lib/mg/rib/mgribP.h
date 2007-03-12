@@ -69,6 +69,11 @@ typedef struct mgribcontext {
   char ribfor[128];	/* for(user) field for RIB 1.0 file comments */
   			/* defaults to user account name */
   char ribdate[128];	/* creation date, defualts to today's date */
+  Image **tximg;        /* array of texture images used; texture
+			 * images are dumped to disk with displayname.#seq.tiff
+			 */
+  int n_tximg;          /* How many of them */
+  int n_txdumped;       /* How many alreadsy got their MakeTexture line */
 } mgribcontext;
 
 /* Make some convenient defines */
@@ -82,3 +87,11 @@ void mgrib_printmatrix(Transform T);
 void mgrib_drawline(HPoint3 *p1, HPoint3 *p2);
 void mgrib_drawpoint(HPoint3 *p);
 void mgrib_drawnormal(HPoint3 *p, Point3 *n);
+void mgrib_mktexname(char *txname, int seq, const char *suffix);
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

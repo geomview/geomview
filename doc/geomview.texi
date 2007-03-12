@@ -1152,7 +1152,9 @@ geometry data, on the connection.
 @item -noopengl
 Disable the use of OpenGL for (possibly) hardware accelerated rendering,
 even if the Geomview binary has support for OpenGL compiled in. This
-also disables the support for transparency and and textures
+also disables the support for transparency and and textures in the
+camera windows. RenderMan snapshots still will have correct transparency
+and some limited texture support.
 
 @item -nopanels
 Start up displaying no panels, only graphics windows.  Panels may be
@@ -2173,15 +2175,27 @@ transformed under both the object's transformation and the world's
 transformation.
 
 @item RMan [->tiff] @asis{(camera)}
-Writes a RenderMan file which when rendered creates a tiff image.
+Writes a RenderMan file which when rendered creates a tiff
+image. Transparency and texturing (the latter only to some extent) will
+be available.
 
 @item RMan [->frame] @asis{(camera)}
 Writes a RenderMan file which when rendered causes an image to appear in
-a window on the screen.
+a window on the screen. Transparency and texturing (the latter only to
+some extent) will be available.
 
 @item SGI snapshot @asis{(camera)}
 Write an SGI raster file.  A bell rings when the snapshot is complete.
 Only available on SGI systems.
+
+@item PPM GLX-offscreen snapshot @asis{(camera)}
+Render the complete scene anew into off-screen memory; GLX provides the
+means to use a Pixmap as rendering area. The advantage of rendering into
+@emph{off}-screen memory over taking screen snapshot is that the camera
+windows need not be mapped and even raised at the time the snapshot is
+taken. So with off-screen snapshot one can savely iconify the camera
+window (but do not close it!), activate the screen-saver and go to bed
+while some script advances the scenes and takes snapshots.
 
 @item PPM Screen snapshot @asis{(camera)}
 Take a snapshot of the given window and save it as a PPM image.
@@ -2190,10 +2204,11 @@ as the file name, it's interpreted as a Bourne shell command
 to which the PPM data should be piped, as in
 @samp{| pnmtotiff > snap.tiff} or @samp{| convert -geometry 50% ppm:- snap.gif}.
 
-PPM screen snapshots are only available with GL and Open GL,
-not plain X graphics.  The window should be entirely on the screen.
-Geomview will ensure that no other windows cover it while the snapshot
-is taken.
+PPM screen snapshots are only available with GL and Open GL, not plain X
+graphics.  The window should be entirely on the screen.  Geomview will
+ensure that no other windows cover it while the snapshot is taken. It is
+probably a better idea to use GLX-@emph{off-screen} snapshots, as
+explained above.
 
 @item PPM software snapshot @asis{(camera)}
 Writes a snapshot of that window's current view, as a PPM image, to the
@@ -3074,15 +3089,19 @@ override status set, that property will be immune to Geomview's controls.
 @node Texture Mapping,  , Appearances, Conventions
 @subsection Texture Mapping
 
-Some platforms support texture-mapped objects.  (On those which don't,
-attempts to use texture mapping are silently ignored.)  A texture is
-specified as part of an appearance structure (@pxref{Appearances}).
-Briefly, one provides a texture image (@pxref{image, Image objects}),
-which is considered to lie in a square in @code{(s,t)} parameter space
-in the range 0 <= s <= 1, 0 <= t <= 1.  Then one provides a geometric
-primitive, with each vertex tagged with @code{(s,t)} texture
-coordinates.  If texturing is enabled, the appropriate portion of the
-texture image is pasted onto each face of the textured object.
+Some rendering back-ends support texture-mapped objects, actually only
+the OpenGL and the RenderMan interface at the time of this
+writing. There are also some issues with the RMan interface when using
+an alpha-channel in the texture image. Those rendering back-ends which
+don't support texturing silently ignore attempts to use texture
+mapping. A texture is specified as part of an appearance structure
+(@pxref{Appearances}).  Briefly, one provides a texture image
+(@pxref{image, Image objects}), which is considered to lie in a square
+in @code{(s,t)} parameter space in the range 0 <= s <= 1, 0 <= t <= 1.
+Then one provides a geometric primitive, with each vertex tagged with
+@code{(s,t)} texture coordinates.  If texturing is enabled, the
+appropriate portion of the texture image is pasted onto each face of the
+textured object.
 
 There is (currently) no provision for inheritance of part of a texture
 structure; if the @code{texture} keyword is mentioned in an appearance,

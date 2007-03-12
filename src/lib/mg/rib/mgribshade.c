@@ -33,6 +33,20 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mgribshade.h"
 #include "mgribtoken.h"
 
+void mgrib_mktexname(char *txname, int seq, const char *suffix)
+{
+    char *strend;
+    
+    strcpy(txname, _mgribc->displayname);
+    if ((strend = strstr(txname, ".tiff")) != NULL ||
+	(strend = strstr(txname, ".rib")) != NULL) {
+	*strend = '\0';
+    } else {
+	strend = txname + strlen(txname);
+    }
+    sprintf(strend, "-tx%d.%s", seq, suffix);
+}
+
 /*
  * Notes:	Tossed mgrib_material, just use mgrib_appearance
  *		since shaders depend on both appearance and material 
@@ -85,8 +99,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    shader = mr_constant;
 	    mrti(mr_surface, shader, mr_NULL);
 	} else if(ap->shading == APF_FLAT) {
-	    enum tokentype shader;
-	    /* determain shader */
+	    /* determine shader */
 	    if(_mgribc->shader==MG_RIBSTDSHADE) {
 		shader = mr_plastic;
 	    } else {
@@ -122,10 +135,59 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	}
 
 	if (shader == mr_paintedplastic
-	    && (ap->flag & APF_TEXTURE) && ap->tex != NULL) {
-	    mrti(mr_texturename, mr_string, ap->tex->filename, mr_NULL);
+	    && (ap->flag & APF_TEXTURE) &&
+	    ap->tex != NULL && ap->tex->image != NULL) {
+	    char txname[1024], *strend;
+	    char filter[1024];
+	    int i;
+	    unsigned chmask = 0;
+	    
+	    if (ap->tex->apply != TXF_MODULATE) {
+		static bool was_here = false;
+		
+		if (!was_here) {
+		    OOGLWarn("textures with apply != modulate "
+			     "areb not yet supported by the RenderMan"
+			     "back-end.");
+		    was_here = true;
+		}
+	    }
+
+	    for (i = 0; i < _mgribc->n_tximg; i++) {
+		if (_mgribc->tximg[i] == ap->tex->image) {
+		    break;
+		}
+	    }
+	    mgrib_mktexname(txname, i, "tiff");
+	    if (i == _mgribc->n_tximg) {
+		if (_mgribc->n_tximg % 10 == 0) {
+		    _mgribc->tximg = OOGLRenewNE(Image *,
+						 _mgribc->tximg,
+						 _mgribc->n_tximg + 10,
+						 "New RIB texture images");
+		}
+		_mgribc->tximg[i] = ap->tex->image;
+		_mgribc->n_tximg++;
+		/* try to dump the image to disk */
+#ifdef HAVE_PAMTOTIFF 
+		chmask = (1 << ap->tex->image->channels) - 1;
+		sprintf(filter, "pamtotiff -lzw -truecolor > %s 2> /dev/null",
+			txname);
+#else
+		chmask = ap->tex->image->channels > 2 ? 0x7 : 0x1;
+		sprintf(filter, "pnmtotiff -lzw -truecolor > %s 2> /dev/null",
+			txname);
+#endif
+		if (!ImgWriteFilter(ap->tex->image, chmask, filter)) {
+		    _mgribc->tximg[i] = NULL;
+		    --_mgribc->n_tximg;
+		}
+	    }
+	    if (i < _mgribc->n_tximg) {
+		mrti(mr_texturename, mr_string, txname, mr_NULL);
+	    }
 	}
-    }	
+    }
 }
 
 void
@@ -203,3 +265,10 @@ void mgrib_lights( LmLighting *lm, struct mgastk *astk )
     mrti(mr_illuminate, mr_int, i, mr_int, 0, mr_NULL);
   if (prevused < lightsused) prevused = lightsused;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

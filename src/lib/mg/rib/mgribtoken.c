@@ -67,7 +67,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void binary_token(int a1, va_list *alist);
 void ascii_token(int a1, va_list *alist);
 
-unsigned char *tokenbuffer=NULL;
+unsigned char *tokenbuffer = NULL;
+unsigned char *worldptr = NULL; /* point of WorldBegin in tokenbuffer */
 unsigned char *limit;
 unsigned char *ptr;
 
@@ -168,15 +169,14 @@ void mrti_init()
 {
     if(tokenbuffer) free(tokenbuffer);
     tokenbuffer = (unsigned char *)malloc(BUFFERSIZE);
-    tokenbuffer[0] = (char)0;
     limit = (unsigned char *)(tokenbuffer + BUFFERSIZE);
-    ptr = tokenbuffer;
+    mrti_reset();
 }
 
 /* reset the ptr & tokenbuffer */
 void mrti_reset()
 {
-	ptr = tokenbuffer;
+	worldptr = ptr = tokenbuffer;
 	tokenbuffer[0] = (char)0;
 }
 
@@ -194,12 +194,14 @@ void check_buffer(int length)
     length += 8;
     if((unsigned char *)(ptr+length)>(unsigned char *)limit) {
         /* optinally check for maximum buffer allocation here */
-	long used = ptr - tokenbuffer;
-	long avail = limit - tokenbuffer;
+	size_t world = worldptr - tokenbuffer;
+	size_t used = ptr - tokenbuffer;
+	size_t avail = limit - tokenbuffer;
 	    /* Buffer grows exponentially, by factor of 1.5 each time */
 	do { avail += avail>>1; } while(used+length >= avail);
 	tokenbuffer = (unsigned char *)realloc(tokenbuffer, avail);
 	ptr = tokenbuffer + used;
+	worldptr = tokenbuffer + world;
 	limit = tokenbuffer + avail;
     }
 }
