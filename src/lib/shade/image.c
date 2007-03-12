@@ -75,8 +75,6 @@ struct imgheader {
 		  */
 };
 
-static int write_pgm(char **obuf, Image *img, int channel, bool compressed);
-static int write_pnm(char **obuf, Image *img, int channelmask, bool compressed);
 static bool readimage(Image *img, int *chmask, char *filter,
 		      char *imgfname, char *imgdata, int datalen);
 static bool parseheader(Image *img, IOBFILE *imgf, int *chmask,
@@ -638,7 +636,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
      */
     switch (img->channels) {
     case 2: /* two greymaps, luminance and alpha */
-      olen = write_pgm(&obuf, img, 1, HAVE_LIBZ);
+      olen = ImgWritePGM(img, 1, HAVE_LIBZ, obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
@@ -646,7 +644,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       OOGLFree(obuf);
       /* fall through to luminance only */
     case 1: /* greymap, luminance */
-      olen = write_pgm(&obuf, img, 0, HAVE_LIBZ);
+      olen = ImgWritePGM(img, 0, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f,
 		 "data LUMINANCE %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
@@ -655,7 +653,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       OOGLFree(obuf);
       break;
     case 4: /* RGBA */
-      olen = write_pgm(&obuf, img, 3, HAVE_LIBZ);
+      olen = ImgWritePGM(img, 3, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
@@ -663,7 +661,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       OOGLFree(obuf);
       /* fall through to RGB */
     case 3: /* RGB only */
-      olen = write_pnm(&obuf, img, 0x07, HAVE_LIBZ);
+      olen = ImgWritePNM(img, 0x07, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data RGB %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
@@ -709,7 +707,7 @@ Image *ImgFLoad(IOBFILE *inf, char *fname)
  * is returned. If channel >= img->channel, then the result will be an
  * all-black PGM image. Optionally compress the image.
  */
-static int write_pgm(char **buffer, Image *img, int channel, bool compressed)
+int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
 {
   int row, col, stride, rowlen, depth;
   unsigned long c_n_bytes, n_bytes;
@@ -768,7 +766,7 @@ static int write_pgm(char **buffer, Image *img, int channel, bool compressed)
  *
  * Optionally compress the image.
  */
-static int write_pnm(char **buffer, Image *img, int chmask, bool compressed)
+int ImgWritePNM(Image *img, int chmask, bool compressed, char **buffer)
 {
   int row, col, stride, depth, rowlen;
   unsigned long c_n_bytes, n_bytes;
