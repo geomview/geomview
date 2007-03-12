@@ -75,8 +75,8 @@ struct imgheader {
 		  */
 };
 
-static int write_pgm(char **obuf, Image *img, int channel, int compressed);
-static int write_pnm(char **obuf, Image *img, int channelmask, int compressed);
+static int write_pgm(char **obuf, Image *img, int channel, bool compressed);
+static int write_pnm(char **obuf, Image *img, int channelmask, bool compressed);
 static bool readimage(Image *img, int *chmask, char *filter,
 		      char *imgfname, char *imgdata, int datalen);
 static bool parseheader(Image *img, IOBFILE *imgf, int *chmask,
@@ -704,7 +704,12 @@ Image *ImgFLoad(IOBFILE *inf, char *fname)
 #define PNM_HEADER_LEN (2 + 1 + 10 + 1 + 10 + 1 + 5 + 1)
 /* P5 1000000000 1000000000 65535\n */
 
-static int write_pgm(char **buffer, Image *img, int channel, int compressed)
+/* Pack one channel of the image data into an PGM image and write that
+ * data to *buffer. *buffer is allocated in this functions, its length
+ * is returned. If channel >= img->channel, then the result will be an
+ * all-black PGM image. Optionally compress the image.
+ */
+static int write_pgm(char **buffer, Image *img, int channel, bool compressed)
 {
   int row, col, stride, rowlen, depth;
   unsigned long c_n_bytes, n_bytes;
@@ -718,15 +723,19 @@ static int write_pgm(char **buffer, Image *img, int channel, int compressed)
   bufptr += sprintf(*buffer,
 		    "P5 %d %d %d\n", img->width, img->height, img->maxval);
   
-  stride = img->channels * depth;
-  for (row = img->height-1; row >= 0; row--) {
-    imgptr = img->data + channel + rowlen * img->channels * row;
-    for (col = 0; col < img->width; col++) {
-      *bufptr++ = *imgptr;
-      if (depth == 2) {
-	*bufptr++ = *(imgptr+1);
+  if (channel >= img->channels) {
+    memset(*buffer, 0, n_bytes);
+  } else {
+    stride = img->channels * depth;
+    for (row = img->height-1; row >= 0; row--) {
+      imgptr = img->data + channel + rowlen * img->channels * row;
+      for (col = 0; col < img->width; col++) {
+	*bufptr++ = *imgptr;
+	if (depth == 2) {
+	  *bufptr++ = *(imgptr+1);
+	}
+	imgptr += stride;
       }
-      imgptr += stride;
     }
   }
 
@@ -753,7 +762,13 @@ static int write_pgm(char **buffer, Image *img, int channel, int compressed)
   return n_bytes;
 }
 
-static int write_pnm(char **buffer, Image *img, int chmask, int compressed)
+/* Pack up to 3 channels of the image data into an PNM image and write
+ * that data to *buffer. *buffer is allocated in this functions, its
+ * length is returned. Missing channels are filled with 0's.
+ *
+ * Optionally compress the image.
+ */
+static int write_pnm(char **buffer, Image *img, int chmask, bool compressed)
 {
   int row, col, stride, depth, rowlen;
   unsigned long c_n_bytes, n_bytes;
@@ -766,7 +781,8 @@ static int write_pnm(char **buffer, Image *img, int chmask, int compressed)
 
   bufptr = *buffer = OOGLNewNE(char, n_bytes, "PNM buffer");
 
-  for (i = j = 0; i < img->channels && chmask; i++, chmask >>= 1) {
+  channels[0] = channels[1] = channels[2] = -1;
+  for (i = j = 0; i < img->channels && j < 3 && chmask; i++, chmask >>= 1) {
     if (chmask & 1) {
       channels[j++] = i;
     }
@@ -781,9 +797,14 @@ static int write_pnm(char **buffer, Image *img, int chmask, int compressed)
     imgptr = img->data + stride * img->width * row;
     for (col = 0; col < img->width; col++) {
       for (j = 0; j < 3; j++) {
-	*bufptr++ = *(imgptr + channels[j]);
-	if (depth == 2) {
-	  *bufptr++ = *(imgptr + channels[j] + 1);
+	if (channels[j] >= 0) {
+	  for (i = 0; i < depth; i++) {
+	    *bufptr++ = *(imgptr + channels[j] + i);
+	  }
+	} else {
+	  for (i = 0; i < depth; i++) {
+	    *bufptr++ = '\0';
+	  }
 	}
       }
       imgptr += stride;
