@@ -350,7 +350,9 @@ Image *ImgFSave(Image *img, FILE *outf, char *fname);
 void ImgDelete(Image *img);
 Image *ImgCreate(int a1, ...);
 int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer);
-int ImgWritePNM(Image *img, int chmask, bool compressed, char **buffer);
+int ImgWritePNM(Image *img, unsigned chmask, bool compressed, char **buffer);
+int ImgWritePAM(Image *img, unsigned chmask, bool compressed, char **buffer);
+bool ImgWriteFilter(Image *img, unsigned chmask, const char *filter);
 
 Texture * TxFLoad( IOBFILE *inf, char *fname );
 Texture * TxFSave(Texture *tx, FILE *outf, char *fname);

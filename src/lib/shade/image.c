@@ -75,13 +75,13 @@ struct imgheader {
 		  */
 };
 
-static bool readimage(Image *img, int *chmask, char *filter,
+static bool readimage(Image *img, unsigned *chmask, char *filter,
 		      char *imgfname, char *imgdata, int datalen);
-static bool parseheader(Image *img, IOBFILE *imgf, int *chmask,
+static bool parseheader(Image *img, IOBFILE *imgf, unsigned *chmask,
 			const char *type, struct imgheader *header);
-static bool readdata(Image *img, IOBFILE *imgf, int chmask,
+static bool readdata(Image *img, IOBFILE *imgf, unsigned chmask,
 		     struct imgheader *header);
-static int run_filter(const char *filter, int fdin, int *cpidp);
+static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp);
 static int data_pipe(const char *data, int datalen, int *cpidp);
 #if HAVE_LIBZ
 static int gv_compress2(Bytef *dest, uLongf *destLen,
@@ -102,7 +102,7 @@ Image *_ImgSet(Image *img, int attr1, va_list *alist)
   int attr, val;
   bool newimg;
   char *chanfile, *filter;
-  int chmask;
+  unsigned chmask;
   void *chandata;
   int chansize = 0;
 #undef NEXT
@@ -164,7 +164,7 @@ Image *_ImgSet(Image *img, int attr1, va_list *alist)
       break;
     case IMG_DATA_CHAN_FILE:
     case IMG_DATA_CHAN_DATA:
-      chmask   = NEXT(int);
+      chmask   = NEXT(unsigned);
       filter   = NEXT(char *); /* can be NULL */
       if (attr == IMG_DATA_CHAN_FILE) {
 	chanfile = NEXT(char *);
@@ -267,7 +267,7 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
   IOBFILE *inf;
   char *fname, *imgfname = NULL, *filter, *imgdata = NULL;
   long datasize = 0;
-  long chmask;
+  unsigned long chmask;
   bool have_chdata;
   static const struct imgkw {
     const char *word;
@@ -636,6 +636,16 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
      */
     switch (img->channels) {
     case 2: /* two greymaps, luminance and alpha */
+#if 1
+      olen = ImgWritePAM(img, 0x3, HAVE_LIBZ, &obuf);
+      PoolFPrint(p, f, "data LUMINANCE_ALPHA %s%d {\n",
+		 HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      break;
+#else
       olen = ImgWritePGM(img, 1, HAVE_LIBZ, obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
@@ -643,6 +653,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
       /* fall through to luminance only */
+#endif
     case 1: /* greymap, luminance */
       olen = ImgWritePGM(img, 0, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f,
@@ -653,6 +664,15 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       OOGLFree(obuf);
       break;
     case 4: /* RGBA */
+#if 1
+      olen = ImgWritePAM(img, 0xf, HAVE_LIBZ, &obuf);
+      PoolFPrint(p, f, "data RGBA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
+      fwrite(obuf, olen, 1, f);
+      fprintf(f, "\n");
+      PoolFPrint(p, f, "}\n");
+      OOGLFree(obuf);
+      break;
+#else
       olen = ImgWritePGM(img, 3, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
       fwrite(obuf, olen, 1, f);
@@ -660,6 +680,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
       /* fall through to RGB */
+#endif
     case 3: /* RGB only */
       olen = ImgWritePNM(img, 0x07, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data RGB %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
@@ -699,18 +720,46 @@ Image *ImgFLoad(IOBFILE *inf, char *fname)
   return img;
 }
 
+/* Compress the contents of *buffer, free *buffer and return the
+ * compressed buffer in a newly allocated chunk pointed to by
+ * *buffer. Return the amount of compressed data.
+ */
+static inline int maybe_compress_buffer(char **buffer, int n_bytes)
+{
+#if HAVE_LIBZ
+  char *bufptr;
+  unsigned long c_n_bytes;
+
+  /* we do it inefficient and quick and dirty: we simply call the
+   * compress() function and compress the entire buffer
+   */
+  bufptr = *buffer;
+  c_n_bytes = compressBound(n_bytes);
+  *buffer = OOGLNewNE(char, c_n_bytes, "compressed buffer");
+  if (gv_compress2((Bytef *)*buffer, &c_n_bytes,
+		   (Bytef *)bufptr, n_bytes, 9) != Z_OK) {
+    OOGLFree(*buffer);
+    *buffer = bufptr;
+  } else {
+    OOGLFree(bufptr);
+    n_bytes = c_n_bytes;
+  }
+#endif
+  return n_bytes;
+}
+
 #define PNM_HEADER_LEN (2 + 1 + 10 + 1 + 10 + 1 + 5 + 1)
 /* P5 1000000000 1000000000 65535\n */
 
 /* Pack one channel of the image data into an PGM image and write that
- * data to *buffer. *buffer is allocated in this functions, its length
+ * data to *buffer. *buffer is allocated in this function, its length
  * is returned. If channel >= img->channel, then the result will be an
  * all-black PGM image. Optionally compress the image.
  */
 int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
 {
   int row, col, stride, rowlen, depth;
-  unsigned long c_n_bytes, n_bytes;
+  unsigned long c_n_bytes, n_bytes, h_len;
   char *imgptr, *bufptr;
 
   depth   = (img->maxval > 255) + 1;
@@ -718,8 +767,9 @@ int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
   n_bytes = rowlen * img->height + PNM_HEADER_LEN;
   bufptr  = *buffer = OOGLNewNE(char, n_bytes, "PGM buffer");
 
-  bufptr += sprintf(*buffer,
-		    "P5 %d %d %d\n", img->width, img->height, img->maxval);
+  bufptr += h_len =
+    sprintf(*buffer, "P5 %d %d %d\n", img->width, img->height, img->maxval);
+  n_bytes -= PNM_HEADER_LEN - h_len;
   
   if (channel >= img->channels) {
     memset(*buffer, 0, n_bytes);
@@ -737,27 +787,7 @@ int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
     }
   }
 
-#if HAVE_LIBZ
-  /* we do it inefficient and quick and dirty: we simply call the
-   * compress() function and compress the entire buffer
-   */
-  if (compressed) {
-    bufptr = *buffer;
-    c_n_bytes = compressBound(n_bytes);
-    *buffer = OOGLNewNE(char, c_n_bytes, "compressed PGM buffer");
-    if (gv_compress2((Bytef *)*buffer, &c_n_bytes,
-		     (Bytef *)bufptr, n_bytes, 9) != Z_OK) {
-      OOGLFree(*buffer);
-      *buffer = bufptr;
-    } else {
-      OOGLFree(bufptr);
-      n_bytes = c_n_bytes;
-    }
-  }
-#endif
-
-
-  return n_bytes;
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
 }
 
 /* Pack up to 3 channels of the image data into an PNM image and write
@@ -766,10 +796,10 @@ int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
  *
  * Optionally compress the image.
  */
-int ImgWritePNM(Image *img, int chmask, bool compressed, char **buffer)
+int ImgWritePNM(Image *img, unsigned chmask, bool compressed, char **buffer)
 {
   int row, col, stride, depth, rowlen;
-  unsigned long c_n_bytes, n_bytes;
+  unsigned long c_n_bytes, n_bytes, h_len;
   int channels[3], i, j;
   char *imgptr, *bufptr;
 
@@ -786,8 +816,9 @@ int ImgWritePNM(Image *img, int chmask, bool compressed, char **buffer)
     }
   }
 
-  bufptr += sprintf(*buffer,
-		    "P6 %d %d %d\n", img->width, img->height, img->maxval);
+  bufptr += h_len =
+    sprintf(*buffer, "P6 %d %d %d\n", img->width, img->height, img->maxval);
+  n_bytes -= PNM_HEADER_LEN - h_len;
   
   imgptr = img->data;
   stride = img->channels * depth;
@@ -809,27 +840,160 @@ int ImgWritePNM(Image *img, int chmask, bool compressed, char **buffer)
     }
   }
 
-#if HAVE_LIBZ
-  /* we do it inefficient and quick and dirty: we simply call the
-   * compress() function and compress the entire buffer
-   */
-  if (compressed) {
-    bufptr = *buffer;
-    c_n_bytes = compressBound(n_bytes);
-    *buffer = OOGLNewNE(char, c_n_bytes, "compressed PNM buffer");
-    if (gv_compress2((Bytef *)*buffer, &c_n_bytes,
-		     (Bytef *)bufptr, n_bytes, 9) != Z_OK) {
-      OOGLFree(*buffer);
-      *buffer = bufptr;
-    } else {
-      OOGLFree(bufptr);
-      n_bytes = c_n_bytes;
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
+}
+
+/* Pack any number of channels into a PAM image. Optionally compress
+ * the image. Excess bits set in chmask are ignored. The destination
+ * image will have min(img->channels, #chmask bits) channels (i.e. at
+ * most 4).
+ *
+ * The destination image is written into memory, allocated in
+ * *buffer. The amount of data in *buffer is returned (size after
+ * compression).
+ */
+
+/* worst case header length for our case */
+#define PAM_HEADER_LEN				\
+  sizeof("P7\n"					\
+	 "WIDTH 1000000000\n"			\
+	 "HEIGHT 1000000000\n"			\
+	 "DEPTH 4\n"				\
+	 "MAXVAL 65535\n"			\
+	 "ENDHDR\n")
+
+int ImgWritePAM(Image *img, unsigned chmask, bool compressed, char **buffer)
+{
+  int row, col, stride, depth, rowlen;
+  unsigned long c_n_bytes, n_bytes, h_len;
+  int channels[4], n_chan, i, j;
+  char *imgptr, *bufptr;
+
+  for (i = n_chan = 0; i < img->channels && chmask; i++, chmask >>= 1) {
+    if (chmask & 1) {
+      channels[n_chan++] = i;
     }
   }
-#endif
 
-  return n_bytes;
+  depth   = (img->maxval > 255) + 1; /* #bytes for a single channel */
+  rowlen  = n_chan * depth * img->width;
+  n_bytes = rowlen * img->height + PAM_HEADER_LEN;
+
+  bufptr = *buffer = OOGLNewNE(char, n_bytes, "PAM buffer");
+
+  bufptr += h_len =
+    sprintf(*buffer,
+	    "P7\nWIDTH %d\nHEIGHT %d\nDEPTH %d\nMAXVAL %d\nENDHDR\n",
+	    img->width, img->height, n_chan, img->maxval);
+  n_bytes -= PAM_HEADER_LEN - h_len;
+  
+  imgptr = img->data;
+  stride = img->channels * depth;
+  for (row = img->height-1; row >= 0; row--) {
+    imgptr = img->data + stride * img->width * row;
+    for (col = 0; col < img->width; col++) {
+      for (j = 0; j < n_chan; j++) {
+	for (i = 0; i < depth; i++) {
+	  *bufptr++ = *(imgptr + channels[j] + i);
+	}
+      }
+      imgptr += stride;
+    }
+  }
+
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
 }
+
+/* Dump an image to disk through the given filter. The filter must
+ * read from stdin. The output of the filter is discarded, it is
+ * assumed that "filter" writes the data to disk or to whatever
+ * destination itself.
+ * 
+ * This is mainly to support textures with the RenderMan MG backend.
+ *
+ * The image filter must understand PAM image data if chmask has 2 or
+ * 4 bits set, otherwise it must understand PNM data.
+ *
+ * This routine is ugly: we simply convert the image data into a PGM,
+ * PNM or PAM image in memory using ImgWritePGM/PNM/PAM() and then
+ * pipe the resulting data with data_pipe() to the stdin of the
+ * filter.
+ *
+ * E.g.:
+ *
+ * ImgWriteFilter(img, 0xf, "pamtotiff -lzw -truecolor > img.tiff");
+ *
+ */
+bool ImgWriteFilter(Image *img, unsigned chmask, const char *filter)
+{
+  int n_chan, buflen;
+  unsigned mask;
+  char *buf = NULL;
+  int data_fd = -1;
+  int data_pid = -1, filter_pid = -1;
+  int result = false;
+  void (*old_sigchld)(int);
+
+  for (n_chan = 0, mask = chmask; mask; n_chan += mask & 1, mask >>= 1);
+  n_chan = min(img->channels, n_chan);
+
+  switch (n_chan) {
+  case 1:
+    buflen = ImgWritePGM(img, 0, false, &buf);
+    break;
+  case 3:
+    buflen = ImgWritePNM(img, chmask, false, &buf);
+    break;
+  case 2:
+  case 4:
+    buflen = ImgWritePAM(img, chmask, false, &buf);
+    break;
+  }
+  if ((data_fd = data_pipe(buf, buflen, &data_pid)) <= 0) {
+    OOGLError(1, "ImgWriteFilter(): unable to generate data pipe");
+    goto out;
+  }
+  if (run_filter(filter, data_fd, true, &filter_pid) < 0) {
+    OOGLError(1, "ImgWriteFilter(): unable to run image filter");
+    goto out;
+  }
+  result = true;
+ out:
+  if (buf) {
+    OOGLFree(buf);
+  }
+  if (data_fd) {
+    close(data_fd);
+  }
+  /* This could cause problems when an emodule exits during the short
+   * period of SIGDFLT being in action ...
+   */
+  signal(SIGCHLD, old_sigchld = signal(SIGCHLD, SIG_DFL));
+  if (old_sigchld != SIG_DFL &&
+      old_sigchld != SIG_IGN &&
+      old_sigchld != SIG_ERR) {
+    /* ... send ourselves a SIGCHLD in this case. */
+    kill(getpid(), SIGCHLD);
+  } else {
+    /* possibly wait for the filter processes. */
+    while (filter_pid != -1 || data_pid != -1) {
+      int cpid, status;
+
+      cpid = wait(&status);
+      if (cpid == filter_pid) {
+	filter_pid = -1;
+      } else if (cpid == data_pid) {
+	data_pid = -1;
+      }
+      if (cpid == -1) {
+	break;
+      }
+    }
+  }
+  return result;
+}
+
+/* reading of images */
 
 struct filter 
 {
@@ -850,7 +1014,7 @@ static struct filter converters[] = {
   { NULL, "jpegtopnm", { "jpeg", "jpg", NULL } },
 };
 
-static bool readimage(Image *img, int *chmask, char *filtertype,
+static bool readimage(Image *img, unsigned *chmask, char *filtertype,
 		      char *imgfname, char *imgdata, int datalen)
 {
   struct filter *filters[2] = { decompressors, converters }, *filter;
@@ -901,7 +1065,8 @@ static bool readimage(Image *img, int *chmask, char *filtertype,
 		goto out;
 	      }
 	    }
-	    filterfds[j] = run_filter(filter->program, imgfd, &filterpids[j]);
+	    filterfds[j] =
+	      run_filter(filter->program, imgfd, false, &filterpids[j]);
 	    if (filterfds[j] < 0) {
 	      result = false;
 	      goto out;
@@ -923,7 +1088,7 @@ static bool readimage(Image *img, int *chmask, char *filtertype,
   }
   if (filterfds[1] < 0 && explicit_filter && *explicit_filter != '\0') {
     /* explicitly specified filter */
-    filterfds[1] = run_filter(explicit_filter, imgfd, &filterpids[1]);
+    filterfds[1] = run_filter(explicit_filter, imgfd, false, &filterpids[1]);
     if (filterfds[1] < 0) {
       result = false;
       goto out;
@@ -997,11 +1162,13 @@ static bool readimage(Image *img, int *chmask, char *filtertype,
 }
 
 static bool
-parseheader(Image *img, IOBFILE *imgf, int *chmask,
+parseheader(Image *img, IOBFILE *imgf, unsigned *chmask,
 	    const char *type, struct imgheader *header)
 {
   char scratch[1024];
-  int chmask_channels, mask;
+  char *w;
+  int chmask_channels;
+  unsigned mask;
   int i, c;
   char *msg = NULL;
   IOBFILE *f = NULL;
@@ -1076,28 +1243,75 @@ parseheader(Image *img, IOBFILE *imgf, int *chmask,
 	  }
 	}
       }
-    } else if (c == 'P' && (c = iobfgetc(imgf)) >= '1' && c <= '6') {
-      msg = "%s: Bad header on PNM image";
-      header->channels = (c == '3' || c == '6') ? 3 : 1;
-      if (iobfgetni(imgf, 1, &header->xsize, 0) != 1) {
-	goto nope;
-      }
-      if (iobfgetni(imgf, 1, &header->ysize, 0) != 1) {
-	goto nope;
-      }
-      if (c != '1' && c != '4') {
-	if (iobfgetni(imgf, 1, &header->maxval, 0) <= 0) {
+    } else if (c == 'P' && (c = iobfgetc(imgf)) >= '1' && c <= '7') {
+      if (c <= '6') {	
+	msg = "%s: Bad header on PNM image";
+	header->channels = (c == '3' || c == '6') ? 3 : 1;
+	if (iobfgetni(imgf, 1, &header->xsize, 0) != 1) {
 	  goto nope;
 	}
+	if (iobfgetni(imgf, 1, &header->ysize, 0) != 1) {
+	  goto nope;
+	}
+	if (c != '1' && c != '4') {
+	  if (iobfgetni(imgf, 1, &header->maxval, 0) <= 0) {
+	    goto nope;
+	  }
+	} else {
+	  header->maxval = 255;
+	}
+	switch(c) {
+	case '1': case '2': case '3': header->format = IMGF_ASCII; break;
+	case '4':                     header->format = IMGF_BIT;   break;
+	case '5': case '6':           header->format = IMGF_BYTE;  break;
+	}
+	while((c = iobfgetc(imgf)) != '\n' && c != EOF);
       } else {
-	header->maxval = 255;
+	int need = 4;
+	/* newer PAM format, possibly including an alpha channel */
+	msg = "%s: Bad header on PAM image";
+
+	while ((w = iobftoken(imgf, 0)) != NULL) {
+	  if (strncmp(w, "ENDHDR", 6) == 0) {
+	    break;
+	  } else if (strncmp(w, "HEIGHT", 6) == 0) {
+	    if (iobfgetni(imgf, 1, &header->ysize, 0) != 1) {
+	      goto nope;
+	    }
+	    --need;
+	  } else if (strncmp(w, "WIDTH", 5) == 0) {
+	    if (iobfgetni(imgf, 1, &header->xsize, 0) != 1) {
+	      goto nope;
+	    }
+	    --need;
+	  } else if (strncmp(w, "DEPTH", 5) == 0) {
+	    if (iobfgetni(imgf, 1, &header->channels, 0) != 1) {
+	      goto nope;
+	    }
+	    --need;
+	  } else if (strncmp(w, "MAXVAL", 5) == 0) {
+	    if (iobfgetni(imgf, 1, &header->maxval, 0) != 1) {
+	      goto nope;
+	    }
+	    if (header->maxval > 255) {
+	      msg =
+		"%s: PAM herader: sorry, 16 bits per channel is unsupported";
+	      goto nope;
+	    }
+	    --need;
+	  } else {
+	    /* just skip everything else, i.e. the tuple type. We
+	     * interprete 1 channel as luminance, 2 channels as
+	     * luminance & alpha, 3 channels as RGB and 4 channels as
+	     * RGBA, no matter what the header says.
+	     */
+	  }
+	}
+	if (need != 0) {
+	  goto nope; /* did not find all required fields */
+	}
+	header->format = IMGF_BYTE; /* will work */
       }
-      switch(c) {
-      case '1': case '2': case '3': header->format = IMGF_ASCII; break;
-      case '4':                     header->format = IMGF_BIT;   break;
-      case '5': case '6':           header->format = IMGF_BYTE;  break;
-      }
-      while((c = iobfgetc(imgf)) != '\n' && c != EOF);
     } else {
       /* assume raw pixel data */
       iobfseekmark(imgf);
@@ -1160,11 +1374,12 @@ parseheader(Image *img, IOBFILE *imgf, int *chmask,
 }
 
 static bool
-readdata(Image *img, IOBFILE *imgf, int chmask, struct imgheader *header)
+readdata(Image *img, IOBFILE *imgf, unsigned chmask, struct imgheader *header)
 {
   int val, bit, i, j, k, depth;
   int chan_map[4] = { -1, -1, -1, -1 };
-  int n_chan, maxval, mask, mask_channels;
+  int n_chan, maxval, mask_channels;
+  unsigned mask;
   int rowsize, stride, yup, rlebase;
 
   if (header->xsize <= 0 || header->ysize <= 0) {
@@ -1373,19 +1588,23 @@ readdata(Image *img, IOBFILE *imgf, int chmask, struct imgheader *header)
   return true;
 }
 
-
 /* Take a file-descriptor and connect it to the stdin of a filter
  * program, return a file descriptor which is connected to stdout of
  * the filter.
+ *
+ * If wronly == true, then also close the read-part of the pipe and
+ * return 0 on success.
  */
-static int run_filter(const char *filter, int fdin, int *cpidp)
+static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp)
 {
   int pfd[2];
   int cpid;
 
-  if (pipe(pfd) == -1) {
-    OOGLError(1, "%s: pipe() failed", filter);
-    return -1;
+  if (!wronly) {
+    if (pipe(pfd) == -1) {
+      OOGLError(1, "%s: pipe() failed", filter);
+      return -1;
+    }
   }
   
   if ((cpid = fork()) == -1) {
@@ -1397,22 +1616,38 @@ static int run_filter(const char *filter, int fdin, int *cpidp)
     /* child (filter process), close pdf[0] (the reader), connect fdin
      * to stdin, and pdf[1] to stdout.
      */
-    close(pfd[0]);
     close(STDIN_FILENO);
     if (dup2(fdin, STDIN_FILENO) != STDIN_FILENO) {
       OOGLError(1, "%s: cannot reassign STDIN_FILENO");
       _exit(EXIT_FAILURE);
     }
     close(fdin);
-    close(STDOUT_FILENO);
-    if (dup2(pfd[1], STDOUT_FILENO) != STDOUT_FILENO) {
-      OOGLError(1, "%s: cannot reassign STDIN_FILENO");
-      _exit(EXIT_FAILURE);
+
+    if (wronly) {
+      /* close stdout and duplicate it on stderr, otherwise a process
+       * listeningon our stdout might get confused.
+       */
+      close(STDOUT_FILENO);
+      if (dup2(STDERR_FILENO, STDOUT_FILENO) != STDOUT_FILENO) {
+	OOGLError(1, "%s: cannot reassign STDOUT_FILENO");
+	_exit(EXIT_FAILURE);
+      }
+    } else {
+      /* if !wronly close the read-end of the pipe and dup the write
+       * end on STDOUT.
+       */
+      close(pfd[0]);
+      close(STDOUT_FILENO);
+      if (dup2(pfd[1], STDOUT_FILENO) != STDOUT_FILENO) {
+	OOGLError(1, "%s: cannot reassign STDOUT_FILENO");
+	_exit(EXIT_FAILURE);
+      }
+      close(pfd[1]);
     }
-    close(pfd[1]);
     
     /* now run the filter process, run it through sh 'cause `filter'
-     * can be a command with arguments.
+     * can be a command with arguments (and possibly file descriptor
+     * redirections).
      */
     execl("/bin/sh", "sh", "-c", filter, NULL);
 
@@ -1423,13 +1658,19 @@ static int run_filter(const char *filter, int fdin, int *cpidp)
     if (cpidp) {
       *cpidp = cpid;
     }
-    close(pfd[1]); /* close the write end */
+    if (wronly) {
+      close(pfd[1]); /* close the write end */
+    }
   }
 
-  return pfd[0]; /* return the read end */
+  return wronly ? 0 : pfd[0]; /* return the read end */
 }
 
-/* Fork a child which pipes data through a pipe to the parent */
+/* Fork a child which pipes data through a pipe to the parent.
+ *
+ * The return value is a pipe descriptor connected to the child's
+ * output.
+ */
 static int data_pipe(const char *data, int datalen, int *cpidp)
 {
 
