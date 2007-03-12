@@ -179,6 +179,13 @@ AC_CHECK_PROGS(EPSTOPDF, epstopdf)
 AC_CHECK_PROGS(PDFIMAGESPROG, pdfimages)
 AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
 
+# For rman texture support. If not found we can only output RGB pnm images
+# without alpha channel.
+AC_CHECK_PROGS(PAMTOTIFF, pamtotiff)
+if test "${PAMTOTIFF}" = "pamtotiff"; then
+  AC_DEFINE_UNQUOTED([HAVE_PAMTOTIFF], "$PAMTOTIFF", [pamtotiff program])
+fi
+
 # The stereo module needs to fiddle with monitor modes.
 # Currently, this only works on IRIX using an external command.
 #
