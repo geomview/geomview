@@ -40,9 +40,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "mgrib.h"
 #include <string.h>
-#ifdef HAVE_LIBGEN_H
-# include <libgen.h>
-#endif
 
 /* for mgrib */
 
@@ -175,7 +172,6 @@ LDEFINE(rib_snapshot, LVOID,
       } else {
 	strcpy(displayname, filename);
       }
-      strcpy(displayname, basename(displayname));
       strcat(displayname, ".tiff");
       f = fopen(fname, "w");
     }
@@ -193,7 +189,6 @@ LDEFINE(rib_snapshot, LVOID,
 
   if (rman.display == MG_RIBFRAME) {
     strcpy(displayname, fname);
-    strcpy(displayname, basename(displayname));
   }
 
   fprintf(stderr, "Writing %s ...", fname);
