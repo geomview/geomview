@@ -33,20 +33,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mgribshade.h"
 #include "mgribtoken.h"
 
-void mgrib_mktexname(char *txname, int seq, const char *suffix)
-{
-    char *strend;
-    
-    strcpy(txname, _mgribc->displayname);
-    if ((strend = strstr(txname, ".tiff")) != NULL ||
-	(strend = strstr(txname, ".rib")) != NULL) {
-	*strend = '\0';
-    } else {
-	strend = txname + strlen(txname);
-    }
-    sprintf(strend, "-tx%d.%s", seq, suffix);
-}
-
 /*
  * Notes:	Tossed mgrib_material, just use mgrib_appearance
  *		since shaders depend on both appearance and material 
@@ -110,7 +96,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    if (shader == mr_plastic
 		&& (ap->flag & APF_TEXTURE)
 		&& ap->tex != NULL) {
-		shader = mr_paintedplastic;
+		shader = mr_GVrgbamaskpaintedplastic;
 	    }
 
 	    /* define surface */
@@ -124,7 +110,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    if (shader == mr_plastic
 		&& (ap->flag & APF_TEXTURE)
 		&& ap->tex != NULL) {
-		shader = mr_paintedplastic;
+		shader = mr_GVrgbamaskpaintedplastic;
 	    }
 
 	    mrti(mr_shadinginterpolation, mr_string, "smooth",
@@ -134,10 +120,10 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		    mr_roughness, mr_float, roughness, mr_NULL);
 	}
 
-	if (shader == mr_paintedplastic
+	if (shader == mr_GVrgbamaskpaintedplastic
 	    && (ap->flag & APF_TEXTURE) &&
 	    ap->tex != NULL && ap->tex->image != NULL) {
-	    char txname[1024], *strend;
+	    char txname[1024];
 	    char filter[1024];
 	    int i;
 	    unsigned chmask = 0;
@@ -158,7 +144,6 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		    break;
 		}
 	    }
-	    mgrib_mktexname(txname, i, "tiff");
 	    if (i == _mgribc->n_tximg) {
 		if (_mgribc->n_tximg % 10 == 0) {
 		    _mgribc->tximg = OOGLRenewNE(Image *,
@@ -169,6 +154,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		_mgribc->tximg[i] = ap->tex->image;
 		_mgribc->n_tximg++;
 		/* try to dump the image to disk */
+		mgrib_mktexname(txname, true, i, "tiff"); /* full-path */
 #ifdef HAVE_PAMTOTIFF 
 		chmask = (1 << ap->tex->image->channels) - 1;
 		sprintf(filter, "pamtotiff -lzw -truecolor > %s 2> /dev/null",
@@ -184,6 +170,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		}
 	    }
 	    if (i < _mgribc->n_tximg) {
+		mgrib_mktexname(txname, false, i, "tiff"); /* only base-name */
 		mrti(mr_texturename, mr_string, txname, mr_NULL);
 	    }
 	}

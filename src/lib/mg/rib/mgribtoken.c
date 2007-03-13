@@ -138,7 +138,7 @@ static struct _table table[] = {
     {"Os",			 2,  4, 0},
     {"st",			 2,  5, 0},
     {"plastic",			 7,  6, 0},
-    {"paintedplastic",		14,  7, 0},
+    {"GVrgbamaskpaintedplastic",14,  7, 0},
     {"hplastic",		 8,  8, 0},
     {"eplastic",		 8,  9, 0},
     {"heplastic",		 9, 10, 0},

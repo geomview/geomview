@@ -76,7 +76,8 @@ enum tokentype {
     mr_Os,
     mr_st,
     mr_plastic,
-    mr_paintedplastic,
+    /* mr_paintedplastic, */
+    mr_GVrgbamaskpaintedplastic,
     mr_hplastic,
     mr_eplastic,
     mr_heplastic,

@@ -40,6 +40,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#ifdef HAVE_LIBGEN_H
+# include <libgen.h>
+#endif
 
 mgcontext * mgrib_ctxcreate(int a1, ...);
 void	    mgrib_ctxset( int a1, ...  );
@@ -171,6 +174,13 @@ void
 _mgrib_ctxset(int a1, va_list *alist)
 {
   int attr;
+  size_t len;
+  char *dot;
+
+  /* secure copy to fixed-length string */
+#undef strNcpy
+#define strNcpy(dst, src)						\
+  strncpy((dst), (src), sizeof(dst)); (dst)[sizeof(dst)-1] = '\0'
 
   for (attr = a1; attr != MG_END; attr = va_arg (*alist, int)) {
     switch (attr) {
@@ -218,15 +228,18 @@ _mgrib_ctxset(int a1, va_list *alist)
       /* for now, read nothing */
       (void)va_arg(*alist, double);
       break;
-
-    case MG_SPACE:   _mgc->space = va_arg(*alist, int); break;
-    case MG_NDCTX:  _mgc->NDctx = va_arg(*alist, mgNDctx *); break;
-
+    case MG_SPACE:
+      _mgc->space = va_arg(*alist, int);
+      break;
+    case MG_NDCTX:
+      _mgc->NDctx = va_arg(*alist, mgNDctx *);
+      break;
 
       /* kind of RIB-specific */
     case MG_RIBFILE:
       /*        if(_mgribc->rib) fclose(_mgribc->rib); */
       _mgribc->rib = va_arg(*alist, FILE*);
+      *_mgribc->filepath = '\0'; /* kill any pending file-path */
       break;
 
       /* really RIB-specific */
@@ -244,15 +257,17 @@ _mgrib_ctxset(int a1, va_list *alist)
       }
       break;
     case MG_RIBFILEPATH:
-      if(_mgribc->rib) fclose(_mgribc->rib);
-      strcpy(_mgribc->filepath, va_arg(*alist, char*));
+      if(_mgribc->rib) {
+	fclose(_mgribc->rib);
+      }
+      strNcpy(_mgribc->filepath, va_arg(*alist, char*));
       _mgribc->rib = fopen(_mgribc->filepath,"w+");
       break;
     case MG_RIBDISPLAY:
       _mgribc->display = va_arg(*alist, int);
       break;
     case MG_RIBDISPLAYNAME:
-      strcpy(_mgribc->displayname, va_arg(*alist, char*));
+      strNcpy(_mgribc->displayname, va_arg(*alist, char*));
       break;
     case MG_RIBBACKING:
       _mgribc->backing = va_arg(*alist, int);
@@ -261,27 +276,70 @@ _mgrib_ctxset(int a1, va_list *alist)
       _mgribc->shader = va_arg(*alist, int);
       break;
     case MG_RIBSCENE:
-      strcpy(_mgribc->ribscene, va_arg(*alist, char*));
+      strNcpy(_mgribc->ribscene, va_arg(*alist, char*));
       break;
     case MG_RIBCREATOR:
-      strcpy(_mgribc->ribcreator, va_arg(*alist, char*));
+      strNcpy(_mgribc->ribcreator, va_arg(*alist, char*));
       break;
     case MG_RIBFOR:
-      strcpy(_mgribc->ribfor, va_arg(*alist, char*));
+      strNcpy(_mgribc->ribfor, va_arg(*alist, char*));
       break;
     case MG_RIBDATE:
-      strcpy(_mgribc->ribdate, va_arg(*alist, char*));
+      strNcpy(_mgribc->ribdate, va_arg(*alist, char*));
       break;
     default:
-    
       OOGLError (0, "_mgrib_ctxset: undefined option: %d\n", attr);
       return;
       break;
     }
   }
 
-  if (_mgc->shown && !_mgribc->born) {
+  /* if we have a file-path, but no display-name, then use filepath as
+   * display-name
+   */
+  if (_mgribc->displayname[0] == '\0' && _mgribc->filepath[0] != '\0') {
+    strcpy(_mgribc->displayname, _mgribc->filepath);
+  }
 
+  /* Determine base and temporary storage location from
+   * displayname. Use $TMPDIR if MG_RIBFRAME.
+   */
+  if (_mgribc->display == MG_RIBFRAME) {
+    char *tmpdir = getenv("TMPDIR");
+    
+    if (strlen(tmpdir) > PATH_MAX/2) {
+      OOGLError(1,
+		"Bogus ${TMPDIR} environment variable, "
+		"falling back to \"/tmp\"");
+      tmpdir = NULL;
+    }
+    strNcpy(_mgribc->displaypath, tmpdir == NULL ? "/tmp" : tmpdir);
+  } else {
+    /* otherwise extract the path-component from displayname */
+    strcpy(_mgribc->displaypath, _mgribc->displayname);
+    strcpy(_mgribc->displaypath, dirname(_mgribc->displaypath));
+  }
+  /* Terminate the path with '/' for convenience */
+  len = strlen(_mgribc->displaypath);
+  if (_mgribc->displaypath[len-1] != '/') {
+    _mgribc->displaypath[len++] = '/';
+    _mgribc->displaypath[len] = '\0';
+  }
+  /* if displayname really is a path-name, then include only its
+   * basename component into the rib-output
+   */
+  strcpy(_mgribc->displaybase, _mgribc->displayname);
+  strcpy(_mgribc->displaybase, basename(_mgribc->displaybase));
+  /* strip the suffix; the RIB-file will contain displaybase.tiff,
+   * texturenames will be generated as displaybase-SEQ.tiff, where SEQ
+   * is an ever increasing number.
+   */
+  if ((dot = strrchr(_mgribc->displaybase, '.')) != NULL &&
+      strcmp(dot, ".tiff") == 0) {
+    dot = '\0';
+  }
+
+  if (_mgc->shown && !_mgribc->born) {
     /* open the window */
     mgribwindow(_mgc->win);
     /* rib state is *not* in accordance with appearance state:
@@ -406,6 +464,7 @@ mgribwindow(WnWindow *win)
   WnPosition wp;
   int xsize, ysize;
   char fullscene[280], fullcreator[280], fullfor[280], fulldate[280];
+  char dpyname[PATH_MAX];
 
   /* RIB 1.0 structure comments */
   sprintf(fullscene,"Scene %s",_mgribc->ribscene);
@@ -432,7 +491,9 @@ mgribwindow(WnWindow *win)
   }
         
   /* set display characteristics...*/
-  mrti(mr_display, mr_string, _mgribc->displayname, 
+  snprintf(dpyname, PATH_MAX, "%s%s", _mgribc->displaybase, 
+	   _mgribc->display == MG_RIBFILE ? ".tiff" : "");
+  mrti(mr_display, mr_string, dpyname, 
        (_mgribc->display == MG_RIBFRAME) ? mr_framebuffer : mr_file, 
        (_mgribc->backing == MG_RIBDOBG) ? mr_rgb : mr_rgba, mr_NULL);
 
@@ -943,10 +1004,12 @@ mgrib_setcamera( Camera* cam )
 mgribcontext *
 mgrib_newcontext( mgribcontext *ctx )
 {
-  static char stdshaderpaths[] =
+  static const char stdshaderpaths[] =
     ".:shaders:/usr/local/prman/prman/lib/shaders:/NextLibrary/Shaders";
-
+  
   char *geomdata = getenv("GEOMDATA");
+
+  memset(ctx, 0, sizeof(mgribcontext));
 
   mg_newcontext(&(ctx->mgctx));
   ctx->mgctx.devfuncs = &mgribfuncs;
@@ -971,9 +1034,6 @@ mgrib_newcontext( mgribcontext *ctx )
 
   ctx->render_device = RMD_ASCII;
   ctx->line_mode = MG_RIBCYLINDER;
-
-  ctx->tximg = NULL;
-  ctx->n_tximg = ctx->n_txdumped = 0;
 
   return ctx;
 }
@@ -1023,8 +1083,8 @@ mgrib_flushbuffer()
     } 
     fprintf(_mgribc->rib, "\n");
     for (i = _mgribc->n_txdumped; i < _mgribc->n_tximg; i++) {
-      mgrib_mktexname(tifftxname, i, "tiff");
-      mgrib_mktexname(txtxname, i, "tx");
+      mgrib_mktexname(tifftxname, false, i, "tiff");
+      mgrib_mktexname(txtxname, false, i, "tx");
       fprintf(_mgribc->rib,
 	      "\nMakeTexture "
 	      "\"%s\" \"%s\" \"none\" \"none\" \"gaussian\" 1.0 1.0",

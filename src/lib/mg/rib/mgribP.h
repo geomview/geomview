@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -18,6 +19,11 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
+
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdio.h>
 #include "mg.h"
 #include "mgP.h"
@@ -50,12 +56,14 @@ typedef struct mgribcontext {
   int line_mode;
 
   FILE *rib;
-  char filepath[256];
+  char filepath[PATH_MAX];
 #define DEFAULT_RIB_FILE "geom.rib"
 
   int display;		/* MG_RIBFRAME: render to framebuffer (screen window)
 			   MG_RIBFILE: render to file  */
-  char displayname[256];/* if display == MG_RIFILE, name of the file */
+  char displayname[PATH_MAX]; /* if display == MG_RIFILE, name of the file */
+  char displaypath[PATH_MAX]; /* dirname(display), if MG_RIFILE */
+  char displaybase[PATH_MAX]; /* basename(display), if MG_RIFILE */
 			   
   int backing;		/* MG_RIBDOBG: simulate colored background w/ polygon
   			   MG_RIBNOBG: no background simulation (defualt) */
@@ -73,7 +81,7 @@ typedef struct mgribcontext {
 			 * images are dumped to disk with displayname.#seq.tiff
 			 */
   int n_tximg;          /* How many of them */
-  int n_txdumped;       /* How many alreadsy got their MakeTexture line */
+  int n_txdumped;       /* How many already got their MakeTexture line */
 } mgribcontext;
 
 /* Make some convenient defines */
@@ -87,7 +95,17 @@ void mgrib_printmatrix(Transform T);
 void mgrib_drawline(HPoint3 *p1, HPoint3 *p2);
 void mgrib_drawpoint(HPoint3 *p);
 void mgrib_drawnormal(HPoint3 *p, Point3 *n);
-void mgrib_mktexname(char *txname, int seq, const char *suffix);
+
+
+static inline void
+mgrib_mktexname(char *txname, bool fullpath, int seq, const char *suffix)
+{
+  if (snprintf(txname, PATH_MAX, "%s%s-tx%d.%s",
+	       fullpath ? _mgribc->displaypath : "",
+	       _mgribc->displaybase, seq, suffix) >= PATH_MAX) {
+    OOGLError(1, "path to texture-file exceedsd maximum length %d", PATH_MAX);
+  }
+}
 
 /*
  * Local Variables: ***
