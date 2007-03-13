@@ -528,29 +528,18 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    st.y = (*v)->st[1];
 	    st.z = 0.0;
 	    Pt3Transform(tex->tfm, &st, &st);
+	    /* should leave clamping to the RIB renderer */
 	    if ((tex->flags & TXF_SCLAMP)) {
 	      if (st.x > 1.0)
 		st.x = 1.0;
 	      else if (st.x < 0.0)
 		st.x = 0.0;
-	    } else {
-	      if (st.x > 1.0) {
-		st.x -= (float)(int)st.x;
-	      } else if (st.x < 0.0) {
-		st.x -= (float)((int)st.x - 1);
-	      }
 	    }
 	    if ((tex->flags & TXF_TCLAMP)) {
 	      if (st.y > 1.0)
 		st.y = 1.0;
 	      else if (st.y < 0.0)
 		st.y = 0.0;
-	    } else {
-	      if (st.y > 1.0) {
-		st.y -= (float)(int)st.y;
-	      } else if (st.x < 0.0) {
-		st.y -= (float)((int)st.y - 1);
-	      }
 	    }
 	    st.y = 1.0 - st.y;
 	    mrti(mr_subarray2, &st, mr_NULL);

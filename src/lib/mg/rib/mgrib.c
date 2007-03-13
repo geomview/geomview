@@ -43,9 +43,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #ifdef HAVE_LIBGEN_H
 # include <libgen.h>
 #endif
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 mgcontext * mgrib_ctxcreate(int a1, ...);
-void	    mgrib_ctxset( int a1, ...  );
+int	    mgrib_ctxset( int a1, ...  );
 int	    mgrib_feature( int feature );
 void	    mgrib_ctxdelete( mgcontext *ctx );
 int	    mgrib_ctxget( int attr, void* valueptr );
@@ -72,7 +75,7 @@ extern void  mgrib_polyline();
 extern void  mgrib_polylist();
 extern void  mgrib_bezier();
 
-void _mgrib_ctxset(int a1, va_list *alist);
+int _mgrib_ctxset(int a1, va_list *alist);
 
 WnWindow *mgribwindow(WnWindow *win);
 
@@ -82,7 +85,7 @@ struct mgfuncs mgribfuncs = {
   mgrib_feature,
   (mgcontext *(*)())mgrib_ctxcreate,
   mgrib_ctxdelete,
-  (void (*)())mgrib_ctxset,
+  (int (*)())mgrib_ctxset,
   mgrib_ctxget,
   mgrib_ctxselect,
   mgrib_sync,
@@ -153,7 +156,9 @@ mgrib_ctxcreate(int a1, ...)
   _mgribc->world = 0;
 
   va_start(alist, a1);
-  _mgrib_ctxset(a1, &alist);
+  if (_mgrib_ctxset(a1, &alist) == -1) {
+    mgrib_ctxdelete(_mgc);
+  }
   va_end(alist);
 
   return _mgc;
@@ -164,17 +169,19 @@ mgrib_ctxcreate(int a1, ...)
  * Description:	internal ctxset routine
  * Args:	a1: first attribute
  *		*alist: rest of attribute-value list
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Author:	mbp
  * Date:	Fri Sep 20 11:08:13 1991
  * Notes:	mgrib_ctxcreate() and mgrib_ctxset() call this to actually
  *		parse and interpret the attribute list.
  */
-void
+int
 _mgrib_ctxset(int a1, va_list *alist)
 {
   int attr;
-  size_t len;
+  FILE *ribfile = NULL;
+  const char *ribdpy = NULL;
+  struct stat st;
   char *dot;
 
   /* secure copy to fixed-length string */
@@ -184,15 +191,14 @@ _mgrib_ctxset(int a1, va_list *alist)
 
   for (attr = a1; attr != MG_END; attr = va_arg (*alist, int)) {
     switch (attr) {
-    case MG_ApSet:
-      {
-	Appearance *ap;
-
-	ap = _ApSet(NULL, va_arg(*alist, int), alist);
-	mgrib_setappearance(ap, MG_MERGE);
-	ApDelete(ap);
-      }
+    case MG_ApSet: {
+      Appearance *ap;
+      
+      ap = _ApSet(NULL, va_arg(*alist, int), alist);
+      mgrib_setappearance(ap, MG_MERGE);
+      ApDelete(ap);
       break;
+    }
     case MG_WnSet:
       _WnSet( _mgc->win, va_arg(*alist, int), alist);
       break;
@@ -238,8 +244,7 @@ _mgrib_ctxset(int a1, va_list *alist)
       /* kind of RIB-specific */
     case MG_RIBFILE:
       /*        if(_mgribc->rib) fclose(_mgribc->rib); */
-      _mgribc->rib = va_arg(*alist, FILE*);
-      *_mgribc->filepath = '\0'; /* kill any pending file-path */
+      ribfile = va_arg(*alist, FILE*);
       break;
 
       /* really RIB-specific */
@@ -248,26 +253,15 @@ _mgrib_ctxset(int a1, va_list *alist)
       break;
     case MG_RIBFORMAT:
       switch( va_arg(*alist, int) ) {
-      case MG_RIBASCII:
-	_mgribc->render_device |= RMD_ASCII;
-	_mgribc->render_device &= ~RMD_BINARY; break;
-      case MG_RIBBINARY:
-	_mgribc->render_device |= RMD_BINARY;
-	_mgribc->render_device &= ~RMD_ASCII; break;
+      case MG_RIBASCII:  _mgribc->render_device = RMD_ASCII; break;
+      case MG_RIBBINARY: _mgribc->render_device = RMD_BINARY; break;
       }
-      break;
-    case MG_RIBFILEPATH:
-      if(_mgribc->rib) {
-	fclose(_mgribc->rib);
-      }
-      strNcpy(_mgribc->filepath, va_arg(*alist, char*));
-      _mgribc->rib = fopen(_mgribc->filepath,"w+");
       break;
     case MG_RIBDISPLAY:
       _mgribc->display = va_arg(*alist, int);
       break;
     case MG_RIBDISPLAYNAME:
-      strNcpy(_mgribc->displayname, va_arg(*alist, char*));
+      ribdpy = va_arg(*alist, char*);
       break;
     case MG_RIBBACKING:
       _mgribc->backing = va_arg(*alist, int);
@@ -288,28 +282,67 @@ _mgrib_ctxset(int a1, va_list *alist)
       strNcpy(_mgribc->ribdate, va_arg(*alist, char*));
       break;
     default:
-      OOGLError (0, "_mgrib_ctxset: undefined option: %d\n", attr);
-      return;
-      break;
+      OOGLError(0, "_mgrib_ctxset: undefined option: %d\n", attr);
+      return -1;
     }
   }
 
-  /* if we have a file-path, but no display-name, then use filepath as
-   * display-name
-   */
-  if (_mgribc->displayname[0] == '\0' && _mgribc->filepath[0] != '\0') {
-    strcpy(_mgribc->displayname, _mgribc->filepath);
+  if (ribfile != NULL && ribdpy == NULL) {
+    OOGLError(0,
+	      "_mgrib_ctxset: must not specify a file without a displayname");
+    return -1;
   }
+
+  if (ribdpy != NULL) {
+    bool rfopened = false;
+
+    if (ribfile == NULL) {
+      ribfile = fopen(ribdpy, "w+");
+      rfopened = true;
+    }
+    if (ribfile == NULL) {
+      OOGLError(0, "_mgrib_ctxset: unable to open file for rib display \"%s\"",
+		ribdpy);
+      return -1;
+    }
+    if (fstat(fileno(ribfile), &st) < 0) {
+      OOGLError(0, "_mgrib_ctxset: unable to stat file for rib display \"%s\"",
+		ribdpy);
+      if (rfopened) {
+	fclose(ribfile);
+      }
+      return -1;
+    }
+    /* ok, now insert the stuff into the context */
+    if (_mgribc->rib && _mgribc->rib_close) {
+      fclose(_mgribc->rib);
+    }
+    _mgribc->rib = ribfile;
+    strNcpy(_mgribc->displayname, ribdpy);
+  }
+
+  /* Now decide where to put texture data (anything else?)
+   *
+   * If ribfile is a regular file, then we asssume that
+   * dirname(ribdpy) is its path-component; texture data goes there,
+   * under the name basename(ribdpy)-txSEQ.tiff, where "SEQ" is an
+   * ever increasing number (during the life-time of the context).
+   *
+   * If ribfile is not a regular file and dirname(ribdpy) equals ".",
+   * then texture data goes to /tmp or ${TMPDIR}, in order not to
+   * bloat the current directory which piping data around.
+   *
+   * If dirname(ribdpy) != ".", but dirname(ribdpy) does not exist,
+   * then we loose. So what.
+   */
 
   /* Extract the path-component from displayname */
   strcpy(_mgribc->displaypath, _mgribc->displayname);
   strcpy(_mgribc->displaypath, dirname(_mgribc->displaypath));
-  /* Terminate the path with '/' for convenience */
-  len = strlen(_mgribc->displaypath);
-  if (_mgribc->displaypath[len-1] != '/') {
-    _mgribc->displaypath[len++] = '/';
-    _mgribc->displaypath[len] = '\0';
+  if (!S_ISREG(st.st_mode) && strcmp(_mgribc->displaypath, ".") == 0) {
+    strNcpy(_mgribc->displaypath, _mgribc->tmppath);
   }
+
   /* If displayname really is a path-name, then include only its
    * basename component into the rib-output. Otherwise one has to edit
    * the RIB-file each time one moves it around.
@@ -321,8 +354,8 @@ _mgrib_ctxset(int a1, va_list *alist)
    * is an ever increasing number.
    */
   if ((dot = strrchr(_mgribc->displaybase, '.')) != NULL &&
-      (strcmp(dot, ".tiff") == 0 || strcmp(dot, ".rib"))) {
-    dot = '\0';
+      (strcmp(dot, ".tiff") == 0 || strcmp(dot, ".rib") == 0)) {
+    *dot = '\0';
   }
   /* Finished. The displayname emitted to the RIB file now will always
    * be without path-component.
@@ -334,8 +367,8 @@ _mgrib_ctxset(int a1, va_list *alist)
     /* rib state is *not* in accordance with appearance state:
        don't set the appearance until worldbegin time */
   }
+  return 0;
 }
-
 
 /*-----------------------------------------------------------------------
  * Function:	mgrib_ctxget
@@ -396,11 +429,10 @@ mgrib_ctxget(int attr, void* value)
     *VALUE(int) = _mgribc->line_mode;
     break;
   case MG_RIBFORMAT:
-    if(_mgribc->render_device & RMD_ASCII) *VALUE(int) = MG_RIBASCII;
-    if(_mgribc->render_device & RMD_BINARY) *VALUE(int) = MG_RIBBINARY;
-    break;
-  case MG_RIBFILEPATH:
-    *VALUE(char *) = _mgribc->filepath;
+    switch (_mgribc->render_device) {
+    case RMD_ASCII: *VALUE(int) = MG_RIBASCII; break;
+    case RMD_BINARY: *VALUE(int) = MG_RIBBINARY; break;
+    }
     break;
   case MG_RIBDISPLAY:
     *VALUE(int) = _mgribc->display;
@@ -469,7 +501,7 @@ mgribwindow(WnWindow *win)
        mr_NULL);
 
   /* options */
-  if(_mgribc->shader && _mgribc->shadepath) {
+  if(_mgribc->shader != RM_STDSHADE && _mgribc->shadepath) {
     mrti(mr_header, "CapabilitiesNeeded ShadingLanguage", mr_nl,
 	 mr_embed, "version 3.03", mr_nl,
 	 mr_option, mr_string, "searchpath", mr_string, "shader",
@@ -481,7 +513,7 @@ mgribwindow(WnWindow *win)
         
   /* set display characteristics...*/
   snprintf(dpyname, PATH_MAX, "%s%s", _mgribc->displaybase, 
-	   _mgribc->display == MG_RIBFILE ? ".tiff" : ".rib");
+	   _mgribc->display == MG_RIBTIFF ? ".tiff" : ".rib");
   mrti(mr_display, mr_string, dpyname, 
        (_mgribc->display == MG_RIBFRAME) ? mr_framebuffer : mr_file, 
        (_mgribc->backing == MG_RIBDOBG) ? mr_rgb : mr_rgba, mr_NULL);
@@ -492,25 +524,27 @@ mgribwindow(WnWindow *win)
   ysize = wp.ymax - wp.ymin + 1;
   mrti(mr_format, mr_int, xsize, mr_int, ysize, mr_float, 1., mr_NULL);
 
-  _mgribc->born = 1;
-  return(win);
+  _mgribc->born = true;
+  return win;
 }
 
 /*-----------------------------------------------------------------------
  * Function:	mgrib_ctxset
  * Description:	set some context attributes
  * Args:	a1, ...: list of attribute-value pairs
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Author:	mbp
  * Date:	Fri Sep 20 12:00:18 1991
  */
-void mgrib_ctxset( int a1, ...  )
+int mgrib_ctxset( int a1, ...  )
 {
   va_list alist;
-
+  int result;
+  
   va_start( alist, a1 );
-  _mgrib_ctxset(a1, &alist);
+  result = _mgrib_ctxset(a1, &alist);
   va_end(alist);
+  return result;
 }
 
 
@@ -555,9 +589,11 @@ void mgrib_ctxdelete( mgcontext *ctx )
     if(((mgribcontext *)ctx)->shadepath) {
       free(((mgribcontext *)ctx)->shadepath);
     }
-    if (_mgribc->tximg) {
-      OOGLFree(_mgribc->tximg);
+    if (_mgribc->tx) {
+      OOGLFree(_mgribc->tx);
     }
+    mrti_delete(&_mgribc->worldbuf);
+    mrti_delete(&_mgribc->txbuf);
     mg_ctxdelete(ctx);
     if(ctx == _mgc)
       _mgc = NULL;
@@ -618,11 +654,14 @@ mgrib_worldbegin( void )
   /* first, check to see if we need to open the default rib file    */
   /* IT'S NOW POSSIBLE THAT THIS WON'T GET SENT TO A FILE (streams) */
   /* IN WHICH CASE IT WOULD BE WRONG TO OPEN A FILE. MOVE THIS!!    */
-  if(!_mgribc->rib)
-    _mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
+  if(!_mgribc->rib) {
+    if (mgrib_ctxset(MG_RIBDISPLAYNAME, DEFAULT_RIB_FILE, MG_END) == -1) {
+      OOGLError(0, "mgrib_worldbeging(): unable to open default file \"%s\"",
+		DEFAULT_RIB_FILE);
+    }
+  }
 	
   /* interpret options...(none exist now) */
-
 
   mg_worldbegin();
   mg_findcam();
@@ -645,6 +684,10 @@ mgrib_worldbegin( void )
   /* interpret camera ...*/
   CamGet( _mgc->cam, CAM_NEAR, &cnear);
   CamGet( _mgc->cam, CAM_FAR, &cfar);
+
+  /* make our buffer the current one */
+  mrti_makecurrent(&_mgribc->worldbuf);
+
   mrti(mr_clipping, mr_float, cnear, mr_float, cfar, mr_NULL);
   CamGet( _mgc->cam, CAM_PERSPECTIVE, &_mgribc->persp);
   mrti(mr_projection, mr_string,
@@ -678,11 +721,6 @@ mgrib_worldbegin( void )
 
   /* otherwise explicitly specified normals would be inverted */
   mrti(mr_reverseorientation, mr_NULL);
-
-  /* Mark the position in the token buffer, because this is
-   * the point where we can place texture commands later on.
-   */
-  worldptr = ptr;
 
   /* RiWorldBegin...*/
   mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
@@ -1006,10 +1044,11 @@ mgrib_newcontext( mgribcontext *ctx )
   ctx->mgctx.astk->ap_seq = 1;
   ctx->mgctx.astk->mat_seq = 1;
   ctx->mgctx.astk->light_seq = 1;
-  ctx->born = 0;
+  ctx->born = false;
   ctx->rib = NULL;
+  ctx->rib_close = false;
   ctx->backing = MG_RIBDOBG;
-  ctx->shader = MG_RIBSTDSHADE;
+  ctx->shader = MG_RIBEXTSHADE;
   ctx->shadepath = NULL;		/* should add context field */
   if (geomdata) {
     char path[512];
@@ -1017,9 +1056,14 @@ mgrib_newcontext( mgribcontext *ctx )
     ctx->shadepath = strdup(path);
   }
 
+  if ((ctx->tmppath = getenv("TMPDIR")) == NULL) {
+    ctx->tmppath = "/tmp";
+  }
+
   /* initalize the token interface */
-  if(!tokenbuffer) mrti_init();
-  mrti_reset();
+  mrti_init(&ctx->worldbuf);
+  mrti_init(&ctx->txbuf);
+  mrti_makecurrent(&ctx->worldbuf);
 
   ctx->render_device = RMD_ASCII;
   ctx->line_mode = MG_RIBCYLINDER;
@@ -1058,70 +1102,41 @@ mgrib_findctx( long winid )
 void
 mgrib_flushbuffer()
 {
-  /* do we even want a buffer anymore? why? */
-  if(!_mgribc->rib) {
-    _mgribc->rib = fopen(DEFAULT_RIB_FILE, "w+");
-  }
-  if (_mgribc->tximg) {
-    size_t size = (size_t)worldptr - (size_t)tokenbuffer;
-    int i;
-    char tifftxname[1024], txtxname[1024];
+  TokenBuffer *wbuf = &_mgribc->worldbuf;
+  size_t size;
 
-    if (fwrite(tokenbuffer, size, 1, _mgribc->rib) != 1) {
+  if(!_mgribc->rib) {
+    if (mgrib_ctxset(MG_RIBDISPLAYNAME, DEFAULT_RIB_FILE, MG_END) == -1) {
+      return;
+    }
+  }
+  if (_mgribc->tx) {
+    TokenBuffer *txbuf = &_mgribc->txbuf;
+
+    size = (size_t)wbuf->tkb_worldptr - (size_t)wbuf->tkb_buffer;
+    if (size && fwrite(wbuf->tkb_buffer, size, 1, _mgribc->rib) != 1) {
       OOGLError(1, "Error flushing RIB tokenbuffer (prologue)");
-    } 
-    fprintf(_mgribc->rib, "\n");
-    for (i = _mgribc->n_txdumped; i < _mgribc->n_tximg; i++) {
-      mgrib_mktexname(tifftxname, false, i, "tiff");
-      mgrib_mktexname(txtxname, false, i, "tx");
-      fprintf(_mgribc->rib,
-	      "\nMakeTexture "
-	      "\"%s\" \"%s\" \"none\" \"none\" \"gaussian\" 1.0 1.0",
-	      tifftxname, txtxname);
     }
-    _mgribc->n_txdumped = _mgribc->n_tximg;
-    size = (size_t)ptr - (size_t)worldptr;
-    if (fwrite(worldptr, size, 1, _mgribc->rib) != 1) {
-      OOGLError(1, "Error flushing RIB tokenbuffer (world): %d");
+    mrti_makecurrent(txbuf);
+    mrti(mr_nl, mr_nl, mr_NULL);
+    size = (size_t)txbuf->tkb_ptr - (size_t)txbuf->tkb_buffer;
+    if (size && fwrite(txbuf->tkb_buffer, size, 1, _mgribc->rib) != 1) {
+      OOGLError(1, "Error flushing RIB tokenbuffer (textures)");
     }
+    size = (size_t)wbuf->tkb_ptr - (size_t)wbuf->tkb_worldptr;
+    if (size && fwrite(wbuf->tkb_worldptr, size, 1, _mgribc->rib) != 1) {
+      OOGLError(1, "Error flushing RIB tokenbuffer (world)");
+    }
+    mrti_reset();
   } else {
-    size_t size = (size_t)ptr - (size_t)tokenbuffer;
-    if (fwrite(tokenbuffer, size, 1, _mgribc->rib) != 1) {
+    size = (size_t)wbuf->tkb_ptr - (size_t)wbuf->tkb_buffer;
+    if (size && fwrite(wbuf->tkb_buffer, size, 1, _mgribc->rib) != 1) {
       OOGLError(1, "Error flushing RIB tokenbuffer");
     }
   }
   fflush(_mgribc->rib);
-  mrti_reset(_mgribc->rib);
-}
-
-/*-----------------------------------------------------------------------
- * Function:	mgrib_terminatebuffer
- * Description: NULL terminates the tokenbuffer, required to support
- NeXTs render panel 
- * Returns:	nothing
- * Author:	wisdom
- * Date:	Mon Jul 26 12:35:45 CDT 1993
- * Notes:	This is a public routine, prototyped in mgrib.h
- */
-void
-mgrib_terminatebuffer()
-{
-  *(ptr++) = 0;
-}
-
-/*-----------------------------------------------------------------------
- * Function:	mgrib_tokenbuffer
- * Description: returns through indirection the tokenbuffer and size 
- * Returns:	char pointer to tokenbuffer
- * Author:	wisdom
- * Date:	Mon Jul 26 12:35:45 CDT 1993
- * Notes:	This is a public routine, prototyped in mgrib.h
- */
-void
-mgrib_tokenbuffer(char **buffer, int *size)
-{
-  *buffer = (char *)tokenbuffer;
-  *size = ptr - tokenbuffer;
+  mrti_makecurrent(wbuf);
+  mrti_reset();
 }
 
 /*

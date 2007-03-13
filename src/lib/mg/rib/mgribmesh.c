@@ -193,29 +193,18 @@ mgrib_submesh( int wrap, int nu, int nv,
       mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
       for(i=0; i<nunv; i++, str++, viflag++) {
 	Pt3Transform(tex->tfm, str, &st);
+	/* should leave clamping to the RIB renderer */
 	if ((tex->flags & TXF_SCLAMP)) {
 	  if (st.x > 1.0)
 	    st.x = 1.0;
 	  else if (st.x < 0.0)
 	    st.x = 0.0;
-	} else {
-	  if (st.x > 1.0) {
-	    st.x -= (float)(int)st.x;
-	  } else if (st.x < 0.0) {
-	    st.x -= (float)((int)st.x - 1);
-	  }
 	}
 	if ((tex->flags & TXF_TCLAMP)) {
 	  if (st.y > 1.0)
 	    st.y = 1.0;
 	  else if (st.y < 0.0)
 	    st.y = 0.0;
-	} else {
-	  if (st.y > 1.0) {
-	    st.y -= (float)(int)st.y;
-	  } else if (st.x < 0.0) {
-	    st.y -= (float)((int)st.y - 1);
-	  }
 	}
 	st.y = 1.0 - st.y;
 	mrti(mr_subarray2, &st, mr_NULL);

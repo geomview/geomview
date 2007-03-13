@@ -46,10 +46,10 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 
     mrti(mr_section, "Interpreting Material", mr_NULL);
 
-    if(mat_mask & MTF_DIFFUSE)
+    if (mat_mask & MTF_DIFFUSE)
         mrti(mr_color, mr_parray, 3, &mat->diffuse, mr_NULL);
 
-    if( (ap_mask & APF_TRANSP || mat_mask & MTF_ALPHA) && 
+    if ( (ap_mask & APF_TRANSP || mat_mask & MTF_ALPHA) && 
        ap->valid & APF_TRANSP && ap->flag & APF_TRANSP) {
         /* presumably, we want this here as well as per vertex opacity
          * specification
@@ -68,7 +68,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
                && (ap->flag & APF_TEXTURE)
                && (ap->tex != astk->next->ap.tex) )
        ) {
-	    /* note: the factor "8.0" is to compensate for some of the
+	    /* NOTE: the factor "8.0" is to compensate for some of the
 	     * usual rib shaders, i.e. BMRT, aqsis etc.. Don't know
 	     * why they started this affair, but without the output
 	     * from rendrib or aqsis is just _very_ different from
@@ -78,53 +78,55 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
         float roughness = (mat->shininess)? 8.0/mat->shininess : 8.0/1.0;
 	enum tokentype shader = mr_plastic;
 
-        if(ap->shading == APF_CONSTANT) {
-	    /* ok, this has nothing to do with texture, but
-	     * we handle texture not for this case. FIXME. cH.
-	     */
-	    shader = mr_constant;
-	    mrti(mr_surface, shader, mr_NULL);
-	} else if(ap->shading == APF_FLAT) {
-	    /* determine shader */
-	    if(_mgribc->shader==MG_RIBSTDSHADE) {
-		shader = mr_plastic;
+        if (ap->shading == APF_CONSTANT) {
+	    if (_mgribc->shader == MG_RIBSTDSHADE) {
+		shader = mr_constant;
 	    } else {
-	        if(_mgc->space & TM_HYPERBOLIC) shader = mr_hplastic;
-		else shader = mr_plastic;
+		if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
+		    shader = mr_GVrgbmaskpaintedconstant;
+		}
 	    }
-
-	    if (shader == mr_plastic
-		&& (ap->flag & APF_TEXTURE)
-		&& ap->tex != NULL) {
-		shader = mr_GVrgbamaskpaintedplastic;
+	    mrti(mr_surface, shader, mr_NULL);
+	} else {
+	    /* determine shader */
+	    if (_mgribc->shader == MG_RIBSTDSHADE) {
+		if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
+		    shader = mr_paintedplastic;
+		} else {
+		    shader = mr_plastic;
+		}
+	    } else {
+	        if (_mgc->space & TM_HYPERBOLIC) {
+		    shader = mr_hplastic;
+		} else if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
+		    shader = mr_GVrgbmaskpaintedplastic;
+		} else {
+		    shader = mr_plastic;
+		}
 	    }
 
 	    /* define surface */
-	    mrti(mr_shadinginterpolation, mr_constant,
-		    mr_surface, shader, mr_Ka, mr_float, mat->ka,
-		    mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
-		    mr_specularcolor, mr_parray, 3, &(mat->specular),
-		    mr_roughness, mr_float, roughness, mr_NULL);
-	} else if(ap->shading == APF_SMOOTH) {
-
-	    if (shader == mr_plastic
-		&& (ap->flag & APF_TEXTURE)
-		&& ap->tex != NULL) {
-		shader = mr_GVrgbamaskpaintedplastic;
+	    if (ap->shading == APF_FLAT) {
+		mrti(mr_shadinginterpolation, mr_constant,
+		     mr_surface, shader, mr_Ka, mr_float, mat->ka,
+		     mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
+		     mr_specularcolor, mr_parray, 3, &(mat->specular),
+		     mr_roughness, mr_float, roughness, mr_NULL);
+	    } else if (ap->shading == APF_SMOOTH) {
+		mrti(mr_shadinginterpolation, mr_string, "smooth",
+		     mr_surface, shader, mr_Ka, mr_float, mat->ka,
+		     mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
+		     mr_specularcolor, mr_parray, 3, &(mat->specular),
+		     mr_roughness, mr_float, roughness, mr_NULL);
 	    }
-
-	    mrti(mr_shadinginterpolation, mr_string, "smooth",
-		    mr_surface, shader, mr_Ka, mr_float, mat->ka,
-		    mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
-		    mr_specularcolor, mr_parray, 3, &(mat->specular),
-		    mr_roughness, mr_float, roughness, mr_NULL);
 	}
 
-	if (shader == mr_GVrgbamaskpaintedplastic
-	    && (ap->flag & APF_TEXTURE) &&
+	/* define texture if appropriate */
+	if ((ap->flag & APF_TEXTURE) &&
 	    ap->tex != NULL && ap->tex->image != NULL) {
-	    char txname[1024];
-	    char filter[1024];
+	    char txtxname[PATH_MAX];
+	    char tifftxname[PATH_MAX];
+	    char filter[PATH_MAX];
 	    int i;
 	    unsigned chmask = 0;
 	    
@@ -140,38 +142,53 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    }
 
 	    for (i = 0; i < _mgribc->n_tximg; i++) {
-		if (_mgribc->tximg[i] == ap->tex->image) {
+		if (_mgribc->tx[i]->image == ap->tex->image &&
+		    (_mgribc->tx[i]->flags & (TXF_SCLAMP|TXF_TCLAMP))
+		    ==
+		    (ap->tex->flags & (TXF_SCLAMP|TXF_TCLAMP))) {
 		    break;
 		}
 	    }
+
+	    mgrib_mktexname(txtxname, i, _mgribc->tmppath, "tx");
+
 	    if (i == _mgribc->n_tximg) {
 		if (_mgribc->n_tximg % 10 == 0) {
-		    _mgribc->tximg = OOGLRenewNE(Image *,
-						 _mgribc->tximg,
-						 _mgribc->n_tximg + 10,
-						 "New RIB texture images");
+		    _mgribc->tx = OOGLRenewNE(Texture *,
+					      _mgribc->tx,
+					      _mgribc->n_tximg + 10,
+					      "New RIB texture images");
 		}
-		_mgribc->tximg[i] = ap->tex->image;
+		_mgribc->tx[i] = ap->tex;
 		_mgribc->n_tximg++;
 		/* try to dump the image to disk */
-		mgrib_mktexname(txname, true, i, "tiff"); /* full-path */
+		mgrib_mktexname(tifftxname, i, _mgribc->displaypath, "tiff");
 #ifdef HAVE_PAMTOTIFF 
 		chmask = (1 << ap->tex->image->channels) - 1;
 		sprintf(filter, "pamtotiff -lzw -truecolor > %s 2> /dev/null",
-			txname);
+			tifftxname);
 #else
 		chmask = ap->tex->image->channels > 2 ? 0x7 : 0x1;
 		sprintf(filter, "pnmtotiff -lzw -truecolor > %s 2> /dev/null",
-			txname);
+			tifftxname);
 #endif
 		if (!ImgWriteFilter(ap->tex->image, chmask, filter)) {
-		    _mgribc->tximg[i] = NULL;
+		    _mgribc->tx[i] = NULL;
 		    --_mgribc->n_tximg;
 		}
+		mgrib_mktexname(tifftxname, i, NULL, "tiff");
+		mrti_makecurrent(&_mgribc->txbuf);
+		mrti(mr_maketexture, mr_string, tifftxname, mr_string, txtxname,
+		     mr_string,
+		     ap->tex->flags & TXF_SCLAMP ? "clamp" : "periodic",
+		     mr_string,
+		     ap->tex->flags & TXF_TCLAMP ? "clamp" : "periodic",
+		     mr_string, "gaussian", mr_float, 2.0, mr_float, 2.0,
+		     mr_NULL);
+		mrti_makecurrent(&_mgribc->worldbuf);
 	    }
 	    if (i < _mgribc->n_tximg) {
-		mgrib_mktexname(txname, false, i, "tiff"); /* only base-name */
-		mrti(mr_texturename, mr_string, txname, mr_NULL);
+		mrti(mr_texturename, mr_string, txtxname, mr_NULL);
 	    }
 	}
     }

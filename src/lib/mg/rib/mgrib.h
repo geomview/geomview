@@ -22,6 +22,8 @@
  * MG context attributes specific to Renderman rib driver (mgrib)
  *
  */
+#ifndef _GV_MGRIB_H_
+#define _GV_MGRIB_H_
 
 #define   MG_RIBWINID		300 /* token: int */
 #define   MG_RIBBORN		301 /* token: int (boolean) */
@@ -36,7 +38,7 @@
 #define   MG_RIBASCII		308 /* possible value for MG_RIBFORMAT */
 #define   MG_RIBBINARY		309 /* possible value for MG_RIBFORMAT */
 
-#define   MG_RIBFILEPATH	310 /* token: char* */
+#define   MG_RIBFILEPATH	MG_RIBDISPLAYNAME /* obsolete. token: char* */
 
 #define   MG_RIBDISPLAY		311 /* token: int */
 #define   MG_RIBTIFF		312 /* possible value for MG_RIBDISPLAY */
@@ -59,6 +61,12 @@
 
 /* following are functions wich need to be accessed by main program */
 void mgrib_flushbuffer();     /* flushes tokens from buffer to file */
-void mgrib_terminatebuffer(); /* NULL terminates the tokenbuffer:   */
-void mgrib_tokenbuffer(char **buffer, int *size);
-			      /* returns via indirection buffer & size */
+
+#endif
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

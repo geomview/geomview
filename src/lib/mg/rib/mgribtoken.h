@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -19,14 +20,24 @@
  * USA, or visit http://www.gnu.org.
  */
 
-/* minnegraphics renderman token interface */
-void mrti_init();
-void mrti( int a1, ... );
-void mrti_reset();
+#ifndef _GV_MGRIBTOKEN_H_
+#define _GV_MGRIBTOKEN_H_
 
-extern unsigned char *tokenbuffer;
-extern unsigned char *worldptr;
-extern unsigned char *ptr;
+/* minnegraphics renderman token interface */
+
+typedef struct tokenbuffer 
+{
+    char *tkb_buffer;      /* base of buffer */
+    char *tkb_worldptr;    /* ptr to worldbegin in buffer */
+    char *tkb_ptr;         /* ptr past last data char */
+    char *tkb_limit;       /* ptr past last allocated char */
+} TokenBuffer;
+
+void mrti_init(TokenBuffer *tkbuf);
+void mrti_delete(TokenBuffer *tkbuf);
+void mrti_makecurrent(TokenBuffer *tkbuf);
+void mrti_reset(void);
+void mrti( int a1, ... );
 
 #define STRINGBASE	50     /* strings start at 50 */
 
@@ -67,6 +78,7 @@ enum tokentype {
     mr_reverseorientation,
     mr_curves,
     mr_points,
+    mr_maketexture,
 
     /* Strings */
     mr_P=STRINGBASE,
@@ -76,8 +88,7 @@ enum tokentype {
     mr_Os,
     mr_st,
     mr_plastic,
-    /* mr_paintedplastic, */
-    mr_GVrgbamaskpaintedplastic,
+    mr_paintedplastic,
     mr_hplastic,
     mr_eplastic,
     mr_heplastic,
@@ -101,6 +112,8 @@ enum tokentype {
     mr_texturename,
     mr_width,
     mr_constantwidth,
+    mr_GVrgbmaskpaintedplastic,
+    mr_GVrgbmaskpaintedconstant,
 
     /* SPECIAL */    
     mr_array,		/* (full array) size, f,f,.. */
@@ -123,6 +136,14 @@ struct _table {
     char *name;		 /* string representing token, or null */
     int  len;		 /* length of string */
     unsigned char reqn;  /* number used to define request/string to renderer */
-    int  defined;	 /* flags weather request/string has been defined */
+    bool defined;	 /* flags weather request/string has been defined */
 };
 
+#endif
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

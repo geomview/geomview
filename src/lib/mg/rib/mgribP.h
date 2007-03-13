@@ -28,21 +28,21 @@
 #include "mg.h"
 #include "mgP.h"
 #include "mgrib.h"
+#include "mgribtoken.h"
 #include "transform.h"
 #include "bezierP.h"
 
+#define DEFAULT_RIB_FILE "geom.rib"
+
 typedef struct mgribcontext {
   struct mgcontext mgctx;	/* The mgcontext */
-  int born;			/* Has window been displayed on the screen? */
+  bool born;			/* Has window been displayed on the screen? */
   int win;			/* window ID, or 0 */
   int world;                    /* inc/decremented by worldbegin()/end() */
   int persp;                    /* camera projection */
   float focallen;               /* focallen */
 
-  int render_device;	/* Device Options */
-#define RMD_ASCII	0x1
-#define RMD_BINARY	0x2
-
+  enum { RMD_ASCII, RMD_BINARY } render_device;	/* Device Options */
 
 /* Which line drawing technique?
  * MG_RIBPOLYGON for creating RIB tokens true to OOGL/geomview, but may appear
@@ -53,23 +53,38 @@ typedef struct mgribcontext {
  * Note: Future versions of renderman should support line drawing, NeXT does
  * now.
  */
-  int line_mode;
+  enum {
+    RM_POLYGON = MG_RIBPOLYGON,
+    RM_CYLINDER = MG_RIBCYLINDER,
+    RM_PRMANLINE = MG_RIBPRMANLINE
+  } line_mode;
+
+  /* MG_RIBFRAME: render to framebuffer (screen window)
+   * MG_RIBTIFF: render to file
+   */
+  enum { RM_FRAME = MG_RIBFRAME, RM_RIBTIFF = MG_RIBTIFF } display;
 
   FILE *rib;
-  char filepath[PATH_MAX];
-#define DEFAULT_RIB_FILE "geom.rib"
-
-  int display;		/* MG_RIBFRAME: render to framebuffer (screen window)
-			   MG_RIBFILE: render to file  */
+  bool rib_close; /* set to true if we have opened rib ourselves */
   char displayname[PATH_MAX]; /* if display == MG_RIFILE, name of the file */
   char displaypath[PATH_MAX]; /* dirname(display), if MG_RIFILE */
   char displaybase[PATH_MAX]; /* basename(display), if MG_RIFILE */
-			   
-  int backing;		/* MG_RIBDOBG: simulate colored background w/ polygon
-  			   MG_RIBNOBG: no background simulation (defualt) */
-  int shader;		/* MG_RIBSTDSHADE: uses standard shader
-  			   MG_RIBEXTSHADE: uses extended shaders (eplastic,
-			   	heplastic, hplastic) */
+  const char *tmppath;
+
+  /* MG_RIBDOBG: simulate colored background w/ polygon
+   * MG_RIBNOBG: no background simulation (defualt)
+   */
+  enum { RB_DOBG = MG_RIBDOBG, RB_NOBG = MG_RIBNOBG } backing;
+
+  /* MG_RIBSTDSHADE: uses standard shader
+   * MG_RIBEXTSHADE: uses extended shaders (eplastic,
+   * heplastic, hplastic)
+   *
+   * + the shaders needed to support Geomview's texture model
+   * (modulate/decal/blend), including alpha channel support.
+   */
+  enum { RM_STDSHADE = MG_RIBSTDSHADE, RM_EXTSHADE = MG_RIBEXTSHADE  } shader;
+
   char *shadepath;	/* path to extended shaders or user shaders */
   char ribscene[128];	/* scene name for RIB 1.0 file comments */
   char ribcreator[128]; /* creator field for RIB 1.0 file comments */
@@ -77,11 +92,19 @@ typedef struct mgribcontext {
   char ribfor[128];	/* for(user) field for RIB 1.0 file comments */
   			/* defaults to user account name */
   char ribdate[128];	/* creation date, defualts to today's date */
-  Image **tximg;        /* array of texture images used; texture
-			 * images are dumped to disk with displayname.#seq.tiff
+  Texture **tx ;        /* array of textures used; texture images are
+			 * dumped to disk with
+			 * displayname.#seq.tiff. Textures are
+			 * considered equal (for this purpose) if they
+			 * refer to the same image and have the same
+			 * clamping settings (we leave the clamping to
+			 * MakeTexture, that is the reason).
 			 */
   int n_tximg;          /* How many of them */
   int n_txdumped;       /* How many already got their MakeTexture line */
+
+  TokenBuffer worldbuf; /* buffer for everything except MakeTexture */
+  TokenBuffer txbuf;    /* buffer for MakeTexture */
 } mgribcontext;
 
 /* Make some convenient defines */
@@ -98,10 +121,10 @@ void mgrib_drawnormal(HPoint3 *p, Point3 *n);
 
 
 static inline void
-mgrib_mktexname(char *txname, bool fullpath, int seq, const char *suffix)
+mgrib_mktexname(char *txname, int seq, const char *path, const char *suffix)
 {
-  if (snprintf(txname, PATH_MAX, "%s%s-tx%d.%s",
-	       fullpath ? _mgribc->displaypath : "",
+  if (snprintf(txname, PATH_MAX, "%s%s%s-tx%d.%s",
+	       path ? path : "", path ? "/" : "",
 	       _mgribc->displaybase, seq, suffix) >= PATH_MAX) {
     OOGLError(1, "path to texture-file exceedsd maximum length %d", PATH_MAX);
   }
