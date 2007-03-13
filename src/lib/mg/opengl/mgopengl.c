@@ -51,7 +51,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 
 mgcontext * mgopengl_ctxcreate(int a1, ...);
-void	    mgopengl_ctxset( int a1, ...  );
+int	    mgopengl_ctxset( int a1, ...  );
 int	    mgopengl_feature( int feature );
 void	    mgopengl_ctxdelete( mgcontext *ctx );
 int	    mgopengl_ctxget( int attr, void* valueptr );
@@ -85,7 +85,7 @@ extern void mgopengl_mesh(int wrap, int nu, int nv,
 extern void mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C,
 			   int qflags);
 
-void _mgopengl_ctxset(int a1, va_list *alist);
+int _mgopengl_ctxset(int a1, va_list *alist);
 static void mgopengl_choosewin(void), mgopengl_initwin(void);
 static void mgopengl_setviewport(void);
 static void mgimgfile2cambgimage(void);
@@ -102,7 +102,7 @@ struct mgfuncs mgopenglfuncs = {
   mgopengl_feature,
   (mgcontext *(*)())mgopengl_ctxcreate,
   mgopengl_ctxdelete,
-  (void (*)())mgopengl_ctxset,
+  (int (*)())mgopengl_ctxset,
   mgopengl_ctxget,
   mgopengl_ctxselect,
   mgopengl_sync,
@@ -154,11 +154,13 @@ mgopengl_ctxcreate(int a1, ...)
   va_list alist;
 
 
-  _mgc =
-    (mgcontext*)mgopengl_newcontext( OOGLNewE(mgopenglcontext, "mgopengl_ctxcreate") );
+  _mgc = (mgcontext*)mgopengl_newcontext(OOGLNewE(mgopenglcontext,
+						  "mgopengl_ctxcreate"));
 
   va_start(alist, a1);
-  _mgopengl_ctxset(a1, &alist);
+  if (_mgopengl_ctxset(a1, &alist) == -1) {
+    mgopengl_ctxdelete(_mgc);
+  }
   va_end(alist);
   return _mgc;
 }
@@ -168,13 +170,13 @@ mgopengl_ctxcreate(int a1, ...)
  * Description:	internal ctxset routine
  * Args:	a1: first attribute
  *		*alist: rest of attribute-value list
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Author:	mbp
  * Date:	Fri Sep 20 11:08:13 1991
  * Notes:	mgopengl_ctxcreate() and mgopengl_ctxset() call this to actually
  *		parse and interpret the attribute list.
  */
-void
+int
 _mgopengl_ctxset(int a1, va_list *alist)
 {
   int attr;
@@ -321,7 +323,7 @@ _mgopengl_ctxset(int a1, va_list *alist)
     }
     default:
       OOGLError (0, "_mgopengl_ctxset: undefined option: %d", attr);
-      return;
+      return -1;
     }
   }
 
@@ -341,6 +343,7 @@ _mgopengl_ctxset(int a1, va_list *alist)
 
 #undef NEXT
 
+  return 0;
 }
 
 
@@ -487,17 +490,19 @@ mgopengl_sharectx(void)
  * Function:	mgopengl_ctxset
  * Description:	set some context attributes
  * Args:	a1, ...: list of attribute-value pairs
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Author:	mbp
  * Date:	Fri Sep 20 12:00:18 1991
  */
-void mgopengl_ctxset( int a1, ...  )
+int mgopengl_ctxset( int a1, ...  )
 {
   va_list alist;
+  int result;
 
   va_start( alist, a1 );
-  _mgopengl_ctxset(a1, &alist);
+  result = _mgopengl_ctxset(a1, &alist);
   va_end(alist);
+  return result;
 }
 
 

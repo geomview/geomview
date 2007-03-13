@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.12 2007/03/09 23:54:49 rotdrop Exp $
+ * $Id: mg.c,v 1.13 2007/03/13 17:53:21 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -575,7 +575,7 @@ mg_setcamera( Camera *cam )
  * Description: set some attributes in the current context
  * Args:        attr, ...: list of attribute-value pairs, terminated
  *                by MG_END
- * Returns:     nothing
+ * Returns:     -1 on error 0 on success
  * Author:      slevy (doc by mbp)
  * Date:        Thu Sep 19 11:22:28 1991
  * Notes:       DO NOT CALL THIS (yet)!  It currently does nothing.
@@ -584,9 +584,11 @@ mg_setcamera( Camera *cam )
  *              This needs to be modified to work as the NULL device.
  *              Use by other devices may never be needed.
  */
-void
+int
 mg_ctxset( int attr, ... /*, MG_END */ )
-{}
+{
+  return 0;
+}
 
 
 /*-----------------------------------------------------------------------
@@ -948,7 +950,7 @@ mg_bsptree(struct BSPTree *bsptree)
       mg_feature,             /* mg_feature          */			\
       (mgcontext *(*)(void))mg_ctxcreate,         /* mg_ctxcreate        */ \
       mg_ctxdelete,           /* mg_ctxdelete        */			\
-      (void (*)(void))mg_ctxset,          /* mg_ctxset           */	\
+      (int (*)(void))mg_ctxset,          /* mg_ctxset           */	\
       mg_ctxget,              /* mg_ctxget           */			\
       mg_ctxselect,           /* mg_ctxselect        */			\
       mg_sync,                /* mg_sync             */			\

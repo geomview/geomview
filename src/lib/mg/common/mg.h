@@ -73,7 +73,7 @@ struct mgfuncs {  /* mg member functions; potentially changed per device */
   int           (*mg_feature)(int feature);
   mgcontext *   (*mg_ctxcreate)(/* int a1, ... */);
   void          (*mg_ctxdelete)(mgcontext *ctx);
-  void          (*mg_ctxset)(/* a1, ...  */);
+  int           (*mg_ctxset)(/* a1, ...  */);
   int           (*mg_ctxget)(int attr, void* valueptr);
   int           (*mg_ctxselect)(mgcontext *ctx);
   void          (*mg_sync)(void);

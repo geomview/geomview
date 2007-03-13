@@ -40,7 +40,7 @@ void        mgbuf_reshapeviewport(void);
 void        mgbuf_appearance( struct mgastk *ma, int mask );
 void        mgbuf_setshader(mgshadefunc shader);
 mgcontext * mgbuf_ctxcreate(int a1, ...);
-void        mgbuf_ctxset( int a1, ...  );
+int         mgbuf_ctxset( int a1, ...  );
 int         mgbuf_feature( int feature );
 void        mgbuf_ctxdelete( mgcontext *ctx );
 int         mgbuf_ctxget( int attr, void* valueptr );
@@ -72,7 +72,7 @@ extern void mgbuf_polyline();
 extern void mgbuf_polylist();
 extern void mgbuf_quads();
 
-void _mgbuf_ctxset(int a1, va_list *alist);
+int _mgbuf_ctxset(int a1, va_list *alist);
 
 WnWindow *mgbufwindow(WnWindow *win);
 
@@ -82,7 +82,7 @@ struct mgfuncs mgbuffuncs = {
   mgbuf_feature,
   (mgcontext *(*)())mgbuf_ctxcreate,
   mgbuf_ctxdelete,
-  (void (*)())mgbuf_ctxset,
+  (int (*)())mgbuf_ctxset,
   mgbuf_ctxget,
   mgbuf_ctxselect,
   mgbuf_sync,
@@ -177,12 +177,12 @@ mgbuf_newcontext( mgbufcontext *ctx )
  * Description: internal ctxset routine
  * Args:        a1: first attribute
  *              *alist: rest of attribute-value list
- * Returns:     nothing
+ * Returns:     -1 on error, 0 on success
  * Date:        Fri Sep 20 11:08:13 1991
  * Notes:       mgbuf_ctxcreate() and mgbuf_ctxset() call this to actually
  *              parse and interpret the attribute list.
  */
-void
+int
 _mgbuf_ctxset(int a1, va_list *alist)
 {
   int attr;
@@ -320,7 +320,7 @@ _mgbuf_ctxset(int a1, va_list *alist)
 
     default:
       OOGLError (0, "_mgbuf_ctxset: undefined option: %d", attr);
-      return;
+      return -1;
     }
   }
   if (_mgc->shown && !_mgbufc->born) {
@@ -339,6 +339,7 @@ _mgbuf_ctxset(int a1, va_list *alist)
 
 #undef NEXT
 
+  return 0;
 }
 
 
@@ -576,21 +577,23 @@ mgbuf_setcamera( Camera *cam )
  * Description:	set some attributes in the current context
  * Args:	attr, ...: list of attribute-value pairs, terminated
  *		  by MG_END
- * Returns:	nothing
+ * Returns:	-1 on error and 0 on success
  * Notes:	DO NOT CALL THIS (yet)!  It currently does nothing.
  * DEVICE USE:  forbidden --- devices have their own mgxx_ctxset()
  *
  *		This needs to be modified to work as the NULL device.
  *		Use by other devices may never be needed.
  */
-void
+int
 mgbuf_ctxset( int attr, ... /*, MG_END */ )
 {
   va_list alist;
+  int result;
 
   va_start( alist, attr );
-  _mgbuf_ctxset(attr, &alist);
+  result = _mgbuf_ctxset(attr, &alist);
   va_end(alist);
+  return result;
 }
 
 

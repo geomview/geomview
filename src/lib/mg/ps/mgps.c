@@ -39,7 +39,7 @@ void        mgps_reshapeviewport(void);
 void        mgps_appearance( struct mgastk *ma, int mask );
 void        mgps_setshader(mgshadefunc shader);
 mgcontext * mgps_ctxcreate(int a1, ...);
-void        mgps_ctxset( int a1, ...  );
+int         mgps_ctxset( int a1, ...  );
 int         mgps_feature( int feature );
 void        mgps_ctxdelete( mgcontext *ctx );
 int         mgps_ctxget( int attr, void* valueptr );
@@ -70,7 +70,7 @@ extern void mgps_polyline();
 extern void mgps_polylist();
 extern void mgps_quads();
 
-void _mgps_ctxset(int a1, va_list *alist);
+int _mgps_ctxset(int a1, va_list *alist);
 
 WnWindow *mgpswindow(WnWindow *win);
 
@@ -80,7 +80,7 @@ struct mgfuncs mgpsfuncs = {
   mgps_feature,
   (mgcontext *(*)())mgps_ctxcreate,
   mgps_ctxdelete,
-  (void (*)())mgps_ctxset,
+  (int (*)())mgps_ctxset,
   mgps_ctxget,
   mgps_ctxselect,
   mgps_sync,
@@ -168,12 +168,12 @@ mgps_newcontext( mgpscontext *ctx )
  * Description: internal ctxset routine
  * Args:        a1: first attribute
  *              *alist: rest of attribute-value list
- * Returns:     nothing
+ * Returns:     -1 on error, 0 on success
  * Date:        Fri Sep 20 11:08:13 1991
  * Notes:       mgps_ctxcreate() and mgps_ctxset() call this to actually
  *              parse and interpret the attribute list.
  */
-void
+int
 _mgps_ctxset(int a1, va_list *alist)
 {
   int attr;
@@ -311,7 +311,7 @@ _mgps_ctxset(int a1, va_list *alist)
 
     default:
       OOGLError (0, "_mgps_ctxset: undefined option: %d", attr);
-      return;
+      return -1;
     }
   }
   if (_mgc->shown && !_mgpsc->born) {
@@ -330,6 +330,7 @@ _mgps_ctxset(int a1, va_list *alist)
 
 #undef NEXT
 
+  return 0;
 }
 
 
@@ -544,21 +545,23 @@ mgps_setcamera( Camera *cam )
  * Description:	set some attributes in the current context
  * Args:	attr, ...: list of attribute-value pairs, terminated
  *		  by MG_END
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Notes:	DO NOT CALL THIS (yet)!  It currently does nothing.
  * DEVICE USE:  forbidden --- devices have their own mgxx_ctxset()
  *
  *		This needs to be modified to work as the NULL device.
  *		Use by other devices may never be needed.
  */
-void
+int
 mgps_ctxset( int attr, ... /*, MG_END */ )
 {
   va_list alist;
+  int result;
 
   va_start( alist, attr );
-  _mgps_ctxset(attr, &alist);
+  result = _mgps_ctxset(attr, &alist);
   va_end(alist);
+  return result;
 }
 
 
@@ -671,7 +674,9 @@ mgps_ctxcreate( int a1, ... )
     (mgcontext*)mgps_newcontext( OOGLNewE(mgpscontext, "mgps_ctxcreate") );
   mgps_initpsdevice();
   va_start(alist, a1);
-  _mgps_ctxset(a1, &alist);
+  if (_mgps_ctxset(a1, &alist) == -1) {
+      mgps_ctxdelete(_mgc);
+  }
   va_end(alist);
   return _mgc;
 }
@@ -794,3 +799,10 @@ mgps_setshader(mgshadefunc shader)
     if((ma->flags & MGASTK_SHADER) != wasusing)
 	mgps_appearance(_mgc->astk, APF_SHADING);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

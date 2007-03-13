@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 
 mgcontext * mgx11_ctxcreate(int a1, ...);
-void        mgx11_ctxset( int a1, ...  );
+int         mgx11_ctxset( int a1, ...  );
 int         mgx11_feature( int feature );
 void        mgx11_ctxdelete( mgcontext *ctx );
 int         mgx11_ctxget( int attr, void* valueptr );
@@ -68,7 +68,7 @@ extern void mgx11_setshader(mgshadefunc shader);
 extern void mgx11_appearance( struct mgastk *ma, int mask );
 extern void mgx11_init_zrange();
 
-void _mgx11_ctxset(int a1, va_list *alist);
+int _mgx11_ctxset(int a1, va_list *alist);
 
 WnWindow *mgx11window(WnWindow *win);
 
@@ -78,7 +78,7 @@ struct mgfuncs mgx11funcs = {
   mgx11_feature,
   (mgcontext *(*)())mgx11_ctxcreate,
   mgx11_ctxdelete,
-  (void (*)())mgx11_ctxset,
+  (int (*)())mgx11_ctxset,
   mgx11_ctxget,
   mgx11_ctxselect,
   mgx11_sync,
@@ -160,12 +160,12 @@ mgx11_newcontext( mgx11context *ctx )
  * Description: internal ctxset routine
  * Args:        a1: first attribute
  *              *alist: rest of attribute-value list
- * Returns:     nothing
+ * Returns:     -1 on error, 0 on success
  * Date:        Fri Sep 20 11:08:13 1991
  * Notes:       mgx11_ctxcreate() and mgx11_ctxset() call this to actually
  *              parse and interpret the attribute list.
  */
-void
+int
 _mgx11_ctxset(int a1, va_list *alist)
 {
   int attr;
@@ -347,7 +347,7 @@ _mgx11_ctxset(int a1, va_list *alist)
 
     default:
       OOGLError (0, "_mgx11_ctxset: undefined option: %d", attr);
-      return;
+      return -1;
     }
   }
   if (_mgc->shown && !_mgx11c->visible) {
@@ -366,6 +366,7 @@ _mgx11_ctxset(int a1, va_list *alist)
 
 #undef NEXT
 
+  return 0;
 }
 
 int mgx11_setwindow( WnWindow *win, int final )
@@ -671,21 +672,23 @@ mgx11_setcamera( Camera *cam )
  * Description:	set some attributes in the current context
  * Args:	attr, ...: list of attribute-value pairs, terminated
  *		  by MG_END
- * Returns:	nothing
+ * Returns:	-1 on error, 0 on success
  * Notes:	DO NOT CALL THIS (yet)!  It currently does nothing.
  * DEVICE USE:  forbidden --- devices have their own mgxx_ctxset()
  *
  *		This needs to be modified to work as the NULL device.
  *		Use by other devices may never be needed.
  */
-void
+int
 mgx11_ctxset( int attr, ... /*, MG_END */ )
 {
   va_list alist;
+  int result;
 
   va_start( alist, attr );
-  _mgx11_ctxset(attr, &alist);
+  result = _mgx11_ctxset(attr, &alist);
   va_end(alist);
+  return result;
 }
 
 
@@ -804,7 +807,9 @@ mgx11_ctxcreate( int a1, ... )
     	OOGLError(0,"mgdevice_X11: unable to open X-display");
 
   va_start(alist, a1);
-  _mgx11_ctxset(a1, &alist);
+  if (_mgx11_ctxset(a1, &alist) == -1) {
+    mgx11_ctxdelete(_mgc);
+  }
   va_end(alist);
   return _mgc;
 }
@@ -973,3 +978,9 @@ mgx11_findctx( Window winid )
   return NULL;
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
