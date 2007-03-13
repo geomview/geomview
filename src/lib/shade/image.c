@@ -759,7 +759,7 @@ static inline int maybe_compress_buffer(char **buffer, int n_bytes)
 int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
 {
   int row, col, stride, rowlen, depth;
-  unsigned long c_n_bytes, n_bytes, h_len;
+  unsigned long n_bytes, h_len;
   char *imgptr, *bufptr;
 
   depth   = (img->maxval > 255) + 1;
@@ -799,7 +799,7 @@ int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
 int ImgWritePNM(Image *img, unsigned chmask, bool compressed, char **buffer)
 {
   int row, col, stride, depth, rowlen;
-  unsigned long c_n_bytes, n_bytes, h_len;
+  unsigned long n_bytes, h_len;
   int channels[3], i, j;
   char *imgptr, *bufptr;
 
@@ -865,7 +865,7 @@ int ImgWritePNM(Image *img, unsigned chmask, bool compressed, char **buffer)
 int ImgWritePAM(Image *img, unsigned chmask, bool compressed, char **buffer)
 {
   int row, col, stride, depth, rowlen;
-  unsigned long c_n_bytes, n_bytes, h_len;
+  unsigned long n_bytes, h_len;
   int channels[4], n_chan, i, j;
   char *imgptr, *bufptr;
 
