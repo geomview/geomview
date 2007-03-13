@@ -301,43 +301,32 @@ _mgrib_ctxset(int a1, va_list *alist)
     strcpy(_mgribc->displayname, _mgribc->filepath);
   }
 
-  /* Determine base and temporary storage location from
-   * displayname. Use $TMPDIR if MG_RIBFRAME.
-   */
-  if (_mgribc->display == MG_RIBFRAME) {
-    char *tmpdir = getenv("TMPDIR");
-    
-    if (strlen(tmpdir) > PATH_MAX/2) {
-      OOGLError(1,
-		"Bogus ${TMPDIR} environment variable, "
-		"falling back to \"/tmp\"");
-      tmpdir = NULL;
-    }
-    strNcpy(_mgribc->displaypath, tmpdir == NULL ? "/tmp" : tmpdir);
-  } else {
-    /* otherwise extract the path-component from displayname */
-    strcpy(_mgribc->displaypath, _mgribc->displayname);
-    strcpy(_mgribc->displaypath, dirname(_mgribc->displaypath));
-  }
+  /* Extract the path-component from displayname */
+  strcpy(_mgribc->displaypath, _mgribc->displayname);
+  strcpy(_mgribc->displaypath, dirname(_mgribc->displaypath));
   /* Terminate the path with '/' for convenience */
   len = strlen(_mgribc->displaypath);
   if (_mgribc->displaypath[len-1] != '/') {
     _mgribc->displaypath[len++] = '/';
     _mgribc->displaypath[len] = '\0';
   }
-  /* if displayname really is a path-name, then include only its
-   * basename component into the rib-output
+  /* If displayname really is a path-name, then include only its
+   * basename component into the rib-output. Otherwise one has to edit
+   * the RIB-file each time one moves it around.
    */
   strcpy(_mgribc->displaybase, _mgribc->displayname);
   strcpy(_mgribc->displaybase, basename(_mgribc->displaybase));
-  /* strip the suffix; the RIB-file will contain displaybase.tiff,
+  /* Strip the suffix; the RIB-file will contain displaybase.tiff,
    * texturenames will be generated as displaybase-SEQ.tiff, where SEQ
    * is an ever increasing number.
    */
   if ((dot = strrchr(_mgribc->displaybase, '.')) != NULL &&
-      strcmp(dot, ".tiff") == 0) {
+      (strcmp(dot, ".tiff") == 0 || strcmp(dot, ".rib"))) {
     dot = '\0';
   }
+  /* Finished. The displayname emitted to the RIB file now will always
+   * be without path-component.
+   */
 
   if (_mgc->shown && !_mgribc->born) {
     /* open the window */
@@ -492,7 +481,7 @@ mgribwindow(WnWindow *win)
         
   /* set display characteristics...*/
   snprintf(dpyname, PATH_MAX, "%s%s", _mgribc->displaybase, 
-	   _mgribc->display == MG_RIBFILE ? ".tiff" : "");
+	   _mgribc->display == MG_RIBFILE ? ".tiff" : ".rib");
   mrti(mr_display, mr_string, dpyname, 
        (_mgribc->display == MG_RIBFRAME) ? mr_framebuffer : mr_file, 
        (_mgribc->backing == MG_RIBDOBG) ? mr_rgb : mr_rgba, mr_NULL);
