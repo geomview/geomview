@@ -72,6 +72,25 @@ typedef bool _Bool;
 # define __bool_true_false_are_defined 1
 #endif
 
+/* make sure we have PATH_MAX */
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+#if HAVE_SYS_PARAM
+# include <sys/param.h>
+#endif
+#ifndef PATH_MAX
+# ifndef _POSIX_PATH_MAX
+#  ifndef MAXPATHLEN
+#   define PATH_MAX 4096
+#  else
+#   define PATH_MAX MAXPATHLEN
+#  endif
+# else
+#  define PATH_MAX _POSIX_PATH_MAX
+# endif
+#endif
+
 #if 0
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -279,10 +298,10 @@ AC_CHECK_DECLS([errno],[],[],[
 #if HAVE_ERRNO_H
 # include <errno.h>
 #endif])
-AC_CHECK_FUNCS([alarm basename bzero bcopy dup2 floor fcntl finite gethostname \
-  gettimeofday isascii memset mkdir pow rint select sqrt strcasecmp strchr \
-  strcspn strdup strerror strncasecmp strpbrk strrchr strstr strtol sysinfo \
-  waitpid wait3])
+AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
+  gethostname gettimeofday isascii memset mkdir pow rint select sqrt \
+  strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr \
+  strstr strtol strerror sysinfo waitpid wait3])
 
 #
 # we can use AC_COMPILE, because we check later for the existence of
@@ -830,14 +849,6 @@ AC_ARG_ENABLE(motion-averaging,
                 fi ],
               [ AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0) ]
               )
-
-########################################################################
-########################################################################
-########################################################################
-
-# Check for some additional functions.
-
-AC_CHECK_FUNCS([strerror])
 
 ########################################################################
 ########################################################################
