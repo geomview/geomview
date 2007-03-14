@@ -22,14 +22,22 @@
 surface
 GVmodulateconstant(string texturename = "";)
 {
+  float channels;
+  
   Ci = Cs;
   Oi = Os;
-  if (texturename != "") {
-    Ci *= color texture (texturename);
-    if (float texture (texturename[3], "fill", 1.0, "width", 0.0) == 0.0) {
-      Oi = 0.0;
-    } 
+
+  if (texturename != "" &&
+      textureinfo(texturename, "channels", channels) == 1.0) {
+    if (channels < 3) {
+      Ci *= float texture (texturename[0]);
+      Oi *= texture (texturename[1], "fill", 1.0, "width", 0.0);
+    } else {
+      Ci *= color texture (texturename);
+      Oi *= texture (texturename[3], "fill", 1.0, "width", 0.0);
+    }
   }
+
   Ci *= Os;
 }
 

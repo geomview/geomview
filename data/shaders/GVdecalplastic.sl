@@ -25,18 +25,34 @@
  * (i.e. OpenGL) behaviour when the texture does not carry an
  * alpha-channel.
  *
- * "apply = decal" is constant shaded, so we simply ignore all of the
- * plastic parameters.
+ * "apply = decal" interpolates between the _shaded_ surface color and
+ * the _un_shaded texture color. The resulting alpha channel is
+ * unaffected by the texture.
  */
 surface
 GVdecalplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 	       color specularcolor = 1;
 	       string texturename = "";)
 {
+  normal Nf;
+  vector V;
+
   Ci = Cs;
   Oi = Os;
+
+  /* First compute the _shaded_ surface color */
+  Nf = faceforward (normalize(N),I);
+  V = -normalize(I);
+
+  Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
+    specularcolor * Ks*specular(Nf,V,roughness);
+
+  /* Then interpolate with the texture color, if there is a
+   * texture. If the texture does not have an alpha-channel, then this
+   * shader has the same effect as the "GVreplaceplastic()" shader.
+   */
   if (texturename != "") {
-    float s = float texture (texturename[0], "fill", 1.0, "width", 0.0);
+    float s = float texture (texturename[3], "fill", 1.0, "width", 0.0);
     Ci = (1 - s) * Ci + s * color texture (texturename);
   }
   Ci *= Os;

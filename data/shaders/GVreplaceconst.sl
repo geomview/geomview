@@ -25,27 +25,23 @@
  * unaffected).
  */
 surface
-GVblendconstant(string texturename = ""; color bgcolor = 0;)
+GVreplaceconstant(string texturename = "";)
 {
-  float channels, Lt, Ot;
-  color Ct;
-
-  Ci = Cs;
-  Oi = Os;
-
-  /* texture support a la GL_BLEND */
+  float channels;
+  
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Lt = float texture(texturename[0]);
-      Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
-      Ci = Lt * Ci + (1.0 - Lt) * bgcolor;
+      Ci = float texture (texturename[0]);
+      Oi = float texture (texturename[1], "fill", Os, "width", 0.0);
     } else {
-      Ct = color texture(texturename);
-      Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
-      Ci = Ct * Ci + (1.0 - Ct) * bgcolor;
+      Ci = color texture (texturename);
+      Oi = float texture (texturename[3], "fill", Os, "width", 0.0);
     }
-    Oi *= Ot;
+  } else {
+    /* no texture: use ordinary constant shader */
+    Ci = Cs;
+    Oi = Os;
   }
 
   Ci *= Os;

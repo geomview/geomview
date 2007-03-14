@@ -18,36 +18,40 @@
  * USA, or visit http://www.gnu.org.
  */
 
-/* Implement Geomview's "apply = blend" for constant shading
- *
- * Maybe mgrib should set bgalpha to 0 if transparency is not enabled
- * (0 because this will leave the alpha channel of the surface
- * unaffected).
+/* Implement Geomview's "apply = replace" for (non-)constant
+ * shading. The surface color simply is replace by the texture color,
+ * the result is constantly shaded.
  */
 surface
-GVblendconstant(string texturename = ""; color bgcolor = 0;)
+GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
+		 color specularcolor = 1;
+		 string texturename = "";)
 {
-  float channels, Lt, Ot;
-  color Ct;
-
-  Ci = Cs;
-  Oi = Os;
-
-  /* texture support a la GL_BLEND */
+  float channels;
+  
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Lt = float texture(texturename[0]);
-      Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
-      Ci = Lt * Ci + (1.0 - Lt) * bgcolor;
+      Ci = float texture (texturename[0]);
+      Oi = float texture (texturename[1], "fill", Os, "width", 0.0);
     } else {
-      Ct = color texture(texturename);
-      Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
-      Ci = Ct * Ci + (1.0 - Ct) * bgcolor;
+      Ci = color texture (texturename);
+      Oi = float texture (texturename[3], "fill", Os, "width", 0.0);
     }
-    Oi *= Ot;
-  }
+  } else {
+    /* no texture: use ordinary plastic shader */
+    normal Nf;
+    vector V;
 
+    Ci = Cs;
+    Oi = Os;
+
+    Nf = faceforward (normalize(N),I);
+    V = -normalize(I);
+
+    Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
+      specularcolor * Ks*specular(Nf,V,roughness);
+  }
   Ci *= Os;
 }
 

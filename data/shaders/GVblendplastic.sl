@@ -20,25 +20,32 @@
 
 /* Implement Geomview's "apply = blend" for non-constant shading
  *
- * Maybe mgrib should set bgalpha to 0 if transparency is not enabled
- * (0 because this will leave the alpha channel of the surface
- * unaffected).
+ * See also glTexEnvf(3).
+ *
+ * Note that we ignore the alpha value of the background color. This
+ * is just what OpenGL does, as Geomview never uses GL_INTENSITY as
+ * texture format.
+ *
+ * Note also that the background color is unaffected by lighting. This
+ * means: we apply first the normal plastic shader, and then
+ * interpolate between the shaded colour and the background color.
+ *
+ * If the texture has an alpha channel, then Oi = Os * Ot.
  */
 surface
 GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 	       color specularcolor = 1;
-	       string texturename = ""; color bgcolor = 0; float bgalpha = 0;)
+	       string texturename = ""; color bgcolor = 0;)
 {
   normal Nf;
   vector V;
+  float channels;
+  float Ot, Lt;
+  color Ct;
 
+  /* normal plastic shader */
   Ci = Cs;
   Oi = Os;
-  if (texturename != "") {
-    float s = float texture (texturename[0], "fill", 0.0, "width", 0.0);
-    Ci = s * Ci + (1.0 - s) * bgcolor;
-    Oi = s * Oi + (1.0 - s) * bgalpha;
-  }
 
   Nf = faceforward (normalize(N),I);
   V = -normalize(I);
@@ -46,6 +53,21 @@ GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
   Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
     specularcolor * Ks*specular(Nf,V,roughness);
   Ci *= Os;
+
+  /* texture support a la GL_BLEND */
+  if (texturename != "" &&
+      textureinfo(texturename, "channels", channels) == 1.0) {
+    if (channels < 3) {
+      Lt = float texture(texturename[0]);
+      Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
+      Ci = Lt * Ci + (1.0 - Lt) * bgcolor;
+    } else {
+      Ct = color texture(texturename);
+      Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
+      Ci = Ct * Ci + (1.0 - Ct) * bgcolor;
+    }
+    Oi *= Ot;
+  }
 }
 
 /*
