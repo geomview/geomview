@@ -69,8 +69,20 @@ typedef struct mgopenglcontext {
 
   void (*d4f)();		/* For shaded colors: apply mat.kd or no? */
   void (*n3f)();		/* Evert normals to face viewer? */
-#  define D4F_ON()	_mgopenglc->d4f = mgopengl_d4f
-#  define D4F_OFF()	_mgopenglc->d4f = glColor4fv
+#  define D4F_ON()					\
+  if (_mgc->astk->mat.valid & MTF_ALPHA &&		\
+      _mgc->astk->mat.override & MTF_ALPHA) {		\
+    _mgopenglc->d4f = mgopengl_d4f_shaded_alpha;	\
+  } else {						\
+    _mgopenglc->d4f = mgopengl_d4f_shaded;		\
+  }
+#  define D4F_OFF()					\
+  if (_mgc->astk->mat.valid & MTF_ALPHA &&		\
+      _mgc->astk->mat.override & MTF_ALPHA) {		\
+    _mgopenglc->d4f = mgopengl_d4f_constant_alpha;	\
+  } else {						\
+    _mgopenglc->d4f = glColor4fv;			\
+  }
 #  define D4F(c)	(*_mgopenglc->d4f)(c)
 #  define N3F_EVERT()	_mgopenglc->n3f = mgopengl_n3fevert
 #  define N3F_NOEVERT()	_mgopenglc->n3f = glNormal3fv
@@ -120,7 +132,13 @@ typedef struct mgopenglcontext {
 
 #define _mgopenglc		((mgopenglcontext*)_mgc)
 
+#if 0
 extern void mgopengl_d4f( float c[4] );
+#else
+extern void mgopengl_d4f_shaded(float c[4]);
+extern void mgopengl_d4f_shaded_alpha(float c[4]);
+extern void mgopengl_d4f_constant_alpha(float c[4]);
+#endif
 extern void mgopengl_n3fevert( Point3 *n, HPoint3 *p );
 
 extern void mgopengl_notexture(void);

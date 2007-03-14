@@ -753,6 +753,7 @@ void mgopengl_needtexture(void)
  * 		so we're overwriting the diffuse material with every
  *		c4f call.
  */
+#if 0
 void
 mgopengl_d4f(float c[4])
 {
@@ -767,7 +768,52 @@ mgopengl_d4f(float c[4])
     d[3] = _mgc->astk->mat.diffuse.a;
   glColor4fv(d);
 }
+#else
+/* cH: even for constant shading we want to have the possibility that
+ * the material alpha overrides the alpha value of the color. Also,
+ * the decision about that can be done in mgopengl_appearance(). We
+ * just define a 4 functions: shaded w/o alpha override and constant
+ * w/o alpha override.
+ */
 
+/* shaded, but without alpha override */
+void
+mgopengl_d4f_shaded(float c[4])
+{
+  float d[4];
+  d[0] = c[0] * kd;
+  d[1] = c[1] * kd;
+  d[2] = c[2] * kd;
+  d[3] = c[3];
+  glColor4fv(d);
+}
+
+/* shaded, with alpha override */
+void
+mgopengl_d4f_shaded_alpha(float c[4])
+{
+  float d[4];
+  d[0] = c[0] * kd;
+  d[1] = c[1] * kd;
+  d[2] = c[2] * kd;
+  d[3] = _mgc->astk->mat.diffuse.a;
+  glColor4fv(d);
+}
+
+/* constant, without alpha override: this is just glColor4fv */
+
+/* constant, with alpha override */
+void
+mgopengl_d4f_constant_alpha(float c[4])
+{
+  float orig_a = c[3];
+  
+  c[3] = _mgc->astk->mat.diffuse.a; /* what if c is not writable? */
+  glColor4fv(c);
+  c[3] = orig_a;
+}
+
+#endif
 
 void
 mgopengl_n3fevert(Point3 *n, HPoint3 *p)
