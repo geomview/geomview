@@ -110,13 +110,13 @@ typedef struct Material {
  */
 typedef struct Image {
     REFERENCEFIELDS;
-    int width;     /* width in pixels */
-    int height;    /* height in pixels */
-    int channels;  /* number of channels */
-    int maxval;    /* maximum intensity value of a channel */
-    char *data;    /* image data, row by row, if depth > 8 then most
-		    * significant bytes come first (BIG-ENDIAN).
-		    */
+    int width;      /* width in pixels */
+    int height;     /* height in pixels */
+    int channels;   /* number of channels */
+    int maxval;     /* maximum intensity value of a channel */
+    char *data;     /* image data, row by row, if depth > 8 then the
+		     * most significant byte comes first (BIG-ENDIAN).
+		     */
 } Image;
 
 typedef struct TxUser TxUser;
