@@ -107,7 +107,7 @@ _TxSet(Texture *tx, int attr1, va_list *alist)
       break;
     case TX_APPLY:
       mask = NEXT(int);
-      if (mask < TXF_MODULATE || mask > TXF_DECAL) {
+      if (mask < TXF_MODULATE || mask > TXF_REPLACE) {
 	OOGLError(1, "TxSet: bad value for TX_APPLY: %d must be %d..%d",
 		  mask, TXF_MODULATE, TXF_DECAL);
 	goto nope;
@@ -362,8 +362,11 @@ HandleOps TextureOps = {
 
 static struct txkw {
   char *word;
-  unsigned short aval;
-  short args;
+  unsigned int aval; /* attribute or attribute value value for _TxSet() */
+  int args;          /* > 0: number of following args,
+		      * < 0: -number of following keywords determine
+		      * attribute value.
+		      */
 } tx_kw[] = {
   { "texture",    0,                   1 },
   { "clamp",      TX_DOCLAMP,         -4 },
@@ -372,10 +375,11 @@ static struct txkw {
   {  "t",         TXF_TCLAMP,          0 },
   {  "st",        TXF_SCLAMP|TXF_TCLAMP, 0 },
   { "image",      TX_HANDLE_IMAGE,     0 },
-  { "apply",      TX_APPLY,           -3 },
+  { "apply",      TX_APPLY,           -4 },
   {  "blend",     TXF_BLEND,           0 },
   {  "modulate",  TXF_MODULATE,        0 },
   {  "decal",     TXF_DECAL,           0 },
+  {  "replace",   TXF_REPLACE,         0 },
   { "transform",  TX_HANDLE_TRANSFORM, 0 },  /*(s,t,r,q) . tfm = tx coords */
   { "background", TX_BACKGROUND,       4 },
   /* deprecated, maybe */
@@ -774,8 +778,8 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
 int
 TxStreamOut(Pool *p, Handle *h, Texture *tx)
 {
-  static char *clamps[] = {"none","s","t","st"};
-  static char *applies[] = {"modulate","blend","decal"};
+  static const char *clamps[] = {"none", "s", "t", "st"};
+  static const char *applies[] = {"modulate", "decal", "blend", "replace"};
   FILE *f = PoolOutputFile(p);
 
   if (f == NULL) {

@@ -140,8 +140,13 @@ typedef struct Texture {
     Transform tfm;	  /* texture-coord transformation */
     Handle *tfmhandle;
     unsigned int flags;   /* clamp, etc. */
-    int apply;		  /* Application style
-			   * (TXF_DECAL, TXF_MODULATE, TXF_BLEND)
+    enum {
+	tx_modulate,
+	tx_decal,
+	tx_blend,
+	tx_replace
+    } apply;		  /* Application style
+			   * (TXF_DECAL, TXF_MODULATE, TXF_BLEND, TXF_REPLACE)
 			   */
     int coords;		  /* Texture-coord auto generation (not implemented) */
     ColorA background;	  /* background color: outside of clamped texture */
@@ -270,9 +275,10 @@ extern HandleOps TextureOps;
 #define TXF_USED    0x10 /* "Recently rendered a geom containing this texture"*/
 
 #define TX_APPLY	451	/* Interpret texture values to... */
-#define   TXF_MODULATE	  0
-#define   TXF_BLEND	  1
-#define   TXF_DECAL	  2
+#define   TXF_MODULATE tx_modulate
+#define   TXF_DECAL    tx_decal
+#define   TXF_BLEND    tx_blend
+#define   TXF_REPLACE  tx_replace
 
 #define TX_HANDLE_IMAGE     452
 #define TX_HANDLE_TRANSFORM 453
