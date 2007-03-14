@@ -1,3 +1,5 @@
+SUBDIRS = shaders
+
 EXTRA_DIST = $(nobase_geomdata_DATA) $(nobase_geomdata_SCRIPTS)
 
 # Current automake (version 1.4) will not create directory "b" if
@@ -63,14 +65,6 @@ groups =					\
 	groups/spaceshipSpace.geom		\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
-
-shaders = \
- shaders/hlight.sl \
- shaders/hlight.slo \
- shaders/hmatte.sl \
- shaders/hmatte.slo \
- shaders/hplastic.sl \
- shaders/hplastic.slo
 
 ndview_scripts = NDview/scripts/.ndview NDview/scripts/4d.2bigwins     \
  NDview/scripts/4d.3wins NDview/scripts/4d.4wins NDview/scripts/4d.cplx \
@@ -242,7 +236,6 @@ nobase_geomdata_DATA = \
 	geom/ztent.mesh
 
 nobase_geomdata_DATA += $(groups)
-nobase_geomdata_DATA += $(shaders)
 nobase_geomdata_DATA += $(ndview)
 nobase_geomdata_DATA += $(cplxview)
 
