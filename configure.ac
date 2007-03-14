@@ -203,7 +203,14 @@ AC_CHECK_PROGS(PNMTOPNG, pnmtopng)
 AC_CHECK_PROGS(PAMTOTIFF, pamtotiff)
 if test "${PAMTOTIFF}" = "pamtotiff"; then
   AC_DEFINE_UNQUOTED([HAVE_PAMTOTIFF], "$PAMTOTIFF", [pamtotiff program])
+else
+  AC_MSG_NOTICE([`pamtotiff' executable not found; textures in RenderMan output
+will not have an alpha-channel. Consider installing a newer NetPBM package.])
 fi
+
+# If aqsis is installed we compile all of our RenderMan shaders with aqsl
+AC_CHECK_PROGS(AQSL, aqsl)
+AM_CONDITIONAL([AQSIS], test "${AQSL}" = "aqsl")
 
 # The stereo module needs to fiddle with monitor modes.
 # Currently, this only works on IRIX using an external command.
@@ -1020,6 +1027,7 @@ LF_SET_INCLUDES
 
 AC_CONFIG_FILES([Makefile
 	  data/Makefile
+	  data/shaders/Makefile
 	  doc/Makefile
 	  src/Makefile
 	  src/lib/Makefile
