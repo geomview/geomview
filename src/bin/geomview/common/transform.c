@@ -516,11 +516,13 @@ void set_motion(Motion *motion)
   TmIdentity(ts.tm);
 
   gv_xform_set(motion->moving_id, &ts);
-  /* Note: the following resets the *entire* N-D xform to the identity,
-   * not just that in the subspace we're looking through.
-   * Might want to have finer control.  XXX - 7/28/93, slevy & holt
-   */
-  drawer_set_ND_xform(motion->moving_id, NULL);
+  if (drawerstate.NDim > 0) {
+    /* Note: the following resets the *entire* N-D xform to the
+     * identity, not just that in the subspace we're looking through.
+     * Might want to have finer control.  XXX - 7/28/93, slevy & holt
+     */
+    drawer_set_ND_xform(motion->moving_id, NULL);
+  }
   apply_motion(motion, motion->timeunit);
 }
 

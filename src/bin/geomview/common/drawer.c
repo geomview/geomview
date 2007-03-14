@@ -1109,8 +1109,12 @@ drawer_dgeom(int id, GeomStruct *gs)
       GeomSet(dg->Lgeom, CR_HANDLE_GEOM, gs->h, gs->geom, CR_END);
       dg->changed = CH_GEOMETRY;
 
-      /* (re-)generate the BSP-tree for this object */
-      GeomBSPTree(dg->Item, dg->Item->bsptree, BSPTREE_CREATE);
+      /* (re-)generate the BSP-tree for this object
+       *
+       * We could also hang the BSP-tree to dg->Item, but that would
+       * require special handling of BSP-trees in InstTransform[To]().
+       */
+      GeomBSPTree(dg->Lgeom, dg->Lgeom->bsptree, BSPTREE_CREATE);
     }
   }
 
