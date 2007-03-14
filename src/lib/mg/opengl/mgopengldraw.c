@@ -162,20 +162,9 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
     C = NULL;
   }
 
-  if ((_mgc->astk->mat.valid & MTF_ALPHA)
-      &&
-      ((_mgc->astk->mat.override & MTF_ALPHA) || C == NULL)) {
-    if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
-      qflags |= COLOR_ALPHA;
-    } else {
-      qflags &= ~COLOR_ALPHA;
-    }
-  }
-  
   /* reestablish correct drawing color if necessary */
 
-  if ((flag & APF_FACEDRAW) &&
-      !((flag & APF_TRANSP) && (qflags & COLOR_ALPHA))) {
+  if ((flag & APF_FACEDRAW) && !(qflags & GEOM_ALPHA)) {
 
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
@@ -470,7 +459,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     Poly   *p      = plist->poly;
     int    j       = p->n_vertices;
     int    plflags = p->flags;
-    int    apchg   = 0;
+    bool   apchg   = false;
 
     if (*plist->tagged_app == NULL) {
       continue;
@@ -478,7 +467,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
     
     if (*cur_app != *plist->tagged_app) {
 
-      apchg = 1;
+      apchg = true;
 
       /* set our appearance now */
       mgtaggedappearance(*plist->tagged_app);
@@ -487,7 +476,17 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       *cur_app = *plist->tagged_app;
 
       ap = mggetappearance();
-      mat = ap->mat;
+    } else {
+      ap = mggetappearance();
+    }
+
+    if (!(ap->flag & APF_FACEDRAW) || !(ap->flag & APF_TRANSP)) {
+      continue;
+    }
+
+    mat = ap->mat;
+
+    if (apchg) {
 
       /* set new plfl_and/_or values */
       *plfl_and = ~0;
@@ -497,16 +496,24 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       case APF_SMOOTH: *plfl_and &= ~PL_HASPN; break;
       default:         *plfl_and &= ~(PL_HASVN|PL_HASPN); break;
       }
+
       if (mat->override & MTF_DIFFUSE) {
 	if (!(_mgc->astk->flags & MGASTK_SHADER)) {
 	  /* software shading will not work yet */
-	  *plfl_and &= ~(PL_HASVCOL|PL_HASPCOL);
+	  *plfl_and &= ~GEOM_COLOR;
 	}
       }
-      if ((mat->valid & MTF_ALPHA)
-	  &&
-	  ((mat->override & MTF_ALPHA) ||
-	   !((plflags & *plfl_and) & (PL_HASVCOL|PL_HASPCOL)))) {	
+
+      /* Decide whether this polygon possibly has an alpha channel.
+       * Same logic as in GeomHasAlpha().
+       */
+      if ((ap->flag & APF_TEXTURE) &&
+	  ap->tex && ap->tex->apply != TXF_DECAL &&
+	  ap->tex->image && (ap->tex->image->channels % 2 == 0)) {
+	*plfl_or |= COLOR_ALPHA;
+      } else if ((mat->valid & MTF_ALPHA) &&
+		 ((mat->override & MTF_ALPHA) ||
+		  !((plflags & *plfl_and) & (GEOM_COLOR)))) {
 	if (mat->diffuse.a < 1.0) {
 	  *plfl_or  |= COLOR_ALPHA;
 	} else {
@@ -520,18 +527,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
       glEnable(GL_COLOR_MATERIAL);
       MAY_LIGHT();
-      
-    } else {
-      ap = mggetappearance();
-      mat = ap->mat;
     }
-
-    if (!(ap->flag & APF_FACEDRAW) || !(ap->flag & APF_TRANSP)) {
-      continue;
-    }
-
-
-
 
     plflags &= *plfl_and;
     plflags |= *plfl_or;
@@ -729,18 +725,8 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       plflags &= ~GEOM_COLOR;
     }
   }
-  if ((_mgc->astk->mat.valid & MTF_ALPHA)
-      &&
-      ((_mgc->astk->mat.override & MTF_ALPHA) || !(plflags & GEOM_COLOR))) {
-    if (ma->ap.mat->diffuse.a != 1.0) {
-      plflags |= COLOR_ALPHA;
-    } else {
-      plflags &= ~COLOR_ALPHA;
-    }
-  }
 
-  if ((flag & APF_FACEDRAW) &&
-      !((flag & APF_TRANSP) && (plflags & COLOR_ALPHA))) {
+  if ((flag & APF_FACEDRAW) && !(plflags & GEOM_ALPHA)) {
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
     MAY_LIGHT();

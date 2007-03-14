@@ -274,8 +274,17 @@ static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
 static inline bool GeomHasAlpha(Geom *geom, const Appearance *ap)
 {
   if ((ap->flag & APF_TRANSP) && (ap->flag & APF_FACEDRAW)) {
-    if ((ap->mat->valid & MTF_ALPHA) &&
-	((ap->mat->override & MTF_ALPHA) || !(geom->geomflags & GEOM_COLOR))) {
+    if ((ap->flag & APF_TEXTURE) &&
+	ap->tex && ap->tex->apply != TXF_DECAL &&
+	ap->tex->image && (ap->tex->image->channels % 2 == 0)) {
+      /* maybe the picture code should set a flag if the alpha channel
+       * indeed has values != 255.
+       */
+      geom->geomflags |= GEOM_ALPHA;
+      return true;
+    } else if ((ap->mat->valid & MTF_ALPHA) &&
+	       ((ap->mat->override & MTF_ALPHA) ||
+		!(geom->geomflags & GEOM_COLOR))) {
       if (ap->mat->diffuse.a != 1.0) {
 	geom->geomflags |= GEOM_ALPHA;
 	return true;

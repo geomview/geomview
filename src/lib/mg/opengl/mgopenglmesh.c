@@ -103,18 +103,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
     }
   }
 
-  if (((_mgc->astk->mat.valid & MTF_ALPHA)
-       &&
-       (_mgc->astk->mat.override & MTF_ALPHA)) || !(has & HAS_C)) {
-    if (_mgc->astk->ap.mat->diffuse.a != 1.0) {
-      mflags |= COLOR_ALPHA;
-    } else {
-      mflags &= ~COLOR_ALPHA;
-    }
-  }
-
-  if (ap->flag & APF_FACEDRAW && nu > 1 && nv > 1 &&
-      !((ap->flag & APF_TRANSP) && (mflags & COLOR_ALPHA))) {
+  if (ap->flag & APF_FACEDRAW && nu > 1 && nv > 1 && !(mflags & GEOM_ALPHA)) {
 
     /* We triangulate strips of (v,u) mesh points:
      *  (v,u)    (v,u+1)    (v,u+2) ...
