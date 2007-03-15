@@ -19,13 +19,17 @@
  */
 
 /* Implement Geomview's "apply = replace" for (non-)constant
- * shading. The surface color simply is replace by the texture color,
+ * shading. The surface color simply is replaced by the texture color,
  * the result is constantly shaded.
+ *
+ * The additional parameter At interpolates between 1 and Ot; the
+ * effective alpha contribution from the texture will be (1-At) + At *
+ * Ot.
  */
 surface
 GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 		 color specularcolor = 1;
-		 string texturename = "";)
+		 string texturename = ""; float At = 1;)
 {
   /* variables used for lighting */
   normal Nf;
@@ -47,6 +51,7 @@ GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
       Ct = color texture (texturename);
       Ot = float texture (texturename[3], "fill", Os, "width", 0.0);
     }
+    Ot = (1.0 - At) + At * Ot;
     Ci = Ct * Ot;
     Oi = Ot;
   } else {

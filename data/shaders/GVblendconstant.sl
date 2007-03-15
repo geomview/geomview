@@ -23,12 +23,20 @@
  * Maybe mgrib should set bgalpha to 0 if transparency is not enabled
  * (0 because this will leave the alpha channel of the surface
  * unaffected).
+ *
+ * The additional parameter At interpolates 1 and Ot; the effective
+ * alpha contribution from the texture will be (1-At) + At * Ot.
  */
 surface
-GVblendconstant(string texturename = ""; color bgcolor = 0;)
+GVblendconstant(string texturename = ""; color bgcolor = 0; float At = 1;)
 {
-  float channels, Lt, Ot;
+  /* texture provided color (luminance) and alpha */
   color Ct;
+  float Ot;
+  /* number of texture channels,
+   * < 3: liminance and possibly alpha, > 2: rgb and possibly alpha
+   */
+  float channels;
 
   Ci = Cs;
   Oi = Os;
@@ -37,18 +45,18 @@ GVblendconstant(string texturename = ""; color bgcolor = 0;)
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Lt = float texture(texturename[0]);
+      Ct = float texture(texturename[0]);
       Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
-      Ci = Lt * Ci + (1.0 - Lt) * bgcolor;
     } else {
       Ct = color texture(texturename);
       Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
-      Ci = Ct * Ci + (1.0 - Ct) * bgcolor;
     }
+    Ci  = (1.0 - Ct) * Ci + Ct * bgcolor;
+    Ot  = (1.0 - At) + At * Ot;
     Oi *= Ot;
   }
 
-  Ci *= Os;
+  Ci *= Oi;
 }
 
 /*

@@ -31,11 +31,14 @@
  * interpolate between the shaded colour and the background color.
  *
  * If the texture has an alpha channel, then Oi = Os * Ot.
+ *
+ * The additional parameter At interpolates 1 and Ot; the effective
+ * alpha contribution from the texture will be (1-At) + At * Ot.
  */
 surface
 GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 	       color specularcolor = 1;
-	       string texturename = ""; color bgcolor = 0;)
+	       string texturename = ""; color bgcolor = 0; float At = 1;)
 {
   /* variables used for lighting */
   normal Nf;
@@ -57,7 +60,6 @@ GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 
   Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
     specularcolor * Ks*specular(Nf,V,roughness);
-  Ci *= Os;
 
   /* texture support a la GL_BLEND */
   if (texturename != "" &&
@@ -69,9 +71,12 @@ GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
       Ct = color texture(texturename);
       Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
     }
-    Ci = (1.0 - Ct) * Ci + Ct * bgcolor;
+    Ci  = (1.0 - Ct) * Ci + Ct * bgcolor;
+    Ot  = (1.0 - At) + At * Ot;
     Oi *= Ot;
   }
+
+  Ci *= Oi;
 }
 
 /*

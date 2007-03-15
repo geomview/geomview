@@ -27,11 +27,16 @@
 surface
 GVdecalconstant(string texturename = "";)
 {
+  /* texture provided color (luminance) and alpha */
+  color Ct;
+  float Ot;
+
   Ci = Cs;
   Oi = Os;
   if (texturename != "") {
-    float s = float texture (texturename[0], "fill", 1.0, "width", 0.0);
-    Ci = (1 - s) * Ci + s * color texture (texturename);
+    Ct = color texture (texturename);
+    Ot  = float texture (texturename[3], "fill", 1.0, "width", 0.0);
+    Ci = (1 - Ot) * Ci + Ot * Ct;
   }
   Ci *= Os;
 }

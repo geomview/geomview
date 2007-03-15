@@ -18,11 +18,16 @@
  * USA, or visit http://www.gnu.org.
  */
 
-/* Implement Geomview's "apply = modulate" for constant shading. */
+/* Implement Geomview's "apply = modulate" for constant shading.
+ *
+ * The additional parameter At interpolates 1 and Ot; the effective
+ * alpha contribution from the texture will be (1-At) + At * Ot.
+ */
 surface
 GVmodulateplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 		  color specularcolor = 1;
-		  string texturename = "";)
+		  string texturename = "";
+		  float At = 1;)
 {
   /* variables used for lighting */
   normal Nf;
@@ -47,6 +52,7 @@ GVmodulateplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
       Ct = color texture (texturename);
       Ot = float texture (texturename[3], "fill", 1.0, "width", 0.0);
     }
+    Ot = (1.0 - At) + At * Ot;
     Ci *= Ct;
     Oi *= Ot;
   }

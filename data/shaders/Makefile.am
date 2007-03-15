@@ -10,7 +10,7 @@ shader_src = \
  GVblendconstant.sl GVblendplastic.sl \
  GVdecalconstant.sl GVdecalplastic.sl \
  GVmodulateconstant.sl GVmodulateplastic.sl \
- GVreplaceconst.sl GVreplaceplastic.sl
+ GVreplaceconstant.sl GVreplaceplastic.sl
 
 if AQSIS
 geomshaderdata_DATA += $(shader_src:.sl=.slx)
