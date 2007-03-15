@@ -131,15 +131,17 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     memcpy(CPctrlPnts, ctrlPnts, sizeof(ctrlPnts));
     quadrant = GeomCCreate(NULL, BezierMethods(), 
 			   CR_DEGU, 2, CR_DEGV, 2, 
-			   CR_DIM, 4, CR_POINT,
-			   CPctrlPnts, CR_END);
+			   CR_DIM, 4,
+			   CR_POINT, CPctrlPnts,
+			   CR_END);
 
     /* TList does make a copy of the transformations */
     unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, reflections,
 			    CR_END);
-    sphere->geom = GeomCCreate(sphere->geom,
-			       InstMethods(), CR_GEOM, quadrant, CR_TLIST,
-			       unitsphere, CR_END);
+    sphere->geom = GeomCCreate(sphere->geom, InstMethods(),
+			       CR_GEOM, quadrant,
+			       CR_TLIST, unitsphere,
+			       CR_END);
     GeomDelete(quadrant);
     GeomDelete(unitsphere);
   }
