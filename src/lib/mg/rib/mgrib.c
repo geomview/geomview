@@ -722,6 +722,11 @@ mgrib_worldbegin( void )
   /* otherwise explicitly specified normals would be inverted */
   mrti(mr_reverseorientation, mr_NULL);
 
+  /* declare "bgcolor" as uniform float, needed by the GVblend filters
+   * (GL_BLEND texturing)
+   */
+  mrti(mr_declare, mr_string, "bgcolor", mr_string, "uniform color", mr_NULL);
+
   /* RiWorldBegin...*/
   mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);
 

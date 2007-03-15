@@ -79,6 +79,7 @@ enum tokentype {
     mr_curves,
     mr_points,
     mr_maketexture,
+    mr_declare,
 
     /* Strings */
     mr_P=STRINGBASE,
@@ -112,9 +113,16 @@ enum tokentype {
     mr_texturename,
     mr_width,
     mr_constantwidth,
-    mr_GVrgbmaskpaintedplastic,
-    mr_GVrgbmaskpaintedconstant,
-
+    mr_GVmodulateplastic,
+    mr_GVmodulateconstant,
+    mr_GVdecalplastic,
+    mr_GVdecalconstant,
+    mr_GVblendplastic,
+    mr_GVblendconstant,
+    mr_GVreplaceplastic,
+    mr_GVreplaceconstant,
+    mr_bgcolor,
+    
     /* SPECIAL */    
     mr_array,		/* (full array) size, f,f,.. */
     mr_buildarray,	/* size (subarys follow w/total subsizes==size) */

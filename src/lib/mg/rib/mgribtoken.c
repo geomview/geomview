@@ -55,15 +55,15 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define TMPSIZE 8192
 #define SECTIONWIDTH 70        /* width of a section header */
 
-#define STRINGDEF	0315
-#define STRINGREF	0317
-#define LNGSTRINGENCODE	0241   /* length follows, is unsigned short */
-#define STRINGENCODE	0220
-#define RIREQDEF	0314
-#define RIREQREF	0246
-#define FLOATARRAYDEF	0310
-#define INTEGER		0201   /* unsigned short */
-#define FLOAT		0244
+#define STRINGDEF	(char)0315
+#define STRINGREF	(char)0317
+#define LNGSTRINGENCODE	(char)0241   /* length follows, is unsigned short */
+#define STRINGENCODE	(char)0220
+#define RIREQDEF	(char)0314
+#define RIREQREF	(char)0246
+#define FLOATARRAYDEF	(char)0310
+#define INTEGER		(char)0201   /* unsigned short */
+#define FLOAT		(char)0244
 
 void binary_token(int a1, va_list *alist);
 void ascii_token(int a1, va_list *alist);
@@ -115,10 +115,10 @@ static struct _table table[] = {
     TABLEROW("Curves", 32),
     TABLEROW("Points", 33),
     TABLEROW("MakeTexture", 34),
+    TABLEROW("Declare", 35),
 
     /* following are reserved - do not add */
     /* or remove fields, just change them! */
-    TABLEROW("", 255),
     TABLEROW("", 255),
     TABLEROW("", 255),
     TABLEROW("", 255),
@@ -167,8 +167,15 @@ static struct _table table[] = {
     TABLEROW("width", 29),
     TABLEROW("constantwidth", 30),
     /* strings for extended texture aware shaders with support for alph */
-    TABLEROW("GVrgbmaskpaintedplastic", 31),
-    TABLEROW("GVrgbmaskpaintedconstant", 32),
+    TABLEROW("GVmodulateplastic", 31),
+    TABLEROW("GVmodulateconstant", 32),
+    TABLEROW("GVdecalplastic", 33),
+    TABLEROW("GVdecalconstant", 34),
+    TABLEROW("GVblendplastic", 35),
+    TABLEROW("GVblendconstant", 36),
+    TABLEROW("GVreplaceplastic", 37),
+    TABLEROW("GVreplaceconstant", 38),
+    TABLEROW("bgcolor", 39) /* BG-color for GL_BLEND texture */
 };
 
 void mrti_makecurrent(TokenBuffer *tkbuf)
@@ -474,6 +481,7 @@ void ascii_token(int token, va_list *alist)
 	case mr_curves:
 	case mr_points:
 	case mr_maketexture:
+	case mr_declare:
 	    check_buffer(table[token].len+1);
 	    cat(ptr,table[token].name);
 	    *(ptr++)=' ';

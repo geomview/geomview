@@ -75,15 +75,18 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	     * that what is displayed on the screen -- cH.
 	     *
 	     */
-        float roughness = (mat->shininess)? 8.0/mat->shininess : 8.0/1.0;
+        float roughness = (mat->shininess)? 1.0/mat->shininess : 1.0/1.0;
 	enum tokentype shader = mr_plastic;
 
         if (ap->shading == APF_CONSTANT) {
 	    if (_mgribc->shader == MG_RIBSTDSHADE) {
 		shader = mr_constant;
-	    } else {
-		if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
-		    shader = mr_GVrgbmaskpaintedconstant;
+	    } else if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
+		switch (ap->tex->apply) {
+		case TXF_MODULATE: shader = mr_GVmodulateconstant; break;
+		case TXF_DECAL: shader = mr_GVdecalconstant; break;
+		case TXF_BLEND: shader = mr_GVblendconstant; break;
+		case TXF_REPLACE: shader = mr_GVreplaceconstant; break;
 		}
 	    }
 	    mrti(mr_surface, shader, mr_NULL);
@@ -99,7 +102,12 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	        if (_mgc->space & TM_HYPERBOLIC) {
 		    shader = mr_hplastic;
 		} else if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
-		    shader = mr_GVrgbmaskpaintedplastic;
+		    switch (ap->tex->apply) {
+		    case TXF_MODULATE: shader = mr_GVmodulateplastic; break;
+		    case TXF_DECAL: shader = mr_GVdecalplastic; break;
+		    case TXF_BLEND: shader = mr_GVblendplastic; break;
+		    case TXF_REPLACE: shader = mr_GVreplaceplastic; break;
+		    }
 		} else {
 		    shader = mr_plastic;
 		}
@@ -130,13 +138,12 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    int i;
 	    unsigned chmask = 0;
 	    
-	    if (ap->tex->apply != TXF_MODULATE) {
+	    if (_mgribc->shader == MG_RIBSTDSHADE) {
 		static bool was_here = false;
 		
 		if (!was_here) {
-		    OOGLWarn("textures with apply != modulate "
-			     "areb not yet supported by the RenderMan"
-			     "back-end.");
+		    OOGLWarn("textures with apply != modulate will not work "
+			     "when using the standard shaders.\n");
 		    was_here = true;
 		}
 	    }
@@ -150,7 +157,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		}
 	    }
 
-	    mgrib_mktexname(txtxname, i, _mgribc->tmppath, "tx");
+	    mgrib_mktexname(txtxname, i, _mgribc->tmppath, "tiff.tx");
 
 	    if (i == _mgribc->n_tximg) {
 		if (_mgribc->n_tximg % 10 == 0) {
@@ -189,6 +196,9 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    }
 	    if (i < _mgribc->n_tximg) {
 		mrti(mr_texturename, mr_string, txtxname, mr_NULL);
+	    }
+	    if (ap->tex->apply == TXF_BLEND) {
+		mrti(mr_bgcolor, mr_parray, 3, &(ap->tex->background), mr_NULL);
 	    }
 	}
     }
