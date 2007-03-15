@@ -93,7 +93,7 @@ mgrib_polygon(int nv,  HPoint3 *V,
     }
 
     /* Supply Color (explicit) */
-    if (nc>0 && (flag & APF_FACEDRAW) && !(flag & APF_CONSTANT)) {
+    if (nc>0 && (flag & APF_FACEDRAW)) {
 	/* note:color should already be set in case of APF_CONSTANT,no?  */
 	mrti(mr_Cs, mr_buildarray, nv*3, mr_NULL);
 	for(i = 0; i < nv; i++) {
@@ -112,7 +112,7 @@ mgrib_polygon(int nv,  HPoint3 *V,
 	}
     }
     /* Supply Normals */
-    if (nn>0 && (flag & APF_FACEDRAW) && !(flag & APF_CONSTANT)) {
+    if (nn>0 && (flag & APF_FACEDRAW) && shading == APF_SMOOTH) {
 	mrti(mr_N, mr_buildarray, nv*3, mr_NULL); 
 	for(i = 0; i < nv; i++) {
 	    if(nn>1) n = &N[i]; else n = N;
@@ -418,12 +418,15 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
   shading = ap->shading;
   matover = _mgc->astk->mat.override;
 
-  if((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER))
+  if ((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) {
     plflags &= ~(PL_HASVCOL | PL_HASPCOL);
+  }
   
-  if (shading & APF_CONSTANT) plflags &= ~(PL_HASVN|PL_HASPN);
-  else if (shading & APF_FLAT) plflags &= ~PL_HASVN;
-  else if (shading & APF_SMOOTH) plflags &= ~PL_HASPN;
+  switch(shading) {
+  case APF_FLAT: plflags &= ~PL_HASVN; break;
+  case APF_SMOOTH: plflags &= ~PL_HASPN; break;
+  default: plflags &= ~(PL_HASVN|PL_HASPN); break;
+  }
 
   if (flag & APF_FACEDRAW) {
     mrti(mr_attributebegin, mr_NULL);
@@ -505,7 +508,7 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	 * texture images to files, enumerated by a sequence
 	 * number. Then we insert for each image a line
 
-	 ``MakeTexture "ourfile" "ribtxfile" "none" "none" "gaussian" 1.0 1.0''
+ ``MakeTexture "ourfile" "ribtxfile" "periodic" "clamp" "gaussian" 1.0 1.0''
 	 
 	 * in front of WorldBegin (unluckily all texture must be
 	 * defined before the call to WorldBegin, meaning the
@@ -528,19 +531,6 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    st.y = (*v)->st[1];
 	    st.z = 0.0;
 	    Pt3Transform(tex->tfm, &st, &st);
-	    /* should leave clamping to the RIB renderer */
-	    if ((tex->flags & TXF_SCLAMP)) {
-	      if (st.x > 1.0)
-		st.x = 1.0;
-	      else if (st.x < 0.0)
-		st.x = 0.0;
-	    }
-	    if ((tex->flags & TXF_TCLAMP)) {
-	      if (st.y > 1.0)
-		st.y = 1.0;
-	      else if (st.y < 0.0)
-		st.y = 0.0;
-	    }
 	    st.y = 1.0 - st.y;
 	    mrti(mr_subarray2, &st, mr_NULL);
 	  }
@@ -569,7 +559,9 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
   
   
   if (flag & APF_NORMALDRAW) {
-    /* since mg_drawnormal handles attributes and stacking, we do nothing here */
+    /* since mg_drawnormal handles attributes and stacking, we do
+     * nothing here
+     */
     if (plflags & PL_HASPN) {
       for (p = P, i = 0; i < np; i++, p++) {
 	for (j=0, v=p->v; j < p->n_vertices; j++, v++) {

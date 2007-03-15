@@ -166,7 +166,7 @@ static struct _table table[] = {
     TABLEROW("texturename", 28),
     TABLEROW("width", 29),
     TABLEROW("constantwidth", 30),
-    /* strings for extended texture aware shaders with support for alph */
+    /* strings for extended texture aware shaders with support for alpha */
     TABLEROW("GVmodulateplastic", 31),
     TABLEROW("GVmodulateconstant", 32),
     TABLEROW("GVdecalplastic", 33),
@@ -174,8 +174,7 @@ static struct _table table[] = {
     TABLEROW("GVblendplastic", 35),
     TABLEROW("GVblendconstant", 36),
     TABLEROW("GVreplaceplastic", 37),
-    TABLEROW("GVreplaceconstant", 38),
-    TABLEROW("bgcolor", 39) /* BG-color for GL_BLEND texture */
+    TABLEROW("GVreplaceconstant", 38)
 };
 
 void mrti_makecurrent(TokenBuffer *tkbuf)
@@ -327,7 +326,7 @@ void ascii_token(int token, va_list *alist)
 	    *(ptr++)='[';
 	    for(i=0;i<arraysize;i++) {
 		nextfloat = va_arg(*alist, double);
-		sprintf(astring,"%g ",nextfloat);
+		sprintf(astring,"%.8g ",nextfloat);
 		cat(ptr, astring);
 	    }
 	    *(--ptr)=0; /* get rid of space */
@@ -349,7 +348,7 @@ void ascii_token(int token, va_list *alist)
 	    /* if arraysize<0 then ERROR */
 	    floatptr = va_arg(*alist, float*);
 	    for(i=0;i<size;i++) {
-		sprintf(astring,"%g ",*(floatptr++));
+		sprintf(astring,"%.8g ",*(floatptr++));
 		cat(ptr,astring);
 	    }
 	    *(--ptr)=0; /* get rid of unwanted space */
@@ -362,7 +361,7 @@ void ascii_token(int token, va_list *alist)
 	    arraysize-=3;
 	    /* if arraysize<0 then ERROR */
 	    floatptr = va_arg(*alist, float*);
-	    sprintf(astring,"%g %g %g   ",
+	    sprintf(astring,"%.8g %.8g %.8g   ",
 		    *(floatptr),*(floatptr+1),*(floatptr+2));
 	    cat(ptr,astring);
 	    if(arraysize<=0) {
@@ -377,7 +376,7 @@ void ascii_token(int token, va_list *alist)
 	    arraysize-=2;
 	    /* if arraysize<0 then ERROR */
 	    floatptr = va_arg(*alist, float*);
-	    sprintf(astring,"%g %g   ",
+	    sprintf(astring,"%.8g %.8g   ",
 		    *(floatptr),*(floatptr+1));
 	    cat(ptr,astring);
 	    if(arraysize<=0) {
@@ -397,7 +396,7 @@ void ascii_token(int token, va_list *alist)
 	case mr_float:
 	    nextfloat = va_arg(*alist, double);
 	    check_buffer(16);
-	    sprintf(astring,"%g ",nextfloat);
+	    sprintf(astring,"%.8g ",nextfloat);
 	    cat(ptr,astring);
 	    break;
 	

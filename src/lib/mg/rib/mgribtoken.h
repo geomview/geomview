@@ -121,7 +121,6 @@ enum tokentype {
     mr_GVblendconstant,
     mr_GVreplaceplastic,
     mr_GVreplaceconstant,
-    mr_bgcolor,
     
     /* SPECIAL */    
     mr_array,		/* (full array) size, f,f,.. */

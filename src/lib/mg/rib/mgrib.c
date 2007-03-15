@@ -698,18 +698,18 @@ mgrib_worldbegin( void )
   mrti(mr_screenwindow, mr_float, -halfxfield, mr_float, halfxfield,
        mr_float, -halfyfield, mr_float, halfyfield, mr_NULL);
   CamGet( _mgc->cam, CAM_FOV, &fov);
-  sprintf(str, "Field of view %g", fov);
+  sprintf(str, "Field of view %.8g", fov);
   mrti(mr_comment, str, mr_NULL);
   mrti(mr_framebegin, mr_int, 1, mr_nl, mr_NULL);
     
   if (_mgc->cpos.w != 0.0 && _mgc->cpos.w != 1.0) {
-    sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+    sprintf(str, "CameraOrientation %.8g %.8g %.8g %.8g %.8g %.8g",
 	    _mgc->cpos.x/_mgc->cpos.w,
 	    _mgc->cpos.y/_mgc->cpos.w,
 	    _mgc->cpos.z/_mgc->cpos.w,
 	    lookat.x,lookat.y,lookat.z);
   } else {
-    sprintf(str, "CameraOrientation %.4g %.4g %.4g %.4g %.4g %.4g",
+    sprintf(str, "CameraOrientation %.8g %.8g %.8g %.8g %.8g %.8g",
 	    _mgc->cpos.x,_mgc->cpos.y,_mgc->cpos.z,
 	    lookat.x,lookat.y,lookat.z);
   }
@@ -723,9 +723,14 @@ mgrib_worldbegin( void )
   mrti(mr_reverseorientation, mr_NULL);
 
   /* declare "bgcolor" as uniform float, needed by the GVblend filters
-   * (GL_BLEND texturing)
+   * (GL_BLEND texturing).
+   *
+   * We also declare At (\alpha_{texture}), which is used to switch
+   * off texture introduced transparency when the appearance has
+   * transparency disabled.
    */
   mrti(mr_declare, mr_string, "bgcolor", mr_string, "uniform color", mr_NULL);
+  mrti(mr_declare, mr_string, "At", mr_string, "uniform float", mr_NULL);
 
   /* RiWorldBegin...*/
   mrti(mr_nl, mr_nl, mr_worldbegin, mr_NULL);

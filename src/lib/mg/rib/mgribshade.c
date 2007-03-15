@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -49,8 +50,8 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
     if (mat_mask & MTF_DIFFUSE)
         mrti(mr_color, mr_parray, 3, &mat->diffuse, mr_NULL);
 
-    if ( (ap_mask & APF_TRANSP || mat_mask & MTF_ALPHA) && 
-       ap->valid & APF_TRANSP && ap->flag & APF_TRANSP) {
+    if ((ap_mask & APF_TRANSP || mat_mask & MTF_ALPHA) && 
+	 ap->valid & APF_TRANSP && ap->flag & APF_TRANSP) {
         /* presumably, we want this here as well as per vertex opacity
          * specification
 	 * 
@@ -68,6 +69,7 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
                && (ap->flag & APF_TEXTURE)
                && (ap->tex != astk->next->ap.tex) )
        ) {
+#if 1 /* cH: I'm not so sure 'bout the following anymore */
 	    /* NOTE: the factor "8.0" is to compensate for some of the
 	     * usual rib shaders, i.e. BMRT, aqsis etc.. Don't know
 	     * why they started this affair, but without the output
@@ -75,10 +77,13 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	     * that what is displayed on the screen -- cH.
 	     *
 	     */
+        float roughness = (mat->shininess)? 8.0/mat->shininess : 8.0/1.0;
+#else
         float roughness = (mat->shininess)? 1.0/mat->shininess : 1.0/1.0;
+#endif
 	enum tokentype shader = mr_plastic;
 
-        if (ap->shading == APF_CONSTANT) {
+        if (ap->shading == APF_CONSTANT || ap->shading == APF_CSMOOTH) {
 	    if (_mgribc->shader == MG_RIBSTDSHADE) {
 		shader = mr_constant;
 	    } else if ((ap->flag & APF_TEXTURE) && ap->tex != NULL) {
@@ -89,7 +94,9 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		case TXF_REPLACE: shader = mr_GVreplaceconstant; break;
 		}
 	    }
-	    mrti(mr_surface, shader, mr_NULL);
+	    mrti(mr_shadinginterpolation,
+		 mr_string, ap->shading == APF_CONSTANT ? "constant" : "smooth",
+		 mr_surface, shader, mr_NULL);
 	} else {
 	    /* determine shader */
 	    if (_mgribc->shader == MG_RIBSTDSHADE) {
@@ -198,7 +205,12 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 		mrti(mr_texturename, mr_string, txtxname, mr_NULL);
 	    }
 	    if (ap->tex->apply == TXF_BLEND) {
-		mrti(mr_bgcolor, mr_parray, 3, &(ap->tex->background), mr_NULL);
+		mrti(mr_string, "bgcolor",
+		     mr_parray, 3, &(ap->tex->background), mr_NULL);
+	    }
+	    if (ap->tex->apply != TXF_DECAL) {
+		mrti(mr_string, "At",
+		     mr_float, (ap->flag & APF_TRANSP) ? 1.0 : 0.0, mr_NULL);
 	    }
 	}
     }
