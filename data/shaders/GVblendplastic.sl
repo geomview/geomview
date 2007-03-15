@@ -37,11 +37,16 @@ GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 	       color specularcolor = 1;
 	       string texturename = ""; color bgcolor = 0;)
 {
+  /* variables used for lighting */
   normal Nf;
   vector V;
-  float channels;
-  float Ot, Lt;
+  /* texture provided color (luminance) and alpha */
   color Ct;
+  float Ot;
+  /* number of texture channels,
+   * < 3: liminance and possibly alpha, > 2: rgb and possibly alpha
+   */
+  float channels;
 
   /* normal plastic shader */
   Ci = Cs;
@@ -58,14 +63,13 @@ GVblendplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Lt = float texture(texturename[0]);
+      Ct = float texture(texturename[0]);
       Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
-      Ci = Lt * Ci + (1.0 - Lt) * bgcolor;
     } else {
       Ct = color texture(texturename);
       Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
-      Ci = Ct * Ci + (1.0 - Ct) * bgcolor;
     }
+    Ci = (1.0 - Ct) * Ci + Ct * bgcolor;
     Oi *= Ot;
   }
 }

@@ -34,8 +34,12 @@ GVdecalplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 	       color specularcolor = 1;
 	       string texturename = "";)
 {
+  /* variables used for lighting */
   normal Nf;
   vector V;
+  /* texture provided color (luminance) and alpha */
+  color Ct;
+  float Ot;
 
   Ci = Cs;
   Oi = Os;
@@ -52,8 +56,9 @@ GVdecalplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
    * shader has the same effect as the "GVreplaceplastic()" shader.
    */
   if (texturename != "") {
-    float s = float texture (texturename[3], "fill", 1.0, "width", 0.0);
-    Ci = (1 - s) * Ci + s * color texture (texturename);
+    Ct = color texture (texturename);
+    Ot = float texture (texturename[3], "fill", 1.0, "width", 0.0);
+    Ci = (1 - Ot) * Ci + Ot * Ct;
   }
   Ci *= Os;
 }

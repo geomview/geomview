@@ -27,17 +27,28 @@ GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 		 color specularcolor = 1;
 		 string texturename = "";)
 {
+  /* variables used for lighting */
+  normal Nf;
+  vector V;
+  /* texture provided color (luminance) and alpha */
+  color Ct;
+  float Ot;
+  /* number of texture channels,
+   * < 3: liminance and possibly alpha, > 2: rgb and possibly alpha
+   */
   float channels;
   
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Ci = float texture (texturename[0]);
-      Oi = float texture (texturename[1], "fill", Os, "width", 0.0);
+      Ct = float texture (texturename[0]);
+      Ot = float texture (texturename[1], "fill", Os, "width", 0.0);
     } else {
-      Ci = color texture (texturename);
-      Oi = float texture (texturename[3], "fill", Os, "width", 0.0);
+      Ct = color texture (texturename);
+      Ot = float texture (texturename[3], "fill", Os, "width", 0.0);
     }
+    Ci = Ct * Ot;
+    Oi = Ot;
   } else {
     /* no texture: use ordinary plastic shader */
     normal Nf;
@@ -51,8 +62,8 @@ GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 
     Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
       specularcolor * Ks*specular(Nf,V,roughness);
+    Ci *= Os;
   }
-  Ci *= Os;
 }
 
 /*

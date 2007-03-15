@@ -24,8 +24,15 @@ GVmodulateplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 		  color specularcolor = 1;
 		  string texturename = "";)
 {
+  /* variables used for lighting */
   normal Nf;
   vector V;
+  /* texture provided color (luminance) and alpha */
+  color Ct;
+  float Ot;
+  /* number of texture channels,
+   * < 3: liminance and possibly alpha, > 2: rgb and possibly alpha
+   */
   float channels;
 
   Ci = Cs;
@@ -34,12 +41,14 @@ GVmodulateplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Ci *= float texture (texturename[0]);
-      Oi *= texture (texturename[1], "fill", 1.0, "width", 0.0);
+      Ct = float texture (texturename[0]);
+      Ot = float texture (texturename[1], "fill", 1.0, "width", 0.0);
     } else {
-      Ci *= color texture (texturename);
-      Oi *= texture (texturename[3], "fill", 1.0, "width", 0.0);
+      Ct = color texture (texturename);
+      Ot = float texture (texturename[3], "fill", 1.0, "width", 0.0);
     }
+    Ci *= Ct;
+    Oi *= Ot;
   }
 
   Nf = faceforward (normalize(N),I);
@@ -47,7 +56,7 @@ GVmodulateplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
 
   Ci = Ci * (Ka*ambient() + Kd*diffuse(Nf)) +
     specularcolor * Ks*specular(Nf,V,roughness);
-  Ci *= Os;
+  Ci *= Oi;
 }
 
 /*
