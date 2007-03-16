@@ -355,6 +355,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   if(ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)
      || (ap->flag & APF_FACEDRAW && (nu == 1 || nv == 1))) {
     glDisable(GL_COLOR_MATERIAL);
+    mgopengl_notexture();
     DONT_LIGHT();
     if(_mgopenglc->znudge) mgopengl_closer();
     if(ap->flag & APF_EDGEDRAW) {			/* Draw edges */
