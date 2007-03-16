@@ -57,6 +57,12 @@ GeomClass *SphereMethods()
     SphereClass->create = (GeomCreateFunc *)SphereCreate;
     SphereClass->fsave = (GeomFSaveFunc *)SphereFSave;
     SphereClass->fload = (GeomFLoadFunc *)SphereFLoad;
+    SphereClass->copy = (GeomCopyFunc *)SphereCopy;
+#if !BEZIER_SPHERES
+    SphereClass->dice = (GeomDiceFunc *)SphereDice;
+    SphereClass->draw = (GeomDrawFunc *)SphereDraw;
+    SphereClass->bsptree = (GeomBSPTreeFunc *)SphereBSPTree;
+#endif
     SphereClass->export = NULL;
     SphereClass->import = NULL;
     SphereClass->unexport = NULL;

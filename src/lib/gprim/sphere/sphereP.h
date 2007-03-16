@@ -23,26 +23,51 @@
 
 #include "sphere.h"
 #include "instP.h"
+#include "mesh.h"
+
+#define BEZIER_SPHERES 0 /* define to 1 to use bezier splines, to 0 to
+			 * use a mesh based on a polar co-ordinate
+			 * system.
+			 */
 
 #define SPHEREFIELDS \
   INSTFIELDS; \
   float radius; \
   HPoint3 center; \
-  int space
+  int space;	  \
+  int ntheta;	  \
+  int nphi
 
 struct Sphere {
   SPHEREFIELDS;
 };
-    
+
 #define SPHEREMAGIC	GeomMagic('s', 1)
+
+#define SPHERE_REMESH GEOMFLAG(0x02) /* need to recompute the mesh */
+#define SPHERE_DEFAULT_MESH_SIZE 10  /* otherwise from ap->dice */
 
 extern GeomClass *SphereMethods();
 extern Sphere *SphereCreate(Geom *, GeomClass *, va_list *a_list );
 extern Sphere *SphereFLoad(IOBFILE *, char *);
 extern Sphere *SphereSave(Sphere *, char *);
 extern Sphere *SphereFSave(Sphere *, FILE *, char *);
+extern Sphere *SphereDice(Sphere *sphere, int nu, int nv);
+#if !BEZIER_SPHERES
+extern void SphereReDice(Sphere *sphere);
+extern Sphere *SphereBSPTree(Sphere *sphere, BSPTree *bsptree, int action);
+extern Sphere *SphereDraw(Sphere *sphere);
+#endif
+extern Sphere *SphereCopy(Sphere *os);
 
 /* These are non-mallocing if sphere exists; will create a new sphere and
  * return it if sphere does not exist */
 
 #endif
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

@@ -21,6 +21,8 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include "geomclass.h"
+
 typedef struct Sphere Sphere;
 
 extern GeomClass *SphereClass;

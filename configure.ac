@@ -845,17 +845,32 @@ AC_ARG_ENABLE(d1debug,
               [AC_DEFINE(D1_DEBUG, 0, [D1 debugging?])]
               )
 
-AC_ARG_ENABLE(motion-averaging,
-[  --enable-motion-averaging      
-                          turn on experimental motion averaging (default is off)],
-	      [ if test "$enableval" = "no" ; then
-                  AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0,
-			    [Use experimental motion averaging code?])
-                else
-                  AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 1)
-                fi ],
-              [ AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0) ]
-              )
+AC_ARG_ENABLE([motion-averaging],
+  AC_HELP_STRING([--enable-motion-averaging],
+                 [turn on experimental motion averaging (default is off)]),
+  [if test "$enableval" = "no" ; then
+     AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0,
+	       [Use experimental motion averaging code?])
+  else
+    AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 1)
+  fi],
+  [AC_DEFINE(EXPERIMENTAL_MOTION_AVERAGING, 0)])
+
+AC_ARG_ENABLE([bezier-spheres],
+  AC_HELP_STRING([--disable-bezier-spheres],[Use a mesh based on a polar
+co-ordinate system instead of using Bezier-splines to approximate a sphere.
+This simplifies drawing textured spheres if the texture co-ordinates live
+in a polar co-ordinate system, e.g. when trying to paste a world-map onto
+a sphere. (default: use Bezier splines)]),
+  [case "$enableval" in
+     yes) BEZIER_SPHERES=1 ;;
+     no) BEZIER_SPHERES=0 ;;
+     *) AC_MSG_ERROR([--disable-bezier-spheres does not take any arguments beside "yes" and "no"]) ;;
+  esac],
+[BEZIER_SPHERES=1])
+AM_CONDITIONAL([BEZIER_SPHERES],[test "${BEZIER_SPHERES}" = 1])
+AC_DEFINE_UNQUOTED([BEZIER_SPHERES], [${BEZIER_SPHERES}],
+  [Define to 0 to use polar meshes for drawing of spheres])
 
 ########################################################################
 ########################################################################

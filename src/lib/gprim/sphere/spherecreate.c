@@ -35,9 +35,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "hpoint3.h"
 #include "sphereP.h"
 #include "bezier.h"
+#include "tlist.h"
+
+#if BEZIER_SPHERES
+#define old 1
 
 static float ctrlPnts[] = {
-#ifdef old
+#if old
   1, 0, 0, 1,	1, 0, 1, 1, 	0, 0, 2, 2,
   1, 1, 0, 1,	1, 1, 1, 1,	0, 0, 2, 2,
   0, 2, 0, 2,	0, 2, 2, 2,	0, 0, 4, 4
@@ -47,6 +51,7 @@ static float ctrlPnts[] = {
   2, 0, 0, 2,  2, 0, 0, 2,  4, 0, 0, 4,
 #endif
 };
+#endif
 
 static Transform reflections[] = {
   {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
@@ -59,10 +64,38 @@ static Transform reflections[] = {
   {{-1,0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}}
 };
 
+#if !BEZIER_SPHERES
+static inline void sphere_make_meshhandle(Sphere *sphere)
+{
+    char meshhname[sizeof("\aSphere::")+sizeof(void *)*2];
+    extern HandleOps GeomOps;
+    Handle *handle;
+
+    sprintf(meshhname, "\aSphere::%lx", (unsigned long)sphere);
+    handle = HandleCreate(meshhname, &GeomOps);
+    GeomCCreate((Geom *)sphere, InstMethods(),
+		CR_NOCOPY, CR_GEOMHANDLE, handle, CR_END);
+}
+#endif
+
+/* Do we need a SphereCopy()? In principle yes. */
+Sphere *SphereCopy(Sphere *sphere)
+{
+  Sphere *nsphere;
+
+  /* simply create a new one and copy over the three defining fields */
+  nsphere = (Sphere *)GeomCCreate(NULL, SphereMethods(),
+				  CR_SPACE, sphere->space,
+				  CR_CENTER, &sphere->center,
+				  CR_RADIUS, &sphere->radius,
+				  CR_END);
+  TmCopy(sphere->axis, nsphere->axis);
+
+  return nsphere;
+}
+
 Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
 {
-  Geom *quadrant;
-  Geom *unitsphere;
   Sphere *sphere;
   int nencompass_points = 0;
   int attr, copy = 1;
@@ -80,11 +113,12 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere->tlist = NULL;
     sphere->axishandle = NULL;
     sphere->NDaxishandle = NULL;
-    sphere->radius = 1.0;
-    sphere->space = TM_EUCLIDEAN;
     sphere->location = L_NONE;
     sphere->origin = L_NONE;
+    sphere->radius = 1.0;
+    sphere->space = TM_EUCLIDEAN;
     HPt3From(&(sphere->center), 0.0, 0.0, 0.0, 1.0);
+    sphere->ntheta = sphere->nphi = SPHERE_DEFAULT_MESH_SIZE;
   } else sphere = (Sphere *)exist;
 
   while ((attr = va_arg (*a_list, int))) switch (attr) {
@@ -118,6 +152,7 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   }
   HPt3Dehomogenize(&(sphere->center), &(sphere->center));
 
+#if BEZIER_SPHERES
   if (sphere->geom == NULL) {
     /* No need to generate those objects anew if we already have a
      * sphere, they never change. Also, we need to make a copy of the
@@ -125,6 +160,8 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
      * object instead.
      */
     float *CPctrlPnts;
+    Geom *quadrant;
+    Geom *unitsphere;
 
     /* Bezier does not make a copy of the control points */
     CPctrlPnts = OOGLNewNE(float, (2+1)*(2+1)*4, "copy of sphere ctrl points");
@@ -138,12 +175,26 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     /* TList does make a copy of the transformations */
     unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, reflections,
 			    CR_END);
-    sphere->geom = GeomCCreate(sphere->geom, InstMethods(),
-			       CR_GEOM, quadrant,
-			       CR_TLIST, unitsphere,
-			       CR_END);
+    GeomCCreate((Geom *)sphere, InstMethods(),
+		CR_GEOM, quadrant,
+		CR_TLIST, unitsphere,
+		CR_END);
     GeomDelete(quadrant);
     GeomDelete(unitsphere);
+  }
+#else
+  if (sphere->geomhandle == NULL) {
+    Geom *unitsphere;
+
+    unitsphere = GeomCCreate(NULL , TlistMethods(),
+			     CR_NELEM, 8, CR_ELEM, reflections, CR_END);
+    GeomCCreate((Geom *)sphere, InstMethods(),
+		CR_NOCOPY, CR_TLIST, unitsphere, CR_END);
+    sphere_make_meshhandle(sphere);
+    sphere->geomflags |= SPHERE_REMESH; /* force remeshing on redraw,
+					 * but not earlier.
+					 */
+#endif
   }
 
   SphereSwitchSpace(sphere, sphere->space);
