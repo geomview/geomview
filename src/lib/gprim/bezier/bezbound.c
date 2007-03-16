@@ -47,11 +47,20 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
    */
   if ((T == TM_IDENTITY || !T) && !TN) {
     min = *(HPoint3 *)p;
-    if (!T && (bezier->dimn == 4)) {
-      max = min;
-      while(--n > 0) {
-	p += 4;
-	Pt4MinMax(&min, &max, (HPoint3 *)p);
+    if (bezier->dimn == 4) {
+      if (!T) {
+	max = min;
+	while(--n > 0) {
+	  p += 4;
+	  Pt4MinMax(&min, &max, (HPoint3 *)p);
+	}
+      } else {
+	HPt3Dehomogenize(&min, &min);
+	max = min;
+	while(--n > 0) {
+	  p += 4;
+	  HPt3MinMax(&min, &max, (HPoint3 *)p);
+	}
       }
       return (BBox *)GeomCCreate(NULL, BBoxMethods(),
 				 CR_4MIN, &min, CR_4MAX, &max,
