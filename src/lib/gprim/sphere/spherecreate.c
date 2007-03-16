@@ -207,8 +207,8 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere->geomflags |= SPHERE_REMESH; /* force remeshing on redraw,
 					 * but not earlier.
 					 */
-#endif
   }
+#endif
 
   SphereSwitchSpace(sphere, sphere->space);
   if (nencompass_points && encompass_points != NULL) 
