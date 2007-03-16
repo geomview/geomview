@@ -25,10 +25,12 @@
 #include "instP.h"
 #include "mesh.h"
 
-#define BEZIER_SPHERES 0 /* define to 1 to use bezier splines, to 0 to
-			 * use a mesh based on a polar co-ordinate
-			 * system.
-			 */
+#ifndef BEZIER_SPHERES
+# define BEZIER_SPHERES 0 /* define to 1 to use bezier splines, to 0 to
+			   * use a mesh based on a polar co-ordinate
+			   * system.
+			   */
+#endif
 
 #define SPHEREFIELDS \
   INSTFIELDS; \
