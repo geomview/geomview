@@ -283,10 +283,13 @@ printf("this is tmpdu0\n");
 
     /*GeomCCreate(bezier->mesh, NULL, CR_COPY, CR_APPEAR, bezier->ap, CR_END);*/
 
+#if 0
+    /* should be handled by a call-back now */
     if (bezier->bsptree != NULL && bezier->bsptree->tree != NULL) {
 	/* simply free the tree */
 	BSPTreeFreeTree(bezier->bsptree);
     }
+#endif
 
     return bezier->mesh;
 }
