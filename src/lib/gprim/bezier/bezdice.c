@@ -295,13 +295,15 @@ printf("this is tmpdu0\n");
 /* Takes a list of control points describing a spline */
 /* and produces values for the spline */
 /* at  n  equally spaced points.   */
-void
-bezier_interp(in,out,deg,n,dimn)
+#if 0
 float *in; /* input array of control points */
 float *out; /* output array */
 int deg; /* degree of spline */
 int n; /* number of points to interpolate */
 int dimn; /* dimension of range */
+#endif
+void
+bezier_interp(float *in, float *out, int deg, int n, int dimn)
 {
   int    m, offset, k, j;
   float  p[(MAX_BEZ_DEGREE+1)*MAX_BEZ_DIMN];
