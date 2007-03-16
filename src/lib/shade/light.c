@@ -740,15 +740,15 @@ LmFSave(LmLighting *li, FILE *f, char *fname, Pool *p)
     LtLight **lp;
     int i;
 
-    PoolFPrint(p, f, "ambient %g %g %g\n", 
+    PoolFPrint(p, f, "ambient %.8g %.8g %.8g\n", 
 	li->ambient.r,
 	li->ambient.g,
 	li->ambient.b);
     PoolFPrint(p, f, "localviewer %d\n", li->localviewer);
-    PoolFPrint(p, f, "attenconst %g\n", li->attenconst);
-    PoolFPrint(p, f, "attenmult %g\n", li->attenmult);
+    PoolFPrint(p, f, "attenconst %.8g\n", li->attenconst);
+    PoolFPrint(p, f, "attenmult %.8g\n", li->attenmult);
     if(li->valid & LMF_ATTEN2) {
-	PoolFPrint(p, f,"attenmult2 %g\n", li->attenmult2);
+	PoolFPrint(p, f,"attenmult2 %.8g\n", li->attenmult2);
     }
     if (li->valid & LMF_REPLACELIGHTS) {
 	PoolFPrint(p, f, "replacelights\n");

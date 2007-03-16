@@ -349,7 +349,7 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap)
 	}
 	break;
       case APF_NORMSCALE:
-	fprintf(f, "normscale %g", ap->nscale);
+	fprintf(f, "normscale %.8g", ap->nscale);
 	break;
       case APF_LINEWIDTH:
 	fprintf(f, "linewidth %d ", ap->linewidth);
