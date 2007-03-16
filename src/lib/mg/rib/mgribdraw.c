@@ -671,7 +671,30 @@ mgrib_bezier( int du, int dv, int dimn, float *CtrlPnts, float *txmapst, ColorA 
 	}
     }
     
-    if(txmapst) {
-        mrti(mr_nl, mr_st, mr_parray, 8, txmapst, mr_NULL);
+    if ((_mgc->astk->ap.flag & (APF_TEXTURE|APF_FACEDRAW))
+	== 
+	(APF_TEXTURE|APF_FACEDRAW)
+	&& _mgc->astk->ap.tex != NULL && txmapst) {
+	Texture *tex = _mgc->astk->ap.tex;
+	Point3 st;
+	int j;
+
+        mrti(mr_nl, mr_st, mr_buildarray, 8, mr_NULL);
+	for(j = 0; j < 4; j++) {
+	    st.x = txmapst[2*j];
+	    st.y = txmapst[2*j+1];
+	    st.z = 0.0;
+	    Pt3Transform(tex->tfm, &st, &st);
+	    st.y = 1.0 - st.y;
+	    mrti(mr_subarray2, &st, mr_NULL);
+	}
     }
 }
+
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
