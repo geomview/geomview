@@ -611,15 +611,17 @@ void mgopengl_needtexture(void)
 
       tex_bind(tu->id + ID_OFFSET);
 
-      if (image->channels == 2 || image->channels == 4) {
+      if (image->channels % 2 == 0) {
 	glAlphaFunc(GL_NOTEQUAL, 0);
 	glEnable(GL_ALPHA_TEST);
       }
-      
-      glMatrixMode(GL_TEXTURE);
-      glLoadMatrixf( (GLfloat *) tu->tx->tfm);
-      glMatrixMode(GL_MODELVIEW);
     }
+
+    /* Load the texture tfm, even if stuff is otherwise identical. */
+    glMatrixMode(GL_TEXTURE);
+    glLoadMatrixf( (GLfloat *) tu->tx->tfm);
+    glMatrixMode(GL_MODELVIEW);
+
     glEnable(GL_TEXTURE_2D);
     return;
   }
