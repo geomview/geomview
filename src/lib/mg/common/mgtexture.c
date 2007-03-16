@@ -168,10 +168,10 @@ mg_same_texture(Texture *tx1, Texture *tx2, bool really)
 	if (tx1->apply != tx2->apply) {
 	    return false;
 	}
-	if (tx1->background.r != tx2->background.r ||
-	    tx1->background.g != tx2->background.g ||
-	    tx1->background.b != tx2->background.b ||
-	    tx1->background.a != tx2->background.a) {
+	if (tx1->apply == TXF_BLEND &&
+	    (tx1->background.r != tx2->background.r ||
+	     tx1->background.g != tx2->background.g ||
+	     tx1->background.b != tx2->background.b)) {
 	    return false;
 	}
     }
