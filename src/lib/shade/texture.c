@@ -80,7 +80,6 @@ Texture *
 _TxSet(Texture *tx, int attr1, va_list *alist)
 {
   int mask;
-  ColorA *co;
   Handle *h;
   Image  *img;
   TransformPtr f;
@@ -179,8 +178,7 @@ _TxSet(Texture *tx, int attr1, va_list *alist)
       break;
 #endif
     case TX_BACKGROUND:
-      co = NEXT(ColorA *);
-      tx->background = *co;
+      tx->background = *NEXT(Color *);
       break;
     case TX_HANDLE_IMAGE:
       h   = NEXT(Handle *);
@@ -381,7 +379,7 @@ static struct txkw {
   {  "decal",     TXF_DECAL,           0 },
   {  "replace",   TXF_REPLACE,         0 },
   { "transform",  TX_HANDLE_TRANSFORM, 0 },  /*(s,t,r,q) . tfm = tx coords */
-  { "background", TX_BACKGROUND,       4 },
+  { "background", TX_BACKGROUND,       3 },
   /* deprecated, maybe */
   { "file",       TX_FILE,             0 },
   { "alphafile",  TX_ALPHAFILE,        0 },
@@ -629,9 +627,26 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
 	tx->coords = (kw+k)->aval;
 	break;
 #endif
-      case TX_BACKGROUND:
+      case TX_BACKGROUND: {
+	/* We allow ColorA for compatibility, but the texture
+	 * background color really is only RGB, not RGBA (see
+	 * glTexEnvf(3)). So: if the next character is not a closing
+	 * brace and not '\n', consume the next float which should be
+	 * the alpha component
+	 */
+	float dummy;
+	int c;
+
+	if ((c = iobfnextc(stream, 1)) != '\n' && c != '}' && c != EOF) {
+	  if (iobfgetnf(stream, 1, &dummy, 0) < 1) {
+	    OOGLSyntax(stream, "%s: background color expected", fname);
+	    TxDelete(tx);
+	    return false;
+	  }
+	}
 	TxSet(tx, kw->aval, val, TX_END);
 	break;
+      }
       case TX_HANDLE_IMAGE:
 	if (!ImgStreamIn(p, &tx->imghandle, &tx->image)) {
 	  OOGLSyntax(stream, "%s: texture image definition expected",
@@ -792,9 +807,8 @@ TxStreamOut(Pool *p, Handle *h, Texture *tx)
   PoolFPrint(p, f, "apply %s\n",
 	     (unsigned)tx->apply < COUNT(applies) ? applies[tx->apply]
 	     : "???");
-  PoolFPrint(p, f, "background %g %g %g %g\n",
-	     tx->background.r, tx->background.g,
-	     tx->background.b, tx->background.a);
+  PoolFPrint(p, f, "background %.8g %.8g %.8g\n",
+	     tx->background.r, tx->background.g, tx->background.b);
   PoolFPrint(p, f, "");
   TransStreamOut(p, tx->tfmhandle, tx->tfm);
   if (tx->filename) {

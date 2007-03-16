@@ -148,9 +148,11 @@ typedef struct Texture {
     } apply;		  /* Application style
 			   * (TXF_DECAL, TXF_MODULATE, TXF_BLEND, TXF_REPLACE)
 			   */
-    int coords;		  /* Texture-coord auto generation (not implemented) */
-    ColorA background;	  /* background color: outside of clamped texture */
+    Color background;	  /* background color for TXF_BLEND */
     TxUser *users;	  /* Users of this texture register here */
+#if 0
+    int coords;		  /* Texture-coord auto generation (not implemented) */
+#endif
     /*****************************************/
     /* the old and deprecated way to do stuff */
     char *filename;       /* ppm or pgm (.Z) file */
