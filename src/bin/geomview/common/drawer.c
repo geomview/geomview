@@ -68,9 +68,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static Fsa name_fsa = NULL;
 
-#define	CH_GEOMETRY	1
-#define	CH_TRANSFORM	2
-
 DrawerState drawerstate;
 
 static int drawer_dgeom(int id, GeomStruct *gs);
@@ -559,21 +556,21 @@ drawer_get_ap( int id )
  * Checks whether any object is moving (so that the main loop shouldn't block).
  * Returns 1 if so, 0 otherwise.
  */
-int
-drawer_moving()
+bool
+drawer_moving(void)
 {
   int i;
   DObject *o;
 
   if (motions_exist())
-    return 1;
+    return true;
   for(i = 0; i < dgeom_max; i++)
     if((o = (DObject *)dgeom[i]) != NULL && (o->moving || o->changed))
-      return 1;
+      return true;
   for(i = 0; i < dview_max; i++)
     if((o = (DObject *)dview[i]) != NULL && (o->moving || o->changed))
-      return 1;
-  return 0;
+      return true;
+  return false;
 }
 
 
@@ -724,8 +721,8 @@ LDEFINE(redraw, LVOID,
 	    LEND));
 
   MAYBE_LOOP_ALL(id, index, T_CAM, DView, dv) {
-    dv->newcam = 1;
-    dv->frozen &= ~1;
+    dv->newcam = true;
+    dv->frozen &= ~SOFT_FROZEN;
   }
   track_changes();
   return Lt;
@@ -750,7 +747,7 @@ LDEFINE(freeze, LVOID,
 	    LKEYWORD, &hard,
 	    LEND));
 
-  freeze = boolval("freeze", hard) ? 2 : 1;
+  freeze = boolval("freeze", hard) ? HARD_FROZEN : SOFT_FROZEN;
 
   MAYBE_LOOP_ALL(id, index, T_CAM, DView, dv) {
     dv->frozen = freeze;
@@ -841,11 +838,11 @@ LDEFINE(xform_set, LVOID,
 	       CAM_C2W, ts->tm, CAM_C2WHANDLE, ts->h, CAM_END);
     }
     TmIdentity(obj->Incr);
-    obj->redraw = 1;
+    obj->redraw = true;
     if (ts->h) {
       obj->changed |= CH_TRANSFORM;
     }
-    obj->moving = (obj->updateproc!=NULL);
+    obj->moving = (obj->updateproc != NULL);
   }
   return Lt;
 }
@@ -877,7 +874,7 @@ LDEFINE(xform, LVOID,
       CamTransform(DVobj(obj)->cam, ts->tm);
     }
     TmIdentity(obj->Incr);
-    obj->redraw = 1;
+    obj->redraw = true;
     obj->moving = (obj->updateproc!=NULL);
   }
   return Lt;
@@ -987,7 +984,7 @@ LDEFINE(camera, LINT,
       }
       TmIdentity(dv->Incr);
       dv->moving = (dv->updateproc!=NULL);
-      dv->newcam = 1;
+      dv->newcam = true;
     }
     /*  gv_camera_reset(id); */
   }
@@ -1022,7 +1019,7 @@ LDEFINE(camera_reset, LVOID,
     }
     TmIdentity(dv->Incr);
     dv->moving = (dv->updateproc!=NULL);
-    dv->redraw = 1;
+    dv->redraw = true;
   }
   ui_maybe_refresh(id);
   return Lt;
@@ -1170,16 +1167,19 @@ drawer_replace_geometry(int id, int *p, int pn, GeomStruct *gs)
   Geom *where;
 
   MAYBE_LOOP(id, ind, T_GEOM, DObject, obj) {
-    for (GeomGet(DGobj(obj)->Lgeom, CR_GEOM, &where); where && pn>0; pn--, p++) {
+    for (GeomGet(DGobj(obj)->Lgeom,
+		 CR_GEOM, &where); where && pn>0; pn--, p++) {
       for (count = 0; count < *p; count++) {
 	GeomGet(where, CR_CDR, &where);
       }
-      if (pn > 1)
+      if (pn > 1) {
 	GeomGet(where, CR_GEOM, &where);
+      }
     }
     if (where) {
-      GeomCCreate(where, ListMethods(), CR_HANDLE_GEOM, gs->h, gs->geom, CR_END);
-      obj->changed = 1;
+      GeomCCreate(where,
+		  ListMethods(), CR_HANDLE_GEOM, gs->h, gs->geom, CR_END);
+      obj->changed = CH_GEOMETRY;
     }
   }
   return id;
@@ -1273,7 +1273,7 @@ LDEFINE(delete, LVOID,
   DObject *obj;
   int index;
   int id;
-  int wasfrozen = 0;
+  unsigned wasfrozen = UNFROZEN;
   LDECLARE(("delete", LBEGIN,
 	    LID, &id,
 	    LEND));
@@ -1335,7 +1335,7 @@ LDEFINE(scene, LVOID,
 	RefIncr((Ref *)gs->geom);
 	GeomDelete(dv->Item);
 	dv->Item = gs->geom;
-	dv->changed = 1;
+	dv->changed = CH_GEOMETRY;
       }
     }
     return Lt;
@@ -1345,7 +1345,7 @@ LDEFINE(scene, LVOID,
     RefIncr((Ref *)gs->geom);
     GeomDelete(dv->Item);
     dv->Item = gs->geom;
-    dv->changed = 1;
+    dv->changed = CH_GEOMETRY;
   }
 
   return Lt;
@@ -1387,7 +1387,7 @@ LDEFINE(merge_ap, LVOID,
     Appearance *thisap = GeomAppearance(obj->Item);
     GeomSet(obj->Item, CR_NOCOPY, CR_APPEAR,
 	    ApMerge(as->ap, thisap, APF_INPLACE|APF_OVEROVERRIDE), CR_END);
-    obj->redraw = 1;
+    obj->redraw = true;
   }
   ui_maybe_refresh(id);
   return Lt;
@@ -1406,7 +1406,7 @@ drawer_set_ap(int id, Handle *h, Appearance *ap)
   MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
     GeomSet(obj->Item, CR_NOCOPY, /* CR_APHANDLE, h */
 	    CR_APPEAR, ap ? ApCopy(ap,NULL) : NULL, CR_END );
-    obj->redraw = 1;
+    obj->redraw = true;
   }
   ui_maybe_refresh(id);
 }
@@ -1806,7 +1806,7 @@ drawer_int(int id, DrawerKeyword key, int ival)
     MAYBE_LOOP(id, index, T_NONE, DObject, obj) {
       DGobj(obj)->bezdice = ival;
       GeomDice(DGobj(obj)->Item, ival, ival);
-      obj->changed = 1;
+      obj->changed = CH_GEOMETRY;
     }
 #endif
     break;
@@ -1819,14 +1819,14 @@ drawer_int(int id, DrawerKeyword key, int ival)
   case DRAWER_PROJECTION:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
       CamSet(DVobj(obj)->cam, CAM_PERSPECTIVE, ival, CAM_END);
-      obj->changed = 1;
+      obj->changed = CH_GEOMETRY;
     }
     break;
 
   case DRAWER_BBOXDRAW:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
       DGobj(obj)->bboxdraw = ival;
-      obj->redraw = 1;
+      obj->redraw = true;
     }
     break;
     
@@ -1839,21 +1839,21 @@ drawer_int(int id, DrawerKeyword key, int ival)
 
   case DRAWER_PICKABLE:
     MAYBE_LOOP(id, index, T_GEOM, DObject, obj) {
-      DGobj(obj)->pickable = ival;
+      DGobj(obj)->pickable = ival != 0;
     }
     break;
 
   case DRAWER_HSPHERE:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
       set_hsphere_draw( id, ival );
-      obj->redraw = 1;
+      obj->redraw = true;
     }
     break;
 
   case DRAWER_CAMERADRAW:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
-      DVobj(obj)->cameradraw = ival;
-      obj->redraw = 1;
+      DVobj(obj)->cameradraw = ival != 0;
+      obj->redraw = true;
     }
     break;
 
@@ -1866,7 +1866,7 @@ drawer_int(int id, DrawerKeyword key, int ival)
       mgctxset(ival==0 || (ival<0 && opts&MGO_DOUBLEBUFFER) ?
 	       MG_UNSETOPTIONS : MG_SETOPTIONS,
 	       MGO_DOUBLEBUFFER, MG_END);
-      obj->redraw = 1;
+      obj->redraw = true;
     }
     break;
 
@@ -1885,7 +1885,7 @@ drawer_int(int id, DrawerKeyword key, int ival)
 	/* Allow pre-existing World settings to win over those in children */
 	ApLetPropagate( worldap, GeomAppearance(obj->Item) );
       }
-      obj->redraw = 1;
+      obj->redraw = true;
     }
     break;
 
@@ -1944,7 +1944,7 @@ drawer_float(int id, DrawerKeyword key, float fval)
     interested = LInterestList("merge");
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
       DVobj(obj)->cam = CamSet(DVobj(obj)->cam, attr, fval, CAM_END);
-      DVobj(obj)->redraw = 1;
+      DVobj(obj)->redraw = true;
       if(interested)
 	gv_merge(&CamOps, DVobj(obj)->id, (Ref *)DVobj(obj)->cam);
     }
@@ -1972,13 +1972,13 @@ drawer_float(int id, DrawerKeyword key, float fval)
 
   case DRAWER_LIGHT_INTENSITY:
     set_light_intensity( fval );
-    drawerstate.changed = 1;
+    drawerstate.changed = true;
     break;
 
   case DRAWER_LINE_ZNUDGE:
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
       DVobj(obj)->lineznudge = fval;
-      DVobj(obj)->redraw = 1;
+      DVobj(obj)->redraw = true;
     }
     drawerstate.defview.lineznudge = fval;
     break;
@@ -2057,7 +2057,7 @@ drawer_color(int id, DrawerKeyword key, Color *col)
       if (DGobj(obj)->bboxap && DGobj(obj)->bboxap->mat) {
 	MtSet(DGobj(obj)->bboxap->mat, MT_EDGECOLOR, col, 
 	      MT_OVERRIDE, MTF_EDGECOLOR & uistate.apoverride, MT_END);
-	obj->redraw = 1;
+	obj->redraw = true;
       }
       else {
 	OOGLError(0,"object with %1d has no bboxap!");
@@ -2070,7 +2070,7 @@ drawer_color(int id, DrawerKeyword key, Color *col)
     drawerstate.defview.backcolor = *col;
     MAYBE_LOOP(id, index, T_CAM, DObject, obj) {
       DVobj(obj)->backcolor = *col;
-      DVobj(obj)->redraw = 1;
+      DVobj(obj)->redraw = true;
     }
     break;
 
@@ -2141,19 +2141,19 @@ LDEFINE(window, LVOID,
 static void
 track_changes()
 {
-  int worldchange = drawerstate.changed;
-  int viewchange = 0;
+  bool worldchange = drawerstate.changed;
+  bool viewchange = 0;
   int i;
   DObject *o;
 
   for(i = 0; i < dgeom_max; i++) {
     if((o = (DObject *)dgeom[i]) != NULL) {
       if(o->moving)
-	worldchange = 1;
+	worldchange = true;
       if(o->changed || o->redraw) {
-	worldchange = 1;
+	worldchange = true;
 	update_dgeom((DGeom*)o);
-	o->changed = o->redraw = 0;
+	o->changed = o->redraw = false;
       }
     }
   }
@@ -2161,22 +2161,23 @@ track_changes()
     if((o = (DObject *)dview[i]) != NULL) {
       if(o->moving || ((DView *)o)->newcam
 	 || (worldchange && o->Item == drawerstate.universe))
-	o->changed = 1;
+	o->changed = true;
       if(o->changed) {
 	update_view((DView *)o);
-	viewchange = 1;
+	viewchange = true;
       }
-      if(!((DView*)o)->frozen)
-	viewchange |= o->redraw;
+      if(!((DView*)o)->frozen) {
+	viewchange = viewchange || o->redraw;
+      }
     }
   }
   if(viewchange) {
     for(i = 0; i < dview_max; i++)
       if((o = (DObject *)dview[i]) != NULL)
 	if(((DView *)o)->cameradraw)
-	  o->redraw = 1;
+	  o->redraw = true;
   }
-  drawerstate.changed = 0;
+  drawerstate.changed = false;
 }
 
 LDEFINE(merge_baseap, LVOID,
@@ -2205,7 +2206,7 @@ drawer_merge_camera( int id, Camera *cam )
 
   MAYBE_LOOP(id, index, T_CAM, DView, dv) {
     CamMerge(cam, dv->cam);
-    dv->newcam = 1;
+    dv->newcam = true;
   }
 }
 
@@ -2220,7 +2221,7 @@ drawer_merge_window( int id, WnWindow *win )
     if(dv->mgctx) {
       mgctxselect(dv->mgctx);
       mgctxset(MG_WINDOW, dv->win, MG_END);
-      dv->newcam = 1;
+      dv->newcam = true;
     }
   }
 }
@@ -2255,7 +2256,7 @@ head of the universe changed --- this shouldn't happen; please report this bug!"
   }
   HandlePDelete(&dg->incrhandle);
   OOGLFree(dg);
-  drawerstate.changed = 1;
+  drawerstate.changed = true;
 }
 
 static void delete_camera(DView *dv)
@@ -2274,7 +2275,8 @@ static void delete_camera(DView *dv)
   OOGLFree(dv);
   ui_objectchange();
   if (index == uistate.mousefocus) {
-    for(i = dview_max; --i > 0 && (dview[i] == NULL || dview[i]->frozen); )
+    for(i = dview_max; --i > 0 && (dview[i] == NULL ||
+				   dview[i]->frozen != UNFROZEN); )
       ;
     ui_mousefocus(i);
   }
@@ -2399,7 +2401,7 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   dg->Lgeom = NULL;
   TmIdentity(dg->Incr);
   name_object(dg, 1, "World");
-  dg->bboxvalid = 0;
+  dg->bboxvalid = false;
 
   drawerstate.universe = GeomCreate("list", CR_GEOM, drawerstate.world, CR_END);
   drawerstate.defview.Item = drawerstate.universe;
@@ -2468,7 +2470,7 @@ new_dgeom(char *from, int citizenship)
   dg->Inorm = GeomCreate("inst", CR_NOCOPY, CR_GEOM, dg->Lgeom, CR_END);
   dg->Item = GeomCreate("inst", CR_NOCOPY, CR_GEOM, dg->Inorm, CR_END);
   dg->changed = CH_GEOMETRY;
-  dg->pickable = 1;
+  dg->pickable = true;
   switch (citizenship) {
   case ORDINARY:
     if(dgeom[0]->Lgeom == NULL)
@@ -2495,16 +2497,15 @@ drawer_init_dgeom(DGeom *dg, int id, int citizenship)
   dg->incrhandle = NULL;
   dg->updateproc = NULL;
   dg->moving = 0;
-  dg->everted = 0;
   dg->bezdice = dgeom[0]->bezdice;
   dg->name[0] = NULL;
   dg->name[1] = NULL;
   name_object(dg, 0, new_object_name(T_GEOM));
   dg->bboxdraw = dgeom[0]->bboxdraw;
   dg->normalization = dgeom[0]->normalization;
-  dg->bboxvalid = 0;
-  dg->changed = 0;
-  dg->redraw = 0;
+  dg->bboxvalid = false;
+  dg->changed = CH_NOTHING;
+  dg->redraw = false;
   dg->seqno = 0;
   dg->NDT = NULL;
   dg->NDTinv = NULL;
@@ -2528,21 +2529,25 @@ drawer_init_dgeom(DGeom *dg, int id, int citizenship)
  *		Assumes (if 'combine') that Lbbox list includes Lgeom list.
  */
 void
-drawer_make_bbox(DGeom *dg, int combine)
+drawer_make_bbox(DGeom *dg, bool combine)
 {
   Geom *bbox;
 
   /* Don't create bbox for world dgeom */
-  if (dg->id == WORLDGEOM) return;
+  if (dg->id == WORLDGEOM) {
+    return;
+  }
 
-  if(!dg->bboxvalid) {
-    if(!combine)
+  if(!bboxvalid(dg)) {
+    if(!combine) {
       GeomReplace(dg->Lbbox, NULL);
-    bbox = GeomBound(dg->Lgeom, TM_IDENTITY, NULL);
-    if(bbox) {
+    }
+    bbox =
+      GeomBound(dg->Lgeom, drawerstate.NDim > 0 ? NULL : TM_IDENTITY, NULL);
+    if (bbox) {
       GeomReplace(dg->Lbbox, bbox);
       GeomDelete(bbox);		/* Only Lbbox needs it now */
-      dg->bboxvalid = 1;
+      dg->bboxvalid = true;
     }
   }
 }
@@ -2619,17 +2624,17 @@ new_dview()
   TmIdentity(dv->Incr);
   dv->incrhandle = NULL;
   dv->updateproc = NULL;
-  dv->moving = 0;
-  dv->changed = 0;
-  dv->frozen = 0;
+  dv->moving = false;
+  dv->changed = CH_NOTHING;
+  dv->frozen = UNFROZEN;
   dv->seqno = 0;
   dv->lineznudge = drawerstate.defview.lineznudge;
-  dv->newcam = 1;
+  dv->newcam = true;
   dv->name[0] = NULL;
   dv->name[1] = NULL;
   name_object(dv, 0, view_name);
   sprintf(window_name, "geomview %s", view_name);
-  dv->cameradraw = 0;
+  dv->cameradraw = false;
   dv->hsphere = NULL;
   dv->hmodel = VIRTUAL;
   dv->stereo = NO_KEYWORD;
@@ -2694,7 +2699,8 @@ draw_view(DView *dv)
   static int righteyemask = MGO_NORED;			/* Green+Blue */
   Appearance *ap;
 
-  if(!dv->frozen && (dv->redraw || dv->changed || dv->newcam)) {
+  if((dv->frozen == UNFROZEN) &&
+     (dv->redraw || (dv->changed != CH_NOTHING) || dv->newcam)) {
     mgctxselect(dv->mgctx);
     mgctxset(MG_CAMERA, dv->cam, MG_BACKGROUND, &dv->backcolor,
 	     MG_ZNUDGE, dv->lineznudge * 1.0e-5,
@@ -2735,7 +2741,8 @@ draw_view(DView *dv)
       }
     }
     really_draw_view(dv);
-    dv->changed = dv->redraw = 0;
+    dv->changed = CH_NOTHING;
+    dv->redraw = false;
   }
 }
 
@@ -2780,6 +2787,8 @@ reconfigure_view(DView *dv)
   case COLORED_KEYWORD:
     /* Viewports identical, stereo enabled. */
     break;
+  default:
+    break;
   }
   if(dv->stereogap > 0) {
     mgctxset(MG_WnSet, WN_VIEWPORT, &gap, WN_END, MG_END);
@@ -2789,7 +2798,7 @@ reconfigure_view(DView *dv)
   mgctxset(MG_WnSet, WN_VIEWPORT, &dv->vp[0], WN_END,
 	   MG_CamSet, CAM_STEREO, isstereo, CAM_END, MG_END);
   mgreshapeviewport();
-  dv->newcam = 0;
+  dv->newcam = false;
   if(dv->id == CAMID(uistate.mousefocus))
     winmoved(dv->id);
 }
@@ -2832,7 +2841,7 @@ really_draw_view(DView *dv)
     /* draw other camera's if requested; take their respective
      * ND-transform into account.
      */
-    if (drawerstate.camgeom && dv->cameradraw) {
+    if (drawerstate.camgeom != NULL && dv->cameradraw) {
       DView *otherv;
       int otheri;
       Transform T3;
@@ -2981,10 +2990,11 @@ object_register(Handle **hp, Ref *thing, DObject *o)
 static void
 update_dgeom(DGeom *dg)
 {
-  if(dg->id == WORLDGEOM)
+  if(dg->id == WORLDGEOM) {
     return;
+  }
   if(dg->changed/* & CH_GEOMETRY*/) {
-    dg->bboxvalid = 0;
+    dg->bboxvalid = false;
     HandleUnregisterAll((Ref *)dg, (void *)(long)(int)dg->seqno, object_changed);
     dg->seqno++;
     /*
@@ -2992,8 +3002,9 @@ update_dgeom(DGeom *dg)
      */
     GeomHandleScan(dg->Item, object_register, dg);
   }
-  if(dg->bboxdraw || dg->normalization != NONE)
+  if(dg->bboxdraw || dg->normalization != NONE) {
     drawer_make_bbox(dg, dg->normalization == ALL);
+  }
   ApSet(dg->bboxap, dg->bboxdraw ? AP_DO : AP_DONT, APF_EDGEDRAW, 
 	AP_OVERRIDE, APF_EDGEDRAW & uistate.apoverride, AP_END);
   GeomDice(dg->Item, dg->bezdice, dg->bezdice);
@@ -3026,8 +3037,9 @@ normalize(DGeom *dg, int normalization)
 
   case EACH:
   case ALL:
-    if(!dg->bboxvalid)
+    if(!bboxvalid(dg)) {
       drawer_make_bbox(dg, normalization == ALL);
+    }
     GeomGet(dg->Lbbox, CR_GEOM, &bbox);
     if (bbox != NULL) {
       BBoxMinMax((BBox*)bbox, &min, &max);
@@ -3046,7 +3058,7 @@ normalize(DGeom *dg, int normalization)
     break;
     /* case KEEP: Leave normalization transform alone */
   }
-  dg->redraw = 1;
+  dg->redraw = true;
 }    
 
 void

@@ -61,21 +61,26 @@ typedef struct NDstuff
 } NDstuff;
 
 #define OBJECTFIELDS							\
-  char *name[2];	/* array of names */				\
-  Geom *Item;		/* For Geoms, the Inst holding the		\
-			 *  modelling transform; for DViews,		\
-			 *  an Inst pointing to the scene.		\
-			 *  In all cases this Inst holds any		\
-			 *  relevant Appearance.			\
-			 */						\
-  PFI updateproc;	/* motion update procedure */			\
-  Handle  *incrhandle;	/* Handle to above */				\
-  Transform Incr;	/* xform per frame update, if no updateproc */	\
-  int id;		/* my id */					\
-  char seqno;		/* sequence no for keeping track of changes */	\
-  char redraw;		/* object needs redrawing */			\
-  char changed;		/* Something about this obj changed; redraw */	\
-  char moving		/* moving -> Incr != identity || updateproc != NULL */
+  char *name[2];        /* array of names */				\
+  Geom *Item;           /* For Geoms, the Inst holding the		\
+                         *  modelling transform; for DViews,		\
+                         *  an Inst pointing to the scene.		\
+                         *  In all cases this Inst holds any		\
+                         *  relevant Appearance.			\
+                         */						\
+  PFI updateproc;       /* motion update procedure */			\
+  Handle  *incrhandle;  /* Handle to above */				\
+  Transform Incr;       /* xform per frame update, if no updateproc */	\
+  int id;               /* my id */					\
+  int seqno;            /* sequence no for keeping track of changes */	\
+  bool redraw;          /* object needs redrawing */			\
+  bool moving;          /* moving -> Incr != identity || updateproc != NULL */ \
+  unsigned changed      /* Something about this obj changed; redraw */
+
+/* flags for the "changed" field */
+#define CH_NOTHING      0
+#define	CH_GEOMETRY	1
+#define	CH_TRANSFORM	2
 
 typedef struct DObject {
   OBJECTFIELDS;
@@ -83,18 +88,17 @@ typedef struct DObject {
 
 typedef struct DGeom {
   OBJECTFIELDS;
-  Geom *Inorm;		/* Inst holding normalization transform */
-  Geom *Lgeom;		/* List node holding pointer to user's Geom */
-  Geom *Lbbox;		/* List node holding pointer to our Bbox */
-  char bboxdraw;	/* boolean */
-  char everted;		/* Normals everted on this geom */
-  char normalization;	/* Normalization: NONE, EACH, or ALL */
-  char bboxvalid;	/* bbox is valid */
-  int bezdice;		/* Meshsize for diced up bezier patch */
-  int pickable;		/* Is this Dgeom pickable ? */
+  Geom *Inorm;          /* Inst holding normalization transform */
+  Geom *Lgeom;          /* List node holding pointer to user's Geom */
+  Geom *Lbbox;          /* List node holding pointer to our Bbox */
+  bool bboxdraw;        /* boolean */
+  char normalization;   /* Normalization: NONE, EACH, or ALL */
+  bool bboxvalid;       /* bbox is valid */
+  bool pickable;        /* Is this Dgeom pickable ? */
+  int  bezdice;         /* Meshsize for diced up bezier patch */
   Appearance *bboxap;
   enum {ORDINARY, THEWORLD, ALIEN} citizenship;
-  TransformN *NDT, *NDTinv;	/* N-D transform and its inverse; NULL for 3-D objects */
+  TransformN *NDT, *NDTinv;     /* N-D transform and its inverse; NULL for 3-D objects */
 
 /* Ordinary DGeoms are subgeoms of Theworld DGeom.
  * Theworld is the single DGeom containing the world transforms
@@ -103,36 +107,47 @@ typedef struct DGeom {
  */
 } DGeom;
 
-
+/* models of hyperbolic space; these must start with 0 and be
+   consecutive because they are used as indices in the browser */
+typedef enum {
+  VIRTUAL=0,
+  PROJECTIVE,
+  CONFORMALBALL
+} HModelValue;
 
 typedef struct DView {
   OBJECTFIELDS;
-  Camera *cam;		/* The camera itself */
-  Handle *camhandle;	/* Handle to above */
-  WnWindow *win;	/* The (abstract) window */
-  short frozen;		/* flag: frozen: Don't attempt to redraw this view */
-  short newcam;		/* flag: need to mgreshapeviewport() */
-  mgcontext *mgctx;	/* Window's mg context pointer */
-  int apseq;		/* seq no: has global default changed? */
-  float lineznudge;	/* millionths of Z-range by which lines lie closer
-			 * than surfaces */
-  Color backcolor;	/* Window background color */
-  int cameradraw;	/* Do we draw cameras in this view? */
-  Geom *hsphere;	/* hsphere at infy for use in hyp mode; when NULL
-			   don't draw it, otherwise draw it */
-  int hmodel;		/* model of hyperbollic space for this camera; value
+  Camera *cam;          /* The camera itself */
+  Handle *camhandle;    /* Handle to above */
+  WnWindow *win;        /* The (abstract) window */
+  unsigned frozen;      /* flag: frozen: Don't attempt to redraw this view */
+  bool newcam;          /* flag: need to mgreshapeviewport() */
+  mgcontext *mgctx;     /* Window's mg context pointer */
+  int apseq;            /* seq no: has global default changed? */
+  float lineznudge;     /* millionths of Z-range by which lines lie closer
+                         * than surfaces */
+  Color backcolor;      /* Window background color */
+  bool cameradraw;      /* Do we draw cameras in this view? */
+  Geom *hsphere;        /* hsphere at infy for use in hyp mode; when NULL
+                           don't draw it, otherwise draw it */
+  HModelValue hmodel;   /* model of hyperbollic space for this camera; value
 			   is one of VIRTUAL, PROJECTIVE, CONFORMAL, and is
-			   meaningful only when viewing hyperbolic geometry */
-  PFV extradraw;	/* function to draw any extra stuff in this window */
-  int stereo;		/* {NO,HORIZONTAL,VERTICAL}_KEYWORD: stereo style */
-  int stereogap;	/* gap between subwindows in stereo mode	*/
-  WnPosition vp[2];	/* Subwindow viewports, if stereo != MONO	*/
-  mgshadefunc shader;	/* Software shader function (NULL -> hardware)  */
-  int NDPerm[4];	/* N-D -> 3-D axis permutation */
+                           meaningful only when viewing hyperbolic geometry */
+  PFV extradraw;        /* function to draw any extra stuff in this window */
+  Keyword stereo;       /* {NO,HORIZONTAL,VERTICAL}_KEYWORD: stereo style */
+  int stereogap;        /* gap between subwindows in stereo mode        */
+  WnPosition vp[2];     /* Subwindow viewports, if stereo != MONO       */
+  mgshadefunc shader;   /* Software shader function (NULL -> hardware)  */
+  int NDPerm[4];        /* N-D -> 3-D axis permutation */
   int nNDcmap;
-  cmap NDcmap[MAXCMAP];	/* N-D color map */
+  cmap NDcmap[MAXCMAP]; /* N-D color map */
   struct NDcam *cluster;/* to which cluster do we belong?  NULL if not N-D */
 } DView;
+
+/* flags for "frozen" */
+#define UNFROZEN    0
+#define SOFT_FROZEN 1
+#define HARD_FROZEN 2
 
 typedef struct NDcam {
   char		*name;		/* camera-cluster name */
@@ -317,14 +332,6 @@ typedef struct DrawerState {
 #define ALLCAMS		CAMID(ALLINDEX)
 #define ALLGEOMS	GEOMID(ALLINDEX)
 
-/* models of hyperbolic space; these must start with 0 and be
-   consecutive because they are used as indices in the browser */
-typedef enum {
-  VIRTUAL=0,
-  PROJECTIVE,
-  CONFORMALBALL
-  } HModelValue;
-
 typedef enum {
   DRAWER_NEAR,
   DRAWER_FAR,
@@ -390,11 +397,11 @@ DObject * drawer_next_object( int id, int *indexp, int type );
 DObject *drawer_next_bcast( int id, int *indexp, int type );
 Appearance * drawer_get_ap( int id );	/* Get net appearance for DGeom 'id' */
 
-void	drawer_make_bbox(DGeom *dg, int combine);
+void	drawer_make_bbox(DGeom *dg, bool combine);
 int	drawer_geom_count();
 int	drawer_cam_count();
 int	drawer_idbyctx( mgcontext *ctx );
-int	drawer_moving();	/* is anything (DGeom, DView) moving? */
+bool	drawer_moving();	/* is anything (DGeom, DView) moving? */
 int	drawer_idbyname(char *name);
 char    *drawer_id2name(int id);
 int     drawer_name2metaid(char *name);
@@ -451,6 +458,17 @@ void drawer_set_ap(int id, Handle *h, Appearance *ap);
 int drawer_read_manifold(char *file);
 
 #endif /* MANIFOLD */
+
+#include "transform.h" /* for get_geom_ND_transform */
+
+static inline bool bboxvalid(DGeom *dg)
+{
+  if (!dg->bboxvalid || (drawerstate.NDim > 0) != (dg->NDT != NULL)) {
+    (void)get_geom_ND_transform(dg);
+    dg->bboxvalid = false;
+  }
+  return dg->bboxvalid;
+}
 
 #endif /* ! _DRAWER_H_ */
 

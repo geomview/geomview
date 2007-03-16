@@ -1810,18 +1810,6 @@ void drawer_get_transform(int from_id, Transform T, int to_id)
   TmConcat(Tfrom, Ttoinv, T);
 }
 
-
-/* Get a geom's transform to its parent */
-static TransformN *
-get_geom_ND_transform(DGeom *dg)
-{
-  if(dg->NDT == NULL && drawerstate.NDim > 0) {
-    dg->NDT = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
-    GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
-  }
-  return REFGET(TransformN, dg->NDT);
-}
-
 TransformN *
 drawer_get_ND_transform(int from_id, int to_id)
 {
@@ -1917,11 +1905,11 @@ drawer_set_ND_xform(int id, TransformN *T)
 	return;
       }
       DVobj(obj)->cluster->C2W = TmNCopy(T, DVobj(obj)->cluster->C2W);
-      drawerstate.changed |= 1;
+      drawerstate.changed = true;
     } else {
       DGobj(obj)->NDT = TmNCopy(T, DGobj(obj)->NDT);
       GeomSet(DGobj(obj)->Item, CR_NDAXIS, DGobj(obj)->NDT, CR_END);
-      obj->changed |= 1;
+      obj->changed |= CH_GEOMETRY;
     }
     TmNDelete(T);
   }
@@ -2100,8 +2088,9 @@ void make_center_from_bbox(char *objname, int obj_id)
     if (dg) {
       Geom *bbox;
 
-      if (!dg->bboxvalid)
+      if (!bboxvalid(dg)) {
 	drawer_make_bbox(dg, dg->normalization == ALL);
+      }
       GeomGet(dg->Lbbox, CR_GEOM, &bbox);
       if (bbox) {
 	if (drawerstate.NDim == 0) {

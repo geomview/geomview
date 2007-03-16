@@ -116,15 +116,11 @@ extern char *shades[4];
 
 /* normalization --- these must be consective beginning with 0 ---
    they are used as indices into the "norm" array !!! */
-#define NONE 0
-#define EACH 1
-#define ALL 2
-#define KEEP 3
+typedef enum { NONE = 0, EACH, ALL, KEEP } Normalization;
 extern char *norm[4];
 
 /* projection */
-#define ORTHOGRAPHIC 0
-#define PERSPECTIVE 1
+typedef enum { ORTHOGRAPHIC = 0, PERSPECTIVE } Projection;
 extern char *proj[2];
 
 /* UI space */

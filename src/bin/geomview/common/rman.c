@@ -235,11 +235,11 @@ LDEFINE(rib_snapshot, LVOID,
      * plug the RenderMan ctx into the camera, and force a redraw.
      * Then undo the subterfuge.
      */
-    int oldredraw = view->redraw;
-    int oldchanged = view->changed;
+    bool oldredraw = view->redraw;
+    bool oldchanged = view->changed;
     mgcontext *oldctx = view->mgctx;
     view->mgctx = ctx;
-    view->redraw = 1;
+    view->redraw = true;
     gv_draw(view->id);
     view->redraw = oldredraw, view->changed = oldchanged;
     view->mgctx = oldctx;
@@ -270,4 +270,9 @@ static int ribtype(char *s, int type)
   }
 }
 
-
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

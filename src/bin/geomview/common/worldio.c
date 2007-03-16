@@ -705,7 +705,7 @@ LDEFINE(camera_prop, LVOID,
     GeomDelete(drawerstate.camgeom);
     drawerstate.camgeom = gs->geom;
     drawerstate.camproj = (proj == PROJECTIVE_KEYWORD);
-    drawerstate.changed = 1;
+    drawerstate.changed = true;
     return Lt;
   }
 
@@ -851,11 +851,11 @@ general_snapshot(char *fname, int id, DView *view,
      * plug the ctx into the camera, and force a redraw.
      * Then undo the subterfuge.
      */
-    int oldredraw = view->redraw;
-    int oldchanged = view->changed;
+    bool oldredraw = view->redraw;
+    bool oldchanged = view->changed;
     mgcontext *oldctx = view->mgctx;
     view->mgctx = ctx;
-    view->redraw = 1;
+    view->redraw = true;
     gv_draw(view->id);
     view->redraw = oldredraw, view->changed = oldchanged;
     view->mgctx = oldctx;

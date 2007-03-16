@@ -19,7 +19,11 @@
  * USA, or visit http://www.gnu.org.
  */
 
+#ifndef _GV_COMMON_TRANSFORM_H_
+#define _GV_COMMON_TRANSFORM_H_
+
 #include "lang.h"
+#include "drawer.h"
 
 typedef struct Motion {
   int moving_id;
@@ -67,3 +71,19 @@ void make_center_from_pick(char *objname, Pick *pick, int focalcam);
 
 void drawer_set_ND_xform(int id, TransformN *T);
 int real_id(int id);
+
+/* Get a geom's transform to its parent */
+static inline TransformN *
+get_geom_ND_transform(DGeom *dg)
+{
+  if (dg->NDT == NULL && drawerstate.NDim > 0) {
+    dg->NDT = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
+    GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
+  } else {
+    TmNDelete(dg->NDT);
+    dg->NDT = NULL;
+  }
+  return REFGET(TransformN, dg->NDT);
+}
+
+#endif /* _GV_COMMON_TRANSFORM_H_ */

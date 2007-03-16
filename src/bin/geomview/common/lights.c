@@ -158,7 +158,7 @@ void set_light_intensity(float intens)
     set_beam_color();
   }
   apseq = ++drawerstate.apseq;
-  drawerstate.changed = 1;
+  drawerstate.changed = true;
 }
 
 void set_beam_color()
@@ -182,7 +182,7 @@ void set_light_color(Color *color)
     set_beam_color();
   }
   apseq = ++drawerstate.apseq;
-  drawerstate.changed = 1;
+  drawerstate.changed = true;
 }
 
 void set_light(int lightno)
@@ -425,7 +425,7 @@ lightedit(Event *event)
 printf("light moved to %s\n", Point3String(&(lr.lights[uistate.current_light]->position)));
 #endif
       apseq = ++drawerstate.apseq;
-      drawerstate.changed = 1;
+      drawerstate.changed = true;
     }
     else {
       /* button went up */
@@ -460,7 +460,7 @@ static int updateproc(Geom *g)
   PtTransform(Tincr, &(lr.lights[uistate.current_light]->position),
 	      &(lr.lights[uistate.current_light]->position));
   apseq = ++drawerstate.apseq;
-  drawerstate.changed = 1;
+  drawerstate.changed = true;
   return 42;
 }
 
@@ -531,7 +531,7 @@ void lights_changed_check()
     ApGet( drawerstate.ap, AP_LGT, &lgt );
     build_light_rack( lgt );
     apseq = drawerstate.apseq;    
-    drawerstate.changed = 1;
+    drawerstate.changed = true;
 /*      
     if (uistate.lights_shown) {
       GeomStruct gs;

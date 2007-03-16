@@ -315,7 +315,7 @@ LDEFINE(ND_axes, LLIST,
 
     CamReset(dv->cam);
 
-    dv->changed |= 1;
+    dv->changed |= CH_GEOMETRY;
     return Lt;
   }
 }
@@ -380,7 +380,7 @@ LDEFINE(dimension, LLIST,
 	if(dgeom[i])
 	  set_dimension(d, &dgeom[i]->NDT, &dgeom[i]->NDTinv);
       }
-      drawerstate.changed = 1;
+      drawerstate.changed = true;
       drawerstate.NDim = d;
     }
   }
@@ -423,13 +423,13 @@ LDEFINE(ND_xform, LTRANSFORMN,
 
   if(ISGEOM(obj->id)) {
     ((DGeom *)obj)->NDT = T;
-    obj->changed |= 1;
+    obj->changed |= CH_GEOMETRY;
   } else if(cl != NULL) {
     cl->C2W = T;
-    drawerstate.changed = 1;
+    drawerstate.changed = true;
   }
   TmIdentity(obj->Incr);
-  obj->redraw = 1;
+  obj->redraw = true;
   obj->moving = (obj->updateproc != NULL);
   return Lt;
 }
@@ -468,10 +468,10 @@ LDEFINE(ND_xform_set, LTRANSFORMN,
   TmNDelete(T);
   if(ISGEOM(obj->id)) {
     ((DGeom *)obj)->NDT = REFGET(TransformN, ts->tm);
-    obj->changed |= 1;
+    obj->changed |= CH_GEOMETRY;
   } else if(cl != NULL) {
     cl->C2W = REFGET(TransformN, ts->tm);
-    drawerstate.changed = 1;
+    drawerstate.changed = true;
   }
   return Lt;
 }
@@ -651,7 +651,7 @@ LDEFINE(ND_color, LLIST,
     ce->v = 1e20;		/* Huge value terminates list */
   }
   dv->nNDcmap = nents;
-  dv->changed |= 1;
+  dv->changed |= CH_GEOMETRY;
   return Lt;
 
  no:

@@ -508,11 +508,11 @@ D1PRINT(("gv_rawevent:     falling through\n"));
 	drawer_int( id, DRAWER_PROJECTION, number.val );
 	break;
 
-    case SEQ('v','d'):			/* Draw other cameras */
+    case SEQ('v','d'):			/* toggle "Draw other cameras" */
 	id = retarget(FOCUSID);
 	if(!number.has) {
 	    dv = (DView *)drawer_get_object(id);
-	    number.val = dv ? !dv->cameradraw : 1;
+	    number.val = dv ? !dv->cameradraw : true;
 	}
 	drawer_int( id, DRAWER_CAMERADRAW, number.val );
 	break;
