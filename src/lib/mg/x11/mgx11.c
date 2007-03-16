@@ -85,16 +85,26 @@ struct mgfuncs mgx11funcs = {
   mgx11_worldbegin,
   mgx11_worldend,
   mgx11_reshapeviewport,
+  /* geometry transform */
   mgx11_settransform,
   mgx11_gettransform,
   mgx11_identity,
   mgx11_transform,
   mgx11_pushtransform,
   mgx11_poptransform,
+  /* texture transform */
+  mg_settxtransform,
+  mg_gettxtransform,
+  mg_txidentity,
+  mg_txtransform,
+  mg_pushtxtransform,
+  mg_poptxtransform,
+  /* appearance stack */
   mgx11_pushappearance,
   mgx11_popappearance,
   mgx11_setappearance,
   mg_getappearance,
+  /********************/
   mgx11_setcamera,
   mgx11_polygon,
   mgx11_polylist,

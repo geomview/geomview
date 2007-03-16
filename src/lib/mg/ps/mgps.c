@@ -87,16 +87,26 @@ struct mgfuncs mgpsfuncs = {
   mgps_worldbegin,
   mgps_worldend,
   mgps_reshapeviewport,
+  /* geometry transform */
   mgps_settransform,
   mgps_gettransform,
   mgps_identity,
   mgps_transform,
   mgps_pushtransform,
   mgps_poptransform,
+  /* texture geometry transform */
+  mg_settxtransform,
+  mg_gettxtransform,
+  mg_txidentity,
+  mg_txtransform,
+  mg_pushtxtransform,
+  mg_poptxtransform,
+  /* appearances */
   mgps_pushappearance,
   mgps_popappearance,
   mgps_setappearance,
   mg_getappearance,
+  /***************/
   mgps_setcamera,
   mgps_polygon,
   mgps_polylist,

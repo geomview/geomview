@@ -188,20 +188,23 @@ mgrib_submesh( int wrap, int nu, int nv,
      */
     if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
         && _mgc->astk->ap.tex != NULL && STR) {
-      Texture *tex = _mgc->astk->ap.tex;
-      Point3 st;
+	Transform T;
+	Texture *tex = _mgc->astk->ap.tex;
+	Point3 st;
+
+	TmConcat(tex->tfm, _mgc->txstk->T, T);
       
-      viflag = 0;
-      mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
-      for(i=0; i<nunv; i++, str++, viflag++) {
-	Pt3Transform(tex->tfm, str, &st);
-	st.y = 1.0 - st.y;
-	mrti(mr_subarray2, &st, mr_NULL);
-	if(viflag>=VI_TUPLET_LIMIT) {
-	  viflag=0;
-	  mrti(mr_nl, mr_NULL);
+	viflag = 0;
+	mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
+	for(i=0; i<nunv; i++, str++, viflag++) {
+	    Pt3Transform(T, str, &st);
+	    st.y = 1.0 - st.y;
+	    mrti(mr_subarray2, &st, mr_NULL);
+	    if(viflag>=VI_TUPLET_LIMIT) {
+		viflag=0;
+		mrti(mr_nl, mr_NULL);
+	    }
 	}
-      }
     }
 
     mrti(mr_attributeend, mr_NULL);

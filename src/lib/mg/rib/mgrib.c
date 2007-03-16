@@ -92,16 +92,26 @@ struct mgfuncs mgribfuncs = {
   mgrib_worldbegin,
   mgrib_worldend,
   mgrib_reshapeviewport,
+  /* geometry transform */
   mgrib_settransform,
   mg_gettransform,	/* Generic */
   mgrib_identity,
   mgrib_transform,
   mgrib_pushtransform,
   mgrib_poptransform,
+  /* texture transform */
+  mg_settxtransform,
+  mg_gettxtransform,
+  mg_txidentity,
+  mg_txtransform,
+  mg_pushtxtransform,
+  mg_poptxtransform,
+  /* appearance stack */
   mgrib_pushappearance,
   mgrib_popappearance,
   mgrib_setappearance,
   mg_getappearance,
+  /********************/
   mgrib_setcamera,
   mgrib_polygon,
   mgrib_polylist,

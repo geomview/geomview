@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.13 2007/03/13 17:53:21 rotdrop Exp $
+ * $Id: mg.c,v 1.14 2007/03/16 19:45:41 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -51,9 +51,10 @@ extern struct mgfuncs mgnullfuncs;      /* Forward */
 mgcontext *_mgc = NULL;
 mgcontext *_mgclist = NULL;
 
-static struct mgastk *mgafree  = NULL;
-static struct mgastk *mgatfree = NULL; /* tagged free-list */
-static struct mgxstk *mgxfree  = NULL;
+static struct mgastk  *mgafree  = NULL;
+static struct mgastk  *mgatfree = NULL; /* tagged free-list */
+static struct mgxstk  *mgxfree  = NULL;
+static struct mgtxstk *mgtxfree  = NULL;
 
 #define MGC     _mgc
 
@@ -109,6 +110,7 @@ mgcontext *mg_newcontext(mgcontext *mgc)
   mgc->background.b = 0.0;
   mgc->background.a = 1.0;
   mgc->bgimage = NULL;
+  /* initialize appearance stack */
   {
     struct mgastk *ma;
 
@@ -122,6 +124,7 @@ mgcontext *mg_newcontext(mgcontext *mgc)
     ma->flags |= MGASTK_ACTIVE;
     RefInit((Ref *)ma, 'a');
   }
+  /* initialize transform stack */
   {
     struct mgxstk *mx;
 
@@ -129,6 +132,12 @@ mgcontext *mg_newcontext(mgcontext *mgc)
     mx->next = NULL;
     TmIdentity(mx->T);
     mx->xfm_seq = mx->hasinv = 0;
+  }
+  /* initialize texture transform stack */
+  {
+    mgc->txstk = OOGLNewE(struct mgtxstk, "mg texture transform stack");
+    mgc->txstk->next = NULL;
+    TmIdentity(mgc->txstk->T);
   }
   mgc->opts = MGO_HIDDEN|MGO_DOUBLEBUFFER;
   mgc->devno = MGD_NODEV;     /* Device-specific init should change this */
@@ -179,98 +188,6 @@ mg_appearancebits( Appearance *ap, int mergeflag, int *valid, int *flag )
     *valid &= ~dst->override;
   }
   return 1;
-}
-
-/*-----------------------------------------------------------------------
- * Function:    mg_identity
- * Description: Set the current object xform to the identity
- * Args:        (none)
- * Returns:     nothing
- * Author:      slevy (doc by mbp)
- * Date:        Wed Sep 18 16:46:06 1991
- * Notes:       Sets the xform on the top of the current context's xform
- *              stack to the identity.  Also sets the MC_TRANS bit of
- *              the context's "changed" flag and increment's the current xfm
- *              sequence number.
- * DEVICE USE:  optional --- if the device actually uses the context
- *              structure's xform stack, call this to do the work.  If
- *              the device keeps its own stack, it doesn't have to call
- *              this.
- */
-void
-mg_identity( void )
-{
-  TmIdentity(_mgc->xstk->T);
-  _mgc->changed |= MC_TRANS;
-  _mgc->xstk->xfm_seq++;
-}
-
-/*-----------------------------------------------------------------------
- * Function:    mg_settransform
- * Description: Set the current object xform
- * Args:        T
- * Returns:     nothing
- * Author:      slevy (doc by mbp)
- * Date:        Wed Sep 18 16:46:06 1991
- * Notes:       Sets the xform on the top of the current context's xform
- *              stack to T.  Also sets the MC_TRANS bit of
- *              the context's "changed" flag and increment's the current xfm
- *              sequence number.
- * DEVICE USE:  optional --- if the device actually uses the context
- *              structure's xform stack, call this to do the work.  If
- *              the device keeps its own stack, it doesn't have to call
- *              this.
- */
-void
-mg_settransform( Transform T )
-{
-  TmCopy(T, _mgc->xstk->T);
-  _mgc->changed |= MC_TRANS;
-  _mgc->xstk->xfm_seq++;
-}
-
-/*-----------------------------------------------------------------------
- * Function:    mg_gettransform
- * Description: Get the current object xform
- * Args:        T
- * Returns:     nothing
- * Author:      slevy (doc by mbp)
- * Date:        Wed Sep 18 16:46:06 1991
- * Notes:       Writes the current object xform, from the top of the
- *              context's xform stack, into T.
- * DEVICE USE:  optional --- if the device actually uses the context
- *              structure's xform stack, call this to do the work.  If
- *              the device keeps its own stack, it doesn't have to call
- *              this.
- */
-void
-mg_gettransform( Transform T )
-{
-  TmCopy(_mgc->xstk->T, T);
-}
-
-/*-----------------------------------------------------------------------
- * Function:    mg_transform
- * Description: premultiply the current object xform by a transform
- * Args:        T: the transform to premultiply by
- * Returns:     nothing
- * Author:      slevy (doc by mbp)
- * Date:        Wed Sep 18 16:46:06 1991
- * Notes:       If X is the context's current object xform, replaces X
- *              by T X.
- * DEVICE USE:  optional --- if the device actually uses the context
- *              structure's xform stack, call this to do the work.  If
- *              the device keeps its own stack, it doesn't have to call
- *              this.
- */
-void
-mg_transform( Transform T )
-{
-  TmConcat(T, _mgc->xstk->T, _mgc->xstk->T);
-  _mgc->changed |= MC_TRANS;
-  _mgc->xstk->xfm_seq++;
-  _mgc->xstk->hasinv = 0;
-  _mgc->has = 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -661,6 +578,7 @@ mg_ctxdelete( mgcontext *ctx )
   struct mgcontext **mp;
   struct mgastk *astk, *nextastk;
   struct mgxstk *xstk, *nextxstk;
+  struct mgtxstk *txstk, *nexttxstk;
 
   if (ctx == NULL)
     return;
@@ -680,6 +598,12 @@ mg_ctxdelete( mgcontext *ctx )
     nextxstk = xstk->next;
     xstk->next = mgxfree;
     mgxfree = xstk;
+  }
+
+  for (txstk = ctx->txstk; txstk != NULL; txstk = nexttxstk) {
+    nexttxstk = txstk->next;
+    txstk->next = mgtxfree;
+    mgtxfree = txstk;
   }
 
   for (astk = ctx->astk; astk != NULL; astk = nextastk) {
@@ -746,6 +670,98 @@ mg_ctxselect( mgcontext *ctx )
 }
 
 /*-----------------------------------------------------------------------
+ * Function:    mg_identity
+ * Description: Set the current object xform to the identity
+ * Args:        (none)
+ * Returns:     nothing
+ * Author:      slevy (doc by mbp)
+ * Date:        Wed Sep 18 16:46:06 1991
+ * Notes:       Sets the xform on the top of the current context's xform
+ *              stack to the identity.  Also sets the MC_TRANS bit of
+ *              the context's "changed" flag and increment's the current xfm
+ *              sequence number.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_identity( void )
+{
+  TmIdentity(_mgc->xstk->T);
+  _mgc->changed |= MC_TRANS;
+  _mgc->xstk->xfm_seq++;
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_settransform
+ * Description: Set the current object xform
+ * Args:        T
+ * Returns:     nothing
+ * Author:      slevy (doc by mbp)
+ * Date:        Wed Sep 18 16:46:06 1991
+ * Notes:       Sets the xform on the top of the current context's xform
+ *              stack to T.  Also sets the MC_TRANS bit of
+ *              the context's "changed" flag and increment's the current xfm
+ *              sequence number.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_settransform( Transform T )
+{
+  TmCopy(T, _mgc->xstk->T);
+  _mgc->changed |= MC_TRANS;
+  _mgc->xstk->xfm_seq++;
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_gettransform
+ * Description: Get the current object xform
+ * Args:        T
+ * Returns:     nothing
+ * Author:      slevy (doc by mbp)
+ * Date:        Wed Sep 18 16:46:06 1991
+ * Notes:       Writes the current object xform, from the top of the
+ *              context's xform stack, into T.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_gettransform( Transform T )
+{
+  TmCopy(_mgc->xstk->T, T);
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_transform
+ * Description: premultiply the current object xform by a transform
+ * Args:        T: the transform to premultiply by
+ * Returns:     nothing
+ * Author:      slevy (doc by mbp)
+ * Date:        Wed Sep 18 16:46:06 1991
+ * Notes:       If X is the context's current object xform, replaces X
+ *              by T X.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_transform( Transform T )
+{
+  TmConcat(T, _mgc->xstk->T, _mgc->xstk->T);
+  _mgc->changed |= MC_TRANS;
+  _mgc->xstk->xfm_seq++;
+  _mgc->xstk->hasinv = 0;
+  _mgc->has = 0;
+}
+
+/*-----------------------------------------------------------------------
  * Function:    mg_pushtransform
  * Description: push the context xform stack
  * Returns:     nothing
@@ -782,6 +798,134 @@ mg_poptransform( void )
   xfm->next = mgxfree;
   mgxfree = xfm;
   _mgc->has = 0;
+  return 0;
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_txidentity
+ * Description: Set the current texture xform to the identity
+ * Args:        (none)
+ * Returns:     nothing
+ * Author:      cH
+ * Date:        2007
+ * Notes:       Sets the xform on the top of the current context's texture 
+ *              xform stack to the identity.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_txidentity(void)
+{
+  TmIdentity(_mgc->txstk->T);
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_settransform
+ * Description: Set the current object xform
+ * Args:        T
+ * Returns:     nothing
+ * Author:      cH
+ * Date:        2007
+ * Notes:       Sets the xform on the top of the current context's texture
+ *              xform stack to T.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_settxtransform(Transform T)
+{
+  TmCopy(T, _mgc->txstk->T);
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_gettxtransform
+ * Description: Get the current object xform
+ * Args:        T
+ * Returns:     nothing
+ * Author:      cH
+ * Date:        2007
+ * Notes:       Writes the current object xform, from the top of the
+ *              context's texture xform stack, into T.
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_gettxtransform(Transform T)
+{
+  TmCopy(_mgc->txstk->T, T);
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_txtransform
+ * Description: premultiply the current object xform by a transform
+ * Args:        T: the transform to premultiply by
+ * Returns:     nothing
+ * Author:      cH
+ * Date:        2007
+ * Notes:       If X is the context's current object texture xform, replaces X
+ *              by (T X).
+ * DEVICE USE:  optional --- if the device actually uses the context
+ *              structure's xform stack, call this to do the work.  If
+ *              the device keeps its own stack, it doesn't have to call
+ *              this.
+ */
+void
+mg_txtransform(Transform T)
+{
+  TmConcat(T, _mgc->txstk->T, _mgc->txstk->T);
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_pushtxtransform
+ * Description: push the context texture xform stack
+ * Returns:     -1 on error, else 0 (error case does not happen)
+ * Author:      cH
+ * Date:        2007
+ * DEVICE USE:  optional --- use if device actually uses our stack
+ */
+int
+mg_pushtxtransform( void )
+{
+  struct mgtxstk *xfm;
+
+  if (mgtxfree) {
+    xfm = mgtxfree;
+    mgtxfree = xfm->next;
+  } else {
+    xfm = OOGLNewE(struct mgtxstk, "mgpushtxtransform");
+  }
+  *xfm = *MGC->txstk;
+  xfm->next = MGC->txstk;
+  MGC->txstk = xfm;
+
+  return 0;
+}
+
+/*-----------------------------------------------------------------------
+ * Function:    mg_poptxtransform
+ * Description: pop the context xform stack
+ * Returns:     -1 on error, else 0
+ * Author:      cH
+ * Date:        2007
+ * DEVICE USE:  optional --- use if device actually uses our stack
+ */
+int
+mg_poptxtransform(void)
+{
+  struct mgtxstk *xfm = MGC->txstk;
+  if (xfm->next == NULL) {
+    return -1;
+  }
+  MGC->txstk = xfm->next;
+  xfm->next = mgtxfree;
+  mgtxfree = xfm;
+
   return 0;
 }
 
@@ -957,16 +1101,26 @@ mg_bsptree(struct BSPTree *bsptree)
       mg_worldbegin,          /* mg_worldbegin       */			\
       mg_worldend,            /* mg_worldend         */			\
       mg_reshapeviewport,     /* mg_reshapeviewport  */			\
+      /* geometry transform */						\
       mg_settransform,        /* mg_settransform     */			\
       mg_gettransform,        /* mg_gettransform     */			\
       mg_identity,            /* mg_identity         */			\
       mg_transform,           /* mg_transform        */			\
       mg_pushtransform,       /* mg_pushtransform    */			\
       mg_poptransform,        /* mg_poptransform     */			\
+      /* texture transform */						\
+      mg_settxtransform,      /* mg_settxtransform   */			\
+      mg_gettxtransform,      /* mg_gettxtransform   */			\
+      mg_txidentity,          /* mg_txidentity       */			\
+      mg_txtransform,         /* mg_txtransform      */			\
+      mg_pushtxtransform,     /* mg_pushtxtransform  */			\
+      mg_poptxtransform,      /* mg_poptxtransform   */			\
+      /* appearences */							\
       mg_pushappearance,      /* mg_pushappearance   */			\
       mg_popappearance,       /* mg_popappearance    */			\
       mg_setappearance,       /* mg_setappearance    */			\
       mg_getappearance,       /* mg_getappearance    */			\
+      /***************/							\
       mg_setcamera,           /* mg_setcamera        */			\
       mg_polygon,             /* mg_polygon          */			\
       mg_polylist,            /* mg_polylist         */			\

@@ -619,7 +619,8 @@ void mgopengl_needtexture(void)
 
     /* Load the texture tfm, even if stuff is otherwise identical. */
     glMatrixMode(GL_TEXTURE);
-    glLoadMatrixf( (GLfloat *) tu->tx->tfm);
+    glLoadMatrixf((GLfloat *)_mgc->txstk->T);
+    glMultMatrixf((GLfloat *)wanttx->tfm);
     glMatrixMode(GL_MODELVIEW);
 
     glEnable(GL_TEXTURE_2D);

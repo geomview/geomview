@@ -80,12 +80,21 @@ struct mgfuncs {  /* mg member functions; potentially changed per device */
   void          (*mg_worldbegin)(void);
   void          (*mg_worldend)(void);
   void          (*mg_reshapeviewport)(void);
+  /* geometry transform support */
   void          (*mg_settransform)(Transform T);
   void          (*mg_gettransform)(Transform T);
   void          (*mg_identity)(void);
   void          (*mg_transform)(Transform T);
   int           (*mg_pushtransform)(void);
   int           (*mg_poptransform)(void);
+  /* texture transform support */
+  void          (*mg_settxtransform)(Transform T);
+  void          (*mg_gettxtransform)(Transform T);
+  void          (*mg_txidentity)(void);
+  void          (*mg_txtransform)(Transform T);
+  int           (*mg_pushtxtransform)(void);
+  int           (*mg_poptxtransform)(void);
+  /* appearances */
   int           (*mg_pushappearance)(void);
   int           (*mg_popappearance)(void);
   const Appearance *(*mg_setappearance)(const Appearance *app, int merge);
@@ -203,6 +212,7 @@ enum sortmethod {MG_NONE, MG_DEPTH, MG_ZBUFFER};
 #define mgctxset                        (*_mgf.mg_ctxset)
 #define mgctxget( attr, valuep )        (*_mgf.mg_ctxget)( attr, valuep )
 
+/* appearnce stack */
 #define mgpushappearance()              (*_mgf.mg_pushappearance)()
 #define mgpopappearance()               (*_mgf.mg_popappearance)()
 #define mgsetappearance( ap, merge )    (*_mgf.mg_setappearance)( ap, merge )
@@ -213,12 +223,21 @@ enum sortmethod {MG_NONE, MG_DEPTH, MG_ZBUFFER};
 
 #define mgsetcamera( cam )              (*_mgf.mg_setcamera)( cam )
 
+/* transform stack */
 #define mgsettransform( T )             (*_mgf.mg_settransform)( T )
 #define mggettransform( T )             (*_mgf.mg_gettransform)( T )
 #define mgidentity()                    (*_mgf.mg_identity)()
 #define mgtransform( T )                (*_mgf.mg_transform)( T )
 #define mgpushtransform()               (*_mgf.mg_pushtransform)()
 #define mgpoptransform()                (*_mgf.mg_poptransform)()
+
+/* texture transform stack */
+#define mgsettxtransform( T )             (*_mgf.mg_settxtransform)( T )
+#define mggettxtransform( T )             (*_mgf.mg_gettxtransform)( T )
+#define mgtxidentity()                    (*_mgf.mg_txidentity)()
+#define mgtxtransform( T )                (*_mgf.mg_txtransform)( T )
+#define mgpushtxtransform()               (*_mgf.mg_pushtxtransform)()
+#define mgpoptxtransform()                (*_mgf.mg_poptxtransform)()
 
 #define mgreshapeviewport()             (*_mgf.mg_reshapeviewport)()
 

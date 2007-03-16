@@ -89,16 +89,26 @@ struct mgfuncs mgbuffuncs = {
   mgbuf_worldbegin,
   mgbuf_worldend,
   mgbuf_reshapeviewport,
+  /* geometry transform */
   mgbuf_settransform,
   mgbuf_gettransform,
   mgbuf_identity,
   mgbuf_transform,
   mgbuf_pushtransform,
   mgbuf_poptransform,
+  /* texture transform */
+  mg_settxtransform,
+  mg_gettxtransform,
+  mg_txidentity,
+  mg_txtransform,
+  mg_pushtxtransform,
+  mg_poptxtransform,
+  /* appearance */
   mgbuf_pushappearance,
   mgbuf_popappearance,
   mgbuf_setappearance,
   mg_getappearance,
+  /*************/
   mgbuf_setcamera,
   mgbuf_polygon,
   mgbuf_polylist,

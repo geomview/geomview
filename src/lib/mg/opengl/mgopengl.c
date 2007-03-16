@@ -109,16 +109,26 @@ struct mgfuncs mgopenglfuncs = {
   mgopengl_worldbegin,
   mgopengl_worldend,
   mgopengl_reshapeviewport,
+  /* geometry transform */
   mgopengl_settransform,
   mgopengl_gettransform,
   mgopengl_identity,
   mgopengl_transform,
   mgopengl_pushtransform,
   mgopengl_poptransform,
+  /* texture transform */
+  mg_settxtransform,
+  mg_gettxtransform,
+  mg_txidentity,
+  mg_txtransform,
+  mg_pushtxtransform,
+  mg_poptxtransform,
+  /* appearance stack */
   mgopengl_pushappearance,
   mgopengl_popappearance,
   mgopengl_setappearance,
   mg_getappearance,
+  /*******************/
   mgopengl_setcamera,
   mgopengl_polygon,
   mgopengl_polylist,

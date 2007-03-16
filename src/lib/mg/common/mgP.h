@@ -79,6 +79,18 @@ struct mgxstk {
 	Transform       Tinv;
 };
 
+/*
+ * Texture transform stack. Needed to paste textured stuff together
+ * with INSTs, but allowing for a texture which covers the entire
+ * object. cH, 2007.
+ */
+struct mgtxstk 
+{
+	struct mgtxstk *next; /* stack link */
+	Transform      T;
+	/* No need for an inverse. Sequence count? Probably not. */
+};
+
 struct mgcontext {
 	REFERENCEFIELDS;
 	struct mgfuncs  *devfuncs; /* Pointers to devices */
@@ -90,8 +102,9 @@ struct mgcontext {
 	Camera          *cam;   /* Camera */
 	mgcontext       *parent; /* Parent mg window, if any */
 	mgcontext       *next;  /* Link in list of all mg contexts */
-	struct mgastk   *astk;  /* Top of appearance stack */
 	struct mgxstk   *xstk;  /* Top of transform stack */
+	struct mgtxstk  *txstk; /* Top of texture transform stack */
+	struct mgastk   *astk;  /* Top of appearance stack */
 	struct mgastk   *ap_tagged;/* Tagged (persistent) appearances */
 	short           ap_min_tag, ap_max_tag; /* excluded seq. regions */
 	short           mat_min_tag, mat_max_tag;
@@ -163,10 +176,22 @@ extern struct mgcontext *_mgclist;
  * (but not intended to be public):
  */
 
+/* geometry transform */
 extern void mg_identity(void);
 extern void mg_transform(Transform T);
 extern void mg_settransform(Transform T);
 extern void mg_gettransform(Transform T);
+extern int mg_pushtransform(void);
+extern int mg_poptransform(void);
+
+/* texture transform */
+extern void mg_txidentity(void);
+extern void mg_txtransform(Transform T);
+extern void mg_settxtransform(Transform T);
+extern void mg_gettxtransform(Transform T);
+extern int mg_pushtxtransform(void);
+extern int mg_poptxtransform(void);
+
 extern void mg_quads(int nquads, HPoint3 *v, Point3 *n, ColorA *c, int qflags);
 extern void mg_bezier(int du, int dv, int dimn, float *ctrlpts, float *txmapst,
 		      ColorA *c);
@@ -176,8 +201,8 @@ extern void mg_findS2O();
 extern void mg_findO2S();
 extern void mg_makepoint();
 
-extern int mg_pushtransform(void),  mg_poptransform(void);
-extern int mg_pushappearance(void), mg_popappearance(void);
+extern int mg_pushappearance(void);
+extern int mg_popappearance(void);
 extern void mg_reshapeviewport(void);
 extern const Appearance *mg_getappearance(void);
 extern const Appearance *mg_setappearance(const Appearance *ap, int mergeflag);

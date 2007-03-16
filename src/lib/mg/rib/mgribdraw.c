@@ -38,14 +38,14 @@ void mgrib_drawPline(HPoint3 *p1, HPoint3 *p2);
 void mgrib_drawCline(HPoint3 *p1, HPoint3 *p2);
 
 void	mgrib_polygon( int nv, HPoint3 *v, int nn, Point3 *n,
-	      	          int nc,ColorA *c );
+		       int nc,ColorA *c );
 void	mgrib_mesh(int wrap,int nu,int nv,HPoint3 *p, Point3 *n, Point3 *nq,
 		   ColorA *c );
 void	mgrib_line( HPoint3 *p1, HPoint3 *p2 );
 void	mgrib_polyline( int nv, HPoint3 *verts, int nc, ColorA *colors,
-				int wrapped );
+			int wrapped );
 void	mgrib_polylist(  int np, Poly *p, int nv, Vertex *v, 
-			     int plflags );
+			 int plflags );
 void	mgrib_drawnormal(HPoint3 *p, Point3 *n);
 				 
 
@@ -74,70 +74,70 @@ mgrib_polygon(int nv,  HPoint3 *V,
   int matover;
   int ninc;
 
-    flag = _mgc->astk->ap.flag;
-    shading = _mgc->astk->ap.shading;
-    matover = _mgc->astk->mat.override;
-    ninc = (nn > 1);
-    if ((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) nc = 0;
+  flag = _mgc->astk->ap.flag;
+  shading = _mgc->astk->ap.shading;
+  matover = _mgc->astk->mat.override;
+  ninc = (nn > 1);
+  if ((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) nc = 0;
     
-    mrti(mr_polygon,mr_NULL);
+  mrti(mr_polygon,mr_NULL);
     
-    /* Points */
-    if(nv>0 && (flag & APF_FACEDRAW)) {
-	mrti(mr_P,mr_buildarray, nv*3, mr_NULL);
-	for(i = 0; i < nv; i++) {
-	    /* we cannot descibe a polygon using Pw, so we normalize */
-	    HPt3Dehomogenize(&V[i], &hpt);
-	    mrti(mr_subarray3, &hpt, mr_NULL);
-	}
+  /* Points */
+  if(nv>0 && (flag & APF_FACEDRAW)) {
+    mrti(mr_P,mr_buildarray, nv*3, mr_NULL);
+    for(i = 0; i < nv; i++) {
+      /* we cannot descibe a polygon using Pw, so we normalize */
+      HPt3Dehomogenize(&V[i], &hpt);
+      mrti(mr_subarray3, &hpt, mr_NULL);
     }
+  }
 
-    /* Supply Color (explicit) */
-    if (nc>0 && (flag & APF_FACEDRAW)) {
-	/* note:color should already be set in case of APF_CONSTANT,no?  */
-	mrti(mr_Cs, mr_buildarray, nv*3, mr_NULL);
-	for(i = 0; i < nv; i++) {
-	    if(nc>1) c4 = &C[i]; else c4 = C;
-	    mrti(mr_subarray3, (float *)c4, mr_NULL);
-	}
+  /* Supply Color (explicit) */
+  if (nc>0 && (flag & APF_FACEDRAW)) {
+    /* note:color should already be set in case of APF_CONSTANT,no?  */
+    mrti(mr_Cs, mr_buildarray, nv*3, mr_NULL);
+    for(i = 0; i < nv; i++) {
+      if(nc>1) c4 = &C[i]; else c4 = C;
+      mrti(mr_subarray3, (float *)c4, mr_NULL);
     }
+  }
 
-    /* Supply Transparency */
-    if(nc>0 && flag & APF_TRANSP && !(matover & MTF_ALPHA)) {
-	for(i = 0; i < nv; i++) {
-	    float opacity[3];
-	    if(nc>1) c4 = &C[i]; else c4 = C;
-	    opacity[0]=opacity[1]=opacity[2]=c4->a;
-	    mrti(mr_subarray3, opacity, mr_NULL);
-	}
+  /* Supply Transparency */
+  if(nc>0 && flag & APF_TRANSP && !(matover & MTF_ALPHA)) {
+    for(i = 0; i < nv; i++) {
+      float opacity[3];
+      if(nc>1) c4 = &C[i]; else c4 = C;
+      opacity[0]=opacity[1]=opacity[2]=c4->a;
+      mrti(mr_subarray3, opacity, mr_NULL);
     }
-    /* Supply Normals */
-    if (nn>0 && (flag & APF_FACEDRAW) && shading == APF_SMOOTH) {
-	mrti(mr_N, mr_buildarray, nv*3, mr_NULL); 
-	for(i = 0; i < nv; i++) {
-	    if(nn>1) n = &N[i]; else n = N;
-	    mrti(mr_subarray3, n, mr_NULL);
-	}
+  }
+  /* Supply Normals */
+  if (nn>0 && (flag & APF_FACEDRAW) && shading == APF_SMOOTH) {
+    mrti(mr_N, mr_buildarray, nv*3, mr_NULL); 
+    for(i = 0; i < nv; i++) {
+      if(nn>1) n = &N[i]; else n = N;
+      mrti(mr_subarray3, n, mr_NULL);
     }
+  }
     
-    /* Draw Edges */
-    if(flag & APF_EDGEDRAW) {
-	c = &_mgc->astk->ap.mat->edgecolor;
-	mrti(mr_attributebegin,
-	    mr_surface, mr_constant, 
-	    mr_color, mr_parray, 3, c,
-	    mr_opacity, mr_array, 3, 1., 1., 1., mr_NULL);
+  /* Draw Edges */
+  if(flag & APF_EDGEDRAW) {
+    c = &_mgc->astk->ap.mat->edgecolor;
+    mrti(mr_attributebegin,
+	 mr_surface, mr_constant, 
+	 mr_color, mr_parray, 3, c,
+	 mr_opacity, mr_array, 3, 1., 1., 1., mr_NULL);
 	
-	for(i=0;i<nv-1;i++) mgrib_drawline(&V[i],&V[i+1]);
-	mgrib_drawline(&V[i],&V[0]);
-	mrti(mr_attributeend, mr_NULL);
-    }
+    for(i=0;i<nv-1;i++) mgrib_drawline(&V[i],&V[i+1]);
+    mgrib_drawline(&V[i],&V[0]);
+    mrti(mr_attributeend, mr_NULL);
+  }
     
-    /* Draw Normals */
-    if(flag & APF_NORMALDRAW) {
+  /* Draw Normals */
+  if(flag & APF_NORMALDRAW) {
     for (n = N, v = V, i = 0; i<nv; ++i, ++v, n += ninc)
-	mgrib_drawnormal(v, n);
-    }
+      mgrib_drawnormal(v, n);
+  }
 }
 
 /*-----------------------------------------------------------------------
@@ -149,9 +149,9 @@ mgrib_polygon(int nv,  HPoint3 *V,
  */
 void mgrib_line( HPoint3 *p1, HPoint3 *p2 )
 {
-    mrti(mr_attributebegin, mr_surface, mr_constant, mr_NULL);
-    mgrib_drawline(p1,p2);
-    mrti(mr_attributeend, mr_NULL);
+  mrti(mr_attributebegin, mr_surface, mr_constant, mr_NULL);
+  mgrib_drawline(p1,p2);
+  mrti(mr_attributeend, mr_NULL);
 }
 
 /*-----------------------------------------------------------------------
@@ -165,74 +165,74 @@ void mgrib_line( HPoint3 *p1, HPoint3 *p2 )
 void
 mgrib_drawline(HPoint3 *p1, HPoint3 *p2)
 {
-	if(_mgribc->line_mode==MG_RIBPOLYGON) mgrib_drawPline(p1,p2);
-	if(_mgribc->line_mode==MG_RIBCYLINDER) mgrib_drawCline(p1,p2);
-	if(_mgribc->line_mode==MG_RIBPRMANLINE)
-		NotImplemented("MG_RIBPRMANLINE");
+  if(_mgribc->line_mode==MG_RIBPOLYGON) mgrib_drawPline(p1,p2);
+  if(_mgribc->line_mode==MG_RIBCYLINDER) mgrib_drawCline(p1,p2);
+  if(_mgribc->line_mode==MG_RIBPRMANLINE)
+    NotImplemented("MG_RIBPRMANLINE");
 }
 
 void
 mgrib_drawPline(HPoint3 *p1, HPoint3 *p2)
 {
-    Transform V;
-    Transform P2S,O2S, O2P, S2O;
-    int xsize, ysize;
-    HPoint3 pnts[4];
-    Point3 s1, s2;
-    int i;
-    float dx,dy,k, len;
+  Transform V;
+  Transform P2S,O2S, O2P, S2O;
+  int xsize, ysize;
+  HPoint3 pnts[4];
+  Point3 s1, s2;
+  int i;
+  float dx,dy,k, len;
 
-    /* This code will simulate line drawing in Photorman */
-    /* create obj->proj transform */
-    CamView(_mgc->cam, V);		/* world->proj */
-    TmConcat(_mgc->xstk->T, V, O2P);	/* obj->proj */
+  /* This code will simulate line drawing in Photorman */
+  /* create obj->proj transform */
+  CamView(_mgc->cam, V);		/* world->proj */
+  TmConcat(_mgc->xstk->T, V, O2P);	/* obj->proj */
     
-    /* create obj->screen transform */
-    WnGet(_mgc->win, WN_XSIZE, &xsize);
-    WnGet(_mgc->win, WN_YSIZE, &ysize);
-    TmScale(P2S, (float)xsize, (float)ysize, 1.0);
-    TmConcat(O2P, P2S, O2S);
+  /* create obj->screen transform */
+  WnGet(_mgc->win, WN_XSIZE, &xsize);
+  WnGet(_mgc->win, WN_YSIZE, &ysize);
+  TmScale(P2S, (float)xsize, (float)ysize, 1.0);
+  TmConcat(O2P, P2S, O2S);
     
-    /* translate & dehomogenize line endpoints from object to screen */
-    HPt3TransPt3(O2S, p1, &s1);
-    HPt3TransPt3(O2S, p2, &s2);
+  /* translate & dehomogenize line endpoints from object to screen */
+  HPt3TransPt3(O2S, p1, &s1);
+  HPt3TransPt3(O2S, p2, &s2);
 
-    dy = s2.y - s1.y;
-    dx = s2.x - s1.x;
-    len = hypot(dy,dx);
-    k = _mgc->astk->ap.linewidth / len;
+  dy = s2.y - s1.y;
+  dx = s2.x - s1.x;
+  len = hypot(dy,dx);
+  k = _mgc->astk->ap.linewidth / len;
     
-    pnts[0].x = s1.x -dy * k;
-    pnts[0].y = s1.y +dx * k;
-    pnts[1].x = s1.x +dy * k;
-    pnts[1].y = s1.y -dx * k;
-    pnts[2].x = s2.x +dy * k;
-    pnts[2].y = s2.y -dx * k;
-    pnts[3].x = s2.x -dy * k;
-    pnts[3].y = s2.y +dx * k;
+  pnts[0].x = s1.x -dy * k;
+  pnts[0].y = s1.y +dx * k;
+  pnts[1].x = s1.x +dy * k;
+  pnts[1].y = s1.y -dx * k;
+  pnts[2].x = s2.x +dy * k;
+  pnts[2].y = s2.y -dx * k;
+  pnts[3].x = s2.x -dy * k;
+  pnts[3].y = s2.y +dx * k;
 	    
-    pnts[0].z = s1.z;
-    pnts[1].z = s1.z;
-    pnts[2].z = s2.z;
-    pnts[3].z = s2.z;
+  pnts[0].z = s1.z;
+  pnts[1].z = s1.z;
+  pnts[2].z = s2.z;
+  pnts[3].z = s2.z;
     
-    for (i=0; i<4; ++i) pnts[i].w = 1.0;
+  for (i=0; i<4; ++i) pnts[i].w = 1.0;
  	    
-    /* now project back... */
-    /* first, find S2O transform */
-    TmInvert(O2S, S2O);
+  /* now project back... */
+  /* first, find S2O transform */
+  TmInvert(O2S, S2O);
     
-    /* now transform screen coords to object coords */
+  /* now transform screen coords to object coords */
     
-    /* DRAW HERE */
-    mrti(mr_polygon, mr_P, mr_buildarray, 4*3, mr_NULL);
-    for(i=0;i<4;i++) {
-	HPoint3 pt;
+  /* DRAW HERE */
+  mrti(mr_polygon, mr_P, mr_buildarray, 4*3, mr_NULL);
+  for(i=0;i<4;i++) {
+    HPoint3 pt;
 
-	HPt3Transform(S2O, &pnts[i], &pt);
-	HPt3Dehomogenize(&pt, &pt);
-	mrti(mr_subarray3, &pt, mr_NULL);
-    }
+    HPt3Transform(S2O, &pnts[i], &pt);
+    HPt3Dehomogenize(&pt, &pt);
+    mrti(mr_subarray3, &pt, mr_NULL);
+  }
 }
 
 void
@@ -247,50 +247,50 @@ mgrib_drawCline(HPoint3 *p1, HPoint3 *p2)
   float size;
   int bounded(Point3 *p);
   
-    HPt3Dehomogenize(p1, &Hstart);
-    HPt3Dehomogenize(p2, &Hend);
+  HPt3Dehomogenize(p1, &Hstart);
+  HPt3Dehomogenize(p2, &Hend);
     
-    start.x = Hstart.x;
-    start.y = Hstart.y;
-    start.z = Hstart.z;
+  start.x = Hstart.x;
+  start.y = Hstart.y;
+  start.z = Hstart.z;
     
-    end.x = Hend.x;
-    end.y = Hend.y;
-    end.z = Hend.z;
+  end.x = Hend.x;
+  end.y = Hend.y;
+  end.z = Hend.z;
     
-    if (! Pt3Equal(&start,&end)) {
-	size = radius*_mgc->astk->ap.linewidth;
-	Pt3Sub(&end,&start,&t);
-	length = Pt3Length(&t);
-	Pt3Cross((Point3*)(void *)unitz,&t,&axis);
-	Pt3Unit(&t);
-	angle = Pt3Dot((Point3*)(void *)unitz,&t);
-	angle = acos(angle);
-	mrti(mr_transformbegin, mr_NULL);
-	if (bounded(&start))
-	    mrti(mr_translate,
-	    	mr_float, start.x,
-		mr_float, start.y,
-		mr_float, start.z, mr_NULL);
-	if ( (t.x == 0.0) && (t.y == 0.0) && (t.z < 0.0)) {
-	    /* if along negative z axis cross product is 0
-	    but rotation by 180 degrees is necessary
-	    (angle is computed correctly) */
-	    axis.y = 1.0;
-	}
-	if (bounded(&axis))
-	    mrti(mr_rotate, mr_float, DEGREES(angle),
-	    	mr_float, axis.x, mr_float, axis.y, mr_float, axis.z, mr_NULL);
-	if (length < MAXCLINE)
-	    mrti(mr_cylinder, mr_float, size, mr_float, 0.,
-	    	mr_float, length, mr_float, 360., mr_NULL);
-	mrti(mr_transformend, mr_NULL);
+  if (! Pt3Equal(&start,&end)) {
+    size = radius*_mgc->astk->ap.linewidth;
+    Pt3Sub(&end,&start,&t);
+    length = Pt3Length(&t);
+    Pt3Cross((Point3*)(void *)unitz,&t,&axis);
+    Pt3Unit(&t);
+    angle = Pt3Dot((Point3*)(void *)unitz,&t);
+    angle = acos(angle);
+    mrti(mr_transformbegin, mr_NULL);
+    if (bounded(&start))
+      mrti(mr_translate,
+	   mr_float, start.x,
+	   mr_float, start.y,
+	   mr_float, start.z, mr_NULL);
+    if ( (t.x == 0.0) && (t.y == 0.0) && (t.z < 0.0)) {
+      /* if along negative z axis cross product is 0
+	 but rotation by 180 degrees is necessary
+	 (angle is computed correctly) */
+      axis.y = 1.0;
     }
+    if (bounded(&axis))
+      mrti(mr_rotate, mr_float, DEGREES(angle),
+	   mr_float, axis.x, mr_float, axis.y, mr_float, axis.z, mr_NULL);
+    if (length < MAXCLINE)
+      mrti(mr_cylinder, mr_float, size, mr_float, 0.,
+	   mr_float, length, mr_float, 360., mr_NULL);
+    mrti(mr_transformend, mr_NULL);
+  }
 }
 
 int 
 bounded(p)
-Point3 *p;
+     Point3 *p;
 {
   if (! Pt3Equal(p,&Pt3Origin)) {
     if (p->x < MAXCLINE && p->y < MAXCLINE && p->z < MAXCLINE) 
@@ -310,39 +310,39 @@ Point3 *p;
  */
 void mgrib_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 {
-	ColorA *color;
+  ColorA *color;
 	
-	mrti(mr_attributebegin, mr_surface, mr_constant, mr_NULL);
-	if(nc==0) mrti(mr_color, mr_parray, 3,
-	    &_mgc->astk->mat.edgecolor, mr_NULL);
-	if(nc==1) {
-		mrti(mr_color, mr_parray, 3, c, mr_NULL);
-		if (_mgc->astk->ap.flag & APF_TRANSP && !(_mgc->astk->mat.override & MTF_ALPHA))
-			mrti(mr_opacity, mr_array, 3, c->a, c->a, c->a, mr_NULL);
-	}
-	if(nv == 1) {
-		mgrib_drawpoint(v);
-	}
-	else {
-	    if(wrapped & 1) {
-		if(nc > 1) {
-		    color = c + nc - 1;
-		    mrti(mr_color, mr_parray, 3, color, mr_NULL);
-		}
-		mgrib_drawline(v + nv - 1,v);
-	    }
+  mrti(mr_attributebegin, mr_surface, mr_constant, mr_NULL);
+  if(nc==0) mrti(mr_color, mr_parray, 3,
+		 &_mgc->astk->mat.edgecolor, mr_NULL);
+  if(nc==1) {
+    mrti(mr_color, mr_parray, 3, c, mr_NULL);
+    if (_mgc->astk->ap.flag & APF_TRANSP && !(_mgc->astk->mat.override & MTF_ALPHA))
+      mrti(mr_opacity, mr_array, 3, c->a, c->a, c->a, mr_NULL);
+  }
+  if(nv == 1) {
+    mgrib_drawpoint(v);
+  }
+  else {
+    if(wrapped & 1) {
+      if(nc > 1) {
+	color = c + nc - 1;
+	mrti(mr_color, mr_parray, 3, color, mr_NULL);
+      }
+      mgrib_drawline(v + nv - 1,v);
+    }
     
-	    while(--nv > 0) {
-		if(nc > 1) {
-		    color = c++;
-		    mrti(mr_color, mr_parray, 3, color, mr_NULL);
-		}
-		mgrib_drawline(v,(v+1));
-		v++;
-	    }
-	}
+    while(--nv > 0) {
+      if(nc > 1) {
+	color = c++;
+	mrti(mr_color, mr_parray, 3, color, mr_NULL);
+      }
+      mgrib_drawline(v,(v+1));
+      v++;
+    }
+  }
 	
-	mrti(mr_attributeend, mr_NULL);
+  mrti(mr_attributeend, mr_NULL);
 
 }
 
@@ -508,7 +508,7 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	 * texture images to files, enumerated by a sequence
 	 * number. Then we insert for each image a line
 
- ``MakeTexture "ourfile" "ribtxfile" "periodic" "clamp" "gaussian" 1.0 1.0''
+	 ``MakeTexture "ourfile" "ribtxfile" "periodic" "clamp" "gaussian" 1.0 1.0''
 	 
 	 * in front of WorldBegin (unluckily all texture must be
 	 * defined before the call to WorldBegin, meaning the
@@ -522,15 +522,18 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    == 
 	    (APF_TEXTURE|APF_FACEDRAW)
 	    && _mgc->astk->ap.tex != NULL && (plflags & PL_HASST)) {
+	  Transform T;
 	  Texture *tex = _mgc->astk->ap.tex;
 	  Point3 st;
+
+	  TmConcat(tex->tfm, _mgc->txstk->T, T);
 
 	  mrti(mr_st, mr_buildarray, p->n_vertices*2, mr_NULL);
 	  for(j = 0, v = p->v; j < p->n_vertices; j++, v++) {
 	    st.x = (*v)->st[0];
 	    st.y = (*v)->st[1];
 	    st.z = 0.0;
-	    Pt3Transform(tex->tfm, &st, &st);
+	    Pt3Transform(T, &st, &st);
 	    st.y = 1.0 - st.y;
 	    mrti(mr_subarray2, &st, mr_NULL);
 	  }
@@ -578,123 +581,125 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 }
 
 /* There is a basic problem now with 4-d points and 3-d normal vectors.
-For now, we'll just ignore the 4-th coordinate of the point when 
-computing the tip of the normal vector.  This will work OK with all
-existing models, but for genuine 4-d points it won't work.  But,
-come to think of it, what is the correct interpretation of the
-normal vector when the points live in 4-d?
+   For now, we'll just ignore the 4-th coordinate of the point when 
+   computing the tip of the normal vector.  This will work OK with all
+   existing models, but for genuine 4-d points it won't work.  But,
+   come to think of it, what is the correct interpretation of the
+   normal vector when the points live in 4-d?
 */
 void
 mgrib_drawnormal(HPoint3 *p, Point3 *n) {	
-    HPoint3 end, tp;
-    float scale;
-    Color *color;
+  HPoint3 end, tp;
+  float scale;
+  Color *color;
     
-    if (p->w <= 0.0) return;
-    scale = p->w * _mgc->astk->ap.nscale;
-    end.x = p->x + scale*n->x;
-    end.y = p->y + scale*n->y;
-    end.z = p->z + scale*n->z;
-    end.w = p->w;
+  if (p->w <= 0.0) return;
+  scale = p->w * _mgc->astk->ap.nscale;
+  end.x = p->x + scale*n->x;
+  end.y = p->y + scale*n->y;
+  end.z = p->z + scale*n->z;
+  end.w = p->w;
 
-    color = &_mgc->astk->mat.normalcolor;
-    mrti(mr_attributebegin, mr_surface, mr_constant,
-	 mr_color, mr_parray, 3, color,
-	 mr_opacity, mr_array, 3, 1., 1., 1., mr_NULL);
-    mgrib_drawline(&tp,&end);
-    mrti(mr_attributeend, mr_NULL);
+  color = &_mgc->astk->mat.normalcolor;
+  mrti(mr_attributebegin, mr_surface, mr_constant,
+       mr_color, mr_parray, 3, color,
+       mr_opacity, mr_array, 3, 1., 1., 1., mr_NULL);
+  mgrib_drawline(&tp,&end);
+  mrti(mr_attributeend, mr_NULL);
     
 }
 
 void
 mgrib_bezier( int du, int dv, int dimn, float *CtrlPnts, float *txmapst, ColorA *c )
 {
-    int i, ip, nu, nv;
-    static float *uknot=NULL, *vknot=NULL;
-    static size_t ulen=0,vlen=0;
-    size_t nulen=0, nvlen=0;
-    int  flag = _mgc->astk->ap.flag;
-    int  matover = _mgc->astk->mat.override;
+  int i, ip, nu, nv;
+  static float *uknot=NULL, *vknot=NULL;
+  static size_t ulen=0,vlen=0;
+  size_t nulen=0, nvlen=0;
+  int  flag = _mgc->astk->ap.flag;
+  int  matover = _mgc->astk->mat.override;
 
-    du += 1;
-    dv += 1;
-    nu = du;
-    nv = dv;
-    ip = nu * nv * dimn; 
+  du += 1;
+  dv += 1;
+  nu = du;
+  nv = dv;
+  ip = nu * nv * dimn; 
 
-    if(!uknot) {
-    	ulen=nu+du;
-	uknot=(float *)malloc(ulen*sizeof(float));
-    }
-    if(!vknot) {
-    	vlen=nv+dv;
-	vknot=(float *)malloc(vlen*sizeof(float));
-    }
-    nulen=nu+du;
-    nvlen=nv+dv;
-    if(nulen>ulen) uknot=(float *)realloc(uknot,(ulen=nulen)*sizeof(float));
-    if(nvlen>vlen) vknot=(float *)realloc(vknot,(vlen=nvlen)*sizeof(float));
+  if(!uknot) {
+    ulen=nu+du;
+    uknot=(float *)malloc(ulen*sizeof(float));
+  }
+  if(!vknot) {
+    vlen=nv+dv;
+    vknot=(float *)malloc(vlen*sizeof(float));
+  }
+  nulen=nu+du;
+  nvlen=nv+dv;
+  if(nulen>ulen) uknot=(float *)realloc(uknot,(ulen=nulen)*sizeof(float));
+  if(nvlen>vlen) vknot=(float *)realloc(vknot,(vlen=nvlen)*sizeof(float));
     
-    /* uknot = (float *)malloc((nu+du)*sizeof(float)); */
-    for(i=0;i<nu;i++) uknot[i] = 0;
-    for(i=nu;i<(nu+du);i++) uknot[i] = 1;
+  /* uknot = (float *)malloc((nu+du)*sizeof(float)); */
+  for(i=0;i<nu;i++) uknot[i] = 0;
+  for(i=nu;i<(nu+du);i++) uknot[i] = 1;
     
-    /* vknot = (float *)malloc((nv+dv)*sizeof(float)); */
-    for(i=0;i<nv;i++) vknot[i] = 0;
-    for(i=nv;i<(nv+dv);i++) vknot[i] = 1;
+  /* vknot = (float *)malloc((nv+dv)*sizeof(float)); */
+  for(i=0;i<nv;i++) vknot[i] = 0;
+  for(i=nv;i<(nv+dv);i++) vknot[i] = 1;
 
-    mrti(mr_nupatch, mr_int, nu, mr_int, du, mr_NULL);
-    mrti(mr_parray, (nu+du), uknot, mr_NULL);
-    mrti(mr_int, 0, mr_int, (nu-1), mr_int, nv, mr_int, dv, mr_NULL);
-    mrti(mr_parray, (nv+dv), vknot, mr_NULL);
-    mrti(mr_int, 0, mr_int, nv -1, mr_NULL);
+  mrti(mr_nupatch, mr_int, nu, mr_int, du, mr_NULL);
+  mrti(mr_parray, (nu+du), uknot, mr_NULL);
+  mrti(mr_int, 0, mr_int, (nu-1), mr_int, nv, mr_int, dv, mr_NULL);
+  mrti(mr_parray, (nv+dv), vknot, mr_NULL);
+  mrti(mr_int, 0, mr_int, nv -1, mr_NULL);
     
-    mrti(dimn == 3 ? mr_P : mr_Pw,
-	mr_parray, ip, CtrlPnts, mr_NULL);
+  mrti(dimn == 3 ? mr_P : mr_Pw,
+       mr_parray, ip, CtrlPnts, mr_NULL);
     
-    /* free(uknot); */
-    /* free(vknot); */
+  /* free(uknot); */
+  /* free(vknot); */
     
-    if (c &&
-	!((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) ) {
-        mrti(mr_Cs, mr_buildarray,  12, mr_NULL);
-	for (i = 0; i < 4; i++) {
-	    mrti(mr_subarray3, (float *)&c[i], mr_NULL);
-	}
-	if(flag & APF_TRANSP && !(matover & MTF_ALPHA)) {
-	    float opacity[3];
-	    opacity[0]=opacity[1]=opacity[2]=c[i].a;
-	    mrti(mr_Os, mr_buildarray, 12, mr_NULL);
-	    for (i = 0; i < 4; i++) {
-	        mrti(mr_subarray3, opacity, mr_NULL);
-	    }
-	}
+  if (c &&
+      !((matover & MTF_DIFFUSE) && !(_mgc->astk->flags & MGASTK_SHADER)) ) {
+    mrti(mr_Cs, mr_buildarray,  12, mr_NULL);
+    for (i = 0; i < 4; i++) {
+      mrti(mr_subarray3, (float *)&c[i], mr_NULL);
     }
+    if(flag & APF_TRANSP && !(matover & MTF_ALPHA)) {
+      float opacity[3];
+      opacity[0]=opacity[1]=opacity[2]=c[i].a;
+      mrti(mr_Os, mr_buildarray, 12, mr_NULL);
+      for (i = 0; i < 4; i++) {
+	mrti(mr_subarray3, opacity, mr_NULL);
+      }
+    }
+  }
     
-    if ((_mgc->astk->ap.flag & (APF_TEXTURE|APF_FACEDRAW))
-	== 
-	(APF_TEXTURE|APF_FACEDRAW)
-	&& _mgc->astk->ap.tex != NULL && txmapst) {
-	Texture *tex = _mgc->astk->ap.tex;
-	Point3 st;
-	int j;
+  if ((_mgc->astk->ap.flag & (APF_TEXTURE|APF_FACEDRAW))
+      == 
+      (APF_TEXTURE|APF_FACEDRAW)
+      && _mgc->astk->ap.tex != NULL && txmapst) {
+    Transform T;
+    Texture *tex = _mgc->astk->ap.tex;
+    Point3 st;
+    int j;
 
-        mrti(mr_nl, mr_st, mr_buildarray, 8, mr_NULL);
-	for(j = 0; j < 4; j++) {
-	    st.x = txmapst[2*j];
-	    st.y = txmapst[2*j+1];
-	    st.z = 0.0;
-	    Pt3Transform(tex->tfm, &st, &st);
-	    st.y = 1.0 - st.y;
-	    mrti(mr_subarray2, &st, mr_NULL);
-	}
+    TmConcat(tex->tfm, _mgc->txstk->T, T);
+
+    mrti(mr_nl, mr_st, mr_buildarray, 8, mr_NULL);
+    for(j = 0; j < 4; j++) {
+      st.x = txmapst[2*j];
+      st.y = txmapst[2*j+1];
+      st.z = 0.0;
+      Pt3Transform(T, &st, &st);
+      st.y = 1.0 - st.y;
+      mrti(mr_subarray2, &st, mr_NULL);
     }
+  }
 }
-
 
 /*
  * Local Variables: ***
  * mode: c ***
- * c-basic-offset: 4 ***
+ * c-basic-offset: 2 ***
  * End: ***
  */
