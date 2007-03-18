@@ -60,7 +60,7 @@ void 	set_emodule_path(char **dirs);
 void 	set_load_path(char **dirs);
 
 static void	save_dgeom(Pool *p, DGeom *dg, int doaliens);
-static void	save_dgeom_geom(Pool *p, DGeom *dg, int world, int wrap, int cum);
+static void	save_dgeom_geom(Pool *p, DGeom *dg, bool world, bool wrap, int cum);
 static void	save_dview(Pool *p, DView *dv);
 static int	nonidentity(Transform T);
 static void	maybe_save_xform(Pool *p, char *cmd, char *name, Handle *, Transform T);
@@ -108,14 +108,14 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
       dg = (DGeom *)drawer_get_object(id);
     if(id == WORLDGEOM) {
       if (wrap) {
-	save_dgeom_geom(p, dg, 1, wrap, to_coords);
+	save_dgeom_geom(p, dg, true, wrap, to_coords);
       }
       PoolFPrint(p, fp, "{ LIST # World list \n");
       PoolIncLevel(p, 1);
       for(i = 1; i < dgeom_max; i++) {
 	dg = (DGeom *)drawer_get_object(GEOMID(i));
 	if (dg != NULL && dg->citizenship != ALIEN) 
-	  save_dgeom_geom(p, dg, 0, 1, WORLDGEOM);
+	  save_dgeom_geom(p, dg, false, true, WORLDGEOM);
       }
       PoolIncLevel(p, -1);
       PoolFPrint(p, fp, "} #end of World List\n");
@@ -128,7 +128,7 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
 	}
       }
     } else {
-      save_dgeom_geom(p, dg, 0, wrap, to_coords);
+      save_dgeom_geom(p, dg, false, wrap, to_coords);
     }
     return !ferror(fp);
   }
@@ -196,7 +196,7 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
  * if not 'world', also add geometry and close the braces.
  */
 static void
-save_dgeom_geom(Pool *p, DGeom *dg, int world, int wrap, int to_coords)
+save_dgeom_geom(Pool *p, DGeom *dg, bool world, bool wrap, int to_coords)
 {
   FILE *fp = PoolOutputFile(p);
   Transform T;
