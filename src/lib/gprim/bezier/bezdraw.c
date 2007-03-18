@@ -42,8 +42,9 @@ BezierDraw(Bezier *bezier)
     
     if (mgfeature(MGF_BEZIER)>0) {
 	mgbezier (bezier->degree_u, bezier->degree_v , bezier->dimn,
-		  bezier->CtrlPnts, bezier->STCords, 
-		  bezier->geomflags & BEZ_C ? bezier->c : NULL);
+		  bezier->CtrlPnts,
+		  (bezier->geomflags & BEZ_ST) ? bezier->STCoords : NULL,
+		  (bezier->geomflags & BEZ_C) ? bezier->c : NULL);
     } else {
 
 	GeomMakePath(bezier, 'B', path, pathlen);

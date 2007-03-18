@@ -143,7 +143,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
        ||
        (flags & PL_HASVCOL && iobfgetnf(file, 4, (float *)&v->vcol, binary) < 4)
        ||
-       (flags & PL_HASST && iobfgetnf(file, 2, &v->st[0], binary) < 2)
+       (flags & PL_HASST && iobfgetnf(file, 2, (float *)&v->st, binary) < 2)
        ) {
       OOGLSyntax(file, "PolyList %s: Bad vertex %d (of %d)", fname, i, pl->n_verts);
       goto bogus;

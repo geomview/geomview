@@ -126,11 +126,27 @@ extern void *GeomCallV( int sel, Geom *geom, va_list *args );
 #define	RETAIN	4	/* Retain returned Geom's indefinitely */
 #define	DESTROY	0	/* vs. Destroy returned Geom's at next iteration step */
 
-extern GeomIter *GeomIterate( Geom *root, int flags );
+extern GeomIter *_GeomIterate( Geom *root, int flags );
 extern Geom	*NextGeom( GeomIter * );
-extern int	 NextTransform( GeomIter *, Transform T );
+extern int	 _NextTransform( GeomIter *, Transform T );
 extern void	 DestroyIter( GeomIter * );
 
+static inline GeomIter *GeomIterate(Geom *root, int flags)
+{
+  if (!root) {
+    return NULL;
+  } else {
+    return _GeomIterate(root, flags);
+  }
+}
+
+static inline int NextTransform(GeomIter *iter, Transform T)
+{
+  if (iter == NULL) {
+    return 0;
+  }
+  return _NextTransform(iter, T);
+}
 	/* Import/export */
 extern int	 GeomUpdate( Geom *obj, int doImport );	/* Recursive bind */
 
@@ -161,3 +177,9 @@ extern void GeomAddTranslator(char *prefix, char *cmd);
 
 
 #endif /*GEOMDEF*/
+
+/* 
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

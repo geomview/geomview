@@ -1,4 +1,4 @@
-@set UPDATED 13 March 2007
+@set UPDATED 18 March 2007
 @set UPDATED-MONTH March 2007
 @set EDITION 1.8.2-post-rc10
 @set VERSION 1.8.2-post-rc10

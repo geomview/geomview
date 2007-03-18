@@ -532,6 +532,7 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 
     if(brack) {
 	fprintf(PoolOutputFile(p), "{");
+	PoolIncLevel(p, 1);
     }
 
     if (p->otype & 4) {
@@ -539,8 +540,6 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
     } else {
 	fprintf(PoolOutputFile(p), "\n");
     }
-
-    PoolIncLevel(p, 1);
 
     if(g && (g->ap || g->aphandle)) {
 	PoolPrint(p, ""); /* use the proper indentation */
@@ -554,9 +553,8 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 	    (*g->Class->fsave)(g, PoolOutputFile(p), PoolName(p));
     }
 
-    PoolIncLevel(p, -1);
-
     if(brack) {
+	PoolIncLevel(p, -1);
 	PoolPrint(p, "}\n");
     }
 

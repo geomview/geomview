@@ -61,16 +61,18 @@
 
 	/* Hierarchy object (Inst, List, TList) attributes */
 #define CR_AXIS		20	/* Transform	(Inst)			*/
+#define	CR_AXISHANDLE	28	/* Handle * to TransObj (for Inst)	*/
 #define CR_NDAXIS	202	/* Transform	(Inst)			*/
+#define	CR_NDAXISHANDLE	203	/* Handle * to NTransObj (for Inst)	*/
 #define CR_GEOM		21	/* Geom *child	(Inst,List)		*/
 #define	CR_GEOMHANDLE	22	/* Handle *childname (Inst,List)	*/
 #define CR_TLIST	23	/* Geom *tlist	   (Inst,TList)		*/
 #define	CR_TLISTHANDLE	24	/* Handle *tlistname (Inst,TList) 	*/
+#define CR_TXTLIST	204	/* Geom *txtlist	   (Inst)	*/
+#define	CR_TXTLISTHANDLE 205	/* Handle *txtlistname (Inst) 		*/
 #define CR_ELEM		25	/* Transform []	(TList)			*/
-#define CR_NELEM	26	/* int nxforms(TList), int nquads (Quad) */
+#define CR_NELEM	26	/* int nxforms(TList), int nquads (Quad)*/
 #define CR_CDR		27	/* List *	(List) (obsolescent?)	*/
-#define	CR_AXISHANDLE	28	/* Handle * to TransObj (for Inst)	*/
-#define	CR_NDAXISHANDLE	203	/* Handle * to TransObj (for Inst)	*/
 #define CR_HANDLE_GEOM  29	/* Handle *, Geom *	(Inst, List)	*/
 #define	CR_CAR		CR_GEOM	/* Geom *	(List) (obsolescent)	*/
 #define	CR_UNIT		CR_GEOM /* Geom *	(Inst) (obsolescent)	*/
@@ -123,6 +125,7 @@
 					 * sphere (for bounding spheres */
 /*      CR_AXIS			20	Transform to apply to points before
 					making bounding sphere */
+#define CR_SPHERETX             67      /* texture mapping for sphere */
 
 /* tokens for Camera moved to camera.h */
 

@@ -117,7 +117,8 @@ static inline PolyListNode *new_poly_list_node(const void **tagged_app,
 }
 
 /* Generate a transformed copy of poly. */
-static inline Poly *transform_poly(Transform T, Transform Tdual, Poly *poly,
+static inline Poly *transform_poly(Transform T, Transform Tdual, Transform TxT,
+				   Poly *poly,
 				   struct obstack *scratch)
 {
   Poly *newp;
@@ -134,8 +135,7 @@ static inline Poly *transform_poly(Transform T, Transform Tdual, Poly *poly,
       NormalTransform(Tdual, &poly->v[i]->vn, &newp->v[i]->vn);
     }
     if (poly->flags & PL_HASST) {
-      newp->v[i]->st[0] = poly->v[i]->st[0];
-      newp->v[i]->st[1] = poly->v[i]->st[1];
+      TxSTTransform (TxT, &poly->v[i]->st, &newp->v[i]->st);
     }
   }
 
@@ -224,13 +224,12 @@ static inline void meshv_to_polyv(Vertex *pv, Mesh *mesh, int vidx)
     pv->vcol = mesh->c[vidx];
   }
   if (mesh->geomflags & MESH_U) {
-    pv->st[0] = mesh->u[vidx].x;
-    pv->st[1] = mesh->u[vidx].y;
+    pv->st = mesh->u[vidx];
   }
 }
 
 static inline void
-meshv_to_polyv_trans(Transform T, Transform Tdual,
+meshv_to_polyv_trans(Transform T, Transform Tdual, Transform TxT,
 		     Vertex *pv, Mesh *mesh, int vidx)
 {
   memset(pv, 0, sizeof(Vertex));
@@ -249,14 +248,14 @@ meshv_to_polyv_trans(Transform T, Transform Tdual,
     pv->vcol = mesh->c[vidx];
   }
   if (mesh->geomflags & MESH_U) {
-    pv->st[0] = mesh->u[vidx].x;
-    pv->st[1] = mesh->u[vidx].y;
+    TxSTTransform(TxT, &mesh->u[vidx], &pv->st);
   }
 }
 
 static PolyListNode *
-QuadToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
-		     PolyListNode **plistp, Quad *quad, struct obstack *scratch)
+QuadToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
+		     const void **tagged_app, PolyListNode **plistp,
+		     Quad *quad, struct obstack *scratch)
 {
   PolyListNode *plist = NULL;
   Poly *qpoly;
@@ -331,8 +330,9 @@ QuadToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
  * non-flat or concave quadrilaterals.
  */
 static PolyListNode *
-MeshToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
-		     PolyListNode **plistp, Mesh *mesh, struct obstack *scratch)
+MeshToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
+		     const void **tagged_app, PolyListNode **plistp,
+		     Mesh *mesh, struct obstack *scratch)
 {
   PolyListNode *plist = NULL;
   Poly *qpoly;
@@ -369,13 +369,13 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
 	}
       }
       if (T && T != TM_IDENTITY) {
-	meshv_to_polyv_trans(T, Tdual, qpoly->v[0], mesh,
+	meshv_to_polyv_trans(T, Tdual, TxT, qpoly->v[0], mesh,
 			     MESHIDX(prevu, prevv, mesh));
-	meshv_to_polyv_trans(T, Tdual, qpoly->v[1], mesh,
+	meshv_to_polyv_trans(T, Tdual, TxT, qpoly->v[1], mesh,
 			     MESHIDX(u, prevv, mesh));
-	meshv_to_polyv_trans(T, Tdual, qpoly->v[2], mesh,
+	meshv_to_polyv_trans(T, Tdual, TxT, qpoly->v[2], mesh,
 			     MESHIDX(u, v, mesh));
-	meshv_to_polyv_trans(T, Tdual, qpoly->v[3], mesh,
+	meshv_to_polyv_trans(T, Tdual, TxT, qpoly->v[3], mesh,
 			     MESHIDX(prevu, v, mesh));
       } else {
 	meshv_to_polyv(qpoly->v[0], mesh, MESHIDX(prevu, prevv, mesh));
@@ -430,7 +430,7 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, const void **tagged_app,
  * non-flat or concave polgons
  */
 static PolyListNode *
-PolyListToLinkedPoyList(Transform T, Transform Tdual,
+PolyListToLinkedPoyList(Transform T, Transform Tdual, Transform TxT,
 			const void **tagged_app,
 			PolyListNode **plistp,
 			PolyList *pl, struct obstack *scratch)
@@ -456,7 +456,7 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual,
     poly->flags |= pl->geomflags;
 
     if (T && T != TM_IDENTITY) {
-      poly = transform_poly(T, Tdual, poly, scratch);
+      poly = transform_poly(T, Tdual, TxT, poly, scratch);
     }
 
     switch (pl->p[pnr].n_vertices) {
@@ -519,6 +519,7 @@ BSPTree *BSPTreeCreate(BSPTree *tree, Geom *object)
 
   tree->geom       = object;
   tree->T          = TM_IDENTITY;
+  tree->TxT        = TM_IDENTITY;
   tree->tagged_app = NULL;
 
   return tree;
@@ -550,6 +551,7 @@ void BSPTreeAddObject(BSPTree *bsptree, Geom *object)
   case PLMAGIC:
     PolyListToLinkedPoyList(bsptree->T,
 			    bsptree->Tdual,
+			    bsptree->TxT,
 			    bsptree->tagged_app,
 			    &bsptree->init_lpl,
 			    (PolyList *)object,
@@ -558,6 +560,7 @@ void BSPTreeAddObject(BSPTree *bsptree, Geom *object)
   case MESHMAGIC:
     MeshToLinkedPolyList(bsptree->T,
 			 bsptree->Tdual,
+			 bsptree->TxT,
 			 bsptree->tagged_app,
 			 &bsptree->init_lpl,
 			 (Mesh *)object, &bsptree->obst);
@@ -565,6 +568,7 @@ void BSPTreeAddObject(BSPTree *bsptree, Geom *object)
   case QUADMAGIC:
     QuadToLinkedPolyList(bsptree->T,
 			 bsptree->Tdual,
+			 bsptree->TxT,
 			 bsptree->tagged_app,
 			 &bsptree->init_lpl,
 			 (Quad *)object,
@@ -839,8 +843,8 @@ static inline void SplitPolyNode(PolyListNode *plnode,
       Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
     }
     Pt3Unit(&v0->vn);
-    v0->st[0] = mu0 * V0->st[0] + mu1 * V1->st[0];
-    v0->st[1] = mu0 * V0->st[1] + mu1 * V1->st[1];
+    v0->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
+    v0->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
 
     if (fpos(edges[0].scp[0])) {
       vstart[1] = vend[0] = v0;
@@ -894,8 +898,8 @@ static inline void SplitPolyNode(PolyListNode *plnode,
       Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
     }
     Pt3Unit(&v1->vn);
-    v1->st[0] = mu0 * V0->st[0] + mu1 * V1->st[0];
-    v1->st[1] = mu0 * V0->st[1] + mu1 * V1->st[1];
+    v1->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
+    v1->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
 
     if (fpos(edges[1].scp[0])) {
       vstart[1] = vend[0] = v1;

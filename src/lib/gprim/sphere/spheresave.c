@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -23,23 +24,26 @@
 # include "config.h"
 #endif
 
-#if 0
-static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
-#endif
-
 #include <stdio.h>
 #include "transform.h"
 #include "geom.h"
 #include "geomclass.h"
 #include "sphereP.h"
 
-Sphere *SphereFSave(sphere, f, fname) 
-Sphere *sphere;
-FILE *f;
-char *fname;
+static const char *texmap[] = {
+  "SINUSOIDAL", "CYLINDRICAL", "RECTANGULAR", "STEREOGRAPHIC", "ONEFACE"
+};
+
+Sphere *SphereFSave(Sphere *sphere, FILE *f, char *fname)
 {
-  if (sphere == NULL) return NULL;
+  int texmeth = 0;
+
+  if (sphere == NULL) {
+    return NULL;
+  }
+  if ((texmeth = SPHERE_TXMETH(sphere->geomflags)) != 0) {
+    fprintf(f, "ST");
+  }
   switch(sphere->space) {
   case TM_HYPERBOLIC:
     fprintf(f, "%c", 'H');
@@ -48,8 +52,13 @@ char *fname;
     fprintf(f, "%c", 'S');
     break;
   }
-  fprintf(f, "SPHERE\n");
-  fprintf(f, "%g %g %g %g", sphere->radius, sphere->center.x, 
+  fprintf(f, "SPHERE");
+  if (texmeth != 0) {
+    fprintf(f, " %s\n", texmap[texmeth-1]);
+  } else {
+    fprintf(f, "\n");
+  }
+  fprintf(f, "%g %g %g %g\n", sphere->radius, sphere->center.x, 
 	  sphere->center.y, sphere->center.z);
   return (ferror(f) ? NULL : sphere);
 }

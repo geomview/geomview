@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -39,8 +40,8 @@ typedef struct Vertex
   HPoint3 pt;
   ColorA  vcol;
   Point3  vn;
-  float   st[2];
-}  Vertex;
+  TxST    st;
+} Vertex;
 
 typedef struct Poly
 {

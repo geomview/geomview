@@ -70,7 +70,7 @@ PolyListFSave(polylist, outf, fname)
 		fprintf(outf, "  %g %g %g %g",
 			v->vcol.r, v->vcol.g, v->vcol.b, v->vcol.a);
 	    if(polylist->geomflags & PL_HASST)
-		fprintf(outf, "  %.8g %.8g", v->st[0], v->st[1]);
+		fprintf(outf, "  %.8g %.8g", v->st.s, v->st.t);
 	}
 
 	fputc('\n', outf);

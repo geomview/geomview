@@ -49,14 +49,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define HAS_NQ     0x02
 #define HAS_C      0x04
 #define HAS_SMOOTH 0x08
-#define HAS_STR    0x10
+#define HAS_ST     0x10
 
 void
 mgopenglsubmesh(int wrap, int nu, int nv,
 		int umin, int umax,
 		int vmin, int vmax,
 		HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
-		ColorA *meshC, Point3 *meshSTR,
+		ColorA *meshC, TxST *meshST,
 		int mflags)
 {
   int u, v;
@@ -64,7 +64,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   HPoint3 *P;
   Point3 *N, *NQ;
   ColorA *C;
-  Point3 *STR;
+  TxST *ST;
   int prev;
   int du;
   int douwrap;
@@ -96,9 +96,9 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   }
   if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
      && _mgc->astk->ap.tex != NULL) {
-    if (meshSTR != NULL)
-      has |= HAS_STR;
-    if (has&HAS_STR) {
+    if (meshST != NULL)
+      has |= HAS_ST;
+    if (has&HAS_ST) {
       mgopengl_needtexture();
     }
   }
@@ -141,7 +141,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       N  = meshN + du;
       NQ = meshNQ + du;
       C  = meshC + du;
-      STR = meshSTR + du;
+      ST = meshST + du;
       ucnt = umax - umin + 1;
       glBegin(GL_TRIANGLE_STRIP);
       douwrap = (wrap & MM_UWRAP);
@@ -226,105 +226,105 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	  } while(--u);
 	  break;
 
-        case HAS_STR:
+        case HAS_ST:
           do {
-            glTexCoord2fv((float *)(STR+prev));
+            glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            P++; STR++;
+            P++; ST++;
           } while(--u);
           break;
 
-        case HAS_C|HAS_STR:
+        case HAS_C|HAS_ST:
           do {
             D4F(C+prev);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            C++; P++; STR++;
+            C++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_C|HAS_SMOOTH|HAS_STR:
+        case HAS_C|HAS_SMOOTH|HAS_ST:
           do {
             D4F(C+prev);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             D4F(C);
-	    glTexCoord2fv((float *)STR);
+	    glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            C++; P++; STR++;
+            C++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_NQ|HAS_STR:
+        case HAS_NQ|HAS_ST:
           do {
 	    N3F(NQ+prev,P+prev);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            NQ++; P++; STR++;
+            NQ++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_N|HAS_STR:
+        case HAS_N|HAS_ST:
           do {
             N3F(N+prev,P);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            N++; P++; STR++;
+            N++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_N|HAS_SMOOTH|HAS_STR:
+        case HAS_N|HAS_SMOOTH|HAS_ST:
           do {
             N3F(N+prev,P);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             N3F(N,P);
-	    glTexCoord2fv((float *)STR);
+	    glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            N++; P++; STR++;
+            N++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_C|HAS_NQ|HAS_STR:
+        case HAS_C|HAS_NQ|HAS_ST:
 	  do {
 	    N3F(NQ+prev,P+prev);
             D4F(C+prev);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            C++; NQ++; P++; STR++;
+            C++; NQ++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_C|HAS_N|HAS_STR:
+        case HAS_C|HAS_N|HAS_ST:
           do {
             D4F(C+prev); N3F(N+prev,P);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
-            glTexCoord2fv((float *)STR);
+            glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            C++; N++; P++; STR++;
+            C++; N++; P++; ST++;
           } while(--u);
           break;
 
-        case HAS_C|HAS_N|HAS_SMOOTH|HAS_STR:
+        case HAS_C|HAS_N|HAS_SMOOTH|HAS_ST:
           do {
             D4F(C+prev); N3F(N+prev,P);
-	    glTexCoord2fv((float *)(STR+prev));
+	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             D4F(C); N3F(N,P);
-	    glTexCoord2fv((float *)STR);
+	    glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
-            C++; N++; P++; STR++;
+            C++; N++; P++; ST++;
           } while(--u);
           break;
         }
@@ -337,12 +337,12 @@ mgopenglsubmesh(int wrap, int nu, int nv,
             N = meshN + du;
             NQ = meshNQ + du;
             C = meshC + du;
-            STR = meshSTR + du;
+            ST = meshST + du;
           }
         } else {
           glEnd();           /* Hit tmesh limit, splice */
           glBegin(GL_TRIANGLE_STRIP);
-          C--; N--; P--; STR--; /* Redraw last vertex */
+          C--; N--; P--; ST--; /* Redraw last vertex */
         }
       } while(ucnt);
 
@@ -426,11 +426,11 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 void
 mgopengl_mesh(int wrap, int nu, int nv,
 	      HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
-	      ColorA *meshC, Point3 *meshSTR,
+	      ColorA *meshC, TxST *meshST,
 	      int mflags)
 {
   mgopenglsubmesh(wrap, nu, nv, 0, nu-1, 0, nv-1, meshP,
-		  meshN, meshNQ, meshC, meshSTR, mflags);
+		  meshN, meshNQ, meshC, meshST, mflags);
 }
 
 /*

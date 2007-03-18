@@ -62,18 +62,6 @@ BezierCopy(Bezier *ob)
     *b = *ob;	/* Copy all fields */
     GGeomInit(b, BezierMethods(), BEZIERMAGIC, NULL);
 
-    if (b->geomflags & BEZ_ST) {
-	if (ob->STCords == NULL) {
-	    OOGLError(0,"Inconsistency in BEZ_ST field of flag");
-	    b->geomflags &= ~BEZ_ST;
-	} else {
-	    b->STCords = OOGLNewNE(float, 4*2, "Bezier ST coords");
-	    memcpy(b->STCords, ob->STCords, 4*2*sizeof(float));
-	}
-    } else {
-	b->STCords = NULL;
-    }
-	
     if (ob->CtrlPnts != NULL) {
 	n = (b->degree_u + 1) * (b->degree_v + 1) * b->dimn;
 	b->CtrlPnts = OOGLNewNE(float, n, "Bezier control points");
@@ -100,9 +88,6 @@ BezierDelete(Bezier *bezier)
 	if (bezier->CtrlPnts != NULL) {
 	    OOGLFree(bezier->CtrlPnts);
 	}
-	if (bezier->STCords != NULL) {
-	    OOGLFree(bezier->STCords);
-	}
 	if (bezier->mesh != NULL) {
 	    GeomDelete((Geom *)bezier->mesh);
 	}
@@ -126,7 +111,6 @@ BezierCreate( Bezier *exist, GeomClass *classp, va_list *a_list )
 	memset(bezier, 0, sizeof(Bezier));
         GGeomInit (bezier, classp, BEZIERMAGIC, NULL);
 	bezier->CtrlPnts = NULL;
-	bezier->STCords = NULL;
 	bezier->nu = bezier->nv = 0;	/* no mesh yet */
 	bezier->mesh = NULL;
 	bez_make_meshhandle(bezier);
@@ -166,7 +150,7 @@ BezierCreate( Bezier *exist, GeomClass *classp, va_list *a_list )
 	bezier->mesh = va_arg (*a_list, Mesh *);
 	break;
     case CR_ST:
-	bezier->STCords = va_arg(*a_list, float *);
+	memcpy(bezier->STCoords, va_arg(*a_list, TxST *), 4*sizeof(TxST));
 	break;
     case CR_COLOR:
 	color = va_arg (*a_list, ColorA *);

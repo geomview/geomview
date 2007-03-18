@@ -40,12 +40,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static void mgrib_submesh( int wrap, int nu, int nv,
 			   HPoint3 *P, Point3 *N, Point3 *NQ,
-			   ColorA *C, Point3 *STR, int mflags );
+			   ColorA *C, TxST *ST, int mflags );
 static void mgrib_prmanmesh( int wrap, int nu, int nv, HPoint3 *P );
 
 int
 mgrib_mesh(int wrap, int nu, int nv,
-	   HPoint3 *P, Point3 *N, Point3 *NQ, ColorA *C, Point3 *STR,
+	   HPoint3 *P, Point3 *N, Point3 *NQ, ColorA *C, TxST *ST,
 	   int mflags)
 {
     Appearance *ap;
@@ -57,7 +57,7 @@ mgrib_mesh(int wrap, int nu, int nv,
     ap = &_mgc->astk->ap;
 
     if(ap->flag & APF_FACEDRAW) {
-	mgrib_submesh( wrap, nu, nv, P, N, NQ, C, STR, mflags);
+	mgrib_submesh( wrap, nu, nv, P, N, NQ, C, ST, mflags);
     }
     
     if(ap->flag & APF_EDGEDRAW) {
@@ -83,14 +83,14 @@ mgrib_mesh(int wrap, int nu, int nv,
 static void
 mgrib_submesh( int wrap, int nu, int nv,
 	       HPoint3 *P, Point3 *N, Point3 *meshNQ,
-	       ColorA *C, Point3 *STR, int mflags )
+	       ColorA *C, TxST *ST, int mflags )
 {
     Appearance *ap;
     char    *uwrap,*vwrap;
     int     i;
     HPoint3 *p;
     Point3  *n;
-    Point3  *str;
+    TxST    *st;
     ColorA  *c;
     int     nunv;
     int     viflag = 0; /* used to insert \n into RIB file so lines */
@@ -100,7 +100,7 @@ mgrib_submesh( int wrap, int nu, int nv,
     p = P;
     n = N;
     c = C;
-    str = STR;
+    st = ST;
 	    
     ap = &_mgc->astk->ap;
     
@@ -187,19 +187,19 @@ mgrib_submesh( int wrap, int nu, int nv,
      * language??
      */
     if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
-        && _mgc->astk->ap.tex != NULL && STR) {
+        && _mgc->astk->ap.tex != NULL && ST) {
 	Transform T;
 	Texture *tex = _mgc->astk->ap.tex;
-	Point3 st;
+	TxST stT;
 
 	TmConcat(tex->tfm, _mgc->txstk->T, T);
       
 	viflag = 0;
 	mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
-	for(i=0; i<nunv; i++, str++, viflag++) {
-	    Pt3Transform(T, str, &st);
-	    st.y = 1.0 - st.y;
-	    mrti(mr_subarray2, &st, mr_NULL);
+	for(i=0; i<nunv; i++, st++, viflag++) {
+	    TxSTTransform (T, st, &stT);
+	    stT.t = 1.0 - stT.t;
+	    mrti(mr_subarray2, (float *)&stT, mr_NULL);
 	    if(viflag>=VI_TUPLET_LIMIT) {
 		viflag=0;
 		mrti(mr_nl, mr_NULL);

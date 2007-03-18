@@ -37,7 +37,7 @@ struct Mesh {
   HPoint3 *p;
   Point3  *n;
   Point3  *nq; /* per quad normals */
-  Point3  *u;
+  TxST    *u;
   ColorA  *c;
 };
 

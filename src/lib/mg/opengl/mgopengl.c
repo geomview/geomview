@@ -80,7 +80,7 @@ extern void mgopengl_polyline();
 extern void mgopengl_polylist(int np, Poly *p, int nv, Vertex *v, int plflags);
 extern void mgopengl_mesh(int wrap, int nu, int nv,
 			  HPoint3 *meshP, Point3 *meshN, Point3 *meshNQ,
-			  ColorA *meshC, Point3 *meshSTR,
+			  ColorA *meshC, TxST *meshST,
 			  int mflags);
 extern void mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C,
 			   int qflags);

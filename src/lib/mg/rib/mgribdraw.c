@@ -524,18 +524,15 @@ void mgrib_polylist( int np, Poly *P, int nv, Vertex *V, int plflags )
 	    && _mgc->astk->ap.tex != NULL && (plflags & PL_HASST)) {
 	  Transform T;
 	  Texture *tex = _mgc->astk->ap.tex;
-	  Point3 st;
+	  TxST stT;
 
 	  TmConcat(tex->tfm, _mgc->txstk->T, T);
 
 	  mrti(mr_st, mr_buildarray, p->n_vertices*2, mr_NULL);
 	  for(j = 0, v = p->v; j < p->n_vertices; j++, v++) {
-	    st.x = (*v)->st[0];
-	    st.y = (*v)->st[1];
-	    st.z = 0.0;
-	    Pt3Transform(T, &st, &st);
-	    st.y = 1.0 - st.y;
-	    mrti(mr_subarray2, &st, mr_NULL);
+	    TxSTTransform (T, &(*v)->st, &stT);
+	    stT.t = 1.0 - stT.t;
+	    mrti(mr_subarray2, (float *)&stT, mr_NULL);
 	  }
 	}
 
@@ -610,7 +607,8 @@ mgrib_drawnormal(HPoint3 *p, Point3 *n) {
 }
 
 void
-mgrib_bezier( int du, int dv, int dimn, float *CtrlPnts, float *txmapst, ColorA *c )
+mgrib_bezier(int du, int dv, int dimn, float *CtrlPnts,
+	     TxST *txmapst, ColorA *c)
 {
   int i, ip, nu, nv;
   static float *uknot=NULL, *vknot=NULL;
@@ -680,19 +678,16 @@ mgrib_bezier( int du, int dv, int dimn, float *CtrlPnts, float *txmapst, ColorA 
       && _mgc->astk->ap.tex != NULL && txmapst) {
     Transform T;
     Texture *tex = _mgc->astk->ap.tex;
-    Point3 st;
+    TxST stT;
     int j;
 
     TmConcat(tex->tfm, _mgc->txstk->T, T);
 
     mrti(mr_nl, mr_st, mr_buildarray, 8, mr_NULL);
     for(j = 0; j < 4; j++) {
-      st.x = txmapst[2*j];
-      st.y = txmapst[2*j+1];
-      st.z = 0.0;
-      Pt3Transform(T, &st, &st);
-      st.y = 1.0 - st.y;
-      mrti(mr_subarray2, &st, mr_NULL);
+      TxSTTransform(T, &txmapst[j], &stT);
+      stT.t = 1.0 - stT.t;
+      mrti(mr_subarray2, &stT, mr_NULL);
     }
   }
 }

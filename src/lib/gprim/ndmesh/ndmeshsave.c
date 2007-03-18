@@ -39,7 +39,7 @@ NDMeshFSave(NDMesh *m, FILE *outf)
   int  i, j, k, wdim, offset;
   HPointN **p = m->p;
   ColorA *c = m->c;
-  Point3 *u = m->u;
+  TxST *u = m->u;
 
   if (!outf || !m)
     return NULL;
@@ -86,7 +86,7 @@ NDMeshFSave(NDMesh *m, FILE *outf)
 	  c++;
 	}
 	if (m->geomflags & MESH_U) {
-	  fprintf(outf, " %g %g %g", u->x, u->y, u->z);
+	  fprintf(outf, " %g %g 0", u->s, u->t);
 	  u++;
 	}
 	fputc('\n', outf);

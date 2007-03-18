@@ -33,7 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "ndmeshP.h"
 
 static int ndmeshfield(int copy, int amount,
-		void **fieldp, void *value, char *name);
+		       void **fieldp, void *value, char *name);
 
 static int ndmeshsize(NDMesh *m)
 {
@@ -137,9 +137,9 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 
 	case CR_U:
 	    m->geomflags = (m->geomflags & ~MESH_U) |
-		(MESH_U & ndmeshfield(copy, npts*sizeof(Point3),
+		(MESH_U & ndmeshfield(copy, npts*sizeof(TxST),
 				      (void **)(void *)&m->u,
-				(void *)va_arg (*a_list, Point3 *),
+				(void *)va_arg (*a_list, TxST *),
 				"ndmesh texture coords"));
 	    break;
 

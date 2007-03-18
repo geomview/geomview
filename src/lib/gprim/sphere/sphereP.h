@@ -46,8 +46,22 @@ struct Sphere {
 
 #define SPHEREMAGIC	GeomMagic('s', 1)
 
-#define SPHERE_REMESH GEOMFLAG(0x02) /* need to recompute the mesh */
+#define SPHERE_REMESH GEOMFLAG(0x01) /* need to recompute the mesh */
 #define SPHERE_DEFAULT_MESH_SIZE 10  /* otherwise from ap->dice */
+
+/* texture co-ordinates a la Orrery's mkmeshtx*/
+
+enum {
+  SPHERE_TXNONE =          GEOMFLAG(0 << 1), /* 0x0 */
+  SPHERE_TXSINUSOIDAL =    GEOMFLAG(1 << 1), /* 0x2 */
+  SPHERE_TXCYLINDRICAL =   GEOMFLAG(2 << 1), /* 0x4 */
+  SPHERE_TXRECTANGULAR =   GEOMFLAG(3 << 1), /* 0x6 */
+  SPHERE_TXSTEREOGRAPHIC = GEOMFLAG(4 << 1), /* 0x8 */
+  SPHERE_ONEFACE =         GEOMFLAG(5 << 1)  /* 0xa */ 
+};
+
+#define SPHERE_TXMASK GEOMFLAG(0xe)
+#define SPHERE_TXMETH(flags) (((flags) & SPHERE_TXMASK) >> (GEOMFL_SHIFT+1))
 
 extern GeomClass *SphereMethods();
 extern Sphere *SphereCreate(Geom *, GeomClass *, va_list *a_list );

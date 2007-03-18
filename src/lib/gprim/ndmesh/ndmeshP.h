@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -30,19 +31,18 @@
 #include "ndmesh.h"
 
 struct NDMesh {
-	GEOMFIELDS;
-	int 	seq;
-	int	meshd;		/* mesh dimension */
-	int	*mdim;		/* mesh size, indexed 0..meshd-1 */
-	HPointN	**p;		/* N-D vertices; dim[0] axis varies fastest */
-	ColorA	*c;		/* vertex colors, indexed likewise */
-	Point3	*u;		/* texture coordinates, should we need any */
+  GEOMFIELDS;
+  int     seq;          /* cH: what is this??? */
+  int     meshd;        /* mesh dimension */
+  int     *mdim;        /* mesh size, indexed 0..meshd-1 */
+  HPointN **p;          /* N-D vertices; dim[0] axis varies fastest */
+  ColorA  *c;           /* vertex colors, indexed likewise */
+  TxST    *u;           /* texture coordinates, should we need any */
 };
 
 /* NOTE that these meshes may have missing vertices; some of the p[]
  * and c[] entries may be NULL.
  */
-
 
 /*
  * mesh indexing:

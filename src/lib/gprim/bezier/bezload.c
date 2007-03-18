@@ -100,7 +100,6 @@ bezierheader(IOBFILE *file, Bezier *bezier)
     }
 
     bezier->CtrlPnts = NULL;
-    bezier->STCords = NULL;
     bezier->mesh = NULL;
     return(binary);
 }
@@ -158,8 +157,7 @@ BezierListFLoad(IOBFILE *file, char *fname)
 	}
 
 	if (bez.geomflags & BEZ_ST) {
-	    bez.STCords = OOGLNewNE(float,8, "Bez ST coords");
-	    if(iobfgetnf(file, 8, bez.STCords, binary) != 8)
+	  if(iobfgetnf(file, 8, (float *)bez.STCoords, binary) != 8)
 		break;
 	}
 	if (bez.geomflags & BEZ_C) {
@@ -170,10 +168,10 @@ BezierListFLoad(IOBFILE *file, char *fname)
 
 	/* successful read; append to list */
 	geom = GeomCCreate (NULL,BezierMethods(),  CR_NOCOPY,
-		  CR_FLAG, bez.geomflags | BEZ_REMESH,
-		  CR_DEGU, bez.degree_u, CR_DEGV, bez.degree_v,
-		  CR_DIM, bez.dimn, CR_POINT, bez.CtrlPnts,
-		  CR_ST, bez.STCords, CR_COLOR, bez.c, CR_END);
+			    CR_FLAG, bez.geomflags | BEZ_REMESH,
+			    CR_DEGU, bez.degree_u, CR_DEGV, bez.degree_v,
+			    CR_DIM, bez.dimn, CR_POINT, bez.CtrlPnts,
+			    CR_ST, bez.STCoords, CR_COLOR, bez.c, CR_END);
 	if(bezierlist)
 	    ListAppend(bezierlist, geom);
 	else
@@ -189,3 +187,9 @@ BezierListFLoad(IOBFILE *file, char *fname)
 
     return (List *)bezierlist;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

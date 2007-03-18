@@ -36,14 +36,16 @@
 
 #define INSTFIELDS						\
   GEOMFIELDS;							\
-  Transform 	axis;		/* this ought to go... */	\
-  TransformN    *NDaxis;	/* maybe not. */		\
   Geom		*geom;						\
-  Geom		*tlist;						\
   Handle	*geomhandle;					\
-  Handle	*tlisthandle;					\
+  Transform 	axis;		/* this ought to go... */	\
   Handle	*axishandle;					\
+  TransformN    *NDaxis;	/* maybe not. */		\
   Handle	*NDaxishandle;					\
+  Geom		*tlist;						\
+  Handle	*tlisthandle;					\
+  Geom		*txtlist;					\
+  Handle	*txtlisthandle;					\
   int		location;	/* L_LOCAL, etc. */		\
   int		origin;		/* L_NONE, L_LOCAL, etc. */	\
   Point3	originpt	/* Only if origin != L_NONE */
@@ -62,3 +64,9 @@ extern Inst *InstCopy( Inst * );
 extern Inst *InstDice( Inst *, int nu, int nv );
 
 #endif /*INSTPDEFS*/
+
+/*
+ * Local Variables ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

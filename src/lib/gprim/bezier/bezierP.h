@@ -34,7 +34,7 @@ struct Bezier {
   int    degree_u, degree_v, dimn;
   int    nu, nv; /* these must match mesh dimensions or remake mesh */
   float  *CtrlPnts;
-  float  *STCords;
+  TxST   STCoords[4];
   Mesh   *mesh;
   Handle *meshhandle; /* to be able to define call-backs when remeshing */
   ColorA c[4];  /* if flag & BEZ_C */

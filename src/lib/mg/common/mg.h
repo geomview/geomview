@@ -105,7 +105,7 @@ struct mgfuncs {  /* mg member functions; potentially changed per device */
   void          (*mg_polylist)(int np, struct Poly *p,
                                int nv, struct Vertex *v, int plflags);
   void          (*mg_mesh)(int wrap,int nu,int nv,HPoint3 *p,
-                           Point3 *n, Point3 *nq, ColorA *c, Point3 *STR,
+                           Point3 *n, Point3 *nq, ColorA *c, TxST *ST,
                            int mflags);
   void          (*mg_line)(HPoint3 *p1, HPoint3 *p2);
   void          (*mg_polyline)(int nv, HPoint3 *v, int nc, ColorA *c, 
@@ -113,7 +113,7 @@ struct mgfuncs {  /* mg member functions; potentially changed per device */
   void          (*mg_quads)(int nquads, HPoint3 *v, Point3 *n, ColorA *c,
                             int qflags);
   void          (*mg_bezier)(int du, int dv, int dimn, float *ctrlpts,
-                             float *txmapst, ColorA *c);
+                             TxST *txmapst, ColorA *c);
   void          (*mg_bsptree)(struct BSPTree *bsptree);
   const void   *(*mg_tagappearance)(void);
   void          (*mg_untagappearance)(const void *tag);

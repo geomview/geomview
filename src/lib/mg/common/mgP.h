@@ -193,7 +193,7 @@ extern int mg_pushtxtransform(void);
 extern int mg_poptxtransform(void);
 
 extern void mg_quads(int nquads, HPoint3 *v, Point3 *n, ColorA *c, int qflags);
-extern void mg_bezier(int du, int dv, int dimn, float *ctrlpts, float *txmapst,
+extern void mg_bezier(int du, int dv, int dimn, float *ctrlpts, TxST *txmapst,
 		      ColorA *c);
 extern void mg_bsptree(struct BSPTree *bsptree);
 extern void mg_findcam();

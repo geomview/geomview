@@ -46,6 +46,8 @@ InstDelete(Inst *inst)
     if (inst->geom) GeomDelete(inst->geom);
     if (inst->tlisthandle) HandlePDelete(&inst->tlisthandle);
     if (inst->tlist) GeomDelete(inst->tlist);
+    if (inst->txtlisthandle) HandlePDelete(&inst->txtlisthandle);
+    if (inst->txtlist) GeomDelete(inst->txtlist);
     if (inst->axishandle) HandlePDelete(&inst->axishandle);
     if (inst->NDaxishandle) HandlePDelete(&inst->NDaxishandle);
     if (inst->NDaxis) NTransDelete(inst->NDaxis);
@@ -97,12 +99,14 @@ int InstGet(Inst *inst, int attr, void *attrp)
   case CR_GEOMHANDLE: *(Handle **)attrp = inst->geomhandle; break;
   case CR_TLIST: *(Geom **)attrp = inst->tlist; break;
   case CR_TLISTHANDLE: *(Geom **)attrp = (Geom *)inst->tlisthandle; break;
-  case CR_AXISHANDLE: *(Handle **)attrp = inst->axishandle; break;
+  case CR_TXTLIST: *(Geom **)attrp = inst->txtlist; break;
+  case CR_TXTLISTHANDLE: *(Geom **)attrp = (Geom *)inst->txtlisthandle; break;
   case CR_NDAXISHANDLE: *(Handle **)attrp = inst->NDaxishandle; break;
+  case CR_NDAXIS: *(TransformN **)attrp = inst->NDaxis; break;
+  case CR_AXISHANDLE: *(Handle **)attrp = inst->axishandle; break;
   case CR_AXIS:
     TmCopy(inst->axis, (void *)attrp);
     return (inst->tlist == NULL && inst->tlisthandle == NULL) ? 1 : 0;
-  case CR_NDAXIS: *(TransformN **)attrp = inst->NDaxis; break;
   case CR_LOCATION: *(int *)attrp = inst->location; break;
   default:
     return -1;
@@ -129,6 +133,8 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
     inst->geom = NULL;
     inst->tlisthandle = NULL;
     inst->tlist = NULL;
+    inst->txtlisthandle = NULL;
+    inst->txtlist = NULL;
     inst->axishandle = NULL;
     inst->NDaxishandle = NULL;
     inst->location = L_NONE;
@@ -238,6 +244,28 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       }
       inst->tlisthandle = h;
       HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist,
+		     HandleUpdRef);
+      break;
+    case CR_TXTLIST:
+      g = va_arg (*a_list, Geom *);
+      if(copy) {
+	REFINCR(g);
+      }
+      if(inst->txtlist) {
+	GeomDelete(inst->txtlist);
+      }
+      inst->txtlist = g;
+      break;
+    case CR_TXTLISTHANDLE:
+      h = va_arg(*a_list, Handle *);
+      if(copy) {
+	REFINCR(h);
+      }
+      if(inst->txtlisthandle != NULL) {
+	HandlePDelete(&inst->txtlisthandle);
+      }
+      inst->txtlisthandle = h;
+      HandleRegister(&inst->txtlisthandle, (Ref *)inst, &inst->txtlist,
 		     HandleUpdRef);
       break;
     case CR_LOCATION:

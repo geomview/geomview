@@ -88,7 +88,7 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
     }
 
     if (pl->geomflags & PL_HASST) {
-      fprintf(outf, "  %.8g %.8g", pl->vl[i].st[0], pl->vl[i].st[1]);
+      fprintf(outf, "  %.8g %.8g", pl->vl[i].st.s, pl->vl[i].st.t);
     }
     fputc('\n', outf);
   }

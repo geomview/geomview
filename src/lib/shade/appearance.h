@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -322,6 +323,38 @@ extern HandleOps TextureOps;
 #define   IMGF_ALPHA           0x100
 #define   IMGF_AUTO            0x200
 #define IMG_END            1042
+
+typedef struct TxST 
+{
+    float s;
+    float t;
+} TxST;
+
+/* Transformation of (s,t)-texture co-ordinates. (s,t,r,q) with r = 0,
+ * q = 1
+ */
+static inline void TxSTTransform(Transform T, TxST *in, TxST *out)
+{
+    float s, t, q;
+
+    if (T == NULL || T == TM_IDENTITY) {
+	*out = *in;
+	return;
+    }
+
+    s = in->s;
+    t = in->t;
+    q = T[TMX][TMW]*s + T[TMY][TMW]*t + T[TMW][TMW];
+
+    if(q != 1.0) {
+	q = 1.0 / q;
+	out->s = q * (s*T[TMX][TMX] + t*T[TMY][TMX] + T[TMW][TMX]);
+	out->t = q * (s*T[TMX][TMY] + t*T[TMY][TMY] + T[TMW][TMY]);
+    } else {
+	out->s = s*T[TMX][TMX] + t*T[TMY][TMX] + T[TMW][TMX];
+	out->t = s*T[TMX][TMY] + t*T[TMY][TMY] + T[TMW][TMY];
+    }
+}
 
 Appearance *	ApCreate( int attr, ... );
 Appearance *	ApSet( Appearance *ap, int attr, ... );

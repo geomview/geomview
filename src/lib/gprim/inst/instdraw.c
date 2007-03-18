@@ -117,8 +117,8 @@ static TmCoord (*coordsto(int from, int to))[4]
     
 Inst *InstDraw(Inst *inst) 
 {
-  GeomIter *it;
-  Transform T, tT, Tl2o;
+  GeomIter *it, *txit = NULL;
+  Transform T, tT, Tl2o, Ttx;
   mgNDctx *NDctx = NULL;
   void *saved_ctx;
 
@@ -157,11 +157,21 @@ Inst *InstDraw(Inst *inst)
 	NDctx->restoreCTX(NDctx, saved_ctx);
       } else {
 	it = GeomIterate((Geom *)inst, DEEP);
-	while(NextTransform(it, T)) {
+	txit = GeomIterate((Geom *)inst->txtlist, DEEP);
+	while (NextTransform(it, T)) {
+	  if (!NextTransform(txit, Ttx)) {
+	    txit = NULL;
+	  } else {
+	    mgpushtxtransform();
+	    mgtxtransform(Ttx);
+	  }
 	  saved_ctx = NDctx->saveCTX(NDctx);
 	  NDctx->pushT(NDctx, T);
 	  GeomDraw(inst->geom);
 	  NDctx->restoreCTX(NDctx, saved_ctx);
+	  if (txit != NULL) {
+	    mgpoptxtransform();
+	  }
 	}
       }
       if (inst->geom->geomflags & GEOM_ALPHA) {
@@ -172,9 +182,17 @@ Inst *InstDraw(Inst *inst)
   }
 
   it = GeomIterate((Geom *)inst, DEEP);
+  txit = GeomIterate((Geom *)inst->txtlist, DEEP);
   while (NextTransform(it, T)) {
 
     mgpushtransform();
+
+    if (!NextTransform(txit, Ttx)) {
+      txit = NULL;
+    } else {
+      mgpushtxtransform();
+      mgtxtransform(Ttx);
+    }
 
     /* Compute origin *before* changing mg tfm */
     if (inst->origin != L_NONE) {	    
@@ -203,6 +221,9 @@ Inst *InstDraw(Inst *inst)
     }
     GeomDraw(inst->geom);
     mgpoptransform();
+    if (txit != NULL) {
+      mgpoptxtransform();
+    }
   }
 
   if(NDctx) {
@@ -225,9 +246,9 @@ Inst *InstDraw(Inst *inst)
 
 Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
 {
-  TransformPtr oldT;
-  GeomIter *it;
-  Transform T, tT, Tl2o;
+  TransformPtr oldT, oldTxT;
+  GeomIter *it, *txit;
+  Transform T, tT, Tl2o, TxT;
 
   if (inst->geom) {
     GeomMakePath(inst, 'I', path, pathlen);
@@ -283,8 +304,10 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     }
 
     oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
+    oldTxT = BSPTreePushTxTransform(bsptree, TM_IDENTITY);
 
     it = GeomIterate((Geom *)inst, DEEP);
+    txit = GeomIterate((Geom *)inst->txtlist, DEEP);
     while (NextTransform(it, T)) {
 
       /* Compute origin *before* changing mg tfm */
@@ -320,9 +343,16 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
 	TmConcat(T, oldT, T);
       }
       BSPTreeSetTransform(bsptree, T);
+      if (!NextTransform(txit, TxT)) {
+	txit = NULL;
+      } else {
+	TmConcat(TxT, oldTxT, TxT);
+	BSPTreeSetTxTransform(bsptree, TxT);
+      }
       GeomBSPTree(inst->geom, bsptree, action);
     }
 
+    BSPTreePopTxTransform(bsptree, oldT);
     BSPTreePopTransform(bsptree, oldT);
 
     return inst;

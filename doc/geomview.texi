@@ -3739,16 +3739,53 @@ int int int int int float float float float
 The conventional suffix for @code{SPHERE} files is @file{.sph}.
 
 @example
-SPHERE
+[ST][E|H|S]SPHERE # Keyword
+# auto-generated texture co-ordinates, only allowed with @emph{ST}SPHERE objects
+[SINUSOIDAL|CYLINDRICAL|RECTANGULAR|STEREOGRAPHIC|ONEFACE]
+# next four fields are required
 @var{Radius}
 @var{Xcenter} @var{Ycenter} @var{Zcenter}
 @end example
 
-Sphere objects are drawn using rational Bezier patches, which are diced into
-meshes; their smoothness, and the time taken to draw them, depends on the
-setting of the dicing level, 10x10 by default.
-From Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or
-a @code{dice nu nv} Appearance attribute sets this.
+The key word is  @code{[ST][E|H|S]SPHERE}.
+The optional prefix characters mean:
+
+@table @samp
+@item ST
+The sphere carries automatically generated texture co-ordinates. See below.
+@item E
+The sphere lives in Euclidean space.
+@item H
+The sphere lives in Hyperbolic space. @xref{Non-Euclidean Geometry}.
+@item S
+The sphere lives in spherical space. @xref{Non-Euclidean Geometry}.
+@end table
+
+Sphere objects are drawn using meshes which are rectangular in a polar
+co-ordinate system, with the equatorial plane parallel to the
+@code{x,y}-plane. Their smoothness, and the time taken to draw them,
+depends on the setting of the dicing level, 10x10 by default.  From
+Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or a
+@code{dice nu nv} Appearance attribute sets this.
+
+Texture co-ordinates are generated for @code{STSPHERE} objectes; the
+keyword following the initial @code{STSPHERE} keyword defines the way
+this is done. It follows the conventions of the @command{mktxmesh}
+Perl-script which comes with the @emph{Orrery}.
+
+@table @var
+@item SINUSOIDAL
+sinusoidal equal-area projection
+@item CYLINDRICAL
+cylindrical proj: @var{s} is the longitude, @var{t} is the latitude
+@item RECTANGULAR
+rectangular proj: @var{s} is the longitude, @var{t} is @code{sin(latitude)}
+(i.e. @code{z} co-ordinate in the sphere's co-ordinate system)
+@item STEREOGRAPHIC
+stereographic projection from the south (@code{z=-1}) pole
+@item ONEFACE
+stretch orthographic view of @code{+y} hemisphere over both, mirroring
+@end table
 
 @comment ----------------------------------------------------------------
 @node INST, LIST, SPHERE, Object File Formats

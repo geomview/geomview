@@ -105,10 +105,10 @@ BezierListFSave(bezierlist, f)
 		p += 3;
 	    }
 	}
-	if(bez->geomflags & BEZ_ST && bez->STCords != NULL) {
+	if(bez->geomflags & BEZ_ST) {
 	    fputc('\n', f);
-	    for(u = 0, p = bez->STCords; u < 4; u++, p += 2)
-		fprintf(f, "%8g %8g  ", p[0], p[1]);
+	    for(u = 0; u < 4; u++)
+		fprintf(f, "%8g %8g  ", bez->STCoords[u].s, bez->STCoords[u].t);
 	}
 	if(bez->geomflags & BEZ_C && bez->c != NULL) {
 	    fputc('\n', f);

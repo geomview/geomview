@@ -35,19 +35,29 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transform.h"
 #include "sphereP.h"
 
+static const char *texmap[] = {
+  "SINUSOIDAL", "CYLINDRICAL", "RECTANGULAR", "STEREOGRAPHIC", "ONEFACE", NULL
+};
+
 Sphere *SphereFLoad(IOBFILE *file, char *fname)
 {
   HPoint3 center;
   float radius;
   Geom *sphere;
   char *token;
-  int space;
+  int space, i, c;
+  unsigned txmapmeth = SPHERE_TXCYLINDRICAL;
+  bool tex = false;
 
   if (file == NULL) return NULL;
 
   space = TM_EUCLIDEAN;
 
   token = GeomToken(file);
+  if (token[0] == 'S' && token[1] == 'T') {
+    tex = true;
+    token += 2;
+  }
   switch(*token) {
   case 'E': space = TM_EUCLIDEAN; token++; break;
   case 'H': space = TM_HYPERBOLIC; token++; break;
@@ -58,10 +68,35 @@ Sphere *SphereFLoad(IOBFILE *file, char *fname)
     }
     break;
   }
-  if(strcmp(token, "SPHERE") != 0)
+  if(strcmp(token, "SPHERE") != 0) {
     return NULL;
+  }
 
-  if ( iobfgetnf(file, 1, &radius, 0) != 1 || iobfgetnf(file, 3, &center.x, 0) != 3 ) {
+  GeomAcceptToken();
+  if (tex) {
+    c = iobfnextc(file, 0);
+    for (i = 0; texmap[i] != NULL; i++) {
+      if (c == (int)texmap[i][0]) {
+	break;
+      }
+    }
+    if (texmap[i] != NULL) {
+      token = GeomToken(file);
+      for (i = 0; texmap[i] != NULL; i++) {
+	if (strcmp(texmap[i], token) == 0) {
+	  break;
+	}
+      }
+      if (texmap[i] == NULL) {
+	OOGLSyntax(file, "%s: SPHERE: expected texture mapping method", fname);
+	return NULL;
+      }
+      txmapmeth = GEOMFLAG((i+1) << 1);
+    }
+  }
+
+  if (iobfgetnf(file, 1, &radius, 0) != 1 ||
+      iobfgetnf(file, 3, &center.x, 0) != 3) {
     OOGLSyntax(file, "%s: SPHERE: expected radius, then x y z", fname);
     return NULL;
   }
@@ -69,7 +104,15 @@ Sphere *SphereFLoad(IOBFILE *file, char *fname)
   center.w = 1.0;
 
   sphere = GeomCreate("sphere", CR_RADIUS, (double)radius, 
-		      CR_CENTER, &center, CR_SPACE, space, CR_END);
+		      CR_CENTER, &center, CR_SPACE, space,
+		      tex ? CR_SPHERETX : CR_END, txmapmeth,
+		      CR_END);
 
   return (Sphere *)sphere;
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

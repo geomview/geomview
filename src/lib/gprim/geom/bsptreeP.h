@@ -79,6 +79,7 @@ struct BSPTree {
   Transform      Tdual;     /* We need the dual of T to transform the normals
 			     * correctly ( y^t x = 0 <=> y^t T T^{-tr}x = 0).
 			     */
+  TransformPtr   TxT;       /* texture transform */
   const void **tagged_app;
 
   struct obstack obst;  /* Scratch space for new polygons etc */
@@ -160,6 +161,33 @@ static inline void BSPTreePopTransform(BSPTree *tree, TransformPtr old_T)
     if (old_T != TM_IDENTITY) {
       TmDual(old_T, tree->Tdual);
     }
+  }
+}
+
+static inline TransformPtr BSPTreePushTxTransform(BSPTree *tree, TransformPtr T)
+{
+  TransformPtr old_TxT;
+
+  if (tree != NULL) {
+    old_TxT = tree->TxT;
+    tree->TxT = T;
+    return old_TxT;
+  } else {
+    return TM_IDENTITY;
+  }
+}
+
+static inline void BSPTreeSetTxTransform(BSPTree *tree, TransformPtr T)
+{
+  if (tree != NULL) {
+    tree->TxT = T;
+  }
+}
+
+static inline void BSPTreePopTxTransform(BSPTree *tree, TransformPtr old_T)
+{
+  if (tree != NULL) {
+    tree->TxT = old_T;
   }
 }
 

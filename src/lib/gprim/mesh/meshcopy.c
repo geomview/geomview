@@ -70,15 +70,16 @@ MeshCopy(Mesh *obj)
 	    return(NULL);
 	}
 	memcpy(m->c, om->c, n * sizeof(ColorA));
-    } else
+    } else {
 	m->c = NULL;
+    }
 
     if (m->geomflags & MESH_U) {
-	if ((m->u = GeomNewN(Point3, n)) == NULL) {
+	if ((m->u = GeomNewN(TxST, n)) == NULL) {
 	    GeomError(0,"Can't allocate space for mesh texture");
 	    return(NULL);
 	}
-	memcpy(m->u, om->u, n * sizeof(Point3));
+	memcpy(m->u, om->u, n * sizeof(TxST));
     } else
 	m->u = NULL;
 

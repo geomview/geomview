@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -23,22 +24,16 @@
 # include "config.h"
 #endif
 
-#if 0
-static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
-#endif
-
 #include <math.h>
 #include "geom.h"
 #include "geomclass.h"
 #include "transform.h"
 #include "hpoint3.h"
 #include "sphereP.h"
-#include "bezier.h"
 #include "tlist.h"
 
 #if BEZIER_SPHERES
-#define old 1
+#include "bezier.h"
 
 static float ctrlPnts[] = {
 #if old
@@ -53,31 +48,111 @@ static float ctrlPnts[] = {
 };
 #endif
 
-/* for the transformation of the geometry */
-static Transform reflections[] = {
-  {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
-  {{1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
-  {{-1,0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
-  {{-1,0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
-  {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}},
-  {{1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}},
-  {{-1,0, 0, 0}, {0,-1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}},
-  {{-1,0, 0, 0}, {0, 1, 0, 0}, {0, 0, -1, 0}, {0, 0, 0, 1}}
+/* To support all texture mappings supported by mktxmesh we have to
+ * compose the sphere of different parts.
+ */
+static const int ngeomtfm[] = { 8, 2, 8, 8, 4, 8 };
+
+static const Transform geomtfm[][8] = {
+  { /* SPHERE_TXNONE, octants */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}}
+  },
+  { /* SPHERE_TXSINUSOIDAL, reflection on (x,y)-plane */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+  },
+  { /* SPHERE_TXCYLINDRIAL, octants */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}}
+  },
+  { /* SPHERE_TXRECTANGULAR, octants */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}}
+  },
+  { /* SPHERE_TXSTEREOGRAPHIC, quarters */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+  },
+  { /* SPHERE_TXONESIDE, octants */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0,-1, 0}, {0, 0, 0, 1}}
+  },
 };
 
 /* for the transformation of the texture co-ordinates (if any) */
-static Transform textfm[] = {
-  {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
-  {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
-  {{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
-  {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {1.0, 0, 0, 1}},
-  {{1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {0, 1.0, 0, 1}},
-  {{-1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {0.5, 1.0, 0, 1}},
-  {{1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {0.5, 1.0, 0, 1}},
-  {{-1, 0, 0, 0}, {0, -1, 0, 0}, {0, 0, 1, 0}, {1.0, 1.0, 0, 1}},
+static const Transform textfm[][8] = {
+  { /* SPHERE_TXNONE, nothing */
+    {{ 0, }},
+  },
+  { /* SPHERE_TXSINUSOIDAL */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 1, 0, 1}},
+  },
+  {/* SPHERE_TXCYLINDRIAL */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {1.0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.0, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {1.0, 1, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.5, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.5, 1, 0, 1}},
+  },
+  { /* SPHERE_TXRECTANGULAR */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {1.0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0.5, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.0, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {1.0, 1, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.5, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0.5, 1, 0, 1}},
+  },
+  { /* SPHERE_TXSTEREOGRAPHIC */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+  },
+  { /* SPHERE_TXONESIDE */
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {1, 0, 0, 1}},
+    {{-1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {1, 0, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 1, 0, 1}},
+    {{ 1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {0, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {1, 1, 0, 1}},
+    {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {1, 1, 0, 1}},
+  }
 };
 
-#if !BEZIER_SPHERES
 static inline void sphere_make_meshhandle(Sphere *sphere)
 {
     char meshhname[sizeof("\aSphere::")+sizeof(void *)*2];
@@ -89,7 +164,6 @@ static inline void sphere_make_meshhandle(Sphere *sphere)
     GeomCCreate((Geom *)sphere, InstMethods(),
 		CR_NOCOPY, CR_GEOMHANDLE, handle, CR_END);
 }
-#endif
 
 /* Do we need a SphereCopy()? In principle yes. */
 Sphere *SphereCopy(Sphere *sphere)
@@ -97,11 +171,13 @@ Sphere *SphereCopy(Sphere *sphere)
   Sphere *nsphere;
 
   /* simply create a new one and copy over the three defining fields */
-  nsphere = (Sphere *)GeomCCreate(NULL, SphereMethods(),
-				  CR_SPACE, sphere->space,
-				  CR_CENTER, &sphere->center,
-				  CR_RADIUS, &sphere->radius,
-				  CR_END);
+  nsphere =
+    (Sphere *)GeomCCreate(NULL, SphereMethods(),
+			  CR_SPACE, sphere->space,
+			  CR_CENTER, &sphere->center,
+			  CR_RADIUS, &sphere->radius,
+			  CR_SPHERETEX, sphere->geomflags & SPHERE_TXMASK,
+			  CR_END);
   TmCopy(sphere->axis, nsphere->axis);
 
   return nsphere;
@@ -112,8 +188,11 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   Sphere *sphere;
   int nencompass_points = 0;
   int attr, copy = 1;
+  unsigned texmeth;
+  unsigned flags;
   Transform *axis = NULL;
   HPoint3 *encompass_points = NULL;
+  bool havetex = false;
 
   if (exist == NULL) {
     sphere = OOGLNewE(Sphere, "SphereCreate:  new Sphere");
@@ -124,6 +203,8 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere->geom = NULL;
     sphere->tlisthandle = NULL;
     sphere->tlist = NULL;
+    sphere->txtlisthandle = NULL;
+    sphere->txtlist = NULL;
     sphere->axishandle = NULL;
     sphere->NDaxishandle = NULL;
     sphere->location = L_NONE;
@@ -132,7 +213,11 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere->space = TM_EUCLIDEAN;
     HPt3From(&(sphere->center), 0.0, 0.0, 0.0, 1.0);
     sphere->ntheta = sphere->nphi = SPHERE_DEFAULT_MESH_SIZE;
-  } else sphere = (Sphere *)exist;
+  } else {
+    sphere = (Sphere *)exist;
+  }
+
+  texmeth = sphere->geomflags & SPHERE_TXMASK;
 
   while ((attr = va_arg (*a_list, int))) switch (attr) {
   case CR_CENTER:
@@ -149,6 +234,24 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     break;
   case CR_NENCOMPASS_POINTS:
     nencompass_points = va_arg(*a_list, int);
+    break;
+  case CR_SPHERETX:
+    switch (texmeth = va_arg(*a_list, int)) {
+    case SPHERE_TXNONE:
+    case SPHERE_TXSINUSOIDAL:
+    case SPHERE_TXCYLINDRICAL:
+    case SPHERE_TXRECTANGULAR:
+    case SPHERE_TXSTEREOGRAPHIC:
+    case SPHERE_ONEFACE:
+      havetex = true;
+      break;
+    default:
+      OOGLError(1, "Undefined texture mapping method: %d", flags);
+      if (exist == NULL) {
+	GeomDelete ((Geom *)sphere);
+      }
+      return NULL;
+    }
     break;
   case CR_AXIS:
     axis = va_arg(*a_list, Transform *);
@@ -186,8 +289,7 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
 			   CR_END);
 
     /* TList does make a copy of the transformations */
-    unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, reflections,
-			    CR_END);
+    unitsphere = GeomCreate("tlist", CR_NELEM, 8, CR_ELEM, V4, CR_END);
     GeomCCreate((Geom *)sphere, InstMethods(),
 		CR_GEOM, quadrant,
 		CR_TLIST, unitsphere,
@@ -197,16 +299,40 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   }
 #else
   if (sphere->geomhandle == NULL) {
-    Geom *unitsphere;
-
-    unitsphere = GeomCCreate(NULL , TlistMethods(),
-			     CR_NELEM, 8, CR_ELEM, reflections, CR_END);
-    GeomCCreate((Geom *)sphere, InstMethods(),
-		CR_NOCOPY, CR_TLIST, unitsphere, CR_END);
+    /* force remeshing on redraw, but not earlier. */
+    sphere->geomflags |= SPHERE_REMESH;
     sphere_make_meshhandle(sphere);
-    sphere->geomflags |= SPHERE_REMESH; /* force remeshing on redraw,
-					 * but not earlier.
-					 */
+  }
+  if (texmeth != (sphere->geomflags & SPHERE_TXMASK)) {
+    Geom *txtlist = NULL;
+    int texidx = SPHERE_TXMETH(texmeth);
+    
+    /* force remeshing on redraw, but not earlier. */
+    sphere->geomflags |= SPHERE_REMESH;
+    sphere->geomflags &= ~SPHERE_TXMASK;
+    sphere->geomflags |= texmeth;
+
+    if (texmeth > 0) {
+      txtlist = GeomCCreate(NULL , TlistMethods(),
+			    CR_NELEM, ngeomtfm[texidx],
+			    CR_ELEM, textfm[texidx],
+			    CR_END);
+    }
+    GeomCCreate((Geom *)sphere, InstMethods(),
+		CR_NOCOPY, CR_TLIST, NULL, CR_TXTLIST, txtlist, CR_END);
+  }
+  if (sphere->tlist == NULL) {
+    Geom *tlist;
+    int texidx = SPHERE_TXMETH(sphere->geomflags);
+
+    /* force remeshing on redraw, but not earlier. */
+    sphere->geomflags |= SPHERE_REMESH;
+
+    tlist = GeomCCreate(NULL , TlistMethods(),
+			CR_NELEM, ngeomtfm[texidx],
+			CR_ELEM, geomtfm[texidx], CR_END);
+    GeomCCreate((Geom *)sphere, InstMethods(), CR_NOCOPY, CR_TLIST, tlist,
+		CR_END);
   }
 #endif
 

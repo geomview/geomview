@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -119,9 +120,9 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
 
   case CR_U:
     mesh->geomflags = (mesh->geomflags & ~MESH_U) |
-      (MESH_U & meshfield(copy, npts*sizeof(Point3),
+      (MESH_U & meshfield(copy, npts*sizeof(TxST),
 			  (void **)(void *)&mesh->u,
-			  (void *)va_arg (*a_list, Point3 *),
+			  (void *)va_arg (*a_list, TxST *),
 			  "mesh texture coords"));
     break;
 

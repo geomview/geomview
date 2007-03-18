@@ -63,7 +63,8 @@ Mesh *BezierReDice(Bezier *bezier)
     float    *tmpdu, *tmpdu0, *tmpdu1, *tmpdu2, *du;
     float norm;
     HPoint3   *bmp;
-    Point3 *bmn, *bmt;
+    Point3 *bmn;
+    TxST *bmt;
     Mesh m;
 
     dimn = bezier->dimn;
@@ -92,7 +93,7 @@ Mesh *BezierReDice(Bezier *bezier)
     if(bezier->geomflags & BEZ_C)
       m.c = OOGLNewNE(ColorA, nu*nv,  "BezierReDice: mesh colors");
     if(bezier->geomflags & BEZ_ST)
-      m.u = OOGLNewNE(Point3, nu*nv, "BezierReDice: mesh txcoords");
+      m.u = OOGLNewNE(TxST, nu*nv, "BezierReDice: mesh txcoords");
 
 
     /* compute first pass: interpolate mesh points in u direction */
@@ -181,10 +182,10 @@ printf("this is tmpdu0\n");
       bezier_interp(tmpdu1, tmpdu2, degree_v, nv, dimn);
       if(bmt) {
 	  tu = (float)u/(nu-1);
-	  txs0 = bezier->STCords[0]*(1-tu) + bezier->STCords[2]*tu;
-	  txds = bezier->STCords[4]*(1-tu) + bezier->STCords[6]*tu - txs0;
-	  txt0 = bezier->STCords[1]*(1-tu) + bezier->STCords[3]*tu;
-	  txdt = bezier->STCords[5]*(1-tu) + bezier->STCords[7]*tu - txt0;
+	  txs0 = bezier->STCoords[0].s*(1-tu) + bezier->STCoords[1].s*tu;
+	  txds = bezier->STCoords[2].s*(1-tu) + bezier->STCoords[3].s*tu - txs0;
+	  txt0 = bezier->STCoords[0].t*(1-tu) + bezier->STCoords[1].t*tu;
+	  txdt = bezier->STCoords[2].t*(1-tu) + bezier->STCoords[3].t*tu - txt0;
       }
       for (v=0, p=tmpp2, dv=tmpdv2, du=tmpdu2; 
            v<nv; ++v, p+=dimn, dv+=dimn, du+=dimn) {
@@ -213,9 +214,8 @@ printf("this is tmpdu0\n");
         bmn++;
 	if(bmt) {
 	    float tv = (float)v/(nv-1);
-	    bmt->x = txs0 + txds*tv;
-	    bmt->y = txt0 + txdt*tv;
-	    bmt->z = 0;
+	    bmt->s = txs0 + txds*tv;
+	    bmt->t = txt0 + txdt*tv;
 	    bmt++;
 	}
       }

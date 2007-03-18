@@ -65,24 +65,35 @@ struct GeomIter {
 	int flags;
 };
 
-static struct GeomIter *itpool;
+static union itpool { union itpool *next; struct GeomIter iter; } *itpool;
 static struct istate *ispool;
 
-#define	NewIter(it)	if(itpool) { it = itpool; itpool = NULL;} \
-			else it = OOGLNewE(GeomIter, "GeomIter")
-#define	NewIstate(is)	if(ispool) { is = ispool; ispool = ispool->parent; } \
-			else is = OOGLNewE(struct istate, "GeomIter state")
+#define	NewIter(it)							\
+    if (itpool) {							\
+	it = &itpool->iter;						\
+	itpool = itpool->next;						\
+    } else {								\
+	it = OOGLNewE(GeomIter, "GeomIter");				\
+    }
+#define	NewIstate(is)							\
+    if (ispool) {							\
+	is = ispool;							\
+	ispool = ispool->parent;					\
+    } else {								\
+	is = OOGLNewE(struct istate, "GeomIter state");			\
+    }
 
-#define	FreeIter(it)	if(itpool) OOGLFree(it); else itpool = it
-#define	FreeIstate(is)	(is)->parent = ispool, ispool = is
+#define	FreeIter(it)							\
+    ((union itpool *)(it))->next = itpool, itpool = (union itpool *)(it)
+#define	FreeIstate(is) (is)->parent = ispool, ispool = (is)
 
-GeomIter *GeomIterate(Geom *g, int flags)
+GeomIter *_GeomIterate(Geom *g, int flags)
 {
     GeomIter *it;
     struct istate *is;
 
     NewIter(it);
-    it->flags = (flags & 15) | VALID;
+    it->flags = (flags & 0xf) | VALID;
     NewIstate(is);
     it->stack = is;
     is->kind = UNKNOWN;
@@ -101,16 +112,19 @@ GeomIter *GeomIterate(Geom *g, int flags)
  *
  * For speed, we act as a friend to the List, TList, Inst, and Sphere
  * classes.   XXX
+ *
+ * This function has to be called through the inline function
+ * NextTransform(); we assume here that iter != NULL and it->stack !=
+ * NULL.
  */
-int NextTransform(GeomIter *it, Transform T)
+int _NextTransform(GeomIter *it, Transform T)
 {
     struct istate *is;
     Geom *g;
 
-    if(it == NULL)
-	return 0;
-    if((is = it->stack) == NULL)
+    if ((is = it->stack) == NULL) {
 	goto gone;
+    }
 
     g = is->g;
 
@@ -281,9 +295,9 @@ int NextTransform(GeomIter *it, Transform T)
 	g = is->g;
 	goto again;	/* Recurse -- type already determined */
     }
-    /* stack empty -- fall into gone: */
+    /* stack empty -- finished */
 
-  gone:
+ gone:
     it->flags = 0;
     it->stack = NULL;
     FreeIter(it);
@@ -302,3 +316,9 @@ DestroyIter(it)
 	GeomError(1,"DestroyIter -- already destroyed %x", it);
     }
 }
+
+/*
+ * Local Variables: ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

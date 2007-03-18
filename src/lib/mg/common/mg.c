@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.14 2007/03/16 19:45:41 rotdrop Exp $
+ * $Id: mg.c,v 1.15 2007/03/18 18:06:53 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -1078,7 +1078,7 @@ mg_quads(int nquads, HPoint3 *verts, Point3 *normals, ColorA *colors,
 }
 
 void
-mg_bezier(int du, int dv, int dimn, float *ctrlpts, float *txmapst, ColorA *c)
+mg_bezier(int du, int dv, int dimn, float *ctrlpts, TxST *txmapst, ColorA *c)
 {
 }
 
