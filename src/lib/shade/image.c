@@ -1086,7 +1086,11 @@ static bool readimage(Image *img, unsigned *chmask, char *filtertype,
       }
     }
   }
-  if (filterfds[1] < 0 && explicit_filter && *explicit_filter != '\0') {
+  /* try to run any explicitly specified filter, but omit the dummy
+   * filter "raw", which just means to interprete the stuff literally.
+   */
+  if (filterfds[1] < 0 && explicit_filter &&
+      *explicit_filter != '\0' && strcasecmp(suffix, "raw") != 0) {
     /* explicitly specified filter */
     filterfds[1] = run_filter(explicit_filter, imgfd, false, &filterpids[1]);
     if (filterfds[1] < 0) {
@@ -1115,7 +1119,12 @@ static bool readimage(Image *img, unsigned *chmask, char *filtertype,
     }
   }
 
-  if (!parseheader(img, imgf, chmask, filtertype, &header)
+  if (filtertype == NULL || (suffix = strrchr(filtertype, '.')) == NULL) {
+    suffix = filtertype;
+  } else {
+    suffix++; /* advance past '.' */
+  }
+  if (!parseheader(img, imgf, chmask, suffix, &header)
       ||
       !readdata(img, imgf, *chmask, &header)) {
     result = false;
@@ -1184,7 +1193,7 @@ parseheader(Image *img, IOBFILE *imgf, unsigned *chmask,
   }
 
   if (type && strcasecmp(type, "raw") == 0) {
-    if (*chmask == 0xf) {
+    if (*chmask == IMGF_AUTO) {
       OOGLError(1, "parseheader(): "
 		"chmask == AUTO cannot work with raw image data");
       return false;
