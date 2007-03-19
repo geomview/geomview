@@ -176,7 +176,7 @@ Sphere *SphereCopy(Sphere *sphere)
 			  CR_SPACE, sphere->space,
 			  CR_CENTER, &sphere->center,
 			  CR_RADIUS, &sphere->radius,
-			  CR_SPHERETX, sphere->geomflags & SPHERE_TXMASK,
+			  CR_SPHERETEX, sphere->geomflags & SPHERE_TXMASK,
 			  CR_END);
   TmCopy(sphere->axis, nsphere->axis);
 
