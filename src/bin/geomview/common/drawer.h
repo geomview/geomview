@@ -459,17 +459,6 @@ int drawer_read_manifold(char *file);
 
 #endif /* MANIFOLD */
 
-#include "transform.h" /* for get_geom_ND_transform */
-
-static inline bool bboxvalid(DGeom *dg)
-{
-  if (!dg->bboxvalid || (drawerstate.NDim > 0) != (dg->NDT != NULL)) {
-    (void)get_geom_ND_transform(dg);
-    dg->bboxvalid = false;
-  }
-  return dg->bboxvalid;
-}
-
 #endif /* ! _DRAWER_H_ */
 
 /*

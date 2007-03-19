@@ -79,7 +79,8 @@ get_geom_ND_transform(DGeom *dg)
   if (dg->NDT == NULL && drawerstate.NDim > 0) {
     dg->NDT = TmNIdentity(TmNCreate(drawerstate.NDim, drawerstate.NDim, NULL));
     GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
-  } else {
+    dg->bboxvalid = false; /* invalidate bounding box */
+  } else if (drawerstate.NDim == 0) {
     TmNDelete(dg->NDT);
     dg->NDT = NULL;
   }

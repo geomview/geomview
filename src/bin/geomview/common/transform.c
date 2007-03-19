@@ -2088,7 +2088,7 @@ void make_center_from_bbox(char *objname, int obj_id)
     if (dg) {
       Geom *bbox;
 
-      if (!bboxvalid(dg)) {
+      if (!dg->bboxvalid) {
 	drawer_make_bbox(dg, dg->normalization == ALL);
       }
       GeomGet(dg->Lbbox, CR_GEOM, &bbox);

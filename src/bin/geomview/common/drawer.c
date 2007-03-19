@@ -2153,7 +2153,8 @@ track_changes()
       if(o->changed || o->redraw) {
 	worldchange = true;
 	update_dgeom((DGeom*)o);
-	o->changed = o->redraw = false;
+	o->changed = CH_NOTHING;
+	o->redraw = false;
       }
     }
   }
@@ -2538,7 +2539,7 @@ drawer_make_bbox(DGeom *dg, bool combine)
     return;
   }
 
-  if(!bboxvalid(dg)) {
+  if (!dg->bboxvalid) {
     if(!combine) {
       GeomReplace(dg->Lbbox, NULL);
     }
@@ -3037,7 +3038,7 @@ normalize(DGeom *dg, int normalization)
 
   case EACH:
   case ALL:
-    if(!bboxvalid(dg)) {
+    if (!dg->bboxvalid) {
       drawer_make_bbox(dg, normalization == ALL);
     }
     GeomGet(dg->Lbbox, CR_GEOM, &bbox);

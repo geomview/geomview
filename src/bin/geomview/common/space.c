@@ -326,8 +326,9 @@ static void set_dimension(int d, TransformN **Tp, TransformN **Tinvp)
     TmNDelete(*Tinvp);
     *Tinvp = NULL;
   }
-  if(Tp == NULL)
+  if(Tp == NULL) {
     return;
+  }
   if(d == 0) {
     TmNDelete(*Tp);
     *Tp = NULL;
@@ -357,28 +358,40 @@ LDEFINE(dimension, LLIST,
 	    LINT, &d,
 	    LEND));
 
-  if(d < 0) {
+  if (d < 0) {
     d = drawerstate.NDim-1;
-    if(d < 0) d = 0;
+    if(d < 0) {
+      d = 0;
+    }
     return LNew(LINT, &d);
   } else {
     NDcam *c;
-    if(d < 4) { /* we do not allow low-dimension ND-view */
+    if (d < 4) { /* we do not allow low-dimension ND-view */
       d = 0;
-      for(i = 0; i < dview_max; i++)
+      for(i = 0; i < dview_max; i++) {
 	if(dview[i] && dview[i]->cluster) {
 	  NDdeletecluster(dview[i]->cluster);
 	  dview[i]->cluster = NULL;
 	}
+      }
     } else {
       d++;	/* Include homogeneous coordinate drawerstate.NDim */
     }
     if(drawerstate.NDim != d) {
-      for(c = drawerstate.NDcams; c != NULL; c = c->next)
+      for(c = drawerstate.NDcams; c != NULL; c = c->next) {
 	set_dimension(d, &c->C2W, &c->W2C);
+      }
+      for(i = 0; i < dview_max; i++) {
+	if(dview[i]) {
+	  dview[i]->changed = CH_GEOMETRY;
+	}
+      }
       for(i = 0; i < dgeom_max; i++) {
-	if(dgeom[i])
+	if(dgeom[i]) {
 	  set_dimension(d, &dgeom[i]->NDT, &dgeom[i]->NDTinv);
+	  dgeom[i]->bboxvalid = false;
+	  dgeom[i]->changed = CH_GEOMETRY;
+	}
       }
       drawerstate.changed = true;
       drawerstate.NDim = d;
