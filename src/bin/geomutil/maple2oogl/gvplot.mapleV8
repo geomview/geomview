@@ -10,6 +10,11 @@
 ##		 Stuart Levy
 ##               The Geometry Center
 ##
+##    Revised : 2003
+##       Claus-Justus Heine, Abteilung fuer Angewandte Mathematik,
+##       Universitaet Freiburg.
+##
+##
 ##    Documentation :   currently ?gvplot or ?writeoogl or ?geomview
 ##
 ##    History
@@ -30,7 +35,7 @@
 ##		gvplot(3dplot_struct);
 
 geomview := module()
-option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. All rights reserved. Heavily based on gvplot, Copyright (C) 1993 by Frederick Wicklin and Stuart Levy, Geometry Center.`;
+option `Copyright (C) 2003 by Claus-Justus Heine, Department for Applied Mathematics, Freiburg University. Heavily based on gvplot, Copyright (C) 1993 by Frederick Wicklin and Stuart Levy, Geometry Center.`;
 description `Geomview interface for MapleV8`;
 export gvdirectories, gvcommand, fwriteoogl, writeoogl, gvplot, gvsendcmd;
 local default_gvdirectories, default_gvcommand, `oogl/lprn`,

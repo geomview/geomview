@@ -1,11 +1,20 @@
 	    gvplot, writeoogl -- Maple 3-D graphics in Geomview
 
 		Contents:
-		  Installation Outline
+		  Installation Outline (out of date)
 		  Maple's Library Directory
 		  Configurable Settings in gvplot
 		  Remote Display
-		
+
+*******************************************************************************
+
+NOTE: the installation instructions are out of date. Please have a
+look at `savegvplot.mws'; load that file with xmaple and try to guess
+what to do from the contents of that file. Nevertheless it may be
+helpful to read through _this_ file; it contains more information than
+just installation instructions.
+
+*******************************************************************************
 
    This Maple package supports displaying Maple 3-D graphic objects (produced
 for example by Maple's plot3d function) in Geomview, and saving Maple graphics

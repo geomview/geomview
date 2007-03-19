@@ -24,26 +24,27 @@ r" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 259 "times" 0 1 0 0
 0 0 0 0 0 }{CSTYLE "" -1 275 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
 0 }{CSTYLE "" -1 276 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }
 {CSTYLE "" -1 277 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "
-" -1 278 "courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 279 
-"courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 280 "courier
-" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 281 "courier" 0 1 0 
-0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 282 "courier" 0 1 0 0 0 0 0 
-1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 283 "courier" 0 1 0 0 0 0 0 0 0 0 0 
-0 0 0 0 0 }{CSTYLE "" -1 284 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
-0 }{CSTYLE "" -1 285 "times" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE 
-"" -1 286 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 
-287 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 288 "" 0 1 0 0 
-0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 289 "" 0 1 0 0 0 0 0 1 0 0 0 0 
-0 0 0 0 }{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Text Output
-" -1 2 1 {CSTYLE "" -1 -1 "Courier" 1 10 0 0 255 1 0 0 0 0 0 1 3 0 3 
-0 }1 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Heading 1" 0 3 1 {CSTYLE 
-"" -1 -1 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }1 0 0 0 8 4 0 0 0 0 0 0 
--1 0 }{PSTYLE "Heading 2" 3 4 1 {CSTYLE "" -1 -1 "" 1 14 0 0 0 0 0 0 
-0 0 0 0 0 0 0 0 }0 0 0 -1 8 2 0 0 0 0 0 0 -1 0 }{PSTYLE "Warning" 2 7 
-1 {CSTYLE "" -1 -1 "" 0 1 0 0 255 1 0 0 0 0 0 0 1 0 0 0 }0 0 0 -1 -1 
--1 0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Output" 0 11 1 {CSTYLE "" -1 -1 "
-" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }
+" -1 279 "courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 280 
+"courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 281 "courier
+" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 282 "courier" 0 1 0 
+0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 283 "courier" 0 1 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 284 "courier" 0 1 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 }{CSTYLE "" -1 285 "times" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }
+{CSTYLE "" -1 286 "courier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }{CSTYLE "
+" -1 287 "" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 288 "" 0 1 
+0 0 0 0 0 1 0 0 0 0 0 0 0 0 }{CSTYLE "" -1 289 "" 0 1 0 0 0 0 0 1 0 0 
+0 0 0 0 0 0 }{CSTYLE "" -1 290 "courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 
+0 0 }{CSTYLE "" -1 291 "courier" 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Text Output" -1 2 1 
+{CSTYLE "" -1 -1 "Courier" 1 10 0 0 255 1 0 0 0 0 0 1 3 0 3 0 }1 0 0 
+-1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Heading 1" 0 3 1 {CSTYLE "" -1 -1 
+"" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 0 }1 0 0 0 8 4 0 0 0 0 0 0 -1 0 }
+{PSTYLE "Heading 2" 3 4 1 {CSTYLE "" -1 -1 "" 1 14 0 0 0 0 0 0 0 0 0 
+0 0 0 0 0 }0 0 0 -1 8 2 0 0 0 0 0 0 -1 0 }{PSTYLE "Warning" 2 7 1 
+{CSTYLE "" -1 -1 "" 0 1 0 0 255 1 0 0 0 0 0 0 1 0 0 0 }0 0 0 -1 -1 -1 
+0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Output" 0 11 1 {CSTYLE "" -1 -1 "" 0 
+1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }
 {PSTYLE "" 11 12 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
 0 }1 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Bullet Item" 0 15 1 
 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }0 0 0 -1 3 3 0 0 
@@ -56,93 +57,94 @@ ier" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0
 {SECT 0 {PARA 3 "" 0 "" {TEXT -1 18 "writeoogl, gvplot " }{TEXT 256 
 29 "- Maple interface to Geomview" }}{PARA 256 "" 0 "" {TEXT -1 0 "" }
 }{PARA 4 "" 0 "" {TEXT 26 16 "Calling Sequence" }}{PARA 257 "" 0 "" 
-{TEXT -1 6 "      " }{TEXT 268 8 "  \011with(" }{TEXT 278 6 "gvplot" }
-{TEXT 272 23 "):\n         fwriteoogl(" }{TEXT 282 17 "fd, 3dplot_stru
-ct" }{TEXT 283 2 ");" }}{PARA 258 "" 0 "" {TEXT 281 19 "        \011wr
-iteoogl(" }{TEXT 279 25 "\"filename\", 3dplot_struct" }{TEXT 273 23 ")
-;\011\n        \011writeoogl(" }{TEXT 280 13 "3dplot_struct" }{TEXT 
-274 24 ");\011\011\011\011\011\n        \011gvplot(" }{TEXT 271 13 "3d
-plot_struct" }{TEXT 275 24 ");\011\011\011\011\011\n        \011gvplot
-(" }{TEXT 270 23 "\"geomview_name\", 3dplot" }{TEXT 276 1 "_" }{TEXT 
-269 6 "struct" }{TEXT 277 2 ");" }}{PARA 4 "" 0 "" {TEXT -1 3 "\011
-\011\n" }{TEXT 26 10 "Parameters" }{TEXT -1 0 "" }}{PARA 0 "" 0 "" 
-{TEXT 284 22 "       \011fd            " }{TEXT 285 58 "- the file-des
-criptor which will contain the Geomview data" }{TEXT 286 24 "\011\n   \+
-    \011filename      " }{TEXT 257 47 "- the file which will contain t
-he Geomview data" }{TEXT 258 24 "\011\n       \0113dplot_struct\011" }
-{TEXT 259 31 "- a Maple PLOT3D data structure" }{TEXT 260 26 "\011\011
-\011\n       \011geomview_name\011" }{TEXT 261 44 "- name of the objec
-t in the Geomview browser" }{TEXT 262 2 "\011\n" }{MPLTEXT 1 0 0 "" }}
-{SECT 1 {PARA 4 "" 0 "" {TEXT 39 11 "Description" }}{PARA 15 "" 0 "" 
-{TEXT -1 1 " " }{TEXT 39 11 "writeoogl()" }{TEXT -1 73 " accepts Maple
- PLOT3D structures and writes files readable by Geomview.  " }{TEXT 
-26 8 "gvplot()" }{TEXT -1 121 " converts Maple PLOT3D structures and d
-isplays them immediately using Geomview, starting a copy of Geomview i
-f necessary." }}{PARA 15 "" 0 "" {TEXT -1 96 "Supported data types inc
-lude the Maple structures MESH, GRID, CURVES, POINTS, and POLYGONS. Se
-e " }{HYPERLNK 17 "plot3d[structure]" 2 "plot3d[structure]" "" }{TEXT 
--1 44 " for more information on Maple PLOT3D types." }}{PARA 15 "" 0 "
-" {TEXT -1 0 "" }{TEXT 287 13 "fwriteoogl() " }{TEXT -1 11 "works like
- " }{TEXT 288 11 "writeoogl()" }{TEXT -1 75 ", except that it does exp
-ect a file-descriptor instead of a file-name. See " }{HYPERLNK 17 "fop
-en" 2 "fopen" "" }{TEXT -1 43 " for more information about files in Ma
-ple." }}{PARA 15 "" 0 "" {TEXT -1 190 "The Maple MESH and GRID structu
-res are translated into Geomview's MESH and ZMESH objects, respectivel
-y, Maple CURVES and POINTS become VECT objects, and Maple POLYGONS bec
-omes an OFF object." }}{PARA 15 "" 0 "" {TEXT -1 90 "The Maple TEXT st
-ructure is not supported. Color information is supported for all objec
-ts." }}{PARA 15 "" 0 "" {TEXT -1 9 "The form " }{TEXT 266 32 "writeoog
-l(filename, plot_struct)" }{TEXT -1 56 " writes data in OOGL (Geomview
-) form to the given file; " }{TEXT 265 15 "writeoogl(plot)" }{TEXT -1 
-52 " writes to the current output stream as selected by " }{TEXT 267 
-9 "writeto()" }{TEXT -1 1 "." }}{PARA 15 "" 0 "" {TEXT 263 8 "gvplot()
-" }{TEXT -1 103 " normally starts the program \"geomview\", with no op
-tions; to specify something else, set the variable \"" }{TEXT 264 9 "g
-vcommand" }{TEXT -1 10 "\", as in: " }{MPLTEXT 1 0 60 "gvcommand := /u
-sr/local/bin/gv -wpos 200x200 -c startup.gv\";" }{TEXT -1 128 " before
- invoking gvplot().  Also, if the programs \"geomview\" or \"togeomvie
-w\" are not on your UNIX search path, set the variable " }{MPLTEXT 1 
-0 59 "gvdirectories := \"/some/dir/ectory:/some/other/directory\"; " }
-{TEXT -1 66 "to the appropriate directory (or directories separated by
- colons)." }}}{SECT 1 {PARA 4 "" 0 "" {TEXT 26 8 "Examples" }}{EXCHG 
-{PARA 0 "> " 0 "" {MPLTEXT 1 0 27 "with(plots):with(geomview);" }}
-{PARA 7 "" 1 "" {TEXT -1 50 "Warning, the name changecoords has been r
-edefined\n" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#7(%+fwriteooglG%*gvcomma
-ndG%.gvdirectoriesG%'gvplotG%*gvsendcmdG%*writeooglG" }}}{EXCHG {PARA 
-0 "> " 0 "" {MPLTEXT 1 0 50 "my_plot := plot3d(sin(x+y), x=-Pi..Pi, y=
--Pi..Pi):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 35 "writeoogl( \"s
-inxy.mesh\", my_plot );" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%ISaving~Ma
-ple~3D~structs~to~Geomview~fileGQ+sinxy.mesh6\"" }}}{EXCHG {PARA 0 "> \+
-" 0 "" {MPLTEXT 1 0 98 "steiner := plot3d([ sin(2*x)*(cos(y))^2, sin(x
-)*sin(2*y),\011cos(x)*sin(2*y)], x=-Pi..Pi, y=-Pi..Pi):" }}}{EXCHG 
-{PARA 0 "> " 0 "" {MPLTEXT 1 0 36 "writeoogl( \"steiner.mesh\", steine
-r);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%ISaving~Maple~3D~structs~to~Ge
-omview~fileGQ-steiner.mesh6\"" }}}{PARA 0 "" 0 "" {TEXT -1 28 "Write u
-sing file-descriptors" }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 33 "fd:
-=fopen(\"steiner.mesh\", WRITE);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%
-#fdG\"\"!" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 26 "fwriteoogl( fd
-, steiner );" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 11 "fclose(fd);
-" }}}{EXCHG {PARA 0 "" 0 "" {TEXT -1 31 "Display it in geomview direct
-ly" }{MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "gv
-plot( steiner );" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 122 "trefoi
-l := spacecurve([ -2*cos(t)- 1/2*cos(5*t)+ 3*sin(2*t),\011-3*cos(2*t)+
- 2*sin(t)- 1/2*sin(5*t), 2*cos(3*t), t=0..2*Pi]):" }}}{EXCHG {PARA 0 "
-> " 0 "" {MPLTEXT 1 0 36 "writeoogl( \"trefoil.vect\", trefoil);" }}
+{TEXT -1 6 "      " }{TEXT 268 8 "  \011with(" }{TEXT 291 8 "geomview
+" }{TEXT 272 23 "):\n         fwriteoogl(" }{TEXT 290 0 "" }{TEXT 282 
+17 "fd, 3dplot_struct" }{TEXT 283 2 ");" }}{PARA 258 "" 0 "" {TEXT 
+281 19 "        \011writeoogl(" }{TEXT 279 25 "\"filename\", 3dplot_st
+ruct" }{TEXT 273 23 ");\011\n        \011writeoogl(" }{TEXT 280 13 "3d
+plot_struct" }{TEXT 274 24 ");\011\011\011\011\011\n        \011gvplot
+(" }{TEXT 271 13 "3dplot_struct" }{TEXT 275 24 ");\011\011\011\011\011
+\n        \011gvplot(" }{TEXT 270 23 "\"geomview_name\", 3dplot" }
+{TEXT 276 1 "_" }{TEXT 269 6 "struct" }{TEXT 277 2 ");" }}{PARA 4 "" 
+0 "" {TEXT -1 3 "\011\011\n" }{TEXT 26 10 "Parameters" }{TEXT -1 0 "" 
+}}{PARA 0 "" 0 "" {TEXT 284 22 "       \011fd            " }{TEXT 285 
+58 "- the file-descriptor which will contain the Geomview data" }
+{TEXT 286 24 "\011\n       \011filename      " }{TEXT 257 47 "- the fi
+le which will contain the Geomview data" }{TEXT 258 24 "\011\n       \+
+\0113dplot_struct\011" }{TEXT 259 31 "- a Maple PLOT3D data structure
+" }{TEXT 260 26 "\011\011\011\n       \011geomview_name\011" }{TEXT 
+261 48 "- name of the new object in the Geomview browser" }{TEXT 262 
+2 "\011\n" }{MPLTEXT 1 0 0 "" }}{SECT 1 {PARA 4 "" 0 "" {TEXT 39 11 "D
+escription" }}{PARA 15 "" 0 "" {TEXT -1 1 " " }{TEXT 39 11 "writeoogl(
+)" }{TEXT -1 73 " accepts Maple PLOT3D structures and writes files rea
+dable by Geomview.  " }{TEXT 26 8 "gvplot()" }{TEXT -1 121 " converts \+
+Maple PLOT3D structures and displays them immediately using Geomview, \+
+starting a copy of Geomview if necessary." }}{PARA 15 "" 0 "" {TEXT 
+-1 96 "Supported data types include the Maple structures MESH, GRID, C
+URVES, POINTS, and POLYGONS. See " }{HYPERLNK 17 "plot3d[structure]" 
+2 "plot3d[structure]" "" }{TEXT -1 44 " for more information on Maple \+
+PLOT3D types." }}{PARA 15 "" 0 "" {TEXT -1 0 "" }{TEXT 287 13 "fwriteo
+ogl() " }{TEXT -1 11 "works like " }{TEXT 288 11 "writeoogl()" }{TEXT 
+-1 75 ", except that it does expect a file-descriptor instead of a fil
+e-name. See " }{HYPERLNK 17 "fopen" 2 "fopen" "" }{TEXT -1 43 " for mo
+re information about files in Maple." }}{PARA 15 "" 0 "" {TEXT -1 190 
+"The Maple MESH and GRID structures are translated into Geomview's MES
+H and ZMESH objects, respectively, Maple CURVES and POINTS become VECT
+ objects, and Maple POLYGONS becomes an OFF object." }}{PARA 15 "" 0 "
+" {TEXT -1 90 "The Maple TEXT structure is not supported. Color inform
+ation is supported for all objects." }}{PARA 15 "" 0 "" {TEXT -1 9 "Th
+e form " }{TEXT 266 32 "writeoogl(filename, plot_struct)" }{TEXT -1 
+56 " writes data in OOGL (Geomview) form to the given file; " }{TEXT 
+265 15 "writeoogl(plot)" }{TEXT -1 52 " writes to the current output s
+tream as selected by " }{TEXT 267 9 "writeto()" }{TEXT -1 1 "." }}
+{PARA 15 "" 0 "" {TEXT 263 8 "gvplot()" }{TEXT -1 103 " normally start
+s the program \"geomview\", with no options; to specify something else
+, set the variable \"" }{TEXT 264 9 "gvcommand" }{TEXT -1 10 "\", as i
+n: " }{MPLTEXT 1 0 60 "gvcommand := /usr/local/bin/gv -wpos 200x200 -c
+ startup.gv\";" }{TEXT -1 128 " before invoking gvplot().  Also, if th
+e programs \"geomview\" or \"togeomview\" are not on your UNIX search \+
+path, set the variable " }{MPLTEXT 1 0 59 "gvdirectories := \"/some/di
+r/ectory:/some/other/directory\"; " }{TEXT -1 66 "to the appropriate d
+irectory (or directories separated by colons)." }}}{SECT 1 {PARA 4 "" 
+0 "" {TEXT 26 8 "Examples" }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 27 
+"with(plots):with(geomview);" }}{PARA 7 "" 1 "" {TEXT -1 50 "Warning, \+
+the name changecoords has been redefined\n" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#7(%+fwriteooglG%*gvcommandG%.gvdirectoriesG%'gvplotG%*g
+vsendcmdG%*writeooglG" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 50 "my
+_plot := plot3d(sin(x+y), x=-Pi..Pi, y=-Pi..Pi):" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 35 "writeoogl( \"sinxy.mesh\", my_plot );" }}
 {PARA 11 "" 1 "" {XPPMATH 20 "6$%ISaving~Maple~3D~structs~to~Geomview~
-fileGQ-trefoil.vect6\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 138 "
-tetrahedra := [[1,0,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,0,1],[0,1,0]],  \+
-             [[0,1,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,1,0],[-1,0,0]]:" 
-}}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 37 "Tplot := polygonplot3d([t
-etrahedra]):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 36 "writeoogl( \+
-\"tetrahedra.off\", Tplot);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%ISavin
-g~Maple~3D~structs~to~Geomview~fileGQ/tetrahedra.off6\"" }}}{EXCHG 
-{PARA 0 "" 0 "" {TEXT -1 77 "Even clipping can be done (internally ach
-ieved by using the external program " }{TEXT 289 7 "clip(1)" }{TEXT 
--1 1 ")" }{MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
-66 "Tplot :=polygonplot3d([tetrahedra],view=[-1..0.3,-0.3..1,0..0.8]);
-" }}{PARA 12 "" 1 "" {XPPMATH 20 "6#>%&TplotG-%1INTERFACE_PLOT3DG6$-%)
-POLYGONSG6&7%7%$\"\"\"\"\"!$F/F/F07%$!\"\"F/F0F07%F0F0F-7%F,F47%F0F-F0
-7%F6F1F47%F,F6F1-%%VIEWG6%;F2$\"\"$F3;$!\"$F3F-;F0$\"\")F3" }}}{EXCHG 
+fileGQ+sinxy.mesh6\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 98 "ste
+iner := plot3d([ sin(2*x)*(cos(y))^2, sin(x)*sin(2*y),\011cos(x)*sin(2
+*y)], x=-Pi..Pi, y=-Pi..Pi):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 36 "writeoogl( \"steiner.mesh\", steiner);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6$%ISaving~Maple~3D~structs~to~Geomview~fileGQ-steiner.me
+sh6\"" }}}{PARA 0 "" 0 "" {TEXT -1 28 "Write using file-descriptors" }
+}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 33 "fd:=fopen(\"steiner.mesh\",
+ WRITE);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%#fdG\"\"!" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 26 "fwriteoogl( fd, steiner );" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 11 "fclose(fd);" }}}{EXCHG 
+{PARA 0 "" 0 "" {TEXT -1 31 "Display it in geomview directly" }
+{MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "gvplot(
+ steiner );" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 122 "trefoil := \+
+spacecurve([ -2*cos(t)- 1/2*cos(5*t)+ 3*sin(2*t),\011-3*cos(2*t)+ 2*si
+n(t)- 1/2*sin(5*t), 2*cos(3*t), t=0..2*Pi]):" }}}{EXCHG {PARA 0 "> " 
+0 "" {MPLTEXT 1 0 36 "writeoogl( \"trefoil.vect\", trefoil);" }}{PARA 
+11 "" 1 "" {XPPMATH 20 "6$%ISaving~Maple~3D~structs~to~Geomview~fileGQ
+-trefoil.vect6\"" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 138 "tetrah
+edra := [[1,0,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,0,1],[0,1,0]],        \+
+       [[0,1,0],[-1,0,0],[0,0,1]], [[1,0,0],[0,1,0],[-1,0,0]]:" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 37 "Tplot := polygonplot3d([tetr
+ahedra]):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 36 "writeoogl( \"t
+etrahedra.off\", Tplot);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6$%ISaving~M
+aple~3D~structs~to~Geomview~fileGQ/tetrahedra.off6\"" }}}{EXCHG {PARA 
+0 "" 0 "" {TEXT -1 77 "Even clipping can be done (internally achieved \+
+by using the external program " }{TEXT 289 7 "clip(1)" }{TEXT -1 1 ")
+" }{MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 66 "Tplo
+t :=polygonplot3d([tetrahedra],view=[-1..0.3,-0.3..1,0..0.8]);" }}
+{PARA 12 "" 1 "" {XPPMATH 20 "6#>%&TplotG-%1INTERFACE_PLOT3DG6$-%)POLY
+GONSG6&7%7%$\"\"\"\"\"!$F/F/F07%$!\"\"F/F0F07%F0F0F-7%F,F47%F0F-F07%F6
+F1F47%F,F6F1-%%VIEWG6%;F2$\"\"$F3;$!\"$F3F-;F0$\"\")F3" }}}{EXCHG 
 {PARA 0 "> " 0 "" {MPLTEXT 1 0 25 "gvplot( \"Tplot\", Tplot );" }}}
 {EXCHG {PARA 0 "" 0 "" {TEXT -1 55 "you can even create a single file \+
 with multiple objects" }{MPLTEXT 1 0 0 "" }}}{EXCHG {PARA 0 "> " 0 "" 
@@ -154,5 +156,5 @@ le~3D~structs~to~Geomview~fileGQ)all.list6\"" }}}{EXCHG {PARA 0 "> "
 }}}{SECT 1 {PARA 4 "" 0 "" {TEXT 26 8 "See Also" }}{PARA 0 "" 0 "" 
 {TEXT -1 0 "" }{HYPERLNK 17 "plot3d[structure]" 2 "plot3d[structure]" 
 "" }{TEXT -1 2 ", " }{HYPERLNK 17 "fopen" 2 "fopen" "" }}{PARA 0 "" 0 
-"" {TEXT -1 0 "" }}}}{MARK "10" 0 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }
-{PAGENUMBERS 0 1 2 33 1 1 }
+"" {TEXT -1 0 "" }}}}{MARK "6 7" 18 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 
+}{PAGENUMBERS 0 1 2 33 1 1 }
