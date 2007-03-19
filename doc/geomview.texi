@@ -4241,41 +4241,41 @@ The general syntax of image objects is like follows:
 @example
 <image> ::= 
   [ "@{" ]             (curly brace, generally needed to make
-                        the end of the object unambiguous.)
+                       the end of the object unambiguous.)
   [ "image" ]          (optional keyword; unnecessary if the type
-                        is determined by the context, which it
-                        usually is.)
+                       is determined by the context, which it
+                       usually is.)
   [ "define" <name> ]
                        (defines an image named <name>, setting
-                        its value from the stuff which follows)
+                       its value from the stuff which follows)
   | 
       "<" <filename>   (meaning: read image from that file)
   |
-      ":" <name>       (meaning: use variable <name>,
-                        defined elsewhere; if undefined the image
-                        carries no data)
+      ":" <name>       (meaning: use variable @var{name},
+                       defined elsewhere; if undefined the image
+                       carries no data)
   |
                        (actual stuff defining the image; image data
-                        must come last, after defining the width and
-                        height and number of channels)
+                       must come last, after defining the width and
+                       height and number of channels)
 
       "width"          (width of the image, auto-detected from image data
-                        if possible)
+                       if possible)
 
       "height"         (height of the image, auto-detected from image data
-                        if possible)
+                       if possible)
 
       "channels"       (number of channels, auto-detected from image data
-                        if possible)
+                       and @code{data} specifications, if possible)
 
       "maxval"         (unsupported, must be @code{255} if specified)
 
       "data DESTMASK [FILTER] [@{] < FILENAME [@}]"
       "data DESTMASK [FILTER] DATASIZE [@{][\n]LITERAL_IMAGE_DATA[@}]"
                        (either external or embedded image data, see below
-                        for a detailed description of the meaning of
-                        @emph{MASK} and @emph{FILTER}. An image can (and
-                        has, in general) multiple data sections.)
+                       for a detailed description of the meaning of
+                       @emph{MASK} and @emph{FILTER}. An image can (and
+                       has, in general) multiple data sections.)
 
   [ "@}" ]             (matching curly brace)
 @end example
@@ -4342,11 +4342,14 @@ Geomview tries to determine the image type from the @samp{FILENAME}
 suffix. If there is no suffix or the suffix is unknown, or for embedded
 image data, Geomview is able to auto-detectc SGI image file formats (for
 historical reasons ...) and NetPBM image formats (for practical
-reasons). Likewise, the final output of any of the specified filters
-must either be in SGI image file format, or specify a PNM or PGM image.
-If the image file format cannot be determined by either the filenmae
-suffix or the filter specification or by auto-deteciong of SGI or NetPBM
-data, then Geomview assume that it is raw-data. See below.
+reasons). The auto-detection of NetPBM formats includes the new
+@dfn{PAM} image format which allows (among other things) to store an
+alpha channel together with the luminance or RGB data. Likewise, the
+final output of any of the specified filters must either be in SGI image
+file format, or specify a PAM, PNM or PGM image.  If the image file
+format cannot be determined by either the filenmae suffix or the filter
+specification or by auto-deteciong of SGI or NetPBM data, then Geomview
+assume that it is raw-data. See below.
 
 The decompression filters may be prepended to either one of the know
 image formats or an explicitly specified filter, e.g. the following is
@@ -4393,10 +4396,12 @@ executable can be fond in the current excution path.
 executable can be fond in the current excution path.
 @item raw
 Raw image data; the number of channels must match the number of bits set
-in @samp{DESTMASK}. Pixels are specified with 1 byte per channel. @b{BIG
-FAT NOTE:} Geomviews co-ordinate system has its origin in the lower-left
-corner, so the first pixel specified by raw image data corresponds to
-the lower-left corner of the image.
+in @samp{DESTMASK}. Pixels are specified with 1 byte per channel. The
+pixels are organized in rows as @samp{liminance[-alpha]} or
+@samp{RGB[A]} samples. The left-most pixel is the first pixel in each
+data-row, the top-most image row must come first (this is just the same
+as the NetPBM convention, the image co-ordinate systems has its origin
+in the left/top corner, as usual).
 @end table
 @item Explicitly Specified Filters
 If none of the suffixes specified above should match, then the
