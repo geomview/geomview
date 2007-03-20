@@ -59,11 +59,10 @@ extern int strcasecmp(char *s1, char *s2);
 /*
  * Memory allocation
  */
-#if defined(sgi) || AIX
+#ifndef OOG_NewP
 extern void *(*OOG_NewP)(size_t);
-extern void *(*OOG_RenewP)(void *, size_t);
-#else
-extern void *(*OOG_NewP)(size_t);
+#endif
+#ifndef OOG_RenewP
 extern void *(*OOG_RenewP)(void *, size_t);
 #endif
 
@@ -77,11 +76,10 @@ extern void *OOG_NewE(int, char *);
 extern void *OOG_RenewE(void *, int, char *);
 #endif
 
-#define	OOGLNew(t)		(t *)(*OOG_NewP)(sizeof(t))
-#define	OOGLNewN(t,N)		(t *)(*OOG_NewP)(sizeof(t)*(N))
-extern void (*OOGLFree)(void *);
-#define	OOGLRenewN(t,p,N)	(t *)(*OOG_RenewP)(p, sizeof(t)*(N))
-#define	OOGLRealloc(t,p)	(t *)(*OOG_RenewP)(p, sizeof(t))
+#define	OOGLNew(t)		(t *)OOG_NewP(sizeof(t))
+#define	OOGLNewN(t,N)		(t *)OOG_NewP(sizeof(t)*(N))
+#define	OOGLRenewN(t,p,N)	(t *)OOG_RenewP(p, sizeof(t)*(N))
+#define	OOGLRealloc(t,p)	(t *)OOG_RenewP(p, sizeof(t))
 
 #define	OOGLNewE(t, errmsg)	(t *)OOG_NewE(sizeof(t), errmsg)
 #define	OOGLNewNE(t,N, errmsg)	(t *)OOG_NewE(sizeof(t)*(N), errmsg)
