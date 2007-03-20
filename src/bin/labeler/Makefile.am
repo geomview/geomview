@@ -20,7 +20,7 @@ module_tcl_DATA = Labeler
 module_DATA = .geomview-labeler
 
 .geomview-labeler:
-	echo '(emodule-define "Labeler" "labeler $$GEOMVIEW_EMODULE_PATH/tcl/Labeler")' > .geomview-labeler
+	echo '(emodule-define "Labeler" "labeler $$GEOMVIEW_EMODULE_DIR/tcl/Labeler")' > .geomview-labeler
 
 all-local: $(top_builddir)/modules/.geomview-labeler
 

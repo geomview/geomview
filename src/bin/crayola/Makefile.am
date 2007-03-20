@@ -20,7 +20,7 @@ module_tcl_DATA = Crayola
 module_DATA = .geomview-crayola
 
 .geomview-crayola: Makefile
-	echo '(emodule-define "Crayola" "crayola $$GEOMVIEW_EMODULE_PATH/tcl/Crayola")' > .geomview-crayola
+	echo '(emodule-define "Crayola" "crayola $$GEOMVIEW_EMODULE_DIR/tcl/Crayola")' > .geomview-crayola
 
 all-local: $(top_builddir)/modules/.geomview-crayola
 

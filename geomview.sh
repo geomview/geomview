@@ -40,12 +40,15 @@ suf=
 
 : ${GEOMDATA=%GEOMDATA%}
 
+: ${GEOMVIEW_DATA_DIR=%GEOMDATA%}
 : ${GEOMVIEW_LOAD_PATH=.:${GEOMDATA}/geom:${GEOMDATA}}
-: ${GEOMVIEW_EMODULE_PATH=%MODULESDIR%}
+: ${GEOMVIEW_EMODULE_DIR=%MODULESDIR%}
+: ${GEOMVIEW_EMODULE_PATH=${GEOMVIEW_EMODULE_DIR}}
 : ${GEOMVIEW_SYSTEM_INITFILE=${GEOMDATA}/.geomview}
 
-export GEOMVIEW_GVX GEOMVIEW_LOAD_PATH GEOMDATA \
-        GEOMVIEW_EMODULE_PATH GEOMVIEW_SYSTEM_INITFILE
+export GEOMVIEW_GVX GEOMVIEW_LOAD_PATH GEOMVIEW_DATA_DIR GEOMDATA
+export GEOMVIEW_EMODULE_PATH GEOMVIEW_EMODULE_DIR
+export GEOMVIEW_SYSTEM_INITFILE
 
 if [ -d /cygdrive ]; then
     TCL_LIBRARY=/usr/share/tcl8.4
@@ -81,7 +84,8 @@ Script options:
 
 -h|--help Print this help
 
---print-geomdata              Print the location of the main data directory
+--print-geomview-data-dir     Print the location of the main data directory
+--print-geomview-emodule-dir  Print the system emodule path
 --print-geomview-load-path    Print the data load-path
 --print-geomview-emodule-path Print the emodule search-path
 --print-geomview-system-initfile    Print the path to the system-wide init file
@@ -95,7 +99,8 @@ EOF
     exec ${GEOMVIEW_GVX} -h
     ;;
 
-    --print-geomdata) echo ${GEOMDATA} ;;
+    --print-geomview-data-dir) echo ${GEOMVIEW_DATA_DIR} ;;
+    --print-geomview-emodule-dir) echo ${GEOMVIEW_EMODULE_DIR} ;;
     --print-geomview-load-path) echo ${GEOMVIEW_LOAD_PATH} ;;
     --print-geomview-emodule-path) echo ${GEOMVIEW_EMODULE_PATH} ;;
     --print-geomview-system-initfile) echo ${GEOMVIEW_SYSTEM_INITFILE} ;;

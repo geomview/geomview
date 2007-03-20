@@ -24,10 +24,10 @@ ndview_geomdemodir = $(ndview_geomdir)/demo
 ndview_textdir     = $(ndviewdir)/text
 
 .geomview-ndview: Makefile
-	echo '(emodule-define "NDview" "ndview $$GEOMVIEW_EMODULE_PATH/tcl/NDview")' > .geomview-ndview
+	echo '(emodule-define "NDview" "ndview $$GEOMVIEW_EMODULE_DIR/tcl/NDview")' > .geomview-ndview
 
 .geomview-nddemo: Makefile
-	echo '(emodule-define "NDdemo" "ndview $$GEOMVIEW_EMODULE_PATH/tcl/NDdemo")' > .geomview-nddemo
+	echo '(emodule-define "NDdemo" "ndview $$GEOMVIEW_EMODULE_DIR/tcl/NDdemo")' > .geomview-nddemo
 
 $(top_builddir)/modules/.geomview-ndview: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)

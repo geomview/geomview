@@ -24,13 +24,13 @@ module_tcl_DATA = 3D-Snapshot Slicer Colormap
 module_DATA = .geomview-3d-snapshot .geomview-slicer .geomview-colormap
 
 .geomview-3d-snapshot: Makefile
-	echo '(emodule-define "3D-Snapshot" "ndutils $$GEOMVIEW_EMODULE_PATH/tcl/3D-Snapshot")' > $@
+	echo '(emodule-define "3D-Snapshot" "ndutils $$GEOMVIEW_EMODULE_DIR/tcl/3D-Snapshot")' > $@
 
 .geomview-slicer: Makefile
-	echo '(emodule-define "Slicer" "ndutils $$GEOMVIEW_EMODULE_PATH/tcl/Slicer")' > $@
+	echo '(emodule-define "Slicer" "ndutils $$GEOMVIEW_EMODULE_DIR/tcl/Slicer")' > $@
 
 .geomview-colormap: Makefile
-	echo '(emodule-define "Colormap" "ndutils $$GEOMVIEW_EMODULE_PATH/tcl/Colormap")' > $@
+	echo '(emodule-define "Colormap" "ndutils $$GEOMVIEW_EMODULE_DIR/tcl/Colormap")' > $@
 
 $(top_builddir)/modules/.geomview-3d-snapshot: Makefile
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
