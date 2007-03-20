@@ -586,6 +586,13 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       glEnable(GL_BLEND);
 
+      /* Culling cannot work with transparency, so disable if it is
+       * potentially enabled.
+       */
+      if (ap->flag & APF_BACKCULL) {
+	glDisable(GL_CULL_FACE);
+      }
+
       /* Load textures if ap has changed */
       if (plflags & PL_HASST) {
 	mgopengl_needtexture();
