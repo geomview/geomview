@@ -40,10 +40,10 @@ GVmodulateconstant(string texturename = ""; float At = 1;)
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Ct = float texture (texturename[0]);
+      Ct = float texture (texturename[0], "width", 0.0);
       Ot = texture (texturename[1], "fill", 1.0, "width", 0.0);
     } else {
-      Ct = color texture (texturename);
+      Ct = color texture (texturename, "width", 0.0);
       Ot = texture (texturename[3], "fill", 1.0, "width", 0.0);
     }
     Ot = (1.0 - At) + At * Ot;

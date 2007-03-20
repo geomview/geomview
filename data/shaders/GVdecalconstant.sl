@@ -34,7 +34,7 @@ GVdecalconstant(string texturename = "";)
   Ci = Cs;
   Oi = Os;
   if (texturename != "") {
-    Ct = color texture (texturename);
+    Ct = color texture (texturename, "width", 0.0);
     Ot  = float texture (texturename[3], "fill", 1.0, "width", 0.0);
     Ci = (1 - Ot) * Ci + Ot * Ct;
   }

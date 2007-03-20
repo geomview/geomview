@@ -45,10 +45,10 @@ GVblendconstant(string texturename = ""; color bgcolor = 0; float At = 1;)
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Ct = float texture(texturename[0]);
+      Ct = float texture(texturename[0], "width", 0.0);
       Ot = float texture(texturename[1], "fill", 1.0, "width", 0.0);
     } else {
-      Ct = color texture(texturename);
+      Ct = color texture(texturename, "width", 0.0);
       Ot = float texture(texturename[3], "fill", 1.0, "width", 0.0);
     }
     Ci  = (1.0 - Ct) * Ci + Ct * bgcolor;

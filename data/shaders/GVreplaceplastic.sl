@@ -45,11 +45,15 @@ GVreplaceplastic(float Ka = 1, Kd = .5, Ks = .5, roughness = .1;
   if (texturename != "" &&
       textureinfo(texturename, "channels", channels) == 1.0) {
     if (channels < 3) {
-      Ct = float texture (texturename[0]);
-      Ot = float texture (texturename[1], "fill", Os, "width", 0.0);
+      Ct = float texture (texturename[0], "width", 0.0);
+      if (channels == 2) {
+	Ot = float texture (texturename[1], "width", 0.0);
+      }
     } else {
-      Ct = color texture (texturename);
-      Ot = float texture (texturename[3], "fill", Os, "width", 0.0);
+      Ct = color texture (texturename, "width", 0.0);
+      if (channels == 4) {
+	Ot = float texture (texturename[3], "width", 0.0);
+      }
     }
     Ot = (1.0 - At) + At * Ot;
     Ci = Ct * Ot;
