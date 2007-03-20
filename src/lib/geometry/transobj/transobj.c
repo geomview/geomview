@@ -109,8 +109,10 @@ TransStreamIn(Pool *p, Handle **hp, Transform T)
     TransObj *tobj = NULL;
     
     if (TransObjStreamIn(p, hp, &tobj)) {
-	TmCopy(tobj->T, T);
-	TransDelete(tobj);
+	if (tobj) {
+	    TmCopy(tobj->T, T);
+	    TransDelete(tobj);
+	}
 	return true;
     }
     return false;
