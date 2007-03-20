@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.15 2007/03/18 18:06:53 rotdrop Exp $
+ * $Id: mg.c,v 1.16 2007/03/20 18:36:45 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -612,6 +612,7 @@ mg_ctxdelete( mgcontext *ctx )
       if (astk->ap.tex != NULL &&
 	  (nextastk == NULL || astk->ap.tex != nextastk->ap.tex)) {
 	TxDelete(ctx->astk->ap.tex);
+	ctx->astk->ap.tex = NULL;
       }
       LmDeleteLights(&astk->lighting);
       astk->next = mgafree;
@@ -1049,7 +1050,7 @@ mg_polylist(int np, struct Poly *p, int nv, struct Vertex *v, int plflags)
 
 void
 mg_mesh(int wrap,int nu,int nv, HPoint3 *p,
-        Point3 *n, Point3 *nq, ColorA *c, Point3 *str, int mflags)
+        Point3 *n, Point3 *nq, ColorA *c, TxST *st, int mflags)
 {}
 
 void
