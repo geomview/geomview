@@ -210,9 +210,16 @@ else
 will not have an alpha-channel. Consider installing a newer NetPBM package.])
 fi
 
-# If aqsis is installed we compile all of our RenderMan shaders with aqsl
+# Check for various shader language comilers; we try to compile and
+# install our RenderMan shaders for any of the shader compilers; I
+# have included only those which are free of charge.
+#
 AC_CHECK_PROGS(AQSL, aqsl)
 AM_CONDITIONAL([AQSIS], test "${AQSL}" = "aqsl")
+AC_CHECK_PROGS(SDRC, sdrc)
+AM_CONDITIONAL([PIXIE], test "${SDRC}" = "sdrc")
+AC_CHECK_PROGS(SHADERDL, shaderdl)
+AM_CONDITIONAL([DELIGHT], test "${SHADERDL}" = "shaderdl")
 
 # The stereo module needs to fiddle with monitor modes.
 # Currently, this only works on IRIX using an external command.

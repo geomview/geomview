@@ -18,6 +18,26 @@ geomshaderdata_DATA += $(shader_src:.sl=.slx)
 .sl.slx:
 	$(AQSL) -o $@ $<
 
-clean-local:
-	-rm -f *.slx
 endif
+
+if PIXIE
+geomshaderdata_DATA += $(shader_src:.sl=.sdr)
+
+.sl.sdr:
+	$(SDRC) -o $@ $<
+
+endif
+
+if DELIGHT
+geomshaderdata_DATA += $(shader_src:.sl=.sdl)
+
+#
+# SDLFLAGS = -O3 --embed-source --dso etc.
+#
+.sl.sdl:
+	$(SHADERDL) $(SDLFLAGS) -o $@ $<
+
+endif
+
+clean-local:
+	-rm -f *.slx *.sdr
