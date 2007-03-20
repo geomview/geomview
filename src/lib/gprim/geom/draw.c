@@ -39,13 +39,16 @@ static inline void maybe_tag_appearance(Geom *geom, const Appearance *ap)
 {
   NodeData *data;
 
-  data = GeomNodeDataCreate(geom, NULL);
-  if (data->tagged_ap) {
+  if (GeomHasAlpha(geom, ap)) {
+    data = GeomNodeDataCreate(geom, NULL);
+    if (data->tagged_ap) {
+      mguntagappearance(data->tagged_ap);
+      data->tagged_ap = NULL;
+    }
+    data->tagged_ap = mgtagappearance();
+  } else if ((data = GeomNodeDataByPath(geom, NULL)) && data->tagged_ap) {
     mguntagappearance(data->tagged_ap);
     data->tagged_ap = NULL;
-  }
-  if (GeomHasAlpha(geom, ap)) {
-    data->tagged_ap = mgtagappearance();
   }
 }
 

@@ -109,15 +109,11 @@ static inline bool never_translucent(Geom *geom)
 
 static inline const void **BSPTreePushAppearance(BSPTree *bsptree, Geom *geom)
 {
-  NodeData *data = GeomNodeDataByPath(geom, NULL);
+  NodeData *data = GeomNodeDataCreate(geom, NULL);
+  const void **tagged_app = bsptree->tagged_app;
 
-  if (data != NULL) {
-    const void **tagged_app = bsptree->tagged_app;
-    bsptree->tagged_app = &data->tagged_ap;
-    return tagged_app;
-  } else {
-    return NULL;
-  }
+  bsptree->tagged_app = &data->tagged_ap;
+  return tagged_app;
 }
 
 static inline void

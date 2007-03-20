@@ -253,6 +253,8 @@ static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
   return NULL;
 }
 
+extern DblListNode GeomNodeDataPool;
+
 static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
 {
   NodeData *data;
@@ -262,7 +264,12 @@ static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
   }
   data = GeomNodeDataByPath(geom, ppath);
   if (data == NULL) {
-    data = OOGLNewE(NodeData, "new per hierarchy-node data");
+    if (DblListEmpty(&GeomNodeDataPool)) {
+      data = DblListContainer(GeomNodeDataPool.next, NodeData, node);
+      DblListDelete(&data->node);
+    } else {
+      data = OOGLNewE(NodeData, "new per hierarchy-node data");
+    }
     data->ppath = strdup(ppath);
     data->tagged_ap = NULL;
     DblListAdd(&geom->pernode, &data->node);
