@@ -164,12 +164,12 @@ struct mgcontext {
 /*
  * Pointer to the current mg context.
  */
-extern struct mgcontext *_mgc;
+extern mgcontext *_mgc;
 
 /*
  * List of all extant mg contexts.
  */
-extern struct mgcontext *_mgclist;
+extern mgcontext *_mgclist;
 
 /*
  * Declarations of common mg routines, accessible to other mg packages
