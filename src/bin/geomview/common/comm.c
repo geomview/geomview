@@ -1271,14 +1271,19 @@ LDEFINE(hdefine, LVOID,
 	      ltype->name, LSummarize(item));
     return Lnil;
   }
+  h = HandleCreateGlobal(hname, ops);
+  REFPUT(h);
   if (ops == &CommandOps) {
     obj = NULL; /* (Ref *)LispCreate( s->lobj ) */
+  } else if (ops == &TransOps) {
+    obj = (Ref *)TransCreate(s->ts.tm);
   } else {
     obj = (Ref *)s->gs.geom; /* All other types resemble geoms */
   }
-  h = HandleCreateGlobal(hname, ops);
-  REFPUT(h);
   HandleSetObject(h, obj);
+  if (ops == &TransOps) {
+    REFPUT(obj); /* otherwise obj will never be deleted */
+  }
 
   return Lt;
 
