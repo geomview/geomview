@@ -132,15 +132,6 @@ extern void free_record(void *ptr);
 #define OOG_RenewE(p, size, blah) realloc(p, size)
 #define OOGLFree(p)               free(p)
 
-#define	OOGLNew(t)		(t *)OOG_NewP(sizeof(t))
-#define	OOGLNewN(t,N)		(t *)OOG_NewP(sizeof(t)*(N))
-#define	OOGLRenewN(t,p,N)	(t *)OOG_RenewP(p, sizeof(t)*(N))
-#define	OOGLRealloc(t,p)	(t *)OOG_RenewP(p, sizeof(t))
-
-#define	OOGLNewE(t, errmsg)	(t *)OOG_NewE(sizeof(t), errmsg)
-#define	OOGLNewNE(t,N, errmsg)	(t *)OOG_NewE(sizeof(t)*(N), errmsg)
-#define	OOGLRenewNE(t,p,N, errmsg) (t *)OOG_RenewE(p, sizeof(t)*(N), errmsg)
-
 #endif
 
 #endif /* CONFIG_H_INCLUDED */
