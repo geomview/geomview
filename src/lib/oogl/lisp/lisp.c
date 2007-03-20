@@ -40,6 +40,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdlib.h>
 #include "lisp.h"
 #include "clisp.c"
+#include "freelist.h"
 
 #define MAXPAT 10
 #define MAXPATLEN 128
@@ -417,6 +418,16 @@ LType LStringp = {
 /*
  * list implementation
  */
+static DEF_FREELIST(LList);
+
+LList *LListNew(void)
+{
+  LList *new;
+
+  FREELIST_NEW(LList, new);
+  new->cdr = NULL;
+  return new;
+}
 
 LList *LListCopy(LList *list)
 {
@@ -432,15 +443,17 @@ LList *LListCopy(LList *list)
 
 void LListFree(LList *list)
 {
-  if (!list) return;
-  if (list->cdr) LListFree(list->cdr);
+  if (!list) {
+    return;
+  }
+  if (list->cdr) {
+    LListFree(list->cdr);
+  }
   LFree(list->car);
-  OOGLFree(list);
+  FREELIST_FREE(LList, list);
 }
 
-void LListWrite(fp, list)
-     FILE *fp;
-     LList *list;
+void LListWrite(FILE *fp, LList *list)
 {
   int first = 1;
   fprintf(fp,"(");
@@ -457,45 +470,35 @@ void LListWrite(fp, list)
 
 /**********************************************************************/
 
-int listfromobj(obj, x)
-    LObject *obj;
-    LList * *x;
+int listfromobj(LObject *obj, LList * *x)
 {
   if (obj->type != LLIST) return 0;
   *x = LLISTVAL(obj);
   return 1;
 }
 
-LObject *list2obj(x)
-    LList * *x;
+LObject *list2obj(LList * *x)
 {
   LList *list = *x ? LListCopy(*x) : NULL;
   return LNew( LLIST, &list );
 }
 
-void listfree(x)
-    LList * *x;
+void listfree(LList * *x)
 {
   if (*x) LListFree(*x);
 }
 
-
-int listmatch(a, b)
-    LList **a,**b;
+int listmatch(LList **a, LList **b)
 {
   return *a == *b;
 }
 
-void listwrite(fp, x)
-    FILE *fp;
-    LList * *x;
+void listwrite(FILE *fp, LList * *x)
 {
   LListWrite(fp, *x);
 }
 
-void listpull(a_list, x)
-    va_list *a_list;
-    LList * *x;
+void listpull(va_list *a_list, LList * *x)
 {
   *x = va_arg(*a_list, LList *);
 }
@@ -925,18 +928,24 @@ void LListShow(LList *list)
 /*
  * Lisp object implementation
  */
+static DEF_FREELIST(LObject);
 
 LObject *_LNew(LType *type, LCell *cell)
 {
-  LObject *obj = OOGLNewE(LObject, "LObject");
+  LObject *obj;
+
+  FREELIST_NEW(LObject, obj);
+
   obj->type = type;
   obj->ref = 1;
-  if (!cell) obj->cell.p = NULL;
-  else if(sizeof(int) < sizeof(void *))	{ /* Really want "alignof(int)" */
+  if (!cell) {
+    obj->cell.p = NULL;
+  } else if(sizeof(int) < sizeof(void *)) { /* Really want "alignof(int)" */
     int *unalignedcell = (int *)cell;
     memcpy((void *)&obj->cell, unalignedcell, sizeof(LCell));
-  } else
+  } else {
     obj->cell = *(LCell *)cell;
+  }
   return obj;
 }
 
@@ -967,7 +976,7 @@ void LFree(LObject *obj)
   LRefDecr(obj);
   if ( obj->ref == 0 ) {
     (*obj->type->free)(&(obj->cell));
-    OOGLFree(obj);
+    FREELIST_FREE(LObject, obj);
   }
 }
 
@@ -1114,13 +1123,6 @@ LObject *LEval(LObject *obj)
     OOGLError(0, "lisp error: call to unknown function %s", LSummarize(list->car));
     return Lnil;
   }
-}
-
-LList *LListNew()
-{
-  LList *new = OOGLNewE(LList, "LList");
-  new->cdr = NULL;
-  return new;
 }
 
 LList *LListAppend(LList *list, LObject *obj)

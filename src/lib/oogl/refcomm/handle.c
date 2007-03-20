@@ -33,10 +33,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include <string.h>
 #include "handleP.h"
+#include "freelist.h"
 
 static DBLLIST(AllHandles);
-static DBLLIST(FreeRefs);
-static DBLLIST(FreeHandles);
+static DEF_FREELIST(HRef);
+static DEF_FREELIST(Handle);
 
 #define HANDLE_DEBUG 0
 
@@ -115,7 +116,7 @@ void HandleUnregister(Handle **hp)
   DblListIterate(&h->refs, HRef, node, r, rn) {
     if(r->hp == hp) {
       DblListDelete(&r->node);
-      DblListAdd(&FreeRefs, &r->node);
+      FREELIST_FREE(HRef, r);
       REFPUT(h);
     }
   }
@@ -137,7 +138,7 @@ void HandleUnregisterJust(Handle **hp, Ref *obj, void *info,
        (info == NULL || rp->info == info) &&
        (update == NULL || rp->update == update)) {
       DblListDelete(&rp->node);
-      DblListAdd(&FreeRefs, &rp->node);
+      FREELIST_FREE(HRef, rp);
       REFPUT(h);
     }
   }
@@ -161,7 +162,7 @@ void HandleUnregisterAll(Ref *obj,
  	   (info == NULL || r->info == info) &&
 	   (update == NULL || r->update == update)) {
 	  DblListDelete(&r->node);
-	  DblListAdd(&FreeRefs, &r->node);
+	  FREELIST_FREE(HRef, r);
 	  REFPUT(h);
 	}
       }
@@ -201,12 +202,7 @@ int HandleRegister(Handle **hp,
     }
   }
 
-  if (DblListEmpty(&FreeRefs)) {
-    rp = OOGLNewE(HRef, "HandleRegister");
-  } else {
-    rp = DblListContainer(FreeRefs.next, HRef, node);
-    DblListDelete(&rp->node);
-  }
+  FREELIST_NEW(HRef, rp);
 
   REFINCR(h);
 
@@ -276,12 +272,8 @@ handlecreate(char *name, HandleOps *ops)
   OOGLWarn("Creating handle with name \"%s\"", name);
 #endif
 
-  if (DblListEmpty(&FreeHandles)) {
-    h = OOGLNewE(Handle, "new Handle");
-  } else {
-    h = DblListContainer(FreeHandles.next, Handle, opsnode);
-    DblListDelete(&h->opsnode);
-  }
+  FREELIST_NEW(Handle, h);
+
   RefInit((Ref *)h, HANDLEMAGIC);
   h->ops = ops = ops ? ops : &NullOps;
   h->name = strdup(name);
@@ -487,7 +479,7 @@ void HandleDelete(Handle *h)
     free(h->name);
   }
 
-  DblListAdd(&FreeHandles, &h->opsnode);
+  FREELIST_FREE(Handle, h);
 
   /*  handle_dump();*/
 }

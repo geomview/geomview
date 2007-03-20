@@ -37,6 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "instP.h"
 #include "transobj.h"
 #include "ntransobj.h"
+#include "freelist.h"
 
 void
 InstDelete(Inst *inst)

@@ -37,7 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 int PoolDoCacheFiles;
 
-DBLLIST(GeomNodeDataPool);
+DEF_FREELISTHEAD(NodeData);
 
 static inline void GeomNodeDataPrune(Geom *geom)
 {
@@ -52,7 +52,7 @@ static inline void GeomNodeDataPrune(Geom *geom)
 	free(data->ppath);
 	data->ppath = NULL;
     }
-    DblListAdd(&GeomNodeDataPool, &data->node);
+    FREELIST_FREE(NodeData, data);
   }
 }
 

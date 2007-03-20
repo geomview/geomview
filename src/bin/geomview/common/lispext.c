@@ -49,6 +49,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transform.h"
 #include "fsa.h"
 #include "lang.h"
+#include "freelist.h"
 
 extern HandleOps GeomOps, CamOps, WindowOps;
 extern HandleOps TransOps, NTransOps, ImageOps, AppearanceOps;
@@ -61,17 +62,37 @@ static Fsa lang_fsa = NULL;
 static char **keyword_names;
 static int n_keywords;
 
+static DEF_FREELIST(HandleRefStruct);
+static DEF_FREELIST(TransformStruct);
+
+#ifdef NEW
+# undef NEW
+#endif
+#define NEW(type, name)				\
+{						\
+  HandleRefStruct *hrname;			\
+  FREELIST_NEW(HandleRefStruct, hrname);	\
+  name = (type##Struct *)hrname;		\
+}
+#ifdef DELETE
+# undef DELETE
+#endif
+#define DELETE(name) FREELIST_FREE(HandleRefStruct, name)
+
 /************************************************************************
  CAMERA LISP OBJECT
  ************************************************************************/
 static CameraStruct *camcopy(CameraStruct *old)
 {
-  CameraStruct *new = OOGLNew(CameraStruct);
-  if(old) *new = *old;
-  else new->cam = NULL, new->h = NULL;
-  if (new->cam) RefIncr((Ref*)(new->cam));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  CameraStruct *newc;
+  
+  NEW(Camera, newc);
+
+  if(old) *newc = *old;
+  else newc->cam = NULL, newc->h = NULL;
+  if (newc->cam) RefIncr((Ref*)(newc->cam));
+  if (newc->h) RefIncr((Ref*)newc->h);
+  return newc;
 }
 
 int camfromobj(LObject *obj, CameraStruct **x)
@@ -92,8 +113,8 @@ void camfree(CameraStruct **x)
   if (*x) {
     if ((*x)->cam) CamDelete( (*x)->cam );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int cammatch(CameraStruct **a, CameraStruct **b)
@@ -115,17 +136,20 @@ void campull(va_list *a_list, CameraStruct **x)
 
 LObject *camparse(Lake *lake)
 {
-  CameraStruct *new = OOGLNew(CameraStruct);
-  new->h = NULL; new->cam = NULL;
-  if (CamOps.strmin(POOL(lake), (Handle **)&new->h,
-		    (Ref **)(void *)&(new->cam)) == 0) {
+  CameraStruct *newc;
+
+  NEW(Camera, newc);
+
+  newc->h = NULL; newc->cam = NULL;
+  if (CamOps.strmin(POOL(lake), (Handle **)&newc->h,
+		    (Ref **)(void *)&(newc->cam)) == 0) {
     return Lnil;
   } else
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newc->h && !newc->h->permanent) {
+      HandleDelete(newc->h);
+      newc->h = NULL;
     }
-    return LNew( LCAMERA, &new );
+    return LNew( LCAMERA, &newc );
 }
 
 LType LCamerap = {
@@ -147,12 +171,15 @@ LType LCamerap = {
 
 static WindowStruct *wncopy(WindowStruct *old)
 {
-  WindowStruct *new = OOGLNew(WindowStruct);
-  if(old) *new = *old;
-  else new->wn = NULL, new->h = NULL;
-  if (new->wn) RefIncr((Ref*)(new->wn));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  WindowStruct *neww;
+
+  NEW(Window, neww);
+
+  if(old) *neww = *old;
+  else neww->wn = NULL, neww->h = NULL;
+  if (neww->wn) RefIncr((Ref*)(neww->wn));
+  if (neww->h) RefIncr((Ref*)neww->h);
+  return neww;
 }
 
 int wnfromobj(LObject *obj, WindowStruct **x)
@@ -173,8 +200,8 @@ void wnfree(WindowStruct **x)
   if (*x) {
     if ((*x)->wn) WnDelete( (*x)->wn );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int wnmatch(WindowStruct **a, WindowStruct **b)
@@ -200,17 +227,20 @@ void wnpull(va_list *a_list, WindowStruct **x)
 
 LObject *wnparse(Lake *lake)
 {
-  WindowStruct *new = OOGLNew(WindowStruct);
-  new->h = NULL; new->wn = NULL;
-  if (WindowOps.strmin(POOL(lake),(Handle **)&new->h,
-		       (Ref **)(void *)&(new->wn)) == 0) {
+  WindowStruct *neww;
+
+  NEW(Window, neww);
+
+  neww->h = NULL; neww->wn = NULL;
+  if (WindowOps.strmin(POOL(lake),(Handle **)&neww->h,
+		       (Ref **)(void *)&(neww->wn)) == 0) {
     return Lnil;
   } else
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(neww->h && !neww->h->permanent) {
+      HandleDelete(neww->h);
+      neww->h = NULL;
     }
-    return LNew( LWINDOW, &new );
+    return LNew( LWINDOW, &neww );
 }
 
 LType LWindowp = {
@@ -232,12 +262,14 @@ LType LWindowp = {
 
 static GeomStruct *geomcopy(GeomStruct *old)
 {
-  GeomStruct *new = OOGLNew(GeomStruct);
-  if(old) *new = *old;
-  else new->geom = NULL, new->h = NULL;
-  if (new->geom) RefIncr((Ref*)(new->geom));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  GeomStruct *newg;
+
+  NEW(Geom, newg);
+  if(old) *newg = *old;
+  else newg->geom = NULL, newg->h = NULL;
+  if (newg->geom) RefIncr((Ref*)(newg->geom));
+  if (newg->h) RefIncr((Ref*)newg->h);
+  return newg;
 }
 
 int geomfromobj(LObject *obj, GeomStruct **x)
@@ -258,8 +290,8 @@ void geomfree(GeomStruct **x)
   if (*x) {
     if ((*x)->geom) GeomDelete( (*x)->geom );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int geommatch(GeomStruct **a, GeomStruct **b)
@@ -281,17 +313,20 @@ void geompull(va_list *a_list, GeomStruct **x)
 
 LObject *geomparse(Lake *lake)
 {
-  GeomStruct *new = OOGLNew(GeomStruct);
-  new->h = NULL; new->geom = NULL;
-  if (GeomOps.strmin(POOL(lake), (Handle **)&new->h, 
-		     (Ref **)(void *)&(new->geom)) == 0) {
+  GeomStruct *newg;
+
+  NEW(Geom, newg);
+
+  newg->h = NULL; newg->geom = NULL;
+  if (GeomOps.strmin(POOL(lake), (Handle **)&newg->h, 
+		     (Ref **)(void *)&(newg->geom)) == 0) {
     return Lnil;
   } else {
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newg->h && !newg->h->permanent) {
+      HandleDelete(newg->h);
+      newg->h = NULL;
     }
-    return LNew( LGEOM, &new );
+    return LNew( LGEOM, &newg );
   }
 }
 
@@ -314,12 +349,14 @@ LType LGeomp = {
 
 static ApStruct *apcopy(ApStruct *old)
 {
-  ApStruct *new = OOGLNew(ApStruct);
-  if(old) *new = *old;
-  else new->ap = NULL, new->h = NULL;
-  if (new->ap) RefIncr((Ref*)(new->ap));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  ApStruct *newap;
+  
+  NEW(Ap, newap);
+  if(old) *newap = *old;
+  else newap->ap = NULL, newap->h = NULL;
+  if (newap->ap) RefIncr((Ref*)(newap->ap));
+  if (newap->h) RefIncr((Ref*)newap->h);
+  return newap;
 }
 
 int apfromobj(LObject *obj, ApStruct **x)
@@ -340,8 +377,8 @@ void apfree(ApStruct **x)
   if (*x) {
     if ((*x)->ap) ApDelete( (*x)->ap );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int apmatch(ApStruct **a, ApStruct **b)
@@ -363,16 +400,19 @@ void appull(va_list *a_list, ApStruct **x)
 
 LObject *apparse(Lake *lake)
 {
-  ApStruct *new = OOGLNew(ApStruct);
-  new->h = NULL; new->ap = NULL;
-  if (ApStreamIn(POOL(lake), &new->h, &(new->ap)) == 0) {
+  ApStruct *newap;
+
+  NEW(Ap, newap);
+
+  newap->h = NULL; newap->ap = NULL;
+  if (ApStreamIn(POOL(lake), &newap->h, &(newap->ap)) == 0) {
     return Lnil;
   } else
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newap->h && !newap->h->permanent) {
+      HandleDelete(newap->h);
+      newap->h = NULL;
     }
-    return LNew( LAP, &new );
+    return LNew( LAP, &newap );
 }
 
 LType LApp = {
@@ -395,11 +435,14 @@ LType LApp = {
 
 static TransformStruct *tmcopy(TransformStruct *old)
 {
-  TransformStruct *new = OOGLNew(TransformStruct);
-  if (old) *new = *old;
-  else new->h = NULL;
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  TransformStruct *newt;
+
+  FREELIST_NEW(TransformStruct, newt);
+
+  if (old) *newt = *old;
+  else newt->h = NULL;
+  if (newt->h) RefIncr((Ref*)newt->h);
+  return newt;
 }
 
 int tmfromobj(LObject *obj, TransformStruct **x)
@@ -419,8 +462,8 @@ void tmfree(TransformStruct **x)
 {
   if (*x) {
     if ((*x)->h) HandleDelete((*x)->h);
+    FREELIST_FREE(TransformStruct, *x);
   }
-  OOGLFree(*x);
 }
 
 int tmmatch(TransformStruct **a, TransformStruct **b)
@@ -442,16 +485,19 @@ void tmpull(va_list *a_list, TransformStruct **x)
 
 LObject *tmparse(Lake *lake)
 {
-  TransformStruct *new = OOGLNew(TransformStruct);
-  new->h = NULL;
-  if (TransStreamIn(POOL(lake), (Handle **)&new->h, new->tm) == false) {
+  TransformStruct *newt;
+  
+  FREELIST_NEW(TransformStruct, newt);
+
+  newt->h = NULL;
+  if (TransStreamIn(POOL(lake), (Handle **)&newt->h, newt->tm) == false) {
     return Lnil;
   } else
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newt->h && !newt->h->permanent) {
+      HandleDelete(newt->h);
+      newt->h = NULL;
     }
-    return LNew( LTRANSFORM, &new );
+    return LNew( LTRANSFORM, &newt );
 }
 
 LType LTransformp = {
@@ -473,12 +519,15 @@ LType LTransformp = {
 
 static TmNStruct *tmncopy(TmNStruct *old)
 {
-  TmNStruct *new = OOGLNew(TmNStruct);
-  if(old) *new = *old;
-  else new->tm = NULL, new->h = NULL;
-  if (new->tm) RefIncr((Ref*)(new->tm));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  TmNStruct *newt;
+
+  NEW(TmN, newt);
+
+  if(old) *newt = *old;
+  else newt->tm = NULL, newt->h = NULL;
+  if (newt->tm) RefIncr((Ref*)(newt->tm));
+  if (newt->h) RefIncr((Ref*)newt->h);
+  return newt;
 }
 
 int tmnfromobj(LObject *obj, TmNStruct **x)
@@ -499,8 +548,8 @@ void tmnfree(TmNStruct **x)
   if (*x) {
     if ((*x)->tm) TmNDelete( (*x)->tm );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int tmnmatch(TmNStruct **a, TmNStruct **b)
@@ -522,18 +571,21 @@ void tmnpull(va_list *a_list, TmNStruct **x)
 
 LObject *tmnparse(Lake *lake)
 {
-  TmNStruct *new = OOGLNew(TmNStruct);
-  new->h = NULL;
-  new->tm = NULL;
-  if (NTransOps.strmin(POOL(lake), (Handle **)&new->h,
-		       (Ref **)(void *)(&new->tm)) == 0) {
+  TmNStruct *newt;
+
+  NEW(TmN, newt);
+
+  newt->h = NULL;
+  newt->tm = NULL;
+  if (NTransOps.strmin(POOL(lake), (Handle **)&newt->h,
+		       (Ref **)(void *)(&newt->tm)) == 0) {
     return Lnil;
   } else {
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newt->h && !newt->h->permanent) {
+      HandleDelete(newt->h);
+      newt->h = NULL;
     }
-    return LNew( LTRANSFORMN, &new );
+    return LNew( LTRANSFORMN, &newt );
   }
 }
 
@@ -556,12 +608,15 @@ LType LTransformNp = {
 
 static ImgStruct *imgcopy(ImgStruct *old)
 {
-  ImgStruct *new = OOGLNew(ImgStruct);
-  if(old) *new = *old;
-  else new->img = NULL, new->h = NULL;
-  if (new->img) RefIncr((Ref*)(new->img));
-  if (new->h) RefIncr((Ref*)new->h);
-  return new;
+  ImgStruct *newi;
+
+  NEW(Img, newi);
+
+  if(old) *newi = *old;
+  else newi->img = NULL, newi->h = NULL;
+  if (newi->img) RefIncr((Ref*)(newi->img));
+  if (newi->h) RefIncr((Ref*)newi->h);
+  return newi;
 }
 
 int imgfromobj(LObject *obj, ImgStruct **x)
@@ -582,8 +637,8 @@ void imgfree(ImgStruct **x)
   if (*x) {
     if ((*x)->img) ImgDelete( (*x)->img );
     if ((*x)->h) HandleDelete( (*x)->h );
+    DELETE(*x);
   }
-  OOGLFree(*x);
 }
 
 int imgmatch(ImgStruct **a, ImgStruct **b)
@@ -605,18 +660,21 @@ void imgpull(va_list *a_list, ImgStruct **x)
 
 LObject *imgparse(Lake *lake)
 {
-  ImgStruct *new = OOGLNew(ImgStruct);
-  new->h = NULL;
-  new->img = NULL;
-  if (ImageOps.strmin(POOL(lake), (Handle **)&new->h,
-		      (Ref **)(void *)(&new->img)) == 0) {
+  ImgStruct *newi;
+
+  NEW(Img, newi);
+  
+  newi->h = NULL;
+  newi->img = NULL;
+  if (ImageOps.strmin(POOL(lake), (Handle **)&newi->h,
+		      (Ref **)(void *)(&newi->img)) == 0) {
     return Lnil;
   } else {
-    if(new->h && !new->h->permanent) {
-      HandleDelete(new->h);
-      new->h = NULL;
+    if(newi->h && !newi->h->permanent) {
+      HandleDelete(newi->h);
+      newi->h = NULL;
     }
-    return LNew( LIMAGE, &new );
+    return LNew( LIMAGE, &newi );
   }
 }
 
@@ -650,8 +708,7 @@ int idfromobj(obj, x)
   return 1;
 }
 
-LObject *id2obj(x)
-    int *x;
+LObject *id2obj(int *x)
 {
   return LNew( LID, x );
 }

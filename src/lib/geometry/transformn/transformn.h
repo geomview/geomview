@@ -38,8 +38,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <math.h>
 #include <ooglutil.h>
 #include "geomtypes.h"
+#include "freelist.h"
 
 #define	TMNMAGIC	OOGLMagic('T', 1)
+
+DECL_FREELIST(TransformN);
 
 /* Refer to the (i,j)'th entry in a TransformN object;
  * beware that (i,j) are not checked!
@@ -108,7 +111,9 @@ static inline TransformN *TmNRead(IOBFILE *f, int binary);
 static inline TransformN *
 TmNCreate(int idim, int odim, HPtNCoord *a)
 {
-  TransformN *T = OOGLNewE(TransformN, "new TransformN");
+  TransformN *T;
+
+  FREELIST_NEW(TransformN, T);
 
   RefInit((Ref *)T, TMNMAGIC);
   if (idim <= 0) idim = 1;
@@ -127,8 +132,10 @@ static inline void
 TmNDelete(TransformN *T)
 {
   if (T && RefDecr((Ref*)T) == 0) {
-    if (T->a) OOGLFree(T->a);
-    OOGLFree(T);
+    if (T->a) {
+      OOGLFree(T->a);
+    }
+    FREELIST_FREE(TransformN, T);
   }
 }
 

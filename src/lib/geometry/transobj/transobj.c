@@ -34,6 +34,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transform.h"
 #include "transobj.h"
 #include "handleP.h"
+#include "freelist.h"
 
 /* 
  * Operations on TransObj objects.
@@ -51,8 +52,9 @@ TransTransformTo(TransObj *tobj, Transform T)	/* Set transform from T */
     TmCopy(T, tobj->T);
 }
 
-void
-TransDelete(TransObj *tobj)
+static DEF_FREELIST(TransObj);
+
+void TransDelete(TransObj *tobj)
 {
     if(tobj == NULL) {
 	return;
@@ -63,14 +65,16 @@ TransDelete(TransObj *tobj)
 	return;
     }
     if(tobj != NULL && RefDecr((Ref *)tobj) <= 0) {
-	OOGLFree(tobj);
+	FREELIST_FREE(TransObj, tobj);
     }
 }
 
 TransObj *
 TransCreate(Transform T)
 {
-    TransObj *tobj = OOGLNewE(TransObj, "TransObj");
+    TransObj *tobj;
+
+    FREELIST_NEW(TransObj, tobj);
 
     RefInit((Ref*)tobj, TRANSMAGIC);
     if (T != NULL) {

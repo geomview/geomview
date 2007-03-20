@@ -25,6 +25,10 @@
 #include "transformn.h"
 #include "ntransobj.h"
 #include "handleP.h"
+#include "freelist.h"
+
+DEF_FREELISTHEAD(TransformN);
+DEF_FREELISTHEAD(HPointN);
 
 /* 
  * Operations on NTransObj objects.

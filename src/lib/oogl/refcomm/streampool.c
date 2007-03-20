@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -23,12 +24,6 @@
 # include "config.h"
 #endif
 
-#if 0
-static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
-#endif
-
-
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include <string.h>
@@ -38,6 +33,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <math.h>
 #include <stdlib.h> /* for decl of 'free'; mbp Tue May 16 19:21:59 2000 */
 #include "handleP.h"	/* Includes stdio.h, etc. too */
+#include "freelist.h"
 
 #if defined(unix) || defined(__unix)
 # include <unistd.h>
@@ -87,7 +83,7 @@ static const int o_nonblock =
     0;
 
 static DBLLIST(AllPools);
-static DBLLIST(FreePools);
+static DEF_FREELIST(Pool);
 
 static fd_set poolwatchfds;
 static int poolmaxfd = 0;
@@ -247,12 +243,7 @@ newPool(char *name)
 {
     Pool *p;
 
-    if (DblListEmpty(&FreePools)) {
-	p = OOGLNewE(Pool, "Pool");
-    } else {
-	p = DblListContainer(FreePools.next, Pool, node);
-	DblListDelete(&p->node);
-    }
+    FREELIST_NEW(Pool, p);
     memset(p, 0, sizeof(Pool));
     DblListInit(&p->node);
     DblListInit(&p->handles);
@@ -615,7 +606,7 @@ void PoolDelete(Pool *p)
     }
 
     free(p->poolname);
-    DblListAdd(&FreePools, &p->node);
+    FREELIST_FREE(Pool, p);
 }
 
 /*

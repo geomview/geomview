@@ -32,6 +32,7 @@
 #include "ooglutil.h"
 #include "pick.h"
 #include "bsptree.h"
+#include "freelist.h"
 #include "dbllist.h"
 
 typedef char   *GeomNameFunc( void );
@@ -253,7 +254,7 @@ static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
   return NULL;
 }
 
-extern DblListNode GeomNodeDataPool;
+extern DECL_FREELIST(NodeData);
 
 static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
 {
@@ -264,12 +265,7 @@ static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
   }
   data = GeomNodeDataByPath(geom, ppath);
   if (data == NULL) {
-    if (DblListEmpty(&GeomNodeDataPool)) {
-      data = DblListContainer(GeomNodeDataPool.next, NodeData, node);
-      DblListDelete(&data->node);
-    } else {
-      data = OOGLNewE(NodeData, "new per hierarchy-node data");
-    }
+    FREELIST_NEW(NodeData, data);
     data->ppath = strdup(ppath);
     data->tagged_ap = NULL;
     DblListAdd(&geom->pernode, &data->node);

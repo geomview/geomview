@@ -31,6 +31,15 @@
 #include "transformn.h"
 #include "lang.h"
 
+/* All extension objects except the transform objects have the
+ * following structure.
+ */
+typedef struct HandleRefStruct
+{
+  Handle *h;
+  Ref *ref;
+} HandleRefStruct;
+
 typedef struct {
   Handle *h;
   Camera *cam;

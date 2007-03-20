@@ -42,6 +42,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <math.h>
 #include <ooglutil.h>
 #include "geomtypes.h"
+#include "freelist.h"
+
+DECL_FREELIST(HPointN);
 
 static inline HPointN *HPtNCreate(int dim, const HPtNCoord *vec);
 static inline void HPtNDelete(HPointN *pt);
@@ -101,7 +104,9 @@ static inline void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other);
 static inline HPointN *
 HPtNCreate(int dim, const HPtNCoord *vec)
 {
-  HPointN *pt = OOGLNewE(HPointN, "new HPointN");
+  HPointN *pt;
+
+  FREELIST_NEW(HPointN, pt);
 
   if(dim <= 0) dim = 1;
   pt->dim = dim;
@@ -121,7 +126,7 @@ HPtNDelete(HPointN *pt)
 {
   if(pt) {
     if(pt->v) OOGLFree(pt->v);
-    OOGLFree(pt);
+    FREELIST_FREE(HPointN, pt);
   }
 }
 
