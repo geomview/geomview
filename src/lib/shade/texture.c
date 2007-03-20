@@ -865,16 +865,14 @@ Texture *
 TxMerge(Texture *src, Texture *dst, int mergeflags)
 {
   if (src == NULL)
-    return dst;
+    return REFGET(Texture, dst);
   if (dst == NULL) {
-    RefIncr((Ref *)src);
-    return src;
+    return REFGET(Texture, src);
   }
   /* Oh, well.  XXX.  Leave real merging for later, if at all.
    * Meanwhile, any new texture completely replaces any old one.
    */
-  RefIncr((Ref *)src);
-  return src;
+  return REFGET(Texture, src);
 }
 
 /*
