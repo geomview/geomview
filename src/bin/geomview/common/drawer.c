@@ -3522,7 +3522,8 @@ LDEFINE(write_comments, LVOID,
   char *fname;
   Pool *p, *op;
   Geom *where;
-  int count, temppool = 0;
+  int count;
+  bool temppool = false;
   int curpath[40];
   Lake *brownie;
 
@@ -3542,11 +3543,11 @@ LDEFINE(write_comments, LVOID,
       op = p;
     } else {
       op = PoolStreamTemp(fname, NULL, stdout, 1, &GeomOps);
-      temppool = 1;
+      temppool = true;
     }
   } else {
     op = PoolStreamTemp(fname, NULL, NULL, 1, &GeomOps);
-    temppool = 1;
+    temppool = true;
   }
   if(op == NULL || PoolOutputFile(op) == NULL) {
     fprintf(stderr, "write: cannot open \"%s\": %s\n", fname, sperror());
@@ -3563,7 +3564,10 @@ LDEFINE(write_comments, LVOID,
   traverse(op,where,pickpath,curpath-1,curpath,pn);
   fprintf(PoolOutputFile(op), ")\n");
   fflush(PoolOutputFile(op));
-  if (temppool) PoolClose(op);
+  if (temppool) {
+    PoolClose(op);
+    PoolDelete(op);
+  }
 
   return Lt;
 }
