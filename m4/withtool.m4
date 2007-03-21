@@ -31,7 +31,6 @@ dnl distribution terms that you use for the rest of that program.
 #
 # GV_PATH_PROG(tk-interpreter, wish, [$PATH:blah])
 
-
 AC_DEFUN([GV_PATH_PROG],
 [m4_define([UPNAME], [m4_bpatsubst(m4_toupper([$1]),-,_)])
 m4_if($#,1,
@@ -48,15 +47,24 @@ AC_ARG_WITH($1,
       ;;
     *) 
       UPNAME[OPT]="${withval}"
+      ;;
     esac],
   [UPNAME[OPT]=PROG])
-  m4_if($#,1,
-        [AC_PATH_PROGS(UPNAME, ${UPNAME[OPT]}, "not found")],
-        m4_if($#,2,
-              [AC_PATH_PROGS(UPNAME, ${UPNAME[OPT]}, "not found")],
-              [AC_PATH_PROGS(UPNAME, ${UPNAME[OPT]}, "not found", [$3])]))
-  if test "${UPNAME}" = "not found"; then
-	AC_MSG_ERROR([`$1' executable not found. Check your installation.])
-	exit 1
+acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
+if test -n "${acgv_path}"; then
+  UPNAME=`basename "${UPNAME[OPT]}"`
+  if echo "${acgv_path}" | egrep -q -s '^/'; then
+    acgv_path="${acgv_path}"
+  else
+    acgv_path="`pwd`/${acgv_path}"
   fi
+  AC_PATH_PROGS(UPNAME, ${UPNAME}, [not found], [${acgv_path}])
+else
+  UPNAME="${UPNAME[OPT]}"
+  m4_if($#,3,[acgv_path="$3:${PATH}"],[acgv_path="${PATH}"])
+  AC_CHECK_PROGS(UPNAME, ${UPNAME}, [not found], [${acgv_path}])
+fi
+if test "${UPNAME}" = "not found"; then
+  AC_MSG_ERROR([`$1' executable not found. Check your installation.])
+  exit 1
 fi])
