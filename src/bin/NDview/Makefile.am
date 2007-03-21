@@ -1,4 +1,7 @@
-INCLUDES = $(default_includes)
+DEFS = -DHAVE_CONFIG_H
+
+INCLUDES = -I$(geomviewincludes) $(default_includes) \
+ -I$(TCL_INCLUDE_PATH) -I$(TK_INCLUDE_PATH)
 
 EXTRA_DIST = NDview NDdemo
 
@@ -6,7 +9,7 @@ LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
 module_PROGRAMS = ndview
 ndview_SOURCES = ndview.c testwish.c
-ndview_DEPENDENCIES = $(OOGLLIB)
+#ndview_DEPENDENCIES =
 #ndview_LDFLAGS= -rpath $(libdir)
 
 module_tcldir = $(moduledir)/tcl
@@ -25,18 +28,5 @@ ndview_textdir     = $(ndviewdir)/text
 .geomview-nddemo: Makefile
 	echo '(emodule-define "NDdemo" "ndview $$GEOMVIEW_EMODULE_DIR/tcl/NDdemo")' > .geomview-nddemo
 
-$(top_builddir)/modules/.geomview-ndview: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDview" "$(subdir)/ndview $(realpath $(srcdir))/NDview")' > $@
-
-$(top_builddir)/modules/.geomview-nddemo: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "NDdemo" "$(subdir)/ndview $(realpath $(srcdir))/$(srcdir)/NDdemo")' > $@
-
-all-local: $(top_builddir)/modules/.geomview-ndview  $(top_builddir)/modules/.geomview-nddemo
-
-CLEANFILES = \
- $(top_builddir)/modules/.geomview-ndview \
- $(top_builddir)/modules/.geomview-nddemo \
- $(module_DATA)
+CLEANFILES = $(module_DATA)
 
