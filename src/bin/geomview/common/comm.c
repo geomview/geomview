@@ -235,29 +235,33 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
     return ok;
   } else if (strpbrk(str, "({ \t\n")) {
     static Pool *pcache;	/* Cache a pool for handling strings */
-    static int inuse = 0;	/* Use cached pool unless already in use */
+    static bool inuse = false;	/* Use cached pool unless already in use */
     IOBFILE *inf = iobfileopen(fmemopen(str, strlen(str), "rb"));
     /* Caching implies this first pool has a long lifetime;
      * suitable for expressing (interest (...)) 
      */
     if (!inuse) {
-      if ((p = pcache) == NULL)
-	p = pcache = PoolStreamTemp(str, inf, NULL, 0, ops);
-      inuse = 1;
+      if ((p = pcache) == NULL) {
+	p = pcache = PoolStreamTemp(str, inf, stdout, 0, ops);
+      } else {
+	p->inf = inf; /* hack */
+      }
+      inuse = true;
     } else {
-      p = PoolStreamTemp(str, inf, NULL, 0, ops);
+      p = PoolStreamTemp(str, inf, stdout, 0, ops);
     }
-    if (p == NULL)
+    if (p == NULL) {
       return 0;		/* Failed */
-    p->inf = inf;
-    p->outf = stdout;	/* Attach default output stream */
-    while(iobfnextc(inf, 0) != EOF)
+    }
+    while(iobfnextc(inf, 0) != EOF) {
       ok = (*ops->strmin)(p, hp, rp);
+    }
     PoolClose(p);
-    if (p == pcache)
-      inuse = 0;
-    else
+    if (p == pcache) {
+      inuse = false;
+    } else {
       MyPoolDelete(p); /* Delete temp pool unless it's our cached one */
+    }
   } else {
     /* Print the "No such file..." error left by access() */
     fprintf(stderr, "%s: %s\n", str, sperror());
