@@ -59,7 +59,15 @@ void HandlesSetObjSaved(bool obj_saved)
   }
 }
 
-/* iterate over Ref->handles */
+/* Iterate over Ref->handles.
+ *
+ * This function increases the ref-count of the handle, only this way
+ * the caller may safely delete the returned handle; if pos != NULL,
+ * then we first iterate to the next element in the list, and then
+ * call HandleDelete() for pos to undo the REFGET from the previous
+ * call. The caller should always iterate until we return NULL,
+ * otherwise spurious ref-counts will be the result.
+ */
 Handle *HandleRefIterate(Ref *r, Handle *pos)
 {
   if (pos == NULL) {
@@ -67,9 +75,12 @@ Handle *HandleRefIterate(Ref *r, Handle *pos)
       ? NULL
       : REFGET(Handle, DblListContainer(r->handles.next, Handle, objnode));
   } else {
-    return pos->objnode.next == &r->handles
+    DblListNode *next = pos->objnode.next;
+    
+    HandleDelete(pos); /* undo REFGET(), possibly really delete the handle */
+    return next == &r->handles
       ? NULL
-      : REFGET(Handle, DblListContainer(pos->objnode.next, Handle, objnode));
+      : REFGET(Handle, DblListContainer(next, Handle, objnode));
   }
 }
 
@@ -81,9 +92,12 @@ Handle *HandlePoolIterate(Pool *pool, Handle *pos)
       ? NULL
       : REFGET(Handle, DblListContainer(pool->handles.next, Handle, poolnode));
   } else {
-    return pos->objnode.next == &pool->handles
+    DblListNode *next = pos->objnode.next;
+    
+    HandleDelete(pos);
+    return next == &pool->handles
       ? NULL
-      : REFGET(Handle, DblListContainer(pos->poolnode.next, Handle, poolnode));
+      : REFGET(Handle, DblListContainer(next, Handle, poolnode));
   }
 }
 
@@ -419,9 +433,9 @@ void handle_dump(void)
 
   DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
     DblListIterateNoDelete(&ops->handles, Handle, opsnode, h) {
-      OOGLWarn("  %s@%s (h: #%d, o: #%d )",
-	       h->name,
-	       ops->prefix,
+      OOGLWarn("  %s[%s]@%p (%s: #%d, o: #%d )",
+	       ops->prefix, h->name, (void *)h,
+	       h->permanent ? "H" : "h",
 	       RefCount((Ref *)h),
 	       h->object ? RefCount((Ref *)h->object) : -1);
     }

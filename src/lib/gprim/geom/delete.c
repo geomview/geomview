@@ -81,16 +81,17 @@ void GeomDelete(Geom *object)
 	if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
 	    np++;
 	}
-	REFPUT(h);
     }
     if (REFPUT(object) == np && np > 0) {
 	/* can this happen??? at all ??? */
 	for (h = HandleRefIterate((Ref *)object, NULL);
 	     h;
 	     h = HandleRefIterate((Ref *)object, h)) {
-	    REFPUT(h);
 	    if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
-		HandleDelete(h);
+		/* REFPUT() is enough, HandleRefIterate() will call
+		 * HandleDelete()
+		 */
+		REFPUT(h);
 	    }
 	}
 	return;
