@@ -26,6 +26,7 @@ dnl distribution terms that you use for the rest of that program.
 # $2: default program to check for. Should be _without_ path,
 #     just the name
 # $3: optional search path
+# $4: keyword: optional/required, bail out if required and prog is not found
 #
 # Example:
 #
@@ -52,19 +53,64 @@ AC_ARG_WITH($1,
   [UPNAME[OPT]=PROG])
 acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
 if test -n "${acgv_path}"; then
-  UPNAME=`basename "${UPNAME[OPT]}"`
+  UPNAME[PROG]=`basename "${UPNAME[OPT]}"`
   if echo "${acgv_path}" | egrep -q -s '^/'; then
     acgv_path="${acgv_path}"
   else
     acgv_path="`pwd`/${acgv_path}"
   fi
-  AC_PATH_PROGS(UPNAME, ${UPNAME}, [not found], [${acgv_path}])
 else
-  UPNAME="${UPNAME[OPT]}"
+  UPNAME[PROG]="${UPNAME[OPT]}"
   m4_if($#,3,[acgv_path="$3:${PATH}"],[acgv_path="${PATH}"])
-  AC_CHECK_PROGS(UPNAME, ${UPNAME}, [not found], [${acgv_path}])
 fi
-if test "${UPNAME}" = "not found"; then
+AC_PATH_PROGS(UPNAME, ${UPNAME[PROG]}, [not found], [${acgv_path}])
+acgv_required=optional
+m4_if($#,4,[acgv_required="$4"])
+if test "${UPNAME}" = "not found" -a "${acgv_required}" = "required"; then
   AC_MSG_ERROR([`$1' executable not found. Check your installation.])
   exit 1
-fi])
+fi
+AM_CONDITIONAL(UPNAME,[! test "${UPNAME}" = "not found"])
+])
+
+AC_DEFUN([GV_CHECK_PROG],
+[m4_define([UPNAME], [m4_bpatsubst(m4_toupper([$1]),-,_)])
+m4_if($2,[],
+     [m4_define([PROG],[$1])],[m4_define([PROG],[$2])])
+AC_ARG_WITH($1,
+  AC_HELP_STRING([--with-$1=PROGRAM],
+[Set PROGRAM to the name of the `$1' program (usually `PROG').
+(default: autodetected)]),
+  [case "${withval}" in
+    no)
+      AC_MSG_ERROR(["--without-$1" or "--with-$1=no" is not an option here])
+      ;;
+    yes) # simply ignore that, use auto-detection
+      ;;
+    *) 
+      UPNAME[OPT]="${withval}"
+      ;;
+    esac],
+  [UPNAME[OPT]=PROG])
+acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
+if test -n "${acgv_path}"; then
+  UPNAME[PROG]=`basename "${UPNAME[OPT]}"`
+  if echo "${acgv_path}" | egrep -q -s '^/'; then
+    acgv_path="${acgv_path}"
+  else
+    acgv_path="`pwd`/${acgv_path}"
+  fi
+  AC_PATH_PROGS(UPNAME, ${UPNAME[PROG]}, [not found], [${acgv_path}])
+else
+  UPNAME[PROG]="${UPNAME[OPT]}"
+  m4_if($3,[],[acgv_path="${PATH}"],[acgv_path="$3:${PATH}"])
+  AC_CHECK_PROGS(UPNAME, ${UPNAME[PROG]}, [not found], [${acgv_path}])
+fi
+acgv_required=optional
+m4_if($#,4,[acgv_required="$4"])
+if test "${UPNAME}" = "not found" -a "${acgv_required}" = "required"; then
+  AC_MSG_ERROR([`$1' executable not found. Check your installation.])
+  exit 1
+fi
+AM_CONDITIONAL(UPNAME,[! test "${UPNAME}" = "not found"])
+])
