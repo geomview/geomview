@@ -1195,6 +1195,63 @@ loadfile(char *name, HandleOps *defops, int guess)
   return;
 }
 
+LDEFINE(hdelete, LVOID,
+	"(hdelete [geometry|camera|window|image|appearance|transform|ntransform] name)\n"
+	"Deletes the given handle. Note that the handle will not actually be "
+	"deleted in case there are still other objects referring to the "
+	"handle, but once those objects are gone, the handle will also "
+	"automatically go away. The object the handle referes to (if any) "
+	"will only be deleted if there are no other references to that object."
+	"\n\n"
+	"If the optional first argument is omitted, then the first handle "
+	"matching \"name\" will be deleted, regardless of the type of the "
+	"object it is attached to. It is not an error to call this function "
+	"with a non-existent handle, but it is an error to call this funcion "
+	"with the name of a non-global handle, i.e. one that was not "
+	"created by (hdefine ...) or (read ... { define ...}).")
+{
+  Handle *h = NULL;
+  HandleOps *ops = NULL;
+  LType *ltype;
+  char *hname = NULL, *opsname = NULL, *horo;
+
+  LDECLARE(("hdelete", LBEGIN,
+	    LSTRING, &horo,
+	    LOPTIONAL,
+	    LSTRING, &hname,
+	    LEND));
+
+  if (hname == NULL) {
+    hname = horo;
+  } else {
+    opsname = horo;
+  }
+
+  if (opsname && ((ops = str2ops(opsname)) == NULL ||
+		  (ltype = ops2ltype(ops)) == NULL)) {
+    OOGLError(0, "\"hdelete\": "
+	      "expected \"camera\" or \"window\" or \"geometry\" or "
+	      "\"transform\" or \"ntransform\" or "
+	      "\"image\" or \"appearance\", got \"%s\"",
+	      opsname);
+    return Lnil;
+  }
+  
+  if ((h = HandleByName(hname, ops)) != NULL) {
+    REFPUT(h); /* undo HandleByName() REFGET */
+    if (!h->permanent) {
+      OOGLError(0, "\"hdelete\": "
+		"attempt to delete the non-global handle \"%s[%s]\"",
+		opsname ? opsname : "", hname);
+      return Lnil;
+    }
+    h->permanent = false;
+    HandleDelete(h);
+  }
+  return Lt;
+}
+
+
 LDEFINE(hdefine, LVOID,
 	"(hdefine {geometry|camera|window|image|appearance|transform|ntransform} name value)\n"
 	"Sets the value of a handle of a given type."

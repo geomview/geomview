@@ -6594,6 +6594,20 @@ except that the assignment is done when hdefine is executed,
 while the @code{read ... define} performs assignment as soon as the
 text is read.
 
+@findex hdelete
+@item (hdelete [@code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform} name)
+Deletes the given handle. Note that the handle will not actually be
+deleted in case there are still other objects referring to the handle,
+but once those objects are gone, the handle will also automatically go
+away. The object the handle referes to (if any) will only be deleted if
+there are no other references to that object.
+
+If the optional first argument is omitted, then the first handle
+matching @var{name} will be deleted, regardless of the type of the
+object it is attached to. It is not an error to call this function with
+a non-existent handle, but it is an error to call this funcion with the
+name of a non-global handle, i.e. one that was not created by
+@code{(hdefine ...)} or @code{(read ... @{ define ...@})}.
 
 @findex help
 @item (help		[command])
