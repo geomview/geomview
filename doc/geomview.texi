@@ -29,7 +29,7 @@
 @vskip 0pt plus 1filll
 @center Copyright @copyright{} 1992-1998 The Geometry Center
 @center Copyright @copyright{} 1998-2006 Stuart Levy, Tamara Munzner, Mark Phillips
-@center Copyright @copyright{} 2006 Claus-Justus Heine
+@center Copyright @copyright{} 2006-2007 Claus-Justus Heine
 
 @end titlepage
 @page
@@ -4066,13 +4066,14 @@ created with the gcl
 @noindent
 while in
 @example
-    INST transforms @{ : @var{myTs} @} geom @{ @dots{} @}
-or  INST transforms @{ LIST @{: @var{myTs}@} @{< more.prj@} @} geom @{ @dots{} @}
+  INST transforms @{ : @var{myTs} @} geom @{ @dots{} @}
+  or
+  INST transforms @{ LIST @{: @var{myTs}@} @{< more.prj@} @} geom @{ @dots{} @}
 @end example
 @noindent
 @var{myTs} must be a geometry object, defined e.g. with
 @example
-    (read geometry @{ define @var{myTs} @{ TLIST 1 0 0 1 @dots{} @} @})
+  (read geometry @{ define @var{myTs} @{ TLIST 1 0 0 1 @dots{} @} @})
 @end example
 
 A @code{TLIST BINARY} format is accepted.  Binary data begins with a
@@ -6275,65 +6276,273 @@ is an OOGL winddow specification.
 @node Gcl Reference,  , Argument Conventions, GCL
 @section Gcl Reference Guide
 
-@table @code
+@c @table @code
 
+@menu
+* shell::                       @code{(! SHELLCOMMAND)}
+* lt::                          @code{(< EXPR1 EXPR2)}
+* eq::                          @code{(= EXPR1 EXPR2)}
+* gt::                          @code{(> EXPR1 EXPR2)}
+* help::                        @code{(? COMMAND)}
+* morehelp::                    @code{(?? COMMAND)}
+* emodule-run::                 @code{(| NAME)}
+* all::                         @code{(all geometry|camera|emodule)}
+* and::                         @code{(and EXPR1 EXPR2)}
+* ap-override::                 @code{(ap-override [on|off])}
+* backcolor::                   @code{(backcolor      CAM-ID R G B)}
+* background-image::            @code{(background-image CAM-ID [FILENAME])}
+* bbox-color::                  @code{(bbox-color GEOM-ID R G B)}
+* bbox-draw::                   @code{(bbox-draw GEOM-ID [yes|no])}
+* camera::                      @code{(camera CAM-ID [CAMERA])}
+* camera-draw::                 @code{(camera-draw CAM-ID [yes|no])}
+* camera-prop::                 @code{(camera-prop @{ geometry object @} [projective])}
+* camera-reset::                @code{(camera-reset CAM-ID)}
+* car::                         @code{(car LIST)}
+* cdr::                         @code{(cdr LIST)}
+* clock::                       @code{(clock)}
+* command::                     @code{(command INFILE [OUTFILE])}
+* copy::                        @code{(copy [ID] [name])}
+* cursor-still::                @code{(cursor-still [INT])}
+* cursor-twitch::               @code{(cursor-twitch [INT])}
+* delete::                      @code{(delete ID)}
+* dice::                        @code{(dice GEOM-ID N)}
+* dimension::                   @code{(dimension [N])}
+* dither::                      @code{(dither CAM-ID @{on|off|toggle@})}
+* draw::                        @code{(draw CAM-ID)}
+* dump-handles::                @code{(dump-handles)}
+* echo::                        @code{(echo ...)}
+* emodule-clear::               @code{(emodule-clear)}
+* emodule-define::              @code{(emodule-define NAME SHELL-COMMAND ...)}
+* emodule-defined::             @code{(emodule-defined @code{modulename})}
+* emodule-isrunning::           @code{(emodule-isrunning NAME)}
+* emodule-path::                @code{(emodule-path)}
+* emodule-run::                 @code{(| NAME)}
+* emodule-sort::                @code{(emodule-sort)}
+* emodule-start::               @code{(emodule-start  NAME)}
+* emodule-transmit::            @code{(emodule-transmit NAME LIST)}
+* escale::                      @code{(escale GEOM-ID FACTOR)}
+* event-keys::                  @code{(event-keys @{on|off@})}
+* event-mode::                  @code{(event-mode MODESTRING)}
+* event-pick::                  @code{(event-pick @{on|off@})}
+* evert::                       @code{(evert GEOM-ID [yes|no])}
+* exit::                        @code{(exit)}
+* ezoom::                       @code{(ezoom GEOM-ID FACTOR)}
+* freeze::                      @code{(freeze CAM-ID)}
+* geometry::                    @code{(geometry GEOM-ID [GEOMETRY])}
+* geomview-version::            @code{(geomview-version)}
+* hdefine::                     @code{(hdefine geometry|camera|... NAME VALUE)}
+* hdelete::                     @code{(hdelete [geometry|camera|...] name)}
+* help::                        @code{(? COMMAND)}
+* hmodel::                      @code{(hmodel CAMID @{virtual|projective|conformal@})}
+* hsphere-draw::                @code{(hsphere-draw CAMID [yes|no])}
+* if::                          @code{(if TEST EXPR1 [EXPR2])}
+* inhibit-warning::             @code{(inhibit-warning STRING)}
+* input-translator::            @code{(input-translator "#pfx" "sh-command")}
+* interest::                    @code{(interest (COMMAND [args]))}
+* lines-closer::                @code{(lines-closer CAM-ID DIST)}
+* load::                        @code{(load filename [command|geometry|camera])}
+* load-path::                   @code{(load-path)}
+* look::                        @code{(look [objectID] [camID])}
+* look-encompass::              @code{(look-encompass [objID] [camID])}
+* look-encompass-size::         @code{(look-encompass-size [view clip near far])}
+* look-recenter::               @code{(look-recenter [objID] [camID])}
+* look-toward::                 @code{(look-toward [objID] [camID] [origin|center])}
+* merge::                       @code{(merge @{window|camera@} CAM-ID @{ WIN or CAM ... @})}
+* merge-ap::                    @code{(merge-ap GEOM-ID APPEARANCE)}
+* merge-base-ap::               @code{(merge-base-ap APPEARANCE)}
+* merge-baseap::                @code{(merge-baseap APPEARANCE)}
+* morehelp::                    @code{(?? COMMAND)}
+* name-object::                 @code{(name-object ID NAME)}
+* ND-axes::                     @code{(ND-axes CAMID [CLUSTER [Xidx Yidx Zidx [Widx]]])}
+* ND-color::                    @code{(ND-color CAMID ...}
+* ND-xform::                    @code{(ND-xform OBJID [ntransform @{ ... @}])}
+* ND-xform-get::                @code{(ND-xform-get ID [from-ID])}
+* ND-xform-set::                @code{(ND-xform-set OBJID [ntransform @{ ... @}])}
+* new-alien::                   @code{(new-alien name [GEOMETRY])}
+* new-camera::                  @code{(new-camera name [CAMERA])}
+* new-center::                  @code{(new-center [id])}
+* new-geometry::                @code{(new-geometry name [GEOMETRY])}
+* new-reset::                   @code{(new-reset)}
+* NeXT::                        @code{(NeXT)}
+* normalization::               @code{(normalization GEOM-ID @{each|none|all|keep@})}
+* not::                         @code{(not EXPR)}
+* or::                          @code{(or EXPR1 EXPR2)}
+* pick::                        @code{(pick COORDSYS GEOMID G V E F P VI EI FI)}
+* pick-invisible::              @code{(pick-invisible [yes|no])}
+* pickable::                    @code{(pickable GEOM-ID @{yes|no@})}
+* position::                    @code{(position objectID otherID)}
+* position-at::                 @code{(position-at objectID otherID [center | origin])}
+* position-toward::             @code{(position-toward objID othID [center|origin])}
+* progn::                       @code{(progn STATEMENT [ ... ])}
+* quit::                        @code{(quit)}
+* quote::                       @code{(quote EXPR)}
+* rawevent::                    @code{(rawevent dev val x y t)}
+* rawpick::                     @code{(rawpick CAMID X Y)}
+* read::                        @code{(read geometry|camera|... @{GEOM or CAM or ...@})}
+* real-id::                     @code{(real-id ID)}
+* redraw::                      @code{(redraw CAM-ID)}
+* regtable::                    @code{(regtable)}
+* rehash-emodule-path::         @code{(rehash-emodule-path)}
+* replace-geometry::            @code{(replace-geometry GEOM-ID PART GEOMETRY)}
+* rib-display::                 @code{(rib-display [frame|tiff] FILEPREFIX)}
+* rib-snapshot::                @code{(rib-snapshot CAM-ID [filename])}
+* scale::                       @code{(scale GEOM-ID FACTOR [FACTORY FACTORZ])}
+* scene::                       @code{(scene CAM-ID [GEOMETRY])}
+* set-clock::                   @code{(set-clock TIME)}
+* set-conformal-refine::        @code{(set-conformal-refine CMX [N [EDGES]])}
+* set-emodule-path::            @code{(set-emodule-path (PATH1 ... PATHN))}
+* set-load-path::               @code{(set-load-path (PATH1 ... PATHN))}
+* set-motionscale::             @code{(set-motionscale X)}
+* setenv::                      @code{(setenv name string)}
+* sgi::                         @code{(sgi)}
+* shell::                       @code{(! SHELLCOMMAND)}
+* sleep-for::                   @code{(sleep-for TIME)}
+* sleep-until::                 @code{(sleep-until TIME)}
+* snapshot::                    @code{(snapshot CAM-ID FILENAME [FORMAT [XSIZE [YSIZE]]])}
+* soft-shader::                 @code{(soft-shader CAM-ID @{on|off|toggle@})}
+* space::                       @code{(space @{euclidean|hyperbolic|spherical@})}
+* stereowin::                   @code{(stereowin CAM-ID [no|horizontal|...] [gap])}
+* time-interests::              @code{(time-interests delta initial prefix [suffix])}
+* transform::                   @code{(transform objectID centerID frameID [rotate|...] ...)}
+* transform-incr::              @code{(transform-incr objectID centerID frameID ...)}
+* transform-set::               @code{(transform-set objectID centerID frameID ...)}
+* ui-cam-focus::                @code{(ui-cam-focus [focus-change|mouse-cross])}
+* ui-center::                   @code{(ui-center ID)}
+* ui-center-origin::            @code{(ui-center-origin [origin|bbox-center}
+* ui-emotion-program::          @code{(ui-emotion-program PROGRAM)}
+* ui-emotion-run::              @code{(ui-emotion-run EMODULE)}
+* ui-freeze::                   @code{(ui-freeze [on|off])}
+* ui-panel::                    @code{(ui-panel PANELNAME @{on|off@} [WINDOW])}
+* ui-target::                   @code{(ui-target ID [yes|no])}
+* uninterest::                  @code{(uninterest (COMMAND [args]))}
+* update::                      @code{(update [timestep_in_seconds])}
+* update-draw::                 @code{(update-draw CAM-ID  [timestep_in_seconds])}
+* window::                      @code{(window CAM-ID WINDOW)}
+* winenter::                    @code{(winenter CAM-ID)}
+* write::                       @code{(write command|geometry|... FILENAME ...)}
+* write-comments::              @code{(write-comments FILENAME GEOMID PICKPATH)}
+* write-handle::                @code{(write-handle PREFIX FILENAME HANDLE)}
+* write-sexpr::                 @code{(write-sexpr FILENAME LISPOBJECT)}
+* xform::                       @code{(xform ID TRANSFORM)}
+* xform-incr::                  @code{(xform-incr ID TRANSFORM)}
+* xform-set::                   @code{(xform-set ID TRANSFORM)}
+* zoom::                        @code{(zoom CAM-ID FACTOR)}
+@end menu
+
+@node shell, lt, Gcl Reference, Gcl Reference
+@subsection !
 @findex !
+@table @code
 @item !
-is a synonym for @code{shell}
+is a synonym for @code{shell}. @xref{shell}.
+@end table
 
+@node lt, eq, shell, Gcl Reference
+@subsection <
 @findex <
+@table @code
 @item (< EXPR1 EXPR2)
 Returns t if EXPR1 is less than EXPR2.  EXPR1 and EXPR2 should
 be either both integers or floats, or both strings.
+@end table
 
+@node eq, gt, lt, Gcl Reference
+@subsection =
 @findex =
+@table @code
 @item (= EXPR1 EXPR2)
 Returns t if EXPR1 is equal to EXPR2.  EXPR1 and EXPR2 should
 be either both integers or floats, or both strings.
+@end table
 
+@node gt, help, eq, Gcl Reference
+@subsection >
 @findex >
+@table @code
 @item (> EXPR1 EXPR2)
 Returns t if EXPR1 is greater than EXPR2.  EXPR1 and EXPR2 should
 be either both integers or floats, or both strings.
+@end table
 
+@node help, morehelp, gt, Gcl Reference
+@subsection ?
 @findex ?
+@table @code
 @item (?  [command])
 Gives one-line usage summary for @code{command}.
-Command may include @code{*}s as wildcards; see also @code{??}
+Command may include @code{*}s as wildcards; see also @ref{morehelp, @code{??}}.
 One-line command help; lists names only if multiple commands match.
-? is a synonym for @code{help}
+@code{?} is a synonym for @ref{help, @code{help}}
+@end table
 
+@node morehelp, emodule-run, help, Gcl Reference
+@subsection ??
 @findex ??
-@item (?? command)  @code{command} may include @code{*} wildcards
-Prints more info than @code{(? command)}.  ?? is a synonym
-for @code{morehelp}.
+@table @code
+@item (?? command)
+@code{command} may include @code{*} wildcards.
+Prints more info than @code{(? command)}. @code{??} is a synonym
+for @ref{morehelp, @code{morehelp}}.
+@end table
 
+@node emodule-run, all, morehelp, Gcl Reference
+@subsection |
 @findex |
-@item | is a synonym for @code{emodule-run}.
+@table @code
+@item |
+@code{|} is a synonym for @code{emodule-run}.
+@end table
 
+@node all, and, emodule-run, Gcl Reference
+@subsection all
 @findex all
-@item (all geometry)  returns a list of names of all geometry objects.
-Use e.g. @samp{(echo (all geometry))} to print such a list.
-@item (all camera)	returns a list of names of all cameras.
-@item (all emodule defined)  returns a list of all defined external modules.
-@item (all emodule running)  returns a list of all running external modules.
+@table @code
+@findex (all geometry)
+@item (all geometry)
+returns a list of names of all geometry objects. Use e.g.
+@samp{(echo (all geometry))} to print such a list.
+@findex (all camera)
+@item (all camera)
+returns a list of names of all cameras.
+@findex (all emodule defined)
+@item (all emodule defined)
+returns a list of all defined external modules.
+@findex (all emodule running)
+@item (all emodule running)
+returns a list of all running external modules.
+@end table
 
+@node and, ap-override, all, Gcl Reference
+@subsection and
 @findex and
-@item (and EXPR1 EXPR2
+@table @code
+@item (and EXPR1 EXPR2)
 Evaluate @code{EXPR1} and @code{EXPR2} and return @code{t} if both
 return non-@code{nil}, otherwise return @code{nil}.
+@end table
 
+@node ap-override, backcolor, and, Gcl Reference
+@subsection ap-override
 @findex ap-override
+@table @code
 @item (ap-override [on|off])
 Selects whether appearance controls should override objects' own
 settings.  On by default.  With no arguments, returns current setting.
+@end table
 
+@node backcolor, background-image, ap-override, Gcl Reference
+@subsection backcolor
 @findex backcolor
-@item (backcolor      CAM-ID R G B)
+@table @code
+@item (backcolor CAM-ID R G B)
 Set the background color of CAM-ID; R G B are numbers
 between 0 and 1.
+@end table
 
+@node background-image, bbox-color, backcolor, Gcl Reference
+@subsection background-image
 @findex background-image
+@table @code
 @item (background-image CAM-ID [FILENAME])
 Use the given image as the background of camera CAM-ID (which must be a
 real camera, not @code{default} or @code{allcams}). Centers the image on
@@ -6341,29 +6550,49 @@ the window area.  Works only with GL and OpenGL graphics.
 Use "" for filename to remove background.  With no filename argument,
 returns name of that window's current background image, or "".  
 Any file type acceptable as a texture is allowed, e.g. .ppm.gz, .sgi, etc.
+@end table
 
+@node bbox-color, bbox-draw, background-image, Gcl Reference
+@subsection bbox-color
 @findex bbox-color
-@item (bbox-color     GEOM-ID R G B)
+@table @code
+@item (bbox-color GEOM-ID R G B)
 Set the bounding-box color of GEOM-ID; R G B are numbers
 between 0 and 1.
+@end table
 
+@node bbox-draw, camera, bbox-color, Gcl Reference
+@subsection bbox-draw
 @findex bbox-draw
-@item (bbox-draw      GEOM-ID [yes|no])
+@table @code
+@item (bbox-draw GEOM-ID [yes|no])
 Say whether GEOM-ID's bounding-box should be drawn; @code{yes} if omitted.
+@end table
 
+@node camera, camera-draw, bbox-draw, Gcl Reference
+@subsection camera
 @findex camera
-@item (camera         CAM-ID [CAMERA])
+@table @code
+@item (camera CAM-ID [CAMERA])
 Specify data for CAM-ID; CAMERA is a string giving an OOGL
 camera specification.  If no camera CAM-ID exists,
 it is created; in this case, the second argument is optional,
 and if omitted, a default camera is used.  See also: new-camera.
+@end table
 
+@node camera-draw, camera-prop, camera, Gcl Reference
+@subsection camera-draw
 @findex camera-draw
-@item (camera-draw    CAM-ID [yes|no])
+@table @code
+@item (camera-draw CAM-ID [yes|no])
 Say whether or not cameras should be drawn in CAM-ID; @code{yes} if omitted.
+@end table
 
+@node camera-prop, camera-reset, camera-draw, Gcl Reference
+@subsection camera-prop
 @findex camera-prop
-@item (camera-prop @{ geometry object @}   [projective])
+@table @code
+@item (camera-prop @{ geometry object @} [projective])
 Specify the object to be shown when drawing other cameras.
 By default, this object is drawn with its origin at the camera,
 and with the camera looking toward the object's -Z axis.
@@ -6371,114 +6600,203 @@ With the @code{projective} keyword, the camera's viewing projection is
 also applied to the object; this places the object's Z=-1 and Z=+1 at
 near and far clipping planes, with the viewing area -1<=@{X,Y@}<=+1.
 Example:  (camera-prop @{ < cube @} projective)
+@end table
 
+@node camera-reset, car, camera-prop, Gcl Reference
+@subsection camera-reset
 @findex camera-reset
-@item (camera-reset   CAM-ID)
+@table @code
+@item (camera-reset CAM-ID)
 Reset CAM-ID to its default value.
+@end table
 
+@node car, cdr, camera-reset, Gcl Reference
+@subsection car
 @findex car
+@table @code
 @item (car LIST)
 returns the first element of LIST.
+@end table
 
+@node cdr, clock, car, Gcl Reference
+@subsection cdr
 @findex cdr
+@table @code
 @item (cdr LIST)
 returns the list obtained by removing the first element of LIST.
+@end table
 
+@node clock, command, cdr, Gcl Reference
+@subsection clock
 @findex clock
+@table @code
 @item (clock)
 Returns the current time, in seconds, as shown by this stream's clock.
 See also set-clock and sleep-until.
+@end table
 
+@node command, copy, clock, Gcl Reference
+@subsection command
 @findex command
-@item (command        INFILE [OUTFILE])
+@table @code
+@item (command INFILE [OUTFILE])
 Read commands from INFILE; send corresponding responses
 (e.g. anything written to filename @code{-}) to OUTFILE, stdout
 by default.
+@end table
 
+@node copy, cursor-still, command, Gcl Reference
+@subsection copy
 @findex copy
+@table @code
 @item (copy [ID] [name])
 Copies an object or camera.  If ID is not specified, it 
 is assumed to be targetgeom.  If name is not specified, it 
 is assumed to be the same as the name of ID.
+@end table
 
+@node cursor-still, cursor-twitch, copy, Gcl Reference
+@subsection cursor-still
 @findex cursor-still
+@table @code
 @item (cursor-still [INT])
 Sets the number of microseconds for which the cursor must not
 move to register as holding still.  If INT is not specified,
 the value will be reset to the default.
+@end table
 
+@node cursor-twitch, delete, cursor-still, Gcl Reference
+@subsection cursor-twitch
 @findex cursor-twitch
-@item (cursor-twitch	[INT])
+@table @code
+@item (cursor-twitch [INT])
 Sets the distance which the cursor must not move (in x or
 y) to register as holding still.  If INT is not specified,
 the value will be reset to the default.
+@end table
 
+@node delete, dice, cursor-twitch, Gcl Reference
+@subsection delete
 @findex delete
-@item (delete         ID)
+@table @code
+@item (delete ID)
 Delete object or camera ID.
+@end table
 
+@node dice, dimension, delete, Gcl Reference
+@subsection dice
 @findex dice
-@item (dice           GEOM-ID N)
-Dice any Bezier patches within GEOM-ID into NxN meshes; default 10.
-See also the appearance attribute @code{dice}, which makes this command
-obsolete.
+@table @code
+@item (dice GEOM-ID N)
+Dice any Bezier patches within @var{GEOM-ID} into NxN meshes; default
+10. See also the appearance attribute @code{dice}, which makes this
+command obsolete.
+@end table
 
+@node dimension, dither, dice, Gcl Reference
+@subsection dimension
 @findex dimension
+@table @code
 @item (dimension [N])
 Sets or reads the space dimension for N-dimensional viewing.
 (Since calculations are done using homogeneous coordinates,
 this means matrices are (N+1)x(N+1).)
 With no arguments, returns the current dimension, or 0 if
 N-dimensional viewing has not been enabled.
+@end table
 
+@node dither, draw, dimension, Gcl Reference
+@subsection dither
 @findex dither
-@item (dither  CAM-ID @{on|off|toggle@})
-         Turn dithering on or off in that camera.
+@table @code
+@item (dither CAM-ID @{on|off|toggle@})
+Turn dithering on or off in that camera.
+@end table
 
+@node draw, dump-handles, dither, Gcl Reference
+@subsection draw
 @findex draw
-@item (draw           CAM-ID)
+@table @code
+@item (draw CAM-ID)
 Draw the view in CAM-ID, if it needs redrawing.  See also @code{redraw}.
+@end table
 
+@node dump-handles, echo, draw, Gcl Reference
+@subsection dump-handles
+@findex dump-handles
+@table @code
+@item (dump-handles)
+Dump the list of currently active handles to stdout. This function is
+intended for internal debugging use only.
+@end table
+
+@node echo, emodule-clear, dump-handles, Gcl Reference
+@subsection echo
 @findex echo
-@item (echo          ...)
+@table @code
+@item (echo ...)
 Write the given data to the special file @code{-}.  Strings are written
 literally; lisp expressions are evaluated and their values written.
 If received from an external program, @code{echo} sends to the program's
 input.  Otherwise writes to geomview's own standard output
 (typically the terminal).
+@end table
 
+@node emodule-clear, emodule-define, echo, Gcl Reference
+@subsection emodule-clear
 @findex emodule-clear
+@table @code
 @item (emodule-clear)
 Clears the geomview application (external module) browser.
+@end table
 
+@node emodule-define, emodule-defined, emodule-clear, Gcl Reference
+@subsection emodule-define
 @findex emodule-define
-@item (emodule-define  NAME  SHELL-COMMAND ...)
-        Define an external module called NAME, which then appears in the
-        external-module browser.  The SHELL-COMMAND string
-        is a UNIX shell command which invokes the module.
-        See emodule-run for discussion of external modules.
+@table @code
+@item (emodule-define NAME SHELL-COMMAND ...)
+Define an external module called NAME, which then appears in the
+external-module browser.  The SHELL-COMMAND string is a UNIX shell
+command which invokes the module.  See emodule-run for discussion of
+external modules.
+@end table
 
+@node emodule-defined, emodule-isrunning, emodule-define, Gcl Reference
+@subsection emodule-defined
 @findex emodule-defined
+@table @code
 @item (emodule-defined @code{modulename})
 If the given external-module name is known, returns the name of
 the program invoked when it's run as a quoted string; otherwise
 returns nil.  @code{(echo (emodule-defined @code{name}))} prints the string.
+@end table
 
+@node emodule-isrunning, emodule-path, emodule-defined, Gcl Reference
+@subsection emodule-isrunning
 @findex emodule-isrunning
+@table @code
 @item (emodule-isrunning NAME)
 Returns Lt if the emodule NAME is running, or Lnil
 if it is not running.  NAME is searched for in the
 names as they appear in the browser and in the shell commands
 used to execute the external modules (not including arguments).
+@end table
 
+@node emodule-path, emodule-run, emodule-isrunning, Gcl Reference
+@subsection emodule-path
 @findex emodule-path
+@table @code
 @item (emodule-path)
 Returns the current search path for external modules.
 Note: to actually see the value returned by this function
 you should wrap it in a call to echo: (echo (emodule-path)).
         See also set-emodule-path.
+@end table
 
+@node emodule-run, emodule-sort, emodule-path, Gcl Reference
+@subsection emodule-run
 @findex emodule-run
+@table @code
 @item (emodule-run  SHELL-COMMAND ARGS...)
 Runs the given SHELL-COMMAND (a string containing a UNIX shell
 command) as an external module.  The module's standard output
@@ -6496,34 +6814,58 @@ sends the signal SIGHUP to the program.  For this to work, programs
 should avoid running in the background; those using FORMS or GL
 should call foreground() before the first FORMS or winopen() call.
 See also emodule-define, emodule-start.
+@end table
 
+@node emodule-sort, emodule-start, emodule-run, Gcl Reference
+@subsection emodule-sort
 @findex emodule-sort
+@table @code
 @item (emodule-sort)
-        Sorts the modules in the application browser alphabetically.
+Sorts the modules in the application browser alphabetically.
+@end table
 
+@node emodule-start, emodule-transmit, emodule-sort, Gcl Reference
+@subsection emodule-start
 @findex emodule-start
+@table @code
 @item (emodule-start  NAME)
-        Starts the external module NAME, defined by emodule-define.
-        Equivalent to clicking on the corresponding module-browser entry.
+Starts the external module NAME, defined by emodule-define. Equivalent
+to clicking on the corresponding module-browser entry.
+@end table
 
+@node emodule-transmit, escale, emodule-start, Gcl Reference
+@subsection emodule-transmit
 @findex emodule-transmit
+@table @code
 @item (emodule-transmit NAME LIST)
 Places LIST into external module NAME's standard input.  NAME is
 searched for in the names of the modules as they appear in the
 External Modules browser and then in the shell commands used to
 execute the external modules.  Does nothing if modname is not
 running.
+@end table
 
+@node escale, event-keys, emodule-transmit, Gcl Reference
+@subsection escale
 @findex escale
-@item (escale          GEOM-ID FACTOR)
+@table @code
+@item (escale GEOM-ID FACTOR)
 Same as scale but multiplies by exp(scale).  Obsolete.
+@end table
 
+@node event-keys, event-mode, escale, Gcl Reference
+@subsection event-keys
 @findex event-keys
+@table @code
 @item (event-keys @{on|off@})
-         Turn keyboard events on or off to enable/disable keyboard shortcuts.
+Turn keyboard events on or off to enable/disable keyboard shortcuts.
+@end table
 
+@node event-mode, event-pick, event-keys, Gcl Reference
+@subsection event-mode
 @findex event-mode
-@item (event-mode     MODESTRING)
+@table @code
+@item (event-mode MODESTRING)w
 Set the mouse event (motion) mode; MODESTRING should be one of
 the following strings:
 @enumerate
@@ -6542,45 +6884,76 @@ the following strings:
 @item
 @code{"[le] Edit Lights"}
 @end enumerate
+@end table
 
-
+@node event-pick, evert, event-mode, Gcl Reference
+@subsection event-pick
 @findex event-pick
+@table @code
 @item (event-pick @{on|off@})
 Turn picking on or off.
+@end table
 
+@node evert, exit, event-pick, Gcl Reference
+@subsection evert
 @findex evert
-@item (evert          GEOM-ID [yes|no])
+@table @code
+@item (evert GEOM-ID [yes|no])
 Set the normal eversion state of GEOM-ID.  If the second argument
 is omitted, toggle the eversion state.
+@end table
 
+@node exit, ezoom, evert, Gcl Reference
+@subsection exit
 @findex exit
+@table @code
 @item (exit)
 Terminates geomview.
+@end table
 
+@node ezoom, freeze, exit, Gcl Reference
+@subsection ezoom
 @findex ezoom
-@item (ezoom          GEOM-ID FACTOR)
+@table @code
+@item (ezoom GEOM-ID FACTOR)
 Same as zoom but multiplies by exp(zoom).  Obsolete.
+@end table
 
+@node freeze, geometry, ezoom, Gcl Reference
+@subsection freeze
 @findex freeze
-@item (freeze         CAM-ID)
+@table @code
+@item (freeze CAM-ID)
 Freeze CAM-ID; drawing in this camera's window is turned off
 until it is explicitly redrawn with @code{(redraw CAM-ID)}, after
 which time drawing resumes as normal.
+@end table
 
+@node geometry, geomview-version, freeze, Gcl Reference
+@subsection geometry
 @findex geometry
-@item (geometry       GEOM-ID [GEOMETRY])
+@table @code
+@item (geometry GEOM-ID [GEOMETRY])
 Specify the geometry for GEOM-ID.  GEOMETRY is a string
 giving an OOGL geometry specification.  If no object
 called GEOM-ID exists, it is created; in this case the
 GEOMETRY argument is optional, and if omitted, the new
 object GEOM-ID is given an empty geometry.
+@end table
 
+@node geomview-version, hdefine, geometry, Gcl Reference
+@subsection geomview-version
 @findex geomview-version
+@table @code
 @item (geomview-version)
 Returns a string representing the version of geomview that is
 running.
+@end table
 
+@node hdefine, hdelete, geomview-version, Gcl Reference
+@subsection hdefine
 @findex hdefine
+@table @code
 @item (hdefine @code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform} name value)
 Sets the value of a handle of a given type.
 @example
@@ -6594,8 +6967,12 @@ except that the assignment is done when hdefine is executed,
 (possibly not at all if inside a conditional statement),
 while the @code{read ... define} performs assignment as soon as the
 text is read.
+@end table
 
+@node hdelete, help, hdefine, Gcl Reference
+@subsection hdelete
 @findex hdelete
+@table @code
 @item (hdelete [@code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform}] name)
 Deletes the given handle. Note that the handle will not actually be
 deleted in case there are still other objects referring to the handle,
@@ -6609,38 +6986,62 @@ object it is attached to. It is not an error to call this function with
 a non-existent handle, but it is an error to call this funcion with the
 name of a non-global handle, i.e. one that was not created by
 @code{(hdefine ...)} or @code{(read ... @{ define ...@})}.
+@end table
 
+@node help, hmodel, hdelete, Gcl Reference
+@subsection help
 @findex help
-@item (help		[command])
-Command may include @code{*}s as wildcards; see also @code{??}
+@table @code
+@item (help [command])
+Command may include @code{*}s as wildcards; see also @ref{help, @code{??}}
 One-line command help; lists names only if multiple commands match.
+@end table
 
+@node hmodel, hsphere-draw, help, Gcl Reference
+@subsection hmodel
 @findex hmodel
+@table @code
 @item (hmodel CAMID @{virtual|projective|conformal@})
 Set the model used to display geometry in
 this camera; see also @code{space}.
+@end table
 
+@node hsphere-draw, if, hmodel, Gcl Reference
+@subsection hsphere-draw
 @findex hsphere-draw
-@item (hsphere-draw   CAMID [yes|no])
+@table @code
+@item (hsphere-draw CAMID [yes|no])
 Say whether to draw a unit sphere: the sphere at infinity in
 hyperbolic space, and a reference sphere in Euclidean and spherical
 spaces.  If the second argument is omitted, @code{yes} is assumed.
+@end table
 
+@node if, inhibit-warning, hsphere-draw, Gcl Reference
+@subsection if
 @findex if
+@table @code
 @item (if TEST EXPR1 [EXPR2])
 Evaluates TEST; if TEST returns a non-nil value, returns the
 value of EXPR1.  If TEST returns nil, returns the value of
 EXPR2 if EXPR2 is present, otherwise returns nil.
+@end table
 
+@node inhibit-warning, input-translator, if, Gcl Reference
+@subsection inhibit-warning
 @findex inhibit-warning
+@table @code
 @item (inhibit-warning STRING)
 Inhibit warning inhbits geomview from displaying a
 particular warning message determined by STRING.
 At present there are no warning messages that this
 applies to, so this command is rather useless.
+@end table
 
+@node input-translator, interest, inhibit-warning, Gcl Reference
+@subsection input-translator
 @findex input-translator
-@item (input-translator  "#prefix_string"  "Bourne-shell-command")
+@table @code
+@item (input-translator "#prefix_string" "Bourne-shell-command")
 Defines an external translation program for special input types.
 When asked to read a file which begins with the specified string,
 geomview invokes that program with standard input coming from the given file.
@@ -6650,20 +7051,22 @@ Useful as in
 @example
   (input-translator "#VRML" "vrml2oogl")
 @end example
+@end table
 
+@node interest, lines-closer, input-translator, Gcl Reference
+@subsection interest
 @findex interest
+@table @code
 @item (interest (COMMAND [args]))
-
-Allows you to express interest in a command.  When geomview
-executes that command in the future it will echo it to the
-communication pool from which the interest command came.
-COMMAND can be any command.  Args specify restrictions on the
-values of the arguments; if args are present in the interest
-command, geomview will only echo calls to the command in which
-the arguments match those given in the interest command.  Two
-special argument values may appear in the argument list.  @code{*}
-matches any value. @code{nil} matches any value but supresses the
-reporting of that value; its value is reported as @code{nil}.
+Allows you to express interest in a command.  When geomview executes
+that command in the future it will echo it to the communication pool
+from which the interest command came. @var{COMMAND} can be any command.
+Args specify restrictions on the values of the arguments; if args are
+present in the interest command, geomview will only echo calls to the
+command in which the arguments match those given in the interest
+command.  Two special argument values may appear in the argument list.
+@code{*} matches any value. @code{nil} matches any value but supresses
+the reporting of that value; its value is reported as @code{nil}.
 
 The purpose of the interest command is to allow external
 modules to find out about things happening inside geomview.
@@ -6671,14 +7074,18 @@ For example, a module interested in knowing when a geom called
 @code{foo} is deleted could say @code{(interest (delete foo))} and would
 receive the string @code{(delete foo)} when foo is deleted.
 
-Picking is a special case of this.  For most modules
-interested in pick events the command @code{(interest (pick
-world))} is sufficient.  This causes geomview to send a string
-of the form @code{(pick world ...)} every time a pick event (right
-mouse double click).  See the @code{pick} command for details.
+Picking is a special case of this.  For most modules interested in pick
+events the command @code{(interest (pick world))} is sufficient.  This
+causes geomview to send a string of the form @code{(pick world ...)} 
+every time a pick event (right mouse double click).  See the @ref{pick,
+@code{pick}} command for details.
+@end table
 
+@node lines-closer, load, interest, Gcl Reference
+@subsection lines-closer
 @findex lines-closer
-@item (lines-closer   CAM-ID DIST)
+@table @code
+@item (lines-closer CAM-ID DIST)
 Draw lines (including edges) closer to the camera than polygons
 by DIST / 10^5  of the Z-buffer range.  DIST = 3.0 by default.
 If DIST is too small, a line lying on a surface may be
@@ -6687,9 +7094,13 @@ If DIST is too large, lines may appear in front of surfaces
 that they actually lie behind.  Good values for DIST vary with
 the scene, viewpoint, and distance between near and far clipping
 planes.  This feature is a kludge, but can be helpful.
+@end table
 
+@node load, load-path, lines-closer, Gcl Reference
+@subsection load
 @findex load
-@item (load  filename  [command|geometry|camera])
+@table @code
+@item (load filename [command|geometry|camera])
 Loads the given file into geomview.  The optional second argument
 specifies the type of data it contains, which may be @code{command}
 (geomview commands), @code{geometry} (OOGL geometric data), or
@@ -6697,38 +7108,55 @@ specifies the type of data it contains, which may be @code{command}
 about the file's contents.
 Loading geometric data creates a new visible object; loading a camera
 opens a new window; loading a command file executes those commands.
+@end table
 
-
+@node load-path, look, load, Gcl Reference
+@subsection load-path
 @findex load-path
+@table @code
 @item (load-path)
 Returns the current search path for command, geometry, etc. files.
 Note: to actually see the value returned by this function
 you should wrap it in a call to echo: (echo (load-path)).
 See also set-load-path.
+@end table
 
+@node look, look-encompass, load-path, Gcl Reference
+@subsection look
 @findex look
+@table @code
 @item (look [objectID] [cameraID])
 Rotates the named camera to point toward the center of the 
 bounding box of the named object (or the origin in hyperbolic or 
 spherical space).  In Euclidean space, moves the camera 
 forward or backward until the object appears as large 
 as possible while still being entirely visible.  Equivalent to 
+@example
 progn ( 
 	(look-toward [objectID] [cameraID] @{center | origin@})
 	[(look-encompass [objectID] [cameraID])] 
 ) 
+@end example
 If objectID is not specified, it is assumed to be World.  If 
 cameraID is not specified, it is assumed to be targetcam.
+@end table
 
+@node look-encompass, look-encompass-size, look, Gcl Reference
+@subsection look-encompass
 @findex look-encompass
+@table @code
 @item (look-encompass [objectID] [cameraID])
 Moves cameraID backwards or forwards until its field of view
 surrounds objectID. This routine works only in Euclidean space.  
 If objectID is not specified, it is assumed to be the world.  
 If cameraID is not specified, it is assumed to be the targetcam.  
 See also (look-encompass-size).
+@end table
 
+@node look-encompass-size, look-recenter, look-encompass, Gcl Reference
+@subsection look-encompass-size
 @findex look-encompass-size
+@table @code
 @item (look-encompass-size [view-fraction  clip-ratio  near-margin far-margin])
 Sets/returns parameters used by (look-encompass).
 view-fraction is the portion of the camera window filled by the object,
@@ -6737,9 +7165,12 @@ The near clipping plane is 1/near-margin times closer than the near
 edge of the object, and the far clipping plane is far-margin times
 further away.  Returns the list of current values.
 Defaults: .75  100  0.1  4.0
+@end table
 
-
+@node look-recenter, look-toward, look-encompass-size, Gcl Reference
+@subsection look-recenter
 @findex look-recenter
+@table @code
 @item (look-recenter [objectID] [cameraID])
 Translates and rotates the camera so that it is looking in the 
 -z direction (in objectID's coordinate system) at the center of 
@@ -6748,8 +7179,12 @@ in non-Eudlidean space).  In Euclidean space, the camera is also
 moved as close as possible to the object while allowing the 
 entire object to be visible.  Also makes sure that the y-axes of 
 objectID and cameraID are parallel.
+@end table
 
+@node look-toward, merge, look-recenter, Gcl Reference
+@subsection look-toward
 @findex look-toward
+@table @code
 @item (look-toward [objectID] [cameraID] [origin | center])
 Rotates the named camera to point toward the origin of the
 object's coordinate system, or the center of the object's
@@ -6757,43 +7192,74 @@ bounding box (in non-Euclidean space, the origin will be used
 automatically).  Default objectID is the world, default camera
 is targetcam, default location to point towards is the center
 of the bounding box.
+@end table
 
+@node merge, merge-ap, look-toward, Gcl Reference
+@subsection merge
 @findex merge
-@item (merge          @{window|camera@} CAM-ID  @{ WINDOW or CAMERA ... @} )
+@table @code
+@item (merge @{window|camera@} CAM-ID  @{ WINDOW or CAMERA ... @})
 Modify the given window or camera, changing just those properties
 specified in the last argument.  E.g.
+@example
 	(merge camera @code{Camera} @{ far 20 @})
+@end example
 sets Camera's far clipping plane to 20 while leaving
 other attributes untouched.
+@end table
 
+@node merge-ap, merge-base-ap, merge, Gcl Reference
+@subsection merge-ap
 @findex merge-ap
-@item (merge-ap       GEOM-ID APPEARANCE)
+@table @code
+@item (merge-ap GEOM-ID APPEARANCE)
 Merge in some appearance characteristics to GEOM-ID.
 Appearance parameters include surface and line color, shading
 style, line width, and lighting.
+@end table
 
+@node merge-base-ap, merge-baseap, merge-ap, Gcl Reference
+@subsection merge-base-ap
 @findex merge-base-ap
-@item merge-base-ap is a synonym for merge-baseap.
+@table @code
+@item (merge-base-ap APPEARANCE)
+@code{merge-base-ap} is a synonym for @ref{merge-baseap, @code{merge-baseap}}.
+@end table
 
+@node merge-baseap, morehelp, merge-base-ap, Gcl Reference
+@subsection merge-baseap
 @findex merge-baseap
-@item (merge-baseap   APPEARANCE)
+@table @code
+@item (merge-baseap APPEARANCE)
 Merge in some appearance characteristics to the base default
 appearance (applied to every geom before its own apperance).
 Lighting is typically included in the base appearance.
+@end table
 
+@node morehelp, name-object, merge-baseap, Gcl Reference
+@subsection morehelp
 @findex morehelp
-@item (morehelp    command)
+@table @code
+@item (morehelp command)
 @code{command} may include @code{*} wildcards.
-Prints more info than @code{(help command)}.
+Prints more info than @ref{help, @code{(help command)}}.
+@end table
 
+@node name-object, ND-axes, morehelp, Gcl Reference
+@subsection name-object
 @findex name-object
-@item (name-object    ID NAME)
+@table @code
+@item (name-object ID NAME)
 Assign a new NAME (a string) to ID.  A number is appended if
 that name is in use (for example, @code{foo} -> @code{foo<2>}).  The new
 name, possibly with number appended, may be used as object's
 id thereafter.
+@end table
 
+@node ND-axes, ND-color, name-object, Gcl Reference
+@subsection ND-axes
 @findex ND-axes
+@table @code
 @item (ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex [Windex]]])
 In our model for N-D viewing (enabled by (dimension)), objects in
 N-space are viewed by N-dimensional @emph{camera clusters}.
@@ -6816,8 +7282,12 @@ dimensions.
 
 To read a camera's configuration, use @code{(echo (ND-axes CAMID))}.
 The return value is an array of 4 integers, the last one should 0.
+@end table
 
+@node ND-color, ND-xform, ND-axes, Gcl Reference
+@subsection ND-color
 @findex ND-color
+@table @code
 @item (ND-color CAMID
 	[ (( [ID] (x1 x2 ... xN) v r g b a   v r g b a  ... )
 	   ((x1 ... xN)  v r g b a  v r g b a ...) ...)] )
@@ -6836,17 +7306,24 @@ With no second argument, (ND-color CAMID) returns that camera's
 color-function list.
 Even when coloring is enabled, objects tagged with the @code{keepcolor}
 appearance attribute are shown in their natural colors.
+@end table
 
-
+@node ND-xform, ND-xform-get, ND-color, Gcl Reference
+@subsection ND-xform
 @findex ND-xform
+@table @code
 @item (ND-xform OBJID [ntransform @{ idim odim  ... @}])
 Concatenate the given ND-transform with the current ND-transform of the
 object (apply the ND-transform to object ID, as opposed to simply
 setting its ND-transform). Note that ND-transforms have their
 homogeneous coordinate at index 0, while 3D transform have it at index
 3.
+@end table
 
+@node ND-xform-get, ND-xform-set, ND-xform, Gcl Reference
+@subsection ND-xform-get
 @findex ND-xform-get
+@table @code
 @item (ND-xform-get ID [from-ID])
 Returns the N-D transform of the given object in the coordinate system
 of from-ID (default @code{universe}), in the sense
@@ -6854,8 +7331,12 @@ of from-ID (default @code{universe}), in the sense
 Note that ND-transforms have their
 homogeneous coordinate at index 0, while 3D transform have it at index
 3.
+@end table
 
+@node ND-xform-set, new-alien, ND-xform-get, Gcl Reference
+@subsection ND-xform-set
 @findex ND-xform-set
+@table @code
 @item (ND-xform-set OBJID [ntransform @{ idim odim  ... @}])
 Sets the N-D transform of the given object.
 In dimension N, this is an (N+1)x(N+1) matrix, so in that case
@@ -6864,52 +7345,79 @@ all cameras in a camera-cluster have the same N-D transform.
 Note that ND-transforms have their
 homogeneous coordinate at index 0, while 3D transform have it at index
 3.
+@end table
 
+@node new-alien, new-camera, ND-xform-set, Gcl Reference
+@subsection new-alien
 @findex new-alien
-@item (new-alien      name [GEOMETRY])
-Create a new alien (geom not in the world) with the given name
-(a string).  GEOMETRY is a string giving an OOGL geometry
-specification.  If GEOMETRY is omitted, the new alien
-is given an empty geometry.  If an object with that name
-already exists, the new alien is given a unique name.  The
-light beams that are used to move around the lights are an
-example of aliens. They're drawn but are not controllable the
-way ordinary objects are: they don't appear in the object
-browser and the user can't move them with the normal motion
+@table @code
+@item (new-alien name [GEOMETRY])
+Create a new alien (geom not in the world) with the given name (a
+string). @var{GEOMETRY} is a string giving an OOGL geometry
+specification. If @var{GEOMETRY} is omitted, the new alien is given an
+empty geometry.  If an object with that name already exists, the new
+alien is given a unique name.  The light beams that are used to move
+around the lights are an example of aliens. They're drawn but are not
+controllable the way ordinary objects are: they don't appear in the
+object browser and the user can't move them with the normal motion
 modes.
+@end table
 
+@node new-camera, new-center, new-alien, Gcl Reference
+@subsection new-camera
 @findex new-camera
-@item (new-camera     name [CAMERA])
-Create a new camera with the given name (a string).  If a
-camera with that name already exists, the new object is given
-a unique name.  If CAMERA is omitted a default camera is used.
+@table @code
+@item (new-camera name [CAMERA])
+Create a new camera with the given name (a string).  If a camera with
+that name already exists, the new object is given a unique name.  If
+@var{CAMERA} is omitted a default camera is used.
+@end table
 
+@node new-center, new-geometry, new-camera, Gcl Reference
+@subsection new-center
 @findex new-center
+@table @code
 @item (new-center [id])
 Stop id, then set id's transform to the identity.  Default id 
 is target.  Also, if the id is a camera, calls 
 (look-recenter World id).  The main function of the call to 
 (look-recenter) is to place the camera so that it is pointing 
 parallel to the z axis toward the center of the world.
+@end table
 
+@node new-geometry, new-reset, new-center, Gcl Reference
+@subsection new-geometry
 @findex new-geometry
-@item (new-geometry   name [GEOMETRY])
-Create a new geom with the given name (a string).  GEOMETRY is
-a string giving an OOGL geometry specification.  If
-GEOMETRY is omitted, the new object is given an empty geometry.
-If an object with that name already exists, the new object is
-given a unique name.
+@table @code
+@item (new-geometry name [GEOMETRY])
+Create a new geom with the given name (a string). @var{GEOMETRY} is a
+string giving an OOGL geometry specification.  If @var{GEOMETRY} is
+omitted, the new object is given an empty geometry.  If an object with
+that name already exists, the new object is given a unique name.
+@end table
 
+@node new-reset, NeXT, new-geometry, Gcl Reference
+@subsection new-reset
 @findex new-reset
+@table @code
 @item (new-reset)
-Equivalent to (progn (new-center ALLGEOMS)(new-center ALLCAMS))
+Equivalent to @code{(progn (new-center ALLGEOMS)(new-center ALLCAMS))}.
+@end table
 
+@node NeXT, normalization, new-reset, Gcl Reference
+@subsection NeXT
 @findex NeXT
+@table @code
 @item (NeXT)
-Returns t if running on a NeXT, nil if not
+Returns @code{t} if running on a NeXT, @code{nil} if not. A relict from
+ancient work-station year.
+@end table
 
+@node normalization, not, NeXT, Gcl Reference
+@subsection normalization
 @findex normalization
-@item (normalization  GEOM-ID @{each|none|all|keep@})
+@table @code
+@item (normalization GEOM-ID @{each|none|all|keep@})
 Set the normalization status of GEOM-ID.
 @table @code
 @item none
@@ -6932,107 +7440,189 @@ when the object changes.  It may be useful to apply @code{each} or
 @code{all} normalization apply to the first version of a changing
 object to bring it in view, then switch to @code{keep}.
 @end table
+@end table
 
+@node not, or, normalization, Gcl Reference
+@subsection not
 @findex not
+@table @code
 @item (not EXPR)
 Evaluates @code{EXPR}; if @code{EXPR} returns a non-@code{nil} value,
 returns nil, if @code{EXPR} returns @code{nil}, return @code{t}.
+@end table
 
+@node or, pick, not, Gcl Reference
+@subsection or
 @findex or
+@table @code
 @item (or EXPR1 EXPR2)
 Evaluates @code{EXPR1}; if @code{EXPR1} returns non-@code{nil}, return
 its value, if @code{EXPR1} returns @code{nil}, evaluate @code{EXPR2} and
 return its value.
+@end table
 
+@node pick, pick-invisible, or, Gcl Reference
+@subsection pick
 @findex pick
+@table @code
 @item (pick COORDSYS GEOMID G V E F P VI EI FI)
 The pick command is executed internally in response to pick
 events (right mouse double click).
 
-COORDSYS = coordinate system in which coordinates of the following
-    arguments are specified.   This can be:
-	world: world coord sys
-	self:  coord sys of the picked geom (GEOMID)
-	primitive: coord sys of the actual primitive within
-	    the picked geom where the pick occurred.
-GEOMID = id of picked geom
-G = picked point (actual intersection of pick ray with object)
-V = picked vertex, if any
-E = picked edge, if any
-F = picked face
-P = path to picked primitive [0 or more]
-VI = index of picked vertex in primitive
-EI = list of indices of endpoints of picked edge, if any
-FI = index of picked face
+@table @var
+@item COORDSYS
+= coordinate system in which coordinates of the following
+arguments are specified.   This can be:
+@table @code
+@item world
+world coord sys
+@item self
+coord sys of the picked geom (@var{GEOMID})
+@item primitive
+coord sys of the actual primitive within the picked geom where the pick
+occurred.
+@end table
+@item GEOMID
+ = id of picked geom
+@item G
+ = picked point (actual intersection of pick ray with object)
+@item V
+ = picked vertex, if any
+@item E
+ = picked edge, if any
+@item F
+ = picked face
+@item P
+ = path to picked primitive [0 or more]
+@item VI
+ = index of picked vertex in primitive
+@item EI
+ = list of indices of endpoints of picked edge, if any
+@item FI
+ = index of picked face
+@end table
 
 External modules can find out about pick events by registering
 interest in calls to @code{pick} via the @code{interest} command.
+@end table
 
+@node pick-invisible, pickable, pick, Gcl Reference
+@subsection pick-invisible
 @findex pick-invisible
+@table @code
 @item (pick-invisible [yes|no])
 Selects whether picks should be sensitive to objects whose appearance
 makes them invisible; default yes.
 With no arguments, returns current status.
+@end table
 
+@node pickable, position, pick-invisible, Gcl Reference
+@subsection pickable
 @findex pickable
-@item (pickable       GEOM-ID @{yes|no@})
+@table @code
+@item (pickable GEOM-ID @{yes|no@})
 Say whether or not GEOM-ID is included in the pool of objects
 that could be returned from the pick command.
+@end table
 
+@node position, position-at, pickable, Gcl Reference
+@subsection position
 @findex position
-@item (position       objectID otherID)
+@table @code
+@item (position objectID otherID)
 Set the transform of objectID to that of otherID.
+@end table
 
+@node position-at, position-toward, position, Gcl Reference
+@subsection position-at
 @findex position-at
-@item (position-at    objectID otherID [center | origin])
+@table @code
+@item (position-at objectID otherID [center | origin])
 Translate objectID to the center of the bounding box or the 
 origin of the coordinate system of otherID (parallel translation).
 Default is center.
+@end table
 
+@node position-toward, progn, position-at, Gcl Reference
+@subsection position-toward
 @findex position-toward
+@table @code
 @item (position-toward objectID otherID [center | origin])
 Rotate objectID so that the center of the bounding box
 or the origin of the coordinate system of the otherID
 lies on the positive z-axis of the first object.  Default is
 the center of the bounding box.
+@end table
 
+@node progn, quit, position-toward, Gcl Reference
+@subsection progn
 @findex progn
+@table @code
 @item (progn STATEMENT [ ... ])
 evaluates each STATEMENT in order and returns the value of the
 last one.  Use progn to group a collection of commands together,
 forcing them to be treated as a single command.
+@end table
 
+@node quit, quote, progn, Gcl Reference
+@subsection quit
 @findex quit
-@item quit is a synonym for @code{exit}
+@table @code
+@item (quit)
+@code{quit} is a synonym for @ref{exit, @code{exit}}.
+@end table
 
+@node quote, rawevent, quit, Gcl Reference
+@subsection quote
 @findex quote
+@table @code
 @item (quote EXPR)
 returns the symbolic lisp expression EXPR without evaluating it.
+@end table
 
+@node rawevent, rawpick, quote, Gcl Reference
+@subsection rawevent
 @findex rawevent
-@item (rawevent       dev val x y t)
+@table @code
+@item (rawevent dev val x y t)
 Enter the specified raw event into the event queue.  The
 arguments directly specify the members of the event structure
 used internally by geomview.  This is the lowest level event
 handler and is not intended for general use.
+@end table
 
+@node rawpick, read, rawevent, Gcl Reference
+@subsection rawpick
 @findex rawpick
+@table @code
 @item (rawpick CAMID X Y)
 Process a pick event in camera CAMID at location (X,Y) given in
 integer pixel coordinates.  This is a low-level procedure not
 intended for external use.
+@end table
 
+@node read, real-id, rawpick, Gcl Reference
+@subsection read
 @findex read
+@table @code
 @item (read @{geometry|camera|appearance|image|ntransform|transform|command@} @{GEOMETRY or CAMERA or ...@})
 Read and interpret the text in ... as containing the
 given type of data.  Useful for defining objects using OOGL
 reference syntax, e.g.
+@example
+(geometry  thing @{ INST  transform : T    geom : fred @})
+(read  geometry  @{ define fred
+   QUAD
+   1 0 0  0 1 0  0 0 1  1 0 0
+@})
+(read  transform @{ define T <myfile@})
+@end example
+@end table
 
-  (geometry  thing @{ INST  transform : T    geom : fred @})
-  (read  geometry  @{ define fred QUAD 1 0 0  0 1 0  0 0 1  1 0 0 @})
-  (read  transform @{ define T <myfile@})
-
+@node real-id, redraw, read, Gcl Reference
+@subsection real-id
 @findex real-id
+@table @code
 @item (real-id ID)
 Returns a string canonically identifying the given ID,
 or @code{nil} if the object does not exist.  Examples:
@@ -7040,17 +7630,29 @@ or @code{nil} if the object does not exist.  Examples:
 deletes @code{fred} if it exists but reports no error if it doesn't, and
  (if (= (real-id targetgeom) (real-id World)) () (delete targetgeom))
 deletes @code{targetgeom} if it is different from the World.
+@end table
 
-
+@node redraw, regtable, real-id, Gcl Reference
+@subsection redraw
 @findex redraw
-@item (redraw         CAM-ID)
+@table @code
+@item (redraw CAM-ID)
 States that the view in CAM-ID should be redrawn on the
 next pass through the main loop or the next invocation of @code{draw}.
+@end table
 
+@node regtable, rehash-emodule-path, redraw, Gcl Reference
+@subsection regtable
 @findex regtable
-@item (regtable) --- shows the registry table
+@table @code
+@item (regtable)
+shows the registry table
+@end table
 
+@node rehash-emodule-path, replace-geometry, regtable, Gcl Reference
+@subsection rehash-emodule-path
 @findex rehash-emodule-path
+@table @code
 @item (rehash-emodule-path)
 Rebuilds the application (external module) browser by reading
 all .geomview-* files in all directories on the emodule-path.
@@ -7058,13 +7660,21 @@ Primarily intended for internal use; any applications defined
 by (emodule-define ...) commands outside of the .geomview-*
 files on the emodule-path will be lost.  Does not sort the
 entries in the brower; see (emodule-sort) for that.
+@end table
 
+@node replace-geometry, rib-display, rehash-emodule-path, Gcl Reference
+@subsection replace-geometry
 @findex replace-geometry
+@table @code
 @item (replace-geometry GEOM-ID PART-SPECIFICATION GEOMETRY)
 Replace a part of the geometry for GEOM-ID.
+@end table
 
+@node rib-display, rib-snapshot, replace-geometry, Gcl Reference
+@subsection rib-display
 @findex rib-display
-@item (rib-display    [frame|tiff] FILEPREFIX)
+@table @code
+@item (rib-display [frame|tiff] FILEPREFIX)
 Set Renderman display to framebuffer (popup screen window) or a
 TIFF format disk file. FILEPREFIX is used to construct
 names of the form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
@@ -7074,15 +7684,23 @@ the same prefix and number as the RIB file (i.e. foo0004.rib
 generates foo0004.tiff). The default FILEPREFIX is @code{geom} and
 the default format is TIFF. (Note that geomview just generates a
 RIB file, which must then be rendered.)
+@end table
 
+@node rib-snapshot, scale, rib-display, Gcl Reference
+@subsection rib-snapshot
 @findex rib-snapshot
-@item (rib-snapshot   CAM-ID  [filename])
-Write Renderman snapshot (in RIB format) of CAM-ID to <filename>.
-If no filename specified, see @code{rib-display} for explanation of
-the filename used.
+@table @code
+@item (rib-snapshot CAM-ID [filename])
+Write Renderman snapshot (in RIB format) of CAM-ID to <filename>.  If no
+filename specified, see @ref{rib-display, @code{rib-display}} for an
+explanation of the filename used.
+@end table
 
+@node scale, scene, rib-snapshot, Gcl Reference
+@subsection scale
 @findex scale
-@item (scale          GEOM-ID FACTOR [FACTORY FACTORZ])
+@table @code
+@item (scale GEOM-ID FACTOR [FACTORY FACTORZ])
 Scale GEOM-ID, multiplying its size by FACTOR.  The factors 
 should be positive numbers.  If FACTORY and FACTORZ are 
 present and non-zero, the object is scaled by FACTOR in x, by 
@@ -7092,17 +7710,30 @@ really makes sense in Euclidean space.  Mouse-driven scaling in
 other spaces is not allowed;  the scale command may be issued 
 in other spaces but should be used with caution because it may 
 cause the data to extend beyond the limits of the space.
+@end table
 
+@node scene, set-clock, scale, Gcl Reference
+@subsection scene
 @findex scene
-@item (scene          CAM-ID [GEOMETRY])
+@table @code
+@item (scene CAM-ID [GEOMETRY])
 Make CAM-ID look at GEOMETRY instead of at the universe.
+@end table
 
+@node set-clock, set-conformal-refine, scene, Gcl Reference
+@subsection set-clock
 @findex set-clock
+@table @code
 @item (set-clock TIME)
-Adjusts the clock for this command stream to read TIME (in seconds)
-as of the moment the command is received.  See also sleep-until, clock.
+Adjusts the clock for this command stream to read @var{TIME} (in
+seconds) as of the moment the command is received.  See also
+sleep-until, clock.
+@end table
 
+@node set-conformal-refine, set-emodule-path, set-clock, Gcl Reference
+@subsection set-conformal-refine
 @findex set-conformal-refine
+@table @code
 @item (set-conformal-refine CMX [N [SHOWEDGES]])
 Sets the parameters for the refinement algorithm used in drawing
 in the conformal model.  CMX is the cosine of the maximum angle
@@ -7111,9 +7742,13 @@ an edge can bend before it is refined.  Its value should be between
 refinement.  N is the maximum number of iterations of refining;
 the default is 6.  SHOWEDGES, which should be @code{no} or @code{yes},
 determines whether interior edges in the refinement are drawn.
+@end table
 
+@node set-emodule-path, set-load-path, set-conformal-refine, Gcl Reference
+@subsection set-emodule-path
 @findex set-emodule-path
-@item (set-emodule-path      (PATH1 ... PATHN))
+@table @code
+@item (set-emodule-path (PATH1 ... PATHN))
 Sets the search path for external modules.  The PATHi should
 be pathnames of directories containing, for each module, the
 module's executable file and a .geomview-<modulename> file
@@ -7122,15 +7757,23 @@ module.  This command implicitly calls (rehash-emodule-path)
 to rebuild the application brower from the new path setting.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
+@end table
 
+@node set-load-path, set-motionscale, set-emodule-path, Gcl Reference
+@subsection set-load-path
 @findex set-load-path
-@item (set-load-path      (PATH1 ... PATHN))
+@table @code
+@item (set-load-path (PATH1 ... PATHN))
 Sets search path for command, geometry, etc. files.  The PATHi
 are strings giving the pathnames of directories to be searched.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-load-path (mydir +)) prepends mydir to the path.
+@end table
 
+@node set-motionscale, setenv, set-load-path, Gcl Reference
+@subsection set-motionscale
 @findex set-motionscale
+@table @code
 @item (set-motionscale X)
 Set the motion scale factor to X (default value 0.5).  These
 commands scale their motion by an amount which depends on the
@@ -7140,31 +7783,51 @@ frame.  Specifically, they scale by
 where dist is the distance from the center to the frame and
 motionscale is the motion scale factor set by this function.
 Scaleof(frame) measures the size of the frame object.
+@end table
 
+@node setenv, sgi, set-motionscale, Gcl Reference
+@subsection setenv
 @findex setenv
-@item (setenv  name string)  sets the environment variable @code{name} to the value
-
-@var{string};
+@table @code
+@item (setenv name string)
+sets the environment variable @code{name} to the value @var{string};
 the name is visible to geomview (as in pathnames containing @code{$name})
 and to processes it creates, e.g. external modules.
+@end table
 
+@node sgi, shell, setenv, Gcl Reference
+@subsection sgi
 @findex sgi
+@table @code
 @item (sgi)
-Returns t if running on an sgi machine, nil if not
+Returns @code{t} if running on an sgi machine, @code{nil} if not. A
+relict from the old work-station years.
+@end table
 
+@node shell, sleep-for, sgi, Gcl Reference
+@subsection shell
 @findex shell
-@item (shell         SHELL-COMMAND)
+@table @code
+@item (shell SHELL-COMMAND)
 Execute the given UNIX SHELL-COMMAND using /bin/sh.  Geomview
 waits for it to complete and will be unresponsive until it does.
 A synonym is @code{!}.
+@end table
 
+@node sleep-for, sleep-until, shell, Gcl Reference
+@subsection sleep-for
 @findex sleep-for
-@item (sleep-for  TIME)
+@table @code
+@item (sleep-for TIME)
 Suspend reading commands from this stream for TIME seconds.
 Commands already read will still be executed; @code{sleep-for} inside
 @code{progn} won't delay execution of the rest of the progn's contents.
+@end table
 
+@node sleep-until, snapshot, sleep-for, Gcl Reference
+@subsection sleep-until
 @findex sleep-until
+@table @code
 @item (sleep-until TIME)
 Suspend reading commands from this stream until TIME (in seconds).
 Commands already read will still be executed; @code{sleep-until} inside
@@ -7173,34 +7836,57 @@ Time is measured according to this stream's clock, as set by
 @code{set-clock}; if never set, the first sleep-until sets it to 0
 (so initially (sleep-until TIME) is the same as (sleep-for TIME)).
 Returns the number of seconds until TIME.
+@end table
 
+@node snapshot, soft-shader, sleep-until, Gcl Reference
+@subsection snapshot
 @findex snapshot
-@item (snapshot       CAM-ID     FILENAME [FORMAT [XSIZE [YSIZE]]])
-Save a snapshot of CAM-ID in the FILENAME (a string).  The
-FORMAT argument is optional; it may be @code{ppmscreen},
-@code{sgi}, @code{ps}, or @code{ppm}.  A @code{ppmscreen} snapshot is created by reading
+@table @code
+@item (snapshot CAM-ID FILENAME [FORMAT [XSIZE [YSIZE]]])
+Save a snapshot of @var{CAM-ID} in the @var{FILENAME} (a string). The
+@var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
+"ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
+libOSMesa) or "ppmosglx". A "ppmscreen" snapshot is created by reading
 the image directly from the given window; the window is popped above
-other windows and redrawn first, then its contents are written as a
-PPM format image.  With @code{ps}, dumps a Postscript picture representing
-the view from that window; hidden-surface removal might be incorrect.
-With @code{ppm}, dumps a PPM-format image produced by geomview's internal
-software renderer; this may be of arbitrary size.  If the FILENAME
-argument begins with the vertical bar @code{|}, it's interpreted as a
-/bin/sh command to which the PPM or PS data should be piped.
-Optional XSIZE and YSIZE values are relevant only for @code{ppm} format,
-and render to a window of that size (or scaled to that size,
-with aspect fixed, if only XSIZE is given)
+other windows and redrawn first, then its contents are written as a PPM
+format image. A "ppmosmesa" snapshot is drawn by Mesa's software
+renderer into a memory buffer in RAM. A "ppmosglx" snapshot is rendered
+into a GLX Pixmap buffer, which is also off-screen but may or may not
+reside in video RAM.  Rendering may or may not be accelerated. The
+problem with on-screen snapshots is that the window must be mapped and
+not obscured by other windows. So on-screen snapshots will not work in
+the background, or when a screen safer is active. With "ps", dumps a
+Postscript picture representing the view from that window;
+hidden-surface removal might be incorrect. With "ppm", dumps a
+PPM-format image produced by geomview's internal software renderer; this
+may be of arbitrary size. If the @var{FILENAME} argument begins with
+"|", it's interpreted as a @code{/bin/sh} command to which the PPM or PS
+data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
+relevant only for "ppm" formats, and render to a window of that size (or
+scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
+@end table
 
+@node soft-shader, space, snapshot, Gcl Reference
+@subsection soft-shader
 @findex soft-shader
-@item (soft-shader  CAM-ID  @{on|off|toggle@})
+@table @code
+@item (soft-shader CAM-ID @{on|off|toggle@})
 Select whether to use software or hardware shading in that camera.
+@end table
 
+@node space, stereowin, soft-shader, Gcl Reference
+@subsection space
 @findex space
+@table @code
 @item (space @{euclidean|hyperbolic|spherical@})
 Set the space associated with the world.
+@end table
 
+@node stereowin, time-interests, space, Gcl Reference
+@subsection stereowin
 @findex stereowin
-@item (stereowin CAM-ID  [no|horizontal|vertical|colored] [gapsize])
+@table @code
+@item (stereowin CAM-ID [no|horizontal|vertical|colored] [gapsize])
 Configure CAM-ID as a stereo window.
 no: entire window is a single pane, stereo disabled@*
 horizontal: split left/right: left is stereo eye#0, right is #1.@*
@@ -7214,8 +7900,12 @@ returns current settings as a @code{(stereowin ...)} command list.
 This command doesn't set stereo projection; use @code{merge camera} or
 @code{camera} to set the stereyes transforms, and @code{merge window} or
 @code{window} to set the pixel aspect ratio & window position if needed.
+@end table
 
+@node time-interests, transform, stereowin, Gcl Reference
+@subsection time-interests
 @findex time-interests
+@table @code
 @item (time-interests deltatime initial prefix [suffix])
 Indicates that all interest-related messages, when separated by at
 least @code{deltatime} seconds of real time, should be preceded by
@@ -7228,9 +7918,13 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 	"(sleep-until %g) (progn (set-clock %g)" ")")    or@*
 (time-interests .1 "(set-clock %g)"
 		   "(if (> 0 (sleep-until %g)) (" "))".
+@end table
 
+@node transform, transform-incr, time-interests, Gcl Reference
+@subsection transform
 @findex transform
-@item (transform      objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
+@table @code
+@item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
 Apply a motion (rotation, translation, scaling) to object @code{objectID};
 that is, construct and concatenate a transformation matrix with
 objectID's transform  The 3 IDs involved are the object
@@ -7263,9 +7957,13 @@ approximately @code{dt} seconds, then stops.  If present and followed by
 the @code{smooth} keyword, the motion is animated with a 3t^2-2t^3
 function, so as to start and stop smoothly.  If absent, the motion is
 applied immediately.
+@end table
 
+@node transform-incr, transform-set, transform, Gcl Reference
+@subsection transform-incr
 @findex transform-incr
-@item (transform-incr  objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
+@table @code
+@item (transform-incr objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
 Apply continuing motion: construct a transformation matrix and
 concatenate it with the current transform of objectID every
 refresh (sets objectID's incremental transform). Same syntax
@@ -7274,14 +7972,21 @@ the object is moved at each time step such that its average motion
 equals one instance of the motion per @code{dt} seconds.  E.g.
   (transform-incr  World World World  rotate  6.28318 0 0  10.0)
 rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
+@end table
 
-
+@node transform-set, ui-cam-focus, transform-incr, Gcl Reference
+@subsection transform-set
 @findex transform-set
+@table @code
 @item (transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])
 Set objectID's transform to the constructed transform.
 Same syntax as transform.
+@end table
 
+@node ui-cam-focus, ui-center, transform-set, Gcl Reference
+@subsection ui-cam-focus
 @findex ui-cam-focus
+@table @code
 @item (ui-cam-focus [focus-change|mouse-cross])
 Set the focus policy for the camera windows. The default is
 @code{mouse-cross}: a camera is made the active camera (for interactive
@@ -7301,13 +8006,21 @@ behaviour permanently you could, e.g., place the following line in your
   @dots{} # other stuff
 )
 @end example
+@end table
 
+@node ui-center, ui-center-origin, ui-cam-focus, Gcl Reference
+@subsection ui-center
 @findex ui-center
-@item (ui-center      ID)
-        Set the center for user interface (i.e. mouse) controlled
-        motions to object ID.
+@table @code
+@item (ui-center ID)
+Set the center for user interface (i.e. mouse) controlled
+motions to object ID.
+@end table
 
+@node ui-center-origin, ui-emotion-program, ui-center, Gcl Reference
+@subsection ui-center-origin
 @findex ui-center-origin
+@table @code
 @item (ui-center-origin [origin|bbox-center])
 Set the origin of the coordinate system of the @code{CENTER} object for
 user interface (i.e. mouse) controlled motions.  The keyword
@@ -7319,80 +8032,136 @@ non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
 make a difference if the center object is not a @emph{geometry}, e.g. if
 it is a camera. Same holds if the World is the currently selected
 object.
+@end table
 
+@node ui-emotion-program, ui-emotion-run, ui-center-origin, Gcl Reference
+@subsection ui-emotion-program
 @findex ui-emotion-program
-@item ui-emotion-program is an obsolete command.
-Use its new eqivalent @code{emodule-define} instead.
+@table @code
+@item (ui-emotion-program PROGRAM)
+This is an obsolete command.  Use its new eqivalent @ref{emodule-define,
+@code{emodule-define}} instead.
+@end table
 
+@node ui-emotion-run, ui-freeze, ui-emotion-program, Gcl Reference
+@subsection ui-emotion-run
 @findex ui-emotion-run
-@item ui-emotion-run is an obsolete command.
-Use its new eqivalent @code{emodule_start} instead.
+@table @code
+@item (ui-emotion-run EMODULE)
+This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
+@code{emodule_start}} instead.
+@end table
 
+@node ui-freeze, ui-panel, ui-emotion-run, Gcl Reference
+@subsection ui-freeze
 @findex ui-freeze
+@table @code
 @item (ui-freeze [on|off])
-        Toggle updating user interface panels. Off by default.
+Toggle updating user interface panels. Off by default.
+@end table
 
+@node ui-panel, ui-target, ui-freeze, Gcl Reference
+@subsection ui-panel
 @findex ui-panel
-@item (ui-panel       PANELNAME  @{on|off@} [ WINDOW ] )
-        Do or don't display the given user-interface panel.
-        Case is ignored in panel names.  Current PANELNAMEs are:
-                geomview        main panel
-                tools           motion controls
-                appearance      appearance controls
-                cameras         camera controls
-                lighting        lighting controls
-                obscure         obscure controls
-                materials       material properties controls
-                command         command entry box
-                credits         geomview credits
-        By default, the @code{geomview} and @code{tools} panels appear when
-        geomview starts.  If the optional Window is supplied, a
-        @code{position} clause (e.g. (ui-panel obscure on @{ position xmin
-        xmax ymin ymax @}) sets the panel's default position.  (Only
-        xmin and ymin values are actually used.)  A present but empty
-        Window, e.g.  @code{(ui-panel obscure on @{})@} causes interactive
-        positioning.
+@table @code
+@item (ui-panel PANELNAME @{on|off@} [WINDOW])
+Do or don't display the given user-interface panel.
+Case is ignored in panel names. Current @var{PANELNAMEs} are:
+@table @asis
+@item geomview
+main panel
+@item tools
+motion controls
+@item appearance
+appearance controls
+@item cameras
+camera controls
+@item lighting
+lighting controls
+@item obscure
+obscure controls (doesn't seem to exist any more)
+@item materials
+material properties controls
+@item command
+command entry box
+@item credits
+geomview credits
+@end table
+By default, the @code{geomview} and @code{tools} panels appear when
+geomview starts.  If the optional Window is supplied, a @code{position}
+clause (e.g. (ui-panel obscure on @{ position xmin xmax ymin ymax @})
+sets the panel's default position.  (Only xmin and ymin values are
+actually used.)  A present but empty Window, e.g.  @code{(ui-panel
+obscure on @{})@} causes interactive positioning.
+@end table
 
+@node ui-target, uninterest, ui-panel, Gcl Reference
+@subsection ui-target
 @findex ui-target
-@item (ui-target      ID [yes|no])
-        Set the target of user actions (the selected line of the
-        target object browser) to ID.  The second argument specifies
-        whether to make ID the current object regardless of its type.
-        If @code{no}, then ID becomes the current object of its type
-        (geom or camera).  The default is @code{yes}.  This command may
-        result in a change of motion modes based on target choice.
+@table @code
+@item (ui-target ID [yes|no])
+Set the target of user actions (the selected line of the target object
+browser) to ID.  The second argument specifies whether to make ID the
+current object regardless of its type.  If @code{no}, then ID becomes
+the current object of its type (geom or camera).  The default is
+@code{yes}.  This command may result in a change of motion modes based
+on target choice.
+@end table
 
+@node uninterest, update, ui-target, Gcl Reference
+@subsection uninterest
 @findex uninterest
+@table @code
 @item (uninterest (COMMAND [args]))
 Undoes the effect of an @code{interest} command.  (COMMAND [args]) must
-be identical to those used in the @code{interest} command.
+be identical to those used in the @ref{interest, @code{interest}}
+command.
+@end table
 
+@node update, update-draw, uninterest, Gcl Reference
+@subsection update
 @findex update
+@table @code
 @item (update [timestep_in_seconds])
 Apply each incremental motion once.  Uses timestep if it's present and
 nonzero; otherwise motions are proportional to elapsed real time.
+@end table
 
+@node update-draw, window, update, Gcl Reference
+@subsection update-draw
 @findex update-draw
-@item (update-draw    CAM-ID  [timestep_in_seconds])
+@table @code
+@item (update-draw CAM-ID  [timestep_in_seconds])
 Apply each incremental motion once and then draw CAM-ID.
 Applies @code{timestep} seconds' worth of motion, or uses elapsed real
 time if @code{timestep} is absent or zero.
+@end table
 
+@node window, winenter, update-draw, Gcl Reference
+@subsection window
 @findex window
-@item (window         CAM-ID  WINDOW)
-Specify attributes for the window of CAM-ID, e.g. its size
-or initial position, in the OOGL Window syntax.
-The special CAM-ID @code{default} specifies
-properties of future windows (created by @code{camera} or
-@code{new-camera}).
+@table @code
+@item (window CAM-ID WINDOW)
+Specify attributes for the window of CAM-ID, e.g. its size or initial
+position, in the OOGL Window syntax.  The special CAM-ID @code{default}
+specifies properties of future windows (created by @ref{camera,
+@code{camera}} or @ref{new-camera, @code{new-camera}}).
+@end table
 
+@node winenter, write, window, Gcl Reference
+@subsection winenter
 @findex winenter
-@item (winenter       CAM-ID)
-Tell geomview that the mouse cursor is in the window
-of CAM-ID.  This function is for development purposes
-and is not intended for general use.
+@table @code
+@item (winenter CAM-ID)
+Tell geomview that the mouse cursor is in the window of CAM-ID.  This
+function is for development purposes and is not intended for general
+use.
+@end table
 
+@node write, write-comments, winenter, Gcl Reference
+@subsection write
 @findex write
+@table @code
 @item (write @{command|geometry|camera|transform|ntransform|window@} FILENAME [ID|(ID ...)] [self|world|universe|otherID])
 write description of ID in given format to FILENAME.  Last
 parameter chooses coordinate system for geometry & transform:
@@ -7411,59 +8180,87 @@ command.)
 
 The ID can either be a single id or a parenthesized list of
 ids, like @code{g0} or @code{(g2 g1 dodec.off)}.
+@end table
 
+@node write-comments, write-handle, write, Gcl Reference
+@subsection write-comments
 @findex write-comments
+@table @code
 @item (write-comments FILENAME GEOMID PICKPATH)
-write OOGL COMMENT objects in the GEOMID hierarchy at the
- 	level of the pick path to FILENAME. Specifically, COMMENTS
- 	at level (a b c ... f g) will match pick paths of the form
- 	(a b c ... f *) where * includes any value of g, and also
- 	any values of possible further indices h,i,j, etc. The pick
- 	path (returned in the @code{pick} command) is a list of
- 	integer counters specifying a subpart of a hierarchical
- 	OOGL object. Descent into a complex object (LIST or INST)
- 	adds a new integer to the path. Traversal of simple objects
- 	increments the counter at the current level.
- 	Individual COMMENTS are enclosed by curly braces, and the
- 	entire string of zero, one, or more COMMENTS (written in
- 	the order in which they are encountered during hierarchy
- 	traversal) is enclosed by parentheses.
+write OOGL COMMENT objects in the GEOMID hierarchy at the level of the
+pick path to FILENAME. Specifically, COMMENTS at level (a b c ... f g)
+will match pick paths of the form (a b c ... f *) where * includes any
+value of g, and also any values of possible further indices h,i,j,
+etc. The pick path (returned in the @code{pick} command) is a list of
+integer counters specifying a subpart of a hierarchical OOGL
+object. Descent into a complex object (LIST or INST) adds a new integer
+to the path. Traversal of simple objects increments the counter at the
+current level.  Individual COMMENTS are enclosed by curly braces, and
+the entire string of zero, one, or more COMMENTS (written in the order
+in which they are encountered during hierarchy traversal) is enclosed by
+parentheses.
         
-        Note that arbitrary data can only be passed through the OOGL
- 	libraries as full-fledged OOGL COMMENT objects, which can be
- 	attached to other OOGL objects via the LIST type as described
- 	above. Ordinary comments in OOGL files (i.e. everything after
- 	'#' on a line) are ignored at when the file is loaded and
- 	cannot be returned.
+Note that arbitrary data can only be passed through the OOGL libraries
+as full-fledged OOGL COMMENT objects, which can be attached to other
+OOGL objects via the LIST type as described above. Ordinary comments in
+OOGL files (i.e. everything after '#' on a line) are ignored at when the
+file is loaded and cannot be returned.
+@end table
 
+@node write-handle, write-sexpr, write-comments, Gcl Reference
+@subsection write-handle
+@findex write-handle
+@table @code
+@item (write-handle PREFIX FILENAME HANDLE)
+Writes the object underlying the given handle to @var{FILENAME}. This
+function is intended for internal debugging use only.
+@end table
+
+@node write-sexpr, xform, write-handle, Gcl Reference
+@subsection write-sexpr
 @findex write-sexpr
-@item (write-sexpr     FILENAME LISPOBJECT)
+@table @code
+@item (write-sexpr FILENAME LISPOBJECT)
 Writes the given LISPOBJECT to FILENAME. This function is intended
 for internal debugging use only.
+@end table
 
+@node xform, xform-incr, write-sexpr, Gcl Reference
+@subsection xform
 @findex xform
-@item (xform          ID TRANSFORM)
+@table @code
+@item (xform ID TRANSFORM)
 Concatenate TRANSFORM with the current transform of the object
 (apply TRANSFORM to object ID).
+@end table
 
+@node xform-incr, xform-set, xform, Gcl Reference
+@subsection xform-incr
 @findex xform-incr
-@item (xform-incr     ID TRANSFORM)
+@table @code
+@item (xform-incr ID TRANSFORM)
 Apply continual motion: concatenate TRANSFORM with the current
 transform of the object every refresh (set object ID's
 incremental transform to TRANSFORM).
-
-@findex xform-set
-@item (xform-set      ID TRANSFORM)
-Overwrite the current object transform with TRANSFORM (set
-object ID's transform to TRANSFORM).
-
-@findex zoom
-@item (zoom           CAM-ID FACTOR)
-Zoom CAM-ID, multiplying its field of view by FACTOR.
-FACTOR should be a positive number.
-
 @end table
 
+@node xform-set, zoom, xform-incr, Gcl Reference
+@subsection xform-set
+@findex xform-set
+@table @code
+@item (xform-set ID TRANSFORM)
+Overwrite the current object transform with TRANSFORM (set
+object ID's transform to TRANSFORM).
+@end table
+
+@node zoom,  , xform-set, Gcl Reference
+@subsection zoom
+@findex zoom
+@table @code
+@item (zoom CAM-ID FACTOR)
+Zoom CAM-ID, multiplying its field of view by FACTOR.
+FACTOR should be a positive number.
+@end table
 
 @comment ****************************************************************
 @node Non-Euclidean Geometry, Mathematica, GCL, Top
