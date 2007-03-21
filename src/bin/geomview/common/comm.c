@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -278,6 +279,9 @@ commandclose(Pool *p)
 {
   PoolDoReread(p);
   PoolClose(p);
+#if 1 /* should we really cache handles for command-files??? */
+  PoolDelete(p);
+#endif
   return 0;
 }
 
