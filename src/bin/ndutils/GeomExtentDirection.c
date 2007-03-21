@@ -35,23 +35,25 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 #include	<stdarg.h>
 #include	<time.h>
 #include	"geomclass.h"
-#include        "geom.h"
-#include        "skelP.h"
-#include        "ndmeshP.h"
-#include        "hpointn.h"
-#include        "hpoint3.h"
-#include        "pointlist.h"
-#include        "quadP.h"
-#include        "meshP.h"
-#include        "polylistP.h"
-#include        "bezierP.h"
-#include        "vectP.h"
-#include        "listP.h"
-#include        "discgrp.h"
-#include        "instP.h"
-#include        "npolylistP.h"
-#include        "dim.h"
-#include	"transformn.h"
+
+#include        <geom.h>
+#include        <discgrp.h>
+#include        <hpointn.h>
+#include        <hpoint3.h>
+#include        <pointlist.h>
+#include        <dim.h>
+#include	<transformn.h>
+
+#include        <skelP.h>
+#include        <ndmeshP.h>
+#include        <quadP.h>
+#include        <meshP.h>
+#include        <polylistP.h>
+#include        <bezierP.h>
+#include        <vectP.h>
+#include        <listP.h>
+#include        <instP.h>
+#include        <npolylistP.h>
 
 #include	"BasicFns.h"
 #include	"Random.h"
@@ -147,13 +149,13 @@ static void *extentDirSkel(int sel, Geom * g, va_list * args)
 
   t = va_arg(*args, TransformN *);
   dimdir = va_arg(*args, int);
-  dimvert = ((Skel *) g)->pdim - 1;
+  dimvert = g->pdim - 1;
   direction = va_arg(*args, float *);
   smdim = (dimvert < dimdir) ? dimvert : dimdir;
   if (((Skel *) g)->nvert == 0)
     return (void *) NULL;
   results = (float *) malloc((sizeof *results) * 3);
-  hpt = HPtNCreate(((Skel *) g)->pdim, NULL);
+  hpt = HPtNCreate(g->pdim, NULL);
   tmp.dim = hpt->dim;
   tmp.flags = 0;
   tmp.v = ((Skel *) g)->p;
@@ -206,13 +208,13 @@ static void *extentDirNPolyList(int sel, Geom * g, va_list * args)
 
   t = va_arg(*args, TransformN *);
   dimdir = va_arg(*args, int);
-  dimvert = ((NPolyList *) g)->pdim - 1;
+  dimvert = g->pdim - 1;
   direction = va_arg(*args, float *);
   smdim = (dimvert < dimdir) ? dimvert : dimdir;
   if (((NPolyList *) g)->n_verts == 0)
     return (void *) NULL;
   results = (float *) malloc((sizeof *results) * 3);
-  hpt = HPtNCreate(((NPolyList *) g)->pdim, NULL);
+  hpt = HPtNCreate(g->pdim, NULL);
   tmp.dim = hpt->dim;
   tmp.flags = 0;
   tmp.v = ((NPolyList *) g)->v;
@@ -266,7 +268,7 @@ static void *extentDirNDMesh(int sel, Geom * g, va_list * args)
   hpt = (HPointN *) malloc(sizeof *hpt);
   t = va_arg(*args, TransformN *);
   dimdir = va_arg(*args, int);
-  dimvert = ((NDMesh *) g)->pdim;
+  dimvert = g->pdim;
   direction = va_arg(*args, float *);
   smdim = (dimvert < dimdir) ? dimvert : dimdir;
   for (i = 0; i < ((NDMesh *) g)->meshd; i++)
