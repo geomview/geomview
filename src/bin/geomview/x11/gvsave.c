@@ -257,7 +257,7 @@ static void save_selection(Widget w, XtPointer data,
         return;
     }
     worldio(sp->ops, p, sp->flag, id);
-    if(PoolOutputFile(p) != stdout) PoolClose(p);
+    PoolClose(p);
     PoolDelete(p);
     break;
   case SAVE_RMan:
