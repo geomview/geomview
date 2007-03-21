@@ -99,6 +99,7 @@ EOF
     exec ${GEOMVIEW_GVX} -h
     ;;
 
+    --version) echo %PACKAGE_VERSION% ;;
     --print-geomview-data-dir) echo ${GEOMVIEW_DATA_DIR} ;;
     --print-geomview-emodule-dir) echo ${GEOMVIEW_EMODULE_DIR} ;;
     --print-geomview-load-path) echo ${GEOMVIEW_LOAD_PATH} ;;

@@ -57,7 +57,7 @@ the library, include and data directories to use. (default: autodetected)]),
   AC_SUBST(geomdatadir)
   AC_MSG_RESULT([Data will go into "${geomdatadir}/"])
   gvversion=`geomview --version`
-  AC_MSG_NOTICE([Geomview version: ${gvversion}])
+  AC_MSG_RESULT([Geomview version: ${gvversion}])
   gv_major=`echo $gvversion|cut -d '.' -f 1`
   gv_minor=`echo $gvversion|cut -d '.' -f 2`
   m4_if($#,4,[gv_major_ok=`expr $gv_major '$1' $2`

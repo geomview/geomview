@@ -26,6 +26,7 @@ geomview: geomview.sh Makefile
 	    -e "s|%LD_LIBRARY_PATH_SETTINGS%|$(LD_LIBRARY_PATH_SETTINGS)|g" \
 	    -e "s|%GEOMVIEW_LIB%|$(libdir)|g" \
 	    -e "s|%GEOMVIEW_INCLUDE%|$(pkgincludedir)|g" \
+	    -e "s|%PACKAGE_VERSION%|$(PACKAGE_VERSION)|g" \
 	    < $(top_srcdir)/geomview.sh > geomview
 	chmod +x geomview
 

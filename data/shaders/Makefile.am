@@ -12,30 +12,30 @@ shader_src = \
  GVmodulateconstant.sl GVmodulateplastic.sl \
  GVreplaceconstant.sl GVreplaceplastic.sl
 
-if AQSIS
+if AQSIS_SHADER_COMPILER
 geomshaderdata_DATA += $(shader_src:.sl=.slx)
 
 .sl.slx:
-	$(AQSL) -o $@ $<
+	$(AQSIS_SHADER_COMPILER) -o $@ $<
 
 endif
 
-if PIXIE
+if PIXIE_SHADER_COMPILER
 geomshaderdata_DATA += $(shader_src:.sl=.sdr)
 
 .sl.sdr:
-	$(SDRC) -o $@ $<
+	$(PIXIE_SHADER_COMPILER) -o $@ $<
 
 endif
 
-if DELIGHT
+if DELIGHT_SHADER_COMPILER
 geomshaderdata_DATA += $(shader_src:.sl=.sdl)
 
 #
 # SDLFLAGS = -O3 --embed-source --dso etc.
 #
 .sl.sdl:
-	$(SHADERDL) $(SDLFLAGS) -o $@ $<
+	$(DELIGHT_SHADER_COMPILER) $(SDLFLAGS) -o $@ $<
 
 endif
 
