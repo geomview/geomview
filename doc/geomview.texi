@@ -6278,7 +6278,8 @@ is an OOGL winddow specification.
 @table @code
 
 @findex !
-@item ! is a synonym for @code{shell}
+@item !
+is a synonym for @code{shell}
 
 @findex <
 @item (< EXPR1 EXPR2)
