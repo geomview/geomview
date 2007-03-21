@@ -79,8 +79,8 @@ struct Handle {
 #define	P_STREAM 2
 
 struct Pool {
-	int	type;		/* P_SM or P_STREAM */
 	DblListNode node;       /* Link in list of all Pools (or free pools) */
+	int	type;		/* P_SM or P_STREAM */
 	char	*poolname;	/* Name of this pool: typically a filename */
 	DblListNode handles;	/* All handles using this Pool */
 	HandleOps *ops;		/* I/O operations */
