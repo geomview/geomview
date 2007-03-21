@@ -21,6 +21,9 @@ dnl distribution terms that you use for the rest of that program.
 
 # Determine installation paths (includes, libraries etc.) from the
 # installed version of Geomview
+#
+# GV_INIT_GEOMVIEW(MAJOR_OP,MAJOR,MINOR_OP,MINOR)
+#
 AC_DEFUN([GV_INIT_GEOMVIEW],
 [AC_ARG_WITH(geomview,
   AC_HELP_STRING([--with-geomview=PROGRAM],
@@ -53,4 +56,18 @@ the library, include and data directories to use. (default: autodetected)]),
   geomdatadir=`geomview --print-geomview-data-dir`
   AC_SUBST(geomdatadir)
   AC_MSG_RESULT([Data will go into "${geomdatadir}/"])
+  gvversion=`geomview --version`
+  AC_MSG_NOTICE([Geomview version: ${gvversion}])
+  gv_major=`echo $gvversion|cut -d '.' -f 1`
+  gv_minor=`echo $gvversion|cut -d '.' -f 2`
+  m4_if($#,4,[gv_major_ok=`expr $gv_major '$1' $2`
+    gv_minor_ok=`expr $gv_minor '$3' $4`
+    if test "$gv_major_ok" != "1" -o "$gv_minor_ok" != "1" ; then
+      AC_MSG_ERROR([
+
+$PACKAGE requires Geomview version N.M, where N$2$3 and M$4$5.
+Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
+
+  ])])
+
 ])
