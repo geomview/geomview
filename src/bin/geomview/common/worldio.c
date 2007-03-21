@@ -738,7 +738,8 @@ LDEFINE(write, LVOID,
   LObject *idobj;
   char *fname;
   Lake *hiawatha;
-  int coords = UNIVERSE, val = 1, id, temppool=0;
+  int coords = UNIVERSE, val = 1, id;
+  bool temppool = false;
 
   LDECLARE(("write", LBEGIN,
 	    LLAKE, &hiawatha,
@@ -760,11 +761,11 @@ LDEFINE(write, LVOID,
       op = p;
     } else {
       op = PoolStreamTemp(fname, NULL,  stdout, 1, &CommandOps);
-      temppool = 1;
+      temppool = true;
     }
   } else {
     op = PoolStreamTemp(fname, NULL, NULL, 1, &CommandOps);
-    temppool = 1;
+    temppool = true;
   }
 
   if(op == NULL || PoolOutputFile(op) == NULL) {
@@ -788,7 +789,10 @@ LDEFINE(write, LVOID,
       val &= (worldio(ops, op, coords, id) == 1);
     }
   }
-  if (temppool) PoolClose(op);
+  if (temppool) {
+    PoolClose(op);
+    PoolDelete(op);
+  }
   if (!val) {
     fprintf(stderr, "write failed\n");
     return Lnil;
