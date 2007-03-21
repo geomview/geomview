@@ -233,6 +233,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     ok = GeomStreamIn(tp, hp, gp);
     iobpclose(tf);
     PoolClose(tp);
+    PoolDelete(tp);
     signal(SIGCHLD, oldchld);
     iobfseek(pf, 0, SEEK_END);  /* Seek input to EOF to avoid confusion */
     return ok;
