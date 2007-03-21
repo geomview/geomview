@@ -360,7 +360,7 @@ HandleCreateGlobal(char *name, HandleOps *ops)
 {
   Handle *h;
   
-  h = HandleAssign(name, ops, NULL);
+  h = HandleCreate(name, ops);
   if (!h->permanent) {
     h->permanent = true;
     return REFGET(Handle, h);
