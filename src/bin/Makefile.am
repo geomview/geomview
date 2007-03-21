@@ -1,7 +1,7 @@
 XFORMS_SUBDIRS = cplxview example flythrough ginsu graffiti gvclock hinge \
  stereo sweep tackdown transformer
 
-TCLTK_SUBDIRS = labeler NDview ndutils
+TCLTK_SUBDIRS = labeler
 if TCLFILEHANDLER
 TCLTK_SUBDIRS += crayola
 endif
