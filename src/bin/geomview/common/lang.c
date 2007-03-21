@@ -305,6 +305,7 @@ LDEFINE(write_handle, LVOID,
       p = PoolStreamTemp(filename, NULL, NULL, 1, &CommandOps);
       h->ops->strmout(p, h, HandleObject(h));
       PoolClose(p);
+      PoolDelete(p);
     }
   } else {
     OOGLWarn("Cannot find handle \"%s@%s\"", handle, prefix);
