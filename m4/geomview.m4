@@ -68,6 +68,6 @@ the library, include and data directories to use. (default: autodetected)]),
 $PACKAGE requires Geomview version N.M, where N$2$3 and M$4$5.
 Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
 
-  ])])
-
+])
+    fi]) dnl m4_if
 ])
