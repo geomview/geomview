@@ -65,23 +65,23 @@ static inline int finite(double v)
 }
 #endif
 
-#if !HAVE_STRCASECMP
+#if !HAVE_DECL_STRCASECMP
 extern int strcasecmp(char *s1, char *s2);
 #endif
 
-#if !HAVE_STRCASECMP
+#if !HAVE_DECL_STRNCASECMP
 extern int strncasecmp(char *a, char *b, int n);
 #endif
 
-#if !HAVE_ACOSH
+#if !HAVE_DECL_ACOSH
 double acosh(double c);
 #endif
 
-#if !HAVE_STRDUP
+#if !HAVE_DECL_STRDUP
 extern char *strdup(const char *);
 #endif
 
-#if !HAVE_PUTENV
+#if !HAVE_DECL_PUTENV
 extern putenv(char *name);
 #endif
 

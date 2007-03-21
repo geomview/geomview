@@ -221,7 +221,6 @@ fi
 AC_CHECK_LIB([m], [cos])
 
 # Checks for header files.
-AC_PATH_XTRA
 AC_FUNC_ALLOCA
 AC_HEADER_DIRENT
 AC_HEADER_STDC
@@ -281,6 +280,7 @@ AC_CHECK_FUNCS([fmemopen],
   [AC_CHECK_DECLS([fmemopen])],
   [AC_LIBOBJ([fmemopen])])
 AC_REPLACE_FUNCS([acosh popen putenv strcasecmp strdup strncasecmp lstat stat])
+AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
 AC_CHECK_FUNCS([fstat])
 AC_FUNC_SELECT_ARGTYPES
 AC_CHECK_FUNC([select],
@@ -304,7 +304,7 @@ AC_CHECK_DECLS([errno],[],[],[
 #endif])
 AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
   gethostname gettimeofday isascii memset mkdir pow rint select sqrt \
-  strcasecmp strchr strcspn strdup strerror strncasecmp strpbrk strrchr \
+  strchr strcspn strdup strerror strncasecmp strpbrk strrchr \
   strstr strtol strerror sysinfo waitpid wait3])
 
 #
