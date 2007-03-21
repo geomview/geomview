@@ -15,6 +15,9 @@ m4_files = \
 
 nodist_pkginclude_HEADERS = $(wildcard include/*[^P].h)
 
+pkgincludeprivdir = ${pkgincludedir}/private
+nodist_pkgincludepriv_HEADERS = $(wildcard include/*P.h)
+
 geomview: geomview.sh Makefile
 	echo top_builddir is $(abs_top_builddir)
 	sed -e 's|%GEOMROOT%|$(abs_top_srcdir)|g' \
