@@ -2,11 +2,7 @@ INCLUDES = $(default_includes)
 
 EXTRA_DIST = NDview NDdemo
 
-LDADD = \
- $(TK_LIB) \
- $(TCL_LIB) \
- $(XLIBS) \
- $(OOGLLIB)
+LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
 module_PROGRAMS = ndview
 ndview_SOURCES = ndview.c testwish.c
