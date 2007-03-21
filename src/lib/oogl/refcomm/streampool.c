@@ -154,7 +154,8 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
     }
 
     if (name) {
-	h = HandleCreate(name, ops);
+	/* Accessing a handle via ':' makes the handle global */
+	h = HandleCreateGlobal(name, ops);
     }
     
     if (ph) {
@@ -583,7 +584,7 @@ void PoolClose(Pool *p)
 	    if (p->outf != stdout) fclose(p->outf);
 	    p->outf = NULL;
 	}
-	PoolDelete(p); /* Shouldn't we delete the Pool? */
+	/* PoolDelete(p);*/ /* Shouldn't we delete the Pool? */
     }
 }
 
