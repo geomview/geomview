@@ -39,9 +39,10 @@ int DiscGrpPresent = 1;
 
 static char discgrpName[] = "discgrp";
 
-extern DiscGrp      *DiscGrpCreate( va_list );
+extern DiscGrp      *DiscGrpCreate( DiscGrp *, GeomClass *, va_list * );
 extern DiscGrp      *DiscGrpDelete( DiscGrp * );
 extern DiscGrp      *DiscGrpCopy( DiscGrp * );
+extern int           DiscGrpGet( DiscGrp *, int attr, void *attrp );
 
 extern GeomScanFunc DiscGrpHandleScan;
 
@@ -69,6 +70,7 @@ DiscGrpMethods()
 		DiscGrpClass->draw = (GeomDrawFunc *) DiscGrpDraw;
 		DiscGrpClass->scan = (GeomScanFunc *)DiscGrpHandleScan;
 		DiscGrpClass->import = (GeomImportFunc *) DiscGrpImport;
+		DiscGrpClass->get = (GeomGetFunc *) DiscGrpGet;
 /*
 		DiscGrpClass->fload = (GeomFLoadFunc *) DiscGrpFLoad;
 		DiscGrpClass->evert = (GeomEvertFunc *) DiscGrpEvert;

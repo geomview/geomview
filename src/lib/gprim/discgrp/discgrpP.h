@@ -85,7 +85,7 @@ struct DiscGrp {
 	GEOMFIELDS;
 	char 		*name;
 	char 		*comment;
-	int 		flag;		/* graphics flags */
+	unsigned 	flag;		/* graphics flags */
 	int 		attributes;	/* group attributes */
 	int 		dimn;
 	float		(*c2m)[4];	/* record the transform taking cam->model*/

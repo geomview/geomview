@@ -126,11 +126,39 @@ DiscGrpElListCreate (DiscGrpElList *exist, ...)
     return(dgellist);
 }
 
+int DiscGrpGet(DiscGrp *discgrp, int attr, void *attrp)
+{
+    switch (attr) {
+
+    case DGCR_NAME: *(char **)attrp = discgrp->name; break;
+    case DGCR_COMMENT: *(char **)attrp = discgrp->comment; break;
+    case DGCR_FLAG: *(unsigned *)attrp = discgrp->flag; break;
+    case DGCR_ATTRIBUTE: *(int *)attrp = discgrp->attributes; break;
+    case DGCR_GENS: *(DiscGrpElList **)attrp = discgrp->gens; break;
+    case DGCR_BIGLIST: *(DiscGrpElList **)attrp = discgrp->big_list; break;
+    case DGCR_CPOINT: *(HPoint3 *)attrp = discgrp->cpoint; break;
+    case DGCR_ENUMDEPTH: *(int *)attrp = discgrp->enumdepth; break;
+    case DGCR_ENUMDIST: *(float *)attrp = discgrp->enumdist; break;
+    case DGCR_DRAWDIST: *(float *)attrp = discgrp->drawdist; break;
+    case DGCR_SCALE: *(float *)attrp = discgrp->scale; break;
+    case DGCR_CAMGEOM: *(Geom **)attrp = discgrp->camgeom; break;
+    case DGCR_CAMGEOMHANDLE: *(Handle **)attrp = discgrp->camgeomhandle; break;
+    case DGCR_DDGEOM: *(Geom **)attrp = discgrp->ddgeom; break;
+    case DGCR_DDGEOMHANDLE: *(Handle **)attrp = discgrp->ddgeomhandle; break;
+    case CR_GEOM: *(Geom **)attrp = discgrp->geom; break;
+    case CR_GEOMHANDLE: *(Handle **)attrp = discgrp->geomhandle; break;
+    default: return -1;
+    }    
+    return 1;
+}
+
 DiscGrp *
 DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list *a_list)
 {
     DiscGrp *discgrp;
-    int		attr, copy = 1;
+    int	attr, copy = 1;
+    Geom *g;
+    Handle *h;
 
     if (exist == NULL) {
 	discgrp = OOGLNewE(DiscGrp, "DiscGrpCreate discgrp");
@@ -164,70 +192,215 @@ DiscGrpCreate (DiscGrp *exist, GeomClass *classp, va_list *a_list)
     }
 
     while ((attr = va_arg (*a_list, int))) switch (attr) {
-	case DGCR_NAME:
-	    discgrp->name = va_arg (*a_list, char *);
-	    break;
+    case DGCR_NAME:
+	discgrp->name = va_arg (*a_list, char *);
+	break;
 
-	case DGCR_COMMENT:
-	    discgrp->comment = va_arg (*a_list, char *);
-	    break;
+    case DGCR_COMMENT:
+	discgrp->comment = va_arg (*a_list, char *);
+	break;
 
-	case DGCR_FLAG:
-	    discgrp->flag = va_arg (*a_list, int);
-	    break;
+    case DGCR_FLAG:
+	discgrp->flag = va_arg (*a_list, int);
+	break;
 
-	case DGCR_ATTRIBUTE:
-	    discgrp->attributes = va_arg (*a_list, int);
-	    break;
+    case DGCR_ATTRIBUTE:
+	discgrp->attributes = va_arg (*a_list, int);
+	break;
 
-	case DGCR_GENS:
-	    discgrp->gens = va_arg (*a_list, DiscGrpElList *);
-	    break;
+    case DGCR_GENS:
+	discgrp->gens = va_arg (*a_list, DiscGrpElList *);
+	break;
 
-	case DGCR_BIGLIST:
-	    discgrp->big_list = va_arg (*a_list, DiscGrpElList *);
-	    break;
+    case DGCR_BIGLIST:
+	discgrp->big_list = va_arg (*a_list, DiscGrpElList *);
+	break;
 
-	case DGCR_CPOINT:
-	    {
+    case DGCR_CPOINT:
+	{
 	    HPoint3 *cptr;
 	    cptr = va_arg (*a_list, HPoint3 *);
 	    discgrp->cpoint = *cptr;
-	    }
-	    break;
+	}
+	break;
 
-	case DGCR_ENUMDEPTH:
-	    discgrp->enumdepth = va_arg (*a_list, int);
-	    break;
+    case DGCR_ENUMDEPTH:
+	discgrp->enumdepth = va_arg (*a_list, int);
+	break;
 
-	case DGCR_ENUMDIST:
-	    discgrp->enumdist = ((float) va_arg (*a_list, double));
-	    break;
+    case DGCR_ENUMDIST:
+	discgrp->enumdist = ((float) va_arg (*a_list, double));
+	break;
 
-	case DGCR_SCALE:
-	    discgrp->scale = ((float) va_arg (*a_list, double));
-	    break;
+    case DGCR_DRAWDIST:
+	discgrp->drawdist = ((float) va_arg (*a_list, double));
+	break;
 
-	case DGCR_CAMGEOM:
-	    discgrp->camgeom = va_arg (*a_list, Geom *);
-	    break;
+    case DGCR_SCALE:
+	discgrp->scale = ((float) va_arg (*a_list, double));
+	break;
 
-	case DGCR_DDGEOM:
-	    discgrp->ddgeom = va_arg (*a_list, Geom *);
-	    break;
+	/* Geometries and their handles: copy the logic from InstCreate() and
+	 * duplicate it for ddgeom and camgeom.
+	 */
+    case CR_GEOMHANDLE:
+	h = va_arg(*a_list, Handle *);
+	if (copy) {
+	    REFINCR(h);
+	}
+	if (discgrp->geomhandle) {
+	    HandlePDelete(&discgrp->geomhandle);
+	}
+	discgrp->geomhandle = h;
+	HandleRegister(&discgrp->geomhandle, (Ref *)discgrp, &discgrp->geom,
+		       HandleUpdRef);
+	break;
+    case CR_HANDLE_GEOM:
+	h = va_arg(*a_list, Handle *);
+	g = va_arg(*a_list, Geom *);
+	if (copy) {
+	    REFINCR(h);
+	    REFINCR(g);
+	}
+	if (discgrp->geomhandle) {
+	    HandlePDelete(&discgrp->geomhandle);
+	}
+	if (discgrp->geom) {
+	    GeomDelete(discgrp->geom);
+	}
+	discgrp->geomhandle = h;
+	discgrp->geom = g;
+	if (h) {
+	    HandleRegister(&discgrp->geomhandle,
+			   (Ref *)discgrp, &discgrp->geom, HandleUpdRef);
+	    HandleSetObject(discgrp->geomhandle, (Ref *)g);
+	}
+	break;
+    case CR_GEOM:
+	g = va_arg (*a_list, Geom *);
+	if (copy) {
+	    REFINCR(g);
+	}
+	if (discgrp->geom) {
+	    GeomDelete(discgrp->geom);
+	}
+	discgrp->geom = g;
+	if (discgrp->geomhandle) {
+	    HandlePDelete(&discgrp->geomhandle);
+	}
+	break;
 
-	case CR_GEOM:
-	    discgrp->geom = va_arg (*a_list, Geom *);
-	    break;
+    case DGCR_CAMGEOMHANDLE:
+	h = va_arg(*a_list, Handle *);
+	if (copy) {
+	    REFINCR(h);
+	}
+	if (discgrp->camgeomhandle) {
+	    HandlePDelete(&discgrp->camgeomhandle);
+	}
+	discgrp->camgeomhandle = h;
+	HandleRegister(&discgrp->camgeomhandle,
+		       (Ref *)discgrp, &discgrp->camgeom,
+		       HandleUpdRef);
+	break;
+    case DGCR_HANDLE_CAMGEOM:
+	h = va_arg(*a_list, Handle *);
+	g = va_arg(*a_list, Geom *);
+	if (copy) {
+	    REFINCR(h);
+	    REFINCR(g);
+	}
+	if (discgrp->camgeomhandle) {
+	    HandlePDelete(&discgrp->camgeomhandle);
+	}
+	if (discgrp->camgeom) {
+	    GeomDelete(discgrp->camgeom);
+	}
+	discgrp->camgeomhandle = h;
+	discgrp->camgeom = g;
+	if (h) {
+	    HandleRegister(&discgrp->camgeomhandle,
+			   (Ref *)discgrp, &discgrp->camgeom, HandleUpdRef);
+	    HandleSetObject(discgrp->camgeomhandle, (Ref *)g);
+	}
+	break;
+    case DGCR_CAMGEOM:
+	g = va_arg (*a_list, Geom *);
+	if (copy) {
+	    REFINCR(g);
+	}
+	if (discgrp->camgeom) {
+	    GeomDelete(discgrp->camgeom);
+	}
+	discgrp->camgeom = g;
+	if (discgrp->camgeomhandle) {
+	    HandlePDelete(&discgrp->camgeomhandle);
+	}
+	break;
 
-	default:
-	    if (GeomDecorate (discgrp, &copy, attr, a_list)) {
-		GeomError (0, "DiscGrpCreate: Undefined option: %d", attr);
-		OOGLFree (discgrp);
-		return NULL;
-	    }
+    case DGCR_DDGEOMHANDLE:
+	h = va_arg(*a_list, Handle *);
+	if (copy) {
+	    REFINCR(h);
+	}
+	if (discgrp->ddgeomhandle) {
+	    HandlePDelete(&discgrp->ddgeomhandle);
+	}
+	discgrp->ddgeomhandle = h;
+	HandleRegister(&discgrp->ddgeomhandle,
+		       (Ref *)discgrp, &discgrp->ddgeom,
+		       HandleUpdRef);
+	break;
+    case DGCR_HANDLE_DDGEOM:
+	h = va_arg(*a_list, Handle *);
+	g = va_arg(*a_list, Geom *);
+	if (copy) {
+	    REFINCR(h);
+	    REFINCR(g);
+	}
+	if (discgrp->ddgeomhandle) {
+	    HandlePDelete(&discgrp->ddgeomhandle);
+	}
+	if (discgrp->ddgeom) {
+	    GeomDelete(discgrp->ddgeom);
+	}
+	discgrp->ddgeomhandle = h;
+	discgrp->ddgeom = g;
+	if (h) {
+	    HandleRegister(&discgrp->ddgeomhandle,
+			   (Ref *)discgrp, &discgrp->ddgeom, HandleUpdRef);
+	    HandleSetObject(discgrp->ddgeomhandle, (Ref *)g);
+	}
+	break;
+    case DGCR_DDGEOM:
+	g = va_arg (*a_list, Geom *);
+	if (copy) {
+	    REFINCR(g);
+	}
+	if (discgrp->ddgeom) {
+	    GeomDelete(discgrp->ddgeom);
+	}
+	discgrp->ddgeom = g;
+	if (discgrp->ddgeomhandle) {
+	    HandlePDelete(&discgrp->ddgeomhandle);
+	}
+	break;
+
+
+    default:
+	if (GeomDecorate (discgrp, &copy, attr, a_list)) {
+	    GeomError (0, "DiscGrpCreate: Undefined option: %d", attr);
+	    OOGLFree (discgrp);
+	    return NULL;
+	}
     }
     return discgrp;
 }
 
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */

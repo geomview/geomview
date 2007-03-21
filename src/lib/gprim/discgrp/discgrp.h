@@ -36,30 +36,30 @@
 #define NULL 0
 #endif
 
-#ifndef	FALSE
-#define	FALSE 0
+#ifndef FALSE
+#define FALSE 0
 #endif
 
-#define DISCGRPMAGIC	GeomMagic('d',1)
+#define DISCGRPMAGIC    GeomMagic('d',1)
 
 typedef struct DiscGrp DiscGrp ;
 
 extern DiscGrp *
 DiscGrpPick( DiscGrp *, Pick *, Appearance *, Transform, TransformN *, int * );
 extern GeomClass *DiscGrpMethods( void );
-extern char	*DiscGrpName( void );
+extern char     *DiscGrpName( void );
 /*
-extern DiscGrp	*DiscGrpFLoad( FILE *, char * );
-extern DiscGrp	*DiscGrpLoad( char * );
+extern DiscGrp  *DiscGrpFLoad( FILE *, char * );
+extern DiscGrp  *DiscGrpLoad( char * );
 */
 extern Geom  *DiscGrpImport (Pool * );
-extern DiscGrp	*DiscGrpSave( DiscGrp *, char * );
-extern DiscGrp	*DiscGrpFSave( DiscGrp *, FILE *, char * );
-extern BBox	*DiscGrpBound( DiscGrp *, Transform T, TransformN *TN);
-extern DiscGrp	*DiscGrpDraw( DiscGrp * );
+extern DiscGrp  *DiscGrpSave( DiscGrp *, char * );
+extern DiscGrp  *DiscGrpFSave( DiscGrp *, FILE *, char * );
+extern BBox     *DiscGrpBound( DiscGrp *, Transform T, TransformN *TN);
+extern DiscGrp  *DiscGrpDraw( DiscGrp * );
 /*
 extern DiscGrpElList *DiscGrpElListCreate(DiscGrpElList *, ...);
-extern DiscGrp	*DiscGrpEvert( DiscGrp * );
+extern DiscGrp  *DiscGrpEvert( DiscGrp * );
 extern DiscGrp     *DiscGrpTransform( DiscGrp *, Transform );
 extern DiscGrp     *DiscGrpTransformTo( DiscGrp *, Transform );
 */
@@ -69,21 +69,41 @@ extern DiscGrp     *DiscGrpTransformTo( DiscGrp *, Transform );
 /* DGELC == DiscGrpElListCreate
    DGC == DiscGrpCreate
 */
-#define 	DGCR_ATTRIBUTE	900	/* int : attributes in both DGC and DGELC */
-#define 	DGCR_ATTRIBUTELIST 901	/* int * : list of attributes in DGELC */
-#define 	DGCR_WORD	902	/* char (*)[DG_WORDLENGTH] : used by DiscGrpElListCreate */
-#define		DGCR_ELEM	903	/* DiscGrpEl * : used in DGELC  */
-					/* note that CR_ELEM is also used here */
-#define		DGCR_CPOINT	905	/* HPoint3 * :base  point of dirichlet domain: */
-#define		DGCR_CAMGEOM	906	/* Geom * :geometry used to represent the observer*/
-#define		DGCR_DDGEOM	907	/* Geom * :geometry for Dirichlet domain */
-#define 	DGCR_GENS	908	/* DiscGrpElList * : generators */
-#define 	DGCR_BIGLIST	910	/* DiscGrpElList * : general list */
-#define 	DGCR_ENUMDEPTH	911	/* int : depth to compute wordlist */
-#define 	DGCR_ENUMDIST	912	/* float : maximum distance of tiles */
-#define 	DGCR_SCALE	913	/* float : scaling factor for dirdom */
-#define 	DGCR_FLAG	914	/* the flag field of the DiscGrp */
-#define 	DGCR_NAME	915	/* the flag field of the DiscGrp */
-#define 	DGCR_COMMENT	916	/* the flag field of the DiscGrp */
+enum {
+  DGCR_ATTRIBUTE = 900, /* int : attributes in both DGC and DGELC */
+  DGCR_ATTRIBUTELIST,   /* int * : list of attributes in DGELC */
+  DGCR_WORD,            /* char (*)[DG_WORDLENGTH] : used by
+			 * DiscGrpElListCreate */
+  DGCR_ELEM,            /* DiscGrpEl * : used in DGELC note that
+			 * CR_ELEM is also used here */
+  DGCR_CPOINT,          /* HPoint3 * :base  point of dirichlet domain: */
+
+  DGCR_CAMGEOM,         /* Geom * :geometry used to represent the observer*/
+  DGCR_CAMGEOMHANDLE,   /* Handle * */
+  DGCR_HANDLE_CAMGEOM,  /* Handle *, Geom * */
+ 
+  DGCR_DDGEOM,          /* Geom * :geometry for Dirichlet domain */
+  DGCR_DDGEOMHANDLE,    /* Handle * */
+  DGCR_HANDLE_DDGEOM,   /* Handle *, Geom * */
+  DGCR_GENS,            /* DiscGrpElList * : generators */
+  DGCR_BIGLIST,         /* DiscGrpElList * : general list */
+  DGCR_ENUMDEPTH,       /* int : depth to compute wordlist */
+  DGCR_ENUMDIST,        /* float : maximum distance of tiles */
+  DGCR_SCALE,           /* float : scaling factor for dirdom */
+  DGCR_FLAG,            /* the flag field of the DiscGrp */
+  DGCR_NAME,            /* the flag field of the DiscGrp */
+  DGCR_COMMENT,         /* the flag field of the DiscGrp */
+  DGCR_DRAWDIST,        /* max distance grp el moves cpoint for
+			 * drawing purposes (generally less than
+			 * enumdist)_ */
+  DGCR_END
+};
 
 #endif /*DISCGRPDEF*/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
