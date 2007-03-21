@@ -45,18 +45,11 @@ the library, include and data directories to use. (default: autodetected)]),
 	AC_MSG_ERROR([Geomview binary not found. Check your installation.])
 	exit 1
   fi
-  moduledir=`geomview --print-geomview-emodule-dir`
-  AC_SUBST(moduledir)
-  AC_MSG_RESULT([Module will go into "${moduledir}/"])
 
-  module_tcldir="${moduledir}/tcl"
-  AC_SUBST(module_tcldir)
-  AC_MSG_RESULT([TCL scripts will go into "${module_tcldir}/"])
-
-  geomdatadir=`geomview --print-geomview-data-dir`
-  AC_SUBST(geomdatadir)
-  AC_MSG_RESULT([Data will go into "${geomdatadir}/"])
-  gvversion=`geomview --version`
+  #
+  # optionally check for the version of Geomview
+  #
+  gvversion=`${GEOMVIEW} --version`
   AC_MSG_RESULT([Geomview version: ${gvversion}])
   gv_major=`echo $gvversion|cut -d '.' -f 1`
   gv_minor=`echo $gvversion|cut -d '.' -f 2`
@@ -69,5 +62,91 @@ $PACKAGE requires Geomview version N.M, where N$2$3 and M$4$5.
 Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
 
 ])
-    fi]) dnl m4_if
+  fi]) dnl m4_if
+
+  #
+  # get the location of everything else from the installed geomview script.
+  #
+
+  moduledir=`${GEOMVIEW} --print-geomview-emodule-dir`
+  AC_SUBST(moduledir)
+  AC_MSG_RESULT([Module will go into "${moduledir}/"])
+
+  module_tcldir="${moduledir}/tcl"
+  AC_SUBST(module_tcldir)
+  AC_MSG_RESULT([TCL scripts will go into "${module_tcldir}/"])
+
+  geomdatadir=`${GEOMVIEW} --print-geomview-data-dir`
+  AC_SUBST(geomdatadir)
+  AC_MSG_RESULT([Data will go into "${geomdatadir}/"])
+
+  geomviewlib=`${GEOMVIEW} --print-geomview-lib`
+  OOGLLIB="-L${geomviewlib} -lgeomview"
+  AC_SUBST(geomviewlib)
+  AC_SUBST(OOGLLIB)
+  AC_MSG_RESULT([libgeomview below "${geomviewlib}/"])
+
+  geomviewincludes=`${GEOMVIEW} --print-geomview-include`
+  AC_SUBST(geomviewincludes)
+  AC_MSG_RESULT([Geomview include files below "${geomviewincludes}/"])
+
+  #
+  # check for stuff s.t. Geomview's header files can be included,
+  # notably "porting"; but we also make sure that bool_t is defined,
+  # and that we have some value for PATH_MAX
+  #
+  AC_C_BIGENDIAN
+  AC_C_CONST
+  AC_HEADER_STDBOOL
+  AC_C_INLINE
+  AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
+  AC_CHECK_FUNCS([bcopy bzero finite])
+  AC_LANG_PUSH([C])
+  AC_MSG_CHECKING([for M_PI])
+  AC_COMPILE_IFELSE(
+    [AC_LANG_PROGRAM(
+[#if HAVE_MATH_H
+# include <math.h>
+#endif
+],
+    [double blah = M_PI;])],
+    [AC_MSG_RESULT([yes])
+    AC_DEFINE(HAVE_M_PI, 1, [Define to 1 if M_PI is defined])],
+    [AC_MSG_RESULT([no])])
+  AC_LANG_POP([C])
+  AC_CHECK_HEADERS([sys/types.h stdio.h])
+  AH_BOTTOM([#ifdef HAVE_STDBOOL_H
+# include <stdbool.h>
+#else
+# ifndef HAVE__BOOL
+#  ifdef __cplusplus
+typedef bool _Bool;
+#  else
+#   define _Bool signed char
+#  endif
+# endif
+# define bool _Bool
+# define false 0
+# define true 1
+# define __bool_true_false_are_defined 1
+#endif
+
+/* make sure we have PATH_MAX */
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+#if HAVE_SYS_PARAM
+# include <sys/param.h>
+#endif
+#ifndef PATH_MAX
+# ifndef _POSIX_PATH_MAX
+#  ifndef MAXPATHLEN
+#   define PATH_MAX 4096
+#  else
+#   define PATH_MAX MAXPATHLEN
+#  endif
+# else
+#  define PATH_MAX _POSIX_PATH_MAX
+# endif
+#endif])
 ])
