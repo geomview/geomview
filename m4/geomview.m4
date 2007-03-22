@@ -126,7 +126,7 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   else
     GEOMVIEW_CHECK_PACKAGE(libgeomview, geomview,,,
       [create.h],["'${includedir}/geomview'"],,required,enabled)
-    geomviewinclude="${LIBGEOMVIEW_INCLUDE_PATH}"
+    geomviewincludes="${LIBGEOMVIEW_INCLUDE_PATH}"
     geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
     OOGLLIB="${LIBGEOMVIEW_LIB}"
     moduledir="${libexecdir}/geomview"
@@ -227,7 +227,7 @@ _GV_PRINT_EXPAND([                ],[${module_tcldir}/])
 AC_MSG_RESULT([Data will go into])
 _GV_PRINT_EXPAND([                ],[${geomdatadir}/])
 AC_MSG_RESULT([Emodule definitions will go to])
-if test "${LOCAL_EMODULE}"; then
+if test "${LOCAL_EMODULE}" = "true"; then
   AC_MSG_RESULT([                ~/])
   AC_MSG_RESULT([                (currently: ${HOME}/)])
 else
