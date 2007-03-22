@@ -6,11 +6,11 @@ INCLUDES = -I$(geomviewincludes) \
  -I$(TCL_INCLUDE_PATH) \
  -I$(TK_INCLUDE_PATH)
 
-EXTRA_DIST = $(module_tcl_DATA)
-
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
 man_MANS = crayola.1
+
+EXTRA_DIST = $(module_tcl_DATA) $(man_MANS)
 
 module_PROGRAMS = crayola
 crayola_SOURCES = tkcrayola.c testwish.c callbacks.h callbacks.c ui.h
