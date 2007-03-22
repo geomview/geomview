@@ -1,4 +1,56 @@
-1.8.2 November, 2006
+1.9.0 April 2007
+
+   * the OpenGL `MG' back-end is now able to display translucent
+     object _correctly_. More specifically: translucency will be
+     displayed correctly for each separate top-level object (those
+     which appear in the object browser). Different translucent
+     top-level objects will not be rendered correctly w.r.t. to each
+     other. Translucency does not work correctly for non-flat or
+     concave polygons with more than 4 vertices. Concave and non-flat
+     quadrilaterals will work.
+
+   * new GCL object: Image. Image data for textures or background can
+     now be embedded into the ordinary GCL data stream. Images can be
+     given symbolic names via (read image { define ... }) and
+     (hdefine...).
+
+   * Appearances can now be given symbolic names via `define' and `hdefine'
+
+   * RenderMan output now supports texturing. I had to write some more
+     shaders to support this.
+
+   * Textures can be applied in "replace" mode: the texture colour
+     simply replaces the surface color.
+
+   * support for translucent textures
+
+   * new GCL command `hdelete' (lazy deletion of global handles)
+
+   * new GCL commands (dump-handles) and (write-handle FILENAME) to aid
+     debugging
+
+   * All emodules which need the XForms library have been moved to the
+     separate package `gvemodules-xforms', the `ndutils' and `NDview'
+     emodules have been moved to the separate package `gvemod-ndview',
+     all other Tcl/Tk modules reside in the separate package
+     `gvemodules-tcltk. The XForms example emodule resides now in the
+     separate package `gvemod-xforms-example'.
+
+   * External extension modules ("emodules") no longer neeed to be
+     compiled inside the Geomview source-tree; they can now be build
+     separately, using an installed version of the OOGL library and
+     the header files. Compiling external add-ons inside the source
+     tree is no longer supported. I have ported `maniview' and the
+     Orrery to this new scheme.
+
+   * another bunch of internal fixes, most notably fixing of reference
+     counts
+
+   * The manual now has cross-references for individual GCL commands.
+
+   cH <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+1.8.2 November 2006 (never released)
 
    * I/O with release <= 1.8.1 was just broken, they used internals of
      opaque data-types (e.g. the FILE handle of the stdio library)
