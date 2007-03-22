@@ -1,27 +1,21 @@
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+DEFS = -DHAVE_CONFIG_H
 
-LDADD = $(XFORMSLIBS)	\
-	$(XLIBS)	\
-	$(OOGLLIB)
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
+
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
 man_MANS = ginsu.1
 
-EXTRA_DIST = ginsu.1 ginsuF.fd
+EXTRA_DIST = ginsuF.fd $(man_MANS)
 
 module_PROGRAMS = ginsu
 ginsu_SOURCES = ginsu.c ginsuF.c ginsuF.h
-ginsu_DEPENDENCIES = $(OOGLLIB)
-#ginsu_LDFLAGS = -rpath $(libdir)
-
 module_DATA = .geomview-ginsu
 
 .geomview-ginsu:
 	echo '(emodule-define "Ginsu" "ginsu")' > .geomview-ginsu
 
-all-local: $(top_builddir)/modules/.geomview-ginsu
-
-$(top_builddir)/modules/.geomview-ginsu: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Ginsu" "$(subdir)/ginsu")' > $@
-
-CLEANFILES = $(module_DATA) $(top_builddir)/modules/.geomview-ginsu
+CLEANFILES = $(module_DATA)

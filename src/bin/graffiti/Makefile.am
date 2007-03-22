@@ -1,27 +1,21 @@
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+DEFS = -DHAVE_CONFIG_H
+
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
+
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
 man_MANS = graffiti.1
 
-LDADD =	$(XFORMSLIBS) \
-	$(XLIBS)     \
-	$(OOGLLIB)
-
-EXTRA_DIST = graffiti.1
+EXTRA_DIST = $(man_MANS)
 
 module_PROGRAMS = graffiti
 graffiti_SOURCES = graffiti.c gui.c lang.h panel.h graffiti.h lang.c panel.c
-graffiti_DEPENDENCIES = $(OOGLLIB)
-#graffiti_LDFLAGS = -rpath $(libdir)
-
 module_DATA = .geomview-graffiti
 
 .geomview-graffiti:
 	echo '(emodule-define "Graffiti" "graffiti")' > .geomview-graffiti
 
-all-local: $(top_builddir)/modules/.geomview-graffiti
-
-$(top_builddir)/modules/.geomview-graffiti: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Graffiti" "$(subdir)/graffiti")' > $@
-
-CLEANFILES = $(top_builddir)/modules/.geomview-graffiti $(module_DATA)
+CLEANFILES = $(module_DATA)

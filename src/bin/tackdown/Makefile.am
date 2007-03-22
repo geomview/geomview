@@ -1,25 +1,21 @@
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+DEFS = -DHAVE_CONFIG_H
+
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
+
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
 man_MANS = tackdown.1
 
-LDADD =	$(XFORMSLIBS) \
-	$(XLIBS)      \
-	$(OOGLLIB)
-
-
-EXTRA_DIST = tackdown.1 panel.fd origin.panel.fd
+EXTRA_DIST = panel.fd origin.panel.fd $(man_MANS)
 
 module_PROGRAMS = tackdown origin
 
-tackdown_SOURCES = tackdown.main.c \
-                   panel.h panel.c
-tackdown_DEPENDENCIES = $(OOGLLIBS)
-#tackdown_LDFLAGS = -rpath $(libdir)
-
-origin_SOURCES = origin.main.c origin.common.c origin.common.h \
-                   origin.panel.c origin.panel.h
-origin_DEPENDENCIES = $(OOGLLIBS)
-#origin_LDFLAGS = -rpath $(libdir)
+tackdown_SOURCES = tackdown.main.c panel.h panel.c
+origin_SOURCES = \
+ origin.main.c origin.common.c origin.common.h origin.panel.c origin.panel.h
 
 module_DATA = .geomview-tackdown .geomview-origin
 
@@ -28,21 +24,6 @@ module_DATA = .geomview-tackdown .geomview-origin
 .geomview-origin: Makefile
 	echo '(emodule-define "Origin" "origin")' > .geomview-origin
 
-all-local: \
- $(top_builddir)/modules/.geomview-tackdown \
- $(top_builddir)/modules/.geomview-origin
-
-$(top_builddir)/modules/.geomview-tackdown: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Tackdown" "$(subdir)/tackdown")' > $@
-
-$(top_builddir)/modules/.geomview-origin: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Origin" "$(subdir)/origin")' > $@
-
-CLEANFILES = \
- $(top_builddir)/modules/.geomview-tackdown \
- $(top_builddir)/modules/.geomview-origin \
- $(module_DATA)
+CLEANFILES = $(module_DATA)
 
 

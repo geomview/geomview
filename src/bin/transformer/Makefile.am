@@ -1,27 +1,21 @@
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+DEFS = -DHAVE_CONFIG_H
 
-LDADD =	$(XFORMSLIBS) \
-	$(XLIBS)     \
-	$(OOGLLIB) 
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
 
-EXTRA_DIST = panel.fd  transformer.1
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = transformer
+man_MANS = transformer.1
+
+EXTRA_DIST = panel.fd $(man_MANS)
 
 module_PROGRAMS = transformer
 transformer_SOURCES = transformer.main.c panel.c panel.h
-transformer_DEPENDENCIES = $(OOGLLIB)
-#transformer_LDFLAGS = -rpath $(libdir)
-
 module_DATA = .geomview-transformer
 
 .geomview-transformer:
 	echo '(emodule-define "Transformer" "transformer")' > .geomview-transformer
 
-all-local: $(top_builddir)/modules/.geomview-transformer
-
-$(top_builddir)/modules/.geomview-transformer: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Transformer" "$(subdir)/transformer")' > $@
-
-CLEANFILES = $(top_builddir)/modules/.geomview-transformer $(module_DATA)
+CLEANFILES = $(module_DATA)

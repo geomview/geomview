@@ -1,23 +1,21 @@
-EXTRA_DIST = README example.1 panel.fd tutorial.ps tutorial.tex
+DEFS = -DHAVE_CONFIG_H
 
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
 
-LDADD =	$(OOGLLIB) $(XFORMSLIBS) $(XLIBS)
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
+
+man_MANS = example.1
+
+EXTRA_DIST = README panel.fd tutorial.ps tutorial.tex $(man_MANS)
 
 module_PROGRAMS = example
 example_SOURCES = main.c oogl.c callbacks.c panel.c panel.h
-example_DEPENDENCIES = $(OOGLLIB)
-#example_LDFLAGS = -rpath $(libdir)
-
 module_DATA = .geomview-example
 
 .geomview-example:
 	echo '(emodule-define "Example" "example")' > .geomview-example
 
-all-local: $(top_builddir)/modules/.geomview-example
-
-$(top_builddir)/modules/.geomview-example: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Example" "$(subdir)/example")' > $@
-
-CLEANFILES = $(module_DATA) $(top_builddir)/modules/.geomview-example
+CLEANFILES = $(module_DATA) 

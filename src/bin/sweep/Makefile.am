@@ -1,29 +1,21 @@
-INCLUDES = $(default_includes) $(XFORMSINCLUDE)
+DEFS = -DHAVE_CONFIG_H
 
-LDADD =	$(XFORMSLIBS) \
-	$(XLIBS)     \
-	$(OOGLLIB)
+INCLUDES = -I$(geomviewincludes)\
+ -I$(geomviewincludes)/private\
+ $(default_includes)\
+ -I$(XFORMS_INCLUDE_PATH)
 
-EXTRA_DIST = panel.fd  sweep.1 sweep.3
+LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
 man_MANS = sweep.1 sweep.3
 
+EXTRA_DIST = panel.fd $(man_MANS)
+
 module_PROGRAMS = sweep
 sweep_SOURCES = sweep.c sweep.main.c panel.c panel.h sweep.h
-sweep_DEPENDENCIES = $(OOGLLIB)
-#sweep_LDFLAGS = -rpath $(libdir)
-
 module_DATA = .geomview-sweep
 
 .geomview-sweep: Makefile
 	echo '(emodule-define "Sweep" "sweep")' > .geomview-sweep
 
-all-local: $(top_builddir)/modules/.geomview-sweep
-
-$(top_builddir)/modules/.geomview-sweep: Makefile
-	$(top_srcdir)/mkmodulesdir $(top_builddir)
-	echo '(emodule-define "Sweep" "$(subdir)/sweep")' > $@
-
-CLEANFILES = $(top_builddir)/modules/.geomview-sweep $(module_DATA)
-
-
+CLEANFILES = $(module_DATA)
