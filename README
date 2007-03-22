@@ -96,35 +96,68 @@ in the "doc" subdirectory.
 EXTERNAL MODULES
 ----------------
 
-Geomview comes with several "external modules" --- programs that
-communicate with geomview through a command language.  The list
-of currently installed modules appears in the "Modules" browser
-on geomview's main panel.  To invoke a module, click the mouse on
-the appropriate line in this browser.  The modules in this
-distribution are:
+Geomview comes with several "external modules" (emodules) -- programs
+that communicate with geomview through a command language.  The list
+of currently installed modules appears in the "Modules" browser on
+geomview's main panel.  To invoke a module, click the mouse on the
+appropriate line in this browser.  The modules in this distribution
+are:
 
 MODULE	   	DESCRIPTION
-
-3D-Snapshot:    Save a 3D projection of an ND object
+~~~~~~          ~~~~~~~~~~~
 Animate:	flip through a sequence of objects
-Colormap:       Coloring of ND objects w.r.t. the "invisible" directions
+Clipboard:      save a single OOGL object to a clipboard
+Gvclock:        an animated clock
+
+Modules involving extra libraries like XForms or Tcl/Tk have be moved
+to separate packages to make the maintenance of the Geomview main
+package easier. The packages can be downloaded from the Geomview
+download area at Sourceforge.net. The names of the emodule packages,
+and the emodules they contain, are as follows:
+
+gvemod-xforms-example -- example XForms-based emodule
+*****************************************************
+
+MODULE	   	DESCRIPTION
+~~~~~~          ~~~~~~~~~~~
+Example:	generic FORMS example external module
+
+gvemodules-xforms -- emodules which require the XForms package
+**************************************************************
+
+MODULE	   	DESCRIPTION
+~~~~~~          ~~~~~~~~~~~
 Cplxview:       visualize the graphs of complex functions
-Crayola:        interactive colouring of OOGL objects
 Example:	generic FORMS example external module
 Flythrough:     "Not Knot" visualisation (hyperbolic space)
 Ginsu:		interactively slice objects (see "clip")
 Graffiti:	draw line segments on objects
-Gvclock:        an animated clock
 Hinge:          "copy-rotate" a polyhedron around edges of itself
-Labeler:        somewhat crude generation of text as OOGL object
-NDview:         visualization of objects in > 3D
-NDdemo:         a demo for ND visualization
-Origin:         draw a coordinate frame for an OOGL object
-Slicer:         Slice ND objects (see also Ginsu below)
 Stereo:         stereo vision module
 Sweep:		generate objects of rotation from line segments
 Tackdown:	redefine an object's "home" position
 Transformer:	explicitly control an object's transformation matrix
+
+gvemodules-tcltk -- emodules based on Tcl/Tk (except NDview)
+************************************************************
+
+MODULE	   	DESCRIPTION
+~~~~~~          ~~~~~~~~~~~
+Crayola:        interactive colouring of OOGL objects
+Labeler:        somewhat crude generation of text as OOGL object
+
+gvemod-ndview -- ND-viewing toolkit, requires Tcl/Tk
+****************************************************
+
+MODULE	   	DESCRIPTION
+~~~~~~          ~~~~~~~~~~~
+
+3D-Snapshot:    Save a 3D projection of an ND object
+Colormap:       Coloring of ND objects w.r.t. the "invisible" directions
+NDview:         visualization of objects in > 3D
+NDdemo:         a demo for ND visualization
+Origin:         draw a coordinate frame for an OOGL object
+Slicer:         Slice ND objects (see also Ginsu below)
 
 									
 AUXILIARY PROGRAMS
@@ -152,6 +185,11 @@ ucdtooff:	convert UCD format file into an OFF OOGL file
 COMPUTER ALGEBRA INTERFACES
 ---------------------------
 gvplot.mapleVx: plot interface to Maple (tm). `x' is in {3, 4, 8}.
+  The source code and Maple V8 work-sheets which can be used to
+  generate a Maple library are installed below
+  PREFIX/share/geomview/Maple/. After installation the documentation
+  can be found in PREFIX/share/doc/geomview-VERISION/README.gvplot
+
 math2oogl:	convert Mathematica graphics object to OOGL format
 
 
@@ -162,21 +200,30 @@ A comprehensive manual is in the "doc" subdirectory.  You can also
 read or download the manual from the Geomview web site,
 www.geomview.org.
 
+"make install" installs the documentation under
+
+PREFIX/share/doc/geomview-VERSION/
+
+The manual comes in Info, PDF and HTML format.
+
 The file doc/oogltour gives an introduction to the OOGL file
 format, which is the format of geometry files that geomview
 reads.  More details are in the manual.
 
-Further documentation is in the "man" directory, which contains
-Unix manual pages in both nroff source and formatted form.  Each
-external module, as well as geomview itself, has a manual
-page.  Of particular interest are:
+Further documentation can be found in several manual pages; the manual
+pages are installed in their proper locations by "make install".  Some
+of the external modules, as well as geomview itself, has a manual
+page. Of particular interest are:
 
-	man/cat1/geomview.1	geomview man page
-	man/cat5/geomview.5	geomview command language reference
-	man/cat5/oogl.5		OOGL file format reference
-	doc/OOGL.m.txt		documentation for interface to Mathematica
-	doc/gvplot.txt		documentation for interface to Maple
+	geomview(1)	geomview man page
+	geomview(5)	geomview command language reference
+	oogl(5)		OOGL file format reference
 
+Other documentation is also moved to PREFIX/share/doc/geomview-VERSION/
+by "make install", e.g.
+
+	OOGL.m.txt	documentation for interface to Mathematica
+	README.gvplot	documentation for interface to Maple
 
 GEOMVIEW MAILING LIST
 ---------------------
