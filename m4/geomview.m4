@@ -143,13 +143,13 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   #
   # Check for some general stuff
   #
+  AC_REQUIRE([AC_PROG_LIBTOOL])
   AC_REQUIRE([AC_PROG_CC])
   AC_REQUIRE([AC_PROG_CPP])
   AC_REQUIRE([AC_PROG_INSTALL])
   AC_REQUIRE([AC_PROG_LN_S])
   AC_REQUIRE([AC_PROG_MAKE_SET])
   AC_REQUIRE([AC_PROG_RANLIB])
-  AC_REQUIRE([AC_PROG_LIBTOOL])
   #
   # check for stuff s.t. Geomview's header files can be included,
   # notably "porting"; but we also make sure that bool_t is defined,
@@ -160,11 +160,12 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   AC_C_CONST
   AC_HEADER_STDC
   AC_HEADER_STDBOOL
-  AC_CHECK_HEADERS([limits.h stdlib.h sys/param.h])
+  AC_CHECK_HEADERS([limits.h stdlib.h sys/param.h sys/types.h stdio.h math.h])
+  AC_CHECK_LIB([m],[sqrt])
   AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
   AC_CHECK_FUNCS([bcopy bzero finite sqrt])
-  AC_LANG_PUSH([C])
   AC_MSG_CHECKING([for M_PI])
+  AC_LANG_PUSH([C])
   AC_COMPILE_IFELSE(
     [AC_LANG_PROGRAM(
 [#if HAVE_MATH_H
@@ -176,7 +177,6 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
     AC_DEFINE(HAVE_M_PI, 1, [Define to 1 if M_PI is defined])],
     [AC_MSG_RESULT([no])])
   AC_LANG_POP([C])
-  AC_CHECK_HEADERS([sys/types.h stdio.h])
   AH_BOTTOM([#ifdef HAVE_STDBOOL_H
 # include <stdbool.h>
 #else
