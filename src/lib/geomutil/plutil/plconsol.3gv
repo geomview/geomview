@@ -1,0 +1,26 @@
+.TH plconsol 3gv "June 25, 1992" "Geometry Center"
+.SH NAME
+PLConsol() -\ polylist consolidator.
+.SH SYNOPSIS
+Geom *PLConsol(Geom *g, float prec);
+.SH DESCRIPTION
+.PP
+PLConsol() is a function which takes a geom, which must be a polylist,
+as its argument and returns a version of the polylist which has
+no repeated vertices.  Two vertices are considered to be identical if 
+they are within prec of one another.  The comparison takes into
+account only the location of the points, not their normals or colors.
+.PP
+The vertices of the resultant polyline have been sorted, and so there
+order bears no resemblance to the order of the point in the original
+polylist.
+.SH LINKING
+PLConsol() is part of the geomutil library; see geomutil(3) for information
+on how to link your program with this library.
+.SH SEE ALSO
+offconsol(1), geomview(1), geomutil(3)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

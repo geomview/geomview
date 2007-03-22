@@ -1,0 +1,22 @@
+.TH offconsol 1gv "June 25, 1992" "Geometry Center"
+.SH NAME
+offconsol -\ polylist consolidator.
+.SH SYNOPSIS
+offconsol [precision]
+.SH DESCRIPTION
+.PP
+offconsol reads an OFF file from standard input and writes an OFF file
+in which vertices closer than a given precision have been combined.
+The default precision is zero.  Color and normal information are not
+taken into account when comparing vertices.
+.PP
+The vertices of the resultant polyline have been sorted, and so there
+order bears no resemblance to the order of the point in the original
+polylist.
+.SH SEE ALSO
+plconsol(3), geomview(1)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

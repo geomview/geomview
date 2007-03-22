@@ -1,0 +1,52 @@
+.TH ginsu 1gv "Nov 4, 1992" " " "Geomview Module"
+.SH NAME
+ginsu \- interactively slice geoms
+.SH SYNOPSIS
+.nf
+ginsu
+.fi
+.SH DESCRIPTION
+.PP
+Ginsu is an interactive slicing tool designed to be used with Geomview.
+It allows the user to move around a square slicing plane to an arbitrary
+position and then to slice a particular geom with that plane. Slicing involves
+dividing the geom into two seperate geoms at the plane of cleavage. Once
+slicing has been performed, each of the two new geoms created can be moved
+around and examined independently from the other. Ginsu runs only on Silicon
+Graphics machines.
+.PP
+Ginsu works by constantly querying geomview for the position of the plane as
+one moves it and then updating the internal plane equation it uses. The
+coefficients of this equation appear on the main panel for examination.
+When the plane has been properly positioned, one enters the name of the
+geom that one wishes to slice in the 'Target Clip Object' text window,
+then clicks on the 'Slice!' button. The old geom is then erased and replaced by
+two new geoms. The speed at which this occurs depends on your machine and
+the complexity of the geom.
+.PP
+In some cases one may want to manually enter the coefficients of the slicing
+plane. This can be accomplished by toggling on the 'Edit' button. Ginsu is
+now in edit mode and will no longer update the coefficients if the plane is
+moved about inside Geomview. To change coefficients now, one clicks in each
+coefficient text box and types in a new number followed by enter. The plane
+will be repositioned each time to match the new set of coefficients. Toggling
+the 'Edit' button off will put us back in interactive mode.
+.PP
+Some things to keep in mind: Ginsu turns normalization off when it is run and
+prevents it from being turned back on. This is because keeping normalization
+can have some unpleasant effects when cutting things. Ginsu depends on the
+clipping plane being present. If the clipping plane is somehow deleted, Ginsu
+is then forced to exit.
+.SH BUGS
+.PP
+Sometimes color or normal information is lost when clipping certain geoms.
+This is because ginsu always converts a geom to an OFF format geom before
+clipping it. When clipping the "World" geom, everything in the world becomes
+consolidated into two geoms (this could actually be thought of as a feature).
+.SH SEE ALSO
+geomview(1) oogl(5)
+.SH AUTHOR
+.nf
+Daeron Meyer
+The Geometry Center
+.f

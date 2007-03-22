@@ -1,0 +1,90 @@
+.TH cplxview 1gv "Oct 29 1993" "Geometry Center"
+.SH NAME
+cplxview \- module to visualize the graphs of complex functions.
+.SH DESCRIPTION
+Purpose:  to allow the user to examine complex functions.
+
+Features:  functions typed into the function panel
+are interpreted via a fexpr, a fast expression evaluator
+written at the Geometry Center.  The domain of the function
+may be specified in a variety of ways, including user
+defined coordinates.  Since the graphs of complex functions
+live in C^2, this viewer makes use of the n-dimensional
+viewing capabilities of geomview (see ndview).
+
+What you see at start-up: the graph of the complex 
+exponential function, seen from four vantage points.  At
+the top of the windows, there is a label similar to
+"cluster1:1_2_4".  The last three numbers correspond to
+the directions visible in the window.  In this case, 
+1_2_4 corresponds to the real part of z, the imaginary
+part of z, and the imaginary part of the function of
+z.  The color corresponds to the dimension that has been
+projected out, in this example the real part of the
+function of z.
+
+How-to-use-it:
+	This section will describe the meaning or use of
+the buttons and inputs, organized by what is shown on the
+main panel.
+
+Function:  please type the function you would like to graph
+in this input.  The parser understands parenthesis, standard
+functions like sin and log, and various constants, namely
+i, e, and pi.  To get exponentials, use 
+the power ("pow") function, as in "pow(2,z)".  When you are
+done typing in the new function, hit return.  If the parser
+understands what you wrote, you will see a message
+saying "new function installed" in the message window.
+
+Domain:  this part of the panel determined the domain over
+which the function is to be graphed.  The meaning of each
+of the four numbers is displayed to its left, which changes
+if you change the coordinate system.  Use the arrows to
+modify these numbers.  If you would like more or less precise
+control than that afforded in this system, you might
+incorporate your wishes into the function you are graphing.
+For example, if you wish to graph f(z) = log(z) very near
+the origin, you may instead wish to use f(z) = log(z/1000).
+When modifying the domain, advanced users may wish to turn
+off normalization in geomview.
+
+Range: pressing this button will give you the range panel, 
+on which you can specify that you wish to see the (three
+dimensional) graph of the real part of the function, the
+(three dimensional) graph of the imaginary part of the
+function, or the actual four-dimensional graph, as viewer
+through the n-dimensional viewer.
+
+Meshsize:  you can modify how fine the mesh used to show the
+function is.  Note that this is a regular mesh, which doesn't
+try to avoid singularities.  Note also that the fineness
+of the mesh  (along with the domain) is remembered as you 
+change coordinate systems.
+
+Coordtype:  this button brings up the panel for specifying the
+coordinate system you wish to use for determining the domain
+to be graphed.  There are three choices: rectangular, polar,
+and user-defined coordinates.  The user-defined coordinates
+mean that z is defined in terms s and t, which are in turn
+functions of u and v.  The same parsing mechanism is applied
+to these functions as to the function to be graphed.  At the
+right on the coordtype panel is the explanation of what
+z is assigned to.  Advanced users may use all the symbols
+listed there (x, y, r, theta, s, and t) in the main function
+window but are advised that there may be unexpected consequences
+if they are used in the "wrong" coordinate system context.
+
+Sliders: users may also make use of two constants "a" and
+"b" which are attached to sliders, if they so desire.  These
+constants can be inserted into a function just as one might
+expect, for example, one could have a function "a*sin(z+b)",
+or "pow(z,a+i*b)".  The default setting of the user
+defined coordinates uses these sliders to determine a 
+rectangular domain whose size depends on the slider values.
+
+Help:  the help button calls up this panel.  More information
+can be found in the manual pages, and comments are 
+appreciated.
+.SH AUTHORS
+Olaf Holt and Nils McCarthy

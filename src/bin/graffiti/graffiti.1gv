@@ -1,0 +1,45 @@
+.TH graffiti 1gv "August 19 1992" "Geometry Center"
+.SH NAME
+graffiti - draw lines on geomview objects
+.SH DESCRIPTION
+Graffiti is a geomview module which allows you to draw polygonal lines
+on objects in the geomview window.  The Graffiti panel has buttons
+labeled "Draw", "Undo", "Vertices Only", and "Quit".  To start
+drawing, press the Draw button.  While the Draw button is down, you
+may interactively draw a polygonal line with vertices on objects in
+the geomview window; clicking the right mouse button on any object in
+the geomview window will cause a vertex to be added to the line.
+Throughout the drawing process, the initial point (the "tail") of the
+line is shown in a small box, and the last point (the "head") is shown
+in a small pyramid.  If you click the right mouse button on the line's
+tail (the small box), graffiti closes up the line segment.  To end the
+line segment without closing it up, just press the Draw button in the
+graffiti window again.
+.PP
+Pressing the Undo button in the graffiti window while drawing a
+line will undo the line's last vertex.
+.PP
+The Vertices Only button, when on, causes graffiti to only recognize
+vertices in geomview objects.  Use this button to force your
+line's vertices to coincide with those of existing geomview objects.
+.PP
+The Quit button exits graffiti.
+.SH BUGS
+The cube and pyramid which indicate the tail and head of the line
+are drawn with an absolute size which may or may not be appropriate
+for all geomview objects.
+.PP
+The object created by graffiti is named "graffiti".  If you quit
+graffiti and start it up a second time in the same geomview session,
+it uses this same name, thereby destroying the graffiti object you
+created the first time.
+.PP
+Graffiti can create a maximum of 100 distinct polygonal lines having
+at most a total of 1000 vertices.
+.SH SEE ALSO
+geomview(1)
+.SH AUTHOR
+.nf
+Mark Phillips
+Geometry Center
+.fi

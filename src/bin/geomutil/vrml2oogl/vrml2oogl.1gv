@@ -1,0 +1,22 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH VRML2OOGL 1gv "February 23, 2001"
+.SH NAME
+vrml2oogl \- convert VRML to OOGL
+.SH SYNOPSIS
+.B vrml2oogl
+.I [handle]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B vrml2oogl
+command.
+.PP
+.B vrml2oogl
+Convert VRML file (possibly compressed/gzipped) into an OOGL file.
+If a handle is given, return GCL not OOGL, where the OOGL geometry is defined as the handle.
+The handle generally corresponds to a URL.
+.SH SEE ALSO
+.BR geomview (1).
+.BR oogl2vrml (1).
+.SH AUTHOR
+This manual page was written by Steve Robbins <steven.robbins@videotron.ca>,
+for the Debian GNU/Linux system (but may be used by others).

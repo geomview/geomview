@@ -1,0 +1,71 @@
+.TH TOGEOMVIEW 1gv "21 May 1993" "Geometry Center"
+.SH NAME
+togeomview \- send commands or OOGL objects to geomview
+.SH SYNOPSIS
+\fBtogeomview\fP [\fB\-c\fP] [\fB\-g\fP]  [\fIpipename\fP  [\fIprogram args ...\fP]]
+.SH DESCRIPTION
+\fBtogeomview\fP sends a stream of geomview commands, or OOGL-format geometric
+data, to a cooperating copy of geomview.  If geomview is not running,
+it is automatically started.  ('geomview' must be on the $PATH of
+the user running 'togeomview' in order for this to work.)
+
+Typical usage is:
+.in +5
+.nf
+\fIsomeprogram\fP | \fBtogeomview\fP    (to send commands) or
+\fIsomeprogram-generating-OOGL-data\fP | \fBtogeomview -g\fP  (to send geometry) 
+.fi
+.in -5
+i.e. a program pipes geometric data into ``\fBtogeomview\fP''; the data
+is displayed by a copy of geomview run with the \fB\-M\fP option and
+a name matching the one given to \fBtogeomview\fP.
+.sp
+\fBTogeomview\fP uses a named pipe in the directory \fB/tmp/geomview\fP to
+communicate with geomview.
+If unspecified, the pipe's default name is "OOGL".
+When sending geometry (\fB\-g\fP), a geomview object with the
+same name as the pipe appears in geomview's object browser.
+.sp
+By default, when no suitable copy of geomview is running, \fBtogeomview\fP invokes
+"geomview" with arguments specifying the appropriate named pipe.  A different command
+may be specified as in:
+.sp
+.ti +5
+togeomview  OOGL  gv -wpos 300x300 -c \fImy_startup_script\fP
+.sp
+which communicates through a pipe named OOGL, and (if necessary) invokes the
+given gv command.  The pipe name is \fIrequired\fP if a command is specified.
+
+After togeomview has created it, the named pipe may be written as an ordinary file.
+For example, one could use
+.sp
+.ti +5
+\fBtogeomview\fP \fIpipename\fP < /dev/null
+.sp
+to invoke a listening copy of geomview, and then run a program which simply
+wrote to /tmp/geomview/\fIpipename\fP.
+.SH FILES
+/tmp/geomview
+.SH BUGS
+The pipe-based communications scheme imposes several restrictions.
+
+If no copy of \fBgeomview\fP is reading from the pipe,
+or if geomview gets far enough behind, a program writing data to
+``\fBtogeomview\fP'' will be forced to block after sending a few kilobytes.
+
+Because of the buffering in the pipe, the sender may be substantially
+ahead of the geomview display.
+
+If geomview exits, the sending program receives a write-on-broken-pipe
+(\fBSIGPIPE\fP) signal, which will kill it unless measures are taken
+to catch or ignore that signal.
+
+Only one copy of geomview can read from a given pipe at a time.  If a second
+copy attempts to read from it, both will probably fail.  It's fine to have
+multiple copies of geomview reading from different pipes.
+
+Note that \fBtogeomview\fP will invoke geomview if no extant copy is listening to
+the relevant pipe; it can't connect to an existing copy of geomview started by other
+means.
+.SH "SEE ALSO"
+geomview(1), oogl(5)

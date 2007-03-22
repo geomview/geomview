@@ -1,0 +1,44 @@
+.TH plcombine 3gv "June 15, 1992" "Geometry Center"
+.SH NAME
+PLCombine -\ polylist two polylists (OFF file format) into one
+.SH SYNOPSIS
+.nf
+Geom *PLCombine(Geom *, Geom *);
+.fi
+.SH DESCRIPTION
+.PP
+PLCombine() combines two polylists into a single polylist and 
+returns the new polylist.  If either of the old polylists was NULL,
+a copy of the other polylist (or NULL if both polylists were NULL)
+is returned.  PLCombine() will generate an error if either of the
+parameters was not of the polylist type.
+.PP
+If the two polylists represent color in an inconsistant way, PLCombine
+will attempt to preserve the color data.  If either polylist has 
+per-polygon colors, the result will have per-polygon colors.  If the
+other object originally had per-vertex colors, the color of the first
+point of each polygon will be used as the color of the polygon.  If the
+other polylist originally had no colors, the rgba value 0.15, 0.15, 0.15, 1.0
+will be used as the color of each of that polyline's polygons.
+.PP
+If neither of the polylists had per-polygon colors but one had per-vertex
+colors, the value 0.15, 0.15, 0.15, 1.0 will be used as the color
+value for each of the vertices of the colorless polylist.
+.PP
+If neither polylist had color data, the result will not have color 
+date.
+.PP
+The result of PLCombine() will not include  normal data if the two 
+polylists represent normals in an inconsistent way, for example, 
+if one has per-vertex data and one has per-face data or one has 
+per-vertex data and one has no data.
+.SH LINKING
+PLCombine() is part of the geomutil library; see geomutil(3) for information
+on how to link your program with this library.
+.SH SEE ALSO
+offcombine(1), geomview(1), geomutil(3)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

@@ -1,0 +1,35 @@
+.TH bdy 3gv "June 15, 1992" "Geometry Center"
+.SH NAME
+bdy -\ boundary curve finder
+.SH SYNOPSIS
+#include "bdy.h"
+
+Geom *Bdy(Geom *, float prec);
+.SH DESCRIPTION
+.PP
+Bdy() is a function which takes a geom as its argument.  The geom is
+then converted to a polylist, which is compressed (See plconsol(3).  
+Bdy() then counts the number of edges in the polylist used once and 
+only once, and returns a vector object containing these edges.  The
+precision, prec, is used to determine the maximum distance between
+vertices which may be considered identical.  If the vertices must have
+identical coordinates, this value should be set to 0.0.  It is
+generally desirable to set the value somewhat higher to allow for
+round-off error.
+.PP
+The vector object is always black.
+.SH BUGS
+The vector object is not a particularly compact representation of itself,
+since it contains many 2-vertex segments which could be combined into a 
+longer polyline.
+.SH LINKING
+Bdy() is part of the geomutil library; see geomutil(3) for information
+on how to link your program with this library.
+.SH SEE ALSO
+bdy(1), geomview(1), anytopl(3), geomutil(3)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi
+

@@ -1,0 +1,55 @@
+.TH AnyToPL 3gv "June 15, 1992" "Geometry Center"
+.SH NAME
+AnyToPL -\ convert an arbitrary geom to a polylist (OFF file format)
+.SH SYNOPSIS
+.nf
+#include "geomutil.h"
+
+Geom *AnyToPL(Geom *, Transform);
+
+.fi
+.SH DESCRIPTION
+.PP
+AnyToPL() takes any geom as an arguement.  It then returns
+a polylist object which is geometrically identical to the
+original geom.  The transform argument is the transform applied 
+to the entire object; it should generally be set to TM_IDENTITY
+when AnyToPL() is first called.  Geometric objects are handled in
+the following ways:
+.PP
+Polylists:  A transformed copy of the original is returned.
+.PP
+Bezier:  The object is rediced if necessary, then handled as a mesh
+object.
+.PP
+Quad:  The object is directly transformed into a new polylist.
+.PP 
+Mesh:  The object is directly transformed into a new polylist, with
+extra polygons added to do the wrapping if necessary.
+.PP
+Vect:  The object is converted into a polylist containing a 2-gon for
+every segment in the original vector object.  The colors of the faces 
+are the same as the colors of the original object, but this generally
+is irrelevant since the faces are not visible.  Note that edge visibility
+must be enabled for an object which has been converted from a vect to
+a polylist to be visible in geomview.
+.PP
+List:  AnyToPL() is called recursively and the resultant polylists are
+combined using PLCombine(3).
+Inst:  AnyToPL() is called recursively with a new transformation matrix.
+The resultant polylists are combined using PLCombine(3).
+.PP
+No effort is made to eliminate identical vertices.  However, no extraneous
+repeated vertexes should be created.  The resultant polylist should 
+have the same number of vertexes as the original object.
+.PP
+.SH LINKING
+AnyToPL() is part of the geomutil library; see geomutil(3) for information
+on how to link your program with this library.
+.SH SEE ALSO
+plcombine(3), anytooff(1), geomview(1), geomutil(3)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

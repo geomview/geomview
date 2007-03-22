@@ -1,0 +1,51 @@
+.TH HVECTEXT 1gv "1 Nov 1996" "Geometry Center"
+.SH NAME
+hvectext \- construct Geomview VECT text object from Hershey fonts
+.SH SYNOPSIS
+.na
+.in +5
+.ti -5
+\fBhvectext\fP [\fB\-w\fP\ \fItotallength\fP] [\fB\-s\fP\ \fItextheight\fP]
+[\fB\-plane\ xy|xz|yz\fP]
+[\fB\-at\fP\ \fIX Y Z\fP]
+[\fB\-align\ n|s|e|w|ne|nw|se|sw|c\fP]
+[\fB\-hershey\fP\ \fIfontfile.gsf\fP]
+[\fB\-\-\fP]
+\fItext string ...\fP
+.in -5
+.ad
+.SH DESCRIPTION
+\fBHvectext\fP generates a Geomview/OOGL vector-text object,
+of given height or total length (default \fB\-s\ .25\fP).
+It aligns the given 3-D point (default \fB\-at\ 0\ 0\ 0\fP)
+with the given corner of the text (default \fB\-align\ c\fP).  Alignment
+specs are like geographic directions; \fB\-align\ sw\fP puts the ``at''
+point at the ``southwest'' corner of the text, so that its lower left
+corner is at that coordinate.
+
+The corresponding VECT object is written to standard output.
+If no non-blank text characters are given, \fBhvectext\fP produces
+a null geom object ("{ }") as output.
+
+The special option \fB\-\-\fP marks the end of options; it's useful in case
+the text itself begins with a hyphen.
+
+\fBHvectext\fP accepts Ghostscript Hershey fonts; the built-in default is
+Hershey-Plain-Simplex a.k.a. hrpl_s.gsf.  Others of interest:
+hrsy_r.gsf (Symbol), hrpl_t.gsf (Triplex).  For a complete list, see all the
+Ghostscript font files of nontrivial size whose names begin with "hr".
+
+Although there's no way to switch fonts within the string, the first line
+of output from hvectext is an OOGL comment resembling:
+.nf
+# Continue with: -align sw -plane xy -s 0.25 -at 1.24378 0 0
+.fi
+giving options for hvectext to continue the string where it left off.
+.SH ENVIRONMENT
+GS_FONTPATH, if present, is a colon-separated list of directories in which
+Hershey font files are sought.
+.SH FILES
+\fBperl\fP (either version 4 or 5) must be installed.
+
+\fB/usr/local/lib/ghostscript/fonts\fP is searched if \fB\-hershey\fP
+is given and \fBGS_FONTPATH\fP isn't set.

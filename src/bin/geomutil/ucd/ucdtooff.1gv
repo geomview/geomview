@@ -1,0 +1,17 @@
+.TH ucdtooff 1gv "June 12 1992" "Geometry Center"
+.SH NAME
+ucdtooff \- filter to convert an AVS 'ucd' (Unstructured Cell Data) format
+file into an OFF file.
+.SH SYNOPSIS
+ucdtooff
+.SH DESCRIPTION
+.PP
+Ucdtooff reads from standard input and outputs the equivalent OFF
+stream to standard out.  
+.SH SEE ALSO
+anytoucd(1)
+.SH AUTHOR
+.nf
+Charlie Gunn
+The Geometry Center
+.fi

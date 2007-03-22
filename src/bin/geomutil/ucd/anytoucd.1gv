@@ -1,0 +1,27 @@
+.TH anytoucd 1gv "June 12 1992" "Geometry Center"
+.SH NAME
+anytoucd \- filter to convert a geomview data file 
+into a data file in the so-called 'ucd' (Unstructured Cell Data) format.
+.SH SYNOPSIS
+anytoucd
+.SH DESCRIPTION
+.PP
+Anytoucd reads a geom from standard in and outputs the  equivalent ucd
+stream to standard out.  
+
+Anytoucd calls anytopl(1) before converting to ucd.  
+
+Full documentation for ucd format is available from AVS documentation
+in an appendix in the Developer's Guide.
+.SH BUGS
+.PP
+Currently no support for vectors.
+.PP
+4D OOGL objects are not treated correctly currently.
+.SH SEE ALSO
+anytopl(3), ucdtooff(1)
+.SH AUTHOR
+.nf
+Charlie Gunn
+The Geometry Center
+.fi

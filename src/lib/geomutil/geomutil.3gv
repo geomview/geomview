@@ -1,0 +1,38 @@
+.TH geomutil 3gv "July 10, 1992" "Geometry Center"
+.SH NAME
+geomutil -\ various geometry utilities (introduction)
+.SH DESCRIPTION
+.PP
+The geomutil library contains a collection of miscellaneous geometric
+utility functions:
+.nf
+
+  AnyToPL()   - convert any geom to a polylist
+  PLCombine() - combine two polylists into one
+  PLConsol()  - consolidate vertices in a polylist
+  Bdy()       - generate the boundary (edge) of a geom
+
+.fi
+Each function has its own manual page which gives usage details.
+.PP
+To link your program with the geomutil library you should 
+specify -lgeomutil followed by the usual list of OOGL libraries,
+as in
+.nf
+
+  cc -L${LIBDIR} prog.c -lgeomutil \\
+    -lstubdraw -lgeom -lvect -lpolylist -lquad \\
+    -lmesh -lbezier -linst -ltlist -llist -lstub \\
+    -lgeom -loogl -lbbox -lshade -lcolor -l3d -lm
+
+.fi
+.SH SEE ALSO
+.nf
+anytopl(3), plcombine(3), plconsol(3), bdy(3), anytooff(1),
+offcombine(1), offconsol(1), bdy(1), geomview(1)
+.fi
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

@@ -1,0 +1,53 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH OOGL2RIB 1gv "February 23, 2001"
+.SH NAME
+oogl2rib \- convert OOGL file to RenderMan rib format
+.SH SYNOPSIS
+.B oogl2rib
+.BI [-n " name" ]
+.BI [-B " r,g,b" ]
+.BI [-w " width" ]
+.BI [-h " height" ]
+.BI [-fgb]
+.BI [ infile ]
+.BI [ outfile ]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B oogl2rib
+command.
+.PP
+.B oogl2rib
+Convert OOGL file to RenderMan rib format.
+Default: read from stdin, write to stdout. Accepts "-" as infile/outfile.
+.SH OPTIONS
+The default action is to create a complete rib file containing default camera, lights, etc.
+.TP
+.BI \-n " name" 
+Set name for rendered TIFF file (default "geom.tiff")
+or framebuffer window (default "geom.rib").
+.TP
+.BI \-B " r,g,b"
+Set background color, each component ranges from 0 to 1.  Default is no background.
+.TP
+.BI \-w " width"
+Set width of rendered frame, in pixels.
+.TP
+.BI \-h " height"
+Set height of rendered frame, in pixels.
+.TP
+.B \-f 
+The .rib file renders to on-screen framebuffer instead of TIFF file.
+.TP
+.B \-g 
+Output geometry only, no world, no world block.
+.TP
+.B \-b 
+Encapsulate geometry-only into a world block. This is the
+configuration to define a RIB file 'clip object' via the Quick
+RenderMan specification.
+Ignores -nBwhf.
+.SH SEE ALSO
+.BR geomview (1).
+.SH AUTHOR
+This manual page was written by Steve Robbins <steven.robbins@videotron.ca>,
+for the Debian GNU/Linux system (but may be used by others).

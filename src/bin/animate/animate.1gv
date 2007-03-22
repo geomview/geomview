@@ -1,0 +1,126 @@
+.TH animate 1gv "December 12, 1994" " " "Geomview Module"
+.SH NAME
+animate \- animate a sequence of geomview files
+.SH SYNOPSIS
+.nf
+animate [-p] [-b] [-s speed] [-o] [-S script] [-hide] [-f file1 file2 ...]
+.fi
+.SH DESCRIPTION
+.PP
+Animate is an interactive animation tool specifically designed to be
+used with Geomview. It provides several simple animation controls such
+as looping, bouncing, and single frame stepping, as well as adjustable
+speed playing. The program works by telling geomview to read in a
+sequence of geomview files and then telling geomview to display each
+frame of the sequence in order.
+.PP
+There are two methods that Animate provides for specifying which frames
+one wants to have in the sequence being viewed. The first method is to enter
+the name of every frame into the text input box and press return or click on
+load. The name of each frame must correspond with the name of a geomview
+file existing in the file system.
+.nf
+
+EXAMPLES
+
+	  pict1 pict2 pict3 pict4
+	  pict*
+	  pic??
+.fi
+.PP
+The second method of loading frames is to first create an animation script
+file outside of animate and then load the script in by typing its name in
+the input box and clicking on the script button. The advantage of this method
+is that you can more easily specify the exact order in which you want the
+frames to be shown. The format of the script file is a list of frame names
+each followed by a newline. Comments prepended by a # sign are allowed.
+.nf
+
+EXAMPLE SCRIPT FILE
+
+	  # list of frames for
+	  # my rotating cube movie
+	  cube.02
+	  cube.04
+	  cube.03 # get rid of this frame later
+	  cube.01
+	    .
+	    .
+	    .
+	  cube.90
+
+.fi
+.PP
+Loading frames into memory may take a little time, especially if each
+frame is a particularly large file. Be sure the machine you're using has
+sufficient memory to load all the frames you desire. Once all frames
+have been loaded, an 'animate' object will appear in the geomview
+object browser. It is now possible to begin animating.
+.PP
+Scrolling through frames can be accomplished in several different ways.
+The first, and most obvious way is by 'playing' the frames. Clicking on
+the \fBPlay\fP button causes animate to begin playing through the frames in
+order, starting with the first frame or whichever frame has been selected.
+The corresponding name of each frame being shown is shown in the pink
+text-entry box.  Click on \fBStop\fP to cease playing.
+.PP
+Animation speed depends on the size and complexity of
+the object in each frame. Thus different sequences can have considerably
+different top playing speeds. Use the \fBSpeed\fP slider to
+set an upper limit to the animation rate.
+You can also play slowly through the frames can also by 
+clicking repeatedly on either step button.
+.PP
+Press the \fBBounce\fP button to enter bounce mode.  
+While in bounce mode, direction of play reverses whenever the first or
+last frame is reached.
+Clicking on either \fBStep\fP button determines the playing direction.
+.PP
+Clicking on \fBOnce\fP puts animate in 'once' mode.
+While in this mode,
+upon reaching the first or last frame (depending on which direction you are
+going) of a specified sequence, animate will stop playing.
+Normal playing can be resumed by clicking on \fBOnce\fP again to exit this mode.
+.PP
+The \fBInfo\fP button will bring up a short menu containing helpful hints for
+program usage. Clicking on the exit button will cause the program to exit.
+.SH OPTIONS
+.TP
+-p
+Start playing through the frames right away upon startup.
+.TP
+-b
+Go into bounce mode upon startup.
+.TP
+-s speed
+Set the speed of play upon startup. The value of speed may be an integer
+between 0 and 100 which roughly signifies the percentage of top playing
+speed.
+.TP
+-o
+Set animation to play through only once upon startup.
+.TP
+-S script
+Specify name of script containing filenames for objects to be read in upon
+startup. Takes precedence over -f option if present.
+.TP
+-hide
+Makes animate invisible upon startup. *Warning* all animate commands must be
+specified on the command line when this option is used since there is no way
+to access the main window.
+.TP
+-f file1 file2 ...
+Specify names of files containing objects to be read in upon startup.
+.SH BUGS
+.PP
+When loading sequences one after another, geomview will often not load a
+sequence on the first try. This can often be remedied by telling animate to
+load the sequence yet again.
+.PP
+.SH SEE ALSO
+geomview(1) oogl(5)
+.SH AUTHOR
+.nf
+Daeron Meyer
+The Geometry Center
+.fi

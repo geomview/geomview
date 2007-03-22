@@ -1,0 +1,47 @@
+.TH fsaparse 3gv "Sat Mar 23 22:01:32 1991"
+.SH NAME
+fsaparse \- parse a word-acceptor automaton file
+.SH SYNOPSIS
+.nf
+#include "wa.h"
+.sp
+fsafparse(fp, fsa)
+  FILE *fp;
+  Fsa *fsa;
+.fi
+
+.SH DESCRIPTION
+
+fsafparse parses a word-acceptor automaton file in the format described
+by DEAGL ("Data Exchange for Automata and Groups Language") (but see
+the BUGS section below).  fp should be a pointer to an open file
+containing the automaton.  fsa should be a pointer to an Fsa struture
+as defined in "fsa.h".  Upon return, the automaton will have been
+written into this structure.
+
+.SH "RETURN VALUES"
+
+On success, fsafparse() returns 1.  On failure, it returns 0.
+
+.SH "SEE ALSO"
+
+.nf
+getwordlist(3), getmatlist(3), fgetmatlist(3),
+getmatlist(1), automata(1)
+.fi
+
+.SH BUGS
+
+fsafparse is meant specifically for use with getwordlist(3) and
+getmatlist(3).  It does not recognize the full language described by
+DEAGL.  It only recognizes that part of it which was present in the
+word-acceptor files that I was working with when I wrote it.  I think
+this may be sufficient for all word-acceptor automata, but I am not
+sure of this.  Please let me know if you find word-acceptor files for
+which this doesn't work.
+
+.SH AUTHOR
+.nf
+Mark Phillips
+The Geometry Center
+.fi

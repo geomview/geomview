@@ -1,0 +1,18 @@
+.TH hinge 1gv "January 29, 1993" "Geometry Center"
+.SH NAME
+hinge - rotate copies of a polyhedron around its edges
+.SH DESCRIPTION
+Hinge is a geomview module which lets you rotate copies of a
+polyhedron around edges of itself to build up constructions in space.
+.PP
+To find out how to use hinge, invoke it by clicking on the "Hinge"
+entry in the geomview "Applications" browser. When the Hinge panel
+appears, click on its "Help" button.
+.SH SEE ALSO
+geomview(1)
+.SH AUTHORS
+.nf
+Mark Phillips
+Tamara Munzner
+Geometry Center
+.fi

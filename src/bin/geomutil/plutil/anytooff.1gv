@@ -1,0 +1,28 @@
+.TH anytooff 1gv "November 2 1993" "Geometry Center"
+.SH NAME
+anytooff \- filter to convert a (set of) geomview data file(s) containing any 
+geomview primitives into a single polylist.
+.SH SYNOPSIS
+anytooff  [filename ...]
+.SH DESCRIPTION
+.PP
+Anytooff reads OOGL geometry data (from the given files, if any, otherwise from standard
+input) and outputs the new polylist (in OFF format) to standard output.  
+Offcombine is a synonym for anytooff.
+.SH BUGS
+In converting a list object, anytooff uses PLCombine(3) to merge
+the members of the list.  PLCombine(3) has certain limitations
+with regard to the way in handles color and normal data; see its
+manual page for details.
+.PP
+When vector objects are switched into polylists, they are transformed
+into polygons with two vertices.  The faces of the polygons are the same
+color as the given vectors, but the edges of the polygons, which are
+their only visible aspect, have no color.
+.SH SEE ALSO
+anytopl(3), geomview(1)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

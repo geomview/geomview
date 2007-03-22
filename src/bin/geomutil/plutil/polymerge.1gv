@@ -1,0 +1,62 @@
+.TH POLYMERGE 1gv "25 July 1993" "Geometry Center"
+.SH NAME
+polymerge \- merge coincident vertices, collinear edges, coplanar faces 
+in an OOGL OFF object
+.SH SYNOPSIS
+\fBpolymerge\fP [\fB\-v\fP \fIvertex_thresh\fP] [\fB\-e\fP \fIedge_thresh\fP]
+[\fB\-f\fP \fIface_thresh\fP] [\fB\-V\fP] [\fB\-E\fP] [\fB\-F\fP]
+[\fB\-d\fP] [\fB\-b\fP] [\fIinputfile.off\fP]
+.SH DESCRIPTION
+\fIPolymerge\fP eliminates redundancies from polyhedral objects in OOGL's
+OFF format, and writes another OFF object to its standard output.
+(Optionally it can produce instead an input file for Brakke's Evolver.)
+Specifically, it combines nearly-coincident vertices,
+nearly-collinear edges, and nearly-coplanar faces.  Vertices
+which aren't used on any face are deleted, as are faces with less than
+three vertices.  Thresholds for approximate equality are adjustable from the
+command line.  Options are:
+.IP "\fB\-v\fP \fIvertex_thresh\fP"
+Merge vertices when they're closer than \fIvertex_thresh\fP apart;
+the default is .00001.
+.IP "\fB\-V\fP"
+Don't attempt to merge vertices.
+.IP "\fB\-e\fP \fIedge_thresh\fP"
+Merge edges where |sin(vertex_angle)| < \fIedge_thresh\fP; the default is
+.01, merging edges with angles within about .5 degree of 0 or 180 degrees.
+When edges are merged, the corresponding vertex is removed.
+.IP "\fB\-E\fP"
+Don't attempt to merge edges.  (4OFF edges are never merged.)
+.IP "\fB\-f\fP \fIface_thresh\fP"
+Merge faces sharing an edge where the faces are nearly coplanar: when
+|sin(angle_between_face_normal_vectors)| < \fIface_thresh\fP.
+The default is .03, or about two degrees.  Note that merging
+can create faces which are concave polygons.
+.IP "\fB\-F\fP"
+Don't attempt to merge faces. (4OFF faces are never merged.)
+.IP "\fB\-b\fP"
+Produce an output file in .fe format for Brakke's Surface Evolver,
+instead of a new OFF file.
+.IP "\fB\-d\fP"
+Include debugging information as comments in the new OFF object.
+The comments indicate which vertices and faces in the original object
+correspond to which in the new one.  Messages include:
+.IP "# Vtx \fInnn\fP->\fImmm\fP"
+Merged vertices \fInnn\fP and \fImmm\fP (both indices in the original object).
+.IP "# Merged face \fInnn\fP into \fImmm\fP (vertices \fIvvv\fP \fIwww\fP) n1.n2 \fIs\fP"
+Faces \fInnn\fP and \fImmm\fP in the original object were merged;
+their common edge joined original vertices \fIvvv\fP and \fIwww\fP.
+The cosine of the angle between the face normals was \fIs\fP.
+.IP "\fIvertex coordinates\fP  # \fInewvertno\fP [\fIorder\fP] # \fIoldvertno\fP"
+Each vertex written appears with its new index, its order (number of
+edges touching that vertex), and its old index (index of a corresponding
+vertex in the original object).
+.IP "\fIface description\fP  # \fIoldvertno ...\fP"
+For each new face, with \fIN\fP vertices after reduction,
+the comment indicates \fIN\fP corresponding vertices in the original object.
+.SH AUTHOR
+Stuart Levy, Geometry Center, University of Minnesota
+.SH "SEE ALSO"
+anytooff(1), offconsol(1)
+.SH BUGS
+Coplanar faces are merged even if they were assigned different colors.
+Should be able to handle binary OFF objects, but this hasn't been tested.

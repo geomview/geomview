@@ -1,0 +1,30 @@
+.TH bdy 1gv "June 12 1992" "Geometry Center"
+.SH NAME
+bdy -\ boundary curve finder
+.SH SYNOPSIS
+bdy [precision]
+.SH DESCRIPTION
+.PP
+Bdy is a filter used to find boundary curves in Geomview objects. 
+The program reads a geomview object from standard input and prints the
+resultant vector object to standard output.  Bdy finds the segments
+of the vector by first converting the given object into a polylist (See
+anytooff(1)).  Then, it finds all edges used once and only once in the
+polylist and combines these edges into a vector object.  The optional
+precision arguement specifies the maximum distance between vertices
+that are to be considered identical.  By default, it is set to 0.0,
+indicating that the vertices must be numerically identical.  It may
+sometimes be necessary to set it to a higher value to compensate for
+floating-point error.
+.PP
+The vector object is always black.
+.SH BUGS
+The vector object is not a particularly compact representation of itself,
+since it contains many 2-vertex segments which could be combined.
+.SH SEE ALSO
+geomview(1), anytooff(1), anytopl(3), bdy(3), offconsol(1), plconsol(3)
+.SH AUTHOR
+.nf
+Celeste Fowler
+The Geometry Center
+.fi

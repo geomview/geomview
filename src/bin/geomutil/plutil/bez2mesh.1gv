@@ -1,0 +1,21 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH BEZ2MESH 1gv "February 23, 2001"
+.SH NAME
+bez2mesh \- dices a BEZ file to a list of MESHes
+.SH SYNOPSIS
+.B bez2mesh
+.BI [[-] N ]
+.BI [ file.bez ]
+.SH DESCRIPTION
+This manual page documents briefly the
+.B bez2mesh
+command.
+.PP
+.B bez2mesh
+Dices a BEZ file to a list of MESHes, each diced NxN.
+If N negative, everts each patch.
+.SH SEE ALSO
+.BR geomview (1).
+.SH AUTHOR
+This manual page was written by Steve Robbins <steven.robbins@videotron.ca>,
+for the Debian GNU/Linux system (but may be used by others).
