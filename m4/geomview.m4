@@ -25,11 +25,13 @@ dnl distribution terms that you use for the rest of that program.
 # GV_INIT_GEOMVIEW(MAJOR_OP,MAJOR,MINOR_OP,MINOR)
 #
 AC_DEFUN([GV_INIT_GEOMVIEW],
-[AC_ARG_WITH(geomview,
-  AC_HELP_STRING([--with-geomview=PROGRAM],
-[Set PROGRAM to the name of the Geomview executable, possibly including the full
-path to the executable. The installed version of Geomview is used to determine
-the library, include and data directories to use. (default: autodetected)]),
+[ AC_ARG_WITH(geomview,
+    AC_HELP_STRING([--with-geomview=PROGRAM],
+[Set PROGRAM to the name of the Geomview executable, possibly
+including the full path to the executable.  If the
+`--enable-geomview-query' switch is in effect then the installed
+version of Geomview is used to determine the library, include and data
+directories to use,. (default: autodetected)]),
   [case "${withval}" in
     no)
       AC_MSG_ERROR(["--without-geomview" or "--with-geomview=no" is not an option here])
@@ -39,21 +41,64 @@ the library, include and data directories to use. (default: autodetected)]),
     *) 
       GEOMVIEWOPT=$withval
     esac],
-  [GEOMVIEWOPT=geomview])
+    [GEOMVIEWOPT=geomview])
   AC_PATH_PROGS(GEOMVIEW, ${GEOMVIEWOPT}, "not found")
   if test "${GEOMVIEW}" = "not found"; then
 	AC_MSG_ERROR([Geomview binary not found. Check your installation.])
 	exit 1
   fi
+  AC_ARG_ENABLE([local-emodule],
+    AC_HELP_STRING([--enable-local-emodule],
+[Install the emodule definition into `${HOME}/.geomview-example'; that
+file will contain the full path to the example binary. Otherwise the
+the emodule definition will be install under either
+`PREFIX/libexec/geomview/' or -- if the `--enable-geomview-query'
+switch has also been given -- under the location returned by `geomview
+--print-emodule-dir'. (default: disabled)]),
+    [case "${enableval}" in
+       yes) LOCAL_EMODULE=true ;;
+       no)  LOCAL_EMODULE=false ;;
+       *) AC_MSG_ERROR([`--enable-local-emodule' does not take an argument])
+          exit 1
+          ;;
+    esac],
+    [LOCAL_EMODULE=false])
+  AM_CONDITIONAL([LOCAL_EMODULE], [test "${LOCAL_EMODULE}" = "true"])
+  AC_SUBST(LOCAL_EMODULE)
+  
+  AC_ARG_ENABLE([geomview-query],
+    AC_HELP_STRING([--enable-geomview-query],
+
+[Ask the installed version of the Geomview executable -- if any --
+about the location of the system-wide emodule definition files
+(usually `PREFIX/libexec/geomview/') by runnding the Geomview executable
+with various `--print-...' switchs (see `geomview --help'). Otherwise
+this package assumes the following defaults:
+
+Geomview emodules below `PREFIX/libexec/geomview/',
+Geomview headers below  `PREFIX/include/geomview/',
+libgeomview below       `PREFIX/lib/geomview/',
+other data below        `PREFIX/share/geomview/']),
+    [case "${enableval}" in
+       yes) GEOMVIEW_QUERY=true ;;
+       no)  GEOMVIEW_QUERY=false ;;
+       *) AC_MSG_ERROR([`--enable-geomview-query' does not take an argument])
+          exit 1
+          ;;
+    esac],
+    [GEOMVIEW_QUERY=false])
+  AM_CONDITIONAL([GEOMVIEW_QUERY], [test "${LOCAL_EMODULE}" = "true"])
+  AC_SUBST(GEOMVIEW_QUERY)
+  
 
   #
   # optionally check for the version of Geomview
   #
-  gvversion=`${GEOMVIEW} --version`
-  AC_MSG_RESULT([Geomview version: ${gvversion}])
-  gv_major=`echo $gvversion|cut -d '.' -f 1`
-  gv_minor=`echo $gvversion|cut -d '.' -f 2`
-  m4_if($#,4,[gv_major_ok=`expr $gv_major '$1' $2`
+  m4_if($#,4,[gvversion=`${GEOMVIEW} --version`
+    AC_MSG_RESULT([Geomview version: ${gvversion}])
+    gv_major=`echo $gvversion|cut -d '.' -f 1`
+    gv_minor=`echo $gvversion|cut -d '.' -f 2`
+    gv_major_ok=`expr $gv_major '$1' $2`
     gv_minor_ok=`expr $gv_minor '$3' $4`
     if test "$gv_major_ok" != "1" -o "$gv_minor_ok" != "1" ; then
       AC_MSG_ERROR([
@@ -64,32 +109,37 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
 ])
   fi]) dnl m4_if
 
-  #
-  # get the location of everything else from the installed geomview script.
-  #
-
-  moduledir=`${GEOMVIEW} --print-geomview-emodule-dir`
-  AC_SUBST(moduledir)
-  AC_MSG_RESULT([Module will go into "${moduledir}/"])
+  if test "${GEOMVIEW_QUERY}" = "true"; then
+    #
+    # get the location of everything else from the installed geomview script.
+    #
+    moduledir=`${GEOMVIEW} --print-geomview-emodule-dir`
+    geomdatadir=`${GEOMVIEW} --print-geomview-data-dir`
+    geomviewlib=`${GEOMVIEW} --print-geomview-lib`
+    OOGLLIB="-L${geomviewlib} -lgeomview"
+    geomviewincludes=`${GEOMVIEW} --print-geomview-include`
+    AM_CONDITIONAL(HAVE_LIBGEOMVIEW,true)
+    if test "${LOCAL_EMODULE}" = "true"; then
+      moduledir="${libexecdir}/geomview"
+      geomdatadir="${datadir}/geomview"
+    fi
+  else
+    GEOMVIEW_CHECK_PACKAGE(libgeomview, geomview,,,
+      [create.h],["'${includedir}/geomview'"],,required,enabled)
+    geomviewinclude="${LIBGEOMVIEW_INCLUDE_PATH}"
+    geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
+    OOGLLIB="${LIBGEOMVIEW_LIB}"
+    moduledir="${libexecdir}/geomview"
+    geomdatadir="${datadir}/geomview"
+  fi
 
   module_tcldir="${moduledir}/tcl"
-  AC_SUBST(module_tcldir)
-  AC_MSG_RESULT([TCL scripts will go into "${module_tcldir}/"])
-
-  geomdatadir=`${GEOMVIEW} --print-geomview-data-dir`
-  AC_SUBST(geomdatadir)
-  AC_MSG_RESULT([Data will go into "${geomdatadir}/"])
-
-  geomviewlib=`${GEOMVIEW} --print-geomview-lib`
-  OOGLLIB="-L${geomviewlib} -lgeomview"
+  AC_SUBST(geomviewincludes)
   AC_SUBST(geomviewlib)
   AC_SUBST(OOGLLIB)
-  AC_MSG_RESULT([libgeomview below "${geomviewlib}/"])
-
-  geomviewincludes=`${GEOMVIEW} --print-geomview-include`
-  AC_SUBST(geomviewincludes)
-  AC_MSG_RESULT([Geomview include files below "${geomviewincludes}/"])
-
+  AC_SUBST(moduledir)
+  AC_SUBST(module_tcldir)
+  AC_SUBST(geomdatadir)
   #
   # check for stuff s.t. Geomview's header files can be included,
   # notably "porting"; but we also make sure that bool_t is defined,
@@ -150,3 +200,39 @@ typedef bool _Bool;
 # endif
 #endif])
 ])
+
+AC_DEFUN([_GV_PRINT_EXPAND],
+[gv_ac_blah=`eval eval eval echo $2`
+AC_MSG_RESULT([$1$2])
+if ! test "${gv_ac_blah}" = "$2"; then
+  AC_MSG_RESULT([$1(currently: ${gv_ac_blah})])
+else
+  AC_MSG_RESULT([])
+fi])
+
+AC_DEFUN([GEOMVIEW_RESULT],
+[AC_MSG_RESULT([])
+if test -n "${gvversion}"; then
+  AC_MSG_RESULT([Geomview version: "${gvversion}"])
+  AC_MSG_RESULT([])
+fi
+AC_MSG_RESULT([Geomview include files below])
+_GV_PRINT_EXPAND([                ],[${geomviewincludes}/])
+AC_MSG_RESULT([libgeomview below])
+_GV_PRINT_EXPAND([                ],[${geomviewlib}/])
+AC_MSG_RESULT([Module executable will go into])
+_GV_PRINT_EXPAND([                ],[${moduledir}/])
+AC_MSG_RESULT([TCL scripts will go into])
+_GV_PRINT_EXPAND([                ],[${module_tcldir}/])
+AC_MSG_RESULT([Data will go into])
+_GV_PRINT_EXPAND([                ],[${geomdatadir}/])
+AC_MSG_RESULT([Emodule definitions will go to])
+if test "${LOCAL_EMODULE}"; then
+  AC_MSG_RESULT([                ~/])
+  AC_MSG_RESULT([                (currently: ${HOME}/)])
+else
+  _GV_PRINT_EXPAND([                ],[${moduledir}/])
+fi
+AC_MSG_RESULT([])])
+
+

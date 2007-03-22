@@ -103,7 +103,7 @@ m4_if($2,[],
     *) UPNAME[_INCLUDE_PATH]="$withval"
 	;;
 esac],
-test -z "${UPNAME[_INCLUDE_PATH]}" && UPNAME[_INCLUDE_PATH]="${DEFAULT_INCDIR}")
+test -z "`eval eval eval echo ${UPNAME[_INCLUDE_PATH]}`" && UPNAME[_INCLUDE_PATH]="${DEFAULT_INCDIR}")
 ])
 dnl
 dnl headers and libraries below the same directory :(
@@ -148,12 +148,12 @@ if test "${UPNAME[_DISABLE]}" = yes; then
 	:
 else
 
-m4_if($3,[],[DEFAULT_LIBDIR="`eval eval echo ${libdir}`"],
+m4_if($3,[],[DEFAULT_LIBDIR="${libdir}"],
 	    [DEFAULT_LIBDIR="$3"])
 
-if test -z "${DEFAULT_LIBDIR}"
+if test "${DEFAULT_LIBDIR}" = ''
 then
-	DEFAULT_LIBDIR="`eval eval echo ${libdir}`"
+	DEFAULT_LIBDIR="'${libdir}'"
 fi
 
 dnl
@@ -191,14 +191,15 @@ m4_if($3,[],
     *) UPNAME[_LIB_PATH]="$withval"
 	;;
 esac],
-test -z "${UPNAME[_LIB_PATH]}" && UPNAME[_LIB_PATH]="${DEFAULT_LIBDIR}")
+test -z "`eval eval eval echo ${UPNAME[_LIB_PATH]}`" && UPNAME[_LIB_PATH]="${DEFAULT_LIBDIR}")
 dnl
 dnl now for the header file
 dnl
 m4_if($5,[],[],
-	[m4_if($6,[],[DEFAULT_INCDIR="`eval eval echo ${includedir}`"],
-		     [DEFAULT_INCDIR="$6"])
-	 GEOMVIEW_CHECK_PKG_HDR_OPT([$1], [PREFIX/include/])])
+	[m4_if($6,[],[DEFAULT_INCDIR="${includedir}"
+                     GEOMVIEW_CHECK_PKG_HDR_OPT([$1], [PREFIX/include/])],
+		     [DEFAULT_INCDIR="$6"
+                     GEOMVIEW_CHECK_PKG_HDR_OPT([$1], [$6/])])])
 dnl
 dnl now check if the library and header files exist
 dnl
@@ -211,7 +212,7 @@ m4_if($8,[optional],
      UPNAME[_LIB_PATH]=""
      UPNAME[_INCLUDE]=""
      UPNAME[_INCLUDE_PATH]=""],
-    -L${UPNAME[_LIB_PATH]} $4)],
+    -L`eval eval eval echo ${UPNAME[_LIB_PATH]}` $4)],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
      [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
       UPNAME[_ALL_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]} $4"],
@@ -223,7 +224,7 @@ m4_if($8,[optional],
 		AC_MSG_ERROR([Library "lib${UPNAME[_NAME]}" was not found])
 		;;
 	esac],
-     -L$UPNAME[_LIB_PATH] $4)])
+     -L`eval eval eval echo $UPNAME[_LIB_PATH]` `eval eval eval echo $4`)])
 
 dnl
 dnl On MacOS X we have that funky -framework switch ...
@@ -261,7 +262,7 @@ else
     dnl  check for the header file
     dnl
     [ac_]UPNAME[_save_CPPFLAGS]="$CPPFLAGS"
-    CPPFLAGS="-I${UPNAME[_INCLUDE_PATH]} $CPPFLAGS"
+    CPPFLAGS="-I`eval eval eval echo ${UPNAME[_INCLUDE_PATH]}` $CPPFLAGS"
     m4_if($8,[optional],
 	[AC_CHECK_HEADERS($5,, [UPNAME[_LIB]=""
 			       UPNAME[_ALL_LIB]=""
@@ -273,7 +274,7 @@ else
 dnl
 dnl no need to use -I... if header is located in standard include path
 dnl
-    if ! test -f "${UPNAME[_INCLUDE_PATH]}/$5"; then
+    if ! test -f "eval eval eval echo ${UPNAME[_INCLUDE_PATH]}/$5"; then
 	UPNAME[_INCLUDE]=""
     fi
     CPPCLAGS="${[ac_]UPNAME[_save_CPPFLAGS]}"
