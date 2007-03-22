@@ -1,11 +1,19 @@
-build*
-.nfs*
+*.la
+*.lo
 .dirstamp
+.libs
+.nfs*
 INSTALL
 Makefile.in Makefile
+ND-blah
 aclocal.m4
 autom4te.cache
 blah
+blah.off
+blah.ps
+blah.rib
+blah.vect
+build*
 config.cache 
 config.guess
 config.h.in config.h
@@ -19,6 +27,8 @@ foolist
 geomview
 geomview*.tar.*
 geomview-1*
+glTexEnvf.3gl
+gvcl-mode.el
 include
 install-sh
 libtool
@@ -26,8 +36,6 @@ ltmain.sh
 missing
 mkinstalldirs
 modules
+patches
 stamp-h.in stamp-h
 stamp-h1
-*.lo
-*.la
-.libs
