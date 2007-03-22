@@ -12,6 +12,8 @@ shader_src = \
  GVmodulateconstant.sl GVmodulateplastic.sl \
  GVreplaceconstant.sl GVreplaceplastic.sl
 
+EXTRA_DIST = $(shader_src) hlight.slo hmatte.slo hplastic.slo
+
 if AQSIS_SHADER_COMPILER
 geomshaderdata_DATA += $(shader_src:.sl=.slx)
 
