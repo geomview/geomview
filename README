@@ -33,9 +33,9 @@ stands for Object Oriented Graphics Library, is the library upon which
 Geomview is built.
 
 Geomview runs on many unix-like platforms including but not limited to
-GNU/Linux, Solaris, IRIX, and AIX.  It requires X windows, OpenGL, and
-Motif (or OpenMotif).  It also works with Mesa, which is a
-free-software replacement to OpenGL.  See www.geomview.org for more
+GNU/Linux, Solaris, IRIX, and AIX. It requires X windows, OpenGL, and
+Motif (or OpenMotif). It also works with Mesa, which is a
+free-software replacement to OpenGL. See www.geomview.org for more
 information.
 
 In addition, if you use geomview please consider joining the
