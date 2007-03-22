@@ -42,7 +42,7 @@ directories to use,. (default: autodetected)]),
       GEOMVIEWOPT=$withval
     esac],
     [GEOMVIEWOPT=geomview])
-  AC_PATH_PROGS(GEOMVIEW, ${GEOMVIEWOPT}, "not found")
+  AC_PATH_PROGS(GEOMVIEW, [${GEOMVIEWOPT}], ["'not found'"])
   if test "${GEOMVIEW}" = "not found"; then
 	AC_MSG_ERROR([Geomview binary not found. Check your installation.])
 	exit 1
@@ -87,7 +87,7 @@ other data below        `PREFIX/share/geomview/']),
           ;;
     esac],
     [GEOMVIEW_QUERY=false])
-  AM_CONDITIONAL([GEOMVIEW_QUERY], [test "${LOCAL_EMODULE}" = "true"])
+  AM_CONDITIONAL([GEOMVIEW_QUERY], [test "${GEOMVIEW_QUERY}" = "true"])
   AC_SUBST(GEOMVIEW_QUERY)
   
 
@@ -141,16 +141,28 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   AC_SUBST(module_tcldir)
   AC_SUBST(geomdatadir)
   #
+  # Check for some general stuff
+  #
+  AC_REQUIRE([AC_PROG_CC])
+  AC_REQUIRE([AC_PROG_CPP])
+  AC_REQUIRE([AC_PROG_INSTALL])
+  AC_REQUIRE([AC_PROG_LN_S])
+  AC_REQUIRE([AC_PROG_MAKE_SET])
+  AC_REQUIRE([AC_PROG_RANLIB])
+  AC_REQUIRE([AC_PROG_LIBTOOL])
+  #
   # check for stuff s.t. Geomview's header files can be included,
   # notably "porting"; but we also make sure that bool_t is defined,
   # and that we have some value for PATH_MAX
   #
+  AC_C_INLINE
   AC_C_BIGENDIAN
   AC_C_CONST
+  AC_HEADER_STDC
   AC_HEADER_STDBOOL
-  AC_C_INLINE
+  AC_CHECK_HEADERS([limits.h stdlib.h sys/param.h])
   AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
-  AC_CHECK_FUNCS([bcopy bzero finite])
+  AC_CHECK_FUNCS([bcopy bzero finite sqrt])
   AC_LANG_PUSH([C])
   AC_MSG_CHECKING([for M_PI])
   AC_COMPILE_IFELSE(
