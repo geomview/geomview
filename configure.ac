@@ -6,7 +6,6 @@ AM_INIT_AUTOMAKE([dist-bzip2 foreign 1.9])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
-AC_PREFIX_DEFAULT([/usr/local/Geomview])
 AC_SUBST(abs_top_builddir)
 AC_SUBST(abs_top_srcdir)
 
@@ -775,19 +774,14 @@ AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
 
 ########################################################################
 
-# cache 'moduledir' and 'geomdatadir' so individual module configure scripts
-# can get them from the cache
+docdir='${datarootdir}/doc/${PACKAGE_TARNAME}-${PACKAGE_VERSION}'
+AC_SUBST(docdir)
 
 moduledir="\$(libexecdir)/geomview"
 AC_SUBST(moduledir)
 
 geomdatadir="\$(datadir)/geomview"
 AC_SUBST(geomdatadir)
-
-# cache 'moduledir' and 'geomdatadir' so individual module configure scripts
-# can get them from the cache
-AC_CACHE_VAL(ac_cv_moduledir,[ac_cv_moduledir="moduledir='$moduledir'"])
-AC_CACHE_VAL(ac_cv_geomdatadir,[ac_cv_geomdatadir="geomdatadir='$geomdatadir'"])
 
 ########################################################################
 
