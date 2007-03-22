@@ -11,4 +11,4 @@ libgeomview_la_SOURCES =
 libgeomview_la_LIBADD = \
  $(OOGLLIBS) $(OPENGLLIBS) $(SOCKETLIBS) $(XLIBS) $(ZLIB_LIB)
 libgeomview_la_DEPENDENCIES = $(OOGLLIBS) Makefile.am
-libgeomview_la_LDFLAGS = -release @PKGVERSION@
+libgeomview_la_LDFLAGS = -release @PACKAGE_VERSION@
