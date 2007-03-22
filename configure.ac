@@ -209,14 +209,6 @@ GV_CHECK_PROG(aqsis-shader-compiler, aqsl)
 GV_CHECK_PROG(pixie-shader-compiler, sdrc)
 GV_CHECK_PROG(delight-shader-compiler, shaderdl)
 
-# The stereo module needs to fiddle with monitor modes.
-# Currently, this only works on IRIX using an external command.
-#
-AC_PATH_PROG([SETMON_PATH],[setmon],,[$PATH:/usr/gfx])
-if test -n "$SETMON_PATH"; then
-  AC_DEFINE_UNQUOTED([SETMON_PATH], "$SETMON_PATH", [Path to setmon program])
-fi
-
 # Checks for libraries.
 AC_CHECK_LIB([m], [cos])
 
@@ -467,21 +459,6 @@ auto-detect OpenGL and use it if available. Use `--without-opengl' to disable
 OpenGL.]),
   [OPENGL_DIR=$withval])
 
-AC_ARG_WITH(xforms,
-  AC_HELP_STRING([--with-xforms=DIR],
-[Set DIR to xforms installation dir. xforms is only used for some of the add-on
-modules, so it is optional. The default is to auto-detect the xforms library.
-Use `--without-xforms' to disable the use of the xforms library.]),
-  [
-if test "$withval" = "no" ; then
-    TRY_XFORMS=false
-else
-    TRY_XFORMS=true
-    XFORMS_DIR=$withval
-fi
-  ],
-  [TRY_XFORMS=true])
-
 ########################################################################
 
 #
@@ -709,104 +686,14 @@ AC_DEFINE_UNQUOTED([MGGL],${MGGL}, [Leave this at 0])
 
 ########################################################################
 
-AC_MSG_CHECKING([for xforms])
-
-AC_CACHE_VAL(ac_cv_have_xforms,
-[if $TRY_XFORMS ; then
-    if test "$XFORMS_DIR" != "" ; then
-      USER_XFORMS_DIR="$XFORMS_DIR"
-    fi
-    GEOM_FIND_I_OPTION(forms.h, ["${USER_XFORMS_DIR}/include" "" "$x_includes" "$x_includes/X11" "/usr/local/include"])
-    ac_xforms_include=$GEOM_I_OPTION
-    GEOM_FIND_L_OPTION(-lforms,
-    		   fl_initialize,
-    		   ["${USER_XFORMS_DIR}/lib" "" "$x_libraries" "/usr/local/lib"],
-    		   "$XLIBS -lXpm -lm"
-    		  )
-    if test "$ac_xforms_include" != 0 -a "$GEOM_L_OPTION" != "0" ; then
-      XFORMS_L_OPTION=$GEOM_L_OPTION
-      ac_xforms_libs="$XFORMS_L_OPTION -lforms -lXpm"
-      ac_have_xforms=yes
-    else
-      ac_xforms_include=
-      ac_xforms_libs=""
-      ac_have_xforms=no
-    fi
-else
-  ac_xforms_include=
-  ac_xforms_libs=""
-  ac_have_xforms=no
-fi
-if test "$ac_have_xforms" = "no" ; then
-  ac_cv_have_xforms="have_xforms=no"
-else
-  ac_cv_have_xforms="have_xforms=yes \
-	ac_xforms_include='$ac_xforms_include' ac_xforms_libs='$ac_xforms_libs'"
-fi
-])
-eval $ac_cv_have_xforms
-
-
-
-########################################################################
-########################################################################
-########################################################################
-
-if test "$have_xforms" = "no" ; then
-  AC_MSG_RESULT([no])
-  AC_MSG_WARN([
-
-    Configuring without the XFORMS library.  Several of Geomview's
-    external modules use the XFORMS library, and they will not be
-    compiled unless you reconfigure Geomview with XFORMS.  See the
-    file INSTALL.Geomview for instructions on doing that (it's easy
-    --- just get a binary XFORMS distribution and unpack it into your
-    Geomview source tree.)  Geomview itself does not use XFORMS, so
-    it's OK to skip XFORMS if all you want is Geomview.
-
-])
-else
-  AC_MSG_RESULT([headers $ac_xforms_include, libraries $ac_xforms_libs])
-fi
-
-XFORMSINCLUDE=$ac_xforms_include
-XFORMSLIBS=$ac_xforms_libs
-
-AC_SUBST(XFORMSINCLUDE)
-AC_SUBST(XFORMSLIBS)
-
-########################################################################
-
 # Check for zlib and bzlib (image compression/decompression)
 GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
 GEOMVIEW_CHECK_PACKAGE(zlib, z, , , zlib.h, , , optional)
-
-# Check for Tcl/Tk with new CHECK_PACKAGE macro:
-
-GEOMVIEW_CHECK_PACKAGE(tcl, tcl, ${x_libraries}, ${XLIBS}, tcl.h, , ,optional)
-GEOMVIEW_CHECK_PACKAGE(tk, tk, ${x_libraries}, ${XLIBS}, tk.h, , ,optional)
-
-AM_CONDITIONAL(HAVE_TCLTK, [test -n "${TCL_LIB}" -a -n "${TK_LIB}"])
-
-#
-# Cygwin does not seem to have the Tcl_CreateFileHandler() function,
-# so test for it and disable the crayola module in this case.
-#
-if test -n "${TCL_LIB}" -a -n "${TK_LIB}"; then
-    ac_save_LIBS="${LIBS}"
-    LIBS="${TCL_ALL_LIB} ${LIBS}"
-    AC_CHECK_FUNCS([Tcl_CreateFileHandler],
-	[TCLFILEHANDLER=yes],
-	[TCLFILEHANDLER=no])
-    LIBS="${ac_save_LIBS}"
-fi
-AM_CONDITIONAL([TCLFILEHANDLER], [test "z${TCLFILEHANDLER}" = "zyes"])
 
 ########################################################################
 
 OPENGL_LD_LIBRARY_PATH=`expr "$GL_L_OPTION" : '-L\(.*\)'`
 MOTIF_LD_LIBRARY_PATH=`expr "$MOTIF_L_OPTION" : '-L\(.*\)'`
-XFORMS_LD_LIBRARY_PATH=`expr "$XFORMS_L_OPTION" : '-L\(.*\)'`
 
 if test "$OPENGL_LD_LIBRARY_PATH" != "0" ; then
   LOCAL_LD_LIBRARY_PATH=$OPENGL_LD_LIBRARY_PATH
@@ -816,13 +703,6 @@ if test "$MOTIF_LD_LIBRARY_PATH" != "0" ; then
     LOCAL_LD_LIBRARY_PATH="$LOCAL_LD_LIBRARY_PATH:$MOTIF_LD_LIBRARY_PATH"
   else
     LOCAL_LD_LIBRARY_PATH="$MOTIF_LD_LIBRARY_PATH"
-  fi
-fi
-if test "$XFORMS_LD_LIBRARY_PATH" != "0" ; then
-  if test "$LOCAL_LD_LIBRARY_PATH" != "" ; then
-    LOCAL_LD_LIBRARY_PATH="$LOCAL_LD_LIBRARY_PATH:$XFORMS_LD_LIBRARY_PATH"
-  else
-    LOCAL_LD_LIBRARY_PATH="$XFORMS_LD_LIBRARY_PATH"
   fi
 fi
 if test "$LOCAL_LD_LIBRARY_PATH" != "" ; then
@@ -892,7 +772,6 @@ AC_DEFINE(POPEN_ACCEPTS_RB, 1,
 AC_LANG_POP([C])
 
 AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
-AM_CONDITIONAL(HAVE_XFORMS, test x$have_xforms = xyes)
 
 ########################################################################
 
@@ -1104,21 +983,11 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomview/x11/Makefile
 	  src/bin/geomview/x11/bitmaps/Makefile
 	  src/bin/geomview/x11/interface/Makefile
-	  src/bin/NDview/Makefile
-	  src/bin/ndutils/Makefile
-	  src/bin/clipboard/Makefile
-	  src/bin/crayola/Makefile
-	  src/bin/example/Makefile
-	  src/bin/ginsu/Makefile
-	  src/bin/gvclock/gvclock
-	  src/bin/gvclock/Makefile
-	  src/bin/labeler/Makefile
-	  src/bin/tackdown/Makefile
 	  src/bin/animate/Makefile
 	  src/bin/animate/interface/Makefile
-	  src/bin/graffiti/Makefile
-	  src/bin/transformer/Makefile
-	  src/bin/stereo/Makefile
+	  src/bin/clipboard/Makefile
+	  src/bin/gvclock/gvclock
+	  src/bin/gvclock/Makefile
 	  src/bin/geomutil/Makefile
 	  src/bin/geomutil/bdy/Makefile
 	  src/bin/geomutil/clip/Makefile
@@ -1132,10 +1001,6 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomutil/ucd/Makefile
 	  src/bin/geomutil/vrml2oogl/Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
-	  src/bin/sweep/Makefile
-	  src/bin/hinge/Makefile
-	  src/bin/flythrough/Makefile
-	  src/bin/cplxview/Makefile
 	  src/bin/togeomview/Makefile
 ])
 AC_OUTPUT
