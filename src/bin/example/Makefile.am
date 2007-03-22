@@ -31,6 +31,9 @@ endif
 endif
 
 .geomview-example: Makefile
-	echo '(emodule-define "Example" "$(modulepath)example")' > .geomview-example
+	echo '(emodule-define "Example" "$(modulepath)example")' > $@
+
+.geomview: Makefile
+	echo '(emodule-define "Example" "./src/example")' > $@
 
 CLEANFILES = $(module_DATA) 
