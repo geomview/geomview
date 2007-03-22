@@ -17,7 +17,7 @@
 @sp 1
 @center @titlefont{Geomview Manual}
 @sp 4
-@center Geomview Version 1.8
+@center Geomview Version 1.9
 @sp 1
 @center for Unix
 @sp 1
@@ -71,7 +71,7 @@ Center at the University of Minnesota, starting in 1991.  It can be used
 as a standalone viewer for static objects or as a display engine for
 other programs which produce dynamically changing geometry.  It runs on
 many kinds of Unix computers, including Linux, SGI, Sun, and HP.
-This manual describes Geomview version 1.8. @refill
+This manual describes Geomview version 1.9. @refill
 
 Geomview is free software, available under the terms of the GNU Lesser
 Public License; @pxref{Copying} for details.
@@ -119,12 +119,16 @@ when you get it, not just free for the manufacturer.
 @node Copying, History, Distrib, Top
 @unnumbered Copying
 
+@c cH: in my opinion the following paragraph is complete nonsense; programs
+@c which simply communicate with other programs by means of streams
+@c cannot inherit the restriction imposed by the GPL
+
 @smallexample
 NOTE: Geomview is distributed under the GNU LESSER GENERAL PUBLIC
-LICENSE.  For the purposes of this license we think of Geomview as if
-it were a "library", and of Geomview external modules as "programs
-than link with the library".  We do this because we specifically
-want to allow proprietary programs and modules to use Geomview.
+LICENSE.  For the purposes of this license we think of Geomview as if it
+were a "library", and of Geomview external modules as "programs that
+link with the library".  We do this because we specifically want to
+allow proprietary programs and modules to use Geomview.
 @end smallexample
 
 @unnumbered GNU LESSER PUBLIC LICENSE
@@ -758,26 +762,34 @@ help by reading it and pointing out mistakes.
 @node Platforms, Pronunciation, History, Top
 @unnumbered Supported Platforms
 
-Geomview runs on a wide variety of Unix systems. It has been tested on
-each of the following systems: Linux, FreeBSD, SGI, Sun either (Sun-OS
-4.1.x and Solaris), HP RISC, Dec Alpha, RS/6000, and NeXT.  Precompiled
-distributions are available for all of these systems.  Using either
-OpenGL or the generic X11 renderer it can probably be compiled on other
-Unix systems as well.
+Geomview 1.9 should -- in principle -- compile and run on any fairly
+recent Unix-like operating system. Specifically, it runs on Linux and on
+Cygwin (Cygwin emulates a SystemV Unix-like environment under Microsoft
+Windows). Unluckily Geomview compiles with MacOS X (Darwin), but
+seemingly communicating with Geomview by means of pipes and sockets
+cause segmentation faults. Feel free to fix that! @xref{Contributing},
+for details.
 
-There is not a version of Geomview for Microsoft Windows.  The main
-reason for this is that at the time when Geomview was written, personal
-computers were not fast enough to make interactive 3D graphics feasible,
-and by the time fast-enough PCs came around, the Geometry Center,
-where Geomview was developed, was in the process of being closed.  The
-staff started work on a port to Windows but was not able to finish it
-before the Center shut down.
+@c Geomview runs on a wide variety of Unix systems. It has been tested on
+@c each of the following systems: Linux, FreeBSD, SGI, Sun either (Sun-OS
+@c 4.1.x and Solaris), HP RISC, Dec Alpha, RS/6000, and NeXT.  Precompiled
+@c distributions are available for all of these systems.  Using either
+@c OpenGL or the generic X11 renderer it can probably be compiled on other
+@c Unix systems as well.
 
-If you would like to see a version of Geomview for Windows, 
-you can contribute to its development in several ways.
-@xref{Contributing}, for details.
+@c There is not a version of Geomview for Microsoft Windows.  The main
+@c reason for this is that at the time when Geomview was written, personal
+@c computers were not fast enough to make interactive 3D graphics feasible,
+@c and by the time fast-enough PCs came around, the Geometry Center,
+@c where Geomview was developed, was in the process of being closed.  The
+@c staff started work on a port to Windows but was not able to finish it
+@c before the Center shut down.
 
-There is also no version of Geomview for Macintosh.
+@c If you would like to see a version of Geomview for Windows, 
+@c you can contribute to its development in several ways.
+@c @xref{Contributing}, for details.
+
+@c There is also no version of Geomview for Macintosh.
 
 @node Pronunciation, Overview, Platforms, Top
 @unnumbered How to Pronounce ``Geomview``
@@ -4862,7 +4874,7 @@ the capability of Geomview itself.
 * Interface::                   How External Modules Interface with Geomview.
 * Example1::                    Simple External Module.
 * Example2::                    Simple External Module with FORMS Control Panel.
-* Forms::                       The FORMS Library.
+* XForms::                      The XForms library.
 * Example3::                    External Module with Bi-Directional Communication.
 * Example4::                    Simple Tcl/Tk Module Demonstrating Picking.
 * Module Installation::         Module Installation.
@@ -5116,7 +5128,7 @@ commands it prints out.  You will have to kill it with
 @kbd{ctrl-C} to get it to stop.
 
 @comment ================================================================
-@node Example2, Forms, Example1, Modules
+@node Example2, XForms, Example1, Modules
 @section Example 2: Simple External Module with FORMS Control Panel
 
 This section gives a new version of the above module --- one that
@@ -5349,34 +5361,23 @@ The last line of the main loop in this example, the call to
 @code{UpdateMesh}, is the same as in the previous example.
 
 @comment ================================================================
-@node Forms, Example3, Example2, Modules
-@section The FORMS Library
+@node XForms, Example3, Example2, Modules
+@section The XForms Library
 
-Geomview itself is written using Mark Overmar's public domain FORMS
-library.  FORMS is a handy and relatively simple user interface toolkit
-for IRISes.  Many Geomview external modules, including the examples in
-this manual, use FORMS to create and manage control panels.
+XForms is a handy and relatively simple user interface toolkit for X11.
+Many Geomview external modules, including the examples in this manual,
+use XForms to create and manage control panels. XForms is available from
+@uref{http://www.nongnu.org/xforms/}. XForms is free-ware.  If you wish
+you may use any other interface toolkit instead of XForms in an external
+module.  We chose FORMS because it is free and relatively simple.
 
-We distribute a version of the FORMS library with Geomview because it is
-necessary in order to compile Geomview and many of our modules.  If you
-use FORMS to write Geomview modules (or anything else, for that matter)
-you may use this copy.  The header file @file{forms.h} is in the
-@file{include} subdirectory, and the library file @file{libforms.a} is
-in the @file{lib/sgi} subdirectory.
-In particular, you can link the example modules in
-this manual using this copy.
-
-FORMS is available via ftp on the Internet from a variety of sites,
-including @code{cs.ruu.nl} or @code{glaurung.physics.mcgill.ca}.  It
-comes with source code and extensive documentation.
-
-If you wish you may use any other interface toolkit instead of FORMS in
-an external module.  We chose FORMS because it is free and relatively
-simple.
-
+There is a complete autoconf'ed package @samp{gvemod-xforms-example}
+available from Geomview's
+@uref{http://geomview.sourceforge.net, Sourceforge.NET}
+page.
 
 @comment ================================================================
-@node Example3, Example4, Forms, Modules
+@node Example3, Example4, XForms, Modules
 @section Example 3: External Module with Bi-Directional Communication
 
 The previous two example modules simply send commands to Geomview and do
