@@ -25,7 +25,15 @@ dnl distribution terms that you use for the rest of that program.
 # GV_INIT_GEOMVIEW(MAJOR_OP,MAJOR,MINOR_OP,MINOR)
 #
 AC_DEFUN([GV_INIT_GEOMVIEW],
-[ AC_ARG_WITH(geomview,
+[
+  AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
+  AC_PREREQ(2.59)
+  AC_CANONICAL_TARGET([])
+  AM_MAINTAINER_MODE
+  AM_INIT_AUTOMAKE([dist-bzip2 1.9])
+  AC_CONFIG_HEADER([config.h])
+
+  AC_ARG_WITH(geomview,
     AC_HELP_STRING([--with-geomview=PROGRAM],
 [Set PROGRAM to the name of the Geomview executable, possibly
 including the full path to the executable.  If the
@@ -98,12 +106,13 @@ other data below        `PREFIX/share/geomview/']),
     AC_MSG_RESULT([Geomview version: ${gvversion}])
     gv_major=`echo $gvversion|cut -d '.' -f 1`
     gv_minor=`echo $gvversion|cut -d '.' -f 2`
+    gv_rev=`echo $gvversion|cut -d '.' -f 3`
     gv_major_ok=`expr $gv_major '$1' $2`
     gv_minor_ok=`expr $gv_minor '$3' $4`
     if test "$gv_major_ok" != "1" -o "$gv_minor_ok" != "1" ; then
       AC_MSG_ERROR([
 
-$PACKAGE requires Geomview version N.M, where N$2$3 and M$4$5.
+$PACKAGE requires Geomview version N.M, where N $1 $2 and M $3 $4.
 Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
 
 ])
