@@ -1,6 +1,6 @@
 INCLUDES = $(default_includes)
 
-EXTRA_DIST = togeomview.1
+EXTRA_DIST = togeomview.1gv
 
 LDADD = $(OOGLLIB) ${SOCKETLIBS}
 

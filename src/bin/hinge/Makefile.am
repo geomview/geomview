@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = hinge.1
+man_MANS = hinge.1gv
 
 EXTRA_DIST =\
  HingeCube HingeTetra HingeDiamond HingeTriangle HingeDodec HingeLongcube\

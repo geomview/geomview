@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = sweep.1 sweep.3
+man_MANS = sweep.1gv sweep.3gv
 
 EXTRA_DIST = panel.fd $(man_MANS)
 

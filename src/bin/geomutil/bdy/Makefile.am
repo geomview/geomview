@@ -2,9 +2,9 @@ INCLUDES = $(default_includes)
 
 LDADD = $(OOGLLIB)
 
-EXTRA_DIST = bdy.1 drawbdy.sh
+man_MANS = bdy.1gv
 
-man_MANS = bdy.1
+EXTRA_DIST = drawbdy.sh $(man_MANS)
 
 bin_PROGRAMS = bdy
 bdy_SOURCES = bdy.c

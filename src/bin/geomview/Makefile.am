@@ -1,8 +1,8 @@
 SUBDIRS = . common x11
 
-EXTRA_DIST = geomview.1 clang.c clang.h
+man_MANS = geomview.1gv
 
-man_MANS = geomview.1
+EXTRA_DIST = clang.c clang.h $(man_MANS)
 
 all-local: clang
 

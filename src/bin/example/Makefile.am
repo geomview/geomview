@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = example.1
+man_MANS = example.1gv
 
 EXTRA_DIST = README panel.fd tutorial.ps tutorial.tex $(man_MANS)
 

@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = cplxview.1
+man_MANS = cplxview.1gv
 
 EXTRA_DIST = cplxpanels2.fd $(man_MANS)
 

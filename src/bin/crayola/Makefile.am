@@ -8,7 +8,7 @@ INCLUDES = -I$(geomviewincludes) \
 
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
-man_MANS = crayola.1
+man_MANS = crayola.1gv
 
 EXTRA_DIST = $(module_tcl_DATA) $(man_MANS)
 

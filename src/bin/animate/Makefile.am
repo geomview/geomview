@@ -1,9 +1,9 @@
 INCLUDES = $(default_includes) $(MOTIFINCLUDE)
 SUBDIRS = interface
 
-EXTRA_DIST = animate.1
+EXTRA_DIST = animate.1gv
 
-man_MANS = animate.1
+man_MANS = animate.1gv
 
 module_PROGRAMS = animate
 animate_SOURCES = \

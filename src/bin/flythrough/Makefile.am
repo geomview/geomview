@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = flythrough.1
+man_MANS = flythrough.1gv
 
 EXTRA_DIST = flyhelp panel.fd $(man_MANS)
 

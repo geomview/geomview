@@ -7,7 +7,7 @@ INCLUDES = -I$(geomviewincludes)\
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
 
-man_MANS = graffiti.1
+man_MANS = graffiti.1gv
 
 EXTRA_DIST = $(man_MANS)
 

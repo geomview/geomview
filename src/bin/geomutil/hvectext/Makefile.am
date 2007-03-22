@@ -1,6 +1,6 @@
-EXTRA_DIST = hvectext.1
+man_MANS = hvectext.1gv
 
-man_MANS = hvectext.1
+EXTRA_DIST = $(man_MANS)
 
 bin_SCRIPTS = hvectext
 CLEANFILES = $(bin_SCRIPTS)

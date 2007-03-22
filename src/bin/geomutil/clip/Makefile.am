@@ -1,8 +1,8 @@
 INCLUDES = $(default_includes)
 
-EXTRA_DIST = clip.1
+man_MANS = clip.1gv
 
-man_MANS = clip.1
+EXTRA_DIST = $(man_MANS)
 
 bin_PROGRAMS = clip
 
