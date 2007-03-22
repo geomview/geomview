@@ -1,0 +1,211 @@
+	    gvplot, writeoogl -- Maple 3-D graphics in Geomview
+
+		Contents:
+		  Installation Outline (out of date)
+		  Maple's Library Directory
+		  Configurable Settings in gvplot
+		  Remote Display
+
+*******************************************************************************
+
+NOTE: the installation instructions are out of date. Please have a
+look at `savegvplot.mws'; load that file with xmaple and try to guess
+what to do from the contents of that file. Nevertheless it may be
+helpful to read through _this_ file; it contains more information than
+just installation instructions.
+
+*******************************************************************************
+
+   This Maple package supports displaying Maple 3-D graphic objects (produced
+for example by Maple's plot3d function) in Geomview, and saving Maple graphics
+objects as Geomview-readable OOGL files.  Maple 2-D graphics aren't supported.
+
+   This distribution (in src/bin/geomutil/maple2oogl in the Geomview source
+distribution) includes Maple source files.  You'll want to run Maple to
+produce library (.m) files from the source files, and possibly to install
+them in the Maple library directory to be accessible via readlib(gvplot).
+This process is handled by the "make install" command described here.
+
+   Documentation for the package itself is available within Maple after
+installation; for example, type
+	readlib(gvplot);
+	?gvplot
+
+   To install this package:
+
+      * Edit gvplot.mapleV3 or gvplot.mapleV4 (according to your version
+	of Maple), possibly changing the settings of
+	default_gvcommand and default_gvdirectories; see
+	"Configurable Settings" and "Remote Display", below.
+
+      * Determine the directory into which new Maple library (.m) files
+	should be placed; see "Maple's Library Directory".
+	This will be the setting of MAPLE_LIB.  A typical value might be
+	/usr/local/maple/lib.
+
+      * If geomview, togeomview, and remotegv aren't already on the
+	search path of everyone who'll want to use the program, determine
+	which directory they are (or will be) placed in, e.g. /usr/local/bin.
+	This will be the setting of BINDIR.
+
+      * If you have the source distribution, edit makefiles/mk.site.default
+	(relative to the top of the geomview distribution) and set
+	MAPLE_LIB and BINDIR to the appropriate values.
+
+      * Make sure "maple" is on your search path.
+
+      * Run
+	  make install
+	or, if you didn't set MAPLE_LIB and BINDIR in mk.site.default,
+	give those values explicitly on the "make" command line:
+
+	  make install MAPLE_LIB=maple_library_directory BINDIR=binary_directory
+
+ 	Maple V4 users: since the Geometry Center doesn't have Maple V4,
+	we haven't been able to test that "make install" correctly determines
+	the version of Maple if you have release 4.  If you have trouble,
+	try invoking the MapleV4 installation directly with
+
+	  make install_v4 MAPLE_LIB=maple_lib_dir BINDIR=binary_dir
+
+
+			MAPLE'S LIBRARY DIRECTORY
+
+   For convenient invocation, it's best to put the compiled Maple code for
+this package -- the file gvplot.m -- in some directory known to Maple.
+Users can then invoke it by typing
+
+    readlib(gvplot);
+
+   Since Maple V.2, Maple keeps a list of library directory names in the
+global variable "libname".  Its default value is typically the single
+directory `/usr/local/maple/lib`; you can check its actual value by
+running Maple and typing
+
+    libname;
+
+    You can configure Maple to add other directories (e.g. for locally-
+installed rather than Maple-supplied packages) to the libname list for all
+users.  Briefly, you create a "src" subdirectory of the default library
+directory (e.g.  /usr/local/maple/lib/src) and create a file there named
+"init" containing something like
+
+   libname := libname, `/usr/local/maple/otherstuff`:
+
+You could then place library files in /usr/local/maple/otherstuff, and/or set
+
+MAPLE_LIB = /usr/local/maple/otherstuff
+
+in makefiles/mk.site.default.
+
+
+
+
+		    Configurable Settings in gvplot
+
+   Two values in the "gvplot" script are configurable:
+
+      default_gvcommand, the UNIX command used to invoke geomview.
+	It's normally "geomview", but might specify some geomview options,
+	or might be "remotegv" if you'll want to run maple on one system and
+	display via geomview on another.
+
+      default_gvdirectories, the directory(ies) (in addition to those in the
+	normal UNIX search path) to find the programs "togeomview" and
+	"geomview".  There's no default; this is correct if these programs
+	are installed on everyone's search path, e.g. in /usr/local/bin.
+	This value is automatically configured as part of the "make install"
+	process and probably won't need to be messed with.
+	It can be set to a colon-separated list of directories.
+
+    It can be useful to invoke something other than simply "geomview" to
+display Maple graphics; for example, one might start geomview with
+options to position its window, or with a special startup script.
+To adjust this, change the setting of "gvcommand" near line 45, as in
+	default_gvcommand := `geomview -nopanels -wpos 640x480@0,0`;
+
+To regenerate the library (.m) file after such changes, start a fresh Maple
+session, read the source file, and save the library file:
+
+    read(`gvplot`);
+    save(`/usr/local/maple/lib/gvplot.m`);
+
+
+
+		REMOTE DISPLAY
+
+
+It's possible to run Maple on one system and display Geomview graphics
+on another.  This can sometimes be done by using the X "DISPLAY" environment
+variable, so that Maple and Geomview run on one machine but Geomview's windows
+appear elsewhere.  But for fastest graphics, it's better if you can run
+Geomview on the computer where the display is.
+
+To have the gvplot package invoke Geomview on another machine,
+make it invoke "remotegv" rather than "geomview".
+You can make "remotegv" the default for all gvplot users by editing 
+the gvplot source and changing the setting of "default_gvcommand" near line 45.
+Or, a user can adjust the setting of "gvcommand" within each session,
+saying e.g.
+   readlib(gvplot);
+   gvcommand := `remotegv -h slevy@gauss`;
+
+remotegv attempts to guess which machine to invoke geomview on by
+examining the DISPLAY environment variable.  If DISPLAY isn't set or
+if geomview should run on a different machine, use the -h host option.
+
+The script also assumes that geomview should display on the machine where
+it is invoked, so for that copy of geomview, it sets DISPLAY to ":0".
+If the display should appear elsewhere (on an X terminal, say),
+use the -display option.
+
+Remotegv uses "rsh" (remote shell) to pass data to the other computer, so 
+the remote computer must allow this -- either with an entry in
+/etc/hosts.equiv, or in a .rhosts file in the user's home directory
+on the machine where geomview will run.  The account name on the other
+machine is assumed to be the same as on this machine; if different,
+use the -l username or -h username@othermachine options.
+
+In case permissions are not set up correctly, the symptom
+is liable to be a "Permission denied." message followed by the
+immediate termination of the Maple process -- so if you're using it for
+the first time, check it out before doing much else in your Maple session!
+Sorry, but MapleV3 is just not very good at connecting to other programs.
+
+Note that togeomview and geomview MUST BE IN THE USER'S DEFAULT SEARCH PATH
+on the remote machine.
+
+To use this script within Maple, you'd say:
+   readlib(gvplot);
+then
+   gvcommand := `remotegv`;
+or e.g.
+   gvcommand := `remotegv -h othermachine -display myxterm:0`;
+or, if the account on the other machine is different from yours,
+   gvcommand := `remotegv -l otheraccount`;
+or
+   gvcommand := `remotegv -h otheraccount@othermachine`;
+Following any remotegv options, you can add the command to be invoked as
+geomview, possibly including options, as in:
+   gvcommand := `remotegv -l person /u/person/bin/geomview -wpos 300x200`;
+
+Once gvcommand is properly set, you can use gvplot() as usual.
+
+Normally, error messages reporting problems on the other machine (for
+example, being unable to run geomview) are suppressed; this is unfortunately
+necessary, or you'd never get another Maple prompt until quitting from
+geomview.  There's a test mode to aid in tracing problems; use it as in
+   gvcommand := `remotegv -test -h othermachine`;
+i.e. add "-test" to whatever other options you'd give to remotegv.
+
+Summary of remotegv options:
+    -l user  or  -l user@host
+    -h host  or  -h user@host
+    -display host:number		(set display on remote end)
+    -test
+    also accepts togeomview's options (-g, -M[c][g][p][s]).
+    Invokes rsh to specified machine, invokes togeomview there by default.
+    By default, we assume DISPLAY points to the machine where we'd like to be;
+      -h {host-portion-of-DISPLAY} -display :0
+    Incorporates settings from "$RGVOPTS" environment variable.
+
