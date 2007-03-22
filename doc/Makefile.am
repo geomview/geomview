@@ -8,10 +8,9 @@ PNGIMAGES = $(PSIMAGES:.ps=.png)
 
 man_MANS = geomview.5gv lisp.3gv oogl.5gv
 
-EXTRA_DIST = geomview.pdf geomview.html README gvplot.txt oogltour \
-  example1.c example2.c example3.c example4.tcl \
-  geomview.5 lisp.3 oogl.5 OOGL.m.txt \
-  motion.tex \
+EXTRA_DIST = geomview.pdf geomview.html README README.gvplot oogltour\
+  example1.c example2.c example3.c example4.tcl\
+  OOGL.m.txt motion.tex $(man_MANS)\
   $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)
 
 AM_MAKEINFOFLAGS = --no-validate
