@@ -19,8 +19,7 @@ info_TEXINFOS = geomview.texi
 infoimgdir = $(infodir)
 nobase_infoimg_DATA = $(PNGIMAGES)
 
-docdir = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)
-dochtmldir = $(datadir)/doc/$(PACKAGE_NAME)-$(PACKAGE_VERSION)/html
+dochtmldir = $(docdir)/html
 nobase_dochtml_DATA = $(PNGIMAGES)
 dochtml_DATA = $(wildcard geomview.html/* $(srcdir)/geomview.html/*)
 doc_DATA = geomview.pdf
