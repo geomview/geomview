@@ -1,11 +1,11 @@
 INCLUDES = $(default_includes)
 
-EXTRA_DIST = togeomview.1gv
-
 LDADD = $(OOGLLIB) ${SOCKETLIBS}
 
-man_MANS = togeomview.1
+man_MANS = togeomview.1gv
 
 bin_PROGRAMS = togeomview
 togeomview_SOURCES = togeomview.c
+
+EXTRA_DIST = $(man_MANS)
 
