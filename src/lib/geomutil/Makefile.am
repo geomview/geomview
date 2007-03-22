@@ -1,2 +1,5 @@
 SUBDIRS	= bdy crayplutil dim plutil
-EXTRA_DIST = geomutil.3
+
+man_MANS = geomutil.3gv
+
+EXTRA_DIST = $(man_MANS)

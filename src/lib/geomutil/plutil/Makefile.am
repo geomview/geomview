@@ -1,5 +1,8 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers anytopl.3 plcombine.3 plconsol.3
+
+man_MANS = anytopl.3gv plcombine.3gv plconsol.3gv
+
+EXTRA_DIST = Headers $(man_MANS)
 
 noinst_LTLIBRARIES = libplutil.la
 

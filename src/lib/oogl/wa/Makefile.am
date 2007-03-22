@@ -1,5 +1,8 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers fsaparse.3 fsaparse.y fsaparse.l $(BUILT_SOURCES)
+
+man_MANS = fsaparse.3gv
+
+EXTRA_DIST = Headers fsaparse.y fsaparse.l $(BUILT_SOURCES) $(man_MANS)
 
 noinst_LTLIBRARIES = libwa.la
 

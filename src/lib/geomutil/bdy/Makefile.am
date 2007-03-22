@@ -1,5 +1,8 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers bdy.3
+
+man_MANS = bdy.3gv
+
+EXTRA_DIST = Headers $(man_MANS)
 
 noinst_LTLIBRARIES = libbdy.la
 
