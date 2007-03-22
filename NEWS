@@ -17,12 +17,18 @@
    * Appearances can now be given symbolic names via `define' and `hdefine'
 
    * RenderMan output now supports texturing. I had to write some more
-     shaders to support this.
+     shaders to support this. The new shaders do not seem to work with
+     the old BMRT (Blue Moon Render Tools) package, because BMRT does
+     not seem to understand the `textureinfo' command. More recent
+     renderers like Aqsis, 3Delight and Pixie seem to work.
 
    * Textures can be applied in "replace" mode: the texture colour
      simply replaces the surface color.
 
    * support for translucent textures
+
+   * The Sphere OOGL objects now have support for textur-emapping; the
+     details are documented in the Geomview manual.
 
    * new GCL command `hdelete' (lazy deletion of global handles)
 
