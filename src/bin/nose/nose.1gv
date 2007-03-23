@@ -1,0 +1,27 @@
+.TH nose 1gv "September 1 1992" "Geometry Center"
+.SH NAME
+nose - test geomview's picking facility
+.SH DESCRIPTION
+
+Nose is a geomview module which tests the geomview picking facility.
+
+Nose has no panel of its own.  You invoke it by selecting the "Nose"
+line in the APPLICATIONS browser.  Once invoked, nose waits for you to
+click the right mouse button with the cursor over some object in a
+geomview camera window.  It then draws a little box on the spot where
+you clicked.  If the picked spot is along an edge, it also draws a
+pair of boxes at the endpoints of the edge, and a line segment along
+the edge.  If the picked spot is on a vertex, the box is a different
+color.
+
+Nose is not necessarily intended to be a useful program.  It is just a
+simple example of how an external program can find out about and make
+use of geomview pick events.
+
+.SH SEE ALSO
+geomview(1)
+.SH AUTHOR
+.nf
+Mark Phillips
+Geometry Center
+.fi
