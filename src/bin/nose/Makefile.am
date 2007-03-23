@@ -7,8 +7,8 @@ man_MANS = nose.1gv
 EXTRA_DIST = $(man_MANS)
 
 module_PROGRAMS = nose
-clipboard_SOURCES = nose.c
-clipboard_DEPENDENCIES = $(OOGLLIB)
+nose_SOURCES = nose.c
+nose_DEPENDENCIES = $(OOGLLIB)
 
 module_DATA = .geomview-nose
 
