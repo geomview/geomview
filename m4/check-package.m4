@@ -210,7 +210,6 @@ m4_if($8,[optional],
     [UPNAME[_LIB]=""
      UPNAME[_ALL_LIB]=""
      UPNAME[_LIB_PATH]=""
-     UPNAME[_INCLUDE]=""
      UPNAME[_INCLUDE_PATH]=""],
     -L`eval eval eval echo ${UPNAME[_LIB_PATH]}` $4)],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
@@ -242,7 +241,6 @@ m4_if($8,[optional],
     [UPNAME[_LIB]=""
      UPNAME[_ALL_LIB]=""
      UPNAME[_LIB_PATH]=""
-     UPNAME[_INCLUDE]=""
      UPNAME[_INCLUDE_PATH]=""],
     -F${UPNAME[_LIB_PATH]} $4)],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
@@ -261,23 +259,29 @@ else
     dnl
     dnl  check for the header file
     dnl
-    [ac_]UPNAME[_save_CPPFLAGS]="$CPPFLAGS"
-    CPPFLAGS="-I`eval eval eval echo ${UPNAME[_INCLUDE_PATH]}` $CPPFLAGS"
-    m4_if($8,[optional],
-	[AC_CHECK_HEADERS($5,, [UPNAME[_LIB]=""
-			       UPNAME[_ALL_LIB]=""
-			       UPNAME[_INCLUDE]=""
-			       UPNAME[_LIB_PATH]=""
-			       UPNAME[_INCLUDE_PATH]=""])],
-	[AC_CHECK_HEADERS($5,, AC_MSG_ERROR([Header file "$5" was not found]))])
-
-dnl
-dnl no need to use -I... if header is located in standard include path
-dnl
-    if ! test -f "eval eval eval echo ${UPNAME[_INCLUDE_PATH]}/$5"; then
-	UPNAME[_INCLUDE]=""
+    [gv_ac_]UPNAME[_save_CPPFLAGS]="$CPPFLAGS"
+    m4_define([gv_ac_inctemp],[m4_bpatsubst([gv_ac_$5],[[].-[]],_)])
+    unset gv_ac_inctemp
+    for incdir in ${UPNAME[_INCLUDE_PATH]}; do
+      CPPFLAGS="-I`eval eval eval echo ${incdir}` ${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
+      AC_CHECK_HEADERS($5,[gv_ac_inctemp="$5"])
+      if ! test "${gv_ac_inctemp}" = "$5"; then
+	eval "[unset ac_cv_header_]m4_bpatsubst([$5],[[].-[]],_)"
+      else
+     	break
+      fi
+    done
+    if ! test "${gv_ac_inctemp}" = "$5"; then
+      m4_if($8,[optional],
+        [UPNAME[_LIB]=""
+	UPNAME[_ALL_LIB]=""
+	UPNAME[_LIB_PATH]=""
+	UPNAME[_INCLUDE_PATH]=""],
+        [AC_MSG_ERROR([Header file "$5" was not found])])
+    else
+      UPNAME[_INCLUDE_PATH]="${incdir}"
     fi
-    CPPCLAGS="${[ac_]UPNAME[_save_CPPFLAGS]}"
+    CPPCLAGS="${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
   ])
   dnl
   dnl define makefile substitutions and config.h macros
@@ -295,7 +299,6 @@ fi dnl disable fi
 AM_CONDITIONAL([HAVE_]UPNAME, [test -n "$[]UPNAME[_LIB]"])
 AC_SUBST(UPNAME[_INCLUDE_PATH])
 AC_SUBST(UPNAME[_LIB_PATH])
-AC_SUBST(UPNAME[_INCLUDE])
 AC_SUBST(UPNAME[_LIB])
 AC_SUBST(UPNAME[_ALL_LIB])
 AC_SUBST(UPNAME[_NAME])
