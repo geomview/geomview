@@ -457,8 +457,6 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
   HPt3Coord w;
   int i; /* leave the loop unrolling to the comiler */
 
-  memset(v, 0, sizeof(*v));  
-
   if (data->polyflags & VERT_ST) {
     /* texture co-ordinates */
     for (i = 0; i < 4; i++) {
@@ -480,6 +478,7 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
 
   if (data->polyflags & VERT_C) {
     /* colors */
+    memset(&v->vcol, 0, sizeof(v->vcol));
     for (i = 0; i < 4; i++) {
       v->vcol.r += weight[i] * vertex_data[i]->vcol.r;
       v->vcol.g += weight[i] * vertex_data[i]->vcol.g;
@@ -493,6 +492,7 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
      * to orient them w.r.t. the polygon normal before computing the
      * linear combination.
      */
+    memset(&v->vn, 0, sizeof(v->vn));
     for (i = 0; i < 4; i++) {
       Point3 *vn = &vertex_data[i]->vn;
       if (Pt3Dot(vn, data->pn) < 0.0) {
@@ -744,6 +744,9 @@ case 4: /* supported */
       tessdata->scratch    = scratch;
       tessdata->plistp     = plistp;
       tessdata->tagged_app = tagged_app;
+
+      /* tell GLU what we think is a good approximation for the normal */
+      gluTessNormal(glutess, poly->pn.x, poly->pn.y, poly->pn.z);
 
       /* rest is done in the callback functions */
       gluTessBeginPolygon(glutess, tessdata);
