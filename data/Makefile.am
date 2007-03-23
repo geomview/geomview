@@ -66,44 +66,6 @@ groups =					\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
 
-ndview_scripts = NDview/scripts/.ndview NDview/scripts/4d.2bigwins     \
- NDview/scripts/4d.3wins NDview/scripts/4d.4wins NDview/scripts/4d.cplx \
- NDview/scripts/4d.earthcolor NDview/scripts/4d.wildcolor	       \
- NDview/scripts/4d.xyw NDview/scripts/4d.xyz NDview/scripts/4d.xzw      \
- NDview/scripts/4d.yzw NDview/scripts/4dcol.w.rb		       \
- NDview/scripts/4dcol.x.rb NDview/scripts/4dcol.y.rb		       \
- NDview/scripts/4dcol.z.rb NDview/scripts/5d.123		       \
- NDview/scripts/5d.5wins NDview/scripts/5dcol.1.rb		       \
- NDview/scripts/5dcol.2.rb NDview/scripts/5dcol.3.rb		       \
- NDview/scripts/5dcol.4.rb NDview/scripts/5dcol.5.rb		       \
- NDview/scripts/color.script NDview/scripts/delete_all.script	       \
- NDview/scripts/deletecams.script NDview/scripts/nocolor.script	       \
- NDview/scripts/reset.script NDview/scripts/startup.big.script	       \
- NDview/scripts/startup.small.script
-
-ndview_geom = NDview/geom/4cube NDview/geom/4daxes NDview/geom/5daxes  \
- NDview/geom/6daxes NDview/geom/crosscap NDview/geom/dodecaplex.skel    \
- NDview/geom/flattorus NDview/geom/funcplane NDview/geom/hypercube.skel \
- NDview/geom/octaplex.skel NDview/geom/orthoplex.skel		       \
- NDview/geom/pluker23col.4d NDview/geom/simplex.skel		       \
- NDview/geom/tetraplex.skel NDview/geom/demo/axes		       \
- NDview/geom/demo/cubew NDview/geom/demo/cubew+ NDview/geom/demo/point  \
- NDview/geom/demo/points NDview/geom/demo/segmentw+x+z		       \
- NDview/geom/demo/segmentw+x+z+ NDview/geom/demo/squarew+x	       \
- NDview/geom/demo/squarew+x+ NDview/geom/demo/tesseract
-
-ndview_text = NDview/text/axeshelp.txt NDview/text/cube.txt	       \
- NDview/text/cubed.txt NDview/text/demohelp.txt			       \
- NDview/text/introhelp.txt NDview/text/point.txt NDview/text/pointd.txt \
- NDview/text/prefabhelp.txt NDview/text/segment.txt		       \
- NDview/text/segmentd.txt NDview/text/square.txt			       \
- NDview/text/squared.txt NDview/text/tesseract.txt		       \
- NDview/text/toolkithelp.txt
-
-ndview = $(ndview_scripts) $(ndview_geom) $(ndview_text)
-
-nobase_geomdata_SCRIPTS = NDview/scripts/eitherwindow
-
 cplxview = \
  NDview/cplxview/text/cplxhelp.txt \
  NDview/cplxview/geom/funcplane \
@@ -236,6 +198,5 @@ nobase_geomdata_DATA = \
 	geom/ztent.mesh
 
 nobase_geomdata_DATA += $(groups)
-nobase_geomdata_DATA += $(ndview)
 nobase_geomdata_DATA += $(cplxview)
 
