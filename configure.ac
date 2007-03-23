@@ -995,6 +995,7 @@ AC_CONFIG_FILES([Makefile
 	  src/bin/geomutil/ucd/Makefile
 	  src/bin/geomutil/vrml2oogl/Makefile
 	  src/bin/geomutil/vrml2oogl/lib/Makefile
+	  src/bin/nose/Makefile
 	  src/bin/togeomview/Makefile
 ])
 AC_OUTPUT

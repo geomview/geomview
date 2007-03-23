@@ -108,6 +108,7 @@ MODULE	   	DESCRIPTION
 Animate:	flip through a sequence of objects
 Clipboard:      save a single OOGL object to a clipboard
 Gvclock:        an animated clock
+Nose:           debugging/example for picking (see Geomview manual)
 
 Modules involving extra libraries like XForms or Tcl/Tk have be moved
 to separate packages to make the maintenance of the Geomview main

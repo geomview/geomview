@@ -1,1 +1,1 @@
-SUBDIRS = geomview togeomview geomutil animate clipboard gvclock 
+SUBDIRS = geomview togeomview geomutil animate clipboard gvclock nose
