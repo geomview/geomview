@@ -426,6 +426,138 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
   return *plistp;
 }
 
+#if 0 && HAVE_LIBGLU
+
+/* GLU tesselator interface for non-convex multi-vertex (> 4)
+ * polygons. We allocate new vertices using the BSPTree obstack.
+ */
+
+struct tess_data
+{
+  Poly *trickyp; /* original polygon */
+  Poly *p; /* current polygon */
+  PolyListNode **plistp;
+  unsigned polyflags;
+  Point3 *pn;
+  GLenum type;
+  int vcnt; /* vertex count after begin() callback */
+  struct obstack *scratch;
+};
+
+void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
+		       GLfloat weight[4], Vertex **outData,
+		       struct tess_data *data)
+{
+  Vertex *v = obstack_alloc(data->scratch, sizeof(Vertex));
+  HPt3Coord w;
+  int i; /* leave the loop unrolling to the comiler */
+
+  memset(v, 0, sizeof(*v));  
+
+  if (data->polyflags & VERT_ST) {
+    /* texture co-ordinates */
+    for (i = 0; i < 4; i++) {
+      v->st.s += weight[i] * vertex_data[i]->st.s;
+      v->st.t += weight[i] * vertex_data[i]->st.t;
+    }  
+    /* same linear combination stuff as in SplitPolyNode(); be careful
+     * not to dehomogenize, otherwise texturing might come out wrong.
+     */
+    for (i = 0, w = 0.0; i < 4; i++) {
+      w += weight[i] * vertex_data[i]->pt.w;
+    }
+  } else {
+    /* just use whatever has been passed in coords */
+    w = 1.0;
+  }
+  v->pt.x = coords[0] * w; v->pt.y = coords[1] * w; v->pt.z = coords[2] * w;
+  v->pt.w = w;
+
+  if (data->polyflags & VERT_C) {
+    /* colors */
+    for (i = 0; i < 4; i++) {
+      v->vcol.r += weight[i] * vertex_data[i]->vcol.r;
+      v->vcol.g += weight[i] * vertex_data[i]->vcol.g;
+      v->vcol.b += weight[i] * vertex_data[i]->vcol.b;
+      v->vcol.a += weight[i] * vertex_data[i]->vcol.a;
+    }
+  }
+
+  if (true || (data->polyflags & VERT_N)) { /* we _have_ normals */
+    /* The averaged vertex normals do not have an orientation, so try
+     * to orient them w.r.t. the polygon normal before computing the
+     * linear combination.
+     */
+    for (i = 0; i < 4; i++) {
+      Point3 *vn = &vertex_data[i]->vn;
+      if (Pt3Dot(vn, &data->poly->pn) < 0.0) {
+	Pt3Comb(-weight[i], vn, 1.0, &v->vn);
+      } else {
+	Pt3Comb(weight[i], vn, 1.0, &v->vn);
+      }
+    }
+    Pt3Unit(&v->vn);
+  }
+
+  *dataOut = v;
+}
+
+void tess_begin_data(GLenum type, struct tess_data *data)
+{
+  data->type = type;
+  data->vcnt = 0; /* reset counter */
+}
+
+void tess_vertex_data(Vertex *v, struct tess_data *data)
+{
+  /* Here we have to do all the work, depending on what flag
+     previously has been passed to the begin() callback.
+  */
+  switch (data->type) {
+  case GL_TRIANGLES: /* the easy case */
+    if (data->vcnt == 0) {
+      /* create a new polygon */
+      data->p = new_poly(3, NULL, data->scratch);
+      data->p->flags |= data->polyflags;
+      if (data->polyflags & FACET_C) {
+	data->p->pcol = data->trickyp->pcol;
+      }
+      data->p->pn = data->pn; /* always inherit the normal */
+    }
+
+    /* add the vertex */
+    data->p->v[data->vcnt] = v;
+    
+    if (++data->vcnt == 3) {
+      /* add the polygon to *data->plistp */
+      PolyListNode *new_pn;
+
+      data->vcnt = 0;
+
+      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn->poly = data->p;
+      data->p = NULL;
+      ListPush(*data->plistp, new_pn);
+    }
+    break;
+  case GL_TRIANGLE_STRIP:
+    break;
+  case GL_TRIANGLE_FAN:
+    break;
+  default:
+    break;
+  }
+}
+
+#if 0
+void tess_end_data(struct tess_data *data)
+{
+  /* probably not needed */
+}
+#endif
+
+#endif 
+
 /* convert a PolyList into a linked list of PolyListNodes, subdivide
  * non-flat or concave polgons
  */
@@ -490,12 +622,60 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual, Transform TxT,
       break;
     default:
       if (pl->p[pnr].flags & (POLY_NONFLAT|POLY_CONCAVE)) {
+#if 1 || !HAVE_LIBGLU
 	static int was_here;
 	
 	if (!was_here ) {
 	  GeomError(1, "Non-flat or concave polygons not supported yet.\n");
 	  was_here = 1;
 	}
+#else
+	/* We use the GLU tesselator here, if available. It is not
+	 * necessary to reinvent the wheel; also, the OpenGL MG
+	 * backend also uses the tesselator (so we will get comparable
+	 * shapes w/o translucency).
+	 */
+	static GLUtesselator *glutess;
+	struct tess_data tessdata[1];
+	GLdouble dv[poly->n_vertices][3];
+	Vertex **vp;
+
+	if (glutess == NULL) {
+	  glutess = gluNewTess();
+	  gluTessProperty(glutess,
+			  GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+	  gluTessCallback(glutess, GLU_BEGIN_DATA, tess_begin_data);
+	  gluTessCallback(glutess, GLU_VERTEX_DATA, tess_vertex_data);
+	  gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
+	  /* gluTessCallback(glutess, GLU_END_DATA, tess_end_data); */
+	}
+
+	tessdata->polyflags = poly->flags;
+	tessdata->pn        = &poly->pn;
+	tessdata->scratch   = scratch;
+	tessdata->plistp    = plistp;
+
+	/* rest is done in the callback functions */
+	gluTessBeginPolygon(glutess, tessdata);
+	gluTessBeginContour(glutess);
+	for (i = 0, vp = poly->v; i < poly->n_vertics; i++, v++) {
+	  HPt3Coord w = vp->pt.w;
+	  if (w != 1.0 && w != 0.0) {
+	    dv[i][0] = vp->pt.x / w;
+	    dv[i][1] = vp->pt.y / w;
+	    dv[i][2] = vp->pt.z / w;
+	  } else {
+	    dv[i][0] = vp->pt.x;
+	    dv[i][1] = vp->pt.y;
+	    dv[i][2] = vp->pt.z;
+	  }
+	  gluTessVertex(glutess, dv[i], vp);
+	}
+	gluTessEndContour(glutess);
+	gluTessEndPolygon(glutess);
+
+	break; /* out of switch */
+#endif
       }
       new_pn = new_poly_list_node(tagged_app, scratch);
       new_pn->poly = poly;
@@ -787,7 +967,7 @@ static inline void SplitPolyNode(PolyListNode *plnode,
   Vertex *v0, *v1, **vpos, **savedv;
   int istart[2], iend[2], i, nv[2];
   Vertex *vstart[2], *vend[2];
-  
+
   poly = plnode->poly;
 
   vstart[0] = vstart[1] = vend[0] = vend[1] = NULL;
@@ -828,23 +1008,31 @@ static inline void SplitPolyNode(PolyListNode *plnode,
      * because the homogeneous divisor is used for perspective
      * corrections.
      */
-    HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v0->pt);
+    if (poly->flags & VERT_ST) {
+      v0->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
+      v0->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
+      HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v0->pt);
+    } else {
+      HPt3LinSum(mu0, &V0->pt, mu1, &V1->pt, &v0->pt);
+    } 
     if (!finite(v0->pt.x + v0->pt.y + v0->pt.z)){
       abort();
     }
-    CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v0->vcol);
-    /* The averaged vertex normals do not have an orientation, so try
-     * so orient them w.r.t. the polygon normal before computing the
-     * linear combination.
-     */
-    if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
-      Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
-    } else {
-      Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+    if (poly->flags & VERT_C) {
+      CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v0->vcol);
     }
-    Pt3Unit(&v0->vn);
-    v0->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
-    v0->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
+    if (true || (poly->flags & VERT_N)) {
+      /* The averaged vertex normals do not have an orientation, so
+       * try to orient them w.r.t. the polygon normal before computing
+       * the linear combination.
+       */
+      if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
+	Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+      } else {
+	Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v0->vn);
+      }
+      Pt3Unit(&v0->vn);
+    }
 
     if (fpos(edges[0].scp[0])) {
       vstart[1] = vend[0] = v0;
@@ -888,18 +1076,26 @@ static inline void SplitPolyNode(PolyListNode *plnode,
 #else
     mu1 = 1.0 - mu0;
 #endif
-    HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
+    if (poly->flags & VERT_ST) {
+      v1->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
+      v1->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
+      HPt3LinSumDenorm(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
+    } else {
+      HPt3LinSum(mu0, &V0->pt, mu1, &V1->pt, &v1->pt);
+    }
     if (!finite(v1->pt.x + v1->pt.y + v1->pt.z))
       abort();
-    CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v1->vcol);
-    if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
-      Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
-    } else {
-      Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+    if (poly->flags & VERT_C) {
+      CoLinSum(mu0, &V0->vcol, mu1, &V1->vcol, &v1->vcol);
     }
-    Pt3Unit(&v1->vn);
-    v1->st.s = mu0 * V0->st.s + mu1 * V1->st.s;
-    v1->st.t = mu0 * V0->st.t + mu1 * V1->st.t;
+    if (true || (poly->flags & VERT_N)) {
+      if (Pt3Dot(&V0->vn, &poly->pn)*Pt3Dot(&V1->vn, &poly->pn) < 0) {
+	Pt3Comb(-mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+      } else {
+	Pt3Comb(mu0, &V0->vn, mu1, &V1->vn, &v1->vn);
+      }
+      Pt3Unit(&v1->vn);
+    }
 
     if (fpos(edges[1].scp[0])) {
       vstart[1] = vend[0] = v1;

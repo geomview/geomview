@@ -277,7 +277,6 @@ void mgopengl_point(HPoint3 *v)
     glEnd();
   }
 }
-  
 
 void mgopengl_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 {
@@ -315,9 +314,10 @@ void mgopengl_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
   if(!(wrapped & 4) && _mgopenglc->znudge) mgopengl_farther();
 }
 
-
+#if HAVE_LIBGLU
 /* Slave routine for mgopengl_trickypolygon() below. */
 static int tessplflags;
+static Point3 *tessplnormal;
 
 void tessvert(Vertex *vp)
 {
@@ -327,17 +327,69 @@ void tessvert(Vertex *vp)
   glVertex4fv(&vp->pt.x);
 }
 
-void tesscombine(GLdouble coords[3], GLdouble *vertex_data[4],
+void tesscombine(GLdouble coords[3], Vertex *vertex_data[4],
                 GLfloat weight[4], Vertex **dataOut, Vertex ***ptr_extra_verts)
 {
    Vertex *vertex;
-   int list_len, alloc_cnt, realloc_cnt;
-
+   int list_len, alloc_cnt, realloc_cnt, i;
+   HPt3Coord w;
+   
    vertex = OOGLNewE(Vertex, "extra vertex");
-   vertex->pt.x = coords[0];
-   vertex->pt.y = coords[1];
-   vertex->pt.z = coords[2];
-   vertex->pt.w = 1;
+
+   if (tessplflags & VERT_ST) {
+    /* texture co-ordinates */
+    for (i = 0; i < 4; i++) {
+      vertex->st.s += weight[i] * vertex_data[i]->st.s;
+      vertex->st.t += weight[i] * vertex_data[i]->st.t;
+    }  
+    /* same linear combination stuff as in SplitPolyNode()@bsptree.c;
+     * be careful not to dehomogenize, otherwise texturing might come
+     * out wrong.
+     */
+    for (i = 0, w = 0.0; i < 4; i++) {
+      w += weight[i] * vertex_data[i]->pt.w;
+    }
+   } else {
+     w = 1.0;
+   }
+     
+   vertex->pt.x = coords[0] * w;
+   vertex->pt.y = coords[1] * w;
+   vertex->pt.z = coords[2] * w;
+   vertex->pt.w = w;
+   
+   if (tessplflags & VERT_N) {
+     if (tessplflags & PL_HASPN) {
+       /* The averaged vertex normals do not have an orientation, so
+	* try to orient them w.r.t. the polygon normal before
+	* computing the linear combination.
+	*/
+       for (i = 0; i < 4; i++) {
+	 Point3 *vn = &vertex_data[i]->vn;
+	 if (Pt3Dot(vn, tessplnormal) < 0.0) {
+	   Pt3Comb(-weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
+	 } else {
+	   Pt3Comb(weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
+	 }
+       }
+     } else { /* normal will come out wrong, probably ... */
+       for (i = 0; i < 4; i++) {
+	 Pt3Comb(weight[i], &vertex_data[i]->vn, 1.0, &vertex->vn, &vertex->vn);
+       }
+     }
+     Pt3Unit(&vertex->vn);
+   }
+   
+   if (tessplflags & VERT_C) {
+     /* colors */
+     for (i = 0; i < 4; i++) {
+       vertex->vcol.r += weight[i] * vertex_data[i]->vcol.r;
+       vertex->vcol.g += weight[i] * vertex_data[i]->vcol.g;
+       vertex->vcol.b += weight[i] * vertex_data[i]->vcol.b;
+       vertex->vcol.a += weight[i] * vertex_data[i]->vcol.a;
+     }
+   }
+
    *dataOut = vertex;
 
    /* Keep list of pointers to allocated Vertex's. 
@@ -354,7 +406,6 @@ void tesscombine(GLdouble coords[3], GLdouble *vertex_data[4],
    (*ptr_extra_verts)[0]->pt.x = list_len + 1;
 }
 
-
 /*
  * Called when we're asked to deal with a possibly-concave polygon.
  * Note we can only be called if APF_CONCAVE mode is set.
@@ -363,7 +414,7 @@ void tesscombine(GLdouble coords[3], GLdouble *vertex_data[4],
  * is indicated by (p->flags & POLY_CONCAVE).
  */
 static void
-mgopengl_trickypolygon( Poly *p, int plflags ) 
+mgopengl_trickypolygon(Poly *p, int plflags) 
 {
   int i, list_len;
   const int init_alloc_sz=2;
@@ -394,6 +445,7 @@ mgopengl_trickypolygon( Poly *p, int plflags )
   extra_verts[0]->pt.x = 1;             /* Holder for list length */
   extra_verts[0]->pt.y = init_alloc_sz; /* Holder for allocation size */
   tessplflags = plflags;
+  tessplnormal = &p->pn;
   gluTessBeginPolygon(glutess, &extra_verts);
   gluTessBeginContour(glutess);
   for(i = 0, dp = dpts; i < p->n_vertices; i++, dp += 3) {
@@ -412,6 +464,7 @@ mgopengl_trickypolygon( Poly *p, int plflags )
   }
   OOGLFree(extra_verts);
 }
+#endif /* HAVE_LIBGLU */
 
 /* The work-horse for mgopengl_bsptree():
  *
@@ -756,10 +809,22 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       v = p->v;
       if((j = p->n_vertices) <= 2) {
 	nonsurf = i;
+#if HAVE_LIBGLU
       } else if ((p->flags & POLY_CONCAVE) ||
 		 (p->n_vertices > 4 && (flag & APF_CONCAVE))) {
 	mgopengl_trickypolygon(p, plflags);
       } else { /* normal algorithm */
+#else
+      } else {
+	static bool was_here = false;
+	if (!was_here &&
+	    ((p->flags & POLY_CONCAVE) ||
+	     (p->n_vertices > 4 && (flag & APF_CONCAVE)))) {
+	  OOGLWarn("The GLU tesselator is not available; "
+		   "rendering of concave and polygons will be wrong.");
+	  was_here = true;
+	}
+#endif
 	glBegin(GL_POLYGON);
 	switch(plflags & (PL_HASVCOL|PL_HASVN|PL_HASST)) {
 	case 0:

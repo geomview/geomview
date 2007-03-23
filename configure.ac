@@ -609,7 +609,15 @@ See the file INSTALL.Geomview for details.
   else
     GLU_L_OPTION=""
   fi
-  OPENGLLIBS="$GL_L_OPTION -lGL $GLU_L_OPTION -lGLU"
+  if test "z${GLU_L_OPTION}" = "z0"; then
+    AC_MSG_RESULT([libGLU not found. libGLU is required to render
+                  non-flat or concave polygons.])
+    OPENGLLIBS="$GL_L_OPTION -lGL"
+    AC_DEFINE([HAVE_LIBGLU], 0, [Define to 1 if you have libGLU])
+  else
+    OPENGLLIBS="$GL_L_OPTION -lGL $GLU_L_OPTION -lGLU"
+    AC_DEFINE([HAVE_LIBGLU], 1, [Define to 1 if you have libGLU])
+  fi
 
   AC_MSG_RESULT([headers $OPENGLINCLUDE, libraries $OPENGLLIBS])
 
@@ -686,7 +694,7 @@ AC_DEFINE_UNQUOTED([MGGL],${MGGL}, [Leave this at 0])
 ########################################################################
 
 # Check for zlib and bzlib (image compression/decompression)
-GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
+#GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
 GEOMVIEW_CHECK_PACKAGE(zlib, z, , , zlib.h, , , optional)
 
 ########################################################################
