@@ -426,7 +426,10 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
   return *plistp;
 }
 
-#if 0 && HAVE_LIBGLU
+#if HAVE_LIBGLU
+
+# include <GL/gl.h>
+# include <GL/glu.h>
 
 /* GLU tesselator interface for non-convex multi-vertex (> 4)
  * polygons. We allocate new vertices using the BSPTree obstack.
@@ -434,12 +437,13 @@ MeshToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
 
 struct tess_data
 {
-  Poly *trickyp; /* original polygon */
-  Poly *p; /* current polygon */
   PolyListNode **plistp;
+  const void **tagged_app;
+  Poly *trickyp; /* original polygon */
   unsigned polyflags;
   Point3 *pn;
   GLenum type;
+  Poly *p; /* current polygon */
   int vcnt; /* vertex count after begin() callback */
   Vertex *v[2]; /* for TRIANGLE_STRIP and TRIANGLE_FAN */
   struct obstack *scratch;
@@ -491,16 +495,16 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
      */
     for (i = 0; i < 4; i++) {
       Point3 *vn = &vertex_data[i]->vn;
-      if (Pt3Dot(vn, &data->poly->pn) < 0.0) {
-	Pt3Comb(-weight[i], vn, 1.0, &v->vn);
+      if (Pt3Dot(vn, data->pn) < 0.0) {
+	Pt3Comb(-weight[i], vn, 1.0, &v->vn, &v->vn);
       } else {
-	Pt3Comb(weight[i], vn, 1.0, &v->vn);
+	Pt3Comb(weight[i], vn, 1.0, &v->vn, &v->vn);
       }
     }
     Pt3Unit(&v->vn);
   }
 
-  *dataOut = v;
+  *outData = v;
 }
 
 void tess_begin_data(GLenum type, struct tess_data *data)
@@ -521,7 +525,7 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
     if (data->polyflags & FACET_C) {
       data->p->pcol = data->trickyp->pcol;
     }
-    data->p->pn = data->pn; /* always inherit the normal */
+    data->p->pn = *data->pn; /* always inherit the normal */
   }
 
   switch (data->type) {
@@ -535,7 +539,8 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
 
       data->vcnt = 0;
 
-      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn = new_poly_list_node(data->tagged_app, data->scratch);
+      new_pn->poly = data->p;
       data->p = NULL;
       ListPush(*data->plistp, new_pn);
     }
@@ -549,7 +554,7 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
       if (data->polyflags & FACET_C) {
 	data->p->pcol = data->trickyp->pcol;
       }
-      data->p->pn = data->pn; /* always inherit the normal */
+      data->p->pn = *data->pn; /* always inherit the normal */
       
       data->p->v[0] = data->v[0];
       data->p->v[1] = data->v[1];
@@ -565,13 +570,13 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
       PolyListNode *new_pn;
 
       if (data->vcnt & 1) {
-	data->v[0] = data->p->v[1];
-	data->v[1] = data->p->v[2];
+	data->v[0] = data->p->v[2];
+	data->v[1] = data->p->v[1];
       } else {
 	data->v[0] = data->p->v[0];
 	data->v[1] = data->p->v[2];
       }
-      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn = new_poly_list_node(data->tagged_app, data->scratch);
       new_pn->poly = data->p;
       ListPush(*data->plistp, new_pn);
     }
@@ -584,14 +589,16 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
       if (data->polyflags & FACET_C) {
 	data->p->pcol = data->trickyp->pcol;
       }
-      data->p->pn = data->pn; /* always inherit the normal */
+      data->p->pn = *data->pn; /* always inherit the normal */
       
       data->p->v[0] = data->v[0];
       data->p->v[1] = data->v[1];
       /* add the vertex */
       data->p->v[2] = v;
     } else {
-      /* add the vertex */
+      if (data->vcnt == 0) {
+	data->v[0] = v;
+      }
       data->p->v[data->vcnt] = v;
     }
 
@@ -599,9 +606,8 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
       /* add the polygon to *data->plistp */
       PolyListNode *new_pn;
 
-      data->v[0] = data->p->v[1];
       data->v[1] = data->p->v[2];
-      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn = new_poly_list_node(data->tagged_app, data->scratch);
       new_pn->poly = data->p;
       ListPush(*data->plistp, new_pn);
     }
@@ -610,13 +616,6 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
     break;
   }
 }
-
-#if 0
-void tess_end_data(struct tess_data *data)
-{
-  /* probably not needed */
-}
-#endif
 
 #endif 
 
@@ -659,7 +658,8 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual, Transform TxT,
       new_pn->poly = poly;
       ListPush(*plistp, new_pn);
       break;
-    case 4: /* supported */
+#if !HAVE_LIBGLU
+case 4: /* supported */
       if (pl->p[pnr].flags & (POLY_NONFLAT|POLY_CONCAVE)) {
 	/* split this polygon along a diagonal, if the polygon is
 	 * concave: split across the unique concave vertex.
@@ -684,67 +684,90 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual, Transform TxT,
       break;
     default:
       if (pl->p[pnr].flags & (POLY_NONFLAT|POLY_CONCAVE)) {
-#if 1 || !HAVE_LIBGLU
 	static int was_here;
 	
 	if (!was_here ) {
 	  GeomError(1, "Non-flat or concave polygons not supported yet.\n");
 	  was_here = 1;
 	}
-#else
-	/* We use the GLU tesselator here, if available. It is not
-	 * necessary to reinvent the wheel; also, the OpenGL MG
-	 * backend also uses the tesselator (so we will get comparable
-	 * shapes w/o translucency).
-	 */
-	static GLUtesselator *glutess;
-	struct tess_data tessdata[1];
-	GLdouble dv[poly->n_vertices][3];
-	Vertex **vp;
-
-	if (glutess == NULL) {
-	  glutess = gluNewTess();
-	  gluTessProperty(glutess,
-			  GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
-	  gluTessCallback(glutess, GLU_BEGIN_DATA, tess_begin_data);
-	  gluTessCallback(glutess, GLU_VERTEX_DATA, tess_vertex_data);
-	  gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
-	  /* gluTessCallback(glutess, GLU_END_DATA, tess_end_data); */
-	}
-
-	tessdata->polyflags = poly->flags;
-	tessdata->pn        = &poly->pn;
-	tessdata->scratch   = scratch;
-	tessdata->plistp    = plistp;
-
-	/* rest is done in the callback functions */
-	gluTessBeginPolygon(glutess, tessdata);
-	gluTessBeginContour(glutess);
-	for (i = 0, vp = poly->v; i < poly->n_vertics; i++, v++) {
-	  HPt3Coord w = vp->pt.w;
-	  if (w != 1.0 && w != 0.0) {
-	    dv[i][0] = vp->pt.x / w;
-	    dv[i][1] = vp->pt.y / w;
-	    dv[i][2] = vp->pt.z / w;
-	  } else {
-	    dv[i][0] = vp->pt.x;
-	    dv[i][1] = vp->pt.y;
-	    dv[i][2] = vp->pt.z;
-	  }
-	  gluTessVertex(glutess, dv[i], vp);
-	}
-	gluTessEndContour(glutess);
-	gluTessEndPolygon(glutess);
-
-	break; /* out of switch */
-#endif
       }
       new_pn = new_poly_list_node(tagged_app, scratch);
       new_pn->poly = poly;
       ListPush(*plistp, new_pn);
       break;
-    }
-  }
+#else
+    case 4:
+      /* if we want to be able to render polygons with
+       * self-intersections "correctly", then we always have to use
+       * the GLU tesselater for polygons with more than 4 vertices and
+       * for non-convex quadrilaterals. We can handle non-flat
+       * quadrilaterals ourselves.
+       */
+      if ((pl->p[pnr].flags & (POLY_NONFLAT|POLY_CONCAVE)) == POLY_NONFLAT) {
+	/* Split this polygon along a diagonal. Leave concave
+	 * quadrilaterals to the GLU tesselator; they could have
+	 * self-intersections.
+	 */
+	split_quad_poly(0, poly, plistp, tagged_app, scratch);
+      } else if ((pl->p[pnr].flags & POLY_CONCAVE) == 0) {
+	new_pn = new_poly_list_node(tagged_app, scratch);
+	new_pn->poly = poly;
+	ListPush(*plistp, new_pn);
+      }
+      /* otherwise fall into the > 4 vertices case and leave
+       * everything to the GLU tesselator.
+       */
+    default: {
+      /* We use the GLU tesselator here, if available. It is not
+       * necessary to reinvent the wheel; also, the OpenGL MG backend
+       * also uses the tesselator (so we will get comparable shapes
+       * w/o translucency).
+       */
+      static GLUtesselator *glutess;
+      struct tess_data tessdata[1];
+      GLdouble dv[poly->n_vertices][3];
+      Vertex **vp;
+      int i;
+      
+      if (glutess == NULL) {
+	glutess = gluNewTess();
+	gluTessProperty(glutess,
+			GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
+	gluTessCallback(glutess, GLU_TESS_BEGIN_DATA, tess_begin_data);
+	gluTessCallback(glutess, GLU_TESS_VERTEX_DATA, tess_vertex_data);
+	gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
+      }
+
+      tessdata->trickyp    = poly;
+      tessdata->polyflags  = poly->flags;
+      tessdata->pn         = &poly->pn;
+      tessdata->scratch    = scratch;
+      tessdata->plistp     = plistp;
+      tessdata->tagged_app = tagged_app;
+
+      /* rest is done in the callback functions */
+      gluTessBeginPolygon(glutess, tessdata);
+      gluTessBeginContour(glutess);
+      for (i = 0, vp = poly->v; i < poly->n_vertices; i++, vp++) {
+	HPt3Coord w = (*vp)->pt.w;
+	if (w != 1.0 && w != 0.0) {
+	  dv[i][0] = (*vp)->pt.x / w;
+	  dv[i][1] = (*vp)->pt.y / w;
+	  dv[i][2] = (*vp)->pt.z / w;
+	} else {
+	  dv[i][0] = (*vp)->pt.x;
+	  dv[i][1] = (*vp)->pt.y;
+	  dv[i][2] = (*vp)->pt.z;
+	}
+	gluTessVertex(glutess, dv[i], *vp);
+      }
+      gluTessEndContour(glutess);
+      gluTessEndPolygon(glutess);
+      break; /* out of switch */
+    } /* default */
+#endif
+    } /* switch */
+  } /* for */
   return *plistp;
 }
 
