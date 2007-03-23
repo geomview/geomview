@@ -316,27 +316,38 @@ void mgopengl_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
 
 #if HAVE_LIBGLU
 /* Slave routine for mgopengl_trickypolygon() below. */
-static int tessplflags;
-static Point3 *tessplnormal;
 
-void tessvert(Vertex *vp)
+#include <obstack.h> /* for allocating extra vertices */
+
+#define obstack_chunk_alloc malloc
+#define obstack_chunk_free  free
+
+struct tess_data 
 {
-  if (tessplflags & PL_HASVCOL) D4F(&vp->vcol);
-  if (tessplflags & PL_HASVN) N3F(&vp->vn, &vp->pt);
-  if (tessplflags & PL_HASST) glTexCoord2fv((GLfloat *)&vp->st);
+  unsigned plflags;
+  Point3 *pnormal;
+  struct obstack obst;
+};
+
+static void tess_vertex_data(Vertex *vp, struct tess_data *data)
+{
+  if (data->plflags & PL_HASVCOL) D4F(&vp->vcol);
+  if (data->plflags & PL_HASVN) N3F(&vp->vn, &vp->pt);
+  if (data->plflags & PL_HASST) glTexCoord2fv((GLfloat *)&vp->st);
   glVertex4fv(&vp->pt.x);
 }
 
-void tesscombine(GLdouble coords[3], Vertex *vertex_data[4],
-                GLfloat weight[4], Vertex **dataOut, Vertex ***ptr_extra_verts)
+static void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
+			      GLfloat weight[4], Vertex **dataOut,
+			      struct tess_data *data)
 {
    Vertex *vertex;
-   int list_len, alloc_cnt, realloc_cnt, i;
+   int i;
    HPt3Coord w;
    
-   vertex = OOGLNewE(Vertex, "extra vertex");
+   vertex = obstack_alloc(&data->obst, sizeof(Vertex));
 
-   if (tessplflags & VERT_ST) {
+   if (data->plflags & VERT_ST) {
     /* texture co-ordinates */
     for (i = 0; i < 4; i++) {
       vertex->st.s += weight[i] * vertex_data[i]->st.s;
@@ -358,30 +369,26 @@ void tesscombine(GLdouble coords[3], Vertex *vertex_data[4],
    vertex->pt.z = coords[2] * w;
    vertex->pt.w = w;
    
-   if (tessplflags & VERT_N) {
-     if (tessplflags & PL_HASPN) {
-       /* The averaged vertex normals do not have an orientation, so
-	* try to orient them w.r.t. the polygon normal before
-	* computing the linear combination.
-	*/
-       for (i = 0; i < 4; i++) {
-	 Point3 *vn = &vertex_data[i]->vn;
-	 if (Pt3Dot(vn, tessplnormal) < 0.0) {
-	   Pt3Comb(-weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
-	 } else {
-	   Pt3Comb(weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
-	 }
-       }
-     } else { /* normal will come out wrong, probably ... */
-       for (i = 0; i < 4; i++) {
-	 Pt3Comb(weight[i], &vertex_data[i]->vn, 1.0, &vertex->vn, &vertex->vn);
+   if (data->plflags & VERT_N) {
+     /* The averaged vertex normals do not have an orientation, so try
+      * to orient them w.r.t. the polygon normal before computing the
+      * linear combination.
+      */
+     memset(&vertex->vn, 0, sizeof(vertex->vn));
+     for (i = 0; i < 4; i++) {
+       Point3 *vn = &vertex_data[i]->vn;
+       if (Pt3Dot(vn, data->pnormal) < 0.0) {
+	 Pt3Comb(-weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
+       } else {
+	 Pt3Comb(weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
        }
      }
      Pt3Unit(&vertex->vn);
    }
    
-   if (tessplflags & VERT_C) {
+   if (data->plflags & VERT_C) {
      /* colors */
+     memset(&vertex->vcol, 0, sizeof(vertex->vcol));
      for (i = 0; i < 4; i++) {
        vertex->vcol.r += weight[i] * vertex_data[i]->vcol.r;
        vertex->vcol.g += weight[i] * vertex_data[i]->vcol.g;
@@ -391,19 +398,6 @@ void tesscombine(GLdouble coords[3], Vertex *vertex_data[4],
    }
 
    *dataOut = vertex;
-
-   /* Keep list of pointers to allocated Vertex's. 
-    * First Vertex is a dummy, list length in pt.x, allocated size in pt.y */
-   list_len = (*ptr_extra_verts)[0]->pt.x + 0.5;
-   alloc_cnt = (*ptr_extra_verts)[0]->pt.y + 0.5;
-   if(list_len == alloc_cnt) {
-      realloc_cnt = alloc_cnt * 2; /* Double allocated size */
-      (*ptr_extra_verts)[0]->pt.y = realloc_cnt;
-      *ptr_extra_verts = OOGLRenewNE(Vertex *, *ptr_extra_verts, realloc_cnt,
-				     "renew extra vertex pointers");
-   }
-   (*ptr_extra_verts)[list_len] = vertex;
-   (*ptr_extra_verts)[0]->pt.x = list_len + 1;
 }
 
 /*
@@ -416,12 +410,11 @@ void tesscombine(GLdouble coords[3], Vertex *vertex_data[4],
 static void
 mgopengl_trickypolygon(Poly *p, int plflags) 
 {
-  int i, list_len;
-  const int init_alloc_sz=2;
-  Vertex *vp, **extra_verts;
+  int i;
+  Vertex *vp;
   static GLUtesselator *glutess;
-  double *dpts = (double *)alloca(3*p->n_vertices*sizeof(double));
-  double *dp;
+  GLdouble dpts[p->n_vertices][3];
+  struct tess_data data[1];
 
   if(glutess == NULL) {
     /* Create GLU-library triangulation handle, just once */
@@ -429,40 +422,43 @@ mgopengl_trickypolygon(Poly *p, int plflags)
     gluTessProperty(glutess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
 #ifdef _WIN32	/* Windows idiocy.  We shouldn't need to cast standard funcs! */
     gluTessCallback(glutess, GLU_BEGIN, (GLUtessBeginProc)glBegin);
-    gluTessCallback(glutess, GLU_VERTEX, (GLUtessVertexProc)tessvert);
-    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, (GLUtessCombineDataProc)tesscombine);
+    gluTessCallback(glutess, GLU_VERTEX_DATA,
+		    (GLUtessVertexDataProc)tess_vertex_data);
+    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA,
+		    (GLUtessCombineDataProc)tess_combine_data);
     gluTessCallback(glutess, GLU_END, (GLUtessEndProc)glEnd);
 #else		/* Any reasonable OpenGL implementation */
     gluTessCallback(glutess, GLU_BEGIN, glBegin);
-    gluTessCallback(glutess, GLU_VERTEX, tessvert);
-    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tesscombine);
+    gluTessCallback(glutess, GLU_TESS_VERTEX_DATA, tess_vertex_data);
+    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
     gluTessCallback(glutess, GLU_END, glEnd);
 #endif
   }
   
-  extra_verts = OOGLNewNE(Vertex *, init_alloc_sz, "extra vertices");
-  extra_verts[0] = OOGLNewE(Vertex, "Dummy Header Vertex");
-  extra_verts[0]->pt.x = 1;             /* Holder for list length */
-  extra_verts[0]->pt.y = init_alloc_sz; /* Holder for allocation size */
-  tessplflags = plflags;
-  tessplnormal = &p->pn;
-  gluTessBeginPolygon(glutess, &extra_verts);
+  data->plflags = plflags;
+  data->pnormal = &p->pn;
+  obstack_init(&data->obst);
+  if ((plflags & VERT_N) && !(plflags & PL_HASPN)) {
+    /* compute it now, we need it! */
+    PolyNormal(p, &p->pn, true /* 4d (?) */, false /* evert */, NULL, NULL);
+  }
+  
+  /* tell GLU what we think is a good approximation for the normal */
+  gluTessNormal(glutess, p->pn.x, p->pn.y, p->pn.z);
+
+  gluTessBeginPolygon(glutess, data);
   gluTessBeginContour(glutess);
-  for(i = 0, dp = dpts; i < p->n_vertices; i++, dp += 3) {
-    vp = (p->v)[i];
-    dp[0] = vp->pt.x / vp->pt.w;
-    dp[1] = vp->pt.y / vp->pt.w;
-    dp[2] = vp->pt.z / vp->pt.w;
-    gluTessVertex(glutess, dp, vp);
+  for(i = 0; i < p->n_vertices; i++) {
+    vp = p->v[i];
+    dpts[i][0] = vp->pt.x / vp->pt.w;
+    dpts[i][1] = vp->pt.y / vp->pt.w;
+    dpts[i][2] = vp->pt.z / vp->pt.w;
+    gluTessVertex(glutess, dpts[i], vp);
   }
   gluTessEndContour(glutess);
   gluTessEndPolygon(glutess);
 
-  list_len = extra_verts[0]->pt.x;
-  for(i=0; i<list_len; i++) {
-    OOGLFree(extra_verts[i]);
-  }
-  OOGLFree(extra_verts);
+  obstack_free(&data->obst, NULL);
 }
 #endif /* HAVE_LIBGLU */
 
