@@ -441,6 +441,7 @@ struct tess_data
   Point3 *pn;
   GLenum type;
   int vcnt; /* vertex count after begin() callback */
+  Vertex *v[2]; /* for TRIANGLE_STRIP and TRIANGLE_FAN */
   struct obstack *scratch;
 };
 
@@ -511,23 +512,23 @@ void tess_begin_data(GLenum type, struct tess_data *data)
 void tess_vertex_data(Vertex *v, struct tess_data *data)
 {
   /* Here we have to do all the work, depending on what flag
-     previously has been passed to the begin() callback.
-  */
+   * previously has been passed to the begin() callback.
+   */
+  if (data->vcnt == 0) {
+    /* create a new polygon */
+    data->p = new_poly(3, NULL, data->scratch);
+    data->p->flags |= data->polyflags;
+    if (data->polyflags & FACET_C) {
+      data->p->pcol = data->trickyp->pcol;
+    }
+    data->p->pn = data->pn; /* always inherit the normal */
+  }
+
   switch (data->type) {
   case GL_TRIANGLES: /* the easy case */
-    if (data->vcnt == 0) {
-      /* create a new polygon */
-      data->p = new_poly(3, NULL, data->scratch);
-      data->p->flags |= data->polyflags;
-      if (data->polyflags & FACET_C) {
-	data->p->pcol = data->trickyp->pcol;
-      }
-      data->p->pn = data->pn; /* always inherit the normal */
-    }
-
     /* add the vertex */
     data->p->v[data->vcnt] = v;
-    
+
     if (++data->vcnt == 3) {
       /* add the polygon to *data->plistp */
       PolyListNode *new_pn;
@@ -535,14 +536,75 @@ void tess_vertex_data(Vertex *v, struct tess_data *data)
       data->vcnt = 0;
 
       new_pn = new_poly_list_node(tagged_app, scratch);
-      new_pn->poly = data->p;
       data->p = NULL;
       ListPush(*data->plistp, new_pn);
     }
     break;
   case GL_TRIANGLE_STRIP:
+    /* pairs of triangles, all with the same orientation */
+    if (data->vcnt > 2) {
+      /* create a new polygon */
+      data->p = new_poly(3, NULL, data->scratch);
+      data->p->flags |= data->polyflags;
+      if (data->polyflags & FACET_C) {
+	data->p->pcol = data->trickyp->pcol;
+      }
+      data->p->pn = data->pn; /* always inherit the normal */
+      
+      data->p->v[0] = data->v[0];
+      data->p->v[1] = data->v[1];
+      /* add the vertex */
+      data->p->v[2] = v;
+    } else {
+      /* add the vertex */
+      data->p->v[data->vcnt] = v;
+    }
+
+    if (++data->vcnt > 2) {
+      /* add the polygon to *data->plistp */
+      PolyListNode *new_pn;
+
+      if (data->vcnt & 1) {
+	data->v[0] = data->p->v[1];
+	data->v[1] = data->p->v[2];
+      } else {
+	data->v[0] = data->p->v[0];
+	data->v[1] = data->p->v[2];
+      }
+      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn->poly = data->p;
+      ListPush(*data->plistp, new_pn);
+    }
     break;
   case GL_TRIANGLE_FAN:
+    if (data->vcnt > 2) {
+      /* create a new polygon */
+      data->p = new_poly(3, NULL, data->scratch);
+      data->p->flags |= data->polyflags;
+      if (data->polyflags & FACET_C) {
+	data->p->pcol = data->trickyp->pcol;
+      }
+      data->p->pn = data->pn; /* always inherit the normal */
+      
+      data->p->v[0] = data->v[0];
+      data->p->v[1] = data->v[1];
+      /* add the vertex */
+      data->p->v[2] = v;
+    } else {
+      /* add the vertex */
+      data->p->v[data->vcnt] = v;
+    }
+
+    if (++data->vcnt > 2) {
+      /* add the polygon to *data->plistp */
+      PolyListNode *new_pn;
+
+      data->v[0] = data->p->v[1];
+      data->v[1] = data->p->v[2];
+      new_pn = new_poly_list_node(tagged_app, scratch);
+      new_pn->poly = data->p;
+      ListPush(*data->plistp, new_pn);
+    }
     break;
   default:
     break;
