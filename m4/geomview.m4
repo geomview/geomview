@@ -134,7 +134,7 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
     fi
   else
     GEOMVIEW_CHECK_PACKAGE(libgeomview, geomview,,,
-      [create.h],["'${includedir}/geomview'"],,required,enabled)
+      [create.h],["'${includedir}/geomview'" -I/usr/local/include/geomview -I/usr/include/geomview],,required,enabled)
     geomviewincludes="${LIBGEOMVIEW_INCLUDE_PATH}"
     geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
     OOGLLIB="${LIBGEOMVIEW_LIB}"
