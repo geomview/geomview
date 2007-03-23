@@ -66,15 +66,6 @@ groups =					\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
 
-cplxview = \
- NDview/cplxview/text/cplxhelp.txt \
- NDview/cplxview/geom/funcplane \
- NDview/cplxview/scripts/reset.script \
- NDview/cplxview/scripts/startup.script \
- NDview/cplxview/scripts/del_c0 \
- NDview/cplxview/scripts/4d.colorcplx \
- NDview/cplxview/scripts/4d.cplx
-
 nobase_geomdata_DATA = \
 	.geomview \
 	cmap.fmap \
@@ -198,5 +189,4 @@ nobase_geomdata_DATA = \
 	geom/ztent.mesh
 
 nobase_geomdata_DATA += $(groups)
-nobase_geomdata_DATA += $(cplxview)
 
