@@ -1,5 +1,8 @@
 INCLUDES = $(default_includes)
-EXTRA_DIST = Headers
+
+man_MANS = discgrp.5gv
+
+EXTRA_DIST = Headers $(man_MANS)
 
 noinst_LTLIBRARIES = libdg.la
 
