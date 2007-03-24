@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.16 2007/03/20 18:36:45 rotdrop Exp $
+ * $Id: mg.c,v 1.17 2007/03/24 01:57:02 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -299,9 +299,8 @@ void mg_untagappearance(const void *tag)
       if (astk == mgatfree) {
 	mgatfree = astk->next;
       } else {
-	for (pos = mgatfree; pos->next != astk; pos = pos->next) {
-	  pos->next = astk->next;
-	}
+	for (pos = mgatfree; pos->next != astk; pos = pos->next);
+	pos->next = astk->next;
       }
     }
     astk->tag_ctx = NULL;
@@ -617,6 +616,8 @@ mg_ctxdelete( mgcontext *ctx )
       LmDeleteLights(&astk->lighting);
       astk->next = mgafree;
       mgafree = astk;
+    } else {
+      OOGLWarn("Tagged, but active?");
     }
   }
 
