@@ -73,6 +73,16 @@ static inline void DblListDelete(DblListNode *node)
   DblListInit(node);
 }
 
+/* Copy an entire DblList, i.e. reparent it, give it a new head.
+ */
+static inline void DblListMove(DblListNode *fromhead, DblListNode *tohead)
+{
+  fromhead->next->prev = tohead;
+  fromhead->prev->next = tohead;
+  tohead->next = fromhead->next;
+  tohead->prev = fromhead->prev;
+}
+
 /* Given a list-node "node" construct a pointer to the containing
  * structure of type "ctype" which has a member with name "nodename"
  * (of type DblListNode).
