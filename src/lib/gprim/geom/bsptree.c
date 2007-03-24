@@ -37,10 +37,46 @@
 #include "bsptree.h"
 #include "bsptreeP.h"
 
+#define BSPTREE_STATS 0
+
+#if BSPTREE_STATS
+static int n_initial_polys;
+static int n_tree_polys;
+static int tree_depth;
+#endif
+
+#if 1
+/* maybe lower the floating point tolerances a little bit? */
+
+/* FLT_EPSILON: 1.19209290e-7F */
+
+# undef TOLERANCE
+# undef fneg
+# undef fpos
+# undef fzero
+# undef fz
+# undef fnz
+
+/* BIG FAT NOTE: even 1e-3 seems to give reasonable rendering results,
+ * though 1-e3 is quite large a tolerance. We should weight the
+ * tolerance by the modulus of the co-ordinate data, this would make
+ * the stuff more sane.
+ */
+
+# define TOLERANCE 1e-3
+
+# define fneg(a)  ((a)<-TOLERANCE)
+# define fpos(a)  ((a)> TOLERANCE)
+# define fzero(a) (((a)<TOLERANCE)&&((a)>-TOLERANCE))
+# define fz(a)    fzero(a)
+# define fnz(a)   (!fzero(a))
+
+#endif
+
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free  free
 
-#define POLY_SCRATCH 0x80000000 /* Flag indicates that this poly lives
+#define POLY_SCRATCH 0x80000000 /* Flag indicates that this polylives
 				 * on our obstack
 				 */
 
@@ -82,6 +118,9 @@ typedef struct EdgeIntersection
 
 static void BSPTreeCreateRecursive(BSPTreeNode *tree,
 				   PolyListNode *pllist,
+#if BSPTREE_STATS
+				   int depth,
+#endif
 				   struct obstack *scratch);
 
 static inline Poly *new_poly(int nv, Vertex **v, struct obstack *scratch)
@@ -858,6 +897,18 @@ void BSPTreeFinalize(BSPTree *bsptree)
     return; 
   }
 
+#if BSPTREE_STATS
+  {
+    PolyListNode *pos;
+    n_initial_polys = 0;
+    
+    for (pos = bsptree->init_lpl; pos; pos = pos->next) {
+      ++n_initial_polys;
+    }
+    OOGLWarn("#initial polygons: %d", n_initial_polys);
+  }
+#endif
+
   /* After bsptree->tree has been allocated adding to the tree is no
    * longer possible.
    */
@@ -868,14 +919,28 @@ void BSPTreeFinalize(BSPTree *bsptree)
     memset(bsptree->tree, 0, sizeof(BSPTreeNode));
     return;
   }
+
+#if BSPTREE_STATS
+  n_tree_polys = n_initial_polys;
+  tree_depth = 0;
+#endif
   
   /* Do it. */
-  BSPTreeCreateRecursive(bsptree->tree, bsptree->init_lpl, &bsptree->obst);
+  BSPTreeCreateRecursive(bsptree->tree, bsptree->init_lpl,
+#if BSPTREE_STATS
+			 0,
+#endif
+			 &bsptree->obst);
 
   /* We build a complete tree, and discard all degenerated polygons,
    * so the polygon list is empty after creating the tree.
    */
   bsptree->init_lpl = NULL;
+
+#if BSPTREE_STATS
+  OOGLWarn("#tree polygons: %d", n_tree_polys);
+  OOGLWarn("tree depth: %d", tree_depth);
+#endif
 }
 
 void BSPTreeFreeTree(BSPTree *tree)
@@ -953,19 +1018,7 @@ BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
     break;
   case BSPTREE_ADDGEOM:
     if (geom == tree->geom) {
-      Transform T;
-      
-      /* make sure the top-level geom has per-node data */
-      GeomNodeDataCreate(geom, NULL);
-
-      mggettransform(T);
-      if (memcmp(T, TM_IDENTITY, sizeof(Transform)) != 0) {
-	tree->Tid = obstack_alloc(&tree->obst, sizeof(Transform));
-	TmCopy(T, tree->Tid);
-      } else {
-	tree->Tid = TM_IDENTITY;
-      }
-      tree->Tidinv = NULL;
+      BSPTreeSetId(tree);
     }
     tagged_app = BSPTreePushAppearance(tree, geom);
     break;
@@ -1055,6 +1108,10 @@ static inline void SplitPolyNode(PolyListNode *plnode,
   Vertex *v0, *v1, **vpos, **savedv;
   int istart[2], iend[2], i, nv[2];
   Vertex *vstart[2], *vend[2];
+
+#if BSPTREE_STATS
+  ++n_tree_polys;
+#endif
 
   poly = plnode->poly;
 
@@ -1466,6 +1523,9 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
 
 static void BSPTreeCreateRecursive(BSPTreeNode *tree,
 				   PolyListNode *pllist,
+#if BSPTREE_STATS
+				   int depth,
+#endif
 				   struct obstack *scratch)
 {
   PolyListNode *plnode, *front, *back;
@@ -1502,12 +1562,25 @@ static void BSPTreeCreateRecursive(BSPTreeNode *tree,
   }
   if (front) {
     tree->front = obstack_alloc(scratch, sizeof(*tree->front));
-    BSPTreeCreateRecursive(tree->front, front, scratch);
+    BSPTreeCreateRecursive(tree->front, front,
+#if BSPTREE_STATS
+			   depth+1,
+#endif
+			   scratch);
   }
   if (back) {
     tree->back = obstack_alloc(scratch, sizeof(*tree->back));
-    BSPTreeCreateRecursive(tree->back, back, scratch);
+    BSPTreeCreateRecursive(tree->back, back,
+#if BSPTREE_STATS
+			   depth+1,
+#endif
+			   scratch);
   }
+#if BSPTREE_STATS
+  if (depth > tree_depth) {
+    tree_depth = depth;
+  }
+#endif
 }
 
 /*
