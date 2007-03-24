@@ -138,9 +138,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
    * translucent.
    */
   if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
-    void *old_tagged_app = BSPTreePushAppearance(NDctx->bsptree, (Geom *)mesh);
+    GeomNodeDataMove((Geom *)mesh, (Geom *)&m);
     GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
-    BSPTreePopAppearance(NDctx->bsptree, old_tagged_app);
+    GeomNodeDataMove((Geom *)&m, (Geom *)mesh);
   }
 
   if (m.n) {

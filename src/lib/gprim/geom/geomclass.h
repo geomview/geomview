@@ -238,6 +238,16 @@ typedef struct NodeData {
   path[pathlen-1] = c;					\
   path[pathlen] = '\0'
 
+/* Transfer one Geom's per-node data to another Geom. Priamrily meant
+ * as hack during ND-drawing
+ */
+static inline void GeomNodeDataMove(Geom *from, Geom *to)
+{
+  DblListMove(&from->pernode, &to->pernode);
+  to->ppath = from->ppath;
+  to->ppathlen = from->ppathlen;
+}
+
 static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
 {
   NodeData *pos;

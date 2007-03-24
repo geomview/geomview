@@ -63,6 +63,7 @@ Geom *GeomDraw(Geom *geom)
       if (NDctx != NULL) {
 	NDctx->bsptree = geom->bsptree;
 	BSPTreeSet(NDctx->bsptree, BSPTREE_ONESHOT, true, BSPTREE_END);
+	BSPTreeSetId(geom->bsptree);
       }
     }
 

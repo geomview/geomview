@@ -67,9 +67,6 @@ struct BSPTree {
 			   * LOCAL) we need the position of the
 			   * top-level geometry (the one who owns the
 			   * tree, i.e. tree->geom).
-			   *
-			   * The low-level mg code should load Tid
-			   * before trying to draw the BSP-tree.
 			   */
   TransformPtr   Tidinv;    /* Inverse of Tid, only computed on demand */
   TransformPtr   T;         /* INST support: transform polygons during
@@ -89,7 +86,7 @@ struct BSPTree {
  * overrides the transparency flag to false _or_ a material which
  * overrides the alpha value to 1.0 (and no own color spec with alpha
  * != 1.0) then we need not add ourselves to the BSP-tree: no facet of
- * the mesh will ever be translucent.
+ * this Geom will ever be translucent.
  *
  * This does, of course, not work with INSTs or LISTs, but only with
  * "atomic" Geom's
@@ -105,6 +102,28 @@ static inline bool never_translucent(Geom *geom)
 	   ||
 	   ((geom->geomflags & COLOR_ALPHA) == 0 && ap->mat &&
 	    (ap->mat->override & MTF_ALPHA) && ap->mat->diffuse.a == 1.0)));
+}
+
+/* Load the current transform form the MG-layer into tree->Tid */
+static inline void BSPTreeSetId(BSPTree *tree)
+{
+  Transform T;
+
+  if (tree->geom == NULL || tree != tree->geom->bsptree) {
+    abort();
+  }
+      
+  /* make sure the top-level geom has per-node data */
+  GeomNodeDataCreate(tree->geom, NULL);
+
+  mggettransform(T);
+  if (memcmp(T, TM_IDENTITY, sizeof(Transform)) != 0) {
+    tree->Tid = obstack_alloc(&tree->obst, sizeof(Transform));
+    TmCopy(T, tree->Tid);
+  } else {
+    tree->Tid = TM_IDENTITY;
+  }
+  tree->Tidinv = NULL;
 }
 
 static inline const void **BSPTreePushAppearance(BSPTree *bsptree, Geom *geom)
