@@ -5,9 +5,10 @@
      displayed correctly for each separate top-level object (those
      which appear in the object browser). Different translucent
      top-level objects will not be rendered correctly w.r.t. to each
-     other. Translucency does not work correctly for non-flat or
-     concave polygons with more than 4 vertices. Concave and non-flat
-     quadrilaterals will work.
+     other. Translucency also works for non-flat or concave polygons
+     if the Geomview is configured for OpenGL and if libGLU is found;
+     in that case the GLU tesselator is used to compute a
+     triangulation of concave or even self-intersecting polygons.
 
    * new GCL object: Image. Image data for textures or background can
      now be embedded into the ordinary GCL data stream. Images can be

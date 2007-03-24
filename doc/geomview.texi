@@ -2949,9 +2949,8 @@ Rendering translucent objects is not supported by all drawing back
 ends. The OpenGL renderer has limited support for it: top-level objects
 (i.e. those which appear in the object browser of the main panel
 (@pxref{Basic Interaction, The Main Panel}) are rendered correctly by
-means of alpha-blending, provided they are composed of nothing more
-complicated than triangles, quadrilaterals (not necessarily flat or
-convex) or convex and flat polygons.
+means of alpha-blending). Also, the RenderMan snapshots will include
+opacity values.
 @end table
 
 Here's an example appearance structure including values for all
