@@ -69,12 +69,6 @@ groups =					\
 nobase_geomdata_DATA = \
 	.geomview \
 	cmap.fmap \
-	geom/HingeCube \
-	geom/HingeDiamond \
-	geom/HingeDodec \
-	geom/HingeLongcube \
-	geom/HingeTetra \
-	geom/HingeTriangle \
 	geom/abstr.off \
 	geom/alphabet.vect \
 	geom/antoine0.oogl \
