@@ -17,8 +17,8 @@ gvx_SOURCES = \
 
 
 buildinfo.c: $(gvx_OBJECTS) ../common/libgvcommon.a
-	(echo 'char builddate[] = "'"`date +%y%m%d%H%M`"'";'; \
-	 echo 'char buildinfo1[] = "'"  By `whoami`@`hostname`[`uname -r`]"'";'; \
+	(echo 'char builddate[] = "'"`date +%Y%m%d%H%M`"'";'; \
+	 echo 'char buildinfo1[] = "'"  By `whoami`@`hostname`[`uname -s`-`uname -r`]"'";'; \
 	 echo 'char buildinfo2[] = "'"  On `date`"'";'; \
 	) > buildinfo.c
 
