@@ -11,6 +11,8 @@ man_MANS = example.1gv
 
 EXTRA_DIST = README panel.fd tutorial.ps tutorial.tex $(man_MANS)
 
+doc_DATA = tutorial.ps tutuorial.tex
+
 module_PROGRAMS = example
 example_SOURCES = main.c oogl.c callbacks.c panel.c panel.h
 
@@ -34,6 +36,8 @@ endif
 	echo '(emodule-define "Example" "$(modulepath)example")' > $@
 
 .geomview: Makefile
-	echo '(emodule-define "Example" "./src/example")' > $@
+	echo '(emodule-define "Example" "$(abs_builddir)/example")' > $@
 
-CLEANFILES = $(module_DATA) 
+all-local: .geomview
+
+CLEANFILES = $(module_DATA) .geomview
