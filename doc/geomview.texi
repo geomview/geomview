@@ -6428,8 +6428,10 @@ is an OOGL winddow specification.
 * ui-emotion-program::          @code{(ui-emotion-program PROGRAM)}
 * ui-emotion-run::              @code{(ui-emotion-run EMODULE)}
 * ui-freeze::                   @code{(ui-freeze @{on|off@})}
+* ui-html-browser::             @code{(ui-html-browser BROWSER)}
 * ui-motion::                   @code{(ui-motion @{inertia|@dots{}@} @{on|off@})}
 * ui-panel::                    @code{(ui-panel PANELNAME @{on|off@} [WINDOW])}
+* ui-pdf-viewer::               @code{(ui-pdf-viewer VIEWER)}
 * ui-target::                   @code{(ui-target ID [yes|no])}
 * uninterest::                  @code{(uninterest (COMMAND [args]))}
 * update::                      @code{(update [timestep_in_seconds])}
@@ -8085,7 +8087,7 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
 @code{emodule_start}} instead.
 @end table
 
-@node ui-freeze, ui-motion, ui-emotion-run, GCL Reference
+@node ui-freeze, ui-html-browser, ui-emotion-run, GCL Reference
 @subsection ui-freeze
 @findex ui-freeze
 @table @code
@@ -8093,7 +8095,7 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
 Toggle updating user interface panels. Off by default.
 @end table
 
-@node ui-html-browser
+@node ui-html-browser, ui-motion, ui-freeze, GCL Reference
 @subsection ui-html-browser
 @findex ui-html-browser
 @table @code
@@ -8106,7 +8108,7 @@ environment variable. If the environment variable is unset then the
 default is compile-time dependent.
 @end table
 
-@node ui-motion, ui-panel, ui-freeze, GCL Reference
+@node ui-motion, ui-panel, ui-html-browser, GCL Reference
 @subsection ui-motion
 @findex ui-motion
 @table @code
@@ -8145,7 +8147,7 @@ direction, and so on. May be especially useful in conjunction with the
 
 @end table
 
-@node ui-panel, ui-target, ui-motion, GCL Reference
+@node ui-panel, ui-pdf-viewer, ui-motion, GCL Reference
 @subsection ui-panel
 @findex ui-panel
 @table @code
@@ -8180,7 +8182,7 @@ actually used.)  A present but empty Window, e.g.  @code{(ui-panel
 obscure on @{})@} causes interactive positioning.
 @end table
 
-@node ui-pdf-viwer
+@node ui-pdf-viewer, ui-target, ui-panel, GCL Reference
 @subsection ui-pdf-viewer
 @findex ui-pdf-viewer
 @table @code
@@ -8193,7 +8195,7 @@ never executed, then the default is to use the browser stored in the
 unset then the default is compile-time dependent.
 @end table
 
-@node ui-target, uninterest, ui-panel, GCL Reference
+@node ui-target, uninterest, ui-pdf-viewer, GCL Reference
 @subsection ui-target
 @findex ui-target
 @table @code
