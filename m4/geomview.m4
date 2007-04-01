@@ -57,7 +57,7 @@ directories to use,. (default: autodetected)]),
   fi
   AC_ARG_ENABLE([local-emodule],
     AC_HELP_STRING([--enable-local-emodule],
-[Install the emodule definition into `${HOME}/.geomview-example'; that
+[Install the emodule definition into `${HOME}/.geomview-EMODULENAME'; that
 file will contain the full path to the example binary. Otherwise the
 the emodule definition will be install under either
 `PREFIX/libexec/geomview/' or -- if the `--enable-geomview-query'
