@@ -70,8 +70,8 @@ geometric objects, originally written by staff members of the Geometry
 Center at the University of Minnesota, starting in 1991.  It can be used
 as a standalone viewer for static objects or as a display engine for
 other programs which produce dynamically changing geometry.  It runs on
-many kinds of Unix computers, including Linux, SGI, Sun, and HP.
-This manual describes Geomview version 1.9. @refill
+many kinds of Unix computers, including Linux, SGI, Sun, and HP. It also
+runs with Cygwin. This manual describes Geomview version 1.9. @refill
 
 Geomview is free software, available under the terms of the GNU Lesser
 Public License; @pxref{Copying} for details.
@@ -8093,6 +8093,19 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
 Toggle updating user interface panels. Off by default.
 @end table
 
+@node ui-html-browser
+@subsection ui-html-browser
+@findex ui-html-browser
+@table @code
+@item (ui-html-browser BROWSER)
+Use @var{BROWSER} for viewing the @var{HTML}-version of the manual when
+the @samp{Manual (HTML)} menu item is selected in the @samp{Help}-menu.
+If the @code{(ui-html-browser...)} command was never executed, then the
+default is to use the browser stored in the @code{WEBBROWSER}
+environment variable. If the environment variable is unset then the
+default is compile-time dependent.
+@end table
+
 @node ui-motion, ui-panel, ui-freeze, GCL Reference
 @subsection ui-motion
 @findex ui-motion
@@ -8165,6 +8178,19 @@ clause (e.g. (ui-panel obscure on @{ position xmin xmax ymin ymax @})
 sets the panel's default position.  (Only xmin and ymin values are
 actually used.)  A present but empty Window, e.g.  @code{(ui-panel
 obscure on @{})@} causes interactive positioning.
+@end table
+
+@node ui-pdf-viwer
+@subsection ui-pdf-viewer
+@findex ui-pdf-viewer
+@table @code
+@item (ui-pdf-viewer VIEWER)
+Use the executable @var{VIEWER} for viewing the @var{PDF}-version of the
+manual when the @samp{Manual (PDF)} menu-item is selected in the
+@samp{Help}-menu.  If the @code{(ui-pdf-viewer @dots{})} command was
+never executed, then the default is to use the browser stored in the
+@code{PDFVIEWER} environment variable. If the environment variable is
+unset then the default is compile-time dependent.
 @end table
 
 @node ui-target, uninterest, ui-panel, GCL Reference
