@@ -1610,9 +1610,10 @@ The @emph{Tools} panel also sports a @emph{Main} button, to invoke the
 main panel in case it was dismissed or buried, and a @emph{Done} button
 to close the @emph{Tools} panel.
 
-
-The @emph{Main} panel's @emph{Motion Style} menu has special controls
-affecting how mouse motions are interpreted.
+The @emph{Main} panel's @emph{Motion} menu has special controls
+affecting how mouse motions are interpreted; the toggles are also
+accessible through a GCL command. @xref{ui-motion, @code{(ui-motion
+@dots{})}}.
 
 @table @emph
 
@@ -8082,8 +8083,46 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
 @subsection ui-freeze
 @findex ui-freeze
 @table @code
-@item (ui-freeze [on|off])
+@item (ui-freeze {on|off})
 Toggle updating user interface panels. Off by default.
+@end table
+
+@node ui-motion,
+@subsection ui-motion
+@table @code
+@item (ui-motion {inertia|constrain|own-coordinates} {yes|on|no|off})
+Enable or disable certain properties of mouse-controlled motion. The
+purpose of this command is to give access to the respective toggles of
+the @emph{Main} panel's @emph{Motion} menu through GCL
+commands. @xref{Mouse Motions}.
+
+@table @code
+@item inertia
+Normally, moving objects have inertia: if the mouse is still moving when
+the button is released, the selected object continues to move. When
+`inertia' is off, objects cease to move as soon as you release the
+mouse.
+
+@item constrain
+It's sometimes handy to move an object in a direction aligned with a
+coordinate axis: exactly horizontally or vertically. Calling
+@code(ui-motion constrain on)} changes the interpretation of mouse
+motions to allow this; approximately-horizontal or
+approximately-vertical mouse dragging becomes exactly horizontal or
+vertical motion. Note that the motion is still along the X or Y axes of
+the camera in which you move the mouse, not necessarily the object's own
+coordinate system.
+
+@item own-coordinates
+It's sometimes handy to move objects with respect to the coordinate
+system where they were defined, rather than with respect to some
+camera's view. When @code{(ui-motion own-coordinates on)} has been
+called, all motions are interpreted that way: dragging the mouse
+rightward in translate mode moves the object in its own @var{+X}
+direction, and so on. May be especially useful in conjunction with the
+@code{(ui-motion constrain on)} command.
+@end table
+
 @end table
 
 @node ui-panel, ui-target, ui-freeze, GCL Reference
