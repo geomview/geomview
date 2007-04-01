@@ -1,4 +1,8 @@
-INCLUDES = $(default_includes)
+#
+# $(OPENGLINCLUDES) are needed for bsptree.c to get the correct
+# location of the glu.h header file.
+#
+INCLUDES = $(default_includes) $(OPENGLINCLUDES)
 EXTRA_DIST = Headers
 
 noinst_LTLIBRARIES = libgeom.la
