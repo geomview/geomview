@@ -41,6 +41,6 @@ endif
 
 all-local: .geomview
 
-CLEANFILES = $(EMDOULES) .geomview
+CLEANFILES = $(EMODULES) .geomview
 
 EXTRA_DIST = hingedata hingehelp panel.fd $(man_MANS) $(geomdatageom_DATA)
