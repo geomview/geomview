@@ -6422,12 +6422,13 @@ is an OOGL winddow specification.
 * transform::                   @code{(transform objectID centerID frameID [rotate|@dots{}] @dots{})}
 * transform-incr::              @code{(transform-incr objectID centerID frameID @dots{})}
 * transform-set::               @code{(transform-set objectID centerID frameID @dots{})}
-* ui-cam-focus::                @code{(ui-cam-focus [focus-change|mouse-cross])}
+* ui-cam-focus::                @code{(ui-cam-focus @{focus-change|mouse-cross@})}
 * ui-center::                   @code{(ui-center ID)}
-* ui-center-origin::            @code{(ui-center-origin [origin|bbox-center}
+* ui-center-origin::            @code{(ui-center-origin @{origin|bbox-center@})}
 * ui-emotion-program::          @code{(ui-emotion-program PROGRAM)}
 * ui-emotion-run::              @code{(ui-emotion-run EMODULE)}
-* ui-freeze::                   @code{(ui-freeze [on|off])}
+* ui-freeze::                   @code{(ui-freeze @{on|off@})}
+* ui-motion::                   @code{(ui-motion @{inertia|@dots{}@} @{on|off@})}
 * ui-panel::                    @code{(ui-panel PANELNAME @{on|off@} [WINDOW])}
 * ui-target::                   @code{(ui-target ID [yes|no])}
 * uninterest::                  @code{(uninterest (COMMAND [args]))}
@@ -6447,7 +6448,8 @@ is an OOGL winddow specification.
 
 @node shell, lt, GCL Reference, GCL Reference
 @subsection !
-@findex !
+@findex !, shell
+@findex shell, !
 @table @code
 @item !
 is a synonym for @code{shell}. @xref{shell}.
@@ -6503,7 +6505,8 @@ for @ref{morehelp, @code{morehelp}}.
 
 @node emodule-run, all, morehelp, GCL Reference
 @subsection |
-@findex |
+@findex |, emodule-run
+@findex emodule-run, |
 @table @code
 @item |
 @code{|} is a synonym for @code{emodule-run}.
@@ -6513,17 +6516,17 @@ for @ref{morehelp, @code{morehelp}}.
 @subsection all
 @findex all
 @table @code
-@findex (all geometry)
+@findex all geometry
 @item (all geometry)
 returns a list of names of all geometry objects. Use e.g.
 @samp{(echo (all geometry))} to print such a list.
-@findex (all camera)
+@findex all camera
 @item (all camera)
 returns a list of names of all cameras.
-@findex (all emodule defined)
+@findex all emodule defined
 @item (all emodule defined)
 returns a list of all defined external modules.
-@findex (all emodule running)
+@findex all emodule running
 @item (all emodule running)
 returns a list of all running external modules.
 @end table
@@ -6582,7 +6585,8 @@ between 0 and 1.
 @findex bbox-draw
 @table @code
 @item (bbox-draw GEOM-ID [yes|no])
-Say whether GEOM-ID's bounding-box should be drawn; @code{yes} if omitted.
+Say whether GEOM-ID's bounding-box should be drawn; defaults to
+@code{yes} if second argument is omitted.
 @end table
 
 @node camera, camera-draw, bbox-draw, GCL Reference
@@ -6813,9 +6817,10 @@ you should wrap it in a call to echo: @code{(echo (emodule-path))}.
 
 @node emodule-run, emodule-sort, emodule-path, GCL Reference
 @subsection emodule-run
-@findex emodule-run
+@findex emodule-run, |
+@findex |, emodule-run
 @table @code
-@item (emodule-run  SHELL-COMMAND ARGS@dots{})
+@item (emodule-run SHELL-COMMAND ARGS@dots{})
 Runs the given SHELL-COMMAND (a string containing a UNIX shell
 command) as an external module.  The module's standard output
 is taken as geomview commands; responses (written to filename
@@ -7833,7 +7838,8 @@ relict from the old work-station years.
 
 @node shell, sleep-for, sgi, GCL Reference
 @subsection shell
-@findex shell
+@findex !, shell
+@findex shell, !
 @table @code
 @item (shell SHELL-COMMAND)
 Execute the given UNIX SHELL-COMMAND using /bin/sh.  Geomview
@@ -8079,18 +8085,19 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
 @code{emodule_start}} instead.
 @end table
 
-@node ui-freeze, ui-panel, ui-emotion-run, GCL Reference
+@node ui-freeze, ui-motion, ui-emotion-run, GCL Reference
 @subsection ui-freeze
 @findex ui-freeze
 @table @code
-@item (ui-freeze {on|off})
+@item (ui-freeze @{on|off@})
 Toggle updating user interface panels. Off by default.
 @end table
 
-@node ui-motion,
+@node ui-motion, ui-panel, ui-freeze, GCL Reference
 @subsection ui-motion
+@findex ui-motion
 @table @code
-@item (ui-motion {inertia|constrain|own-coordinates} {yes|on|no|off})
+@item (ui-motion @{inertia|constrain|own-coordinates@} @{on|off@})
 Enable or disable certain properties of mouse-controlled motion. The
 purpose of this command is to give access to the respective toggles of
 the @emph{Main} panel's @emph{Motion} menu through GCL
@@ -8100,13 +8107,13 @@ commands. @xref{Mouse Motions}.
 @item inertia
 Normally, moving objects have inertia: if the mouse is still moving when
 the button is released, the selected object continues to move. When
-`inertia' is off, objects cease to move as soon as you release the
+@code{inertia} is off, objects cease to move as soon as you release the
 mouse.
 
 @item constrain
 It's sometimes handy to move an object in a direction aligned with a
 coordinate axis: exactly horizontally or vertically. Calling
-@code(ui-motion constrain on)} changes the interpretation of mouse
+@code{(ui-motion constrain on)} changes the interpretation of mouse
 motions to allow this; approximately-horizontal or
 approximately-vertical mouse dragging becomes exactly horizontal or
 vertical motion. Note that the motion is still along the X or Y axes of
@@ -8125,7 +8132,7 @@ direction, and so on. May be especially useful in conjunction with the
 
 @end table
 
-@node ui-panel, ui-target, ui-freeze, GCL Reference
+@node ui-panel, ui-target, ui-motion, GCL Reference
 @subsection ui-panel
 @findex ui-panel
 @table @code
