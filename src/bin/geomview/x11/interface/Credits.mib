@@ -6,8 +6,8 @@ Children: 2 3 4 5\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Root\"\n\
-Xmwidth: 360\n\
-Xmheight: 260\n\
+Xmwidth: 532\n\
+Xmheight: 640\n\
 XmtopAttachment: 1\n\
 XmbottomAttachment: 1\n\
 XmleftAttachment: 1\n\
@@ -24,8 +24,8 @@ Children: X\n\
 Parent: 1\n\
 Public-\n\
 Name: \"CreditsList\"\n\
-Xmwidth: 348\n\
-Xmheight: 215\n\
+Xmwidth: 480\n\
+Xmheight: 480\n\
 XmtopAttachment: 1\n\
 XmbottomAttachment: 1\n\
 XmleftAttachment: 1\n\
