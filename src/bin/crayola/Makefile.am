@@ -8,21 +8,38 @@ INCLUDES = -I$(geomviewincludes) \
 
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
+module_tcldir = $(moduledir)/tcl
+
 man_MANS = crayola.1gv
-
-EXTRA_DIST = $(module_tcl_DATA) $(man_MANS)
-
+module_tcl_DATA = Crayola
 module_PROGRAMS = crayola
 crayola_SOURCES = tkcrayola.c testwish.c callbacks.h callbacks.c ui.h
-#crayola_DEPENDENCIES = $(OOGLLIB)
-#crayola_LDFLAGS= -rpath $(libdir)
 
-module_tcldir = $(moduledir)/tcl
-module_tcl_DATA = Crayola
-module_DATA = .geomview-crayola
+EMODULES = .geomview-crayola
+
+if LOCAL_EMODULE
+  homedir = $(HOME)
+  home_DATA = $(EMODULES)
+  modulepath = $(moduledir)/
+  tclpath = $(module_tcldir)
+else
+  tclpath = $$GEOMVIEW_EMODULE_DIR/tcl
+  module_DATA = $(EMODULES)
+if !GEOMVIEW_QUERY
+    modulepath = $(moduledir)/
+else
+    modulepath =
+endif
+endif
 
 .geomview-crayola: Makefile
-	echo '(emodule-define "Crayola" "crayola $$GEOMVIEW_EMODULE_DIR/tcl/Crayola")' > .geomview-crayola
+	echo '(emodule-define "Crayola" "$(modulepath)crayola $(tclpath)Crayola")' > $@
 
-CLEANFILES = $(module_DATA)
+.geomview: Makefile
+	echo '(emodule-define "Crayola" "$(abs_builddir)/crayola $(abs_srcdir)/Crayola")' > $@
 
+all-local: .geomview
+
+CLEANFILES = $(module_DATA) .geomview
+
+EXTRA_DIST = $(module_tcl_DATA) $(man_MANS)
