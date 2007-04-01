@@ -64,7 +64,7 @@ typedef struct Help {
 
 static Help *helps = NULL;
 
-static char nomatch[] = "No commands match \"%s\"; see \"(? *)\" for list.\n";
+static char nomatch[] = "No commands match \"%s\"; see \"(? *)\" for a list.\n";
 
 static int FilterArgMatch(LList *filter, LList *args);
 static void InterestOutput(char *name, LList *args, LInterest *interest);
