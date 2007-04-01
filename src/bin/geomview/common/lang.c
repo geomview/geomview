@@ -150,6 +150,10 @@ void lang_init()
 
   define_keyword("focus-change", FOCUS_CHANGE_KEYWORD);
   define_keyword("mouse-cross", MOUSE_CROSS_KEYWORD);
+
+  define_keyword("inertia", MOTION_INERTIA_KEYWORD);
+  define_keyword("constrain", MOTION_CONSTRAIN_KEYWORD);
+  define_keyword("own-coordinates", MOTION_OWN_COORDS_KEYWORD);
   
   /*
    * Define various synonyms

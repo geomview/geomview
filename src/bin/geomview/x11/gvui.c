@@ -544,7 +544,7 @@ LDEFINE(ui_center, LVOID,
 }
 
 LDEFINE(ui_center_origin, LVOID,
-       "(ui-center-origin [origin|bbox-center])\n"
+       "(ui-center-origin {origin|bbox-center})\n"
 	"Set the origin of the coordinate system of the \"CENTER\" object"
 	"for user interface (i.e. mouse) controlled motions."
 	"The keyword \"origin\" means to use the origin of the coordinate"

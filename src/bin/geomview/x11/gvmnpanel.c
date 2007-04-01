@@ -184,7 +184,100 @@ static void motion_menu_callbacks(Widget widget, char *text)
   }
 
   drawer_int(GEOMID(uistate.targetgeom), val,
-		XmToggleButtonGadgetGetState(widget));
+	     XmToggleButtonGadgetGetState(widget));
+}
+
+/* make the motion menu state accessible through GCL commands */
+LDEFINE(ui_motion, LVOID,
+	"(ui-motion {inertia|constrain|own-coordinates} {on|off|yes|no})\n"
+	"Enable or disable certain properties of mouse-controlled motion. "
+	"The purpose of this command is to give access to the toggles of the "
+	"`motion'-menu of the main panels through GCL commands. "
+	"\n\n"
+	"`inertia': "
+	"Normally, moving objects have inertia: if the mouse is still moving "
+	"when the button is released, the selected object continues to move. "
+	"When `inertia' is off, objects cease to move as soon as you release "
+	"the mouse."
+	"\n\n"
+	"`constrain': "
+	"It's sometimes handy to move an object in a direction aligned with a "
+	"coordinate axis: exactly horizontally or vertically. Calling "
+	"`(ui-motion constrain on)' changes the interpretation of mouse "
+	"motions to allow this; approximately-horizontal or "
+	"approximately-vertical mouse dragging becomes exactly horizontal "
+	"or vertical motion. Note that the motion is still along the "
+	"X or Y axes of the camera in which you move the mouse, not "
+	"necessarily the object's own coordinate system."
+	"\n\n"
+	"`own-coordinates': "
+	"It's sometimes handy to move objects with respect to the coordinate "
+	"system where they were defined, rather than with respect to some "
+	"camera's view.  When `(ui-motion own-coordinates on) has been called, "
+	"all motions are interpreted that way: dragging the mouse rightward "
+	"in translate mode moves the object in its own +X direction, and so "
+	"on.  May be especially useful in conjunction with the "
+	"(ui-motion constrain on) command.")
+{
+  Keyword enabled = NO_KEYWORD, flagkw = NO_KEYWORD;
+  DrawerKeyword motionflag = -1;
+  bool onoff;
+  int btnidx = -1;
+  
+  LDECLARE(("ui-motion", LBEGIN,
+	    LKEYWORD, &flagkw,
+	    LKEYWORD, &enabled,
+	    LEND));
+
+  switch (flagkw) {
+  case MOTION_INERTIA_KEYWORD:
+    motionflag = DRAWER_INERTIA;
+    btnidx = 0;
+    break;
+  case MOTION_CONSTRAIN_KEYWORD:
+    motionflag = DRAWER_CONSTRAIN;
+    btnidx = 1;
+    break;
+  case MOTION_OWN_COORDS_KEYWORD:
+    motionflag = DRAWER_OWNMOTION;
+    btnidx = 2;
+    break;
+  default:
+    OOGLError(1,
+	      "Wrong keyword, expected one out of "
+	      "{\"%s\", \"%s\", \"%s\"}\n",
+	      keywordname(MOTION_INERTIA_KEYWORD),
+	      keywordname(MOTION_CONSTRAIN_KEYWORD),
+	      keywordname(MOTION_OWN_COORDS_KEYWORD));
+    break;
+    return Lnil;
+  }
+
+  switch (enabled) {
+  case YES_KEYWORD:
+  case ON_KEYWORD:
+    onoff = true;
+    break;
+  case NO_KEYWORD:
+  case OFF_KEYWORD:
+    onoff = false;
+    break;
+  default:
+    OOGLError(1,
+	      "Wrong keyword, expected one out of "
+	      "{\"%s\", \"%s\", \"%s\", \"%s\"}\n",
+	      keywordname(YES_KEYWORD),
+	      keywordname(ON_KEYWORD),
+	      keywordname(NO_KEYWORD),
+	      keywordname(OFF_KEYWORD));
+    return Lnil;
+  }
+
+  drawer_int(GEOMID(uistate.targetgeom), motionflag, onoff);
+  
+  XtVaSetValues(MotionToggle[btnidx], XmNset, onoff ? True : False, NULL);
+
+  return Lt;
 }
 
 static void choose_space(Widget w, int item)
@@ -648,3 +741,10 @@ static void select_module(Widget w, XtPointer data, XmListCallbackStruct *cbs)
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
