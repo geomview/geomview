@@ -1,4 +1,5 @@
 .deps
+.geomview
 .geomview-crayola
 .libs
 Makefile
