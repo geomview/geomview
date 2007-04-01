@@ -13,9 +13,29 @@ EXTRA_DIST = panel.fd $(man_MANS)
 
 module_PROGRAMS = transformer
 transformer_SOURCES = transformer.main.c panel.c panel.h
-module_DATA = .geomview-transformer
 
-.geomview-transformer:
-	echo '(emodule-define "Transformer" "transformer")' > .geomview-transformer
+EMODULES = .geomview-transformer
 
-CLEANFILES = $(module_DATA)
+if LOCAL_EMODULE
+homedir = $(HOME)
+home_DATA = $(EMODULES)
+modulepath = $(moduledir)/
+else
+if !GEOMVIEW_QUERY
+modulepath = $(moduledir)/
+module_DATA = $(EMODULES)
+else
+modulepath =
+module_DATA = $(EMODULES)
+endif
+endif
+
+.geomview-transformer: Makefile
+	echo '(emodule-define "Transformer" "$(modulepath)transformer")' > $@
+
+.geomview: Makefile
+	echo '(emodule-define "Transformer" "$(abs_builddir)/transformer")' > $@
+
+all-local: .geomview
+
+CLEANFILES = $(EMODULES) .geomview

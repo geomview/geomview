@@ -13,9 +13,29 @@ EXTRA_DIST = cplxpanels2.fd $(man_MANS)
 
 module_PROGRAMS = cplxview
 cplxview_SOURCES = computegraph.c cplxpanels2.c cplxpanels2.h cplxview.c
-module_DATA = .geomview-cplxview
+
+EMODULES = .geomview-cplxview
+
+if LOCAL_EMODULE
+homedir = $(HOME)
+home_DATA = $(EMODULES)
+modulepath = $(moduledir)/
+else
+if !GEOMVIEW_QUERY
+modulepath = $(moduledir)/
+module_DATA = $(EMODULES)
+else
+modulepath =
+module_DATA = $(EMODULES)
+endif
+endif
 
 .geomview-cplxview: Makefile
-	echo '(emodule-define "Cplxview" "cplxview")' > .geomview-cplxview
+	echo '(emodule-define "Cplxview" "$(modulepath)cplxview")' > $@
 
-CLEANFILES = $(module_DATA)
+.geomview: Makefile
+	echo '(emodule-define "Cplxview" "$(abs_builddir)/cplxview")' > $@
+
+all-local: .geomview
+
+CLEANFILES = $(EMODULES) .geomview

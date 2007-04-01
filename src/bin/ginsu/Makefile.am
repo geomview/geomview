@@ -13,9 +13,29 @@ EXTRA_DIST = ginsuF.fd $(man_MANS)
 
 module_PROGRAMS = ginsu
 ginsu_SOURCES = ginsu.c ginsuF.c ginsuF.h
-module_DATA = .geomview-ginsu
 
-.geomview-ginsu:
-	echo '(emodule-define "Ginsu" "ginsu")' > .geomview-ginsu
+EMODULES = .geomview-ginsu
 
-CLEANFILES = $(module_DATA)
+if LOCAL_EMODULE
+homedir = $(HOME)
+home_DATA = $(EMODULES)
+modulepath = $(moduledir)/
+else
+if !GEOMVIEW_QUERY
+modulepath = $(moduledir)/
+module_DATA = $(EMODULES)
+else
+modulepath =
+module_DATA = $(EMODULES)
+endif
+endif
+
+.geomview-ginsu: Makefile
+	echo '(emodule-define "Ginsu" "$(modulepath)ginsu")' > $@
+
+.geomview: Makefile
+	echo '(emodule-define "Ginsu" "$(abs_builddir)/ginsu")' > $@
+
+all-local: .geomview
+
+CLEANFILES = $(EMODULES) .geomview

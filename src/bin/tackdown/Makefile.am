@@ -17,13 +17,33 @@ tackdown_SOURCES = tackdown.main.c panel.h panel.c
 origin_SOURCES = \
  origin.main.c origin.common.c origin.common.h origin.panel.c origin.panel.h
 
-module_DATA = .geomview-tackdown .geomview-origin
+EMODULES = .geomview-tackdown .geomview-origin
+
+if LOCAL_EMODULE
+homedir = $(HOME)
+home_DATA = $(EMODULES)
+modulepath = $(moduledir)/
+else
+if !GEOMVIEW_QUERY
+modulepath = $(moduledir)/
+module_DATA = $(EMODULES)
+else
+modulepath =
+module_DATA = $(EMODULES)
+endif
+endif
 
 .geomview-tackdown: Makefile
-	echo '(emodule-define "Tackdown" "tackdown")' > .geomview-tackdown
+	echo '(emodule-define "Tackdown" "$(modulepath)tackdown")' > $@
+
 .geomview-origin: Makefile
-	echo '(emodule-define "Origin" "origin")' > .geomview-origin
+	echo '(emodule-define "Origin" "$(modulepath)origin")' > $@
 
-CLEANFILES = $(module_DATA)
+.geomview: Makefile
+	echo '(emodule-define "Tackdown" "$(abs_builddir)/tackdown")' > $@
+	echo '(emodule-define "Origin" "$(abs_builddir)/origin")' >> $@
 
+all-local: .geomview
+
+CLEANFILES = $(EMODULES) .geomview
 
