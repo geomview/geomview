@@ -1,6 +1,7 @@
 
 *.la
 *.lo
+.geomview
 .geomview-transformer
 .libs
 .libs
