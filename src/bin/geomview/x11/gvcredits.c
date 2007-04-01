@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -62,8 +63,12 @@ static char *credits[] = {
   "Important Modifications:",
   "Celeste Fowler, Charlie Gunn, Nathaniel Thurston", 
   " ",
+  "Bug-fixes, maintenance:",
+  "Claus-Justus Heine",
+  " ",
   "Copyright 1992-1998 The Geometry Center",
   "Copyright 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips",
+  "Copyright 2005-2007 Claus-Justus Heine",
   "http://www.geomview.org/",
   " ",
   "Geomview is free software; you can redistribute it and/or modify it",
@@ -131,3 +136,10 @@ static void add_text(Widget clist, char *text[])
    line++;
   }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
