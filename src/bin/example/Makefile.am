@@ -40,4 +40,4 @@ endif
 
 all-local: .geomview
 
-CLEANFILES = $(module_DATA) .geomview
+CLEANFILES = $(EMODULES) .geomview
