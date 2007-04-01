@@ -1,4 +1,5 @@
 .deps
+.geomview
 .geomview-3d-snapshot
 .geomview-colormap
 .geomview-slicer

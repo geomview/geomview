@@ -6,22 +6,39 @@ INCLUDES = -I$(geomviewincludes) \
  -I$(TCL_INCLUDE_PATH) \
  -I$(TK_INCLUDE_PATH)
 
-EXTRA_DIST = $(module_tcl_DATA)
-
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
 man_MANS =
 
+module_tcl_DATA = Labeler
 module_PROGRAMS = labeler
 labeler_SOURCES = labeler.c testwish.c
-#labeler_DEPENDENCIES = $(OOGLLIB)
-#labeler_LDFLAGS= -rpath $(libdir)
 
-module_tcldir = $(moduledir)/tcl
-module_tcl_DATA = Labeler
-module_DATA = .geomview-labeler
+EMODULES = .geomview-labeler
 
-.geomview-labeler:
-	echo '(emodule-define "Labeler" "labeler $$GEOMVIEW_EMODULE_DIR/tcl/Labeler")' > .geomview-labeler
+if LOCAL_EMODULE
+  homedir = $(HOME)
+  home_DATA = $(EMODULES)
+  tclpath = $(module_tcldir)
+  modulepath = $(moduledir)/
+else
+  module_DATA = $(EMODULES)
+  tclpath = $$GEOMVIEW_EMODULE_DIR/tcl
+if !GEOMVIEW_QUERY
+    modulepath = $(moduledir)/
+else
+    modulepath =
+endif
+endif
 
-CLEANFILES = $(module_DATA)
+.geomview-labeler: Makefile
+	echo '(emodule-define "Labeler" "$(modulepath)labeler $(tclpath)/Labeler")' > $@
+
+.geomview: Makefile
+	echo '(emodule-define "Labeler" "$(abs_builddir)/labeler $(abs_srcdir)/Labeler")' > $@
+
+all-local: .geomview
+
+CLEANFILES = $(EMODULES) .geomview
+
+EXTRA_DIST = $(module_tcl_DATA) $(man_MANS)
