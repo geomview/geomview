@@ -421,7 +421,7 @@ case "$target" in
           AC_DEFINE(unix, 1, [Define to 1 since we are compiling for unix])
           ;;
   *rs6000*) MACHTYPE="rs6000"
-          AC_DEFINE(AIX, 1, [Define to 1if we are compiling for AIX])
+          AC_DEFINE(AIX, 1, [Define to 1 if we are compiling for AIX])
 	  ACCEPT_ARG3_TYPE="unsigned long"
           AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
 	  ;;
@@ -439,6 +439,32 @@ ACCEPT_ARG3_TYPE should be the datatype of the
 Default to int])
 
 # Search for necessary programs.
+
+AC_ARG_WITH(htmlbrowser,
+  AC_HELP_STRING([--with-htmlbrowser=BROWSER],
+[Use BROWSER for viewing the HTML version of the manual when the
+`Manual (HTML)' menu item is selected. (default: firefox)]),
+[DFLTHTMLBROWSER="${withval}"],
+[DFLTHTMLBROWSER="firefox"])
+AC_DEFINE_UNQUOTED(DFLTHTMLBROWSER, ["${DFLTHTMLBROWSER}"],
+  [Define to the name of the html browser for online viewing of the HTML manual.])
+AC_CHECK_PROGS(HTMLBROWSER, ${DFLTHTMLBROWSER})
+if ! test "${HTMLBROWSER}" = "${DFLTHTMLBROWSER}"; then
+  AC_MSG_NOTICE([HTML browser executable not found, online viewing of the HTML manual will probably not be possible.])
+fi
+
+AC_ARG_WITH(pdfviewer,
+  AC_HELP_STRING([--with-pdfviewer=BROWSER],
+[Use BROWSER for viewing the HTML version of the manual when the
+`Manual (HTML)' menu item is selected. (default: firefox)]),
+[DFLTPDFVIEWER="${withval}"],
+[DFLTPDFVIEWER="xpdf"])
+AC_DEFINE_UNQUOTED(DFLTPDFVIEWER, ["${DFLTPDFVIEWER}"],
+  [Define to the name of the html browser for online viewing of the PDF manual.])
+AC_CHECK_PROGS(PDFVIEWER, ${DFLTPDFVIEWER})
+if ! test "${PDFVIEWER}" = "${DFLTPDFVIEWER}"; then
+  AC_MSG_NOTICE([PDF viewr executable not found, online viewing of the PDF manual will probably not be possible.])
+fi
 
 ########################################################################
 ########################################################################
@@ -784,6 +810,9 @@ AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
 
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}-${PACKAGE_VERSION}'
 AC_SUBST(docdir)
+AC_DEFINE_UNQUOTED(DOCDIR,
+  ["`eval eval echo ${docdir}`"],
+  ["Define to the root of the Geomview documentation"])
 
 moduledir="\$(libexecdir)/geomview"
 AC_SUBST(moduledir)

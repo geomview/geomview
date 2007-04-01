@@ -285,7 +285,13 @@ be used instead of the built-in defaults.
 GEOMVIEW_GVX \- geomview executable
 .br
 .ti -5
+GEOMVIEW_DATA_DIR \- default directory for data files
+.br
+.ti -5
 GEOMVIEW_LOAD_PATH \- colon-separated search path for data files
+.br
+.ti -5
+GEOMVIEW_EMODULE_DIR \- default directory for external emodules
 .br
 .ti -5
 GEOMVIEW_EMODULE_PATH \- colon-separated search path for external modules
@@ -295,6 +301,15 @@ GEOMVIEW_SYSTEM_INITFILE \- system-wide GCL initialization script
 .br
 .ti -5
 GEOMDATA \- top directory of the default data tree, used by some modules
+.br
+.ti -5
+GEOMVIEW_DOC_DIR \- path to the user manual
+.br
+.ti -5
+WEBBROWSER \- executable for viewing the HTML version of the manual when invoking the `Manual (HTML)' menu item
+.br
+.ti -5
+PDFVIEWER \- executable for viewing the PDF version of the manual when invoking the `Manual (PDF)' menu item
 .br
 .in -5
 

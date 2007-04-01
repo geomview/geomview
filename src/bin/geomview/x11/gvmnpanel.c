@@ -50,6 +50,7 @@ static void file_menu_callbacks(Widget, char *);
 static void edit_menu_callbacks(Widget, char *);
 static void inspect_menu_callbacks(Widget, XtPointer);
 static void motion_menu_callbacks(Widget, char *);
+static void help_menu_callbacks(Widget, XtPointer);
 static void choose_space(Widget, int);
 static void BuildBrowserMenu();
 static int id2menuindex(int);
@@ -99,8 +100,6 @@ static MenuItem inspect_menu[] = {
         inspect_menu_callbacks, (XtPointer)P_CAMERA, (MenuItem *)NULL},
   { "Commands       ", &xmPushButtonGadgetClass, 'O', "Ctrl<Key>P", "[PC]",
         inspect_menu_callbacks, (XtPointer)P_COMMANDS, (MenuItem *)NULL},
-  { "Credits        ", &xmPushButtonGadgetClass, 'r', "Ctrl<Key>R", "[PA]",
-        inspect_menu_callbacks, (XtPointer)P_CREDITS, (MenuItem *)NULL},
   { NULL, NULL }
 };
 
@@ -127,6 +126,18 @@ static MenuItem motion_menu[] = {
         motion_menu_callbacks, "2", (MenuItem *)NULL},
   { "Own coordinates", &xmToggleButtonGadgetClass, 'O', "Alt<Key>O", "[uo]",
         motion_menu_callbacks, "3", (MenuItem *)NULL},
+  { NULL, NULL }
+};
+
+static MenuItem help_menu[] = {
+  { "About", &xmPushButtonGadgetClass, 'a', "Alt<Key>A", "[PA]",
+    help_menu_callbacks, (XtPointer)P_CREDITS, (MenuItem *)NULL },
+  { "Manual (PDF)", &xmPushButtonGadgetClass, 'h', "Alt<Key>P", "[PP]",
+    help_menu_callbacks, "p", (MenuItem *)NULL },
+  { "Manual (HTML)", &xmPushButtonGadgetClass, 'h', "Alt<Key>H", "[PH]",
+    help_menu_callbacks, "h", (MenuItem *)NULL },
+  { "Credits", &xmPushButtonGadgetClass, 'A', "Alt<Key>A", "[PA]",
+    help_menu_callbacks, (XtPointer)P_CREDITS, (MenuItem *)NULL },
   { NULL, NULL }
 };
 
@@ -280,6 +291,19 @@ LDEFINE(ui_motion, LVOID,
   return Lt;
 }
 
+char htmlbrowser[PATH_MAX] = { '\0', }, pdfviewer[PATH_MAX] = { '\0', };
+
+static void help_menu_callbacks(Widget widget, XtPointer ptr)
+{
+  if ((int)(long)ptr == P_CREDITS) {
+    ui_showpanel(P_CREDITS, 1);
+  } else if (*(char *)ptr == 'h') {
+    ui_manual_browser("html");
+  } else { /* if (*(char *)ptr == 'p') { */
+    ui_manual_browser("pdf");
+  }
+}
+
 static void choose_space(Widget w, int item)
 {
   int  space;
@@ -318,6 +342,7 @@ void ui_load_mainpanel()
 	     space,
 	  /*inspect,*/
 	     motion,
+             help,
 	     title,
 	     HideButton;
 
@@ -404,6 +429,10 @@ void ui_load_mainpanel()
     sprintf(buf, "button_%d", n);
     MotionToggle[n] = (Widget) motion_menu[n+2].subitems;
   }
+
+  help = BuildMenu(mainmenu, XmMENU_PULLDOWN, "Help", 'H', help_menu);
+
+  XtVaSetValues(mainmenu, XmNmenuHelpWidget, help, NULL);
 
   XtManageChild(mainmenu);
 

@@ -245,6 +245,13 @@ extern int  ui_name2panel( char *name );
 			 */
 extern void ui_showpanel( int index, int show );
 
+			/* ui_manual_browser() tries to spawn an external
+			 * html or pdf browser to give access to the manual.
+			 * "type" may be either "html" or "pdf", other values
+			 * are silently ignored.
+			 */
+extern void ui_manual_browser(const char *type);
+
 			/* ui_panelwindow() specifies positioning for the
 			 * given UI panel from the given WnWindow.
 			 */
