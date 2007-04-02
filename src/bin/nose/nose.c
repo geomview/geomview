@@ -19,12 +19,15 @@
  * or visit http://www.gnu.org.
  */
 
+#if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Geometry Technologies, Inc.";
+#endif
 
 /* (picked "name" (gx gy gz) (vx vy vz) (x1 y1 z1 x2 y2 z2)) */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "lisp.h"
 #include "pickfunc.h"
 #include "3d.h"
@@ -123,7 +126,7 @@ main()
 {
   Lake *lake;
   LObject *lit, *val;
-  extern char *getenv();
+  IOBFILE *fromgv;
 
   verbose = (getenv("VERBOSE_NOSE") != NULL);
 
@@ -141,8 +144,8 @@ main()
   fprintf(stdout, ")\n");
   fflush(stdout);
 
-  lake = LakeDefine(stdin, stdout, NULL);
-  while (!feof(stdin)) {
+  lake = LakeDefine(fromgv = iobfileopen(stdin), stdout, NULL);
+  while (!iobfeof(fromgv)) {
     lit = LSexpr(lake);
     val = LEval(lit);
     LFree(lit);
