@@ -11,7 +11,7 @@ man_MANS = example.1gv
 
 EXTRA_DIST = README panel.fd tutorial.ps tutorial.tex $(man_MANS)
 
-doc_DATA = tutorial.ps tutuorial.tex
+doc_DATA = tutorial.ps tutorial.tex
 
 module_PROGRAMS = example
 example_SOURCES = main.c oogl.c callbacks.c panel.c panel.h
