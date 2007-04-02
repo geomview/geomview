@@ -462,6 +462,12 @@ D1PRINT(("gv_rawevent:     falling through\n"));
       pickpanel:
 	ui_showpanel(ui_name2panel(s), getint(-1));
 	break;
+    case SEQ('P','P'):
+      ui_manual_browser("pdf");
+      break;
+    case SEQ('P','H'):
+      ui_manual_browser("html");
+      break;
     case SEQ('P','-'): 
 	comm_object("(read command < -)", &CommandOps, NULL, NULL, COMM_LATER);
 	break;
