@@ -3,8 +3,6 @@ DEFS = -DHAVE_CONFIG_H
 INCLUDES = -I$(geomviewincludes) $(default_includes) \
  -I$(TCL_INCLUDE_PATH) -I$(TK_INCLUDE_PATH)
 
-EXTRA_DIST = NDview NDdemo
-
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 
 module_PROGRAMS = ndview
