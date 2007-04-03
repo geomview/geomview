@@ -1,3 +1,5 @@
-*.lo
 *.la
+*.lo
 .libs
+Makefile
+Makefile.in
