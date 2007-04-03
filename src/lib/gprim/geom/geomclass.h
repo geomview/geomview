@@ -264,7 +264,7 @@ static inline NodeData *GeomNodeDataByPath(Geom *geom, const char *ppath)
   return NULL;
 }
 
-extern DECL_FREELIST(NodeData);
+extern DEF_FREELIST(NodeData);
 
 static inline NodeData *GeomNodeDataCreate(Geom *geom, const char *ppath)
 {
