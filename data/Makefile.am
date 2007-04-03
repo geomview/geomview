@@ -27,19 +27,6 @@ groups =					\
 	groups/borrom3.dgp			\
 	groups/borrom4.dgp			\
 	groups/borrom4.wa			\
-	groups/br4.0.tlist			\
-	groups/br4.1.tlist			\
-	groups/br4.2.tlist			\
-	groups/br4.3.tlist			\
-	groups/dir.1.gv				\
-	groups/dir.2.gv				\
-	groups/dir.3.gv				\
-	groups/dir.4.gv				\
-	groups/dodec.vect			\
-	groups/equi.1.gv			\
-	groups/equi.2.gv			\
-	groups/equi.3.gv			\
-	groups/equi.4.gv			\
 	groups/fig8.dgp				\
 	groups/g233.prj				\
 	groups/g234.prj				\
@@ -51,15 +38,7 @@ groups =					\
 	groups/klein.wa				\
 	groups/klein_bricks.dgp			\
 	groups/klein_whole.dgp			\
-	groups/loop.1.gv			\
-	groups/loop.2.gv			\
-	groups/loop.3.gv			\
-	groups/loop.4.gv			\
 	groups/notknot.dgp			\
-	groups/quart.1.gv			\
-	groups/quart.2.gv			\
-	groups/quart.3.gv			\
-	groups/quart.4.gv			\
 	groups/sample.proj.dgp			\
 	groups/sample.uhs.dgp			\
 	groups/spaceshipSpace.geom		\
@@ -95,7 +74,6 @@ nobase_geomdata_DATA = \
 	geom/dodec.vect \
 	geom/dodec2.off \
 	geom/facecube.off \
-	geom/flythrough_diagram.gv \
 	geom/hdodec.off \
 	geom/helicoid \
 	geom/hypercube.off \

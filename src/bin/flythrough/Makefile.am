@@ -1,6 +1,7 @@
+SUBDIRS = data
 DEFS = -DHAVE_CONFIG_H
 
-INCLUDES =ß
+INCLUDES =\
  -I$(geomviewincludes)\
  -I$(geomviewincludes)/private\
  $(default_includes)\
