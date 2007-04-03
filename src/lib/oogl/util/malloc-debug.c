@@ -1,9 +1,11 @@
 /* GNAH. Nothing more to be said ... */
 
 #include <stdlib.h>
-#include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+#if HAVE_MALLOC_H
+# include <malloc.h>
+#endif
 
 #define N_RECORDS 10000
 
@@ -162,10 +164,12 @@ void print_alloc_records(void)
   fprintf(stderr, "#records: %d\n", i);
 }
 
+#if HAVE_MALLINFO
 struct mallinfo gv_mallinfo(void)
 {
   return mallinfo();
 }
+#endif
 
 /*
  * Local Variables: ***
