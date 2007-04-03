@@ -727,6 +727,9 @@ Image *ImgFLoad(IOBFILE *inf, char *fname)
 static inline int maybe_compress_buffer(char **buffer, int n_bytes)
 {
 #if HAVE_LIBZ
+# if !HAVE_COMPRESSBOUND
+#  define compressBound(slen) ((slen) + ((slen) >> 12) + ((slen) >> 14) + 11)
+# endif
   char *bufptr;
   unsigned long c_n_bytes;
 
