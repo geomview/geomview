@@ -772,9 +772,12 @@ case 4: /* supported */
 	glutess = gluNewTess();
 	gluTessProperty(glutess,
 			GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
-	gluTessCallback(glutess, GLU_TESS_BEGIN_DATA, tess_begin_data);
-	gluTessCallback(glutess, GLU_TESS_VERTEX_DATA, tess_vertex_data);
-	gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
+	gluTessCallback(glutess, GLU_TESS_BEGIN_DATA,
+			(GLvoid (*)())tess_begin_data);
+	gluTessCallback(glutess, GLU_TESS_VERTEX_DATA,
+			(GLvoid (*)())tess_vertex_data);
+	gluTessCallback(glutess, GLU_TESS_COMBINE_DATA,
+			(GLvoid (*)())tess_combine_data);
       }
 
       tessdata->trickyp    = poly;

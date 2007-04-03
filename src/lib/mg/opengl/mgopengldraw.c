@@ -428,10 +428,12 @@ mgopengl_trickypolygon(Poly *p, int plflags)
 		    (GLUtessCombineDataProc)tess_combine_data);
     gluTessCallback(glutess, GLU_END, (GLUtessEndProc)glEnd);
 #else		/* Any reasonable OpenGL implementation */
-    gluTessCallback(glutess, GLU_BEGIN, glBegin);
-    gluTessCallback(glutess, GLU_TESS_VERTEX_DATA, tess_vertex_data);
-    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA, tess_combine_data);
-    gluTessCallback(glutess, GLU_END, glEnd);
+    gluTessCallback(glutess, GLU_BEGIN, (GLvoid (*)())glBegin);
+    gluTessCallback(glutess, GLU_TESS_VERTEX_DATA,
+		    (GLvoid (*)())tess_vertex_data);
+    gluTessCallback(glutess, GLU_TESS_COMBINE_DATA,
+		    (GLvoid (*)())tess_combine_data);
+    gluTessCallback(glutess, GLU_END, (GLvoid (*)())glEnd);
 #endif
   }
   
