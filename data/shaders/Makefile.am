@@ -42,4 +42,4 @@ geomshaderdata_DATA += $(shader_src:.sl=.sdl)
 endif
 
 clean-local:
-	-rm -f *.slx *.sdr
+	-rm -f *.slx *.sdr *.sdl
