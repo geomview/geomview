@@ -42,7 +42,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #define	TMNMAGIC	OOGLMagic('T', 1)
 
-DECL_FREELIST(TransformN);
+extern DEF_FREELIST(TransformN);
 
 /* Refer to the (i,j)'th entry in a TransformN object;
  * beware that (i,j) are not checked!

@@ -38,13 +38,6 @@ typedef struct FreeListNode
     type data;					\
   } type##FreeNode
 
-#define DECL_FREELIST(type)			\
-  FreeListNode *type##FreeList;			\
-  typedef union type##FreeNode {		\
-    FreeListNode node;				\
-    type data;					\
-  } type##FreeNode
-
 #define FREELIST_NEW(type, name)		\
   if (type##FreeList == NULL) {			\
     name = OOGLNewE(type, #type);		\

@@ -44,7 +44,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geomtypes.h"
 #include "freelist.h"
 
-DECL_FREELIST(HPointN);
+extern DEF_FREELIST(HPointN);
 
 static inline HPointN *HPtNCreate(int dim, const HPtNCoord *vec);
 static inline void HPtNDelete(HPointN *pt);
