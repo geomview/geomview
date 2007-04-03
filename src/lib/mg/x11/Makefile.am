@@ -1,4 +1,4 @@
-INCLUDES = $(default_includes)
+INCLUDES = $(default_includes) $(X_CFLAGS)
 
 EXTRA_DIST = Headers
 
