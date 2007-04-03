@@ -294,7 +294,7 @@ AC_CHECK_DECLS([errno],[],[],[
 # include <errno.h>
 #endif])
 AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
-  gethostname gettimeofday isascii memset mkdir pow rint select sqrt \
+  gethostname gettimeofday isascii mallinfo memset mkdir pow rint select sqrt \
   strchr strcspn strdup strerror strncasecmp strpbrk strrchr \
   strstr strtol strerror sysinfo waitpid wait3])
 
@@ -722,6 +722,10 @@ AC_DEFINE_UNQUOTED([MGGL],${MGGL}, [Leave this at 0])
 # Check for zlib and bzlib (image compression/decompression)
 #GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
 GEOMVIEW_CHECK_PACKAGE(zlib, z, , , zlib.h, , , optional)
+gv_ac_save_LIBS="${LIBS}"
+LIBS="${LIBS} ${ZLIB_ALL_LIB}"
+AC_CHECK_FUNCS([compressBound]) # pre-1.2 zlib?
+LIBS="${gv_ac_save_LIBS}"
 
 ########################################################################
 
@@ -858,8 +862,6 @@ OOGLLIBS="\$(top_geom_builddir)/src/lib/oogl/wa/libwa.la                     \
           \$(top_geom_builddir)/src/lib/shade/libshade.la                    \
           \$(top_geom_builddir)/src/lib/window/libwindow.la                  \
           \$(top_geom_builddir)/src/lib/geometry/cmodel/libcmodel.la         \
-          \$(top_geom_builddir)/src/lib/geometry/hpoint3/libhpoint3.la       \
-          \$(top_geom_builddir)/src/lib/geometry/hpointn/libhpointn.la       \
           \$(top_geom_builddir)/src/lib/geometry/point3/libpoint3.la         \
           \$(top_geom_builddir)/src/lib/geometry/transform3/libtransform3.la \
           \$(top_geom_builddir)/src/lib/geometry/transformn/libtransformn.la \
