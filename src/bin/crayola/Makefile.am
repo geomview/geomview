@@ -3,6 +3,7 @@ DEFS = -DHAVE_CONFIG_H
 INCLUDES = -I$(geomviewincludes) \
  -I$(geomviewincludes)/private \
  $(default_includes) \
+ $(X_CFLAGS)\
  -I$(TCL_INCLUDE_PATH) \
  -I$(TK_INCLUDE_PATH)
 

@@ -1,8 +1,10 @@
 DEFS = -DHAVE_CONFIG_H
 
-INCLUDES = -I$(geomviewincludes)\
+INCLUDES =ß
+ -I$(geomviewincludes)\
  -I$(geomviewincludes)/private\
  $(default_includes)\
+ $(X_CFLAGS)\
  -I$(XFORMS_INCLUDE_PATH)
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
