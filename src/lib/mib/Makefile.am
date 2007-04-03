@@ -1,4 +1,4 @@
-INCLUDES = $(default_includes) $(MOTIFINCLUDE)
+INCLUDES = $(default_includes) $(MOTIFINCLUDE) $(X_CFLAGS)
 EXTRA_DIST = Headers
 
 noinst_LIBRARIES = libmib.a
