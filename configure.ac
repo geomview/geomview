@@ -243,7 +243,7 @@ AC_COMPILE_IFELSE(
 AC_DEFINE(HAVE_M_PI, 1, [Define to 1 if M_PI is defined])],
 [AC_MSG_RESULT([no])])
 AC_LANG_POP([C])
-AC_CHECK_TYPES([dev_t ino_t time_t])
+AC_CHECK_TYPES([dev_t, ino_t, time_t])
 AC_CHECK_SIZEOF([dev_t])
 AC_CHECK_SIZEOF([ino_t])
 AC_CHECK_SIZEOF([time_t])
