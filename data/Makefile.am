@@ -71,7 +71,6 @@ nobase_geomdata_DATA = \
 	geom/dodec \
 	geom/dodec.off \
 	geom/dodec.quad \
-	geom/dodec.vect \
 	geom/dodec2.off \
 	geom/facecube.off \
 	geom/hdodec.off \
