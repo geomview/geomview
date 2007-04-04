@@ -145,8 +145,7 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 
     if (fname != NULL && *fname != '\0') {
 	p = PoolStreamOpen(fname, NULL, 0, ops);
-	hknown = HandleByName(fname, ops);
-	REFPUT(hknown);
+	hknown = HandleCreate(fname, ops);
     }
 
     if (p && ((p->flags & (PF_ANY|PF_REREAD)) != PF_ANY || hknown != NULL)) {
@@ -157,7 +156,7 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 	/* Accessing a handle via ':' makes the handle global */
 	h = HandleCreateGlobal(name, ops);
     }
-    
+
     if (ph) {
 	if (h) {
 	    /* If we were told to assign to a specific named handle
@@ -169,7 +168,29 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 	} else {
 	    h = ph; /* otherwise we return the handle returned by PoolIn(). */
 	}
+    } else if (p) {
+	/* If we have a pool but not handle, then generate one for
+	 * this pool; callers of this functinos treat handle == NULL
+	 * as error case.
+	 */
+	REFGET(Handle, hknown);
+	HandleSetObject(hknown, NULL);
+	h = hknown;
+	if (h->whence) {
+	    if (h->whence != p) {
+		/* steal the pool pointer */
+		DblListDelete(&h->poolnode);
+		h->whence = p;
+		DblListAdd(&p->handles, &h->poolnode);
+	    }
+	    REFPUT(h); /* no need to call HandleDelete() */
+	} else {
+	    h->whence = p;
+	    DblListAdd(&p->handles, &h->poolnode);
+	}
     }
+
+    HandleDelete(hknown);
 
     if (hp) {
 	if (*hp) {
@@ -829,9 +850,7 @@ Handle *PoolIn(Pool *p)
 	     * hierarchy.
 	     */
 	    if (h == NULL) {
-		if ((h = HandleByName(p->poolname, p->ops)) == NULL) {
-		    h = HandleCreate(p->poolname, p->ops);
-		}
+		h = HandleCreate(p->poolname, p->ops);
 		if (r != NULL) {
 		    HandleSetObject(h, r);
 		    /* Decrement reference count since we're handing
