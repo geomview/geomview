@@ -39,8 +39,8 @@ void norm(FILE *fp);
 
 int verbose = 0;
 
-handle_pick(FILE *fp, int picked, HPoint3 *gotten,
-	    int vert, HPoint3 *v, int edge, HPoint3 e[])
+void handle_pick(FILE *fp, int picked, HPoint3 *gotten,
+		 int vert, HPoint3 *v, int edge, HPoint3 e[])
 {
   static int first = 1;
   HPoint3 got, e0, e1;
@@ -110,19 +110,19 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 })
 
 
-init()
+void init(void)
 {
   LInit();
   LDefun("pick", Lpick, Hpick);
 }
 
-pickability(FILE *fp)
+void pickability(FILE *fp)
 {
   fprintf(fp, "(interest (pick world * * * * nil nil nil nil nil))\n");
   fflush(fp);
 }
 
-main()
+int main(int argc, char *argv[])
 {
   Lake *lake;
   LObject *lit, *val;
