@@ -75,8 +75,8 @@ int main(int argc, char **argv)
   CameraStruct  cs;
 
 #if defined(_FPU_SETCW)
-     fpu_control_t hctrlword = _FPU_IEEE;
-     _FPU_SETCW(hctrlword);
+  fpu_control_t hctrlword = _FPU_IEEE;
+  _FPU_SETCW(hctrlword);
 #endif
 
   signal(SIGFPE, SIG_IGN);   /* Ignore e.g. divide-by-zero traps */
@@ -219,3 +219,10 @@ int ntsc(int on)
 }
 
 /*****************************************************************************/
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+ 
