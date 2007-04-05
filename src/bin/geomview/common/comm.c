@@ -1200,7 +1200,7 @@ LDEFINE(hdelete, LVOID,
 	"Deletes the given handle. Note that the handle will not actually be "
 	"deleted in case there are still other objects referring to the "
 	"handle, but once those objects are gone, the handle will also "
-	"automatically go away. The object the handle referes to (if any) "
+	"automatically go away. The object the handle refers to (if any) "
 	"will only be deleted if there are no other references to that object."
 	"\n\n"
 	"If the optional first argument is omitted, then the first handle "
