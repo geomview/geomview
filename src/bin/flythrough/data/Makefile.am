@@ -10,3 +10,5 @@ geomgroups_DATA =\
 geomdatageomdir = $(geomdatadir)/geom
 
 geomdatageom_DATA = dodec.vect flythrough_diagram.gv
+
+EXTRA_DIST = $(geomdatageom_DATA) $(geomgroups_DATA)
