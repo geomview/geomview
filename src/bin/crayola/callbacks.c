@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -44,7 +45,8 @@ static char msg[] = "callbacks.c";
 #define PICK_YES		"(interest (pick self))"
 #define PICK_NO			"(uninterest (pick self))"
 
-void SetUndo(Geom *g, char *name) {
+void SetUndo(Geom *g, char *name)
+{
   if (undoGeom != NULL) GeomDelete(undoGeom);
   if (undoID != NULL) OOGLFree(undoID);
   undoGeom = GeomCopy(g);
@@ -52,7 +54,8 @@ void SetUndo(Geom *g, char *name) {
   strcpy(undoID, name);
 }
 
-Geom *GetObject(char *name) {
+Geom *GetObject(char *name)
+{
   printf("(echo \"{\")");
   printf("(write geometry - %s bare)", name);
   printf("(echo \"}\")");
@@ -60,11 +63,13 @@ Geom *GetObject(char *name) {
   return GeomFLoad(infile, NULL);
 }
 
-Geom *GetTarget() {
+Geom *GetTarget(void)
+{
   return GetObject("targetgeom");
 }
 
-void ReplaceObject(Geom *g, char *name) {
+void ReplaceObject(Geom *g, char *name)
+{
   if (g == NULL) return;
   printf("(geometry %s ", name);
   GeomFSave(g, stdout, NULL);
@@ -73,23 +78,26 @@ void ReplaceObject(Geom *g, char *name) {
   fflush(stdout);
 }
 
-void ReplaceTarget(Geom *g) {
+void ReplaceTarget(Geom *g)
+{
   ReplaceObject(g, "targetgeom");
 }
 
-void freeze() {
+void freeze(void)
+{
   uiFreeze();
   printf(PICK_NO);
   fflush(stdout);
 }
 
-void thaw() {
+void thaw(void)
+{
   printf("(echo \"(ack)\\n\")");
   fflush(stdout);
 }
 
 LDEFINE(ack, LVOID,
-	 "(ack)\n\
+	"(ack)\n\
 Command sent back from Geomview indicating that everything has been\n\
 processed")
 {
@@ -164,24 +172,24 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
   return Lt;
 })
 
-void init() {
-       
-    crayolaInit();
+void init(void)
+{       
+  crayolaInit();
      
-    infile = iobfileopen(stdin);
+  infile = iobfileopen(stdin);
 
-    LInit();
-    LDefun("pick", Lpick, Hpick);
-    LDefun("ack", Lack, Hack);
-    lake = LakeDefine(infile, stdout, NULL);
-    printf(PICK_YES);
-    fflush(stdout);
+  LInit();
+  LDefun("pick", Lpick, Hpick);
+  LDefun("ack", Lack, Hack);
+  lake = LakeDefine(infile, stdout, NULL);
+  printf(PICK_YES);
+  fflush(stdout);
 
-    uiChangeColor(&crayDefColor);
-
+  uiChangeColor(&crayDefColor);
 }
 
-void dopipes() {
+void dopipes(void)
+{
   LObject *lit, *val;
   lit = LSexpr(lake);
   val = LEval(lit);
@@ -189,25 +197,36 @@ void dopipes() {
   LFree(val);
 }
 
-void checkpipes() {
+void checkpipes(void)
+{
   if (async_iobfnextc(infile, 0) != NODATA) dopipes();
+#if 0
   else {
     static struct timeval tenth = { 0, 100000 };
     select(0, NULL, NULL, NULL, &tenth);
   }
+#endif
 }
 
-int undo() {
-       if (undoGeom != NULL) {
-	 ReplaceObject(undoGeom, undoID);
-	 return 1;
-       } else return 0;
-   }
+int undo(void)
+{
+  if (undoGeom != NULL) {
+    ReplaceObject(undoGeom, undoID);
+    return 1;
+  } else return 0;
+}
      
 
-void quit() {
-       if (undoGeom != NULL) GeomDelete(undoGeom);
-     if (undoID != NULL) OOGLFree(undoID);
+void quit(void)
+{
+  if (undoGeom != NULL) GeomDelete(undoGeom);
+  if (undoID != NULL) OOGLFree(undoID);
   exit(0);
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

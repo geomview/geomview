@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -52,36 +53,36 @@ uiThaw(void)
 static int
 checkOperation(char *op)
 {
-    const char *value = Tcl_GetVar(magic, "operation", 0);
+  const char *value = Tcl_GetVar(magic, "operation", 0);
 
-    if (!strcmp(value, op))
-	return 1;
-    else
-	return 0;
+  if (!strcmp(value, op))
+    return 1;
+  else
+    return 0;
 }
 
 int
 uiGet(void)
 {
-    return checkOperation("get");
+  return checkOperation("get");
 }
 
 int
 uiSet(void)
 {
-    return checkOperation("set");
+  return checkOperation("set");
 }
 
 int
 uiSetAll(void)
 {
-    return checkOperation("setall");
+  return checkOperation("setall");
 }
 
 int
 uiEliminateColor(void)
 {
-    return checkOperation("eliminate");
+  return checkOperation("eliminate");
 }
 
 #if 0
@@ -91,102 +92,117 @@ static char cscl[] = ".crayola.c";
 static void
 setsliders(char *which, Color *c)
 {
-    char s[200];
-    sprintf(s, "setsliders %s {%g %g %g}", which, c->r, c->g, c->b);
-    Tcl_Eval(magic, s);
+  char s[200];
+  sprintf(s, "setsliders %s {%g %g %g}", which, c->r, c->g, c->b);
+  Tcl_Eval(magic, s);
 }
 
 void
 uiChangeColor(ColorA *color)
 {
-    rgb = *(Color *)color;
-    rgb2hsv(&rgb, &hsv);
-    setsliders("rgb", &rgb);
-    setsliders("hsv", &hsv);
-    Tcl_Eval(magic, "newColor");
+  rgb = *(Color *)color;
+  rgb2hsv(&rgb, &hsv);
+  setsliders("rgb", &rgb);
+  setsliders("hsv", &hsv);
+  Tcl_Eval(magic, "newColor");
 }
 
 void
 uiCurrentColor(ColorA *color)
 {
-    *(Color *)color = rgb;
-    color->a = 1.0;
+  *(Color *)color = rgb;
+  color->a = 1.0;
 }
 
 int
 uiQuery(char *ques1, char *ques2, char *ques3, char *res1, char *res2)
 {
-    Tcl_VarEval(magic, "tk_dialog .question Query {", ques1, " ", ques2, " ",
-		ques3, "} {} -1 \"", res1, "\" \"", res2, "\"", NULL);
-    return atoi(magic->result);
+  Tcl_VarEval(magic, "tk_dialog .question Query {", ques1, " ", ques2, " ",
+	      ques3, "} {} -1 \"", res1, "\" \"", res2, "\"", NULL);
+  return atoi(magic->result);
 }
 
 int
 undoCmd(ClientData clientData, Tcl_Interp *interp, int argc, const char **argv)
 {
-    undo();
-    return TCL_OK;
+  undo();
+  return TCL_OK;
 }
 
 int
 setColorCmd(ClientData clientData, Tcl_Interp *interp,
 	    int argc, const char **argv)
 {
-    Color *c = &rgb;
+  Color *c = &rgb;
 
-    if(argc > 1 && strcmp(argv[1], "-hsv") == 0) {
-	c = &hsv;
-	argc--;
-	argv++;
-    }
+  if(argc > 1 && strcmp(argv[1], "-hsv") == 0) {
+    c = &hsv;
+    argc--;
+    argv++;
+  }
 	
-    if (argc != 4)
+  if (argc != 4)
     {
-	Tcl_SetResult(interp, "usage: crayolaSetColor ?-hsv? r g b", TCL_STATIC);
-	return TCL_ERROR;
+      Tcl_SetResult(interp, "usage: crayolaSetColor ?-hsv? r g b", TCL_STATIC);
+      return TCL_ERROR;
     }
-    c->r = atof(argv[1]);
-    c->g = atof(argv[2]);
-    c->b = atof(argv[3]);
-    if(c == &hsv) {
-	hsv2rgb(&hsv, &rgb);
-	setsliders("rgb", &rgb);
-    } else {
-	rgb2hsv(&rgb, &hsv);
-	setsliders("hsv", &hsv);
-    }
-    return TCL_OK;
+  c->r = atof(argv[1]);
+  c->g = atof(argv[2]);
+  c->b = atof(argv[3]);
+  if(c == &hsv) {
+    hsv2rgb(&hsv, &rgb);
+    setsliders("rgb", &rgb);
+  } else {
+    rgb2hsv(&rgb, &hsv);
+    setsliders("hsv", &hsv);
+  }
+  return TCL_OK;
 }
 
 int
 quitCmd(ClientData clientData, Tcl_Interp *interp, int argc, const char **argv)
 {
-    quit();
-    return TCL_OK;
+  quit();
+  return TCL_OK;
 }
 
 static void
-handler(ClientData clientData, int mask)
+handler(ClientData clientData/*, int mask*/)
 {
-    dopipes();
+#if HAVE_TCL_CREATEFILEHANDLER
+  dopipes();
+#else
+  checkpipes();
+  Tk_CreateTimerHandler(100, handler, NULL);
+#endif
 }
 
 int
 crayola_init(Tcl_Interp *interp)
 {
-    Tk_Window mainw = Tk_MainWindow(interp);
+  Tk_Window mainw = Tk_MainWindow(interp);
 
-    magic = interp;
-    Tcl_CreateCommand(interp, "crayolaSetColor", setColorCmd, 
-		      (ClientData) mainw, (Tcl_CmdDeleteProc *) NULL);
-    Tcl_CreateCommand(interp, "crayolaUndo", undoCmd, (ClientData) mainw,
-		      (Tcl_CmdDeleteProc *) NULL);
-    Tcl_CreateCommand(interp, "crayolaQuit", quitCmd, (ClientData) mainw,
-		      (Tcl_CmdDeleteProc *) NULL);
+  magic = interp;
+  Tcl_CreateCommand(interp, "crayolaSetColor", setColorCmd, 
+		    (ClientData) mainw, (Tcl_CmdDeleteProc *) NULL);
+  Tcl_CreateCommand(interp, "crayolaUndo", undoCmd, (ClientData) mainw,
+		    (Tcl_CmdDeleteProc *) NULL);
+  Tcl_CreateCommand(interp, "crayolaQuit", quitCmd, (ClientData) mainw,
+		    (Tcl_CmdDeleteProc *) NULL);
 
-    init();
-    uiThaw();
-    Tk_CreateFileHandler(0, TK_READABLE, handler, 0);
-    return TCL_OK;
+  init();
+  uiThaw();
+#if HAVE_TCL_CREATEFILEHANDLER
+  Tk_CreateFileHandler(0, TK_READABLE, handler, 0);
+#else
+  Tk_CreateTimerHandler(100, handler, NULL);
+#endif
+  return TCL_OK;
 }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
