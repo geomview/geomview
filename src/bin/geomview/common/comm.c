@@ -1490,6 +1490,7 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
    * which isn't prepared to receive data back from us.
    * PoolStreamOpen(conname, fdopen(ds, "w"), 1, (HandleOps*)PoolClientData(listenp));
    */
+  PoolStreamOpen(conname, fdopen(ds, "w"), 1, ops);
   useconnection( listenp->poolname, ops, HandleCreate(conname, ops), NULL, 0 );
   return 1;
 }
@@ -1518,16 +1519,9 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
   enum {
     nopipe = -1,
     namedpipe = 1,
-#if HAVE_UNIX_SOCKETS
     unixsocket = 2,
-#endif
-#if HAVE_INET_SOCKETS
     inetsocket = 3,
-#endif
-#if HAVE_INET6_SOCKETS
-    inet6socket = 4,
-#endif
-    numer_of_pipe_types /* just to get rid of the `,' compiler warning */
+    inet6socket = 4
   } usepipe = nopipe;
   int port;
 
@@ -1560,7 +1554,7 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
 #endif
   }
 
-  if (usepipe == unixsocket || namedpipe) {
+  if (usepipe == unixsocket || usepipe == namedpipe) {
     if (suffix[0] == '/') {
       strcpy(pdir, suffix);
       tail = strrchr(pdir, '/');

@@ -1144,6 +1144,28 @@ Specifies the initial location and size of the first camera window.  The
 values for @var{width}, @var{height}, @var{xmin}, and @var{ymin} are in
 screen (pixel) coordinates.
 
+@item -M[cg][ps[un|in|in6]] @var{PIPENAME}|@var{TCPPORT}
+The @samp{-M} option accepts modifiers: a @samp{g} suffix expects
+geometry data (the default), while a @samp{c} suffix expects GCL
+commands. A @samp{p} implies the connection should use a named pipe (the
+default on everything except on the NeXT), while @samp{s} implies using
+a UNIX-domain socket (the default on the NeXT). Since version 1.9 of
+Geomview internet domain sockets are also supported; use @samp{sin} to
+make Geomview listen on the IPv4 port given by @var{TCPPORT}, or use
+@samp{sin6} to make Geomview listen on an IPv6 port (also as specified
+by @var{TCPPORT}). @samp{sun} is a synonym for @samp{s}, i.e. use the
+Unix domain socket with the name @var{PIPENAME}. If @var{PIPENAME}
+starts with a slash ('/'), then it is assumed to be an absolute
+pathname, otherwise the named pipe or socket is created below
+@file{$@{TMPDIR@}/geomview/}.
+
+@b{Listening to command streams on TCP ports can be a security risk,
+as Geomview itself does not take any security precautions, it simply
+executes all commands fed to it throught the network socket. This also
+implies that disk-io can be initiated remotely.}
+
+Examples:
+@table @code
 @item -M @var{objectname}
 Display (possibly dynamically changing) geometry sent from the
 programs @code{geomstuff} or @code{togeomview}.  This actually listens to the
@@ -1163,6 +1185,15 @@ executing the GCL command:
 @item -Mc @var{pipename}
 Like @samp{-M} above, but expects GCL commands, rather than OOGL
 geometry data, on the connection.
+
+@item -Mcs fred
+Read commands from the UNIX-domain socket named.
+@file{/tmp/geomview/fred}
+
+@item -Mcsin 40000
+Read commands from the IPv4 port @samp{40000}. Geomview itself does not
+take any security precautions, so this can be a security risk.
+@end table
 
 @item -noopengl
 Disable the use of OpenGL for (possibly) hardware accelerated rendering,

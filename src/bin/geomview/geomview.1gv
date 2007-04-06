@@ -86,13 +86,25 @@ executing the geomview command:
     (geometry\ \fIobjname\fP\ \ <\ /tmp/geomview/\fIobjname\fP)
 .br
 .TP
--M[cg][sp] \fIpipename\fP
-The \fB\-M\fP option accepts modifiers: a 'g' suffix expects geometry data
-(the default), while 'c' suffix expects gcl commands.  A 'p' implies
-the connection should use a named pipe (the default on the Iris),
-while 's' implies using a UNIX-domain socket (default on the NeXT).
+-M[cg][ps[un|in|in6]] \fIPIPENAME|TCPPORT\fP
+
+The \fB\-M\fP option accepts modifiers: a '\fBg\fP' suffix expects
+geometry data (the default), while a '\fBc\fP' suffix expects GCL
+commands.  A '\fBp\fP' implies the connection should use a named pipe
+(the default on everything except on the NeXT), while '\fBs\fP'
+implies using a UNIX-domain socket (the default on the NeXT). Since
+version 1.9 of Geomview internet domain sockets are also supported;
+use '\fBsin\fP' to make Geomview listen on the IPv4 port given
+by \fBTCPPORT\fP, or use '\fBsin6\fP' to make Geomview listen on an IPv6
+port (also as specified by \fBTCPPORT\fP). '\fBsun\fP' is a synonym
+for '\fBs\fP', i.e. use the Unix domain socket with the
+name \fBPIPENAME\fP. If \fBPIPENAME\fP starts with a slash ('/'), then it
+is assumed to be an absolute pathname, otherwise the named pipe or
+socket is created below \fB${TMPDIR}/geomview/\fP.
+
 So \fB\-Mcs fred\fP selects reading commands from the UNIX-domain socket named
-\fB/tmp/geomview/fred\fP.
+\fB/tmp/geomview/fred\fP, \fB\-Mcsin 40000\fP selects reading commands from the
+IPv4 port '40000'.
 .TP
 -noopengl
 Disable the use of OpenGL for (possibly) hardware

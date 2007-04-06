@@ -155,7 +155,8 @@ int main(int argc, char *argv[])
 {
   int n, fd = -1;
   int asgeom = 0;
-  char pipename[BUFSIZ];
+  char pipename[PATH_MAX];
+  char buffer[BUFSIZ];
   static char *geomview[] = { "geomview", NULL };
   char **progtorun = geomview;
   char *tail;
@@ -169,7 +170,7 @@ int main(int argc, char *argv[])
   const char *todir = "/tmp/geomview";
   const char *toname = "OOGL";
   const char *hostname = "localhost";
-  const char *portstr;
+  char *portstr;
   int port = DFLT_PORT;
 
   prog = argv[0];
@@ -186,12 +187,12 @@ int main(int argc, char *argv[])
       case 'p': pipetype = namedpipe; break;
       case 's':
 	pipetype = unixsocket;
-	if (strncmp(tail, "sun", 3)) {
+	if (strncmp(tail, "sun", 3) == 0) {
 	  tail += 2;
-	} else if (strncmp(tail, "sin6", 4)) {
+	} else if (strncmp(tail, "sin6", 4) == 0) {
 	  pipetype = inet6socket;
 	  tail += 3;
-	} else if (strncmp(tail, "sin", 3)) {
+	} else if (strncmp(tail, "sin", 3) == 0) {
 	  pipetype = inetsocket;
 	  tail += 2;
 	}
@@ -228,17 +229,17 @@ int main(int argc, char *argv[])
 #endif
 
   if (argc > 1) {
+    toname = argv[1];
     if (pipetype == inetsocket || pipetype == inet6socket) {
-      char *portstr = strrchr(toname, ':');
+      portstr = strrchr(toname, ':');
       if (portstr == NULL) {
-	usage(prog);
+	portstr = DFLT_PORT_STR;
+      } else {
+	*portstr++ = '\0';
       }
-      *portstr++ = '\0';
       hostname = toname;
       port = atoi(portstr);
       toname = portstr;
-    } else {
-      toname = argv[1];
     }
   } else if (pipetype == inetsocket || pipetype == inet6socket) {
     toname = portstr = DFLT_PORT_STR;
@@ -325,20 +326,26 @@ int main(int argc, char *argv[])
     default:
       break;
     }
-    if (connect(fd, s, slen) < 0 &&
-	errno != ECONNREFUSED && errno != ENOENT) {
-      fprintf(stderr, "togeomview: Can't connect to ");
-      perror(pipename);
-      exit(1);
-    }
-
-    if (do_startgv) {
-      start_gv(progtorun, pipename, asgeom, pipetype);
-      for (n = 0; connect(fd, s, slen) < 0; n++) {
-	if (n == 15) {
-	  interrupt(0);
+    if (connect(fd, s, slen) < 0) {
+      if (errno != ECONNREFUSED && errno != ENOENT) {
+	fprintf(stderr, "togeomview: Can't connect to ");
+	perror(pipename);
+	exit(EXIT_FAILURE);
+      }
+      if (do_startgv) {
+	start_gv(progtorun, pipename, asgeom, pipetype);
+	for (n = 0; connect(fd, s, slen) < 0; n++) {
+	  if (n == 15) {
+	    interrupt(0);
+	  }
+	  sleep(1);
 	}
-	sleep(1);
+      } else {
+	fprintf(stderr,
+		"togeomview: unable to connect to \"%s\"; and "
+		"starting Geomview on remote-hosts is not implemented yet.\n",
+		pipename);
+	exit(EXIT_FAILURE);
       }
     }
 #ifdef S_IFIFO
@@ -365,13 +372,38 @@ int main(int argc, char *argv[])
     perror(pipename);
     exit(1);
   }
-  while ((n = read(0, pipename, sizeof(pipename))) > 0) {
-    if (write(fd, pipename, n) < n) {
+  while ((n = read(0, buffer, sizeof(buffer))) > 0) {
+    if (write(fd, buffer, n) < n) {
       perror("Error writing to geomview");
       exit(1);
     }
   }
-  exit(0);
+  if (!asgeom) {
+    /* try to consume answers and echo them on STDOUT.
+     *
+     * The policy is somewhat questionable; the code below means that
+     * each command piped to geomview via togeomview will at least
+     * take 1/10 seconds, regardless whether there really comes an
+     * answer or not.
+     */
+    fd_set sset;
+    struct timeval tenth = { 0, 100000 };
+
+    FD_ZERO(&sset);
+    FD_SET(fd, &sset);
+
+    for (;;) {
+      if (select(fd+1, &sset, NULL, NULL, &tenth) == 1) {
+	if ((n = read(fd, buffer, sizeof(buffer))) > 0) {
+	  write(1, buffer, n);
+	}
+      } else {
+	break;
+      }
+    }
+  }
+
+  exit(EXIT_SUCCESS);
 }
 
 static void usage(const char *prog)
@@ -379,16 +411,22 @@ static void usage(const char *prog)
   char buf[BUFSIZ];
   setbuf(stderr, buf);
 
-  fprintf(stderr, "Usage: %s [-g] [pipename  [ geomview ... args ] ]\n\
-Sends lisp-style commands or (with \"-g\") OOGL geometry data to geomview,\n\
-starting a copy if none is yet running.  Uses \"pipename\" as the connection\n\
-name; a file by that name is created in the directory \"/tmp/geomview\".\n\
-Default pipename is \"OOGL\".  If \"geomview ... args\" are present,\n\
-invokes that (if need be) rather than geomview itself.\n\
-Examples:\n\
-	echo '(geometry fred < dodec.off)' | togeomview  sam\n\
-	togeomview -g <dodec.off\n\
-	cat my_geomview_script | togeomview bob  gv -wpos 300x300@500,500\n",
+  fprintf(stderr,
+"Usage: %s [-c] [-g] [-ps[un|in[6]]] [PIPENAME|HOST:PORT [GVPROG ARGS...]]\n"
+"Sends lisp-style commands or (with \"-g\") OOGL geometry data to Geomview\n"
+"(or the program specified by \"GVPROG\"). The transport channel is a\n"
+"named pipe (\"-p\" switch, default, except on the NeXT), a Unix domain\n"
+"(\"-s[un]\" switch, default on the NeXT), or a TCP socket, either with the\n"
+"IPv4 or IPv6 protocol (\"in[6]\" switch). For \"-p\" and \"-s\" a socket\n"
+"or FIFO special file as given by \"PIPENAME\" is created in\n"
+"\"/tmp/geomview/\". The default pipename is \"OOGL\". A copy of Geomview\n"
+"or \"GVPROG\" is started if none listening on the chosen transport medium\n"
+"is yet running. For TCP sockets this is done only when \"HOST\" refers to\n"
+"the loopback device.\n"
+"Examples:\n"
+"	echo '(geometry fred < dodec.off)' | togeomview  sam\n"
+"	togeomview -g <dodec.off\n"
+"	cat my_geomview_script | togeomview bob  gv -wpos 300x300@500,500\n",
 	  prog);
   exit(1);
 }

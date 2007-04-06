@@ -62,7 +62,7 @@ char *geomview_system_initfile = NULL;
 int do_init = 1;
 
 Color initial_defaultbackcolor = {1.0/3.0, 1.0/3.0, 1.0/3.0 };
-static char *pipedir = "/tmp/geomview";
+static char *pipesubdir = "geomview";
 
 int gv_nwins = 1;
 int gv_no_opengl = 0;
@@ -245,6 +245,13 @@ int parse_common_arg(int *acp, char ***avp)
     gv_load(*++av, "command");
   } else if(!strncmp(arg, "-M", 2) && --ac > 0) {
     /* -M[cg][ps[un|in|in6]] pipename|port  -- external connection */
+    char pipedir[PATH_MAX];
+    char *tmpdir = getenv("TMPDIR");
+    
+    if (tmpdir == NULL) {
+      tmpdir = "/tmp";
+    }
+    snprintf(pipedir, PATH_MAX, "%s/%s", tmpdir, pipesubdir);
     usepipe(pipedir, *++av, &arg[2]);
   } else if(strncmp(arg, "-nop", 4) == 0) {	/* "-nopanels" */
     /* -nopanels -- Suppress all possible panels */
