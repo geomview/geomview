@@ -437,7 +437,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		if (fd < 0)
 		    fd = open(name, O_RDONLY | o_nonblock);
 
-#if defined(unix) || defined(__unix)
+#if HAVE_UNIX_SOCKETS
 		/* Unix-domain socket? */
 		if (fd < 0 && errno == EOPNOTSUPP) {
 		    struct sockaddr_un sa;
@@ -449,7 +449,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 			fd = -1;
 		    }
 		}
-#endif /*unix*/
+#endif /* HAVE_UNIX_SOCKETS */
 
 		if (fd < 0)
  		    OOGLError(0, "Cannot open file \"%s\": %s",
@@ -501,7 +501,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	    watchfd(p->infd);
 #if HAVE_FCNTL
 	    fcntl(p->infd, F_SETFL, fcntl(p->infd, F_GETFL) & ~o_nonblock);
-#endif /*unix*/
+#endif /* HAVE_FCNTL */
 	}
     }
 #if HAVE_FCNTL
@@ -509,7 +509,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	int fd = fileno(p->outf);
 	fcntl(fd, F_SETFL, fcntl(fd, F_GETFL) & ~o_nonblock);
     }
-#endif /*unix*/
+#endif /* HAVE_FCNTL */
     if (p->level == 0 && p->outf &&
 	  (lseek(fileno(p->outf),0,SEEK_CUR) == -1 || isatty(fileno(p->outf))))
 	p->level = 1;
