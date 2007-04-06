@@ -483,7 +483,9 @@ Default to int])
 AC_ARG_WITH(htmlbrowser,
   AC_HELP_STRING([--with-htmlbrowser=BROWSER],
 [Use BROWSER for viewing the HTML version of the manual when the
-`Manual (HTML)' menu item is selected. (default: firefox)]),
+`Manual (HTML)' menu item is selected. This setting can be changed at
+runtime through the '(ui-html-browser BROWSER)' GCL-command.
+(default: firefox)]),
 [DFLTHTMLBROWSER="${withval}"],
 [DFLTHTMLBROWSER="firefox"])
 AC_DEFINE_UNQUOTED(DFLTHTMLBROWSER, ["${DFLTHTMLBROWSER}"],
@@ -494,9 +496,11 @@ if ! test "${HTMLBROWSER}" = "${DFLTHTMLBROWSER}"; then
 fi
 
 AC_ARG_WITH(pdfviewer,
-  AC_HELP_STRING([--with-pdfviewer=BROWSER],
-[Use BROWSER for viewing the HTML version of the manual when the
-`Manual (HTML)' menu item is selected. (default: firefox)]),
+  AC_HELP_STRING([--with-pdfviewer=VIEWER],
+[Use BROWSER for viewing the PDF version of the manual when the
+`Manual (PDF)' menu item is selected. This setting can be changed at
+runtime through the '(ui-pdf-viewer VIEWER)' GCL-command.
+(default: xpdf)]),
 [DFLTPDFVIEWER="${withval}"],
 [DFLTPDFVIEWER="xpdf"])
 AC_DEFINE_UNQUOTED(DFLTPDFVIEWER, ["${DFLTPDFVIEWER}"],
