@@ -90,7 +90,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # include <GL/glu.h>
 # include <GL/glx.h>
 # ifdef MESA
-#  define OPENGL_BUILDINFOGRAPHICS "OpenGL (MESA)"
+#  define OPENGL_BUILDINFOGRAPHICS "OpenGL(MESA)"
 # else
 #  define OPENGL_BUILDINFOGRAPHICS "OpenGL"
 # endif /*!MESA*/
@@ -98,7 +98,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #ifdef OPENGL_BUILDINFOGRAPHICS
 # if MGX11
-char *buildinfographics = OPENGL_BUILDINFOGRAPHICS" / X11";
+char *buildinfographics = OPENGL_BUILDINFOGRAPHICS"/X11";
 # else
 char *buildinfographics = OPENGL_BUILDINFOGRAPHICS;
 # endif
