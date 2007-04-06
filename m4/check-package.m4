@@ -262,8 +262,10 @@ else
     [gv_ac_]UPNAME[_save_CPPFLAGS]="$CPPFLAGS"
     m4_define([gv_ac_inctemp],[m4_bpatsubst([gv_ac_$5],[[].-[]],_)])
     unset gv_ac_inctemp
-    for incdir in ${UPNAME[_INCLUDE_PATH]}; do
-      CPPFLAGS="-I`eval eval eval echo ${incdir}` ${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
+    for incdir in "${UPNAME[_INCLUDE_PATH]}"; do
+      if test -n "`eval eval eval echo ${incdir}`"; then
+	CPPFLAGS="-I`eval eval eval echo ${incdir}` ${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
+      fi
       AC_CHECK_HEADERS($5,[gv_ac_inctemp="$5"])
       if ! test "${gv_ac_inctemp}" = "$5"; then
 	eval "[unset ac_cv_header_]m4_bpatsubst([$5],[[].-[]],_)"
@@ -281,7 +283,7 @@ else
     else
       UPNAME[_INCLUDE_PATH]="${incdir}"
     fi
-    CPPCLAGS="${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
+    CPPFLAGS="${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
   ])
   dnl
   dnl define makefile substitutions and config.h macros
