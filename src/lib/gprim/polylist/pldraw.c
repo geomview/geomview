@@ -31,15 +31,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.15 2007/03/24 02:02:26 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.16 2007/04/06 20:39:14 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
  */
 
-#ifndef alloca
-#include <alloca.h>
-#endif
 #include <stdlib.h>
 #include "polylistP.h"
 #include "appearance.h"

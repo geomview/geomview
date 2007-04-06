@@ -31,9 +31,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-#ifndef alloca
-#include <alloca.h>
-#endif
 #include <stdlib.h>
 
 #include "quadP.h"
