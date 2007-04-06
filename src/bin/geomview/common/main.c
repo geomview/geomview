@@ -244,7 +244,7 @@ int parse_common_arg(int *acp, char ***avp)
     /* -c -- Process command file (or string) */
     gv_load(*++av, "command");
   } else if(!strncmp(arg, "-M", 2) && --ac > 0) {
-    /* -M[cg][ps] pipename  -- external connection */
+    /* -M[cg][ps[un|in|in6]] pipename|port  -- external connection */
     usepipe(pipedir, *++av, &arg[2]);
   } else if(strncmp(arg, "-nop", 4) == 0) {	/* "-nopanels" */
     /* -nopanels -- Suppress all possible panels */

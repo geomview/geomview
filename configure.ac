@@ -302,21 +302,51 @@ AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
 # we can use AC_COMPILE, because we check later for the existence of
 # socket()
 #
+
+################################################################################
 AC_MSG_CHECKING([for Unix domain sockets])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
 #if HAVE_SYS_SOCKET_H
 # include <sys/socket.h>
 #endif
-  ],[int s = socket(AF_UNIX, SOCK_STREAM, 0); ])
+  ],[int s = socket(PF_UNIX, SOCK_STREAM, 0); ])
 ],[
   HAVE_UNIX_SOCKETS=yes
   AC_MSG_RESULT([yes])
 ],[
   HAVE_UNIX_SOCKETS=no
   AC_MSG_RESULT([no])])
+################################################################################
+AC_MSG_CHECKING([for IPv4 sockets])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+  ],[int s = socket(PF_INET, SOCK_STREAM, 0); ])
+],[
+  HAVE_INET_SOCKETS=yes
+  AC_MSG_RESULT([yes])
+],[
+  HAVE_INET_SOCKETS=no
+  AC_MSG_RESULT([no])])
+################################################################################
+AC_MSG_CHECKING([for IPv6 sockets])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+#if HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+  ],[int s = socket(PF_INET6, SOCK_STREAM, 0); ])
+],[
+  HAVE_INET6_SOCKETS=yes
+  AC_MSG_RESULT([yes])
+],[
+  HAVE_INET6_SOCKETS=no
+  AC_MSG_RESULT([no])])
+################################################################################
 
-if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
-
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"\
+ -o "z${HAVE_INET_SOCKETS}" != "zno"\
+ -o "z${HAVE_INET6_SOCKETS}" != "zno"; then
 #
 # Try to figure out how to get at the "socket()" function
 #
@@ -336,7 +366,7 @@ if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
       AC_MSG_RESULT([socket() not available])
     ])
   ])
-fi
+fi # HAVE_UNIX/INET/INET6_SOCKETS=yes
 
 ac_save_LIBS="${LIBS}"
 LIBS="${SOCKETLIBS} ${LIBS}"
@@ -349,7 +379,9 @@ fi
 LIBS="${ac_save_LIBS}"
 
 
-if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
+if test "z${HAVE_UNIX_SOCKETS}" != "zno"\
+ -o "z${HAVE_INET_SOCKETS}" != "zno"\
+ -o "z${HAVE_INET6_SOCKETS}" != "zno"; then
 #
 # Try to figure out what the 3rd argument of accept should be. The
 # third argument is an integer type, ideally it is "socklent_t". As
@@ -373,12 +405,20 @@ if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
 # include <sys/socket.h>
 #endif
   ])
-fi # HAVE_UNIX_SOCKETS=yes
+fi # HAVE_UNIX/INET/INET6_SOCKETS=yes
 
 AC_SUBST(SOCKETLIBS)
 if test "z${HAVE_UNIX_SOCKETS}" != "zno"; then
  AC_DEFINE([HAVE_UNIX_SOCKETS],1,
   [Define to 1 if Unix domain sockets are available])
+fi
+if test "z${HAVE_INET_SOCKETS}" != "zno"; then
+ AC_DEFINE([HAVE_INET_SOCKETS],1,
+  [Define to 1 if IPv4 sockets are available])
+fi
+if test "z${HAVE_INET6_SOCKETS}" != "zno"; then
+ AC_DEFINE([HAVE_INET6_SOCKETS],1,
+  [Define to 1 if IPv6 sockets are available])
 fi
 
 #

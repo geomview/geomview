@@ -98,7 +98,9 @@ static HandleOps emoduleCommandOps = {
 #if HAVE_UNIX_SOCKETS
 static HandleOps listenOps = {	/* "Ops" structure for listening sockets */
   "socket_listener",
-  listenimport,	/* "read" routine really spawns a new connection's data socket */
+  listenimport,	/* "read" routine really spawns a new connection's
+		 * data socket
+		 */
   NULL,
   NULL,
   NULL,
@@ -1362,21 +1364,26 @@ LDEFINE(hdefine, LVOID,
 
 /*****************************************************************************/
 
-#if HAVE_UNIX_SOCKETS
+#if HAVE_UNIX_SOCKETS || HAVE_INET_SOCKETS || HAVE_INET6_SOCKETS
 
 #if HAVE_SYS_SOCKET_H
 # include <sys/socket.h>
+#endif
+
+#if HAVE_NETINET_IN_H
+# include <netinet/in.h>
 #endif
 
 #if !HAVE_DECL_ACCEPT
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 #endif
 
+#if HAVE_UNIX_SOCKETS
 /*
- * makesocket(name) makes a UNIX-domain listening socket and returns its fd.
+ * makeunixsocket(name) makes a UNIX-domain listening socket and returns its fd.
  */
 static int
-makesocket(char *name)
+makeunixsocket(char *name)
 {
   struct sockaddr_un un;
   int s;
@@ -1384,7 +1391,7 @@ makesocket(char *name)
   unlink(name);
   strcpy(un.sun_path, name);
   un.sun_family = AF_UNIX;
-  if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
+  if ((s = socket(PF_UNIX, SOCK_STREAM, 0)) < 0) {
     OOGLError(0, "geomview: can't make UNIX domain socket: %s", sperror());
     return -1;
   }
@@ -1394,7 +1401,58 @@ makesocket(char *name)
   }
   return s;
 }
+#endif /* HAVE_UNIX_SOCKKETS */
 
+#if HAVE_INET_SOCKETS
+/*
+ * makeinetsocket(name) makes a IPv4 listening socket and returns its fd.
+ */
+static int
+makeinetsocket(int port)
+{
+  struct sockaddr_in in;
+  int s;
+
+  if ((s = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
+    OOGLError(0, "geomview: can't make IPv4 socket: %s", sperror());
+    return -1;
+  }
+  in.sin_family = AF_INET;
+  in.sin_port = htons(port);
+  in.sin_addr.s_addr = htonl(INADDR_ANY);
+  if (bind(s, (struct sockaddr *)&in, sizeof(in)) < 0 || listen(s, 4) < 0) {
+    OOGLError(0, "geomview: can't listen on IPv4 port %d: %s", port, sperror());
+    return -1;
+  }
+  return s;
+}
+#endif /* HAVE_INET_SOCKETS */
+
+#if HAVE_INET6_SOCKETS
+/*
+ * makeinet6socket(name) makes a IPv6 listening socket and returns its fd.
+ */
+static int
+makeinet6socket(int port)
+{
+  struct sockaddr_in6 in;
+  struct in6_addr addr = IN6ADDR_ANY_INIT;
+  int s;
+
+  if ((s = socket(PF_INET6, SOCK_STREAM, 0)) < 0) {
+    OOGLError(0, "geomview: can't make IPv6 socket: %s", sperror());
+    return -1;
+  }
+  in.sin6_family = AF_INET6;
+  in.sin6_port = htons(port);
+  in.sin6_addr = addr;
+  if (bind(s, (struct sockaddr *)&in, sizeof(in)) < 0 || listen(s, 4) < 0) {
+    OOGLError(0, "geomview: can't listen on IPv6 port %d: %s", port, sperror());
+    return -1;
+  }
+  return s;
+}
+#endif /* HAVE_INET6_SOCKETS */
 
 /*
  * This pretends to be a stream-import routine, but it really handles
@@ -1441,50 +1499,90 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
 /*
  * usepipe(dir, suffix, type)
  * where the characters in "type" specify:
- * kind of connection (named-pipe 'p' or UNIX-domain socket 's') and
+ * kind of connection (named-pipe 'p' or socket 's') and
  * type of data expected (command 'c' or geometry 'g').
+ * 
+ * For sockets 's' may be followed by eigher "un" (Unix domain
+ * socket), "in" (IPv4 socket) or "in6" (IPv6 socket). For IP sockets
+ * "suffix" actually specifies the port-number to use. pipedir is
+ * ignored in that case.
  */
 void
 usepipe(char *pipedir, char *suffix, char *pipetype)
 {
   HandleOps *ops = &GeomOps;
-  int s, usepipe = -1;
+  int s;
   char *tail;
-  char pipename[10240];
-  char pdir[10240];
+  char pipename[PATH_MAX];
+  char pdir[PATH_MAX];
+  enum {
+    nopipe = -1,
+    namedpipe = 1,
+#if HAVE_UNIX_SOCKETS
+    unixsocket = 2,
+#endif
+#if HAVE_INET_SOCKETS
+    inetsocket = 3,
+#endif
+#if HAVE_INET6_SOCKETS
+    inet6socket = 4,
+#endif
+    numer_of_pipe_types /* just to get rid of the `,' compiler warning */
+  } usepipe = nopipe;
+  int port;
 
-  if (suffix[0] == '/') {
-    strcpy(pdir, suffix);
-    tail = strrchr(pdir, '/');
-    *tail = '\0';
-    pipedir = pdir;
-    suffix = tail + 1;
-  }
-  sprintf(pipename, "%s/%s", pipedir, suffix);
-  mkdir(pipedir, 0777);
-  chmod(pipedir, 0777);
-
-  while(*pipetype) switch(*pipetype++) {
-  case 's': usepipe = 0; break;
-  case 'p': usepipe = 1; break;
+  while (*pipetype) switch(*pipetype++) {
+  case 's':
+    usepipe = unixsocket;
+    /* Check for sin:PORT and sin6:PORT sockets, allow sun socket type */
+    if (strncmp(pipetype, "un", 2) == 0) {
+      pipetype += 2;
+    } else if (strncmp(pipetype, "in6", 3) == 0) {
+      usepipe = inet6socket;
+      pipetype += 3;
+    } else if (strncmp(pipetype, "in", 2) == 0) {
+      usepipe = inetsocket;
+      pipetype += 2;
+    }
+    break;
+  case 'p': usepipe = namedpipe; break;
   case 'c': ops = &CommandOps; break;
   case 'g': ops = &GeomOps; break;
-  default: OOGLError(0, "Unknown character '%c' in pipe type string; expected s, p, c, g", pipetype[-1]);
+  default:
+    OOGLError(0, "Unknown character '%c' in pipe type string: "
+	      "expected s, p, c, g", pipetype[-1]);
   }
-  if (usepipe < 0) {
+  if (usepipe == nopipe) {
 #ifdef NeXT
-    usepipe = 0;
+    usepipe = unixsocket;
 #else
-    usepipe = 1;
+    usepipe = namedpipe;
 #endif
   }
 
-  if (usepipe) {
+  if (usepipe == unixsocket || namedpipe) {
+    if (suffix[0] == '/') {
+      strcpy(pdir, suffix);
+      tail = strrchr(pdir, '/');
+      *tail = '\0';
+      pipedir = pdir;
+      suffix = tail + 1;
+    }
+    sprintf(pipename, "%s/%s", pipedir, suffix);
+    mkdir(pipedir, 0777);
+    chmod(pipedir, 0777);
+  } else {
+    port = atoi(suffix);
+  }
+
+  switch (usepipe) {
+  case namedpipe: {
     /* Establish System-V style named pipe.
      * Expect data on it of type 'ops'.
      * If there's a non-pipe with that name, trash it.
      */
     struct stat st;
+
     if (stat(pipename, &st) == 0 && (st.st_mode & S_IFMT) != S_IFIFO)
       unlink(pipename);
     if (access(pipename, 0) < 0) {
@@ -1493,18 +1591,49 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
       chmod(pipename, 0666);
     }
     loadfile(pipename, ops, 0);
+    break;
+  }
 #if HAVE_UNIX_SOCKETS
-  } else {
+  case unixsocket:
     /* Establish UNIX-domain listener socket.
      * When we get connections to it, expect data of type 'ops'.
      */
-    s = makesocket(pipename);
+    s = makeunixsocket(pipename);
     if (s >= 0) {
       Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
       if (p) PoolSetClientData(p, ops);
       p->flags |= PF_NOPREFETCH;
     }
+    break;
 #endif
+#if HAVE_INET_SOCKETS
+  case inetsocket:
+    /* Establish UNIX-domain listener socket.
+     * When we get connections to it, expect data of type 'ops'.
+     */
+    s = makeinetsocket(port);
+    if (s >= 0) {
+      Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
+      if (p) PoolSetClientData(p, ops);
+      p->flags |= PF_NOPREFETCH;
+    }
+    break;
+#endif
+#if HAVE_INET6_SOCKETS
+  case inet6socket:
+    /* Establish UNIX-domain listener socket.
+     * When we get connections to it, expect data of type 'ops'.
+     */
+    s = makeinet6socket(port);
+    if (s >= 0) {
+      Pool *p = PoolStreamOpen(pipename, fdopen(s, "rb"), 0, &listenOps);
+      if (p) PoolSetClientData(p, ops);
+      p->flags |= PF_NOPREFETCH;
+    }
+    break;
+#endif
+  default:
+    break;
   }
 }
 
