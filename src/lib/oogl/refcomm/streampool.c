@@ -443,7 +443,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 		    struct sockaddr_un sa;
 		    sa.sun_family = AF_UNIX;
 		    strncpy(sa.sun_path, name, sizeof(sa.sun_path));
-		    fd = socket(AF_UNIX, SOCK_STREAM, 0);
+		    fd = socket(PF_UNIX, SOCK_STREAM, 0);
 		    if (connect(fd, (struct sockaddr *)&sa, sizeof(sa)) < 0) {
 			close(fd);
 			fd = -1;

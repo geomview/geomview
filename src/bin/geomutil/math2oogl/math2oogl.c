@@ -192,7 +192,7 @@ void startgv(char **gvpath)
     if(usesock) {
 	strncpy(un.sun_path, pipename, sizeof(un.sun_path)-1);
 	un.sun_family = AF_UNIX;
-	fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	fd = socket(PF_UNIX, SOCK_STREAM, 0);
 	if(connect(fd, (struct sockaddr *)(&un), sizeof(un)) < 0) {
 	    if(errno != ECONNREFUSED && errno != ENOENT) {
 		fprintf(stderr, "togeomview: Can't connect to ");
