@@ -122,12 +122,17 @@ void *cray_quad_SetColorAll(int sel, Geom *geom, va_list *args) {
 
 void *cray_quad_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
-  int vindex, findex;
+  int vindex, findex, *eindex;
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
+  eindex = va_arg(*args, int *);
   if (vindex != -1) 
     return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  if (eindex[0] != eindex[1]) {
+    craySetColorAtV(geom, color, eindex[0], NULL, NULL);
+    return (void *)(long)craySetColorAtV(geom, color, eindex[1], NULL, NULL);
+  }
   return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
@@ -200,3 +205,10 @@ void *cray_quad_GetColorAtF(int sel, Geom *geom, va_list *args) {
 
 
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+ 

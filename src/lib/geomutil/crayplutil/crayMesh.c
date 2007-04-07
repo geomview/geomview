@@ -116,12 +116,17 @@ void *cray_mesh_SetColorAll(int sel, Geom *geom, va_list *args) {
 
 void *cray_mesh_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
-  int vindex, findex;
+  int vindex, findex, *eindex;
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
-  if (vindex != -1) 
+  eindex = va_arg(*args, int *);
+  if (vindex != -1)
     return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  if (eindex[0] != eindex[1]) {
+    craySetColorAtV(geom, color, eindex[0], NULL, NULL);
+    return (void *)(long)craySetColorAtV(geom, color, eindex[1], NULL, NULL);
+  }
   return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
@@ -180,3 +185,11 @@ void *cray_mesh_GetColorAtV(int sel, Geom *geom, va_list *args) {
  color->a = m->c[i].a;
  return (void *)color;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+ 

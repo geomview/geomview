@@ -152,12 +152,19 @@ void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list *args) {
 
 void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
-  int vindex, findex;
+  int vindex, findex, *eindex;
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
   findex = va_arg(*args, int);
-  if (crayHasVColor(geom, NULL) && vindex != -1) 
-    return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+  eindex = va_arg(*args, int *);
+  if (crayHasVColor(geom, NULL)) {
+    if (vindex != -1)
+      return (void *)(long)craySetColorAtV(geom, color, vindex, NULL, NULL);
+    if (eindex[0] != eindex[1]) {
+      craySetColorAtV(geom, color, eindex[0], NULL, NULL);
+      return  (void *)(long)craySetColorAtV(geom, color, eindex[1], NULL, NULL);
+    }
+  }
   return (void *)(long)craySetColorAtF(geom, color, findex, NULL);
 }
 
@@ -227,3 +234,10 @@ void *cray_polylist_GetColorAtF(int sel, Geom *geom, va_list *args) {
   return (void *)geom;
 }
      
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+ 
