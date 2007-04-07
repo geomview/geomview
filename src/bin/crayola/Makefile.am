@@ -1,10 +1,11 @@
 DEFS = -DHAVE_CONFIG_H
 
-INCLUDES = -I$(geomviewincludes) \
+INCLUDES =\
+ -I$(geomviewincludes)\
  -I$(geomviewincludes)/private \
  $(default_includes) \
  $(X_CFLAGS)\
- -I$(TCL_INCLUDE_PATH) \
+ -I$(TCL_INCLUDE_PATH)\
  -I$(TK_INCLUDE_PATH)
 
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)

@@ -166,16 +166,20 @@ quitCmd(ClientData clientData, Tcl_Interp *interp, int argc, const char **argv)
   return TCL_OK;
 }
 
-static void
-handler(ClientData clientData/*, int mask*/)
-{
 #if HAVE_TCL_CREATEFILEHANDLER
+static void
+handler(ClientData clientData, int mask)
+{
   dopipes();
+}
 #else
+static void
+handler(ClientData clientData)
+{
   checkpipes();
   Tk_CreateTimerHandler(100, handler, NULL);
-#endif
 }
+#endif
 
 int
 crayola_init(Tcl_Interp *interp)
