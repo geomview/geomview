@@ -123,21 +123,21 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 {
   Geom *g;
   ColorA color;
-  int setcolor = 0;
-  int vcolor;
-  int fcolor;  
+  bool setcolor = false;
+  bool vcolor;
+  bool fcolor;  
 
   if (!pn) return Lt;
   freeze();
   g = GetObject(id);
   if (uiSet() || uiSetAll()) {
     if (crayHasColor(g, ppath)) {
-      setcolor = 1; 
-      vcolor = fcolor = 0;
+      setcolor = true; 
+      vcolor = fcolor = false;
     }
     else {
-      vcolor = crayCanUseVColor(g, ppath);
-      fcolor = crayCanUseFColor(g, ppath);
+      vcolor = crayCanUseVColor(g, ppath) != 0;
+      fcolor = crayCanUseFColor(g, ppath) != 0;
       if ((vcolor || fcolor) && 
 	  !uiQuery("Object currently has no color", 
 		   "information.  Would you",
@@ -146,9 +146,9 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 	  vcolor = uiQuery("Would you like to color the",
 			   "object by face or", "by vertex?", 
 			   "By Face", "By Vertex");
-	  fcolor = vcolor ? 0 : 1;
+	  fcolor = vcolor ? false : true;
 	}
-	setcolor = 1;
+	setcolor = true;
       }
     }
     if (setcolor) {
@@ -157,7 +157,9 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
       if (vcolor) crayUseVColor(g, &crayDefColor, ppath);
       else if (fcolor) crayUseFColor(g, &crayDefColor, ppath);
       if (uiSetAll()) craySetColorAll(g, &color, ppath);
-      else craySetColorAt(g, &color, vi, fi, ei, ppath, &vertex);
+      else {
+	craySetColorAt(g, &color, vi, fi, ei, ppath, &vertex);
+      }
       ReplaceObject(g, id);
     }
   }
