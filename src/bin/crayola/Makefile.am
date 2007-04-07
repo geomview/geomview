@@ -4,9 +4,7 @@ INCLUDES =\
  -I$(geomviewincludes)\
  -I$(geomviewincludes)/private \
  $(default_includes) \
- $(X_CFLAGS)\
- -I$(TCL_INCLUDE_PATH)\
- -I$(TK_INCLUDE_PATH)
+ $(TK_ALL_INCLUDES)
 
 LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
 

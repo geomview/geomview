@@ -763,9 +763,9 @@ AC_DEFINE_UNQUOTED([MGGL],${MGGL}, [Leave this at 0])
 
 ########################################################################
 
-# Check for zlib and bzlib (image compression/decompression)
-#GEOMVIEW_CHECK_PACKAGE(bz2lib, bz2, , , bzlib.h, , , optional)
-GEOMVIEW_CHECK_PACKAGE(zlib, z, , , zlib.h, , , optional)
+# Check for zlib (and maybe bzlib? (image compression/decompression))
+#GEOMVIEW_CHECK_PACKAGE([bz2lib],[bz2],[],[],[bzlib.h],[],[],[optional enabled])
+GEOMVIEW_CHECK_PACKAGE([zlib],[z],[],[],[zlib.h],[],[],[optional enabled])
 gv_ac_save_LIBS="${LIBS}"
 LIBS="${LIBS} ${ZLIB_ALL_LIB}"
 AC_CHECK_FUNCS([compressBound]) # pre-1.2 zlib?
