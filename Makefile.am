@@ -13,10 +13,12 @@ m4_files = \
 #	m4/smr_REQUIRED_LIB.m4 \
 #	m4/smr_WITH_BUILD_PATH.m4
 
-nodist_pkginclude_HEADERS = $(wildcard include/*[^P].h)
+nodist_pkginclude_HEADERS = @GEOMVIEWHDRFILES@
 
 pkgincludeprivdir = ${pkgincludedir}/private
-nodist_pkgincludepriv_HEADERS = $(wildcard include/*P.h)
+nodist_pkgincludepriv_HEADERS = @GEOMVIEWPRIVHDRFILES@
+
+EXTRA_HEADERS =
 
 geomview: geomview.sh Makefile
 	echo top_builddir is $(abs_top_builddir)

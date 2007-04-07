@@ -68,12 +68,24 @@ AC_DEFUN([LF_LINK_HEADERS],[
       for lf_file in `(cd $srcdir/$lf_dir; cat Headers)`
       do
         rm -f $lf_directory/$lf_file
-        $LN_S "$lf_srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
+	if test -f "$lf_srcdir/$lf_dir/$lf_file"; then
+ 	  $LN_S "$lf_srcdir/$lf_dir/$lf_file" "$lf_directory/$lf_file"
+	else
+	  # assume it will be located in the build-directory
+ 	  $LN_S "`pwd`/$lf_dir/$lf_file" "$lf_directory/$lf_file"
+	fi
+	if echo ${lf_file}|fgrep -qs 'P.h'; then
+	  GEOMVIEWPRIVHDRFILES="${GEOMVIEWPRIVHDRFILES} include/${lf_file}"
+	else
+	  GEOMVIEWHDRFILES="${GEOMVIEWHDRFILES} include/${lf_file}"
+	fi
       done
     else
       echo "Warning: No Headers file for $srcdir/$lf_dir"
     fi
   done
+  AC_SUBST(GEOMVIEWHDRFILES)
+  AC_SUBST(GEOMVIEWPRIVHDRFILES)
 ])
 
 # --------------------------------------------------------------------------
