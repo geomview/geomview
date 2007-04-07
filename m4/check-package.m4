@@ -143,19 +143,19 @@ m4_define([UPNAME], [m4_bpatsubst(m4_toupper([$1]),-,_)])
 dnl
 dnl need to use m4_if, the $i arguments are not shell variables
 dnl
-m4_define([ac_gv_enabled],[enabled])
-m4_define([ac_gv_optional],[required])
+m4_define([ENABLED],[enabled])
+m4_define([OPTIONAL],[required])
 m4_if($#,8,[
   m4_foreach_w([ac_gv_lvar],[$9],
     [m4_if([ac_gv_lvar],[disabled],
-           [m4_define([ac_gv_enabled],[ac_gv_lvar])],
+           [m4_define([ENABLED],[ac_gv_lvar])],
            [ac_gv_lvar],[enabled],
-           [m4_define([ac_gv_enabled],[ac_gv_lvar])],
+           [m4_define([ENABLED],[ac_gv_lvar])],
            [ac_gv_lvar],[optional],
-           [m4_define([ac_gv_optional],[ac_gv_lvar])],
+           [m4_define([OPTIONAL],[ac_gv_lvar])],
            [ac_gv_lvar],[required],
-           [m4_define([ac_gv_optional],[ac_gv_lvar])])])])
-GEOMVIEW_CHECK_PKG_OPT([$1],[ac_gv_enabled])
+           [m4_define([OPTIONAL],[ac_gv_lvar])])])])
+GEOMVIEW_CHECK_PKG_OPT([$1],[ENABLED])
 dnl
 dnl bail out if package is completely disabled
 dnl
@@ -220,7 +220,7 @@ m4_if($5,[],[],
 dnl
 dnl now check if the library and header files exist
 dnl
-m4_if([ac_gv_optional],[optional],
+m4_if([OPTIONAL],[optional],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
      UPNAME[_ALL_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]} $4"],
