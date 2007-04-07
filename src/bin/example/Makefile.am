@@ -4,7 +4,6 @@ INCLUDES =\
  -I$(geomviewincludes)\
  -I$(geomviewincludes:=/private)\
  $(default_includes)\
- -I$(X_CFLAGS)\
  -I$(XFORMS_ALL_INCLUDES)
 
 LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
