@@ -52,6 +52,7 @@ AC_ARG_WITH($1,
     esac],
   [UPNAME[OPT]=PROG])
 acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
+test "${acgv_path}" = "." && acgv_path=""
 if test -n "${acgv_path}"; then
   UPNAME[PROG]=`basename "${UPNAME[OPT]}"`
   if echo "${acgv_path}" | egrep -q -s '^/'; then
