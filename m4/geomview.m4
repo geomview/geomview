@@ -39,7 +39,7 @@ AC_DEFUN([GV_INIT_GEOMVIEW],
 including the full path to the executable.  If the
 `--enable-geomview-query' switch is in effect then the installed
 version of Geomview is used to determine the library, include and data
-directories to use,. (default: autodetected)]),
+directories to use. (default: autodetected)]),
   [case "${withval}" in
     no)
       AC_MSG_ERROR(["--without-geomview" or "--with-geomview=no" is not an option here])
@@ -133,8 +133,8 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
       geomdatadir="${datadir}/geomview"
     fi
   else
-    GEOMVIEW_CHECK_PACKAGE(libgeomview, geomview,,,
-      [create.h],["'${includedir}/geomview'" -I/usr/local/include/geomview -I/usr/include/geomview],,required,enabled)
+    GEOMVIEW_CHECK_PACKAGE([libgeomview],[geomview],[],[],
+      [create.h],["'${includedir}/geomview/ -I${DEFAULT_PREFIX}/include/geomview/ -I${oldincludedir}/geomview'"],[],[required enabled])
     geomviewincludes="${LIBGEOMVIEW_INCLUDE_PATH}"
     geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
     OOGLLIB="${LIBGEOMVIEW_LIB}"

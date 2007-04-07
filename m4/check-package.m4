@@ -146,16 +146,16 @@ dnl
 m4_define([ENABLED],[enabled])
 m4_define([OPTIONAL],[required])
 m4_if($#,8,[
-  m4_foreach_w([ac_gv_lvar],[$9],
-    [m4_if([ac_gv_lvar],[disabled],
-           [m4_define([ENABLED],[ac_gv_lvar])],
-           [ac_gv_lvar],[enabled],
-           [m4_define([ENABLED],[ac_gv_lvar])],
-           [ac_gv_lvar],[optional],
-           [m4_define([OPTIONAL],[ac_gv_lvar])],
-           [ac_gv_lvar],[required],
-           [m4_define([OPTIONAL],[ac_gv_lvar])])])])
-GEOMVIEW_CHECK_PKG_OPT([$1],[ENABLED])
+  m4_foreach_w([ac_gv_lvar],[$8],
+    [m4_if(ac_gv_lvar,[disabled],
+           [m4_define([ENABLED],ac_gv_lvar)],
+           ac_gv_lvar,[enabled],
+           [m4_define([ENABLED],ac_gv_lvar)],
+           ac_gv_lvar,[optional],
+           [m4_define([OPTIONAL],ac_gv_lvar)],
+           ac_gv_lvar,[required],
+           [m4_define([OPTIONAL],ac_gv_lvar)])])])
+m4_if(OPTIONAL,[optional],[GEOMVIEW_CHECK_PKG_OPT([$1],[ENABLED])])
 dnl
 dnl bail out if package is completely disabled
 dnl
