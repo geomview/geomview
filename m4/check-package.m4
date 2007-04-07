@@ -9,21 +9,24 @@ dnl $2: library name (base name, lib$2[.so|.a]
 dnl $3: library path (-L$3)
 dnl $4: additional libraries needed (e.g. -lm -lGL)
 dnl $5: header name
-dnl $6: include path (-I$6)
-dnl $7: package prefix, headers and library below $7/
-dnl $8: \in \{optional, required\}, bail out if required, warning otherwise
-dnl $9: \in \{disabled, enabled\}; if $8 == optional then this gives the default
-dnl     state. The package may need to be explicitly enabled with the appropriate
-dnl     --with-package option.
+dnl $6: include path for $5 (-I$6)
+dnl $7: additional include paths (e.g. when $5 includes some other headers)
+dnl $8: a space separated list of the keywords
+dnl
+dnl     optional, required, disabled, enabled
+dnl
+dnl     optional: failing to detect the package is not fatal
+dnl     required: configure is terminated when the package is not detected
+dnl               (default)
+dnl     disabled: package is initially disabled and needs the appropriate
+dnl               --with-blah switch, otherwise the package is not checked for
+dnl     enabled:  package is initially enabled (the default)
 dnl
 dnl Default is to check for libraries below $prefix/lib/ and for header-files
 dnl below $prefix/include/
 dnl
 dnl $5 may be empty (e.g. to check for a Fortran library). In this case
-dnl $6 is ignored
-dnl
-dnl $7 may be empty, actually the idea to install libraries and
-dnl headers in the same directory is a little bit awkward.
+dnl $6 and $7 are ignored
 dnl
 dnl This Macro defines the following variables (UPNAME means a
 dnl canonicalized version of $1: i.e. uppercase and - converted to _)
@@ -128,11 +131,11 @@ dnl the macro itself
 dnl
 AC_DEFUN([GEOMVIEW_CHECK_PACKAGE],
 [AC_REQUIRE([GEOMVIEW_SET_PREFIX])
-m4_if($#,8,,
-  [m4_if($#,9,,
-     [errprint([$0] needs eight (8) or nine (9) arguments, but got $#
-	)
-      m4exit(1)])])
+dnl m4_if($#,8,,
+dnl  [m4_if($#,9,,
+dnl     [errprint([$0] needs eight (8) or nine (9) arguments, but got $#
+dnl	)
+dnl      m4exit(1)])])
 dnl
 dnl upcase $1
 dnl
@@ -140,7 +143,19 @@ m4_define([UPNAME], [m4_bpatsubst(m4_toupper([$1]),-,_)])
 dnl
 dnl need to use m4_if, the $i arguments are not shell variables
 dnl
-m4_if($8, optional,[GEOMVIEW_CHECK_PKG_OPT([$1],[m4_if($#,9,[$9],[enabled])])])
+m4_define([ac_gv_enabled],[enabled])
+m4_define([ac_gv_optional],[required])
+m4_if($#,8,[
+  m4_foreach_w([ac_gv_lvar],[$9],
+    [m4_if([ac_gv_lvar],[disabled],
+           [m4_define([ac_gv_enabled],[ac_gv_lvar])],
+           [ac_gv_lvar],[enabled],
+           [m4_define([ac_gv_enabled],[ac_gv_lvar])],
+           [ac_gv_lvar],[optional],
+           [m4_define([ac_gv_optional],[ac_gv_lvar])],
+           [ac_gv_lvar],[required],
+           [m4_define([ac_gv_optional],[ac_gv_lvar])])])])
+GEOMVIEW_CHECK_PKG_OPT([$1],[ac_gv_enabled])
 dnl
 dnl bail out if package is completely disabled
 dnl
@@ -172,6 +187,8 @@ esac],
 UPNAME[_NAME]="$2")
 dnl
 dnl headers and libraries below the same directory :(
+dnl If we have no header to check for, then this additional option does not
+dnl make sense, hence the m4_if()
 dnl
 m4_if($5,[],[],[GEOMVIEW_CHECK_PKG_DIR_OPT([$1])])
 dnl
@@ -203,7 +220,7 @@ m4_if($5,[],[],
 dnl
 dnl now check if the library and header files exist
 dnl
-m4_if($8,[optional],
+m4_if([ac_gv_optional],[optional],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
      UPNAME[_ALL_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]} $4"],
@@ -264,7 +281,7 @@ else
     unset gv_ac_inctemp
     for incdir in "${UPNAME[_INCLUDE_PATH]}"; do
       if test -n "`eval eval eval echo ${incdir}`"; then
-	CPPFLAGS="-I`eval eval eval echo ${incdir}` ${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
+	CPPFLAGS="-I`eval eval eval echo ${incdir}` $7 ${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
       fi
       AC_CHECK_HEADERS($5,[gv_ac_inctemp="$5"])
       if ! test "${gv_ac_inctemp}" = "$5"; then
@@ -281,6 +298,8 @@ else
 	UPNAME[_INCLUDE_PATH]=""],
         [AC_MSG_ERROR([Header file "$5" was not found])])
     else
+      UPNAME[_ALL_INCLUDES]="-I${incdir} $7"
+      UPNAME[_INCLUDES]="-I${incdir}"
       UPNAME[_INCLUDE_PATH]="${incdir}"
     fi
     CPPFLAGS="${[gv_ac_]UPNAME[_save_CPPFLAGS]}"
@@ -300,6 +319,8 @@ fi dnl disable fi
 
 AM_CONDITIONAL([HAVE_]UPNAME, [test -n "$[]UPNAME[_LIB]"])
 AC_SUBST(UPNAME[_INCLUDE_PATH])
+AC_SUBST(UPNAME[_INCLUDES])
+AC_SUBST(UPNAME[_ALL_INCLUDES])
 AC_SUBST(UPNAME[_LIB_PATH])
 AC_SUBST(UPNAME[_LIB])
 AC_SUBST(UPNAME[_ALL_LIB])
