@@ -84,6 +84,7 @@ nobase_geomdata_DATA = \
 	geom/link2.grp \
 	geom/link8.grp \
 	geom/moebius.4d.mesh \
+	geom/moebius.skel \
 	geom/mushroom.off \
 	geom/nsquare.quad \
 	geom/octa.off \
