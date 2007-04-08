@@ -127,15 +127,16 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
   bool vcolor;
   bool fcolor;  
 
-  if (!pn) return Lt;
+  if (!pn) {
+    return Lt;
+  }
   freeze();
   g = GetObject(id);
   if (uiSet() || uiSetAll()) {
     if (crayHasColor(g, ppath)) {
       setcolor = true; 
       vcolor = fcolor = false;
-    }
-    else {
+    } else {
       vcolor = crayCanUseVColor(g, ppath) != 0;
       fcolor = crayCanUseFColor(g, ppath) != 0;
       if ((vcolor || fcolor) && 
@@ -154,20 +155,26 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
     if (setcolor) {
       uiCurrentColor(&color);
       SetUndo(g, id);
-      if (vcolor) crayUseVColor(g, &crayDefColor, ppath);
-      else if (fcolor) crayUseFColor(g, &crayDefColor, ppath);
-      if (uiSetAll()) craySetColorAll(g, &color, ppath);
-      else {
+      if (vcolor) {
+	crayUseVColor(g, &crayDefColor, ppath);
+      } else if (fcolor) {
+	crayUseFColor(g, &crayDefColor, ppath);
+      } if (uiSetAll()) {
+	craySetColorAll(g, &color, ppath);
+      } else {
 	craySetColorAt(g, &color, vi, fi, ei, ppath, &vertex);
       }
       ReplaceObject(g, id);
     }
-  }
-  else if (uiGet() && crayGetColorAt(g, &color, vi, fi, ei, ppath, &vertex))
-    uiChangeColor(&color);
-  else if (uiEliminateColor()) {
+  } else if (uiGet()) {
+    if (crayGetColorAt(g, &color, vi, fi, ei, ppath, &vertex)) {
+      uiChangeColor(&color);
+    }
+  } else if (uiEliminateColor()) {
     SetUndo(g, id);
-    if (crayEliminateColor(g, ppath)) ReplaceObject(g, id);
+    if (crayEliminateColor(g, ppath)) {
+      ReplaceObject(g, id);
+    }
   }
   GeomDelete(g);
   thaw();
