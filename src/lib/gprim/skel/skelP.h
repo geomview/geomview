@@ -43,7 +43,7 @@ struct Skel {
   Skline *l;		/* nl[nlines] */
   int nvi;		/* Total number of vertex indices */
   int *vi;		/* All vertex index lists */
-  int nc;			/* Total number of colors */
+  int nc;		/* Total number of colors */
   ColorA *c;		/* Array of per-polyline colors */
   ColorA *vc;           /* Array of per-vertex colors */
 };

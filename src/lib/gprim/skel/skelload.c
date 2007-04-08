@@ -47,8 +47,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 Skel *SkelFLoad(IOBFILE *file, char *fname)
 {
   Skel *s;
-  int binary = 0;
-  int nd = 0, dimn = 3, pdim = 4, vc = 0;
+  int dimn = 3, pdim = 4;
+  bool nd = false, vc = false, binary = false;
   char *token;
   float *vp;
   Skline *lp;
@@ -63,7 +63,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
   token = GeomToken(file);
 
   if (*token == 'C') {
-    vc = 1;
+    vc = true;
     token++;
   }
   if(*token == '4') {		/* Really means "homogeneous coords" */
@@ -71,7 +71,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     token++;
   }
   if(*token == 'n') {
-    nd = 1;
+    nd = true;
     token++;
   }
   if (strcmp(token, "SKEL"))
@@ -91,7 +91,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     ++pdim;
   }
   if(iobfnextc(file, 1) == 'B' && iobfexpectstr(file, "BINARY") == 0) {
-    binary = 1;
+    binary = true;
     if(iobfnextc(file, 1) != '\n')	/* Expect \n after BINARY */
       return NULL;
     (void) iobfgetc(file);		/* Toss \n */
@@ -101,6 +101,9 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
 
   GGeomInit(s, SkelMethods(), SKELMAGIC, NULL);
   s->geomflags = (dimn == 4) ? VERT_4D : 0;
+  if (vc) {
+    s->geomflags |= VERT_C;
+  }
   s->pdim = pdim;
   s->p = NULL;
   s->l = NULL;
@@ -216,6 +219,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     if (k > 0) {
       lp->nc = 1;
       VVCOUNT(colors)++;
+      s->geomflags |= FACET_C;
     } else {
       lp->nc = 0;
     }
