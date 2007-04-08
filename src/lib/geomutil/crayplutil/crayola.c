@@ -40,7 +40,8 @@ static char methods[][CRAYOLA_MAXNAME] =
 };
 int sel[CRAYOLA_MAXMETH];
 
-void crayolaInit() {
+void crayolaInit(void)
+{
   int i;
 
   for (i = 0; i < CRAYOLA_MAXMETH; i++) 
@@ -53,7 +54,7 @@ void crayolaInit() {
   cray_polylist_init();
   cray_quad_init();
   cray_vect_init();
-
+  cray_skel_init();
 }
 
 void crayInitSpec(craySpecFunc *specfunc, int n_func, GeomClass *class) {
@@ -135,3 +136,9 @@ void *crayTrue(int sel, Geom *geom, va_list *args) {
 void *crayFalse(int sel, Geom *geom, va_list *args) {
   return (void *)0;
 }
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

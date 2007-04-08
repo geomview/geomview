@@ -3,6 +3,7 @@ EXTRA_DIST = Headers
 
 noinst_LTLIBRARIES = libcrayplutil.la
 
-libcrayplutil_la_SOURCES = \
-    crayBezier.c crayInst.c crayList.c crayMesh.c crayola.c crayPolylist.c crayQuad.c crayVect.c \
-    crayola.h crayolaP.h
+libcrayplutil_la_SOURCES =\
+ crayBezier.c crayInst.c crayList.c crayMesh.c\
+ crayPolylist.c crayQuad.c crayVect.c craySkel.c\
+ crayola.c crayola.h crayolaP.h

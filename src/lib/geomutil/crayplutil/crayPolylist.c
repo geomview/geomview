@@ -145,9 +145,11 @@ void *cray_polylist_SetColorAll(int sel, Geom *geom, va_list *args) {
   PolyList *p = (PolyList *)geom;
   ColorA *color = va_arg(*args, ColorA *);
 
+  if (!crayHasVColor(geom, NULL)) return NULL;
+
   for (i = 0; i < p->n_verts; i++) p->vl[i].vcol = *color;
   for (i = 0; i < p->n_polys; i++) p->p[i].pcol = *color;
-  return (void *)(long)crayHasColor(geom, NULL);
+  return geom;
 }
 
 void *cray_polylist_SetColorAt(int sel, Geom *geom, va_list *args) {
