@@ -240,7 +240,7 @@ NTransStreamOut(Pool *p, Handle *h, TransformN *T)
 	}
     }
     PoolIncLevel(p, -1);
-    PoolFPrint(p, outf, "\n");
+    PoolFPrint(p, outf, "}\n");
     return !ferror(outf);
 }
 
