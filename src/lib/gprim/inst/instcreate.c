@@ -69,6 +69,8 @@ Inst *InstCopy(Inst *inst)
   ni->geomhandle = NULL;
   ni->tlist = GeomCopy(inst->tlist);
   ni->tlisthandle = NULL;
+  ni->txtlist = GeomCopy(inst->txtlist);
+  ni->txtlisthandle = NULL;
   ni->axishandle = NULL;
   ni->NDaxishandle = NULL;
   ni->geomflags = inst->geomflags;
