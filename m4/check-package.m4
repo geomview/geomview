@@ -220,7 +220,7 @@ m4_if($5,[],[],
 dnl
 dnl now check if the library and header files exist
 dnl
-m4_if([OPTIONAL],[optional],
+m4_if(OPTIONAL,[optional],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
      UPNAME[_ALL_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]} $4"],
@@ -251,7 +251,7 @@ if test "x${UPNAME[_LIB]}" = "x" ; then
   case "$host" in
 	*darwin*)
 	eval "unset ac_cv_lib_${UPNAME[_NAME]}___main"
-m4_if($8,[optional],
+m4_if(OPTIONAL,[optional],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]}"
      UPNAME[_ALL_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]} $4"],
@@ -291,7 +291,7 @@ else
       fi
     done
     if ! test "${gv_ac_inctemp}" = "$5"; then
-      m4_if($8,[optional],
+      m4_if(OPTIONAL,[optional],
         [UPNAME[_LIB]=""
 	UPNAME[_ALL_LIB]=""
 	UPNAME[_LIB_PATH]=""
