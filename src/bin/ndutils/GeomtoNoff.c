@@ -303,41 +303,16 @@ static void *toNoffNPolyList(int sel, Geom * g, va_list * args)
   return (void *) g;
 }
 
-static void *toNoffList(int sel, Geom * g, va_list * args)
+/* Convert a list of Noff objects to a single Noff object */
+static NPolyList *_toNoffList(List *lh)
 {
-  TransformN *t = va_arg(*args, TransformN *), *smaller;
   List *l;
   NPolyList *noff;
-  int numvertindex, npoly, *numvertsperpoly, *indexlist, nvert,
-      *nvpptr, *ilptr, i, j, numvertsofar = 0, idim, odim;
-  float *vertlist, *vlptr, zero = 0.0, *sourceptr, *transformcoords;
+  int numvertindex, npoly, *numvertsperpoly, *indexlist, nvert;
+  int *nvpptr, *ilptr, i, j, numvertsofar = 0, dim;
+  float *vertlist, *vlptr, zero = 0.0, *sourceptr;
 
-  if (g == NULL)
-    return (void *) NULL;
-
-  if (t) {
-    odim = t->odim;
-    idim = GeomDimension(g) + 1;
-    if (t->idim != idim)
-      return (void *) NULL;
-
-    transformcoords =
-	(float *) malloc((sizeof *transformcoords) * (t->idim) *
-			 (t->odim));
-    for (l = (List *) g; l != NULL; l = l->cdr) {
-      for (i = 0; i < GeomDimension(l->car) + 1; i++) {
-	memcpy(transformcoords + i * (GeomDimension(l->car) + 1),
-	       t->a + i * (t->odim),
-	       GeomDimension(l->car) * (sizeof *transformcoords));
-      }
-      smaller =
-	  TmNCreate(GeomDimension(l->car) + 1, GeomDimension(l->car) + 1,
-		    transformcoords);
-      l->car = GeomtoNoff(l->car, smaller);
-    }
-  }
-
-  for (l = (List *) g, npoly = 0, nvert = 0, numvertindex = 0; l != NULL;
+  for (l = lh, npoly = 0, nvert = 0, numvertindex = 0; l != NULL;
        l = l->cdr) {
     npoly += ((NPolyList *) (l->car))->n_polys;
     nvert += ((NPolyList *) (l->car))->n_verts;
@@ -345,17 +320,17 @@ static void *toNoffList(int sel, Geom * g, va_list * args)
   }
   ilptr = indexlist = (int *) malloc((sizeof *indexlist) * numvertindex);
   vlptr = vertlist =
-      (float *) malloc((sizeof *vertlist) * nvert * GeomDimension(g));
+    (float *) malloc((sizeof *vertlist) * nvert * GeomDimension((Geom *)lh));
   nvpptr = numvertsperpoly =
       (int *) malloc((sizeof *numvertsperpoly) * npoly);
-  for (l = (List *) g; l != NULL; l = l->cdr) {
+  for (l = lh; l != NULL; l = l->cdr) {
     for (i = 0; i < ((NPolyList *) (l->car))->n_polys; i++)
       *(nvpptr++) = (((NPolyList *) (l->car))->p + i)->n_vertices;
     sourceptr = ((NPolyList *) (l->car))->v;
     for (i = 0; i < ((NPolyList *) (l->car))->n_verts; i++) {
       memcpy(vlptr, sourceptr, (sizeof *vlptr) * GeomDimension(l->car));
       vlptr += ((((NPolyList *) (l->car))->pdim) - 1);
-      for (j = 0; j < GeomDimension(g) - GeomDimension(l->car); j++) {
+      for (j = 0; j < GeomDimension((Geom *)lh) - GeomDimension(l->car); j++) {
 	memcpy(vlptr, &zero, sizeof *vlptr);
 	vlptr++;
       }
@@ -365,17 +340,94 @@ static void *toNoffList(int sel, Geom * g, va_list * args)
       *(ilptr++) = *(((NPolyList *) (l->car))->vi + i) + numvertsofar;
     numvertsofar += ((NPolyList *) (l->car))->n_verts;
   }
-  noff = (NPolyList *) GeomCCreate(NULL, NPolyListMethods(),
-				   CR_NPOLY, npoly,
-				   CR_NVERT, numvertsperpoly,
-				   CR_VERT, indexlist,
-				   CR_DIM, GeomDimension(g),
-				   CR_POINT, vertlist,
-				   CR_APPEAR, g->ap, CR_END);
+  noff = (NPolyList *)GeomCCreate(NULL, NPolyListMethods(),
+				  CR_NPOLY, npoly,
+				  CR_NVERT, numvertsperpoly,
+				  CR_VERT, indexlist,
+				  CR_DIM, GeomDimension((Geom *)lh),
+				  CR_POINT, vertlist,
+				  CR_APPEAR, lh->ap, CR_END);
   free(indexlist);
   free(vertlist);
   free(numvertsperpoly);
-  return (void *) noff;
+  return noff;
+}
+
+static void *toNoffList(int sel, Geom * g, va_list * args)
+{
+  TransformN *t = va_arg(*args, TransformN *), *smaller;
+  List *l;
+  Geom *nl = NULL;
+  NPolyList *noff;
+  int numvertindex, npoly, *numvertsperpoly, *indexlist, nvert,
+      *nvpptr, *ilptr, i, j, numvertsofar = 0, idim, odim;
+  float *vertlist, *vlptr, zero = 0.0, *sourceptr;
+  void *result;
+
+  if (g == NULL)
+    return (void *) NULL;
+
+  odim = t->odim;
+  idim = GeomDimension(g) + 1;
+  if (t->idim != idim)
+    return (void *) NULL;
+
+  for (l = (List *)g; l != NULL; l = l->cdr) {
+    nl = ListAppend(nl, GeomtoNoff(l->car, t));
+  }
+
+  result = (void *)_toNoffList((List *)nl);
+
+  GeomDelete(nl);
+
+  return result;
+}
+
+static void *toNoffInst(int sel, Geom *g, va_list *args)
+{
+  TransformN *t = va_arg(*args, TransformN *);
+  Inst *inst = (Inst *)g;
+  
+  /* if we have a single ND-transform, or a single 3d-transform, then
+   * we simply concat with t (from the left). We "origin" and
+   * "location" != L_NONE/L_LOCAL cannot be suported here.
+   */
+  if (inst->location > L_LOCAL || inst->origin != L_NONE) {
+    return NULL;
+  }
+
+  if (inst->NDaxis) {
+    if (t) {
+      t = TmNConcat(inst->NDaxis, t, NULL);
+    } else {
+      t = REFGET(TransformN, inst->NDaxis);
+    }
+    GeomGet(g, CR_GEOM, &g);
+    g = GeomtoNoff(g, t);
+    TmNDelete(t);
+    return (void *)g;
+  } else {
+    /* Not very efficient, but so what: convert into a list of Noff
+     * objects, then convert that list to a single Noff object.
+     */
+    GeomIter *it;
+    Transform T;
+    NPolyList *noff;
+    TransformN *tmp = NULL;
+    Geom *l = NULL;
+
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, T)) {
+      tmp = TmNCopy(t, tmp);
+      TmNApplyT3TN(T, NULL, tmp);
+      l = ListAppend(l, GeomtoNoff(inst->geom, tmp));
+    }
+    TmNDelete(tmp);
+    noff = _toNoffList((List *)l);
+    GeomDelete(l);
+    return (void *)noff;
+  }
+  
 }
 
 static void *toNoffPolyList(int sel, Geom * g, va_list * args)
@@ -453,6 +505,7 @@ Geom *GeomtoNoff(Geom * g, TransformN * t)
     GeomSpecifyMethod(ConvertSel, NPolyListMethods(), toNoffNPolyList);
     GeomSpecifyMethod(ConvertSel, PolyListMethods(), toNoffPolyList);
     GeomSpecifyMethod(ConvertSel, ListMethods(), toNoffList);
+    GeomSpecifyMethod(ConvertSel, InstMethods(), toNoffInst);
   }
   return (Geom *) GeomCall(ConvertSel, g, t);
 }
