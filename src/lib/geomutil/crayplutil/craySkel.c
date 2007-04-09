@@ -161,6 +161,11 @@ void *cray_skel_UseFColor(int sel, Geom *geom, va_list *args)
     s->l[i].c0 = i; /* use a linear mapping, no holes anymore */
   }
 
+  if (s->c) {
+    OOGLFree(s->c);
+  }
+  s->c = color;
+
   s->geomflags |= FACET_C;
 
   return (void *)geom;
