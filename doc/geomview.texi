@@ -3870,7 +3870,7 @@ a reference to a "transform" object, i.e.
 @end example
 or
 @example
-    ":" symbol-representing-transform-object>
+    ":" symbol-representing-transform-object
 @end example
 Another way to specify the transformation is
 @example
@@ -3890,7 +3890,20 @@ object, though a single-membered LIST would do this more efficiently.
 
 @xref{Transformation matrices}, for the matrix format.
 
-@var{(N+1)}-dimensional transformations can be specified by
+When replicating a single geometry by means of a @code{TLIST} object
+(see @samp{transforms} above) it may be useful to transform texture
+co-ordinates by another list of transformations; that list can be
+specified by
+@example
+txtransforms
+    @var{TLIST-object}
+@end example
+The number of texture transformations must match the number of geometry
+transformations. The @code{SPHERE} object (@pxref{SPHERE, Sphere
+Objects}) uses this technique to generate an entire textured sphere out
+of some fraction of a sphere (usually one octant).
+
+A single @var{(N+1)}-dimensional transformation can be specified by
 
 @example
 ntransform ["@{"] @var{N+1} @var{N+1} @code{(N+1)x(N+1) floats} ["@}"]
@@ -3898,13 +3911,13 @@ ntransform ["@{"] @var{N+1} @var{N+1} @code{(N+1)x(N+1) floats} ["@}"]
 @noindent
 This gives a single @var{N+1}-dimensional transformation matrix.  Either
 the matrix may appear literally as @var{(N+1)}x@var{(N+1)} numbers, or
-there may be a reference to a "transform" object, i.e.
+there may be a reference to an @samp{ntransform} object, i.e.
 @example
     "<" file-containing-@var{(N+1)}x@var{(N+1)}-matrix
 @end example
 or
 @example
-    ":" symbol-representing-ntransform-object>
+    ":" symbol-representing-ntransform-object
 @end example
 
 @xref{ND Transformation matrices}, for the matrix format.

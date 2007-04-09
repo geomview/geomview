@@ -198,7 +198,24 @@ Geom *InstImport(Pool *p)
 				   (Ref *)inst, inst->axis, TransUpdate);
 		}
 		break;
-		
+
+	    case 'x':
+		if (iobfexpectstr(file, (expect = "txtransforms")+2)) {
+		    goto syntax;
+		}
+		if(inst == NULL) {
+		    inst = (Inst *)GeomCCreate(NULL, InstMethods(), NULL);
+		}
+		expect = "TLIST object";
+		if(!GeomStreamIn(p, &inst->txtlisthandle, &inst->txtlist)) {
+		    goto failed;
+		}
+		if(inst->txtlisthandle) {
+		    HandleRegister(&inst->txtlisthandle,
+				   (Ref *)inst, &inst->txtlist, HandleUpdRef);
+		}
+		break;
+
 	    default:
 		expect = "something";
 		goto syntax;
@@ -249,7 +266,10 @@ InstExport(Inst *inst, Pool *pool)
 	PoolFPrint(pool, outf, "location %s\n", locations[inst->location]);
 
     if(inst->tlist != NULL || inst->tlisthandle != NULL) {
-	PoolFPrint(pool, outf, "tlist ");
+	PoolFPrint(pool, outf, "transforms ");
+	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
+    } else if(inst->tlist != NULL || inst->tlisthandle != NULL) {
+	PoolFPrint(pool, outf, "txtransforms ");
 	ok &= GeomStreamOut(pool, inst->tlisthandle, inst->tlist);
     } else if (memcmp(inst->axis, TM_IDENTITY, sizeof(Transform)) != 0) {
 	PoolFPrint(pool, outf, "");
