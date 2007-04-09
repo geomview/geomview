@@ -57,7 +57,7 @@ void SetUndo(Geom *g, char *name)
 Geom *GetObject(char *name)
 {
   printf("(echo \"{\")");
-  printf("(write geometry - %s bare)", name);
+  printf("(write geometry - \"%s\" bare)", name);
   printf("(echo \"}\")");
   fflush(stdout);
   return GeomFLoad(infile, NULL);
@@ -71,7 +71,7 @@ Geom *GetTarget(void)
 void ReplaceObject(Geom *g, char *name)
 {
   if (g == NULL) return;
-  printf("(geometry %s ", name);
+  printf("(geometry \"%s\" ", name);
   GeomFSave(g, stdout, NULL);
   printf(")");
   printf("(redraw allcams)");

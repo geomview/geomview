@@ -726,7 +726,7 @@ void idwrite(fp, x)
     FILE *fp;
     int *x;
 {
-  fprintf(fp, "%s", drawer_id2name(*x));
+  fprintf(fp, "\"%s\"", drawer_id2name(*x));
 }
 
 LObject *idparse(Lake *lake)
