@@ -50,7 +50,7 @@ int DoProjection(ClientData clientdata, Tcl_Interp * interp,
     interp->result = "Wrong number of arguments";
     return TCL_ERROR;
   }
-  printf("(if (real-id %s) (write geometry - %s self) (echo \"nada\"))\n",
+  printf("(if (real-id \"%s\") (write geometry - \"%s\" self) (echo \"nada\"))\n",
 	 argv[1], argv[1]);
   fflush(stdout);
   g = GeomFLoad(infile, "stdin");
@@ -59,14 +59,14 @@ int DoProjection(ClientData clientdata, Tcl_Interp * interp,
     iobfrewind(infile);
     return TCL_OK;
   }
-  printf("(echo(ND-xform-get %s universe))\n", argv[1]);
+  printf("(echo(ND-xform-get \"%s\" universe))\n", argv[1]);
   fflush(stdout);
   ObjUniv = TmNRead(infile, 0);
-  printf("(echo(ND-xform-get universe %s))\n", argv[2]);
+  printf("(echo(ND-xform-get universe \"%s\"))\n", argv[2]);
   fflush(stdout);
   UnivCam = TmNRead(infile, 0);
   iobfrewind(infile);
-  printf("(echo(ND-axes %s)\\n)\n", argv[2]);
+  printf("(echo(ND-axes \"%s\")\\n)\n", argv[2]);
   fflush(stdout);
   iobftoken(infile, 0);
   if (iobfgetni(infile, 4, axes, 0) != 4) {
