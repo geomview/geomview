@@ -68,7 +68,7 @@ static char *	normalization_string(int n);
 static char *	onoff_string(int n);
 
 int
-save_world(Pool *p, int id, int comm, int wrap, int to_coords)
+save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
 {
   Appearance *ap;
   int i, closeme = 0;
@@ -77,7 +77,7 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
   DGeom *dg = NULL;
   Handle *h = NULL;
 
-  if((fp = PoolOutputFile(p)) == NULL) {
+  if ((fp = PoolOutputFile(p)) == NULL) {
     return 0;
   }
 
@@ -87,26 +87,26 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
   PoolSetOType(p, PO_DATA);
 #endif
   
-  if(!comm) {
+  if (!comm) {
     /* Write geometry */
 
     if (wrap) {
-      if(id == NOID || ISCAM(id)) {
+      if (id == NOID || ISCAM(id)) {
 	PoolFPrint(p, fp, "{ # Base appearance\n");
 	PoolIncLevel(p, 1);
 	ApStreamOut(p, NULL, drawerstate.ap);
 	PoolFPrint(p, fp, "# end base appearance\n");
-	if(ISCAM(id)) {
+	if (ISCAM(id)) {
 	  PoolIncLevel(p, -1);
 	  PoolFPrint(p, fp, "}\n");
 	  return !ferror(fp);
 	} else closeme = 1;
       }
     }
-    if(id == NOID) id = WORLDGEOM;
-    if(ISGEOM(id))
+    if (id == NOID) id = WORLDGEOM;
+    if (ISGEOM(id))
       dg = (DGeom *)drawer_get_object(id);
-    if(id == WORLDGEOM) {
+    if (id == WORLDGEOM) {
       if (wrap) {
 	save_dgeom_geom(p, dg, true, wrap, to_coords);
       }
@@ -138,18 +138,18 @@ save_world(Pool *p, int id, int comm, int wrap, int to_coords)
 
   PoolFPrint(p, fp, "(progn\n");
   PoolIncLevel(p, 1); /* Ensure embedded objects have { braces } */
-  if(id == NOID || id == WORLDGEOM) {
+  if (id == NOID || id == WORLDGEOM) {
     PoolFPrint(p, fp, "(merge-baseap ");
     ApStreamOut(p, NULL, drawerstate.ap);
     PoolFPrint(p, fp, ") # end base appearance\n");
-    if(drawerstate.NDim > 0)
+    if (drawerstate.NDim > 0)
       PoolFPrint(p, fp, "(dimension %d)\n", drawerstate.NDim-1);
   }
 
-  if(id != NOID && id != WORLDGEOM) {
+  if (id != NOID && id != WORLDGEOM) {
     DObject *dobj = drawer_get_object(id);
-    if(dobj) {
-      if(ISGEOM(dobj->id))
+    if (dobj) {
+      if (ISGEOM(dobj->id))
 	save_dgeom(p, (DGeom *)dobj, 1);
       else
 	save_dview(p, (DView *)dobj);
@@ -204,7 +204,7 @@ save_dgeom_geom(Pool *p, DGeom *dg, bool world, bool wrap, int to_coords)
   Geom *g = NULL;
   Appearance *ap = NULL;
 
-  if(dg == NULL || dg->Item == NULL)
+  if (dg == NULL || dg->Item == NULL)
     return;
 
   if (wrap) {
@@ -214,13 +214,13 @@ save_dgeom_geom(Pool *p, DGeom *dg, bool world, bool wrap, int to_coords)
     PoolFPrint(p, fp, "INST\n");
     
     drawer_get_transform(dg->id, T, to_coords);
-    if(nonidentity(T) || h) {	/* Could say "transform" here */
+    if (nonidentity(T) || h) {	/* Could say "transform" here */
       PoolFPrint(p, fp, "");
       TransStreamOut(p, h, T);	/* but TransStreamOut does that */
     }
     PoolFPrint(p, fp, "geom ");
     GeomGet(dg->Item, CR_APPEAR, &ap);
-    if(ap) {
+    if (ap) {
       ap = ApCopy(ap, NULL);
       ap->override = 0;
       if (ap->mat) ap->mat->override = 0;
@@ -230,13 +230,15 @@ save_dgeom_geom(Pool *p, DGeom *dg, bool world, bool wrap, int to_coords)
       ApDelete(ap);
     }
   }
-  if(!world) {
+  if (!world) {
     h = NULL;
     GeomGet(dg->Lgeom, CR_GEOM, &g);
     GeomGet(dg->Lgeom, CR_GEOMHANDLE, &h);
     GeomStreamOut(p, h, g);
-    PoolIncLevel(p, -1);
-    if (wrap) PoolFPrint(p, fp, "} # end (geom and INST) %s\n", dg->name[1]);
+    if (wrap) {
+      PoolIncLevel(p, -1);
+      PoolFPrint(p, fp, "} # end (geom and INST) %s\n", dg->name[1]);
+    }
   }
 }
 
@@ -264,7 +266,7 @@ save_dgeom(Pool *p, DGeom *dg, int doaliens)
   sprintf(name, "[%s]", dg->name[0]);	/* Temporary name -- unlikely to conflict */
   
   if (dg->citizenship == ALIEN) {
-    if(!doaliens)
+    if (!doaliens)
       return;
     PoolFPrint(p, fp, "(new-alien");
   } else {
@@ -291,7 +293,7 @@ save_dgeom(Pool *p, DGeom *dg, int doaliens)
   GeomGet( dg->Item, CR_AXISHANDLE, &h );
   maybe_save_xform(p, "xform-set", name, h, T);
 
-  if(dg->NDT) {
+  if (dg->NDT) {
     PoolFPrint(p, fp, "(ND-xform-set \"%s\" ", name);
     NTransStreamOut(p, NULL, dg->NDT);
     PoolFPrint(p, fp, ")\n");
@@ -316,7 +318,7 @@ save_dview(Pool *p, DView *dv)
   FILE *fp = PoolOutputFile(p);
   WnPosition wp;
 
-  if(WnGet(dv->win, WN_CURPOS, &wp) > 0) {
+  if (WnGet(dv->win, WN_CURPOS, &wp) > 0) {
     WnSet(dv->win, WN_PREFPOS, &wp, WN_END);
     PoolFPrint(p, fp, "(window default { position %d %d %d %d })\n",
 	       wp.xmin,wp.xmax,wp.ymin,wp.ymax);
@@ -342,7 +344,7 @@ save_dview(Pool *p, DView *dv)
 	    name, dv->cluster->name,
 	    dv->NDPerm[0], dv->NDPerm[1], dv->NDPerm[2], dv->NDPerm[3]);
 
-    if(dv->cluster->C2W != NULL) {
+    if (dv->cluster->C2W != NULL) {
       PoolFPrint(p, fp, "(ND-xform-set \"%s\" ", name);
       TmNPrint(fp, dv->cluster->C2W);
       PoolFPrint(p, fp, ")\n");
@@ -399,31 +401,31 @@ int worldio(HandleOps *ops, Pool *p, int to_coords, int id)
   int ok = -1;
   Transform T;
   TransformN *TN;
-  int wrap = 1;
-
+  bool wrap = true;
+  
   /* no data attached to a handle has been saved yet */
   HandlesSetObjSaved(false);
 
   if (to_coords == SELF) {
     wrap = 0;
   }
-  if(ops == &CommandOps) ok = save_world(p, id, 1, wrap, to_coords);
-  else if(ops == &GeomOps) ok = save_world(p, id, 0, wrap, to_coords);
-  else if(ops == &CamOps && ISCAM(id)) {
+  if (ops == &CommandOps) ok = save_world(p, id, true, wrap, to_coords);
+  else if (ops == &GeomOps) ok = save_world(p, id, false, wrap, to_coords);
+  else if (ops == &CamOps && ISCAM(id)) {
     DView *dv = (DView *)drawer_get_object(id);
-    if(dv) ok = CamStreamOut(p, dv->camhandle, dv->cam);
-  } else if(ops == &WindowOps) {
+    if (dv) ok = CamStreamOut(p, dv->camhandle, dv->cam);
+  } else if (ops == &WindowOps) {
     DView *dv = (DView *)drawer_get_object(ISCAM(id) ? id : FOCUSID);
     WnWindow *win;
-    if(dv && dv->mgctx) {
+    if (dv && dv->mgctx) {
       mgctxselect(dv->mgctx);
-      if((ok = mgctxget(MG_WINDOW, &win)) > 0)
+      if ((ok = mgctxget(MG_WINDOW, &win)) > 0)
 	ok = WnStreamOut(p, NULL, win);
     }
-  } else if(ops == &TransOps) {
+  } else if (ops == &TransOps) {
     drawer_get_transform(id, T, to_coords);
     ok = TransStreamOut(p, NULL, T);
-  } else if(ops == &NTransOps) {
+  } else if (ops == &NTransOps) {
     TN = drawer_get_ND_transform(id, to_coords);
     ok = NTransStreamOut(p, NULL, TN);
     TmNDelete(TN);
@@ -437,10 +439,10 @@ static int
 unique(char *new, char **already, int nalready)
 {
   int i;
-  if(new == NULL)
+  if (new == NULL)
     return 0;
   for(i = 0; i < nalready; i++)
-    if(strcmp(new, already[i]) == 0)
+    if (strcmp(new, already[i]) == 0)
       return 0;
   return 1;
 }
@@ -452,17 +454,17 @@ setapath(LList *list, vvec *vvpath, void (*setfunc)(char **))
   int i, k;
   char *td, *dirs[MAXDIRS+1];
   for(i = 0; i < MAXDIRS && list; list = list->cdr) {
-    if(list->car == NULL)
+    if (list->car == NULL)
       continue;
     td = LSTRINGVAL(list->car);
-    if(strcmp(td, "+") == 0) {
+    if (strcmp(td, "+") == 0) {
       for(k = 0; k < VVCOUNT(*vvpath) && i < MAXDIRS; k++) {
 	td = VVEC(*vvpath, char *)[k];
-	if(unique(td, dirs, i))
+	if (unique(td, dirs, i))
 	  dirs[i++] = strdup(td);
       }
     } else {
-      if(unique(td, dirs, i))
+      if (unique(td, dirs, i))
 	dirs[i++] = td;
     }
   }
@@ -508,7 +510,7 @@ void set_load_path(char **dirs)
   filedirs(dirs);			/* Inform OOGL/refcomm library */
 
   filepanel = ui_name2panel("Files");	/* Inform UI */
-  if(ui_panelshown(filepanel))
+  if (ui_panelshown(filepanel))
     ui_showpanel(filepanel, 1);
 }
 
@@ -654,17 +656,17 @@ Use e.g. ``(echo (all geometry))'' to print such a list.")
 	    LSTRING, &subtype,
 	    LEND));
     
-  if(strncmp(type, "geom", 4) == 0) {
+  if (strncmp(type, "geom", 4) == 0) {
     LOOPGEOMS(i, dg)
       l = LListAppend(l, LTOOBJ(LSTRING)(&dg->name[1]));
-  } else if(strncmp(type,  "cam", 3) == 0) {
+  } else if (strncmp(type,  "cam", 3) == 0) {
     LOOPVIEWS(i, dv)
       l = LListAppend(l, LTOOBJ(LSTRING)(&dv->name[1]));
-  } else if(strncmp(type, "emodule", 7) == 0) {
+  } else if (strncmp(type, "emodule", 7) == 0) {
     wantrunning = (strncmp(subtype, "run", 3) == 0);
     em = VVEC(uistate.emod, emodule);
     for(i = VVCOUNT(uistate.emod); --i >= 0; em++)
-      if((em->pid != 0) == wantrunning)
+      if ((em->pid != 0) == wantrunning)
 	l = LListAppend(l, LTOOBJ(LSTRING)(&em->name));
   } else {
     OOGLError(0, "all: expected \"geometry\" or \"camera\" or \"emodule defined\" or \"emodule running\", got: %s %s\n",
@@ -699,7 +701,7 @@ LDEFINE(camera_prop, LVOID,
     return Lnil;
   }
   
-  if(gs && gs->geom) {
+  if (gs && gs->geom) {
     REFINCR(gs->geom);
     REFINCR(gs->h);
     GeomDelete(drawerstate.camgeom);
@@ -768,7 +770,7 @@ LDEFINE(write, LVOID,
     temppool = true;
   }
 
-  if(op == NULL || PoolOutputFile(op) == NULL) {
+  if (op == NULL || PoolOutputFile(op) == NULL) {
     fprintf(stderr, "write: cannot open \"%s\": %s\n", fname, sperror());
     return Lnil;
   }
@@ -821,7 +823,7 @@ general_snapshot(char *fname, int id, DView *view,
   int failed;
 
   f = (fname[0] == '|') ? popen(fname+1, "wb") : fopen(fname, "wb");
-  if(f == NULL)
+  if (f == NULL)
     return -1;
 
   mgctxget(MG_CAMERA, &cam);
@@ -912,12 +914,12 @@ LDEFINE(snapshot, LINT,
   wp.xmin = wp.ymin = 0;  wp.xmax = wp.ymax = 399;  /* Avoid catastrophe */
   WnGet(wn, WN_CURPOS, &wp);
 
-  if(xsize > 0 || ysize > 0) {
+  if (xsize > 0 || ysize > 0) {
     int dx = wp.xmax - wp.xmin + 1;
     int dy = wp.ymax - wp.ymin + 1;
-    if(xsize <= 0)
+    if (xsize <= 0)
       xsize = (dx * ysize + dy/2) / dy;
-    else if(ysize <= 0)
+    else if (ysize <= 0)
       ysize = (dy * xsize + dx/2) / dx;
     wp.xmax = wp.xmin + xsize - 1;
     wp.ymax = wp.ymin + ysize - 1;
@@ -934,7 +936,7 @@ LDEFINE(snapshot, LINT,
   } else if (!strcmp(format, "ps")) {
     failed = general_snapshot(fname, id, dv, wn, &wp, mgdevice_PS);
   }
-  if(failed == -1)
+  if (failed == -1)
     OOGLError(0, "snapshot: unknown file format %s", format);
   return failed ? Lnil : Lt;
 }
