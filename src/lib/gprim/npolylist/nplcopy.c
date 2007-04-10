@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.5 2006/12/11 04:50:12 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.6 2007/04/10 15:33:33 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -64,21 +64,25 @@ NPolyListCopy(NPolyList *pl)
   newp = OOGLNewNE(Poly, pl->n_polys, "NPolyList polygons");
   newvi = OOGLNewNE(int, pl->nvi, "NPolyList vert indices");
   newpv = OOGLNewNE(int, pl->n_polys, "NPolyList polygon vertices");
-  newvcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyList vertex colors");
+  if (pl->vcol) {
+    newvcol = OOGLNewNE(ColorA, pl->n_verts, "NPolyList vertex colors");
+  }
   newpl = OOGLNewE(NPolyList, "NPolyList");
   *newpl = *pl;
 
   newpl->vi   = newvi;
   newpl->pv   = newpv;
   newpl->v    = newv;
-  newpl->vcol = newvcol;
+  newpl->vcol = pl->vcol ? newvcol : NULL;
   newpl->p    = newp;
   newpl->vl   = newvl;
 
   memcpy(newvi, pl->vi, pl->nvi * sizeof(int));
   memcpy(newpv, pl->pv, pl->n_polys * sizeof(int));
   memcpy(newv, pl->v, pl->n_verts * pl->pdim * sizeof(HPtNCoord));
-  memcpy(newvcol, pl->vcol, pl->n_verts * sizeof(ColorA));
+  if (pl->vcol) {
+    memcpy(newvcol, pl->vcol, pl->n_verts * sizeof(ColorA));
+  }
   memcpy(newp, pl->p, pl->n_polys * sizeof(Poly));
   memcpy(newvl, pl->vl, pl->n_verts * sizeof(Vertex));
   
