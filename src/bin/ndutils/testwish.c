@@ -63,3 +63,10 @@ int main(int argc, char **argv)
   Tk_Main(argc, argv, Tcl_AppInit);
   return 0;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
