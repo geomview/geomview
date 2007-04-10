@@ -18,6 +18,10 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
+#if HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
@@ -40,7 +44,7 @@ typedef struct _vertex {	/* A single vertex */
   float *coord;			/* My coordinates for ND case. */
 
   Color c;			/* Vertex color if any */
-  int clip;			/* Have I been clipped or not? */
+  bool clip;			/* Have I been clipped or not? */
   float val;			/* Function value at this vertex */
   int num;			/* Reference number of vertex in array */
 } vertex;
@@ -73,7 +77,7 @@ typedef struct _polyvtx_list {	/* vertex list for each polygon */
 
 typedef struct _poly {		/* A polygon */
   int numvtx;			/* Number of vertices */
-  int clipped;			/* has the whole polygon been cut away? */
+  bool clipped;			/* has the whole polygon been cut away? */
   /* 1 if it has been cut away, 0 if some */
   /* or all of the polygon remains */
   polyvtx_list *me;		/* Vertex list of polygon */
@@ -89,7 +93,7 @@ typedef struct _poly_list {	/* List of polygons */
 #define HAS_VC	0x4
 #define	HAS_PC	0x8
   int has;			/* bit mask of associated data */
-
+ 
   poly *head;			/* head of list of polys */
   poly *point;			/* pointer for traversing list */
 
@@ -98,26 +102,27 @@ typedef struct _poly_list {	/* List of polygons */
 #define NEWLINE '\n'
 #define SPACE	' '
 
+enum clip_side { CLIP_LE, CLIP_GE };
 
 typedef struct clip {
   poly_list polyhedron;
   vertex_list polyvertex;
-  int side;			/* side to cut... 0 -- less than   1 -- greater than */
-  int dim;			/* We are working in dim Dimensions. */
-  float *surf;			/* Surface parameters.
-				 * For a plane, the plane normal vector
-				 * (or, other parameters for non-planar clip)
-				 */
+  enum clip_side side;	/* side to cut... 0 -- less than   1 -- greater than */
+  int dim;		/* We are working in dim Dimensions. */
+  float *surf;		/* Surface parameters.
+			 * For a plane, the plane normal vector
+			 * (or, other parameters for non-planar clip)
+			 */
 
-  float (*clipfunc) ();		/* Clipping function, whose value is zero
-				 * along the surface where we should clip.
-				 */
-  int nonlinear;		/* Is clipfunc an affine function of position? */
-  float level;			/* Value of clipfunc at clipping surface */
+  float (*clipfunc) ();	/* Clipping function, whose value is zero
+			 * along the surface where we should clip.
+			 */
+  int nonlinear;	/* Is clipfunc an affine function of position? */
+  float level;		/* Value of clipfunc at clipping surface */
 
-  struct obstack obst;          /* temporary memory is allocated through an
-				 * obstack for easy clean-up.
-				 */
+  struct obstack obst;  /* temporary memory is allocated through an
+			 * obstack for easy clean-up.
+			 */
   
 } Clip;
 
@@ -138,8 +143,7 @@ typedef struct clip {
  */
 void setClipPlane(Clip *, float coeffs[], float level);
 
-enum clip_side { CLIP_LE, CLIP_GE };
-void setSide(Clip *, int side);	/* 0->negative, 1->positive side */
+void setSide(Clip *, enum clip_side side); /* 0->negative, 1->positive side */
 
 void setGeom(Clip *, void *g);
 void *getGeom(Clip *);
