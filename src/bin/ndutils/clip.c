@@ -52,9 +52,9 @@ vertex *add_vertex(Clip * clip, vertex_list * vtxl, float *aCoord,
   return (head);
 }
 
-int find_unclipped_vertex(polyvtx_list * me, vertex ** vertex_set)
+/* return true if all vertices have been clipped away */
+bool find_unclipped_vertex(polyvtx_list * me, vertex ** vertex_set)
 {
-  pvtx *temp = me->head;
   pvtx *point;
   int brk = 0;
 
@@ -64,13 +64,12 @@ int find_unclipped_vertex(polyvtx_list * me, vertex ** vertex_set)
     brk = vertex_set[point->num]->clip;	/* Check polygon vertex list to see */
     if (brk)			/* if any still remain */
       point = point->next;
-  } while (brk && (point != temp));
+  } while (brk && (point != me->head));
 
-  if ((point == temp) && brk)	/* if we found a vertex, return 1 */
-    return 1;
+  if ((point == me->head) && brk)	/* if we found no vertex, return true */
+    return true;
 
-  me->head = point;
-  return 0;			/* otherwise return 0 */
+  return false;			/* otherwise return false */
 }
 
 
@@ -136,7 +135,7 @@ void pcinterp(Clip * clip, float *result, float *p1, float *p2,
 int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
 		     vertex ** vertex_set)
 {
-  pvtx *temp, *next, *last;
+  pvtx *temp, *next, **lastnext, *head;
   float *intersect;
   Color c, *c1, *c2;
   float *p1 = NULL;
@@ -145,9 +144,9 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
 
   intersect = malloc(clip->dim * sizeof(float));
 
-  last = me->head;
+  lastnext = &me->head;
 
-  me->point = me->head;
+  head = me->point = me->head;
   me->point->me = vertex_set[me->point->num];
 
   do {
@@ -187,9 +186,8 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
       me->numvtx++;		/* point to the polygon's */
       temp->next = next;	/* vertex list. */
       me->point->next = temp;
-      last = temp;
+      lastnext = &temp->next;
       me->point = next;
-      next = me->point->next;
     } else
       /*
        * Handle second case:
@@ -206,14 +204,13 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
        */
 
     if (v1->clip && v2->clip) {
-      last->next = next;	/* simply delete the current */
+      *lastnext = next;	/* simply delete the current */
 
       /*      free(me->point);*/
       me->point = NULL;
 
       me->numvtx--;
       me->point = next;
-      next = me->point->next;
     } else
       /*
        * Handle third case:
@@ -236,28 +233,24 @@ int clip_each_vertex(Clip * clip, polyvtx_list * me, vertex_list * vtxl,
 
       temp->me = add_vertex(clip, vtxl, intersect, &c);
       temp->next = next;	/* intersection point to the */
-      last->next = temp;	/* polygon's vertex list */
+      *lastnext = temp;	/* polygon's vertex list */
 
-      /*free(me->point);*/
-      me->point = NULL;
-
-      last = temp;		/* from the list. */
+      lastnext = &temp->next;		/* from the list. */
       me->point = next;
-      next = me->point->next;
     } /* fourth case: */
     else {			/* Both vertices unclipped. */
       /* Therefore, do nothing. */
-      last = me->point;
+      lastnext = &me->point->next;
       me->point = next;
-      next = me->point->next;
     }
 
-  } while (me->point != me->head);	/* Do this 'til we have */
-  /* checked all vertices in */
-  /* the circular linked list. */
+  } while (me->point != head);	/* Do this 'til we have checked all
+				 * vertices in the circular linked
+				 * list. */
+  *lastnext = me->head;
+  me->point = NULL;
 
   free(intersect);
-
 
   return me->numvtx;
 
@@ -315,11 +308,14 @@ void setClipPlane(Clip * clip, float *coeff, float level)
   clip->level = level;
 }
 
-void setSide(Clip * clip, int side)
+void setSide(Clip * clip, enum clip_side side)
 {
   clip->side = side;
 }
 
+/* Find vertices which are on the wrong side of the plane; mark them
+ * as clipped. Vertices on the plane are marked as unclipped.
+ */
 void clip_vertices(Clip * clip)
 {
   vertex *point;
@@ -383,6 +379,7 @@ void clip_polygons(Clip * clip, vertex_list * vtxl)
     point->clipped = find_unclipped_vertex(point->me, vertex_set);
 
     if (!point->clipped) {
+      /* at least some vertices remain; clip or keep the polygon */
       point->numvtx = clip_each_vertex(clip, point->me, vtxl, vertex_set);
     }
 
