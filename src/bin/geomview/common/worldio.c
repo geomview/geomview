@@ -407,7 +407,7 @@ int worldio(HandleOps *ops, Pool *p, int to_coords, int id)
   HandlesSetObjSaved(false);
 
   if (to_coords == SELF) {
-    wrap = 0;
+    wrap = false;
   }
   if (ops == &CommandOps) ok = save_world(p, id, true, wrap, to_coords);
   else if (ops == &GeomOps) ok = save_world(p, id, false, wrap, to_coords);
