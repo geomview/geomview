@@ -56,11 +56,13 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 #include "BasicFns.h"
 #include "GeomtoNoff.h"
 
-/*The following defines a Geomview function called GeomtoNoff which takes a Geom
-and a TransformN, applies the TransformN to the Geom, and then converts the Geom
-to an nOFF (without destroying the original Geom).  It keeps the same colors and
-appearances as the original with the exception that Lists are returned without
-color.*/
+/*The following defines a Geomview function called GeomtoNoff which
+ * takes a Geom and a TransformN, applies the TransformN to the Geom,
+ * and then converts the Geom to an nOFF (without destroying the
+ * original Geom).  It keeps the same colors and appearances as the
+ * original with the exception that Lists are returned without
+ * color.
+ */
 
 static void *toNoffDefault(int sel, Geom * g, va_list * args)
 {
@@ -284,68 +286,72 @@ static void *toNoffNDMesh(int sel, Geom * g, va_list * args)
 static void *toNoffNPolyList(int sel, Geom * g, va_list * args)
 {
   TransformN *t = va_arg(*args, TransformN *);
-  NPolyList *noff = (NPolyList *) g;
-  HPointN *hptn;
+  NPolyList *noff;
+  HPointN hptnsrc, hptndst;
+  HPtNCoord *oldcoords = ((NPolyList *)g)->v;
   int i;
   if (g == NULL)
     return (void *) NULL;
   if (t && t->idim != GeomDimension(g) + 1)
     return (void *) NULL;
-  hptn = HPtNCreate(noff->pdim, NULL);
-  hptn->v = (float *) malloc((sizeof *(hptn->v)) * noff->pdim);
+  hptnsrc.dim = hptndst.dim = g->pdim;
+  noff = (NPolyList *)GeomCopy(g);
   for (i = 0; i < noff->n_verts; i++) {
-    memcpy(hptn->v, (noff->v + i * (noff->pdim)),
-	   (sizeof *(hptn->v)) * noff->pdim);
-    hptn = HPtNTransform(t, hptn, hptn);
-    memcpy((noff->v + i * (noff->pdim)), hptn->v,
-	   (sizeof *(hptn->v)) * noff->pdim);
+    hptnsrc.v = oldcoords + i * noff->pdim;
+    hptndst.v = noff->v + i * noff->pdim;
+    HPtNTransform(t, &hptnsrc, &hptndst);
+    HPtNDehomogenize(&hptndst, &hptndst);
   }
-  return (void *) g;
+
+  return (void *)noff;
 }
 
 /* Convert a list of Noff objects to a single Noff object */
 static NPolyList *_toNoffList(List *lh)
 {
   List *l;
-  NPolyList *noff;
+  NPolyList *noff, *carpl;
   int numvertindex, npoly, *numvertsperpoly, *indexlist, nvert;
   int *nvpptr, *ilptr, i, j, numvertsofar = 0, dim;
   float *vertlist, *vlptr, zero = 0.0, *sourceptr;
 
   for (l = lh, npoly = 0, nvert = 0, numvertindex = 0; l != NULL;
        l = l->cdr) {
-    npoly += ((NPolyList *) (l->car))->n_polys;
-    nvert += ((NPolyList *) (l->car))->n_verts;
-    numvertindex += ((NPolyList *) (l->car))->nvi;
+    carpl = (NPolyList *)l->car;
+    npoly += carpl->n_polys;
+    nvert += carpl->n_verts;
+    numvertindex += carpl->nvi;
   }
+  dim = GeomDimension((Geom *)lh);
   ilptr = indexlist = (int *) malloc((sizeof *indexlist) * numvertindex);
   vlptr = vertlist =
-    (float *) malloc((sizeof *vertlist) * nvert * GeomDimension((Geom *)lh));
-  nvpptr = numvertsperpoly =
-      (int *) malloc((sizeof *numvertsperpoly) * npoly);
+    (float *)malloc(sizeof(float)*nvert*(dim+1));
+  nvpptr = numvertsperpoly = (int *)malloc(sizeof(int)*npoly);
   for (l = lh; l != NULL; l = l->cdr) {
-    for (i = 0; i < ((NPolyList *) (l->car))->n_polys; i++)
-      *(nvpptr++) = (((NPolyList *) (l->car))->p + i)->n_vertices;
-    sourceptr = ((NPolyList *) (l->car))->v;
-    for (i = 0; i < ((NPolyList *) (l->car))->n_verts; i++) {
-      memcpy(vlptr, sourceptr, (sizeof *vlptr) * GeomDimension(l->car));
-      vlptr += ((((NPolyList *) (l->car))->pdim) - 1);
-      for (j = 0; j < GeomDimension((Geom *)lh) - GeomDimension(l->car); j++) {
-	memcpy(vlptr, &zero, sizeof *vlptr);
-	vlptr++;
-      }
-      sourceptr += ((NPolyList *) (l->car))->pdim;
+    carpl = (NPolyList *)l->car;
+    for (i = 0; i < carpl->n_polys; i++) {
+      *(nvpptr++) = (carpl->p + i)->n_vertices;
     }
-    for (i = 0; i < ((NPolyList *) (l->car))->nvi; i++)
-      *(ilptr++) = *(((NPolyList *) (l->car))->vi + i) + numvertsofar;
-    numvertsofar += ((NPolyList *) (l->car))->n_verts;
+    sourceptr = carpl->v;
+    for (i = 0; i < carpl->n_verts; i++) {
+      memcpy(vlptr, sourceptr, sizeof(float) * carpl->pdim);
+      for (j = 0; j < dim - carpl->pdim+1; j++) {
+	*vlptr++ = 0.0;
+      }
+      vlptr += carpl->pdim;
+      sourceptr += carpl->pdim;
+    }
+    for (i = 0; i < carpl->nvi; i++) {
+      *(ilptr++) = *(carpl->vi + i) + numvertsofar;
+    }
+    numvertsofar += carpl->n_verts;
   }
   noff = (NPolyList *)GeomCCreate(NULL, NPolyListMethods(),
 				  CR_NPOLY, npoly,
 				  CR_NVERT, numvertsperpoly,
 				  CR_VERT, indexlist,
 				  CR_DIM, GeomDimension((Geom *)lh),
-				  CR_POINT, vertlist,
+				  CR_POINT4, vertlist,
 				  CR_APPEAR, lh->ap, CR_END);
   free(indexlist);
   free(vertlist);
