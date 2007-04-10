@@ -67,7 +67,7 @@ GeomLoad(char *fname)
     IOBFILE *inf = iobfopen(fname, "rb");
     Geom *g;
 
-    if(inf == NULL) {
+    if (inf == NULL) {
 	OOGLError(0, "GeomLoad: can't open %s: %s", fname, sperror());
 	return NULL;
     }
@@ -112,7 +112,7 @@ GeomSave(Geom *g, char *fname)
 	return NULL;
     }
     p = PoolStreamTemp(fname, NULL, outf, 1, &GeomOps);
-    if(p == NULL) {
+    if (p == NULL) {
 	OOGLError(0, "GeomSave: Can't open %s: %s", fname, sperror());
 	return NULL;
     }
@@ -160,7 +160,7 @@ static char *geomtoken;
 char *
 GeomToken(IOBFILE *f)
 {
-    if(geomtoken)
+    if (geomtoken)
 	return geomtoken;
     geomtoken = iobfdelimtok("{}()<:@=", f, 0);
     return geomtoken ? geomtoken : "";
@@ -185,15 +185,15 @@ GeomAddTranslator(char *prefix, char *cmd)
 {
     struct GeomTranslator *gt;
     int i;
-    if(VVCOUNT(geomtransl) == 0)
+    if (VVCOUNT(geomtransl) == 0)
 	VVINIT(geomtransl, struct GeomTranslator, 4);
     cmd = cmd && cmd[0] ? strdup(cmd) : "";
-    if(prefix[0] == '#')
+    if (prefix[0] == '#')
 	comment_translators = 1;
     gt = VVEC(geomtransl, struct GeomTranslator);
-    for(i = VVCOUNT(geomtransl); --i >= 0; gt++) {
-	if(strcmp(prefix, gt->prefix) == 0) {
-	    if(gt->cmd) OOGLFree(gt->cmd);
+    for (i = VVCOUNT(geomtransl); --i >= 0; gt++) {
+	if (strcmp(prefix, gt->prefix) == 0) {
+	    if (gt->cmd) OOGLFree(gt->cmd);
 	    gt->cmd = cmd[0]!='\0' ? cmd : NULL;
 	    return;
 	}
@@ -215,7 +215,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
 
 #if defined(unix) || defined(__unix)
     /* Rewind file descriptor to previous position */
-    if(iobfseek(pf, pos, SEEK_SET) < 0) {
+    if (iobfseek(pf, pos, SEEK_SET) < 0) {
 	OOGLError(1, "%s: can only use external format-translators on disk files", PoolName(p));
 	return 0;
     }
@@ -225,7 +225,7 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     oldchld = signal(SIGCHLD, SIG_DFL);
     tf = iobpopen(cmd, POPEN_RB);
     close(0);
-    if(oldstdin > 0) {
+    if (oldstdin > 0) {
 	dup(oldstdin);
 	close(oldstdin);
     }
@@ -263,7 +263,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     int brack = 0;
     int more;
 
-    if(p == NULL || (f = PoolInputFile(p)) == NULL)
+    if (p == NULL || (f = PoolInputFile(p)) == NULL)
 	return 0;
 
     /* Hack for external support for additional file formats, VRML/Inventor in
@@ -272,31 +272,31 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
      * If first character is a #, grab first line as a token and
      * match against known patterns.
      */
-    if(comment_translators) {
+    if (comment_translators) {
 	struct GeomTranslator *gt;
 	char prefix[256];
-	if((c = iobfgetc(f)) == '#') {
+	if ((c = iobfgetc(f)) == '#') {
 	    prefix[0] = '#';
 	    iobfgets(prefix+1, sizeof(prefix)-1, f);
 	    gt = VVEC(geomtransl, struct GeomTranslator);
-	    for(i = VVCOUNT(geomtransl); --i >= 0; gt++) {
-		if(strncmp(gt->prefix, prefix, gt->prefixlen) == 0) {
+	    for (i = VVCOUNT(geomtransl); --i >= 0; gt++) {
+		if (strncmp(gt->prefix, prefix, gt->prefixlen) == 0) {
 		    return GeomInvokeTranslator(p, prefix, gt->cmd, hp, gp);
 		}
 	    }
 	    /* Nope, not one we recognize.  Finish consuming comment line
 	     * in case the prefix[] buffer didn't hold it all.
 	     */
-	    if(strchr(prefix, '\n') == NULL)
+	    if (strchr(prefix, '\n') == NULL)
 		while((c = iobfgetc(f)) != '\n' && c != EOF)
 		    ;
-	} else if(c != EOF)
+	} else if (c != EOF)
 	    iobfungetc(c, f);
     }
 
     /* Skip a semicolon if it's the first thing we see -- 'stuff' compatibility.
      */
-    if(iobfnextc(f, 0) == ';')
+    if (iobfnextc(f, 0) == ';')
 	iobfgetc(f);
 
     do {
@@ -317,7 +317,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    if (c == '<' &&
 	       (h = HandleByName(w, &GeomOps)) == NULL && w[0] != '/') {
 		w = findfile(PoolName(p), raww = w);
-		if(w == NULL) {
+		if (w == NULL) {
 		    OOGLSyntax(f,
 			"Error reading \"%s\": can't find file \"%s\"",
 			PoolName(p), raww);
@@ -341,7 +341,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    brack++;
 	    break;
 	case '}':
-	    if(brack--) braces = 1;
+	    if (brack--) braces = 1;
 	    else iobfungetc(c, f);
 	    break;
 
@@ -350,16 +350,16 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    break;
 
 	default:
-	    if(strcmp(w, "geom") == 0) {
+	    if (strcmp(w, "geom") == 0) {
 		more = 1;
 		break;
 	    }
-	    if(strcmp(w, "define") == 0) {
+	    if (strcmp(w, "define") == 0) {
 		more = 1;
 		hname = HandleCreateGlobal(iobftoken(f, 0), &GeomOps);
 		break;
 	    }
-	    if(strcmp(w, "appearance") == 0) {
+	    if (strcmp(w, "appearance") == 0) {
 		more = 1;
 		if (!ApStreamIn(p, &aphandle, &ap)) {
 		    OOGLSyntax(f, "%s: appearance definition expected",
@@ -388,13 +388,13 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    tgp = gp ? gp : &g;
 	    thp = hp ? hp : &h;
 
-	    if(Class) {
-		if(Class->import)
+	    if (Class) {
+		if (Class->import)
 		    g = (*Class->import)(p);
-		else if(Class->fload)
+		else if (Class->fload)
 		    g = (*Class->fload)(f, PoolName(p));
 		first = 0;
-		if(g)
+		if (g)
 		    break;
 	    }
 
@@ -405,26 +405,26 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 
 	    it = GeomClassIterate();
 	    while (g == NULL && (Class = GeomNextClass(&it)) != NULL) {
-		if(Class->import == NULL && Class->fload == NULL)
+		if (Class->import == NULL && Class->fload == NULL)
 		    continue;
 		/*
 		 * Try to seek back to our initial position.
 		 */
-		if(!first && !PoolSeekMark(p)) {
+		if (!first && !PoolSeekMark(p)) {
 		    /* No luck.  Might as well give up right now. */
 		    OOGLSyntax(f, "Error reading \"%s\": PoolSetMark() failed.",
 			       PoolName(p));
 			break;
 		}
 
-		if(Class->import)
+		if (Class->import)
 		    g = (*Class->import)(p);
-		else if(Class->fload)
+		else if (Class->fload)
 		    g = (*Class->fload)(f, PoolName(p));
 		first = 0;
 	    }
 	    geomtoken = NULL;
-	    if(g == NULL) {
+	    if (g == NULL) {
 		PoolClearMark(p);
 		return 0;
 	    }
@@ -503,7 +503,7 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 	    GeomDelete(*gp);
 	}
 	*gp = g;
-    } else if(g) {
+    } else if (g) {
 	GeomDelete(g);
     }
 
@@ -518,20 +518,21 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 {
     int brack;
 
-    if(PoolOutputFile(p) == NULL)
+    if (PoolOutputFile(p) == NULL)
 	  return 0;
 
-    if(g == NULL && h != NULL && h->object != NULL)
+    if (g == NULL && h != NULL && h->object != NULL)
 	g = (Geom *)h->object;
 
-    if(g == NULL && h == NULL) {
+    if (g == NULL && h == NULL) {
 	fprintf(PoolOutputFile(p), "{ }\n");
 	return 1;
     }
 
-    brack = (p->level > 0 || (g && (g->ap || g->aphandle)) || h != NULL);
+    brack = true ||
+	(p->level > 0 || (g && (g->ap || g->aphandle)) || h != NULL);
 
-    if(brack) {
+    if (brack) {
 	fprintf(PoolOutputFile(p), "{");
 	PoolIncLevel(p, 1);
     }
@@ -542,19 +543,19 @@ GeomStreamOut(Pool *p, Handle *h, Geom *g)
 	fprintf(PoolOutputFile(p), "\n");
     }
 
-    if(g && (g->ap || g->aphandle)) {
+    if (g && (g->ap || g->aphandle)) {
 	PoolPrint(p, ""); /* use the proper indentation */
 	ApStreamOut(p, g->aphandle, g->ap);
     }
 
     if (PoolStreamOutHandle(p, h, g != NULL)) {
-	if(g->Class->export)
+	if (g->Class->export)
 	    (*g->Class->export)(g, p);
-	else if(g->Class->fsave)
+	else if (g->Class->fsave)
 	    (*g->Class->fsave)(g, PoolOutputFile(p), PoolName(p));
     }
 
-    if(brack) {
+    if (brack) {
 	PoolIncLevel(p, -1);
 	PoolPrint(p, "}\n");
     }
