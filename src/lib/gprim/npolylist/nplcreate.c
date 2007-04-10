@@ -191,9 +191,9 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
     } else {
       float *pv;
       for(i = pl->n_verts, pv = pl->v; --i >= 0; ) {
-	for(j = pl->pdim; --j > 0; )
-	  *pv++ = *v++;
 	*pv++ = 1.0;	/* Add homogenous '1' */
+	for(j = 1; j < pl->pdim; j++)
+	  *pv++ = *v++;
       }
     }
   }
