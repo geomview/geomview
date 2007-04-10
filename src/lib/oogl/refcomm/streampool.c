@@ -538,7 +538,15 @@ int PoolClearMark(Pool *p)
 int
 PoolIncLevel(Pool *p, int incr)
 {
-    return p ? (p->level += incr) : incr;
+    if (p) {
+	p->level += incr;
+	if (p->level < 0) {
+	    OOGLError(0, "PoolIncLevel(): negative level.\n");
+	}
+	return p->level;
+    } else {
+	return incr;
+    }
 }
 
 int
