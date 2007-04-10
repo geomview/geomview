@@ -36,7 +36,7 @@ Copyright (C) 1998-2000 Geometry Technologies, Inc.";
 #include "Clip.h"
 
 static void
-readVerts(Clip * clip, Geom * g, int isnd)
+readVerts(Clip * clip, Geom * g, bool isnd)
 {
   int i;
   vertex_list *pv = &clip->polyvertex;
@@ -84,7 +84,7 @@ readNDPoly(struct obstack *obst, poly * p, NPolyList * pl, int polyNum)
   pv->numvtx = np->n_vertices;
   for (i = 0; i < np->n_vertices; i++) {
     corner = (pvtx *) obstack_alloc(obst, sizeof(pvtx));
-    corner->num = pl->vi[i + pl->pv[i]];
+    corner->num = pl->vi[i + pl->pv[polyNum]];
     *prevp = corner;
     prevp = &corner->next;
   }
@@ -161,7 +161,7 @@ void readPolys(Clip * clip, Geom * g, int isnd)
 void setGeom(struct clip *clip, void *aGeom)
 {
   char *classname;
-  int isnd;
+  bool isnd;
 
   clip_destroy(clip);
   if (aGeom == NULL) {
@@ -175,10 +175,9 @@ void setGeom(struct clip *clip, void *aGeom)
       clip->polyhedron.has = HAS_VC;
     if (pl->geomflags & PL_HASPCOL)
       clip->polyhedron.has |= HAS_PC;
-    isnd = 0;
     clip->dim = pl->geomflags & VERT_4D ? 4 : 3;
     clip->polyvertex.numvtx = pl->n_verts;
-    isnd = 0;
+    isnd = false;
   } else if (strcmp(classname, "npolylist") == 0) {
     NPolyList *npl = (NPolyList *) aGeom;
 
@@ -187,9 +186,8 @@ void setGeom(struct clip *clip, void *aGeom)
       clip->polyhedron.has = HAS_VC;
     if (npl->geomflags & PL_HASPCOL)
       clip->polyhedron.has |= HAS_PC;
-    isnd = 1;
     clip->polyvertex.numvtx = npl->n_verts;
-    isnd = 1;
+    isnd = true;
   } else {
     fprintf(stderr, "clip: can't handle object of type '%s'\n", classname);
     exit(1);
