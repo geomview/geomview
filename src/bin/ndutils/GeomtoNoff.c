@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -394,9 +395,9 @@ static void *toNoffInst(int sel, Geom *g, va_list *args)
   TransformN *t = va_arg(*args, TransformN *);
   Inst *inst = (Inst *)g;
   
-  /* if we have a single ND-transform, or a single 3d-transform, then
-   * we simply concat with t (from the left). We "origin" and
-   * "location" != L_NONE/L_LOCAL cannot be suported here.
+  /* if we have a single ND-transform, or multiple 3d-transforms, then
+   * we simply concat with t (from the left). "origin" and "location"
+   * != L_NONE/L_LOCAL cannot be suported here.
    */
   if (inst->location > L_LOCAL || inst->origin != L_NONE) {
     return NULL;
@@ -421,6 +422,11 @@ static void *toNoffInst(int sel, Geom *g, va_list *args)
     NPolyList *noff;
     TransformN *tmp = NULL;
     Geom *l = NULL;
+
+    if (t == NULL) {
+      int dim = GeomDimension(g) + 1;
+      t = tmp = TmNIdentity(TmNCreate(dim, dim, NULL));
+    }
 
     it = GeomIterate((Geom *)inst, DEEP);
     while (NextTransform(it, T)) {
@@ -515,3 +521,10 @@ Geom *GeomtoNoff(Geom * g, TransformN * t)
   }
   return (Geom *) GeomCall(ConvertSel, g, t);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

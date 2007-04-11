@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -96,8 +97,10 @@ static void *projectCamDefault(int sel, Geom * g, va_list * args)
     PTLINIT = 0;
   }
   npts = (long) GeomCall(GeomMethodSel("PointList_length"), g);
-  if (npts == 0)
-    return (void *) NULL;
+  if (npts == 0) {
+    return  NULL;
+  }
+  
   pts = OOGLNewNE(HPoint3, npts, "Points");
   pts =
       GeomCall(GeomMethodSel("PointList_get"), g, TM_IDENTITY,
@@ -117,7 +120,8 @@ static void *projectCamDefault(int sel, Geom * g, va_list * args)
   TmNDelete(ProjMat);
   g->pdim = 4;
   g->geomflags = (g->geomflags) & (~(VERT_4D));
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static void *projectCamMesh(int sel, Geom * g, va_list * args)
@@ -138,8 +142,10 @@ static void *projectCamMesh(int sel, Geom * g, va_list * args)
     PTLINIT = 0;
   }
   npts = (long) GeomCall(GeomMethodSel("PointList_length"), g);
-  if (npts == 0)
-    return (void *) NULL;
+  if (npts == 0) {
+    return NULL;
+  }
+  
   pts = OOGLNewNE(HPoint3, npts, "Points");
   pts =
       GeomCall(GeomMethodSel("PointList_get"), g, TM_IDENTITY,
@@ -159,7 +165,8 @@ static void *projectCamMesh(int sel, Geom * g, va_list * args)
   TmNDelete(ProjMat);
   g->pdim = 4;
   g->geomflags = (g->geomflags) & (~VERT_4D);
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static void *projectCamQuad(int sel, Geom * g, va_list * args)
@@ -201,7 +208,8 @@ static void *projectCamQuad(int sel, Geom * g, va_list * args)
   TmNDelete(ProjMat);
   g->pdim = 4;
   g->geomflags = (g->geomflags) & (~VERT_4D);
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static void *projectCamNDMesh(int sel, Geom * g, va_list * args)
@@ -225,7 +233,8 @@ static void *projectCamNDMesh(int sel, Geom * g, va_list * args)
   }
   ((NDMesh *) g)->pdim = 4;
   TmNDelete(ProjMat);
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static void *projectCamSkel(int sel, Geom * g, va_list * args)
@@ -257,7 +266,8 @@ static void *projectCamSkel(int sel, Geom * g, va_list * args)
   HPtNDelete(hptn1);
   HPtNDelete(hptn2);
   TmNDelete(ProjMat);
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static void *projectCamList(int sel, Geom * g, va_list * args)
@@ -265,19 +275,70 @@ static void *projectCamList(int sel, Geom * g, va_list * args)
   List *l;
   TransformN *ObjUniv, *UnivCam;
   int *axes;
+
   ObjUniv = va_arg(*args, TransformN *);
   UnivCam = va_arg(*args, TransformN *);
   axes = va_arg(*args, int *);
-  for (l = (List *) g; l != NULL; l = l->cdr)
+  for (l = (List *)g; l != NULL; l = l->cdr) {
     GeomProjCam(l->car, ObjUniv, UnivCam, axes);
-  return (void *) g;
+  }
+
+  return (void *)g;
+}
+
+static void *projectCamInst(int sel, Geom *g, va_list *args)
+{
+  Inst *inst = (Inst *)g;
+  TransformN *ObjUniv, *UnivCam;
+  int *axes;
+
+  ObjUniv = va_arg(*args, TransformN *);
+  UnivCam = va_arg(*args, TransformN *);
+  axes = va_arg(*args, int *);
+
+  /* if we have a single ND-transform, or multiple 3d-transforms, then
+   * we simply concat with t (from the left). "origin" and "location"
+   * != L_NONE/L_LOCAL cannot be suported here.
+   */
+  if (inst->location > L_LOCAL || inst->origin != L_NONE) {
+    return NULL;
+  }
+
+  if (inst->NDaxis) {
+    if (ObjUniv) {
+      ObjUniv = TmNConcat(inst->NDaxis, ObjUniv, NULL);
+    } else {
+      ObjUniv = REFGET(TransformN, inst->NDaxis);
+    }
+    TmNDelete(ObjUniv);
+    g = GeomProjCam(g, ObjUniv, UnivCam, axes);
+  } else {
+    GeomIter *it;
+    Transform T;
+    TransformN *tmp = NULL;
+
+    if (ObjUniv == NULL) {
+      int dim = GeomDimension(g) + 1;
+      ObjUniv = tmp = TmNIdentity(TmNCreate(dim, dim, NULL));
+    }
+
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, T)) {
+      tmp = TmNCopy(ObjUniv, tmp);
+      TmNApplyT3TN(T, NULL, tmp);
+      GeomProjCam(g, ObjUniv, tmp, axes);
+    }
+    TmNDelete(tmp);
+  }
+  return (void *)g;
 }
 
 static void *projectCamNPolyList(int sel, Geom * g, va_list * args)
 {
+  NPolyList *np = (NPolyList *)g;
   int i, j, *axes;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  HPointN *hptn1, *hptn2, tmp;
+  HPointN hptn1, hptn2;
 
   ObjUniv = va_arg(*args, TransformN *);
   UnivCam = va_arg(*args, TransformN *);
@@ -285,23 +346,19 @@ static void *projectCamNPolyList(int sel, Geom * g, va_list * args)
 
   ProjMat = TmNCreateProjection(UnivCam, axes);
 
-  hptn1 = HPtNCreate(((NPolyList *) g)->pdim, NULL);
-  hptn2 = HPtNCreate(4, NULL);
-  tmp.dim = ((NPolyList *) g)->pdim;
-  tmp.flags = 0;
-  for (i = 0; i < ((NPolyList *) g)->n_verts; i++) {
-    tmp.v = ((NPolyList *) g)->v + i * (((NPolyList *) g)->pdim);
-    HPtNCopy(&tmp, hptn1);
-    hptn1 = HPtNTransform(ObjUniv, hptn1, hptn1);
-    hptn2 = HPtNTransform(ProjMat, hptn1, hptn2);
-    for (j = 0; j < 4; j++)
-      *(((NPolyList *) g)->v + i * 4 + j) = hptn2->v[j];
+  hptn1.dim = np->pdim;
+  hptn2.dim = 4;
+  hptn1.flags = hptn2.flags = 0;
+  for (i = 0; i < np->n_verts; i++) {
+    hptn1.v = np->v + i * np->pdim;
+    hptn2.v = np->v + i * 4;
+    HPtNTransform(ObjUniv, &hptn1, &hptn1);
+    HPtNTransform(ProjMat, &hptn1, &hptn2);
   }
-  ((NPolyList *) g)->pdim = 4;
-  HPtNDelete(hptn1);
-  HPtNDelete(hptn2);
+  np->pdim = 4;
   TmNDelete(ProjMat);
-  return (void *) g;
+
+  return (void *)g;
 }
 
 static int SnapSel = 0;
@@ -313,10 +370,19 @@ Geom *GeomProjCam(Geom * g, TransformN * ObjUniv, TransformN * UnivCam,
     SnapSel = GeomNewMethod("projCam", projectCamDefault);
     GeomSpecifyMethod(SnapSel, SkelMethods(), projectCamSkel);
     GeomSpecifyMethod(SnapSel, NDMeshMethods(), projectCamNDMesh);
-    GeomSpecifyMethod(SnapSel, ListMethods(), projectCamList);
     GeomSpecifyMethod(SnapSel, NPolyListMethods(), projectCamNPolyList);
     GeomSpecifyMethod(SnapSel, MeshMethods(), projectCamMesh);
     GeomSpecifyMethod(SnapSel, QuadMethods(), projectCamQuad);
+    GeomSpecifyMethod(SnapSel, ListMethods(), projectCamList);
+    GeomSpecifyMethod(SnapSel, InstMethods(), projectCamInst);
   }
-  return (Geom *) GeomCall(SnapSel, g, ObjUniv, UnivCam, axes);
+
+  return (Geom *)GeomCall(SnapSel, g, ObjUniv, UnivCam, axes);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
