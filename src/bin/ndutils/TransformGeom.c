@@ -304,14 +304,16 @@ static void *projectCamInst(int sel, Geom *g, va_list *args)
     return NULL;
   }
 
+  GeomGet(g, CR_GEOM, &g);
+
   if (inst->NDaxis) {
     if (ObjUniv) {
       ObjUniv = TmNConcat(inst->NDaxis, ObjUniv, NULL);
     } else {
       ObjUniv = REFGET(TransformN, inst->NDaxis);
     }
-    TmNDelete(ObjUniv);
     g = GeomProjCam(g, ObjUniv, UnivCam, axes);
+    TmNDelete(ObjUniv);
   } else {
     GeomIter *it;
     Transform T;
@@ -338,7 +340,7 @@ static void *projectCamNPolyList(int sel, Geom * g, va_list * args)
   NPolyList *np = (NPolyList *)g;
   int i, j, *axes;
   TransformN *ObjUniv, *UnivCam, *ProjMat;
-  HPointN hptn1, hptn2;
+  HPointN hptn1, *hptn2;
 
   ObjUniv = va_arg(*args, TransformN *);
   UnivCam = va_arg(*args, TransformN *);
@@ -346,17 +348,19 @@ static void *projectCamNPolyList(int sel, Geom * g, va_list * args)
 
   ProjMat = TmNCreateProjection(UnivCam, axes);
 
-  hptn1.dim = np->pdim;
-  hptn2.dim = 4;
-  hptn1.flags = hptn2.flags = 0;
+  hptn1.flags = 0;
+  hptn2 = HPtNCreate(np->pdim, NULL);
   for (i = 0; i < np->n_verts; i++) {
-    hptn1.v = np->v + i * np->pdim;
-    hptn2.v = np->v + i * 4;
-    HPtNTransform(ObjUniv, &hptn1, &hptn1);
-    HPtNTransform(ProjMat, &hptn1, &hptn2);
+    hptn1.dim = np->pdim;
+    hptn1.v = np->v + i * hptn1.dim;
+    HPtNTransform(ObjUniv, &hptn1, hptn2);
+    hptn1.dim = 4;
+    hptn1.v = np->v + i * hptn1.dim;
+    HPtNTransform(ProjMat, hptn2, &hptn1);
   }
   np->pdim = 4;
   TmNDelete(ProjMat);
+  HPtNDelete(hptn2);
 
   return (void *)g;
 }
