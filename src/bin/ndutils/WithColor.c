@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -394,9 +395,76 @@ static void *projectCamWCList(int sel, Geom * g, va_list * args)
   axes = va_arg(*args, int *);
   objname = va_arg(*args, char *);
   camname = va_arg(*args, char *);
-  for (l = (List *) g; l != NULL; l = l->cdr)
+  for (l = (List *) g; l != NULL; l = l->cdr) {
     GeomProjCamWC(l->car, ObjUniv, UnivCam, axes, objname, camname);
+  }
   return (void *) g;
+}
+
+static void *projectCamWCInst(int sel, Geom * g, va_list * args)
+{
+  Inst *inst = (Inst *)g;
+  TransformN *ObjUniv, *UnivCam;
+  int *axes;
+  char *objname, *camname;
+
+  ObjUniv = va_arg(*args, TransformN *);
+  UnivCam = va_arg(*args, TransformN *);
+  axes = va_arg(*args, int *);
+  objname = va_arg(*args, char *);
+  camname = va_arg(*args, char *);
+
+  /* if we have a single ND-transform, or multiple 3d-transforms, then
+   * we simply concat with t (from the left). "origin" and "location"
+   * != L_NONE/L_LOCAL cannot be suported here.
+   */
+  if (inst->location > L_LOCAL || inst->origin != L_NONE) {
+    return NULL;
+  }
+
+  GeomGet(g, CR_GEOM, &g);
+
+  if (inst->NDaxis) {
+    if (ObjUniv) {
+      ObjUniv = TmNConcat(inst->NDaxis, ObjUniv, NULL);
+    } else {
+      ObjUniv = REFGET(TransformN, inst->NDaxis);
+    }
+    g = GeomProjCamWC(g, ObjUniv, UnivCam, axes, objname, camname);
+    TmNDelete(ObjUniv);
+  } else if (inst->tlist == NULL) {
+    ObjUniv = TmNCopy(ObjUniv, NULL);
+    TmNApplyT3TN(inst->axis, NULL, ObjUniv);
+    GeomProjCamWC(g, ObjUniv, UnivCam, axes, objname, camname);
+    TmNDelete(ObjUniv);
+  } else {
+    /* We need to copy and transform each instant separately, then sum
+     * it all up into a list object.
+     */
+    GeomIter *it;
+    Transform T;
+    TransformN *tmp = NULL;
+    Geom *l = NULL, *lcar;
+
+    if (ObjUniv == NULL) {
+      int dim = GeomDimension(g) + 1;
+      ObjUniv = tmp = TmNIdentity(TmNCreate(dim, dim, NULL));
+    }
+    
+    it = GeomIterate((Geom *)inst, DEEP);
+    while (NextTransform(it, T)) {
+      tmp = TmNCopy(ObjUniv, tmp);
+      TmNApplyT3TN(T, NULL, tmp);
+      lcar = GeomCopy(g);
+      GeomProjCamWC(lcar, tmp, UnivCam, axes, objname, camname);
+      l = ListAppend(l, lcar);
+    }
+    TmNDelete(tmp);
+    GeomDelete(g);
+    g = l;
+  }
+
+  return (void *)g;
 }
 
 static void *projectCamWCNPolyList(int sel, Geom * g, va_list * args)
@@ -459,12 +527,19 @@ Geom *GeomProjCamWC(Geom * g, TransformN * ObjUniv, TransformN * UnivCam,
     WColorSel = GeomNewMethod("projCam", projectCamWCDefault);
     GeomSpecifyMethod(WColorSel, SkelMethods(), projectCamWCSkel);
     GeomSpecifyMethod(WColorSel, NDMeshMethods(), projectCamWCNDMesh);
-    GeomSpecifyMethod(WColorSel, ListMethods(), projectCamWCList);
-    GeomSpecifyMethod(WColorSel, NPolyListMethods(),
-		      projectCamWCNPolyList);
+    GeomSpecifyMethod(WColorSel, NPolyListMethods(), projectCamWCNPolyList);
     GeomSpecifyMethod(WColorSel, MeshMethods(), projectCamWCMesh);
     GeomSpecifyMethod(WColorSel, QuadMethods(), projectCamWCQuad);
+    GeomSpecifyMethod(WColorSel, ListMethods(), projectCamWCList);
+    GeomSpecifyMethod(WColorSel, InstMethods(), projectCamWCInst);
   }
   return (Geom *) GeomCall(WColorSel, g, ObjUniv, UnivCam, axes,
 			   objectname, camname);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

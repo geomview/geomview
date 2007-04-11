@@ -314,10 +314,16 @@ static void *projectCamInst(int sel, Geom *g, va_list *args)
     }
     g = GeomProjCam(g, ObjUniv, UnivCam, axes);
     TmNDelete(ObjUniv);
+  } else if (inst->tlist == NULL) {
+    ObjUniv = TmNCopy(ObjUniv, NULL);
+    TmNApplyT3TN(inst->axis, NULL, ObjUniv);
+    GeomProjCam(g, ObjUniv, UnivCam, axes);
+    TmNDelete(ObjUniv);
   } else {
     GeomIter *it;
     Transform T;
     TransformN *tmp = NULL;
+    Geom *l = NULL, *lcar;
 
     if (ObjUniv == NULL) {
       int dim = GeomDimension(g) + 1;
@@ -328,10 +334,15 @@ static void *projectCamInst(int sel, Geom *g, va_list *args)
     while (NextTransform(it, T)) {
       tmp = TmNCopy(ObjUniv, tmp);
       TmNApplyT3TN(T, NULL, tmp);
-      GeomProjCam(g, ObjUniv, tmp, axes);
+      lcar = GeomCopy(g);
+      GeomProjCam(lcar, tmp, UnivCam, axes);
+      l = ListAppend(l, lcar);
     }
     TmNDelete(tmp);
+    GeomDelete(g);
+    g = l;
   }
+
   return (void *)g;
 }
 
