@@ -513,12 +513,30 @@ void ascii_token(int token, va_list *alist)
  * int sizes of 2 bytes
  */
 
-#define COPYUSHORT( value )	*ptr++ = ((char *)&value)[0];	\
+/* cH: hey, folks, there are sane machines around, I mean: with the
+ * "correct" LITTLE-ENDIAN byte order ...
+ *
+ * RIB requires BIG-ENDIAN, so handle the case.
+ */
+#if WORDS_BIGENDIAN
+# define COPYUSHORT( value )			\
+    *ptr++ = ((char *)&value)[0];		\
     *ptr++ = ((char *)&value)[1]
-#define COPYFLOAT( value )	*ptr++ = ((char *)&value)[0];	\
-    *ptr++ = ((char *)&value)[1];				\
-    *ptr++ = ((char *)&value)[2];				\
+# define COPYFLOAT( value )			\
+    *ptr++ = ((char *)&value)[0];		\
+    *ptr++ = ((char *)&value)[1];		\
+    *ptr++ = ((char *)&value)[2];		\
     *ptr++ = ((char *)&value)[3]
+#else
+# define COPYUSHORT( value )			\
+    *ptr++ = ((char *)&value)[1];		\
+    *ptr++ = ((char *)&value)[0]
+# define COPYFLOAT( value )			\
+    *ptr++ = ((char *)&value)[3];		\
+    *ptr++ = ((char *)&value)[2];		\
+    *ptr++ = ((char *)&value)[1];		\
+    *ptr++ = ((char *)&value)[0]
+#endif
 
 void binary_token(int token, va_list *alist)
 {
@@ -588,6 +606,13 @@ void binary_token(int token, va_list *alist)
 	case mr_shadingrate:
 	case mr_framebegin:
 	case mr_frameend:
+	case mr_curves:
+	case mr_points:
+	case mr_maketexture:
+	case mr_declare:
+	    if (token == mr_worldbegin) {
+		worldptr = ptr;
+	    }
 	    check_buffer(7+table[token].len);
 	    if(!table[token].defined) {
 		/* we must define it */
@@ -655,8 +680,9 @@ void binary_token(int token, va_list *alist)
 	    *(ptr++)=FLOATARRAYDEF;
 	    *(ptr++)=arraycount;
 	    floatptr = va_arg(*alist, float*);
-	    memcpy((char *)ptr, (char *)floatptr, arraycount*sizeof(float));
-	    ptr+=arraycount*sizeof(float);
+	    for (i = 0; i < arraycount; i++) {
+		COPYFLOAT(floatptr[i]);
+	    }
 	    if(arraysize<=0) {
 		expectSubArray = 0;
 	    }
