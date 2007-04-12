@@ -86,12 +86,17 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
   /* "Temporary" workaround for library reading bug. -slevy */
   PoolSetOType(p, PO_DATA);
 #endif
+
+  if (id == NOID) {
+    /* cH: hack, but otherwise we cannot save the universe, no aliens. */
+    id = UNIVERSE;
+  }
   
   if (!comm) {
     /* Write geometry */
 
     if (wrap) {
-      if (id == NOID || ISCAM(id)) {
+      if (id == UNIVERSE || ISCAM(id)) {
 	PoolFPrint(p, fp, "{ # Base appearance\n");
 	PoolIncLevel(p, 1);
 	ApStreamOut(p, NULL, drawerstate.ap);
@@ -103,7 +108,9 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
 	} else closeme = 1;
       }
     }
-    if (id == NOID) id = WORLDGEOM;
+    if (id == UNIVERSE) {
+      id = WORLDGEOM;
+    }
     if (ISGEOM(id))
       dg = (DGeom *)drawer_get_object(id);
     if (id == WORLDGEOM) {
@@ -138,7 +145,7 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
 
   PoolFPrint(p, fp, "(progn\n");
   PoolIncLevel(p, 1); /* Ensure embedded objects have { braces } */
-  if (id == NOID || id == WORLDGEOM) {
+  if (id == UNIVERSE || id == WORLDGEOM) {
     PoolFPrint(p, fp, "(merge-baseap ");
     ApStreamOut(p, NULL, drawerstate.ap);
     PoolFPrint(p, fp, ") # end base appearance\n");
@@ -146,7 +153,7 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
       PoolFPrint(p, fp, "(dimension %d)\n", drawerstate.NDim-1);
   }
 
-  if (id != NOID && id != WORLDGEOM) {
+  if (id != UNIVERSE && id != WORLDGEOM) {
     DObject *dobj = drawer_get_object(id);
     if (dobj) {
       if (ISGEOM(dobj->id))
@@ -170,9 +177,9 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
       PoolFPrint(p, fp, ") # end appearance \"worldgeom\"\n");
     }
 
-    /* save the dgeoms.  Include aliens if id==NOID. */
+    /* save the dgeoms.  Include aliens if id == UNIVERSE. */
     for (i=1; i<dgeom_max; ++i)
-      if (dgeom[i] != NULL) save_dgeom(p, dgeom[i], id==NOID);
+      if (dgeom[i] != NULL) save_dgeom(p, dgeom[i], id == UNIVERSE);
 
     /* save the dviews */
     for (i=0; i<dview_max; ++i)

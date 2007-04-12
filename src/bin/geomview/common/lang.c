@@ -195,7 +195,7 @@ void lang_init()
 \n\
 	world, World, etc.:   the world, within which all other\n\
 				geoms live.\n\
-	universe:	      the universe, in which the World, lights\n\
+	universe, Universe:	the universe, in which the World, lights\n\
 				and cameras live.  Cameras' world2cam\n\
 				transforms might better be called\n\
 				universe2cam, etc.\n\

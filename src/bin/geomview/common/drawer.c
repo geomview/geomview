@@ -2360,6 +2360,7 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   fsa_install(name_fsa, "self",		(void *)SELF);
   fsa_install(name_fsa, ".",		(void *)SELF);
   fsa_install(name_fsa, "universe",	(void *)UNIVERSE);
+  fsa_install(name_fsa, "Universe",	(void *)UNIVERSE);
   fsa_install(name_fsa, "primitive",	(void *)PRIMITIVE);
   /* The following four names are here for backward compatibility
    * of the 'write' command with the midsummer '92 version.

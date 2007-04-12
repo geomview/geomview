@@ -204,7 +204,7 @@ static int suitable_id(int savetype, char **namep)
             id = GEOMID(uistate.targetgeom);
    }
    *namep = drawer_id2name(id);
-   return (drawer_get_object(id) == NULL) ? NOID : id;
+   return (id != UNIVERSE && drawer_get_object(id) == NULL) ? NOID : id;
 }
 
 /*****************************************************************************/
@@ -219,8 +219,7 @@ static void select_type(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 static void save_selection(Widget w, XtPointer data,
 		XmFileSelectionBoxCallbackStruct *cbs)
 {
-
-  char *fname, *object;
+  char *fname, *object, *wobject;
   int   id;
   Pool *p;
   struct saveops *sp;
@@ -229,23 +228,20 @@ static void save_selection(Widget w, XtPointer data,
   if (!XmStringGetLtoR(cbs->value, XmSTRING_DEFAULT_CHARSET, &fname))
     return;
 
-  if (!*fname)
+  if (!fname || *fname == '\0') {
     return;
+  }
 
-  object = XmTextFieldGetString(geomobj);
+  wobject = object = XmTextFieldGetString(geomobj);
 
   if(fname == NULL || object == NULL || *fname == '\0' || *object == '\0'
                    || savechoice < 0)
   {
-    XtFree(fname);
-    XtFree(object);
-    return;
+    goto out;
   }
   if((id = suitable_id(savechoice, &object)) == NOID) {
     XmTextFieldSetString(geomobj, "?");
-    XtFree(fname);
-    XtFree(object);
-    return;
+    goto out;
   }
   sp = &save[savechoice];
   switch(sp->special) {
@@ -289,6 +285,14 @@ static void save_selection(Widget w, XtPointer data,
   ui_showpanel(P_SAVE, 0);
   XtVaSetValues(shell, XmNwidth, width, XmNheight, height, NULL);
   uistate.savewhat = NOID;
+
+ out:
+  if (fname) {
+    XtFree(fname);
+  }
+  if (wobject) {
+    XtFree(wobject);
+  }
 }
 
 /*****************************************************************************/
