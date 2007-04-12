@@ -174,7 +174,9 @@ static struct _table table[] = {
     TABLEROW("GVblendplastic", 35),
     TABLEROW("GVblendconstant", 36),
     TABLEROW("GVreplaceplastic", 37),
-    TABLEROW("GVreplaceconstant", 38)
+    TABLEROW("GVreplaceconstant", 38),
+    TABLEROW("periodic", 39),
+    TABLEROW("gaussian", 40)
 };
 
 void mrti_makecurrent(TokenBuffer *tkbuf)
@@ -274,7 +276,7 @@ void ascii_token(int token, va_list *alist)
 
     do {
     
-	if(expectSubArray && (token!=mr_subarray3)) {
+	if(expectSubArray && (token!=mr_subarray3) && (token!=mr_subarray2)) {
 	    /* ERROR */
 	}
     
@@ -545,7 +547,7 @@ void binary_token(int token, va_list *alist)
     static int arraysize;
     float *floatptr;
 
-    if(expectSubArray && (token!=mr_subarray3)) {
+    if(expectSubArray && (token!=mr_subarray3) && (token!=mr_subarray2)) {
     	/* ERROR */
     }
 
@@ -586,6 +588,7 @@ void binary_token(int token, va_list *alist)
 	case mr_worldbegin:
 	case mr_worldend:
 	case mr_color:
+	case mr_opacity:
 	case mr_format:
 	case mr_display:
 	case mr_screenwindow:
@@ -665,14 +668,28 @@ void binary_token(int token, va_list *alist)
 	    if(arraysize<0) /* ERROR */;
 	    check_buffer(12); /* 3*sizeof(float) */
 	    floatptr = va_arg(*alist, float*);
-	    memcpy((char *)ptr, (char *)floatptr, 3*sizeof(float));
-	    ptr+=3*sizeof(float);
+	    COPYFLOAT(floatptr[0]);
+	    COPYFLOAT(floatptr[1]);
+	    COPYFLOAT(floatptr[2]);
 	    if(arraysize<=0) {
 		expectSubArray = 0;
 	    }
 	    break;
 	}
   
+	case mr_subarray2: {
+	    arraysize-=2;
+	    if(arraysize<0) /* ERROR */;
+	    check_buffer(8); /* 3*sizeof(float) */
+	    floatptr = va_arg(*alist, float*);
+	    COPYFLOAT(floatptr[0]);
+	    COPYFLOAT(floatptr[1]);
+	    if(arraysize<=0) {
+		expectSubArray = 0;
+	    }
+	    break;
+	}
+
 	case mr_parray: {
 	    char arraycount;
 	    arraycount = (char)va_arg(*alist, int);
