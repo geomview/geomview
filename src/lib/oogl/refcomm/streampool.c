@@ -141,6 +141,15 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 	}
 	memcpy(fname, str, sep-str);
 	fname[sep-str] = '\0';
+	/* The ':' introduces an ambiguity: at least on MS win it can
+	 * also mean a drive letter, and on other systems it could
+	 * also be a legal part of the name. We only hack around the
+	 * drive-letter stuff: if we have a one-letter file-name, then
+	 * we assume it is a drive letter.
+	 */
+	if (fname[1] == '\0' && findfile(NULL, fname) == NULL) {
+	  fname = str;
+	}
     }
 
     if (fname != NULL && *fname != '\0') {
