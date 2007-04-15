@@ -206,6 +206,10 @@ IOBFILE *iobfileopen(FILE *istream)
 {
   IOBFILE *iobf;
 
+  if (istream == NULL) {
+    return NULL;
+  }
+
   iobf = calloc(1, sizeof(IOBFILE));
   iobf->istream = istream;
   iobf->fd = fileno(istream);
