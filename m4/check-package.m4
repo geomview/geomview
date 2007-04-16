@@ -254,7 +254,7 @@ if test "x${UPNAME[_LIB]}" = "x" ; then
   case "$host" in
 	*darwin*)
 	eval "unset ac_cv_lib_${UPNAME[_NAME]}___main"
-LDFLAGS="${LDFLAGS} -F`eval eval eval echo ${UPNAME[_LIB_PATH]}`"
+        LDFLAGS="${LDFLAGS} -F`eval eval eval echo ${UPNAME[_LIB_PATH]}`"
 m4_if(OPTIONAL,[optional],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]}"
@@ -269,10 +269,10 @@ m4_if(OPTIONAL,[optional],
       UPNAME[_ALL_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]} $4"],
      [AC_MSG_ERROR([Framework "${UPNAME[_NAME]}" was not found])],
      `eval eval eval echo $4`)])
+        LDFLAGS="${ac_gv_save_LDFLAGS}"
 	;;
   esac
 fi
-LDFLAGS="${ac_gv_save_LDFLAGS}"
 
 if test "x${UPNAME[_LIB]}" = "x" ; then
 	:
