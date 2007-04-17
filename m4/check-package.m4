@@ -220,8 +220,6 @@ m4_if($5,[],[],
 dnl
 dnl now check if the library and header files exist
 dnl
-ac_gv_save_LDFLAGS="${LDFLAGS}"
-LDFLAGS="${LDFLAGS} -L`eval eval eval echo ${UPNAME[_LIB_PATH]}`"
 m4_if(OPTIONAL,[optional],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
@@ -230,7 +228,7 @@ m4_if(OPTIONAL,[optional],
      UPNAME[_ALL_LIB]=""
      UPNAME[_LIB_PATH]=""
      UPNAME[_INCLUDE_PATH]=""],
-    `eval eval eval echo $4`)],
+    -L`eval eval eval echo ${UPNAME[_LIB_PATH]}` $4)],
   [AC_CHECK_LIB(${UPNAME[_NAME]}, main,
      [UPNAME[_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]}"
       UPNAME[_ALL_LIB]="-L${UPNAME[_LIB_PATH]} -l${UPNAME[_NAME]} $4"],
@@ -242,8 +240,7 @@ m4_if(OPTIONAL,[optional],
 		AC_MSG_ERROR([Library "lib${UPNAME[_NAME]}" was not found])
 		;;
 	esac],
-     `eval eval eval echo $4`)])
-LDFLAGS="${ac_gv_save_LDFLAGS}"
+     -L`eval eval eval echo $UPNAME[_LIB_PATH]` `eval eval eval echo $4`)])
 
 dnl
 dnl On MacOS X we have that funky -framework switch ...
@@ -254,7 +251,6 @@ if test "x${UPNAME[_LIB]}" = "x" ; then
   case "$host" in
 	*darwin*)
 	eval "unset ac_cv_lib_${UPNAME[_NAME]}___main"
-        LDFLAGS="${LDFLAGS} -F`eval eval eval echo ${UPNAME[_LIB_PATH]}`"
 m4_if(OPTIONAL,[optional],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
     [UPNAME[_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]}"
@@ -263,13 +259,12 @@ m4_if(OPTIONAL,[optional],
      UPNAME[_ALL_LIB]=""
      UPNAME[_LIB_PATH]=""
      UPNAME[_INCLUDE_PATH]=""],
-    `eval eval eval echo $4`)],
+    -F${UPNAME[_LIB_PATH]} $4)],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
      [UPNAME[_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]}"
       UPNAME[_ALL_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]} $4"],
      [AC_MSG_ERROR([Framework "${UPNAME[_NAME]}" was not found])],
-     `eval eval eval echo $4`)])
-        LDFLAGS="${ac_gv_save_LDFLAGS}"
+     -F$UPNAME[_LIB_PATH] $4)])
 	;;
   esac
 fi
