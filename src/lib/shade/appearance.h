@@ -512,9 +512,11 @@ void		LmDeleteLights( LmLighting *lm );
 #define APF_FLAT	1	/* Flat-shaded, lighted faces */
 #define APF_SMOOTH	2	/* Gouraud-shaded faces, with lighting */
 #define APF_CSMOOTH	3	/* Gouraud-shaded faces, without lighting */
+#define APF_VCFLAT      4       /* Gouraud-coloured, but flat faces */
 
 #define IS_SMOOTH(shading)  ((shading) >= APF_SMOOTH)
-#define IS_SHADED(shading)  ((1<<(shading)) & ((1<<APF_FLAT)|(1<<APF_SMOOTH)))
+#define IS_SHADED(shading)				\
+    ((1<<(shading)) & ((1<<APF_FLAT)|(1<<APF_SMOOTH)|(1<<APF_VCFLAT)))
 
 
 #ifdef AP_IDEBUG

@@ -634,7 +634,7 @@ D1PRINT(("gv_rawevent:     falling through\n"));
 	    ApDelete(ap);
 	    number.val++;
 	}
-	drawer_int(id, DRAWER_SHADING, number.val&3);
+	drawer_int(id, DRAWER_SHADING, number.val % 5);
 	break;
 
     case SEQ('a','w'):	/* line width */

@@ -112,7 +112,7 @@ extern UIState uistate;
 #define CONSTANTSHADE	APF_CONSTANT
 #define FLATSHADE	APF_FLAT
 #define SMOOTHSHADE	APF_SMOOTH
-extern char *shades[4];
+extern char *shades[5];
 
 /* normalization --- these must be consective beginning with 0 ---
    they are used as indices into the "norm" array !!! */

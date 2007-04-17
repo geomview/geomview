@@ -64,6 +64,7 @@ static struct {
   { "flat",	APF_SHADING,	AP_SHADING + APF_FLAT },
   { "constant",	APF_SHADING,	AP_SHADING + APF_CONSTANT },
   { "csmooth",	APF_SHADING,	AP_SHADING + APF_CSMOOTH },
+  { "csmooth",	APF_VCFLAT,	AP_SHADING + APF_VCFLAT },
   { "mipmap",	APF_TXMIPMAP,	0 },
   { "mipinterp",	APF_TXMIPINTERP, 0 },
   { "linear",	APF_TXLINEAR,   0 },
@@ -345,6 +346,7 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap)
 	case APF_FLAT:     fputs("flat", f);	break;
 	case APF_CONSTANT: fputs("constant", f);	break;
 	case APF_CSMOOTH:  fputs("csmooth", f);	break;
+	case APF_VCFLAT:   fputs("vcflat", f);	break;
 	default:           fprintf(f, "%d", ap->shading); break;
 	}
 	break;

@@ -543,6 +543,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       *plfl_and = ~0;
       *plfl_or  =  0;
       switch(ap->shading) {
+      case APF_VCFLAT:
       case APF_FLAT:   *plfl_and &= ~PL_HASVN; break;
       case APF_SMOOTH: *plfl_and &= ~PL_HASPN; break;
       default:         *plfl_and &= ~(PL_HASVN|PL_HASPN); break;
@@ -775,6 +776,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   switch(shading) {
   case APF_FLAT: plflags &= ~PL_HASVN; break;
   case APF_SMOOTH: plflags &= ~PL_HASPN; break;
+  case APF_VCFLAT: plflags &= ~PL_HASVN; break;
   default: plflags &= ~(PL_HASVN|PL_HASPN); break;
   }
 

@@ -69,7 +69,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
   int preread = 0;
   int headerseen = 0;
   int flags = 0;
-  int makenorm = 0;
+  bool makenorm = false;
   int dimn = 3;
   static ColorA black = { 0,0,0,0 };
 
@@ -95,7 +95,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
     token++;
   }
   if(*token == 'S') {		/* "smooth surface": we compute vtx normals */
-    makenorm = 1;
+    makenorm = true;
     token++;
   }
   if(strcmp(token, "OFF") == 0) {
@@ -202,7 +202,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
       }
     }
 
-    if((flags & PL_HASVCOL) == 0) {
+    if(true || (flags & PL_HASVCOL) == 0) {
       if(k > 0)
 	pl->geomflags |= PL_HASPCOL;
 
@@ -235,8 +235,7 @@ PolyListFLoad(IOBFILE *file, char *fname)
   }
 
   if(makenorm && !(flags & PL_HASVN)) {
-    pl->geomflags |= PL_HASVN;
-    pl->geomflags &= ~PL_HASPN;		/* Leave vertex-normals only */
+    pl->geomflags |= PL_HASVN; /* ???? where ???? */
   }
   return pl;
 

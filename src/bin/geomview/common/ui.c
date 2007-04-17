@@ -48,11 +48,12 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "comm.h"
 
 
-char *shades[4] = {
+char *shades[5] = {
 	"[0as] Constant",	/* APF_CONSTANT */
 	"[1as] Flat",		/* APF_FLAT */
 	"[2as] Smooth",		/* APF_SMOOTH */
-	"[3as] CSmooth",	/* APF_CONSMOOTH */
+	"[3as] CSmooth",	/* APF_CSMOOTH */
+	"[4as] VCflat",	        /* APF_VCFLAT */
 };
 
 char *norm[4] = {

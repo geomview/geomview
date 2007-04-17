@@ -82,18 +82,26 @@ mgopenglsubmesh(int wrap, int nu, int nv,
     meshC = 0;
 
   has = 0;
-  if (meshN && !(_mgc->astk->flags & MGASTK_SHADER))
+  if (meshN && !(_mgc->astk->flags & MGASTK_SHADER)) {
     has |= HAS_N;
-  if (meshNQ && !(_mgc->astk->flags & MGASTK_SHADER))
+  }
+  if (meshNQ && !(_mgc->astk->flags & MGASTK_SHADER)) {
     has |= HAS_NQ;
-  if (meshC)
+  }
+  if (meshC) {
     has |= HAS_C;
+  }
   if (IS_SMOOTH(ap->shading)) {
     has |= HAS_SMOOTH;
-    has &= ~HAS_NQ;
-  } else if (has & HAS_NQ) {
-    has &= ~HAS_N;
   }
+
+  switch (ap->shading) {
+  case APF_VCFLAT:
+  case APF_FLAT:   has &= ~HAS_N; break;
+  case APF_SMOOTH: has &= ~HAS_NQ; break;
+  default: has &= (has & HAS_NQ) ? ~HAS_N : ~HAS_NQ; break;
+  }
+
   if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
      && _mgc->astk->ap.tex != NULL) {
     if (meshST != NULL)
@@ -114,7 +122,6 @@ mgopenglsubmesh(int wrap, int nu, int nv,
      * If we hit the 256-vertex triangle-mesh limit, the strip is spliced
      * by redrawing the latest (v,u+i),(v+1,u+i) pair of vertices.
      */
-
 
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
@@ -194,6 +201,15 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	  } while(--u);
 	  break;
 
+	case HAS_NQ|HAS_SMOOTH:
+	  do {
+	    N3F(NQ+prev,P+prev);
+	    glVertex4fv((float *)(P+prev));
+	    glVertex4fv((float *)P);
+	    NQ++; P++;
+	  } while(--u);
+	  break;
+
 	case HAS_N|HAS_SMOOTH:
 	  do {
 	    N3F(N+prev,P); glVertex4fv((float *)(P+prev));
@@ -215,6 +231,14 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	    D4F(C+prev); N3F(N+prev,P); glVertex4fv((float *)(P+prev));
 	    glVertex4fv((float *)P);
 	    C++; N++; P++;
+	  } while(--u);
+	  break;
+
+	case HAS_C|HAS_NQ|HAS_SMOOTH:
+	  do {
+	    D4F(C+prev); N3F(NQ+prev,P+prev); glVertex4fv((float *)(P+prev));
+	    D4F(C); glVertex4fv((float *)P);
+	    C++; NQ++; P++;
 	  } while(--u);
 	  break;
 
@@ -281,6 +305,17 @@ mgopenglsubmesh(int wrap, int nu, int nv,
           } while(--u);
           break;
 
+        case HAS_NQ|HAS_SMOOTH|HAS_ST:
+          do {
+	    N3F(NQ+prev,P+prev);
+	    glTexCoord2fv((float *)(ST+prev));
+	    glVertex4fv((float *)(P+prev));
+	    glTexCoord2fv((float *)ST);
+	    glVertex4fv((float *)P);
+            NQ++; P++; ST++;
+          } while(--u);
+          break;
+
         case HAS_N|HAS_SMOOTH|HAS_ST:
           do {
             N3F(N+prev,P);
@@ -313,6 +348,18 @@ mgopenglsubmesh(int wrap, int nu, int nv,
             glTexCoord2fv((float *)ST);
 	    glVertex4fv((float *)P);
             C++; N++; P++; ST++;
+          } while(--u);
+          break;
+
+        case HAS_C|HAS_NQ|HAS_SMOOTH|HAS_ST:
+          do {
+            D4F(C+prev); N3F(NQ+prev,P);
+	    glTexCoord2fv((float *)(ST+prev));
+	    glVertex4fv((float *)(P+prev));
+            D4F(C);
+	    glTexCoord2fv((float *)ST);
+	    glVertex4fv((float *)P);
+            C++; NQ++; P++; ST++;
           } while(--u);
           break;
 
