@@ -259,12 +259,12 @@ m4_if(OPTIONAL,[optional],
      UPNAME[_ALL_LIB]=""
      UPNAME[_LIB_PATH]=""
      UPNAME[_INCLUDE_PATH]=""],
-    -F${UPNAME[_LIB_PATH]} $4)],
+    -F`eval eval eval echo ${UPNAME[_LIB_PATH]}` `eval eval eval echo $4`)],
   [AC_CHECK_FRAMEWORK(${UPNAME[_NAME]}, main,
      [UPNAME[_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]}"
       UPNAME[_ALL_LIB]="-F${UPNAME[_LIB_PATH]} -framework ${UPNAME[_NAME]} $4"],
      [AC_MSG_ERROR([Framework "${UPNAME[_NAME]}" was not found])],
-     -F$UPNAME[_LIB_PATH] $4)])
+     -F`eval eval eval echo $UPNAME[_LIB_PATH]` `eval eval eval echo $4`)])
 	;;
   esac
 fi
