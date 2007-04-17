@@ -36,8 +36,8 @@ AC_DEFUN([GV_INIT_GEOMVIEW],
   AC_ARG_WITH(geomview,
     AC_HELP_STRING([--with-geomview=PROGRAM],
 [Set PROGRAM to the name of the Geomview executable, possibly
-including the full path to the executable.  If the
-`--enable-geomview-query' switch is in effect then the installed
+including the full path to the executable. If not disabled by the
+`--disable-geomview-query' switch then the installed
 version of Geomview is used to determine the library, include and data
 directories to use. (default: autodetected)]),
   [case "${withval}" in
@@ -57,12 +57,12 @@ directories to use. (default: autodetected)]),
   fi
   AC_ARG_ENABLE([local-emodule],
     AC_HELP_STRING([--enable-local-emodule],
-[Install the emodule definition into `${HOME}/.geomview-EMODULENAME'; that
-file will contain the full path to the example binary. Otherwise the
-the emodule definition will be install under either
-`PREFIX/libexec/geomview/' or -- if the `--enable-geomview-query'
-switch has also been given -- under the location returned by `geomview
---print-emodule-dir'. (default: disabled)]),
+[Install the emodule definition into `${HOME}/.geomview-EMODULENAME';
+that file will contain the full path to the emodule binary. Otherwise
+the emodule definition will be installed under either the location
+returned by `geomview --print-emodule-dir' or -- if the
+`--disable-geomview-query' switch is in effect -- under
+`PREFIX/libexec/geomview/'. (default: disabled)]),
     [case "${enableval}" in
        yes) LOCAL_EMODULE=true ;;
        no)  LOCAL_EMODULE=false ;;
@@ -75,13 +75,13 @@ switch has also been given -- under the location returned by `geomview
   AC_SUBST(LOCAL_EMODULE)
   
   AC_ARG_ENABLE([geomview-query],
-    AC_HELP_STRING([--enable-geomview-query],
-
-[Ask the installed version of the Geomview executable -- if any --
+    AC_HELP_STRING([--disable-geomview-query],
+[Normally the installed version of the Geomview executable is queried
 about the location of the system-wide emodule definition files
-(usually `PREFIX/libexec/geomview/') by runnding the Geomview executable
-with various `--print-...' switchs (see `geomview --help'). Otherwise
-this package assumes the following defaults:
+(usually `PREFIX/libexec/geomview/') by runnding the Geomview
+executable with various `--print-...' switches (see `geomview
+--help'). This can be disabled with option, in which case the
+following defaults are in effect:
 
 Geomview emodules below `PREFIX/libexec/geomview/',
 Geomview headers below  `PREFIX/include/geomview/',
@@ -94,7 +94,7 @@ other data below        `PREFIX/share/geomview/']),
           exit 1
           ;;
     esac],
-    [GEOMVIEW_QUERY=false])
+    [GEOMVIEW_QUERY=true])
   AM_CONDITIONAL([GEOMVIEW_QUERY], [test "${GEOMVIEW_QUERY}" = "true"])
   AC_SUBST(GEOMVIEW_QUERY)
   
