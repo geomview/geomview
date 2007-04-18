@@ -99,7 +99,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   case APF_VCFLAT:
   case APF_FLAT:   has &= ~HAS_N; break;
   case APF_SMOOTH: has &= ~HAS_NQ; break;
-  default: has &= (has & HAS_NQ) ? ~HAS_N : ~HAS_NQ; break;
+  default: has &= ~(HAS_N|HAS_NQ) /*(has & HAS_NQ) ? ~HAS_N : ~HAS_NQ*/; break;
   }
 
   if ((ap->flag & (APF_TEXTURE|APF_FACEDRAW)) == (APF_TEXTURE|APF_FACEDRAW)
@@ -162,7 +162,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	case 0:
 	case HAS_SMOOTH:
 	  do {
-	    glVertex4fv((float *)P+prev);
+	    glVertex4fv((float *)(P+prev));
 	    glVertex4fv((float *)P);
 	    P++;
 	  } while(--u);
@@ -195,7 +195,8 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
 	case HAS_N:
 	  do {
-	    N3F(N+prev,P); glVertex4fv((float *)(P+prev));
+	    N3F(N+prev,P);
+	    glVertex4fv((float *)(P+prev));
 	    glVertex4fv((float *)P);
 	    N++; P++;
 	  } while(--u);
@@ -212,7 +213,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
 	case HAS_N|HAS_SMOOTH:
 	  do {
-	    N3F(N+prev,P); glVertex4fv((float *)(P+prev));
+	    N3F(N+prev,P+prev); glVertex4fv((float *)(P+prev));
 	    N3F(N,P); glVertex4fv((float *)P);
 	    N++; P++;
 	  } while(--u);
@@ -228,7 +229,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
 	case HAS_C|HAS_N:
 	  do {
-	    D4F(C+prev); N3F(N+prev,P); glVertex4fv((float *)(P+prev));
+	    D4F(C+prev); N3F(N+prev,P+prev); glVertex4fv((float *)(P+prev));
 	    glVertex4fv((float *)P);
 	    C++; N++; P++;
 	  } while(--u);
@@ -244,7 +245,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
 	case HAS_C|HAS_N|HAS_SMOOTH:
 	  do {
-	    D4F(C+prev);	N3F(N+prev,P);	glVertex4fv((float *)(P+prev));
+	    D4F(C+prev);	N3F(N+prev,P+prev);	glVertex4fv((float *)(P+prev));
 	    D4F(C);		N3F(N,P);	glVertex4fv((float *)P);
 	    C++; N++; P++;
 	  } while(--u);
@@ -296,7 +297,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
         case HAS_N|HAS_ST:
           do {
-            N3F(N+prev,P);
+            N3F(N+prev,P+prev);
 	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             glTexCoord2fv((float *)ST);
@@ -318,7 +319,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
         case HAS_N|HAS_SMOOTH|HAS_ST:
           do {
-            N3F(N+prev,P);
+            N3F(N+prev,P+prev);
 	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             N3F(N,P);
@@ -342,7 +343,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
         case HAS_C|HAS_N|HAS_ST:
           do {
-            D4F(C+prev); N3F(N+prev,P);
+            D4F(C+prev); N3F(N+prev,P+prev);
 	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             glTexCoord2fv((float *)ST);
@@ -365,7 +366,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 
         case HAS_C|HAS_N|HAS_SMOOTH|HAS_ST:
           do {
-            D4F(C+prev); N3F(N+prev,P);
+            D4F(C+prev); N3F(N+prev,P+prev);
 	    glTexCoord2fv((float *)(ST+prev));
 	    glVertex4fv((float *)(P+prev));
             D4F(C); N3F(N,P);
