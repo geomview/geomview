@@ -64,7 +64,7 @@ static struct {
   { "flat",	APF_SHADING,	AP_SHADING + APF_FLAT },
   { "constant",	APF_SHADING,	AP_SHADING + APF_CONSTANT },
   { "csmooth",	APF_SHADING,	AP_SHADING + APF_CSMOOTH },
-  { "csmooth",	APF_VCFLAT,	AP_SHADING + APF_VCFLAT },
+  { "vcflat",	APF_VCFLAT,	AP_SHADING + APF_VCFLAT },
   { "mipmap",	APF_TXMIPMAP,	0 },
   { "mipinterp",	APF_TXMIPINTERP, 0 },
   { "linear",	APF_TXLINEAR,   0 },
