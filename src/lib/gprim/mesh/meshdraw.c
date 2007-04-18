@@ -104,11 +104,11 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   m.geomflags &= ~(MESH_N|MESH_NQ);
   normal_need = (ap->flag & APF_NORMALDRAW) ? MESH_N|MESH_NQ : 0;
   if (ap->flag & APF_FACEDRAW) {
-    if (ap->shading == APF_FLAT) {
-      normal_need |= MESH_NQ;
-    }
-    if (ap->shading == APF_SMOOTH) {
-      normal_need |= MESH_N;
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: normal_need |= MESH_NQ; break;
+    case APF_SMOOTH: normal_need |= MESH_N; break;
+    default: break;
     }
     if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
       /* could re-use per quad normals here */
@@ -172,11 +172,11 @@ MeshDraw(Mesh *mesh)
     if (ap->flag & APF_NORMALDRAW) {
       need = MESH_N|MESH_NQ;
     } else if (ap->flag & APF_FACEDRAW) {
-      if (ap->shading == APF_FLAT) {
-	need |= MESH_NQ;
-      }
-      if (ap->shading == APF_SMOOTH) {
-	need |= MESH_N;
+      switch (ap->shading) {
+      case APF_FLAT:
+      case APF_VCFLAT: need |= MESH_NQ; break;
+      case APF_SMOOTH: need |= MESH_N; break;
+      default: break;
       }
     }
     MeshComputeNormals(mesh, need);
