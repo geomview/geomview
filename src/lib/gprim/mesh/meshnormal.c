@@ -32,10 +32,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips, Claus-Justus Heine */
 
 #include "meshP.h"
+
 static void mnorm(HPoint3 *ap, Point3 *an, int nu, int nv,
-		  int uwrap, int vwrap, int evert);
+		  bool uwrap, bool vwrap, bool evert);
 static void mnormq(HPoint3 *ap, Point3 *an, int nu, int nv,
-		   int uwrap, int vwrap, int evert);
+		   bool uwrap, bool vwrap, bool evert);
 
 Mesh *
 MeshComputeNormals(Mesh *m, int need)
@@ -66,7 +67,7 @@ MeshComputeNormals(Mesh *m, int need)
   }
 
   if (need & MESH_N) {
-    if(m->n) {
+    if (m->n) {
       GeomFree(m->n);
     }
     m->n = GeomNewN(Point3, m->nu * m->nv);
@@ -77,7 +78,7 @@ MeshComputeNormals(Mesh *m, int need)
   }
   
   if (need & MESH_NQ) {
-    if(m->nq) {
+    if (m->nq) {
       GeomFree(m->nq);
     }
     m->nq = GeomNewN(Point3, m->nu * m->nv);
@@ -125,23 +126,24 @@ static void QuadNormal(HPoint3 *v[4], Point3 *nu_av)
 }
 
 static void
-mnormq(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
+mnormq(HPoint3 *ap, Point3 *an, int nu, int nv,
+       bool uwrap, bool vwrap, bool evert)
 {
   int v0 = 1, prev0v = 0;
   int u0 = 1, prev0u = 0;
   int u, v, prevu, prevv;
   HPoint3 *vq[4];
 
-  if(uwrap) {
+  if (vwrap) {
     v0 = 0, prev0v = nv-1;
   }
-  if(vwrap) { 
+  if (uwrap) { 
     u0 = 0, prev0u = nu-1;
   }
 
 #define MESHIDX(u, v) ((v)*nu + (u))
-  for(prevv = prev0v, v = v0; v < nv; prevv = v, v++) {
-    for(prevu = prev0u, u = u0; u < nu; prevu = u, u++) {
+  for (prevv = prev0v, v = v0; v < nv; prevv = v, v++) {
+    for (prevu = prev0u, u = u0; u < nu; prevu = u, u++) {
       /* quad normals are ordered according to the least-numbered
        * vertex, i.e. the normal of the quad 
        *
@@ -156,12 +158,22 @@ mnormq(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
       vq[3] = ap + MESHIDX(prevu, v);
       QuadNormal(vq, an + MESHIDX(u, prevv /*prevu, prevv*/));
     }
+    /* Also initialize the normal at position 0 (if !u_wrap) */
+    if (!uwrap) {
+      an[MESHIDX(0, prevv)] = an[MESHIDX(1, prevv)];
+    }
+  }
+  if (!vwrap) {
+    for (u = 0; u < nu; u++) {
+      an[MESHIDX(u, nv-1)] = an[MESHIDX(u, nv-2)];      
+    }
   }
 #undef MESHIDX
 }
 
 static void
-mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
+mnorm(HPoint3 *ap, Point3 *an, int nu, int nv,
+      bool uwrap, bool vwrap, bool evert)
 {
   HPoint3 *prev, *next;
   Point3 *n;
@@ -186,11 +198,11 @@ mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
 
   unit = evert ? -1.0 : 1.0;
 
-  for(u = 0; u < nu; u++) {
-    if(u == 0) {
+  for (u = 0; u < nu; u++) {
+    if (u == 0) {
       prev = &ap[uwrap ? nu-1 : 0];
       next = &ap[u+1];
-    } else if(u == nu-1) {
+    } else if (u == nu-1) {
       prev = &ap[u-1];
       next = &ap[uwrap ? 0 : u];
     } else {
@@ -209,11 +221,11 @@ mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
     } while(--k > 0);
   }
 
-  for(v = 0; v < nv; v++) {
-    if(v == 0) {
+  for (v = 0; v < nv; v++) {
+    if (v == 0) {
       prev = &ap[vwrap ? nu*(nv-1) : 0];
       next = &ap[nu*1];
-    } else if(v == nv-1) {
+    } else if (v == nv-1) {
       prev = &ap[nu*(v-1)];
       next = &ap[vwrap ? 0 : nu*v];
     } else {
@@ -232,38 +244,38 @@ mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
       y = n->z * t.x - n->x * t.z;
       z = n->x * t.y - n->y * t.x;
       norm = x*x + y*y + z*z;
-      if(norm == 0.0) {
+      if (norm == 0.0) {
 	/*
 	 * Oh no, degenerate norm.
 	 * Let's hope it happened because (part of) a row of
 	 * mesh points coincided -- maybe even though N=S,
 	 * NE != SE or NW != SW.
 	 */
-	if(t.x == 0.0 && t.y == 0.0 && t.z == 0.0) {
-	  if(k > 1) {
+	if (t.x == 0.0 && t.y == 0.0 && t.z == 0.0) {
+	  if (k > 1) {
 	    t.x = (next+1)->x - (prev+1)->x;
 	    t.y = (next+1)->y - (prev+1)->y;
 	    t.z = (next+1)->z - (prev+1)->z;
 	  }
-	  if(t.x == 0.0 && t.y == 0.0 && t.z == 0.0 && k < nu) {
+	  if (t.x == 0.0 && t.y == 0.0 && t.z == 0.0 && k < nu) {
 	    t.x = (next-1)->x - (prev-1)->x;
 	    t.y = (next-1)->y - (prev-1)->y;
 	    t.z = (next-1)->z - (prev-1)->z;
 	  }
 	}
-	if(n->x == 0.0 && n->y == 0.0 && n->z == 0.0) {
+	if (n->x == 0.0 && n->y == 0.0 && n->z == 0.0) {
 	  /* Do likewise in E-W direction. */
 	  HPoint3 *cur = &ap[nu*(v+1) - k];
 
-	  if(k == 1) cur--;
-	  else if(k == nu) cur++;
-	  if(v > 0) {
+	  if (k == 1) cur--;
+	  else if (k == nu) cur++;
+	  if (v > 0) {
 	    cur -= nu;		/* SE-SW */
 	    n->x = (cur+1)->x - (cur-1)->x;
 	    n->y = (cur+1)->y - (cur-1)->y;
 	    n->z = (cur+1)->z - (cur-1)->z;
 	  }
-	  if(n->x==0.0 && n->y==0.0 && n->z==0.0 && v < nv-1) {
+	  if (n->x==0.0 && n->y==0.0 && n->z==0.0 && v < nv-1) {
 	    cur += 2*nu;	/* NE-NW */
 	    n->x = (cur+1)->x - (cur-1)->x;
 	    n->y = (cur+1)->y - (cur-1)->y;
@@ -274,7 +286,7 @@ mnorm(HPoint3 *ap, Point3 *an, int nu, int nv, int uwrap, int vwrap, int evert)
 	y = n->z * t.x - n->x * t.z;
 	z = n->x * t.y - n->y * t.x;
 	norm = x*x + y*y + z*z;
-	if(norm == 0.0) {
+	if (norm == 0.0) {
 	  /* Oh well. */
 	  n->x = unit;
 	  norm = 1.0;
