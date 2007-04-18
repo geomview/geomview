@@ -102,7 +102,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   }
   
   if (ap->flag & APF_FACEDRAW) {
-    if (ap->shading != APF_CONSTANT) {
+    if (IS_SHADED(ap->shading)) {
       QuadComputeNormals(&q);
     }
     if (GeomHasAlpha((Geom *)(void *)&q, ap)) {
@@ -138,8 +138,8 @@ QuadDraw(Quad *q)
   if ((((Quad *)q)->geomflags & VERT_N) == 0) {
     const Appearance *ap = mggetappearance();
     
-    if(ap->valid & APF_NORMSCALE ||
-       (ap->flag & APF_FACEDRAW && ap->shading != APF_CONSTANT)) {
+    if ((ap->flag & APF_NORMALDRAW) ||
+	(ap->flag & APF_FACEDRAW && IS_SHADED(ap->shading))) {
       QuadComputeNormals(q);
       q->geomflags |= VERT_N;
     }
@@ -149,7 +149,8 @@ QuadDraw(Quad *q)
     cmodel_clear(_mgc->space);
     cm_read_quad(q);
     cmodel_draw(PL_HASVN|PL_HASPN|PL_HASVCOL);
-  } else if(_mgc->astk->flags & MGASTK_SHADER) {
+  } else if ((_mgc->astk->flags & MGASTK_SHADER) &&
+	     !(q->geomflags & GEOM_ALPHA)) {
     /*
      * Special software shading
      */

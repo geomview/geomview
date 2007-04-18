@@ -90,13 +90,14 @@ mgopengl_polygon(int nv,  HPoint3 *V,
 
   flag = _mgc->astk->ap.flag;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
-      !(_mgc->astk->flags & MGASTK_SHADER))
+      !(_mgc->astk->flags & MGASTK_SHADER)) {
     nc = 0;
+  }
   cinc = (nc > 1);
   ninc = (nn > 1);
-  if(nc == 0)
+  if(nc == 0) {
     C = (ColorA*)&_mgc->astk->ap.mat->diffuse;
-
+  }
 
   /* reestablish correct drawing color if necessary */
 
@@ -105,11 +106,12 @@ mgopengl_polygon(int nv,  HPoint3 *V,
     glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
     glEnable(GL_COLOR_MATERIAL);
     glBegin(GL_POLYGON);
-    if (nc <= 1)
+    if (nc <= 1) {
       D4F(&(_mgc->astk->ap.mat->diffuse));
-    for (n = N, c = C, v = V, i = 0; i<nv; ++i, ++v) {
-      if (nc) { D4F(c); c += cinc; }
-      if (nn) { N3F(n,v); n += ninc; }
+    }
+    for (n = N, c = C, v = V, i = 0; i < nv; ++i, ++v) {
+      if (nc-- > 0) { D4F(c); c++; }
+      if (nn-- > 0) { N3F(n, v); n++; }
       glVertex4fv((float *)v);
     }
     glEnd();
@@ -774,7 +776,12 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   shading = ma->ap.shading;
 
   switch(shading) {
-  case APF_FLAT: plflags &= ~PL_HASVN; break;
+  case APF_FLAT:
+    plflags &= ~PL_HASVN;
+    if (plflags & PL_HASPCOL) {
+      plflags &= ~PL_HASVCOL;
+    }
+    break;
   case APF_SMOOTH: plflags &= ~PL_HASPN; break;
   case APF_VCFLAT: plflags &= ~PL_HASVN; break;
   default: plflags &= ~(PL_HASVN|PL_HASPN); break;

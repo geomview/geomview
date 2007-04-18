@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.16 2007/04/06 20:39:14 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.17 2007/04/18 17:39:16 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -52,7 +52,8 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   HPointN *h;
   Poly *np;
   Vertex *ov, *nv;
-  int i, colored = 0, alpha = 0;
+  int i, j;
+  bool colored = false, alpha = false;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
   Material *mat = &_mgc->astk->mat;
@@ -67,12 +68,12 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 
   h = HPtNCreate(5, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
-    colored = 0;
+    colored = false;
   } else {
     HPoint3 dummyv;
     ColorA dummyc;
     /* Dummy transform to determine whether we have ND colors or not */
-    colored = mapHPtN(NDctx, h, &dummyv, &dummyc);
+    colored = mapHPtN(NDctx, h, &dummyv, &dummyc) != 0;
   }
 
   /* Transform vertices */
@@ -88,7 +89,7 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
     if (colored) {
       mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       if (nv->vcol.a < 1.0) {
-	alpha = 1;
+	alpha = true;
       }
     } else {
       nv->vcol = ov->vcol;
@@ -104,6 +105,8 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
     }
     npl->geomflags &= ~PL_HASPCOL;
     npl->geomflags |= PL_HASVCOL;    
+  } else if (npl->geomflags & GEOM_COLOR) {
+    colored = true;
   }
 
   /* The drawing routines might need either polygon or vertex normals,
@@ -113,37 +116,61 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
   npl->geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
   normal_need = (ap->flag & APF_NORMALDRAW) ? PL_HASPN|PL_HASVN : 0;
   if (ap->flag & APF_FACEDRAW) {
-    if (ap->shading == APF_FLAT) {
-      normal_need |= PL_HASPN;
-    }
-    if (ap->shading == APF_SMOOTH) {
-      normal_need |= PL_HASVN;
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: normal_need |= PL_HASPN; break;
+    case APF_SMOOTH: normal_need |= PL_HASVN; break;
+    default: break;
     }
     if (GeomHasAlpha((Geom *)npl, ap)) {
       normal_need |= PL_HASPFL|PL_HASPN;
     }
   }
-  PolyListComputeNormals(npl, normal_need);
+  if (normal_need) {
+    PolyListComputeNormals(npl, normal_need);
+  }
 
-  if(_mgc->astk->flags & MGASTK_SHADER) {
-    ColorA *c = !colored && (mat->override & MTF_DIFFUSE)
+  if ((_mgc->astk->flags & MGASTK_SHADER) && !(npl->geomflags & GEOM_ALPHA)) {
+    ColorA *c = !colored || (mat->override & MTF_DIFFUSE)
       ? (ColorA *)&mat->diffuse : NULL;
 	
-    if(IS_SMOOTH(ap->shading)) {
-      for(i = 0, nv = npl->vl; i < npl->n_verts; i++, nv++) {
+    switch (ap->shading) {
+    case APF_SMOOTH:
+      for (i = 0, nv = npl->vl; i < npl->n_verts; i++, nv++) {
 	(*_mgc->astk->shader)(1, &nv->pt, &nv->vn,
 			      c ? c : &nv->vcol, &nv->vcol);
       }
       npl->geomflags |= PL_HASVCOL;
-    } else {
-      for(i = 0, np = npl->p; i < npl->n_polys; i++, np++) {
-	(*_mgc->astk->shader)(1, &np->v[0]->pt, (Point3 *)&np->pn,
+      mgpolylist(npl->n_polys, npl->p, npl->n_verts, npl->vl, npl->geomflags);
+      break;
+    case APF_FLAT:
+      for (i = 0, np = npl->p; i < npl->n_polys; i++, np++) {
+	(*_mgc->astk->shader)(1, &np->v[0]->pt, &np->pn,
 			      c ? c : &np->pcol, &np->pcol);
       }
       npl->geomflags |= PL_HASPCOL;
+      mgpolylist(npl->n_polys, npl->p, npl->n_verts, npl->vl, npl->geomflags);
+      break;
+    case APF_VCFLAT:
+      for (i = 0, np = npl->p; i < npl->n_polys; i++, np++) {
+	HPoint3 V[np->n_vertices];
+	ColorA C[np->n_vertices];
+	for (j = 0; j < np->n_vertices; j++) {
+	  V[j] = np->v[j]->pt;
+	  C[j] = (npl->geomflags & PL_HASVCOL)
+	    ? np->v[j]->vcol
+	    : ((npl->geomflags & PL_HASPCOL) || c == NULL ? np->pcol : *c);
+
+	  (*_mgc->astk->shader)(1, &V[j], (Point3 *)&np->pn, &C[j], &C[j]);
+	}
+	mgpolygon(np->n_vertices, V, 1, &np->pn, np->n_vertices, C);
+      }
+      break;
     }
+  } else {
+    /* ordinary shading */
+    mgpolylist(npl->n_polys, npl->p, npl->n_verts, npl->vl, npl->geomflags);
   }
-  mgpolylist(npl->n_polys, npl->p, npl->n_verts, npl->vl, npl->geomflags);
 
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
@@ -160,10 +187,11 @@ draw_projected_polylist(mgNDctx *NDctx, PolyList *pl)
 PolyList *PolyListDraw(PolyList *pl)
 {
   mgNDctx *NDctx = NULL;
+  Appearance *ap = &_mgc->astk->ap;
 
   mgctxget(MG_NDCTX, &NDctx);
 
-  if(NDctx) {
+  if (NDctx) {
     draw_projected_polylist(NDctx, pl);
     return pl;
   }
@@ -175,62 +203,68 @@ PolyList *PolyListDraw(PolyList *pl)
   if ((pl->geomflags & (PL_HASVN|PL_HASPN|PL_HASPFL))
       !=
       (PL_HASVN|PL_HASPN|PL_HASPFL)) {
-    Appearance *ap = &_mgc->astk->ap;
     int need = PL_HASPFL;
 
     if (ap->flag & APF_NORMALDRAW) {
       need |= PL_HASPN|PL_HASVN;
     } else if (ap->flag & APF_FACEDRAW) {
-      if (ap->shading == APF_FLAT) {
-	need |= PL_HASPN;
-      }
-      if (ap->shading == APF_SMOOTH) {
-	need |= PL_HASVN;
+      switch (ap->shading) {
+      case APF_FLAT:
+      case APF_VCFLAT: need |= PL_HASPN; break;
+      case APF_SMOOTH: need |= PL_HASVN; break;
+      default: break;
       }
     }
-    PolyListComputeNormals(pl, need);
+    if (need) {
+      PolyListComputeNormals(pl, need);
+    }
   }
     
   if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_read_polylist(pl);
     cmodel_draw(pl->geomflags);
-  } else if(_mgc->astk->flags & MGASTK_SHADER) {
+  } else if (!(pl->geomflags & GEOM_ALPHA) &&
+	     _mgc->astk->flags & MGASTK_SHADER) {
     /*
      * Software shading
      */
+    Poly *p;
     ColorA *c0 = (ColorA *)&_mgc->astk->mat.diffuse;
     ColorA pc, *nc = NULL, *savedc = NULL;
+    Point3 *savedn = NULL;
     int i, j;
     int flags = pl->geomflags;
-
-    if(_mgc->astk->mat.override & MTF_DIFFUSE)
-      flags &= ~(PL_HASVCOL | PL_HASPCOL);
+    int shading;
 
     /* Smooth or facetted? */
-    if(_mgc->astk->ap.shading == APF_SMOOTH) {
+    switch (ap->shading) {
+    case APF_SMOOTH: {
       Vertex *v;
-      if(flags & PL_HASVCOL) {
-	savedc = (ColorA *)alloca(pl->n_verts * sizeof(ColorA));
+
+      if (flags & PL_HASVCOL) {
+	savedc = OOGLNewNE(ColorA, pl->n_verts, "saved colours");
       } else if(flags & PL_HASPCOL) {
 	/* Rats.  We need vertex colors, but only face colors are
 	 * supplied.  Associate a face with each vertex.
 	 */
-	Poly *p = pl->p;
+	p = pl->p;
 	for(i = 0; i < pl->n_polys; i++, p++)
 	  for(j = p->n_vertices; --j >= 0; )
 	    p->v[j]->vcol = p->pcol;
 	c0 = &pc;
       }
-      for(i = 0, nc = savedc, v = pl->vl; i < pl->n_verts; i++, v++) {
-	if(savedc) {
+      for (i = 0, nc = savedc, v = pl->vl; i < pl->n_verts; i++, v++) {
+	if (savedc) {
 	  /* If we had per-vertex colors, save & use them */
 	  *nc = v->vcol;
 	  (*_mgc->astk->shader)(1, &v->pt, &v->vn, nc, &v->vcol);
 	  nc++;
 	} else {
 	  /* If no per-vertex colors, use material default */
-	  if(flags & PL_HASPCOL) pc = v->vcol;
+	  if (flags & PL_HASPCOL) {
+	    pc = v->vcol;
+	  }
 	  (*_mgc->astk->shader)(1, &v->pt, &v->vn, c0, &v->vcol);
 	}
       }
@@ -238,16 +272,19 @@ PolyList *PolyListDraw(PolyList *pl)
 
       /* Restore colors if trashed */
       if(savedc) {
-	for(i = 0, v = pl->vl, nc = savedc; i < pl->n_verts; i++, v++)
+	for(i = 0, v = pl->vl, nc = savedc; i < pl->n_verts; i++, v++) {
 	  v->vcol = *nc++;
+	}
+	OOGLFree(savedc);
       }
-    } else /* facetted */ {
-      Poly *p;
-
-      if(flags & PL_HASPCOL)
-	nc = savedc = (ColorA *)alloca(pl->n_polys * sizeof(ColorA));
-      for(i = 0, p = pl->p; i < pl->n_polys; i++, p++) {
-	if(savedc) {
+      break;
+    }
+    case APF_FLAT:
+      if (flags & PL_HASPCOL) {
+	nc = savedc = OOGLNewNE(ColorA, pl->n_polys, "saved colours");
+      }
+      for (i = 0, p = pl->p; i < pl->n_polys; i++, p++) {
+	if (savedc) {
 	  *nc = p->pcol;
 	  (*_mgc->astk->shader)(1, &p->v[0]->pt, (Point3 *)&p->pn,
 				nc, &p->pcol);
@@ -261,10 +298,28 @@ PolyList *PolyListDraw(PolyList *pl)
       mgpolylist(pl->n_polys, pl->p, pl->n_verts, pl->vl, flags|PL_HASPCOL);
 
       /* Restore colors if trashed */
-      if(savedc) {
-	for(i = 0, p = pl->p, nc = savedc; i < pl->n_polys; i++, p++)
+      if (savedc) {
+	for (i = 0, p = pl->p, nc = savedc; i < pl->n_polys; i++, p++) {
 	  p->pcol = *nc++;
+	}
+	OOGLFree(savedc);
       }
+      break;
+    case APF_VCFLAT:
+      for (i = 0, p = pl->p; i < pl->n_polys; i++, p++) {
+	HPoint3 V[p->n_vertices];
+	ColorA C[p->n_vertices];
+	for (j = 0; j < p->n_vertices; j++) {
+	  V[j] = p->v[j]->pt;
+	  C[j] = (flags & PL_HASVCOL)
+	    ? p->v[j]->vcol
+	    : ((flags & PL_HASPCOL) ? p->pcol : *c0);
+
+	  (*_mgc->astk->shader)(1, &V[j], (Point3 *)&p->pn, &C[j], &C[j]);
+	}
+	mgpolygon(p->n_vertices, V, 1, &p->pn, p->n_vertices, C);
+      }
+      break;
     }
   } else {
     /*

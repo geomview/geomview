@@ -114,19 +114,30 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
       /* could re-use per quad normals here */
     }
   }
-  MeshComputeNormals(&m, normal_need);
+  if (normal_need) {
+    MeshComputeNormals(&m, normal_need);
+  }
 
-  if(_mgc->astk->flags & MGASTK_SHADER) {
+  if ((_mgc->astk->flags & MGASTK_SHADER) && !(m.geomflags & GEOM_ALPHA)) {
     ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;
-    if(c) {
-      (*_mgc->astk->shader)(npts, m.p, m.n ? m.n : m.nq, c, m.c);
+    Point3 *n;
+
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: n = m.nq; break;
+    case APF_SMOOTH: n = m.n; break;
+    default: break;
+    }
+    
+    if (c) {
+      (*_mgc->astk->shader)(npts, m.p, n, c, m.c);
     } else {
       for(i = 0; i < npts; i++) {
-	(*_mgc->astk->shader)(1, m.p + i, m.n + i,
+	(*_mgc->astk->shader)(1, m.p + i, n + i,
 			      (ColorA *)&_mgc->astk->mat.diffuse, m.c + i);
       }
     }
-    colored = 1;
+    colored = true;
   }
   mgmeshst(MESH_MGWRAP(m.geomflags), m.nu, m.nv, m.p, m.n, m.nq,
 	   colored ? m.c : mesh->c, mesh->u, m.geomflags);
@@ -155,8 +166,7 @@ Mesh *
 MeshDraw(Mesh *mesh)
 {
   mgNDctx *NDctx = NULL;
-
-  /* We pass mesh->flag verbatim to mgmesh() -- MESH_[UV]WRAP == MM_[UV]WRAP */
+  const Appearance *ap = &_mgc->astk->ap;
 
   mgctxget(MG_NDCTX, &NDctx);
 
@@ -166,7 +176,6 @@ MeshDraw(Mesh *mesh)
   }
 
   if ((mesh->geomflags & (MESH_N|MESH_NQ)) != (MESH_N|MESH_NQ)) {
-    const Appearance *ap = &_mgc->astk->ap;
     int need = 0;
       
     if (ap->flag & APF_NORMALDRAW) {
@@ -179,21 +188,33 @@ MeshDraw(Mesh *mesh)
       default: break;
       }
     }
-    MeshComputeNormals(mesh, need);
+    if (need) {
+      MeshComputeNormals(mesh, need);
+    }
   }
 
   if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
     cm_draw_mesh(mesh);
     return mesh;
-  } else if(_mgc->astk->flags & MGASTK_SHADER) {
+  } else if((_mgc->astk->flags & MGASTK_SHADER) &&
+	    !(mesh->geomflags & GEOM_ALPHA)) {
     int i, npts = mesh->nu * mesh->nv;
     ColorA *c = (ColorA *)alloca(npts * sizeof(ColorA));
+    Point3 *n;
+
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: n = mesh->nq; break;
+    case APF_SMOOTH: n = mesh->n; break;
+    default: break;
+    }
+
     if(mesh->c && !(_mgc->astk->mat.override & MTF_DIFFUSE)) {
-      (*_mgc->astk->shader)(npts, mesh->p, mesh->n, mesh->c, c);
+      (*_mgc->astk->shader)(npts, mesh->p, n, mesh->c, c);
     } else {
       for(i = 0; i < npts; i++) {
-	(*_mgc->astk->shader)(1, mesh->p + i, mesh->n + i,
+	(*_mgc->astk->shader)(1, mesh->p + i, n + i,
 			      (ColorA *)&_mgc->astk->mat.diffuse, c + i);
       }
     }

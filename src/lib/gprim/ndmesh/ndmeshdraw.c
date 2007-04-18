@@ -105,17 +105,19 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   if (ap->flag & APF_NORMALDRAW) {
     normal_need = MESH_N|MESH_NQ;
   } else if (ap->flag & APF_FACEDRAW) {
-    if (ap->shading == APF_FLAT) {
-      normal_need |= MESH_NQ;
-    }
-    if (ap->shading == APF_SMOOTH) {
-      normal_need |= MESH_N;
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: normal_need |= MESH_NQ; break;
+    case APF_SMOOTH: normal_need |= MESH_N; break;
+    default: break;
     }
     if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
       /* could re-use per quad normals here */
     }
   }
-  MeshComputeNormals(&m, normal_need);
+  if (normal_need) {
+    MeshComputeNormals(&m, normal_need);
+  }
 
   if(_mgc->astk->flags & MGASTK_SHADER) {
     ColorA *c = colored ? m.c : (mat->override & MTF_DIFFUSE) ? NULL : mesh->c;

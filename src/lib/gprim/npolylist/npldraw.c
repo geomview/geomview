@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.15 2007/03/24 02:02:26 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.16 2007/04/18 17:39:16 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -51,13 +51,14 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 static void
 draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 {
-  PolyList newpl;
+  PolyList npl;
   HPointN *h;
   Poly *np;
   Vertex *nv;
   float *ov;
   ColorA *oc;
-  int i, colored = 0, alpha = 0;
+  int i, j;
+  bool colored = false, alpha = false;
   float *hdata;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
@@ -65,33 +66,33 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
   int normal_need;
 
   /* Copy the PolyList onto the stack. */
-  memset(&newpl, 0, sizeof(PolyList));
-  GGeomInit((Geom *)(void *)&newpl, PolyListMethods(), PLMAGIC, NULL);
-  newpl.n_polys   = pl->n_polys;
-  newpl.n_verts   = pl->n_verts;
-  newpl.geomflags = pl->geomflags;
-  newpl.vl        = pl->vl;
-  newpl.p         = pl->p;
+  memset(&npl, 0, sizeof(PolyList));
+  GGeomInit((Geom *)(void *)&npl, PolyListMethods(), PLMAGIC, NULL);
+  npl.n_polys   = pl->n_polys;
+  npl.n_verts   = pl->n_verts;
+  npl.geomflags = pl->geomflags;
+  npl.vl        = pl->vl;
+  npl.p         = pl->p;
 
   h = HPtNCreate(pl->pdim, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
-    colored = 0;
+    colored = false;
   } else {
     HPoint3 dummyv;
     ColorA dummyc;
     /* Dummy transform to determine whether we have ND colors or not */
-    colored = mapHPtN(NDctx, h, &dummyv, &dummyc);
+    colored = mapHPtN(NDctx, h, &dummyv, &dummyc) != 0;
   }
 
   /* Transform vertices */
   hdata = h->v;
-  newpl.geomflags &= ~VERT_4D;
-  for(i = 0, ov = pl->v, nv = newpl.vl; i < pl->n_verts; i++, nv++) {
+  npl.geomflags &= ~VERT_4D;
+  for(i = 0, ov = pl->v, nv = npl.vl; i < pl->n_verts; i++, nv++) {
     h->v = ov;
     if (colored) {
       mapHPtN(NDctx, h, &nv->pt, &nv->vcol);
       if (nv->vcol.a != 1.0) {
-	alpha = 1;
+	alpha = true;
       }
     } else {
       mapHPtN(NDctx, h, &nv->pt, NULL);
@@ -99,70 +100,105 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
     ov += pl->pdim;
   }
 
-  if(colored) {
+  if (colored) {
     if (alpha) {
-      newpl.geomflags |= COLOR_ALPHA;
+      npl.geomflags |= COLOR_ALPHA;
     } else {
-      newpl.geomflags &= ~COLOR_ALPHA;
+      npl.geomflags &= ~COLOR_ALPHA;
     }
-    newpl.geomflags &= ~PL_HASPCOL;
-    newpl.geomflags |= PL_HASVCOL;
+    npl.geomflags &= ~PL_HASPCOL;
+    npl.geomflags |= PL_HASVCOL;
     pl->geomflags &= ~NPL_HASVLVCOL; /* mark as invalid */
   } else if ((pl->geomflags & PL_HASVCOL) && !(pl->geomflags & NPL_HASVLVCOL)) {
     /* copy per vertex colors into vertex list */
-    for(i = 0, nv = newpl.vl, oc = pl->vcol; i < pl->n_verts; ++i, ++nv, ++oc) {
+    for(i = 0, nv = npl.vl, oc = pl->vcol; i < pl->n_verts; ++i, ++nv, ++oc) {
       nv->vcol = *oc;
     }
     pl->geomflags |= NPL_HASVLVCOL; /* mark as valid */
+  } else if (npl.geomflags & GEOM_COLOR) {
+    colored = true;
   }
 
   /* The drawing routines might need either polygon or vertex normals,
    * so if either is missing and either might be needed, we force it
    * to be computed.
    */
-  newpl.geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
+  npl.geomflags &= ~(PL_HASVN|PL_HASPN|PL_HASPFL);
   normal_need = (ap->flag & APF_NORMALDRAW) ? PL_HASPN|PL_HASVN : 0;
   if (ap->flag & APF_FACEDRAW) {
-    if (ap->shading == APF_FLAT) {
-      normal_need |= PL_HASPN;
+    switch (ap->shading) {
+    case APF_FLAT:
+    case APF_VCFLAT: normal_need |= PL_HASPN; break;
+    case APF_SMOOTH: normal_need |= PL_HASVN; break;
+    default: break;
     }
-    if (ap->shading == APF_SMOOTH) {
-      normal_need |= PL_HASVN;
-    }
-    if (GeomHasAlpha((Geom *)(void *)&newpl, ap)) {
+    if (GeomHasAlpha((Geom *)(void *)&npl, ap)) {
       normal_need |= PL_HASPFL|PL_HASPN;
     }
   }
-  PolyListComputeNormals(&newpl, normal_need);
+  if (normal_need) {
+    PolyListComputeNormals(&npl, normal_need);
+  }
 
-  if(_mgc->astk->flags & MGASTK_SHADER) {
-    ColorA *c = !colored && (mat->override & MTF_DIFFUSE)
+  if((_mgc->astk->flags & MGASTK_SHADER) && !(npl.geomflags & GEOM_ALPHA)) {
+    ColorA *c = !colored || (mat->override & MTF_DIFFUSE)
       ? (ColorA *)&mat->diffuse : NULL;
 	
-    if(IS_SMOOTH(_mgc->astk->ap.shading)) {
-      for(i = 0, nv = newpl.vl; i < newpl.n_verts; i++, nv++) {
+    switch (ap->shading) {
+    case APF_SMOOTH:
+      if (!(npl.geomflags & PL_HASVCOL)) {
+	if (npl.geomflags & PL_HASPCOL) {
+	  for (i = 0, np = npl.p; i < npl.n_polys; i++, np++) {
+	    for (j = 0; j < np->n_vertices; j++) {
+	      np->v[j]->vcol = np->pcol;
+	    }
+	  }
+	}
+      }
+      for (i = 0, nv = npl.vl; i < npl.n_verts; i++, nv++) {
 	(*_mgc->astk->shader)(1, &nv->pt, &nv->vn,
 			      c ? c : &nv->vcol, &nv->vcol);
       }
-      newpl.geomflags |= PL_HASVCOL;
-    } else {
-      for(i = 0, np = newpl.p; i < newpl.n_polys; i++, np++) {
+      npl.geomflags |= PL_HASVCOL;
+      mgpolylist(npl.n_polys, npl.p, npl.n_verts, npl.vl, npl.geomflags);
+      break;
+    case APF_FLAT:
+      for (i = 0, np = npl.p; i < npl.n_polys; i++, np++) {
 	(*_mgc->astk->shader)(1, &np->v[0]->pt, (Point3 *)&np->pn,
 			      c ? c : &np->pcol, &np->pcol);
       }
-      newpl.geomflags |= PL_HASPCOL;
-    }
-  }
+      npl.geomflags |= PL_HASPCOL;
+      mgpolylist(npl.n_polys, npl.p, npl.n_verts, npl.vl, npl.geomflags);
+      break;
+    case APF_VCFLAT:
+      for (i = 0, np = npl.p; i < npl.n_polys; i++, np++) {
+	HPoint3 V[np->n_vertices];
+	ColorA C[np->n_vertices];
+	for (j = 0; j < np->n_vertices; j++) {
+	  V[j] = np->v[j]->pt;
+	  C[j] = (npl.geomflags & PL_HASVCOL)
+	    ? np->v[j]->vcol
+	    : ((npl.geomflags & PL_HASPCOL) ? np->pcol : *c);
 
-  mgpolylist(newpl.n_polys, newpl.p, newpl.n_verts, newpl.vl, newpl.geomflags);
+	  (*_mgc->astk->shader)(1, &V[j], (Point3 *)&np->pn, &C[j], &C[j]);
+	}
+	mgpolygon(np->n_vertices, V, 1, &np->pn, np->n_vertices, C);
+      }
+      break;
+    }
+  } else {
+    /* ordinary shading */
+    mgpolylist(npl.n_polys, npl.p, npl.n_verts, npl.vl, npl.geomflags);
+  }
+  
 
   /* Generate a BSP-tree if the object or parts of it might be
    * translucent.
    */
-  if (NDctx->bsptree && (newpl.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)pl, (Geom *)&newpl);
-    GeomBSPTree((Geom *)&newpl, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)&newpl, (Geom *)pl);
+  if (NDctx->bsptree && (npl.geomflags & GEOM_ALPHA)) {
+    GeomNodeDataMove((Geom *)pl, (Geom *)&npl);
+    GeomBSPTree((Geom *)&npl, NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove((Geom *)&npl, (Geom *)pl);
   }
 
   h->v = hdata;
