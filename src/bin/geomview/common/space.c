@@ -435,7 +435,8 @@ LDEFINE(ND_xform, LTRANSFORMN,
   }
 
   if(ISGEOM(obj->id)) {
-    ((DGeom *)obj)->NDT = T;
+    DGobj(obj)->NDT = T;
+    GeomSet(DGobj(obj)->Item, CR_NDAXIS, DGobj(obj)->NDT, CR_END);
     obj->changed |= CH_GEOMETRY;
   } else if(cl != NULL) {
     cl->C2W = T;
@@ -481,6 +482,7 @@ LDEFINE(ND_xform_set, LTRANSFORMN,
   TmNDelete(T);
   if(ISGEOM(obj->id)) {
     ((DGeom *)obj)->NDT = REFGET(TransformN, ts->tm);
+    GeomSet(DGobj(obj)->Item, CR_NDAXIS, DGobj(obj)->NDT, CR_END);
     obj->changed |= CH_GEOMETRY;
   } else if(cl != NULL) {
     cl->C2W = REFGET(TransformN, ts->tm);
