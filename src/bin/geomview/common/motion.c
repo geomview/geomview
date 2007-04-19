@@ -470,3 +470,10 @@ D1PRINT(("minterp_switch: mousedisp returned : dx = %10f, dy = %10f, dt = %ld\n"
   }
   return 0;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
