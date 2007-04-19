@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.17 2007/04/18 17:39:16 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/polylist/pldraw.c,v 1.18 2007/04/19 00:05:17 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -232,10 +232,8 @@ PolyList *PolyListDraw(PolyList *pl)
     Poly *p;
     ColorA *c0 = (ColorA *)&_mgc->astk->mat.diffuse;
     ColorA pc, *nc = NULL, *savedc = NULL;
-    Point3 *savedn = NULL;
     int i, j;
     int flags = pl->geomflags;
-    int shading;
 
     /* Smooth or facetted? */
     switch (ap->shading) {

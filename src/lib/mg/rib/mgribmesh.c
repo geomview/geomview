@@ -56,11 +56,11 @@ mgrib_mesh(int wrap, int nu, int nv,
 
     ap = &_mgc->astk->ap;
 
-    if(ap->flag & APF_FACEDRAW) {
+    if (ap->flag & APF_FACEDRAW) {
 	mgrib_submesh( wrap, nu, nv, P, N, NQ, C, ST, mflags);
     }
     
-    if(ap->flag & APF_EDGEDRAW) {
+    if (ap->flag & APF_EDGEDRAW) {
 	/* must draw edges manually */
 	c3 = &ap->mat->edgecolor;
 	mrti(mr_attributebegin, mr_color, mr_parray, 3, c3,
@@ -70,10 +70,10 @@ mgrib_mesh(int wrap, int nu, int nv,
 	mrti(mr_attributeend,mr_NULL);
     }
     
-    if((ap->flag & APF_NORMALDRAW) && N!=NULL) {
+    if ((ap->flag & APF_NORMALDRAW) && N!=NULL) {
 	p = P;
 	n = N;
-	for(u = nu*nv; --u >= 0; )
+	for (u = nu*nv; --u >= 0; )
 	    mgrib_drawnormal(p++, n++);
     }
     
@@ -111,7 +111,7 @@ mgrib_submesh( int wrap, int nu, int nv,
 
 /* THIS SHOULD BE AT A HIGHER LEVEL
     mgrib_print("ShadingInterpolation ");
-    if(ap->shading & APF_SMOOTH) mgrib_print("\"smooth\"\n");
+    if (ap->shading & APF_SMOOTH) mgrib_print("\"smooth\"\n");
     else mgrib_print("\"constant\"\n");
 */
     
@@ -120,9 +120,9 @@ mgrib_submesh( int wrap, int nu, int nv,
     	mr_int, nv, mr_string, vwrap,
 	mr_P, mr_buildarray, 3*nunv, mr_NULL);
 	
-    for(i=0; i<nunv; i++, p++, viflag++) {
+    for (i=0; i<nunv; i++, p++, viflag++) {
 	mrti(mr_subarray3, p, mr_NULL);
-	if(viflag>=VI_TUPLET_LIMIT) {
+	if (viflag>=VI_TUPLET_LIMIT) {
 	    viflag=0;
 	    /* wrap lines so they won't be too long for vi */
 	    mrti(mr_nl, mr_NULL);
@@ -135,9 +135,9 @@ mgrib_submesh( int wrap, int nu, int nv,
     if (N != NULL && ap->shading == APF_SMOOTH) {
 	viflag = 0;
 	mrti(mr_N, mr_buildarray, 3*nunv, mr_NULL);
-	for(i=0; i<nunv; i++, n++, viflag++) {
+	for (i=0; i<nunv; i++, n++, viflag++) {
 	  mrti(mr_subarray3, n, mr_NULL);
-	  if(viflag>=VI_TUPLET_LIMIT) {
+	  if (viflag>=VI_TUPLET_LIMIT) {
 	    viflag = 0;
 	    mrti(mr_nl, mr_NULL);
 	  }
@@ -145,26 +145,26 @@ mgrib_submesh( int wrap, int nu, int nv,
     }
     
     /* use colors if supplied and not overridden */
-    if(C &&
+    if (C &&
        !((ap->mat->override & MTF_DIFFUSE) &&
 	 !(_mgc->astk->flags & MGASTK_SHADER))) {
 	viflag = 0;
 	mrti(mr_Cs, mr_buildarray, 3*nunv, mr_NULL);
-	for(i=0; i<nunv; i++, c++, viflag++) {
+	for (i=0; i<nunv; i++, c++, viflag++) {
 	    mrti(mr_subarray3, c, mr_NULL);
-	    if(viflag>=VI_TUPLET_LIMIT) {
+	    if (viflag>=VI_TUPLET_LIMIT) {
 		viflag = 0;
 		mrti(mr_nl, mr_NULL);
 	    }
 	}
 	
 	/* transparancy */
-	if(ap->flag & APF_TRANSP) {
+	if (ap->flag & APF_TRANSP) {
 	    c = C;
 	    mrti(mr_Os, mr_buildarray, 3*nunv, mr_NULL);
-	    for(i=0; i<nunv; i++, c++) {
+	    for (i=0; i<nunv; i++, c++) {
 		mrti(mr_subarray3, c, mr_NULL);
-		if(viflag>=VI_TUPLET_LIMIT)
+		if (viflag>=VI_TUPLET_LIMIT)
 		{
 		    viflag = 0;
 		    mrti(mr_nl, mr_NULL);
@@ -196,11 +196,11 @@ mgrib_submesh( int wrap, int nu, int nv,
       
 	viflag = 0;
 	mrti(mr_st, mr_buildarray, 2*nunv, mr_NULL);
-	for(i=0; i<nunv; i++, st++, viflag++) {
+	for (i=0; i<nunv; i++, st++, viflag++) {
 	    TxSTTransform (T, st, &stT);
 	    stT.t = 1.0 - stT.t;
 	    mrti(mr_subarray2, (float *)&stT, mr_NULL);
-	    if(viflag>=VI_TUPLET_LIMIT) {
+	    if (viflag>=VI_TUPLET_LIMIT) {
 		viflag=0;
 		mrti(mr_nl, mr_NULL);
 	    }
@@ -215,19 +215,19 @@ mgrib_prmanmesh( int wrap, int nu, int nv, HPoint3 *P )
 {
     int u, v, prevu, prevv;
 
-    for(v=0; v<nv; v++) {
-	if(wrap & MM_UWRAP) u = 0, prevu = nu-1;
+    for (v=0; v<nv; v++) {
+	if (wrap & MM_UWRAP) u = 0, prevu = nu-1;
 	else		    u = 1, prevu = 0;
-	for( ; u<nu; u++) {
+	for ( ; u<nu; u++) {
 	    mgrib_drawline(&P[prevu + v * nu], &P[u + v * nu]);
 	    prevu = u;
 	}
     }
 
-    for(u=0; u<nu; u++) {
-	if(wrap & MM_VWRAP) v = 0, prevv = nv-1;
+    for (u=0; u<nu; u++) {
+	if (wrap & MM_VWRAP) v = 0, prevv = nv-1;
 	else		    v = 1, prevv = 0;
-	for( ; v<nv; v++) {
+	for ( ; v<nv; v++) {
 	    mgrib_drawline(&P[u + prevv * nu], &P[u + v * nu]);
 	    prevv = v;
 	}

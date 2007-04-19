@@ -140,9 +140,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
    * translucent.
    */
   if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)mesh, (Geom *)&m);
+    GeomNodeDataMove((Geom *)mesh, (Geom *)(void *)&m);
     GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)&m, (Geom *)mesh);
+    GeomNodeDataMove((Geom *)(void *)&m, (Geom *)mesh);
   }
 
   if (m.n) {

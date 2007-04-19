@@ -126,7 +126,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
     case APF_FLAT:
     case APF_VCFLAT: n = m.nq; break;
     case APF_SMOOTH: n = m.n; break;
-    default: break;
+    default: n = NULL; break;
     }
     
     if (c) {
@@ -146,9 +146,9 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
    * translucent.
    */
   if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)mesh, (Geom *)&m);
-    GeomBSPTree((Geom *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)&m, (Geom *)mesh);
+    GeomNodeDataMove((Geom *)mesh, (Geom *)(void *)&m);
+    GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove((Geom *)(void *)&m, (Geom *)mesh);
   }
 
   if (m.n) {
@@ -207,7 +207,7 @@ MeshDraw(Mesh *mesh)
     case APF_FLAT:
     case APF_VCFLAT: n = mesh->nq; break;
     case APF_SMOOTH: n = mesh->n; break;
-    default: break;
+    default: n = NULL; break;
     }
 
     if(mesh->c && !(_mgc->astk->mat.override & MTF_DIFFUSE)) {

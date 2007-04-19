@@ -114,9 +114,9 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 	  q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0], q.geomflags);
 
   if (NDctx->bsptree && (q.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)qquad, (Geom *)&q);
+    GeomNodeDataMove((Geom *)qquad, (Geom *)(void *)&q);
     GeomBSPTree((Geom *)(void *)&q, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)&q, (Geom *)qquad);
+    GeomNodeDataMove((Geom *)(void *)&q, (Geom *)qquad);
   }
 
   OOGLFree(q.n);

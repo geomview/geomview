@@ -95,7 +95,7 @@ mgopengl_polygon(int nv,  HPoint3 *V,
   }
   cinc = (nc > 1);
   ninc = (nn > 1);
-  if(nc == 0) {
+  if (nc == 0) {
     C = (ColorA*)&_mgc->astk->ap.mat->diffuse;
   }
 
@@ -117,8 +117,8 @@ mgopengl_polygon(int nv,  HPoint3 *V,
     glEnd();
   }
 
-  if( flag & (APF_EDGEDRAW|APF_NORMALDRAW) ) {
-    if(_mgopenglc->znudge) mgopengl_closer();
+  if ( flag & (APF_EDGEDRAW|APF_NORMALDRAW) ) {
+    if (_mgopenglc->znudge) mgopengl_closer();
     glDisable(GL_COLOR_MATERIAL);
     DONT_LIGHT();
     if (flag & APF_EDGEDRAW) {
@@ -135,7 +135,7 @@ mgopengl_polygon(int nv,  HPoint3 *V,
 	mgopengl_drawnormal(v, n);
       }
     }
-    if(_mgopenglc->znudge) mgopengl_farther();
+    if (_mgopenglc->znudge) mgopengl_farther();
   }
 }
 
@@ -150,12 +150,10 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 
 #define QUAD(stuff)  {				\
     int k = 4;					\
-    glBegin(GL_POLYGON);			\
     do { stuff; } while(--k > 0);		\
-    glEnd();					\
   }
 
-  if(count <= 0)
+  if (count <= 0)
     return;
 
   flag = _mgc->astk->ap.flag;
@@ -175,8 +173,9 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 
     i = count;
     v = V; c = C; n = N;
-    if(c) {
-      if(n) {
+    glBegin(GL_QUADS);
+    if (c) {
+      if (n) {
 	do {
 	  QUAD( (D4F(c++), N3F(n++,v), glVertex4fv((float*)v++)) );
 	} while(--i > 0);
@@ -188,7 +187,7 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
       }
     } else {
       c = (ColorA*)&_mgc->astk->ap.mat->diffuse;
-      if(n) {
+      if (n) {
 	D4F(c);
 	do {
 	  QUAD( (N3F(n++, v), glVertex4fv((float*)v++)) );
@@ -200,10 +199,11 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 	} while(--i > 0);
       }
     }
+    glEnd();
   }
 
-  if( flag & (APF_EDGEDRAW|APF_NORMALDRAW) ) {
-    if(_mgopenglc->znudge) mgopengl_closer();
+  if ( flag & (APF_EDGEDRAW|APF_NORMALDRAW) ) {
+    if (_mgopenglc->znudge) mgopengl_closer();
     glDisable(GL_COLOR_MATERIAL);
     DONT_LIGHT();
 
@@ -225,7 +225,7 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 	mgopengl_drawnormal(v++, n++);
       } while(--i > 0);
     }
-    if(_mgopenglc->znudge) mgopengl_farther();
+    if (_mgopenglc->znudge) mgopengl_farther();
   }
 }
 
@@ -247,14 +247,14 @@ void mgopengl_point(HPoint3 *v)
 
   DONT_LIGHT();
 
-  if(_mgc->astk->ap.linewidth > 1) {
+  if (_mgc->astk->ap.linewidth > 1) {
     
-    if(!(_mgc->has & HAS_POINT))
+    if (!(_mgc->has & HAS_POINT))
       mg_makepoint();
     /* Compute w component of point after projection to screen */
     vw = v->x * _mgc->O2S[0][3] + v->y * _mgc->O2S[1][3]
       + v->z * _mgc->O2S[2][3] + v->w * _mgc->O2S[3][3];
-    if(vw <= 0) return;
+    if (vw <= 0) return;
     
 #define  PUT(p)					\
     a.x = v->x + p->x*vw; a.y = v->y + p->y*vw;	\
@@ -268,7 +268,7 @@ void mgopengl_point(HPoint3 *v)
     do {
       p++;
       PUT(p);
-      if(p >= q) break;
+      if (p >= q) break;
       q--;
       PUT(q);
     } while(p < q);
@@ -290,30 +290,30 @@ void mgopengl_polyline( int nv, HPoint3 *v, int nc, ColorA *c, int wrapped )
    * the last color call.
    */
   
-  if(!(wrapped & 2)) {
+  if (!(wrapped & 2)) {
     /* First member of batch */
-    if(_mgopenglc->znudge) mgopengl_closer();
-    if(nc)
+    if (_mgopenglc->znudge) mgopengl_closer();
+    if (nc)
       glDisable(GL_COLOR_MATERIAL);
   }
   if (nv == 1) {
-    if(nc > 0) glColor4fv((float *)c);
+    if (nc > 0) glColor4fv((float *)c);
     mgopengl_point(v);
   } 
-  else if(nv > 0) {
+  else if (nv > 0) {
     glBegin(GL_LINE_STRIP);
-    if(wrapped & 1) {
-      if(nc > 0) glColor4fv((float *)(c + nc - 1));
+    if (wrapped & 1) {
+      if (nc > 0) glColor4fv((float *)(c + nc - 1));
       mgopengl_v4ffunc(v + nv - 1);
     }
 
     do {
-      if(--nc >= 0) glColor4fv((float *)c++);
+      if (--nc >= 0) glColor4fv((float *)c++);
       mgopengl_v4ffunc(v++);
     } while(--nv > 0);
     glEnd();
   }
-  if(!(wrapped & 4) && _mgopenglc->znudge) mgopengl_farther();
+  if (!(wrapped & 4) && _mgopenglc->znudge) mgopengl_farther();
 }
 
 #if HAVE_LIBGLU
@@ -418,7 +418,7 @@ mgopengl_trickypolygon(Poly *p, int plflags)
   GLdouble dpts[p->n_vertices][3];
   struct tess_data data[1];
 
-  if(glutess == NULL) {
+  if (glutess == NULL) {
     /* Create GLU-library triangulation handle, just once */
     glutess = gluNewTess();
     gluTessProperty(glutess, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO);
@@ -452,7 +452,7 @@ mgopengl_trickypolygon(Poly *p, int plflags)
 
   gluTessBeginPolygon(glutess, data);
   gluTessBeginContour(glutess);
-  for(i = 0; i < p->n_vertices; i++) {
+  for (i = 0; i < p->n_vertices; i++) {
     vp = p->v[i];
     dpts[i][0] = vp->pt.x / vp->pt.w;
     dpts[i][1] = vp->pt.y / vp->pt.w;
@@ -597,7 +597,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 
 #if DEBUG_BSPTREE /* make the sub-division visible */
     if (ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)) {
-      if(_mgopenglc->znudge) mgopengl_closer();
+      if (_mgopenglc->znudge) mgopengl_closer();
       glDisable(GL_COLOR_MATERIAL);
       DONT_LIGHT();
 
@@ -621,7 +621,7 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
 	  }
 	}
       }
-      if(_mgopenglc->znudge) mgopengl_farther();
+      if (_mgopenglc->znudge) mgopengl_farther();
 
       apchg = 1;
       glColorMaterial(GL_FRONT_AND_BACK, _mgopenglc->lmcolor);
@@ -745,7 +745,7 @@ void mgopengl_bsptree(BSPTree *bsptree)
    * are not handled correctly here; or that the high-level code has
    * to convert them first.
    */
-  if(!(_mgc->has & HAS_CPOS)) {
+  if (!(_mgc->has & HAS_CPOS)) {
     mg_findcam();
   }
 
@@ -814,7 +814,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       if (plflags & PL_HASPN)
 	N3F(&p->pn, &(*p->v)->pt);
       v = p->v;
-      if((j = p->n_vertices) <= 2) {
+      if ((j = p->n_vertices) <= 2) {
 	nonsurf = i;
 #if HAVE_LIBGLU
       } else if ((p->flags & POLY_CONCAVE) ||
@@ -878,7 +878,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   }
 
   if (flag & (APF_EDGEDRAW|APF_NORMALDRAW) || nonsurf >= 0) {
-    if(_mgopenglc->znudge) mgopengl_closer();
+    if (_mgopenglc->znudge) mgopengl_closer();
     glDisable(GL_COLOR_MATERIAL);
     DONT_LIGHT();
 
@@ -913,19 +913,19 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       if (!(plflags & (PL_HASPCOL | PL_HASVCOL)))
 	D4F(&(ma->ap.mat->diffuse));
       
-      for(p = _p, i = 0; i <= nonsurf; p++, i++) {
+      for (p = _p, i = 0; i <= nonsurf; p++, i++) {
 	if (plflags & PL_HASPCOL)
 	  D4F(&p->pcol);
 	v = p->v;
 	switch(j = p->n_vertices) {
 	case 1:
-	  if(plflags & PL_HASVCOL) glColor4fv((float *)&(*v)->vcol);
+	  if (plflags & PL_HASVCOL) glColor4fv((float *)&(*v)->vcol);
 	  mgopengl_point(&(*v)->pt);
 	  break;
 	case 2:
 	  glBegin(GL_LINE_STRIP);
 	  do {
-	    if(plflags & PL_HASVCOL) glColor4fv((float *)&(*v)->vcol);
+	    if (plflags & PL_HASVCOL) glColor4fv((float *)&(*v)->vcol);
 	    glVertex4fv((float *)&(*v)->pt);
 	    v++;
 	  } while(--j > 0);
@@ -934,7 +934,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
 	}
       }
     }
-    if(_mgopenglc->znudge) mgopengl_farther();
+    if (_mgopenglc->znudge) mgopengl_farther();
   }
 }
 
@@ -984,13 +984,13 @@ mgopengl_drawnormal(HPoint3 *p, Point3 *n)
   HPt3Coord scale, w, s;
 
   if (p->w <= 0.0) return;
-  if(p->w != 1) {
+  if (p->w != 1) {
     HPt3ToPt3(p, &tp);
     p = (HPoint3 *)(void *)&tp;
   }
 
   scale = _mgc->astk->ap.nscale;
-  if(_mgc->astk->ap.flag & APF_EVERT) {
+  if (_mgc->astk->ap.flag & APF_EVERT) {
     HPoint3 *cp = &_mgc->cpos;
     if (!(_mgc->has & HAS_CPOS)) {
       mg_findcam();

@@ -121,13 +121,13 @@ mgrib_appearance( struct mgastk *astk, int ap_mask, int mat_mask)
 	    }
 
 	    /* define surface */
-	    if (ap->shading == APF_FLAT) {
+	    if (!IS_SMOOTH(ap->shading)) {
 		mrti(mr_shadinginterpolation, mr_constant,
 		     mr_surface, shader, mr_Ka, mr_float, mat->ka,
 		     mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,
 		     mr_specularcolor, mr_parray, 3, &(mat->specular),
 		     mr_roughness, mr_float, roughness, mr_NULL);
-	    } else if (ap->shading == APF_SMOOTH) {
+	    } else {
 		mrti(mr_shadinginterpolation, mr_string, "smooth",
 		     mr_surface, shader, mr_Ka, mr_float, mat->ka,
 		     mr_Kd, mr_float, mat->kd, mr_Ks, mr_float, mat->ks,

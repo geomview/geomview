@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.6 2007/04/10 15:33:33 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/nplcopy.c,v 1.7 2007/04/19 00:05:17 rotdrop Exp $ */
 
 /*
  * Geometry object routines
@@ -52,12 +52,13 @@ NPolyListCopy(NPolyList *pl)
   HPtNCoord *newv;
   int *newvi;
   int *newpv;
-  ColorA *newvcol;
+  ColorA *newvcol = NULL;
   Vertex **newvp;
   int i, k;
 
-  if (pl == NULL)
+  if (pl == NULL) {
     return NULL;
+  }
 	
   newv = OOGLNewNE(HPtNCoord, pl->pdim*pl->n_verts, "NPolyList verts");
   newvl = OOGLNewNE(Vertex, pl->n_verts, "NPolyList verts description");
@@ -100,3 +101,10 @@ NPolyListCopy(NPolyList *pl)
 
   return newpl;
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

@@ -930,7 +930,7 @@ int ImgWritePAM(Image *img, unsigned chmask, bool compressed, char **buffer)
  */
 bool ImgWriteFilter(Image *img, unsigned chmask, const char *filter)
 {
-  int n_chan, buflen;
+  int n_chan, buflen = 0;
   unsigned mask;
   char *buf = NULL;
   int data_fd = -1;

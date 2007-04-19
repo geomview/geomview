@@ -305,17 +305,16 @@ void mgps_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
 
 /*  fprintf(stderr,"X11: draw a polylist %d\n",np); */
 
-  switch(shading)
-  {
-    case APF_FLAT:
-      plflags &= ~PL_HASVN;
-      break;
-    case APF_SMOOTH:
-      plflags &= ~PL_HASPN;
-      break;
-    default:
-      plflags &= ~(PL_HASVN | PL_HASPN);
-      break;
+  switch(shading) {
+  case APF_FLAT:
+    plflags &= ~PL_HASVN;
+    if (plflags & PL_HASPCOL) {
+      plflags &= ~PL_HASVCOL;
+    }
+    break;
+  case APF_SMOOTH: plflags &= ~PL_HASPN; break;
+  case APF_VCFLAT: plflags &= ~PL_HASVN; break;
+  default: plflags &= ~(PL_HASVN|PL_HASPN); break;
   }
 
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&

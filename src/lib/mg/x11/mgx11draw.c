@@ -305,17 +305,16 @@ void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
 
 /*  fprintf(stderr,"X11: draw a polylist %d\n",np); */
 
-  switch(shading)
-  {
-    case APF_FLAT:
-      plflags &= ~PL_HASVN;
-      break;
-    case APF_SMOOTH:
-      plflags &= ~PL_HASPN;
-      break;
-    default:
-      plflags &= ~(PL_HASVN | PL_HASPN);
-      break;
+  switch(shading) {
+  case APF_FLAT:
+    plflags &= ~PL_HASVN;
+    if (plflags & PL_HASPCOL) {
+      plflags &= ~PL_HASVCOL;
+    }
+    break;
+  case APF_SMOOTH: plflags &= ~PL_HASPN; break;
+  case APF_VCFLAT: plflags &= ~PL_HASVN; break;
+  default: plflags &= ~(PL_HASVN|PL_HASPN); break;
   }
 
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
@@ -330,29 +329,25 @@ void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
       v = p->v;
       if ((j = p->n_vertices) <= 2)
 	nonsurf = i;
-      else
-      {
-        if (flag & APF_EDGEDRAW)
-	{
+      else {
+        if (flag & APF_EDGEDRAW) {
 	  if (shading == APF_FLAT || shading == APF_CONSTANT) {
 	    Xmg_add(MGX_BGNEPOLY, 0, NULL, NULL);
-	  } else
-          if (plflags & PL_HASVCOL)
+	  } else if (plflags & PL_HASVCOL) {
 	    Xmg_add(MGX_BGNSEPOLY, 0, NULL, NULL);
-          else
+	  } else {
 	    Xmg_add(MGX_BGNEPOLY, 0, NULL, NULL);
-          Xmg_add(MGX_ECOLOR, 0, NULL, &_mgc->astk->ap.mat->edgecolor);
-	}
-	else
-          {
-	    if (shading == APF_FLAT || shading == APF_CONSTANT) {
-	      Xmg_add(MGX_BGNPOLY, 0, NULL, NULL);
-	    } else
-            if (plflags & PL_HASVCOL)
-	      Xmg_add(MGX_BGNSPOLY, 0, NULL, NULL);
-	    else
-	      Xmg_add(MGX_BGNPOLY, 0, NULL, NULL);
 	  }
+          Xmg_add(MGX_ECOLOR, 0, NULL, &_mgc->astk->ap.mat->edgecolor);
+	} else {
+	  if (shading == APF_FLAT || shading == APF_CONSTANT) {
+	    Xmg_add(MGX_BGNPOLY, 0, NULL, NULL);
+	  } else if (plflags & PL_HASVCOL) {
+	    Xmg_add(MGX_BGNSPOLY, 0, NULL, NULL);
+	  } else {
+	    Xmg_add(MGX_BGNPOLY, 0, NULL, NULL);
+	  }
+	}
 
 	if (plflags & PL_HASPCOL)
 	  Xmg_add(MGX_COLOR, 0, NULL, &p->pcol);
@@ -362,11 +357,12 @@ void mgx11_polylist( int np, Poly *_p, int nv, Vertex *V, int pl_flags )
 	  else
 	    Xmg_add(MGX_COLOR, 0, NULL, &(ma->ap.mat->diffuse));
 	vh = v;
-	do
-	{
-	  if (plflags & PL_HASVCOL) Xmg_add(MGX_CVERTEX, 1, &(*v)->pt, &(*v)->vcol);
-	    else
-	      Xmg_add(MGX_CVERTEX, 1, &(*v)->pt, &(*vh)->vcol);
+	do {
+	  if (plflags & PL_HASVCOL) {
+	    Xmg_add(MGX_CVERTEX, 1, &(*v)->pt, &(*v)->vcol);
+	  } else {
+	    Xmg_add(MGX_CVERTEX, 1, &(*v)->pt, &(*vh)->vcol);
+	  }
 
 	  v++;
 	} while (--j > 0);

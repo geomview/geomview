@@ -189,7 +189,6 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   int nencompass_points = 0;
   int attr, copy = 1;
   unsigned texmeth;
-  unsigned flags;
   Transform *axis = NULL;
   HPoint3 *encompass_points = NULL;
   bool havetex = false;
@@ -246,7 +245,7 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
       havetex = true;
       break;
     default:
-      OOGLError(1, "Undefined texture mapping method: %d", flags);
+      OOGLError(1, "Undefined texture mapping method: %d", texmeth);
       if (exist == NULL) {
 	GeomDelete ((Geom *)sphere);
       }
