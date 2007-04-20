@@ -7,8 +7,8 @@ test "x$prefix" = xNONE && prefix="${DEFAULT_PREFIX}"
 PREFIX="${prefix}"
 # Let make expand exec_prefix.
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
-expanded_prefix=`eval echo ${prefix}`
+expanded_prefix=`eval eval eval echo ${prefix}`
 AC_SUBST(expanded_prefix)
-expanded_exec_prefix=`eval echo ${exec_prefix}`
+expanded_exec_prefix=`eval eval eval echo ${exec_prefix}`
 AC_SUBST(expanded_exec_prefix)
 ])
