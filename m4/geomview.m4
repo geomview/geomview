@@ -33,6 +33,8 @@ AC_DEFUN([GV_INIT_GEOMVIEW],
   AM_INIT_AUTOMAKE([dist-bzip2 1.9])
   AC_CONFIG_HEADER([config.h])
 
+  AC_REQUIRE([GEOMVIEW_SET_PREFIX])
+
   AC_ARG_WITH(geomview,
     AC_HELP_STRING([--with-geomview=PROGRAM],
 [Set PROGRAM to the name of the Geomview executable, possibly
@@ -57,11 +59,13 @@ directories to use. (default: autodetected)]),
   fi
   AC_ARG_ENABLE([local-emodule],
     AC_HELP_STRING([--enable-local-emodule],
+
 [Install the emodule definition into `${HOME}/.geomview-EMODULENAME';
 that file will contain the full path to the emodule binary. Otherwise
 the emodule definition will be installed under either the location
-returned by `geomview --print-emodule-dir' or -- if the
-`--disable-geomview-query' switch is in effect -- under
+returned by `geomview --print-emodule-dir' (if
+`--enable-geomview-query' is in effect) or (if the
+`--disable-geomview-query' switch is in effect) under
 `PREFIX/libexec/geomview/'. (default: disabled)]),
     [case "${enableval}" in
        yes) LOCAL_EMODULE=true ;;
@@ -86,7 +90,13 @@ following defaults are in effect:
 Geomview emodules below `PREFIX/libexec/geomview/',
 Geomview headers below  `PREFIX/include/geomview/',
 libgeomview below       `PREFIX/lib/geomview/',
-other data below        `PREFIX/share/geomview/']),
+other data below        `PREFIX/share/geomview/'
+
+Note that specifying `--prefix=PREFIX' inverts the default for the
+`--disable-geomview-query' switch in order to prevent the default
+installation to attempt installing data outside the PREFIX
+directory. With `--prefix' switch it is necessary to re-enable this
+feature with `--enable-geomview-query'.]),
     [case "${enableval}" in
        yes) GEOMVIEW_QUERY=true ;;
        no)  GEOMVIEW_QUERY=false ;;
@@ -94,7 +104,11 @@ other data below        `PREFIX/share/geomview/']),
           exit 1
           ;;
     esac],
-    [GEOMVIEW_QUERY=true])
+    [if test "x${prefix}" = "x${DEFAULT_PREFIX}"; then
+       GEOMVIEW_QUERY=true
+    else
+       GEOMVIEW_QUERY=false
+    fi])
   AM_CONDITIONAL([GEOMVIEW_QUERY], [test "${GEOMVIEW_QUERY}" = "true"])
   AC_SUBST(GEOMVIEW_QUERY)
   
@@ -133,7 +147,7 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
       geomdatadir="${datadir}/geomview"
     fi
   else
-    GEOMVIEW_CHECK_PACKAGE([libgeomview],[geomview],[],[],
+    GEOMVIEW_CHECK_PACKAGE([libgeomview],[geomview],[${DEFAULT_PREFIX}/lib],[],
       [create.h],["'${includedir}/geomview/ -I${DEFAULT_PREFIX}/include/geomview/ -I${oldincludedir}/geomview'"],[],[required enabled])
     geomviewincludes="${LIBGEOMVIEW_INCLUDE_PATH}"
     geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
