@@ -9,6 +9,8 @@ AC_CONFIG_HEADER([config.h])
 AC_SUBST(abs_top_builddir)
 AC_SUBST(abs_top_srcdir)
 
+GEOMVIEW_SET_PREFIX
+
 dnl Add extra include or link directories
 AC_ARG_WITH(build-path,[
   --with-build-path[=DIR] use DIR/include DIR/lib
