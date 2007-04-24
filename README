@@ -110,57 +110,63 @@ Clipboard:      save a single OOGL object to a clipboard
 Gvclock:        an animated clock
 Nose:           debugging/example for picking (see Geomview manual)
 
-Modules involving extra libraries like XForms or Tcl/Tk have be moved
-to separate packages to make the maintenance of the Geomview main
-package easier. The packages can be downloaded from the Geomview
+Modules involving extra libraries like XForms or Tcl/Tk have been
+moved to separate packages to make the maintenance of the Geomview
+main-package easier. The packages can be downloaded from the Geomview
 download area at Sourceforge.net. The names of the emodule packages,
 and the emodules they contain, are as follows:
 
-gvemod-xforms-example -- example XForms-based emodule
-*****************************************************
+Package gvemod-xforms-example -- example XForms-based emodule
+*************************************************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  Example:        generic FORMS example external module
 
-MODULE	   	DESCRIPTION
-~~~~~~          ~~~~~~~~~~~
-Example:	generic FORMS example external module
+Package gvemodules-xforms -- emodules which require the XForms package
+**********************************************************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  Cplxview:       visualize the graphs of complex functions
+  Example:        generic FORMS example external module
+  Flythrough:     "Not Knot" visualisation (hyperbolic space)
+  Ginsu:          interactively slice objects (see "clip")
+  Graffiti:       draw line segments on objects
+  Hinge:          "copy-rotate" a polyhedron around edges of itself
+  Stereo:         stereo vision module
+  Sweep:          generate objects of rotation from line segments
+  Tackdown:       redefine an object's "home" position
+  Transformer:    explicitly control an object's transformation matrix
 
-gvemodules-xforms -- emodules which require the XForms package
-**************************************************************
+Package maniview -- requires XForms
+***********************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  Maniview        visualize 3d manifolds and orbifolds
 
-MODULE	   	DESCRIPTION
-~~~~~~          ~~~~~~~~~~~
-Cplxview:       visualize the graphs of complex functions
-Example:	generic FORMS example external module
-Flythrough:     "Not Knot" visualisation (hyperbolic space)
-Ginsu:		interactively slice objects (see "clip")
-Graffiti:	draw line segments on objects
-Hinge:          "copy-rotate" a polyhedron around edges of itself
-Stereo:         stereo vision module
-Sweep:		generate objects of rotation from line segments
-Tackdown:	redefine an object's "home" position
-Transformer:	explicitly control an object's transformation matrix
+Pacakge gvemod-crayola -- requires Tcl/Tk
+*****************************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  Crayola:        interactive colouring of OOGL objects
 
-gvemodules-tcltk -- emodules based on Tcl/Tk (except NDview)
-************************************************************
+Package gvemod-labeler -- requires Tcl/Tk
+*****************************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  Labeler:        somewhat crude generation of text as OOGL object
 
-MODULE	   	DESCRIPTION
-~~~~~~          ~~~~~~~~~~~
-Crayola:        interactive colouring of OOGL objects
-Labeler:        somewhat crude generation of text as OOGL object
-
-gvemod-ndview -- ND-viewing toolkit, requires Tcl/Tk
+gvemod-ndview -- requires Tcl/Tk
 ****************************************************
+  MODULE          DESCRIPTION
+  ~~~~~~          ~~~~~~~~~~~
+  3D-Snapshot:    Save a 3D projection of an ND object
+  Colormap:       Coloring of ND objects w.r.t. the "invisible" directions
+  NDview:         visualization of objects in > 3D
+  NDdemo:         a demo for ND visualization
+  Origin:         draw a coordinate frame for an OOGL object
+  Slicer:         Slice ND objects (see also Ginsu above)
 
-MODULE	   	DESCRIPTION
-~~~~~~          ~~~~~~~~~~~
-
-3D-Snapshot:    Save a 3D projection of an ND object
-Colormap:       Coloring of ND objects w.r.t. the "invisible" directions
-NDview:         visualization of objects in > 3D
-NDdemo:         a demo for ND visualization
-Origin:         draw a coordinate frame for an OOGL object
-Slicer:         Slice ND objects (see also Ginsu below)
-
-									
+                                                                        
 AUXILIARY PROGRAMS
 ------------------
 

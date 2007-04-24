@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.16 2006/07/30 11:59:32 rotdrop Exp $
+$Id: INSTALL.Geomview,v 1.17 2007/04/24 11:11:17 rotdrop Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -22,31 +22,14 @@ which is normal only for copies of Geomview that have been taken
 directly from developer CVS. See the `README.cvs' textfile for hints
 on building Geomview from developer CVS.
 
-The default prefix for Geomview is `/usr/local/Geomview'; however, the
-directory layout below the prefix follows the convention for any other
-GNU package: binaries below `PREFIX/bin/', data below
-`PREFIX/share/geomview/', executable code below
-`PREFIX/libexec/geomview/' (here live the modules). The documentation
-is installed below `PREFIX/share/doc/geomview-VERSION/'
-
-IMPORTANT NOTE: by default 'make install' will install Geomview into
-`/usr/local/Geomview'.  Once you've done this, you invoke Geomview by
-running the script `/usr/local/Geomview/bin/geomview'.  If you want,
-you can copy /usr/local/Geomview/bin/geomview to a directory that's on
-your PATH, and use it to invoke Geomview (it refers to things in the
-/usr/local/Geomview directory, so be sure to leave this directory in
-place if you do this).  Or you can add /usr/local/Geomview/bin to your
-PATH.
-
-PARALLEL MAKE: don't bother.  The Makefile dependencies are not
-yet complete.
-
-You can override the default installation directory with the --prefix
-option to 'configure'.  For example, to install into
-/opt/soft/Geomview instead of /usr/local/Geomview, do "./configure
---prefix=/opt/soft/Geomview".  'make install' will install files into
-subdirectories of the prefix directory called 'bin', 'info', and
-'data'.
+The default installation prefix for Geomview is no longer
+`/usr/local/Geomview/', but just `/usr/local/'. The directory layout
+below the prefix follows the conventions of any other GNU package:
+binaries below `PREFIX/bin/', data below `PREFIX/share/geomview/',
+executable code below `PREFIX/libexec/geomview/' (here live the
+modules). The documentation is installed below
+`PREFIX/share/doc/geomview-VERSION/'. See the file `INSTALL' for
+generic installation instructions.
 
 Geomview requires Motif and benefits from OpenGL; you need to make
 sure Motif is installed on your system before you can compile (or run)
@@ -111,37 +94,6 @@ variables are specific to Geomview:
 	    themselves.
 
 ========================================================================
-Tcl/Tk:
-
-Some of Geomview's external modules use Tcl/Tk (NDview, NDdemo,
-Slicer, 3D-Snapshort, Colormap, Labeler, Crayola).
-
-========================================================================
-
-XFORMS:
-
-Some of Geomview's external modules use the XFORMS GUI library (now at
-http://savannah.nongnu.org/projects/xforms/, formerly at
-http://world.std.com/~xforms). Geomview itself does not use XFORMS,
-but you need to have XFORMS in order to use many of its modules.
-
-For the case that your system does not have XFORMS already installed
-we suggest that you fetch the source-code release from 
-
-http://savannah.nongnu.org/projects/xforms/
-
-The XFORMS package comes with the usual GNU configure/automake
-environment.
-
-If you install the XFORMS in a strange place on your system
-(i.e. outside of the standard library and header-file search paths),
-you can tell Geomview's 'configure' script where to look for it via
-the --with-xforms option: if you run "configure --with-xforms=DIR",
-then 'configure' will look for the XFORMS header and library files in
-DIR.  It expects both the header file 'forms.h', and the libforms
-library, to be in the same directory.
-
-========================================================================
 
 PLATFORM SPECIFIC NOTES:
 
@@ -188,3 +140,15 @@ but I'm not sure.  I'll try to get access to a more recent IRIX
 installation soon and will check it out more.  In the meantime, if you
 compile Geomview on IRIX and run into any problems, please let me
 [mbp@geomtech.com] know.
+
+Cygwin and various older Unix-like system
+-----------------------------------------
+
+Nowadays Xorg installs itself using the usual directory layout below a
+PREFIX path, just like many other GNU packages. Former version
+installed themselves below PFX/X11R<VERSION> (e.g. /usr/X11R6). In
+this case, the following switches are needed:
+
+./configure --with-motif=/usr/X11R6 --with-opengl=/usr/X11R6 OTHERSWICHES
+
+

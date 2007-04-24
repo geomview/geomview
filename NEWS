@@ -21,14 +21,16 @@
      shaders to support this. The new shaders do not seem to work with
      the old BMRT (Blue Moon Render Tools) package, because BMRT does
      not seem to understand the `textureinfo' command. More recent
-     renderers like Aqsis, 3Delight and Pixie seem to work.
+     renderers like Aqsis, 3Delight and Pixie seem to work. Also, writing
+     bianry RIB files was broken on Big-Endian machines in all previous
+     releases of Geomview.
 
    * Textures can be applied in "replace" mode: the texture colour
      simply replaces the surface color.
 
    * support for translucent textures
 
-   * The Sphere OOGL objects now have support for textur-emapping; the
+   * The Sphere OOGL objects now have support for texture-xmapping; the
      details are documented in the Geomview manual.
 
    * new GCL command `hdelete' (lazy deletion of global handles)
@@ -37,18 +39,15 @@
      debugging
 
    * All emodules which need the XForms library have been moved to the
-     separate package `gvemodules-xforms', the `ndutils' and `NDview'
-     emodules have been moved to the separate package `gvemod-ndview',
-     all other Tcl/Tk modules reside in the separate package
-     `gvemodules-tcltk. The XForms example emodule resides now in the
-     separate package `gvemod-xforms-example'.
+     separate package `gvemodules-xforms', the `ndutils', `NDview',
+     `Crayola' and `Labeler' emodules have been moved to separate packages.
 
    * External extension modules ("emodules") no longer neeed to be
-     compiled inside the Geomview source-tree; they can now be build
+     compiled inside the Geomview source-tree; they can now be built
      separately, using an installed version of the OOGL library and
      the header files. Compiling external add-ons inside the source
-     tree is no longer supported. I have ported `maniview' and the
-     Orrery to this new scheme.
+     tree is no longer supported. I have ported `Maniview' and the
+     `Orrery' to this new scheme.
 
    * another bunch of internal fixes, most notably fixing of reference
      counts
