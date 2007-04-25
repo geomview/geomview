@@ -151,6 +151,8 @@ int main(int argc, char *argv[])
     LFree(lit);
     LFree(val);
   }
+
+  return 0;
 }
 
 void
