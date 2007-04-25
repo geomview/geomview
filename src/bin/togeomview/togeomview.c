@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
   const char *todir = "/tmp/geomview";
   const char *toname = "OOGL";
   const char *hostname = "localhost";
-  char *portstr;
+  char *portstr = NULL;
   int port = DFLT_PORT;
 
   prog = argv[0];
@@ -287,8 +287,8 @@ int main(int argc, char *argv[])
 #if HAVE_INET6_SOCKETS
     struct sockaddr_in6 in6;
 #endif
-    struct sockaddr *s;
-    int slen;
+    struct sockaddr *s = NULL;
+    int slen = 0;
     bool do_startgv = false;
 
     switch (pipetype) {
