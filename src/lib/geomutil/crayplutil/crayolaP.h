@@ -54,5 +54,6 @@ int cray_mesh_init();
 int cray_polylist_init();
 int cray_quad_init();
 int cray_vect_init();
+int cray_skel_init();
 
 #endif
