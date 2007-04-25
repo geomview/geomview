@@ -51,10 +51,10 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   const Material *mat = &_mgc->astk->mat;
   int normal_need;
 
-  m.p  = (HPoint3 *)alloca(npts*sizeof(HPoint3));
+  m.p  = OOGLNewNE(HPoint3, npts, "projected points");
   m.n  = NULL;
   m.nq = NULL;
-  m.c  = (ColorA *)alloca(npts*sizeof(ColorA));
+  m.c  = OOGLNewNE(ColorA, npts, "ND colors");
   m.ap = NULL;
   RefInit((Ref *)(void *)&m, mesh->magic);
   DblListInit(&m.pernode);
@@ -158,6 +158,9 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
     OOGLFree(m.nq);
   }
   HPtNDelete(h);
+
+  OOGLFree(m.p);
+  OOGLFree(m.c);
 
   return 0;
 }

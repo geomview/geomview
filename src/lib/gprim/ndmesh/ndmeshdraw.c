@@ -40,9 +40,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "hpointn.h"
 #include "bsptreeP.h"
 #include <stdlib.h>
-#ifndef alloca
-#include <alloca.h>
-#endif
 
 static void
 draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
@@ -59,9 +56,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
 
   memset(&m, 0, sizeof(m));
   GGeomInit((Geom *)(void *)&m, MeshMethods(), MESHMAGIC, NULL);
-  m.p = (HPoint3 *)alloca(npts*sizeof(HPoint3));
+  m.p = OOGLNewNE(HPoint3, npts, "projected points");
   m.n = NULL;
-  m.c = (ColorA *)alloca(npts*sizeof(ColorA));
+  m.c = OOGLNewNE(ColorA, npts, "ND colors");
   m.nu = mesh->mdim[0];
   m.nv = mesh->mdim[1];
   m.geomflags = mesh->geomflags & ~MESH_4D;
@@ -151,6 +148,8 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
   if (m.nq) {
     OOGLFree(m.nq);
   }
+  OOGLFree(m.p);
+  OOGLFree(m.c);
 }
 
 NDMesh *
