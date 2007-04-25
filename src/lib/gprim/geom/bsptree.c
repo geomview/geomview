@@ -764,7 +764,7 @@ case 4: /* supported */
        */
       static GLUtesselator *glutess;
       struct tess_data tessdata[1];
-      GLdouble dv[poly->n_vertices][3];
+      VARARRAY2(dv, GLdouble, poly->n_vertices, 3);
       Vertex **vp;
       int i;
       
@@ -1387,8 +1387,8 @@ static inline HPt3Coord PlaneDistance(HPoint3 *plane, HPoint3 *v)
 static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
 				   EdgeIntersection edges[2])
 {
-  HPt3Coord scp0, scp1, scp2, scp3;
-  PolyPos sign0, sign1, sign2, sign3;
+  HPt3Coord scp0, scp1 = 0.0, scp2, scp3 = 0.0;
+  PolyPos sign0, sign1 = 0.0, sign2, sign3 = 0.0;
   int i, i0, i2;
 
   scp0 = PlaneDistance(plane, &poly->v[0]->pt);

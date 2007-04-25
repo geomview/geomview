@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.17 2007/04/19 00:05:17 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.18 2007/04/25 19:02:31 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -44,9 +44,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bsptreeP.h"
 #include "hpointn.h"
 #include <stdlib.h>
-#ifndef alloca
-#include <alloca.h>
-#endif
 
 static void
 draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
@@ -172,8 +169,8 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
       break;
     case APF_VCFLAT:
       for (i = 0, np = npl.p; i < npl.n_polys; i++, np++) {
-	HPoint3 V[np->n_vertices];
-	ColorA C[np->n_vertices];
+	VARARRAY(V, HPoint3, np->n_vertices);
+	VARARRAY(C, ColorA, np->n_vertices);
 	for (j = 0; j < np->n_vertices; j++) {
 	  V[j] = np->v[j]->pt;
 	  C[j] = (npl.geomflags & PL_HASVCOL)

@@ -415,7 +415,7 @@ mgopengl_trickypolygon(Poly *p, int plflags)
   int i;
   Vertex *vp;
   static GLUtesselator *glutess;
-  GLdouble dpts[p->n_vertices][3];
+  VARARRAY2(dpts, GLdouble, p->n_vertices, 3);
   struct tess_data data[1];
 
   if (glutess == NULL) {

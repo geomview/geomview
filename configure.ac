@@ -95,9 +95,12 @@ typedef bool _Bool;
 #endif
 
 #if HAVE_ISO_C99
-# define VARARRAY(type, name, len) type name[len]
+# define VARARRAY(name, type, len) type name[len]
+# define VARARRAY2(name, type, len1, len2) type name[len1][len2]
 #else
-# define VARARRAY(type, name, len) type *name = alloca((len)*sizeof(type))
+# define VARARRAY(name, type, len) type *name = alloca((len)*sizeof(type))
+# define VARARRAY2(name, type, len1, len2) \
+  type (*name)[len2] = alloca((len1)*(len2)*sizeof(type))
 #endif
 
 #if 0
