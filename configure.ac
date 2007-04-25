@@ -94,6 +94,12 @@ typedef bool _Bool;
 # endif
 #endif
 
+#if HAVE_ISO_C99
+# define VARARRAY(type, name, len) type name[len]
+#else
+# define VARARRAY(type, name, len) type *name = alloca((len)*sizeof(type))
+#endif
+
 #if 0
 #ifdef HAVE_SYS_TYPES_H
 # include <sys/types.h>
@@ -158,6 +164,7 @@ else
   HAVE_CXX=true
 fi
 AC_PROG_CC
+GEOMVIEW_ISO_C99_CHECK
 AC_PROG_AWK
 AC_PROG_INSTALL
 AC_PROG_CPP
