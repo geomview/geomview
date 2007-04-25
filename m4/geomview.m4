@@ -147,7 +147,8 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
       geomdatadir="${datadir}/geomview"
     fi
   else
-    GEOMVIEW_CHECK_PACKAGE([libgeomview],[geomview],[${DEFAULT_PREFIX}/lib],[],
+    GEOMVIEW_CHECK_PACKAGE([libgeomview],[geomview],
+                           [${libdir} -L${DEFAULT_PREFIX}/lib],[],
       [create.h],["'${includedir}/geomview/ -I${DEFAULT_PREFIX}/include/geomview/ -I${oldincludedir}/geomview'"],[],[required enabled])
     geomviewincludes="${LIBGEOMVIEW_INCLUDE_PATH}"
     geomviewlib="${LIBGEOMVIEW_LIB_PATH}"
