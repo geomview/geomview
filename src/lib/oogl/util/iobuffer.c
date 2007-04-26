@@ -726,8 +726,9 @@ int iobfsetmark(IOBFILE *iobf)
   }
 
   /* FIXME: generate error if EOF condition is set? */
-  if (iobf->eof == -1)
+  if (iobf->eof == -1) {
     return -1;
+  }
 
   iob_flush_buffer(ioblist);
   
