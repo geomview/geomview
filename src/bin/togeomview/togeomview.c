@@ -170,8 +170,10 @@ int main(int argc, char *argv[])
   const char *todir = "/tmp/geomview";
   const char *toname = "OOGL";
   const char *hostname = "localhost";
-  char *portstr = NULL;
+#if HAVE_INET_SOCKETS || HAVE_INET6_SOCKETS
+  char *portstr = DFLT_PORT_STR;
   int port = DFLT_PORT;
+#endif
 
   prog = argv[0];
   tail = strrchr(prog, '/');
