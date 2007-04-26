@@ -494,9 +494,7 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
     p->seekable = false;
     p->softEOF = false;
     if (p->inf != NULL) {
-	if (p->infd == -1) {
-	    p->infd = iobfileno(p->inf);
-	}
+	p->infd = iobfileno(p->inf);
 	if (p->infd != -1) {
 	    if (isatty(p->infd)) {
 		p->softEOF = true;
@@ -617,6 +615,7 @@ void PoolClose(Pool *p)
 		iobfclose(p->inf);
 	    }
 	    p->inf = NULL;
+	    p->infd = -1;
 	}
 	if (p->outf != NULL) {
 	    if (p->outf != stdout) fclose(p->outf);
