@@ -868,7 +868,7 @@ AM_CONDITIONAL(HAVE_CXX,    test x$HAVE_CXX = xtrue)
 
 ########################################################################
 
-docdir='${datarootdir}/doc/${PACKAGE_TARNAME}-${PACKAGE_VERSION}'
+dnl docdir='${datarootdir}/doc/${PACKAGE_TARNAME}-${PACKAGE_VERSION}'
 AC_SUBST(docdir)
 AC_DEFINE_UNQUOTED(DOCDIR,
   ["`eval eval echo ${docdir}`"],
