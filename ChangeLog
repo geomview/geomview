@@ -1,3 +1,1441 @@
+2007-04-27  Claus-Justus Heine  <claus@mathematik.uni-freiburg.de>
+
+	* Release of Geomview 1.9.0
+
+2007-04-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Use default docdir.
+
+	* src/bin/togeomview/togeomview.c: Really fix the ipv4/v6 issue.
+
+2007-04-26  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/iobuffer.c: Cosmetics.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	initialization of pool->infd was broken.
+
+	* src/bin/togeomview/togeomview.c: Forgot an #ifdef (for IpV4/V6).
+
+2007-04-25  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/geomview.m4:
+	Search under DEFAULT_PREFIX/lib/ and libdir for libgeomview.
+
+	* configure.ac, src/lib/gprim/geom/bsptree.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/mg/opengl/mgopengldraw.c:
+	Use ISO C99 variable size arrays through a VARARRAY() macro that falls
+	back to alloca is ISOC99 is not available.
+
+	* src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c:
+	Try to avoid alloca for large arrays.
+
+	* src/lib/geomutil/crayplutil/crayolaP.h: missing proto-type
+
+	* src/bin/togeomview/togeomview.c: Some uninitialized variables.
+
+	* src/bin/nose/nose.c: main() should return something.
+
+	* configure.ac: Check for ISO C99 features.
+
+	* m4/iso-c99.m4: Initial revision.
+
+2007-04-24  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* INSTALL.Geomview, NEWS, README, README.cvs: Doc update.
+
+2007-04-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Call GEOMVIEW_SET_PREFIX (DEFAULT_PREFIX env var etc)
+
+2007-04-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/geomview.m4:
+	Check for libgeomview under DEFAULT_PREFIX, disable (per default)
+	--enable-geomview-query if --prefix was given (can be re-enabled).
+
+	* m4/set-prefix.m4: Iterate with eval.
+
+2007-04-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/space.c:
+	Fix ND-view scale bug, introduced by earlier changes.
+
+	* src/bin/geomview/common/motion.c: Formatting.
+
+	* src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/nplcopy.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/sphere/spherecreate.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.h, src/lib/mg/x11/mgx11draw.c, src/lib/shade/image.c:
+	Compiler warnings.
+
+2007-04-18  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/mg/opengl/mgopengldraw.c:
+	Partial support for flat-shaded facets with smooth color interpolation
+	between the vertices.
+
+	* src/lib/gprim/mesh/meshnormal.c:
+	Fill per-quad normals for all mesh points to support shading=vcflat.
+
+	* src/lib/gprim/mesh/meshdraw.c:
+	Support shading=vcflat in draw_projected_mesh().
+
+	* src/lib/shade/apstream.c: Support shading=vcflat
+
+	* src/lib/mg/opengl/mgopenglmesh.c:
+	Fix a bug missing () bug in mgopenglsubmesh().
+
+2007-04-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/event.c, src/bin/geomview/common/ui.c, src/bin/geomview/common/ui.h, src/lib/gprim/polylist/plload.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/shade/appearance.h, src/lib/shade/apstream.c:
+	New shading option VCflat: smooth interpolated per-vertex colours, but with flat lighting.
+
+	* m4/geomview.m4:
+	Make --enable-geomview-query the default, i.e. ask the installed
+	version of Geomview about the installation directories if not disabled
+	via --disable-geomview-query.
+
+	* m4/check-package.m4:
+	Iterate with eval over the extra framework search paths.
+
+	* m4/check-package.m4: Revert previous two changes.
+
+2007-04-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/check-package.m4:
+	Need to use LDFLAGS; the library path passed to AC_CHECK_LIB() in the
+	last argument really is passed as last argument to the linker; and
+	linker paths are position sensitive.
+
+2007-04-15  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/iobuffer.c:
+	iobffileopen(): bail out if istream argument is NULL.
+
+	* src/lib/oogl/refcomm/streampool.c: Handle drive-letter in file name.
+
+2007-04-12  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/rib/mgribtoken.c: Again:
+
+	The world is not Big-Endian (luckily). So fix the damn RIB-stuff to
+	not misbehave.
+
+	Also:
+	Binary RIB was missing some tokens the ASCII stuff already was aware of.
+
+	* src/lib/mg/rib/mgribtoken.c:
+	The world is not Big-Endian (luckily). So fix the damn RIB-stuff to
+	not misbehave.
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/lang.c, src/bin/geomview/common/worldio.c, src/bin/geomview/x11/gvsave.c:
+	Make sure we can save the universe (i.e. include aliens).
+
+2007-04-11  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/ndutils/TransformGeom.c, src/bin/ndutils/WithColor.c:
+	Support 3d-snapshots for Insts (colored or not).
+
+	* src/bin/ndutils/TransformGeom.c:
+	3d snapshot without colour works for INSTs, colour snapshots still to
+	be done (but should now be trivial).
+
+	* src/bin/ndutils/TransformGeom.c, src/bin/ndutils/Clip.h, src/bin/ndutils/GeomtoNoff.c:
+	Trying to make 3d snapshots work again ... (not yet).
+
+2007-04-10  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/worldio.c: Use bool true/false
+
+	* src/bin/ndutils/snapshot.c: Quote geometry names.
+
+	* src/bin/ndutils/clip.c:
+	clip_all_vertices(): the list head may be deleted, cope with that.
+
+	* src/bin/ndutils/clipoogl.c: readNDPoly() was broken (my fault).
+
+	* src/bin/ndutils/testwish.c: Emacs stuff.
+
+	* src/bin/ndutils/GeomtoNoff.c:
+	Make it work for lists and insts, fix toNoffNPolyList() (did modify
+	stuff instead of copying).
+
+	* src/bin/ndutils/Clip.h: Bool data type.
+
+	* src/lib/gprim/npolylist/nplcreate.c:
+	CR_POINT: homogeneous component is now at index 0 for ND stuff.
+
+	* src/lib/gprim/npolylist/nplcopy.c:
+	Only copy per-vertex colour if they are present.
+
+	* src/lib/gprim/geom/geomstream.c:
+	GeomStreamOut(): _always_ surround geometries by braces, some
+	geometries (INSTs) have a variable number of "sections" which may be
+	there or not.
+
+	* src/bin/geomview/common/worldio.c:
+	save_dgeom_geom(): only decrease the pool-level is wrap == true.
+
+	* src/lib/oogl/refcomm/streampool.c: PoolIncLevel(): debugging code.
+
+2007-04-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/geometry/ntransobj/ntransobj.c: Forgot the closing brace.
+
+	* src/bin/ndutils/GeomtoNoff.c: Try to support Inst objects.
+
+	* src/lib/geomutil/crayplutil/craySkel.c:
+	cray_skel_UseFColor(): allocation bug.
+
+	* src/bin/crayola/callbacks.c, src/bin/geomview/common/lispext.c:
+	Stringe geom-ids have to be quoted, they might contain spaces.
+
+	* doc/geomview.texi, src/lib/gprim/inst/inststream.c:
+	Allow texture transform in the on-disk format.
+
+	* src/lib/gprim/inst/instcreate.c:
+	InstCopy(): need to initialize txtlist.
+
+	* m4/check-package.m4: Some more m4 fixes.
+
+2007-04-08  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* data/Makefile.am: Add moebius.skel
+
+	* src/bin/crayola/callbacks.c: Cosmetics.
+
+	* src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skelpick.c:
+	Pick related fixes.
+
+	* src/lib/geomutil/crayplutil/Makefile.am, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/craySkel.c, src/lib/geomutil/crayplutil/crayola.c:
+	Some smaller fixes + support for SKEL objects.
+
+2007-04-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/withtool.m4:
+	Fix empty path issue in GV_PATH_PROG (dirname perl == ., not empty).
+
+	* configure.ac: Make sure to use new CHECK_PACKAGE stuff.
+
+	* src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c:
+	Colouring edge picks should really only colour the edge. Fix that.
+
+	MISSING: colouring of SKEL objects.
+
+	* doc/version.texi, src/bin/NDview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/labeler/Makefile.am, src/bin/ndutils/Makefile.am:
+	Make sure to use new CHECK_PACKAGE stuff.
+
+	* src/bin/crayola/callbacks.c: Cosmetics.
+
+	* src/bin/cplxview/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am:
+	Use new CHECK_PACKAGE() stuff etc.
+
+	* src/bin/example/Makefile.am:
+	XFORMS_ALL_INCLUDES already contains ${X_CFLAGS}
+
+	* m4/check-package.m4, m4/geomview.m4:
+	FreeBSD seems to work now (with this emodule)
+
+	* m4/check-package.m4: Cosmetics.
+
+	* m4/check-package.m4, src/bin/example/Makefile.am:
+	We need to be a little bit more careful when checking for packages;
+	Linux is not the world.
+
+	* src/bin/crayola/Makefile.am, src/bin/crayola/tkcrayola.c:
+	Fix checking for tcl/tk headers.
+
+	* Makefile.am, m4/lf_local.m4:
+	Fix header link & install issue for auto-generated headers.
+
+2007-04-06  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/cplxview/Makefile.am, src/bin/example/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/ndutils/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am:
+	Fix include path for private headers.
+
+	* m4/check-package.m4, m4/geomview.m4:
+	Fix include path stuff for tcl and geomview
+
+	* src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c:
+	Fix faulty alloca #ifdef's
+
+	* src/lib/shade/image.c: Need to include signal.h
+
+	* configure.ac: Fix --help texts.
+
+	* src/bin/geomview/common/main.c, src/bin/togeomview/togeomview.c, src/bin/geomview/common/comm.c, src/bin/geomview/geomview.1gv, doc/geomview.texi:
+	Support IPv4/v6 sockets. Somewhat dangerous, but so what.
+
+	* src/bin/geomview/x11/gvcamui.c: Remove spaces from version string.
+
+	* src/lib/oogl/refcomm/streampool.c: Cosmetics.
+
+	* configure.ac, src/bin/geomview/common/comm.c, src/bin/geomview/common/main.c, src/bin/togeomview/togeomview.c:
+	Try to support IPv4/v6 sockets.
+
+	* src/bin/geomutil/math2oogl/math2oogl.c, src/lib/oogl/refcomm/streampool.c:
+	Cosmetics: use PF_xxx insteadof AF_xxx as argument to connect.
+
+2007-04-05  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/crayola/callbacks.c, src/bin/crayola/tkcrayola.c:
+	Replace the functionality of Tcl_CreateFileHandler() by polling via
+	timer events.
+
+	* src/bin/cplxview/.cvsignore: Add .geomview.
+
+	* src/bin/flythrough/data/Makefile.am: EXTRA_DIST stuff.
+
+	* src/bin/geomview/common/comm.c: Typo.
+
+	* src/bin/geomview/x11/gvmain.c: Local variables section.
+
+2007-04-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/refcomm/streampool.c:
+	HandleReferringTo(): ref-count cleanups introduced some bugs which
+	made it impossible to read from a named pipe, fix that (always return
+	with a handle if the file could be opened, even when it does not have
+	(yet) data available).
+
+	* data/Makefile.am: dodec.vec belongs to cplxview.
+
+	* src/bin/nose/nose.c: Fix some compiler warnings.
+
+2007-04-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/flythrough/Makefile.am, src/bin/flythrough/data/Makefile.am:
+	Move flythrough data to flythrough emodule.
+
+	* src/bin/flythrough/data/.cvsignore: Add Makefile[.in]
+
+	* data/groups/equi.1.gv, data/groups/equi.2.gv, data/groups/equi.3.gv, data/groups/equi.4.gv, data/groups/loop.1.gv, data/groups/loop.2.gv, data/groups/loop.3.gv, data/groups/loop.4.gv, data/groups/quart.1.gv, data/groups/quart.2.gv, data/groups/quart.3.gv, data/groups/quart.4.gv, data/Makefile.am, data/geom/dodec.vect, data/geom/flythrough_diagram.gv, data/groups/br4.0.tlist, data/groups/br4.1.tlist, data/groups/br4.2.tlist, data/groups/br4.3.tlist, data/groups/dir.1.gv, data/groups/dir.2.gv, data/groups/dir.3.gv, data/groups/dir.4.gv:
+	Move flythrough data to flythrough emodule.
+
+	* src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am, src/bin/example/Makefile.am, src/bin/NDview/Makefile.am, src/bin/cplxview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/ndutils/Makefile.am:
+	Add path to X11 include files via X_CFLAGS.
+
+	* src/lib/gprim/geom/Makefile.am: OPENGLINCLUDE without trailing s.
+
+	* src/lib/gprim/geom/geomclass.h: free-list fix.
+
+	* src/lib/gprim/geom/bsptree.c, src/lib/mg/opengl/mgopengldraw.c:
+	Fix a compiler warning.
+
+	* src/lib/mib/Makefile.am:
+	Use X_CFLAGS for the proper location of the X11-headers.
+
+	* src/lib/oogl/util/malloc-debug.c:
+	Only use malloc.h and mallinfo() when found by configure.
+
+	* src/lib/shade/image.c:
+	compressBound() is not always available, replace by a macro in that case.
+
+	* src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/transformn/transformn.h, src/lib/oogl/util/freelist.h:
+	Fix w.r.t. to local/extern/declaration only free-lists.
+
+	* src/lib/geometry/hpoint3/Makefile.am, src/lib/geometry/hpointn/Makefile.am:
+	Do not create empty archives.
+
+	* src/bin/geomview/x11/Makefile.am, src/bin/labeler/Makefile.am, src/lib/mg/x11/Makefile.am:
+	Use X_CFLAGS; on older systems the X11 headers are still below X11R6/include/
+
+	* configure.ac:
+	Do not try to generate empty archives, this is not supported on all
+	platforms. Check for compressBound() if zlib is found (then it is
+	pre-1.2.x). Check for malloc.h and mallinfo() (debugging only).
+
+	* data/shaders/Makefile.am: Forgot to add .sdl files to clean-local:
+
+	* configure.ac:
+	AC_CHECK_TYPES takes a comma separated list. Gnah. Autoconf is really
+	inconsistent.
+
+2007-04-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/nose/nose.c:
+	Fix the nose emodule; need to use IOBFILEs not FILEs.
+
+	* src/bin/example/.cvsignore, src/bin/labeler/.cvsignore:
+	Ignore .geomview.
+
+	* src/bin/example/Makefile.am: Typo.
+
+	* src/bin/geomview/common/event.c:
+	Keyboard short-cuts for help browsers (html/pdf).
+
+	* src/bin/NDview/Makefile.am: EXTRA_DIST was doubly defined.
+
+2007-04-01  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi: Finish the docs for (ui-html-browser .........
+
+	* src/bin/geomview/common/help.c, Makefile.am, configure.ac, geomview.sh, src/Makefile.am, src/bin/geomview/common/Makefile.am, src/bin/geomview/common/ui.h, src/bin/geomview/geomview.1gv, src/bin/geomview/x11/gvmnpanel.c:
+	Add a real "Help" button the the main-menu; the user manual may be
+	viewed by external browsers (either PDF or HTML, browsers are
+	configurable).
+
+	* src/lib/oogl/lisp/lisp.c: Fix an ugliness.
+
+	* doc/geomview.texi:
+	Document (ui-html-browser...) and (ui-pdf-viewer...) configuration commands.
+
+	* src/bin/geomview/x11/gvcredits.c, src/bin/geomview/x11/interface/Credits.mib:
+	Convert the "credits" stuff into an "about" panel, add myself and the
+	others from the README.
+
+	* src/bin/geomview/x11/Makefile.am: Use %Y format for date, not %y.
+
+	* src/lib/mib/mibload.c: Cosmetics.
+
+	* src/bin/geomview/x11/gvcredits.c: Add myself.
+
+	* src/bin/geomview/x11/gvui.c, src/bin/geomview/common/lang.c, src/bin/geomview/common/lang.h, src/bin/geomview/x11/gvmnpanel.c:
+	Defined a (ui-motion ...) command to give access to the motion menu
+	through GCL.
+
+	* doc/geomview.texi, doc/version.texi:
+	Document new (ui-motion...) GCL command.
+
+	* src/bin/NDview/.cvsignore, src/bin/NDview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/labeler/Makefile.am, src/bin/ndutils/.cvsignore, src/bin/ndutils/Makefile.am:
+	--enable-[local-emodule,geomview-query] support.
+
+	* src/bin/flythrough/.cvsignore, src/bin/ginsu/.cvsignore, src/bin/graffiti/.cvsignore, src/bin/hinge/.cvsignore, src/bin/stereo/.cvsignore, src/bin/sweep/.cvsignore, src/bin/tackdown/.cvsignore, src/bin/transformer/.cvsignore:
+	Ignore .geomview.
+
+	* src/bin/hinge/Makefile.am: Typo.
+
+	* src/bin/cplxview/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am:
+	Support the --enable-[local-emodule,geomview-query] switches.
+
+	* data/Makefile.am: Move Hinge... objects to gvemodules-xforms
+
+	* data/geom/HingeCube, data/geom/HingeDiamond, data/geom/HingeDodec, data/geom/HingeLongcube, data/geom/HingeTetra, data/geom/HingeTriangle:
+	Moved to gvemodules-xforms/src/hinge/
+
+	* src/bin/example/Makefile.am:
+	Changes w.r.t. to template-like automake stuff.
+
+	* src/bin/example/Makefile.am:
+	Use abs_builddir as path to the executable for the local .geomview
+	emodule definition.
+
+	* src/bin/crayola/Makefile.am:
+	Generate .geomview for local testing (without the need to install the stuff).
+
+	* src/bin/crayola/.cvsignore: Ignore .geomview.
+
+	* m4/geomview.m4: Fix help text (kill reference to "example" emodule).
+
+	* src/lib/gprim/geom/Makefile.am:
+	bsptree.c needs the correct path to the glu.h header file 'cause it is
+	using the GLU tesselator for complicated polygons.
+
+2007-03-24  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* NEWS, doc/geomview.texi:
+	Docment most recent translucency progress (by means of the GLU tesselator).
+
+	* src/lib/gprim/geom/bsptree.c:
+	Use a very large floating point tolerance (1e-3). This still seems to
+	give good results in most cases, and prevents consumption of
+	tremendous amounts of memory for translucent ND-objects and for
+	Adrian's fancy self-intersecting polygons.
+
+	* src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/geomclass.h, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c:
+	Various ND-viewing translucency fixes; the stuff was broken again. Gnah.
+
+	* src/lib/oogl/util/dbllist.h:
+	New function DblListMove(): move the entire list from one head to
+	another (this implies adjusting the back pointers to the list head as
+	well 'cause it is a doubly linked list).
+
+	* src/lib/mg/common/mg.c:
+	Fix of a very silly beginners bug. What a shame.
+
+2007-03-23  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Clean up of the "tricky" polygon code.
+
+	* src/lib/gprim/geom/bsptree.c:
+	Give the GLU tesselator the (already computed) normal.
+
+	* src/lib/gprim/geom/bsptree.c:
+	Use the GLU tesselator for non-convex quadrilaterals and for all
+	polygons with more than 4 vertices. Should still need some performance
+	tuning (e.g. we should pass the polygon normal to the tesselator etc.)
+
+	* src/lib/gprim/geom/bsptree.c:
+	Untested "#if 0"ed GLU tesselation for non-convex or non-flat polygons.
+
+	* configure.ac, src/lib/gprim/geom/bsptree.c, src/lib/mg/opengl/mgopengldraw.c:
+	Define HAVE_LIBGLU is that library is actually there, only compile
+	trickypolygon() if GLU is found.
+
+	The stuff still needs cleanup. The first attempt at the combine
+	callback was really incomplete (textures, colors etc); and it could
+	probably be sped up a little bit.
+
+	First attempts to use the GLU tesselator for the BSP-tree stuff.
+
+	* src/lib/gprim/discgrp/Makefile.am, src/lib/gprim/discgrp/discgrp.5gv:
+	Resurrect the discgrp manual page.
+
+	* data/NDview/cplxview/.cvsignore, data/NDview/cplxview/Makefile.am:
+	Compose an cplxview emodule.
+
+	* data/Makefile.am: Move cplxviewdata to that module.
+
+	* data/NDview/.cvsignore, data/NDview/Makefile.am:
+	Move NDview data to the nd-view module where it belongs to.
+
+	* src/bin/nose/Makefile.am: Typos.
+
+	* data/Makefile.am:
+	Move NDview data to NDview module where it belongs to.
+
+	* configure.ac: Get rid of "foreign" automake flag.
+
+	* README, configure.ac, src/bin/Makefile.am: Add nose emodule.
+
+	* src/bin/geomutil/math2oogl/Makefile.am: Add man-page to EXTRA_DIST.
+
+	* src/bin/nose/.cvsignore, src/bin/nose/Makefile.am, src/bin/nose/nose.1gv, src/bin/nose/nose.c:
+	Nose module / example, debugging for picking.
+
+	* m4/check-package.m4, m4/geomview.m4:
+	Writing autoconf test is really a little bit complicated ...
+
+	* m4/geomview.m4:
+	Check also in standard places for geomview include files.
+
+2007-03-22  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi, doc/version.texi: Version bumped to 1.9.0
+
+	* src/lib/geomutil/Makefile.am, src/lib/geomutil/bdy/Makefile.am, src/lib/geomutil/plutil/Makefile.am, src/lib/oogl/wa/Makefile.am:
+	Man-page move (NR -> NRgv).
+
+	* doc/Makefile.am: Man page update.
+
+	* doc/gvplot.txt: This really is README.gvplot.
+
+	* src/lib/Makefile.am: Versioning.
+
+	* src/bin/togeomview/Makefile.am, doc/geomview.5gv, doc/lisp.3gv, doc/oogl.5gv, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am, src/bin/example/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/geomutil/bdy/Makefile.am, src/bin/geomutil/clip/Makefile.am, src/bin/geomutil/hvectext/Makefile.am, src/bin/geomutil/oogl2rib/Makefile.am, src/bin/geomutil/oogl2vrml/Makefile.am, src/bin/geomutil/plutil/Makefile.am, src/bin/geomutil/ucd/Makefile.am, src/bin/geomutil/vrml2oogl/Makefile.am, src/bin/geomview/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/sweep/Makefile.am, doc/Makefile.am, src/bin/animate/Makefile.am, src/bin/cplxview/Makefile.am, src/bin/crayola/Makefile.am, src/lib/geomutil/bdy/bdy.3gv, src/lib/geomutil/plutil/anytopl.3gv, src/lib/geomutil/plutil/plcombine.3gv, src/lib/geomutil/plutil/plconsol.3gv, src/lib/oogl/wa/fsaparse.3gv, src/bin/geomview/geomview.1gv, src/bin/ginsu/ginsu.1gv, src/bin/graffiti/graffiti.1gv, src/bin/hinge/hinge.1gv, src/bin/sweep/sweep.1gv, src/bin/sweep/sweep.3gv, src/bin/tackdown/tackdown.1gv, src/bin/togeomview/togeomview.1gv, src/bin/transformer/transformer.1gv, src/lib/geomutil/geomutil.3gv, src/bin/geomutil/clip/clip.1gv, src/bin/geomutil/hvectext/hvectext.1gv, src/bin/geomutil/math2oogl/OOGL.m.txt, src/bin/geomutil/math2oogl/math2oogl.1gv, src/bin/geomutil/oogl2rib/oogl2rib.1gv, src/bin/geomutil/oogl2vrml/oogl2vrml.1gv, src/bin/geomutil/plutil/anytooff.1gv, src/bin/geomutil/plutil/bez2mesh.1gv, src/bin/geomutil/plutil/offconsol.1gv, src/bin/geomutil/plutil/polymerge.1gv, src/bin/geomutil/ucd/anytoucd.1gv, src/bin/geomutil/ucd/ucdtooff.1gv, src/bin/geomutil/vrml2oogl/vrml2oogl.1gv, src/bin/animate/animate.1gv, src/bin/cplxview/cplxview.1gv, src/bin/crayola/crayola.1gv, src/bin/example/example.1gv, src/bin/flythrough/flythrough.1gv, src/bin/geomutil/bdy/bdy.1gv, src/lib/geomutil/bdy/bdy.3, src/lib/geomutil/plutil/anytopl.3, src/lib/geomutil/plutil/plcombine.3, src/lib/geomutil/plutil/plconsol.3, src/lib/oogl/wa/fsaparse.3, src/lib/geomutil/geomutil.3, src/bin/tackdown/tackdown.1, src/bin/togeomview/togeomview.1, src/bin/transformer/transformer.1, src/bin/geomview/geomview.1, src/bin/ginsu/ginsu.1, src/bin/graffiti/graffiti.1, src/bin/hinge/hinge.1, src/bin/sweep/sweep.1, src/bin/sweep/sweep.3, src/bin/geomutil/plutil/bez2mesh.1, src/bin/geomutil/plutil/offconsol.1, src/bin/geomutil/plutil/polymerge.1, src/bin/geomutil/ucd/anytoucd.1, src/bin/geomutil/ucd/ucdtooff.1, src/bin/geomutil/vrml2oogl/vrml2oogl.1, src/bin/geomutil/oogl2rib/oogl2rib.1, src/bin/geomutil/oogl2vrml/oogl2vrml.1, src/bin/geomutil/plutil/anytooff.1, src/bin/geomutil/hvectext/hvectext.1, src/bin/geomutil/maple2oogl/Makefile.am, src/bin/geomutil/math2oogl/Makefile.am, src/bin/geomutil/math2oogl/math2oogl.1, src/bin/geomutil/bdy/bdy.1, src/bin/geomutil/clip/clip.1, src/bin/flythrough/flythrough.1, src/bin/example/example.1, src/bin/cplxview/cplxview.1, src/bin/crayola/crayola.1, doc/oogl.5, src/bin/animate/animate.1, doc/geomview.5, doc/lisp.3:
+	Give all manual pages a gv suffix, some of the names are just too short.
+
+	* doc/README.gvplot: Initial revision.
+
+	* .cvsignore: Blah.
+
+	* src/lib/Makefile.am: Versioning.
+
+	* doc/version.texi: Update.
+
+	* doc/Makefile.am: Use globally defined docdir.
+
+	* README: Update.
+
+	* configure.ac: No longer use  /usr/local/Geomview/ as default prefix.
+
+	* NEWS: Update.
+
+	* m4/geomview.m4:
+	Fix version check. Move most of the generic autoconf initialization to
+	the GV_INIT_GEOMVIEW() macro.
+
+	* NEWS, configure.ac: Call the beast 1.9.0
+
+	* m4/geomview.m4:
+	Small fixes (check for -lm, math.h, other minor stuff).
+
+	* m4/geomview.m4, m4/set-prefix.m4: Some fine-tuning
+
+	* src/bin/example/Makefile.am: Emodule definition stuff.
+
+	* README: Cosmetics.
+
+	* geomview.sh: Add $HOME to the search path for emodule definitions.
+
+	* data/shaders/Makefile.am:
+	Add blue-moon compiled shaders to EXTRA_DIST.
+
+	* src/lib/oogl/util/Makefile.am: Add freelist.h to sources.
+
+	* m4/geomview.m4: Feature local installation.
+
+	* m4/check-package.m4, m4/geomview.m4, src/bin/example/Makefile.am:
+	Autoconf madness.
+
+	* src/bin/cplxview/Makefile.am, src/bin/example/Makefile.am, src/bin/flythrough/Makefile.am, src/bin/ginsu/Makefile.am, src/bin/graffiti/Makefile.am, src/bin/hinge/Makefile.am, src/bin/stereo/Makefile.am, src/bin/sweep/Makefile.am, src/bin/tackdown/Makefile.am, src/bin/transformer/Makefile.am:
+	Separate emodules, using xforms library.
+
+	* src/bin/crayola/Makefile.am: Add man-pages to EXTRA_DIST.
+
+	* configure.ac, src/bin/Makefile.am:
+	Move xforms modules and Tcl/Tk modules to the separate packages
+
+	gvemod-ndview
+	gvemodules-xforms
+	gvemodules-tcltk
+
+	* src/bin/crayola/Makefile.am, src/bin/labeler/Makefile.am:
+	External gvemodules-xforms and gvemodules-tcltk packages.
+
+2007-03-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/NDview/Makefile.am, src/bin/ndutils/Makefile.am:
+	Emodule strip-off should be finished now.
+
+	* src/bin/ndutils/GeomExtentDirection.c: Cosmetics.
+
+	* Makefile.am:
+	Also install the private header files to enable stripping off emodules
+	into separate package; private header files go to PKGINCLUDEDIR/private/
+
+	* src/bin/Makefile.am:
+	Remove NDview and ndutils, moved to a separate package.
+
+	* doc/geomview.texi: Add some more cross-references for GCL commands.
+
+	* doc/geomview.texi:
+	Convert the GCL reference into subsections; the stuff can now be
+	referenced and there is a menu node for each command.
+
+	* doc/geomview.texi: Cosmetics
+
+	* doc/geomview.texi: Forgot a closing bracket.
+
+	* doc/geomview.texi, doc/version.texi, src/bin/geomview/common/comm.c:
+	New command (hdelete [type] name) which can be used to actually delete
+	a named global handle.
+
+	* src/lib/gprim/geom/delete.c, src/lib/oogl/refcomm/handle.c:
+	HandleRefIterate(), HandlePoolIterate() were not safe w.r.t. to the
+	deletion of handles. Fix that.
+
+	* src/bin/geomview/common/comm.c:
+	commandclose(): should we really keep Pools with command-language? ATM
+	I'm calling PoolDelete(). Mmmh.
+
+	* src/bin/geomview/common/worldio.c:
+	Lwrite(): also delete the tempoaray pool.
+
+	* src/bin/geomview/common/lang.c:
+	Lwrite_handle(): don't forget to delete the temporary pool.
+
+	* src/bin/geomview/common/drawer.c:
+	Lwrite_comments(): also delete the temporary pool. What else.
+
+	* src/bin/geomview/common/comm.c:
+	Slight changes for reading from command strings.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	HandleReferringTo(): accessing a handle via ": blahhandle"
+	automatically converts "blahhandle" into a global one.
+
+	PoolClose(): revert back to not deleting the closed Pool. But maybe we
+	should get rid of all the opened emodule pools nevertheless ...
+
+	* src/lib/oogl/refcomm/handleP.h:
+	Move the list-node to the top of the structure; this way (hack!) we
+	can use the double-list node for the free-list without overwriting the
+	"deleted" tag.
+
+	* src/lib/oogl/refcomm/handle.c:
+	HandleCreateGlobal(): do not reset the attached object when converting
+	a temporary handle to a permanent one.
+
+	* src/lib/gprim/geom/geomstream.c:
+	GeomInvokeTranslator(): do not forget to really delete the temporary pool.
+
+	* src/bin/geomview/x11/gvsave.c:
+	PoolClose() takes care of stdout/stdin for itself.
+
+	* src/lib/gprim/discgrp/dgclass.c, src/lib/gprim/discgrp/dgcreate.c, src/lib/gprim/discgrp/dgstream.c, src/lib/gprim/discgrp/discgrp.h, src/lib/gprim/discgrp/discgrpP.h:
+	Sanitize the handling of geom, camgeom, ddgeom and their associated
+	handles. Define a Get() method, so maniview no longer needs to access
+	private data-structures.
+
+	* configure.ac, src/lib/oogl/util/porting.h:
+	Should use AC_CHECK_DECLS() before defining proto-types. The mere fact
+	the function does not exist as a symbol does not mean that it is not declared.
+
+	* m4/geomview.m4: Use GeomGet()/GeomSet() instead of accessing private
+	data-structures. Make sure the damn stuff compiles as external module,
+	outside the Geomview source-tree.
+
+	* m4/geomview.m4: Fix unbalanced if-fi
+
+	* Makefile.am, configure.ac, data/shaders/Makefile.am, geomview.sh, m4/geomview.m4, src/Makefile.am:
+	Build system fixes.
+
+	* m4/geomview.m4: Optionally check for the version of Geomview.
+
+	* src/bin/NDview/Makefile.am: Cosmetics.
+
+	* m4/withtool.m4: CHECK_PROG/PATH_PROG duality.
+
+	* m4/withtool.m4: Absolute/relative path-name support.
+
+2007-03-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/withtool.m4, m4/geomview.m4: Initial revision.
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Back-face culling cannot work with transparency, so disable it while
+	drawing translucent facets.
+
+	* src/lib/gprim/geom/geomclass.h, src/lib/gprim/inst/instcreate.c, src/lib/oogl/lisp/Makefile.am, src/lib/oogl/lisp/lisp.c, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/util/Headers, src/lib/oogl/util/freelist.h, src/bin/geomview/common/lispext.c, src/bin/geomview/common/lispext.h, src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/ntransobj/ntransobj.c, src/lib/geometry/transformn/transformn.h, src/lib/geometry/transobj/transobj.c, src/lib/gprim/geom/delete.c:
+	Implement a simplistic free-list approach for small objects which are
+	allocated/deallocated very often.
+
+	* src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/geom/delete.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/geomclass.h:
+	Handle tagging of appearance and the necessary per-node data madness
+	more efficiently (i.e. do _not_ allocate and check for per-node data
+	if transparency is not enabled).
+
+	* src/lib/mg/common/mgP.h: Cosmetics.
+
+	* src/lib/shade/texture.c:
+	TxMerge() did not correctly increase the ref.-count in all cases.
+
+	* src/lib/oogl/util/ooglutil.h: Fix memory debug definitions.
+
+	* src/lib/mg/common/mg.c:
+	Don't forget to set ap->tx to NULL after calling TxDelete().
+
+	* src/lib/geometry/transobj/transobj.c:
+	TransStreamIn(): TransObjStreamIn() can (successfully) return with an
+	empty handle, in which case we must not try to access the
+	(non-existing) TransObj.
+
+	* src/bin/geomview/common/comm.c: TransObj handling had a memory leak.
+
+	* src/bin/NDview/Makefile.am, src/bin/crayola/Makefile.am, src/bin/labeler/Makefile.am, src/bin/ndutils/Makefile.am, geomview.sh:
+	Adjust environment variables in preparation for Orrery and maniview
+	autoconf revision.
+
+	* configure.ac: Fix debug malloc definitions.
+
+	* configure.ac, data/shaders/Makefile.am:
+	Check for shader compilers sdrc (Pixie) and shaderdl
+	(3Delight). Luckily Aqsis, Pixie and 3Delight produce shader files
+	with different suffixes.
+
+	* data/shaders/GVblendconstant.sl, data/shaders/GVblendplastic.sl, data/shaders/GVdecalconstant.sl, data/shaders/GVdecalplastic.sl, data/shaders/GVmodulateconstant.sl, data/shaders/GVmodulateplastic.sl, data/shaders/GVreplaceconstant.sl, data/shaders/GVreplaceplastic.sl:
+	Use texture(..., "width", 0.0); at least aqsis otherwise produces
+	textures which are just overblurred.
+
+2007-03-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi: Image object doc fixes.
+
+	* src/lib/gprim/sphere/spherecreate.c:
+	Typo (CR_SPHERETEX -> CR_SPHERETX)
+
+	* src/lib/gprim/sphere/spherecreate.c: Undo previous commit.
+
+	* src/lib/shade/image.c, src/lib/gprim/sphere/spherecreate.c:
+	Fix handling of raw image data.
+
+	* src/bin/geomutil/maple2oogl/README.gvplot, src/bin/geomutil/maple2oogl/gvplot.mapleV8, src/bin/geomutil/maple2oogl/gvplot.mws, src/bin/geomutil/maple2oogl/savegvplot.mws:
+	Most documentation.
+
+	* src/bin/geomview/common/drawer.h, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/transform.h, src/bin/geomview/common/drawer.c:
+	ND-fixes.
+
+2007-03-18  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, doc/geomview.texi, doc/version.texi, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/bezier/bezdraw.c, src/lib/gprim/bezier/bezierP.h, src/lib/gprim/bezier/bezload.c, src/lib/gprim/bezier/bezsave.c, src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomstream.c, src/lib/gprim/geom/iterate.c, src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/mesh/meshP.h, src/lib/gprim/mesh/meshcopy.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshload.c, src/lib/gprim/mesh/meshsave.c, src/lib/gprim/ndmesh/ndmeshP.h, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/polylist/polylistP.h, src/lib/gprim/sphere/sphereP.h, src/lib/gprim/sphere/spherecreate.c, src/lib/gprim/sphere/spheredice.c, src/lib/gprim/sphere/sphereload.c, src/lib/gprim/sphere/spheresave.c, src/lib/mg/common/mg.c, src/lib/mg/common/mg.h, src/lib/mg/common/mgP.h, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/oogl/util/create.h, src/lib/shade/appearance.h:
+	Support for textured spheres/define TxST structure + transforms,
+	support for texture transform stacks.
+
+	* src/bin/geomview/common/worldio.c: Comment/cosmetics.
+
+	* Makefile.am: Use absolute path-names for build-dir geomview script.
+
+2007-03-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/ps/mgps.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/x11/mgx11.c, src/lib/mg/buf/mgbuf.c, src/lib/mg/common/mg.c, src/lib/mg/common/mg.h, src/lib/mg/common/mgP.h, src/lib/mg/opengl/mgopengl.c:
+	Prepare for texture transform stacks to support texturing of objects
+	pasted together via INSTs and TLists.
+
+	* src/lib/gprim/sphere/spherecreate.c: Compilation fix.
+
+	* src/lib/gprim/sphere/sphereP.h: Get rid of a compiler warning.
+
+	* doc/version.texi: This file should not be kept in the CVS.
+
+	* src/lib/gprim/sphere/spherecreate.c:
+	Start defining texture transformations.
+
+	* src/lib/gprim/sphere/sphere.h, src/lib/gprim/sphere/sphereP.h, src/lib/gprim/sphere/sphereclass.c, src/lib/gprim/sphere/spherecreate.c, configure.ac, src/lib/gprim/sphere/Makefile.am:
+	Optionally use a polar mesh for drawing spheres, should also make it
+	much easier to define spheres with textures.
+
+	* src/lib/gprim/bezier/bezdice.c:
+	BSP-tree invalidation now done via call-back.
+
+	* src/lib/gprim/sphere/spheredice.c, src/lib/gprim/sphere/spheredraw.c:
+	Initial revision.
+
+	* src/lib/mg/rib/mgribdraw.c:
+	Fix textured beziers (up-side down issue).
+
+	* src/lib/gprim/bezier/bezdice.c: Cosmetics.
+
+	* src/lib/mg/opengl/mgopenglmesh.c:
+	Turn-off texturing before drawing edges, otherwise at least GL_REPLACE
+	leads to the wrong colors (for the edges).
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/event.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/rman.c, src/bin/geomview/common/space.c, src/bin/geomview/common/transform.c, src/bin/geomview/common/transform.h, src/bin/geomview/common/ui.h, src/bin/geomview/common/worldio.c:
+	Try to be a little bit more consistent in the choice of data-types in
+	some places.
+
+	* src/lib/gprim/bezier/bezbound.c:
+	Fix bbox for pdim == 4 with 3d drawing.
+
+	* src/lib/shade/texture.c, src/lib/shade/appearance.h:
+	tex->background really is only RGB, _not_ RGBA (see glTexEnvf(3)).
+
+	* src/lib/shade/apstream.c, src/lib/shade/light.c:
+	Use 8 digits for output of float.
+
+	* src/lib/mg/opengl/mgopenglshade.c:
+	mgopengl_needtexture(): always load tex->tfm, even if the texture in
+	the cache is otherwise identical to the desired texture.
+
+	* src/lib/mg/common/mgtexture.c:
+	mg_same_texture(): tex->background is only relevant for tex->apply == blend.
+
+2007-03-15  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/sphere/spherecreate.c: Cosmetics.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Debugging, correctly draw flat shaded stuff (i.e. emit per-vertex
+	normals in this case). Shading logic was broken in mgribmesh.c and
+	mgribdraw.c. Leave the texture clipping to RiMakeTexture(). Disable
+	texture alpha-channel when transparency is not enabled (exception
+	GL_BLEND, cause the the alpha channel of the texture only influences
+	the colouring, not the transparency).
+
+	* doc/version.texi: Update, this file does not belong to the CVS.
+
+	* data/shaders/GVblendconstant.sl, data/shaders/GVblendplastic.sl, data/shaders/GVdecalconstant.sl, data/shaders/GVmodulateconstant.sl, data/shaders/GVmodulateplastic.sl, data/shaders/GVreplaceplastic.sl, data/shaders/Makefile.am:
+	Shader debugging, should work now, more or less.
+
+	* data/shaders/GVreplaceconst.sl, data/shaders/GVreplaceconstant.sl:
+	Renamed.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Further progress with texture and alpha-aware shaders.
+
+	* doc/version.texi: Update. This file should not be in the  CVS.
+
+	* data/shaders/GVblendplastic.sl, data/shaders/GVdecalplastic.sl, data/shaders/GVmodulateplastic.sl, data/shaders/GVreplaceplastic.sl:
+	Fixed some silly bugs. We still need some shaders which ignore the
+	alpha channel if transparency is enabled; or give all of them another
+	float parameter which is used to switch off the alpha channel.
+
+2007-03-14  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac: Check for aqsl, the aqsis shader language compiler.
+
+	* data/shaders/.cvsignore: Ignore Makefile.in.
+
+	* data/Makefile.am:
+	Conditionally compile shader sources for the Aqsis renderer.
+
+	* data/shaders/Makefile.am:
+	Initial revision; conditionally compile shader sources for the Aqsis
+	renderer.
+
+	* src/lib/gprim/geom/geomclass.h, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c:
+	Also honor the alpha channel provided by the texture. Do some
+	restructering of mgopengl_bsptreerecursive().
+
+	* src/lib/shade/appearance.h: Comment stuff.
+
+	* data/shaders/GVreplaceconst.sl, data/shaders/GVreplaceplastic.sl, data/shaders/GVblendconstant.sl, data/shaders/GVblendplastic.sl, data/shaders/GVdecalplastic.sl, data/shaders/GVmodulateconstant.sl, data/shaders/GVmodulateplastic.sl:
+	Bring the stuff (hopefully) into accordance with the OpenGL docs
+	(because this is what Geomview also uses).
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/transform.c:
+	Hang the BSP-tree to dg->Lgeom, not dg->Item. Otherwise
+	transformations would need special handling.
+
+	* src/lib/mg/opengl/mgopenglP.h, src/lib/mg/opengl/mgopenglshade.c:
+	Even for constantly shaded objects we should allow override of the
+	alpha channel by material->diffuse[3]. Fix that.
+
+	* src/lib/mg/opengl/mgopenglshade.c, src/lib/shade/appearance.h, src/lib/shade/texture.c:
+	Implement "apply = replace" mode; texture color simply replaces the
+	surface color.
+
+	* data/shaders/rgbmaskpaintedconstant.sl, data/shaders/rgbmaskpaintedplastic.sl:
+	Renamed
+
+	* data/shaders/GVblendconstant.sl, data/shaders/GVblendplastic.sl, data/shaders/GVdecalconstant.sl, data/shaders/GVdecalplastic.sl, data/shaders/GVmodulateconstant.sl, data/shaders/GVmodulateplastic.sl:
+	Initial revision.
+
+2007-03-13  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi: Should not be in the CVS.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgrib.h, src/lib/mg/rib/mgribP.h, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Texture stuff seems to work. We need some shaders to actually
+	implement texturing the same way as the OpenGL backend is doing it.
+
+	* src/lib/mg/buf/mgbuf.c, src/lib/mg/common/mg.c, src/lib/mg/common/mg.h, src/lib/mg/opengl/mgopengl.c, src/lib/mg/ps/mgps.c, src/lib/mg/x11/mgx11.c:
+	mgctxset() has now a return value: -1 on error, 0 on success.
+
+	* data/shaders/rgbapaintedconstant.sl, data/shaders/rgbmaskpaintedconstant.sl:
+	Initial revision.
+
+	* src/lib/mg/rib/mgrib.c: Comment.
+
+	* doc/version.texi: Update. This file should not be in the CVS.
+
+	* configure.ac: Provide PATH_MAX.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribP.h, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Fiddle with texture stuff.
+
+	* src/bin/geomview/common/rman.c: Undo a previous change.
+
+	* src/lib/shade/image.c: Remove some unneeded variables.
+
+	* data/shaders/rgbapaintedplastic.sl, data/shaders/rgbmaskpaintedplastic.sl, data/shaders/.cvsignore:
+	Initial revision.
+
+2007-03-12  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, doc/geomview.texi, src/bin/geomview/common/rman.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribP.h, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgribshade.c, src/lib/mg/rib/mgribtoken.c, src/lib/mg/rib/mgribtoken.h:
+	Substantial progress in supporting textures with RenderMan. Not really
+	complete yet.
+
+	* src/lib/shade/appearance.h, src/lib/shade/image.c:
+	New function ImgWriteFilter() to dump the image to disk through an
+	external filter program (i.e. convert to tiff for RenderMan texture
+	support).
+
+	* configure.ac:
+	Check for pamtotiff in anticipation of RenderMan texture support.
+
+	* src/lib/shade/appearance.h, src/lib/shade/image.c:
+	New globally defined functions ImgWritePGM() and ImgWritePNM(), in
+	preparation for real RenderMan texture support.
+
+	* doc/version.texi: Update.
+
+	* src/lib/shade/image.c: Sanity checks for write_pmm/pgm.
+
+2007-03-11  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/rib/mgribmesh.c, src/lib/mg/rib/mgrib.c:
+	Fix the (rudimentory) texture support. This really needs to be reworked.
+
+	* src/lib/gprim/list/liststream.c:
+	ListStreamOut(): Proper indent of inferior geometries.
+
+	* src/lib/shade/image.c:
+	Continue parsing, even if reading of specific channels fails. This
+	increases the chance of skipping over broken  binary data.
+
+	* src/bin/geomview/common/worldio.c, src/lib/camera/camstream.c, src/lib/geometry/ntransobj/ntransobj.c, src/lib/geometry/transobj/transobj.c, src/lib/gprim/geom/geomstream.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/list/liststream.c, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/handle.h, src/lib/oogl/refcomm/handleP.h, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h, src/lib/shade/appearance.c, src/lib/shade/appearance.h, src/lib/shade/apstream.c, src/lib/shade/image.c, src/lib/shade/light.c, src/lib/shade/material.c, src/lib/shade/texture.c:
+	Dump handles as handles if possible (but take care to dump every
+	referenced object also). ppath fix for lists. Formatting of
+	StreamOut() (proper -- or at least better -- indentation where
+	possible).
+
+	* doc/geomview.texi:
+	Bring command line switches in sync with the stuff acutally supported,
+	add some notes about translucency.
+
+	* src/lib/gprim/inst/instmisc.c:
+	No need to free bsptree->tree when transforming an INST.
+
+	* src/lib/gprim/geom/bsptreeP.h:
+	Delete the no longer needed structure component geomflags.
+
+	* src/bin/geomview/geomview.1:
+	Move -noopengl explanation closer to the other "-no..." options.
+
+	* doc/geomview.texi, doc/version.texi: Document new image OOGL object.
+
+2007-03-10  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/draw.c: Undo faulty optimizations. Gnah.
+
+	* src/lib/gprim/geom/geomclass.h:
+	Protect GeomNodeDataByPath() and GeomNodeDataCreate() against an
+	undefined (NULL) object path.
+
+	* src/lib/camera/camera.c: Use the same bgcolor default as the GUI.
+
+	* src/bin/geomview/common/main.c:
+	Use 1.0/3.0 and leave it to the comiler to generate the best
+	approximation ...
+
+	* doc/geomview.texi, doc/version.texi: Start update of docs.
+
+	* src/lib/shade/texture.c, src/lib/window/winstream.c, src/bin/geomview/common/comm.c, src/bin/geomview/common/lang.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/geomclass.h, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/shade/image.c:
+	Get rid of some compiler warnings.
+
+	* doc/Makefile.am: Install man-pages.
+
+	* src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/draw.c:
+	Tagged appearance logic was somewhat broken.
+
+	* doc/Makefile.am: Remove geomview.1, oogl.5.man and geomview.5.man.
+
+	* doc/geomview.1: generated from (and in) src/bin/geomview/
+
+	* doc/oogl.5.man: Just a duplicate of oogl.5
+
+	* doc/geomview.5.man: Just a duplicate of geomview.5
+
+	* src/bin/geomview/x11/gvcamui.c:
+	ui_ppmglxsnapshot(): get rid of some unused variables.
+
+	* src/lib/camera/camstream.c, src/lib/gprim/geom/geomstream.c, src/lib/window/winstream.c:
+	Cleanup and unification w.r.t. to Handles; applies also to all other
+	xxxStreamIn() routines.
+
+	* src/lib/camera/camera.c:
+	Handle handling cleanup, was maybe unnecessary, but the current code works.
+
+	Also:
+
+	A camera now (optionally) has a background image and a background
+	color. IMHO those things do not belong to the mg-layer. It is
+	questionabble, though, whether stuff like this belongs to the camera.
+
+	* src/lib/camera/camera.h: New atributes:
+
+	CAM_BGCOLOR, CAM_BGIMAGE, CAM_BGIMGHANDLE.
+
+	A camera now (optionally) has a background image and a background
+	color. IMHO those things do not belong to the mg-layer. It is
+	questionabble, though, whether stuff like this belongs to the camera.
+
+	* src/lib/camera/cameraP.h:
+	A camera now (optionally) has a background image and a background
+	color. IMHO those things do not belong to the mg-layer. It is
+	questionabble, though, whether stuff like this belongs to the camera.
+
+	* src/lib/window/window.c:
+	Ref->handle has been replaced by a list of handles and is properly
+	handled in RefInit() now.
+
+	* src/lib/window/windowP.h: Get rid of the silly "long" data type.
+
+	* src/lib/gprim/inst/instdraw.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c:
+	BSP-tree cleanup: properly handle the case that a geometry can belong
+	to several nodes in the object hierarchy (referenced through handles).
+
+	* src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/bezier/bezdraw.c, src/lib/gprim/bezier/bezierP.h:
+	Use a Handle to define callbacks for invalidating BSP-trees. The issue
+	is that a geometry can belong to several nodes in the object hierarchy
+	when it is referenced by handles, and hence can belong to several
+	BSP-trees, and may have to be entered more than once to the same
+	BSP-tree (with a different position or appearance).
+
+	* src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/list/listP.h, src/lib/gprim/list/listcreate.c, src/lib/gprim/list/liststream.c:
+	BSP-tree cleanup: can now live again with the standard HandleUpdRef()
+	callback.
+
+	* src/lib/gprim/inst/instmisc.c:
+	Transform[To](): installed a 3d transform now leaves any ND-transform
+	alone and vice-versa. Needed to allow for simplification in the
+	top-level ND-drawing code in
+	really_draw_view()@src/bin/geomview/common/drawer.c
+
+	* src/lib/gprim/polylist/plcreate.c:
+	PolyListCreate(): always delete the temporary projected polylist used
+	to speed up ND-drawing.
+
+	* src/lib/gprim/polylist/plcopy.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/polylistP.h:
+	ND-drawing: allocate on demand an additional polylist; it is not
+	necessary and inefficient to copy over the structure of the polylist
+	on every draw. This way it has to be done only once.
+
+	* src/lib/gprim/polylist/plsphere.c:
+	Treat VERT_4D pl's as projective things in 3d.
+
+	* src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/polylist/plcreate.c:
+	BSPTree alloc/dealloc is done at a higher level now.
+
+	* src/lib/gprim/mesh/meshcopy.c: Ansification.
+
+	* src/bin/geomview/common/worldio.c, src/bin/geomview/common/space.c:
+	Cosmetics.
+
+	* src/bin/geomview/common/main.c:
+	Remove unnecessary handle ops external declaration.
+
+	* src/bin/geomview/common/comm.c:
+	Image and appearance objects. Handle ref-count related fixes.
+
+	* src/bin/geomview/common/lang.c, src/bin/geomview/common/lang.h, src/bin/geomview/common/lispext.c, src/bin/geomview/common/lispext.h:
+	Image and appearance objects.
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/ndshade.c, src/bin/geomview/common/transform.c:
+	internal ND-view simplification
+
+	* src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/bsptree.h, src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/geom/copy.c, src/lib/gprim/geom/create.c, src/lib/gprim/geom/delete.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomclass.h:
+	BSP-tree stuff was broken: as geometries can be referenced by handles
+	we need to take special precaution when attaching global data to geoms.
+
+	* src/lib/oogl/util/Makefile.am, src/lib/oogl/util/Headers:
+	Add dbllist.h header.
+
+	* src/lib/oogl/util/ppopen.c: Program flow logic was broken. Fix that.
+
+	* src/lib/oogl/util/create.h: Delete unused CR_HANDLE attribute.
+
+	* src/lib/shade/Makefile.am, src/lib/shade/appearance.c, src/lib/shade/appearance.h, src/lib/shade/apstream.c:
+	Strip off texture and material stuff. Allow defining global handles
+	for appearances.
+
+	* src/lib/geometry/ntransobj/ntransobj.c, src/lib/geometry/ntransobj/ntransobj.h, src/lib/geometry/transobj/transobj.c, src/lib/geometry/transobj/transobj.h, src/lib/oogl/refcomm/Makefile.am, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/handle.h, src/lib/oogl/refcomm/handleP.h, src/lib/oogl/refcomm/reference.c, src/lib/oogl/refcomm/reference.h, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h:
+	Fix the deeply broken handle reference count stuff. Gnah.
+
+	* src/lib/geometry/transform3/transform3.h: Cosmetics.
+
+2007-03-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/bezier/bezbound.c, src/lib/gprim/inst/instbound.c, src/lib/gprim/mesh/meshbound.c, src/lib/gprim/polylist/plbound.c, src/lib/gprim/quad/quadbound.c, src/lib/gprim/skel/skelbound.c, src/lib/gprim/vect/vectbound.c:
+	Handle VERT_4D co-ordinates as homogeneous coords if no ND-transform is given.
+
+	* src/lib/mg/common/mg.c, src/lib/mg/common/mgP.h, src/lib/mg/common/mgtexture.c, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopenglP.h, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglshade.c:
+	Texture cleanup and some translucency changes.
+
+	* src/lib/mg/buf/mgbufdraw.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/x11/mgx11draw.c:
+	Copy with numerical instabilities which everting normals.
+
+	* src/lib/mg/common/mg.h:
+	Add a pointer to the current BSP-tree to mgNDctx, part of a larger
+	BSP-tree cleanup.
+
+	* src/lib/mg/rib/mgrib.c, src/lib/mg/x11/mgx11.c, src/lib/mg/buf/mgbuf.c:
+	Return the new ap. There is just no point in returning the user
+	specified ap pointer.
+
+	* src/lib/gprim/comment/commentstream.c:
+	Get rid of just another memory leak.
+
+	* src/lib/gprim/comment/commentcreate.c: Cosmetics.
+
+	* src/lib/geometry/transform3/tm3print.c: Change the output format.
+
+	* src/lib/geometry/transformn/transformn.h:
+	Slight changes, typos mostly.
+
+	* src/lib/geometry/hpointn/hpointn.h: Typo.
+
+	* src/lib/geometry/hpoint3/hpoint3.h:
+	Support for denormalized linear combination.
+
+	* src/lib/Makefile.am: link (optionally) with libz
+
+	* configure.ac:
+	false/true/bool definition. Also (optionally) check for zlib/bzlib.
+
+	* src/lib/oogl/util/malloc-debug.c: Fix alloc size accounting.
+
+	* src/lib/oogl/util/iobfutil.c, src/lib/oogl/util/iobuffer.h:
+	Fix iobfcontext(); syntax error messages should work again now.
+
+	* src/lib/shade/image.c, src/lib/shade/material.c, src/lib/shade/texture.c, src/lib/oogl/util/dbllist.h:
+	Initial revision.
+
+2007-02-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/common/mgtexture.c: Add pngtopnm filter.
+
+2007-02-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Merge Adrian Rossiter's changes for concave and self-intersecting polygons.
+
+2007-02-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopengldraw.c:
+	Fix logic concerning alpha blending.
+
+	* src/lib/gprim/inst/instdraw.c: BSP-tree fixes.
+
+	* src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/mesh/meshdraw.c:
+	Change BSPTreePushAppearance(): appearances are only set when
+	geom->ap_tagged != NULL.
+
+	* src/lib/mg/common/mgtexture.c: Remove a crazy comment.
+
+	* src/lib/shade/appearance.c:
+	TxStreamOut(): fix file: -> alphafile bug.
+
+	* src/bin/geomview/x11/gvcamui.c:
+	Some cleanup w.r.t. to the logic of gv_no_opengl and the pre-processor
+	symbols MGGL, MGOPENGL and MGX11. Also, `#define' gv_no_opengl to
+	`true' if !(MGGL || MGOPENGL) to simplify some of the
+	gv_no_opengl/MG...  related conditionals.
+
+	* src/lib/mg/common/mg.c:
+	mg_untagappearance(): Only delete texture and light if the appearance
+	slot is not currently in use; delete astk->texture, not
+	ctx->astk->texture (copy and paste bug).
+
+	* src/bin/geomview/x11/gvcamui.c:
+	Remove and/or document some slightly confusing preprocessor constructs.
+
+	* src/lib/gprim/inst/instdraw.c:
+	Fix a BSP-tree related bug: do not loop over the transformation if
+	when not adding to the tree, but just distributing the tree-handle to
+	all sub-geometries (when running InstBSPTree(..., action =
+	BSPTREE_CREATE), in contrast to action == BSPTREE_ADDGEOM).
+
+	* configure.ac:
+	Disable OSMesa because it just does not work, unluckily.
+
+2007-02-15  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/common/mgtexture.c:
+	Support bzip2 for compression of texture files.
+
+	* src/bin/NDview/NDdemo, src/bin/NDview/NDview:
+	Remove invalid script interpreter
+
+	* configure.ac: Get rid of the CONFIG_SUBDIR stuff.
+
+	* configure.ac, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/interface/Save.mib:
+	Implement a GLX off-screen snapshot by rendering into a GLX
+	pixmap. The idea is that off-screen rendering does not suffer from
+	partially obscured windows, screen-saver etc.
+
+	* configure.ac:
+	Gnah. Should read twice through my changes before committing.
+
+	* configure.ac:
+	Should check for glXAllocateMemoryMESA() not GLX_MESA_allocate_memory.
+
+	* configure.ac, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvsave.c, src/bin/geomview/x11/interface/Save.mib:
+	Check for libOSMesa if we are using Mesa and re-enable
+	ppmmesasnapshot() in gvcamui.c
+
+2007-02-14  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/wa/wa.lex.c, src/lib/oogl/wa/wa.yacc.c, src/lib/oogl/wa/wa.yacc.h:
+	Auto-generated.
+
+	* src/lib/oogl/wa/Makefile.am:
+	Split-out rule for lex.yy.c, otherwise a dependency for "all:" cannot
+	be resolved.
+
+	* src/bin/geomview/common/main.c, src/bin/geomview/common/main.h, src/bin/geomview/geomview.1, src/bin/geomview/x11/gvcamui.c, src/bin/geomview/x11/gvmain.c:
+	Implement a -noopengl option.
+
+	* Makefile.am, geomview.sh:
+	--print-BLAH switches to figure out the location of the data directory
+	etc. of an already installed geomview.
+
+	* configure.ac: Cosmetics (some help strings and such).
+
+	* src/lib/mg/common/mgtexture.c: Cosmetics.
+
+2007-02-13  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/geomstream.c:
+	Get rid of the infamous "can't seek back for enough (on pipe?)" error
+	message because it is no longer adequate and misleading.
+
+	* src/lib/mg/rib/mgribdraw.c: Cosmetics.
+
+	* src/lib/mg/opengl/mgopenglshade.c:
+	Do the obvious fixes for tex_adequate().
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Fix texture handling during BSP-tree traversal.
+
+	* doc/version.texi, doc/geomview.texi:
+	Document "linear" texture option.
+
+	* src/lib/gprim/geom/bsptree.c:
+	Hack around round-off error w.r.t. to plane equations.
+
+	* src/lib/gprim/list/listcreate.c: cosmetics.
+
+	* src/lib/mg/common/mg.c:
+	Fix lazy deletion of sticky (tagged) appearances.
+
+	* src/lib/oogl/refcomm/handle.c: Cosmetics.
+
+	* src/lib/mg/opengl/mgopenglmesh.c: Braces around && inside ||.
+
+	* src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/polylist/pltransform.c, src/lib/gprim/quad/quadtransform.c:
+	Handle NormalTransform() correctly.
+
+	* src/lib/gprim/inst/instP.h, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/inst/inststream.c, src/lib/gprim/list/listP.h, src/lib/gprim/list/listcreate.c, src/lib/gprim/list/liststream.c:
+	Invalidate the BSP-tree if any object underlying a handle changes.
+
+	* src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/bsptreeP.h:
+	Handle NormalTransform() correctly (i.e. use the dual of T).
+
+	* src/lib/gprim/geom/replace.c: Call BSPTreeFreeTree().
+
+	* src/lib/gprim/bezier/bezdraw.c: Cleanup.
+
+	* src/lib/geometry/transobj/transobj.c, src/lib/geometry/transform3/tm3adjoint.c, src/lib/geometry/transform3/tm3dual.c, src/lib/geometry/transform3/tm3invert.c:
+	Cosmetics.
+
+	* src/lib/geometry/point3/point3.h:
+	Simplify NormalTransform(), add a comment stating that
+	NormalTransform(Tdual, ...) should be called with the dual of T.
+
+	* src/lib/geometry/ntransobj/ntransobj.c: Cosmetics.
+
+2007-02-12  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/delete.c, src/lib/gprim/inst/instcreate.c, src/lib/gprim/inst/instmisc.c, src/lib/gprim/list/listcreate.c, src/lib/gprim/mesh/meshdelete.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/quad/quaddelete.c:
+	Move deletion of BSP-trees to GeomDelete().
+
+2007-02-10  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* m4/lf_local.m4:
+	Hopefully LF_LINK_HEADERS() works _NOW_ for in-path and VPATH builds.
+
+	* m4/lf_local.m4: Undo a bug introduced previously by myself.
+
+2007-02-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/ndmesh/ndmeshclass.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/nplclass.c, src/lib/gprim/npolylist/npldraw.c:
+	Implement BSP-tree stuff for ND objects. Not tested. Needs testing.
+
+	* src/lib/gprim/mesh/meshcreate.c: nu*nv, not nu+nv, fixing myself.
+
+	* src/bin/geomview/common/drawer.c:
+	Give every object accesible through the browser a
+	BSP-tree. Transluceny is now correctly implemented for OpenGL (and
+	RMAN, of course, as RMAN handles translucency by itself). Supported is
+	a single translucent compound object (like the list of SaVI's coverage
+	cones) which is drawn on a solid scene consisting of arbitrarily many
+	objects.
+
+	* src/bin/geomview/common/rman.c, src/bin/geomview/common/worldio.c:
+	Small changes w.r.t. to unneeded (?FIXME) appearance copies
+
+	* src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/bezier/bezbound.c, src/lib/gprim/bezier/bezclass.c, src/lib/gprim/bezier/bezdice.c, src/lib/gprim/bezier/bezdraw.c, src/lib/gprim/geom/bsptree.c, src/lib/gprim/geom/bsptree.h, src/lib/gprim/geom/bsptreeP.h, src/lib/gprim/geom/create.c, src/lib/gprim/geom/dice.c, src/lib/gprim/geom/draw.c, src/lib/gprim/geom/geom.h, src/lib/gprim/geom/geomclass.h, src/lib/gprim/inst/inst.h, src/lib/gprim/inst/instclass.c, src/lib/gprim/inst/instdraw.c, src/lib/gprim/list/listP.h, src/lib/gprim/list/listclass.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/mesh/mesh.h, src/lib/gprim/mesh/meshclass.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/mesh/meshevert.c, src/lib/gprim/polylist/plclass.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quad.h, src/lib/gprim/quad/quadclass.c:
+	Support BSP-trees consisting of multiple geoms.
+
+	* src/lib/oogl/refcomm/reference.c:
+	The reference count should be an int, not a long.
+
+	* src/lib/mg/buf/mgbuf.c, src/lib/mg/buf/mgbufdraw.c, src/lib/mg/common/mg.c, src/lib/mg/common/mg.h, src/lib/mg/common/mgP.h, src/lib/mg/opengl/mgopengl.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/ps/mgps.c, src/lib/mg/ps/mgpsdraw.c, src/lib/mg/ps/mgpswindows.c, src/lib/mg/rib/mgrib.c, src/lib/mg/rib/mgribdraw.c, src/lib/mg/rib/mgribmesh.c, src/lib/mg/x11/mgx11.c, src/lib/mg/x11/mgx11draw.c, src/lib/mg/x11/mgx11shade.c:
+	Introduce a "tagged" appearance which can safely be re-used while
+	traversing a BSP-tree. Needed to implement BSP-trees for geoms
+	consisting of multiple parts like lists and insts.
+
+	* src/lib/gprim/sphere/spherecreate.c:
+	Run GeomDecorate() to have the chance to define a sphere with an
+	attached appearance.
+
+	* src/lib/camera/cameraP.h, src/lib/geometry/geomtypes.h, src/lib/geometry/ntransobj/ntransobj.h, src/lib/geometry/transobj/transobj.h:
+	Remove the semicolon from the end of REFERENCEFIELDS, just looks more
+	natural when defining a derived "class".
+
+	* src/lib/shade/appearance.c, src/lib/shade/appearance.h:
+	Remove the semicolon from the end of REFERENCEFIELDS, just looks more
+	natural when defining a derived "class". Introducde some "const"
+	keywords in some places.
+
+	* src/lib/window/windowP.h, src/lib/oogl/refcomm/handleP.h, src/lib/oogl/refcomm/reference.h:
+	Remove the semicolon from the end of REFERENCEFIELDS, just looks more
+	natural when defining a derived "class".
+
+	* src/lib/pointlist/ptlMesh.c, src/lib/gprim/vect/vectP.h, src/lib/gprim/vect/vectcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/vect/vectload.c, src/lib/gprim/vect/vectsphere.c, src/lib/gprim/quad/quadP.h, src/lib/gprim/quad/quadcopy.c, src/lib/gprim/quad/quadcreate.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/quad/quadload.c, src/lib/gprim/quad/quadnormal.c, src/lib/gprim/quad/quadsave.c, src/lib/gprim/quad/quadtransform.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/polylist/plevert.c, src/lib/gprim/polylist/plload.c, src/lib/gprim/polylist/plnormal.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/polylist/pltransform.c, src/lib/gprim/polylist/polylist.h, src/lib/gprim/polylist/polylistP.h, src/lib/gprim/ndmesh/ndmeshP.h, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/ndmesh/ndmeshpick.c, src/lib/gprim/ndmesh/ndmeshsave.c, src/lib/gprim/npolylist/nplcreate.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplload.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/npolylist/npolylistP.h, src/lib/gprim/mesh/meshcopy.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshflag.h, src/lib/gprim/mesh/meshload.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshpick.c, src/lib/gprim/mesh/meshsave.c, src/lib/gprim/mesh/meshsphere.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/mesh/meshP.h, src/lib/gprim/bezier/bezier.h, src/lib/gprim/bezier/bezsphere.c, src/lib/gprim/bezier/bezsave.c, src/lib/gprim/bezier/bezpick.c, src/lib/gprim/bezier/bezload.c, src/lib/gprim/bezier/bezevert.c, src/lib/gprim/bezier/bezcreate.c, src/lib/gprim/bezier/bezierP.h, src/lib/gprim/lincoln/lincolnload.c, src/lib/geomutil/plutil/anytopl.c, src/lib/geomutil/plutil/plcombine.c, src/lib/geomutil/crayplutil/crayBezier.c, src/lib/geomutil/crayplutil/crayMesh.c, src/lib/geomutil/crayplutil/crayPolylist.c, src/lib/geomutil/crayplutil/crayQuad.c, src/lib/geometry/cmodel/cmodel.c, src/bin/ndutils/GeomtoNoff.c, src/bin/ndutils/WithColor.c, src/bin/ndutils/clipoogl.c, src/bin/geomutil/ucd/anytoucd.c, src/bin/geomutil/oogl2vrml/oogl2vrml.c, src/bin/geomutil/oogl2vrml/oogl2vrml2.c, src/bin/geomutil/clip/clipoogl.c:
+	Move some more flag values to geom->geomflags, kind of unification.
+
+2007-02-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/bezier/bezbound.c:
+	Treat VERT_4D bez's as homogeneous coords (undo my previous changes).
+
+2007-01-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/aclib/obstack.c:
+	Hack around exitfail and gettext, should compile now with cygwin.
+
+2007-01-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/iobuffer.c:
+	setmark()/seekmark() has to take the ungetc() value into account.
+
+2007-01-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/drawer.c:
+	Reset "center-bbox" feature at reset.
+
+2007-01-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/transform.c: Comment.
+
+	* src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c:
+	Remove unused variable warnings.
+
+2007-01-15  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, doc/version.texi, src/lib/aclib/obstack.c:
+	Include obstack.c from glibc-2.5; my fault, thought obstack was
+	implemented as a pure macro stuff.
+
+2007-01-14  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac:
+	Use "foreing" automake option to prevent the latest and greatest
+	automake from complaining about using GNU extensions.
+
+2007-01-08  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi, src/lib/gprim/skel/skelP.h, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/skel/skelload.c, src/lib/gprim/skel/skelsave.c, doc/geomview.texi:
+	Allow per-vertex colors for SKEL filec, i.e. support a C[4][n]SKEL
+	format. Document the change in the TeXInfo manual
+
+2007-01-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/polylist/plnormal.c:
+	New per-vertex normal computation was borken.
+
+2007-01-06  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/bsptree.c: SplitPolyNode(): v0 <-> v1 typo.
+
+2007-01-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/polylist/pldraw.c, src/lib/gprim/quad/quaddelete.c, src/lib/gprim/quad/quaddraw.c:
+	Remove some compiler warnings.
+
+	* src/lib/gprim/polylist/plnormal.c:
+	missing initialization bug (n_edges).
+
+2007-01-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi, doc/version.texi:
+	Fix VECT binary documentation bug and work around a figure
+	cross-referencing bug in GNU makeinfo.
+
+2007-01-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/bsptree.c:
+	Work around a strange "-fstrict-aliasing" comiler bug. At least I
+	think it is a compiler bug ...
+
+2006-12-28  Steve M. Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* ChangeLog, configure.ac:
+	Fix probe for Tcl_CreateFileHandler to use ${TCL_ALL_LIB}, rather than
+	"-ltcl".
+
 2006-12-27  Steve M. Robbins  <smr@sumost.ca>
 
 	* configure.ac: Use ${TCL_ALL_LIB}, not "-ltcl", to check for
