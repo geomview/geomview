@@ -74,19 +74,17 @@ enum streamtype {
 
 static void usage(const char *prog);
 
-#if HAVE_INET_SOCKETS || HAVE_INET6_SOCKETS
-# define DFLT_PORT 29*31*37 /* 33263, so what */
-# define DFLT_PORT_STR "33263"
-# if HAVE_INET_SOCKETS
+#define DFLT_PORT 29*31*37 /* 33263, so what */
+#define DFLT_PORT_STR "33263"
+#if HAVE_INET_SOCKETS
 static void init_inetaddr(struct sockaddr_in *name,
 			  const char *hostname,
 			  int port);
-# endif
-# if HAVE_INET6_SOCKETS
+#endif
+#if HAVE_INET6_SOCKETS
 static void init_inet6addr(struct sockaddr_in6 *name,
 			   const char *hostname,
 			   int port);
-# endif
 #endif
 
 static void interrupt(int sig)
@@ -119,6 +117,7 @@ static void start_gv(char **progtorun, char *toname,
   default: break;
   }
   args[i++] = Mhow;
+#if HAVE_INET_SOCKETS || HAVE_INET6_SOCKETS
   if (pipetype == inetsocket || pipetype == inet6socket) {
     if ((toname = strrchr(toname, ':')) == NULL) {
       toname = DFLT_PORT_STR;
@@ -126,10 +125,10 @@ static void start_gv(char **progtorun, char *toname,
       ++toname;
     }
     args[i++] = toname;
-  } else {
+  } else
+#endif
     args[i++] = strncmp(toname, Mprefix, sizeof(Mprefix)-1) != 0
       ? toname : toname + sizeof(Mprefix)-1;
-  }
   args[i] = NULL;
   
   if (fork() == 0) {
@@ -170,10 +169,8 @@ int main(int argc, char *argv[])
   const char *todir = "/tmp/geomview";
   const char *toname = "OOGL";
   const char *hostname = "localhost";
-#if HAVE_INET_SOCKETS || HAVE_INET6_SOCKETS
   char *portstr = DFLT_PORT_STR;
   int port = DFLT_PORT;
-#endif
 
   prog = argv[0];
   tail = strrchr(prog, '/');
@@ -294,7 +291,7 @@ int main(int argc, char *argv[])
     bool do_startgv = false;
 
     switch (pipetype) {
- #if HAVE_UNIX_SOCKETS
+#if HAVE_UNIX_SOCKETS
     case unixsocket: 
       strncpy(un.sun_path, pipename, sizeof(un.sun_path)-1);
       un.sun_family = AF_UNIX;
