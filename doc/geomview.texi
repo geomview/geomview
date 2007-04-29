@@ -4297,7 +4297,7 @@ for each pixel; and @code{maxval} is tied to 255. The interpretation of the imag
 @tab alpha channel (0: transparent, @code{maxval}: opaque)
 @end multitable
 
-Image data can be spefied inline (embedded into the current data stream)
+Image data can be specified inline (embedded into the current data stream)
 or via file references; in both cases the data is read in and
 interpreted at the time the image object is parsed. @emph{This is
 different from the old (and deprecated) texture image specification,
