@@ -46,7 +46,10 @@ figs/%.png: figs/%.pdf
 	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
 	-rm -f $(<:.pdf=-000.ppm)
 
+# Anoyingly, automake includes XXX~ files into the distro, caused by a
+# somewhat broken dist-info: target.
 dist-hook: html pdf
+	rm -rf `find $(distdir) -name '*~'`
 
 MAINTAINERCLEANFILES = \
  $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
