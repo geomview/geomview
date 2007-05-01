@@ -1,6 +1,6 @@
-		     Geomview/OOGL Release 1.8.2
-			      July 2006
-			      ---------
+		     Geomview/OOGL Release 1.9.0
+			      April 2007
+			      ----------
 
 CONTENTS
 --------
@@ -24,7 +24,7 @@ CONTENTS
 INTRODUCTION
 ------------
                                    
-This is version 1.8.2 of Geomview/OOGL.  See the file NEWS for a summary
+This is version 1.9.0 of Geomview/OOGL.  See the file NEWS for a summary
 of changes in this release, and the file ChangeLog for specific
 details.
 
