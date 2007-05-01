@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT(geomview, [1.9.0], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.9.1], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE([dist-bzip2 1.9])

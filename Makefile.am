@@ -1,17 +1,9 @@
+ACLOCAL_AMFLAGS = -I m4
+
 SUBDIRS = src data doc
-EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir \
-             $(m4_files)
+EXTRA_DIST = reconf geomview.sh INSTALL.Geomview mkmodulesdir
 
 noinst_SCRIPTS = geomview
-
-ACLOCAL_AMFLAGS = -I m4
-m4_files = \
-	m4/geom_local.m4 \
-	m4/lf_local.m4
-
-#	m4/smr_OPTIONAL_LIB.m4 \
-#	m4/smr_REQUIRED_LIB.m4 \
-#	m4/smr_WITH_BUILD_PATH.m4
 
 nodist_pkginclude_HEADERS = @GEOMVIEWHDRFILES@
 
