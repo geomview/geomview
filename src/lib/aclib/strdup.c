@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -28,16 +29,24 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
-
-/* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-char *
-strdup( char *str )
+/* Note: we do not use OOGLNew() & friends because libc would neither do so. */
+static inline void *xmalloc(size_t size)
+{
+  void *ptr;
+  
+  if ((ptr = malloc(size)) == NULL) {
+    fprintf(stderr, "malloc(%d) failed in strdup().\n", size);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
+#undef strdup
+char *strdup(const char *str )
 {
     char *s;
     int len;
@@ -45,7 +54,13 @@ strdup( char *str )
     if(str == NULL)
 	return NULL;
     len = strlen(str);
-    s = malloc(len+1);
+    s = xmalloc(len+1);
     memcpy(s, str, len+1);
     return s;
 }
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

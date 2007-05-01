@@ -29,6 +29,8 @@ static char sccsid[] = "@(#)getenv.c	5.5 (Berkeley) 6/27/88";
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /*
  * _findenv --
@@ -37,29 +39,49 @@ static char sccsid[] = "@(#)getenv.c	5.5 (Berkeley) 6/27/88";
  *	environmental array, for use by setenv(3)/putenv(3) and unsetenv(3).
  *	Explicitly removes '=' in argument name.
  */
-static char *
-_findenv(name, offset)
-	char *name;
-	int *offset;
+static char *_findenv(char *name, int *offset)
 {
-	extern char **environ;
-	int len;
-	char **P, *C;
+  extern char **environ;
+  int len;
+  char **P, *C;
 
-	for (C = name, len = 0; *C && *C != '='; ++C, ++len);
-	for (P = environ; *P; ++P)
-		if (!strncmp(*P, name, len))
-			if (*(C = *P + len) == '=') {
-				*offset = P - environ;
-				return(++C);
-			}
-	return(NULL);
+  for (C = name, len = 0; *C && *C != '='; ++C, ++len);
+  for (P = environ; *P; ++P)
+    if (!strncmp(*P, name, len))
+      if (*(C = *P + len) == '=') {
+	*offset = P - environ;
+	return(++C);
+      }
+  return(NULL);
 }
 #if defined(LIBC_SCCS) && !defined(lint)
 /* static char sccsid[] = "@(#)setenv.c	5.2 (Berkeley) 6/27/88"; */
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
+
+/* Note: we do not use OOGLNew() & friends because libc would neither do so. */
+static inline void *xmalloc(size_t size)
+{
+  void *ptr;
+  
+  if ((ptr = malloc(size)) == NULL) {
+    fprintf(stderr, "malloc(%d) failed in putenv().\n", size);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
+
+static inline void *xrealloc(void *oldptr, size_t newsize)
+{
+  void *ptr;
+  
+  if ((ptr = realloc(oldptr, newsize)) == NULL) {
+    fprintf(stderr, "realloc(%p, %d) failed in putenv().\n", oldptr, newsize);
+    exit(EXIT_FAILURE);
+  }
+  return ptr;
+}
 
 /*
  * putenv --
@@ -68,49 +90,56 @@ _findenv(name, offset)
  */
 putenv(char *name)
 {
-	extern char **environ;
-	static int alloced;			/* if allocated space before */
-	char *value;
-	char *C;
-	int l_value, offset;
+  extern char **environ;
+  static int alloced;			/* if allocated space before */
+  char *value;
+  char *C;
+  int l_value, offset;
 
-	value = strchr(name, '=');
-	value = value ? value+1 : name;
-	l_value = strlen(value);
-	if ((C = _findenv(name, &offset))) {	/* find if already exists */
-		if (strlen(C) >= l_value) {	/* old larger; copy over */
-			while (*C++ = *value++);
-			return(0);
-		}
-	}
-	else {					/* create new slot */
-		int	cnt;
-		char	**P;
+  value = strchr(name, '=');
+  value = value ? value+1 : name;
+  l_value = strlen(value);
+  if ((C = _findenv(name, &offset))) {	/* find if already exists */
+    if (strlen(C) >= l_value) {	/* old larger; copy over */
+      while (*C++ = *value++);
+      return(0);
+    }
+  }
+  else {					/* create new slot */
+    int	cnt;
+    char	**P;
 
-		for (P = environ, cnt = 0; *P; ++P, ++cnt);
-		if (alloced) {			/* just increase size */
-			environ = (char **)realloc((char *)environ,
-			    (u_int)(sizeof(char *) * (cnt + 2)));
-			if (!environ)
-				return(-1);
-		}
-		else {				/* get new space */
-			alloced = 1;		/* copy old entries into it */
-			P = (char **)malloc((u_int)(sizeof(char *) *
-			    (cnt + 2)));
-			if (!P)
-				return(-1);
-			memcpy(P, environ, cnt * sizeof(char *));
-			environ = P;
-		}
-		environ[cnt + 1] = NULL;
-		offset = cnt;
-	}
-	for (C = name; *C && *C != '='; ++C);	/* no `=' in name */
-	if (!(environ[offset] =			/* name + `=' + value */
-	    malloc((u_int)((int)(C - name) + l_value + 2))))
-		return(-1);
-	for (C = environ[offset]; (*C = *name++) && *C != '='; ++C);
-	for (*C++ = '='; *C++ = *value++;);
-	return(0);
+    for (P = environ, cnt = 0; *P; ++P, ++cnt);
+    if (alloced) {			/* just increase size */
+      environ = (char **)realloc((char *)environ,
+				 (u_int)(sizeof(char *) * (cnt + 2)));
+      if (!environ)
+	return(-1);
+    }
+    else {				/* get new space */
+      alloced = 1;		/* copy old entries into it */
+      P = (char **)xmalloc((u_int)(sizeof(char *) *
+				  (cnt + 2)));
+      if (!P)
+	return(-1);
+      memcpy(P, environ, cnt * sizeof(char *));
+      environ = P;
+    }
+    environ[cnt + 1] = NULL;
+    offset = cnt;
+  }
+  for (C = name; *C && *C != '='; ++C);	/* no `=' in name */
+  if (!(environ[offset] =			/* name + `=' + value */
+	xmalloc((u_int)((int)(C - name) + l_value + 2))))
+    return(-1);
+  for (C = environ[offset]; (*C = *name++) && *C != '='; ++C);
+  for (*C++ = '='; *C++ = *value++;);
+  return(0);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
