@@ -2,7 +2,7 @@ AC_PREREQ(2.59)
 AC_INIT(geomview, [1.9.1], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE([dist-bzip2 1.9])
+AM_INIT_AUTOMAKE([dist-bzip2 1.10])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
