@@ -19,8 +19,9 @@ infoimgdir = $(infodir)
 nobase_infoimg_DATA = $(PNGIMAGES)
 
 dochtmldir = $(docdir)/html
-nobase_dochtml_DATA = $(PNGIMAGES)
-dochtml_DATA = $(wildcard geomview.html/* $(srcdir)/geomview.html/*)
+dochtml_DATA = htdocs/*.html
+dochtmlfigsdir = $(docdir)/html/figs
+dochtmlfigs_DATA = htdocs/figs/*.png
 doc_DATA = geomview.pdf
 
 geomview.pdf:  $(PDFIMAGES)
@@ -30,17 +31,36 @@ geomview.html: $(PNGIMAGES)
 
 TEXINPUTS = $(srcdir):
 
-all-local: html pdf
+all-local: htdocs pdf
 
-figs/%.eps: figs/%.ps
-	@test -d figs || mkdir figs
+htdocs/*.html htdocs/figs/*.png: htdocs
+
+htdocs: geomview.html
+	if test -d $@; then rm -rf $@; fi
+	if test -d $(srcdir)/$<; then \
+          htmldir=$(srcdir)/$<; \
+	else \
+          htmldir=$<; \
+	fi; \
+	cp -R $$htmldir $@; \
+	chmod 0755 $@; \
+	$(mkdir_p) $@/figs; \
+	chmod 0755 $@/figs; \
+	for f in $(PNGIMAGES); do \
+	  test -f $(srcdir)/$$f && f=$(srcdir)/$$f; \
+	  cp $$f $@/figs/; \
+	done; \
+	find $@ -type f -exec chmod 644 \{\} \;
+
+.ps.eps:
+	@D=`dirname $@`; test -d $$D || mkdir $$D
 	$(PS2EPSI) $< $@
 
-figs/%.pdf: figs/%.eps
-	@test -d figs || mkdir figs
+.eps.pdf:
+	@D=`dirname $@`; test -d $$D || mkdir $$D
 	$(EPSTOPDF) $<
 
-figs/%.png: figs/%.pdf
+.pdf.png:
 	@test -d figs || mkdir figs
 	$(PDFIMAGESPROG) $< $(<:.pdf=)
 	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
@@ -53,6 +73,9 @@ dist-hook: html pdf
 
 MAINTAINERCLEANFILES = \
  $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
+
+distclean-local:
+	-rm -rf htdocs
 
 maintainerclean-local:
 	-rm -rf geomview.html
