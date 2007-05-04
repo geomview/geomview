@@ -72,8 +72,7 @@
  * but which have at least one user whose mg context has been rendered to. 
  *
  */
-int
-mg_textureclock()
+int mg_textureclock(void)
 {
     Texture *tx, *txn;
     mgcontext *ctx;
