@@ -1,6 +1,11 @@
 1.9.1 May 2007
 
-   * Bug-fix release for 1.9.0.
+   * Bug-fix release for 1.9.0
+
+   * versions strings were wrong in some places
+
+   * textures would not be reloaded after deleting all cameras (OpenGL
+     MG-backend)
 
 1.9.0 April 2007
 
