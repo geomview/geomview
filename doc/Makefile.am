@@ -29,7 +29,7 @@ geomview.ps:   $(EPSIMAGES)
 geomview.dvi:  $(EPSIMAGES)
 geomview.html: $(PNGIMAGES)
 
-TEXINPUTS = $(srcdir):
+TEXINPUTS = $(srcdir):.:
 
 all-local: htdocs pdf
 
