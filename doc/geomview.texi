@@ -17,7 +17,7 @@
 @sp 1
 @center @titlefont{Geomview Manual}
 @sp 4
-@center Geomview Version 1.9
+@center Geomview Version @value{VERSION}
 @sp 1
 @center for Unix
 @sp 1
@@ -68,7 +68,7 @@ Geomview, the interactive 3D viewing program.
 Geomview is an interactive program for viewing and manipulating
 geometric objects, originally written by staff members of the Geometry
 Center at the University of Minnesota, starting in 1991.  It can be used
-as a standalone viewer for static objects or as a display engine for
+as a stand-alone viewer for static objects or as a display engine for
 other programs which produce dynamically changing geometry.  It runs on
 many kinds of Unix computers, including Linux, SGI, Sun, and HP. It also
 runs with Cygwin. This manual describes Geomview version 1.9. @refill
@@ -822,7 +822,7 @@ of movement, appearance of surfaces and lines, and so on.  Geomview can
 handle any number of objects and allows both separate and collective
 control over them.  
 
-The simplest way to use Geomview is as a standalone viewer to see
+The simplest way to use Geomview is as a stand-alone viewer to see
 and manipulate objects.  It can display objects described in a variety
 of file formats.  It comes with a wide variety of example objects, and
 you can create your own objects.
@@ -873,7 +873,7 @@ out the examples given here to get a feel for what you can do with
 Geomview.
 
 To start Geomview, login to the computer and get a shell window.  A
-shell window is a window in which you can type unix commands; the prompt
+shell window is a window in which you can type Unix commands; the prompt
 in the window usually ends with a '%'.  In the shell window (the mouse
 cursor must be in the window) type the following (@kbd{@key{Enter}} here
 means hit the "Enter" key):
@@ -919,7 +919,7 @@ sphere.  Moving the mouse while holding the button down causes the
 sphere (and hence the object) to move in the same direction as the
 mouse.
 
-In addition to the two solids you should also see two wireframe
+In addition to the two solids you should also see two wire-frame
 boxes in the camera window.  These are the "bounding boxes" of the two
 objects.  By default Geomview puts a bounding box around each object
 that it displays so that you have an idea of how large it is.
@@ -1150,7 +1150,7 @@ geometry data (the default), while a @samp{c} suffix expects GCL
 commands. A @samp{p} implies the connection should use a named pipe (the
 default on everything except on the NeXT), while @samp{s} implies using
 a UNIX-domain socket (the default on the NeXT). Since version 1.9 of
-Geomview internet domain sockets are also supported; use @samp{sin} to
+Geomview Internet domain sockets are also supported; use @samp{sin} to
 make Geomview listen on the IPv4 port given by @var{TCPPORT}, or use
 @samp{sin6} to make Geomview listen on an IPv6 port (also as specified
 by @var{TCPPORT}). @samp{sun} is a synonym for @samp{s}, i.e. use the
@@ -1161,7 +1161,7 @@ pathname, otherwise the named pipe or socket is created below
 
 @b{Listening to command streams on TCP ports can be a security risk,
 as Geomview itself does not take any security precautions, it simply
-executes all commands fed to it throught the network socket. This also
+executes all commands fed to it through the network socket. This also
 implies that disk-io can be initiated remotely.}
 
 Examples:
@@ -1278,14 +1278,14 @@ browser is called the @dfn{target} object.  This is the object that
 receives any actions that you do with the mouse or keyboard.  You can
 change the target object by selecting a different line in the
 @emph{Targets} browser.  Another way to change the target object is
-to put the mouse cursor directly over a geom in a camera window
+to put the mouse cursor directly over a geometry in a camera window
 and rapidly double-click the right mouse button.  This process is called
 @dfn{picking}; the picked object becomes the new target.
 
 Geomview objects are all known by two names, both of which are shown in
 the @emph{Targets} browser.  The first name given there, which appears
 in square brackets ([ ]), is a short name assigned by Geomview when you
-load the object.  It consists of the letter `g' for geoms and `c' for
+load the object.  It consists of the letter `g' for geometries and `c' for
 cameras, followed by a number.  The second name is a longer more
 descriptive name; by default this is the name of the file that the
 object was loaded from.  The two names are equivalent as far as Geomview
@@ -1315,9 +1315,9 @@ geom, a camera, or GCL commands.  For details, @xref{Loading}.
 
 The @emph{Delete} button causes the target
 object to be deleted.  Geomview selects another object to be the new
-target.  You can delete cameras as well as geoms in this way.  If you
+target.  You can delete cameras as well as geometries in this way.  If you
 hit the @emph{Delete} button while the target object is "World",
-Geomview deletes all geoms.
+Geomview deletes all geometries.
 
 The three buttons at the bottom of the @emph{Main} panel, labeled
 @emph{Euclidean}, @emph{Hyperbolic}, and @emph{Spherical}, allow
@@ -1396,7 +1396,7 @@ the @emph{Files} panel will appear.
 @end float
 This panel lets you select a file from a variety of directories.
 The top of the panel is a standard Motif file browser.  Below this is
-a list of directories on geomview's standard search path; click on one
+a list of directories on Geomview's standard search path; click on one
 of these to browse files in that directory.
 
 To select a file, double-click on its name in the browser at upper right,
@@ -1506,7 +1506,7 @@ center of motion to the center of the current object's bounding
 box. Once toggled the active geometry's bounding box center will become
 the center of motion, if you select another object, then the center of
 motion will become the center of that object's bounding box. Nothing
-changes when a cameara or the @emph{World} is selected, you have to
+changes when a camera or the @emph{World} is selected, you have to
 type in the word @code{target} in the @emph{Center} field the reset to
 the default.
 
@@ -1785,7 +1785,7 @@ properties of the target object.
 @caption{The Appearance Panel.}
 @end float
 If the target is an individual geom, then changes you make in the
-appearance panel apply to that geom's appearance.  If the target is the
+appearance panel apply to that geometry's appearance.  If the target is the
 World, then appearance panel changes apply to the World appearance
 @emph{and} to all individual geom appearances.  (Users have found that
 this is more desirable than having the changes only apply to the World
@@ -2246,7 +2246,7 @@ Render the complete scene anew into off-screen memory; GLX provides the
 means to use a Pixmap as rendering area. The advantage of rendering into
 @emph{off}-screen memory over taking screen snapshot is that the camera
 windows need not be mapped and even raised at the time the snapshot is
-taken. So with off-screen snapshot one can savely iconify the camera
+taken. So with off-screen snapshot one can safely iconify the camera
 window (but do not close it!), activate the screen-saver and go to bed
 while some script advances the scenes and takes snapshots.
 
@@ -2772,7 +2772,7 @@ The syntax for @var{N}-dimensional vertices (@var{N} > 3) is
 has been specified in the object's header line)
 @end table
 
-Note, howerver, that @var{N}-dimensional objects internally always have
+Note, however, that @var{N}-dimensional objects internally always have
 @var{(N+1)}-dimensional points; the first component @var{x[0]} -- if
 present in the object file -- is used as homogeneous divisor. This is
 different from the ordinary 3D case where the @code{4} modifier
@@ -2950,7 +2950,7 @@ may appear anywhere.
 @subsection Appearances
 
 Geometric objects can have associated "appearance" information,
-specifying shading, lighting, color, wireframe vs. shaded-surface
+specifying shading, lighting, color, wire-frame vs. shaded-surface
 display, and so on.  Appearances are inherited through object
 hierarchies, e.g. attaching an appearance to a @code{LIST} means that the
 appearance is applied to all the @code{LIST}'s members.
@@ -2958,7 +2958,7 @@ appearance is applied to all the @code{LIST}'s members.
 Some appearance-related properties are relegated to "material",
 "lighting" and "texture" substructures. Take care to note which
 properties belong to which structure. Any geometric object can be
-preceded by an appearance definintion like in the following example:
+preceded by an appearance definition like in the following example:
 
 @example
 @{ 
@@ -3188,7 +3188,7 @@ image @{ <image specification> (@pxref{image, Image objects}) @}
   @emph{apply} is equal to @emph{modulate} and translucency is enabled:
   in this case the resulting alpha value is the result of the
   multiplication of the surface color with the alpha value of the
-  texture's alph channel.
+  texture's alpha channel.
 
 file      filename
 alphafile filename
@@ -3307,7 +3307,7 @@ ChapReyes.
 
 Following the key word is an arbitrary number of groups of four
 vertices, each group describing a quadrilateral.  See the Vertex syntax
-above.  The object ends at end-of-file, or with a closebrace if
+above.  The object ends at end-of-file, or with a close-brace if
 incorporated into an object reference (see above).
 
 A @code{QUAD BINARY} file format is accepted; @xref{Binary format}.  The
@@ -3433,7 +3433,7 @@ or
 
 There is no BBOX binary format. The @code{4} modifyer has different
 meanings depending on the dimension of the bounding box: @code{4BBOX}
-means that the 4 components of the vertices make up a 4-dimensionional
+means that the 4 components of the vertices make up a 4-dimensional
 bounding-box. Using @code{4} in conjunction with @code{n} --
 @code{4nBBOX @var{NDim}} -- means that the vertices specified in the
 file have @var{NDim+1} components, but the component at index 0 is the
@@ -3577,7 +3577,7 @@ An @code{OFF} file may begin with the keyword @code{OFF}; it's
 recommended but optional, as many existing files lack this keyword.
 
 Three ASCII integers follow: @var{NVertices}, @var{NFaces}, and
-@var{NEdges}.  Thse are the number of vertices, faces, and edges,
+@var{NEdges}.  Thease are the number of vertices, faces, and edges,
 respectively.  Current software does not use nor check @var{NEdges}; it
 needn't be correct but must be present.
 
@@ -9243,4 +9243,10 @@ Thank you.
 
 @bye
 
-@c  LocalWords:  Geomview RenderMan
+@c  LocalWords:  Geomview RenderMan texinfo letterpaper setfilename geomview sp
+@c  LocalWords:  settitle texi dircategory direntry titlepage titlefont vskip
+@c  LocalWords:  Munzner uref Hanrahan MinneView OOGL Meuer Kaplan SGI NeXT GPL
+@c  LocalWords:  SGIs NeXTStep OpenGL Geomview's unnumberedsec Gunn Krech MacOS
+@c  LocalWords:  Daeron Cygwin SystemV FreeBSD Solaris Precompiled emph Heine
+@c  LocalWords:  Renderman Mathematica pxref smallexample Yoyodyne Thurston GCL
+@c  LocalWords:  xref Bezier var emodule iconify PPM NCMESH NCOFF RGBA
