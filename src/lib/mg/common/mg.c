@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.17 2007/03/24 01:57:02 rotdrop Exp $
+ * $Id: mg.c,v 1.18 2007/05/04 13:02:29 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -632,6 +632,13 @@ mg_ctxdelete( mgcontext *ctx )
     astk->next = mgatfree;
     mgatfree = astk;
   }
+
+ /* make sure textures only needed by this context are purged,
+  * otherwise the mg-backends may fail to reload the texture if a new
+  * camera is opened
+  */
+  ctx->changed |= MC_USED;
+  mg_textureclock();
 
   WnDelete(ctx->win);
   CamDelete(ctx->cam);
