@@ -1,6 +1,69 @@
+2007-05-07  Claus-Justus Heine  <claus@mathematik.uni-freiburg.de>
+
+	* Release of Geomview 1.9.1
+
+2007-05-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* README: Bump version to 1.9.1
+
+	* NEWS: Update.
+
+	* doc/geomview.texi:
+	Some sort of spell-checking. Not complete. ispell and TeXinfo is a real nightmare.
+
+	* src/lib/mg/common/mg.c:
+	When we delete a context then we must make sure that textures are
+	pruned which only belong to this context, otherwise mgopengl thinks
+	the texture is still loaded, even when the last (shared) OpenGL
+	context has gone.
+
+	* src/lib/mg/common/mgtexture.c: Cosmetics.
+
+	* doc/Makefile.am: Tweak TEXINPUTS.
+
+2007-05-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/Makefile.am:
+	Try to provide working html doc in the build-directory.
+
+	* configure.ac: Use automake 1.10.
+
+2007-05-01  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi: Update.
+
+	* doc/Makefile.am:
+	Prevent automake from including Emacs backup-files into the distro.
+
+	* AUTHORS, Makefile.am, NEWS, configure.ac: Bump version to 1.9.1
+
+	* AUTHORS, README: Version stamps were wrong.
+
+	* src/lib/aclib/putenv.c, src/lib/aclib/strdup.c:
+	Fix bug "[ 1687598 ] Check return codes everywhere" where it was appropriate.
+
+2007-04-29  Lloyd Wood  <L.Wood@surrey.ac.uk>
+
+	* doc/geomview.texi: Fixing minor typo.
+
 2007-04-27  Claus-Justus Heine  <claus@mathematik.uni-freiburg.de>
 
 	* Release of Geomview 1.9.0
+
+2007-04-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* ChangeLog: Update.
+
+	* configure.ac: Use default docdir.
+
+	* src/bin/togeomview/togeomview.c: Really fix the ipv4/v6 issue.
+
+2007-04-26  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/iobuffer.c: Cosmetics.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	initialization of pool->infd was broken.
 
 2007-04-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
