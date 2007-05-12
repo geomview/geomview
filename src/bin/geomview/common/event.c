@@ -63,9 +63,9 @@ static int view_pick( DView *dv, int x, int y, Pick *pick );
 #define	ESC	'\033'
 
 struct num {
-   int has;	/* 0 if no number, or -1 (negative) or +1 (positive) */
-   int val;
-   int expon;
+  int has;	/* 0 if no number, or -1 (negative) or +1 (positive) */
+  int val;
+  int expon;
 } number, onum;
 
 static int keyshorts = 1;
@@ -101,11 +101,11 @@ Appearance:\n\
 Motions:				      Viewing:\n\
   r rotate	   [ Leftmouse=X-Y plane,	0vp Orthographic view\n"
 #ifdef NeXT
-"  t translate	     Alt-Left=Z axis,		1vp Perspective view\n"
+  "  t translate	     Alt-Left=Z axis,		1vp Perspective view\n"
 #else
-"  t translate	     Middle=Z axis,		1vp Perspective view\n"
+  "  t translate	     Middle=Z axis,		1vp Perspective view\n"
 #endif
-"  z zoom FOV	     Shift=slow motion,		 vd Draw other views' cameras\n\
+  "  z zoom FOV	     Shift=slow motion,		 vd Draw other views' cameras\n\
   f fly		     in r/t modes.      ]	#vv field of View\n\
   o orbit           [Left=steer, Middle=speed ]	#vn near clip distance\n\
   s scale					#vf far clip distance\n\
@@ -128,9 +128,9 @@ Other:\n\
   Rightmouse-doubleclick  pick as current target object\n\
   Shift-Rightmouse        pick interest (center) point\n"
 #ifdef NeXT
-"  Alt-Leftmouse is synonym for Rightmouse.\n"
+  "  Alt-Leftmouse is synonym for Rightmouse.\n"
 #endif
-;
+  ;
 
 void 
 print_help()
@@ -147,7 +147,7 @@ event_init()
 }
 
 LDEFINE(event_mode, LVOID,
-"(event-mode     MODESTRING)\n\
+	"(event-mode     MODESTRING)\n\
 	Set the mouse event (motion) mode; MODESTRING should be one of\n\
 	the strings that appears in the motion mode browser (including\n\
 	the keyboard shortcut, e.g. \"[r] Rotate\").")
@@ -164,8 +164,8 @@ LDEFINE(event_mode, LVOID,
     estate.motionproc(&ev_exit);
   }
   estate.motionproc = 
-     uistate.modes[uistate.mode_current = ui_mode_index(modename) ];
-D1PRINT(("gv_event_mode: estate.motionproc <- %1x\n", estate.motionproc)); 
+    uistate.modes[uistate.mode_current = ui_mode_index(modename) ];
+  D1PRINT(("gv_event_mode: estate.motionproc <- %1x\n", estate.motionproc)); 
   ui_event_mode( modename );
   if ( estate.motionproc != NULL ) {
     estate.motionproc(&ev_enter);
@@ -196,23 +196,23 @@ elapsed(float *since, float *nextepoch)
   now = tnow.tv_sec - t0.tv_sec + 1e-6*(tnow.tv_usec - t0.tv_usec);
   if(since) {
     if((sincetime = *since) == 0)
-	sincetime = *since = now;
+      sincetime = *since = now;
   }
   if(nextepoch) *nextepoch = now;
   return now - sincetime;
 }
 
 LDEFINE(pick_invisible, LVOID,
-"(pick-invisible [yes|no])\n\
+	"(pick-invisible [yes|no])\n\
 	Selects whether picks should be sensitive to objects whose appearance\n\
 	makes them invisible; default yes.\n\
 	With no arguments, returns current status.")
 {
   int kw = -1;
   LDECLARE(("pick-invisible", LBEGIN,
-	LOPTIONAL,
-	LKEYWORD, &kw,
-	LEND));
+	    LOPTIONAL,
+	    LKEYWORD, &kw,
+	    LEND));
 
   if(kw < 0)
     return uistate.pick_invisible ? Lt : Lnil;
@@ -222,7 +222,7 @@ LDEFINE(pick_invisible, LVOID,
 }
   
 LDEFINE(rawevent, LVOID,
-"(rawevent       dev val x y t)\n\
+	"(rawevent       dev val x y t)\n\
 	Enter the specified raw event into the event queue.  The\n\
 	arguments directly specify the members of the event structure\n\
 	used internally by geomview.  This is the lowest level event\n\
@@ -255,66 +255,66 @@ LDEFINE(rawevent, LVOID,
    * Call the current motion proc, if any.  This proc returns 1 if it
    * used the event, in which case we don't do any further processing.
    */
-D1PRINT(("gv_rawevent: estate.motionproc = %x\n", estate.motionproc));
+  D1PRINT(("gv_rawevent: estate.motionproc = %x\n", estate.motionproc));
   if ( estate.motionproc != NULL ) {
-D1PRINT(("gv_rawevent:   calling estate.motionproc\n"));
+    D1PRINT(("gv_rawevent:   calling estate.motionproc\n"));
     if ( estate.motionproc(&event) ) {
-D1PRINT(("gv_rawevent:     returning Lt\n"));
+      D1PRINT(("gv_rawevent:     returning Lt\n"));
       return Lt;
     }
-D1PRINT(("gv_rawevent:     falling through\n"));
+    D1PRINT(("gv_rawevent:     falling through\n"));
   }
 
-/* The rightmouse and doubleclick is now hardcoded but should be
-   bindable through lang later, through a control mechanism similar to
-   current motionproc stuff */
+  /* The rightmouse and doubleclick is now hardcoded but should be
+     bindable through lang later, through a control mechanism similar to
+     current motionproc stuff */
 
   if (event.dev == ERIGHTMOUSE) {
     if ((event.val > 0) && pickon) {
-	static unsigned long int lastt = 0;
-	Pick *pick = PickSet(NULL, PA_WANT,
-		uistate.pick_invisible ? PW_EDGE|PW_VERT|PW_FACE
-					: PW_VISIBLE|PW_EDGE|PW_VERT|PW_FACE,
-		PA_END);
-	int pickedid = view_pick( (DView *)drawer_get_object(FOCUSID),
+      static unsigned long int lastt = 0;
+      Pick *pick = PickSet(NULL, PA_WANT,
+			   uistate.pick_invisible ? PW_EDGE|PW_VERT|PW_FACE
+			   : PW_VISIBLE|PW_EDGE|PW_VERT|PW_FACE,
+			   PA_END);
+      int pickedid = view_pick( (DView *)drawer_get_object(FOCUSID),
 				event.x, event.y, pick );
 
-	if(button.shift) {
-	  /* Could change FOCUSID here to ALLCAMS,
-	   * to force setting everyone's focal length to 
-	   * their distance from the pick.
-	   */
-	  if(pickedid != NOID)
-	    make_center_from_pick("CENTER", pick, FOCUSID);
-	  else
-	    gv_ui_center(TARGETID);
-	} else {
-	  if(pickedid != NOID)
-	    emit_pick(pickedid, pick);
-	  if (event.t - lastt < DOUBLECLICKTIME) {
-	    lastt = 0;
-	    gv_ui_target( pickedid!=NOID ? pickedid : WORLDGEOM, IMMEDIATE );
-	  }
+      if(button.shift) {
+	/* Could change FOCUSID here to ALLCAMS,
+	 * to force setting everyone's focal length to 
+	 * their distance from the pick.
+	 */
+	if(pickedid != NOID)
+	  make_center_from_pick("CENTER", pick, FOCUSID);
+	else
+	  gv_ui_center(TARGETID);
+      } else {
+	if(pickedid != NOID)
+	  emit_pick(pickedid, pick);
+	if (event.t - lastt < DOUBLECLICKTIME) {
+	  lastt = 0;
+	  gv_ui_target( pickedid!=NOID ? pickedid : WORLDGEOM, IMMEDIATE );
 	}
-	PickDelete(pick);
-	lastt = event.t;
+      }
+      PickDelete(pick);
+      lastt = event.t;
     }
   }
 
   if(!isascii(event.dev))
-	return Lt;
+    return Lt;
 
 
   if (!keyshorts)  /* are keyboard shortcuts on? :-) */
     return Lt;     /* no? then we don't want to process them... */
 
-	/* Only keyboard events from here on down */
+  /* Only keyboard events from here on down */
 
   ui_keyboard(event.dev);
   if(event.dev >= '0' && event.dev <= '9') {
     if(!number.has) {
-	number.val = 0;
-	number.has = 1;
+      number.val = 0;
+      number.has = 1;
     }
     number.val = 10*number.val + (event.dev - '0');
     if(number.expon) number.expon++;
@@ -329,86 +329,86 @@ D1PRINT(("gv_rawevent:     falling through\n"));
 
     case '-':
     case '*':
-	number.has = -1;
-	number.expon = 0;
-	number.val = 0;
-	prefix = 0;
-	goto keepmode;
+      number.has = -1;
+      number.expon = 0;
+      number.val = 0;
+      prefix = 0;
+      goto keepmode;
 
     case '.':
-	number.expon = 1;
-	prefix = 0;
-	goto keepmode;
+      number.expon = 1;
+      prefix = 0;
+      goto keepmode;
 
 
     case 'g': keymode = KEYGEOM; goto gotmode; /* Select geom:  'g' prefix */
     case 'c': keymode = KEYCAM; goto gotmode;  /* Select camera: 'c' prefix */
-  gotmode:
-	onum = number;
-	number.has = 0;
-	prefix = 0;
-	goto keepmode;
+    gotmode:
+      onum = number;
+      number.has = 0;
+      prefix = 0;
+      goto keepmode;
 
     case 'p':
-	{
-	  int id;
+      {
+	int id;
 
-	  if (pickon) {
-	    if (keymode == KEYNONE) {
-	      id = gv_rawpick(FOCUSID, event.x, event.y);
-	      if (id == NOID) id = WORLDGEOM;
-	    } else {
-	      id = retarget(NOID);
-	    }
-
-	    gv_ui_target(id, IMMEDIATE);
+	if (pickon) {
+	  if (keymode == KEYNONE) {
+	    id = gv_rawpick(FOCUSID, event.x, event.y);
+	    if (id == NOID) id = WORLDGEOM;
+	  } else {
+	    id = retarget(NOID);
 	  }
+
+	  gv_ui_target(id, IMMEDIATE);
 	}
+      }
 
     case '@':
-	gv_ui_center(retarget(uistate.centerid));
-	break;
+      gv_ui_center(retarget(uistate.centerid));
+      break;
 
     case 'N':
-	id = retarget(GEOMID(uistate.targetgeom));
-	if(!number.has) {
-	    dg = (DGeom *)drawer_get_object(id);
-	    if(dg) number.val = dg->normalization == NONE ? EACH : NONE;
-	}
-	drawer_int(id, DRAWER_NORMALIZATION, number.val);
-	break;
+      id = retarget(GEOMID(uistate.targetgeom));
+      if(!number.has) {
+	dg = (DGeom *)drawer_get_object(id);
+	if(dg) number.val = dg->normalization == NONE ? EACH : NONE;
+      }
+      drawer_int(id, DRAWER_NORMALIZATION, number.val);
+      break;
 
     case '<':
-	s = "Load"; number.val = 1; goto pickpanel;	/* Load file */
+      s = "Load"; number.val = 1; goto pickpanel;	/* Load file */
     case '>':
-	s = "Save"; number.val = 1; goto pickpanel;	/* Save State */
+      s = "Save"; number.val = 1; goto pickpanel;	/* Save State */
 
-	/* use bounding box center as CENTER position */
+      /* use bounding box center as CENTER position */
     case 'B':
-	gv_ui_center_origin(uistate.bbox_center
-			    ? ORIGIN_KEYWORD : BBOX_CENTER_KEYWORD);
-	break;
+      gv_ui_center_origin(uistate.bbox_center
+			  ? ORIGIN_KEYWORD : BBOX_CENTER_KEYWORD);
+      break;
 
-		/* Halt current object */
+      /* Halt current object */
     case 'h':
-	drawer_stop(retarget(uistate.targetid)); break;
+      drawer_stop(retarget(uistate.targetid)); break;
 
     case 'H':	/* Halt Everything */
-	drawer_stop(NOID); break;
+      drawer_stop(NOID); break;
 
     case 'w':     /* Recenter current thing */
-	drawer_center(retarget(uistate.targetid)); break;
+      drawer_center(retarget(uistate.targetid)); break;
 
     case 'W':     /* Recenter (and halt) Everything */
-	drawer_center(NOID); break;
+      drawer_center(NOID); break;
 
     case 'L':
-	gv_look(retarget(uistate.targetid),FOCUSID); 
-	break;
+      gv_look(retarget(uistate.targetid),FOCUSID); 
+      break;
 	
-    /*
-     * r/t/z/f/o apply to the currently selected object unless target specified.
-     */
+      /*
+       * r/t/z/f/o apply to the currently selected object unless target specified.
+       */
     case 'f': s = OBJFLY; goto mote;
     case 'o': s = OBJORBIT; goto mote;
     case 'r': s = OBJROTATE; goto mote;
@@ -416,15 +416,15 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case 'z': s = OBJZOOM; goto mote;
     case 's': s = OBJSCALE; goto mote;
 
-   mote:
-	k = retarget(NOID);
-	if (k) gv_ui_target( k, IMMEDIATE);
-	gv_event_mode( s );
-	break;
+    mote:
+      k = retarget(NOID);
+      if (k) gv_ui_target( k, IMMEDIATE);
+      gv_event_mode( s );
+      break;
 
     case '?':
-	print_help();
-	break;
+      print_help();
+      break;
 
 #ifdef sgi
     case 'T':   /* NTSC */
@@ -439,13 +439,13 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case 'P':	/* panel show */
     case 'u':	/* motion style */
     case ESC:	/* quit prefix */
-	if(keymode != KEYNONE) {
-	    prefixid = retarget(NOID);
-	    if(ISGEOM(prefixid))
-		gv_ui_target( prefixid, IMMEDIATE);
-	}
-	prefix = event.dev;
-	goto keepnumber;
+      if(keymode != KEYNONE) {
+	prefixid = retarget(NOID);
+	if(ISGEOM(prefixid))
+	  gv_ui_target( prefixid, IMMEDIATE);
+      }
+      prefix = event.dev;
+      goto keepnumber;
 
     case SEQ('P','m'): 
     case SEQ('P','g'): s = "main"; goto pickpanel;
@@ -459,9 +459,9 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case SEQ('P','s'): s = "Save"; goto pickpanel;
     case SEQ('P','M'): s = "Materials"; goto pickpanel;	
     case SEQ('P','A'): s = "Credits"; goto pickpanel;
-      pickpanel:
-	ui_showpanel(ui_name2panel(s), getint(-1));
-	break;
+    pickpanel:
+    ui_showpanel(ui_name2panel(s), getint(-1));
+    break;
     case SEQ('P','P'):
       ui_manual_browser("pdf");
       break;
@@ -469,13 +469,13 @@ D1PRINT(("gv_rawevent:     falling through\n"));
       ui_manual_browser("html");
       break;
     case SEQ('P','-'): 
-	comm_object("(read command < -)", &CommandOps, NULL, NULL, COMM_LATER);
-	break;
+      comm_object("(read command < -)", &CommandOps, NULL, NULL, COMM_LATER);
+      break;
 
 
     case SEQ(ESC,ESC):
-	gv_exit();
-	/*NOTREACHED*/
+      gv_exit();
+      /*NOTREACHED*/
 
     case SEQ('C','f'): k = DRAWER_DIFFUSE; goto pickcolor;
     case SEQ('C','e'): k = DRAWER_EDGECOLOR; goto pickcolor;
@@ -483,16 +483,16 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case SEQ('C','b'): k = DRAWER_BBOXCOLOR; goto pickcolor;
     case SEQ('C','v'):
     case SEQ('C','B'): k = DRAWER_BACKCOLOR; goto pickcolor;
-     pickcolor:
-	ui_pickcolor( k );
-	break;
+    pickcolor:
+    ui_pickcolor( k );
+    break;
 
     case SEQ('u','i'): k = DRAWER_INERTIA; goto motstyle;
     case SEQ('u','c'): k = DRAWER_CONSTRAIN; goto motstyle;
     case SEQ('u','o'): k = DRAWER_OWNMOTION;
-     motstyle:
-	drawer_int( WORLDGEOM, k, getint(-1) );
-	break;
+    motstyle:
+    drawer_int( WORLDGEOM, k, getint(-1) );
+    break;
 
     case SEQ('v','+'): 		/* Add camera */
       { CameraStruct cs;
@@ -502,86 +502,86 @@ D1PRINT(("gv_rawevent:     falling through\n"));
 	cs.cam = dv && dv->cam ? CamCopy(dv->cam, NULL) : NULL; 
 	gv_new_camera(NULL, &cs);
       }
-	break;
+      break;
 
     case SEQ('v','p'):		/* Projection: orthographic or perspective */
-	id = retarget(FOCUSID);
-	if(!number.has) {
-	    dv = (DView *)drawer_get_object(id);
-	    if(dv) CamGet(dv->cam, CAM_PERSPECTIVE, &number.val);
-	    number.val = !number.val;
-	}
-	drawer_int( id, DRAWER_PROJECTION, number.val );
-	break;
+      id = retarget(FOCUSID);
+      if(!number.has) {
+	dv = (DView *)drawer_get_object(id);
+	if(dv) CamGet(dv->cam, CAM_PERSPECTIVE, &number.val);
+	number.val = !number.val;
+      }
+      drawer_int( id, DRAWER_PROJECTION, number.val );
+      break;
 
     case SEQ('v','d'):			/* toggle "Draw other cameras" */
-	id = retarget(FOCUSID);
-	if(!number.has) {
-	    dv = (DView *)drawer_get_object(id);
-	    number.val = dv ? !dv->cameradraw : true;
-	}
-	drawer_int( id, DRAWER_CAMERADRAW, number.val );
-	break;
+      id = retarget(FOCUSID);
+      if(!number.has) {
+	dv = (DView *)drawer_get_object(id);
+	number.val = dv ? !dv->cameradraw : true;
+      }
+      drawer_int( id, DRAWER_CAMERADRAW, number.val );
+      break;
 
     case SEQ('v','D'): /* Toggle dithering */
-	id = retarget(FOCUSID);
-	gv_dither(id, TOGGLE_KEYWORD);
-	break;
+      id = retarget(FOCUSID);
+      gv_dither(id, TOGGLE_KEYWORD);
+      break;
 
-					/* stuff for X11 version */
+      /* stuff for X11 version */
     case SEQ('v','h'): /* pick hidden surface removal method: */
-	id = retarget(FOCUSID);
-	dv = (DView *)drawer_get_object(id);
-	if(dv == NULL || dv->mgctx == NULL)
-	    break;
-	if (!number.has) {
-	    mgctxselect(dv->mgctx);
-	    mgctxget(MG_DEPTHSORT, &number.val);
-	    number.val = (number.val+1) % 3;
-	}
-	mgctxset(MG_DEPTHSORT,
-		number.val>=0&&number.val<=2 ? number.val : 2, MG_END);
-	gv_redraw(dv->id);
-	ui_maybe_refresh(dv->id);
+      id = retarget(FOCUSID);
+      dv = (DView *)drawer_get_object(id);
+      if(dv == NULL || dv->mgctx == NULL)
 	break;
-					/* end of stuff for X11 version */
+      if (!number.has) {
+	mgctxselect(dv->mgctx);
+	mgctxget(MG_DEPTHSORT, &number.val);
+	number.val = (number.val+1) % 3;
+      }
+      mgctxset(MG_DEPTHSORT,
+	       number.val>=0&&number.val<=2 ? number.val : 2, MG_END);
+      gv_redraw(dv->id);
+      ui_maybe_refresh(dv->id);
+      break;
+      /* end of stuff for X11 version */
 
     case SEQ('v','x'): /* Toggle/enable/disable cursor */
-	ui_curson( number.has ? number.val : -1 ); 
-	break;
+      ui_curson( number.has ? number.val : -1 ); 
+      break;
 
     case SEQ('v','b'):
-	tog_ap_flag( id, APF_BACKCULL );
-	break;
+      tog_ap_flag( id, APF_BACKCULL );
+      break;
 
     case SEQ('v','s'):
-	id = retarget(FOCUSID);
-	number.val = !number.val;	/* "1vs" => single-buffered */
-	drawer_int( id, DRAWER_DOUBLEBUFFER, getint(-1) );
-	break;
+      id = retarget(FOCUSID);
+      number.val = !number.val;	/* "1vs" => single-buffered */
+      drawer_int( id, DRAWER_DOUBLEBUFFER, getint(-1) );
+      break;
 
-	/* For testing software shading */
+      /* For testing software shading */
     case SEQ('v','~'):
-	id = retarget(FOCUSID);
-	gv_soft_shader(id,
-		number.has ? (number.val?ON_KEYWORD:OFF_KEYWORD) : TOGGLE_KEYWORD);
-	break;
+      id = retarget(FOCUSID);
+      gv_soft_shader(id,
+		     number.has ? (number.val?ON_KEYWORD:OFF_KEYWORD) : TOGGLE_KEYWORD);
+      break;
 
 
-	/* Viewing options */
+      /* Viewing options */
     case SEQ('a','c'): 
     case SEQ('v','c'): k = DRAWER_LINE_ZNUDGE; v = 10.; goto setcam;
     case SEQ('v','v'): k = DRAWER_FOV;  v = 45.; goto setcam;
     case SEQ('v','n'): k = DRAWER_NEAR; v = .1;	goto setcam;
     case SEQ('v','f'): k = DRAWER_FAR;  v = 100.; goto setcam;
     case SEQ('v','l'): k = DRAWER_FOCALLENGTH; v = 3.; goto setcam;
-     setcam:
-	drawer_float( retarget(FOCUSID), k, getreal(v) );
-	break;
+    setcam:
+    drawer_float( retarget(FOCUSID), k, getreal(v) );
+    break;
 
-	/* Might add others here, e.g. a viewfinder mode. */
+    /* Might add others here, e.g. a viewfinder mode. */
 
-	/* Metrics / Models */
+    /* Metrics / Models */
     case SEQ('m','e'):
       gv_space(EUCLIDEAN_KEYWORD);
       break;
@@ -601,7 +601,7 @@ D1PRINT(("gv_rawevent:     falling through\n"));
       gv_hmodel(retarget(FOCUSID), CONFORMALBALL_KEYWORD);
       break;
 
-	/* Appearance settings */
+      /* Appearance settings */
     case SEQ('a','f'): k = APF_FACEDRAW; goto togapflag;
     case SEQ('a','e'): k = APF_EDGEDRAW; goto togapflag;
     case SEQ('a','l'): k = APF_SHADELINES; goto togapflag;
@@ -612,91 +612,91 @@ D1PRINT(("gv_rawevent:     falling through\n"));
     case SEQ('a','V'): k = APF_VECTDRAW; goto togapflag;
     case SEQ('a','C'): k = APF_CONCAVE; goto togapflag;
     case SEQ('a','q'): k = APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR; goto togapflag;
-	togapflag:
-	  tog_ap_flag( id, k );
-	  break;
+    togapflag:
+    tog_ap_flag( id, k );
+    break;
     case SEQ('a','x'): drawer_set_ap( id, NULL, NULL ); break;
     case SEQ('a','o'): gv_ap_override( getint( !uistate.apoverride ) ); break;
 
 
     case SEQ('a','b'): /* Bounding box drawing */
-	if(!number.has) {
-	    DGeom *dg = (DGeom *)drawer_get_object( id );
-	    if(dg) number.val = !dg->bboxdraw;
-	}
-	drawer_int(id, DRAWER_BBOXDRAW, number.val);
-	break;
+      if(!number.has) {
+	DGeom *dg = (DGeom *)drawer_get_object( id );
+	if(dg) number.val = !dg->bboxdraw;
+      }
+      drawer_int(id, DRAWER_BBOXDRAW, number.val);
+      break;
 
     case SEQ('a','s'):	/* Shading */
-	if(!number.has) {
-	    ap = drawer_get_ap(id);
-	    ApGet(ap, AP_SHADING, &number.val);
-	    ApDelete(ap);
-	    number.val++;
-	}
-	drawer_int(id, DRAWER_SHADING, number.val % 5);
-	break;
+      if(!number.has) {
+	ap = drawer_get_ap(id);
+	ApGet(ap, AP_SHADING, &number.val);
+	ApDelete(ap);
+	number.val++;
+      }
+      drawer_int(id, DRAWER_SHADING, number.val % 5);
+      break;
 
     case SEQ('a','w'):	/* line width */
-        if(!number.has) {
-	    ap = drawer_get_ap(id);
-	    ApGet(ap, AP_LINEWIDTH, &number.val);
-	    ApDelete(ap);
-	    number.val = (number.val > 1) ? 1 : 2;
-	}
-	drawer_int(id, DRAWER_LINEWIDTH, number.val);
-	break;
+      if(!number.has) {
+	ap = drawer_get_ap(id);
+	ApGet(ap, AP_LINEWIDTH, &number.val);
+	ApDelete(ap);
+	number.val = (number.val > 1) ? 1 : 2;
+      }
+      drawer_int(id, DRAWER_LINEWIDTH, number.val);
+      break;
 
-	/* Scale normals */
+      /* Scale normals */
     case SEQ('a','h'): drawer_float(id, DRAWER_NORMSCALE, getreal(1.0)); break;
 
-	/* Patch dicing */
+      /* Patch dicing */
     case SEQ('a','d'): drawer_int( id, DRAWER_BEZDICE, number.val ); break;
 
-	/* hyperbolic sphere at infinity */
+      /* hyperbolic sphere at infinity */
     case SEQ('a', 'i'): drawer_int( retarget(FOCUSID), DRAWER_HSPHERE,
-						getint(-1) );
-			break;
+				    getint(-1) );
+      break;
 	
-	/* Delete */
+      /* Delete */
     case SEQ('d','d'): gv_delete(uistate.targetid); break;
 
-	/* NTSC */
+      /* NTSC */
 #ifdef sgi
     case SEQ('T','V'): ntsc(getint(-1)); break;
 #endif
 
-	/* Timing -- ctrl-T
-	 * ^T : print accumulated timing status now
-	 * <nnn>^T : print timing status now and every <nnn> main-loop cycles
-	 * -^T : quit timing
-	 */
+      /* Timing -- ctrl-T
+       * ^T : print accumulated timing status now
+       * <nnn>^T : print timing status now and every <nnn> main-loop cycles
+       * -^T : quit timing
+       */
     case 'T'&0x1f:
-	timing( number.has<0 ? 0 : number.has ? number.val : 9999999 );
-	break;
+      timing( number.has<0 ? 0 : number.has ? number.val : 9999999 );
+      break;
 
-	/* Edit Lights */
+      /* Edit Lights */
     case SEQ('l','e'):
       if (!(uistate.lights_shown)) light_edit_mode(1);
       else gv_event_mode( LIGHTEDIT );
-	break;
+      break;
 	
-	/* Toggle Show Lights */
+      /* Toggle Show Lights */
     case SEQ('l','s'): light_edit_mode(2); break;
 
-    /*
-     * All R* commands moved to rman.c - slevy.
-     */
+      /*
+       * All R* commands moved to rman.c - slevy.
+       */
     default:
-	err = EOF;
-	if(prefix == 'R') {
-	    rman_do(event.dev,number.has,number.val);
-	    break;
-	} else if(prefix != 0) {		/* No such command? */
-	    prefix = 0;
-	    goto rescan;		/* Try same char without prefix */
-	}
-	keymode = KEYNONE;
+      err = EOF;
+      if(prefix == 'R') {
+	rman_do(event.dev,number.has,number.val);
+	break;
+      } else if(prefix != 0) {		/* No such command? */
+	prefix = 0;
+	goto rescan;		/* Try same char without prefix */
+      }
+      keymode = KEYNONE;
     }
     number.has = number.expon = onum.has = onum.expon = 0;
     prefix = 0;
@@ -723,19 +723,19 @@ retarget(int defindex)
   char code[12];
 
   if(keymode == KEYNONE) {
-	if(number.expon && !number.has) {  /* a "." prefix, sans number */
-	    number.expon = 0;
-	    return TARGETID;
-	}
-	return prefixid != NOID ?
-		prefixid : defindex;	/* No prefix, or just numeric */
+    if(number.expon && !number.has) {  /* a "." prefix, sans number */
+      number.expon = 0;
+      return TARGETID;
+    }
+    return prefixid != NOID ?
+      prefixid : defindex;	/* No prefix, or just numeric */
   }
 
   sprintf(code, "%c%d", ch[keymode], number.val);
   if(number.has > 0) t = drawer_idbyname(code);
   else if(number.has < 0) t = allid[keymode];
   else t = (keymode == KEYGEOM) ? WORLDGEOM
-				: FOCUSID;
+    : FOCUSID;
   number = onum;
   onum.has = onum.expon = 0;
   keymode = KEYNONE;
@@ -747,18 +747,18 @@ retarget(int defindex)
 static float
 getreal(float defval)
 {
-    float v = number.has * number.val;
+  float v = number.has * number.val;
 
-    if(!number.has) return defval;
-    while(--number.expon > 0)
-	v *= 0.1;
-    return v;
+  if(!number.has) return defval;
+  while(--number.expon > 0)
+    v *= 0.1;
+  return v;
 }
 
 static int
 getint(int defaultvalue)
 {
-   return number.has ? number.val*number.has : defaultvalue;
+  return number.has ? number.val*number.has : defaultvalue;
 }
 
 #if 0
@@ -772,21 +772,21 @@ toggle(int val)
 static void
 tog_ap_flag( int id, int flagbit )
 {
-    ApStruct as;
-    int val;
+  ApStruct as;
+  int val;
 
-    memset(&as, 0, sizeof(as));
+  memset(&as, 0, sizeof(as));
     
-    if(number.has) {
-	val = number.val;
-    } else {
-	as.ap = drawer_get_ap(id);
-	val = as.ap ? !(as.ap->flag & flagbit) : 1;
-    }
-    as.ap = ApCreate(val ? AP_DO : AP_DONT, flagbit,
-		     AP_OVERRIDE, uistate.apoverride & flagbit, AP_END);
-    gv_merge_ap(id, &as);
-    ApDelete(as.ap);
+  if(number.has) {
+    val = number.val;
+  } else {
+    as.ap = drawer_get_ap(id);
+    val = as.ap ? !(as.ap->flag & flagbit) : 1;
+  }
+  as.ap = ApCreate(val ? AP_DO : AP_DONT, flagbit,
+		   AP_OVERRIDE, uistate.apoverride & flagbit, AP_END);
+  gv_merge_ap(id, &as);
+  ApDelete(as.ap);
 }
 
 
@@ -815,13 +815,13 @@ view_pick( DView *dv, int x, int y, Pick *pick )
     /* Map screen -> view position in a stereo window.
      */
     for(i = 0; i < 2; i++) {
-	wp.xmin = drawerstate.winpos.xmin + dv->vp[i].xmin;
-	wp.xmax = wp.xmin + dv->vp[i].xmax - dv->vp[i].xmin;
-	wp.ymin = drawerstate.winpos.ymin + dv->vp[i].ymin;
-	wp.ymax = wp.ymin + dv->vp[i].ymax - dv->vp[i].ymin;
-	mousemap(x, y, &xpick, &ypick, &wp);
-	if(fabs(xpick) <= 1 && fabs(ypick) <= 1)
-	    break;
+      wp.xmin = drawerstate.winpos.xmin + dv->vp[i].xmin;
+      wp.xmax = wp.xmin + dv->vp[i].xmax - dv->vp[i].xmin;
+      wp.ymin = drawerstate.winpos.ymin + dv->vp[i].ymin;
+      wp.ymax = wp.ymin + dv->vp[i].ymax - dv->vp[i].ymin;
+      mousemap(x, y, &xpick, &ypick, &wp);
+      if(fabs(xpick) <= 1 && fabs(ypick) <= 1)
+	break;
     }
   }
 
@@ -891,8 +891,8 @@ view_pick( DView *dv, int x, int y, Pick *pick )
 				 */
 
   if(dv->Item != drawerstate.universe) {
-	/* Picking in a window with a dedicated Scene */
-	/* We yield results in the Scene's coordinate system */
+    /* Picking in a window with a dedicated Scene */
+    /* We yield results in the Scene's coordinate system */
     /* Is this really correct? Why should we call GeomPosition() here? 
      * dv->Item is just a normal geometry, only by chance a
      * single-element INST.
@@ -901,12 +901,12 @@ view_pick( DView *dv, int x, int y, Pick *pick )
     GeomPosition( dv->Item, T );
     TmConcat(T,V, T);		/* T = Scene to screen projection */
     if(GeomMousePick( dv->Item, pick, (Appearance *)NULL, T, xpick, ypick )) {
-	chosen = dv->id;
+      chosen = dv->id;
     }
 #else
     if (GeomMousePick( dv->Item, pick, (Appearance *)NULL,
 		       V, NULL, NULL, xpick, ypick )) {
-	chosen = dv->id;
+      chosen = dv->id;
     }
 #endif
     return chosen;
@@ -954,16 +954,16 @@ view_pick( DView *dv, int x, int y, Pick *pick )
 
   /* Ok, everything below is just debugging stuff */
   if (chosen == NOID) {
-/*    printf("Picked nothing.\n"); */
+    /*    printf("Picked nothing.\n"); */
   } else {
-/*    printf("Picked dgeom #%d\n", INDEXOF(chosen)); */
+    /*    printf("Picked dgeom #%d\n", INDEXOF(chosen)); */
     
-/* pick->got is in mouse coords.
-   wgot is world coords.
-   old world is really dgeom coords. (maybe...)
-   got is raw object coords. (the kind of numbers in geom data file!)
+    /* pick->got is in mouse coords.
+       wgot is world coords.
+       old world is really dgeom coords. (maybe...)
+       got is raw object coords. (the kind of numbers in geom data file!)
     
-*/
+    */
     if (pick && getenv("VERBOSE_PICK")) {
       Point3 got, v, e[2], wgot, wv, we[2], owgot, owv, owe[2];
 	
@@ -1083,8 +1083,8 @@ emit_pick(int pickedid, Pick *pick)
     /* extract the coord system to use from the interest filter;
        if none given, use world */
     if (   interest->filter
-	&& interest->filter->car
-	&& (LFILTERVAL(interest->filter->car)->flag == VAL)) {
+	   && interest->filter->car
+	   && (LFILTERVAL(interest->filter->car)->flag == VAL)) {
       if (!LFROMOBJ(LID)(LFILTERVAL(interest->filter->car)->value,
 			 &coordsysid)) {
 	OOGLError(0,"rawpick: bad coord sys filter type");
@@ -1114,7 +1114,7 @@ emit_pick(int pickedid, Pick *pick)
       }
 
       if (pickedid != NOID) {
-	      Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
+	Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
 	got[3] = 1;
 	gn = 4;
       } else
@@ -1230,8 +1230,8 @@ LDEFINE(event_keys, LVOID,
   int on;
 
   LDECLARE(("event-keys", LBEGIN,
-	LKEYWORD, &on,
-	LEND));
+	    LKEYWORD, &on,
+	    LEND));
 
   if (on == ON_KEYWORD)
     keyshorts = 1;
@@ -1256,8 +1256,8 @@ LDEFINE(event_pick, LVOID,
   int on;
 
   LDECLARE(("event-pick", LBEGIN,
-	LKEYWORD, &on,
-	LEND));
+	    LKEYWORD, &on,
+	    LEND));
 
   if (on == ON_KEYWORD)
     pickon = 1;
@@ -1282,34 +1282,34 @@ LDEFINE(dither, LVOID,
   int id, dither, i, on = -1;
 
   LDECLARE(("dither", LBEGIN,
-        LID, &id,
-        LOPTIONAL,
-        LKEYWORD, &on,
-        LEND));
+	    LID, &id,
+	    LOPTIONAL,
+	    LKEYWORD, &on,
+	    LEND));
 
   MAYBE_LOOP(id, i, T_CAM, DView, dv) {
-        if (dv->mgctx) {
-                mgctxselect(dv->mgctx);
-                mgctxget(MG_DITHER, &dither);
-        }
-        if (on == TOGGLE_KEYWORD)
-          dither = !dither;
-        else
-          if (on == ON_KEYWORD)
-            dither = 1;
-          else
-            if (on == OFF_KEYWORD)
-              dither = 0;
-            else {
-                OOGLError(0, "dither: expected \"on\", \"off\" or \"toggle\" keyword");
-                return Lnil;
-            }
+    if (dv->mgctx) {
+      mgctxselect(dv->mgctx);
+      mgctxget(MG_DITHER, &dither);
+    }
+    if (on == TOGGLE_KEYWORD)
+      dither = !dither;
+    else
+      if (on == ON_KEYWORD)
+	dither = 1;
+      else
+	if (on == OFF_KEYWORD)
+	  dither = 0;
+	else {
+	  OOGLError(0, "dither: expected \"on\", \"off\" or \"toggle\" keyword");
+	  return Lnil;
+	}
 
-        if (dv->mgctx) {
-                mgctxset(MG_DITHER, dither, MG_END);
-                gv_redraw(dv->id);
-        }
-        ui_maybe_refresh(dv->id);
+    if (dv->mgctx) {
+      mgctxset(MG_DITHER, dither, MG_END);
+      gv_redraw(dv->id);
+    }
+    ui_maybe_refresh(dv->id);
   }
   return Lt;
 
