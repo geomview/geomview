@@ -775,6 +775,8 @@ tog_ap_flag( int id, int flagbit )
     ApStruct as;
     int val;
 
+    memset(&as, 0, sizeof(as));
+    
     if(number.has) {
 	val = number.val;
     } else {
@@ -782,7 +784,7 @@ tog_ap_flag( int id, int flagbit )
 	val = as.ap ? !(as.ap->flag & flagbit) : 1;
     }
     as.ap = ApCreate(val ? AP_DO : AP_DONT, flagbit,
-		AP_OVERRIDE, uistate.apoverride & flagbit, AP_END);
+		     AP_OVERRIDE, uistate.apoverride & flagbit, AP_END);
     gv_merge_ap(id, &as);
     ApDelete(as.ap);
 }
