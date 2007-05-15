@@ -460,17 +460,18 @@ mgopengl_trickypolygon(Poly *p, int plflags)
   gluTessBeginPolygon(glutess, data);
   gluTessBeginContour(glutess);
   for (i = 0; i < p->n_vertices; i++) {
-    HPt3Coord w = vp->pt.w ? vp->pt.w : 1e20;
+    HPt3Coord w;
     
     vp = p->v[i];
-    if (vp->pt.w == 1.0) {
+    w = vp->pt.w ? vp->pt.w : 1e20;
+    if (w == 1.0) {
       dpts[i][0] = vp->pt.x;
       dpts[i][1] = vp->pt.y;
       dpts[i][2] = vp->pt.z;
     } else {
-      dpts[i][0] = vp->pt.x / vp->pt.w;
-      dpts[i][1] = vp->pt.y / vp->pt.w;
-      dpts[i][2] = vp->pt.z / vp->pt.w;
+      dpts[i][0] = vp->pt.x / w;
+      dpts[i][1] = vp->pt.y / w;
+      dpts[i][2] = vp->pt.z / w;
     }
     gluTessVertex(glutess, dpts[i], vp);
   }
