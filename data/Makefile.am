@@ -1,7 +1,5 @@
 SUBDIRS = shaders
 
-EXTRA_DIST = $(nobase_geomdata_DATA) $(nobase_geomdata_SCRIPTS)
-
 # Current automake (version 1.4) will not create directory "b" if
 # "a/b/foo" is listed in a _DATA variable.
 #
@@ -45,7 +43,7 @@ groups =					\
 	groups/tetra2.dgp			\
 	groups/wholecube.geom
 
-nobase_geomdata_DATA = \
+nobase_dist_geomdata_DATA = \
 	.geomview \
 	cmap.fmap \
 	geom/abstr.off \
@@ -160,5 +158,5 @@ nobase_geomdata_DATA = \
 	geom/xyz.vect \
 	geom/ztent.mesh
 
-nobase_geomdata_DATA += $(groups)
+nobase_dist_geomdata_DATA += $(groups)
 
