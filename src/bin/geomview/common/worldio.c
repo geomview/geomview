@@ -127,8 +127,8 @@ save_world(Pool *p, int id, bool comm, int wrap, int to_coords)
       PoolIncLevel(p, -1);
       PoolFPrint(p, fp, "} #end of World List\n");
       if (wrap) {
-	PoolIncLevel(p, -2);
-	PoolFPrint(p, fp, "} } # end of World and INST\n");
+	PoolIncLevel(p, -1);
+	PoolFPrint(p, fp, "} # end of World and INST\n");
 	if (closeme) {
 	  PoolIncLevel(p, -1);
 	  PoolFPrint(p, fp, "}\n");
