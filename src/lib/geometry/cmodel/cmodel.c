@@ -34,10 +34,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "cmodelP.h"
 #include "mgP.h"
 
-#ifndef alloca
-#include <alloca.h>
-#endif
-
 static int cm_show_subdivision = 0;
 static int cm_maxrefine = 6;
 /*static double cm_cosmaxbend = .95;*/
@@ -123,7 +119,7 @@ void make_new_quad(Transform T, HPoint3 *p, ColorA *c)
   struct edge *e1, *e2, *e3, *e4, *e5;
   int apflags = _mgc->astk->ap.flag;
 
-  if((apflags & (APF_EDGEDRAW | APF_FACEDRAW | APF_NORMALDRAW)) == 0)
+  if ((apflags & (APF_EDGEDRAW | APF_FACEDRAW | APF_NORMALDRAW)) == 0)
     return;
 
   /* make 4 new vertices */
@@ -151,7 +147,7 @@ void make_new_quad(Transform T, HPoint3 *p, ColorA *c)
   e4 = new_edge_p(v[2], v[3]); 
   e5 = new_edge_p(v[3], v[0]);
 
-  if(apflags & (APF_FACEDRAW|APF_NORMALDRAW)) {
+  if (apflags & (APF_FACEDRAW|APF_NORMALDRAW)) {
     /* make two triangles and five edges */
     new_triangle(e1, e2,
 		 e3 = new_edge_p(v[2], v[0]),
@@ -187,24 +183,31 @@ void cm_draw_mesh(Mesh *m)
   npt = m->nu * m->nv;
   pt = m->p;
   n = m->n;
-  newpt = ppt = (HPoint3 *)alloca(npt * sizeof(HPoint3));
-  newn = pn = (Point3 *)alloca(npt * sizeof(Point3));
-  if(_mgc->astk->flags & MGASTK_SHADER) {
-    newc = pc = (ColorA *)alloca(npt * sizeof(ColorA));
+  newpt = ppt = OOGLNewNE(HPoint3, npt, "CModel mesh points");
+  newn = pn = OOGLNewNE(Point3, npt, "CModel mesh normals");
+  if (_mgc->astk->flags & MGASTK_SHADER) {
+    newc = pc = OOGLNewNE(ColorA, npt, "CModel mesh color");
     c = m->c ? m->c : (ColorA *)&_mgc->astk->mat.diffuse;
   }
   for (i = 0; i < npt; ++i) {
     projective_vector_to_conformal(curv, pt, n, T, (Point3 *)ppt, pn);
     ppt->w = 1.;
-    if(newc) {
+    if (newc) {
       (*shader)(1, ppt, pn, c, pc);
       pc++;
-      if(m->c) c++;
+      if (m->c) c++;
     }
     ++pt; ++n; ++ppt; ++pn;
   }
   mgmesh(MESH_MGWRAP(m->geomflags),
 	 m->nu, m->nv, newpt, newn, NULL, newc ? newc : m->c, m->geomflags);
+
+  OOGLFree(newpt);
+  OOGLFree(newn);
+  if (newc) {
+    OOGLFree(newc);
+  }
+
   mgpoptransform();
 }
 
@@ -269,7 +272,7 @@ void cm_read_polylist(PolyList *polylist)
   facecolors = (polylist->geomflags & PL_HASPCOL);
   col = (ColorA*)&_mgc->astk->mat.diffuse;
   for (i = 0; i < n; i++) {
-    if(facecolors) col = &p->pcol;
+    if (facecolors) col = &p->pcol;
     nv = p->n_vertices;
     if (nv == 3) {
       make_new_triangle(&p->v[0]->pt,
@@ -316,7 +319,7 @@ void make_new_triangle(HPoint3 *a, HPoint3 *b, HPoint3 *c, ColorA *col,
   e2 = new_edge_p(v2, v3); 
   e3 = new_edge_p(v3, v1);
 
-  if(apflags & (APF_FACEDRAW|APF_NORMALDRAW))
+  if (apflags & (APF_FACEDRAW|APF_NORMALDRAW))
     new_triangle(e1, e2, e3, TRUE, TRUE, TRUE, p);
 
   if (apflags & APF_EDGEDRAW) {
@@ -357,7 +360,7 @@ void cmodel_draw(int plflags)
   HPoint3 pts[2];
   Vertex *Vertp = NULL, *verts = NULL;
   Poly *Polyp = NULL, *polys = NULL;
-  int npolys, keepflags, nverts, facecolors, vertcolors, useshader, shading;
+  int npolys, keepflags, nverts, useshader, shading;
   mgshadefunc shader;
 
   refine();
@@ -367,18 +370,19 @@ void cmodel_draw(int plflags)
   mgpushtransform();
   mgidentity();
 
-  if ((npolys = triangle_count()) != 0)
-    polys = Polyp = (Poly *)alloca(npolys * sizeof(Poly));
+  if ((npolys = triangle_count()) != 0) {
+    polys = Polyp = OOGLNewNE(Poly, npolys, "CModel Polys");
+  }
 
-  if ((nverts = vertex_count()) != 0) 
-    verts = Vertp = (Vertex *)alloca(nverts * sizeof(Vertex));
+  if ((nverts = vertex_count()) != 0) {
+    verts = Vertp = OOGLNewNE(Vertex, nverts, "CModel Vertices");
+  }
 
   shading = _mgc->astk->ap.shading;
   useshader = _mgc->astk->flags & MGASTK_SHADER;
   shader = _mgc->astk->shader;
 
   vp = first_vertex();
-  vertcolors = plflags & (PL_HASVCOL | PL_HASPCOL);
   while (vp != NULL) {
     Vertp->pt = vp->V.pt;
     /* visible vertices must be displayed
@@ -387,9 +391,9 @@ void cmodel_draw(int plflags)
 
     if (vp->visible) {
       mgpolyline(1, &Vertp->pt, 1, &vp->V.vcol, 0);
-    } else if(IS_SMOOTH(shading)) {
+    } else if (IS_SMOOTH(shading)) {
       set_normal(&vp->V.pt, &vp->polar, &Vertp->vn);
-      if(useshader)
+      if (useshader)
 	(*shader)(1, &Vertp->pt, &Vertp->vn, &vp->V.vcol, &Vertp->vcol);
       else
 	Vertp->vcol = vp->V.vcol;
@@ -418,23 +422,29 @@ void cmodel_draw(int plflags)
   }
 
   tp = first_triangle();
-  facecolors = (plflags & (PL_HASPCOL|PL_HASVCOL));
   while (tp != NULL) {
     tp->v[0] = edge_start(tp->e1, tp->o1)->vxp;
     tp->v[1] = edge_start(tp->e2, tp->o2)->vxp;
     tp->v[2] = edge_start(tp->e3, tp->o3)->vxp;
+    Polyp->flags = plflags & (PL_HASPCOL|PL_HASVCOL);
     Polyp->n_vertices = 3;
     Polyp->v = tp->v;
     /* computation is not exact here: assume triangle is small so center
        and vertex are very close together */
-    if(IS_SHADED(shading))
+    if (IS_SHADED(shading)) {
       set_normal(&tp->e1->v1->V.pt, &tp->e1->v1->polar, (Point3 *)&Polyp->pn);
+      Polyp->flags |= PL_HASPN;
+    }
+    if (IS_SMOOTH(shading)) {
+      Polyp->flags |= PL_HASVN;
+    }
 
-    if(useshader)
+    if (useshader) {
       (*shader)(1, &tp->v[0]->pt, (Point3 *)&Polyp->pn,
 		&tp->e1->v1->V.vcol, &Polyp->pcol);
-    else
+    } else {
       Polyp->pcol = tp->e1->v1->V.vcol;
+    }
 
     Polyp++;
     tp = tp->next;
@@ -454,7 +464,14 @@ void cmodel_draw(int plflags)
 
   /* restore the current transform */
   mgpoptransform();
-  return;
+
+  if (polys) {
+    OOGLFree(polys);
+  }
+  if (verts) {
+    OOGLFree(verts);
+  }
+  
 }
 
 void refine()
