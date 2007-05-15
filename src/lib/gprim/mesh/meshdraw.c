@@ -198,6 +198,9 @@ MeshDraw(Mesh *mesh)
 
   if (_mgc->space & TM_CONFORMAL_BALL) {
     cmodel_clear(_mgc->space);
+    if (!(mesh->geomflags & MESH_N)) {
+      MeshComputeNormals(mesh, MESH_N);
+    }
     cm_draw_mesh(mesh);
     return mesh;
   } else if((_mgc->astk->flags & MGASTK_SHADER) &&
