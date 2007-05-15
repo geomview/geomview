@@ -37,10 +37,10 @@ htdocs/*.html htdocs/figs/*.png: htdocs
 
 htdocs: geomview.html
 	if test -d $@; then rm -rf $@; fi
-	if test -d $(srcdir)/$<; then \
-          htmldir=$(srcdir)/$<; \
+	if test -d $(srcdir)/geomview.html; then \
+          htmldir=$(srcdir)/geomview.html; \
 	else \
-          htmldir=$<; \
+          htmldir=geomview.html; \
 	fi; \
 	cp -R $$htmldir $@; \
 	chmod 0755 $@; \

@@ -39,7 +39,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bbox.h"
 #include "color.h"
 #include <string.h>
-#include <getopt.h>
 
 ColorA white = {1, 1, 1, 1};
 ColorA black = {0, 0, 0, 1};
@@ -93,8 +92,6 @@ int main(int argc, char **argv)
     } flag;
     int errflag=0;
     int c, display;
-    extern char *optarg;
-    extern int optind;
     char *name = "geom.tiff";
     int doback = 0;
     char *infile = "-";

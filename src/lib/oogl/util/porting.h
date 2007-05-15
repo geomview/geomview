@@ -39,6 +39,12 @@
 #if HAVE_STDIO_H
 # include <stdio.h>
 #endif
+#if HAVE_GETOPT_H
+# include <getopt.h>
+#endif
+#if HAVE_UNISTD_H /* getopt() on AIX */
+# include <unistd.h>
+#endif
 
 #if !HAVE_M_PI
 # define M_PI 3.14159265358979323846	/* pi */
@@ -88,6 +94,26 @@ extern putenv(char *name);
 /* supply missing declaration for fmemopen */
 #if !HAVE_DECL_FMEMOPEN
 extern FILE *fmemopen(void *buf, size_t buflen, char *mode);
+#endif
+
+#if !HAVE_DECL_GETOPT
+extern int getopt(int argc, char * const argv[], const char *optstring);
+#endif
+
+#if !HAVE_DECL_OPTARG
+extern char *optarg;
+#endif
+
+#if !HAVE_DECL_OPTIND
+extern int optind;
+#endif
+
+#if !HAVE_DECL_OPTERR
+extern int opterr;
+#endif
+
+#if !HAVE_DECL_OPTOPT
+extern int optopt;
 #endif
 
 #endif /* GV_PORTING_H */

@@ -32,9 +32,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>	/* for qsort(), malloc(), atof() */
-#include <getopt.h>
 
-#include <ooglutil.h>	/* variable-length arrays */
+#include <ooglutil.h>	/* variable-length arrays, getopt() and stuff */
 
 #ifdef NeXT
 extern char *strdup(const char *);
