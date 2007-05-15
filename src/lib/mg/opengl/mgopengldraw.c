@@ -343,15 +343,22 @@ static void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
 			      GLfloat weight[4], Vertex **dataOut,
 			      struct tess_data *data)
 {
-   Vertex *vertex;
-   int i;
-   HPt3Coord w;
+  Vertex *vertex;
+  int i, n;
+  HPt3Coord w;
    
-   vertex = obstack_alloc(&data->obst, sizeof(Vertex));
+  vertex = obstack_alloc(&data->obst, sizeof(Vertex));
 
-   if (data->plflags & VERT_ST) {
+  /* Although otherwise documented at least the Mesa version of the
+   * GLU tesselator sometimes does not fill vertex_data with valid
+   * pointers.
+   */
+  for (n = 3; n >= 0 && vertex_data[n] == NULL; --n);
+  ++n;
+
+  if (data->plflags & VERT_ST) {
     /* texture co-ordinates */
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < n; i++) {
       vertex->st.s += weight[i] * vertex_data[i]->st.s;
       vertex->st.t += weight[i] * vertex_data[i]->st.t;
     }  
@@ -359,47 +366,47 @@ static void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
      * be careful not to dehomogenize, otherwise texturing might come
      * out wrong.
      */
-    for (i = 0, w = 0.0; i < 4; i++) {
+    for (i = 0, w = 0.0; i < n; i++) {
       w += weight[i] * vertex_data[i]->pt.w;
     }
-   } else {
-     w = 1.0;
-   }
+  } else {
+    w = 1.0;
+  }
      
-   vertex->pt.x = coords[0] * w;
-   vertex->pt.y = coords[1] * w;
-   vertex->pt.z = coords[2] * w;
-   vertex->pt.w = w;
+  vertex->pt.x = coords[0] * w;
+  vertex->pt.y = coords[1] * w;
+  vertex->pt.z = coords[2] * w;
+  vertex->pt.w = w;
    
-   if (data->plflags & VERT_N) {
-     /* The averaged vertex normals do not have an orientation, so try
-      * to orient them w.r.t. the polygon normal before computing the
-      * linear combination.
-      */
-     memset(&vertex->vn, 0, sizeof(vertex->vn));
-     for (i = 0; i < 4; i++) {
-       Point3 *vn = &vertex_data[i]->vn;
-       if (Pt3Dot(vn, data->pnormal) < 0.0) {
-	 Pt3Comb(-weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
-       } else {
-	 Pt3Comb(weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
-       }
-     }
-     Pt3Unit(&vertex->vn);
-   }
+  if (data->plflags & VERT_N) {
+    /* The averaged vertex normals do not have an orientation, so try
+     * to orient them w.r.t. the polygon normal before computing the
+     * linear combination.
+     */
+    memset(&vertex->vn, 0, sizeof(vertex->vn));
+    for (i = 0; i < n; i++) {
+      Point3 *vn = &vertex_data[i]->vn;
+      if (Pt3Dot(vn, data->pnormal) < 0.0) {
+	Pt3Comb(-weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
+      } else {
+	Pt3Comb(weight[i], vn, 1.0, &vertex->vn, &vertex->vn);
+      }
+    }
+    Pt3Unit(&vertex->vn);
+  }
    
-   if (data->plflags & VERT_C) {
-     /* colors */
-     memset(&vertex->vcol, 0, sizeof(vertex->vcol));
-     for (i = 0; i < 4; i++) {
-       vertex->vcol.r += weight[i] * vertex_data[i]->vcol.r;
-       vertex->vcol.g += weight[i] * vertex_data[i]->vcol.g;
-       vertex->vcol.b += weight[i] * vertex_data[i]->vcol.b;
-       vertex->vcol.a += weight[i] * vertex_data[i]->vcol.a;
-     }
-   }
+  if (data->plflags & VERT_C) {
+    /* colors */
+    memset(&vertex->vcol, 0, sizeof(vertex->vcol));
+    for (i = 0; i < n; i++) {
+      vertex->vcol.r += weight[i] * vertex_data[i]->vcol.r;
+      vertex->vcol.g += weight[i] * vertex_data[i]->vcol.g;
+      vertex->vcol.b += weight[i] * vertex_data[i]->vcol.b;
+      vertex->vcol.a += weight[i] * vertex_data[i]->vcol.a;
+    }
+  }
 
-   *dataOut = vertex;
+  *dataOut = vertex;
 }
 
 /*
@@ -453,10 +460,18 @@ mgopengl_trickypolygon(Poly *p, int plflags)
   gluTessBeginPolygon(glutess, data);
   gluTessBeginContour(glutess);
   for (i = 0; i < p->n_vertices; i++) {
+    HPt3Coord w = vp->pt.w ? vp->pt.w : 1e20;
+    
     vp = p->v[i];
-    dpts[i][0] = vp->pt.x / vp->pt.w;
-    dpts[i][1] = vp->pt.y / vp->pt.w;
-    dpts[i][2] = vp->pt.z / vp->pt.w;
+    if (vp->pt.w == 1.0) {
+      dpts[i][0] = vp->pt.x;
+      dpts[i][1] = vp->pt.y;
+      dpts[i][2] = vp->pt.z;
+    } else {
+      dpts[i][0] = vp->pt.x / vp->pt.w;
+      dpts[i][1] = vp->pt.y / vp->pt.w;
+      dpts[i][2] = vp->pt.z / vp->pt.w;
+    }
     gluTessVertex(glutess, dpts[i], vp);
   }
   gluTessEndContour(glutess);

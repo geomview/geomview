@@ -494,18 +494,25 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
 {
   Vertex *v = obstack_alloc(data->scratch, sizeof(Vertex));
   HPt3Coord w;
-  int i; /* leave the loop unrolling to the comiler */
+  int i, n;
+
+  /* Although otherwise documented at least the Mesa version of the
+   * GLU tesselator sometimes does not fill vertex_data with valid
+   * pointers.
+   */
+  for (n = 3; n >= 0 && vertex_data[n] == NULL; --n);
+  ++n;
 
   if (data->polyflags & VERT_ST) {
     /* texture co-ordinates */
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < n; i++) {
       v->st.s += weight[i] * vertex_data[i]->st.s;
       v->st.t += weight[i] * vertex_data[i]->st.t;
     }  
     /* same linear combination stuff as in SplitPolyNode(); be careful
      * not to dehomogenize, otherwise texturing might come out wrong.
      */
-    for (i = 0, w = 0.0; i < 4; i++) {
+    for (i = 0, w = 0.0; i < n; i++) {
       w += weight[i] * vertex_data[i]->pt.w;
     }
   } else {
@@ -518,7 +525,7 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
   if (data->polyflags & VERT_C) {
     /* colors */
     memset(&v->vcol, 0, sizeof(v->vcol));
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < n; i++) {
       v->vcol.r += weight[i] * vertex_data[i]->vcol.r;
       v->vcol.g += weight[i] * vertex_data[i]->vcol.g;
       v->vcol.b += weight[i] * vertex_data[i]->vcol.b;
@@ -532,7 +539,7 @@ void tess_combine_data(GLdouble coords[3], Vertex *vertex_data[4],
      * linear combination.
      */
     memset(&v->vn, 0, sizeof(v->vn));
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < n; i++) {
       Point3 *vn = &vertex_data[i]->vn;
       if (Pt3Dot(vn, data->pn) < 0.0) {
 	Pt3Comb(-weight[i], vn, 1.0, &v->vn, &v->vn);
@@ -794,15 +801,16 @@ case 4: /* supported */
       gluTessBeginPolygon(glutess, tessdata);
       gluTessBeginContour(glutess);
       for (i = 0, vp = poly->v; i < poly->n_vertices; i++, vp++) {
-	HPt3Coord w = (*vp)->pt.w;
-	if (w != 1.0 && w != 0.0) {
-	  dv[i][0] = (*vp)->pt.x / w;
-	  dv[i][1] = (*vp)->pt.y / w;
-	  dv[i][2] = (*vp)->pt.z / w;
-	} else {
+	HPt3Coord w = (*vp)->pt.w ? (*vp)->pt.w : 1e20;
+
+	if (w == 1.0) {
 	  dv[i][0] = (*vp)->pt.x;
 	  dv[i][1] = (*vp)->pt.y;
 	  dv[i][2] = (*vp)->pt.z;
+	} else {
+	  dv[i][0] = (*vp)->pt.x / w;
+	  dv[i][1] = (*vp)->pt.y / w;
+	  dv[i][2] = (*vp)->pt.z / w;
 	}
 	gluTessVertex(glutess, dv[i], *vp);
       }
