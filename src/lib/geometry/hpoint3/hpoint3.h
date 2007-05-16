@@ -706,6 +706,9 @@ static inline void HPt3MinMax(HPoint3 *min, HPoint3 *max, HPoint3 *other)
 {
   HPt3Coord oc = other->w;
 
+  if (oc == 0.0) {
+    oc = 1.0;
+  }
   if(oc * min->x > other->x) min->x = other->x / oc;
   else if(oc * max->x < other->x) max->x = other->x / oc;
   if(oc * min->y > other->y) min->y = other->y / oc;
