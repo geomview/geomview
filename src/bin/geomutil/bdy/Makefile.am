@@ -19,6 +19,7 @@ drawbdy: drawbdy.sh Makefile
 	sed \
  -e "s|%SHELL%|`eval eval eval echo @SHELL@`|g" \
  -e "s|%bindir%|`eval eval eval echo $(bindir)`|g" \
+ -e "s|%builddir%|$(abs_builddir)|g" \
  < $(srcdir)/drawbdy.sh > drawbdy
 	chmod +x drawbdy
 
