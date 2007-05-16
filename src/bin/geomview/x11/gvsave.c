@@ -51,7 +51,6 @@ static void save_selection(Widget, XtPointer,
 static int  suitable_id(int, char **);
 static Widget shell, saveobj, geomobj, saveform, savewrapper, filetext;
 static int    savechoice = 0;
-static int    loaded = 0;
 static int blinkrate;
 
 #define SAVE_WIO        0
@@ -178,7 +177,6 @@ void ui_load_savepanel()
 
   XtManageChild(savetypeform);
 
-  loaded = 1;
 }
 
 void ui_show_savepanel()

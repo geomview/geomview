@@ -473,8 +473,6 @@ static void pick_light(Event *ev)
   Transform V, T, Tnorm, Tmodel, Tnet, Tt;
   float xpick, ypick;
   Pick *pick = NULL;
-  int picked = 0;
-
 
   CamView(dv->cam, V); 
   /* Top-level modelling transform */
@@ -492,7 +490,6 @@ static void pick_light(Event *ev)
 		      Tnet, NULL, NULL, xpick, ypick )) {
       uistate.current_light = i;
       set_light(i);
-      picked = 1;
     }
   }
 }

@@ -43,11 +43,10 @@ MeshCreate (Mesh *exist, GeomClass *classp, va_list *a_list)
   Mesh *mesh;
   int		attr, copy = 1;
   int		npts;
-  HPoint3	*p;
-  Point3 	*n, *u, *p3;
+  Point3 	*p3;
   ColorA	*c;
 
-  p = NULL; n = NULL; u = NULL; c = NULL; p3 = NULL;
+  c = NULL; p3 = NULL;
 
   if (exist == NULL) {
     mesh = OOGLNewE(Mesh, "MeshCreate mesh");

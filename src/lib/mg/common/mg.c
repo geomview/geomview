@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.18 2007/05/04 13:02:29 rotdrop Exp $
+ * $Id: mg.c,v 1.19 2007/05/16 19:38:06 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -413,11 +413,10 @@ mg_globallights( LmLighting *lm, int worldbegin )
 const Appearance *
 mg_setappearance(const Appearance *ap, int mergeflag)
 {
-  Appearance *nap;
   struct mgastk *ma = _mgc->astk;
 
   if (mergeflag == MG_MERGE) {
-    nap = ApMerge(ap, &ma->ap, 1);  /* Merge, in place */
+    ApMerge(ap, &ma->ap, 1);  /* Merge, in place */
     ma->changed |= MC_AP;
     /* ma->ap = *nap; */ /* <- not necessary, ApMerge(a, b) returns b
      * unless b would be NULL on entry, which canot be the case here.

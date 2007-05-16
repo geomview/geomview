@@ -59,7 +59,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* do-lang, do-lang, do-lang... */
 
 char geomview_version[] = GEOMVIEW_VERSION;
-char *buildinfographics;	/* Possibly initialized elsewhere */
+extern char *buildinfographics;	/* Possibly initialized elsewhere */
 
 void lang_init()
 {
@@ -348,21 +348,21 @@ LDEFINE(geomview_version, LSTRING,
   return LNew( LSTRING, &s );
 }
 
-int boolval(char *s, Keyword keyword)
+bool boolval(char *s, Keyword keyword)
 {
   switch (keyword) {
   case YES_KEYWORD:
   case ON_KEYWORD:
   case ONE_KEYWORD:
-    return 1;
+    return true;
   case NO_KEYWORD:
   case OFF_KEYWORD:
   case ZERO_KEYWORD:
-    return 0;
+    return false;
   default:
     fprintf(stderr, "%s: %s is not a boolean keyword; assuming \"no\"\n",
 	    s, keywordname(keyword));
-    return 0;
+    return false;
   }
 }
 

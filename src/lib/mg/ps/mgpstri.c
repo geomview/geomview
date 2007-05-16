@@ -44,7 +44,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 # define max(a,b) ((a) > (b) ? (a) : (b))
 #endif
 
-static double areaThreshold;
+/*static double areaThreshold;*/
 static FILE *psout;
 
 static void smoothLine(CPoint3 *p0, CPoint3 *p1);
@@ -87,7 +87,7 @@ MGPS_startPS(FILE *outf, ColorA *col, double aspect, int width, int height)
     fprintf(psout,"%%%%CreationDate: %s", ctime(&tm));
     fprintf(psout,"%%%%For: %s\n", getenv("USER"));
 
-    areaThreshold = (width*height)/(double)AREA;
+    /* areaThreshold = (width*height)/(double)AREA;*/
     dx = width;
     dy = height;
 

@@ -41,7 +41,7 @@ Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
 	       Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[2];
-  int i, j, k, which, ok[2];
+  int i, j, k, ok[2];
   int found, v4d;
   unsigned int apflag = 0;
 
@@ -59,7 +59,6 @@ Vect *VectPick(Vect *v, Pick *p, Appearance *ap,
   for (i = k = 0; i < v->nvec; i++) {
     int nv = abs(v->vnvert[i]);
     
-    which = 0;
     if (TN)
       ok[0] = (0 < HPt3NTransPt3(TN, axes, &v->p[k], v4d, &plist[0]));
     else

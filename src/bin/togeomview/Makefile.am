@@ -1,6 +1,6 @@
 INCLUDES = $(default_includes)
 
-LDADD = $(OOGLLIB) ${SOCKETLIBS}
+LDADD = ${SOCKETLIBS}
 
 man_MANS = togeomview.1gv
 

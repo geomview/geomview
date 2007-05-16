@@ -373,7 +373,8 @@ LDEFINE(ap_override, LVOID,
 	Selects whether appearance controls should override objects' own\n\
 	settings.  On by default.  With no arguments, returns current setting.")
 {
-  int kw = -1;
+  Keyword kw = NO_KEYWORD;
+
   LDECLARE(("ap-override", LBEGIN,
 	LOPTIONAL,
 	LKEYWORD, &kw,

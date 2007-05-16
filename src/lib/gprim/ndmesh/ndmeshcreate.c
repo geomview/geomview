@@ -73,11 +73,9 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
     int		attr, copy = 1;
     int		i;
     int		npts;
-    HPoint3	*p;
-    Point3 	*n, *u, *p3;
     ColorA	*c;
 
-    p = NULL; n = NULL; u = NULL; c = NULL; p3 = NULL;
+    c = NULL;
 
     if (exist == NULL) {
 	m = OOGLNewE(NDMesh, "NDMeshCreate mesh");

@@ -33,7 +33,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 extern Display	*dpy;
 extern GC	 mib_gc;
+#ifdef notdef
 static int       scaleflag;
+#endif
 
 /* Code for Scale */
 /*****************************************************************************/
@@ -47,7 +49,9 @@ mib_Widget *mib_create_Scale(mib_Widget *parent, char *name, char *orient,
   int		 n;
 
 
+#ifdef notdef
   scaleflag = 0;
+#endif
   /* create the new widget and add it to the tree */
 
   temp = mib_new_mib_Widget();
@@ -132,8 +136,10 @@ mib_Widget *mib_create_Scale(mib_Widget *parent, char *name, char *orient,
     temp->me = XtCreateManagedWidget(name, xmScaleWidgetClass,
                 temp->parent->me, args, n);
 
+#ifdef notdef
   if (mib_fill == WEMPTY)
     scaleflag = 1;
+#endif
 
   if (mib_fill == WEDIT || mib_fill == WDEFAULT)
   {

@@ -1072,8 +1072,8 @@ LDEFINE(transform, LVOID,
 	"function, so as to start and stop smoothly.  "
 	"If absent, the motion is applied immediately.")
 {
-  int moving_id, center_id, frame_id, transform_type;
-  Keyword smooth = NO_KEYWORD;
+  int moving_id, center_id, frame_id;
+  Keyword smooth = NO_KEYWORD, transform_type = NO_KEYWORD;
   float fx, fy, fz, during = 0;
 
   LDECLARE(("transform", LBEGIN,
@@ -1111,8 +1111,8 @@ LDEFINE(transform_incr, LVOID,
 	rotates the World about its X axis at 1 turn (2pi radians) per 10\n\
 	seconds.\n")
 {
-  int moving_id, center_id, frame_id, transform_type;
-  Keyword smooth = NO_KEYWORD;
+  int moving_id, center_id, frame_id;
+  Keyword smooth = NO_KEYWORD, transform_type = NO_KEYWORD;
   float fx, fy, fz;
   float timeunit = 0;
 
@@ -1143,7 +1143,8 @@ LDEFINE(transform_set, LVOID,
 	Set objectID's transform to the constructed transform.\n\
 	Same syntax as transform.")
 {
-  int moving_id, center_id, frame_id, transform_type;
+  int moving_id, center_id, frame_id;
+  Keyword transform_type = NO_KEYWORD;
   float fx, fy, fz;
 
   LDECLARE(("transform-set", LBEGIN,

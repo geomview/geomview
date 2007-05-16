@@ -77,7 +77,7 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
   int attr, copy=1;
   int numentries=0, numvertices=0;
   int i;
-  int j,k=0, pdim = 4;
+  int j,k=0;
 
   if (exist == NULL) {
     pl = OOGLNewE(NPolyList,"NPolyListCreate npolylist");
@@ -86,7 +86,6 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
     pl->pdim = 4;	/* 3-D plus homogeneous component */
   } else {
     pl = exist;
-    pdim = pl->pdim;
   }
 
   while ((attr = va_arg(*a_list, int))) 

@@ -404,12 +404,9 @@ void SphereEncompassPoints(Sphere *sphere,
   int i, dim;
   HPointN **spanPts;
   HPoint3 *spanPts3;
-  HPointN tmp;
 
   if (!n) 
     return;
-
-  tmp.flags = 0;
 
   if (pdim != 4)
     vert_4d = 0;

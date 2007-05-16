@@ -41,7 +41,7 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
 	 Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[4];
-  int nu, nv, maxnu, maxnv, maxpt;
+  int nu, nv, maxnu, maxnv;
   int foundu, foundv, v4d;
   unsigned int apflag = 0;
   HPt3Coord xa, xb, xc, xd;
@@ -52,7 +52,6 @@ MeshPick(Mesh *mesh, Pick *pick, Appearance *ap,
 
   maxnu = mesh->nu;
   maxnv = mesh->nv;
-  maxpt = maxnu * maxnv;
 
   /* Make sure that vects do not as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */

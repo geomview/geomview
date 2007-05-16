@@ -256,8 +256,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
     void *it;
     int i, first;
     int empty = 1, braces = 0;
-    Geom **tgp;
-    Handle **thp;
     int c;
     char *w, *raww;
     int brack = 0;
@@ -385,8 +383,6 @@ GeomStreamIn(Pool *p, Handle **hp, Geom **gp)
 
 	    g = NULL;
 	    first = 1;
-	    tgp = gp ? gp : &g;
-	    thp = hp ? hp : &h;
 
 	    if (Class) {
 		if (Class->import)

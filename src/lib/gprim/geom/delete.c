@@ -59,7 +59,6 @@ static inline void GeomNodeDataPrune(Geom *geom)
 void GeomDelete(Geom *object)
 {
     Handle *h;
-    Pool *p;
     int np;
 
     if (object == NULL) {
@@ -78,7 +77,7 @@ void GeomDelete(Geom *object)
     for (np = 0, h = HandleRefIterate((Ref *)object, NULL);
 	 h;
 	 h = HandleRefIterate((Ref *)object, h)) {
-	if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
+	if (HandlePool(h) != NULL && !PoolDoCacheFiles) {
 	    np++;
 	}
     }
@@ -87,7 +86,7 @@ void GeomDelete(Geom *object)
 	for (h = HandleRefIterate((Ref *)object, NULL);
 	     h;
 	     h = HandleRefIterate((Ref *)object, h)) {
-	    if ((p = HandlePool(h)) != NULL && !PoolDoCacheFiles) {
+	    if (HandlePool(h) != NULL && !PoolDoCacheFiles) {
 		/* REFPUT() is enough, HandleRefIterate() will call
 		 * HandleDelete()
 		 */

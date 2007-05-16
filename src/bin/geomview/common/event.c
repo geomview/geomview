@@ -208,7 +208,8 @@ LDEFINE(pick_invisible, LVOID,
 	makes them invisible; default yes.\n\
 	With no arguments, returns current status.")
 {
-  int kw = -1;
+  Keyword kw = NO_KEYWORD;
+
   LDECLARE(("pick-invisible", LBEGIN,
 	    LOPTIONAL,
 	    LKEYWORD, &kw,
@@ -232,7 +233,8 @@ LDEFINE(rawevent, LVOID,
 */
 {
   int id;
-  int k;
+  int apfl;
+  DrawerKeyword k;
   int err = 0;
   float v;
   Appearance *ap;
@@ -417,8 +419,8 @@ LDEFINE(rawevent, LVOID,
     case 's': s = OBJSCALE; goto mote;
 
     mote:
-      k = retarget(NOID);
-      if (k) gv_ui_target( k, IMMEDIATE);
+      id = retarget(NOID);
+      if (k) gv_ui_target( id, IMMEDIATE);
       gv_event_mode( s );
       break;
 
@@ -602,18 +604,18 @@ LDEFINE(rawevent, LVOID,
       break;
 
       /* Appearance settings */
-    case SEQ('a','f'): k = APF_FACEDRAW; goto togapflag;
-    case SEQ('a','e'): k = APF_EDGEDRAW; goto togapflag;
-    case SEQ('a','l'): k = APF_SHADELINES; goto togapflag;
-    case SEQ('a','n'): k = APF_NORMALDRAW; goto togapflag;
-    case SEQ('a','v'): k = APF_EVERT; goto togapflag;
-    case SEQ('a','t'): k = APF_TEXTURE; goto togapflag;
-    case SEQ('a','T'): k = APF_TRANSP; goto togapflag;
-    case SEQ('a','V'): k = APF_VECTDRAW; goto togapflag;
-    case SEQ('a','C'): k = APF_CONCAVE; goto togapflag;
-    case SEQ('a','q'): k = APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR; goto togapflag;
+    case SEQ('a','f'): apfl = APF_FACEDRAW; goto togapflag;
+    case SEQ('a','e'): apfl = APF_EDGEDRAW; goto togapflag;
+    case SEQ('a','l'): apfl = APF_SHADELINES; goto togapflag;
+    case SEQ('a','n'): apfl = APF_NORMALDRAW; goto togapflag;
+    case SEQ('a','v'): apfl = APF_EVERT; goto togapflag;
+    case SEQ('a','t'): apfl = APF_TEXTURE; goto togapflag;
+    case SEQ('a','T'): apfl = APF_TRANSP; goto togapflag;
+    case SEQ('a','V'): apfl = APF_VECTDRAW; goto togapflag;
+    case SEQ('a','C'): apfl = APF_CONCAVE; goto togapflag;
+    case SEQ('a','q'): apfl = APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR; goto togapflag;
     togapflag:
-    tog_ap_flag( id, k );
+    tog_ap_flag( id, apfl );
     break;
     case SEQ('a','x'): drawer_set_ap( id, NULL, NULL ); break;
     case SEQ('a','o'): gv_ap_override( getint( !uistate.apoverride ) ); break;

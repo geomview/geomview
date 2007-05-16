@@ -115,7 +115,7 @@ int hypshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
     struct LtLight *l;
     int i, lno;
     HPoint3 V, n4, N, I;
-    float s, ni, d;
+    float s, ni;
     Color Ci;
     static LtLight *cachedlights[AP_MAXLIGHTS];
     static int ncached = 0;
@@ -163,7 +163,7 @@ int hypshade(int nv, HPoint3 *v, Point3 *n, ColorA *c, ColorA *cs)
 
 					/* Transform point by T */
 	HPt3Transform(mx->T, v, &V);	/* V = v in world coords */
-	if ((d = HPt3R31Dot(&V, &V)) >= 0)  /* point at infinity, or beyond */
+	if (HPt3R31Dot(&V, &V) >= 0)    /* point at infinity, or beyond */
 		continue;		/* outside hyperbolic space */
 	HPt3R31Normalize(&V);		/* lie on surface < , > = -1 */
 

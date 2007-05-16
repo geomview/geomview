@@ -84,7 +84,7 @@ mgopengl_polygon(int nv,  HPoint3 *V,
   HPoint3 *v;
   Point3 *n;
   ColorA *c;
-  int cinc, ninc;
+  int ninc;
   int flag;
 
 
@@ -93,7 +93,6 @@ mgopengl_polygon(int nv,  HPoint3 *V,
       !(_mgc->astk->flags & MGASTK_SHADER)) {
     nc = 0;
   }
-  cinc = (nc > 1);
   ninc = (nn > 1);
   if (nc == 0) {
     C = (ColorA*)&_mgc->astk->ap.mat->diffuse;

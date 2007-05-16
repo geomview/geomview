@@ -477,20 +477,20 @@ LDEFINE(ui_target, LVOID,
         (geom or camera).  The default is \"yes\".  This command may\n\
         result in a change of motion modes based on target choice.")
 {
-  DObject *obj;
   int id, newtype;
-  int immediate=YES_KEYWORD;
+  Keyword immediate_kw = YES_KEYWORD;
+  bool immediate;
 
   LDECLARE(("ui-target", LBEGIN,
             LID, &id,
             LOPTIONAL,
-            LKEYWORD, &immediate,
+            LKEYWORD, &immediate_kw,
             LEND));
-  immediate = boolval("ui-target", immediate);
+  immediate = boolval("ui-target", immediate_kw);
   newtype = TYPEOF(id);
 
   if (id == uistate.targetid ) return Lt;
-  if ( !(obj = drawer_get_object(id))
+  if (drawer_get_object(id) == NULL
       || (id == TARGETID) || (id == CENTERID)
       || (id == SELF) || (id == UNIVERSE) || (id == PRIMITIVE)) {
     return Lt;
@@ -812,7 +812,8 @@ LDEFINE(ui_panel, LVOID,
         positioning.")
 {
   char *panelname;
-  int index, on;
+  int index;
+  Keyword on = NO_KEYWORD;
   struct panel *p;
   WindowStruct *ws=NULL;
   WnPosition wp;

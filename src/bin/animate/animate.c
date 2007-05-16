@@ -742,10 +742,6 @@ void anim_loadscript(char *in_scr)
 void anim_speed(int percent)
 {
   /* for now we let the user interface handle the the speed of update */
-
-  int dummy;
-
-  dummy = 0;
 }
 
 /*****************************************************************************/

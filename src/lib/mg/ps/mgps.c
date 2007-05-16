@@ -497,7 +497,7 @@ mgps_popappearance()
 const Appearance *
 mgps_setappearance(const Appearance *ap, int mergeflag )
 {
-  int changed, mat_changed, lng_changed;
+  int changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
   Appearance *ma;
 
@@ -506,16 +506,13 @@ mgps_setappearance(const Appearance *ap, int mergeflag )
   if(mergeflag == MG_MERGE)
   {
     changed = ap->valid &~ (ma->override &~ ap->override);
-    mat_changed =
-    ap->mat ? ap->mat->valid &~ (ma->mat->override &~ ap->mat->override) : 0;
     lng_changed =
-    ap->lighting ? ap->lighting->valid &~
-    (ma->lighting->override &~ ap->lighting->override) : 0;
+	ap->lighting ? ap->lighting->valid &~
+	(ma->lighting->override &~ ap->lighting->override) : 0;
   }
   else
   {
     changed = ap->valid;
-    mat_changed = ap->mat ? ap->mat->valid : 0;
     lng_changed = ap->lighting ? ap->lighting->valid : 0;
   }
   mg_setappearance( ap, mergeflag );

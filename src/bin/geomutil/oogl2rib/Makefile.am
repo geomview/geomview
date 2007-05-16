@@ -7,7 +7,6 @@ oogl2rib_SOURCES = oogl2rib.c
 oogl2rib_DEPENDENCIES = $(OOGLLIB)
 #oogl2rib_LDFLAGS = -rpath $(libdir)
 
-LDADD = $(STUBLIB) $(OOGLLIB)
+LDADD = $(OOGLLIB)
 
 EXTRA_DIST = $(man_MANS)
- 

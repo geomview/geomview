@@ -1,7 +1,7 @@
 INCLUDES = @default_includes@
 
-LDADD = $(STUBLIB) ${OOGLLIB}
-DEPENDENCIES = $(STUBLIB) ${OOGLLIB}
+LDADD = ${OOGLLIB}
+DEPENDENCIES = ${OOGLLIB}
 #AM_LDFLAGS = -rpath $(libdir)
 
 man_MANS = anytoucd.1gv ucdtooff.1gv

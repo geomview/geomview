@@ -44,7 +44,6 @@ extern Widget TopLevel;
 
 static Widget shell, loadform;
 static Widget FileBrowserButton, HideButton, OKButton, TextField;
-static int loaded = 0;
 /*static int    pos_later = 0, posx = 0, posy = 0;
   static char geometry[40];*/
 
@@ -92,7 +91,6 @@ void ui_load_loadpanel()
   LoadTransl = XtParseTranslationTable(loadtransl);
   XtOverrideTranslations(TextField, LoadTransl);
 
-  loaded = 1;
 }
 
 

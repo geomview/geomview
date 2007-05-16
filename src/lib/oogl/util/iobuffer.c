@@ -629,13 +629,13 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 {
   IOBLIST *ioblist = &iobf->ioblist;
   size_t rq_size = size * nmemb, rd_size, rd_tot;
-  size_t tail_rd, o_tail_rd;
+  size_t tail_rd;
   char *buf = ptr;
 #if HAVE_FCNTL
   int first = 1;
   int fcntl_err = 0;
 #endif
-  int cnt, was_here;
+  int cnt;
 
   if (size*nmemb == 0) {
     return 0;
@@ -644,7 +644,6 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
   rd_tot  =  0;
   tail_rd = ~0;
   cnt = 0;
-  was_here = 0;
   do {
     ++cnt;
     rd_size = iobfread_buffer(buf, rq_size, iobf);
@@ -675,7 +674,6 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 #endif
       tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
 		      1, tail_space, iobf->istream);
-      o_tail_rd = tail_rd;
       ioblist->tail_size += tail_rd;
       ioblist->tot_size  += tail_rd;
       if (tail_rd < tail_space && feof(iobf->istream)) {

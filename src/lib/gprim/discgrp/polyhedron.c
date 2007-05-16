@@ -43,11 +43,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "extern.h"
 
 Geom *
-WEPolyhedronToVect(poly, origin)
-WEpolyhedron *poly;
-HPoint3 origin;
+WEPolyhedronToVect(WEpolyhedron *poly, HPoint3 origin)
 {
-    int i, k, ii, jj;
+    int i, ii, jj;
     Geom *orbit;
     HPoint3 gorigin;
     /*static HPoint3 origin2 = {0,0,0,1};*/
@@ -63,7 +61,7 @@ HPoint3 origin;
     p = OOGLNewN(HPoint3, 2*poly->num_faces);
     c = OOGLNewN(ColorA, poly->num_faces);
 	
-    for (k = 0, i=0, fptr=poly->face_list; i<poly->num_faces; 
+    for (i=0, fptr=poly->face_list; i<poly->num_faces; 
 	 ++i, fptr = fptr->next)
 	{
 	vnvert[i] = 2;	/* line segment! */

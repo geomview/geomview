@@ -177,10 +177,12 @@ included_file(IOBFILE *fp)
   if (iobfnextc(fp, 0) == '<') /* read from file */
     {
       name = iobfdelimtok(delims, fp, 0);
-      OOGLError(1,"Discrete groups: including files not implemented");
-      return(NULL);
+      OOGLError(1,
+		"Discrete groups: including files "
+		"(here: \"%s\") not implemented", name);
+      return NULL;
     }
-  return(NULL);
+  return NULL;
 }
 
 static void
@@ -262,7 +264,7 @@ get_el_list( DiscGrp *discgrp, DiscGrpElList *dgellist, IOBFILE *fp, char *fname
 Geom *
 DiscGrpImport(Pool *p)
 {
-  char *name, *fname, t;
+  char *name, *fname;
   char keyword[DG_KEYWORDSIZE];
   DiscGrp *discgrp;
   IOBFILE *fp;
@@ -277,7 +279,7 @@ DiscGrpImport(Pool *p)
     return(NULL);
 
   /* now the parentheses begin */
-  if ((t = iobfnextc(fp, 0)) != '(')
+  if (iobfnextc(fp, 0) != '(')
     return(NULL);
 
   discgrp = (DiscGrp*)GeomCreate("discgrp",CR_END);

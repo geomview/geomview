@@ -45,7 +45,6 @@ extern Pixmap geomicon;
 /*****************************************************************************/
 
 static void add_text(Widget, char *[]);
-static Widget shell;
 /*static char geometry[40];*/
 
 static char *credits[] = {
@@ -110,7 +109,7 @@ void ui_load_creditspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Credits, Root, True, True, &creditsform);
+  ui_make_panel_and_form(Credits, Root, True, True, &creditsform);
 
 /*creditsload = mib_load_interface(creditsform, "interface/Credits.mib",
 		MI_FROMFILE);*/

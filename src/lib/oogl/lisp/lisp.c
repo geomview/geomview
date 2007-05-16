@@ -46,10 +46,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #define MAXPATLEN 128
 
 typedef struct _pattern {
-    int n;
-    char p0[MAXPATLEN];
-    char *pat[MAXPAT];
-    int len[MAXPAT];
+  int n;
+  char p0[MAXPATLEN];
+  char *pat[MAXPAT];
+  int len[MAXPAT];
 } pattern;
 
 static int match(char *str, pattern *p);
@@ -57,9 +57,9 @@ static void compile(char *str, pattern *p);
 static int LCompare(char *name, LObject *expr1, LObject *expr2);
 
 typedef struct Help {
-    char *key;
-    char *message;
-    struct Help *next;
+  char *key;
+  char *message;
+  struct Help *next;
 } Help;
 
 static Help *helps = NULL;
@@ -79,9 +79,9 @@ LObject *LMakeArray(LType *basetype, char *array, int count);
 static char *delims = "()";
 #define NEXTTOKEN(tok,fp) tok = iobfdelimtok( delims, fp, 0 )
 
-	/* Use -1 as the item size of special type markers
-	 * for quick detection in LParseArgs()/AssignArgs().
-	 */
+/* Use -1 as the item size of special type markers
+ * for quick detection in LParseArgs()/AssignArgs().
+ */
 LType Larray = { NULL, -1 };
 LType Lend = { NULL, -1 };
 LType Lrest = { NULL, -1 };
@@ -157,7 +157,7 @@ static LType niltype = {
   NULL,
   NULL,
   LTypeMagic
-  };
+};
 static LObject nil; /* = {&niltype, 1, nullcell }; */
 LObject *Lnil = &nil;
 
@@ -181,7 +181,7 @@ static LType ttype = {
   NULL,
   NULL,
   LTypeMagic
-  } ;
+} ;
 static LObject t; /* = {&ttype, 1, nullcell }; */
 LObject *Lt = &t;
 
@@ -191,8 +191,8 @@ LObject *Lt = &t;
  */
 
 static int intfromobj(obj, x)
-    LObject *obj;
-    int *x;
+     LObject *obj;
+     int *x;
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -209,31 +209,31 @@ static int intfromobj(obj, x)
 }
 
 static LObject *int2obj(x)
-    int *x;
+     int *x;
 {
   return LNew( LINT, x );
 }
 
 static void intfree(x)
-    int *x;
+     int *x;
 {}
 
 static int intmatch(a, b)
-    int *a,*b;
+     int *a,*b;
 {
   return *a == *b;
 }
 
 static void intwrite(fp, x)
-    FILE *fp;
-    int *x;
+     FILE *fp;
+     int *x;
 {
   fprintf(fp, "%1d", *x);
 }
 
 static void intpull(a_list, x)
-    va_list *a_list;
-    int *x;
+     va_list *a_list;
+     int *x;
 {
   *x = va_arg(*a_list, int);
 }
@@ -249,9 +249,9 @@ LObject *intparse(Lake *lake)
     char *cp = LSTRINGVAL(obj);
     int val = strtol(cp, &cp, 0);
     if(cp != LSTRINGVAL(obj)) {		/* if valid int */
-	free(LSTRINGVAL(obj));
-	obj->type = LINT;
-	obj->cell.i = val;
+      free(LSTRINGVAL(obj));
+      obj->type = LINT;
+      obj->cell.i = val;
     }
   }
   return obj;
@@ -268,15 +268,15 @@ LType LIntp = {
   intpull,
   intparse,
   LTypeMagic
-  };
+};
 
 /*
  * float object implementation
  */
 
 int floatfromobj(obj, x)
-    LObject *obj;
-    float *x;
+     LObject *obj;
+     float *x;
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -289,31 +289,31 @@ int floatfromobj(obj, x)
 }
 
 LObject *float2obj(x)
-    float *x;
+     float *x;
 {
   return LNew( LFLOAT, x );
 }
 
 void floatfree(x)
-    float *x;
+     float *x;
 {}
 
 int floatmatch(a, b)
-    float *a,*b;
+     float *a,*b;
 {
   return *a == *b;
 }
 
 void floatwrite(fp, x)
-    FILE *fp;
-    float *x;
+     FILE *fp;
+     float *x;
 {
   fprintf(fp, "%1g", *x);
 }
 
 void floatpull(a_list, x)
-    va_list *a_list;
-    float *x;
+     va_list *a_list;
+     float *x;
 {
   *x = va_arg(*a_list, double);
 }
@@ -329,9 +329,9 @@ LObject *floatparse(Lake *lake)
     char *cp = LSTRINGVAL(obj);
     float val = strtod(cp, &cp);
     if(cp != LSTRINGVAL(obj)) {
-	free(LSTRINGVAL(obj));
-	obj->type = LFLOAT;
-	obj->cell.f = val;
+      free(LSTRINGVAL(obj));
+      obj->type = LFLOAT;
+      obj->cell.f = val;
     }
   } else if (obj->type == LINT) {
     float val = LINTVAL(obj);
@@ -352,15 +352,15 @@ LType LFloatp = {
   floatpull,
   floatparse,
   LTypeMagic
-  };
+};
 
 /*
  * string object implementation
  */
 
 int stringfromobj(obj, x)
-    LObject *obj;
-    char * *x;
+     LObject *obj;
+     char * *x;
 {
   if (obj->type != LSTRING) return 0;
   *x = LSTRINGVAL(obj);
@@ -368,20 +368,20 @@ int stringfromobj(obj, x)
 }
 
 LObject *string2obj(x)
-    char * *x;
+     char * *x;
 {
   char *copy = *x ? strdup(*x) : NULL;
   return LNew( LSTRING, &copy );
 }
 
 void stringfree(x)
-    char * *x;
+     char * *x;
 {
   if (*x) free(*x);
 }
 
 int stringmatch(a, b)
-    char **a,**b;
+     char **a,**b;
 {
   if (!*a) return *b==NULL;
   if (!*b) return *a==NULL;
@@ -389,15 +389,15 @@ int stringmatch(a, b)
 }
 
 void stringwrite(fp, x)
-    FILE *fp;
-    char * *x;
+     FILE *fp;
+     char * *x;
 {
   fprintf(fp, "\"%s\"", *x);
 }
 
 void stringpull(a_list, x)
-    va_list *a_list;
-    char * *x;
+     va_list *a_list;
+     char * *x;
 {
   *x = va_arg(*a_list, char *);
 }
@@ -413,7 +413,7 @@ LType LStringp = {
   stringpull,
   LSexpr,
   LTypeMagic
-  };
+};
 
 /*
  * list implementation
@@ -514,32 +514,32 @@ LType LListp = {
   listpull,
   LSexpr,
   LTypeMagic
-  };
+};
 
 int objfromobj(obj, x)
-    LObject *obj;
-    LObject * *x;
+     LObject *obj;
+     LObject * *x;
 {
   *x = LRefIncr(obj);
   return 1;
 }
 
 LObject *obj2obj(x)
-    LObject * *x;
+     LObject * *x;
 {
   if (*x) LRefIncr(*x);
   return *x;
 }
 
 void objpull(a_list, x)
-    va_list *a_list;
-    LObject * *x;
+     va_list *a_list;
+     LObject * *x;
 {
   *x = va_arg(*a_list, LObject *);
 }
 
 int objmatch(a, b)
-    LObject **a,**b;
+     LObject **a,**b;
 {
   return *a == *b;
 }
@@ -555,7 +555,7 @@ LType LObjectp = {
   objpull,
   LSexpr,
   LTypeMagic
-  };
+};
 
 /*
  * Lake implementation
@@ -585,26 +585,26 @@ void LakeFree(Lake *lake)
 
 
 int lakefromobj(obj, x)
-    LObject *obj;
-    Lake * *x;
+     LObject *obj;
+     Lake * *x;
 {
   *x = LLAKEVAL(obj);
   return 1;
 }
 
 LObject *lake2obj(x)
-    Lake * *x;
+     Lake * *x;
 {
   return LNew( LLAKE, x );
 }
 
 void lakefree(x)
-    Lake * *x;
+     Lake * *x;
 {}
 
 void lakewrite(fp, x)
-    FILE *fp;
-    Lake * *x;
+     FILE *fp;
+     Lake * *x;
 {
   fprintf(fp,"-lake-");
 }
@@ -621,15 +621,15 @@ LType LLakep = {
   NULL,
   NULL,
   LTypeMagic
-  };
+};
 
 /*
  * function object implementation
  */
 
 int funcfromobj(obj, x)
-    LObject *obj;
-    int *x;
+     LObject *obj;
+     int *x;
 {
   if (obj->type == LSTRING) {
     *x = funcindex(LSTRINGVAL(obj));
@@ -641,31 +641,31 @@ int funcfromobj(obj, x)
 }
 
 LObject *func2obj(x)
-    int *x;
+     int *x;
 {
   return LNew( LFUNC, x );
 }
 
 void funcfree(x)
-    int *x;
+     int *x;
 {}
 
 int funcmatch(a, b)
-    int *a,*b;
+     int *a,*b;
 {
   return *a == *b;
 }
 
 void funcwrite(fp, x)
-    FILE *fp;
-    int *x;
+     FILE *fp;
+     int *x;
 {
   fprintf(fp, "%s", functable[*x].name);
 }
 
 void funcpull(a_list, x)
-    va_list *a_list;
-    int *x;
+     va_list *a_list;
+     int *x;
 {
   *x = va_arg(*a_list, int);
 }
@@ -681,7 +681,7 @@ LType LFuncp = {
   funcpull,
   LSexpr,
   LTypeMagic
-  };
+};
 
 /**********************************************************************/
 
@@ -713,7 +713,7 @@ void LInit()
 	One-line command help; lists names only if multiple commands match.\n\
 	? is a synonym for \"help\"");
     LDefun("??", Lmorehelp,
-	"(?? command)  \"command\" may include \"*\" wildcards\n\
+	   "(?? command)  \"command\" may include \"*\" wildcards\n\
 	Prints more info than \"(? command)\".  ?? is a synonym\n\
 	for \"morehelp\"");
   }
@@ -728,7 +728,7 @@ void LInit()
 }
   
 LDEFINE(quote, LLOBJECT,
-       "(quote EXPR)\n\
+	"(quote EXPR)\n\
 	returns the symbolic lisp expression EXPR without evaluating it.")
 {
   LObject *arg;
@@ -901,7 +901,7 @@ LDEFINE(NeXT, LINT,
 
 
 LDEFINE(progn, LLOBJECT,
-       "(progn STATEMENT [ ... ])\n\
+	"(progn STATEMENT [ ... ])\n\
 	evaluates each STATEMENT in order and returns the value of the\n\
 	last one.  Use progn to group a collection of commands together,\n\
 	forcing them to be treated as a single command.")
@@ -910,9 +910,9 @@ LDEFINE(progn, LLOBJECT,
   LList *arglist = NULL;
 
   LDECLARE(("progn", LBEGIN,
-	LHOLD,
-	LREST, &arglist,
-	LEND));
+	    LHOLD,
+	    LREST, &arglist,
+	    LEND));
   for( ; arglist != NULL; arglist = arglist->cdr) {
     LFree(val);
     val = LEval(arglist->car);
@@ -1038,41 +1038,41 @@ static LObject *LSexpr0(Lake *lake, int listhow)
   if (*tok == '(' && tok[1] == '\0') {
     obj = LNew(LLIST, NULL);
     if(listhow == LIST_LITERAL) {
-	while ( LakeMore(lake,c) )
-	    obj->cell.p = (void*) LListAppend((LList*)(obj->cell.p),
-					 LSexpr0(lake,LIST_LITERAL));
+      while ( LakeMore(lake,c) )
+	obj->cell.p = (void*) LListAppend((LList*)(obj->cell.p),
+					  LSexpr0(lake,LIST_LITERAL));
     } else if ( LakeMore(lake,c) ) {
       /* if we have a non-empty list ... */
-	/* ... get the first element and see if it's a function name */
-	head = LEvalSexpr(lake);
-	if (funcfromobj(head, &i)) {
-	  /* It's a function name.  Enter the function as the first element
-	     of our list, and then call the function in parse mode to
-	     construct the rest of the list (arguments to the function) */
-	    if(head->type != LFUNC) {
-		LFree(head);
-		head = LNew(LFUNC, &i);
-	    }
-	    obj->cell.p = (void*) LListAppend(LLISTVAL(obj), head);
-	    if ( (*functable[i].fptr)(lake, LLISTVAL(obj)) == Lnil ) {
-		LFree(obj);
-		obj = Lnil;
-	    }
-	} else {
-	  /* It's not a function name.  Probably this part will only
-	     be called in error, because plain lists should always be
-	     quoted.  This should probably be replaced by more robust
-	     error detection and recovery code.  For now, just parse
-	     as a plain list.  LEval() will emit an error message if
-	     this list is ever evaluated. */
-	  if(listhow == LIST_EVAL)
-	     OOGLSyntax(lake->streamin, "Reading \"%s\": call to unknown function \"%s\"",
-		LakeName(lake), LSummarize(head));
-	  obj->cell.p = (void*) LListAppend(LLISTVAL(obj), head);
-	  while ( LakeMore(lake,c) )
-	    obj->cell.p = (void*) LListAppend(LLISTVAL(obj),
-					     LSexpr0(lake,listhow));
+      /* ... get the first element and see if it's a function name */
+      head = LEvalSexpr(lake);
+      if (funcfromobj(head, &i)) {
+	/* It's a function name.  Enter the function as the first element
+	   of our list, and then call the function in parse mode to
+	   construct the rest of the list (arguments to the function) */
+	if(head->type != LFUNC) {
+	  LFree(head);
+	  head = LNew(LFUNC, &i);
 	}
+	obj->cell.p = (void*) LListAppend(LLISTVAL(obj), head);
+	if ( (*functable[i].fptr)(lake, LLISTVAL(obj)) == Lnil ) {
+	  LFree(obj);
+	  obj = Lnil;
+	}
+      } else {
+	/* It's not a function name.  Probably this part will only
+	   be called in error, because plain lists should always be
+	   quoted.  This should probably be replaced by more robust
+	   error detection and recovery code.  For now, just parse
+	   as a plain list.  LEval() will emit an error message if
+	   this list is ever evaluated. */
+	if(listhow == LIST_EVAL)
+	  OOGLSyntax(lake->streamin, "Reading \"%s\": call to unknown function \"%s\"",
+		     LakeName(lake), LSummarize(head));
+	obj->cell.p = (void*) LListAppend(LLISTVAL(obj), head);
+	while ( LakeMore(lake,c) )
+	  obj->cell.p = (void*) LListAppend(LLISTVAL(obj),
+					    LSexpr0(lake,listhow));
+      }
     }
     NEXTTOKEN(tok,lake->streamin);
   } else {
@@ -1204,13 +1204,13 @@ int LDefun(char *name, LObjectFunc func, char *help)
 
 /* Function is called in one of three modes:
    lake != NULL, args != NULL: parse mode
-     In this mode, upon entry args is a list containing one element,
-     the function object itself.  We parse arguments from lake,
-     appending them to the args list.  We return Lt if the parsing was
-     successful, Lnil if not.
+   In this mode, upon entry args is a list containing one element,
+   the function object itself.  We parse arguments from lake,
+   appending them to the args list.  We return Lt if the parsing was
+   successful, Lnil if not.
    lake == NULL: evaluate mode
-     In this mode, upon entry args is a list containing the arguments
-     to the function.  We return the function's value on the arguments.
+   In this mode, upon entry args is a list containing the arguments
+   to the function.  We return the function's value on the arguments.
 */
 
 static int funcindex(char *name)
@@ -1240,53 +1240,53 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
   while (moreargspecs) {
     argclass=va_arg(a_list, LType *);
     if (argclass->size < 0) {
-	if (argclass == LEND) {
-	  moreargspecs = 0;
-	} else if (argclass == LOPTIONAL) {
-	  argsrequired = argspecs;
-	} else if (argclass == LHOLD) {
-	  hold = 1;
-	} else if (argclass == LLITERAL) {
-	  /* literal affects the way an argument is parsed (as well as
-	     implying "hold" in the assignment stage).  It should only be
-	     used on LLOBJECT or LLIST.  It means parse the
-	     argument literally.  In non-literal parsing, lists are
-	     treated as function calls and the function is called to parse
-	     the arguments.  In literal parsing, we don't treat lists as
-	     function calls.  Just parse them as lists.  */
-	  literal = 1;
-	} else if (argclass == LARRAY) {
-	  /* special case for this because it takes 3 args: the base type,
-	     the array itself, and a count */
-	    (void)va_arg(a_list, LType *);
-	    (void)va_arg(a_list, void *);
-	    (void)va_arg(a_list, int *);
+      if (argclass == LEND) {
+	moreargspecs = 0;
+      } else if (argclass == LOPTIONAL) {
+	argsrequired = argspecs;
+      } else if (argclass == LHOLD) {
+	hold = 1;
+      } else if (argclass == LLITERAL) {
+	/* literal affects the way an argument is parsed (as well as
+	   implying "hold" in the assignment stage).  It should only be
+	   used on LLOBJECT or LLIST.  It means parse the
+	   argument literally.  In non-literal parsing, lists are
+	   treated as function calls and the function is called to parse
+	   the arguments.  In literal parsing, we don't treat lists as
+	   function calls.  Just parse them as lists.  */
+	literal = 1;
+      } else if (argclass == LARRAY) {
+	/* special case for this because it takes 3 args: the base type,
+	   the array itself, and a count */
+	(void)va_arg(a_list, LType *);
+	(void)va_arg(a_list, void *);
+	(void)va_arg(a_list, int *);
 
-	    ++argspecs;
-	    if (LakeMore(lake,c)) {
-		LListAppend(args, LSexpr(lake));
-		++argsgot;
-	    }
-	} else if(argclass == LREST) {
-	    /*
-	     * Gather up any remaining arguments into an LList.
-	     * If the caller provides a NULL pointer, discard them;
-	     * otherwise store the list there.  Note that we yield an LList,
-	     * not an LLIST-typed LObject.
-	     */
-	    LList **restp = va_arg(a_list, LList **);
-
-	    (void)restp;
-
-	    while(LakeMore(lake,c)) {
-		arg = hold||literal ? LSexpr(lake) : LEvalSexpr(lake);
-		LListAppend(args, arg);	/* Stash args for AssignArgs to grab */
-	    }
-	    moreargspecs = 0;
+	++argspecs;
+	if (LakeMore(lake,c)) {
+	  LListAppend(args, LSexpr(lake));
+	  ++argsgot;
 	}
+      } else if(argclass == LREST) {
+	/*
+	 * Gather up any remaining arguments into an LList.
+	 * If the caller provides a NULL pointer, discard them;
+	 * otherwise store the list there.  Note that we yield an LList,
+	 * not an LLIST-typed LObject.
+	 */
+	LList **restp = va_arg(a_list, LList **);
+
+	(void)restp;
+
+	while(LakeMore(lake,c)) {
+	  arg = hold||literal ? LSexpr(lake) : LEvalSexpr(lake);
+	  LListAppend(args, arg);	/* Stash args for AssignArgs to grab */
+	}
+	moreargspecs = 0;
+      }
     } else if(argclass == LLAKE) {
-	(void)va_arg(a_list, Lake **);
-	LListAppend(args, LTOOBJ(LLAKE)(&lake));
+      (void)va_arg(a_list, Lake **);
+      LListAppend(args, LTOOBJ(LLAKE)(&lake));
     } else {
       ++argspecs;
       (void)va_arg(a_list, void *);
@@ -1315,12 +1315,12 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
   va_end(a_list);
   if (argsgot < argsrequired) {
     OOGLSyntax(lake->streamin, "Reading from \"%s\": %s requires %d args, got %d",
-	PoolName(POOL(lake)),name,argsrequired,argsgot);
+	       PoolName(POOL(lake)),name,argsrequired,argsgot);
     return LPARSE_BAD;
   }
   if (LakeMore(lake,c)) {
     OOGLSyntax(lake->streamin, "In \"%s\": %s: ignoring additional arguments (expected %1d)\n",
-	    PoolName((Pool *)(lake->river)), name, argsgot);
+	       PoolName((Pool *)(lake->river)), name, argsgot);
     while (LakeMore(lake,c)) LFree(LSexpr(lake));
   }
   return LPARSE_GOOD;
@@ -1335,7 +1335,7 @@ static int obj2array(LObject *obj, LType *type, char *x, int *n)
 
   /* interpret the nil object as an empty list */
   if (   (obj == Lnil)
-      || (obj->type==LSTRING && strcmp(LSTRINGVAL(obj),"nil")==0) ) {
+	 || (obj->type==LSTRING && strcmp(LSTRINGVAL(obj),"nil")==0) ) {
     return 1;
   }
   
@@ -1372,58 +1372,58 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
   while (moreargspecs) {
     argtype=va_arg(a_list, LType *);
     if (argtype->size < 0) {
-	if (argtype == LEND) {
-	  moreargspecs = 0;
-	} else if (argtype == LOPTIONAL) {
-	  argsrequired = argspecs;
-	} else if (argtype == LHOLD) {
-	  hold=1;
-	} else if (argtype == LLITERAL) {
-	  /* in the assignment stage, literal means the same as hold */
-	  hold=1;
-	} else if (argtype == LLAKE) {
-	  if (args) {
-	    arg = args->car;
-	    *va_arg(a_list, Lake **) = LLAKEVAL(arg);
-	    args = args->cdr;
-	  } else {
-	    OOGLError(0,"%s: internal lake assignment out of whack.  Please\n\
+      if (argtype == LEND) {
+	moreargspecs = 0;
+      } else if (argtype == LOPTIONAL) {
+	argsrequired = argspecs;
+      } else if (argtype == LHOLD) {
+	hold=1;
+      } else if (argtype == LLITERAL) {
+	/* in the assignment stage, literal means the same as hold */
+	hold=1;
+      } else if (argtype == LLAKE) {
+	if (args) {
+	  arg = args->car;
+	  *va_arg(a_list, Lake **) = LLAKEVAL(arg);
+	  args = args->cdr;
+	} else {
+	  OOGLError(0,"%s: internal lake assignment out of whack.  Please\n\
     report this error!",name);
-	    goto bad;
+	  goto bad;
+	}
+      } else if (argtype == LARRAY) {
+	/* get the base type of the array */
+	argtype=va_arg(a_list, LType *);
+	++argspecs;
+	if (args) {
+	  void *array = va_arg(a_list, void*);
+	  int *count = va_arg(a_list, int*);
+	  int origcount = abs(*count);
+	  if (hold) {
+	    arg = LRefIncr(args->car);
+	  } else {
+	    arg = LEval(args->car);
 	  }
-	} else if (argtype == LARRAY) {
-	  /* get the base type of the array */
-	  argtype=va_arg(a_list, LType *);
-	  ++argspecs;
-	  if (args) {
-	    void *array = va_arg(a_list, void*);
-	    int *count = va_arg(a_list, int*);
-	    int origcount = abs(*count);
-	    if (hold) {
-	      arg = LRefIncr(args->car);
-	    } else {
-	      arg = LEval(args->car);
-	    }
-	    ++argsgot;
-	    convok = obj2array(arg, argtype, array, count);
-	    if (!convok) {
-	      OOGLError(0, "%s: array of at most %1d %ss expected in\n\
+	  ++argsgot;
+	  convok = obj2array(arg, argtype, array, count);
+	  if (!convok) {
+	    OOGLError(0, "%s: array of at most %1d %ss expected in\n\
      arg position %1d (got %s)\n", name,origcount, argtype->name, argsgot,
 		      LSummarize(arg));
-	    }
-	    args = args->cdr;
-	    hold = 0;
-	  } else {
-	    (void)va_arg(a_list, void *);
-	    (void)va_arg(a_list, void *);
 	  }
-	} else if(argtype == LREST) {
-	    LList **restp = va_arg(a_list, LList **);
-	    if(restp)
-		*restp = args;
-	    moreargspecs = 0;
-	    args = NULL;		/* Don't complain of excess args */
+	  args = args->cdr;
+	  hold = 0;
+	} else {
+	  (void)va_arg(a_list, void *);
+	  (void)va_arg(a_list, void *);
 	}
+      } else if(argtype == LREST) {
+	LList **restp = va_arg(a_list, LList **);
+	if(restp)
+	  *restp = args;
+	moreargspecs = 0;
+	args = NULL;		/* Don't complain of excess args */
+      }
     } else {
       ++argspecs;
       if (args) {
@@ -1476,7 +1476,6 @@ int LArgClassValid(LType *type)
 LObject *LEvalFunc(char *name, ...)
 {
   va_list a_list;
-  int laked = 0;
   LList *list = NULL;
   LObject *obj, *val;
   int i;
@@ -1492,13 +1491,12 @@ LObject *LEvalFunc(char *name, ...)
 
   va_start(a_list, name);
   while ( (a=va_arg(a_list, LType *)) != LEND ) {
-    if (a==LHOLD
-	|| a==LLITERAL
-	|| a==LOPTIONAL
+    if (a == LHOLD
+	|| a == LLITERAL
+	|| a == LOPTIONAL
+	|| a == LLAKE
 	) {
       /* do nothing */
-    } else if (a==LLAKE) {
-      laked=1;
     } else if (a==LARRAY) {
       LType *basetype=va_arg(a_list, LType *);
       void *array = va_arg(a_list, void *);
@@ -1516,8 +1514,8 @@ LObject *LEvalFunc(char *name, ...)
 }
 
 static int filterfromobj(obj, x)
-    LObject *obj;
-    LFilter * *x;
+     LObject *obj;
+     LFilter * *x;
 {
   if (obj->type != LFILTER) return 0;
   *x = LFILTERVAL(obj);
@@ -1525,7 +1523,7 @@ static int filterfromobj(obj, x)
 }
 
 static LObject *filter2obj(x)
-    LFilter * *x;
+     LFilter * *x;
 {
   LFilter *copy = OOGLNew(LFilter);
   copy->flag = (*x)->flag;
@@ -1534,7 +1532,7 @@ static LObject *filter2obj(x)
 }
 
 static void filterfree(x)
-    LFilter * *x;
+     LFilter * *x;
 {
   if (*x) {
     if ((*x)->value) LFree((*x)->value);
@@ -1543,8 +1541,8 @@ static void filterfree(x)
 }
 
 static void filterwrite(fp, x)
-    FILE *fp;
-    LFilter * *x;
+     FILE *fp;
+     LFilter * *x;
 {
   switch ((*x)->flag) {
   case VAL:
@@ -1575,10 +1573,10 @@ LType LFilterp = {
   NULL,
   LSexpr,
   LTypeMagic
-  };
+};
 
 LDEFINE(interest, LVOID,
-     "(interest (COMMAND [args]))\n\
+	"(interest (COMMAND [args]))\n\
 \n\
 	Allows you to express interest in a command.  When geomview\n\
 	executes that command in the future it will echo it to the\n\
@@ -1615,7 +1613,7 @@ LDEFINE(interest, LVOID,
 }
 
 LDEFINE(uninterest, LVOID,
-       "(uninterest (COMMAND [args]))\n\
+	"(uninterest (COMMAND [args]))\n\
 	Undoes the effect of an \"interest\" command.  (COMMAND [args]) must\n\
 	be identical to those used in the \"interest\" command.")
 {
@@ -1648,12 +1646,12 @@ LDEFINE(time_interests, LVOID,
   float dt;
   char *initial = NULL, *prefix = NULL, *suffix = NULL;
   LDECLARE(("time-interests", LBEGIN,
-	LLAKE, &l,
-	LOPTIONAL, LFLOAT, &dt,
-	LSTRING, &initial,
-	LSTRING, &prefix,
-	LSTRING, &suffix,
-	LEND));
+	    LLAKE, &l,
+	    LOPTIONAL, LFLOAT, &dt,
+	    LSTRING, &initial,
+	    LSTRING, &prefix,
+	    LSTRING, &suffix,
+	    LEND));
   if(l->timing_interests) {
     l->timing_interests = 0;
     if(l->initial) free(l->initial);
@@ -1815,10 +1813,10 @@ static LList *FilterList(LList *args)
       return NULL;
     }
     if (   (strcmp(LSTRINGVAL(args->car),"*")==0)
-	|| (args->car==Lt) ) {
+	   || (args->car==Lt) ) {
       filterlist = LListAppend(filterlist, LRefIncr(LFAny));
     } else if (   (strcmp(LSTRINGVAL(args->car),"nil")==0)
-	       || (args->car==Lnil) ) {
+		  || (args->car==Lnil) ) {
       filterlist = LListAppend(filterlist, LRefIncr(LFNil));
     } else {
       filter = OOGLNew(LFilter);
@@ -1875,14 +1873,14 @@ static void InterestOutput(char *name, LList *args, LInterest *interest)
   if (!outf) return;
 
   if(lake->timing_interests &&
-		(now = PoolTimeAt(POOL(lake), NULL)) > lake->nexttime) {
+     (now = PoolTimeAt(POOL(lake), NULL)) > lake->nexttime) {
     if(lake->initial) {
-	fprintf(outf, lake->initial, now,now,now);
-	free(lake->initial);
-	lake->initial = NULL;
+      fprintf(outf, lake->initial, now,now,now);
+      free(lake->initial);
+      lake->initial = NULL;
     }
     if(lake->prefix)
-	fprintf(outf, lake->prefix, now,now,now);
+      fprintf(outf, lake->prefix, now,now,now);
     suffix = lake->suffix;
   }
 
@@ -1920,7 +1918,7 @@ static void InterestOutput(char *name, LList *args, LInterest *interest)
 }
 
 LDEFINE(regtable, LVOID,
-       "(regtable) --- shows the registry table")
+	"(regtable) --- shows the registry table")
 {
   int i;
   Lake *outlake;
@@ -1951,20 +1949,20 @@ LDEFINE(regtable, LVOID,
 
 static void compile(char *str, pattern *p)
 {
-    int n;
-    char *rest, *tail;
+  int n;
+  char *rest, *tail;
 
-    strncpy(p->p0, str, MAXPATLEN-1);
-    p->p0[MAXPATLEN-1] = '\0';
-    for(rest = p->p0, n = 0; (tail = strchr(rest, '*')) && n < MAXPAT; n++) {
-	p->pat[n] = rest;
-	p->len[n] = tail-rest;
-	*tail = '\0';
-	rest = tail+1;
-    }
+  strncpy(p->p0, str, MAXPATLEN-1);
+  p->p0[MAXPATLEN-1] = '\0';
+  for(rest = p->p0, n = 0; (tail = strchr(rest, '*')) && n < MAXPAT; n++) {
     p->pat[n] = rest;
-    p->len[n] = strlen(rest);
-    p->n = n;
+    p->len[n] = tail-rest;
+    *tail = '\0';
+    rest = tail+1;
+  }
+  p->pat[n] = rest;
+  p->len[n] = strlen(rest);
+  p->n = n;
 }
 
 /* Keep the first line unchanged and wrap the remaining lines to 80
@@ -2019,17 +2017,17 @@ static void print_help_formatted(FILE *outf, char *message)
 
 static int match(char *str, pattern *p)
 {
-    int i;
-    char *rest;
-    if(strncmp(str, p->pat[0], p->len[0])) return 0;	/* Failed */
-    rest = str + p->len[0];
-    for(i = 1; i <= p->n; i++) {
-	if(p->len[i]) {
-	    if((rest = strstr(rest, p->pat[i])) == NULL) break;
-	    rest += p->len[i];
-	}
+  int i;
+  char *rest;
+  if(strncmp(str, p->pat[0], p->len[0])) return 0;	/* Failed */
+  rest = str + p->len[0];
+  for(i = 1; i <= p->n; i++) {
+    if(p->len[i]) {
+      if((rest = strstr(rest, p->pat[i])) == NULL) break;
+      rest += p->len[i];
     }
-    return i > p->n && rest && (p->len[p->n] == 0 || *rest == '\0') ? 1 : 0;
+  }
+  return i > p->n && rest && (p->len[p->n] == 0 || *rest == '\0') ? 1 : 0;
 }
 
 void LHelpDef(char *key, char *message)
@@ -2051,14 +2049,14 @@ void LHelpRedef(char *key, char *message)
   Help *h;
   for(h = helps; h != NULL; h = h->next)
     if(strcmp(key, h->key) == 0) {
-	h->message = message;
-	return;
+      h->message = message;
+      return;
     }
   LHelpDef(key, message);
 }
 
 LDEFINE(help, LVOID,
-       "(help		[command])\n\
+	"(help		[command])\n\
 	Command may include \"*\"s as wildcards; see also \"??\"\n\
 	One-line command help; lists names only if multiple commands match.")
 {
@@ -2079,22 +2077,22 @@ LDEFINE(help, LVOID,
   compile(pat, &p);
   for(h=helps; h!=NULL; h=h->next) {
     if(match(h->key, &p)) {
-	if(++seen >= 2) {
-	    if(seen == 2) fprintf(outf,"%-15s ", last->key);
-	    fprintf(outf, seen%4 ? "%-15s " : "%s\n", h->key);
-	}
-	last = h;
+      if(++seen >= 2) {
+	if(seen == 2) fprintf(outf,"%-15s ", last->key);
+	fprintf(outf, seen%4 ? "%-15s " : "%s\n", h->key);
+      }
+      last = h;
     }
   }
   switch(seen) {
   default: if(seen%4) fprintf(outf, "\n"); break;
   case 0: fprintf(outf, nomatch, pat); break;
   case 1:
-	nl = strchr(last->message, '\n');
-	fprintf(outf, "%.*s\n", (int)(nl && last->message[0]=='('
-				      ? nl - last->message  : 9999),
-		last->message);
-	break;
+    nl = strchr(last->message, '\n');
+    fprintf(outf, "%.*s\n", (int)(nl && last->message[0]=='('
+				  ? nl - last->message  : 9999),
+	    last->message);
+    break;
   }
   fflush(outf);
   return Lt;
@@ -2120,11 +2118,11 @@ LDEFINE(morehelp, LVOID,
   for(h=helps; h!=NULL; h=h->next) {
     if(match(h->key, &p)) {
 #if 0
-	fprintf(outf, "%s\n", h->message);
+      fprintf(outf, "%s\n", h->message);
 #else
-	print_help_formatted(outf, h->message);
+      print_help_formatted(outf, h->message);
 #endif
-	seen++;
+      seen++;
     }
   }
 
@@ -2154,7 +2152,7 @@ char *LSummarize(LObject *obj)
   if(f == NULL) {
     f = tmpfile();
     if(f == NULL) {
-	return strdup("???");
+      return strdup("???");
     }
   }
   rewind(f);
@@ -2179,8 +2177,8 @@ char *LSummarize(LObject *obj)
  */
 
 static int ulongfromobj(obj, x)
-    LObject *obj;
-    unsigned long *x;
+     LObject *obj;
+     unsigned long *x;
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -2197,31 +2195,31 @@ static int ulongfromobj(obj, x)
 }
 
 static LObject *ulong2obj(x)
-    unsigned long *x;
+     unsigned long *x;
 {
   return LNew( LULONG, x );
 }
 
 static void ulongfree(x)
-    unsigned long *x;
+     unsigned long *x;
 {}
 
 static int ulongmatch(a, b)
-    unsigned long *a,*b;
+     unsigned long *a,*b;
 {
   return *a == *b;
 }
 
 static void ulongwrite(fp, x)
-    FILE *fp;
-    unsigned long *x;
+     FILE *fp;
+     unsigned long *x;
 {
   fprintf(fp, "%1lu", *x);
 }
 
 static void ulongpull(a_list, x)
-    va_list *a_list;
-    unsigned long *x;
+     va_list *a_list;
+     unsigned long *x;
 {
   *x = va_arg(*a_list, unsigned long);
 }
@@ -2237,9 +2235,9 @@ LObject *ulongparse(Lake *lake)
     char *cp = LSTRINGVAL(obj);
     unsigned long val = strtol(cp, &cp, 0);
     if(cp != LSTRINGVAL(obj)) {		/* if valid ulong */
-	free(LSTRINGVAL(obj));
-	obj->type = LULONG;
-	obj->cell.ul = val;
+      free(LSTRINGVAL(obj));
+      obj->type = LULONG;
+      obj->cell.ul = val;
     }
   }
   return obj;
@@ -2256,4 +2254,11 @@ LType LULongp = {
   ulongpull,
   ulongparse,
   LTypeMagic
-  };
+};
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

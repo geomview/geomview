@@ -117,7 +117,7 @@ struct mgfuncs mgx11funcs = {
   mg_tagappearance,
   mg_untagappearance,
   mg_taggedappearance
-  };
+};
 
 
 /*-----------------------------------------------------------------------
@@ -130,10 +130,10 @@ struct mgfuncs mgx11funcs = {
 int
 mgdevice_X11()
 {
-    _mgf = mgx11funcs;
-    if(_mgc != NULL && _mgc->devno != MGD_X11)
-	_mgc = NULL;
-    return(0);
+  _mgf = mgx11funcs;
+  if(_mgc != NULL && _mgc->devno != MGD_X11)
+    _mgc = NULL;
+  return(0);
 }
 
 /*-----------------------------------------------------------------------
@@ -248,15 +248,15 @@ _mgx11_ctxset(int a1, va_list *alist)
       break;
 
     case MG_BACKGROUND:
-    {
-      ColorA bcolor;
-      bcolor = *NEXT(ColorA*);
-      if ((bcolor.r != _mgc->background.r) ||
-	  (bcolor.g != _mgc->background.g) ||
-	  (bcolor.b != _mgc->background.b))
-         _mgx11c->exposed = 1;
-      _mgc->background = bcolor;
-    }
+      {
+	ColorA bcolor;
+	bcolor = *NEXT(ColorA*);
+	if ((bcolor.r != _mgc->background.r) ||
+	    (bcolor.g != _mgc->background.g) ||
+	    (bcolor.b != _mgc->background.b))
+	  _mgx11c->exposed = 1;
+	_mgc->background = bcolor;
+      }
       break;
 
     case MG_SHADER:	mgx11_setshader( NEXT(mgshadefunc) ); break;
@@ -269,14 +269,14 @@ _mgx11_ctxset(int a1, va_list *alist)
       {
 	int space = NEXT(int);
 	switch (TM_SPACE(space))
-	{
+	  {
 	  case TM_EUCLIDEAN:
 	  case TM_SPHERICAL:
 	    _mgc->space = space;
 	    break;
 	  case TM_HYPERBOLIC:
 	    switch (TM_MODEL(space))
-	    {
+	      {
 	      case TM_VIRTUAL:
 	      case TM_PROJECTIVE:
 	      case TM_CONFORMAL_BALL:
@@ -284,13 +284,13 @@ _mgx11_ctxset(int a1, va_list *alist)
 		break;
 	      default:
 		fprintf(stderr, "_mgx11_ctxset: Illegal space value %1d\n",
-				space);
-	    }
+			space);
+	      }
 	    break;
 	  default:
 	    fprintf(stderr, "_mgx11_ctxset: Illegal space value %1d\n",
-				space);
-	}
+		    space);
+	  }
       }
       break;
 
@@ -299,61 +299,61 @@ _mgx11_ctxset(int a1, va_list *alist)
       break;
 
     case MG_ZNUDGE:
-        _mgc->zfnudge = NEXT(double);
-        break;
+      _mgc->zfnudge = NEXT(double);
+      break;
 
     case MG_DEPTHSORT:
-	_mgx11c->sortmethod = NEXT(int);
-        break;
+      _mgx11c->sortmethod = (enum sortmethod)NEXT(int);
+      break;
 
     case MG_DITHER:
-	_mgx11c->dither = NEXT(int);
-	break;
+      _mgx11c->dither = NEXT(int);
+      break;
 
     case MG_BITDEPTH:
-	_mgx11c->bitdepth = NEXT(int);
-	Xmg_setx11display(_mgx11c->mgx11display);
-/*        fprintf(stderr," Got bit depth %d\n", _mgx11c->bitdepth); */
-	break;
+      _mgx11c->bitdepth = NEXT(int);
+      Xmg_setx11display(_mgx11c->mgx11display);
+      /*        fprintf(stderr," Got bit depth %d\n", _mgx11c->bitdepth); */
+      break;
 
     case MG_X11PIXID:
-	_mgx11c->win = 1;
-	_mgx11c->pix = 1;
-	Xmg_setwin(NEXT(Window));
-	_mgc->shown = 1;
-	break;
+      _mgx11c->win = 1;
+      _mgx11c->pix = 1;
+      Xmg_setwin(NEXT(Window));
+      _mgc->shown = 1;
+      break;
 
     case MG_X11WINID:
-	_mgx11c->win = 1;
-	Xmg_setwin(NEXT(Window));
-	_mgc->shown = 1;
-	break;
+      _mgx11c->win = 1;
+      Xmg_setwin(NEXT(Window));
+      _mgc->shown = 1;
+      break;
 
     case MG_X11PARENT:
-	Xmg_setparent(NEXT(Window));
-	break;
+      Xmg_setparent(NEXT(Window));
+      break;
 
     case MG_X11DISPLAY:
-	_mgx11c->mgx11display = NEXT(Display *);
-	Xmg_initx11device();
-	break;
+      _mgx11c->mgx11display = NEXT(Display *);
+      Xmg_initx11device();
+      break;
 
     case MG_X11SIZELOCK:
-	_mgx11c->sizelock = NEXT(int);
-	break;
+      _mgx11c->sizelock = NEXT(int);
+      break;
 
     case MG_X11VISUAL:
-	_mgx11c->visual = NEXT(Visual *);
-	break;
+      _mgx11c->visual = NEXT(Visual *);
+      break;
 
     case MG_X11EXPOSE:
-	_mgx11c->exposed = 1;
-	break;
+      _mgx11c->exposed = 1;
+      break;
 
     case MG_X11COLORMAP:
-	_mgx11c->cmap = NEXT(Colormap);
-	_mgx11c->cmapset = 1;
-	break;
+      _mgx11c->cmap = NEXT(Colormap);
+      _mgx11c->cmapset = 1;
+      break;
 
     default:
       OOGLError (0, "_mgx11_ctxset: undefined option: %d", attr);
@@ -390,7 +390,7 @@ int mgx11_setwindow( WnWindow *win, int final )
 #endif
 
   if (win == NULL)
-   return 0;
+    return 0;
 
   if(_mgc->winchange)
     (*_mgc->winchange)(_mgc, _mgc->winchangeinfo, MGW_WINCHANGE, win);
@@ -398,92 +398,92 @@ int mgx11_setwindow( WnWindow *win, int final )
 #ifdef UNNEEDED
   reconstrain = 0;
   if (WnGet(win, WN_PREFPOS, (void*)&pos) == 1 && (win->changed & WNF_HASPREF))
-  {
-    if (_mgx11c->visible)
-      Xmg_poswin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
-    else
     {
-      Xmg_prefposwin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
-      reconstrain = positioned = 1;
+      if (_mgx11c->visible)
+	Xmg_poswin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
+      else
+	{
+	  Xmg_prefposwin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
+	  reconstrain = positioned = 1;
+	}
+      win->changed &= ~(WNF_HASPREF | WNF_HASSIZE);
     }
-    win->changed &= ~(WNF_HASPREF | WNF_HASSIZE);
-  }
   else
     if ((WnGet(win, WN_XSIZE, (void*)&xsize) == 1
-      && (WnGet(win, WN_YSIZE, (void*)&ysize) == 1
-      && (win->changed & WNF_HASSIZE)))
-      && !(_mgx11c->sizelock)
-      && _mgx11c->visible)
-    {
-      Xmg_sizewin(xsize, ysize);
-      reconstrain = 1;
-      win->changed &= ~WNF_HASSIZE;
-    }
+	 && (WnGet(win, WN_YSIZE, (void*)&ysize) == 1
+	     && (win->changed & WNF_HASSIZE)))
+	&& !(_mgx11c->sizelock)
+	&& _mgx11c->visible)
+      {
+	Xmg_sizewin(xsize, ysize);
+	reconstrain = 1;
+	win->changed &= ~WNF_HASSIZE;
+      }
 
   if (reconstrain && _mgx11c->visible)
-  {
-    WnGet(win, WN_NOBORDER, &flag);
+    {
+      WnGet(win, WN_NOBORDER, &flag);
 
-    /*
-    if (flag) noborder(); what to replace these with for X?
-    winconstraints();*/
+      /*
+	if (flag) noborder(); what to replace these with for X?
+	winconstraints();*/
 
-    reconstrain = 0;
-  }
+      reconstrain = 0;
+    }
 
 
   if (_mgc->shown) {
     WnGet(win, WN_NAME, &name);
     if (_mgx11c->visible) {
       if(name && (win->changed & WNF_HASNAME))
-      {
-        Xmg_titlewin(name);
-        win->changed &= ~WNF_HASNAME;
-      }
+	{
+	  Xmg_titlewin(name);
+	  win->changed &= ~WNF_HASNAME;
+	}
       if (WnGet(win, WN_VIEWPORT, &vp) > 0 && win->changed & WNF_HASVP)
-      {
-	/* some sort of
-	   viewport(vp.xmin, vp.xmax, vp.ymin, vp.ymax) function */
-	win->changed &=~WNF_HASVP;
-      }
+	{
+	  /* some sort of
+	     viewport(vp.xmin, vp.xmax, vp.ymin, vp.ymax) function */
+	  win->changed &=~WNF_HASVP;
+	}
     }
     else
       if (final)
-      {
-	_mgx11c->win = Xmg_openwin(name);
-	mgx11_sync();
-	if (_mgx11c->win == 0) {
-	  OOGLError(0,"mgx11window: unable to open window");
-	  return 0;
+	{
+	  _mgx11c->win = Xmg_openwin(name);
+	  mgx11_sync();
+	  if (_mgx11c->win == 0) {
+	    OOGLError(0,"mgx11window: unable to open window");
+	    return 0;
+	  }
+	  if (positioned)
+	    Xmg_poswin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
+	  _mgx11c->visible = 1;
+	  reconstrain = 0;
 	}
-	if (positioned)
-	  Xmg_poswin(pos.xmin, pos.xmax, pos.ymin, pos.ymax);
-	_mgx11c->visible = 1;
-	reconstrain = 0;
-      }
   }
 
   if ((reconstrain && _mgx11c->visible)
-	|| (win->changed & (WNF_NOBORDER | WNF_ENLARGE | WNF_SHRINK)))
-  {
-    WnGet(win, WN_SHRINK, &flag);
-    if (flag)
-      Xmg_minsize((long)40, (long)30);
-    reconstrain = 1;
-  }
+      || (win->changed & (WNF_NOBORDER | WNF_ENLARGE | WNF_SHRINK)))
+    {
+      WnGet(win, WN_SHRINK, &flag);
+      if (flag)
+	Xmg_minsize((long)40, (long)30);
+      reconstrain = 1;
+    }
   if (reconstrain && _mgx11c->visible)
-  {
-    Xmg_winconstrain();
-    win->changed &= ~(WNF_NOBORDER | WNF_ENLARGE | WNF_SHRINK);
-  }
+    {
+      Xmg_winconstrain();
+      win->changed &= ~(WNF_NOBORDER | WNF_ENLARGE | WNF_SHRINK);
+    }
 #endif /*UNNEEDED*/
 
   if (win != _mgc->win)
-  {
-    RefIncr((Ref *)win);
-    WnDelete(_mgc->win);
-    _mgc->win = win;
-  }
+    {
+      RefIncr((Ref *)win);
+      WnDelete(_mgc->win);
+      _mgc->win = win;
+    }
   return 1;
 }
 
@@ -504,7 +504,7 @@ int mgx11_setwindow( WnWindow *win, int final )
 void
 mgx11_identity( void )
 {
-   mgx11_settransform( TM3_IDENTITY );
+  mgx11_settransform( TM3_IDENTITY );
 }
 
 /*-----------------------------------------------------------------------
@@ -524,8 +524,8 @@ mgx11_identity( void )
 void
 mgx11_settransform( Transform T )
 {
-    TmCopy(T, _mgc->xstk->T);
-    _mgc->has = _mgc->xstk->hasinv = 0;
+  TmCopy(T, _mgc->xstk->T);
+  _mgc->has = _mgc->xstk->hasinv = 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -543,7 +543,7 @@ mgx11_settransform( Transform T )
 void
 mgx11_gettransform( Transform T )
 {
-    TmCopy(_mgc->xstk->T, T);
+  TmCopy(_mgc->xstk->T, T);
 }
 
 /*-----------------------------------------------------------------------
@@ -561,8 +561,8 @@ mgx11_gettransform( Transform T )
 void
 mgx11_transform( Transform T )
 {
-    TmConcat(T, _mgc->xstk->T, _mgc->xstk->T);
-    _mgc->has = _mgc->xstk->hasinv = 0;
+  TmConcat(T, _mgc->xstk->T, _mgc->xstk->T);
+  _mgc->has = _mgc->xstk->hasinv = 0;
 }
 
 /*-----------------------------------------------------------------------
@@ -593,10 +593,10 @@ mgx11_popappearance()
   struct mgastk *mastk_next;
 
   if (!(mastk_next = mastk->next))
-  {
-    OOGLError(0, "mgx11_popappearance: appearance stack has only 1 entry.");
-    return 1;
-  }
+    {
+      OOGLError(0, "mgx11_popappearance: appearance stack has only 1 entry.");
+      return 1;
+    }
   mgx11_appearance(mastk_next, mastk_next->ap.valid);
   mg_popappearance();
   return 0;
@@ -621,25 +621,22 @@ mgx11_popappearance()
 const Appearance *
 mgx11_setappearance(const Appearance *ap, int mergeflag )
 {
-  int changed, mat_changed, lng_changed;
+  int changed, lng_changed;
   struct mgastk *mastk = _mgc->astk;
   Appearance *ma;
 
   ma = &(mastk->ap);
 
   if(mergeflag == MG_MERGE)
-  {
+    {
     changed = ap->valid &~ (ma->override &~ ap->override);
-    mat_changed =
-    ap->mat ? ap->mat->valid &~ (ma->mat->override &~ ap->mat->override) : 0;
     lng_changed =
-    ap->lighting ? ap->lighting->valid &~
-    (ma->lighting->override &~ ap->lighting->override) : 0;
+      ap->lighting ? ap->lighting->valid &~
+      (ma->lighting->override &~ ap->lighting->override) : 0;
   }
   else
   {
     changed = ap->valid;
-    mat_changed = ap->mat ? ap->mat->valid : 0;
     lng_changed = ap->lighting ? ap->lighting->valid : 0;
   }
   mg_setappearance( ap, mergeflag );
@@ -715,7 +712,7 @@ mgx11_ctxget( int attr, void *value )
 #define VALUE(type) ((type*)value)
 
   switch (attr)
-  {
+    {
     case MG_APPEAR:
       *VALUE(Appearance*) = &(_mgc->astk->ap);
       break;
@@ -726,14 +723,14 @@ mgx11_ctxget( int attr, void *value )
 
     case MG_WINDOW:
       if (_mgx11c->visible)
-      {
-	int x0, y0, xsize, ysize;
-	WnPosition wp;
-        Xmg_getwinsize(&xsize, &ysize, &x0, &y0);
-        wp.xmin = (long)x0; wp.xmax = (long)x0+(long)xsize-1;
-        wp.ymin = (long)y0; wp.ymax = (long)y0+(long)ysize-1;
-	WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
-      }
+	{
+	  int x0, y0, xsize, ysize;
+	  WnPosition wp;
+	  Xmg_getwinsize(&xsize, &ysize, &x0, &y0);
+	  wp.xmin = (long)x0; wp.xmax = (long)x0+(long)xsize-1;
+	  wp.ymin = (long)y0; wp.ymax = (long)y0+(long)ysize-1;
+	  WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
+	}
       *VALUE(WnWindow*) = _mgc->win;
       break;
 
@@ -775,7 +772,7 @@ mgx11_ctxget( int attr, void *value )
       OOGLError (0, "mgx11_ctxget: undefined option: %d\n", attr);
       return -1;
 
-  }
+    }
   return 1;
 
 #undef VALUE
@@ -814,7 +811,7 @@ mgx11_ctxcreate( int a1, ... )
     (mgcontext*)mgx11_newcontext( OOGLNewE(mgx11context, "mgx11_ctxcreate") );
 
   if (!Xmg_initx11device())
-    	OOGLError(0,"mgdevice_X11: unable to open X-display");
+    OOGLError(0,"mgdevice_X11: unable to open X-display");
 
   va_start(alist, a1);
   if (_mgx11_ctxset(a1, &alist) == -1) {
@@ -845,11 +842,11 @@ mgx11_ctxdelete( mgcontext *ctx )
       mgctxselect(was);
   } else {
     if (((mgx11context *)ctx)->visible)
-	Xmg_closewin(_mgx->myxwin);
+      Xmg_closewin(_mgx->myxwin);
     free(_mgx->myxwin);
     mg_ctxdelete(ctx);
     if (ctx == _mgc)
-	 _mgc = NULL;
+      _mgc = NULL;
   }
 }
 
@@ -946,27 +943,27 @@ mgx11_reshapeviewport( void )
 
   WnGet(_mgc->win, WN_PIXELASPECT, &pixasp);
   if (WnGet(_mgc->win, WN_VIEWPORT, &vp) <= 0)
-  {
-    WnPosition wp;
-    Xmg_getwinsize(&w, &h, &x0, &y0);
-    wp.xmin = (long)x0; wp.xmax = (long)x0+(long)w-1;
-    wp.ymin = (long)y0; wp.ymax = (long)y0+(long)h-1;
-    WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
-  }
+    {
+      WnPosition wp;
+      Xmg_getwinsize(&w, &h, &x0, &y0);
+      wp.xmin = (long)x0; wp.xmax = (long)x0+(long)w-1;
+      wp.ymin = (long)y0; wp.ymax = (long)y0+(long)h-1;
+      WnSet(_mgc->win, WN_CURPOS, &wp, WN_END);
+    }
   else
-  {
-    w = vp.xmax - vp.xmin + 1;
-    h = vp.ymax - vp.ymin + 1;
-  }
+    {
+      w = vp.xmax - vp.xmin + 1;
+      h = vp.ymax - vp.ymin + 1;
+    }
   CamSet(_mgc->cam, CAM_ASPECT, pixasp * (double)w/(double)h, CAM_END);
 }
 
 WnWindow *
 mgx11window(WnWindow *win)
 {
- mgx11_setwindow(win, 1);
- mgx11_init_zrange();
- return(win);
+  mgx11_setwindow(win, 1);
+  mgx11_init_zrange();
+  return(win);
 }
 
 /*-----------------------------------------------------------------------
@@ -983,7 +980,7 @@ mgx11_findctx( Window winid )
 
   for(mgc = _mgclist; mgc != NULL; mgc = mgc->next) {
     if(mgc->devno == MGD_X11 && ((mgx11context *)mgc)->myxwin->window == winid)
-        return mgc;
+      return mgc;
   }
   return NULL;
 }

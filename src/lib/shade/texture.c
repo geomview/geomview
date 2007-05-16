@@ -111,7 +111,7 @@ _TxSet(Texture *tx, int attr1, va_list *alist)
 		  mask, TXF_MODULATE, TXF_DECAL);
 	goto nope;
       }
-      tx->apply = mask;
+      tx->apply = (enum apply_enum)mask;
       break;
     case TX_FILE:
       str = NEXT(char *);
@@ -482,7 +482,7 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
   int brack = 0;
   int empty = 1;
   bool braces = true;
-  int plus = 0;
+  /*int plus = 0;*/
   bool more, mine = true; /* Questionable -- we'll report all errors */
 
   if ((stream = PoolInputFile(p)) == NULL) {
@@ -529,10 +529,10 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
       break;
     case '-':
     case '!':
-      plus = -1;
+      /*plus = -1;*/
       break;
     case '+':
-      plus = 1;
+      /*plus = 1;*/
       break;
     case '*':  break;
 
@@ -591,7 +591,7 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
 	break;
 
       case TX_APPLY:
-	tx->apply = (kw+k)->aval;
+	tx->apply = (enum apply_enum)(kw+k)->aval;
 	break;
 
       case TX_FILE:
@@ -687,7 +687,7 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
       default:
 	break;
       }
-      plus = 0;
+      /*plus = 0;*/
     }
   } while (brack > 0 || more);
 
@@ -805,7 +805,7 @@ TxStreamOut(Pool *p, Handle *h, Texture *tx)
   PoolIncLevel(p, 1);
   PoolFPrint(p, f, "clamp %s\n", clamps[tx->apply & (TXF_SCLAMP|TXF_TCLAMP)]);
   PoolFPrint(p, f, "apply %s\n",
-	     (unsigned)tx->apply < COUNT(applies) ? applies[tx->apply]
+	     (unsigned int)tx->apply < COUNT(applies) ? applies[tx->apply]
 	     : "???");
   PoolFPrint(p, f, "background %.8g %.8g %.8g\n",
 	     tx->background.r, tx->background.g, tx->background.b);

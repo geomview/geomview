@@ -64,17 +64,16 @@ mgbuf_polygon(int nv,  HPoint3 *V,
 	     int nn,  Point3 *N, 
 	     int nc,  ColorA *C)
 {
-  int		count;
-  HPoint3     *v;
-  Point3      *n;
-  int			flag, cinc, ninc, smooth;
+  int	  count;
+  HPoint3 *v;
+  Point3  *n;
+  int	  flag, ninc, smooth;
 
 /*  fprintf(stderr,"X11: draw a polygon\n"); */
 
   flag = _mgc->astk->ap.flag;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) && 
       !(_mgc->astk->flags & MGASTK_SHADER)) nc = 0;
-  cinc = (nc > 1);
   ninc = (nn > 1);
   smooth = IS_SMOOTH(_mgc->astk->ap.shading);
 /*

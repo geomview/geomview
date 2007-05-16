@@ -69,7 +69,6 @@ char **ooglglob(char *s)
   char cmd[FBUFSIZ];
   vvec vp;
   char *c;
-  int status;
 #ifdef SIGCHLD
 	/* Avoid NeXT pclose() bug: don't catch subprocess' SIGCHLD */
   void (*oldsigchld)() = signal(SIGCHLD, SIG_DFL);
@@ -89,7 +88,7 @@ char **ooglglob(char *s)
   *VVAPPEND(vp,char*) = NULL;
   vvtrim(&vp);
 
-  status = pclose(fp);
+  pclose(fp);
 #ifdef SIGCHLD
   signal(SIGCHLD, oldsigchld);
 #endif

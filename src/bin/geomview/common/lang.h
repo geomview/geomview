@@ -80,7 +80,7 @@ typedef enum {
 } Keyword;
 
 void lang_init();
-int boolval(char *s, Keyword keyword);
+bool boolval(char *s, Keyword keyword);
 HandleOps *keyword2ops(Keyword keyword);
 
 #endif

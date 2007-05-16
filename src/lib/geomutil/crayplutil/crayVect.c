@@ -124,9 +124,10 @@ void *cray_vect_UseVColor(int sel, Geom *geom, va_list *args) {
   return (void *)geom;
 }
 
-void *cray_vect_UseFColor(int sel, Geom *geom, va_list *args) {
+void *cray_vect_UseFColor(int sel, Geom *geom, va_list *args)
+{
   Vect *v = (Vect *)geom;
-  int h, i, k;
+  int i, k;
   ColorA *color, *def;
 
   def = va_arg(*args, ColorA *);
@@ -139,7 +140,7 @@ void *cray_vect_UseFColor(int sel, Geom *geom, va_list *args) {
    * k = current color
    * h = current vertex of vect
    */
-  for (h = i = k = 0; i < v->nvec; i++) {
+  for (i = k = 0; i < v->nvec; i++) {
     switch(v->vncolor[i]) {
     case 1:
       def = &v->c[k++];
@@ -181,12 +182,12 @@ void *cray_vect_EliminateColor(int sel, Geom *geom, va_list *args)
 
 void *cray_vect_SetColorAt(int sel, Geom *geom, va_list *args) {
   ColorA *color;
-  int vindex, findex, *eindex;
+  int vindex, *eindex;
   HPoint3 *pt;
 
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  findex = va_arg(*args, int);
+  /*findex = */va_arg(*args, int);
   eindex = va_arg(*args, int *);
   pt = va_arg(*args, HPoint3 *);
   if (vindex != -1) craySetColorAtV(geom, color, vindex, NULL, pt);
@@ -223,13 +224,14 @@ void *cray_vect_SetColorAtV(int sel, Geom *geom, va_list *args) {
   return (void *)geom;
 }
 
-void *cray_vect_GetColorAt(int sel, Geom *geom, va_list *args) {
+void *cray_vect_GetColorAt(int sel, Geom *geom, va_list *args)
+{
   ColorA *color;
-  int vindex, findex, *eindex;
+  int vindex, *eindex;
 
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  findex = va_arg(*args, int);
+  /*findex = */va_arg(*args, int);
   eindex = va_arg(*args, int *);
   if (vindex != -1) 
     return (void *)(long)crayGetColorAtV(geom, color, vindex, NULL, NULL);

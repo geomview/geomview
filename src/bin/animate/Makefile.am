@@ -9,7 +9,7 @@ module_PROGRAMS = animate
 animate_SOURCES = \
  animate.c xanimate.c glob.c animate.h glob.h xanimate.h \
  interface/animate.mib interface/command.mib interface/info.mib
-animate_LDADD = $(OOGLLIB) $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(XLIBS)
+animate_LDADD = $(MOTIFUILIB) $(MOTIFLIBS) $(XMULIBS) $(XLIBS)
 #animate_LDFLAGS = -rpath $(libdir)
 
 module_DATA = .geomview-animate

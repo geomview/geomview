@@ -184,7 +184,7 @@ Poly *PP;
     {
     line cutcorner;
     double dx, dy;	
-    int cutoff, j, jj,ni, pi, oc, nc;
+    int cutoff, j, jj, oc, nc;
 
     for (nc = 0, oc=0; oc<pp->nv-1; ++oc, ++nc)
 	{
@@ -196,8 +196,6 @@ Poly *PP;
 	  cutoff = 1;		/* default is to cut if off */
 	  if (!convex)
 	    {
-	    pi = oc;
-	    ni = (oc+2)%n;
 	    dx = pp->vlistxy[(oc+2)%n].x - pp->vlistxy[oc].x;
 	    dy = pp->vlistxy[(oc+2)%n].y - pp->vlistxy[oc].y;
 	    /* orient this line to run from v2 to v0, to agree with edges */
@@ -293,14 +291,13 @@ int main(int argc, char **argv)
     polygon *ncp, *cp;
     int pcountold;
     Geom *thisgeom;
-    PolyList *thispl, *newpl;
+    PolyList *thispl;
     Vertex *vlist[4];
     Transform id;
 
     TmIdentity(id);
     thisgeom = GeomFLoad(iobfileopen(stdin), NULL);
     thispl = (PolyList *)AnyToPL(thisgeom, id);
-    newpl = (PolyList *)GeomCopy((Geom *)thispl);
     if (initstack() == 0) 
 	OOGLError(1,"anytoucd: unable to init stack\n");
 

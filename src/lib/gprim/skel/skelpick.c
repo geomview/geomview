@@ -38,7 +38,7 @@ static Skel *NSkelPick(Skel *s, Pick *p, Appearance *ap,
 		       Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[2];
-  int i, j, which, ok[2];
+  int i, j, ok[2];
   bool found;
   unsigned int apflag = 0;
   HPointN ptN[1];
@@ -63,7 +63,6 @@ static Skel *NSkelPick(Skel *s, Pick *p, Appearance *ap,
     int nv = abs(s->l[i].nv);
     int *idx = s->vi + s->l[i].v0;
     
-    which = 0;
     ptN->v = s->p + idx[0]*s->pdim;
     ok[0] = (0 < HPtNNTransPt3(TN, axes, ptN, &plist[0]));
     if (nv == 1) {
@@ -149,7 +148,7 @@ Skel *SkelPick(Skel *s, Pick *p, Appearance *ap,
 	       Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[2];
-  int i, j, which, ok[2];
+  int i, j, ok[2];
   bool found;
   int v4d;
   unsigned int apflag = 0;
@@ -173,7 +172,6 @@ Skel *SkelPick(Skel *s, Pick *p, Appearance *ap,
     int nv = abs(s->l[i].nv);
     int *idx = &s->vi[s->l[i].v0];
     
-    which = 0;
     if (TN) {
       ok[0] = (0 < HPt3NTransPt3(TN, axes,
 				 (HPoint3 *)(s->p + idx[0]*s->pdim), v4d,

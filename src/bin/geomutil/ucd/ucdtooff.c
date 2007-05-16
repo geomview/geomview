@@ -105,7 +105,6 @@ int main(int argc, char **argv)
 	*node_data_comp = NULL,
 	num_cells, 
 	num_cell_data_comp,
-	num_model_data,
 	*cell_data_comp = NULL,
 	offset,
 	i,j,k,id,index,n, plflags = 0,
@@ -135,7 +134,7 @@ int main(int argc, char **argv)
 	num_cells = buff[1];
 	num_node_data_comp = buff[2];
 	num_cell_data_comp = buff[3];
-	num_model_data = buff[4];
+	/* num_model_data = buff[4];*/
     }
 
     ucdv  = OOGLNewN(ucdvert, num_nodes); 

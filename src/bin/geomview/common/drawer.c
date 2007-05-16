@@ -73,7 +73,7 @@ DrawerState drawerstate;
 static int drawer_dgeom(int id, GeomStruct *gs);
 
 static int spaceval(char *s, int val);
-static int hmodelval(char *s, int val);
+static HModelValue hmodelval(char *s, int val);
 static int normalval(char *s, int val);
 extern Appearance *GeomAppearance( Geom * );
 extern mgshadefunc softshader(int id);
@@ -107,7 +107,7 @@ static char *	_name_object(DObject *obj, int ni, char *name);
 static void	track_changes();
 static void	winmoved(int camid);
 static bool     nonidentity(Transform T);
-static DGeom *	new_dgeom(char *from, int citizenship);
+static DGeom *	new_dgeom(char *from, enum citizenship citizenship);
 static DView *	new_dview();
 static void	updateit(float dt);
 static void	draw_view(DView *dv);
@@ -134,7 +134,7 @@ static int trivial_visibility = 0;
  */
 
 int
-drawer_geom_count()
+drawer_geom_count(void)
 {
   int i, n;
   DGeom *dg;
@@ -145,7 +145,7 @@ drawer_geom_count()
 }
 
 int
-drawer_cam_count()
+drawer_cam_count(void)
 {
   int i, n;
   DView *dv;
@@ -739,7 +739,7 @@ LDEFINE(freeze, LVOID,
   DView *dv;
   int index;
   int id;
-  int hard = NO_KEYWORD;
+  Keyword hard = NO_KEYWORD;
   int freeze;
   LDECLARE(("freeze", LBEGIN,
 	    LID, &id,
@@ -1025,8 +1025,8 @@ LDEFINE(camera_reset, LVOID,
   return Lt;
 }
 
-int
-drawer_new_dgeom(char *name, GeomStruct *gs, int citizenship)
+static int
+drawer_new_dgeom(char *name, GeomStruct *gs, enum citizenship citizenship)
 {
   int id;
   DGeom *dg;
@@ -1060,6 +1060,7 @@ LDEFINE(new_alien, LID,
   GeomStruct *gs = &nullgs;
   char *name;
   int id;
+
   LDECLARE(("new-alien", LBEGIN,
 	    LSTRING, &name,
 	    LOPTIONAL,
@@ -1273,7 +1274,8 @@ LDEFINE(delete, LVOID,
   DObject *obj;
   int index;
   int id;
-  unsigned wasfrozen = UNFROZEN;
+  unsigned int wasfrozen = UNFROZEN;
+
   LDECLARE(("delete", LBEGIN,
 	    LID, &id,
 	    LEND));
@@ -1428,7 +1430,9 @@ LDEFINE(bbox_draw, LVOID,
 	"(bbox-draw      GEOM-ID [yes|no])\n\
 	Say whether GEOM-ID's bounding-box should be drawn; \"yes\" if omitted.")
 {
-  int id, yes=YES_KEYWORD;
+  int id;
+  Keyword yes = YES_KEYWORD;
+
   LDECLARE(("bbox-draw", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
@@ -1442,7 +1446,9 @@ LDEFINE(camera_draw, LVOID,
 	"(camera-draw    CAM-ID [yes|no])\n\
 	Say whether or not cameras should be drawn in CAM-ID; \"yes\" if omitted.")
 {
-  int id, yes=YES_KEYWORD;
+  int id;
+  Keyword yes = YES_KEYWORD;
+
   LDECLARE(("camera-draw", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
@@ -1512,7 +1518,7 @@ LDEFINE(stereowin, LLIST,
 	``window'' to set the pixel aspect ratio & window position if needed.")
 {
   int id;
-  int kw = -1;
+  Keyword kw = NO_KEYWORD;
   DView *dv;
   int gapsize = 0;
 
@@ -1703,7 +1709,9 @@ LDEFINE(hsphere_draw, LVOID,
 	hyperbolic space, and a reference sphere in Euclidean and spherical\n\
 	spaces.  If the second argument is omitted, \"yes\" is assumed.")
 {
-  int id, yes=YES_KEYWORD;
+  int id;
+  Keyword yes = YES_KEYWORD;
+
   LDECLARE(("hsphere-draw", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
@@ -1718,7 +1726,9 @@ LDEFINE(pickable, LVOID,
 	Say whether or not GEOM-ID is included in the pool of objects\n\
 	that could be returned from the pick command.")
 {
-  int id, yes=YES_KEYWORD;
+  int id;
+  Keyword yes = YES_KEYWORD;
+
   LDECLARE(("pickable", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
@@ -2444,7 +2454,7 @@ static bool nonidentity(Transform T)
 }
 
 static DGeom *
-new_dgeom(char *from, int citizenship)
+new_dgeom(char *from, enum citizenship citizenship)
 {
   DGeom *dg;
   Geom *g = NULL;
@@ -2491,7 +2501,7 @@ new_dgeom(char *from, int citizenship)
 }
 
 void
-drawer_init_dgeom(DGeom *dg, int id, int citizenship)
+drawer_init_dgeom(DGeom *dg, int id, enum citizenship citizenship)
 {
   dg->id = id;
   dg->citizenship = citizenship;
@@ -3087,6 +3097,7 @@ LDEFINE(exit, LVOID,
 	    LEND));
   ui_cleanup();
   exit(0);
+  return Lt;
 }
 
 /*-----------------------------------------------------------------------
@@ -3102,12 +3113,11 @@ static char *
 unique_name(char *name, int id)
 {
   char newname[256];
-  int i, len;
+  int i;
 
   if ( fsa_parse( name_fsa, name ) == NOID )
     return strdup(name);
   
-  len = strlen(name);
   i = INDEXOF(id);
   do {
     sprintf(newname, "%.240s<%d>", name, i++);
@@ -3245,7 +3255,7 @@ float intensity(float d, float d1, float i1)
 
 #endif /* MANIFOLD */
 
-static int hmodelval(char *s, int val)
+static HModelValue hmodelval(char *s, int val)
 {
   switch (val) {
   case VIRTUAL_KEYWORD: return VIRTUAL;
@@ -3258,7 +3268,7 @@ static int hmodelval(char *s, int val)
 }
 
 
-int hmodelkeyword(char *s, int val)
+Keyword hmodelkeyword(char *s, HModelValue val)
 {
   switch (val) {
   case VIRTUAL: return VIRTUAL_KEYWORD;
@@ -3421,6 +3431,7 @@ LDEFINE(set_conformal_refine, LVOID,
   int maxsteps = -1;
   int showedges = -1;
   extern void set_cm_refine(double cm_cmb, int cm_mr, int cm_ss);
+
   LDECLARE(("set-conformal-refine", LBEGIN,
 	    LFLOAT, &cmb,
             LOPTIONAL, 

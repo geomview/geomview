@@ -65,7 +65,6 @@ NPolyListFLoad(IOBFILE *file, char *fname)
   int binary = 0;
   int headerseen = 0;
   int flags = 0;
-  int makenorm = 0;
   char *token;
   int dimn = 3, pdim;
   static ColorA black = { 0,0,0,0 };
@@ -89,7 +88,6 @@ NPolyListFLoad(IOBFILE *file, char *fname)
   }
   if(*token == 'S') {		/* "smooth surface": we compute vtx normals */
     /* ??? normals ??? */
-    makenorm = 1;
     token++;
   }
   if(strcmp(token, "nOFF") == 0) {

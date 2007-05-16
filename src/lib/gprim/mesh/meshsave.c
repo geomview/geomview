@@ -121,5 +121,5 @@ Mesh *MeshSave(Mesh *m, char *name)
   tm = MeshFSave(m, outf);
   fclose(outf);
 
-  return m;
+  return tm;
 }

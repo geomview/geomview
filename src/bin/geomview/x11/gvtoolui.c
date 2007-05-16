@@ -98,7 +98,7 @@ static struct toolbutton {
 };
 
 static struct toolbutton *last;
-static Widget shell, TargetText, CenterText, BBoxCenter;
+static Widget TargetText, CenterText, BBoxCenter;
 
 
 /*****************************************************************************/
@@ -114,7 +114,7 @@ void ui_load_toolpanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Tools, Root, False, False, &toolform);
+  ui_make_panel_and_form(Tools, Root, False, False, &toolform);
 
 /*toolload = mib_load_interface(toolform, "interface/Tool.mib", MI_FROMFILE);*/
   toolload = mib_load_interface(toolform, Root, MI_FROMSTRING);

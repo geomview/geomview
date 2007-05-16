@@ -95,7 +95,7 @@ void mgps_add(int primtype, int numdata, void *data, void *cdata)
     static mgpsprim *prim;
     static ColorA color;
     static float average_depth;
-    static int *primp, numverts;
+    static int numverts;
     static int ecolor[3];
   
     switch (primtype)
@@ -105,8 +105,6 @@ void mgps_add(int primtype, int numdata, void *data, void *cdata)
 	average_depth = 0.0;
 	prim =
 	    &(VVEC(_mgpsc->mysort->prims, mgpsprim)[_mgpsc->mysort->cprim]);
-	primp =
-	    &(VVEC(_mgpsc->mysort->primsort, int)[_mgpsc->mysort->cprim]);
 	
 	if (primtype == MGX_BGNLINE)
 	    prim->mykind = PRIM_LINE;

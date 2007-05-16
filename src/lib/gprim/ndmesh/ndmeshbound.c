@@ -37,7 +37,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
 {
   BBox *result;
-  int n, pdim;
+  int n;
   HPoint3 min, max, tmp, clean;
   HPointN **p;
 
@@ -46,8 +46,7 @@ BBox *NDMeshBound(NDMesh *mesh, Transform T, TransformN *TN)
 
   n    = mesh->mdim[0]*mesh->mdim[1]; /* more is not implemented yet */
   p    = mesh->p;
-  pdim = mesh->pdim;
-
+  
   /* First handle the case without transformations, this means that we
    * return an Nd bbox.
    */

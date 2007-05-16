@@ -141,7 +141,7 @@ typedef struct Texture {
     Transform tfm;	  /* texture-coord transformation */
     Handle *tfmhandle;
     unsigned int flags;   /* clamp, etc. */
-    enum {
+    enum apply_enum {
 	tx_modulate,
 	tx_decal,
 	tx_blend,

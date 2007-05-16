@@ -84,13 +84,13 @@ void find_visual(Display *dpy)
 int main(int argc, char **argv)
 {
   XtAppContext	App;
-  Widget	TopLevel,
-		MainWindow,
-		CutButton,
-		CopyButton,
-		PasteButton,
-		DeleteButton,
-		DrawArea;
+  Widget TopLevel,
+    MainWindow,
+    CutButton,
+    CopyButton,
+    PasteButton,
+    DeleteButton;
+  
 
   int		no_mi;
   Arg		args[20];
@@ -149,7 +149,6 @@ int main(int argc, char **argv)
   CopyButton  = NULL;
   PasteButton  = NULL;
   DeleteButton  = NULL;
-  DrawArea = NULL;
 
   /* Do similarly when trying to find a widget named "CutButton" */
 
@@ -161,7 +160,7 @@ int main(int argc, char **argv)
     no_mi = 1;
   if (!(DeleteButton = XtNameToWidget(MainForm->me, "DeleteButton")))
     no_mi = 1;
-  if (!(DrawArea = XtNameToWidget(MainForm->me, "DrawingArea")))
+  if (!XtNameToWidget(MainForm->me, "DrawingArea"))
     no_mi = 1;
 
   /* if we found both widgets then add a callback to the button. This
@@ -277,3 +276,10 @@ void delete_callback(Widget w, XtPointer data, XmPushButtonCallbackStruct *cbs)
   fprintf(stdout,"(delete target)\n");
   fflush(stdout);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

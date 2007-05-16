@@ -153,7 +153,7 @@ DiscGrpDraw(DiscGrp *discgrp)
 
     {
     int viscnt = 0; 
-    float ratio = 1.0;
+    /*float ratio = 1.0;*/
     HPoint3 image;
     int vis;
     float d;
@@ -235,7 +235,7 @@ DiscGrpDraw(DiscGrp *discgrp)
 	  }
         }
     /* for debugging to see how culling works */
-    ratio = viscnt / ((double) discgrp->big_list->num_el);
+    /*ratio = viscnt / ((double) discgrp->big_list->num_el);*/
     }
 
     return(discgrp);

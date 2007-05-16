@@ -83,12 +83,16 @@ void OOGLSyntax(IOBFILE *f, char *fmt, ...)
 
 void OOGLWarn(char *fmt, ...)
 {
-  int level = 2;
   va_list args;
-  
+#if 0
+  int level = 2;
   if(fmt[0] < ' ' && fmt[0] != '\0')
     level = *fmt++;
-  /* Maybe we have a current warning level below which we don't print */
+  /* Maybe we have a current warning level below which we don't print
+   *
+   * cH: seemingly not implemented.
+   */
+#endif
 
   va_start (args, fmt);
   

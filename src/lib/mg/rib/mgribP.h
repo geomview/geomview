@@ -53,7 +53,7 @@ typedef struct mgribcontext {
  * Note: Future versions of renderman should support line drawing, NeXT does
  * now.
  */
-  enum {
+  enum line_mode {
     RM_POLYGON = MG_RIBPOLYGON,
     RM_CYLINDER = MG_RIBCYLINDER,
     RM_PRMANLINE = MG_RIBPRMANLINE
@@ -62,7 +62,7 @@ typedef struct mgribcontext {
   /* MG_RIBFRAME: render to framebuffer (screen window)
    * MG_RIBTIFF: render to file
    */
-  enum { RM_FRAME = MG_RIBFRAME, RM_RIBTIFF = MG_RIBTIFF } display;
+  enum display { RM_FRAME = MG_RIBFRAME, RM_RIBTIFF = MG_RIBTIFF } display;
 
   FILE *rib;
   bool rib_close; /* set to true if we have opened rib ourselves */
@@ -74,7 +74,7 @@ typedef struct mgribcontext {
   /* MG_RIBDOBG: simulate colored background w/ polygon
    * MG_RIBNOBG: no background simulation (defualt)
    */
-  enum { RB_DOBG = MG_RIBDOBG, RB_NOBG = MG_RIBNOBG } backing;
+  enum backing { RB_DOBG = MG_RIBDOBG, RB_NOBG = MG_RIBNOBG } backing;
 
   /* MG_RIBSTDSHADE: uses standard shader
    * MG_RIBEXTSHADE: uses extended shaders (eplastic,
@@ -83,7 +83,10 @@ typedef struct mgribcontext {
    * + the shaders needed to support Geomview's texture model
    * (modulate/decal/blend), including alpha channel support.
    */
-  enum { RM_STDSHADE = MG_RIBSTDSHADE, RM_EXTSHADE = MG_RIBEXTSHADE  } shader;
+  enum shader {
+    RM_STDSHADE = MG_RIBSTDSHADE,
+    RM_EXTSHADE = MG_RIBEXTSHADE
+  } shader;
 
   char *shadepath;	/* path to extended shaders or user shaders */
   char ribscene[128];	/* scene name for RIB 1.0 file comments */

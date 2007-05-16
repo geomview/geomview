@@ -8,6 +8,6 @@ oogl2vrml2_SOURCES = oogl2vrml2.c
 oogl2vrml2_DEPENDENCIES = $(OOGLLIB)
 #oogl2vrml2_LDFLAGS = -rpath $(libdir)
 
-LDADD = $(STUBLIB) $(OOGLLIB)
+LDADD = $(OOGLLIB)
 
 EXTRA_DIST = $(man_MANS)

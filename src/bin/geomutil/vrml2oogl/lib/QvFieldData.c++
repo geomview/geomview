@@ -171,11 +171,10 @@ QvFieldData::getEnumData(const char *typeNameArg, int &num,
 QvBool
 QvFieldData::readFieldTypes(QvInput *in, QvNode *object)
 {
-    int gotChar;
     QvName fieldType, fieldName;
     char   c;
 
-    if (! ((gotChar = in->read(c)) || c != OPEN_BRACE_CHAR))
+    if (! (in->read(c) || c != OPEN_BRACE_CHAR))
 	return FALSE;
 
     if (in->read(c) && c == CLOSE_BRACE_CHAR)

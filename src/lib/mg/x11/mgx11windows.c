@@ -512,7 +512,7 @@ void Xmg_add(int primtype, int numdata, void *data, void *cdata)
   static mgx11prim *prim;
   static ColorA color;
   static float average_depth;
-  static int *primp, numverts, ecolor[3];
+  static int numverts, ecolor[3];
   static int maxlinewidth = 0;
 
 #if 1 || HACK_THE_CODE_BUT_BETTER_FIX_IT
@@ -543,8 +543,6 @@ void Xmg_add(int primtype, int numdata, void *data, void *cdata)
 	  average_depth = 0.0;
           prim =
 	    &(VVEC(_mgx11c->mysort->prims, mgx11prim)[_mgx11c->mysort->cprim]);
-          primp =
-	    &(VVEC(_mgx11c->mysort->primsort, int)[_mgx11c->mysort->cprim]);
 
           if (primtype == MGX_BGNLINE)
 	    prim->mykind = PRIM_LINE;
@@ -1147,6 +1145,7 @@ void Xmg_getwinsize(int *xsize, int *ysize, int *xorig, int *yorig)
         handler = XSetErrorHandler(myXErrorHandler);
 	XShmAttach(_mgx11c->mgx11display, &(current->shminf));
 	XSync(_mgx11c->mgx11display, False);
+	XSetErrorHandler(handler);
 	shmctl(current->shminf.shmid, IPC_RMID, 0);
         if (globalXError == 1)
         {

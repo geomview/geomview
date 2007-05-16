@@ -79,7 +79,6 @@ int main(int argc, char **argv)
     WnWindow *win;
     WnPosition position;
     Appearance *ap;
-    mgcontext *ctx;
     Geom *ageom;
     float aspect;
     int wwidth;
@@ -216,16 +215,15 @@ Default: create complete rib file containing default camera, lights, etc.\n\
 	    if(framebuffer) display = MG_RIBFRAME;
 	    else display = MG_RIBTIFF;
 
-	    ctx = mgctxcreate(
-	            MG_RIBFILE, outfileFD,
-		    MG_RIBFORMAT, MG_RIBASCII,
-		    MG_RIBBACKING, MG_RIBNOBG,
-		    MG_WINDOW, win,	
-		    MG_CAMERA, cam,
-		    MG_APPEAR, ap,
-		    MG_RIBDISPLAY, display,
-		    MG_RIBDISPLAYNAME, name,
-		    MG_END );
+	    mgctxcreate(MG_RIBFILE, outfileFD,
+			MG_RIBFORMAT, MG_RIBASCII,
+			MG_RIBBACKING, MG_RIBNOBG,
+			MG_WINDOW, win,	
+			MG_CAMERA, cam,
+			MG_APPEAR, ap,
+			MG_RIBDISPLAY, display,
+			MG_RIBDISPLAYNAME, name,
+			MG_END );
     
 	    if(doback) {
 		mgctxset(
@@ -244,8 +242,7 @@ Default: create complete rib file containing default camera, lights, etc.\n\
 				MT_END,
 			  AP_LGT, lighting,
 			  AP_END);
-	    ctx = mgctxcreate(
-	    		MG_RIBFILE, outfileFD,
+	    mgctxcreate(MG_RIBFILE, outfileFD,
 			MG_SHOW, 0,		/* overides Format & Display */
 		 	MG_RIBFORMAT, MG_RIBASCII,
 			MG_APPEAR, ap,

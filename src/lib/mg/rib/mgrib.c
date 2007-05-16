@@ -126,7 +126,7 @@ struct mgfuncs mgribfuncs = {
   mg_taggedappearance
 };
 
-static mgribcontext *MGRIB;	/* For debugging */
+mgribcontext *_MGRIB_;	/* For debugging */
 
 int
 mgdevice_RIB()
@@ -151,8 +151,8 @@ mgrib_ctxcreate(int a1, ...)
   time_t timedate = (time_t)time(0);
     
   _mgc =
-    (mgcontext*)(MGRIB = mgrib_newcontext( OOGLNewE(mgribcontext,
-						    "mgrib_ctxcreate") ));
+    (mgcontext*)(_MGRIB_ = mgrib_newcontext( OOGLNewE(mgribcontext,
+						      "mgrib_ctxcreate") ));
 
   /* Ensure some sensible default Window */
   WnSet(_mgc->win, WN_XSIZE, 450, WN_YSIZE, 450, WN_END);
@@ -259,7 +259,7 @@ _mgrib_ctxset(int a1, va_list *alist)
 
       /* really RIB-specific */
     case MG_RIBLINEMODE:
-      _mgribc->line_mode = va_arg(*alist, int);
+      _mgribc->line_mode = (enum line_mode)va_arg(*alist, int);
       break;
     case MG_RIBFORMAT:
       switch( va_arg(*alist, int) ) {
@@ -268,16 +268,16 @@ _mgrib_ctxset(int a1, va_list *alist)
       }
       break;
     case MG_RIBDISPLAY:
-      _mgribc->display = va_arg(*alist, int);
+      _mgribc->display = (enum display)va_arg(*alist, int);
       break;
     case MG_RIBDISPLAYNAME:
       ribdpy = va_arg(*alist, char*);
       break;
     case MG_RIBBACKING:
-      _mgribc->backing = va_arg(*alist, int);
+      _mgribc->backing = (enum backing)va_arg(*alist, int);
       break;
     case MG_RIBSHADER:
-      _mgribc->shader = va_arg(*alist, int);
+      _mgribc->shader = (enum shader)va_arg(*alist, int);
       break;
     case MG_RIBSCENE:
       strNcpy(_mgribc->ribscene, va_arg(*alist, char*));
@@ -626,7 +626,7 @@ mgrib_ctxselect( mgcontext *ctx )
   }
 
   _mgc = ctx;
-  MGRIB = (mgribcontext *)ctx;
+  _MGRIB_ = (mgribcontext *)ctx;
 
   return(0);
 }
@@ -963,9 +963,8 @@ int
 mgrib_popappearance( void )
 {
   struct mgastk *mastk = _mgc->astk;
-  struct mgastk *mastk_next;
 
-  if (! (mastk_next=mastk->next)) {
+  if (mastk->next == NULL) {
     OOGLError(0, "mggl_popappearance: appearance stack has only 1 entry.\n");
     return 0;
   }
@@ -1067,8 +1066,8 @@ mgrib_newcontext( mgribcontext *ctx )
   ctx->born = false;
   ctx->rib = NULL;
   ctx->rib_close = false;
-  ctx->backing = MG_RIBDOBG;
-  ctx->shader = MG_RIBEXTSHADE;
+  ctx->backing = RB_DOBG;
+  ctx->shader = RM_EXTSHADE;
   ctx->shadepath = NULL;		/* should add context field */
   if (geomdata) {
     char path[512];
@@ -1086,7 +1085,7 @@ mgrib_newcontext( mgribcontext *ctx )
   mrti_makecurrent(&ctx->worldbuf);
 
   ctx->render_device = RMD_ASCII;
-  ctx->line_mode = MG_RIBCYLINDER;
+  ctx->line_mode = RM_CYLINDER;
 
   return ctx;
 }

@@ -624,14 +624,14 @@ int mib_load_Root(Widget parent, mib_Widget **this, mib_Buffer *fin)
 
   char		res[MI_MAXSTRLEN];
   char		val[MI_MAXSTRLEN];
-  int		num_widgets, count, n, got_line;
+  int		num_widgets, count;
   Arg		args[20];
   XGCValues     gcvals;
   XtGCMask      val_mask;
   mib_Widget   *temp = NULL;
   int		rubberPositioning = False;
 
-  got_line = mib_read_line(fin, res, val);
+  mib_read_line(fin, res, val);
   if (!strcmp(res,"TotalWidgets"))
     sscanf(val, "%d", &num_widgets);
   else
@@ -641,7 +641,6 @@ int mib_load_Root(Widget parent, mib_Widget **this, mib_Buffer *fin)
   (*this)->mib_class = (char*)malloc(9);
   sprintf((*this)->mib_class,"RootForm");
 
-  n = 0;
   XtVaGetValues(parent, XmNrubberPositioning, &rubberPositioning, NULL);
 
   (*this)->me = XmCreateForm(parent, "MainForm", args, 0);
@@ -650,7 +649,7 @@ int mib_load_Root(Widget parent, mib_Widget **this, mib_Buffer *fin)
 
   /* we don't expect any private resources for the root widget */
 
-  got_line = mib_read_line(fin, res, val);
+  mib_read_line(fin, res, val);
   if (strcmp(res,"EndWidget."))
     return 0;
 

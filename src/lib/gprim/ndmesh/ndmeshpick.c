@@ -37,11 +37,10 @@ NDMeshPick(NDMesh *mesh, Pick *pick, Appearance *ap,
 	   Transform T, TransformN *TN, int *axes)
 {
   Point3 plist[4];
-  int nu, nv, maxnu, maxnv, maxpt;
+  int nu, nv, maxnu, maxnv;
   int foundu, foundv;
   unsigned int apflag = 0;
   HPt3Coord xa, xb, xc, xd;
-  HPointN ptN[1];
 
   if (!TN)
     return NULL; /* no 3d pick for ND object. */
@@ -49,15 +48,10 @@ NDMeshPick(NDMesh *mesh, Pick *pick, Appearance *ap,
   if (mesh->meshd > 2)
     return NULL;
 
-  /* we have full-featured ND-points here. */
-  ptN->flags = 0;
-  ptN->dim = mesh->pdim;
-
   foundu = foundv = -1;
 
   maxnu = mesh->mdim[0];
   maxnv = mesh->mdim[1];
-  maxpt = maxnu * maxnv;
 
   /* Make sure that vects do not as visible - otherwise they
    * will wreak havoc with the edge picking stuff. */

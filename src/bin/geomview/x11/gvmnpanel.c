@@ -172,7 +172,7 @@ void ui_refresh_mainpanel(int id)
 
 static void motion_menu_callbacks(Widget widget, char *text)
 {
-  int val = 0;
+  DrawerKeyword val = DRAWER_NOKEYWORD;
 
   switch (text[0])
   {
@@ -231,7 +231,7 @@ LDEFINE(ui_motion, LVOID,
 	"(ui-motion constrain on) command.")
 {
   Keyword enabled = NO_KEYWORD, flagkw = NO_KEYWORD;
-  DrawerKeyword motionflag = -1;
+  DrawerKeyword motionflag = DRAWER_NOKEYWORD;
   bool onoff;
   int btnidx = -1;
   
@@ -341,7 +341,6 @@ void ui_load_mainpanel()
 	     cascade,
 	     space,
 	  /*inspect,*/
-	     motion,
              help,
 	     title,
 	     HideButton;
@@ -422,7 +421,7 @@ void ui_load_mainpanel()
 
 /*****************************************************************************/
 
-  motion = BuildMenu(mainmenu, XmMENU_PULLDOWN, "Motion", 'M', motion_menu);
+  BuildMenu(mainmenu, XmMENU_PULLDOWN, "Motion", 'M', motion_menu);
 
   for (n = 0; n < 3; n++)
   {

@@ -191,7 +191,6 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   unsigned texmeth;
   Transform *axis = NULL;
   HPoint3 *encompass_points = NULL;
-  bool havetex = false;
 
   if (exist == NULL) {
     sphere = OOGLNewE(Sphere, "SphereCreate:  new Sphere");
@@ -242,7 +241,6 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     case SPHERE_TXRECTANGULAR:
     case SPHERE_TXSTEREOGRAPHIC:
     case SPHERE_ONEFACE:
-      havetex = true;
       break;
     default:
       OOGLError(1, "Undefined texture mapping method: %d", texmeth);

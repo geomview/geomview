@@ -44,16 +44,15 @@ static void matt_entries(Widget w, XtPointer data, XmAnyCallbackStruct *cbs);
 extern void ap_toggle(Widget w, XtPointer data, XmToggleButtonCallbackStruct *cbs);
 extern void set_ap_toggle(Widget w, int *current, Appearance *ap, int flagbit);
 
-static Widget shell,
-	TransparentToggle;
+static Widget TransparentToggle;
 
 static struct _slider {
-   float min, max;
-   int  val;
-   int mtcode;
-   char *slidername, *textname;
-   Widget sliderw, textw;
-   float lastval;
+  float min, max;
+  DrawerKeyword val;
+  int mtcode;
+  char *slidername, *textname;
+  Widget sliderw, textw;
+  float lastval;
 } sliders[] = {
   { 1.0, 128.0, DRAWER_SHININESS, MT_SHININESS, "ShininessScale", "ShininessText" },
   { 0.0, 1.0,	DRAWER_KS, MT_Ks,	  "SpecularScale", "SpecularText" },
@@ -75,44 +74,44 @@ void ui_load_materialpanel()
   int	     i;
   struct _slider *s;
   Widget     mattform,
-	     HideButton;
+    HideButton;
 
   mib_Widget *mattload;
   static char Material[] = "Material";
 
-/*****************************************************************************/
+  /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Material, Root, False, True, &mattform);
+  ui_make_panel_and_form(Material, Root, False, True, &mattform);
 
-/*mattload = mib_load_interface(mattform, "interface/Material.mib",
-		MI_FROMFILE);*/
+  /*mattload = mib_load_interface(mattform, "interface/Material.mib",
+    MI_FROMFILE);*/
   mattload = mib_load_interface(mattform, Root,
-		MI_FROMSTRING);
+				MI_FROMSTRING);
  
   XtManageChild(mattform);
 
-/*****************************************************************************/
+  /*****************************************************************************/
 
   HideButton = mib_find_name(mattload, "HideButton")->me;
   TransparentToggle = mib_find_name(mattload, "TransparentToggle")->me;
   XtAddCallback(HideButton, XmNactivateCallback, (XtCallbackProc) ui_hide,
 		(XtPointer) Material);
 
-  for(i = 0, s = sliders; i < COUNT(sliders); i++, s++) {
+  for (i = 0, s = sliders; i < COUNT(sliders); i++, s++) {
     s->sliderw = mib_find_name(mattload, s->slidername)->me;
     s->textw = mib_find_name(mattload, s->textname)->me;
     XtAddCallback(s->sliderw, XmNdragCallback,
-		(XtCallbackProc) matt_sliders, (XtPointer)(long) i);
+		  (XtCallbackProc) matt_sliders, (XtPointer)(long) i);
     XtAddCallback(s->sliderw, XmNvalueChangedCallback,
-		(XtCallbackProc) matt_sliders, (XtPointer)(long) i);
+		  (XtCallbackProc) matt_sliders, (XtPointer)(long) i);
     XtAddCallback(s->textw, XmNactivateCallback,
-		(XtCallbackProc) matt_entries, (XtPointer)(long) i);
+		  (XtCallbackProc) matt_entries, (XtPointer)(long) i);
     XtAddCallback(s->textw, XmNlosingFocusCallback,
-		(XtCallbackProc) matt_entries, (XtPointer)(long) i);
+		  (XtCallbackProc) matt_entries, (XtPointer)(long) i);
   }
   XtAddCallback(TransparentToggle, XmNvalueChangedCallback,
-		  (XtCallbackProc) ap_toggle,
-		  (XtPointer)DRAWER_TRANSPARENT);
+		(XtCallbackProc) ap_toggle,
+		(XtPointer)DRAWER_TRANSPARENT);
 
 }
 
@@ -137,10 +136,10 @@ static void matt_entries(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
   char *estr;
   float val = strtod(str, &estr);
 
-  if(*str != '\0' && *estr == '\0') {
-    if(fabs(s->lastval - val) > .001) {
-	XmScaleSetValue(s->sliderw, (int)(100.0*(val - s->min)/(s->max - s->min)));
-	s->lastval = val;
+  if (*str != '\0' && *estr == '\0') {
+    if (fabs(s->lastval - val) > .001) {
+      XmScaleSetValue(s->sliderw, (int)(100.0*(val - s->min)/(s->max - s->min)));
+      s->lastval = val;
     }
   } else {
     ui_set_ftext(s->textw, s->lastval);
@@ -154,29 +153,34 @@ void ui_target_materialpanel(int id)
   int		i;
   double      val;
   int         conv;
-  DGeom      *dg;
   Appearance *ap;
   Material *mt = NULL;
   struct _slider *s;
 
-  if ((dg = (DGeom *)drawer_get_object(id)))
-  {
+  if (drawer_get_object(id) != NULL) {
     ap = drawer_get_ap(id);
     ApGet(ap, AP_MAT, &mt);
    
     set_ap_toggle(TransparentToggle, &i, ap, APF_TRANSP);
-    if(mt == NULL)
-	return;
-    for(i = 0; i < COUNT(sliders); i++) {
-	s = &sliders[i];
-	if(MtGet(mt, s->mtcode, &val) > 0) {
-	    conv = (int)(100.0*(val - s->min)/(s->max - s->min));
-	    XmScaleSetValue(s->sliderw, conv);
-	    ui_set_ftext(s->textw, val);
-	    s->lastval = val;
-	}
+    if (mt == NULL)
+      return;
+    for (i = 0; i < COUNT(sliders); i++) {
+      s = &sliders[i];
+      if (MtGet(mt, s->mtcode, &val) > 0) {
+	conv = (int)(100.0*(val - s->min)/(s->max - s->min));
+	XmScaleSetValue(s->sliderw, conv);
+	ui_set_ftext(s->textw, val);
+	s->lastval = val;
+      }
     }
   }
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

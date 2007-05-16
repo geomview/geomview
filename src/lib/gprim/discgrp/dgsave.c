@@ -108,10 +108,7 @@ DiscGrpFSave(DiscGrp *dg, FILE *fp, char *fname)
 }
 
 
-DiscGrp           *
-DiscGrpSave(dg, name)
-DiscGrp           *dg;
-char           *name;
+DiscGrp* DiscGrpSave(DiscGrp *dg, char *name)
 {
 	DiscGrp           *tdg;
 	FILE           *outf;
@@ -125,5 +122,5 @@ char           *name;
 	tdg = DiscGrpFSave(dg, outf, name);
 	fclose(outf);
 
-	return (dg);
+	return (tdg);
 }

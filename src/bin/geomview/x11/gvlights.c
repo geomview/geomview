@@ -54,8 +54,7 @@ static void toggle_lights(Widget, XtPointer, XmToggleButtonCallbackStruct *);
 static void color_light(Widget, XtPointer, XmAnyCallbackStruct *);
 static void light_add(Widget, XtPointer, XmAnyCallbackStruct *);
 static void light_del(Widget, XtPointer, XmAnyCallbackStruct *);
-static Widget  shell,
-	       ltoggle,
+static Widget  ltoggle,
 	       lintensity,
 	       lightslist;
 static char   *lights[MAXLIGHTS+1];
@@ -80,7 +79,7 @@ void ui_load_lightspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Lights, Root, True, True, &lightsform);
+  ui_make_panel_and_form(Lights, Root, True, True, &lightsform);
 
 /*lightsload = mib_load_interface(lightsform, "interface/Lights.mib",
 		MI_FROMFILE);*/

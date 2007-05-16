@@ -796,9 +796,7 @@ static int keywordmatch(a, b)
   return *a == *b;
 }
 
-void keywordwrite(fp, x)
-    FILE *fp;
-    int *x;
+void keywordwrite(FILE *fp, Keyword *x)
 {
   fprintf(fp, "%s", keywordname(*x));
 }

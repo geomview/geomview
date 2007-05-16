@@ -1396,15 +1396,15 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
 				   EdgeIntersection edges[2])
 {
   HPt3Coord scp0, scp1 = 0.0, scp2, scp3 = 0.0;
-  PolyPos sign0, sign1 = 0.0, sign2, sign3 = 0.0;
+  PolyPos sign0, sign1 = COPLANAR, sign2, sign3 = COPLANAR;
   int i, i0, i2;
 
   scp0 = PlaneDistance(plane, &poly->v[0]->pt);
-  sign0 = fpos(scp0) - fneg(scp0);
+  sign0 = (PolyPos)(fpos(scp0) - fneg(scp0));
   if (sign0 == COPLANAR) {
     for (i = 1; i < poly->n_vertices; i++) {
       scp1 = PlaneDistance(plane, &poly->v[i]->pt);
-      sign1 = fpos(scp1) - fneg(scp1);
+      sign1 = (PolyPos)(fpos(scp1) - fneg(scp1));
       if (sign1 != COPLANAR) {
 	break;
       }
@@ -1422,7 +1422,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
     scp2 = scp1;
     for (++i; i < poly->n_vertices; i++) {
       scp3 = PlaneDistance(plane, &poly->v[i]->pt);
-      sign3 = fpos(scp3) - fneg(scp3);
+      sign3 = (PolyPos)(fpos(scp3) - fneg(scp3));
       if (sign3 != sign2) {
 	break;
       }
@@ -1446,7 +1446,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
       scp2 = scp3;
       sign2 = sign3;
       scp3 = PlaneDistance(plane, &poly->v[++i]->pt);
-      sign3 = fpos(scp3) - fneg(scp3);
+      sign3 = (PolyPos)(fpos(scp3) - fneg(scp3));
       if (sign3 == COPLANAR) {
 	return sign1;
       } else if (sign3 == sign1) {
@@ -1466,7 +1466,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
     /* Loop until we find a change of sign */
     for (i = 1; i < poly->n_vertices; i++) {
       scp1 = PlaneDistance(plane, &poly->v[i]->pt);
-      sign1 = fpos(scp1) - fneg(scp1);
+      sign1 = (PolyPos)(fpos(scp1) - fneg(scp1));
       if (sign1 != sign0) {
 	break;
       }
@@ -1487,7 +1487,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
       i %= poly->n_vertices;
 
       scp3 = PlaneDistance(plane, &poly->v[i]->pt);
-      sign3 = fpos(scp3) - fneg(scp3);
+      sign3 = (PolyPos)(fpos(scp3) - fneg(scp3));
       if (sign3 == COPLANAR || sign3 == sign0) {
 	return sign0;
       }
@@ -1500,7 +1500,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
      */
     for (++i; i < poly->n_vertices; i++) {
       scp3 = PlaneDistance(plane, &poly->v[i]->pt);
-      sign3 = fpos(scp3) - fneg(scp3);
+      sign3 = (PolyPos)(fpos(scp3) - fneg(scp3));
       if (sign3 != sign2) {
 	break;
       }
@@ -1513,7 +1513,7 @@ static inline PolyPos ClassifyPoly(HPoint3 *plane, Poly *poly,
 	sign3 = sign0;
       } else {
 	scp3 = PlaneDistance(plane, &poly->v[0]->pt);
-	sign3 = fpos(scp3) - fneg(scp3);
+	sign3 = (PolyPos)(fpos(scp3) - fneg(scp3));
       }
     }
     i2 = i-1;

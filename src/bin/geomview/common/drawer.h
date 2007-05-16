@@ -97,7 +97,7 @@ typedef struct DGeom {
   bool pickable;        /* Is this Dgeom pickable ? */
   int  bezdice;         /* Meshsize for diced up bezier patch */
   Appearance *bboxap;
-  enum {ORDINARY, THEWORLD, ALIEN} citizenship;
+  enum citizenship {ORDINARY, THEWORLD, ALIEN} citizenship;
   TransformN *NDT, *NDTinv;     /* N-D transform and its inverse; NULL for 3-D objects */
 
 /* Ordinary DGeoms are subgeoms of Theworld DGeom.
@@ -333,6 +333,7 @@ typedef struct DrawerState {
 #define ALLGEOMS	GEOMID(ALLINDEX)
 
 typedef enum {
+  DRAWER_NOKEYWORD = 1,
   DRAWER_NEAR,
   DRAWER_FAR,
   DRAWER_FOV,
@@ -419,7 +420,7 @@ void	drawer_stop(int id);
 void	drawer_pause(int pause);
 void	drawer_set_window(int id, WnWindow *win);
 void	drawer_snap_window(int id, char *fname);
-void	drawer_init_dgeom(DGeom *dg, int id, int citizenship);
+void	drawer_init_dgeom(DGeom *dg, int id, enum citizenship citizenship);
 void	drawer_nuke_world();
 void	drawer_nuke_cameras(int keepzero);
 void	drawer_get_transform(int id, Transform T, int cumulative);
@@ -449,7 +450,7 @@ void	drawer_color(int id, DrawerKeyword key, Color *col);
 
 float scaleof(int id);
 int spaceof(int id);
-extern int hmodelkeyword(char *s, int val);
+extern Keyword hmodelkeyword(char *s, HModelValue val);
 
 void drawer_set_ap(int id, Handle *h, Appearance *ap);
 

@@ -50,9 +50,7 @@ static void command_scroll(Widget, XtPointer, XmListCallbackStruct *);
 static void command_up(Widget, XtPointer, XmAnyCallbackStruct *);
 static void command_down(Widget, XtPointer, XmAnyCallbackStruct *);
 
-static Widget shell;
 static int num_items;
-static int loaded = 0;
 /*static int pos_later = 0, posx = 0, posy = 0;
   static char geometry[40];*/
 
@@ -75,7 +73,7 @@ void ui_load_commandspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Commands, Root, False, True, &commandsform);
+  ui_make_panel_and_form(Commands, Root, False, True, &commandsform);
 
 /*commandsload = mib_load_interface(commandsform, "interface/Commands.mib",
 		MI_FROMFILE);*/
@@ -120,7 +118,6 @@ void ui_load_commandspanel()
 
 
   num_items = 0;
-  loaded = 1;
 }
 
 

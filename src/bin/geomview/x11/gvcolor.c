@@ -79,7 +79,7 @@ static Window testwin;
 static Color oldc;
 static Color rgb, hsv;
 static enum Colormodel { CM_RGB, CM_HSV } colormodel = CM_RGB;
-static int   myindex, myval, colortarget, loaded = 0;
+static int myval, colortarget;
 
 /*****************************************************************************/
 
@@ -145,7 +145,6 @@ void ui_load_colorpanel()
 
   show_settings(0);
 
-  loaded = 1;
 }
 
 
@@ -242,7 +241,7 @@ static void show_settings(int changed)
   }
 
   if(changed)
-    drawer_color(colortarget, myval, &rgb);
+    drawer_color(colortarget, (DrawerKeyword)myval, &rgb);
 }
 
 /*****************************************************************************/
@@ -299,9 +298,16 @@ void ui_config_colorpanel(char *name, Color *old, int index, int val,
   oldc = *old;
   rgb2hsv(&rgb, &hsv);
 
-  myindex = index; myval = val;
+  myval = val;
   colortarget = id;
 
   XtVaSetValues(shell, XmNtitle, name, NULL);
   show_settings(0);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

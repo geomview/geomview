@@ -52,7 +52,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
   char *token;
   float *vp;
   Skline *lp;
-  int i, k, v0;
+  int i, k;
   ColorA *cp;
   static ColorA black = { 0,0,0,1 };
   vvec colors;
@@ -167,7 +167,7 @@ Skel *SkelFLoad(IOBFILE *file, char *fname)
     }
   }
 
-  for (i = 0, v0 = 0, lp = s->l; i < s->nlines; i++, lp++) {
+  for (i = 0, lp = s->l; i < s->nlines; i++, lp++) {
     /* Read one polyline
      */
     if(iobfgetni(file, 1, &lp->nv, binary) <= 0 || lp->nv <= 0) {

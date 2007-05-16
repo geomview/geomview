@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.17 2006/08/01 16:01:25 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.18 2007/05/16 19:38:07 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -181,7 +181,7 @@ fputnf(FILE *file, int count, float *v, int binary)
 int
 fputtransform(FILE *file, int ntrans, float *trans, int binary)
 {
-	int i, j, n;
+	int i, n;
 	float *p;
 
 	if(binary) {
@@ -192,6 +192,8 @@ fputtransform(FILE *file, int ntrans, float *trans, int binary)
 		    int   wi;
 		    float wf;
 	    } w;
+	    int j;
+
 	    for (i = 0; i < ntrans; i++) {
 		    for (j = 0; j < 16; j++) {
 			    w.wf = trans[i*16 + j];

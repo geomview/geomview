@@ -58,10 +58,9 @@ static void toggle_singlebuffer(Widget w, XtPointer data, XmToggleButtonCallback
 static void list_callbacks(Widget, XtPointer, XmListCallbackStruct *);
 static void text_callbacks(Widget, XtPointer, XmAnyCallbackStruct *);
 static void depth_callbacks(Widget, XtPointer, XmAnyCallbackStruct *);
-static void ui_float(char *, int, int, float, float);
+static void ui_float(char *, DrawerKeyword, int, float, float);
 
-static Widget shell,
-	      ProjectList,
+static Widget ProjectList,
 	      CurrentCam,
 	      ModelList,
 	      SphereToggle,
@@ -101,7 +100,7 @@ void ui_load_cameraspanel()
 
 /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(Cameras, Root, False, True, &camerasform);
+  ui_make_panel_and_form(Cameras, Root, False, True, &camerasform);
 
 /*camerasload = mib_load_interface(camerasform, "interface/Cameras.mib",
 		MI_FROMFILE);*/
@@ -287,9 +286,10 @@ getfloat(char *str, float *fp)
 
 /*****************************************************************************/
 
-static void ui_float(char *str, int key, int id, float min, float max)
+static void ui_float(char *str, DrawerKeyword key, int id, float min, float max)
 {
     float f;
+
     if(getfloat(str, &f) && strcmp(str,store)) {
         if(f < min) f = min;
         else if(f > max) f = max;
@@ -305,7 +305,7 @@ static void text_callbacks( Widget		  w,
 			    XtPointer		  data,
 			    XmAnyCallbackStruct *cbs )
 {
-  int val = (int)(long)data;
+  DrawerKeyword val = (DrawerKeyword)(long)data;
   char *str;
   DView *dv;
   int persp = 0;
@@ -351,13 +351,15 @@ static void list_callbacks( Widget		  w,
 			    XtPointer		  data,
 			    XmListCallbackStruct *cbs )
 {
-  int id, val = (int)(long)data;
+  int id;
+  DrawerKeyword val = (DrawerKeyword)(long)data;
 
   if (!val)
   {
     modelpos = cbs->item_position;
-    gv_hmodel(currentcam_id, hmodelkeyword("ModelBrowserProc",
-		cbs->item_position - 1));
+    gv_hmodel(currentcam_id,
+	      hmodelkeyword("ModelBrowserProc",
+			    (HModelValue)(cbs->item_position - 1)));
     return;
   }
   else
@@ -507,3 +509,10 @@ void update_x11_depth(DView *dv, mib_Widget *DepthMenu, Widget DitherToggle,
       }
     }
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

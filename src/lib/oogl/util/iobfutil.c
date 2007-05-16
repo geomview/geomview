@@ -419,7 +419,7 @@ iobfgetni(IOBFILE *f, int maxi, int *iv, int binary)
   if(binary) {
 #if WORDS_BIGENDIAN
     /* Easy -- our native floating point == big-endian IEEE */
-    return fread((char *)iv, sizeof(int), maxi, f);
+    return iobfread((char *)iv, sizeof(int), maxi, f);
 #else /* not native big-endian int's */
     int w;
     for(n = 0; n < maxi && iobfread(&w,4,1,f) > 0; n++)
@@ -463,7 +463,7 @@ iobfgetns(IOBFILE *f, int maxs, short *sv, int binary)
   if(binary) {
 #if WORDS_BIGENDIAN
     /* Easy -- our native floating point == big-endian IEEE */
-    return fread((char *)sv, sizeof(short), maxs, f);
+    return iobfread((char *)sv, sizeof(short), maxs, f);
 #else /* not native big-endian int's */
     short w;
     for(n = 0; n < maxs && iobfread(&w,2,1,f) > 0; n++)
@@ -733,7 +733,7 @@ iobfcontext(IOBFILE *f)
   static char *cont = NULL;
   static char dflt[] = "";
   char buf[1024];
-  int npre, npost, nlpre, nlpost, tab, len;
+  int npre, nlpre, nlpost, tab, len;
   int predots = 4, postdots = 4;
   char *p, *q;
   char *lastline, *lastnonblank;
@@ -775,7 +775,7 @@ iobfcontext(IOBFILE *f)
     }
   }
   len = npre;
-  npost = nlpost = 0;
+  nlpost = 0;
   lastline = lastnonblank = q;
   for(p = ptr;  p < ptr + cnt && len < CONTEXT_SIZE;  len++, q++) {
     *q = *p++;

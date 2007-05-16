@@ -47,38 +47,37 @@ void ap_toggle(Widget, XtPointer, XmToggleButtonCallbackStruct *);
 static void ap_color(Widget, XtPointer, XmAnyCallbackStruct *);
 static void list_callbacks(Widget, XtPointer, XmListCallbackStruct *);
 static void text_callbacks(Widget, XtPointer, XmAnyCallbackStruct *);
-static Widget	shell,
-		NormalList,
-		ShadeList,
-		OverrideToggle,
-		FaceToggle, FaceColor,
-		EdgeToggle, EdgeColor,
-		NormalToggle, NormalColor,
-		BBoxToggle, BBoxColor,
-		VectToggle,
-		TexToggle,
-		TexQToggle,
-		ShadeLineToggle,
-		ConcaveToggle,
-		FacingNormalsToggle,
-		BezDiceInput, NormalScaleInput,
-		LineWidthInput;
+static Widget NormalList,
+  ShadeList,
+  OverrideToggle,
+  FaceToggle, FaceColor,
+  EdgeToggle, EdgeColor,
+  NormalToggle, NormalColor,
+  BBoxToggle, BBoxColor,
+  VectToggle,
+  TexToggle,
+  TexQToggle,
+  ShadeLineToggle,
+  ConcaveToggle,
+  FacingNormalsToggle,
+  BezDiceInput, NormalScaleInput,
+  LineWidthInput;
 
 static int  NormalListSet = -1, ShadeListSet = -1;
 static int  FaceSet = 0, EdgeSet = 0, NormalSet = 0, BBoxSet = 0, VectSet = 0,
-	      TexSet = 0, TexQSet = 0,
-		ConcaveSet = 0, FacingNormalsSet = 0, OverrideSet = 0;
+  TexSet = 0, TexQSet = 0,
+  ConcaveSet = 0, FacingNormalsSet = 0, OverrideSet = 0;
 static int  app_loaded = 0;
 static char AppearancE[] = "Appearance";
 
 /*****************************************************************************/
 
 static struct awid {
-   enum what { TOG, BTN, TXT, LST } type; 
-   char *name;
-   Widget *widp;
-   void (*callback)();
-   XtPointer cbdata;
+  enum what { TOG, BTN, TXT, LST } type; 
+  char *name;
+  Widget *widp;
+  void (*callback)();
+  XtPointer cbdata;
 } awidgets[] = {
   {BTN, "HideButton", NULL, ui_hide, AppearancE },
   {BTN, "RevButton", NULL, revert_appearance, NULL },
@@ -113,43 +112,43 @@ void ui_load_appearancepanel()
   struct awid *a;
   mib_Widget *appload;
 
-/*****************************************************************************/
+  /*****************************************************************************/
 
-  shell = ui_make_panel_and_form(AppearancE, Root, False, True, &appform);
+  ui_make_panel_and_form(AppearancE, Root, False, True, &appform);
 
-/*appload = mib_load_interface(appform, "interface/Appearance.mib",
-		MI_FROMFILE);*/
+  /*appload = mib_load_interface(appform, "interface/Appearance.mib",
+    MI_FROMFILE);*/
   appload = mib_load_interface(appform, Root,
-		MI_FROMSTRING);
+			       MI_FROMSTRING);
  
   XtManageChild(appform);
 
-/*****************************************************************************/
+  /*****************************************************************************/
 
   NormalList   = mib_find_name(appload, "NormList")->me;
   ShadeList    = mib_find_name(appload, "ShadeList")->me;
 
   for(i = 0, a = awidgets; i < COUNT(awidgets); i++, a++) {
     Widget w = mib_find_name(appload, a->name)->me;
-    if(a->widp)
-	*a->widp = w;
+    if (a->widp)
+      *a->widp = w;
     switch(a->type) {
     case BTN:
-	XtAddCallback(w, XmNactivateCallback,
-			(XtCallbackProc) a->callback, a->cbdata);
-	break;
+      XtAddCallback(w, XmNactivateCallback,
+		    (XtCallbackProc) a->callback, a->cbdata);
+      break;
     case TOG:
-	XtAddCallback(w, XmNvalueChangedCallback,
-			(XtCallbackProc) a->callback, a->cbdata);
-	break;
+      XtAddCallback(w, XmNvalueChangedCallback,
+		    (XtCallbackProc) a->callback, a->cbdata);
+      break;
     case TXT:
-	XtAddCallback(w, XmNactivateCallback,
-			(XtCallbackProc)a->callback, a->cbdata);
-	XtAddCallback(w, XmNlosingFocusCallback,
-			(XtCallbackProc)a->callback, a->cbdata);
-	break;
+      XtAddCallback(w, XmNactivateCallback,
+		    (XtCallbackProc)a->callback, a->cbdata);
+      XtAddCallback(w, XmNlosingFocusCallback,
+		    (XtCallbackProc)a->callback, a->cbdata);
+      break;
     case LST:
-	XtAddCallback(w, XmNbrowseSelectionCallback,
+      XtAddCallback(w, XmNbrowseSelectionCallback,
 		    (XtCallbackProc) a->callback, a->cbdata);
     }
   }
@@ -164,7 +163,7 @@ void ui_load_appearancepanel()
 /*****************************************************************************/
 
 static void revert_appearance(Widget w, XtPointer data,
-		XmAnyCallbackStruct *cbs)
+			      XmAnyCallbackStruct *cbs)
 {
 
   drawer_set_ap( GEOMID(uistate.targetgeom), NULL, NULL );
@@ -181,16 +180,16 @@ static void ap_color(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 /*****************************************************************************/
 
 void ap_toggle(Widget w, XtPointer data,
-		XmToggleButtonCallbackStruct *cbs)
+	       XmToggleButtonCallbackStruct *cbs)
 {
-  drawer_int(GEOMID(uistate.targetgeom), (int)(long)data, cbs->set);
+  drawer_int(GEOMID(uistate.targetgeom), (DrawerKeyword)(long)data, cbs->set);
 }
 
 /*****************************************************************************/
 
 static void set_toggle(Widget w, int *current, int val)
 {
-  if(*current != (val != 0)) {
+  if (*current != (val != 0)) {
     *current = (val != 0);
     XmToggleButtonSetState(w, *current, False);
   }
@@ -209,45 +208,39 @@ void ui_target_appearancepanel(int id)
   if (!app_loaded)
     return;
 
-  if (ISGEOM(id))
-  {
+  if (ISGEOM(id)) {
     DGeom      *dg;
     Appearance *ap;
     int         val;
-    int         revert = 0;
 
-    if ((dg = (DGeom *)drawer_get_object(id)))
-    {
-	ap = drawer_get_ap(id);
-	revert = ap->override;
+    if ((dg = (DGeom *)drawer_get_object(id))) {
+      ap = drawer_get_ap(id);
 
-        set_ap_toggle(FaceToggle, &FaceSet, ap, APF_FACEDRAW);
-        set_ap_toggle(EdgeToggle, &EdgeSet, ap, APF_EDGEDRAW);
-        set_ap_toggle(NormalToggle, &NormalSet, ap, APF_NORMALDRAW);
-	set_ap_toggle(VectToggle, &VectSet, ap, APF_VECTDRAW);
-        set_ap_toggle(TexToggle, &TexSet, ap, APF_TEXTURE);
-        set_ap_toggle(TexQToggle, &TexQSet, ap, APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR);
-	set_ap_toggle(ConcaveToggle, &ConcaveSet, ap, APF_CONCAVE);
-	set_ap_toggle(FacingNormalsToggle, &FacingNormalsSet, ap, APF_EVERT);
+      set_ap_toggle(FaceToggle, &FaceSet, ap, APF_FACEDRAW);
+      set_ap_toggle(EdgeToggle, &EdgeSet, ap, APF_EDGEDRAW);
+      set_ap_toggle(NormalToggle, &NormalSet, ap, APF_NORMALDRAW);
+      set_ap_toggle(VectToggle, &VectSet, ap, APF_VECTDRAW);
+      set_ap_toggle(TexToggle, &TexSet, ap, APF_TEXTURE);
+      set_ap_toggle(TexQToggle, &TexQSet, ap, APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR);
+      set_ap_toggle(ConcaveToggle, &ConcaveSet, ap, APF_CONCAVE);
+      set_ap_toggle(FacingNormalsToggle, &FacingNormalsSet, ap, APF_EVERT);
 
-	set_toggle(OverrideToggle, &OverrideSet, uistate.apoverride);
-	set_toggle(BBoxToggle, &BBoxSet, dg->bboxdraw);
+      set_toggle(OverrideToggle, &OverrideSet, uistate.apoverride);
+      set_toggle(BBoxToggle, &BBoxSet, dg->bboxdraw);
 
-	if ((val = (dg->normalization + 1)) != NormalListSet)
-	{
-	  NormalListSet = val;
-	  XmListSelectPos(NormalList, val, False);
-	}
+      if ((val = (dg->normalization + 1)) != NormalListSet) {
+	NormalListSet = val;
+	XmListSelectPos(NormalList, val, False);
+      }
 
-	if ((val = (ap->shading - CONSTANTSHADE + 1)) != ShadeListSet)
-	{
-	  ShadeListSet = val;
-	  XmListSelectPos(ShadeList, val, False);
-	}
+      if ((val = (ap->shading - CONSTANTSHADE + 1)) != ShadeListSet) {
+	ShadeListSet = val;
+	XmListSelectPos(ShadeList, val, False);
+      }
 
-	ui_set_itext(BezDiceInput, ap->dice[0]);
-	ui_set_ftext(NormalScaleInput, ap->nscale);
-	ui_set_itext(LineWidthInput, ap->linewidth);
+      ui_set_itext(BezDiceInput, ap->dice[0]);
+      ui_set_ftext(NormalScaleInput, ap->nscale);
+      ui_set_itext(LineWidthInput, ap->linewidth);
 
     }
 
@@ -259,11 +252,11 @@ void ui_target_appearancepanel(int id)
 
 static void list_callbacks(Widget w, XtPointer data, XmListCallbackStruct *cbs)
 {
-  int val = (int)(long)data;
+  DrawerKeyword val = (DrawerKeyword)(long)data;
   int offset = 0;
 
   switch (val)
-  {
+    {
     case DRAWER_NORMALIZATION:
       NormalListSet = offset = cbs->item_position - 1;
       break;
@@ -273,7 +266,7 @@ static void list_callbacks(Widget w, XtPointer data, XmListCallbackStruct *cbs)
     default:
       OOGLError(1, "Bogus browser callback.\n");
       return;
-  }
+    }
 
   drawer_int(GEOMID(uistate.targetgeom), val, offset);
 }
@@ -283,24 +276,24 @@ static void list_callbacks(Widget w, XtPointer data, XmListCallbackStruct *cbs)
 static int
 getfloat(char *str, float *fp)
 {
-   if (sscanf(str, "%f", fp))
-     return 1;
-   else
-     return 0;
+  if (sscanf(str, "%f", fp))
+    return 1;
+  else
+    return 0;
 }
 
 /*****************************************************************************/
 
-static void ui_float(char *str, int key, int id, float min, float max)
+static void ui_float(char *str, DrawerKeyword key, int id, float min, float max)
 {
-    float f;
-    if(getfloat(str, &f)) {
-        if(f < min) f = min;
-        else if(f > max) f = max;
-        drawer_float(id, key, f);
-    } else {
-        ui_select(id);
-    }
+  float f;
+  if (getfloat(str, &f)) {
+    if (f < min) f = min;
+    else if (f > max) f = max;
+    drawer_float(id, key, f);
+  } else {
+    ui_select(id);
+  }
 
 }
 
@@ -309,24 +302,24 @@ static void ui_float(char *str, int key, int id, float min, float max)
 static int
 getint(char *str, int *ip)
 {
-   char *after;
-   *ip = strtol(str, &after, 0);
-   return str != after;
+  char *after;
+  *ip = strtol(str, &after, 0);
+  return str != after;
 
 }
 
 /*****************************************************************************/
 
-static void ui_int(char *str, int key, int id, int min, int max)
+static void ui_int(char *str, DrawerKeyword key, int id, int min, int max)
 {
-    int i;
-    if(getint(str, &i)) {
-        if(i < min) i = min;
-        else if(i > max) i = max;
-        drawer_int(id, key, i);
-    } else {
-        ui_select(id);
-    }
+  int i;
+  if (getint(str, &i)) {
+    if (i < min) i = min;
+    else if (i > max) i = max;
+    drawer_int(id, key, i);
+  } else {
+    ui_select(id);
+  }
 
 }
 
@@ -334,27 +327,33 @@ static void ui_int(char *str, int key, int id, int min, int max)
 
 static void text_callbacks(Widget w, XtPointer data, XmAnyCallbackStruct *cbs)
 {
-  int val = (int)(long)data;
+  DrawerKeyword val = (DrawerKeyword)(long)data;
   char *str;
   str = XmTextFieldGetString(w);
   XmTextFieldSetInsertionPosition(w, (XmTextPosition) 0);
 
-  switch(val)
-  {
-     case DRAWER_BEZDICE:
-     ui_int(str, val, GEOMID(uistate.targetgeom), 0, 999);
-     break;
-     case DRAWER_NORMSCALE:
-     ui_float(str, val, GEOMID(uistate.targetgeom), 0.0, 999.0);
-     break;
-     case DRAWER_LINEWIDTH:
-     ui_int(str, val, GEOMID(uistate.targetgeom), 1, 256);
-     break;
-     default:
-     break;
+  switch(val) {
+  case DRAWER_BEZDICE:
+    ui_int(str, val, GEOMID(uistate.targetgeom), 0, 999);
+    break;
+  case DRAWER_NORMSCALE:
+    ui_float(str, val, GEOMID(uistate.targetgeom), 0.0, 999.0);
+    break;
+  case DRAWER_LINEWIDTH:
+    ui_int(str, val, GEOMID(uistate.targetgeom), 1, 256);
+    break;
+  default:
+    break;
   }
 
   XtFree(str);
 }
 
 /*****************************************************************************/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

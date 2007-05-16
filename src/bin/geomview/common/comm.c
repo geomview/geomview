@@ -1214,7 +1214,6 @@ LDEFINE(hdelete, LVOID,
 {
   Handle *h = NULL;
   HandleOps *ops = NULL;
-  LType *ltype;
   char *hname = NULL, *opsname = NULL, *horo;
 
   LDECLARE(("hdelete", LBEGIN,
@@ -1229,8 +1228,7 @@ LDEFINE(hdelete, LVOID,
     opsname = horo;
   }
 
-  if (opsname && ((ops = str2ops(opsname)) == NULL ||
-		  (ltype = ops2ltype(ops)) == NULL)) {
+  if (opsname && ((ops = str2ops(opsname)) == NULL || ops2ltype(ops) == NULL)) {
     OOGLError(0, "\"hdelete\": "
 	      "expected \"camera\" or \"window\" or \"geometry\" or "
 	      "\"transform\" or \"ntransform\" or "
@@ -1375,7 +1373,7 @@ LDEFINE(hdefine, LVOID,
 #endif
 
 #if !HAVE_DECL_ACCEPT
-int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+int accept(int sockfd, struct sockaddr *addr, ACCEPT_ARG3_TYPE *addrlen);
 #endif
 
 #if HAVE_UNIX_SOCKETS
@@ -1465,7 +1463,6 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
   ACCEPT_ARG3_TYPE len = sizeof(un);
   char conname[10240];
   int i, ds;
-  Pool *p;
   HandleOps *ops = (HandleOps *)PoolClientData(listenp);
 
   if ((ds =
@@ -1483,7 +1480,7 @@ listenimport(Pool *listenp, Handle **hp, Ref **rp)
     if (PoolByName(conname, ops) == NULL)
       break;
   }
-  p = PoolStreamOpen(conname, fdopen(ds, "rb"), 0, ops);
+  PoolStreamOpen(conname, fdopen(ds, "rb"), 0, ops);
   /*
    * Reply on the same pipe's return stream.
    * Don't do this yet; only user so far is "togeomview",

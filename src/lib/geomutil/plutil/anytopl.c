@@ -534,7 +534,6 @@ static void *vecttoPL(int sel, Vect *v, va_list *args) {
   PLData *PL = va_arg(*args, PLData *);
   int base, i, vno;
   short *vip, *cip;
-  HPoint3 *vp;
   ColorA *cp, *lastc;
 
   if(PL->ap && (PL->ap->flag & APF_VECTDRAW) == 0)
@@ -544,7 +543,6 @@ static void *vecttoPL(int sel, Vect *v, va_list *args) {
   vno = base;
   vip = v->vnvert;
   cip = v->vncolor;
-  vp = v->p;
   cp = v->c;
   lastc = (v->ncolor>0) ? cp : NULL;
   for(i = 0, vno = base; i < v->nvec; i++, vip++, cip++) {
