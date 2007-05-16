@@ -286,12 +286,12 @@ Pool *
 PoolStreamTemp(char *name, IOBFILE *inf, FILE *outf, int rw, HandleOps *ops)
 {
     Pool *p;
-    char dummy[12];
+    char dummy[3+sizeof(unsigned long)*2+1];
     FILE *f = NULL;
     
     if (name==NULL) {
-	sprintf(name=dummy, "_p%p",
-		(void *)inf ? (void *)inf : (void *)outf);
+	sprintf(name=dummy, "_p@%lx",
+		(unsigned long)(inf ? (void *)inf : (void *)outf));
     }
 
     if (inf == NULL && outf == NULL && name != NULL) {
