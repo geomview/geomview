@@ -55,7 +55,7 @@ acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
 test "${acgv_path}" = "." && acgv_path=""
 if test -n "${acgv_path}"; then
   UPNAME[PROG]=`basename "${UPNAME[OPT]}"`
-  if echo "${acgv_path}" | egrep -q -s '^/'; then
+  if echo "${acgv_path}" | egrep '^/' > /dev/null 2>&1 ; then
     acgv_path="${acgv_path}"
   else
     acgv_path="`pwd`/${acgv_path}"
@@ -96,7 +96,7 @@ AC_ARG_WITH($1,
 acgv_path=`dirname "${UPNAME[OPT]}"|sed -e 's|^\./\?||g'`
 if test -n "${acgv_path}"; then
   UPNAME[PROG]=`basename "${UPNAME[OPT]}"`
-  if echo "${acgv_path}" | egrep -q -s '^/'; then
+  if echo "${acgv_path}" | egrep '^/' > /dev/null 2>&1 ; then
     acgv_path="${acgv_path}"
   else
     acgv_path="`pwd`/${acgv_path}"
