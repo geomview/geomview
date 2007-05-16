@@ -86,21 +86,28 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
 
     ptN = HPtNCreate(5, NULL);
 
-    if (!(bezier->geomflags & VERT_4D)) {
-      Pt4ToHPtN((HPoint3 *)p, ptN);
-    } else {
+    if (bezier->dimn == 3) {
       Pt3ToHPtN((Point3 *)p, ptN);
+    } else if (!(bezier->geomflags & VERT_4D)) {
+      HPt3ToHPtN((HPoint3 *)p, NULL, ptN);
+    } else {
+      Pt4ToHPtN((HPoint3 *)p, ptN);
     }
+
     minN = HPtNTransform(TN, ptN, NULL);
     HPtNDehomogenize(minN, minN);
     maxN = HPtNCopy(minN, NULL);
     while(--n > 0) {
-      if (bezier->dimn == 4) {
-	p += 4;
-	Pt4ToHPtN((HPoint3 *)p, ptN);
-      } else {
+      if (bezier->dimn == 3) {
 	p += 3;
 	Pt3ToHPtN((Point3 *)p, ptN);
+      } else {
+	p += 4;
+	if (!(bezier->geomflags & VERT_4D)) {
+	  HPt3ToHPtN((HPoint3 *)p, NULL, ptN);
+	} else {
+	  Pt4ToHPtN((HPoint3 *)p, ptN);
+	}
       }
       HPtNTransform(TN, ptN, ptN);
       HPtNMinMax(minN, maxN, ptN);
@@ -123,14 +130,22 @@ BBox *BezierBound(Bezier *bezier, Transform T, TransformN *TN)
     /* ordinary 3d transform, treat 4d co-ordinates as homogeneous
      * co-ordinates.
      */
-
-    min = *(HPoint3 *)p;
+    if (stride == 3) {
+      Pt3ToHPt3((Point3 *)p, &min, 1);
+    } else {
+      min = *(HPoint3 *)p;
+    }
     HPt3Transform(T, &min, &min);
     HPt3Dehomogenize(&min, &min);
     max = min;
     while(--n > 0) {
       p += stride;
-      HPt3Transform(T, (HPoint3 *)p, &clean);
+      if (stride == 3) {
+	Pt3ToHPt3((Point3 *)p, &clean, 1);
+      } else {
+	clean = *(HPoint3 *)p;
+      }
+      HPt3Transform(T, &clean, &clean);
       HPt3MinMax(&min, &max, &clean);
     }
     /* At this point we are ready to generate a 3d bounding box */
