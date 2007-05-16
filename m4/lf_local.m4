@@ -74,7 +74,7 @@ AC_DEFUN([LF_LINK_HEADERS],[
 	  # assume it will be located in the build-directory
  	  $LN_S "`pwd`/$lf_dir/$lf_file" "$lf_directory/$lf_file"
 	fi
-	if echo ${lf_file}|fgrep -qs 'P.h'; then
+	if echo ${lf_file}|fgrep 'P.h' > /dev/null 2>&1; then
 	  GEOMVIEWPRIVHDRFILES="${GEOMVIEWPRIVHDRFILES} include/${lf_file}"
 	else
 	  GEOMVIEWHDRFILES="${GEOMVIEWHDRFILES} include/${lf_file}"
