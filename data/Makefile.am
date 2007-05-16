@@ -135,11 +135,15 @@ nobase_dist_geomdata_DATA = \
 	geom/textured/dodec.off \
 	geom/textured/lunar-t.oogl \
 	geom/textured/rabbitball \
-	geom/textured/rabbits.ppm.gz \
 	geom/textured/square.off \
 	geom/textured/themi.bez \
 	geom/textured/sphere.gcl \
 	geom/textured/Earth.pam.bz2 \
+	geom/textured/NASA.pgm.gz \
+	geom/textured/geologo.pgm.gz \
+	geom/textured/grid.pgm.gz \
+	geom/textured/rabbits.ppm.gz \
+	geom/textured/white.pgm.gz \
 	geom/torus.bez \
 	geom/torus3.oogl \
 	geom/torus8.oogl \
