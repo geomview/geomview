@@ -647,7 +647,9 @@ emodule_run(emodule *em)
   pfrom.r = pfrom.w = -1;
   if (pipe((int *)&pfrom) < 0 || pipe((int *)&pto) < 0) {
     OOGLError(1, "Can't create pipe to external module: %s", sperror());
-    close(pfrom.r); close(pfrom.w);
+    if (pfrom.r >= 0) {
+      close(pfrom.r); close(pfrom.w);
+    }
     return NULL;
   }
 
@@ -690,18 +692,20 @@ emodule_run(emodule *em)
 
     close(pfrom.r);
     close(pto.w);
-    dup2(pto.r, 0);
+    dup2(pto.r, STDIN_FILENO);
     close(pto.r);
-    dup2(pfrom.w, 1);
+    dup2(pfrom.w, STDOUT_FILENO);
     close(pfrom.w);
     signal(SIGPIPE, SIG_DFL);
     signal(SIGCHLD, SIG_DFL);
     execl("/bin/sh", "sh", "-c", program, NULL);
 
-    write(2, rats, sizeof(rats)-1);
+    write(STDERR_FILENO, rats, sizeof(rats)-1);
     perror(em->text);
     exit(1);
   }
+  default: /* parent */
+    break;
   }
 
   close(pto.r);
