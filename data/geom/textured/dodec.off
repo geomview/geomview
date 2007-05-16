@@ -1,7 +1,7 @@
 appearance {
   +texturing
   texture {
-	file grid.pgm.Z
+	file grid.pgm.gz
   }
 }
 STOFF

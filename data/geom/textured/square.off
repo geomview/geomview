@@ -2,7 +2,7 @@ appearance {
   +texturing
   texture {
 	#file ../../modules/orrery/earth.ppm.Z
-	file grid.pgm.Z
+	file grid.pgm.gz
   }
 }
 # STOFF

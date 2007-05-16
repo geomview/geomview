@@ -1,11 +1,12 @@
 appearance {
-    shading smooth
-    texture {
-	file white.pgm.Z
-	alphafile grid.pgm.Z
-	apply modulate
-	transform 2 0 0 0  0 2 0 0  0 0 1 0  0 0 0 1
-    }
+  shading smooth
+  +texturing
+  texture {
+    file white.pgm.gz
+    alphafile grid.pgm.gz
+    apply modulate
+    transform 2 0 0 0  0 2 0 0  0 0 1 0  0 0 0 1
+  }
 }
 # ../orbit/mkparaboloid .5 1 -t
 NUMESH

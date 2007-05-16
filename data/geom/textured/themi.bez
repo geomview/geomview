@@ -1,6 +1,6 @@
 appearance {
     texture {
-      file geologo.pgm.Z
+      file geologo.pgm.gz
     }
 }
 #
