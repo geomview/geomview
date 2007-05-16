@@ -138,6 +138,8 @@ nobase_dist_geomdata_DATA = \
 	geom/textured/rabbits.ppm.gz \
 	geom/textured/square.off \
 	geom/textured/themi.bez \
+	geom/textured/sphere.gcl \
+	geom/textured/Earth.pam.bz2 \
 	geom/torus.bez \
 	geom/torus3.oogl \
 	geom/torus8.oogl \

@@ -1,0 +1,24 @@
+(read image { define worldimage
+  data RGBA { < Earth.pam.bz2 }
+})
+(read appearance { define texap
+  -transparent
+  texturing
+  shading flat
+  * mipmap
+  * mipinterp
+  * linear
+  edge
+  material {
+    diffuse 0.839000 1.000000 0.461000
+  }
+  texture {
+    clamp none
+    apply replace
+    image { : worldimage }
+  }
+})
+(geometry sphere {
+  appearance { : texap }
+  STSPHERE CYLINDRICAL 1 0 0 0
+})
