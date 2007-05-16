@@ -1,7 +1,8 @@
 appearance {
-    texture {
-      file geologo.pgm.gz
-    }
+  +texturing
+  texture {
+    file geologo.pgm.gz
+  }
 }
 #
 # homogeneous biquadratic Bezier patch for a hemisphere
