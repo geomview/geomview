@@ -82,6 +82,11 @@ static const int o_nonblock =
 #endif
     0;
 
+#if !defined(O_NONBLOCK) && !defined(O_NDELAY) \
+ && !defined(FNONBLK) && !defined(FNDELAY)
+# error Do not know how to achieve non-blocking IO
+#endif
+
 static DBLLIST(AllPools);
 static DEF_FREELIST(Pool);
 
