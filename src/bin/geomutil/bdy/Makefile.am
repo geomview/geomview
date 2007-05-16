@@ -9,7 +9,6 @@ EXTRA_DIST = drawbdy.sh $(man_MANS)
 bin_PROGRAMS = bdy
 bdy_SOURCES = bdy.c
 bdy_DEPENDENCIES = $(OOGLLIB)
-#bdy_LDFLAGS = -rpath $(libdir)
 
 module_SCRIPTS = drawbdy
 module_DATA = .geomview-drawbdy
@@ -17,8 +16,10 @@ module_DATA = .geomview-drawbdy
 CLEANFILES = drawbdy
 
 drawbdy: drawbdy.sh Makefile
-	sed -e 's|%GEOMBIN%|$(moduledir)|g'       \
-	    < $(srcdir)/drawbdy.sh > drawbdy
+	sed \
+ -e "s|%SHELL%|`eval eval eval echo @SHELL@`|g" \
+ -e "s|%bindir%|`eval eval eval echo $(bindir)`|g" \
+ < $(srcdir)/drawbdy.sh > drawbdy
 	chmod +x drawbdy
 
 .geomview-drawbdy:
@@ -27,9 +28,5 @@ drawbdy: drawbdy.sh Makefile
 all-local:
 	$(top_srcdir)/mkmodulesdir $(top_builddir)
 	echo '(emodule-define "Draw Boundary" "$(subdir)/drawbdy")' > $(top_builddir)/modules/.geomview-drawbdy
-
-# install-geomview-dotfile: drawbdy
-# 	$(top_builddir)/mkmodulesdir $(top_builddir)
-# 	echo '(emodule-define "Draw Boundary" "$(subdir)/drawbdy")' > $(top_builddir)/modules/.geomview-drawbdy
 
 DISTCLEANFILES = .geomview-drawbdy

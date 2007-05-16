@@ -1,9 +1,8 @@
-#!/bin/sh
+#! %SHELL%
 
-echo "(write geometry - targetgeom world)";
-echo "(new-geometry Boundary ";
+echo "(write geometry - targetgeom world)"
+echo "(new-geometry Boundary "
 
-PATH=%GEOMBIN%:$PATH bdy
+%bindir%/bdy
 
-echo ")";
-
+echo ")"
