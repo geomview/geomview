@@ -1145,7 +1145,15 @@ void Xmg_getwinsize(int *xsize, int *ysize, int *xorig, int *yorig)
         handler = XSetErrorHandler(myXErrorHandler);
 	XShmAttach(_mgx11c->mgx11display, &(current->shminf));
 	XSync(_mgx11c->mgx11display, False);
+#if 0
+	/* Grumf. If there is really no object to draw, then we catch
+	 * an X error when using XShm. I failed (GNAH) to figure this
+	 * out, so just resurrect the (fucking brain damaged) policy
+	 * to install a custom error handler which hides this BUG. cH
+	 * (2007). Shit.
+	 */
 	XSetErrorHandler(handler);
+#endif
 	shmctl(current->shminf.shmid, IPC_RMID, 0);
         if (globalXError == 1)
         {
