@@ -2495,6 +2495,8 @@ new_dgeom(char *from, enum citizenship citizenship)
   case ALIEN:
     ListAppend(drawerstate.universe, dg->Item);
     break;
+  default:
+    break; /* cannot happen, shut-off a compiler warning */
   }
 
   return dg;
