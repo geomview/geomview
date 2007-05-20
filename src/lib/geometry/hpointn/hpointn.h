@@ -651,7 +651,7 @@ HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to)
  * least.
  *
  * T already contains all necessary permutations and the projection to
- * map from to result properly.
+ * map "from" to result "properly".
  */
 static inline HPoint3 *
 HPtNTransProj(const TransformN *T,
@@ -763,7 +763,7 @@ HPt3NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
     for (i = 0; i < odim; i++) {
       to->v[i] = 0;
       for (j = 0; j < idim; j++) {
-	to->v[i] += v[(j+1)%4] * T->a[j*odim+i];
+	to->v[i] += v[(j+3)%4] * T->a[j*odim+i];
       }
     }
   } else if (idim > 4) {
@@ -772,7 +772,7 @@ HPt3NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
     for(i = 0; i < odim; i++) {
       to->v[i] = 0;
       for (j = 0; j < 4; j++) {
-	to->v[i] += v[(j+1)%4] * T->a[j*odim+i];
+	to->v[i] += v[(j+3)%4] * T->a[j*odim+i];
       }
     }
   } else { /* obviously the case idim < dim */
@@ -782,7 +782,7 @@ HPt3NTransform(const TransformN *T, const HPoint3 *from, HPointN *to)
     for (i = 0; i < odim; i++) {
       to->v[i] = 0;
       for (j = 0; j < idim; j++) {
-	to->v[i] += v[(j+1) % 4] * T->a[j*odim+i];
+	to->v[i] += v[(j+3) % 4] * T->a[j*odim+i];
       }
       if (i >= idim && i < 4) {
 	to->v[i] += v[i];
