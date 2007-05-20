@@ -6,7 +6,7 @@ INCLUDES =\
  $(default_includes) \
  $(TK_ALL_INCLUDES)
 
-LDADD = $(TK_LIB) $(TCL_LIB) $(XLIBS) $(OOGLLIB)
+LDADD = $(OOGLLIB) $(TK_LIB) $(TCL_LIB) $(XLIBS)
 
 module_tcldir = $(moduledir)/tcl
 
