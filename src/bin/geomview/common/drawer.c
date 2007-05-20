@@ -1112,7 +1112,7 @@ drawer_dgeom(int id, GeomStruct *gs)
        * We could also hang the BSP-tree to dg->Item, but that would
        * require special handling of BSP-trees in InstTransform[To]().
        */
-      GeomBSPTree(dg->Lgeom, dg->Lgeom->bsptree, BSPTREE_CREATE);
+      GeomBSPTree(dg->Lgeom, NULL, BSPTREE_CREATE);
     }
   }
 
