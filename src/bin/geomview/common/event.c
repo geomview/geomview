@@ -840,7 +840,7 @@ view_pick( DView *dv, int x, int y, Pick *pick )
   }
 
   if (drawerstate.NDim > 0) {
-    TransformN *V, *Tnet, *Tmodel, *Tworld;
+    TransformN *V, *W, *Tnet, *Tmodel, *Tworld;
     
     V = drawer_ND_CamView(dv, NULL);
     
@@ -875,6 +875,9 @@ view_pick( DView *dv, int x, int y, Pick *pick )
 	    chosen = id;
 	    /* Arrange for things to be in world coords not Dgeom coords. */
 	    pick->TwN = TmNConcat(pick->TwN, Tmodel, pick->TwN);
+	    W = drawer_get_ND_transform(WORLDGEOM, id);
+	    pick->TselfN = TmNConcat(pick->TwN, W, pick->TselfN);
+	    TmNDelete(W);
 	  }
 	  TmNDelete(Tmodel);
 	  TmNDelete(Tnet);
@@ -927,6 +930,8 @@ view_pick( DView *dv, int x, int y, Pick *pick )
   LOOPSOMEGEOMS(i,dg,ORDINARY) {
     if (dg->pickable) {
       Geom *g = NULL;
+      int id = GEOMID(i);
+
       if (dg->Lgeom) {
 	GeomPosition( dg->Item, Tmodel );
 	GeomPosition( dg->Inorm, Tnorm );
@@ -935,7 +940,7 @@ view_pick( DView *dv, int x, int y, Pick *pick )
 	GeomGet( dg->Lgeom, CR_GEOM, &g );
 	ap = drawer_get_ap(dg->id);
 	if (GeomMousePick( g, pick, ap, Tnet, NULL, NULL, xpick, ypick )) {
-	  chosen = GEOMID(i);
+	  chosen = id;
 	  /* We remember oldTw to print out info below for debugging only */
 	  TmCopy(pick->Tw, oldTw);
 	  /* This is necessary!  Arranges for things to be in world
@@ -943,10 +948,7 @@ view_pick( DView *dv, int x, int y, Pick *pick )
 	   * transform, Tw is (more or less) screen -> dgeom
 	   */
 	  TmConcat(pick->Tw, Tt, pick->Tw);
-	  /* cH: This is the single and only place where Tself is
-	   * referenced. strange.
-	   */
-	  drawer_get_transform(WORLDGEOM, pick->Tself, GEOMID(i));
+	  drawer_get_transform(WORLDGEOM, pick->Tself, id);
 	  TmConcat(pick->Tw, pick->Tself, pick->Tself);
 	}
 	ApDelete(ap);
@@ -1053,7 +1055,9 @@ LDEFINE(rawpick, LINT,
   pick = PickSet(NULL, PA_WANT, PW_EDGE|PW_VERT|PW_FACE, PA_END);
   pickedid= view_pick( (DView *)drawer_get_object(id), x, y, pick );
 
-  emit_pick(pickedid, pick);
+  if (pickedid != NOID) {
+    emit_pick(pickedid, pick);
+  }
   PickDelete(pick);
   return LNew(LINT, &pickedid);
 }
@@ -1067,6 +1071,11 @@ emit_pick(int pickedid, Pick *pick)
 
   LInterest *interest = LInterestList("pick");
 
+  if (pickedid == NOID) {
+    OOGLError(0,"emit_pick: cowardly refusing to handle an empty pick");
+    return;
+  }
+
   VVINIT(done, char, 128);
   if(interest) {
     vvuse(&done, donebits, COUNT(donebits));
@@ -1076,100 +1085,225 @@ emit_pick(int pickedid, Pick *pick)
 #define DONEID(id) *VVINDEX(done, char, id-CAMID(-20))
 
   for ( ; interest != NULL; interest = interest->next) {
-    Transform T;
-    float got[4];
-    HPoint3 v, e[2];
-    HPoint3 *f;
-    int gn, vn, vi, en, ei[2], ein, coordsysid, fn, fi;
+    int coordsysid;
 
     /* extract the coord system to use from the interest filter;
        if none given, use world */
-    if (   interest->filter
-	   && interest->filter->car
-	   && (LFILTERVAL(interest->filter->car)->flag == VAL)) {
+    if (interest->filter
+	&& interest->filter->car
+	&& (LFILTERVAL(interest->filter->car)->flag == VAL)) {
       if (!LFROMOBJ(LID)(LFILTERVAL(interest->filter->car)->value,
 			 &coordsysid)) {
-	OOGLError(0,"rawpick: bad coord sys filter type");
+	OOGLError(0,"emit_pick: bad coord sys filter type");
 	continue;
       }
     } else {
       coordsysid = WORLDGEOM;
     }
 
-    /*  T = transform converting to the coord system of coordsysid */
-    /* This section does the setup for the total hack */
+    if (drawerstate.NDim > 0) {
+      /* In an ND-context, we report the 3d-quantities picked in the
+       * 3d sub-space of the camera where the pick occurred. The
+       * interested parties still have access to the ND-co-ordinates
+       * by means of the vertex/edge/face indices.
+       *
+       * We use TmNMap() to map the 3d vertices to the full Nd-space.
+       */
+      int dim = drawerstate.NDim;
+      TransformN *T, *tmp;
+      HPointN *got = NULL;
+      HPointN *v = NULL;
+      VARARRAY(e, HPtNCoord, 2*dim);
+      VARARRAY(f, HPtNCoord, pick->found & PW_FACE ? pick->fn * dim : 0);
+      int gn, vn, vi, en, ei[2], ein, fn, fi;
 
-    /* Total hack gigantic if statement */
-    if (!DONEID(coordsysid)) {
-      DONEID(coordsysid) = 1;
-      switch(coordsysid) {
-      case WORLDGEOM:
-	TmCopy(pick->Tw, T); break;
-      case PRIMITIVE:
-	TmCopy(pick->Tmirp, T); break;
-      case SELF:
-	TmCopy(pick->Tself, T); break;
-      default:
-	drawer_get_transform(WORLDGEOM, T, coordsysid);
-	TmConcat(pick->Tw, T, T);
-	break;
-      }
+      /*  T = transform converting to the coord system of coordsysid */
+      /* This section does the setup for the total hack */
 
-      if (pickedid != NOID) {
-	Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
-	got[3] = 1;
-	gn = 4;
-      } else
-	gn = 0;
+      /* Total hack gigantic if statement */
+      if (!DONEID(coordsysid)) {
+	DONEID(coordsysid) = 1;
+	switch(coordsysid) {
+	case WORLDGEOM:
+	  T = TmNMap(pick->TwN, pick->axes, NULL);
+	  break;
+	case PRIMITIVE:
+	  T = TmNMap(pick->TmirpN, pick->axes, NULL);
+	  break;
+	case SELF:
+	  T = TmNMap(pick->TselfN, pick->axes, NULL);
+	  break;
+	default:
+	  tmp = drawer_get_ND_transform(WORLDGEOM, coordsysid);
+	  T = TmNConcat(pick->TwN, tmp, NULL);
+	  TmNDelete(tmp);
+	  TmNMap(T, pick->axes, T);
+	  break;
+	}
+
+	if (pickedid != NOID) {
+	  HPoint3 gothpt4;
+
+	  Pt3ToHPt3(&pick->got, &gothpt4, 1);
+	  got = HPt3NTransform(T, &gothpt4, NULL);
+	  gn = got->dim;
+#if 1
+	  {
+	    HPointN *gotn;
+	    
+	    gotn = HPt3ToHPtN(&gothpt4, pick->axes, NULL);
+	    HPtNTransform(pick->TwN, gotn, gotn);
+	    HPtNDelete(gotn);
+	  }
+#endif
+	} else {
+	  got = NULL;
+	  gn = 0;
+	}
       
-      if (pick->found&PW_VERT) {
-	HPt3Transform(T, &(pick->v), &v);
-	vn = 4;
-	vi = pick->vi;
-      } else {
-	vn = 0;
-	vi = -1;
-      }
+	if (pick->found & PW_VERT) {
+	  v = HPt3NTransform(T, &pick->v, NULL);
+	  vn = v->dim;
+	  vi = pick->vi;
+	} else {
+	  v = NULL;
+	  vn = 0;
+	  vi = -1;
+	}
       
-      if (pick->found&PW_EDGE) {
-	HPt3TransformN(T, pick->e, &e[0], 2);
-	en = 8;
-	ei[0] = pick->ei[0];
-	ei[1] = pick->ei[1];
-	ein = 2;
-      } else {
-	en = 0;
-	ein = 0;
-      }
-      if (pick->found & PW_FACE) {
-	f = OOGLNewNE(HPoint3, pick->fn, "rawpick");
-	HPt3TransformN(T, pick->f, f, pick->fn);
-	fi = pick->fi;
-	fn = pick->fn * 4;
-      }
-      else {
-	f = NULL;
-	fn = 0;
-	fi = -1;
-      }
+	if (pick->found & PW_EDGE) {
+	  HPointN tmp;
+	  
+	  tmp.dim   = T->odim;
+	  tmp.flags = 0;
+
+	  tmp.v = e+0;   HPt3NTransform(T, &pick->e[0], &tmp);
+	  tmp.v = e+dim; HPt3NTransform(T, &pick->e[1], &tmp);
+	  en = 2*dim;
+	  ei[0] = pick->ei[0];
+	  ei[1] = pick->ei[1];
+	  ein = 2;
+	} else {
+	  en = 0;
+	  ein = 0;
+	}
+	if (pick->found & PW_FACE) {
+	  HPointN tmp;
+	  int i;
+	  
+	  tmp.dim   = T->odim;
+	  tmp.flags = 0;
+	  for (i = 0; i < pick->fn; i++) {
+	    tmp.v = &f[i*dim];
+	    HPt3NTransform(T, pick->f+i, &tmp);
+	  }
+	  fi = pick->fi;
+	  fn = pick->fn * dim;
+	} else {
+	  fn = 0;
+	  fi = -1;
+	}
       
-      /* Cause of total hack.
-       * This CANNOT be called once for every interested party - otherwise
-       * every interested party will hear about it numerous times. */
-      gv_pick(coordsysid, pickedid,
-	      got, gn,
-	      &v.x, vn,
-	      &e[0].x, en,
-	      (float *)f, fn, 	/* f, fn, */
-	      VVEC(pick->gpath, int), VVCOUNT(pick->gpath),
-	      vi,
-	      ei, ein,
-	      fi
-	      );
+	/* Cause of total hack.
+	 * This CANNOT be called once for every interested party - otherwise
+	 * every interested party will hear about it numerous times. */
+	gv_pick(coordsysid, pickedid,
+		got ? got->v : NULL, gn,
+		v ? v->v : NULL, vn,
+		e, en,
+		f, fn,
+		VVEC(pick->gpath, int), VVCOUNT(pick->gpath),
+		vi,
+		ei, ein,
+		fi);
 
-      if (f != NULL) OOGLFree(f);
+	HPtNDelete(got);
+	HPtNDelete(v);
+	TmNDelete(T);
 
-    } /* End of total hack if statement */
+      } /* End of total hack if statement */
+
+    } else {
+      /*  T = transform converting to the coord system of coordsysid */
+      /* This section does the setup for the total hack */    
+      Transform T;
+      float got[4];
+      HPoint3 v, e[2];
+      HPoint3 *f;
+      int gn, vn, vi, en, ei[2], ein, fn, fi;
+
+      /* Total hack gigantic if statement */
+      if (!DONEID(coordsysid)) {
+	DONEID(coordsysid) = 1;
+	switch(coordsysid) {
+	case WORLDGEOM:
+	  TmCopy(pick->Tw, T); break;
+	case PRIMITIVE:
+	  TmCopy(pick->Tmirp, T); break;
+	case SELF:
+	  TmCopy(pick->Tself, T); break;
+	default:
+	  drawer_get_transform(WORLDGEOM, T, coordsysid);
+	  TmConcat(pick->Tw, T, T);
+	  break;
+	}
+
+	if (pickedid != NOID) {
+	  Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
+	  got[3] = 1;
+	  gn = 4;
+	} else {
+	  gn = 0;
+	}
+      
+	if (pick->found & PW_VERT) {
+	  HPt3Transform(T, &(pick->v), &v);
+	  vn = 4;
+	  vi = pick->vi;
+	} else {
+	  vn = 0;
+	  vi = -1;
+	}
+      
+	if (pick->found & PW_EDGE) {
+	  HPt3TransformN(T, pick->e, &e[0], 2);
+	  en = 8;
+	  ei[0] = pick->ei[0];
+	  ei[1] = pick->ei[1];
+	  ein = 2;
+	} else {
+	  en = 0;
+	  ein = 0;
+	}
+	if (pick->found & PW_FACE) {
+	  f = OOGLNewNE(HPoint3, pick->fn, "rawpick");
+	  HPt3TransformN(T, pick->f, f, pick->fn);
+	  fi = pick->fi;
+	  fn = pick->fn * 4;
+	} else {
+	  f = NULL;
+	  fn = 0;
+	  fi = -1;
+	}
+      
+	/* Cause of total hack.
+	 * This CANNOT be called once for every interested party - otherwise
+	 * every interested party will hear about it numerous times. */
+	gv_pick(coordsysid, pickedid,
+		got, gn,
+		&v.x, vn,
+		&e[0].x, en,
+		(float *)f, fn, 	/* f, fn, */
+		VVEC(pick->gpath, int), VVCOUNT(pick->gpath),
+		vi,
+		ei, ein,
+		fi);
+
+	if (f != NULL) OOGLFree(f);
+
+      } /* End of total hack if statement */
+      
+    } /* End of 3d case */
   }
   vvfree(&done);
 }
@@ -1198,12 +1332,11 @@ LDEFINE(pick, LVOID,
 	External modules can find out about pick events by registering\n\
 	interest in calls to \"pick\" via the \"interest\" command.")
 {
-  float got[4], v[4], e[8], f[40];
-  int vi, ei[8], fi, p[40];
-  int gn=4, vn=4, en=8, fn=40, pn = 40;
-  int ein=8;
+  float *got = NULL, *v = NULL, *e = NULL, *f = NULL;
+  int vi, ei[2], fi, *p = NULL;
+  int gn, vn, en, fn, pn;
+  int ein = 2;
   int id, coordsys;
-
 
   /* NOTE: If you change the lisp syntax of this function (which you
      shouldn't do), you must also update the DEFPICKFUNC macro in the
@@ -1211,15 +1344,22 @@ LDEFINE(pick, LVOID,
   LDECLARE(("pick", LBEGIN,
 	    LID, &coordsys,
 	    LID, &id,
-	    LHOLD, LARRAY, LFLOAT, got, &gn,
-	    LHOLD, LARRAY, LFLOAT, v, &vn,
-	    LHOLD, LARRAY, LFLOAT, e, &en,
-	    LHOLD, LARRAY, LFLOAT, f, &fn,
-	    LHOLD, LARRAY, LINT, p, &pn,
+	    LHOLD, LVARARRAY, LFLOAT, &got, &gn,
+	    LHOLD, LVARARRAY, LFLOAT, &v, &vn,
+	    LHOLD, LVARARRAY, LFLOAT, &e, &en,
+	    LHOLD, LVARARRAY, LFLOAT, &f, &fn,
+	    LHOLD, LVARARRAY, LINT, &p, &pn,
 	    LINT, &vi,
 	    LHOLD, LARRAY, LINT, ei, &ein,
 	    LINT, &fi,
 	    LEND));
+
+  if (got) OOGLFree(got);
+  if (v) OOGLFree(v);
+  if (e) OOGLFree(e);
+  if (f) OOGLFree(f);
+  if (p) OOGLFree(p);
+
   return Lt;
 }
 

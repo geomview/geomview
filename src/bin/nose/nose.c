@@ -90,25 +90,110 @@ void handle_pick(FILE *fp, int picked, HPoint3 *gotten,
   fflush(fp);
 }
 
+void handle_ND_pick(FILE *fp, int picked, HPtNCoord *gotten, int dim,
+		    int vert, HPtNCoord *v, int edge, HPtNCoord *e)
+{
+  static int first = 1;
+  HPointN got, e0, e1;
+  TransformN *trans;
+  int i;
+
+  got.flags = e0.flags = e1.flags = 0;
+  got.dim = e0.dim = e1.dim = dim;
+  got.v = gotten;
+  e0.v  = e;
+  e1.v  = e+dim;
+
+  HPtNDehomogenize(&got, &got);
+  fprintf(fp, "(progn\n");
+  if (!picked) {
+    fprintf(fp,"(geometry \"pick\" { LIST } )\n");
+  } else {
+    trans = TmNTranslateOrigin(NULL, &got);
+    fprintf(fp,"(ND-xform-set pick ");
+    TmNPrint(fp, trans);
+    fprintf(fp, ")\n");
+    fprintf(fp,"(geometry \"pick\"\n");
+    if (vert) fprintf(fp, "{ appearance { material { diffuse 1 0 1 } }\n");
+    else fprintf(fp, "{ appearance { material { diffuse 1 1 0 } }\n");
+    fprintf(fp, "  { LIST { :littlebox }\n");
+
+    if (edge && !vert) {
+      HPtNDehomogenize(&e0, &e0);
+      HPtNDehomogenize(&e1, &e1);
+      HPtNComb(-1.0, &got, 1.0, &e0, &e0);
+      HPtNComb(-1.0, &got, 1.0, &e1, &e1);
+      fprintf(fp,
+	      "{\n"
+	      "  appearance { material { diffuse 0 1 1 } }\n"
+	      "  LIST {\n"
+	      "    { INST\n");
+      trans = TmNTranslateOrigin(NULL, &e0);
+      TmNPrint(fp, trans);
+      fprintf(fp,
+	      "      geom :littlebox\n"
+	      "    }\n"
+	      "    { INST\n");
+      trans = TmNTranslateOrigin(NULL, &e1);
+      TmNPrint(fp, trans);
+      fprintf(fp,
+	      "      geom :littlebox\n"
+	      "    }\n"
+	      "    { nSKEL %d\n"
+	      "      2 1\n", dim-1);
+      fprintf(fp,
+	      "     ");
+      for (i = 1; i < dim; i++) {
+	fprintf(fp, " %10.7f", e0.v[i]);
+      }
+      fprintf(fp,
+	      "\n     ");
+      for (i = 1; i < dim; i++) {
+	fprintf(fp, " %10.7f", e1.v[i]);
+      }
+      fprintf(fp,
+	      "\n      2 0 1 1 1 0 1\n"
+	      "    }\n"
+	      "  }\n"
+	      "}\n");
+    }
+    fprintf(fp, "}})\n");
+  }
+  if (first) {
+    fprintf(fp, "(pickable \"pick\" no)\n");
+    first = 0;
+  }
+  fprintf(fp, ")\n");
+  fflush(fp);
+}
+
 DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 	    coordsys,
 	    id,
 	    point, pn,
 	    vertex, vn,
 	    edge, en,
-	    face, fn, 10,
-	    ppath, ppn, 50,
+	    face, fn,
+	    ppath, ppn,
 	    vi,
 	    ei, ein,
 	    fi,
 {	    
   int picked = pn > 0;
+
   handle_pick(stdout, picked, &point, vn>0, &vertex, en>0, edge);
   if (verbose)
     handle_pick(stderr, picked, &point, vn>0, &vertex, en>0, edge);
   return Lt;
-})
+},
+{	      
+  int picked = pn > 0;
 
+  handle_ND_pick(stdout, picked, point, pn, vn>0, vertex, en>0, edge);
+  if (verbose)
+    handle_ND_pick(stderr, picked, point, pn, vn>0, vertex, en>0, edge);
+  return Lt;
+})
 
 void init(void)
 {
@@ -196,3 +281,10 @@ deflittlebox(FILE *fp, float size)
 	  4 1 2 6 5\n\
 	  }})\n", size, size, size);
 }
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */

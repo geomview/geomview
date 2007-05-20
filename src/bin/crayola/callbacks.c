@@ -109,17 +109,8 @@ processed")
   return Lt;
 }
 
-DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
-	    coordsys,
-	    id,
-	    point, pn,
-	    vertex, vn,
-	    edge, en,
-	    face, fn, 10,
-	    ppath, ppn, 50,
-	    vi,
-	    ei, ein,
-	    fi,
+static inline LObject *
+handle_pick(char *id, int pn, int ppath[], int vi, int ei[2], int fi)
 {
   Geom *g;
   ColorA color;
@@ -162,12 +153,12 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
       } if (uiSetAll()) {
 	craySetColorAll(g, &color, ppath);
       } else {
-	craySetColorAt(g, &color, vi, fi, ei, ppath, &vertex);
+	craySetColorAt(g, &color, vi, fi, ei, ppath, NULL /* &vertex */);
       }
       ReplaceObject(g, id);
     }
   } else if (uiGet()) {
-    if (crayGetColorAt(g, &color, vi, fi, ei, ppath, &vertex)) {
+    if (crayGetColorAt(g, &color, vi, fi, ei, ppath, NULL /* &vertex */)) {
       uiChangeColor(&color);
     }
   } else if (uiEliminateColor()) {
@@ -179,7 +170,21 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
   GeomDelete(g);
   thaw();
   return Lt;
-})
+}
+
+DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
+	    coordsys,
+	    id,
+	    point, pn,
+	    vertex, vn,
+	    edge, en,
+	    face, fn,
+	    ppath, ppn,
+	    vi,
+	    ei, ein,
+	    fi,
+	    return handle_pick(id, pn, ppath, vi, ei, fi),
+	    return handle_pick(id, pn, ppath, vi, ei, fi))
 
 void init(void)
 {       

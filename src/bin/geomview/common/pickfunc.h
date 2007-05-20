@@ -18,35 +18,94 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
-#define PICKFUNC(name, maxfaceverts, maxpathlen, body)		\
-LObject *name(Lake *lake, LList *args)				\
-{								\
-  char *coordsys = NULL, *id = NULL;				\
-  HPoint3 point;  int pn = 4;					\
-  HPoint3 vertex; int vn = 4;					\
-  HPoint3 edge[2]; int en = 8;					\
-  HPoint3 face[maxfaceverts]; int fn = maxfaceverts*4;		\
-  int ppath[maxpathlen]; int ppn = maxpathlen;			\
-  int vi;							\
-  int ei[2]; int ein = 2;					\
-  int fi;							\
-								\
-  LDECLARE(("pick", LBEGIN,					\
-	    LSTRING,			&coordsys,		\
-	    LSTRING,			&id,			\
-	    LHOLD, LARRAY, LFLOAT,	&point, &pn,		\
-	    LHOLD, LARRAY, LFLOAT,	&vertex, &vn,		\
-	    LHOLD, LARRAY, LFLOAT,	edge, &en,		\
-	    LHOLD, LARRAY, LFLOAT,	face, &fn,		\
-	    LHOLD, LARRAY, LINT,	ppath, &ppn,		\
-	    LINT,			&vi,			\
-	    LHOLD, LARRAY, LINT,	ei, &ein,		\
-	    LINT,			&fi,			\
-	    LEND));						\
-								\
-  if (1) { body };						\
-  return Lt;							\
-}
+#define PICKFUNC(name, body)						\
+  static inline LObject *pickbody(char *coordsys, char *id,		\
+				  HPoint3 point, int pn,		\
+				  HPoint3 vertex, int vn,		\
+				  HPoint3 edge[2], int en,		\
+				  HPoint3 face[], int fn,		\
+				  int ppath[], int ppn,			\
+				  int vi, int ei[2], int ein, int fi)	\
+  {									\
+    do {								\
+      body;								\
+    } while (false);							\
+    return Lt;								\
+  }									\
+  static inline LObject *pickNDbody(char *coordsys, char *id,		\
+				    float *point, int pn,		\
+				    float *vertex, int vn,		\
+				    float *edge, int en,		\
+				    float *face, int fn,		\
+				    int ppath[], int ppn,		\
+				    int vi, int ei[2], int ein, int fi)	\
+  {									\
+    do {								\
+      NDbody;								\
+    } while (false);							\
+    return Lt;								\
+  }									\
+  LObject *name(Lake *lake, LList *args)				\
+  {									\
+    char *coordsys = NULL, *id = NULL;					\
+    float *varpoint = NULL;  int pn;					\
+    float *varvertex = NULL; int vn;					\
+    float *varedge = NULL; int en;					\
+    float *varface = NULL; int fn;					\
+    int *varppath = NULL; int ppn;					\
+    int vi;								\
+    int ei[2]; int ein = 2;						\
+    int fi;								\
+    LObject *res;							\
+									\
+    LDECLARE(("pick", LBEGIN,						\
+	      LSTRING,			&coordsys,			\
+	      LSTRING,			&id,				\
+	      LHOLD, LVARARRAY, LFLOAT,	&varpoint, &pn,			\
+	      LHOLD, LVARARRAY, LFLOAT,	&varvertex, &vn,		\
+	      LHOLD, LVARARRAY, LFLOAT,	&varedge, &en,			\
+	      LHOLD, LVARARRAY, LFLOAT,	&varface, &fn,			\
+	      LHOLD, LVARARRAY, LINT,	&varppath, &ppn,		\
+	      LINT,			&vi,				\
+	      LHOLD, LARRAY, LINT,	ei, &ein,			\
+	      LINT,			&fi,				\
+	      LEND));							\
+									\
+    if (varpoint == NULL) {						\
+      return Lnil;							\
+    }									\
+									\
+    if (pn == 4) {							\
+      HPoint3 point;							\
+      HPoint3 vertex;							\
+									\
+      if (varpoint) {							\
+	point = *(HPoint3 *)varpoint;					\
+      }									\
+      if (varvertex) {							\
+	vertex = *(HPoint3 *)varvertex;					\
+      }									\
+      res = pickbody(coordsys, id,					\
+		     point, pn,						\
+		     vertex, vn,					\
+		     (HPoint3 *)varedge, en,				\
+		     (HPoint3 *)varface, fn,				\
+		     varppath, ppn, vi, ei, ein, fi);			\
+    } else if (pn > 4) {						\
+      res = pickNDbody(coordsys, id,					\
+		       varpoint, pn,					\
+		       varvertex, vn, varedge, en, varface, fn,		\
+		       varppath, ppn, vi, ei, ein, fi);			\
+    }									\
+									\
+    if (varpoint) OOGLFree(varpoint);					\
+    if (varvertex) OOGLFree(varvertex);					\
+    if (varedge) OOGLFree(varedge);					\
+    if (varface) OOGLFree(varface);					\
+    if (varppath) OOGLFree(varppath);					\
+									\
+    return res;								\
+  }
 
 /*
   Note: the "if (1)" business above is to prevent a warning
@@ -56,45 +115,115 @@ LObject *name(Lake *lake, LList *args)				\
 
 /* Note: Don't use DEFPICKFUNC any more.  Use the newer PICKFUNC
  * instead.  DEFPICKFUNC is provided for backward compatibility.
+ *
+ * cH: the above comment seemingly is ignored by everybody ...
  */
-#define DEFPICKFUNC(helpstr,					\
-		    coordsys,					\
-		    id,						\
-		    point, pn,					\
-		    vertex, vn,					\
-		    edge, en,					\
-		    face, fn, maxfaceverts,			\
-		    ppath, ppn, maxpathlen,			\
-		    vi,						\
-		    ei, ein,					\
-		    fi,						\
-		    body)					\
-LDEFINE(pick, LVOID, helpstr)					\
-{								\
-  char *coordsys = NULL, *id = NULL;				\
-  HPoint3 point;  int pn = 4;					\
-  HPoint3 vertex; int vn = 4;					\
-  HPoint3 edge[2]; int en = 8;					\
-  HPoint3 face[maxfaceverts]; int fn = maxfaceverts*4;		\
-  int ppath[maxpathlen]; int ppn = maxpathlen;			\
-  int vi;							\
-  int ei[2]; int ein = 2;					\
-  int fi;							\
-								\
-  LDECLARE(("pick", LBEGIN,					\
-	    LSTRING,			&coordsys,		\
-	    LSTRING,			&id,			\
-	    LHOLD, LARRAY, LFLOAT,	&point, &pn,		\
-	    LHOLD, LARRAY, LFLOAT,	&vertex, &vn,		\
-	    LHOLD, LARRAY, LFLOAT,	edge, &en,		\
-	    LHOLD, LARRAY, LFLOAT,	face, &fn,		\
-	    LHOLD, LARRAY, LINT,	ppath, &ppn,		\
-	    LINT,			&vi,			\
-	    LHOLD, LARRAY, LINT,	ei, &ein,		\
-	    LINT,			&fi,			\
-	    LEND));						\
-								\
-  if (1) { body };						\
-  return Lt;							\
-}
+#define DEFPICKFUNC(helpstr,						\
+		    coordsys,						\
+		    id,							\
+		    point, pn,						\
+		    vertex, vn,						\
+		    edge, en,						\
+		    face, fn,						\
+		    ppath, ppn,						\
+		    vi,							\
+		    ei, ein,						\
+		    fi,							\
+		    body,						\
+		    NDbody)						\
+  static inline LObject *pickbody(char *coordsys, char *id,		\
+				  HPoint3 point, int pn,		\
+				  HPoint3 vertex, int vn,		\
+				  HPoint3 edge[2], int en,		\
+				  HPoint3 face[], int fn,		\
+				  int ppath[], int ppn,			\
+				  int vi, int ei[2], int ein, int fi)	\
+  {									\
+    do {								\
+      body;								\
+    } while (false);							\
+    return Lt;								\
+  }									\
+  static inline LObject *pickNDbody(char *coordsys, char *id,		\
+				    float *point, int pn,		\
+				    float *vertex, int vn,		\
+				    float *edge, int en,		\
+				    float *face, int fn,		\
+				    int ppath[], int ppn,		\
+				    int vi, int ei[2], int ein, int fi)	\
+  {									\
+    do {								\
+      NDbody;								\
+    } while (false);							\
+    return Lt;								\
+  }									\
+  LDEFINE(pick, LVOID, helpstr)						\
+  {									\
+    char *coordsys = NULL, *id = NULL;					\
+    float *var##point = NULL;  int pn;					\
+    float *var##vertex = NULL; int vn;					\
+    float *var##edge = NULL; int en;					\
+    float *var##face = NULL; int fn;					\
+    int *var##ppath = NULL; int ppn;					\
+    int vi;								\
+    int ei[2]; int ein = 2;						\
+    int fi;								\
+    LObject *res;							\
+									\
+    LDECLARE(("pick", LBEGIN,						\
+	      LSTRING,			&coordsys,			\
+	      LSTRING,			&id,				\
+	      LHOLD, LVARARRAY, LFLOAT,	&var##point, &pn,		\
+	      LHOLD, LVARARRAY, LFLOAT,	&var##vertex, &vn,		\
+	      LHOLD, LVARARRAY, LFLOAT,	&var##edge, &en,		\
+	      LHOLD, LVARARRAY, LFLOAT,	&var##face, &fn,		\
+	      LHOLD, LVARARRAY, LINT,	&var##ppath, &ppn,		\
+	      LINT,			&vi,				\
+	      LHOLD, LARRAY, LINT,	ei, &ein,			\
+	      LINT,			&fi,				\
+	      LEND));							\
+									\
+    if (var##point == NULL) {						\
+      return Lnil;							\
+    }									\
+									\
+    if (pn == 4) {							\
+      HPoint3 point;							\
+      HPoint3 vertex;							\
+									\
+      if (var##point) {							\
+	point = *(HPoint3 *)var##point;					\
+      }									\
+      if (var##vertex) {						\
+	vertex = *(HPoint3 *)var##vertex;				\
+      }									\
+      res = pickbody(coordsys, id,					\
+		     point, pn,						\
+		     vertex, vn,					\
+		     (HPoint3 *)var##edge, en,				\
+		     (HPoint3 *)var##face, fn,				\
+		     var##ppath, ppn, vi, ei, ein, fi);			\
+    } else if (pn > 4) {						\
+      res = pickNDbody(coordsys, id,					\
+		       var##point, pn,					\
+		       var##vertex, vn, var##edge, en, var##face, fn,	\
+		       var##ppath, ppn, vi, ei, ein, fi);		\
+    }									\
+									\
+    if (var##point) OOGLFree(var##point);				\
+    if (var##vertex) OOGLFree(var##vertex);				\
+    if (var##edge) OOGLFree(var##edge);					\
+    if (var##face) OOGLFree(var##face);					\
+    if (var##ppath) OOGLFree(var##ppath);				\
+									\
+    return res;								\
+  }
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
+
+  
