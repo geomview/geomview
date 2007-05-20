@@ -128,10 +128,11 @@ Initialize()
  * variables that hold information about the pick.  For details see
  * Example 3 in the Extenal Modules chapter of the geomview manual.
  */
-PICKFUNC(Lpick, 1, 1,
+PICKFUNC(Lpick,
 {           
   handle_pick(pn>0, &point, vn>0, &vertex, en>0, edge);
-})
+},
+/* ND-stuff */)
 
 handle_pick(picked, p, vert, v, edge, e)
      int picked;                /* was something actually picked?     */
