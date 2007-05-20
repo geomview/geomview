@@ -18,7 +18,7 @@
  * to the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139,
  * USA, or visit http://www.gnu.org.
  */
-#define PICKFUNC(name, body)						\
+#define PICKFUNC(name, body, NDbody)					\
   static inline LObject *pickbody(char *coordsys, char *id,		\
 				  HPoint3 point, int pn,		\
 				  HPoint3 vertex, int vn,		\
