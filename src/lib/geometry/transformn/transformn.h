@@ -1100,8 +1100,8 @@ TmNMap(const TransformN *from, int *axes, TransformN *to)
  * a lot of floating point operations, especially in higher
  * diemensions.
  * 
- * To will be an idim x 4 matrix. If perm contains dimensions not
- * present in from, then we can simply ignore those.
+ * To will be an idim x 4 matrix. If "perm" contains dimensions not
+ * present in "from", then we can simply ignore those.
  */
 static inline TransformN *
 TmNProject(const TransformN *from, int *perm, TransformN *to)
