@@ -10,7 +10,7 @@ all-local: clisp.c clisp.h
 
 clisp.h: clisp.c
 
-clisp.c: lisp.c
+clisp.c: lisp.c lisp.h
 	$(srcdir)/lisp2c -o $(srcdir)/clisp $(srcdir)/lisp.c
 
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
