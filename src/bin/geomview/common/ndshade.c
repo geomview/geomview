@@ -166,12 +166,12 @@ static void *saveCTX(mgNDctx *NDctx)
   } else {
     savedCTX->Tc = NULL;
   }
+#if 0
   savedCTX->rest = nds->rest;
   nds->rest = TmNCopy(nds->rest, NULL);
   TmCopy(nds->MGFactor, savedCTX->MGFactor);
   memcpy(savedCTX->perm, nds->perm, nds->T->idim * sizeof(int));
 
-#if 0
   mgpushtransform();
 #endif
   
@@ -225,10 +225,12 @@ static void restoreCTX(mgNDctx *NDctx, void *vsavedCTX)
     TmNDelete(nds->Tc);
   }
   nds->Tc = savedCTX->Tc;
+#if 0
   TmNDelete(nds->rest);
   nds->rest = savedCTX->rest;
   TmCopy(savedCTX->MGFactor, nds->MGFactor);
   memcpy(nds->perm, savedCTX->perm, nds->T->idim * sizeof(int));
+#endif
 
   OOGLFree(savedCTX);
 }
@@ -299,8 +301,11 @@ NDstuff *drawer_init_ndstuff(DView *dv, TransformN *W2C, TransformN *W2U)
    * operations.
    */
   nds->T    = NULL;
+
+#if 0
   nds->rest = NULL;
   nds->perm = OOGLNewNE(int, dim, "permutation for fast ND mapping");
+#endif
 
   nds->W2C = TmNProject(W2C, dv->NDPerm, NULL);
 
@@ -313,9 +318,12 @@ void drawer_destroy_ndstuff(NDstuff *nds)
   TmNDelete(nds->W2c);
 
   TmNDelete(nds->T);
+  TmNDelete(nds->W2C);
+
+#if 0
   TmNDelete(nds->rest);
   OOGLFree(nds->perm);
-  TmNDelete(nds->W2C);
+#endif
 
   HPtNDelete(nds->hc);
 

@@ -53,6 +53,14 @@ typedef struct NDstuff
 			 * sub-space.
 			 */
 
+#if 0
+  Transform  MGFactor;  /* 4x4 transform handed over to the mg layer */
+  TransformN *rest;     /* remaining (Nd-4) lines, contained in the
+			 * rows (4..Nd)
+			 */
+  int *perm;            /* permuation on the rows of T */
+#endif
+
   TransformN *W2c;      /* Universe-to-Color transform */
   TransformN *Tc;	/* object-to-coloring-space-transform */
   int ncm;		/* number of colormaps */
