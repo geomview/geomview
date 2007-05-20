@@ -6,3 +6,4 @@ pickP.h
 vert.h
 bsptree.h
 bsptreeP.h
+nodedata.h

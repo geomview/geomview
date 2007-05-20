@@ -21,6 +21,7 @@
 #define _GV_BSPTREE_P_H_
 
 #include "geomclass.h"
+#include "nodedata.h"
 #include "bsptree.h"
 
 #include "obstack.h"

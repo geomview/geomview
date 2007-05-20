@@ -31,6 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 #include "listP.h"
+#include "nodedata.h"
 
 /*
  * List editing, deletion and creation.
@@ -153,6 +154,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
     int attr, copy = 1;
     Handle *h;
     Geom *g;
+    bool tree_changed = false;
 
     if (exist == NULL) {
 	list = OOGLNewE( List, "ListCreate: new List" );
@@ -191,6 +193,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 			       (Ref *)list, &list->car, HandleUpdRef);
 		HandleSetObject(list->carhandle, (Ref *)g);
 	    }
+	    tree_changed = true;
 	    break;
 	case CR_GEOM:	/* == CR_CAR */
 	    if (list->car != NULL || list->carhandle != NULL) {
@@ -206,9 +209,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    if (copy) {
 		RefIncr((Ref *)list->car);
 	    }
-	    if (list->bsptree) {
-		BSPTreeFreeTree(list->bsptree);
-	    }
+	    tree_changed = true;
 	    break;
 	case CR_GEOMHANDLE:
 	    if (list->car != NULL || list->carhandle != NULL) {
@@ -216,6 +217,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		l->car = list->car;
 		l->carhandle = list->carhandle;
 		l->cdr = list->cdr;
+		list->cdr = l;
 		list->car = NULL;
 	    }
 	    h = va_arg(*a_list, Handle *);
@@ -224,6 +226,7 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 	    list->carhandle = h;
 	    HandleRegister(&list->carhandle,
 			   (Ref *)list, &list->car, HandleUpdRef);
+	    tree_changed = true;
 	    break;
 	case CR_CDR:
 	    l = va_arg (*a_list, List *);
@@ -239,19 +242,22 @@ List *ListCreate (List *exist, GeomClass *Classp, va_list *a_list )
 		RefIncr((Ref *)l);
 	    }
 	    list->cdr = l;
-	    if (list->bsptree) {
-		BSPTreeFreeTree(list->bsptree);
-	    }
+	    tree_changed = true;
 	    break;
 	default:
 	    if (GeomDecorate (list, &copy, attr, a_list)) {
 		OOGLError (0, "ListCreate: Undefined attribute: %d", attr);
 
 	      fail:
-		if (exist == NULL)
+		if (exist == NULL) {
 		    GeomDelete ((Geom *)list);
+		}
 		return NULL;
 	    }
+    }
+
+    if (tree_changed) {
+	GeomNodeDataPrune((Geom *)list);
     }
 
     return list;

@@ -38,6 +38,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "transobj.h"
 #include "ntransobj.h"
 #include "freelist.h"
+#include "nodedata.h"
 
 void
 InstDelete(Inst *inst)
@@ -126,6 +127,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
   TransformN *nt;
   Geom *g;
   Handle *h;
+  bool tree_changed = false;
 
   if (exist == NULL) {
     inst = OOGLNewE(Inst, "InstCreate inst");
@@ -159,6 +161,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       }
       inst->geomhandle = h;
       HandleRegister(&inst->geomhandle, (Ref *)inst, &inst->geom, HandleUpdRef);
+      tree_changed = true;
       break;
     case CR_HANDLE_GEOM:
       h = va_arg(*a_list, Handle *);
@@ -180,6 +183,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
 		       (Ref *)inst, &inst->geom, HandleUpdRef);
 	HandleSetObject(inst->geomhandle, (Ref *)g);
       }
+      tree_changed = true;
       break;
     case CR_GEOM:
       g = va_arg(*a_list, Geom *);
@@ -193,14 +197,17 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       if (inst->geomhandle) {
 	HandlePDelete(&inst->geomhandle);
       }
+      tree_changed = true;
       break;
     case CR_AXIS:
       t = va_arg(*a_list, TransformPtr);
       InstTransformTo(inst, t, NULL);
+      tree_changed = true;
       break;
     case CR_NDAXIS:
       nt = va_arg(*a_list, TransformN *);
       InstTransformTo(inst, NULL, nt);
+      tree_changed = true;
       break;
     case CR_AXISHANDLE:
       h = va_arg(*a_list, Handle *);
@@ -214,6 +221,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       if (h) {
 	HandleRegister(&inst->axishandle, (Ref *)inst, inst->axis, TransUpdate);
       }
+      tree_changed = true;
       break;
     case CR_NDAXISHANDLE:
       h = va_arg(*a_list, Handle *);
@@ -226,6 +234,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       inst->NDaxishandle = h;
       HandleRegister(&inst->NDaxishandle,
 		     (Ref *)inst, &inst->NDaxis, HandleUpdRef);
+      tree_changed = true;
       break;
     case CR_TLIST:
       g = va_arg (*a_list, Geom *);
@@ -236,6 +245,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
 	GeomDelete(inst->tlist);
       }
       inst->tlist = g;
+      tree_changed = true;
       break;
     case CR_TLISTHANDLE:
       h = va_arg(*a_list, Handle *);
@@ -248,6 +258,7 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
       inst->tlisthandle = h;
       HandleRegister(&inst->tlisthandle, (Ref *)inst, &inst->tlist,
 		     HandleUpdRef);
+      tree_changed = true;
       break;
     case CR_TXTLIST:
       g = va_arg (*a_list, Geom *);
@@ -277,10 +288,16 @@ Inst *InstCreate(Inst *exist, GeomClass *classp, va_list *a_list)
     default:
       if(GeomDecorate(inst, &copy, attr, a_list)) {
 	OOGLError (0, "InstCreate: Undefined option: %d", attr);
-	if(exist == NULL) GeomDelete ((Geom *)inst);
+	if(exist == NULL) {
+	  GeomDelete ((Geom *)inst);
+	}
 	return NULL;
       }
     }
+  }
+
+  if (tree_changed) {
+    GeomNodeDataPrune((Geom *)inst);
   }
 
   return inst;

@@ -34,27 +34,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "geomclass.h"
 #include "handleP.h"
 #include "mg.h"
+#include "nodedata.h"
 
 int PoolDoCacheFiles;
 
 DEF_FREELISTHEAD(NodeData);
-
-static inline void GeomNodeDataPrune(Geom *geom)
-{
-  NodeData *data, *data_next;
-
-  DblListIterate(&geom->pernode, NodeData, node, data, data_next) {
-    DblListDelete(&data->node);
-    if (data->tagged_ap) {
-      mguntagappearance(data->tagged_ap);
-    }
-    if (data->ppath) {
-	free(data->ppath);
-	data->ppath = NULL;
-    }
-    FREELIST_FREE(NodeData, data);
-  }
-}
 
 void GeomDelete(Geom *object)
 {

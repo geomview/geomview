@@ -28,7 +28,7 @@ extern BSPTree *BSPTreeCreate(BSPTree *tree, Geom *object);
 extern void BSPTreeAddObject(BSPTree *bsp_tree, Geom *object);
 extern void BSPTreeFinalize(BSPTree *bsp);
 extern void BSPTreeFree(BSPTree *bsp);
-extern void BSPTreeFreeTree(BSPTree *tree);
+extern void BSPTreeFreeTree(const BSPTree *tree);
 extern void BSPTreeSetAppearance(Geom *object);
 extern BSPTree *BSPTreeSet(BSPTree *tree, int attr1, ...);
 

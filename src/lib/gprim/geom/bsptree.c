@@ -954,8 +954,10 @@ void BSPTreeFinalize(BSPTree *bsptree)
 #endif
 }
 
-void BSPTreeFreeTree(BSPTree *tree)
+void BSPTreeFreeTree(const BSPTree *_tree)
 {
+  BSPTree *tree = (BSPTree *)_tree;
+
   if (tree->tree != NULL || tree->init_lpl != NULL) {
     obstack_free(&tree->obst, NULL);
     obstack_init(&tree->obst);
@@ -1012,6 +1014,7 @@ BSPTree *BSPTreeSet(BSPTree *tree, int attr1, ...)
 BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
 {
   const void **tagged_app = NULL;
+  NodeData *pernode;
 
   if (!geom) {
     return NULL;
@@ -1026,6 +1029,8 @@ BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
     if (tree == NULL) {
       geom->bsptree = tree = BSPTreeCreate(geom->bsptree, geom);
     }
+    pernode = GeomNodeDataCreate(geom, NULL);
+    pernode->node_tree = tree;
     break;
   case BSPTREE_ADDGEOM:
     if (geom == tree->geom) {
@@ -1046,6 +1051,8 @@ BSPTree *GeomBSPTree(Geom *geom, BSPTree *tree, int action)
   
   switch (action) {    
   case BSPTREE_DELETE:
+    pernode = GeomNodeDataByPath(geom, NULL);
+    pernode->node_tree = NULL;
     if (tree->geom == geom) {
       BSPTreeFree(tree);
       tree = geom->bsptree = NULL;

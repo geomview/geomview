@@ -116,9 +116,10 @@ GeomMousePick(Geom *g, Pick *p, Appearance *ap,
     if (g && !pick) {
 	/* Only bother if the caller will get to see these */
 	if (TN) {
-	    p->TwN = TmNInvert(TN, p->TwN);
+	    p->TmirpN = TmNInvert(p->TprimN, p->TmirpN);
+	    p->TwN    = TmNInvert(TN, p->TwN);
 	} else {
-	    TmInvert(p->Tprim, p->Tmirp); /* cH: Why? Nobody uses Tmirp */
+	    TmInvert(p->Tprim, p->Tmirp);
 	    TmInvert(T, p->Tw);
 	}
     }
@@ -207,8 +208,12 @@ PickDelete(Pick *p)
 	OOGLFree(p->f);	/* free the face list, if any */
     if (p->TprimN)
 	TmNDelete(p->TprimN);
+    if (p->TmirpN)
+	TmNDelete(p->TmirpN);
     if (p->TwN)
 	TmNDelete(p->TwN);
+    if (p->TselfN)
+	TmNDelete(p->TselfN);
     vvfree(&p->gcur);
     vvfree(&p->gpath);
     OOGLFree(p);
@@ -234,7 +239,9 @@ PickSet(Pick *p, int attr, ...)
 	VVINIT(p->gpath, int, 1);
 	p->gprim = NULL;
 	p->TprimN = NULL;
+	p->TmirpN = NULL;
 	p->TwN = NULL;
+	p->TselfN = NULL;
 	HPt3From(&p->v, 0.0, 0.0, 0.0, 1.0);
 	p->vi = -1;
 	HPt3From(&p->e[0], 0.0, 0.0, 0.0, 1.0);
@@ -247,6 +254,10 @@ PickSet(Pick *p, int attr, ...)
 	TmIdentity(p->Tw2n);
 	TmIdentity(p->Tc2n);
 	TmIdentity(p->Ts2n);
+	TmIdentity(p->Tprim);
+	TmIdentity(p->Tmirp);
+	TmIdentity(p->Tw);
+	TmIdentity(p->Tself);
     }
     va_start(al, attr);
     for(a = attr; a != PA_END; a = va_arg(al, int)) {

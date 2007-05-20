@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -34,46 +35,46 @@
 #include "ooglutil.h"
 
 struct Pick {
-	Point3 got;
+    Point3 got;
 
-	float thresh;
+    float thresh;
 
-	int want;		/* Fields wanted */
-	int  found;		/* Fields found */
+    int want;		/* Fields wanted */
+    int  found;		/* Fields found */
 
-	vvec gcur;              /* Path to the current primitive - 
-				   used for recursion */
-	vvec gpath;		/* Path to picked primitive */
-	Geom *gprim;		/* Picked primitive */
+    vvec gcur;              /* Path to the current primitive - 
+			       used for recursion */
+    vvec gpath;		/* Path to picked primitive */
+    Geom *gprim;		/* Picked primitive */
 
-	HPoint3 v;		/* picked vertex, if any */
-	int vi;			/* index of picked vertex */
+    HPoint3 v;		/* picked vertex, if any */
+    int vi;			/* index of picked vertex */
 
-	HPoint3 e[2];		/* endpoints of picked edge, if any */
-	int ei[2];		/* indices of endpoints of picked edge */
+    HPoint3 e[2];		/* endpoints of picked edge, if any */
+    int ei[2];		/* indices of endpoints of picked edge */
 
-	Transform Tprim;	/* gprim -> screen */
-	Transform Tmirp;
-	Transform Tw;
-	Transform Tself;
+    Transform Tprim;	/* gprim -> screen */
+    Transform Tmirp;
+    Transform Tw;
+    Transform Tself;
 
-	/* for ND-viewing. Note that we do not bother about Tmirp and
-	 * Tself, none of them is used anywhere. Strange. cH.
-	 */
-	TransformN *TprimN;
-	int        axes[4];     /* the relevant sub-space of the output of 
-				 * TprimN.
-				 */
-	TransformN *TwN;
+    /* for ND-viewing. */
+    TransformN *TprimN;
+    TransformN *TmirpN;
+    int        axes[4];     /* the relevant sub-space of the output of 
+			     * TprimN.
+			     */
+    TransformN *TwN;
+    TransformN *TselfN;
 
-	HPoint3 *f;		/* array of vertices of picked face, if any */
-	int fn;			/* number of vertices in array f */
-	int fi;			/* index of picked face */
+    HPoint3 *f;		/* array of vertices of picked face, if any */
+    int fn;			/* number of vertices in array f */
+    int fi;			/* index of picked face */
 
-	Transform Ts2n;		/* NDC to screen tfm */
-	Transform Tc2n;		/* NDC to camera tfm */
-	Transform Tw2n;		/* NDC to world (global) tfm */
-	float x0, y0;		/* NDC coords of original pick */
+    Transform Ts2n;		/* NDC to screen tfm */
+    Transform Tc2n;		/* NDC to camera tfm */
+    Transform Tw2n;		/* NDC to world (global) tfm */
+    float x0, y0;		/* NDC coords of original pick */
 };
 
 /* 
@@ -119,3 +120,10 @@ int PickFillIn(Pick *pick, int n_verts, Point3 *got, int vertex,
 
 
 #endif /*PICKPDEF*/
+
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 4 ***
+ * End: ***
+ */
