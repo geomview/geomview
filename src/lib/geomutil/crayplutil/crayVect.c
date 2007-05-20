@@ -187,7 +187,7 @@ void *cray_vect_SetColorAt(int sel, Geom *geom, va_list *args) {
 
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  /*findex = */va_arg(*args, int);
+  /*findex = */(void)va_arg(*args, int);
   eindex = va_arg(*args, int *);
   pt = va_arg(*args, HPoint3 *);
   if (vindex != -1) craySetColorAtV(geom, color, vindex, NULL, pt);
@@ -231,7 +231,7 @@ void *cray_vect_GetColorAt(int sel, Geom *geom, va_list *args)
 
   color = va_arg(*args, ColorA *);
   vindex = va_arg(*args, int);
-  /*findex = */va_arg(*args, int);
+  /*findex = */(void)va_arg(*args, int);
   eindex = va_arg(*args, int *);
   if (vindex != -1) 
     return (void *)(long)crayGetColorAtV(geom, color, vindex, NULL, NULL);
