@@ -81,12 +81,12 @@ Geom *PolyListSphere(PolyList *p,
       }
       for (i = 0; i < 2*4; i++) {
 	HPtNTransformComponents(TN, spanPts[i], axes, &spanPts3[i]);
-	HPt3Dehomogenize(&spanPts3[i], &spanPts3[i]);
+	/*HPt3Dehomogenize(&spanPts3[i], &spanPts3[i]);*/
 	HPtNDelete(spanPts[i]);
       }
       SphereEncompassBoundsN(sphere, spanPts3, 4);
       for (i = 0; i < p->n_verts; i++) {
-	*(HPoint3 *)tmp->v = p->vl[i].pt;
+	HPt3ToHPtN(&p->vl[i].pt, NULL, tmp);
 	SphereAddHPtN(sphere, tmp, NULL, TN, axes);
       }
     }
