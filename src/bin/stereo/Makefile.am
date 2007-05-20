@@ -6,7 +6,7 @@ INCLUDES =\
  $(default_includes)\
  -I$(XFORMS_ALL_INCLUDES)
 
-LDADD =	$(XFORMS_ALL_LIB) $(XLIBS) $(OOGLLIB) 
+LDADD = $(OOGLLIB) $(XFORMS_ALL_LIB) $(XLIBS)
 
 EXTRA_DIST = help.txt sterui.fd
 
