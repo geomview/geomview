@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
+ * Copyright (C) 2006-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -52,7 +53,7 @@ typedef struct _pattern {
   int len[MAXPAT];
 } pattern;
 
-static int match(char *str, pattern *p);
+static bool match(char *str, pattern *p);
 static void compile(char *str, pattern *p);
 static int LCompare(char *name, LObject *expr1, LObject *expr2);
 
@@ -66,14 +67,15 @@ static Help *helps = NULL;
 
 static char nomatch[] = "No commands match \"%s\"; see \"(? *)\" for a list.\n";
 
-static int FilterArgMatch(LList *filter, LList *args);
+static bool FilterArgMatch(LList *filter, LList *args);
 static void InterestOutput(char *name, LList *args, LInterest *interest);
 
 static LObject *LFAny, *LFNil;
 static LFilter FAny = {ANY, NULL};
 static LFilter FNil = {NIL, NULL};
 
-static int obj2array(LObject *obj, LType *type, char *x, int *n);
+static bool obj2array(LObject *obj, LType *type, char *x, int *n);
+static bool obj2vararray(LObject *obj, LType *type, char **x, int *n);
 LObject *LMakeArray(LType *basetype, char *array, int count);
 
 static char *delims = "()";
@@ -83,6 +85,7 @@ static char *delims = "()";
  * for quick detection in LParseArgs()/AssignArgs().
  */
 LType Larray = { NULL, -1 };
+LType Lvararray = { NULL, -1 };
 LType Lend = { NULL, -1 };
 LType Lrest = { NULL, -1 };
 LType Lhold = { NULL, -1 };
@@ -110,7 +113,7 @@ static Fsa func_fsa;
  * function prototypes
  */
 
-static int AssignArgs(char *name, LList *args, va_list a_list);
+static LParseResult AssignArgs(char *name, LList *args, va_list a_list);
 static int funcindex(char *name);
 
 static LObject *LSexpr0(Lake *lake, int listhow);
@@ -125,9 +128,9 @@ static LObject *do_interest(Lake *lake, LList *call, char *action);
 
 static void RemoveInterests(LInterest **interest, Lake *lake,
 			    int usefilter, LList *filter);
-static int InterestMatch(LInterest *interest, Lake *lake,
-			 int usefilter, LList *filter);
-static int FilterMatch(LFilter *f1, LFilter *f2);
+static bool InterestMatch(LInterest *interest, Lake *lake,
+			  bool usefilter, LList *filter);
+static bool FilterMatch(LFilter *f1, LFilter *f2);
 static void DeleteInterest(LInterest *interest);
 static LInterest *NewInterest();
 static void AppendInterest(LInterest **head, LInterest *new);
@@ -190,9 +193,7 @@ LObject *Lt = &t;
  * int object implementation
  */
 
-static int intfromobj(obj, x)
-     LObject *obj;
-     int *x;
+static bool intfromobj(LObject *obj, int *x)
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -204,36 +205,29 @@ static int intfromobj(obj, x)
     }
   } else if (obj->type == LINT) {
     *x = LINTVAL(obj);
-  } else return 0;
-  return 1;
+  } else return false;
+  return true;
 }
 
-static LObject *int2obj(x)
-     int *x;
+static LObject *int2obj(int *x)
 {
   return LNew( LINT, x );
 }
 
-static void intfree(x)
-     int *x;
+static void intfree(int *x)
 {}
 
-static int intmatch(a, b)
-     int *a,*b;
+static bool intmatch(int *a, int *b)
 {
   return *a == *b;
 }
 
-static void intwrite(fp, x)
-     FILE *fp;
-     int *x;
+static void intwrite(FILE *fp, int *x)
 {
   fprintf(fp, "%1d", *x);
 }
 
-static void intpull(a_list, x)
-     va_list *a_list;
-     int *x;
+static void intpull(va_list *a_list, int *x)
 {
   *x = va_arg(*a_list, int);
 }
@@ -274,9 +268,7 @@ LType LIntp = {
  * float object implementation
  */
 
-int floatfromobj(obj, x)
-     LObject *obj;
-     float *x;
+bool floatfromobj(LObject *obj, float *x)
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -284,36 +276,29 @@ int floatfromobj(obj, x)
     return cp != LSTRINGVAL(obj) ? 1 : 0;
   } else if (obj->type == LFLOAT) {
     *x = LFLOATVAL(obj);
-  } else return 0;
-  return 1;
+  } else return false;
+  return true;
 }
 
-LObject *float2obj(x)
-     float *x;
+LObject *float2obj(float *x)
 {
   return LNew( LFLOAT, x );
 }
 
-void floatfree(x)
-     float *x;
+void floatfree(float *x)
 {}
 
-int floatmatch(a, b)
-     float *a,*b;
+bool floatmatch(float *a, float *b)
 {
   return *a == *b;
 }
 
-void floatwrite(fp, x)
-     FILE *fp;
-     float *x;
+void floatwrite(FILE *fp, float *x)
 {
   fprintf(fp, "%1g", *x);
 }
 
-void floatpull(a_list, x)
-     va_list *a_list;
-     float *x;
+void floatpull(va_list *a_list, float *x)
 {
   *x = va_arg(*a_list, double);
 }
@@ -358,46 +343,37 @@ LType LFloatp = {
  * string object implementation
  */
 
-int stringfromobj(obj, x)
-     LObject *obj;
-     char * *x;
+bool stringfromobj(LObject *obj, char * *x)
 {
-  if (obj->type != LSTRING) return 0;
+  if (obj->type != LSTRING) return false;
   *x = LSTRINGVAL(obj);
-  return 1;
+  return true;
 }
 
-LObject *string2obj(x)
-     char * *x;
+LObject *string2obj(char * *x)
 {
   char *copy = *x ? strdup(*x) : NULL;
   return LNew( LSTRING, &copy );
 }
 
-void stringfree(x)
-     char * *x;
+void stringfree(char * *x)
 {
   if (*x) free(*x);
 }
 
-int stringmatch(a, b)
-     char **a,**b;
+bool stringmatch(char **a, char **b)
 {
   if (!*a) return *b==NULL;
   if (!*b) return *a==NULL;
   return strcmp(*a,*b)==0 ;
 }
 
-void stringwrite(fp, x)
-     FILE *fp;
-     char * *x;
+void stringwrite(FILE *fp, char * *x)
 {
   fprintf(fp, "\"%s\"", *x);
 }
 
-void stringpull(a_list, x)
-     va_list *a_list;
-     char * *x;
+void stringpull(va_list *a_list, char * *x)
 {
   *x = va_arg(*a_list, char *);
 }
@@ -470,11 +446,11 @@ void LListWrite(FILE *fp, LList *list)
 
 /**********************************************************************/
 
-int listfromobj(LObject *obj, LList * *x)
+bool listfromobj(LObject *obj, LList * *x)
 {
-  if (obj->type != LLIST) return 0;
+  if (obj->type != LLIST) return false;
   *x = LLISTVAL(obj);
-  return 1;
+  return true;
 }
 
 LObject *list2obj(LList * *x)
@@ -488,7 +464,7 @@ void listfree(LList * *x)
   if (*x) LListFree(*x);
 }
 
-int listmatch(LList **a, LList **b)
+bool listmatch(LList **a, LList **b)
 {
   return *a == *b;
 }
@@ -516,30 +492,24 @@ LType LListp = {
   LTypeMagic
 };
 
-int objfromobj(obj, x)
-     LObject *obj;
-     LObject * *x;
+bool objfromobj(LObject *obj, LObject * *x)
 {
   *x = LRefIncr(obj);
-  return 1;
+  return true;
 }
 
-LObject *obj2obj(x)
-     LObject * *x;
+LObject *obj2obj(LObject * *x)
 {
   if (*x) LRefIncr(*x);
   return *x;
 }
 
-void objpull(a_list, x)
-     va_list *a_list;
-     LObject * *x;
+void objpull(va_list *a_list, LObject * *x)
 {
   *x = va_arg(*a_list, LObject *);
 }
 
-int objmatch(a, b)
-     LObject **a,**b;
+bool objmatch(LObject **a, LObject **b)
 {
   return *a == *b;
 }
@@ -584,27 +554,21 @@ void LakeFree(Lake *lake)
  */
 
 
-int lakefromobj(obj, x)
-     LObject *obj;
-     Lake * *x;
+bool lakefromobj(LObject *obj, Lake * *x)
 {
   *x = LLAKEVAL(obj);
-  return 1;
+  return true;
 }
 
-LObject *lake2obj(x)
-     Lake * *x;
+LObject *lake2obj(Lake * *x)
 {
   return LNew( LLAKE, x );
 }
 
-void lakefree(x)
-     Lake * *x;
+void lakefree(Lake * *x)
 {}
 
-void lakewrite(fp, x)
-     FILE *fp;
-     Lake * *x;
+void lakewrite(FILE *fp, Lake * *x)
 {
   fprintf(fp,"-lake-");
 }
@@ -627,45 +591,36 @@ LType LLakep = {
  * function object implementation
  */
 
-int funcfromobj(obj, x)
-     LObject *obj;
-     int *x;
+bool funcfromobj(LObject *obj, int *x)
 {
   if (obj->type == LSTRING) {
     *x = funcindex(LSTRINGVAL(obj));
-    if (*x == REJECT) return 0;
+    if (*x == REJECT) return false;
   } else if (obj->type == LFUNC) {
     *x = LFUNCVAL(obj);
-  } else return 0;
-  return 1;
+  } else return false;
+  return true;
 }
 
-LObject *func2obj(x)
-     int *x;
+LObject *func2obj(int *x)
 {
   return LNew( LFUNC, x );
 }
 
-void funcfree(x)
-     int *x;
+void funcfree(int *x)
 {}
 
-int funcmatch(a, b)
-     int *a,*b;
+bool funcmatch(int *a, int *b)
 {
   return *a == *b;
 }
 
-void funcwrite(fp, x)
-     FILE *fp;
-     int *x;
+void funcwrite(FILE *fp, int *x)
 {
   fprintf(fp, "%s", functable[*x].name);
 }
 
-void funcpull(a_list, x)
-     va_list *a_list;
-     int *x;
+void funcpull(va_list *a_list, int *x)
 {
   *x = va_arg(*a_list, int);
 }
@@ -939,12 +894,9 @@ LObject *_LNew(LType *type, LCell *cell)
   obj->type = type;
   obj->ref = 1;
   if (!cell) {
-    obj->cell.p = NULL;
-  } else if(sizeof(int) < sizeof(void *)) { /* Really want "alignof(int)" */
-    int *unalignedcell = (int *)cell;
-    memcpy((void *)&obj->cell, unalignedcell, sizeof(LCell));
+    memset(&obj->cell, 0, sizeof(obj->cell));
   } else {
-    obj->cell = *(LCell *)cell;
+    memcpy(&obj->cell, cell, LSIZE(type));
   }
   return obj;
 }
@@ -1190,7 +1142,7 @@ LDEFINE(cdr, LLOBJECT,
  * function definition implementation
  */
 
-int LDefun(char *name, LObjectFunc func, char *help)
+bool LDefun(char *name, LObjectFunc func, char *help)
 {
   int index = VVCOUNT(funcvvec)++;
   LFunction *lfunction = VVINDEX(funcvvec, LFunction, index);
@@ -1199,7 +1151,7 @@ int LDefun(char *name, LObjectFunc func, char *help)
   lfunction->interested = NULL;
   fsa_install( func_fsa, name, (void *)(long)index );
   if (help) LHelpDef(name, help);
-  return 1;
+  return true;
 }
 
 /* Function is called in one of three modes:
@@ -1221,7 +1173,7 @@ static int funcindex(char *name)
 /*
  * The LDECLARE() macro calls this function.
  */
-int LParseArgs(char *name, Lake *lake, LList *args, ...)
+LParseResult LParseArgs(char *name, Lake *lake, LList *args, ...)
 {
   int c, moreargspecs=1, argsgot=0, argsrequired= -1;
   LType *argclass;
@@ -1232,7 +1184,7 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
   va_start(a_list, args);
   
   if (lake == NULL) {
-    int val = AssignArgs(name, args, a_list);
+    LParseResult val = AssignArgs(name, args, a_list);
     va_end(a_list);
     return val;
   }
@@ -1260,6 +1212,18 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
 	   the array itself, and a count */
 	(void)va_arg(a_list, LType *);
 	(void)va_arg(a_list, void *);
+	(void)va_arg(a_list, int *);
+
+	++argspecs;
+	if (LakeMore(lake,c)) {
+	  LListAppend(args, LSexpr(lake));
+	  ++argsgot;
+	}
+      } else if (argclass == LVARARRAY) {
+	/* special case for this because it takes 3 args: the base type,
+	   the array-pointer itself, and a count */
+	(void)va_arg(a_list, LType *);
+	(void)va_arg(a_list, void **);
 	(void)va_arg(a_list, int *);
 
 	++argspecs;
@@ -1326,27 +1290,74 @@ int LParseArgs(char *name, Lake *lake, LList *args, ...)
   return LPARSE_GOOD;
 }
 
-static int obj2array(LObject *obj, LType *type, char *x, int *n)
+static bool obj2array(LObject *obj, LType *type, char *x, int *n)
 {
   int max= abs(*n);
   LList *list;
 
   *n = 0;
 
-  /* interpret the nil object as an empty list */
-  if (   (obj == Lnil)
-	 || (obj->type==LSTRING && strcmp(LSTRINGVAL(obj),"nil")==0) ) {
-    return 1;
+  /* interprete the nil object as an empty list */
+  if ((obj == Lnil)
+      || (obj->type==LSTRING && strcmp(LSTRINGVAL(obj),"nil")==0) ) {
+    return true;
   }
   
   list = LLISTVAL(obj);
-  if (obj->type != LLIST) return 0;
+  if (obj->type != LLIST) return false;
   while (list && list->car && *n<max) {
-    if (!LFROMOBJ(type)(list->car, (void*)(x + (*n)*LSIZE(type)))) return 0;
+    if (!LFROMOBJ(type)(list->car, (void*)(x + (*n)*LSIZE(type)))) return false;
     (*n)++;
     list = list->cdr;
   }
-  return 1;
+  if (*n == max && list) {
+    return false;
+  }
+  return true;
+}
+
+/* variable length array */
+static bool obj2vararray(LObject *obj, LType *type, char **x, int *n)
+{
+  LList *list;
+
+  /* interprete the nil object as an empty list */
+  if (   (obj == Lnil)
+	 || (obj->type==LSTRING && strcmp(LSTRINGVAL(obj),"nil")==0) ) {
+    if (*x) {
+      OOGLFree(*x);
+    }
+    *x = NULL;
+    *n = 0;
+    return true;
+  }
+  
+  list = LLISTVAL(obj);
+  if (obj->type != LLIST) {
+    if (*x) {
+      OOGLFree(*x);
+    }
+    *x = NULL;
+    *n = 0;
+    return false;
+  }
+  if ((*n = LListLength(list)) == 0) {
+    if (*x) {
+      OOGLFree(*x);
+    }
+    *x = NULL;
+    return true;
+  }
+  *x = OOGLRenewNE(char, *x, (*n)*LSIZE(type), "C-lisp vararray");
+  *n = 0;
+  while (list && list->car) {
+    if (!LFROMOBJ(type)(list->car, (void * )((*x) + (*n)*LSIZE(type)))) {
+      return false;
+    }
+    (*n)++;
+    list = list->cdr;
+  }
+  return true;
 }
 
 LObject *LMakeArray(LType *basetype, char *array, int count)
@@ -1362,7 +1373,7 @@ LObject *LMakeArray(LType *basetype, char *array, int count)
   return LNew(LLIST, &list);
 }
 
-static int AssignArgs(char *name, LList *args, va_list a_list)
+static LParseResult AssignArgs(char *name, LList *args, va_list a_list)
 {
   LObject *arg;
   int moreargspecs=1, argsgot=0, argsrequired= -1, hold=0;
@@ -1410,6 +1421,34 @@ static int AssignArgs(char *name, LList *args, va_list a_list)
 	    OOGLError(0, "%s: array of at most %1d %ss expected in\n\
      arg position %1d (got %s)\n", name,origcount, argtype->name, argsgot,
 		      LSummarize(arg));
+	  }
+	  args = args->cdr;
+	  hold = 0;
+	} else {
+	  (void)va_arg(a_list, void *);
+	  (void)va_arg(a_list, void *);
+	}
+      } else if (argtype == LVARARRAY) {
+	/* get the base type of the array */
+	argtype=va_arg(a_list, LType *);
+	++argspecs;
+	if (args) {
+	  void *arrayp = va_arg(a_list, void*);
+	  int *countp = va_arg(a_list, int*);
+	  if (hold) {
+	    arg = LRefIncr(args->car);
+	  } else {
+	    arg = LEval(args->car);
+	  }
+	  ++argsgot;
+	  convok = obj2vararray(arg, argtype, arrayp, countp);
+	  if (!convok) {
+	    OOGLError(0,
+		      "%s: variable length array conversion failed "
+		      "after converting %1d %ss in\n"
+		      "arg position %1d (got %s)\n",
+		      name, *countp, argtype->name,
+		      argsgot, LSummarize(arg));
 	  }
 	  args = args->cdr;
 	  hold = 0;
@@ -1468,7 +1507,7 @@ Please report this error!", name);
   return LASSIGN_BAD;
 }
 
-int LArgClassValid(LType *type)
+bool LArgClassValid(LType *type)
 {
   return (type->magic == LTypeMagic);
 }
@@ -1497,7 +1536,7 @@ LObject *LEvalFunc(char *name, ...)
 	|| a == LLAKE
 	) {
       /* do nothing */
-    } else if (a==LARRAY) {
+    } else if (a == LARRAY || a == LVARARRAY) {
       LType *basetype=va_arg(a_list, LType *);
       void *array = va_arg(a_list, void *);
       int count = abs(va_arg(a_list, int));
@@ -1513,17 +1552,14 @@ LObject *LEvalFunc(char *name, ...)
   return val;
 }
 
-static int filterfromobj(obj, x)
-     LObject *obj;
-     LFilter * *x;
+static bool filterfromobj(LObject *obj, LFilter * *x)
 {
-  if (obj->type != LFILTER) return 0;
+  if (obj->type != LFILTER) return false;
   *x = LFILTERVAL(obj);
-  return 1;
+  return true;
 }
 
-static LObject *filter2obj(x)
-     LFilter * *x;
+static LObject *filter2obj(LFilter * *x)
 {
   LFilter *copy = OOGLNew(LFilter);
   copy->flag = (*x)->flag;
@@ -1531,8 +1567,7 @@ static LObject *filter2obj(x)
   return LNew( LFILTER, &copy );
 }
 
-static void filterfree(x)
-     LFilter * *x;
+static void filterfree(LFilter * *x)
 {
   if (*x) {
     if ((*x)->value) LFree((*x)->value);
@@ -1540,9 +1575,7 @@ static void filterfree(x)
   }
 }
 
-static void filterwrite(fp, x)
-     FILE *fp;
-     LFilter * *x;
+static void filterwrite(FILE *fp, LFilter * *x)
 {
   switch ((*x)->flag) {
   case VAL:
@@ -1736,41 +1769,41 @@ void RemoveLakeInterests(Lake *lake)
 }
 
 
-static int InterestMatch(LInterest *interest, Lake *lake,
-			 int usefilter, LList *filter)
+static bool InterestMatch(LInterest *interest, Lake *lake,
+			  bool usefilter, LList *filter)
 {
   LList *ifilter;
 
-  if (interest->lake != lake) return 0;
-  if (!usefilter) return 1;
+  if (interest->lake != lake) return false;
+  if (!usefilter) return true;
   ifilter = interest->filter;
   while (filter) {
-    if (!ifilter) return 0;
+    if (!ifilter) return false;
     if (!FilterMatch(LFILTERVAL(filter->car),
-		     LFILTERVAL(ifilter->car))) return 0;
+		     LFILTERVAL(ifilter->car))) return false;
     filter = filter->cdr;
     ifilter = ifilter->cdr;
   }
-  if (ifilter) return 0;
-  return 1;
+  if (ifilter) return false;
+  return true;
 }
 
-static int FilterMatch(LFilter *f1, LFilter *f2)
+static bool FilterMatch(LFilter *f1, LFilter *f2)
 {
-  if (f1 && !f2) return 0;
-  if (f2 && !f1) return 0;
-  if (!f1 && !f2) return 1;
-  if (f1->flag != f2->flag) return 0;
+  if (f1 && !f2) return false;
+  if (f2 && !f1) return false;
+  if (!f1 && !f2) return true;
+  if (f1->flag != f2->flag) return false;
   switch (f1->flag) {
   case ANY:
   case NIL:
-    return 1;
+    return true;
   case VAL:
-    if (f1->value->type != f2->value->type) return 0;
+    if (f1->value->type != f2->value->type) return false;
     return LMATCH(f1->value->type)( &(f1->value->cell), &(f2->value->cell) );
   default:
     OOGLError(0,"invalid filter flag value.  Please report this.");
-    return 0;
+    return false;
   }
 }
 
@@ -1829,7 +1862,7 @@ static LList *FilterList(LList *args)
   return filterlist;
 }
 
-static int FilterArgMatch(LList *filter,  LList *args)
+static bool FilterArgMatch(LList *filter,  LList *args)
 {
   int filterflag;
   LObject *filterobj;
@@ -1849,7 +1882,7 @@ static int FilterArgMatch(LList *filter,  LList *args)
       LFROMOBJ(args->car->type)(args->car, &argval);
       LFROMOBJ(args->car->type)(filterobj, &filterval);
       if (! LMATCH(args->car->type)(&filterval, &argval))
-	return 0;
+	return false;
       break;
     case ANY:
     case NIL:
@@ -1858,7 +1891,7 @@ static int FilterArgMatch(LList *filter,  LList *args)
 
     args = args->cdr;
   }
-  return 1;
+  return true;
 }
 
 static void InterestOutput(char *name, LList *args, LInterest *interest)
@@ -2015,11 +2048,11 @@ static void print_help_formatted(FILE *outf, char *message)
   fflush(outf);
 }
 
-static int match(char *str, pattern *p)
+static bool match(char *str, pattern *p)
 {
   int i;
   char *rest;
-  if(strncmp(str, p->pat[0], p->len[0])) return 0;	/* Failed */
+  if(strncmp(str, p->pat[0], p->len[0])) return false;	/* Failed */
   rest = str + p->len[0];
   for(i = 1; i <= p->n; i++) {
     if(p->len[i]) {
@@ -2176,9 +2209,7 @@ char *LSummarize(LObject *obj)
  * unsigned long object implementation
  */
 
-static int ulongfromobj(obj, x)
-     LObject *obj;
-     unsigned long *x;
+static bool ulongfromobj(LObject *obj, unsigned long *x)
 {
   if (obj->type == LSTRING) {
     char *cp = LSTRINGVAL(obj);
@@ -2190,36 +2221,29 @@ static int ulongfromobj(obj, x)
     }
   } else if (obj->type == LULONG) {
     *x = LULONGVAL(obj);
-  } else return 0;
-  return 1;
+  } else return false;
+  return true;
 }
 
-static LObject *ulong2obj(x)
-     unsigned long *x;
+static LObject *ulong2obj(unsigned long *x)
 {
   return LNew( LULONG, x );
 }
 
-static void ulongfree(x)
-     unsigned long *x;
+static void ulongfree(unsigned long *x)
 {}
 
-static int ulongmatch(a, b)
-     unsigned long *a,*b;
+static bool ulongmatch(unsigned long *a, unsigned long *b)
 {
   return *a == *b;
 }
 
-static void ulongwrite(fp, x)
-     FILE *fp;
-     unsigned long *x;
+static void ulongwrite(FILE *fp, unsigned long *x)
 {
   fprintf(fp, "%1lu", *x);
 }
 
-static void ulongpull(a_list, x)
-     va_list *a_list;
-     unsigned long *x;
+static void ulongpull(va_list *a_list, unsigned long *x)
 {
   *x = va_arg(*a_list, unsigned long);
 }

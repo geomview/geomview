@@ -179,6 +179,8 @@ $NF == "LEND" || atend == 1 {
 	    if (i>1) dec = dec sprintf(", ");
 	    if (arg[i] == "LARRAY") {
 		dec = dec sprintf("%s *a%1d, int a%1dn", type[basetype[i]], i, i);
+	    } else if (arg[i] == "LVARARRAY") {
+		dec = dec sprintf("%s *a%1d, int a%1dn", type[basetype[i]], i, i);
 	    } else {
 		if (type[arg[i]] != "") dec = dec sprintf("%s ", type[arg[i]]);
 		else dec = dec sprintf("??? ");
@@ -195,6 +197,8 @@ $NF == "LEND" || atend == 1 {
 	for (i=1; i<=argc; ++i) {
 	    if (arg[i] == "LARRAY") {
 		printf "\t\t\t   LARRAY, %s, a%1d, a%1dn,\n", basetype[i], i, i ;
+	    } else if (arg[i] == "LVARARRAY") {
+		printf "\t\t\t   LVARARRAY, %s, a%1d, a%1dn,\n", basetype[i], i, i ;
 	    } else {
 		printf "\t\t\t   %s, a%1d,\n", arg[i], i ;
 	    }
@@ -223,10 +227,10 @@ $NF == "LEND" || atend == 1 {
 	    ++i; continue;
 	} else if ($i == "LLITERAL") {
 	    ++i; continue;
-	} else if ($i == "LARRAY") {
-	    ++i;
+	} else if ($i == "LARRAY" || $i == "LVARARRAY") {
 	    ++argc ;
-	    arg[argc] = "LARRAY";
+	    arg[argc] = $i;
+	    ++i;
 	    basetype[argc] = $i;
 	    next;
 	} else if ($i == "LREST") {

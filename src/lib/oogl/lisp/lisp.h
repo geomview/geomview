@@ -42,8 +42,8 @@ typedef union {
   unsigned long ul;
 } LCell;
 
-struct LType {
-
+struct LType
+{
   /* name of type */
   char *name;
 
@@ -51,7 +51,7 @@ struct LType {
   int size;
 
   /* extract cell value from obj */
-  int (*fromobj)(/* LObject *obj, void *x */);
+  bool (*fromobj)(/* LObject *obj, void *x */);
 
   /* create a new LObject of this type */
   LObject *(*toobj)(/* void *x */);
@@ -63,7 +63,7 @@ struct LType {
   void (*write)(/* FILE *fp, void *x */);
 
   /* test equality of two cells of this type */
-  int (*match)(/* void *a, void *b */);
+  bool (*match)(/* void *a, void *b */);
 
   /* pull a cell value from a va_list */
   void (*pull)(/* va_list *a_list, void *x */);
@@ -73,7 +73,6 @@ struct LType {
 
   /* magic number; always set to LTypeMagic */
   int magic;
-
 };
 
 #define LTypeMagic 314159
@@ -174,10 +173,14 @@ extern LType LObjectp;
  * Function definition stuff:
  */
 
-#define LASSIGN_GOOD 1
-#define LASSIGN_BAD  2
-#define LPARSE_GOOD  3
-#define LPARSE_BAD   4
+enum lparseresult {
+  LASSIGN_GOOD,
+  LASSIGN_BAD,
+  LPARSE_GOOD,
+  LPARSE_BAD
+};
+
+typedef enum lparseresult LParseResult;
 
 #define LDECLARE(stuff) \
   switch (LParseArgs stuff) { \
@@ -188,6 +191,9 @@ extern LType LObjectp;
 
 extern LType Larray;
 #define LARRAY (&Larray)
+
+extern LType Lvararray;
+#define LVARARRAY (&Lvararray)
 
 extern LType Lend;
 #define LEND (&Lend)
@@ -228,12 +234,12 @@ void	  	LListFree(LList *list);
 LList *	  	LListCopy(LList *list);
 LObject * 	LListEntry(LList *list, int n);
 int	  	LListLength(LList *list);
-int	  	LParseArgs(char *name, Lake *lake, LList *args, ...);
-int	  	LDefun(char *name, LObjectFunc func, char *help);
+LParseResult    LParseArgs(char *name, Lake *lake, LList *args, ...);
+bool	  	LDefun(char *name, LObjectFunc func, char *help);
 void		LListWrite(FILE *fp, LList *list);
 LInterest *	LInterestList(char *funcname);
 LObject *	LEvalFunc(char *name, ...);
-int		LArgClassValid(LType *type);
+bool		LArgClassValid(LType *type);
 void		LHelpDef(char *key, char *message);
 void		LHelpRedef(char *key, char *newmessage);
 char *		LakeName(Lake *lake);
@@ -280,3 +286,9 @@ void LWriteFile(char *fname, LObject *obj);
 
 #endif /* ! LISP_H */
 
+/*
+ * Local Variables: ***
+ * mode: c ***
+ * c-basic-offset: 2 ***
+ * End: ***
+ */
