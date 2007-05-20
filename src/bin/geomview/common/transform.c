@@ -1823,7 +1823,7 @@ drawer_get_ND_transform(int from_id, int to_id)
 
   if((obj = drawer_get_object(from_id)) == NULL) {
     if(to_id == UNIVERSE) {
-      OOGLError(1, "drawer_get_transform: can't handle from_id %d", from_id);
+      OOGLError(1, "drawer_get_ND_transform: can't handle from_id %d", from_id);
       return NULL;
     }
   } else {
