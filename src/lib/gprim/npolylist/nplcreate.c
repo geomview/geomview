@@ -168,18 +168,23 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
 
   if(nvertflag && vertflag) {
     numentries = 0;
-    for (i=0; i<pl->n_polys; i++)
+    for (i=0; i<pl->n_polys; i++) {
       numentries += nvertperpol[i];
-    for (i=0; i<numentries; i++) 
-      if (verts[i] > numvertices)
+    }
+    for (i=0; i<numentries; i++) {
+      if (verts[i] > numvertices) {
 	numvertices = verts[i];
+      }
+    }
     pl->n_verts = numvertices + 1;
-    if(pl->v)
+    if(pl->v) {
       OOGLFree(pl->v);
+    }
     pl->v = OOGLNewNE(HPtNCoord,
 		      pl->n_verts * pl->pdim, "polylist vertices");
-    if (pl->vl)
+    if (pl->vl) {
       OOGLFree(pl->vl);
+    }
     pl->vl = OOGLNewNE(Vertex, pl->n_verts, "polylist vertex info");
   }
   if(pointflag) {
@@ -204,8 +209,9 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
       OOGLFree(pl->p);
     }
     pl->p = OOGLNewNE(Poly, pl->n_polys, "nPolyListCreate polygons");
-    if (pl->pv)
+    if (pl->pv) {
       OOGLFree(pl->pv);
+    }
     pl->pv = OOGLNewNE(int, pl->n_polys, "nPolyListCreate polygon verts");
   }
   if(nvertflag && vertflag) {
@@ -215,8 +221,9 @@ NPolyListCreate(NPolyList *exist, GeomClass *classp, va_list *a_list)
       pl->pv[i] = k;
       k += (pl->p[i].n_vertices = nvertperpol[i]);
     }
-    if(pl->vi)
+    if(pl->vi) {
       OOGLFree(pl->vi);
+    }
     pl->vi = OOGLNewNE(int, numentries, "nPolyListCreate vertex indices");
     pl->nvi = k;
     memcpy(pl->vi, verts, k*sizeof(int));
