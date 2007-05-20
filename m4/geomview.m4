@@ -52,7 +52,8 @@ directories to use. (default: autodetected)]),
       GEOMVIEWOPT=$withval
     esac],
     [GEOMVIEWOPT=geomview])
-  AC_PATH_PROGS(GEOMVIEW, [${GEOMVIEWOPT}], ["'not found'"])
+  AC_PATH_PROGS(GEOMVIEW, [${GEOMVIEWOPT}], ["'not found'"],
+    [`eval eval eval echo ${bindir}`:${PATH}])
   if test "${GEOMVIEW}" = "not found"; then
 	AC_MSG_ERROR([Geomview binary not found. Check your installation.])
 	exit 1
@@ -250,6 +251,7 @@ AC_DEFUN([GEOMVIEW_RESULT],
 [AC_MSG_RESULT([])
 if test -n "${gvversion}"; then
   AC_MSG_RESULT([Geomview version: "${gvversion}"])
+  AC_MSG_RESULT([Geomview executable: "${GEOMVIEW}"])
   AC_MSG_RESULT([])
 fi
 AC_MSG_RESULT([Geomview include files below])
