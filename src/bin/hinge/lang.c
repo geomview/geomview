@@ -41,15 +41,16 @@ DEFPICKFUNC("(pick COORDSYS GEOMID G V E F P VI EI FI)",
 	    point, pn,
 	    vertex, vn,
 	    edge, en,
-	    face, fn, 10,
-	    ppath, ppn, 50,
+	    face, fn,
+	    ppath, ppn,
 	    vi,
 	    ei, ein,
 	    fi,
 {
   handle_pick(id, &point, vn>0, &vertex, en>0, edge);
   return Lt;
-})
+},
+/* ND-stuff */)
 
 #if 0
 LObject *Lpicked(Lake *lake, LList *args)
