@@ -52,6 +52,7 @@ void crayolaInit(void)
   cray_list_init();
   cray_mesh_init();
   cray_polylist_init();
+  cray_npolylist_init();
   cray_quad_init();
   cray_vect_init();
   cray_skel_init();
