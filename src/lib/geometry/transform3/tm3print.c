@@ -42,14 +42,14 @@ void Tm3Print(FILE *f, Transform3 T)
 	return;
     }
     fprintf(f, "transform {\n");
-    for( i=0; i<4; i++ ) {
-	printf( "  " );
-	for( j=0; j<4; j++) {
-	    printf( "%g ", T[i][j] );
+    for (i=0; i<4; i++) {
+	fprintf(f, "  ");
+	for (j=0; j<4; j++) {
+	    fprintf(f, "%10.7f ", T[i][j] );
 	}
-	printf( "\n" );
+	fprintf(f, "\n" );
     }
-    printf( "}\n" );
+    fprintf(f, "}\n" );
 }
 
 /*
