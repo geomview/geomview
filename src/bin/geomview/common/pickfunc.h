@@ -75,7 +75,7 @@
       return Lnil;							\
     }									\
 									\
-    if (pn == 4) {							\
+    if (pn <= 4) {							\
       HPoint3 point;							\
       HPoint3 vertex;							\
 									\
@@ -91,7 +91,7 @@
 		     (HPoint3 *)varedge, en,				\
 		     (HPoint3 *)varface, fn,				\
 		     varppath, ppn, vi, ei, ein, fi);			\
-    } else if (pn > 4) {						\
+    } else {								\
       res = pickNDbody(coordsys, id,					\
 		       varpoint, pn,					\
 		       varvertex, vn, varedge, en, varface, fn,		\
@@ -187,7 +187,7 @@
       return Lnil;							\
     }									\
 									\
-    if (pn == 4) {							\
+    if (pn <= 4) {							\
       HPoint3 point;							\
       HPoint3 vertex;							\
 									\
@@ -203,7 +203,7 @@
 		     (HPoint3 *)var##edge, en,				\
 		     (HPoint3 *)var##face, fn,				\
 		     var##ppath, ppn, vi, ei, ein, fi);			\
-    } else if (pn > 4) {						\
+    } else {								\
       res = pickNDbody(coordsys, id,					\
 		       var##point, pn,					\
 		       var##vertex, vn, var##edge, en, var##face, fn,	\
