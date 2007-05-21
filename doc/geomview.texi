@@ -5614,7 +5614,8 @@ Initialize()
 PICKFUNC(Lpick, 1, 1,
 @{           
   handle_pick(pn>0, &point, vn>0, &vertex, en>0, edge);
-@})
+@},
+/* version for picking Nd-objects (not documented here) */)
 
 handle_pick(picked, p, vert, v, edge, e)
      int picked;                /* was something actually picked?     */
@@ -5726,10 +5727,11 @@ startup time.  It initializes the lisp library by calling
 @code{LInit()}.  Any program that uses the lisp library should call this
 once before calling any other lisp library functions.  It then calls
 @code{LDefun} to tell the library about our @code{pick} procedure, which
-is defined further down with a call to the @code{DEFPICKFUNC} macro.
-Then it sends a bunch of setup commands to Geomview, grouped in a
-@code{progn} block.  This includes defining a handle called @code{littlebox}
-that stores the geometry of the little box.  Next it sends the command
+is defined further down with a call to the @code{PICKFUNC} macro.  Then
+it sends a bunch of setup commands to Geomview, grouped in a
+@code{progn} block.  This includes defining a handle called
+@code{littlebox} that stores the geometry of the little box.  Next it
+sends the command
 
 @example
 (interest (pick world * * * * nil nil nil nil nil))
@@ -5782,29 +5784,50 @@ it to suit yours needs.
 
 In general the syntax for @code{PICKFUNC} is
 @example
-PICKFUNC(@var{name}, @var{maxfaceverts}, @var{maxpathlen}, @var{block})
+PICKFUNC(@var{name}, @var{block}, @var{NDblock})
 @end example
 @noindent
 where @var{name} is the name of the procedure to be defined, in this
-case @code{Lpick}.  The next two arguments, @var{maxfaceverts} and
-@var{maxpathlen}, give the sizes to be used for declaring two local
-variable arrays in the body of the procedure.  These arrays are for
-storing information about the picked face and the picked primitive's
-path.  In this module we don't care about this information (it
-corresponds to some of the things masked out by the @code{nil}'s in the
-@code{interest} call above) so we specify 1, the minimum allowable, for
-both of these.  The last argument, @var{block}, is a block of code to be
-executed when a pick event occurs.  The @var{block} should be delimited
-by curly braces.  The code in your @var{block} should not include
-any @code{return} statements.
+case @code{Lpick}. The next argument, @var{block}, is a block of code to
+be executed when a pick event occurs.  If @var{block} contains a return
+statement, then the returned value must be a pointer to a Lisp-object,
+that is of type @code{LObject *}. The last argument has the same
+functionality as the @var{block} argument, but is only invoked when
+picking objects in a higher dimensional world.
 
 @code{PICKFUNC} declares certain local variables in the body of the
-procedure.  When the module receives a @code{(pick @dots{})} statement
+procedure. When the module receives a @code{(pick @dots{})} statement
 from Geomview, the procedure assigns values to these variables based on
-the information in the @code{pick} call.  (Variables corresponding to
+the information in the @code{pick} call (variables corresponding to
 @code{nil}'s in the @code{(interest (pick @dots{}))} are not given
-values.)
-These variables are:
+values). 
+
+There is also a second variant of the @code{PICKFUNC} macro with a
+slightly different syntax:
+@example
+DEFPICKFUNC(@var{helpstr}, @var{coordsys}, @var{id},
+  @var{point}, @var{pn}, @var{vertex}, @var{vn}, @var{edge}, @var{en}, @var{face}, @var{fn}, @var{ppath}, @var{ppn},
+  @var{vi}, @var{ei}, @var{ein}, @var{fi},
+  @var{body}, @var{NDbody})
+@end example
+@code{DEFPICKFUNC} can be used as well as @code{PICKFUNC}, there is no
+functional differene with the exception that the name of the C-function
+is tied to @code{Lpick} when using @code{DEFPICKFUNC} and that the
+@code{(help pick)} GCL-command (@pxref{help, @code{(help @dots{})}})
+would respond with echoing @var{helpstr}.
+
+The table below lists all variables defined in @code{PICKFUNC} In the
+context of ND-viewing @code{float} variants of the arguments apply: the
+@var{body} execution block sees the @code{HPoint3} variables, and the
+@var{NDbody} block sees only flat one-dimensional arrays of
+@code{float}-type.
+
+In the ND-viewing context the co-ordinates passed to the pick function
+are still the 3-dimensional co-ordinates of the camera view-port where
+the pick occurred, but padded with zeroes on transformed back to the
+co-ordinate system specified by the second argument of the @code{pick}
+command.
+
 @table @asis
 
 @item @code{char *coordsys;}
@@ -5816,53 +5839,69 @@ of the @code{interest} call above.
 A string specifying the name of the picked geom.
 
 @item @code{HPoint3 point; int pn;}
+
+@item @code{float *point; int pn;}
 @code{point} is an @code{HPoint3} structure giving the coordinates of
 the picked point.  @code{HPoint3} is a homogeneous point coordinate
-representation equivalent to an array of 4 floats.  @code{pn} tells how
+representation equivalent to an array of 4 floats. @code{pn} tells how
 many coordinates have been written into this array; it will always be
-either 0 or 4.  A value of zero means no point was picked, i.e. the user
-clicked the right mouse button while the cursor was not pointing at a
-geom.
+either @code{0}, @code{4} or greater than @code{4}. If it is greater
+than @code{4}, then the @var{NDbody} instruction block is invoked and in
+this case @code{point} is a flat array of @code{pn} many @code{float}s.
+A value of zero means no point was picked, i.e. the user clicked the
+right mouse button while the cursor was not pointing at a geom. In this
+case the ordinary @var{block} 3d instruction block is executed.
 
 @item @code{HPoint3 vertex; int vn;}
+
+@item @code{float *vertex; int vn;}
 @code{vertex} is an @code{HPoint3} structure giving the coordinates of
 the picked vertex, if the pick point was near a vertex.  @code{vn} tells
 how many coordinates have been written into this array; it will always
-be either 0 or 4.  A value of zero means the pick point was not near a
-vertex.
+be either @code{0} or greater equal @code{4}. A value of zero means the
+pick point was not near a vertex. In the context of ND-viewing
+@code{vertex} will be an array of @code{vn} @code{float}s and @code{vn}
+will be equal to @code{pn}.
 
 @item @code{HPoint3 edge[2]; int en;}
+
+@item @code{float *edge; int en;}
 @code{edge} is an array of two @code{HPoint3} structures giving the
 coordinates of the endpoints of the picked edge, if the pick point was
 near an edge.  @code{en} tells how many coordinates have been written
-into this array; it will always be either 0 or 8.  A value of zero means
-the pick point was not near an edge.
+into this array; it will always be @code{0} or greater equal @code{8}.
+A value of zero means the pick point was not near an edge. In the
+context of ND-viewing @code{edge} will be a flat one-dimensional array
+of @code{en} many @code{float}s: the first @code{pn} @code{float}s
+define the first vertex, and the second @code{pn} many @code{float}s
+define the second vertex; @code{en} will be two times @code{pn}.
 
 @end table
 
 In this example module, the remaining variables will never be given
 values because their values in the @code{interest} statement were
-specified as @code{nil}.   
+specified as @code{nil}.
 
 @table @asis
 
-@item @code{HPoint3 face[@var{maxfaceverts}]; int fn;}
-@code{face} is an array of @var{maxfaceverts} @code{HPoint3}'s;
-@var{maxfaceverts} is the value specified in the @code{PICKFUNC} call.
+@item @code{HPoint3 face[]; int fn;}
+
+@item @code{float *face; int fn;}
+@code{face} is a variable length array of @var{fn} @code{HPoint3}'s.
 @code{face} gives the coordinates of the vertices of the picked face.
 @code{fn} tells how many coordinates have been written into this array;
-it will always be a multiple of 4 and will be at most
-4*@var{maxfaceverts}.  A value of zero means the pick point was not near
-a face.
+it will always be either @code{0} or a multiple of @code{pn}. A value of
+zero means the pick point was not near a face. In the context of
+ND-viewing @code{face} is a flat one-dimensional array of @code{fn} many
+floats of which each vertex occupies @code{pn} many components.
 
-@item @code{HPoint3 ppath[@var{maxpathlen}; int ppn;}
-@code{ppath} is an array of @var{maxpathlen} @code{int}'s;
-@var{maxpathlen} is the value specified in the @code{PICKFUNC} call.
-@code{ppath} gives the path through the OOGL heirarchy to the picked
-primitive.  @code{pn} tells how many integers have been written into
-this array; it will be at most @var{maxpathlen}.  A path of @{3,1,2@},
-for example, means that the picked primitive is "subobject number 2
-of subobject number 1 of object 3 in the world".
+@item @code{int ppath[]; int ppn;}
+@code{ppath} is an array of @var{maxpathlen} @code{int}'s.  @code{ppath}
+gives the path through the OOGL heirarchy to the picked primitive.
+@code{pn} tells how many integers have been written into this array; it
+will be at most @var{maxpathlen}.  A path of @{3,1,2@}, for example,
+means that the picked primitive is "subobject number 2 of subobject
+number 1 of object 3 in the world".
 
 @item @code{int vi;}
 @code{vi} gives the index of the picked vertex in the picked primitive,
@@ -7579,6 +7618,12 @@ occurred.
 
 External modules can find out about pick events by registering
 interest in calls to @code{pick} via the @code{interest} command.
+
+In the ND-viewing context the co-ordinates are actually ND-points. They
+correspond to the 3D points of the pick relative to the sub-space
+defined by the viewport of the camera where the pick occurred. The
+co-ordinates are then padded with zeroes and transformed back to the
+co-ordinate system defined by @var{COORDSYS}.
 @end table
 
 @node pick-invisible, pickable, pick, GCL Reference
