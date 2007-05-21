@@ -1,5 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Geometry Technologies, Inc.
+ * Copyright (C) 2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -18,11 +19,6 @@
  * Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA,
  * or visit http://www.gnu.org.
  */
-
-#if 0
-static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 1998-2000 Geometry Technologies, Inc.";
-#endif
 
 /* (picked "name" (gx gy gz) (vx vy vz) (x1 y1 z1 x2 y2 z2)) */
 
