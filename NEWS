@@ -1,3 +1,11 @@
+1.9.2 May 2007
+
+   * Bug-fix release for 1.9.0 (see ChangeLog)
+
+   * ND-picking was not fully implemented; should work now
+
+   * PICKFUNC() interface has changed
+
 1.9.1 May 2007
 
    * Bug-fix release for 1.9.0
