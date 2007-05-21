@@ -1071,11 +1071,6 @@ emit_pick(int pickedid, Pick *pick)
 
   LInterest *interest = LInterestList("pick");
 
-  if (pickedid == NOID) {
-    OOGLError(0,"emit_pick: cowardly refusing to handle an empty pick");
-    return;
-  }
-
   VVINIT(done, char, 128);
   if(interest) {
     vvuse(&done, donebits, COUNT(donebits));
@@ -1309,28 +1304,44 @@ emit_pick(int pickedid, Pick *pick)
 }
 
 LDEFINE(pick, LVOID,
-	"(pick COORDSYS GEOMID G V E F P VI EI FI)\n\
-	The pick command is executed internally in response to pick\n\
-	events (right mouse double click).\n\
-\n\
-	COORDSYS = coordinate system in which coordinates of the following\n\
-	    arguments are specified.   This can be:\n\
-		world: world coord sys\n\
-		self:  coord sys of the picked geom (GEOMID)\n\
-		primitive: coord sys of the actual primitive within\n\
-		    the picked geom where the pick occurred.\n\
-	GEOMID = id of picked geom\n\
-	G = picked point (actual intersection of pick ray with object)\n\
-	V = picked vertex, if any\n\
-	E = picked edge, if any\n\
-	F = picked face\n\
-	P = path to picked primitive [0 or more]\n\
-	VI = index of picked vertex in primitive\n\
-	EI = list of indices of endpoints of picked edge, if any\n\
-	FI = index of picked face\n\
-\n\
-	External modules can find out about pick events by registering\n\
-	interest in calls to \"pick\" via the \"interest\" command.")
+	"(pick COORDSYS GEOMID G V E F P VI EI FI)\n"
+	"The pick command is executed internally in response to pick\n"
+	"events (right mouse double click).\n"
+	"\n\n"
+	"COORDSYS = coordinate system in which coordinates of the following\n"
+	"arguments are specified. This can be:"
+	"\n\n\tworld: world coord sys"
+	"\n\n\tself:  coord sys of the picked geom (GEOMID)"
+	"\n\n\tprimitive: coord sys of the actual primitive within"
+	"\n\n\t\tthe picked geom where the pick occurred."
+	"\n\n\n\n"
+	"GEOMID = id of picked geom"
+	"\n\n\n\n"
+	"G = picked point (actual intersection of pick ray with object)"
+	"\n\n\n\n"
+	"V = picked vertex, if any"
+	"\n\n\n\n"
+	"E = picked edge, if any"
+	"\n\n\n\n"
+	"F = picked face"
+	"\n\n\n\n"
+	"P = path to picked primitive [0 or more]"
+	"\n\n\n\n"
+	"VI = index of picked vertex in primitive"
+	"\n\n\n\n"
+	"EI = list of indices of endpoints of picked edge, if any"
+	"\n\n\n\n"
+	"FI = index of picked face"
+	"\n\n\n\n"
+	"External modules can find out about pick events by registering\n"
+	"interest in calls to \"pick\" via the \"interest\" command."
+	"\n\n\n\n"
+	"In the ND-viewing context the co-ordinates are actually ND-points.\n"
+	"They correspond to the 3D points of the pick relative to the\n"
+	"sub-space defined by the viewport of the camera where the pick\n"
+	"occurred. The co-ordinates are then padded with zeroes and\n"
+	"transformed back to the co-ordinate system defined by\n"
+	"\"COORDSYS\".")
 {
   float *got = NULL, *v = NULL, *e = NULL, *f = NULL;
   int vi, ei[2], fi, *p = NULL;

@@ -930,7 +930,7 @@ LDEFINE(read, LVOID,
 	"Read and interpret the text in ... as containing the "
 	"given type of data.  Useful for defining objects using OOGL "
 	"reference syntax, e.g. "
-	"\n\n"
+	"\n\n\n\n"
 	"(geometry  thing { INST  transform : T    geom : fred })\n\n"
 	"(read  geometry  { define fred QUAD 1 0 0  0 1 0  0 0 1  1 0 0 })\n\n"
 	"(read  transform { define T <myfile})")
@@ -1208,7 +1208,7 @@ LDEFINE(hdelete, LVOID,
 	"handle, but once those objects are gone, the handle will also "
 	"automatically go away. The object the handle refers to (if any) "
 	"will only be deleted if there are no other references to that object."
-	"\n\n"
+	"\n\n\n\n"
 	"If the optional first argument is omitted, then the first handle "
 	"matching \"name\" will be deleted, regardless of the type of the "
 	"object it is attached to. It is not an error to call this function "

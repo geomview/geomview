@@ -1055,7 +1055,7 @@ LDEFINE(transform, LVOID,
 	"the center object. Normally frameID, in whose coordinate system "
 	"the (mouse) motions are interpreted, is \"focus\", the current "
 	"camera. "
-	"\n\n"
+	"\n\n\n\n"
 	"Translations can be scaled proportional to the "
 	"distance between the target and the center. Support for "
 	"spherical and hyperbolic as well as Euclidean space is "
@@ -1064,7 +1064,7 @@ LDEFINE(transform, LVOID,
 	"For types \"translate\" and \"translate-scaled\" x, y, and z are "
 	"floats specifying distances in the coordinate system of the "
 	"center object. "
-	"\n\n"
+	"\n\n\n\n"
 	"The optional \"dt\" field allows a simple form of animation; if "
 	"present, the object moves by just that amount during approximately "
 	"\"dt\" seconds, then stops.  If present and followed by the "
@@ -1103,7 +1103,7 @@ LDEFINE(transform_incr, LVOID,
 	concatenate it with the current transform of objectID every\n\
 	refresh (sets objectID's incremental transform). Same syntax\n\
 	as transform. "
-	"\n\n"
+	"\n\n\n\n"
 	"If the optional \"dt\" argument is present,\n\
 	the object is moved at each time step such that its average motion\n\
 	equals one instance of the motion per \"dt\" seconds.  E.g.\n\

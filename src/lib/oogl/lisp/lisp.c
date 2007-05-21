@@ -2019,15 +2019,22 @@ static void print_help_formatted(FILE *outf, char *message)
     printed = 7;
     while (*message && printed < 72) {
       nnl = 0;
+      /* keep \n\n as hard line break marker */
       while (isspace(*message)) {
-	/* keep \n\n as paragraph marker */
 	if (*message++ == '\n') {
 	  ++nnl;
 	}
-      }
-      if (nnl >= 2) {
-	fprintf(outf, "\n\n       ");
-	printed = 7;
+	if (nnl == 2) {
+	  fprintf(outf, "\n       ");
+	  printed = 7;
+	  /* use \n\n\t\t\t as indentation hint */
+	  while (*message == '\t') {
+	    fprintf(outf, "        ");
+	    printed += 8;
+	    message++;
+	  }
+	  nnl = 0;
+	}
       }
       wordlen = 0;
       while (message[wordlen] && !isspace(message[wordlen])) {
