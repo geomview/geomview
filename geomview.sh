@@ -8,6 +8,11 @@ else
     GEOMVIEW_GVX=%GEOMVIEW_GVX%
 fi
 
+# The ancient Geomview dinosaur really does not know anything about
+# native language support
+LC_ALL=C
+export LC_ALL
+
 ########################################################################
 #
 #		  DO NOT CHANGE ANYTHING BELOW HERE		       #
