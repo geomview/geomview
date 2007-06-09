@@ -230,7 +230,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 
 AC_CHECK_HEADERS([errno.h fcntl.h getopt.h inttypes.h libgen.h libintl.h \
- limits.h malloc.h \
+ limits.h locale.h malloc.h \
  netinet/in.h stddef.h stdlib.h string.h sys/file.h sys/param.h sys/select.h \
  sys/socket.h sys/systeminfo.h sys/time.h sys/types.h unistd.h io.h math.h])
 
@@ -307,9 +307,16 @@ AC_CHECK_DECLS([errno],[],[],[
 #endif])
 AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
   gethostname getopt gettimeofday isascii mallinfo memset mkdir pow rint \
-  select sqrt strchr strcspn strdup strerror strncasecmp strpbrk strrchr \
-  strstr strtol strerror sysinfo waitpid wait3])
+  select sqrt strchr strcspn strdup strerror strncasecmp strpbrk \
+  strrchr strstr strtol strerror sysinfo waitpid wait3])
 AC_CHECK_DECLS([getopt, optarg, optind, opterr, optopt],[],[])
+AC_CHECK_FUNCS([setlocale],
+  [AC_CHECK_DECLS([LC_ALL],[],[],[
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
+  ])])
+
 #
 # we can use AC_COMPILE, because we check later for the existence of
 # socket()

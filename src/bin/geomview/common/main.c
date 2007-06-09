@@ -52,7 +52,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #else
 #include <unistd.h>
 #endif
-
+#if HAVE_LOCALE_H
+# include <locale.h>
+#endif
 
 #define STREQ(s1,s2) (strcmp(s1,s2)==0)
 
@@ -298,6 +300,10 @@ init_geomview(int argc, char **argv)
   char *userhome, homefile[512], dotfile[512];
   struct stat homebuf, dotbuf;
   int i, homestat, dotstat;
+
+#if HAVE_SETLOCALE && HAVE_DECL_LC_ALL
+  setlocale(LC_ALL, "POSIX");
+#endif
 
   if (getenv("GEOMVIEW_DEBUG"))
     gv_debug = 1;
