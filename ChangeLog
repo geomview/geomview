@@ -1,6 +1,18 @@
-2007-06-07    <claus@mathematik.uni-freiburg.de>
+2007-06-09    <claus@mathematik.uni-freiburg.de>
 
 	* Release of Geomview 1.9.2
+
+2007-06-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, geomview.sh, src/bin/geomview/common/main.c, src/bin/gvclock/gvclock.in:
+	Locale stuff.
+
+2007-06-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* ChangeLog, AUTHORS, NEWS, README: Version to 1.9.2
+
+	* geomview.sh: Set LC_ALL to C to avoid problems with native language
+	support. Geomview does not know about this stuff.
 
 2007-06-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
