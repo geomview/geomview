@@ -1,3 +1,22 @@
+2007-06-21    <claus@mathematik.uni-freiburg.de>
+
+	*  Release of Geomview 1.9.3
+
+2007-06-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* AUTHORS, NEWS, README, configure.ac:
+	Bump version to 1.9.3; spheres were severely broken in > 1.8.2 < 1.9.2
+
+	* src/lib/gprim/sphere/spheredice.c:
+	Drawing of sheres with center != 0 was severely broken.
+
+2007-06-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* ChangeLog: Update.
+
+	* configure.ac, geomview.sh, src/bin/geomview/common/main.c, src/bin/gvclock/gvclock.in:
+	Locale stuff.
+
 2007-06-09    <claus@mathematik.uni-freiburg.de>
 
 	* Release of Geomview 1.9.2
