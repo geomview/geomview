@@ -42,14 +42,11 @@ void SphereReDice(Sphere *sphere)
   Point3 *spherepoints;
   Point3 *spherenormals;
   TxST *spheretexcoord = NULL;
-  Point3 center;
   int npts;
   float theta, phi, thetafrac, phifrac, x, y, z, r;
   float phiscale, thetascale, thetastart;
   int i, j, ptno, nphi, ntheta;
   
-  HPt3ToPt3(&sphere->center, &center);
-
   nphi       = sphere->nphi;
   phiscale   = 0.25;
   ntheta     = sphere->ntheta;
@@ -89,8 +86,8 @@ void SphereReDice(Sphere *sphere)
       spherenormals[ptno].x = x = cos(phi) * r;
       spherenormals[ptno].y = y = sin(phi) * r;
       spherenormals[ptno].z = z;
-      Pt3Comb(1.0, &center, sphere->radius, spherenormals + ptno, 
-	      spherepoints + ptno);
+      Pt3Copy(spherenormals + ptno, spherepoints + ptno);
+      Pt3Mul(sphere->radius, spherepoints + ptno, spherepoints + ptno);
       switch (sphere->geomflags & SPHERE_TXMASK) {
       case SPHERE_TXNONE:
 	break;
