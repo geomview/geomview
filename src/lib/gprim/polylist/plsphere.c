@@ -42,15 +42,15 @@ Geom *PolyListSphere(PolyList *p,
 
   if (p == NULL || p->n_verts == 0 || p->n_polys == 0) return NULL;
 
-  /* Create a dummy sphere, the center will be corrected later */
-  sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &p->vl[0].pt,
-				CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
-				CR_END);
-
   if (TN) {
     HPointN *tmp = HPtNCreate(5, NULL);
     HPointN *spanPts[2*4];
     HPoint3 spanPts3[2*4];
+
+    /* Create a dummy sphere, the center will be corrected later */
+    sphere = (Sphere *)GeomCreate("sphere", CR_CENTER, &p->vl[0].pt,
+				  CR_RADIUS, 0.0, CR_AXIS, T, CR_SPACE, space,
+				  CR_END);
 
     if(p->geomflags & VERT_4D) {
       for (i = 0; i < 2*4; i++) {
