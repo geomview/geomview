@@ -66,16 +66,18 @@ getmeshvert(IOBFILE *file, int flag, int u, int v, HPoint3 *p,
   if ((flag & MESH_C) && iobfgetnf(file, 4, (float *)c, binary) < 4) {
     return false;
   }
-  if ((flag & MESH_U) && iobfgetnf(file, 2, (float *)st, binary) < 2) {
-    return false;
-  } else {
-    /* consume unused "r" component for compatibility */
-    float dummy;
-    int c;
+  if (flag & MESH_U) {
+    if (iobfgetnf(file, 2, (float *)st, binary) < 2) {
+      return false;
+    } else {
+      /* consume unused "r" component for compatibility */
+      float dummy;
+      int c;
 
-    if ((c = iobfnextc(file, 1)) != '\n' && c != '}' && c != EOF) {
-      if (iobfgetnf(file, 1, &dummy, 0) < 1) {
-	return false;
+      if ((c = iobfnextc(file, 1)) != '\n' && c != '}' && c != EOF) {
+	if (iobfgetnf(file, 1, &dummy, 0) < 1) {
+	  return false;
+	}
       }
     }
   }
