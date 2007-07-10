@@ -280,8 +280,10 @@ PolyListComputeNormals(PolyList *polylist, int need)
     }
 
     for (i = 0, vl = polylist->vl; i < polylist->n_verts; ++i, ++vl) {
+      bool patch_end;
+      Point3 patch_nu;
       HPt3Coord w = 0.0;
-      int v_idx, j;
+      int v_idx, j, k;
 
       v_idx = V_IDX(vl, polylist->vl);
 
@@ -289,7 +291,11 @@ PolyListComputeNormals(PolyList *polylist, int need)
       if (fourd) {
 	w = 1.0/vl->pt.w;
       }
+
+      patch_nu.x = patch_nu.y = patch_nu.z = 0.0;
+      patch_end = false;
       for (j = e_idx[v_idx]; j < e_idx[v_idx+1]; j += 2) {
+	HPoint3 *swap;
 	HPoint3 *p1, *p2;
 	Point3 nu;
 	HPt3Coord w1, w2;
@@ -321,10 +327,47 @@ PolyListComputeNormals(PolyList *polylist, int need)
 	  nu.z = ANTI(x,y);
 #undef ANTI
 	}
-	if (Pt3Dot(&nu, &vl->vn) >= 0.0) {
-	  Pt3Add(&vl->vn, &nu, &vl->vn);
+	Pt3Add(&patch_nu, &nu, &patch_nu);
+
+	/* Try to find the next adjacent edges pair and give it the
+	   proper orientation.
+	 */
+	if (j+2 < e_idx[v_idx+1]) {
+	  if (edges[j+2] == edges[j+1]) {
+	    /* ok */
+	  } else if (edges[j+3] == edges[j+1]) {
+	    swap = edges[j+2]; edges[j+2] = edges[j+3]; edges[j+3] = swap;
+	  } else {
+	    for (k = j + 4; k < e_idx[v_idx+1]; k += 2) {
+	      if (edges[k] == edges[j+1]) {
+		swap = edges[j+2]; edges[j+2] = edges[k];   edges[k]   = swap;
+		swap = edges[j+3]; edges[j+3] = edges[k+1]; edges[k+1] = swap;
+		break;
+	      } else if (edges[k+1] == edges[j+1]) {
+		swap = edges[j+2]; edges[j+2] = edges[k+1]; edges[k+1] = swap;
+		swap = edges[j+3]; edges[j+3] = edges[k];   edges[k] = swap;
+		break;
+	      }
+	    }
+	    if (k >= e_idx[v_idx+1]) {
+	      patch_end = true;
+	    }
+	  }
 	} else {
-	  Pt3Sub(&vl->vn, &nu, &vl->vn);
+	  patch_end = true;
+	}
+	
+	if (patch_end) {
+	  /* try to match the orientation with the normal of the
+	   * previous patch-component (if any).
+	   */
+	  if (fneg(Pt3Dot(&patch_nu, &vl->vn))) {
+	    Pt3Sub(&vl->vn, &patch_nu, &vl->vn);
+	  } else {
+	    Pt3Add(&vl->vn, &patch_nu, &vl->vn);
+	  }
+	  patch_nu.x = patch_nu.y = patch_nu.z = 0.0;
+	  patch_end = false;
 	}
       }
       len = Pt3Length(&vl->vn);
