@@ -713,14 +713,16 @@ void mgopengl_needtexture(void)
 
 	tudata->data = (char *)malloc(newx * newy * tudata->channels);
 
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	gluScaleImage(format, tudata->xsize, tudata->ysize,
 		      GL_UNSIGNED_BYTE, image->data, newx, newy,
 		      GL_UNSIGNED_BYTE, tudata->data);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4); /* default */
 	tudata->xsize = newx;
 	tudata->ysize = newy;
       }
 
-      glTexImage2D(GL_TEXTURE_2D, 0, image->channels,
+      glTexImage2D(GL_TEXTURE_2D, 0, tudata->channels,
 		   tudata->xsize, tudata->ysize,
 		   0, format, GL_UNSIGNED_BYTE, tudata->data);
     }
