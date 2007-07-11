@@ -71,7 +71,7 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 	nu.x = ANTI_4D(y,z);
 	nu.y = ANTI_4D(z,x);
 	nu.z = ANTI_4D(x,y);
-	if (Pt3Dot(&nu, nu_av) >= 0) {
+	if (!fneg(Pt3Dot(&nu, nu_av))) {
 	  Pt3Add(nu_av, &nu, nu_av);
 	} else {
 	  Pt3Sub(nu_av, &nu, nu_av);
@@ -98,7 +98,8 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 	nu.x = ANTI(y,z);
 	nu.y = ANTI(z,x);
 	nu.z = ANTI(x,y);
-	if (Pt3Dot(&nu, nu_av) >= 0) {
+	/*Pt3Unit(&nu);*/
+	if (!fneg(Pt3Dot(&nu, nu_av))) {
 	  Pt3Add(nu_av, &nu, nu_av);
 	} else {
 	  Pt3Sub(nu_av, &nu, nu_av);
@@ -108,6 +109,7 @@ void PolyNormal(Poly *p, Point3 *nu_av, int fourd, int evert,
 	    first_concave = NULL;
 	  }
 	}
+	/*Pt3Unit(nu_av);*/
 	v1 = v2;
 	v2 = v3;
       } while(--n > 0);
