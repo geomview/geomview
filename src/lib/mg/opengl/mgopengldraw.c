@@ -452,7 +452,7 @@ mgopengl_trickypolygon(Poly *p, int plflags)
     /* compute it now, we need it! */
     PolyNormal(p, &p->pn, true /* 4d (?) */, false /* evert */, NULL, NULL);
   }
-  
+
   /* tell GLU what we think is a good approximation for the normal */
   gluTessNormal(glutess, p->pn.x, p->pn.y, p->pn.z);
 
@@ -843,7 +843,7 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
 	    ((p->flags & POLY_CONCAVE) ||
 	     (p->n_vertices > 4 && (flag & APF_CONCAVE)))) {
 	  OOGLWarn("The GLU tesselator is not available; "
-		   "rendering of concave and polygons will be wrong.");
+		   "rendering of concave polygons will be wrong.");
 	  was_here = true;
 	}
 #endif
