@@ -559,12 +559,26 @@ static void mgopengl_bsptree_recursive(BSPTreeNode *tree,
       /* set new plfl_and/_or values */
       *plfl_and = ~0;
       *plfl_or  =  0;
+#if 0
       switch(ap->shading) {
       case APF_VCFLAT:
       case APF_FLAT:   *plfl_and &= ~PL_HASVN; break;
       case APF_SMOOTH: *plfl_and &= ~PL_HASPN; break;
       default:         *plfl_and &= ~(PL_HASVN|PL_HASPN); break;
       }
+#else
+      switch(ap->shading) {
+      case APF_FLAT:
+	*plfl_and &= ~PL_HASVN;
+	if (plflags & PL_HASPCOL) {
+	  *plfl_and &= ~PL_HASVCOL;
+	}
+	break;
+      case APF_SMOOTH: *plfl_and &= ~PL_HASPN; break;
+      case APF_VCFLAT: *plfl_and &= ~PL_HASVN; break;
+      default: *plfl_and &= ~(PL_HASVN|PL_HASPN); break;
+      }
+#endif
 
       if (mat->override & MTF_DIFFUSE) {
 	if (!(_mgc->astk->flags & MGASTK_SHADER)) {
@@ -832,16 +846,16 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       if ((j = p->n_vertices) <= 2) {
 	nonsurf = i;
 #if HAVE_LIBGLU
-      } else if ((p->flags & POLY_CONCAVE) ||
-		 (p->n_vertices > 4 && (flag & APF_CONCAVE))) {
+      } else if ((flag & APF_CONCAVE) &&
+		 ((p->flags & POLY_CONCAVE) || (p->n_vertices > 4))) {
 	mgopengl_trickypolygon(p, plflags);
+#endif
       } else { /* normal algorithm */
-#else
-      } else {
+#if !HAVE_LIBGLU
 	static bool was_here = false;
 	if (!was_here &&
-	    ((p->flags & POLY_CONCAVE) ||
-	     (p->n_vertices > 4 && (flag & APF_CONCAVE)))) {
+	    ((flag & APF_CONCAVE) &&
+	     ((p->flags & POLY_CONCAVE) || (p->n_vertices > 4)))) {
 	  OOGLWarn("The GLU tesselator is not available; "
 		   "rendering of concave polygons will be wrong.");
 	  was_here = true;
