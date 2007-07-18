@@ -245,13 +245,14 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
      */
     if (!inuse) {
       if ((p = pcache) == NULL) {
-	p = pcache = PoolStreamTemp(str, inf, stdout, 0, ops);
+	p = pcache = PoolStreamTemp(str, inf, stdout, 2, ops);
       } else {
-	p->inf = inf; /* hack */
+	p->inf  = inf; /* hack */
+	p->outf = stdout; /* hack */
       }
       inuse = true;
     } else {
-      p = PoolStreamTemp(str, inf, stdout, 0, ops);
+      p = PoolStreamTemp(str, inf, stdout, 2, ops);
     }
     if (p == NULL) {
       return 0;		/* Failed */
