@@ -221,7 +221,7 @@ IOBFILE *iobfileopen(FILE *istream)
   iobf->ungetc = EOF;
 
   if (iobf->fd >= 0) {
-    /* Determine whether we file positioning support */
+    /* Determine whether we have file positioning support */
     if (lseek(iobf->fd, 0, SEEK_CUR) != -1 &&
 	!isatty(iobf->fd)) {
       iobf->can_seek = -1;
