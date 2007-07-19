@@ -649,7 +649,7 @@ Can't find OpenGL header file GL/gl.h.  Geomview does not require OpenGL
 but you will have to live without hardware accellerated rendering.
 See the file INSTALL.Geomview for details.
 ])
-    OPENGLINCLUDE=$GEOM_I_OPTION
+    OPENGLINCLUDE="" # $GEOM_I_OPTION
   fi
   GL_I_OPTION=$GEOM_I_OPTION
 
