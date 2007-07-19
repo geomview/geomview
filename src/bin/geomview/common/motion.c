@@ -87,11 +87,8 @@ int name(int action, float x, float y, float t, float dx, float dy, float dt) \
   D1PRINT(("%s: action=%3d x=%8f y=%8f t=%8f dx=%8f dy=%8f dt=%8f\n",	\
 	   #name, action, x, y, t, dx, dy, dt));			\
 									\
-  drawer_transform(moving, center, useframe, type, fx, fy, fz,		\
-		   dt,							\
-		   uistate.inertia ? "transform-incr" : "transform",	\
-		   NO_KEYWORD);						\
-									\
+  (uistate.inertia ? gv_transform_incr : gv_transform)			\
+    ( moving, center, useframe, type, fx, fy, fz, dt, NO_KEYWORD );	\
   return 1;								\
 }
 
@@ -118,8 +115,8 @@ static void maybe_scale(int id, float s)
   } else {
     /* only allow mouse scaling in Euclidean space */
     if (spaceof(id) == TM_EUCLIDEAN) {
-      drawer_transform(id, CENTERID, FOCUSID, SCALE_KEYWORD, s, s, s,
-		       0, "transform", NO_KEYWORD);
+      gv_transform(id, CENTERID, FOCUSID,
+		   SCALE_KEYWORD, s, s, s, 0, NO_KEYWORD);
     }
     return;
   }
