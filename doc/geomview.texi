@@ -3821,7 +3821,7 @@ depends on the setting of the dicing level, 10x10 by default.  From
 Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or a
 @code{dice nu nv} Appearance attribute sets this.
 
-Texture co-ordinates are generated for @code{STSPHERE} objectes; the
+Texture co-ordinates are generated for @code{STSPHERE} objects; the
 keyword following the initial @code{STSPHERE} keyword defines the way
 this is done. It follows the conventions of the @command{mktxmesh}
 Perl-script which comes with the @emph{Orrery}.
