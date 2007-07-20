@@ -1052,8 +1052,8 @@ Below the middle of this panel is a browser with three lines in it; the
 second line is a directory with lots of Geomview example files in it.
 Click on that second line; @pxref{figfilespanel, Figure}. Scroll down in
 the list of files until you see @file{tref.off}.  Click on that line,
-and then click on the @emph{Add} button.  A large trefoil-shaped tube
-will appear in your window.  Click the @emph{Done} button in the
+and then click on the @emph{OK} button.  A large trefoil-shaped tube
+will appear in your window.  Click the @emph{Hide} button in the
 @emph{Files} panel to dismiss the panel.
 
 @float Figure,figfilespanel
