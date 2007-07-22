@@ -1,0 +1,6 @@
+@set UPDATED 21 de Maio de 2007
+@set UPDATED-MONTH Maio de 2007
+@set EDITION 1.9.3
+@set VERSION 1.9.3
+@set TRANSLATEDBY Traduzido para o Portugu@^es do Brasil por Jorge Barros de Abreu
+@set HPTRANSLATOR http://usr.solar.com.br/~ficmatin

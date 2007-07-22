@@ -1,0 +1,542 @@
+Tradução usando a versão 1.1.1.1 do cvs.
+Tutorial: Os Formatos Geométricos de Arquivo OOGL 
+		(e do Geomview conseqüêntemente)
+
+OOGL é a abreviatura de Object Oriented Graphics Library (Biblioteca Gráfica Orientada a Objetos.  Um objeto OOGL é
+chamado um Geom. Existe um formato de arquivo texto  para cada tipo de Geom. Você
+pode chamar um arquivo texto em qualquer progama que usa o formato OOGL. Geomview é um
+visualizador interativo de objetos tridimensionais construído sobre o topo do OOGL. (Geomview executa sobre
+as palntaformas Silicon Graphics, NextStep, e X-Windows.) Existem
+notas do Geomview entre colchêtes ao longo deste guia dizendo a
+você o que fazer no Geomview para ver do que estamos falando. Posteriormente
+notas assumem que você tenha ambos know how para fazer e tenha realizado o que as notas anteriores
+disseram para você fazer. Todos os arquivos referenciados nesse documento estão no
+diretório de exemplos de arquivos OOGL que acompanham o Geomview.
+
+A seção Os formatos de arquivo OOGL do manual do Geomview é uma referência
+completa para a sintaxe dos formatos de arquivo. Esse tutorial é uma tentativa
+de levar você mais gentilmente ao mundo dos formatos de arquivos OOGL.
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+				QUAD
+
+Iniciamos um um objeto muito simples: um quadrado. Especificamente, o quadrado
+unitário no plano xy em z=0.
+----------------------------------------------------------------------
+"square.quad":
+
+QUAD
+-1 -1 0 
+1 -1 0
+1 1 0
+-1 1 0
+----------------------------------------------------------------------
+O cabeçalho "QUAD" identifica o tipo de arquivo.  (Você pode tambémusar o
+cabeçalho "POLY" para este tipo por razZões históricas.)  Um arquivo QUAD é uma
+lista de 4*n vertices onde n é o número de quadriláteros. Esse
+arquivo contém somente um quadrilátero.  Você também pode usar esse formato
+para especificar triângulos: apenas use um quadrilátero degenerado onde dois
+dos quatro vértices são identicos.  Os vértices nesse arquivo são
+simples: apenas as coordenadas x,y, e z do ponto.
+
+[GEOMVIEW: Digite "geomview square.quad" de uma janela de shell sobre um
+Silicon Graphics Iris. Gire o quadrado em torno de si mesmo com o botão esquerdo do mouse
+após geomview Tê-lo carregado. Sinta-se livre para brincar com geomview por um tempo se
+a imaginação atingir você durante esse tutorial.  ]
+
+O arquivo seguinte tem vértices mais complexos por incluirem uma cor com as coordenadas do ponto. 
+----------------------------------------------------------------------
+"csquare.quad":
+
+CQUAD
+-1 -1 0		1 0 0 1
+1 -1 0		0 1 0 1
+1 1 0		0 1 0 1
+-1 1 0		1 0 0 1
+----------------------------------------------------------------------
+
+Esses foram os mesmos pontos do quadrado anterior, mas com dois cantos vermelhos e
+dois cantos verdes. O cabeçalho é agora "CQUAD" para indicar que seus
+vértices possuem informações de cores além das informações de ponto.
+Cores são especificadas pelas quádruplas (r,g,b,a) de números em ponto flutuante
+entre 0 e 1. Qualquer cor que pode ser mostrada na tela de um computador
+pode ser codificada por alguma combinação de vermelho (r), verde (g) e azul (b). A quarta
+componente, alfa, representa a opacidade: 0 é transparente e 1 é
+opaco. As plantaformas X-Window, NextStep, e some SGI ignoram a informação 
+alfa inteiramente, mas um instantâneo Renderman irá usar a informação
+alfa se a transparência estiver habilitada. Algumas plantaformas SGI utilizam a
+informação alfa, mas a figura é garantidamente incorreta.
+
+
+[geomview: Apague o objeto atual pressionando o botão Delete.  Para
+chamar csquare.quad, pressione File/Open/segunda linha do navegador de diretórios 
+e localize o "csquare.quad" na lista dos arquivos (pressione o botão OK
+quando tiver terminado) dentro da caixa que aparece.]
+
+You're probably wondering why it's all one cor.  The default shading
+mode is flat shading, where each polygon or polygonal face is the same
+cor. The other two shading modes, constant and smooth, will both
+display multicolored faces where the cores smoothly interpolated
+between vértices. Constant shading ignores all lighting information,
+while smooth shading interpolates lighting as well as coloring between
+the vértices.
+
+To change shading mode, first open up the Appearance panel by clicking
+on the Appearance line in the More Panels browser.  Now switch from
+mode to mode by clicking on different lines in the Shading browser.
+]
+
+
+Time to move on to bigger and better things. 
+
+"dodec.quad":
+
+QUAD
+0 0 0.794654 0 0.491123 0.794654 0.356822 0.491123 0.794654 0.467086 0.151765 0.794654
+0 0 0.794654 -0.467086 0.151765 0.794654 -0.356822 0.491123 0.794654 4.89153e-09 0.491123 0.794654
+0 0 0.794654 -0.288675 -0.397327 0.794654 -0.57735 -0.187593 0.794654 -0.467086 0.151766 0.794654
+0 0 0.794654 0.288675 -0.397327 0.794654 4.36694e-09 -0.607062 0.794654 -0.288675 -0.397327 0.794654
+0 0 0.794654 0.467086 0.151766 0.794654 0.57735 -0.187592 0.794654 0.288675 -0.397327 0.794654
+0 0.710761 0.35538 0 0.491123 0.794654 -0.356822 0.491123 0.794654 -0.467086 0.642889 0.491123
+	.
+	.
+	.
+ < 55 lines of numbers deleted>
+
+
+Now we've got a more interesting object: a dodecahedron.  Since
+dodecahedra have 5-sided faces, each of its 12 faces is actually made out
+of 5 quadrilaterals for a total of 20 quadrilaterals in this Quad object.
+
+[geomview: 
+Delete the square and load "dodec.quad". Since the 5
+quadilaterals on each face all fit together perfectly, the fact that
+there are indeed many of them on each face is only apparent when the
+edges are drawn. To turn on edge drawing, hit the Edges button on
+the Appearance panel.
+]
+
+
+				OFF
+
+There is a much more efficient way of representing a dodecahedron.
+
+"dodec.off":
+
+OFF
+20 12 30
+	1.214124 0.000000 1.589309
+	0.375185 1.154701 1.589309
+	-0.982247 0.713644 1.589309
+	-0.982247 -0.713644 1.589309
+	0.375185 -1.154701 1.589309
+	1.964494 0.000000 0.375185
+	0.607062 1.868345 0.375185
+	-1.589309 1.154701 0.375185
+	-1.589309 -1.154701 0.375185
+	0.607062 -1.868345 0.375185
+	1.589309 1.154701 -0.375185
+	-0.607062 1.868345 -0.375185
+	-1.964494 0.000000 -0.375185
+	-0.607062 -1.868345 -0.375185
+	1.589309 -1.154701 -0.375185
+	0.982247 0.713644 -1.589309
+	-0.375185 1.154701 -1.589309
+	-1.214124 0.000000 -1.589309
+	-0.375185 -1.154701 -1.589309
+	0.982247 -0.713644 -1.589309
+	5 0 1 2 3 4
+	5 0 5 10 6 1
+	5 1 6 11 7 2
+	5 2 7 12 8 3
+	5 3 8 13 9 4
+	5 4 9 14 5 0
+	5 15 10 5 14 19
+	5 16 11 6 10 15
+	5 17 12 7 11 16
+	5 18 13 8 12 17
+	5 19 14 9 13 18
+	5 19 18 17 16 15
+
+The "OFF" header tells us it's a polylist file. The second line in
+the file tells us that there are 20 vértices, 12 faces, and 30 edges.
+(The OOGL libraries presently don't use the edges value, so you can
+just use 0 if you don't happen know the number of edges.)  The next 20
+lines give a list of vértices. The last 12 lines specify the faces:
+the first number is the number of vértices in that face. Since our
+polyhedron happens to be regular, all faces have the same number of
+vértices (in this case, 5).  The rest of the numbers on the line are
+indices into the above list of vértices.
+
+Besides being far more compact, the Polylist file format embeds
+connectivity information in the Geom.  OOGL has no way of knowing
+whether any two quadrilaterals in a Quad object are connected.  But
+with a Polylist, OOGL can interpolate normals across connected faces.
+The normals of an object are used to calculate shading information.
+Interpolated normals make an object look smooth instead of faceted.
+This is often desirable if you are trying to approximate a curved
+surface by breaking it up into small pieces.
+
+[geomview: 
+Go ahead and load "dodec.off" without deleting the other one.  Now
+you've got two Geoms in your world.  Most actions apply to the
+currently picked object. When you start up geomview, the currently
+picked object is the whole world. You can independently control any
+object in the world by picking it as the target of your actions.
+Double-clicking the right mouse button when the mouse is over an
+object picks it: double-clicking the right mouse over empty space
+picks the whole world. You can also pick objects by clicking on the
+appropriate line in the Object browser.
+
+The two dodecahedra are probably superimposed.  Pick one of them as
+your target, click on the "Translate" line in the motion browser, and
+move the picked object away from the center of the world with the left
+mouse.  (To return to "Rotate" mode, click the appropriate line in the
+motion browser.)
+ 
+Now pick the whole world again and draw the normals by hitting the
+"Normals" button on the Appearance panel. Switch between Flat and
+Smooth Shading modes (by clicking in the Shading browser) and notice
+that the Polylist changes but the Quad doesn't.  
+
+Sometimes using the mouse to click on browser lines and buttons is
+cumbersome. The bracketed characters shown on the control panels are
+keyboard shortcuts that duplicate the effect of using the mouse to
+click on that line or button. For instance, "an" (the "a" stands for
+"appearance") toggles drawing normals and "t" switches the motion to
+translation.  In a further shortcut, you can use the prefix of an
+object ("g" or "c" followed by a number, as shown in brackets in the
+Object browser) before most commands to simultaneously pick an object
+and do some action to it. For instance, "g0r" lets you immediately
+rotate the world.
+
+]
+
+
+Let's compare two ways of coloring a Polylist.
+
+facecube.off:
+
+# off file with per face cor
+OFF
+8 6 12
+     1.0 1.0 1.0 
+     1.0 1.0 -1.0 
+     1.0 -1.0 1.0 
+     1.0 -1.0 -1.0 
+     -1.0 1.0 1.0 
+     -1.0 1.0 -1.0 
+     -1.0 -1.0 1.0 
+     -1.0 -1.0 -1.0 
+     4 0 2 3 1  .05 .8 .1 .75
+     4 4 5 7 6  .2 .05 .8 .75
+     4 0 4 6 2  .9 .9 .02 .75
+     4 1 3 7 5  .0 .7 .4 .75
+     4 0 1 5 4  .1 .4 .7 .75
+     4 2 6 7 3  .7 .7 0 .75
+
+vertcube.off:
+
+# off file with per vertex cores
+COFF
+8 6 12
+     1.0 1.0 1.0 	.05 .8 .1 .75
+     1.0 1.0 -1.0	.2 .05 .8 .75 
+     1.0 -1.0 1.0	.9 .9 .02 .75 
+     1.0 -1.0 -1.0 	.0 .7 .4 .75
+     -1.0 1.0 1.0 	.1 .4 .7 .75
+     -1.0 1.0 -1.0 	.7 .7 0 .75
+     -1.0 -1.0 1.0 	0. 0. 0. .75
+     -1.0 -1.0 -1.0 	1. 1. 1. .75	
+     4 0 2 3 1  
+     4 4 5 7 6  
+     4 0 4 6 2  
+     4 1 3 7 5  
+     4 0 1 5 4  
+     4 2 6 7 3  
+
+Everything following a "#" is a comment for humans to read and is
+ignored by OOGL. The header for a plain Polylist file is optional, but
+if you have anything besides points in a vertex you do need a proper
+header.  The object is the unit cube, which has 8 vértices, 6 faces,
+and 12 edges.  The first has per-face coloring and the second has
+per-vertex coloring.
+
+A subtle point: the header for vertcube.off is "COFF" as you would
+expect but the header for facecube.off is just "OFF" because the
+header refers only to the structure of the vértices, not the entire
+file.
+
+[geomview: 
+Delete everything by picking the world and hitting the Delete Object
+button. Now load "facecube.off" and "vertcube.off". Translate one of
+them away from the center so that you can see what you're doing.
+Switch both Polylists between Constant, Flat, and Smooth Shading
+modes.
+
+Shading is done according to light sources that you have control over.
+To play with the lights, open the Light panel by clicking on the Light
+line in the More Panels browser. When you hit the Show Lights button,
+you will see light beams that you can drag around to move the lights.
+You can also add, delete, change the intensity of, and change the
+cor of lights.
+]
+
+
+				MESH
+
+The vértices of a Mesh file are connected in a rectangular grid.
+
+tent.mesh:
+CMESH
+3 3
+0 0 0  1 0 0 1	   1 0 1  0 1 0 1	    2 0 0  0 0 1 1
+0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
+0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
+
+The "CMESH" header tells us that this is a Mesh file and each vertex
+contains both point and cor information.  The second line means that
+both the u and v dimensions of the mesh are 3, so there will be 3*3 =
+9 vértices. Each vertex that's not on an outer edge is connected to
+its 4 surrounding neighbots by an edge. In "tent.mesh", only the
+point (1,1,1) is an inside point. The 9 vértices, when named (u,v),
+are specified in v-major order, just like an array in C:
+
+(0,0)---(1,0)---(2,0)   
+  |	  |	  |
+(0,1)---(1,1)---(2,1)
+  |	  |	  |
+(0,2}---(1,2)---(2,2)
+
+[geomview:
+Delete everything and load "tent.mesh". Go into Smooth Shading mode to
+see each vertex with its own cor so that it's obvious how the points in
+the file correspond with the image in the viewer.
+]
+
+If you want the mesh to be closed along either (or both) of the u or v
+edges, insert either a "u" or "v" in the header just before the
+"MESH".
+	
+"wraptent.mesh" 
+CuMESH
+3 3
+0 0 0  1 0 0 1	   1 0 1  0 1 0 1	    2 0 0  0 0 1 1
+0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
+0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
+
+[geomview: 
+Load "wraptent.mesh" and compare the two Meshes, translating them
+apart from each other as necessary.
+]
+
+There's an extremely efficient way to describe a mesh when the x and y
+coordinates match the u and v coordinates of every point.
+
+"ztent.mesh":
+ZMESH
+3 3
+0 1 0
+0 1 0
+0 1 0
+
+"ztent.mesh" is exactly the same shape as "tent.mesh", although its
+vértices don't have any cores. The header "ZMESH" means that only
+the z-coordinate of each point is specified and the x and y
+coordinates of each point are set equal to its (u,v) position in the
+grid.
+
+[geomview:
+Load "ztent.mesh" to verify that it's really the same shape as "tent.mesh"
+]
+
+
+
+				VECT
+
+A Vect is a collection of polylines, which are lines with 1 or more
+vértices. Here's a file specifying an "X" and the x-axis in red, a "Y"
+and the y-axis in green, and a "Z" and the z-axis in blue.
+
+"xyz.vect":
+VECT
+8 19 3
+2 2 2 2 2 3 2 4 
+1 0 0 1 0 0 1 0
+
+0 0 0  1 0 0
+1 -.05 .05   1  .05 .25
+1  .05 .05   1 -.05 .25
+
+0 0 0  0 1 0
+-.05 1 .25   0  1   .15
+ .05 1 .25   0  1   .15   0  1  .05
+
+0 0 0  0 0 1
+-.05 .25 1  .05 .25 1   -.05 .05 1   .05  .05  1
+
+1 0 0 1
+0 1 0 1
+0 .6 1 1
+
+The header is always "VECT": no letters can be tacked on the front.
+The second line means that there are 8 polylines, which have a total
+of 19 vértices and 3 cores. There is no indexing into a list of
+vértices like a polylist: every single vertex must be specified
+separately. The third line lists the number of vértices in each
+polyline. In "xyz.vect", the only polylines with more than 2 vértices
+are the upper part of the "Y", which has 3, and the "Z", which has 4.
+The fourth line lists the number of cores in each polyline.  When a
+polyline has no cores it inherits the previously set cor.  Next
+come the 19 vértices: only points are allowed. Finally, the 3 cores
+are given on the last three lines.
+
+[geomview: 
+Delete everything, load and look at "xyz.vect". Do the same thing for
+all the remaining examples.
+]
+
+				BEZ
+
+For those who already understand how to create parametric surface
+patches, the syntax of Bezier surface patches is described in the OOGL
+man page. The art of constructing parametric surfaces is not easily
+explained: thus, it is beyond the scope of this tutorial to discuss
+them.
+
+
+Lists and Insts are complex Geoms that can be used to create a
+hierarchical tree of objects. 
+
+				LIST
+
+A List is just a collection of other Geoms.
+
+"ref.list":
+LIST
+< xyz.vect
+< dodec.quad
+{ = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
+
+
+The header is always exactly "LIST". The first two subgeoms refer to
+other files, using the syntax " < filename ". We have omitted the
+optional surrounding braces.  The third is a literal, or in-line,
+object. Although this particular syntax would still work if we left
+off the surrounding braces and equal sign, very similar syntax would
+not so we follow the "when in doubt, use braces" rule.
+
+[geomview:
+Geomview looks for filenames in the current directory, the pathname in
+the GEOMDATA environment variable, and the same directory as the file
+that it's currently reading. 
+]
+
+				INST
+
+An Inst is one or more 4x4 transforms applied to another Geom.  These
+matrices can represent all of the 3D transformations such as rotation,
+translation, scaling, shearing and perspective.  We use 4x4 matrices
+instead of 3x3 matrices so that we can use homogenous coordinates and
+concatenate all transformations without treating translations as
+special cases that require adding instead of multiplying.  4x4
+matrices can also be used for such operations such as 4D rotation or
+projective hyperbolic transformations. A linear algebra or computer
+graphics textbook is a good place to start if you are unfamiliar with
+these ideas.
+
+"ref.inst":
+INST
+geom { < ref.list }
+transforms { = 
+TLIST
+ 1 0 0 0
+ 0 1 0 0
+ 0 0 1 0
+ 2 0 0 1
+
+ 1 0 0 0
+ 0 1 0 0
+ 0 0 1 0
+ 0 2 0 1
+
+ 1 0 0 0
+ 0 1 0 0
+ 0 0 1 0
+ 0 0 2 1
+
+ 1 0 0 0
+ 0 1 0 0
+ 0 0 1 0
+ 0 0 0 1
+}
+
+The header is always exactly "INST". The value following the "geom"
+keyword is a filename reference to "ref.list", which is the List we
+saw above.  It could also be an in-line Geom or a handle. We surround
+the value with braces to avoid ambiguity.
+
+The value of the "transforms" keyword is an in-line TList. It could
+also be a filename reference or a handle. (See the OOGL File Formats
+section of the Geomview manual for specifics.) A TList is actually a
+full-fledged Geom, but we don't ever load a file like "foo.tlist" into
+the viewer because TLists are just a collection of transforms with no
+associated subgeom, so there's nothing to see.
+
+A transform is exactly 16 numbers. The first three are a translations:
+2 units in the x, y and z directions, respectively. The last is just
+the identity. The length of the TList is the number of instantiations
+of the unit: in this case, 4.
+
+If we could not use instantiation, we would have had to compute 4
+entirely new Geoms, since the actual points in space of an object are
+different if you move it. Since the unit of an Inst can be another
+Inst, you can build up a complex hierarchy. For instance, to build a
+solar system you only need to generate one sphere. All the planets can be
+scaled and translated instantiations of that single Geom.
+
+
+"warp.inst":
+INST
+transform {
+		1 0 0 0
+		0 9 0 0
+		0 0 3 0
+		0 0 0 1
+}
+geom { < dodec.off }
+
+This Inst has a single transform instead of a list of them. Thus we
+use the keyword "transform" instead of "transforms". A transform is
+not a Geom, so there is no header before the 16 numbers. We could also
+have a handle here.  (Handles are documented in the OOGL File Formats
+section of the Geomview manual.) Finally, we have "dodec.off" as our
+unit.  The order of the geom and the transform/transforms is
+irrelevant.
+
+
+Postscripts:
+
+OOGL:
+
+This tutorial doesn't document binary files or object appearances.
+See the OOGL File Formats section of the Geomview manual for details. 
+
+White space in OOGL files is mostly for the benefit of human readers.
+"ZMESH 3 3 0 1 0 0 1 0 0 1 0" is a legal OOGL file.  The only
+exception is that there cannot be a line break between the last vertex
+index for an  OFF face and the next 4 cor floats.
+
+Geomview: 
+
+When a Geom is loaded, it is automatically normalized to fit inside a
+unit cube centered around the origin. The default camera viewpoint is
+at {0,0,-3} looking toward the origin. To see the unaltered size and
+position of an object, pick the None line in the Normalization browser
+on the Obscure panel. In general it doesn't matter what the coordinate
+range of an object is as long as the entire file is consistent: {0,1},
+{-1,1}, {0,100}, {-1000,-500}, {17,36} are all valid ranges.
+
+
