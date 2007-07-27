@@ -1,4 +1,4 @@
-Tradução usando a versão 1.1.1.1 do cvs.
+Tradução usando a versão 1.1.1.1 do cvs em inglês.
 Tutorial: Os Formatos Geométricos de Arquivo OOGL 
 		(e do Geomview conseqüêntemente)
 
@@ -73,23 +73,23 @@ informação alfa, mas a figura é garantidamente incorreta.
 [geomview: Apague o objeto atual pressionando o botão Delete.  Para
 chamar csquare.quad, pressione File/Open/segunda linha do navegador de diretórios 
 e localize o "csquare.quad" na lista dos arquivos (pressione o botão OK
-quando tiver terminado) dentro da caixa que aparece.]
+quando tiver terminado) dentro da caixa que aparece.
 
-You're probably wondering why it's all one cor.  The default shading
-mode is flat shading, where each polygon or polygonal face is the same
-cor. The other two shading modes, constant and smooth, will both
-display multicolored faces where the cores smoothly interpolated
-between vértices. Constant shading ignores all lighting information,
-while smooth shading interpolates lighting as well as coloring between
-the vértices.
+Você está provavelmente surpreso porque esse quadrado está todo com uma cor somente.  O modo de tonalidade de cor 
+padrão é o tipo plano, onde cada polígono ou face poligonal é da mesma
+cor. Os outros dois modos de tonalidade de cor, constante e liso, irão ambos
+mostrar faces multicoloridas onde as cores são lisamente interpoladas
+entre os vértices. Tonalidade de cor constante ignora todas as informações de iluminação,
+enquanto tonalidade de cor lisa interpola iluminação e também coloração entre
+os vértices.
 
-To change shading mode, first open up the Appearance panel by clicking
-on the Appearance line in the More Panels browser.  Now switch from
-mode to mode by clicking on different lines in the Shading browser.
+Para mudar o modo de sombreamento, primeiro chame o painel de aparência clicando
+sobre a linha Aparência no navegador principal de painéis.  Agora alterne de
+modo em modo clicando em diferentes linhas no navegador de @emph{Shading}.
 ]
 
 
-Time to move on to bigger and better things. 
+É hora de ir na direção de coisas maiores e melhores. 
 
 "dodec.quad":
 
@@ -106,22 +106,22 @@ QUAD
  < 55 lines of numbers deleted>
 
 
-Now we've got a more interesting object: a dodecahedron.  Since
-dodecahedra have 5-sided faces, each of its 12 faces is actually made out
-of 5 quadrilaterals for a total of 20 quadrilaterals in this Quad object.
+Agora pegamos um objeto mais interessante: um dodecaedro.  Uma vez que
+dodecaedro tem faces de 5 lados, cada uma de suas 12 faces é atualmente feita
+de 5 quadriláteros de um total de 20 quadriláteros nesse objeto do tipo Quad.
 
 [geomview: 
-Delete the square and load "dodec.quad". Since the 5
-quadilaterals on each face all fit together perfectly, the fact that
-there are indeed many of them on each face is only apparent when the
-edges are drawn. To turn on edge drawing, hit the Edges button on
-the Appearance panel.
+Apague o quadrado e chame o arquivo "dodec.quad". Uma vez que os 5
+quadriláteros que formam cada face todos se ajustam perfeitamente uns aos outros, o fato de que
+existe realmente muitos deles em cada face é somente aparente quando as
+borads são desenhadas. Para habilitar o desenho das bordas, aperte o botão Edges no
+painel de aparência.
 ]
 
 
 				OFF
 
-There is a much more efficient way of representing a dodecahedron.
+Existe uma maneira muito mais eficiente de representar um dodecaedro.
 
 "dodec.off":
 
@@ -160,24 +160,24 @@ OFF
 	5 19 14 9 13 18
 	5 19 18 17 16 15
 
-The "OFF" header tells us it's a polylist file. The second line in
-the file tells us that there are 20 vértices, 12 faces, and 30 edges.
-(The OOGL libraries presently don't use the edges value, so you can
-just use 0 if you don't happen know the number of edges.)  The next 20
-lines give a list of vértices. The last 12 lines specify the faces:
-the first number is the number of vértices in that face. Since our
-polyhedron happens to be regular, all faces have the same number of
-vértices (in this case, 5).  The rest of the numbers on the line are
-indices into the above list of vértices.
+O cabeçalho "OFF" nos diz que o arquivo dodec.off é um arquivo do tipo "polylist". A segunda linha no
+arquivo nos diz que existem 20 vértices, 12 faces, e 30 arestas.
+(As bibliotecas OOGL atualmente não utilizam os valores de arestas, de forma que você
+pode apenas usar 0 se acontecer de não saber o número de arestas.)  As próximas 20 seguintes
+linhas fornecem uma lista de vértices. TAs últimas 12 linhas especificam as faces:
+o primeiro numero é o número de vértices naquela face. Uma vez que nosso
+poliedro é regular, todas as faces possuem o mesmo número de
+vértices (nesse caso, 5).  Os números restantes na linha são
+indices dentro da lista de vértices acima.
 
-Besides being far more compact, the Polylist file format embeds
-connectivity information in the Geom.  OOGL has no way of knowing
-whether any two quadrilaterals in a Quad object are connected.  But
-with a Polylist, OOGL can interpolate normals across connected faces.
-The normals of an object are used to calculate shading information.
+Juntamente com o fato de loge mais compacto, o formato de arquivo do tipo "Polylist" incorpora
+informação de conectividade no Geom (Objeto OOGL).  OOGL não tem formas de conhecer
+se quaisquer dois quadriláteros em um bojeto Quad estão conectados.  Mas
+com uma "Polylist", OOGL pode interpolar retas normais ao longo das faces conectadas.
+As retas normais de um objeto são usadas para calcular a informação de tonalidade de cor.
 Interpolated normals make an object look smooth instead of faceted.
-This is often desirable if you are trying to approximate a curved
-surface by breaking it up into small pieces.
+Isso é muitas vezes desejável se você estiver tentando aproximar uma superfície
+curva por meio da quebra da mesma em peças pequenas.
 
 [geomview: 
 Go ahead and load "dodec.off" without deleting the other one.  Now
