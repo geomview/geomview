@@ -114,7 +114,7 @@ de 5 quadriláteros de um total de 20 quadriláteros nesse objeto do tipo Quad.
 Apague o quadrado e chame o arquivo "dodec.quad". Uma vez que os 5
 quadriláteros que formam cada face todos se ajustam perfeitamente uns aos outros, o fato de que
 existe realmente muitos deles em cada face é somente aparente quando as
-borads são desenhadas. Para habilitar o desenho das bordas, aperte o botão Edges no
+bordas são desenhadas. Para habilitar o desenho das bordas, aperte o botão "Edges" no
 painel de aparência.
 ]
 
@@ -180,42 +180,42 @@ Isso é muitas vezes desejável se você estiver tentando aproximar uma superfície
 curva por meio da quebra da mesma em peças pequenas.
 
 [geomview: 
-Go ahead and load "dodec.off" without deleting the other one.  Now
-you've got two Geoms in your world.  Most actions apply to the
-currently picked object. When you start up geomview, the currently
-picked object is the whole world. You can independently control any
-object in the world by picking it as the target of your actions.
-Double-clicking the right mouse button when the mouse is over an
-object picks it: double-clicking the right mouse over empty space
-picks the whole world. You can also pick objects by clicking on the
-appropriate line in the Object browser.
+Vá adiante e chame "dodec.off" sem deletar o oddec.quad.  Agora
+você tem dois Geoms no seu mundo.  A maioria das ações aplicam-se aos
+objetos atualmente selecionados. Quando você inicia o geomview, os objetos
+atualmente selecionados é o mundo todo. Você pode independentemente controlar qualquer
+objeto no mundo selecionando esse objeto como alvo e suas ações.
+Duplo clicando o botão direito do mouse quando o mouse está sobre um
+objeto faz com que ele seja selecionado: duplo clicando o botão direito do mouse sobre o espaço vazio
+seleciona o mundo completo. Você pode também selecionar objetos clicando sobre a
+linha apropriada no navegador de objetos.
 
-The two dodecahedra are probably superimposed.  Pick one of them as
-your target, click on the "Translate" line in the motion browser, and
-move the picked object away from the center of the world with the left
-mouse.  (To return to "Rotate" mode, click the appropriate line in the
-motion browser.)
+Os dois dodecaedros estão provavelmente sobrepostos.  Selecione um deles como
+seu alvo, clique sobre a linha "Translate" no navegador de movimentos, e
+mova o objeto selecionado afastando-se do centro do mundo com o botão esquerdo
+do mouse.  (Para retornar ao modo "Rotate", clique na linha apropriada no
+navegador de movimento.)
  
-Now pick the whole world again and draw the normals by hitting the
-"Normals" button on the Appearance panel. Switch between Flat and
-Smooth Shading modes (by clicking in the Shading browser) and notice
-that the Polylist changes but the Quad doesn't.  
+Agora selecione o mundo completo novamente e desenhe as normais pressionando o
+botão "Normals" no painel de aparência. Alterne entre os modos de sombreamento
+"Flat" e "Smooth" (clicando no navegador de tonalidades) e note
+que a "Polylist" modifica-se mas o "Quad" não se modifica.  
 
-Sometimes using the mouse to click on browser lines and buttons is
-cumbersome. The bracketed characters shown on the control panels are
-keyboard shortcuts that duplicate the effect of using the mouse to
-click on that line or button. For instance, "an" (the "a" stands for
-"appearance") toggles drawing normals and "t" switches the motion to
-translation.  In a further shortcut, you can use the prefix of an
-object ("g" or "c" followed by a number, as shown in brackets in the
-Object browser) before most commands to simultaneously pick an object
-and do some action to it. For instance, "g0r" lets you immediately
-rotate the world.
+Algumas vezes usando o mouse para clicar no navegador de linhas e botões é
+incômodo. Os caracteres colchêtes mostram nos painéis de controle os
+atalhos de teclado que reproduzem o efeito de usar o mouse para
+clicar sobre aquela linha ou butão. Por exemplo, "an" (o "a" representa
+"appearance") muda o desenho de normais e "t" uda o movimento para
+translação.  Como tecla de atalho adicional, você pode usar o prefixo de um
+objeto ("g" ou "c" seguido de um número, como mostrado nos parêtesis no
+navegador de objetos) antes da maioria dos comandos para simultâneamente selecionar um objeto
+e fazer alguma ação para esse objeto. Pr exemplo, "g0r" permite a você imediatamente
+rotacionar o mundo.
 
 ]
 
 
-Let's compare two ways of coloring a Polylist.
+Vamos comparar duas formas de se colorir uma "Polylist".
 
 facecube.off:
 
@@ -257,37 +257,37 @@ COFF
      4 0 1 5 4  
      4 2 6 7 3  
 
-Everything following a "#" is a comment for humans to read and is
-ignored by OOGL. The header for a plain Polylist file is optional, but
-if you have anything besides points in a vertex you do need a proper
-header.  The object is the unit cube, which has 8 vértices, 6 faces,
-and 12 edges.  The first has per-face coloring and the second has
-per-vertex coloring.
+Tudo seguindo o caractere "#" é um comentário para humanos ler e é
+ignorado por OOGL. O cabeçalho para uma "Polylist" plana é opcional, mas
+se você tiver qualquer coisa ao lado de pontos em um vértice você precisará fazer um cabeçalho
+apropriado.  O objeto é um cubo unitário, qu tem 8 vértices, 6 faces,
+e 12 arestas.  O primeiro coloração por face e o segundo tem
+coloração pro vértice.
 
-A subtle point: the header for vertcube.off is "COFF" as you would
-expect but the header for facecube.off is just "OFF" because the
-header refers only to the structure of the vértices, not the entire
-file.
+Um ponto sutil: o cabeçalho para vertcube.off é "COFF" como você pode
+esperar mas o cabeçalho para facecube.off é apenas "OFF" por que o
+cabeçalho refere-se somente àestrutura dos vértices, não ao arquvo
+como um todo.
 
 [geomview: 
-Delete everything by picking the world and hitting the Delete Object
-button. Now load "facecube.off" and "vertcube.off". Translate one of
-them away from the center so that you can see what you're doing.
-Switch both Polylists between Constant, Flat, and Smooth Shading
-modes.
+Apague tudo selecionando o mundo como alvo e clicando o botão
+delete. Agora chae "facecube.off" e "vertcube.off". Translacione um
+deles para adiante de centro de forma que você possa ver o que você está fazendo.
+Alterne ambas as "Polylists" entre os modos de tonalidade "Constant",
+"Flat", e "Smooth".
 
-Shading is done according to light sources that you have control over.
-To play with the lights, open the Light panel by clicking on the Light
-line in the More Panels browser. When you hit the Show Lights button,
-you will see light beams that you can drag around to move the lights.
-You can also add, delete, change the intensity of, and change the
-cor of lights.
+Tonalidade é realizada conforme a fonte de luz que você controla.
+Para brincar com luzes, abra o painel "Light" clicando na linha
+"Light" no navegador de "Inspect". Quando você pressionar o botão "Show Lights",
+você irá ver raios luminosos que você pode arrastar ao redor para mover as luzes.
+Você também pode adicionar "add", apagar "delete", modificar a intensidade da, e modificar a
+cor das luzes.
 ]
 
 
 				MESH
 
-The vértices of a Mesh file are connected in a rectangular grid.
+Os vértices de um arquivo de Malha(Mesh) são conectados em uma grade retangular.
 
 tent.mesh:
 CMESH
@@ -296,13 +296,13 @@ CMESH
 0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
 0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
 
-The "CMESH" header tells us that this is a Mesh file and each vertex
-contains both point and cor information.  The second line means that
-both the u and v dimensions of the mesh are 3, so there will be 3*3 =
-9 vértices. Each vertex that's not on an outer edge is connected to
-its 4 surrounding neighbots by an edge. In "tent.mesh", only the
-point (1,1,1) is an inside point. The 9 vértices, when named (u,v),
-are specified in v-major order, just like an array in C:
+O cabeçalho "CMESH" nos diz que esse é um arquivo de Malha e cada vértice
+contém ambos ponto e informação de cor.  A segunda linha significa que
+ambas as dimensões u e v da malha são 3, então existirão 3*3 =
+9 vértices. Cada vértice que não está sobre uma aresta externa está conectado a
+seus 4 vizinhos por uma aresta. Em "tent.mesh", somente o
+ponto (1,1,1) é um ponto interno. Os 9 vértices, quando chamados (u,v),
+são especificados na ordem crescente de v, apenas como um array em C:
 
 (0,0)---(1,0)---(2,0)   
   |	  |	  |
@@ -311,13 +311,13 @@ are specified in v-major order, just like an array in C:
 (0,2}---(1,2)---(2,2)
 
 [geomview:
-Delete everything and load "tent.mesh". Go into Smooth Shading mode to
-see each vertex with its own cor so that it's obvious how the points in
-the file correspond with the image in the viewer.
+Apague tudo e chame "tent.mesh". Entre no modo de tonalidade "Smooth" (Inspect/Appearence/Shading) para
+ver cada vértice com sua própia cor de forma que seja óbvio como os pontos no
+arquivo correspondem com a imagem no visualizador.
 ]
 
-If you want the mesh to be closed along either (or both) of the u or v
-edges, insert either a "u" or "v" in the header just before the
+Se você desejar a malha seja fechada ao longo das ou (ou ambas) arestas 
+u ou v, insira ou um "u" ou um "v" no cabeçalho apenas antes de
 "MESH".
 	
 "wraptent.mesh" 
@@ -328,12 +328,12 @@ CuMESH
 0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
 
 [geomview: 
-Load "wraptent.mesh" and compare the two Meshes, translating them
-apart from each other as necessary.
+Chame "wraptent.mesh" e compare as duas malhas, transladando-as
+separadamente se necessário.
 ]
 
-There's an extremely efficient way to describe a mesh when the x and y
-coordinates match the u and v coordinates of every point.
+Existe uma forma extremamente eficiente de descrever uma malha quando as coordenadas
+x e y coincidem com as coordenadas u e v de todo ponto.
 
 "ztent.mesh":
 ZMESH
@@ -342,23 +342,23 @@ ZMESH
 0 1 0
 0 1 0
 
-"ztent.mesh" is exactly the same shape as "tent.mesh", although its
-vértices don't have any cores. The header "ZMESH" means that only
-the z-coordinate of each point is specified and the x and y
-coordinates of each point are set equal to its (u,v) position in the
-grid.
+"ztent.mesh" é exatamente a mesma aparência que "tent.mesh", embora seus
+vértices não tenham quaisquer cores. O cabeçalho "ZMESH" significa que somente
+as coordenadas do eixo z de cada ponto é especificada e as coordenadas
+x e y de cada ponto são escolhidas para serem iguais à sua posição (u,v) na
+grade.
 
 [geomview:
-Load "ztent.mesh" to verify that it's really the same shape as "tent.mesh"
+Chame "ztent.mesh" para verificar que esse arquivo realmente tem a mesma aparência que "tent.mesh"
 ]
 
 
 
 				VECT
 
-A Vect is a collection of polylines, which are lines with 1 or more
-vértices. Here's a file specifying an "X" and the x-axis in red, a "Y"
-and the y-axis in green, and a "Z" and the z-axis in blue.
+Um vetor é uma coleção de "polylines", que são linhas com um ou mais
+vértices. Aqui está um arquivo especificando um "X" e o eixo x em vermelho, um "Y"
+e o eixo y em verde, e um "Z" e o eixo z em azul.
 
 "xyz.vect":
 VECT
@@ -381,38 +381,38 @@ VECT
 0 1 0 1
 0 .6 1 1
 
-The header is always "VECT": no letters can be tacked on the front.
-The second line means that there are 8 polylines, which have a total
-of 19 vértices and 3 cores. There is no indexing into a list of
-vértices like a polylist: every single vertex must be specified
-separately. The third line lists the number of vértices in each
-polyline. In "xyz.vect", the only polylines with more than 2 vértices
-are the upper part of the "Y", which has 3, and the "Z", which has 4.
-The fourth line lists the number of cores in each polyline.  When a
-polyline has no cores it inherits the previously set cor.  Next
-come the 19 vértices: only points are allowed. Finally, the 3 cores
-are given on the last three lines.
+O cabeçalho é sempre "VECT": nenhuma letra pode ser pregada na frente.
+A segunda linha significa que existem 8 "polylines", que possuem um total
+de 19 vértices e 3 cores. Não existe indexação dentro de uma lista de
+vértices como uma "polylist": todo vértice simples deve ser especificado
+separadamente. A terceira linha lista o número de vértices em cada
+"polyline". Em "xyz.vect", somente "polylines" com mais que 2 vértices
+são a parte superior do "Y", que tem 3, e o "Z", que tem 4.
+A quarta linha lista o número de cores em cada "polyline".  Quando uma
+"polyline" não possui cores essa "polyline"herda a cor previamente escolhida.  A seguir
+vem os 19 vértices: somente pontos são permitidos. Finalmente, as 3 cores
+são fornecidas nas últimas três linhas.
 
 [geomview: 
-Delete everything, load and look at "xyz.vect". Do the same thing for
-all the remaining examples.
+Apague tudo, chame e olhe "xyz.vect". Faça a mesma coisa para
+todos os exemplos restantes.
 ]
 
 				BEZ
 
-For those who already understand how to create parametric surface
-patches, the syntax of Bezier surface patches is described in the OOGL
-man page. The art of constructing parametric surfaces is not easily
-explained: thus, it is beyond the scope of this tutorial to discuss
-them.
+Para aqueles que já entenderam como criar ajustes em superfície
+paramétrica, a sintaxe do ajuste da superfície de Bezier é descrito página de
+manual da OOGL. A arte de construir superfícies paramétricas não é facilmente
+explicável: dessa forma, superfícies paramétricas estão dentro da abrangência deste tutorial
+discutí-las.
 
 
-Lists and Insts are complex Geoms that can be used to create a
-hierarchical tree of objects. 
+"Lists" e "Insts" são Geoms complexos que podem ser usados para criar uma
+árvore hierárquica de objetos. 
 
 				LIST
 
-A List is just a collection of other Geoms.
+Uma "List" é apenas uma coleção de outros Geoms.
 
 "ref.list":
 LIST
@@ -421,31 +421,31 @@ LIST
 { = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
 
 
-The header is always exactly "LIST". The first two subgeoms refer to
-other files, using the syntax " < filename ". We have omitted the
-optional surrounding braces.  The third is a literal, or in-line,
-object. Although this particular syntax would still work if we left
-off the surrounding braces and equal sign, very similar syntax would
-not so we follow the "when in doubt, use braces" rule.
+O cabeçalho é sempre exatamente "LIST". Os primeiros dois subgeoms referem-se a
+outros arquivos, usando a sintaxe " < nomearquivo ". Omitimos as
+chaves opcionais.  O terceiro é um objeto literal,
+ou in-line. Embora essa sintaxe em particular possa ainda trabalhar se esquecermos
+as chaves e o sinal de igual, sintaxe muito similar não
+pode então seguimos a regra "quando tiver dúvida, use as chaves".
 
 [geomview:
-Geomview looks for filenames in the current directory, the pathname in
-the GEOMDATA environment variable, and the same directory as the file
-that it's currently reading. 
+Geomview procura por nomes de arquivos no diretório atual, o camino de nomes na
+variável de ambiente GEOMDATA, e no mesmo diretório que o arquivo
+que está atualmente sendo lido pelo geomview. 
 ]
 
 				INST
 
-An Inst is one or more 4x4 transforms applied to another Geom.  These
-matrices can represent all of the 3D transformations such as rotation,
-translation, scaling, shearing and perspective.  We use 4x4 matrices
-instead of 3x3 matrices so that we can use homogenous coordinates and
-concatenate all transformations without treating translations as
-special cases that require adding instead of multiplying.  4x4
-matrices can also be used for such operations such as 4D rotation or
-projective hyperbolic transformations. A linear algebra or computer
-graphics textbook is a good place to start if you are unfamiliar with
-these ideas.
+Um "Inst"é uma ou mais transformações 4x4 aplicada a outro Geom.  Essas
+matrizes podem representar todas as transformações em 3D tais como rotação,
+translação, homotetia, redução e perspectiva.  Usamos matrizes 4x4
+em lugar de matrizes 3x3 de forma que podemos usar coordenadas homogêneas e
+concatenar todas as transformações sem tratar translações como
+casos especiais que requerem adições em lugar de multiplicações.  Matrizes
+4x4 podem também serem usadas para operações tais como rotações em 4D
+ou transformações projetivas hiperbólicas. Um livro texto de álgebra linear
+ou um livro texto de computação gráfica são bons lugares para iniciar seus estudos se você não está familiarizado com
+essas idéias.
 
 "ref.inst":
 INST
@@ -473,29 +473,29 @@ TLIST
  0 0 0 1
 }
 
-The header is always exactly "INST". The value following the "geom"
-keyword is a filename reference to "ref.list", which is the List we
-saw above.  It could also be an in-line Geom or a handle. We surround
-the value with braces to avoid ambiguity.
+O cabeçalho é sempre exatamente "INST". O valor seguindo a palavra chave
+"geom" é uma referência de nome de arquivo "ref.list", que é a "List" que
+mostramos acima.  Isso também pode ser um  Geom in-line ou um manipulador. Cercamos
+o valor com chaves para evitar ambiguidade.
 
-The value of the "transforms" keyword is an in-line TList. It could
-also be a filename reference or a handle. (See the OOGL File Formats
-section of the Geomview manual for specifics.) A TList is actually a
-full-fledged Geom, but we don't ever load a file like "foo.tlist" into
-the viewer because TLists are just a collection of transforms with no
-associated subgeom, so there's nothing to see.
+O valor da palavra chave "transforms" é uma "TList" in-line. Isso também
+pode ser uma referência a um nome de arquivo ou um manpulador. (Veja a seção Os Formatos
+de Arquivo do OOGL do manual do Geomview para especificidades.) Uma "TList" é atualmente um
+Geom completametne fugidio, mas nós não temos mesmo que chamar um arquivo como "foo.tlist" dentro
+do visualizador porque "TLists" são apenas uma coleção de transformações sem
+subgeom associado, de forma que não há nada para ver.
 
-A transform is exactly 16 numbers. The first three are a translations:
-2 units in the x, y and z directions, respectively. The last is just
-the identity. The length of the TList is the number of instantiations
-of the unit: in this case, 4.
+Uma transformação é exatamente 16 números. Os primeiros três são translações:
+2 unidade nas direções x, y e z, respectivamente. O último é apenas
+a identidade. O comprimeto da "TList" é o número de instanciações
+da unidade: nesse caso, 4.
 
-If we could not use instantiation, we would have had to compute 4
-entirely new Geoms, since the actual points in space of an object are
-different if you move it. Since the unit of an Inst can be another
-Inst, you can build up a complex hierarchy. For instance, to build a
-solar system you only need to generate one sphere. All the planets can be
-scaled and translated instantiations of that single Geom.
+Se não pudermos usar instanciação, teremos que calcular 4
+Geoms inteiramente novos, uma vez que os atuais pontos no espaço de um objeto são
+diferentes se você movê-lo. Uma vez que a unidade de um "Inst" pode ser outro
+"Inst", você pode construir uma hierarquía complexa. Por exemplo, para construi um
+sistema solar você só precisa gerar uma esfera. Tdos os planetes pode ser
+instanciações de homotetias e translações da que simples Geom.
 
 
 "warp.inst":
@@ -508,34 +508,34 @@ transform {
 }
 geom { < dodec.off }
 
-This Inst has a single transform instead of a list of them. Thus we
-use the keyword "transform" instead of "transforms". A transform is
-not a Geom, so there is no header before the 16 numbers. We could also
-have a handle here.  (Handles are documented in the OOGL File Formats
-section of the Geomview manual.) Finally, we have "dodec.off" as our
-unit.  The order of the geom and the transform/transforms is
-irrelevant.
+Esse "Inst" tem uma transformação simples em lugar de uma lista deles. Dessa forma
+usamos a palavra chave "transform" em lugar da palavra chave "transforms". Um "transform" não
+é um Geom, de forma que não existe cabeçalho antes dos 16. Podemos também
+ter um manipulador aqui.  (Manipuladores estão documentados na seção Formatos de Arquivo
+do OOGL do manual do Geomview.) Finalmente, temos "dodec.off" como nossa
+unidade.  A ordem do geom e das "transform/transforms" é
+irrelevante.
 
 
 Postscripts:
 
 OOGL:
 
-This tutorial doesn't document binary files or object appearances.
-See the OOGL File Formats section of the Geomview manual for details. 
+Esse tutorial não documenta arquivos binários ou aparências de objetos.
+Veja a seção Formatos de Arquivo do OOGL do manual do Geomview para detalhes. 
 
-White space in OOGL files is mostly for the benefit of human readers.
-"ZMESH 3 3 0 1 0 0 1 0 0 1 0" is a legal OOGL file.  The only
-exception is that there cannot be a line break between the last vertex
-index for an  OFF face and the next 4 cor floats.
+Espaços em branco em arquivos OOGL ocorrem para facilitar a vida dos leitores humanos.
+"ZMESH 3 3 0 1 0 0 1 0 0 1 0" é um arquivo OOGL válido.  A única
+excessão é que não pode haver um fim de linha entre o último índice de
+vértice para uma face tipo "OFF" e os 4 números em ponto flutuante representativos de cor.
 
 Geomview: 
 
-When a Geom is loaded, it is automatically normalized to fit inside a
-unit cube centered around the origin. The default camera viewpoint is
-at {0,0,-3} looking toward the origin. To see the unaltered size and
-position of an object, pick the None line in the Normalization browser
-on the Obscure panel. In general it doesn't matter what the coordinate
+Quando um Geom é chamado, ele automaticamente normalizado ajustar dentro de um
+cubo unitário centrado em torno da origem. O ponto de visualização padrào da câmera é
+em {0,0,-3} olhando na direção da oríge. Para ver a posição e o tamanho
+inalterado de um objeto, seleciona a linah "None" no navegador "Normalization"
+Em "Inspect/Appearence". In general it doesn't matter what the coordinate
 range of an object is as long as the entire file is consistent: {0,1},
 {-1,1}, {0,100}, {-1000,-500}, {17,36} are all valid ranges.
 
