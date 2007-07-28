@@ -535,8 +535,8 @@ Quando um Geom é chamado, ele automaticamente normalizado ajustar dentro de um
 cubo unitário centrado em torno da origem. O ponto de visualização padrào da câmera é
 em {0,0,-3} olhando na direção da oríge. Para ver a posição e o tamanho
 inalterado de um objeto, seleciona a linah "None" no navegador "Normalization"
-Em "Inspect/Appearence". In general it doesn't matter what the coordinate
-range of an object is as long as the entire file is consistent: {0,1},
-{-1,1}, {0,100}, {-1000,-500}, {17,36} are all valid ranges.
+Em "Inspect/Appearence". Em geral não importa o que o intervalo de
+coordenadas é enquanto o arquivo inteiro for consistente: {0,1},
+{-1,1}, {0,100}, {-1000,-500}, {17,36} são todos intervalos válidos.
 
 
