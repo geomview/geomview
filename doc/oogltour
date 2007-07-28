@@ -535,7 +535,7 @@ When a Geom is loaded, it is automatically normalized to fit inside a
 unit cube centered around the origin. The default camera viewpoint is
 at {0,0,-3} looking toward the origin. To see the unaltered size and
 position of an object, pick the None line in the Normalization browser
-on the Obscure panel. In general it doesn't matter what the coordinate
+in the Inspect pull-down menu. In general it doesn't matter what the coordinate
 range of an object is as long as the entire file is consistent: {0,1},
 {-1,1}, {0,100}, {-1000,-500}, {17,36} are all valid ranges.
 
