@@ -278,7 +278,7 @@ modes.
 
 Shading is done according to light sources that you have control over.
 To play with the lights, open the Light panel by clicking on the Light
-line in the More Panels browser. When you hit the Show Lights button,
+line in the Inspect pull-down menu. When you hit the Show Lights button,
 you will see light beams that you can drag around to move the lights.
 You can also add, delete, change the intensity of, and change the
 color of lights.
