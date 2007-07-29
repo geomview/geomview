@@ -1198,7 +1198,7 @@ take any security precautions, so this can be a security risk.
 @item -noopengl
 Disable the use of OpenGL for (possibly) hardware accelerated rendering,
 even if the Geomview binary has support for OpenGL compiled in. This
-also disables the support for transparency and and textures in the
+also disables the support for transparency and textures in the
 camera windows. RenderMan snapshots still will have correct transparency
 and some limited texture support.
 
