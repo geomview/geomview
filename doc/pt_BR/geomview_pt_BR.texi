@@ -12,7 +12,7 @@
 * Geomview: (geomview).         Programa interativo de visualiza@,c@~ao tridimensional.
 @end direntry
 
-@c baseado na vers@~{a}o 1.41 do cvs
+@c baseado na vers@~{a}o 1.42 do cvs
 @titlepage
 @sp 1
 @center @titlefont{Manual do Geomview}
@@ -1126,113 +1126,114 @@ Aqui est@~{a}o as op@,c@~{o}es de linha de comando que o Geomview permite:
 Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @var{r} @var{g} @var{}b.
 @c added by jorge
-@c -b 0 0 64 - azul
+@c -b 0 0 1 - azul
 @c -b 0 0 0 - preto
-@c -b 64 64 64 - branco
-@item -c @var{file}
-Interpret the GCL commands in @var{file}, which may be the special
-symbol @file{-} for standard input.  For a description of GCL,
-@xref{GCL}.
+@c -b 1 1 1 - branco
+@d -b 0.5 0.5 0.5 - cinza
+@item -c @var{arquivo}
+Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
+especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,c@~{a}o de GCL,
+veja @ref{GCL}.
 
-@item -c @var{command}
-Commands may also be supplied literally, as in
+@item -c @var{comando}
+Comandos podem tamb@'{e}m serem fornecidos literalmente, como em
 @example
 -c "(ui-panel main off)"
 @end example
-Since @var{command} includes parentheses, which have special meaning to
-the shell, @var{command} must be quoted.  Multiple @var{-c} options are allowed.
+Uma vez que @var{comando} inclui par@^{e}ntesis, que possuem significado especial para
+o shell, @var{comando} deve receber ap@'{o}strofo.  Multiplas op@,c@~{o}es @var{-c} s@~{a}o permitidas.
 
-@item -wins @var{nwins}
-Causes Geomview to initially display @var{nwins} janelas de c@^{a}mera.
+@item -wins @var{n}
+Faz com que Geomview mostre inicialmente @var{n} janelas de c@^{a}mera.
 
-@item -wpos @var{width},@var{height}[@@@var{xmin},@var{ymin}]
-Specifies the initial location and size of the first janela de c@^{a}mera.  The
-values for @var{width}, @var{height}, @var{xmin}, and @var{ymin} are in
-screen (pixel) coordinates.
+@item -wpos @var{largura},@var{altura}[@@@var{xmin},@var{ymin}]
+Especifica a localiza@,c@~{a}o inicial e o tamanho da primeira janela de c@^{a}mera.  Os
+valores para @var{largura}, @var{altura}, @var{xmin}, e @var{ymin} est@~{a}o em
+coordenadas de tela (pixel).
 
-@item -M[cg][ps[un|in|in6]] @var{PIPENAME}|@var{TCPPORT}
-The @samp{-M} option accepts modifiers: a @samp{g} suffix expects
-geometry data (the default), while a @samp{c} suffix expects GCL
-commands. A @samp{p} implies the connection should use a named pipe (the
-default on everything except on the NeXT), while @samp{s} implies using
-a UNIX-domain socket (the default on the NeXT). Since version 1.9 of
-Geomview Internet domain sockets are also supported; use @samp{sin} to
-make Geomview listen on the IPv4 port given by @var{TCPPORT}, or use
-@samp{sin6} to make Geomview listen on an IPv6 port (also as specified
-by @var{TCPPORT}). @samp{sun} is a synonym for @samp{s}, i.e. use the
-Unix domain socket with the name @var{PIPENAME}. If @var{PIPENAME}
-starts with a slash ('/'), then it is assumed to be an absolute
-pathname, otherwise the named pipe or socket is created below
+@item -M[cg][ps[un|in|in6]] @var{PIPENOME}|@var{TCPPORT}
+A op@,c@~{a}o @samp{-M} aceita modificadores: um sufixo @samp{g} espera
+dados geom@'{e}tricos (o padr@~{a}o), enquanto um sufixo @samp{c} espera comandos
+GCL. Um @samp{p} implica que a conec@,c@~{a}o pode usar um pipe nomeado (o
+padr@~{a}o para tudo exceto para "NeXT"), enquanto @samp{s} implica no uso de
+um "UNIX-domain socket" (o padr@~{a}o em "NeXT"). Uma vez que na vers@~{a}o 1.9 do
+Geomview "Internet domain sockets" s@~{a}o tamb@'{e}m suportados; use @samp{sin} para
+fazer o Geomview escutar uma porta IPv4 fornecida por @var{TCPPORT}, ou use
+@samp{sin6} para fazer Geomview escute uma porta IPv6 (tamb@'{e}m como especificado
+em @var{TCPPORT}). @samp{sun} @'{e} um sin@^{o}nimo para @samp{s}, i.e. use o
+"Unix domain socket" com o nome @var{PIPENOME}. Se @var{PIPENOME}
+inicia com uma barra ('/'), ent@~{a}o esse nome @'{e} assumido ser um caminho
+absoluto, de outra forma o pipe nomeado  ou socket @'{e} criado sob o diret@'{o}rio
 @file{$@{TMPDIR@}/geomview/}.
 
-@b{Listening to command streams on TCP ports can be a security risk,
-as Geomview itself does not take any security precautions, it simply
-executes all commands fed to it through the network socket. This also
-implies that disk-io can be initiated remotely.}
+@b{Escutando fluxo de comando em portas TCP pode ser um risco de seguran@,ca,
+como Geomview por si mesmo n@~{a}o toma nenhum tipo de precau@,c@~{a}o de seguran@,ca, Geomview simplesmente
+executa todos os comandos alimentado a ele atrav@'{e}s do sockete de rede. Isso
+tamb@'{e}m implica entrada e sa@'{i}da para unidades de armazenamento locais devem ser permitidas remotamente.}
 
-Examples:
+Exemplos:
 @table @code
-@item -M @var{objectname}
-Display (possibly dynamically changing) geometry sent from the
-programs @code{geomstuff} or @code{togeomview}.  This actually listens to the
-named pipe @file{/tmp/geomview/objectname}; you can achieve the same
-effect with the shell commands:
+@item -M @var{nome_de_objeto}
+Mostra (possivelmente mudando dinamicamente) geometria enviada de
+programas @code{geomstuff} ou @code{togeomview}.  Essa op@,c@~{a}o "-M" escuta o
+pipe nomeado @file{/tmp/geomview/nome_de_objeto}; voc@^{e} pode conseguir o mesmo
+efeito com os comandos de shell abaixo:
 @example
 mkdir /tmp/geomview
-mknod /tmp/geomview/objectname p
+mknod /tmp/geomview/nome_de_objeto p
 @end example
-(assuming the directory and named pipe don't already exist), then
-executing the GCL command:
+(assumindo que o diret@'{o}rio e o pipe nomeado n@~{a}o existam atualmente), ent@~{a}o
+executando o comando GCL:
 @example
-(geometry objectname  < /tmp/geomview/objectname)
+(geometry nome_de_objeto  < /tmp/geomview/nome_de_objeto)
 @end example
 (@pxref{geometry,@code{(geometry @dots{})}})
 
-@item -Mc @var{pipename}
-Like @samp{-M} above, but expects GCL commands, rather than OOGL
-geometry data, on the connection.
+@item -Mc @var{pipenome}
+Como @samp{-M} acima, mas espera comandos GCL, em lugar de dados
+geom@'{e}tricos OOGL, na conec@,c@~{a}o.
 
-@item -Mcs fred
-Read commands from the UNIX-domain socket named.
-@file{/tmp/geomview/fred}
+@item -Mcs nome
+L@^{e} comandos a partir do "UNIX-domain socket" nomeado.
+@file{/tmp/geomview/nome}
 
 @item -Mcsin 40000
-Read commands from the IPv4 port @samp{40000}. Geomview itself does not
-take any security precautions, so this can be a security risk.
+L@^{e} comandos a partir da porta IPv4 @samp{40000}. Geomview por si mesmo n@~{a}o
+toma qualquer precau@,c@~{a}o de seguran@,ca, de forma que "-Mcsin 40000" pode ser um risco de seguran@,ca.
 @end table
 
 @item -noopengl
-Disable the use of OpenGL for (possibly) hardware accelerated rendering,
-even if the Geomview binary has support for OpenGL compiled in. This
-also disables the support for transparency and and textures in the
-janelas de c@^{a}mera. RenderMan snapshots still will have correct transparency
-and some limited texture support.
+Desabilita o uso de OpenGL para (possivelmente) convers@~{a}o acelerada de hardware,
+mesmo que o bin@'{a}rio do Geomview tenha suporte a OpenGL compilado internamente. "-noopengl"
+tamb@'{e}m desabilita o suporte a transpar@^{e}ncia e texturas na
+janelas de c@^{a}mera. Instant@^{a}neos "RenderMan" ainda ter@~{a}o a transpar@^{e}ncia correta
+e suporte a alguma textura limitada.
 
 @item -nopanels
-Start up displaying no panels, only graphics windows.  Panels may be
-invoked later as usual with the @kbd{Px} keyboard shortcuts or with
-the @code{ui-panel} command. @xref{ui-panel, @code{(ui-panel @dots{})}}.
+Inicia sem mostrar nenhum painel, somente a janelas gr@'{a}ficas.  Pain@'{e}is podem ser
+invocados mais tarde da forma usual com as teclas de atalho @kbd{Px} ou com
+comando @code{ui-panel}. Veja @ref{ui-panel, @code{(ui-panel @dots{})}}.
 
 @item -noinit
-Read no initialization files. By default, geomview reads the system-wide
-@file{.geomview} file, followed by those in @file{$@{HOME@}/.geomview} and
+N@~{a}o l@^{e} nenum arquivo de inicializa@,c@~{a}o. Por padr@~{a}o, geomview l@^{e} o arquivo
+@file{.geomview} do systema, seguido daqueles em @file{$@{HOME@}/.geomview} e em
 @file{./.geomview}.
 
-@item -e @var{module}
-Start an external module; @var{module} is the name associated with the
-module, appearing in the main panel's Applications browser, as defined
-by the @code{emodule-define} command. @xref{emodule-define,
+@item -e @var{modulo}
+Inicial um m@'{o}dulo externo; @var{modulo} @'{e} o nome associado ao
+módulo chamado, aparecendo no painel principal no navegador de "Applications", como definido
+pelo comando @code{emodule-define}. Veja @ref{emodule-define,
 @code{(emodule-define @dots{})}}.
 
 @item -start @var{module} @var{args} @dots{}
-Like -e but allows you to pass arguments to the external module.  "--"
-signals the end of the argument list; the "--" may be omitted if it
-would be the last argument on the Geomview command line.
+Como -e mas permite a você enviar argumentos para o módulo externo.  "--"
+sinaliza o fim da lista de argumentos; o "--" pode ser omitido se for
+o último argumento na linha de comando do Geomview.
 
-@item -run @var{shell-command} @var{args} @dots{}
-Like -start but takes the pathname of executable of the external module
-instead of the module's name.  The pathnames of all known module directories
-are appended to the UNIX search path when invoking @var{shell-command}.
+@item -run @var{coamando-shell} @var{args} @dots{}
+Como "-start" mas toma o caminho de arquivos do executável do módulo externo
+em lugar do nome do módulo.  Os caminhos de arquivo de todos os diretórios de módulos conhecidos
+são anexados ao final do caminho de busca do UNIX quando for invocado o @var{comando-shell}.
 
 @end table
 
@@ -1240,24 +1241,24 @@ are appended to the UNIX search path when invoking @var{shell-command}.
 @node Basic Interaction, Loading, Command Line Options, Interaction
 @section Basic Interaction: The Main Panel
 
-Normally when you invoke Geomview, three windows appear: the
-@emph{Main} panel, the @emph{Tools} panel, and one janela de c@^{a}mera.
-Geomview has many other windows but most things can be done with these
-three and so by default the others do not appear.  This section of the
-manual introduces some basic concepts that are used throughout the rest
-of the manual and describes the @emph{Main} panel.
+Normalmente quando você invoca Geomview, três janelas aparecem: O
+painel principal (@emph{Main}), o painel de ferramentas (@emph{Tools}), e uma janela de c@^{a}mera.
+Geomview tem muitas outras janelas mas muitas coisas podem ser realizadas com essas
+três de forma que por padrão as outras não aparecem.  Essa seção do
+manual introduz alguns conceitos básicos que são usados nas seções restantes
+do manual e descreve o painel principal (@emph{Main}).
 @c
 @float Figure,figmainpanel
 @image{../figs/main}
 @caption{The Main Panel}
 @end float
 @c
-Geomview can display an arbitrary number of objetos simultaneously.  The
-@emph{Targets} browser in the @emph{Main} panel displays a list of all
-the objetos that Geomview currently knows about.  This browser has a
-line for each objeto that you have loaded, plus some lines for other
-objetos.  One of the other objetos is called @code{World} and corresponds to
-the all the currently loaded objetos, treated as if they were one
+Geomview pode mostrar um número arbitrário de objetos simultaneamente.  O
+navegador @emph{Targets} no painel principal (@emph{Main}) mostra uma lista de todos
+os objetos dos quais Geomview atualmente abertos.  Esse navegador tem uma
+linha para cada objeto que você tiver chamado, adicionalmente algumas linhas para outros
+objetos.  Um desses outros objetos é chamado @code{World} e corresponde a
+a todos os objetos atualmente chamados, treated as if they were one
 objeto.  Most of the operations that you can do to one objeto, such as
 applying a movimento or changing a color, can also be done to the "World"
 objeto.
