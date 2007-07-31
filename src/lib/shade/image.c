@@ -267,6 +267,7 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
   int brack = 0;
   IOBFILE *inf;
   char *fname, *imgfname = NULL, *filter, *imgdata = NULL;
+  char filterpath[PATH_MAX];
   long datasize = 0;
   unsigned long chmask;
   bool have_chdata;
@@ -522,7 +523,13 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
 	      /* we leave it to readimage() to determine
 	       * whether this is a valid filter program, or
 	       * prefix, file type spec.
+	       *
+	       * We have to save the filter because thiobfdelimtok()
+	       * would otherwise overwrite it with the next token.
 	       */
+	      strncpy(filterpath, filter, PATH_MAX);
+	      filterpath[PATH_MAX-1] = '\0';
+	      filter = filterpath;
 	      moredata = 1;
 	    }
 	    break;
@@ -1638,7 +1645,7 @@ static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp)
 
     if (wronly) {
       /* close stdout and duplicate it on stderr, otherwise a process
-       * listeningon our stdout might get confused.
+       * listening on our stdout might get confused.
        */
       close(STDOUT_FILENO);
       if (dup2(STDERR_FILENO, STDOUT_FILENO) != STDOUT_FILENO) {
@@ -1671,7 +1678,7 @@ static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp)
     if (cpidp) {
       *cpidp = cpid;
     }
-    if (wronly) {
+    if (!wronly) {
       close(pfd[1]); /* close the write end */
     }
   }
