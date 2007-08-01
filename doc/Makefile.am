@@ -6,28 +6,38 @@ EPSIMAGES = $(PSIMAGES:.ps=.eps)
 PDFIMAGES = $(PSIMAGES:.ps=.pdf)
 PNGIMAGES = $(PSIMAGES:.ps=.png)
 
+LANGUAGES = "" "-pt_BR"
+
 man_MANS = geomview.5gv lisp.3gv oogl.5gv
 
-EXTRA_DIST = geomview.pdf geomview.html README README.gvplot oogltour\
+EXTRA_DIST = geomview.pdf geomview.html geomview-pt_BR.html\
+  README README.gvplot oogltour ooglttour-pt_BR\
   example1.c example2.c example3.c example4.tcl\
   OOGL.m.txt motion.tex $(man_MANS)\
   $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)
 
 AM_MAKEINFOFLAGS = --no-validate
-info_TEXINFOS = geomview.texi
+info_TEXINFOS = geomview.texi geomview-pt_BR.texi
 infoimgdir = $(infodir)
 nobase_infoimg_DATA = $(PNGIMAGES)
+
+geomview_pt_BR_texi_MAKEINFOFLAGS = --enable-encoding --lang=pt
 
 dochtmldir = $(docdir)/html
 dochtml_DATA = htdocs/*.html
 dochtmlfigsdir = $(docdir)/html/figs
 dochtmlfigs_DATA = htdocs/figs/*.png
-doc_DATA = geomview.pdf
+doc_DATA = geomview.pdf geomview-pt_BR.pdf
 
 geomview.pdf:  $(PDFIMAGES)
 geomview.ps:   $(EPSIMAGES)
 geomview.dvi:  $(EPSIMAGES)
 geomview.html: $(PNGIMAGES)
+
+geomview-pt_BR.pdf:  $(PDFIMAGES)
+geomview-pt_BR.ps:   $(EPSIMAGES)
+geomview-pt_BR.dvi:  $(EPSIMAGES)
+geomview-pt_BR.html: $(PNGIMAGES)
 
 TEXINPUTS = $(srcdir):.:
 
@@ -35,21 +45,25 @@ all-local: htdocs pdf
 
 htdocs/*.html htdocs/figs/*.png: htdocs
 
-htdocs: geomview.html
+htdocs: geomview.html geomview-pt_BR.html
 	if test -d $@; then rm -rf $@; fi
-	if test -d $(srcdir)/geomview.html; then \
-          htmldir=$(srcdir)/geomview.html; \
-	else \
-          htmldir=geomview.html; \
-	fi; \
-	cp -R $$htmldir $@; \
-	chmod 0755 $@; \
 	$(mkdir_p) $@/figs; \
 	chmod 0755 $@/figs; \
 	for f in $(PNGIMAGES); do \
 	  test -f $(srcdir)/$$f && f=$(srcdir)/$$f; \
 	  cp $$f $@/figs/; \
 	done; \
+	for loc in $(LANGUAGES); do \
+	  if test -d $(srcdir)/geomview$${loc}.html; then \
+            htmldir=$(srcdir)/geomview$${loc}.html; \
+	  else \
+            htmldir=geomview$${loc}.html; \
+	  fi; \
+	  loc2=`echo $${loc}|sed -e 's/-//g'`; \
+	  $(mkdir_p) $@/$${loc2}; \
+	  cp -R $${htmldir}/. $@/$${loc2}/.; \
+	done; \
+	chmod 0755 $@; \
 	find $@ -type f -exec chmod 644 \{\} \;
 
 .ps.eps:
@@ -72,20 +86,24 @@ dist-hook: html pdf
 	rm -rf `find $(distdir) -name '*~'`
 
 MAINTAINERCLEANFILES = \
- $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf
+ $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES) geomview.pdf geomview-pt_BR.pdf
 
 distclean-local:
 	-rm -rf htdocs
 
 maintainerclean-local:
-	-rm -rf geomview.html
+	-for loc in $(LANGUAGES); do rm -rf geomview$${loc}.html; done
 
 #
 # override to disable deletion of .pdf, .html by the user.
 #
 mostlyclean-aminfo:
-	-rm -rf geomview.aux geomview.cp geomview.cps geomview.fn geomview.fns \
-	  geomview.ky geomview.kys geomview.log geomview.pg \
-	  geomview.pgs geomview.tmp geomview.toc geomview.tp \
-	  geomview.tps geomview.vr geomview.vrs geomview.dvi \
-	  geomview.ps
+	-for loc in $(LANGUAGES); do \
+	  rm -rf \
+	    geomview$${loc}.aux geomview$${loc}.cp geomview$${loc}.cps \
+	    geomview$${loc}.fn geomview$${loc}.fns geomview$${loc}.ky \
+	    geomview$${loc}.kys geomview$${loc}.log geomview$${loc}.pg \
+	    geomview$${loc}.pgs geomview$${loc}.tmp geomview$${loc}.toc \
+	    geomview$${loc}.tp geomview$${loc}.tps geomview$${loc}.vr \
+	    geomview$${loc}.vrs geomview$${loc}.dvi geomview$${loc}.ps ; \
+	done

@@ -1,12 +1,16 @@
+*-[0-9]
+*.la
+*.lo
 *.log *.aux *.cp *.fn *.vr *.dp *.ky *.pg *.tp *.toc *.fns *.dvi
+.libs
 Makefile Makefile.in .deps
-geomview geomview-*
+geomview 
+geomview-pt_BR
 geomview.html
-geomview.pdf geomview.ps
+geomview.pdf
+geomview.ps
+html/*
 mdate-sh
+stamp-1
 stamp-vti
 texinfo.tex
-html/*
-*.lo
-*.la
-.libs

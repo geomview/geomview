@@ -2,14 +2,14 @@
 \tolerance=2000
 \input texinfo
 @letterpaper
-@setfilename geomview
+@setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
-@include version_pt_BR.texi
+@include version-pt_BR.texi
 
 @dircategory Graphics Applications
 @direntry
-* Geomview: (geomview).         Programa interativo de visualiza@,c@~ao tridimensional.
+* Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,c@~ao tridimensional.
 @end direntry
 
 @c baseado na vers@~{a}o 1.42 do cvs
@@ -127,7 +127,7 @@ quando voc@^{e} o receber, n@~{a}o apenas livre para o fabricante.
 @c cannot inherit the restriction imposed by the GPL
 
 @smallexample
-NOTA: Geomview @'{e} distribu@'{i}do sob a LICEN@,{C}}A P@'{U}BLICA GERAL
+NOTA: Geomview @'{e} distribu@'{i}do sob a LICEN@,{C}A P@'{U}BLICA GERAL
 MENOR.  Para os prop@'{o}sitos dessa licen@,ca  n@'{o}s pensamos em Geomview como se ele
 fosse uma "biblioteca", e dos m@'{o}dulos externos do Geomview como "programas que
 se comunicam com a biblioteca".  Fazemos isso porque queremos especificamente
@@ -890,7 +890,7 @@ tetraedro e um dodecaedro.  Ap@'{o}s poucos segundos tr@^{e}s janelas
 ir@~{a}o aparecer; @pxref{figinitial, Figure}.
 
 @float Figure,figinitial
-@image{../figs/initial}
+@image{figs/initial}
 @caption{Initial Geomview display.}
 @end float
 
@@ -919,7 +919,7 @@ esfera invis@'{i}vel e o cursor do mouse como sendo uma al@,ca fora da esfera pr
 Quando voc@^{e} mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse, a ventosa da al@,ca gruda na
 esfera; quando voc@^{e} libera o bot@~{a}o do mouse, a ventosa da al@,ca libera a
 esfera.  Movendo o mouse enquanto mant@'{e}m pressionado o bot@~{a}o faz com que a
-esfera (e conceq@"u}@^{e}ntemente o objeto) mova-se na mesma dire@,c@~{a}o que o
+esfera (e conceq@"{u}@^{e}ntemente o objeto) mova-se na mesma dire@,c@~{a}o que o
 mouse.
 
 Adicionalmente para os dois s@'{o}lidos que est@~{a}o atualmente na tela voc@^{e} pode tamb@'{e}m ver duas molduras de fios
@@ -965,7 +965,7 @@ ajustando-se ao meio da janela (figura
 @pxref{figlookatworld}).  O bot@~{a}o "Olhar Para" (@emph{Look At}) posiciona a c@^{a}mera em uma posi@,c@~{a}o tal
 que o objeto alvo fique centrado na janela.
 @float Figure,figlookatworld
-@image{../figs/fig2}
+@image{figs/fig2}
 @caption{Olhando para o Mundo.}
 @end float
 Agora coloque o cursor sobre o meio do dodecaedro e d@^{e} sobre ele um duplo clique com
@@ -976,7 +976,7 @@ do painel principal (@emph{Main}).  Um duplo clique no bot@~{a}o direito do mous
 @'{e} outra forma de fazer esse objeto tornar-se o objeto alvo.
 
 @float Figure,figappearance
-@image{../figs/ap}
+@image{figs/ap}
 @caption{A Painel Apar@^{e}ncia.}
 @end float
 V@'{a} para o menu @emph{Inspect} no topo do painel principal (@emph{Main}) e selecione
@@ -997,7 +997,7 @@ ou n@~{a}o as faces.  Clique sobre o bot@~{a}o novamente para de forma que a exi
 Agora clique sobre o bot@~{a}o @emph{[Cf] Faces} sob a palavra @emph{COLOR}. Um
 painel de escolha de cores aparecer@'{a} (@pxref{figcolorchooser, Figure}).
 @float Figure,figcolorchooser
-@image{../figs/color}
+@image{figs/color}
 @caption{Painel de Escolha de Cores.}
 @end float
 
@@ -1036,7 +1036,7 @@ Clique sobre o bot@~{a}o @emph{[ab] BBox} sob a palavra @emph{Draw}.
 A caixa associada desaparece.  agora pona o cursor de volta na janela de
 c@^{a}mera.  No teclado, digite as teclas @kbd{a }b.  Note que a
 caixa associada aparece novamente.  @kbd{a }b @'{e} o atalho de teclado para
-o bot@~{a}o que alterna entre a exibi@,c@~{a}o ou n@~{a}o da caixa associada; a seq@"u}@^{e}ncia de caracteres "[ab]" aparece sobre o
+o bot@~{a}o que alterna entre a exibi@,c@~{a}o ou n@~{a}o da caixa associada; a seq@"{u}@^{e}ncia de caracteres "[ab]" aparece sobre o
 bot@~{a}o para indicar isso.  A maioria dos bot@~{o}es do Geomview possuem atalhos
 de teclado que voc@^{e} pode usar se preferir.  Isso ser@'{a} @'{u}ltil quando voc@^{e}
 estiver familiarizado com o Geomview e n@~{a}o quiser ter de se mover
@@ -1060,7 +1060,7 @@ ir@'{a} aparecer em sua janela.  Clique sobre o bot@~{a}o @emph{Hide} no painel
 @emph{Files} para dispensar o painel.
 
 @float Figure,figfilespanel
-@image{../figs/secondlinelist}
+@image{figs/secondlinelist}
 @caption{O Painel de Arquivos.}
 @end float
 
@@ -1077,7 +1077,7 @@ veja @file{doc/oogltour} distribuido com Geomview.  As coisas
 naquele arquivo ir@~{a}o ser incorporadas em futuras vers@~{o}es desse manual.
 
 @float Figure,figtrefdodec
-@image{../figs/trefdodecinter}
+@image{figs/trefdodecinter}
 @caption{Trevo e Dodecaedro.}
 @end float
 
@@ -1129,7 +1129,7 @@ Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @c -b 0 0 1 - azul
 @c -b 0 0 0 - preto
 @c -b 1 1 1 - branco
-@d -b 0.5 0.5 0.5 - cinza
+@c -b 0.5 0.5 0.5 - cinza
 @item -c @var{arquivo}
 Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
 especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,c@~{a}o de GCL,
@@ -1249,7 +1249,7 @@ manual introduz alguns conceitos básicos que são usados nas seções restantes
 do manual e descreve o painel principal (@emph{Main}).
 @c
 @float Figure,figmainpanel
-@image{../figs/main}
+@image{figs/main}
 @caption{The Main Panel}
 @end float
 @c
@@ -1398,7 +1398,7 @@ If you clique the @emph{Load} bot@~{a}o in Geomview's @emph{Main} panel,
 the @emph{Files} panel will appear. 
 
 @float Figure,figmyfilelist
-@image{../figs/myfilelist}
+@image{figs/myfilelist}
 @caption{The Files Panel.}
 @end float
 This panel lets you select a file from a variety of directories.
@@ -1451,7 +1451,7 @@ the @emph{Files} panel.  If, after bringing up the small load panel
 with @kbd{<}, you decide you want to use the larger @emph{Files} panel
 after all, press the @emph{File Browser} bot@~{a}o.
 @float Figure,figloadpanel
-@image{../figs/load}
+@image{figs/load}
 @caption{The Load Panel.}
 @end float
 
@@ -1480,7 +1480,7 @@ This section describes basic mouse interaction.  For details,
 @pxref{Commands}.
 
 @float Figure,figtools
-@image{../figs/tools}
+@image{figs/tools}
 @caption{The Tools Panel.}
 @end float
 
@@ -1788,7 +1788,7 @@ Geomview has three panels which let you modify appearances.
 The @emph{Appearance} panel lets you change most common appearance
 properties of the target objeto.
 @float Figure,figap
-@image{../figs/ap}
+@image{figs/ap}
 @caption{The Appearance Panel.}
 @end float
 If the target is an individual geom, then changes you make in the
@@ -1829,7 +1829,7 @@ The four bot@~{o}es under @emph{Color} labeled @emph{Faces}, @emph{Edges},
 the corresponding aspect of the target geom.  Clicando on one
 of them brings up a color chooser panel.
 @float Figure,figcolorchooserpanel
-@image{../figs/color}
+@image{figs/color}
 @caption{Color Chooser Panel.}
 @end float
 This panel offers two sets of sliders: H(ue) S(aturation) V(alue), or
@@ -1939,7 +1939,7 @@ The @emph{Materials} panel controls material properties of surfaces.
 It works with the target objeto in the same way that the
 @emph{Appearance} panel does.
 @float Figure,figmatpanel
-@image{../figs/mat}
+@image{figs/mat}
 @caption{The Materials Panel.}
 @end float
 
@@ -1987,7 +1987,7 @@ This bot@~{a}o dismisses the @emph{Materials} panel.
 The @emph{Lighting} panel controls the number, position, and color of
 the light sources used in shading.
 @float
-@image{../figs/light}
+@image{figs/light}
 @caption{The Lighting Panel.}
 @end float
 
@@ -2056,7 +2056,7 @@ By default there is only one camera, but it is possible to have as many
 as you want.  You can control certain aspects of the way the world is
 drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
 @float Figure,figcamerapanel
-@image{../figs/cam}
+@image{figs/cam}
 @caption{The Cameras Panel.}
 @end float
 If the target objeto is a camera, the @emph{Cameras} panel affects that
@@ -2193,7 +2193,7 @@ Geomview's @emph{Save} panel lets you store Geomview objetos and other
 information in files that you can read back into Geomview or other
 programs.
 @float Figure,figsavepanel
-@image{../figs/save}
+@image{figs/save}
 @caption{The Save Panel.}
 @end float
 To use the @emph{Save} panel you select the desired format in the
@@ -2323,7 +2323,7 @@ whenever you hit @kbd{@key{Enter}} with the cursor in the @emph{Commands}
 panel, Geomview tries to interpret whatever text you have typed in the
 text field as a command.
 @float Figure,figcommandpanel
-@image{../figs/command}
+@image{figs/command}
 @caption{The Commands Panel.}
 @end float
 
@@ -2334,7 +2334,7 @@ Geomview, the @emph{Obscure} panel includes the @emph{NORMALIZE GEOMETRY}
 browser, which controls the kind of geometry normalization that Geomview does,
 and several bot@~{o}es affecting movimento style.
 @float Figure,figobscurepanel
-@image{../figs/obscure}
+@image{figs/obscure}
 @caption{The Obscure Panel.}
 @end float
 @end ifset
@@ -5186,7 +5186,7 @@ This section gives a new version of the above module --- one that
 includes a user interface panel for controlling the velocity of the
 oscillation.  We use the FORMS library by Mark Overmars for the control
 panel.  The FORMS library is a public domain user interface toolkit for
-IRISes; for more information @xref{Forms}.
+IRISes; for more information @xref{XForms}.
 
 To try out this example, make a copy of the file
 @file{example2.c} (distributed with Geomview in the @file{doc}
