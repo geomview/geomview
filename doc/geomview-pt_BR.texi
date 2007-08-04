@@ -5,7 +5,7 @@
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
-@include version-pt_BR.texi
+@include version.texi
 
 @dircategory Graphics Applications
 @direntry
@@ -27,8 +27,8 @@
 @center Mark Phillips et al.
 @sp 14
 @center Tradutor para o Portugu@^es do Brasil
-@center @value{TRANSLATEDBY}
-@center @value{HPTRANSLATOR}
+@center Jorge Barros de Abreu
+@center http://usr.solar.com.br/~ficmatin
 @sp 2
 @vskip 0pt plus 1filll
 @center Copyright @copyright{} 1992-1998 The Geometry Center
