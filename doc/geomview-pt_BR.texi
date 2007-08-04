@@ -25,7 +25,8 @@
 @comment 19 de Novembro de 2000
 @sp 2
 @center Mark Phillips et al.
-@sp 1
+@sp 14
+@center Tradutor para o Portugu@^es do Brasil
 @center @value{TRANSLATEDBY}
 @center @value{HPTRANSLATOR}
 @sp 2
@@ -1129,7 +1130,7 @@ Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @c -b 0 0 1 - azul
 @c -b 0 0 0 - preto
 @c -b 1 1 1 - branco
-@c -b 0.5 0.5 0.5 - cinza
+@d -b 0.5 0.5 0.5 - cinza
 @item -c @var{arquivo}
 Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
 especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,c@~{a}o de GCL,
@@ -1221,19 +1222,19 @@ N@~{a}o l@^{e} nenum arquivo de inicializa@,c@~{a}o. Por padr@~{a}o, geomview l@
 
 @item -e @var{modulo}
 Inicial um m@'{o}dulo externo; @var{modulo} @'{e} o nome associado ao
-módulo chamado, aparecendo no painel principal no navegador de "Applications", como definido
+m@'{o}dulo chamado, aparecendo no painel principal no navegador de "Applications", como definido
 pelo comando @code{emodule-define}. Veja @ref{emodule-define,
 @code{(emodule-define @dots{})}}.
 
 @item -start @var{module} @var{args} @dots{}
-Como -e mas permite a você enviar argumentos para o módulo externo.  "--"
+Como -e mas permite a voc@^{e} enviar argumentos para o m@'{o}dulo externo.  "--"
 sinaliza o fim da lista de argumentos; o "--" pode ser omitido se for
-o último argumento na linha de comando do Geomview.
+o @'{u}ltimo argumento na linha de comando do Geomview.
 
 @item -run @var{coamando-shell} @var{args} @dots{}
-Como "-start" mas toma o caminho de arquivos do executável do módulo externo
-em lugar do nome do módulo.  Os caminhos de arquivo de todos os diretórios de módulos conhecidos
-são anexados ao final do caminho de busca do UNIX quando for invocado o @var{comando-shell}.
+Como "-start" mas toma o caminho de arquivos do execut@'{a}vel do m@'{o}dulo externo
+em lugar do nome do m@'{o}dulo.  Os caminhos de arquivo de todos os diret@'{o}rios de m@'{o}dulos conhecidos
+s@~{a}o anexados ao final do caminho de busca do UNIX quando for invocado o @var{comando-shell}.
 
 @end table
 
@@ -1241,11 +1242,11 @@ são anexados ao final do caminho de busca do UNIX quando for invocado o @var{com
 @node Basic Interaction, Loading, Command Line Options, Interaction
 @section Basic Interaction: The Main Panel
 
-Normalmente quando você invoca Geomview, três janelas aparecem: O
+Normalmente quando voc@^{e} invoca Geomview, tr@^{e}s janelas aparecem: O
 painel principal (@emph{Main}), o painel de ferramentas (@emph{Tools}), e uma janela de c@^{a}mera.
 Geomview tem muitas outras janelas mas muitas coisas podem ser realizadas com essas
-três de forma que por padrão as outras não aparecem.  Essa seção do
-manual introduz alguns conceitos básicos que são usados nas seções restantes
+tr@^{e}s de forma que por padr@~{a}o as outras n@~{a}o aparecem.  Essa se@,c@~{a}o do
+manual introduz alguns conceitos b@'{a}sicos que s@~{a}o usados nas se@,c@~{o}es restantes
 do manual e descreve o painel principal (@emph{Main}).
 @c
 @float Figure,figmainpanel
@@ -1253,84 +1254,84 @@ do manual e descreve o painel principal (@emph{Main}).
 @caption{The Main Panel}
 @end float
 @c
-Geomview pode mostrar um número arbitrário de objetos simultaneamente.  O
+Geomview pode mostrar um n@'{u}mero arbitr@'{a}rio de objetos simultaneamente.  O
 navegador @emph{Targets} no painel principal (@emph{Main}) mostra uma lista de todos
 os objetos dos quais Geomview atualmente abertos.  Esse navegador tem uma
-linha para cada objeto que você tiver chamado, adicionalmente algumas linhas para outros
-objetos.  Um desses outros objetos é chamado @code{World} e corresponde a
-a todos os objetos atualmente chamados, treated as if they were one
-objeto.  Most of the operations that you can do to one objeto, such as
-applying a movimento or changing a color, can also be done to the "World"
-objeto.
+linha para cada objeto que voc@^{e} tiver chamado, adicionalmente algumas linhas para outros
+objetos.  Um desses outros objetos @'{e} chamado @code{World} e corresponde a
+a todos os objetos atualmente chamados, tratados como se eles fossem um
+objeto.  A maioria das opera@,c@~{o}eos que voc@^{e} pode fazer sobre um objeto, tais como
+aplicar um movimento ou mudar uma cor, pode tamb@'{e}m ser feita para o objeto
+"World".
 
-The @emph{Targets} browser also has an entry for each camera.  By
-default there is only one camera; it is possible to add more of them via
-the @emph{New Camera} entry of the @emph{Main} panel's @emph{File} menu.
-Geomview treats cameras in much the same way
-as it does geometric objetos.  For example, you can move cameras around
-and add them and delete them just as with geometric objetos.  Cameras do
-not usually show up in the display as an objeto that you see.  Each
-camera has a separate janela de c@^{a}mera which displays the view as seen by
-that camera.  (It is possible for each camera to display a geometric
-representation of other cameras.  @xref{Cameras}.)
+O navegador de alvos (@emph{Targets}) tamb@'{e}m possui uma entrada para cada c@^{a}mera.  Por
+padr@~{a}o existe somente uma c@^{a}mera; @'{e} poss@'{i}vel adicionar mais delas atrav@'{e}s da
+entrada @emph{New Camera} do painel principal (@emph{Main}) via menu @emph{File}.
+Geomview trata c@^{a}meras na maioria das vezes como
+trata objetos geom@'{e}tricos.  Por exemplo, voc@^{e} pode mover c@^{a}meras pelas proximidades
+e adicion@'{a}-las e apag@'{a}-las como objetos geom@'{e}tricos.  C@^{a}meras n@~{a}o
+s@~{a}o mostradas na tela como um objeto que voc@^{e} v@^{e}.  Cada
+c@^{a}mera tem uma janela de c@^{a}mera separada que mostra a vis@~{a}o como vista atrav@'{e}s da lente
+daquela c@^{a}mera.  (@'{E} pass@'{i}vel para cada c@^{a}mera mostrar uma representa@,c@~{a}o
+geom@'{e}trica de outras c@^{a}meras.  Veja @ref{Cameras}.)
 
-Because Geomview treats cameras and geometric objetos very similarly,
-the term @dfn{objeto} in this documentation is used to refer to either
-one.  When we need to distinguish between the two kinds of objetos, we
-use the term @dfn{geom} to denote a geometric objeto and the word
-@dfn{camera} to denote a camera.
+Devido ao fato de Geomview tratar c@^{a}meras e objetos geom@'{e}tricos muito similarmente,
+o termo @dfn{objeto} nessa documenta@,c@~{a}o @'{e} usado para referir-se a qualquer dos dois
+indistintamente.  Quando precisamos disting@"{u}ir entre os dois tipos de objetos, usamos
+o termo "@dfn{geom}" para denotar um objeto geom@'{e}trico e a palavra
+@dfn{c@^{a}mera} para denotar uma c@^{a}mera.
 
-The objeto which is selected (highlighted) in the @emph{Targets}
-browser is called the @dfn{target} objeto.  This is the objeto that
-receives any actions that you do with the mouse or keyboard.  You can
-change the target objeto by selecting a different line in the
-@emph{Targets} browser.  Another way to change the target objeto is
-to put the mouse cursor directly over a geometry in a janela de c@^{a}mera
-and rapidly double-clique the bot@~{a}o direito do mouse.  This process is called
-@dfn{picking}; the picked objeto becomes the new target.
+O objeto que est@'{a} selecionado (luminosidade alta) no navegador
+"@emph{Targets}" @'{e} chamado objeto alvo.  Esse @'{e} o objeto que
+recebe quaisquer a@,c@~{o}es que voc@^{e} faz com o mouse ou com o teclado.  Voc@^{e} pode
+mudar o objeto alvo selecionando uma linha diferente no
+navegador de alvos (@emph{Targets}).  Outro caminho de modificar o objeto alvo @'{e}
+colocar o cursor do mouse diretamente sobre um geom na janela de c@^{a}mera
+e rapidamente dar um duplo clique no bot@~{a}o direito do mouse.  Esse processo @'{e} chamado
+@dfn{selecionar}; o objeto selecionado torna-se o novo alvo.
 
-Geomview objetos are all known by two names, both of which are shown in
-the @emph{Targets} browser.  The first name given there, which appears
-in square brackets ([ ]), is a short name assigned by Geomview when you
-load the objeto.  It consists of the letter `g' for geometries and `c' for
-cameras, followed by a number.  The second name is a longer more
-descriptive name; by default this is the name of the file that the
-objeto was loaded from.  The two names are equivalent as far as Geomview
-is concerned; at any point where you need to specify a name you can give
-either one.
+Objetos do Geomview s@~{a}o todos conhecidos por dois nomes, ambos dos quais s@~{a}o mostrados no
+navegador de alvos (@emph{Targets}).  O primeiro nome l@'{a} fornecido, que aparece
+entre colch@^{e}tes ([ ]), @'{e} um nome curto atribuido pelo Geomview quando voc@^{e}
+chama o objeto.  Esse nome consiste da letra `g' para geometria e da letra `c' para
+c@^{a}meras, seguindo por um n@'{u}mero.  O segundo nome @'{e} maior e mais
+descritivo; por padr@~{a}o esse @'{e} o nome do arquivo do qual o
+objeto foi chamado.  Os dois nomes s@~{a}o equivalentes at@'{e} no que diz respeito ao
+Geomview; em qualquer ponto onde voc@^{e} precisar especificar um nome voc@^{e} pode fornecer
+qualquer dos dois.
 
-To manipulate an objeto, make sure you that the objeto you want to move is the
-target objeto, and put the mouse cursor in a janela de c@^{a}mera.  Movimentos are
-applied by holding down either the left or middle mouse bot@~{a}o and
-moving the mouse.  There are several different movimento "modes", each for
-applying a different kind of movimento.  The @emph{MOTION MODE} browser
-in the @emph{Main} panel indicates the current modo de movimento.  The
-default is "Rotate".  You can change the current modo de movimento by
-selecting a new one in the @emph{MOTION MODE} browser, or by using the
-@emph{Tools} panel.  For more information about modos de movimento,
-@xref{Mouse Motions}.
+Para manipular um objeto, esteja certo de que aquele objeto que voc@^{e} quer mover seja o
+objeto alvo, e coloque o cursor do mouse em uma janela de c@^{a}mera.  Movimentos s@~{a}o
+aplicados pressionando ou o bot@~{a}o esquerdo ou o bot@~{a}o do meio do mouse e
+movendo o mouse.  Existem muitos modos de movimento diferentes, cada modo de movimento
+aplicando um diferente tipo de movimento.  O navegador de modos de movimento (@emph{MOTION MODE})
+no painel principal indica o modo de movimento atual.  O
+padr@~{a}o @'{e} a rota@,c@~{a}o ("Rotate").  Voc@^{e} pode mudar o modo corrente de movimento
+selecionando um no modo de movimento no navegador de modos de movimento (@emph{MOTION MODE}), ou usando o
+painel de ferramentas (@emph{Tools}).  Para maiores informa@,c@~{o}es sobre modos de movimento,
+veja @ref{Mouse Motions}.
 
-The @emph{Modules} browser lists Geomview external modules.  An
-external module is a separate program that interacts with Geomview to
-extend its functionality.  For information on external modules,
-@xref{Modules}.
+O navegador de m@'{o}dulos (@emph{Modules}) lista m@'{o}dulos externos do Geomview.  Um
+m@'{o}dulo externo @'{e} um programa separado que interage com Geomview para
+extender suas funcionalidades.  Para informa@,c@~{o}es sobre m@'{o}dulos externos,
+veja @ref{Modules}.
 
 @ifset forms
-The @emph{Load} bot@~{a}o on the @emph{Main} panel brings up the
-@emph{Files} panel for loading a file.  The file can contain either a
-geom, a camera, or GCL commands.  For details, @xref{Loading}.
+O bot@~{a}o @emph{Load} no painel principal @emph{Main} faz surgir o
+painel de arquivos (@emph{Files}) para chmar um arquivo.  O arquivo pode conter ou um
+geom, ou uma c@^{a}mera, ou comandos GCL.  Para detalhes, veja @ref{Loading}.
 
-The @emph{Delete} bot@~{a}o causes the target
-objeto to be deleted.  Geomview selects another objeto to be the new
-target.  You can delete cameras as well as geometries in this way.  If you
-hit the @emph{Delete} bot@~{a}o while the target objeto is "World",
-Geomview deletes all geometries.
+O bot@~{a}o @emph{Delete} faz com que o objeto
+alvo seja apagado.  Geomview seleciona outro objeto para ser o novo
+alvo.  Voc@^{e} pode apagar c@^{a}meras da mesma forma que geoms dessa forma.  Se voc@^{e}
+pressionar o bot@~{a}o delete @emph{Delete} enquanto o objeto alvo for "World",
+Geomview aagar@'{a} todos os geoms.
 
-The three bot@~{o}es at the bottom of the @emph{Main} panel, labeled
-@emph{Euclidean}, @emph{Hyperbolic}, and @emph{Spherical}, allow
-you to change the geometry of the space that Geomview displays.  By
-default @emph{Euclidean} is selected.  For details about using
-@emph{Hyperbolic} and @emph{Spherical} spaces, @xref{Non-Euclidean
+Os tr@^{e}s bot@~{o}es na parte de baixo do painel principal (@emph{Main}), rotulados
+@emph{Euclidean}, @emph{Hyperbolic}, e @emph{Spherical}, permitem
+a voc@^{e} modificar a geometria do espa@,co que Geomview mostra.  Por
+padr@~{a}o @emph{Euclidean} @'{e} selecionado.  Para detalhes sobre como usar
+espa@,cos @emph{Hyperbolic} e @emph{Spherical}, veja @ref{Non-Euclidean
 Geometry}.
 @end ifset
 
@@ -1489,7 +1490,7 @@ applied.  In particular, each depends on the current @emph{target}
 objeto and the current @emph{center} objeto.  These are explained in the
 following paragraphs.
 
-The current target objeto is shown in the @emph{Target} field in the
+The current objeto alvo is shown in the @emph{Target} field in the
 @emph{Tools} panel.  This is the same as the selected objeto in the
 @emph{Targets} browser in the @emph{Main} panel, and you can
 change it by either selecting a new objeto in the browser, by typing
@@ -1499,7 +1500,7 @@ the objeto.
 
 The current center objeto is shown in the @emph{Center} field in the
 @emph{Tools} panel.  Its default value is the special word "target",
-which means that the center objeto is whatever the target objeto is.
+which means that the center objeto is whatever the objeto alvo is.
 You can change the center to any objeto by typing it in the @emph{Center}
 field.  The origin of the center objeto is held fixed in @emph{Rotate} and
 @emph{Orbit} modes.  Normally the center objeto is one of the existing
@@ -1513,7 +1514,7 @@ center of movimento to the center of the current objeto's bounding
 box. Once toggled the active geometry's bounding box center will become
 the center of movimento, if you select another objeto, then the center of
 movimento will become the center of that objeto's bounding box. Nothing
-changes when a camera or the @emph{World} is selected, you have to
+changes when a c@^{a}mera or the @emph{World} is selected, you have to
 type in the word @code{target} in the @emph{Center} field the reset to
 the default.
 
@@ -1522,7 +1523,7 @@ bot@~{a}o with the cursor in a janela de c@^{a}mera and moving the mouse.  Most 
 the modes have @emph{inertia}, which means that if you let go of the
 bot@~{a}o while moving the mouse, the movimento will continue.  It may be
 helpful to imagine the mouse cursor as being a gripper; when you hold a
-mouse bot@~{a}o down, it grips the target objeto and you can move it.  When
+mouse bot@~{a}o down, it grips the objeto alvo and you can move it.  When
 you let go of the mouse bot@~{a}o, the gripper releases the objeto.
 Letting go of the mouse bot@~{a}o while moving the mouse is like throwing
 the objeto --- the objeto continues moving independent of the mouse.
@@ -1543,10 +1544,10 @@ this chooses a point of interest.
 
 @item Rotate
 In @emph{Rotate} mode, hold the left mouse bot@~{a}o down to rotate the
-target objeto about the center objeto.  Rotation proceeds in the
+objeto alvo about the center objeto.  Rotation proceeds in the
 direction that you move the mouse.  Specifically, the axis of rotation
 passes through the origin of the center objeto, is parallel to the
-camera view plane, and is perpendicular to the direction of movimento of
+c@^{a}mera view plane, and is perpendicular to the direction of movimento of
 the mouse.  When the center is "target", this means that the target
 objeto rotates about its own origin.
 
@@ -1555,7 +1556,7 @@ objeto about an axis perpendicular to the view plane.
 
 @item Translate
 In @emph{Translate} mode, hold the left mouse bot@~{a}o down to translate
-the target objeto in the direction of mouse movimento.  The middle mouse
+the objeto alvo in the direction of mouse movimento.  The middle mouse
 bot@~{a}o translates the target along an axis perpendicular to the view
 plane.
 
@@ -1568,25 +1569,25 @@ center objeto.
 @emph{Cam Fly} is a crude flight simulator that lets you fly around
 the scene.  It works by moving the camera.
 Move the mouse while holding the left mouse bot@~{a}o down to
-point the camera in a different direction.  To move forward or backward,
+point the c@^{a}mera in a different direction.  To move forward or backward,
 hold down the middle bot@~{a}o and move the mouse vertically.  Both of
 these movimentos have inertia; typically the easiest way to fly around a
-scene is to give the camera a slight forward push by letting go of the
+scene is to give the c@^{a}mera a slight forward push by letting go of the
 middle bot@~{a}o while moving the mouse upward, and then using the left
 bot@~{a}o to steer.
 
 @emph{Cam Fly} affects the janela de c@^{a}mera that the mouse is in; it
-ignores the target objeto and the center objeto.
+ignores the objeto alvo and the center objeto.
 
 @item Cam Orbit
-@emph{Cam Orbit} mode lets you rotate the current camera around the
+@emph{Cam Orbit} mode lets you rotate the current c@^{a}mera around the
 current center. The left mouse bot@~{a}o does this rotation.  The middle
 mouse bot@~{a}o in @emph{Cam Orbit} mode acts as in
-@emph{Cam Fly} mode: it moves the camera forward or backward.
+@emph{Cam Fly} mode: it moves the c@^{a}mera forward or backward.
 
-In general @emph{Cam Orbit} does not move the target objeto, although
-if the current camera is selected as the target and the center is also
-the target, it will pivot that camera about itself just as in
+In general @emph{Cam Orbit} does not move the objeto alvo, although
+if the current c@^{a}mera is selected as the target and the center is also
+the target, it will pivot that c@^{a}mera about itself just as in
 @emph{Cam Fly} mode.
 
 @item Cam Zoom
@@ -1597,9 +1598,9 @@ to change it.  The numeric value of the field of view is shown in the
 
 @item Geom Scale
 @emph{Geom Scale} mode lets you enlarge or shrink a geom.  It operates
-on the target objeto if that objeto is a geom.  If the target is a
+on the objeto alvo if that objeto is a geom.  If the target is a
 camera, @emph{Geom Scale} operates on the geom that was most recently
-the target objeto.  Moving the mouse while holding down the left mouse bot@~{a}o
+the objeto alvo.  Moving the mouse while holding down the left mouse bot@~{a}o
 scales the objeto either up or down, depending on the direction of
 mouse movimento.  The center of the applied scaling transformation is the
 center objeto.
@@ -1620,21 +1621,21 @@ but do not change the current modo de movimento.
 
 @item Stop
 The @emph{Stop} bot@~{a}o causes all movimentos to stop.  It affects all
-moving objetos, not just the target objeto.  Its keyboard shortcut
+moving objetos, not just the objeto alvo.  Its keyboard shortcut
 is @kbd{H}.
 
 The keyboard command @kbd{h}, which does not correspond to a
-panel bot@~{a}o, stops the current movimento for the target objeto only.
+panel bot@~{a}o, stops the current movimento for the objeto alvo only.
 
 @item Look At
-The @emph{Look At} bot@~{a}o causes the current camera to be moved
-to a position such that it is looking at the target objeto, and such
-that the target objeto more or less fills the window.
+The @emph{Look At} bot@~{a}o causes the current c@^{a}mera to be moved
+to a position such that it is looking at the objeto alvo, and such
+that the objeto alvo more or less fills the window.
 
 The Look At command is unreliable in non-Euclidean spaces.
 
 @item Center
-The @emph{Center} bot@~{a}o undoes the target objeto's transformation,
+The @emph{Center} bot@~{a}o undoes the objeto alvo's transformation,
 moving it back to its home position, which is where it was when you
 originally loaded it into Geomview.
 
@@ -1667,7 +1668,7 @@ coordinate axis: exactly horizontally or vertically.  Selecting
 @emph{Constrain Motion} changes the interpretation of mouse movimentos
 to allow this; approximately-horizontal or approximately-vertical mouse dragging
 becomes exactly horizontal or vertical movimento.  Note that the movimento is
-still along the X or Y axes of the camera in which you move the mouse,
+still along the X or Y axes of the c@^{a}mera in which you move the mouse,
 not necessarily the objeto's own coordinate system.
 
 @item [uo] Own Coordinates
@@ -1730,7 +1731,7 @@ What happens internally when you select a point of interest is
 that the center is set to the objeto called CENTER, and that objeto is
 positioned at the point of interest.  In addition, in order for mouse
 movimentos to track the point of interest, the current camera's focal
-length is set to be the distance from the camera to the point of
+length is set to be the distance from the c@^{a}mera to the point of
 interest.  You can accomplish this via GCL with the following commands:
 @example
 (if (real-id CENTER) nil (new-alien CENTER @{@}))
@@ -1786,7 +1787,7 @@ Geomview has three panels which let you modify appearances.
 @subsection The Appearance Panel
 
 The @emph{Appearance} panel lets you change most common appearance
-properties of the target objeto.
+properties of the objeto alvo.
 @float Figure,figap
 @image{figs/ap}
 @caption{The Appearance Panel.}
@@ -1936,7 +1937,7 @@ and to all appearance-related panels.
 @subsection The Materials Panel
 
 The @emph{Materials} panel controls material properties of surfaces.
-It works with the target objeto in the same way that the
+It works with the objeto alvo in the same way that the
 @emph{Appearance} panel does.
 @float Figure,figmatpanel
 @image{figs/mat}
@@ -2051,7 +2052,7 @@ specified in OOGL files; for details,
 @node Cameras, Saving, Appearance, Interaction
 @section Cameras
 
-A camera in Geomview is the objeto that corresponds to a janela de c@^{a}mera.
+A c@^{a}mera in Geomview is the objeto that corresponds to a janela de c@^{a}mera.
 By default there is only one camera, but it is possible to have as many
 as you want.  You can control certain aspects of the way the world is
 drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
@@ -2059,9 +2060,9 @@ drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
 @image{figs/cam}
 @caption{The Cameras Panel.}
 @end float
-If the target objeto is a camera, the @emph{Cameras} panel affects that
-camera.  If the target objeto is not a camera, the @emph{Cameras} panel
-affects the @dfn{current camera}.  The current camera is the camera of
+If the objeto alvo is a camera, the @emph{Cameras} panel affects that
+camera.  If the objeto alvo is not a camera, the @emph{Cameras} panel
+affects the @dfn{current camera}.  The current c@^{a}mera is the c@^{a}mera of
 the window that the mouse cursor is in, or was in most recently if the
 cursor is not in a janela de c@^{a}mera.  Thus, if you use the keyboard
 shortcuts for the actions in the @emph{Cameras} panel while the cursor
@@ -2126,15 +2127,15 @@ it is the linear size of the field of view.  This number can be modified
 with the mouse in @emph{Cam Zoom} mode.
 
 @item Focal Length
-The focal length is intended to suggest the distance from the camera to
+The focal length is intended to suggest the distance from the c@^{a}mera to
 an imaginary plane of interest.  Its value is used when switching
 between orthographic and perspective views (and during stereo viewing),
 so as to preserve apparent size of objetos lying at the focal distance
 from the camera.  Focal length also affects interpretation of mouse-based
 translational movimentos.  Speed of forward movimento (in translate, fly and
 orbit modes) is proportional to focal length; and objetos lying at the
-focal distance from the camera translate laterally at the same rate as
-the mouse cursor.  Finally, in N-D projection mode, cameras are displaced
+focal distance from the c@^{a}mera translate laterally at the same rate as
+the mouse cursor.  Finally, in N-D projection mode, c@^{a}meras are displaced
 back by the focal distance from the 3-D projection of the world origin.
 
 @item Lines Closer
@@ -2144,7 +2145,7 @@ exactly on surfaces (such as the edges of an objeto); due to machine
 round-off error, sometimes the lines appear to be in front of the
 surface and sometimes they appear behind it.  The @emph{Lines Closer}
 value is a fudge factor --- Geomview nudges all the lines that it draws
-closer to the camera by this amount.  The number should be a small
+closer to the c@^{a}mera by this amount.  The number should be a small
 integer; try 5 or 10.  0 turns this feature off completely.  Choosing
 too large a value will make lines visible even though they should be
 hidden.
@@ -2161,7 +2162,7 @@ the space.
 
 @item Projective
 The projective model of hyperbolic and spherical space.  Geoms move
-under isometries of the space, and cameras move by Euclidean movimentos.
+under isometries of the space, and c@^{a}meras move by Euclidean movimentos.
 By default in the projective model, the Euclidean unit sphere is drawn.
 In hyperbolic space this is the sphere at infinity.  In Euclidean space
 the projective model is the same as the virtual model except that the
@@ -2169,7 +2170,7 @@ sphere is drawn by default.
 
 @item Conformal
 The conformal model of hyperbolic and spherical space.  Geoms move under
-isometries of the space, and cameras move by Euclidean movimentos.  In
+isometries of the space, and c@^{a}meras move by Euclidean movimentos.  In
 Euclidean space, the conformal model amounts to inverting everything in
 the unit sphere.
 @end table
@@ -2343,7 +2344,7 @@ Normalization is a kind of scaling; Geomview can scale an objeto so that
 it fits within a certain region.  The main point of normalization is to
 allow you to easily view all of an objeto without having to worry about
 how big it is.  We are gradually replacing Geomview's normalization
-feature with more robust camera positioning features.  In general, the
+feature with more robust c@^{a}mera positioning features.  In general, the
 best way to make sure you are seeing all of an objeto is to use the
 @emph{Look At} bot@~{a}o on the @emph{Tools} panel.  Normalization may
 be completely replaced by this and other features in a future version of
@@ -2403,12 +2404,12 @@ most control panels.
 
 Many keyboard shortcuts allow numeric arguments which you type as a
 prefix to the command key(s).  For example, the shortcut for
-@emph{Near clip} in the camera panel is @kbd{v n}.  To set the near
+@emph{Near clip} in the c@^{a}mera panel is @kbd{v n}.  To set the near
 clip plane to @samp{0.5}, type @kbd{0.5vn}.  Commands that don't take a
 numeric prefix toggle or reset the current value.
 
 Most commands allow one of the following selection prefixes.  If none is
-provided the command applies to the target objeto.
+provided the command applies to the objeto alvo.
 
 @table @kbd
 @item g
@@ -2422,7 +2423,7 @@ current camera
 @item c#
 #'th camera
 @item c*
-All cameras
+All c@^{a}meras
 @end table
 
 For example, @kbd{g4af} means toggle the face drawing of objeto
@@ -2437,7 +2438,7 @@ The text field in the upper left corner of the @emph{Main} panel
 shows the state of the current keyboard shortcut.
 
 In addition to the keyboard shortcuts for the panel commands, there is
-also a shortcut for picking a target objeto: type the short name of the
+also a shortcut for picking a objeto alvo: type the short name of the
 objeto followed by @kbd{p}.  For example, to select objeto @emph{g3},
 type @kbd{g 3 p}.  This only works with the short names --- the ones
 that appear in square brackets ([ ]) in the @emph{Targets} browser of
@@ -2532,7 +2533,7 @@ Below is a summary of all keyboard shortcuts.
     @item 1vp
     Perspective view
     @item  vd
-    Draw other views' cameras
+    Draw other views' c@^{a}meras
     @item #vv
     field of View
     @item #vn
@@ -2563,7 +2564,7 @@ Below is a summary of all keyboard shortcuts.
     @item Pt
     Tools
     @item Pc
-    Cameras
+    C@^{a}meras
     @item PC
     Commands
     @item Pf
@@ -2618,14 +2619,14 @@ Below is a summary of all keyboard shortcuts.
     @item Pf
     load geometry/command file
     @item dd
-    delete target objeto
+    delete objeto alvo
     @item >
     @item Ps
     save state to file
     @item TV
     NTSC mode toggle
     @item p
-    pick as target objeto (e.g. @kbd{g 3 p})
+    pick as objeto alvo (e.g. @kbd{g 3 p})
     With no prefix, selects the objeto under the
     mouse cursor (like double-clicando the right mouse)
     @end table
@@ -3946,14 +3947,14 @@ the @code{location} field allows putting an objeto elsewhere.
 @item
 @code{location global} attaches the objeto to the global (a.k.a. universe)
 coordinate system -- the same as that in which geomview's World objetos,
-alien geometry, and cameras are placed.
+alien geometry, and c@^{a}meras are placed.
 @item
 @code{location camera} places the objeto relative to the camera.
 (Thus if there are multiple views, it may appear in a different 
 spatial position in each view.)  The center of the camera's view
 is along its negative Z axis; positive X is rightward, positive Y upward.
-Normally the units of camera space are the same as global coordinates.
-When a camera is reset, the global origin is at (0,0,-3.0).
+Normally the units of c@^{a}mera space are the same as global coordinates.
+When a c@^{a}mera is reset, the global origin is at (0,0,-3.0).
 @item
 @code{location ndc} places the objeto relative to the normalized unit
 cube into which the camera's projection (perspective or orthographic)
@@ -4247,7 +4248,7 @@ alternative choices.
 * image::                       Image objetos.
 * transform::                   Transformation matrices.
 * ntransform::                  N-dimensional transformation matrices.
-* camera::                      Cameras.
+* camera::                      C@^{a}meras.
 * window::                      Windows.
 @end menu
 
@@ -4263,7 +4264,7 @@ details. @xref{Appearances}.
 @subsection Image Objects
 
 Image objetos are used to specify pixmap data for either textures
-(@pxref{Texture Mapping}), or for background images of cameras
+(@pxref{Texture Mapping}), or for background images of c@^{a}meras
 (@pxref{camera, Camera objects}).
 
 At the time of this writing images are comprised of 1 to 4 channels, a
@@ -4524,7 +4525,7 @@ Note that a transform is distinct from a @code{TLIST}, which is a type
 of geometry.  @code{TLIST}s can contain one or more 4x4 transformations;
 "transform" objetos must have exactly one.
 
-Why have both?  In many places -- e.g. camera positioning -- it's only
+Why have both?  In many places -- e.g. c@^{a}mera positioning -- it's only
 meaningful to have a single transform.  Using a separate objeto type
 enforces this.
 
@@ -4688,7 +4689,7 @@ Some examples, in contexts where they might be used:
 @node camera, window, ntransform, Non-geometric objects
 @subsection cameras
 
-A camera objeto specifies the following properties of a camera:
+A c@^{a}mera objeto specifies the following properties of a camera:
 
 @table @asis
 @item position and orientation
@@ -4697,14 +4698,14 @@ this transformation does not include the projection, so it's typically
 just a combination of translation and rotation.  Specified as a
 transform objeto, typically a 4x4 matrix.
 @item "focus" distance
-Intended to suggest a typical distance from the camera to the objeto of
-interest; used for default camera positioning (the camera is placed at
+Intended to suggest a typical distance from the c@^{a}mera to the objeto of
+interest; used for default c@^{a}mera positioning (the c@^{a}mera is placed at
 (X,Y,Z) = (0,0,focus) when reset) and for adjusting field-of-view when
 switching between perspective and orthographic views.
 @item window aspect ratio
 True aspect ratio in the sense <Xsize>/<Ysize>.  This normally should
 agree with the aspect ratio of the camera's window.  Geomview normally
-adjusts the aspect ratio of its cameras to match their associated
+adjusts the aspect ratio of its c@^{a}meras to match their associated
 windows.
 @item near and far clipping plane distances
 Note that both must be strictly greater than zero.  Very large
@@ -4748,7 +4749,7 @@ Image objetos}.
 @end table
 
 
-The syntax for a camera is:
+The syntax for a c@^{a}mera is:
 
 @example
 <camera> ::=
@@ -5186,7 +5187,7 @@ This section gives a new version of the above module --- one that
 includes a user interface panel for controlling the velocity of the
 oscillation.  We use the FORMS library by Mark Overmars for the control
 panel.  The FORMS library is a public domain user interface toolkit for
-IRISes; for more information @xref{XForms}.
+IRISes; for more information @xref{Forms}.
 
 To try out this example, make a copy of the file
 @file{example2.c} (distributed with Geomview in the @file{doc}
@@ -5830,7 +5831,7 @@ context of ND-viewing @code{float} variants of the arguments apply: the
 @code{float}-type.
 
 In the ND-viewing context the co-ordinates passed to the pick function
-are still the 3-dimensional co-ordinates of the camera view-port where
+are still the 3-dimensional co-ordinates of the c@^{a}mera view-port where
 the pick occurred, but padded with zeroes on transformed back to the
 co-ordinate system specified by the second argument of the @code{pick}
 command.
@@ -6254,7 +6255,7 @@ for Geomview or some of the external modules.)
 
 In the descriptions of the commands below several references are made to
 "OOGL" formats.  OOGL is the data description language that Geomview
-uses for describing geometry, cameras, appearances, and other basic
+uses for describing geometry, c@^{a}meras, appearances, and other basic
 objetos.  For details of the OOGL formats, @xref{OOGL File Formats}.
 (Or equivalently, see the oogl(5) manual page, distributed with Geomview
 in the file man/cat5/oogl.5.
@@ -6290,7 +6291,7 @@ is an OOGL appearance specification.
 is an @var{id} that refers to a camera.
 
 @item @var{camera}
-is an OOGL camera specification.
+is an OOGL c@^{a}mera specification.
 
 @item @var{geom-id}
 is an @var{id} that refers to a geometry.
@@ -6308,7 +6309,7 @@ those you create, valid ones are:
 the collection of all geom's
 
 @item target
-selected target objeto (cam or geom)
+selected objeto alvo (cam or geom)
 
 @item center
 selected center-of-movimento objeto
@@ -6320,16 +6321,16 @@ last selected target camera
 last selected target geom
 
 @item focus
-camera where cursor is (or most recently was)
+c@^{a}mera where cursor is (or most recently was)
 
 @item allgeoms
 all geom objetos
 
 @item allcams
-all cameras
+all c@^{a}meras
 
 @item @code{default, defaultcam, prototype}
-future cameras inherit default's settings
+future c@^{a}meras inherit default's settings
 
 @end table
 
@@ -6342,7 +6343,7 @@ e.g. in @code{pick} and @code{write} commands:
 the world, within which all other geoms live.
 
 @item universe 
-the universe, in which the World, lights and cameras live.  Cameras'
+the universe, in which the World, lights and c@^{a}meras live.  C@^{a}meras'
 world2cam transforms might better be called universe2cam, etc.
 
 @item self
@@ -6358,7 +6359,7 @@ lowest-level OOGL primitive.
 
 A name is also an acceptable id.  Given names are made unique by
 appending numbers if necessary (i.e. @code{foo<2>}). Every geom is also
-named g[n] and every camera is also named c[n] (@code{g0} is always the
+named g[n] and every c@^{a}mera is also named c[n] (@code{g0} is always the
 worldgeom): this name is used as a prefix to keyboard commands and can
 also be used as a GCL id.  Numbers are reused after an
 objeto is deleted. Both names are shown in the Objeto browser.
@@ -6614,7 +6615,7 @@ returns a list of names of all geometry objetos. Use e.g.
 @samp{(echo (all geometry))} to print such a list.
 @findex all camera
 @item (all camera)
-returns a list of names of all cameras.
+returns a list of names of all c@^{a}meras.
 @findex all emodule defined
 @item (all emodule defined)
 returns a list of all defined external modules.
@@ -6687,9 +6688,9 @@ Say whether GEOM-ID's bounding-box should be drawn; defaults to
 @table @code
 @item (camera CAM-ID [CAMERA])
 Specify data for @var{CAM-ID}; @var{CAMERA} is a string giving an OOGL
-camera specification.  If no camera @var{CAM-ID} exists, it is created;
+c@^{a}mera specification.  If no camera @var{CAM-ID} exists, it is created;
 in this case, the second argument is optional, and if omitted, a default
-camera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
+c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @end table
 
 @node camera-draw, camera-prop, camera, GCL Reference
@@ -6697,7 +6698,7 @@ camera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @findex camera-draw
 @table @code
 @item (camera-draw CAM-ID [yes|no])
-Say whether or not cameras should be drawn in CAM-ID; @code{yes} if omitted.
+Say whether or not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
 @end table
 
 @node camera-prop, camera-reset, camera-draw, GCL Reference
@@ -6705,9 +6706,9 @@ Say whether or not cameras should be drawn in CAM-ID; @code{yes} if omitted.
 @findex camera-prop
 @table @code
 @item (camera-prop @{ geometry object @} [projective])
-Specify the objeto to be shown when drawing other cameras.
+Specify the objeto to be shown when drawing other c@^{a}meras.
 By default, this objeto is drawn with its origin at the camera,
-and with the camera looking toward the objeto's -Z axis.
+and with the c@^{a}mera looking toward the objeto's -Z axis.
 With the @code{projective} keyword, the camera's viewing projection is
 also applied to the objeto; this places the objeto's Z=-1 and Z=+1 at
 near and far clipping planes, with the viewing area -1<=@{X,Y@}<=+1.
@@ -6793,7 +6794,7 @@ the value will be reset to the default.
 @findex delete
 @table @code
 @item (delete ID)
-Delete objeto or camera ID.
+Delete objeto or c@^{a}mera ID.
 @end table
 
 @node dice, dimension, delete, GCL Reference
@@ -7207,7 +7208,7 @@ every time a pick event (right mouse double clique).  See the @ref{pick,
 @findex lines-closer
 @table @code
 @item (lines-closer CAM-ID DIST)
-Draw lines (including edges) closer to the camera than polygons
+Draw lines (including edges) closer to the c@^{a}mera than polygons
 by DIST / 10^5  of the Z-buffer range.  DIST = 3.0 by default.
 If DIST is too small, a line lying on a surface may be
 dotted or invisible, depending on the viewpoint.
@@ -7225,7 +7226,7 @@ planes.  This feature is a kludge, but can be helpful.
 Loads the given file into geomview.  The optional second argument
 specifies the type of data it contains, which may be @code{command}
 (geomview commands), @code{geometry} (OOGL geometric data), or
-@code{camera} (OOGL camera definition).  If omitted, attempts to guess
+@code{camera} (OOGL c@^{a}mera definition).  If omitted, attempts to guess
 about the file's contents.
 Loading geometric data creates a new visible objeto; loading a camera
 opens a new window; loading a command file executes those commands.
@@ -7247,9 +7248,9 @@ you should wrap it in a call to echo: @code{(echo (load-path))}.
 @findex look
 @table @code
 @item (look [objectID] [cameraID])
-Rotates the named camera to point toward the center of the 
+Rotates the named c@^{a}mera to point toward the center of the 
 bounding box of the named objeto (or the origin in hyperbolic or 
-spherical space).  In Euclidean space, moves the camera 
+spherical space).  In Euclidean space, moves the c@^{a}mera 
 forward or backward until the objeto appears as large 
 as possible while still being entirely visible.  Equivalent to 
 @example
@@ -7293,10 +7294,10 @@ Defaults: .75  100  0.1  4.0
 @findex look-recenter
 @table @code
 @item (look-recenter [objectID] [cameraID])
-Translates and rotates the camera so that it is looking in the 
+Translates and rotates the c@^{a}mera so that it is looking in the 
 -z direction (in objectID's coordinate system) at the center of 
 objectID's bounding box (or the origin of the coordinate system 
-in non-Eudlidean space).  In Euclidean space, the camera is also 
+in non-Eudlidean space).  In Euclidean space, the c@^{a}mera is also 
 moved as close as possible to the objeto while allowing the 
 entire objeto to be visible.  Also makes sure that the y-axes of 
 objectID and cameraID are parallel.
@@ -7307,7 +7308,7 @@ objectID and cameraID are parallel.
 @findex look-toward
 @table @code
 @item (look-toward [objectID] [cameraID] [origin | center])
-Rotates the named camera to point toward the origin of the
+Rotates the named c@^{a}mera to point toward the origin of the
 objeto's coordinate system, or the center of the objeto's
 bounding box (in non-Euclidean space, the origin will be used 
 automatically).  Default objectID is the world, default camera
@@ -7386,7 +7387,7 @@ In our model for N-D viewing (enabled by (dimension)), objetos in
 N-space are viewed by N-dimensional @emph{camera clusters}.
 Each real janela de c@^{a}mera belongs to some cluster, and shows &
 manipulates a 3-D axis-aligned projected subspace of the N-space seen
-by its cluster.  Moving one camera in a cluster affects its siblings.
+by its cluster.  Moving one c@^{a}mera in a cluster affects its siblings.
 
 The ND-axes command configures all this.  It specifies a camera's
 cluster membership, and the set of N-space axes which become the 3-D
@@ -7462,7 +7463,7 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 Sets the N-D transform of the given objeto.
 In dimension N, this is an (N+1)x(N+1) matrix, so in that case
 idim and odim are expected to be both equal to (N+1). Note that
-all cameras in a camera-cluster have the same N-D transform.
+all c@^{a}meras in a camera-cluster have the same N-D transform.
 Note that ND-transforms have their
 homogeneous coordinate at index 0, while 3D transform have it at index
 3.
@@ -7489,9 +7490,9 @@ modes.
 @findex new-camera
 @table @code
 @item (new-camera name [CAMERA])
-Create a new camera with the given name (a string).  If a camera with
+Create a new c@^{a}mera with the given name (a string).  If a c@^{a}mera with
 that name already exists, the new objeto is given a unique name.  If
-@var{CAMERA} is omitted a default camera is used.
+@var{CAMERA} is omitted a default c@^{a}mera is used.
 @end table
 
 @node new-center, new-geometry, new-camera, GCL Reference
@@ -7502,7 +7503,7 @@ that name already exists, the new objeto is given a unique name.  If
 Stop id, then set id's transform to the identity.  Default id 
 is target.  Also, if the id is a camera, calls 
 (look-recenter World id).  The main function of the call to 
-(look-recenter) is to place the camera so that it is pointing 
+(look-recenter) is to place the c@^{a}mera so that it is pointing 
 parallel to the z axis toward the center of the world.
 @end table
 
@@ -7628,7 +7629,7 @@ interest in calls to @code{pick} via the @code{interest} command.
 
 In the ND-viewing context the co-ordinates are actually ND-points. They
 correspond to the 3D points of the pick relative to the sub-space
-defined by the viewport of the camera where the pick occurred. The
+defined by the viewport of the c@^{a}mera where the pick occurred. The
 co-ordinates are then padded with zeroes and transformed back to the
 co-ordinate system defined by @var{COORDSYS}.
 @end table
@@ -8120,14 +8121,14 @@ Same syntax as transform.
 @table @code
 @item (ui-cam-focus [focus-change|mouse-cross])
 Set the focus policy for the janelas de c@^{a}mera. The default is
-@code{mouse-cross}: a camera is made the active camera (for interactive
+@code{mouse-cross}: a c@^{a}mera is made the active c@^{a}mera (for interactive
 mouse events) when the mouse cursor crosses the window. Because this
-means it can become complicated to activate a specific camera (in the
+means it can become complicated to activate a specific c@^{a}mera (in the
 context of multiple janelas de c@^{a}mera) there is also the option to only
-change the camera focus when the window-manager decides to give it the
+change the c@^{a}mera focus when the window-manager decides to give it the
 focus for input events. So, after specifying @code{focus-change} it
 depends on the focus-change configuration of your window-manager when a
-camera becomes the active camera for mouse-interaction. To change this
+c@^{a}mera becomes the active c@^{a}mera for mouse-interaction. To change this
 behaviour permanently you could, e.g., place the following line in your
 @file{$@{HOME@}/.geomview} file (@pxref{Customization}):
 
@@ -8228,7 +8229,7 @@ coordinate axis: exactly horizontally or vertically. Calling
 movimentos to allow this; approximately-horizontal or
 approximately-vertical mouse dragging becomes exactly horizontal or
 vertical movimento. Note that the movimento is still along the X or Y axes of
-the camera in which you move the mouse, not necessarily the objeto's own
+the c@^{a}mera in which you move the mouse, not necessarily the objeto's own
 coordinate system.
 
 @item own-coordinates
@@ -8258,7 +8259,7 @@ movimento controls
 @item appearance
 appearance controls
 @item cameras
-camera controls
+c@^{a}mera controls
 @item lighting
 lighting controls
 @item obscure
@@ -8296,7 +8297,7 @@ unset then the default is compile-time dependent.
 @findex ui-target
 @table @code
 @item (ui-target ID [yes|no])
-Set the target of user actions (the selected line of the target objeto
+Set the target of user actions (the selected line of the objeto alvo
 browser) to ID.  The second argument specifies whether to make ID the
 current objeto regardless of its type.  If @code{no}, then ID becomes
 the current objeto of its type (geom or camera).  The default is
@@ -8468,10 +8469,10 @@ panel are for setting the current geometry type.
 In each of the three geometries, three models are supported:
 @emph{Virtual}, @emph{Projective}, and @emph{Conformal}.  You can
 change the current model with the @emph{Model} browser on the
-@emph{Camera} panel.  Each Geomview camera has its own model setting.
+@emph{Camera} panel.  Each Geomview c@^{a}mera has its own model setting.
 
 The default model is all three spaces is @emph{Virtual}.  This
-corresponds to the camera being in the same space as, and moving under
+corresponds to the c@^{a}mera being in the same space as, and moving under
 the same set of transformations as, the geometry itself.
 
 In Euclidean space @emph{Virtual} is the most useful model.
@@ -8483,8 +8484,8 @@ inverted in the unit sphere.
 
 In hyperbolic space, the @emph{Projective} model setting gives a view
 of the projective ball model of hyperbolic 3-space imbedded in Euclidean
-space.  The camera is initially outside the unit ball.  In this model,
-the camera moves by Euclidean movimentos and geometry moves by hyperbolic
+space.  The c@^{a}mera is initially outside the unit ball.  In this model,
+the c@^{a}mera moves by Euclidean movimentos and geometry moves by hyperbolic
 movimentos.  @emph{Conformal} model is similar but shows the conformal
 ball model instead. 
 
@@ -8499,7 +8500,7 @@ M\"{o}bius
 Moebius
 @end ifnottex
 transformations in the @emph{Conformal} model.  In both of these
-models the camera moves by Euclidean movimentos.
+models the c@^{a}mera moves by Euclidean movimentos.
 
 In @emph{Projective} and @emph{Conformal} models, the unit sphere is
 drawn by default.  You can turn it off and on at will using the
@@ -8723,7 +8724,7 @@ Out[4] := -Graphics3D-
 @end example
 @noindent
 This generates the file @file{math.ri}b.  This is a ready-to-render RIB
-file of the given geometry, using a default camera position, lighting,
+file of the given geometry, using a default c@^{a}mera position, lighting,
 and the ``plastic'' shader. In a shell window, type @code{render
 cube.ri}b to generate the image file @file{mma.tiff}. Of course, you
 need to have RenderMan installed for this to work. A shortcut to render
@@ -8738,7 +8739,7 @@ option string is @code{" -n mma.tiff "}, which indicates that the RIB
 file should generate a rendered TIFF file named @file{mma.tiff}.  A
 particularly useful option is @code{-g}, which tells oogl2rib to
 convert only the geometry into a RIB fragment. You can insert that
-fragment into a full RIB file of your own making with camera positions
+fragment into a full RIB file of your own making with c@^{a}mera positions
 and shaders of your choice, to harness the full power of RenderMan.
 
 The full usage of oogl2rib is:
