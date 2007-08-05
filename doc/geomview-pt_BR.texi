@@ -1169,7 +1169,7 @@ absoluto, de outra forma o pipe nomeado  ou socket @'{e} criado sob o diret@'{o}
 
 @b{Escutando fluxo de comando em portas TCP pode ser um risco de seguran@,ca,
 como Geomview por si mesmo n@~{a}o toma nenhum tipo de precau@,c@~{a}o de seguran@,ca, Geomview simplesmente
-executa todos os comandos alimentado a ele atrav@'{e}s do sockete de rede. Isso
+executa todos os comandos alimentados a ele atrav@'{e}s do socket de rede. Isso
 tamb@'{e}m implica entrada e sa@'{i}da para unidades de armazenamento locais devem ser permitidas remotamente.}
 
 Exemplos:
@@ -1336,54 +1336,54 @@ Geometry}.
 @end ifset
 
 @ifclear forms
-The menu bar at the top of the main panel offers menus for common operations.
+A barra de menu no topo do painel principal oferece menus para operações comuns.
 
-To create new windows, load new objetos, save objetos or other information,
-or quit from geomview, see the @emph{File} menu.  
+Para criar novas janelas, chame novos objetos, grave os objetos ou outras informações,
+ou saia do geomview, veja o menu @emph{File}.  
 
-To copy or delete objetos, see the @emph{Edit} menu.
+Para copiar ou apagar objetos, veja o menu @emph{Edit}.
 
-You can invoke any panel from the @emph{Inspect} menu.
+Você pode chamar qualquer painel a partir do menu @emph{Inspect}.
 
-The @emph{Space} menu lets you choose whether geomview operates
-in Euclidean, Hyperbolic, or Spherical mode.  Euclidean mode is selected
-by default.  For details about using @emph{Hyperbolic} and
-@emph{Spherical} spaces, @xref{Non-Euclidean Geometry}.
+O menu @emph{Space} permite a você escolher se geomview trabalha
+no modo Euclidiano, Hiperbolico ou Esférico.  O modo Euclideano é usado
+por padrão.  Para detalhes sobre a utilização do modo espaço @emph{Hyperbolic} e do modo
+@emph{Spherical}, veja @ref{Non-Euclidean Geometry}.
 @end ifclear
 
-Most actions that you can do through Geomview's panels have equivalent
-keyboard shortcuts so that you can do the same action by typing a
-sequence of keys on the keyboard.  This is useful for advanced users who
-are familiar with Geomview's capabilities and want to work quickly
-without having to have lots of panels cluttering up the screen.
-Keyboard shortcuts are usually indicated in square brackets ([ ]) near
-the corresponding item in a panel.  For example, the keyboard shortcut
-for @emph{Rotate} mode is 'r'; this is indicated by "[r]" appearing
-before the word "Rotate" in the @emph{MOTION MODE} browser.  To
-use this keyboard shortcut, just hit the @kbd{r} key while the mouse
-cursor is in any Geomview window.  Do not hit the @kbd{@key{Enter}} key
-afterwards.
+A maioria das ações que você pode fazer através dos painéis do Geomview possuem equivalentes
+atalhos de teclado de forma que você pode fazer a mesma ação atavés de digitação de uma
+seqüência de teclas no teclado.  Isso é útil para usuários avançados que
+estão familiarizados com as capacidades do Geomview e querem trabalhar rapidamente
+sem ter montanhas de painéis amontoando-se na tela.
+Atalhos de teclado são usualmente indicados ente colchêtes ([ ]) próximo
+ao item correspondente em um apinel.  Por exemplo, o atalho de teclado
+para o modo @emph{Rotate} é 'r'; isso é indicado par "[r]" que aparece
+antes da palavra "Rotate" no navegador @emph{MOTION MODE}.  Para
+usar esse atalaho de teclado, apenas pressione a tecla @kbd{r} enquanto o cursor do
+mouse estiver em qualquer janela  do Geomview.  Não é necessário pressionar a tecla @kbd{@key{Enter}}
+posteriormente.
 
-Some keyboard shortcuts consist of more than one key.  In these cases
-just type the keys one after the other, with no @kbd{@key{Enter}}
-afterwards.  Keyboard shortcuts are case sensitive.
+Alguns atalhos de teclado consistem em mais de uma tecla.  Nesses caso
+apenas digite as teclas uma após a outra, sem pressionar @kbd{@key{Enter}}
+posteriormente ou entre as teclas pressionadas.  Atalhos de teclado são sensíveis à caixa alta/baixa.
 
-Many keyboard shortcuts can be preceded by a numeric parameter.
-For example, typing @code{ae} toggles the state of drawing edges,
-while @code{1ae} always enables edge drawing.
+Muitas teclas de atalho podem ser precedidas de um parâmetro numérico.
+Por exemplo, digitando @code{ae} muda o estado do desenho de arestas,
+enquanto @code{1ae} sempre habilita o desenho de arestas.
 
-The @emph{keyboard} field in the upper left corner of the @emph{Main}
-panel echos the current state of keyboard shortcuts.
+O campo @emph{keyboard} no canto superior esquerdo do painel principal
+(@emph{Main}), imediatamente acima da palavra "Targets", ecoa o estado atual das teclas de atalho.
 
 @ifset forms
-The bot@~{a}o labeled @emph{?} near the top right corner of the
-@emph{Main} panel causes Geomview to print out a list of all keyboard
-shortcuts to standard output.
+O bot@~{a}o rotulado @emph{?} próximo ao canto superior direito do
+painel principal (@emph{Main}) faz com que Geomview mostre uma lista de todos os atalhos de
+teclado na saída padrão.
 
-The @emph{Quit} bot@~{a}o on the main panel terminates Geomview.
+O botão @emph{Quit} no painel principal encerra o Geomview.
 @end ifset
 @ifclear forms
-For a list of all keyboard shortcuts, press the @emph{@code{?}} key.
+Para uma lista de todas as teclas de atalho, pressione a telca @emph{@code{?}}.
 @end ifclear
 
 
@@ -1391,46 +1391,46 @@ For a list of all keyboard shortcuts, press the @emph{@code{?}} key.
 @node Loading, Mouse Motions, Basic Interaction, Interaction
 @section Loading Objects Into Geomview
 
-There are several ways to load an objeto into Geomview.
+Existem muitos caminhos para chamar um objeto dentro do Geomview.
 
 @table @asis
-@item the @emph{Files} panel
-If you clique the @emph{Load} bot@~{a}o in Geomview's @emph{Main} panel,
-the @emph{Files} panel will appear. 
+@item No painel de arquivos (@emph{Files})
+Se você clicar no botão @emph{Load} no painel principal do Geomview (@emph{Main}),
+o painel de arquivos (@emph{Files}) irá aparecer. 
 
 @float Figure,figmyfilelist
 @image{figs/myfilelist}
-@caption{The Files Panel.}
+@caption{O Painel de Arquivos.}
 @end float
-This panel lets you select a file from a variety of directories.
-The top of the panel is a standard Motif file browser.  Below this is
-a list of directories on Geomview's standard search path; clique sobre o one
-of these to browse files in that directory.
+Esse painel permite que você selecione um arquivo a partir de uma variedade de diretórios.
+O topo do painel é um navegador de arquivos padrão do Motif.  Abaixo deste está
+uma lista de diretórios no caminho de busca padrão do Geomview; clique sobre um
+desses para navegar entre os arquivos naquele diretório.
 
-To select a file, double-clique sobre o its name in the browser at upper right,
-or clique sobre o its name and press the @key{Enter} key, or type the file's name
-into the text box at the bottom of the browser and press @key{Enter}.
+Para selecionar um arquivo, duplo-clique sobre o seu nome no navegador no canto superior direito,
+ou clique sobre o seu nome e pressione a tecla @key{Enter}, ou ainda digite o nome do arquivo
+dentro da caixa de texto na parte inferior do navegador e pressione a tecla @key{Enter}.
 @refill
 
-If the selected file contains OOGL geometric data, it will be added to the
-geomview @emph{Targets} browser.  If it contains GCL commands instead,
-the file will be interpreted. @xref{GCL}.
+Se o arquivo selecionado contiver dados geométricos OOGL, esse arquivo irá ser adicionado ao
+navegador de alvos (@emph{Targets}) do geomview.  Se esse arquivo contiver comandos GCL em lugar de conter dados geométricos OOGL,
+o arquivo será interpretado. Veja @ref{GCL}.
 
-When the @emph{Files} panel first appears, the directory selected in the
-directory browser is the current directory --- the one from which you
-invoked Geomview.  The file browser shows @emph{all} the files in this
-directory, including ones that are not Geomview files.  If you try to
-load a file that doesn't contain either an OOGL objeto or Geomview
-commands, Geomview will print out an error message.
+Quando o apinel de arquivos (@emph{Files}) aparecer pela primeira vez, o diretório selecionado no
+navegador de diretórios é o diretório atual --- que corresponde ao diretório a partir do qual você
+chamou o Geomview.  O navegador de arquivos mostra @emph{todos} os arquivos nesse
+diretório, incluindo os que não são arquivos do Geomview.  Se você tentar
+chamar u arquivo que não contenha nem um objeto OOGL nem comandos do
+Geomview, o Geomview irá mostrar uma mensagem de errp.
 
-The directory browser also lists a second and third directory in
-addition to the current directory.  The second one, which ends in
-@file{data/geom}, is the Geomview example data directory.  This contains
-a wide variety of sample objetos.  It also contains several
-subdirectories.  In particular, the @file{hyperbolic} and
-@file{spherical} subdirectories have sample hyperbolic and spherical
-objetos, respectively.  Directory entries in the browser look just like
-file entries; to view a subdirectory, clique sobre o it.
+O navegador de diretórios também lista um segundo e um terceiro diretórios
+adicionalmente além do diretório atual.  O segundo, que termina em
+@file{data/geom}, é o diretório de exemplos de dados do Geomview.  Esse diretório contém
+uma grande variedade de amostras de objetos.  Esse diretório também contém muitos
+subdiretórios.  Em particular, os subdiretórios @file{hyperbolic} e o
+subdiretório @file{spherical} possuem amostras de objetos hiperbólicos
+e esféricos, respectivamente.  Entradas no navegador de diretórios são vistas apenas como
+entradas de arquivos; para visualizar um subdiretório, clique sobre o nome do referido diretório.
 
 The third directory shown in the directory browser, which ends in
 @file{geom}, contains several subdirectories with other Geomview files
@@ -1441,7 +1441,7 @@ You can change the list of directories shown the @emph{Files}
 panel's directory browser by using the @code{set-load-path} command;
 @pxref{set-load-path, @code{(set-load-path @dots{})}}.
 
-@item the @kbd{<} keyboard shortcut:
+@item the @kbd{<} tecla de atalho:
 If you type @kbd{<} in any Geomview window, the @emph{Load} panel will
 appear.  This is a small version of the @emph{Files} panel; it contains
 a text field in which you can enter the name of a file to load (or a
@@ -1621,7 +1621,7 @@ but do not change the current modo de movimento.
 
 @item Stop
 The @emph{Stop} bot@~{a}o causes all movimentos to stop.  It affects all
-moving objetos, not just the objeto alvo.  Its keyboard shortcut
+moving objetos, not just the objeto alvo.  Its tecla de atalho
 is @kbd{H}.
 
 The keyboard command @kbd{h}, which does not correspond to a
@@ -2069,7 +2069,7 @@ shortcuts for the actions in the @emph{Cameras} panel while the cursor
 is in a janela de c@^{a}mera, the actions apply to that camera, unless you have
 explicitly selected another camera.
 
-To create new janelas de c@^{a}mera, use the @kbd{v+} keyboard shortcut,
+To create new janelas de c@^{a}mera, use the @kbd{v+} tecla de atalho,
 or see the @emph{File} menu on the @emph{Main} panel.
 
 @table @emph
@@ -2381,28 +2381,28 @@ it in view, then switch to "Keep".
 @section Keyboard Shortcuts
 
 Most actions that you can do through Geomview's panels have equivalent
-keyboard shortcuts so that you can do the same action by typing a
+teclas de atalho so that you can do the same action by typing a
 sequence of keys on the keyboard.  This is useful for advanced users who
 are familiar with Geomview's capabilities and want to work quickly
 without having to have lots of panels cluttering up the screen.
 Keyboard shortcuts usually are indicated in square brackets ([ ]) near
-the corresponding item in a panel.  For example, the keyboard shortcut
+the corresponding item in a panel.  For example, the tecla de atalho
 for @emph{Rotate} mode is 'r'; this is indicated by "[r]" appearing
 before the word "Rotate" in the @emph{MOTION MODE} browser.  To
-use this keyboard shortcut just hit the @kbd{r} key while the mouse
+use this tecla de atalho just hit the @kbd{r} key while the mouse
 cursor is in any Geomview window.  You don't need to press the @kbd{@key{Enter}}
 or @kbd{@key{SPACE}} keys.
 
-Some keyboard shortcuts consist of more than one key.  In these cases
+Some teclas de atalho consist of more than one key.  In these cases
 just type the keys one after the other, with no @kbd{@key{Enter}}
 afterwards.  Keyboard shortcuts are case sensitive.  You can cancel a
-multi-key keyboard shortcut that you have started by typing any invalid
+multi-key tecla de atalho that you have started by typing any invalid
 key, for example the space bar.
 
 Keyboard commands apply while the cursor is in any janela de c@^{a}mera and
 most control panels.
 
-Many keyboard shortcuts allow numeric arguments which you type as a
+Many teclas de atalho allow numeric arguments which you type as a
 prefix to the command key(s).  For example, the shortcut for
 @emph{Near clip} in the c@^{a}mera panel is @kbd{v n}.  To set the near
 clip plane to @samp{0.5}, type @kbd{0.5vn}.  Commands that don't take a
@@ -2435,16 +2435,16 @@ To select an objeto as the target without doing anything else to it,
 use the @kbd{p} command.  So @kbd{g3p} selects objeto g3.
 
 The text field in the upper left corner of the @emph{Main} panel
-shows the state of the current keyboard shortcut.
+shows the state of the current tecla de atalho.
 
-In addition to the keyboard shortcuts for the panel commands, there is
+In addition to the teclas de atalho for the panel commands, there is
 also a shortcut for picking a objeto alvo: type the short name of the
 objeto followed by @kbd{p}.  For example, to select objeto @emph{g3},
 type @kbd{g 3 p}.  This only works with the short names --- the ones
 that appear in square brackets ([ ]) in the @emph{Targets} browser of
 the @emph{Main} panel.
 
-Below is a summary of all keyboard shortcuts.
+Below is a summary of all teclas de atalho.
 
 @table @asis
 @item Draw
@@ -6976,7 +6976,7 @@ Same as scale but multiplies by exp(scale).  Obsolete.
 @findex event-keys
 @table @code
 @item (event-keys @{on|off@})
-Turn keyboard events on or off to enable/disable keyboard shortcuts.
+Turn keyboard events on or off to enable/disable teclas de atalho.
 @end table
 
 @node event-mode, event-pick, event-keys, GCL Reference
