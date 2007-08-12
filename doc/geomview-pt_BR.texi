@@ -5,7 +5,7 @@
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
-@include version.texi
+@include version-pt_BR.texi
 
 @dircategory Graphics Applications
 @direntry
@@ -1336,39 +1336,39 @@ Geometry}.
 @end ifset
 
 @ifclear forms
-A barra de menu no topo do painel principal oferece menus para operações comuns.
+A barra de menu no topo do painel principal oferece menus para opera@,c@~{o}es comuns.
 
-Para criar novas janelas, chame novos objetos, grave os objetos ou outras informações,
+Para criar novas janelas, chame novos objetos, grave os objetos ou outras informa@,c@~{o}es,
 ou saia do geomview, veja o menu @emph{File}.  
 
 Para copiar ou apagar objetos, veja o menu @emph{Edit}.
 
-Você pode chamar qualquer painel a partir do menu @emph{Inspect}.
+Voc@^{e} pode chamar qualquer painel a partir do menu @emph{Inspect}.
 
-O menu @emph{Space} permite a você escolher se geomview trabalha
-no modo Euclidiano, Hiperbolico ou Esférico.  O modo Euclideano é usado
-por padrão.  Para detalhes sobre a utilização do modo espaço @emph{Hyperbolic} e do modo
+O menu @emph{Space} permite a voc@^{e} escolher se geomview trabalha
+no modo Euclidiano, Hiperbolico ou Esf@'{e}rico.  O modo Euclideano @'{e} usado
+por padr@~{a}o.  Para detalhes sobre a utiliza@,c@~{a}o do modo espa@,co @emph{Hyperbolic} e do modo
 @emph{Spherical}, veja @ref{Non-Euclidean Geometry}.
 @end ifclear
 
-A maioria das ações que você pode fazer através dos painéis do Geomview possuem equivalentes
-atalhos de teclado de forma que você pode fazer a mesma ação atavés de digitação de uma
-seqüência de teclas no teclado.  Isso é útil para usuários avançados que
-estão familiarizados com as capacidades do Geomview e querem trabalhar rapidamente
-sem ter montanhas de painéis amontoando-se na tela.
-Atalhos de teclado são usualmente indicados ente colchêtes ([ ]) próximo
+A maioria das a@,c@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possuem equivalentes
+atalhos de teclado de forma que voc@^{e} pode fazer a mesma a@,c@~{a}o atav@'{e}s de digita@,c@~{a}o de uma
+seq@"{u}@^{e}ncia de teclas no teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,cados que
+est@~{a}o familiarizados com as capacidades do Geomview e querem trabalhar rapidamente
+sem ter montanhas de pain@'{e}is amontoando-se na tela.
+Atalhos de teclado s@~{a}o usualmente indicados ente colch@^{e}tes ([ ]) pr@'{o}ximo
 ao item correspondente em um apinel.  Por exemplo, o atalho de teclado
-para o modo @emph{Rotate} é 'r'; isso é indicado par "[r]" que aparece
+para o modo @emph{Rotate} @'{e} 'r'; isso @'{e} indicado par "[r]" que aparece
 antes da palavra "Rotate" no navegador @emph{MOTION MODE}.  Para
 usar esse atalaho de teclado, apenas pressione a tecla @kbd{r} enquanto o cursor do
-mouse estiver em qualquer janela  do Geomview.  Não é necessário pressionar a tecla @kbd{@key{Enter}}
+mouse estiver em qualquer janela  do Geomview.  N@~{a}o @'{e} necess@'{a}rio pressionar a tecla @kbd{@key{Enter}}
 posteriormente.
 
 Alguns atalhos de teclado consistem em mais de uma tecla.  Nesses caso
-apenas digite as teclas uma após a outra, sem pressionar @kbd{@key{Enter}}
-posteriormente ou entre as teclas pressionadas.  Atalhos de teclado são sensíveis à caixa alta/baixa.
+apenas digite as teclas uma ap@'{o}s a outra, sem pressionar @kbd{@key{Enter}}
+posteriormente ou entre as teclas pressionadas.  Atalhos de teclado s@~{a}o sens@'{i}veis @`{a} caixa alta/baixa.
 
-Muitas teclas de atalho podem ser precedidas de um parâmetro numérico.
+Muitas teclas de atalho podem ser precedidas de um par@^{a}metro num@'{e}rico.
 Por exemplo, digitando @code{ae} muda o estado do desenho de arestas,
 enquanto @code{1ae} sempre habilita o desenho de arestas.
 
@@ -1376,11 +1376,11 @@ O campo @emph{keyboard} no canto superior esquerdo do painel principal
 (@emph{Main}), imediatamente acima da palavra "Targets", ecoa o estado atual das teclas de atalho.
 
 @ifset forms
-O bot@~{a}o rotulado @emph{?} próximo ao canto superior direito do
+O bot@~{a}o rotulado @emph{?} pr@'{o}ximo ao canto superior direito do
 painel principal (@emph{Main}) faz com que Geomview mostre uma lista de todos os atalhos de
-teclado na saída padrão.
+teclado na sa@'{i}da padr@~{a}o.
 
-O botão @emph{Quit} no painel principal encerra o Geomview.
+O bot@~{a}o @emph{Quit} no painel principal encerra o Geomview.
 @end ifset
 @ifclear forms
 Para uma lista de todas as teclas de atalho, pressione a telca @emph{@code{?}}.
@@ -1395,72 +1395,72 @@ Existem muitos caminhos para chamar um objeto dentro do Geomview.
 
 @table @asis
 @item No painel de arquivos (@emph{Files})
-Se você clicar no botão @emph{Load} no painel principal do Geomview (@emph{Main}),
-o painel de arquivos (@emph{Files}) irá aparecer. 
+Se voc@^{e} clicar no bot@~{a}o @emph{Load} no painel principal do Geomview (@emph{Main}),
+o painel de arquivos (@emph{Files}) ir@'{a} aparecer. 
 
 @float Figure,figmyfilelist
 @image{figs/myfilelist}
 @caption{O Painel de Arquivos.}
 @end float
-Esse painel permite que você selecione um arquivo a partir de uma variedade de diretórios.
-O topo do painel é um navegador de arquivos padrão do Motif.  Abaixo deste está
-uma lista de diretórios no caminho de busca padrão do Geomview; clique sobre um
-desses para navegar entre os arquivos naquele diretório.
+Esse painel permite que voc@^{e} selecione um arquivo a partir de uma variedade de diret@'{o}rios.
+O topo do painel @'{e} um navegador de arquivos padr@~{a}o do Motif.  Abaixo deste est@'{a}
+uma lista de diret@'{o}rios no caminho de busca padr@~{a}o do Geomview; clique sobre um
+desses para navegar entre os arquivos naquele diret@'{o}rio.
 
 Para selecionar um arquivo, duplo-clique sobre o seu nome no navegador no canto superior direito,
 ou clique sobre o seu nome e pressione a tecla @key{Enter}, ou ainda digite o nome do arquivo
 dentro da caixa de texto na parte inferior do navegador e pressione a tecla @key{Enter}.
 @refill
 
-Se o arquivo selecionado contiver dados geométricos OOGL, esse arquivo irá ser adicionado ao
-navegador de alvos (@emph{Targets}) do geomview.  Se esse arquivo contiver comandos GCL em lugar de conter dados geométricos OOGL,
-o arquivo será interpretado. Veja @ref{GCL}.
+Se o arquivo selecionado contiver dados geom@'{e}tricos OOGL, esse arquivo ir@'{a} ser adicionado ao
+navegador de alvos (@emph{Targets}) do geomview.  Se esse arquivo contiver comandos GCL em lugar de conter dados geom@'{e}tricos OOGL,
+o arquivo ser@'{a} interpretado. Veja @ref{GCL}.
 
-Quando o apinel de arquivos (@emph{Files}) aparecer pela primeira vez, o diretório selecionado no
-navegador de diretórios é o diretório atual --- que corresponde ao diretório a partir do qual você
+Quando o apinel de arquivos (@emph{Files}) aparecer pela primeira vez, o diret@'{o}rio selecionado no
+navegador de diret@'{o}rios @'{e} o diret@'{o}rio atual --- que corresponde ao diret@'{o}rio a partir do qual voc@^{e}
 chamou o Geomview.  O navegador de arquivos mostra @emph{todos} os arquivos nesse
-diretório, incluindo os que não são arquivos do Geomview.  Se você tentar
-chamar u arquivo que não contenha nem um objeto OOGL nem comandos do
-Geomview, o Geomview irá mostrar uma mensagem de errp.
+diret@'{o}rio, incluindo os que n@~{a}o s@~{a}o arquivos do Geomview.  Se voc@^{e} tentar
+chamar u arquivo que n@~{a}o contenha nem um objeto OOGL nem comandos do
+Geomview, o Geomview ir@'{a} mostrar uma mensagem de errp.
 
-O navegador de diretórios também lista um segundo e um terceiro diretórios
-adicionalmente além do diretório atual.  O segundo, que termina em
-@file{data/geom}, é o diretório de exemplos de dados do Geomview.  Esse diretório contém
-uma grande variedade de amostras de objetos.  Esse diretório também contém muitos
-subdiretórios.  Em particular, os subdiretórios @file{hyperbolic} e o
-subdiretório @file{spherical} possuem amostras de objetos hiperbólicos
-e esféricos, respectivamente.  Entradas no navegador de diretórios são vistas apenas como
-entradas de arquivos; para visualizar um subdiretório, clique sobre o nome do referido diretório.
+O navegador de diret@'{o}rios tamb@'{e}m lista um segundo e um terceiro diret@'{o}rios
+adicionalmente al@'{e}m do diret@'{o}rio atual.  O segundo, que termina em
+@file{data/geom}, @'{e} o diret@'{o}rio de exemplos de dados do Geomview.  Esse diret@'{o}rio cont@'{e}m
+uma grande variedade de amostras de objetos.  Esse diret@'{o}rio tamb@'{e}m cont@'{e}m muitos
+subdiret@'{o}rios.  Em particular, os subdiret@'{o}rios @file{hyperbolic} e o
+subdiret@'{o}rio @file{spherical} possuem amostras de objetos hiperb@'{o}licos
+e esf@'{e}ricos, respectivamente.  Entradas no navegador de diret@'{o}rios s@~{a}o vistas apenas como
+entradas de arquivos; para visualizar um subdiret@'{o}rio, clique sobre o nome do referido diret@'{o}rio.
 
-The third directory shown in the directory browser, which ends in
-@file{geom}, contains several subdirectories with other Geomview files
-in them.  These are used less frequently than the ones in the
-@file{data/geom} directory.
+O terceiro diret@'{o}rio mostrado mostrado no navegador de diret@'{o}rio, que termina em
+@file{geom}, cont@'{e}m muitos subdiret@'{o}rios com outros arquivos do Geomview
+dentro deles.  Esses arquivos s@~{a}o usados menos freq@"{u}@^{e}ntemente que os outros no
+diret@'{o}rio @file{data/geom}.
 
-You can change the list of directories shown the @emph{Files}
-panel's directory browser by using the @code{set-load-path} command;
-@pxref{set-load-path, @code{(set-load-path @dots{})}}.
+Voc@^{e} pode mudar a lista de diret@'{o}rios mostra no navegador de diret@'{o}rios
+do painel de arquivos (@emph{Files}) usando o comando @code{set-load-path};
+Veja @ref{set-load-path, @code{(set-load-path @dots{})}}.
 
-@item the @kbd{<} tecla de atalho:
-If you type @kbd{<} in any Geomview window, the @emph{Load} panel will
-appear.  This is a small version of the @emph{Files} panel; it contains
-a text field in which you can enter the name of a file to load (or a
-GCL command surrounded by parentheses).  After typing the name of the file
-to load, type @kbd{@key{Enter}}; Geomview will
-load the file as if you had loaded it with the @emph{Add} bot@~{a}o in
-the @emph{Files} panel.  If, after bringing up the small load panel
-with @kbd{<}, you decide you want to use the larger @emph{Files} panel
-after all, press the @emph{File Browser} bot@~{a}o.
+@item a tecla de atalho @kbd{<}:
+Se voc@^{e} digitar @kbd{<} em qualquer janela do Geomview, o painel @emph{Load} ir@'{a}
+aparecer.  Esse painel @'{e} uma pequena vers@~{a}o do painel de arquivos (@emph{Files}); o painel @emph{Load} cont@'{e}m
+um campo de texto no qual voc@^{e} o nome de um arquivo a ser chamado (ou um
+comando GCL entre par@^{e}ntesis).  Ap@'{o}s digitar o nome do arquivo
+a ser chamado, aperte a tecla @kbd{@key{Enter}}; Geomview ir@'{a}
+chamar o arquivo como se voc@^{e} o tivesse chamado com o bot@~{a}o @emph{Add} no
+painel de arquivos (@emph{Files}).  Se, ap@'{o}s fazer surgir o pequeno painel @emph{Load}
+com @kbd{<}, voc@^{e} decidir que quer usar o grande painel de arquivos (@emph{Files})
+ap@'{o}s tudo, pressione o bot@~{a}o @emph{File Browser}.
 @float Figure,figloadpanel
 @image{figs/load}
 @caption{The Load Panel.}
 @end float
 
-@item geometry loading commands:
-The @code{load}, @code{geometry}, @code{new-geometry}, and @code{read}
-GCL commands allow you to load an objeto into Geomview;
-@xref{GCL}. @xref{load, @code{(load @dots{})}}. @xref{new-geometry,
-@code{(new-geometry @dots{})}}. @xref{read, @code{(read @dots{})}}.
+@item comandos para chamar objetos geom@'{e}tricos:
+Os comandos GCL @code{load}, @code{geometry}, @code{new-geometry},
+e @code{read} permitem a voc@^{e} chamar um objeto dentro do Geomview;
+veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
+@code{(new-geometry @dots{})}}. Veja @ref{read, @code{(read @dots{})}}.
 @refill
 
 @end table
@@ -1469,120 +1469,120 @@ GCL commands allow you to load an objeto into Geomview;
 @node Mouse Motions, Appearance, Loading, Interaction
 @section Using the Mouse to Manipulate Objects
 
-Geomview lets you manipulate objetos with the mouse.  There are six
-different mouse modos de movimento: @emph{Rotate}, @emph{Translate},
-@emph{Cam Fly}, @emph{Cam Zoom}, @emph{Geom Scale}, and
-@emph{Cam Orbit}.  The tools panel has a bot@~{a}o for each of these
-modes; to switch modes, clique sobre o the corresponding bot@~{a}o.  You can also
-select these through the @emph{Motion Mode} browser on the
-@emph{Main} panel.@refill
+Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
+diferentes modos de movimento do mouse: rota@,c@~{a}o (@emph{Rotate}), transla@,c@~{a}o (@emph{Translate}),
+v@^{o}o da c@^{a}mera (@emph{Cam Fly}), zoom da c@^{a}mera (@emph{Cam Zoom}), homotetia de um objeto geom@'{e}trico (@emph{Geom Scale}), e
+@'{o}rbita de c@^{a}mera (@emph{Cam Orbit}).  O painel de ferramentas tem um bot@~{a}o para cada um desses
+modos; para tracar os modos, clique sobre o bot@~{a}o correspondente.  voc@^{e} pode tamb@'{e}m
+selecionar um modo atrav@'{e}s do navegador de modos de movimento (@emph{Motion Mode}) no
+painel principal (@emph{Main}).@refill
 
-This section describes basic mouse interaction.  For details,
-@pxref{Commands}.
+Essa se@,c@~{a}o descreve a intera@,c@~{a}o b@'{a}sica com o mouse.  Para detalhes,
+veja @ref{Commands}.
 
 @float Figure,figtools
 @image{figs/tools}
-@caption{The Tools Panel.}
+@caption{O Painel de Ferramentas.}
 @end float
 
-Each of the modos de movimento uses a common paradigm for how the movimento is
-applied.  In particular, each depends on the current @emph{target}
-objeto and the current @emph{center} objeto.  These are explained in the
-following paragraphs.
+Cada um dos modos de movimento usa um paradigma comum para como o movimento @'{e}
+aplicado.  Em particular, cada modo de movimento depende do objeto alvo (@emph{target})
+atual e do atual objeto do centro (@emph{center}.  O obejto alvo atual e o atual objeto do centro s@~{a}o explicados
+nos par@'{a}grafos seguintes.
 
-The current objeto alvo is shown in the @emph{Target} field in the
-@emph{Tools} panel.  This is the same as the selected objeto in the
-@emph{Targets} browser in the @emph{Main} panel, and you can
-change it by either selecting a new objeto in the browser, by typing
-a new entry in the field, or by picking an objeto in a camera
-window by double-clicando the bot@~{a}o direito do mouse with the cursor over
-the objeto.
+O objeto alvo atual @'{e} mostrado no campo @emph{Target} no
+painel de ferramentas (@emph{Tools}).  Isso @'{e} o mesmo que o objeto selecionado no
+navegador de alvos (@emph{Targets}) no painel principal (@emph{Main}), e voc@^{e} pode
+mudar o alvo ou selecionando um novo objeto no navegador, digitando
+uma nova entrada no campo, ou selecionando um objeto na janela
+de c@^{a}mera duplo-clicando no bot@~{a}o direito do mouse com o cursor sobre
+o objeto.
 
-The current center objeto is shown in the @emph{Center} field in the
-@emph{Tools} panel.  Its default value is the special word "target",
-which means that the center objeto is whatever the objeto alvo is.
-You can change the center to any objeto by typing it in the @emph{Center}
-field.  The origin of the center objeto is held fixed in @emph{Rotate} and
-@emph{Orbit} modes.  Normally the center objeto is one of the existing
-geoms listed in the @emph{Targets} browser, and the actual center of
-rotations is the origin of that objeto's coordinate system.
-It is possible, however, to select an arbitrary point of interest on
-an objeto as the center. For details, @pxref{Point of Interest}.
+O atual objeto do centro @'{e} mostrado no campo @emph{Center} no
+painel de ferramentas(@emph{Tools}).  Seu valor padr@~{a}o @'{e} a palavra especial "target",
+que significa que o odbjeto do centro @'{e} o objeto que estiver designado como objeto alvo.
+Voc@^{e} pode mudar o objeto atual do centro para qualquer objeto digitando seu nome no campo
+@emph{Center}.  A or@'{i}gem do objeto do centro @'{e} mantido fixo no modo rota@,c@~{a}o @emph{Rotate} e
+no modo @emph{Orbit}.  Normalmente o objeto do centro @'{e} um dos objetos geom@'{e}tricos
+(geoms) existentes listados no navegador de alvos (@emph{Targets}), o centro atual das
+rota@,c@~{o}es @'{e} a or@'{i}gem daquele sistema de coordenadas daquele objeto.
+@'{E} poss@'{i}vel, todavia, selecionar um ponto arbitr@'{a}rio de interesse sobre
+um objeto como o centro. Para detalhes, veja @ref{Point of Interest}.
 
-It is also possible to toggle the bot@~{a}o @emph{BBox Center} to set the
-center of movimento to the center of the current objeto's bounding
-box. Once toggled the active geometry's bounding box center will become
-the center of movimento, if you select another objeto, then the center of
-movimento will become the center of that objeto's bounding box. Nothing
-changes when a c@^{a}mera or the @emph{World} is selected, you have to
-type in the word @code{target} in the @emph{Center} field the reset to
-the default.
+Isso tamb@'{e}m @'{e} poss@'{i}vel mudando o bot@~{a}o @emph{BBox Center} para escolher o
+centro de movimento como sendo o centro do objeto atual da caixa
+associada. Uma vez modificado o centro da caixa geom@'{e}trica ativa associada ir@'{a} tornar-se
+o centro do movimento, se voc@^{e} selecionar outro objeto, ent@~{a}o o centro do
+movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nada modifica@,c@~{a}o
+ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado, voc@^{e} tem que
+digitar a palavra @code{target} no campo @emph{Center} para retornar ao
+valor padr@~{a}o.
 
-You apply a mouse movimento by holding down either the left or middle mouse
-bot@~{a}o with the cursor in a janela de c@^{a}mera and moving the mouse.  Most of
-the modes have @emph{inertia}, which means that if you let go of the
-bot@~{a}o while moving the mouse, the movimento will continue.  It may be
-helpful to imagine the mouse cursor as being a gripper; when you hold a
-mouse bot@~{a}o down, it grips the objeto alvo and you can move it.  When
-you let go of the mouse bot@~{a}o, the gripper releases the objeto.
-Letting go of the mouse bot@~{a}o while moving the mouse is like throwing
-the objeto --- the objeto continues moving independent of the mouse.
-Inertia can be turned off; see the @emph{Main} panel's @emph{Motion} menu,
-described below.
+Voc@^{e} aplica um movimento de mouse pressionando ou o bot@~{a}o esquerdo ou o bot@~{a}o do meio
+do mouse com o cursor em uma janela de c@^{a}mera e movendo o mouse.  A maioria dos
+modos de movimento possui in@'{e}rcia (@emph{inertia}), que significa que se voc@^{e} soltar o
+bot@~{a}o enquanto move o mouse, o movimento ir@'{a} continuar.  Para imaginar a in@'{e}rcia pode ser
+@'{u}til imaginar o cursor do mouse como sendo uma al@,ca; quando voc@^{e} pressiona um
+bot@~{a}o do mouse para baixo, o mouse agarra firmemente no objeto alvo e voc@^{e} pode mover esse objeto.  Quando
+voc@^{e} libera o bot@~{a}o do mouse, a al@,ca libera o objeto.
+Liberando o bot@~{a}o do mouse enquanto move o mesmo @'{e} como abandonar
+o objeto --- o objeto continua movendo-se independentemente do mouse.
+In@'{e}rcia pode ser desligada; veja o menu de movimento (@emph{Motion}) no painel principal (@emph{Main}),
+descrito abaixo.
 
-Generally, the left mouse bot@~{a}o controls movimento in the screen plane,
-while the middle mouse controls movimento along or around the forward direction.
+Generally, the bot@~{a}o esquerdo do mouse controla movimento no plano da tela,
+enquanto o bot@~{a}o m@'{e}dio do mouse controla movimento ao longo ou em torno da dire@,c@~{a}o de avan@,co.
 
-Pressing the shift key while dragging with left or middle mouse bot@~{o}es
-in most modos de movimento gives slow-speed movimentos, useful for fine adjustment.
+Pressionando o tecla "shift" enquanto arrasta com o bot@~{a}o esquerdo ou m@'{e}dio do mouse
+na maioria dos modos de movimento fornece movimentos de baixa velocidade , @'{u}til para ajustes finos.
 
-You can pick any point on an objeto (not just its origin) as the center of
-movimento by holding down the shift key while clicando the bot@~{a}o direito do mouse;
-this chooses a point of interest.
+Voc@^{e} pode selecionar qualquer ponto sobre um objeto (n@~{a}o apenas sua or@'{i}gem) como centro do
+movimento pressionando a tecla "shift" enquanto clica no bot@~{a}o direito do mouse;
+isso escolhe o ponto de interesse.
 
 @table @emph
 
 @item Rotate
-In @emph{Rotate} mode, hold the left mouse bot@~{a}o down to rotate the
-objeto alvo about the center objeto.  Rotation proceeds in the
-direction that you move the mouse.  Specifically, the axis of rotation
-passes through the origin of the center objeto, is parallel to the
-c@^{a}mera view plane, and is perpendicular to the direction of movimento of
-the mouse.  When the center is "target", this means that the target
-objeto rotates about its own origin.
+No modo rota@,c@~{a}o (@emph{Rotate}), pressione o bot@~{a}o esquerdo do mouse para rotacionar o
+objeto alvo en torno do objeto do centro.  A rota@,c@~{a}o ocorre na
+dire@,c@~{a}o que voc@^{e} move o mouse.  Especificamente, o eixo de rota@,c@~{a}o
+passa atrav@'{e}s da or@'{i}gem do objeto do centro, @'{e} paralelo ao
+plano de vis@~{a}o da c@^{a}mera, e @'{e} perpendicular @`{a} dire@,c@~{a}o do movimento do
+mouse.  Quando o centro for o alvo ("target"), isso significa que o objeto
+alvo rotaciona em torno de sua pr@'{o}pria or@'{i}gem.
 
-The middle mouse bot@~{a}o in @emph{Rotate} mode rotates the target
-objeto about an axis perpendicular to the view plane.
+O bot@~{a} do meio do mouse no modo de movimento tipo rota@,c@~{a}o (@emph{Rotate}) rotaciona o objeto
+alvo em torno de um eixo perpendicular ao plano de vis@~{a}o.
 
 @item Translate
-In @emph{Translate} mode, hold the left mouse bot@~{a}o down to translate
+In @emph{Translate} mode, hold the bot@~{a}o esquerdo do mouse down to translate
 the objeto alvo in the direction of mouse movimento.  The middle mouse
 bot@~{a}o translates the target along an axis perpendicular to the view
 plane.
 
-In Euclidean space, the center objeto is essentially irrelevant for
+In Euclidean space, the objeto do centro is essentially irrelevant for
 translations.  In hyperbolic and spherical spaces, where translations
 have a unique axis, this axis is chosen to go through the origin of the
-center objeto.
+objeto do centro.
 
 @item Cam Fly
 @emph{Cam Fly} is a crude flight simulator that lets you fly around
 the scene.  It works by moving the camera.
-Move the mouse while holding the left mouse bot@~{a}o down to
+Move the mouse while holding the bot@~{a}o esquerdo do mouse down to
 point the c@^{a}mera in a different direction.  To move forward or backward,
-hold down the middle bot@~{a}o and move the mouse vertically.  Both of
+hold down the bot@~{a} do meio and move the mouse vertically.  Both of
 these movimentos have inertia; typically the easiest way to fly around a
 scene is to give the c@^{a}mera a slight forward push by letting go of the
-middle bot@~{a}o while moving the mouse upward, and then using the left
+bot@~{a} do meio while moving the mouse upward, and then using the left
 bot@~{a}o to steer.
 
 @emph{Cam Fly} affects the janela de c@^{a}mera that the mouse is in; it
-ignores the objeto alvo and the center objeto.
+ignores the objeto alvo and the objeto do centro.
 
 @item Cam Orbit
 @emph{Cam Orbit} mode lets you rotate the current c@^{a}mera around the
-current center. The left mouse bot@~{a}o does this rotation.  The middle
-mouse bot@~{a}o in @emph{Cam Orbit} mode acts as in
+current center. The bot@~{a}o esquerdo do mouse does this rotation.  The middle
+bot@~{a}o do mouse in @emph{Cam Orbit} mode acts as in
 @emph{Cam Fly} mode: it moves the c@^{a}mera forward or backward.
 
 In general @emph{Cam Orbit} does not move the objeto alvo, although
@@ -1592,7 +1592,7 @@ the target, it will pivot that c@^{a}mera about itself just as in
 
 @item Cam Zoom
 @emph{Cam Zoom} mode lets you change the current camera's field of
-view with the mouse; hold the left mouse bot@~{a}o down and move the mouse
+view with the mouse; hold the bot@~{a}o esquerdo do mouse down and move the mouse
 to change it.  The numeric value of the field of view is shown in the
 @emph{FOV} field in the @emph{Camera} panel.
 
@@ -1600,10 +1600,10 @@ to change it.  The numeric value of the field of view is shown in the
 @emph{Geom Scale} mode lets you enlarge or shrink a geom.  It operates
 on the objeto alvo if that objeto is a geom.  If the target is a
 camera, @emph{Geom Scale} operates on the geom that was most recently
-the objeto alvo.  Moving the mouse while holding down the left mouse bot@~{a}o
+the objeto alvo.  Moving the mouse while holding down the bot@~{a}o esquerdo do mouse
 scales the objeto either up or down, depending on the direction of
 mouse movimento.  The center of the applied scaling transformation is the
-center objeto.
+objeto do centro.
 
 Scaling is meaningful only in Euclidean space; attempts to scale are
 ignored in other spaces.
@@ -1698,11 +1698,11 @@ interest}.  The point of interest must be on an existing objeto.
 
 Selecting a point of interest simplifies examining a small portion of a
 larger objeto.  Shift-right-clique sobre o an interesting point, and select
-@emph{Orbit} mode.  Use the middle mouse bot@~{a}o to approach, and the
+@emph{Orbit} mode.  Use the bot@~{a} do meio do mouse to approach, and the
 left mouse to orbit the point, examining the region from different
 directions.
 
-When you have selected a point of interest, the current center objeto
+When you have selected a point of interest, the current objeto do centro
 changes to an objeto named "CENTER", which is an invisible objeto
 located at the point of interest.  In addition, mouse movimentos for the
 window in which you made the selection are adjusted so that the point of
@@ -1711,10 +1711,10 @@ interest follows the mouse.
 You can change the point of interest at any time by selecting a new one
 by shift-clicando the bot@~{a}o direito do mouse again.  You can cancel
 the point of interest altogether by shift-clicando the right
-mouse bot@~{a}o with the cursor on the background (i.e. not on any objeto).
-This changes the center objeto back to its default value, "target".
+bot@~{a}o do mouse with the cursor on the background (i.e. not on any objeto).
+This changes the objeto do centro back to its default value, "target".
 
-The objeto named "CENTER", which serves as the center objeto for the
+The objeto named "CENTER", which serves as the objeto do centro for the
 point of interest, is a special kind of geom called an "alien".  It does
 not appear in the @emph{Targets} browser.  By default it has no geometry
 associated with it and hence is invisible.  You can, however, explicitly
@@ -2022,7 +2022,7 @@ This bot@~{a}o lets you see and change the positions of the light sources
 in a janela de c@^{a}mera.  Each light is drawn as long cylinder which is
 supposed to remind you of a light beam.  When you clique sobre o the
 @emph{Show Lights} bot@~{a}o Geomview goes into "light edit" mode, during
-which you can rotate current light by holding down the left mouse bot@~{a}o
+which you can rotate current light by holding down the bot@~{a}o esquerdo do mouse
 and moving the mouse.  Lights placed in this way are infinitely distant,
 so what you are changing is the angular position.  Clique sobre o the
 @emph{Show Lights} bot@~{a}o again to return to the previous modo de movimento
@@ -4936,7 +4936,7 @@ the capability of Geomview itself.
 @section How External Modules Interface with Geomview
 
 External modules appear in the @emph{Modules} browser in Geomview's
-@emph{Main} panel.  To run a module, clique the left mouse bot@~{a}o on
+@emph{Main} panel.  To run a module, clique the bot@~{a}o esquerdo do mouse on
 the module's entry in the browser.  While the module is running, an
 additional line for that module will appear in red in the browser.
 This line begins with a number in brackets, which indicates the
@@ -8064,7 +8064,7 @@ that moves, the center of movimento, and the frame of reference
 in which to apply the movimento.  The center is easiest understood
 for rotations: if centerID is the same as objectID then it will
 spin around its own axes; otherwise the moving objeto will orbit
-the center objeto.  Normally frameID, in whose coordinate system
+the objeto do centro.  Normally frameID, in whose coordinate system
 the (mouse) movimentos are interpreted, is @code{focus}, the current camera.
 Translations can be scaled proportional to the
 distance between the target and the center. Support for
@@ -8073,7 +8073,7 @@ built-in: use the @code{space} command to change spaces.  With type
 @code{rotate} x, y, and z are floats specifying angles in RADIANS.
 For types @code{translate} and @code{translate-scaled} x, y, and z are
 floats specifying distances in the coordinate system of the
-center objeto.
+objeto do centro.
 
 The next field is optional and may consist of the keyword
 @code{bbox-center} or the keyword @code{origin} and modifies the
@@ -8161,7 +8161,7 @@ currently selected objeto, while @code{bbox-center} means to use the
 center of the bouding box of the current objeto.  The keyword
 @code{bbox-center} makes no sense if the geometry is
 non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
-make a difference if the center objeto is not a @emph{geometry}, e.g. if
+make a difference if the objeto do centro is not a @emph{geometry}, e.g. if
 it is a camera. Same holds if the World is the currently selected
 objeto.
 @end table
