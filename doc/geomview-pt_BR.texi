@@ -139,101 +139,123 @@ permitir que programas propriet@'{a}rios e m@'{o}dulos usem o Geomview.
 @center Version 2.1, February 1999
 
 @display
-Copyright @copyright{} 1991, 1999 Free Software Foundation, Inc.
-59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+Licença Pública Geral Menor do GNU
 
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
+This is an unofficial translation of the GNU Lesser General Public
+License into Portuguese. It was not published by the Free Software Foundation,
+and does not legally state the distribution terms for software that uses the
+GNU LGPL--only the original English text of the GNU LGPL does that. However,
+we hope that this translation will help Portuguese speakers understand the
+GNU LGPL better.
+
+Esta é uma tradução não-oficial da GNU Lesser General Public
+License para o Português. Ela não é publicada pela Free Software Foundation
+e não traz os termos de distribuição legal do software que usa a GNU LGPL -- estes termos estão contidos apenas no texto da GNU LGPL original em inglês.
+No entanto, esperamos que esta tradução ajudará no
+melhor entendimento da GNU LGPL em Português.
+
+Versão 2.1, Fevereiro de 1999
+
+Copyright @copyright{} 1991, 1999 Free Software Foundation, Inc.
+59 Temple Place, Suite 330, Boston, MA  02111-1307  USA [Estados Unidos da América]
+
+É permitido a qualquer pessoa copiar e distribuir cópias
+sem alterações deste documento de licença, sendo vedada, entretanto, sua modificação.
+
+[Esta é a primeira versão da GPL Menor a ser lançada. Ela também constitui
+a sucessora da Licença Pública de Biblioteca do GNU, daí o número 2.1. da versão].
 
 [This is the first released version of the Lesser GPL.  It also counts
  as the successor of the GNU Library Public License, version 2, hence
  the version number 2.1.]
 @end display
 
-@unnumberedsec Preamble
+@unnumberedsec Introdução
 
-The licenses for most software are designed to take away your
-freedom to share and change it.  By contrast, the GNU General Public
-Licenses are intended to guarantee your freedom to share and change
-free software--to make sure the software is free for all its users.
+As licenças da maioria dos softwares são elaboradas para suprimir sua
+liberdade de compartilhá-los e modificá-los. As Licenças Públicas do GNU, ao contrário,
+têm o objetivo de assegurar sua liberdade para compartilhar e modificar
+softwares livres para garantir que o software seja livre para todos os seus usuários.
 
-This license, the Lesser General Public License, applies to some
-specially designated software packages--typically libraries--of the
-Free Software Foundation and other authors who decide to use it.  You
-can use it too, but we suggest you first think carefully about whether
-this license or the ordinary General Public License is the better
-strategy to use in any particular case, based on the explanations
-below.
+A presente Licença Pública Geral Menor se aplica a alguns
+pacotes de software especialmente designados - normalmente bibliotecas - da
+Free Software Foundation e de outros autores que decidam utilizá-la. Você
+pode utilizá-la também, mas recomendamos que antes, você analise cuidadosamente se
+esta licença, ou a Licença Pública Geral comum, é a melhor
+estratégia a ser adotada em cada caso específico, tendo como base as explicações
+abaixo.
 
-When we speak of free software, we are referring to freedom of use,
-not price.  Our General Public Licenses are designed to make sure that
-you have the freedom to distribute copies of free software (and charge
-for this service if you wish); that you receive source code or can get
-it if you want it; that you can change the software and use pieces of
-it in new free programs; and that you are informed that you can do
-these things.
+Quando falamos de software livre, estamos nos referindo a liberdade de uso
+e não de gratuidade de preço. Nossas Licenças Públicas Gerais são elaboradas para garantir que
+você tenha liberdade para distribuir cópias de software livre (cobrando
+por esse serviço se você assim o desejar); que você receba código-fonte ou o obtenha,
+se quiser; que você modifique o software e utilize partes dele
+em novos programas livres; e que você tenha ciência de que pode praticar
+estes atos.
 
-To protect your rights, we need to make restrictions that forbid
-distributors to deny you these rights or to ask you to surrender these
-rights.  These restrictions translate to certain responsibilities for
-you if you distribute copies of the library or if you modify it.
+A fim de proteger seus direitos, é necessário que façamos restrições que proíbam
+distribuídores de negar estes direitos a você ou de pedir que você que renuncie a
+eles. Essas restrições se traduzem em determinadas responsabilidades que você deverá
+assumir, se vier a distribuir cópias da biblioteca ou modificá-la.
 
-For example, if you distribute copies of the library, whether gratis
-or for a fee, you must give the recipients all the rights that we gave
-you.  You must make sure that they, too, receive or can get the source
-code.  If you link other code with the library, you must provide
-complete object files to the recipients, so that they can relink them
-with the library after making changes to the library and recompiling
-it.  And you must show them these terms so they know their rights.
+Por exemplo, se você distribuir cópias da biblioteca, seja gratuitamente
+ou mediante um valor, terá de conceder a seus receptores todos os direitos que estamos concedendo
+a você. Você terá de garantir que eles, também, recebam ou possam obter o código
+fonte. Se você ligar outro código com a biblioteca, você deve fornecer
+os arquivos-objeto completos para os receptores, de modo que eles possam ligá-los novamente
+com a biblioteca após terem feito mudanças na biblioteca e recompilado a
+mesma. E você terá de exibir a eles esses termos, para que eles conheçam seus direitos.
 
-We protect your rights with a two-step method: (1) we copyright the
-library, and (2) we offer you this license, which gives you legal
-permission to copy, distribute and/or modify the library.
+Protegemos seus direitos através de um método que envolve dois passos: (1) estabelecemos direitos autorais sobre a
+biblioteca e (2) oferecemos a você esta licença, que dá a você
+permissão para copiar, distribuir e/ou modificar a biblioteca.
 
-To protect each distributor, we want to make it very clear that
-there is no warranty for the free library.  Also, if the library is
-modified by someone else and passed on, the recipients should know
-that what they have is not the original version, so that the original
-author's reputation will not be affected by problems that might be
-introduced by others.
+Para proteger cada distribuidor, queremos deixar bem claro que
+não há nenhuma garantia para a biblioteca livre. Além disso, se a biblioteca for
+modificada por alguém e passada adiante, os receptores devem saber
+que o que eles têm não é a versão original, de modo que a reputação do autor original
+não será afetada por problemas que possam ser
+introduzidos por outros.
 
-Finally, software patents pose a constant threat to the existence of
-any free program.  We wish to make sure that a company cannot
-effectively restrict the users of a free program by obtaining a
-restrictive license from a patent holder.  Therefore, we insist that
-any patent license obtained for a version of the library must be
-consistent with the full freedom of use specified in this license.
+Por fim, as patentes de software representam uma ameaça constante para a existência de
+qualquer programa livre. Queremos assegurar que uma empresa não possa
+efetivamente restringir os usuários de um programa livre por ter obtido uma
+licença restritiva de um titular de direitos de patente. Por isso, insistimos que
+qualquer licença de patente obtida para alguma versão da biblioteca seja
+consistente com a plena liberdade de uso, especificada nesta licença.
 
-Most GNU software, including some libraries, is covered by the
-ordinary GNU General Public License.  This license, the GNU Lesser
-General Public License, applies to certain designated libraries, and
-is quite different from the ordinary General Public License.  We use
-this license for certain libraries in order to permit linking those
-libraries into non-free programs.
+A maior parte dos softwares do GNU, incluindo algumas bibliotecas, está coberta pela
+Licença Pública Geral comum do GNU. A presente Licença Pública
+Geral Menor do GNU se aplica a determinadas bibliotecas designadas,
+sendo bastante diferente da Licença Pública Geral comum. Usamos
+esta licença para determinadas bibliotecas, a fim de permitir a ligação dessas
+bibliotecas a programas não-livres.
 
-When a program is linked with a library, whether statically or using
-a shared library, the combination of the two is legally speaking a
-combined work, a derivative of the original library.  The ordinary
-General Public License therefore permits such linking only if the
-entire combination fits its criteria of freedom.  The Lesser General
-Public License permits more lax criteria for linking other code with
-the library.
+Quando um programa é ligado a uma biblioteca, seja estaticamente ou usando
+uma biblioteca compartilhada, essa combinação das duas é em termos legais uma
+obra combinada, uma derivação da biblioteca original. Por essa razão, a
+Licença Pública Geral comum somente permite essa ligação se a combinação como um
+todo atender a seus critérios de liberdade. A Licença Pública
+Geral Menor permite critérios mais flexíveis para a ligação de outros códigos
+à biblioteca.
 
-We call this license the "Lesser" General Public License because it
-does Less to protect the user's freedom than the ordinary General
-Public License.  It also provides other free software developers Less
-of an advantage over competing non-free programs.  These disadvantages
-are the reason we use the ordinary General Public License for many
-libraries.  However, the Lesser license provides advantages in certain
-special circumstances.
+Chamamos esta licença de Licença Pública Geral "Menor" porque ela
+faz Menos para proteger a liberdade do usuário do que a Licença Pública
+Geral comum. Ela também oferece a outros desenvolvedores de software livre uma Menor
+vantagem na competição com com programas não livres. Essas desvantagens
+são o motivo pelo qual usamos a Licença Pública Geral comum para muitas
+bibliotecas. Por outro lado, em determinadas circunstâncias especiais, a licença Menor
+oferece vantagens.
 
-For example, on rare occasions, there may be a special need to
-encourage the widest possible use of a certain library, so that it
-becomes a de-facto standard.  To achieve this, non-free programs must
-be allowed to use the library.  A more frequent case is that a free
-library does the same job as widely used non-free libraries.  In this
-case, there is little to gain by limiting the free library to free
-software only, so we use the Lesser General Public License.
+Por exemplo, em raras ocasiões, pode existir uma necessidade especial
+de se incentivar a mais ampla utilização possível de uma determinada biblioteca, para que ela
+se torne um padrão de fato. Para conseguir isso, deve-se permitir que programas não-livres
+utilizem a biblioteca. Um caso mais freqüente ocorre quando uma biblioteca livre
+desempenha a mesma função de bibliotecas não-livres amplamente usadas. Nesse
+caso, existem poucas vantagens em restringir a biblioteca livre somente para
+software livre, então utilizamos a Licença Pública Geral Menor.
+
+*
 
 In other cases, permission to use a particular library in non-free
 programs enables a greater number of people to use a large body of
