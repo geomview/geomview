@@ -1,7 +1,11 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
+
+@iftex
 @letterpaper
+@end iftex
+
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
@@ -9,7 +13,7 @@
 
 @dircategory Graphics Applications
 @direntry
-* Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,c@~ao tridimensional.
+* Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,{c}@~ao tridimensional.
 @end direntry
 
 @c baseado na vers@~{a}o 1.42 do cvs
@@ -40,21 +44,21 @@
 
 @node Top, Intro, (dir), (dir)
 
-Programa interativo de visualiza@,c@~ao tridimensional.
+Programa interativo de visualiza@,{c}@~ao tridimensional.
 
 @menu
-* Intro::                       Introdu@,c@~ao ao Geomview.
+* Intro::                       Introdu@,{c}@~ao ao Geomview.
 * Distrib::                     Como acessar a vers@~ao mais recente do Geomview.
-* Copying::                     A Licen@,ca P@'ublica Geral Menor do GNU.
+* Copying::                     A Licen@,{c}a P@'ublica Geral Menor do GNU.
 * History::                     Hist@'oria do Desenvolvimento do Geomview.
 * Platforms::                   Plantaformas Suportadas.
 * Pronunciation::               Como Pronunciar ``Geomview''.
 * Overview::                    Vis@~ao Geral do Geomview.
 * Tutorial::                    Tutorial Introdut@'orio.
 * Interaction::                 Interagindo com Geomview.
-* OOGL File Formats::           Formatos para Inser@,c@~ao de Dados Geom@'etricos.
+* OOGL File Formats::           Formatos para Inser@,{c}@~ao de Dados Geom@'etricos.
 * Customization::               Modificando o comportamento do Geomview.
-* Modules::                     Programas que usam Geomview para exibi@,c@~ao de imagens.
+* Modules::                     Programas que usam Geomview para exibi@,{c}@~ao de imagens.
 * GCL::                         GCL: a Linguagem de Comandos do Geomview.
 * Non-Euclidean Geometry::      Geometrias N@~ao Euclideanas.
 * Mathematica::                 Gr@'aficos do Mathematica no Geomview ou no RenderMan.
@@ -62,7 +66,7 @@ Programa interativo de visualiza@,c@~ao tridimensional.
 * Support::                     acessando o Suporte T@'ecnico para o Geomview.
 
 * Contributing::                Como contribuir com o Geomview.
-* Function Index::              Acesso r@'apido a cada fun@,c@~ao da GCL.
+* Function Index::              Acesso r@'apido a cada fun@,{c}@~ao da GCL.
 * List of Figures::             Lista de Figuras.
 @end menu
 
@@ -71,13 +75,13 @@ Programa interativo de visualiza@,c@~ao tridimensional.
 
 Geomview @'{e} um programa interativo para visualizar e manipular
 objetos geom@'{e}tricos, originalmente escrito pelos membros do estado maior do Geometry
-Center na Universidade de Minesota (EUA), come@,cando em 1991.  O Geomview pode ser usado
-como um visualizador independente para objetos est@'{a}ticos ou como um mecanismo de visualiza@,c@~{a}o para
-outros programas que produzem dinamicamente mudan@,cas geom@'{e}tricas.  Geomview roda sobre
+Center na Universidade de Minesota (EUA), come@,{c}ando em 1991.  O Geomview pode ser usado
+como um visualizador independente para objetos est@'{a}ticos ou como um mecanismo de visualiza@,{c}@~{a}o para
+outros programas que produzem dinamicamente mudan@,{c}as geom@'{e}tricas.  Geomview roda sobre
 muitos tipos de computadores Unix, incluindo Linux, SGI, Sun, e HP. Geomview tamb@'{e}m
 executa com Cygwin. Esse manual descreve Geomview em sua vers@~{a}o 1.9. @refill
 
-Geomview @'{e} um @dfn{software} livre, dispon@'{i}vel sob os termos da Licen@,ca P@'{u}blica Geral 
+Geomview @'{e} um @dfn{software} livre, dispon@'{i}vel sob os termos da Licen@,{c}a P@'{u}blica Geral 
 Menor do GNU ; veja @ref{Copying} para detalhes.
 
 Geomview e esse manual podem ser encontrados em
@@ -97,27 +101,27 @@ no s@'{i}tio @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}
 @unnumbered Distribution
 
 Geomview @'{e} um @dfn{software} livre; isso significa que qualquer um @'{e} livre para
-us@'{a}-lo e livre para redistribu@'{i}-lo sob certas condi@,c@~{o}es.  
+us@'{a}-lo e livre para redistribu@'{i}-lo sob certas condi@,{c}@~{o}es.  
 Geomview n@~{a}o @'{e} 
-de dom@'{i}nio p@'{u}blico; @'{e} protegido por direitos autorais e existem restri@,c@~{o}es
-sobre sua distribui@,c@~{a}o, mas essas restri@,c@~{o}es s@~{a}o montadas de forma a permitir
+de dom@'{i}nio p@'{u}blico; @'{e} protegido por direitos autorais e existem restri@,{c}@~{o}es
+sobre sua distribui@,{c}@~{a}o, mas essas restri@,{c}@~{o}es s@~{a}o montadas de forma a permitir
 qualquer coisa que um bom cidad@~{a}o colaborador possa querer fazer.  O que n@~{a}o @'{e}
 permitido @'{e} para tentar previnir outros de compartilhamento adicional de qualquer vers@~{a}o
-do Geomview que eles possam pegar de voc@^{e}.  As condi@,c@~{o}es precisas podem ser
-encontradas na Licen@,ca Geral Menor do GNU que acompanha o Geomview e tamb@'{e}m
-aparece acompanhando essa se@,c@~{a}o.
+do Geomview que eles possam pegar de voc@^{e}.  As condi@,{c}@~{o}es precisas podem ser
+encontradas na Licen@,{c}a Geral Menor do GNU que acompanha o Geomview e tamb@'{e}m
+aparece acompanhando essa se@,{c}@~{a}o.
 
 Uma forma de acessar uma c@'{o}pia do Geomview @'{e} a partir de algu@'{e}m que j@'{a} possua o Geomview.  Voc@^{e}
 n@~{a}o precisa perguntar por nossa permiss@~{a}o para fazer isso, ou informar qualquer coisa; apenas
-fa@,ca a c@'{o}pia.  Se voc@^{e} tiver acesso @`{a} internet, voc@^{e} pode pegar a mais recente
+fa@,{c}a a c@'{o}pia.  Se voc@^{e} tiver acesso @`{a} internet, voc@^{e} pode pegar a mais recente
 vers@~{a}o do Geomview em @uref{http://www.geomview.org}.
 
 Voc@^{e} tamb@'{e}m pode receber Geomview quando voc@^{e} compra um computador.  Fabricantes de
 computadores est@~{a}o livres para distribuir c@'{o}pias sob os mesmos termos que s@~{a}o aplicados a
-qualquer pessoa.  Esses termos requerem que os fabricantes forne@,cam a voc@^{e} o c@'{o}digo completo,
-incluindo qualquer mudan@,cas que eles tenham feito, e permitam a voc@^{e} que
+qualquer pessoa.  Esses termos requerem que os fabricantes forne@,{c}am a voc@^{e} o c@'{o}digo completo,
+incluindo qualquer mudan@,{c}as que eles tenham feito, e permitam a voc@^{e} que
 redistribua o Geomview recebido deles nos termos usuais da
-Licen@,ca P@'{u}blica Geral Menor do GNU.  Em outras palavras, o programa deve ser livre para voc@^{e}
+Licen@,{c}a P@'{u}blica Geral Menor do GNU.  Em outras palavras, o programa deve ser livre para voc@^{e}
 quando voc@^{e} o receber, n@~{a}o apenas livre para o fabricante.
 
 @node Copying, History, Distrib, Top
@@ -129,7 +133,7 @@ quando voc@^{e} o receber, n@~{a}o apenas livre para o fabricante.
 
 @smallexample
 NOTA: Geomview @'{e} distribu@'{i}do sob a LICEN@,{C}A P@'{U}BLICA GERAL
-MENOR.  Para os prop@'{o}sitos dessa licen@,ca  n@'{o}s pensamos em Geomview como se ele
+MENOR.  Para os prop@'{o}sitos dessa licen@,{c}a  n@'{o}s pensamos em Geomview como se ele
 fosse uma "biblioteca", e dos m@'{o}dulos externos do Geomview como "programas que
 se comunicam com a biblioteca".  Fazemos isso porque queremos especificamente
 permitir que programas propriet@'{a}rios e m@'{o}dulos usem o Geomview.
@@ -139,7 +143,7 @@ permitir que programas propriet@'{a}rios e m@'{o}dulos usem o Geomview.
 @center Version 2.1, February 1999
 
 @display
-Licença Pública Geral Menor do GNU
+Licen@,{c}a P@'{u}blica Geral Menor do GNU
 
 This is an unofficial translation of the GNU Lesser General Public
 License into Portuguese. It was not published by the Free Software Foundation,
@@ -148,552 +152,552 @@ GNU LGPL--only the original English text of the GNU LGPL does that. However,
 we hope that this translation will help Portuguese speakers understand the
 GNU LGPL better.
 
-Esta é uma tradução não-oficial da GNU Lesser General Public
-License para o Português. Ela não é publicada pela Free Software Foundation
-e não traz os termos de distribuição legal do software que usa a GNU LGPL -- estes termos estão contidos apenas no texto da GNU LGPL original em inglês.
-No entanto, esperamos que esta tradução ajudará no
-melhor entendimento da GNU LGPL em Português.
+Esta @'{e} uma tradu@,{c}@~{a}o n@~{a}o-oficial da GNU Lesser General Public
+License para o Portugu@^{e}s. Ela n@~{a}o @'{e} publicada pela Free Software Foundation
+e n@~{a}o traz os termos de distribui@,{c}@~{a}o legal do software que usa a GNU LGPL -- estes termos est@~{a}o contidos apenas no texto da GNU LGPL original em ingl@^{e}s.
+No entanto, esperamos que esta tradu@,{c}@~{a}o ajudar@'{a} no
+melhor entendimento da GNU LGPL em Portugu@^{e}s.
 
-Versão 2.1, Fevereiro de 1999
+Vers@~{a}o 2.1, Fevereiro de 1999
 
 Copyright @copyright{} 1991, 1999 Free Software Foundation, Inc.
-59 Temple Place, Suite 330, Boston, MA  02111-1307  USA [Estados Unidos da América]
+59 Temple Place, Suite 330, Boston, MA  02111-1307  USA [Estados Unidos da Am@'{e}rica]
 
-É permitido a qualquer pessoa copiar e distribuir cópias
-sem alterações deste documento de licença, sendo vedada, entretanto, sua modificação.
+@'{E} permitido a qualquer pessoa copiar e distribuir c@'{o}pias
+sem altera@,{c}@~{o}es deste documento de licen@,{c}a, sendo vedada, entretanto, sua modifica@,{c}@~{a}o.
 
-[Esta é a primeira versão da GPL Menor a ser lançada. Ela também constitui
-a sucessora da Licença Pública de Biblioteca do GNU, daí o número 2.1. da versão].
+[Esta @'{e} a primeira vers@~{a}o da GPL Menor a ser lan@,{c}ada. Ela tamb@'{e}m constitui
+a sucessora da Licen@,{c}a P@'{u}blica de Biblioteca do GNU, da@'{i} o n@'{u}mero 2.1. da vers@~{a}o].
 
 [This is the first released version of the Lesser GPL.  It also counts
  as the successor of the GNU Library Public License, version 2, hence
  the version number 2.1.]
 @end display
 
-@unnumberedsec Introdução
+@unnumberedsec Introdu@,{c}@~{a}o
 
-As licenças da maioria dos softwares são elaboradas para suprimir sua
-liberdade de compartilhá-los e modificá-los. As Licenças Públicas do GNU, ao contrário,
-têm o objetivo de assegurar sua liberdade para compartilhar e modificar
-softwares livres para garantir que o software seja livre para todos os seus usuários.
+As licen@,{c}as da maioria dos softwares s@~{a}o elaboradas para suprimir sua
+liberdade de compartilh@'{a}-los e modific@'{a}-los. As Licen@,{c}as P@'{u}blicas do GNU, ao contr@'{a}rio,
+t@^{e}m o objetivo de assegurar sua liberdade para compartilhar e modificar
+softwares livres para garantir que o software seja livre para todos os seus usu@'{a}rios.
 
-A presente Licença Pública Geral Menor se aplica a alguns
+A presente Licen@,{c}a P@'{u}blica Geral Menor se aplica a alguns
 pacotes de software especialmente designados - normalmente bibliotecas - da
-Free Software Foundation e de outros autores que decidam utilizá-la. Você
-pode utilizá-la também, mas recomendamos que antes, você analise cuidadosamente se
-esta licença, ou a Licença Pública Geral comum, é a melhor
-estratégia a ser adotada em cada caso específico, tendo como base as explicações
+Free Software Foundation e de outros autores que decidam utiliz@'{a}-la. Voc@^{e}
+pode utiliz@'{a}-la tamb@'{e}m, mas recomendamos que antes, voc@^{e} analise cuidadosamente se
+esta licen@,{c}a, ou a Licen@,{c}a P@'{u}blica Geral comum, @'{e} a melhor
+estrat@'{e}gia a ser adotada em cada caso espec@'{i}fico, tendo como base as explica@,{c}@~{o}es
 abaixo.
 
 Quando falamos de software livre, estamos nos referindo a liberdade de uso
-e não de gratuidade de preço. Nossas Licenças Públicas Gerais são elaboradas para garantir que
-você tenha liberdade para distribuir cópias de software livre (cobrando
-por esse serviço se você assim o desejar); que você receba código-fonte ou o obtenha,
-se quiser; que você modifique o software e utilize partes dele
-em novos programas livres; e que você tenha ciência de que pode praticar
+e n@~{a}o de gratuidade de pre@,{c}o. Nossas Licen@,{c}as P@'{u}blicas Gerais s@~{a}o elaboradas para garantir que
+voc@^{e} tenha liberdade para distribuir c@'{o}pias de software livre (cobrando
+por esse servi@,{c}o se voc@^{e} assim o desejar); que voc@^{e} receba c@'{o}digo-fonte ou o obtenha,
+se quiser; que voc@^{e} modifique o software e utilize partes dele
+em novos programas livres; e que voc@^{e} tenha ci@^{e}ncia de que pode praticar
 estes atos.
 
-A fim de proteger seus direitos, é necessário que façamos restrições que proíbam
-distribuídores de negar estes direitos a você ou de pedir que você que renuncie a
-eles. Essas restrições se traduzem em determinadas responsabilidades que você deverá
-assumir, se vier a distribuir cópias da biblioteca ou modificá-la.
+A fim de proteger seus direitos, @'{e} necess@'{a}rio que fa@,{c}amos restri@,{c}@~{o}es que pro@'{i}bam
+distribu@'{i}dores de negar estes direitos a voc@^{e} ou de pedir que voc@^{e} que renuncie a
+eles. Essas restri@,{c}@~{o}es se traduzem em determinadas responsabilidades que voc@^{e} dever@'{a}
+assumir, se vier a distribuir c@'{o}pias da biblioteca ou modific@'{a}-la.
 
-Por exemplo, se você distribuir cópias da biblioteca, seja gratuitamente
-ou mediante um valor, terá de conceder a seus receptores todos os direitos que estamos concedendo
-a você. Você terá de garantir que eles, também, recebam ou possam obter o código
-fonte. Se você ligar outro código com a biblioteca, você deve fornecer
-os arquivos-objeto completos para os receptores, de modo que eles possam ligá-los novamente
-com a biblioteca após terem feito mudanças na biblioteca e recompilado a
-mesma. E você terá de exibir a eles esses termos, para que eles conheçam seus direitos.
+Por exemplo, se voc@^{e} distribuir c@'{o}pias da biblioteca, seja gratuitamente
+ou mediante um valor, ter@'{a} de conceder a seus receptores todos os direitos que estamos concedendo
+a voc@^{e}. Voc@^{e} ter@'{a} de garantir que eles, tamb@'{e}m, recebam ou possam obter o c@'{o}digo
+fonte. Se voc@^{e} ligar outro c@'{o}digo com a biblioteca, voc@^{e} deve fornecer
+os arquivos-objeto completos para os receptores, de modo que eles possam lig@'{a}-los novamente
+com a biblioteca ap@'{o}s terem feito mudan@,{c}as na biblioteca e recompilado a
+mesma. E voc@^{e} ter@'{a} de exibir a eles esses termos, para que eles conhe@,{c}am seus direitos.
 
-Protegemos seus direitos através de um método que envolve dois passos: (1) estabelecemos direitos autorais sobre a
-biblioteca e (2) oferecemos a você esta licença, que dá a você
-permissão para copiar, distribuir e/ou modificar a biblioteca.
+Protegemos seus direitos atrav@'{e}s de um m@'{e}todo que envolve dois passos: (1) estabelecemos direitos autorais sobre a
+biblioteca e (2) oferecemos a voc@^{e} esta licen@,{c}a, que d@'{a} a voc@^{e}
+permiss@~{a}o para copiar, distribuir e/ou modificar a biblioteca.
 
 Para proteger cada distribuidor, queremos deixar bem claro que
-não há nenhuma garantia para a biblioteca livre. Além disso, se a biblioteca for
-modificada por alguém e passada adiante, os receptores devem saber
-que o que eles têm não é a versão original, de modo que a reputação do autor original
-não será afetada por problemas que possam ser
+n@~{a}o h@'{a} nenhuma garantia para a biblioteca livre. Al@'{e}m disso, se a biblioteca for
+modificada por algu@'{e}m e passada adiante, os receptores devem saber
+que o que eles t@^{e}m n@~{a}o @'{e} a vers@~{a}o original, de modo que a reputa@,{c}@~{a}o do autor original
+n@~{a}o ser@'{a} afetada por problemas que possam ser
 introduzidos por outros.
 
-Por fim, as patentes de software representam uma ameaça constante para a existência de
-qualquer programa livre. Queremos assegurar que uma empresa não possa
-efetivamente restringir os usuários de um programa livre por ter obtido uma
-licença restritiva de um titular de direitos de patente. Por isso, insistimos que
-qualquer licença de patente obtida para alguma versão da biblioteca seja
-consistente com a plena liberdade de uso, especificada nesta licença.
+Por fim, as patentes de software representam uma amea@,{c}a constante para a exist@^{e}ncia de
+qualquer programa livre. Queremos assegurar que uma empresa n@~{a}o possa
+efetivamente restringir os usu@'{a}rios de um programa livre por ter obtido uma
+licen@,{c}a restritiva de um titular de direitos de patente. Por isso, insistimos que
+qualquer licen@,{c}a de patente obtida para alguma vers@~{a}o da biblioteca seja
+consistente com a plena liberdade de uso, especificada nesta licen@,{c}a.
 
-A maior parte dos softwares do GNU, incluindo algumas bibliotecas, está coberta pela
-Licença Pública Geral comum do GNU. A presente Licença Pública
+A maior parte dos softwares do GNU, incluindo algumas bibliotecas, est@'{a} coberta pela
+Licen@,{c}a P@'{u}blica Geral comum do GNU. A presente Licen@,{c}a P@'{u}blica
 Geral Menor do GNU se aplica a determinadas bibliotecas designadas,
-sendo bastante diferente da Licença Pública Geral comum. Usamos
-esta licença para determinadas bibliotecas, a fim de permitir a ligação dessas
-bibliotecas a programas não-livres.
+sendo bastante diferente da Licen@,{c}a P@'{u}blica Geral comum. Usamos
+esta licen@,{c}a para determinadas bibliotecas, a fim de permitir a liga@,{c}@~{a}o dessas
+bibliotecas a programas n@~{a}o-livres.
 
-Quando um programa é ligado a uma biblioteca, seja estaticamente ou usando
-uma biblioteca compartilhada, essa combinação das duas é em termos legais uma
-obra combinada, uma derivação da biblioteca original. Por essa razão, a
-Licença Pública Geral comum somente permite essa ligação se a combinação como um
-todo atender a seus critérios de liberdade. A Licença Pública
-Geral Menor permite critérios mais flexíveis para a ligação de outros códigos
-à biblioteca.
+Quando um programa @'{e} ligado a uma biblioteca, seja estaticamente ou usando
+uma biblioteca compartilhada, essa combina@,{c}@~{a}o das duas @'{e} em termos legais uma
+obra combinada, uma deriva@,{c}@~{a}o da biblioteca original. Por essa raz@~{a}o, a
+Licen@,{c}a P@'{u}blica Geral comum somente permite essa liga@,{c}@~{a}o se a combina@,{c}@~{a}o como um
+todo atender a seus crit@'{e}rios de liberdade. A Licen@,{c}a P@'{u}blica
+Geral Menor permite crit@'{e}rios mais flex@'{i}veis para a liga@,{c}@~{a}o de outros c@'{o}digos
+@`{a} biblioteca.
 
-Chamamos esta licença de Licença Pública Geral "Menor" porque ela
-faz Menos para proteger a liberdade do usuário do que a Licença Pública
-Geral comum. Ela também oferece a outros desenvolvedores de software livre uma Menor
-vantagem na competição com com programas não livres. Essas desvantagens
-são o motivo pelo qual usamos a Licença Pública Geral comum para muitas
-bibliotecas. Por outro lado, em determinadas circunstâncias especiais, a licença Menor
+Chamamos esta licen@,{c}a de Licen@,{c}a P@'{u}blica Geral "Menor" porque ela
+faz Menos para proteger a liberdade do usu@'{a}rio do que a Licen@,{c}a P@'{u}blica
+Geral comum. Ela tamb@'{e}m oferece a outros desenvolvedores de software livre uma Menor
+vantagem na competi@,{c}@~{a}o com com programas n@~{a}o livres. Essas desvantagens
+s@~{a}o o motivo pelo qual usamos a Licen@,{c}a P@'{u}blica Geral comum para muitas
+bibliotecas. Por outro lado, em determinadas circunst@^{a}ncias especiais, a licen@,{c}a Menor
 oferece vantagens.
 
-Por exemplo, em raras ocasiões, pode existir uma necessidade especial
-de se incentivar a mais ampla utilização possível de uma determinada biblioteca, para que ela
-se torne um padrão de fato. Para conseguir isso, deve-se permitir que programas não-livres
-utilizem a biblioteca. Um caso mais freqüente ocorre quando uma biblioteca livre
-desempenha a mesma função de bibliotecas não-livres amplamente usadas. Nesse
+Por exemplo, em raras ocasi@~{o}es, pode existir uma necessidade especial
+de se incentivar a mais ampla utiliza@,{c}@~{a}o poss@'{i}vel de uma determinada biblioteca, para que ela
+se torne um padr@~{a}o de fato. Para conseguir isso, deve-se permitir que programas n@~{a}o-livres
+utilizem a biblioteca. Um caso mais freq@"{u}ente ocorre quando uma biblioteca livre
+desempenha a mesma fun@,{c}@~{a}o de bibliotecas n@~{a}o-livres amplamente usadas. Nesse
 caso, existem poucas vantagens em restringir a biblioteca livre somente para
-software livre, então utilizamos a Licença Pública Geral Menor.
+software livre, ent@~{a}o utilizamos a Licen@,{c}a P@'{u}blica Geral Menor.
 
-Em outros casos, a permissão para usar uma determinada biblioteca em programas não-livres
-possibilita que um maior número de pessoas use um amplo leque de
-softwares livres. Por exemplo, a permissão para usar a Biblioteca C do GNU
+Em outros casos, a permiss@~{a}o para usar uma determinada biblioteca em programas n@~{a}o-livres
+possibilita que um maior n@'{u}mero de pessoas use um amplo leque de
+softwares livres. Por exemplo, a permiss@~{a}o para usar a Biblioteca C do GNU
 permite que muito mais pessoas usem todo o sistema
 operacional do GNU, bem como sua variante, o sistema operacional do
 GNU/Linux.
 
-Mesmo protegendo a liberdade dos usuários em menor grau,
-a Licença Pública Geral Menor garante ao usuário de um programa que esteja
-ligado à Biblioteca a liberdade e os meios para executar
-o programa, usando uma versão modificada da Biblioteca.
+Mesmo protegendo a liberdade dos usu@'{a}rios em menor grau,
+a Licen@,{c}a P@'{u}blica Geral Menor garante ao usu@'{a}rio de um programa que esteja
+ligado @`{a} Biblioteca a liberdade e os meios para executar
+o programa, usando uma vers@~{a}o modificada da Biblioteca.
 
-Seguem abaixo os termos e condições exatos para a cópia, distribuição e
-modificação. Preste muita atenção à diferença entre uma
+Seguem abaixo os termos e condi@,{c}@~{o}es exatos para a c@'{o}pia, distribui@,{c}@~{a}o e
+modifica@,{c}@~{a}o. Preste muita aten@,{c}@~{a}o @`{a} diferen@,{c}a entre uma
 "obra baseada na biblioteca" e uma "obra que usa a biblioteca". O
-primeiro contém código que é derivado da biblioteca, enquanto o segundo tem de ser
-combinado à biblioteca para que possa ser executado.
+primeiro cont@'{e}m c@'{o}digo que @'{e} derivado da biblioteca, enquanto o segundo tem de ser
+combinado @`{a} biblioteca para que possa ser executado.
 
-@unnumberedsec TERMOS E CONDIÇÕES PARA CÓPIA, DISTRIBUIÇÃO E MODIFICAÇÃO
+@unnumberedsec TERMOS E CONDI@,{C}@~{O}ES PARA C@'{O}PIA, DISTRIBUI@,{C}@~{A}O E MODIFICA@,{C}@~{A}O
 
 @enumerate 0
 @item
-O presente Contrato de Licença se aplica a qualquer biblioteca de software ou a outro
+O presente Contrato de Licen@,{c}a se aplica a qualquer biblioteca de software ou a outro
 programa que contenha um aviso colocado pelo titular dos direitos autorais ou
-outra parte autorizada, informando que ela pode ser distribuída nos termos desta
-Licença Pública Geral Menor (também denominada "esta Licença").
-Cada licenciado doravante será denominado "você".
+outra parte autorizada, informando que ela pode ser distribu@'{i}da nos termos desta
+Licen@,{c}a P@'{u}blica Geral Menor (tamb@'{e}m denominada "esta Licen@,{c}a").
+Cada licenciado doravante ser@'{a} denominado "voc@^{e}".
 
-Uma "biblioteca" significa uma coleção de funções de software e/ou dados
-preparados, de forma a serem convenientemente ligados com programas de aplicação
-(que usam algumas dessas funções e dados) para formar executáveis.
+Uma "biblioteca" significa uma cole@,{c}@~{a}o de fun@,{c}@~{o}es de software e/ou dados
+preparados, de forma a serem convenientemente ligados com programas de aplica@,{c}@~{a}o
+(que usam algumas dessas fun@,{c}@~{o}es e dados) para formar execut@'{a}veis.
 
 O termo "Biblioteca", abaixo, refere-se a qualquer biblioteca de software ou obra
-que tenha sido distribuída de acordo com esses termos. Uma "obra baseada na
+que tenha sido distribu@'{i}da de acordo com esses termos. Uma "obra baseada na
 Biblioteca" significa tanto a Biblioteca como qualquer obra derivada, nos termos
-da legislação autoral: isto é, uma obra contendo a Biblioteca ou
-parte dela, seja sem alterações ou com modificações e/ou traduzida
-diretamente para outra linguagem. (Doravante, o termo "modificação"
-inclui, sem reservas, o termo "tradução").
+da legisla@,{c}@~{a}o autoral: isto @'{e}, uma obra contendo a Biblioteca ou
+parte dela, seja sem altera@,{c}@~{o}es ou com modifica@,{c}@~{o}es e/ou traduzida
+diretamente para outra linguagem. (Doravante, o termo "modifica@,{c}@~{a}o"
+inclui, sem reservas, o termo "tradu@,{c}@~{a}o").
 
-O "código-fonte" de uma obra significa o formato preferencial da obra para
-que sejam feitas modificações na mesma. Para uma biblioteca, o código-fonte completo significa
-todo o código fonte para todos os módulos contidos na mesma, além de quaisquer arquivos de definição de
-interface associados, além dos scripts utilizados para controlar
-a compilação
-e a instalação da biblioteca.
+O "c@'{o}digo-fonte" de uma obra significa o formato preferencial da obra para
+que sejam feitas modifica@,{c}@~{o}es na mesma. Para uma biblioteca, o c@'{o}digo-fonte completo significa
+todo o c@'{o}digo fonte para todos os m@'{o}dulos contidos na mesma, al@'{e}m de quaisquer arquivos de defini@,{c}@~{a}o de
+interface associados, al@'{e}m dos scripts utilizados para controlar
+a compila@,{c}@~{a}o
+e a instala@,{c}@~{a}o da biblioteca.
 
-Outras atividades que não a cópia, distribuição e modificação não são
-cobertas por esta Licença; elas estão fora de seu escopo. O ato de
-executar um programa usando a Biblioteca não tem restrições, e o resultado gerado
-a partir desse programa encontra-se coberto somente se seu conteúdo constituir uma obra baseada
+Outras atividades que n@~{a}o a c@'{o}pia, distribui@,{c}@~{a}o e modifica@,{c}@~{a}o n@~{a}o s@~{a}o
+cobertas por esta Licen@,{c}a; elas est@~{a}o fora de seu escopo. O ato de
+executar um programa usando a Biblioteca n@~{a}o tem restri@,{c}@~{o}es, e o resultado gerado
+a partir desse programa encontra-se coberto somente se seu conte@'{u}do constituir uma obra baseada
 na Biblioteca (independente do uso da Biblioteca em uma ferramenta para
-escrevê-lo). Na verdade, isto dependerá daquilo que a Biblioteca faz
+escrev@^{e}-lo). Na verdade, isto depender@'{a} daquilo que a Biblioteca faz
 e o que o programa que usa a biblioteca faz.
 
 
 
 @item
-Você pode copiar e distribuir cópias sem alterações do código-fonte
-completo da Biblioteca ao recebê-lo, em qualquer meio ou mídia, desde que
+Voc@^{e} pode copiar e distribuir c@'{o}pias sem altera@,{c}@~{o}es do c@'{o}digo-fonte
+completo da Biblioteca ao receb@^{e}-lo, em qualquer meio ou m@'{i}dia, desde que
 publique, ostensiva e adequadamente, um aviso de direitos autorais (ou copyright)
-apropriado e uma notificação sobre a exoneração de garantias; mantenha intactas
-as informações, avisos ou notificações referentes a esta Licença e à ausência de qualquer
-garantia; e distribua uma cópia desta Licença junto com a
+apropriado e uma notifica@,{c}@~{a}o sobre a exonera@,{c}@~{a}o de garantias; mantenha intactas
+as informa@,{c}@~{o}es, avisos ou notifica@,{c}@~{o}es referentes a esta Licen@,{c}a e @`{a} aus@^{e}ncia de qualquer
+garantia; e distribua uma c@'{o}pia desta Licen@,{c}a junto com a
 Biblioteca.
 
-Você poderá cobrar um valor pelo ato físico de transferir uma cópia,
-e você pode oferecer, se quiser, a proteção de uma garantia em troca de um
+Voc@^{e} poder@'{a} cobrar um valor pelo ato f@'{i}sico de transferir uma c@'{o}pia,
+e voc@^{e} pode oferecer, se quiser, a prote@,{c}@~{a}o de uma garantia em troca de um
 valor.
 
 @item
-Você pode modificar sua cópia ou cópias da Biblioteca ou qualquer parte
+Voc@^{e} pode modificar sua c@'{o}pia ou c@'{o}pias da Biblioteca ou qualquer parte
 dela, formando, assim, uma obra baseada na Biblioteca, bem como copiar e
-distribuir essas modificações ou obra, em conformidade com a Cláusula 1
-acima, desde que atenda, ainda, a todas as seguintes condições:
+distribuir essas modifica@,{c}@~{o}es ou obra, em conformidade com a Cl@'{a}usula 1
+acima, desde que atenda, ainda, a todas as seguintes condi@,{c}@~{o}es:
 
 @enumerate a
 @item
-A obra modificada tem de ser, por si só, uma biblioteca de software.
+A obra modificada tem de ser, por si s@'{o}, uma biblioteca de software.
 
 @item
-Você tem de fazer com que os arquivos modificados contenham avisos, em destaque,
-de que você modificou os arquivos e a data de qualquer modificação.
+Voc@^{e} tem de fazer com que os arquivos modificados contenham avisos, em destaque,
+de que voc@^{e} modificou os arquivos e a data de qualquer modifica@,{c}@~{a}o.
 
 @item
-Você tem de fazer com que a obra como um todo seja licenciada, sem nenhum
-custo, a todos os terceiros, de acordo com esta Licença.
+Voc@^{e} tem de fazer com que a obra como um todo seja licenciada, sem nenhum
+custo, a todos os terceiros, de acordo com esta Licen@,{c}a.
 
 @item
-Se um dispositivo, na Biblioteca modificada, se referir a uma função ou a
-uma tabela de dados a ser fornecida por um programa de aplicação que usa
-esse dispositivo, outro que não um argumento transmitido quando o dispositivo
-é invocado, nesse caso, você terá de fazer um esforço de boa-fé para assegurar que,
-no caso de uma aplicação que não forneça essa função ou
-tabela, o dispositivo ainda assim opere, e irá realizar qualquer parte de
+Se um dispositivo, na Biblioteca modificada, se referir a uma fun@,{c}@~{a}o ou a
+uma tabela de dados a ser fornecida por um programa de aplica@,{c}@~{a}o que usa
+esse dispositivo, outro que n@~{a}o um argumento transmitido quando o dispositivo
+@'{e} invocado, nesse caso, voc@^{e} ter@'{a} de fazer um esfor@,{c}o de boa-f@'{e} para assegurar que,
+no caso de uma aplica@,{c}@~{a}o que n@~{a}o forne@,{c}a essa fun@,{c}@~{a}o ou
+tabela, o dispositivo ainda assim opere, e ir@'{a} realizar qualquer parte de
 sua finalidade que permanecer significativa.
 
-(Por exemplo, uma função de uma biblioteca para computar raízes quadradas tem
-uma finalidade que é completamente bem definida independentemente da
-aplicação. Por essa razão, a letra d, da Cláusula 2, exige que qualquer
-função ou tabela fornecida pela aplicação, usada por essa função, tem de ser
-opcional: se a aplicação não fornecê-la, a função de
-raízes quadradas deverá ainda assim computar raízes quadradas).
+(Por exemplo, uma fun@,{c}@~{a}o de uma biblioteca para computar ra@'{i}zes quadradas tem
+uma finalidade que @'{e} completamente bem definida independentemente da
+aplica@,{c}@~{a}o. Por essa raz@~{a}o, a letra d, da Cl@'{a}usula 2, exige que qualquer
+fun@,{c}@~{a}o ou tabela fornecida pela aplica@,{c}@~{a}o, usada por essa fun@,{c}@~{a}o, tem de ser
+opcional: se a aplica@,{c}@~{a}o n@~{a}o fornec@^{e}-la, a fun@,{c}@~{a}o de
+ra@'{i}zes quadradas dever@'{a} ainda assim computar ra@'{i}zes quadradas).
 @end enumerate
 
-Essas exigências se aplicam à obra modificada como um todo. Se
-partes identificáveis dessa obra não forem derivadas da Biblioteca
+Essas exig@^{e}ncias se aplicam @`{a} obra modificada como um todo. Se
+partes identific@'{a}veis dessa obra n@~{a}o forem derivadas da Biblioteca
 e puderem ser consideradas razoavelmente, em si, como obras independentes e separadas,
-nesse caso, esta Licença e seus termos não se aplicarão a essas
-partes quando você distribui-las como obras separadas. Todavia, quando você
+nesse caso, esta Licen@,{c}a e seus termos n@~{a}o se aplicar@~{a}o a essas
+partes quando voc@^{e} distribui-las como obras separadas. Todavia, quando voc@^{e}
 distribuir essas mesmas partes como partes de um todo, que por si seja uma obra baseada
-na Biblioteca, a distribuição desse todo deverá ser realizada de acordo com
-esta Licença, cujas respectivas permissões para outros licenciados extendem-se à
+na Biblioteca, a distribui@,{c}@~{a}o desse todo dever@'{a} ser realizada de acordo com
+esta Licen@,{c}a, cujas respectivas permiss@~{o}es para outros licenciados extendem-se @`{a}
 integralidade deste todo, dessa forma, a toda e qualquer parte, independentemente de quem
 a escreveu.
 
-Assim, esta cláusula não tem a intenção de afirmar direitos ou contestar
-os seus direitos sobre uma obra escrita inteiramente por você; a intenção é,
-antes, de exercer o direito de controlar a distribuição de obras derivadas ou
+Assim, esta cl@'{a}usula n@~{a}o tem a inten@,{c}@~{a}o de afirmar direitos ou contestar
+os seus direitos sobre uma obra escrita inteiramente por voc@^{e}; a inten@,{c}@~{a}o @'{e},
+antes, de exercer o direito de controlar a distribui@,{c}@~{a}o de obras derivadas ou
 obras coletivas baseadas na Biblioteca.
 
-Além disto, a simples agregação de outra obra, que não seja baseada na Biblioteca,
-à Biblioteca (ou a uma obra baseada na Biblioteca) em um volume de
-meio ou mídia de armazenamento ou distribuição, não inclui esta outra obra no
-âmbito desta Licença.
+Al@'{e}m disto, a simples agrega@,{c}@~{a}o de outra obra, que n@~{a}o seja baseada na Biblioteca,
+@`{a} Biblioteca (ou a uma obra baseada na Biblioteca) em um volume de
+meio ou m@'{i}dia de armazenamento ou distribui@,{c}@~{a}o, n@~{a}o inclui esta outra obra no
+@^{a}mbito desta Licen@,{c}a.
 
 @item
-Você poderá optar por aplicar os termos da Licença Pública Geral
-do GNU ao invés desta Licença, para uma determinada cópia da Biblioteca. Para tanto,
-você deverá alterar todos os avisos ou notificações que se refiram a esta Licença,
-para que eles se refiram à Licença Pública Geral comum do GNU, versão 2,
-ao invés desta Licença. (Se uma versão mais nova do que a versão 2 da
-Licença Pública Geral comum do GNU tiver sido gerada, então você poderá especificar
-essa versão, se preferir). Não faça nenhuma outra alteração nesses
-avisos ou notificações.
+Voc@^{e} poder@'{a} optar por aplicar os termos da Licen@,{c}a P@'{u}blica Geral
+do GNU ao inv@'{e}s desta Licen@,{c}a, para uma determinada c@'{o}pia da Biblioteca. Para tanto,
+voc@^{e} dever@'{a} alterar todos os avisos ou notifica@,{c}@~{o}es que se refiram a esta Licen@,{c}a,
+para que eles se refiram @`{a} Licen@,{c}a P@'{u}blica Geral comum do GNU, vers@~{a}o 2,
+ao inv@'{e}s desta Licen@,{c}a. (Se uma vers@~{a}o mais nova do que a vers@~{a}o 2 da
+Licen@,{c}a P@'{u}blica Geral comum do GNU tiver sido gerada, ent@~{a}o voc@^{e} poder@'{a} especificar
+essa vers@~{a}o, se preferir). N@~{a}o fa@,{c}a nenhuma outra altera@,{c}@~{a}o nesses
+avisos ou notifica@,{c}@~{o}es.
 
-Uma vez que essa alteração tenha sido feita em uma determinada cópia, ela é irreversível para
-esta cópia, passando a Licença Pública Geral comum do GNU a ser aplicada para todas
-as cópias e obras derivadas subseqüentes, feitas a partir dessa cópia.
+Uma vez que essa altera@,{c}@~{a}o tenha sido feita em uma determinada c@'{o}pia, ela @'{e} irrevers@'{i}vel para
+esta c@'{o}pia, passando a Licen@,{c}a P@'{u}blica Geral comum do GNU a ser aplicada para todas
+as c@'{o}pias e obras derivadas subseq@"{u}entes, feitas a partir dessa c@'{o}pia.
 
-Essa opção é útil quando você desejar copiar parte do código da
-Biblioteca em um programa que não seja uma biblioteca.
-
-@item
-Você poderá copiar e distribuir a Biblioteca (ou uma parte ou obra
-derivada dela, de acordo com a Cláusula 2) em código-objeto ou formato executável,
-sob as Cláusulas 1 e 2 acima, desde que inclua
-todo o código-fonte correspondente, passível de leitura pela máquina, que
-deve ser distribuído sob os termos das Cláusulas 1 e 2 acima,
-em um meio ou mídia costumeiramente utilizado para o intercâmbio de software.
-
-Se a distribuição do código-objeto for feita pela oferta de acesso para cópia
-a partir de um local designado, então a permissão de acesso equivalente para copiar o
-código-fonte a partir do mesmo local atende a exigência de
-distribuição do código-fonte, mesmo que terceiros não sejam
-levados a copiar a fonte junto com o código-objeto.
+Essa op@,{c}@~{a}o @'{e} @'{u}til quando voc@^{e} desejar copiar parte do c@'{o}digo da
+Biblioteca em um programa que n@~{a}o seja uma biblioteca.
 
 @item
-Um programa que não contenha nenhum derivativo de qualquer parte da
+Voc@^{e} poder@'{a} copiar e distribuir a Biblioteca (ou uma parte ou obra
+derivada dela, de acordo com a Cl@'{a}usula 2) em c@'{o}digo-objeto ou formato execut@'{a}vel,
+sob as Cl@'{a}usulas 1 e 2 acima, desde que inclua
+todo o c@'{o}digo-fonte correspondente, pass@'{i}vel de leitura pela m@'{a}quina, que
+deve ser distribu@'{i}do sob os termos das Cl@'{a}usulas 1 e 2 acima,
+em um meio ou m@'{i}dia costumeiramente utilizado para o interc@^{a}mbio de software.
+
+Se a distribui@,{c}@~{a}o do c@'{o}digo-objeto for feita pela oferta de acesso para c@'{o}pia
+a partir de um local designado, ent@~{a}o a permiss@~{a}o de acesso equivalente para copiar o
+c@'{o}digo-fonte a partir do mesmo local atende a exig@^{e}ncia de
+distribui@,{c}@~{a}o do c@'{o}digo-fonte, mesmo que terceiros n@~{a}o sejam
+levados a copiar a fonte junto com o c@'{o}digo-objeto.
+
+@item
+Um programa que n@~{a}o contenha nenhum derivativo de qualquer parte da
 Biblioteca, mas que seja desenhado para operar com a Biblioteca ao ser compilado ou
-ligado a ela, é chamado de uma "obra que usa a Biblioteca". Essa
-obra, isoladamente, não é uma obra derivada da Biblioteca e,
-portanto, fica de fora do âmbito desta Licença.
+ligado a ela, @'{e} chamado de uma "obra que usa a Biblioteca". Essa
+obra, isoladamente, n@~{a}o @'{e} uma obra derivada da Biblioteca e,
+portanto, fica de fora do @^{a}mbito desta Licen@,{c}a.
 
-Entretanto, a ligação de uma "obra que usa a Biblioteca" com a Biblioteca
-constitui um executável que é um derivado da Biblioteca (pois
-contém partes da Biblioteca), e não uma "obra que usa a
-Biblioteca". O executável é, assim, coberto por esta Licença.
-A Cláusula 6 estabelece os termos para a distribuição desses executáveis.
+Entretanto, a liga@,{c}@~{a}o de uma "obra que usa a Biblioteca" com a Biblioteca
+constitui um execut@'{a}vel que @'{e} um derivado da Biblioteca (pois
+cont@'{e}m partes da Biblioteca), e n@~{a}o uma "obra que usa a
+Biblioteca". O execut@'{a}vel @'{e}, assim, coberto por esta Licen@,{c}a.
+A Cl@'{a}usula 6 estabelece os termos para a distribui@,{c}@~{a}o desses execut@'{a}veis.
 
-Quando uma "obra que usa a Biblioteca" usar material de um arquivo de cabeçalho
-que é parte da Biblioteca, o código-objeto para a obra poderá ser uma
-obra derivada da Biblioteca, mesmo que o código-fonte não o seja.
-Para que isto seja verdade, é especialmente importante se a obra pode ser
-ligada sem a Biblioteca, ou se a obra é, em si mesma, uma biblioteca. O
-limiar para que isto seja verdade não é definido com precisão pela lei.
+Quando uma "obra que usa a Biblioteca" usar material de um arquivo de cabe@,{c}alho
+que @'{e} parte da Biblioteca, o c@'{o}digo-objeto para a obra poder@'{a} ser uma
+obra derivada da Biblioteca, mesmo que o c@'{o}digo-fonte n@~{a}o o seja.
+Para que isto seja verdade, @'{e} especialmente importante se a obra pode ser
+ligada sem a Biblioteca, ou se a obra @'{e}, em si mesma, uma biblioteca. O
+limiar para que isto seja verdade n@~{a}o @'{e} definido com precis@~{a}o pela lei.
 
-Se um arquivo-objeto usar somente parâmetros numéricos, layouts
-e accessors da estrutura de dados, bem como pequenas macros e pequenas funções
-inline (dez linhas ou menos de extensão), então o uso do arquivo-objeto
-não é restrito, independente de ser ele legalmente uma obra
-derivada. (Executáveis contendo este código-objeto mais partes da
-Biblioteca continuam submetidos aos termos da Cláusula 6).
+Se um arquivo-objeto usar somente par@^{a}metros num@'{e}ricos, layouts
+e accessors da estrutura de dados, bem como pequenas macros e pequenas fun@,{c}@~{o}es
+inline (dez linhas ou menos de extens@~{a}o), ent@~{a}o o uso do arquivo-objeto
+n@~{a}o @'{e} restrito, independente de ser ele legalmente uma obra
+derivada. (Execut@'{a}veis contendo este c@'{o}digo-objeto mais partes da
+Biblioteca continuam submetidos aos termos da Cl@'{a}usula 6).
 
-Do contrário, se a obra for um derivado da Biblioteca, você poderá
-distribuir o código objeto da obra sob os termos da Cláusula 6.
-Quaisquer executáveis contendo esta obra também se submetmem à Cláusula 6,
-estejam ou não diretamente ligados à Biblioteca em si.
+Do contr@'{a}rio, se a obra for um derivado da Biblioteca, voc@^{e} poder@'{a}
+distribuir o c@'{o}digo objeto da obra sob os termos da Cl@'{a}usula 6.
+Quaisquer execut@'{a}veis contendo esta obra tamb@'{e}m se submetmem @`{a} Cl@'{a}usula 6,
+estejam ou n@~{a}o diretamente ligados @`{a} Biblioteca em si.
 
 @item
-Como exceção à Cláusula acima, você também pode combinar ou
-ligar uma "obra que usa a Biblioteca" à Biblioteca para produzir uma
-obra contendo partes da Biblioteca e distribuí-la de acordo
+Como exce@,{c}@~{a}o @`{a} Cl@'{a}usula acima, voc@^{e} tamb@'{e}m pode combinar ou
+ligar uma "obra que usa a Biblioteca" @`{a} Biblioteca para produzir uma
+obra contendo partes da Biblioteca e distribu@'{i}-la de acordo
 com os termos de sua escolha, desde que estes termos permitam
-modificações na obra para uso próprio por parte do cliente e engenharia
-reversa para depuração dessas modificações.
+modifica@,{c}@~{o}es na obra para uso pr@'{o}prio por parte do cliente e engenharia
+reversa para depura@,{c}@~{a}o dessas modifica@,{c}@~{o}es.
 
-Em cada cópia da obra, você terá de colocar um aviso, em destaque, de que a
-Biblioteca foi usada e que ela e seu uso estão cobertos por
-esta Licença. Você deverá fornecer uma cópia desta Licença. Se, durante a execução, a obra
-exibir avisos ou notificações de direitos autorais (ou copyright), você terá de incluir,
-entre eles, o aviso de direitos autorais (ou copyright) referente à Biblioteca, bem como uma referência
-direcionando o usuário para a cópia desta Licença. Além disso, você dever tomar ao menos uma
-das seguintes providências:
+Em cada c@'{o}pia da obra, voc@^{e} ter@'{a} de colocar um aviso, em destaque, de que a
+Biblioteca foi usada e que ela e seu uso est@~{a}o cobertos por
+esta Licen@,{c}a. Voc@^{e} dever@'{a} fornecer uma c@'{o}pia desta Licen@,{c}a. Se, durante a execu@,{c}@~{a}o, a obra
+exibir avisos ou notifica@,{c}@~{o}es de direitos autorais (ou copyright), voc@^{e} ter@'{a} de incluir,
+entre eles, o aviso de direitos autorais (ou copyright) referente @`{a} Biblioteca, bem como uma refer@^{e}ncia
+direcionando o usu@'{a}rio para a c@'{o}pia desta Licen@,{c}a. Al@'{e}m disso, voc@^{e} dever tomar ao menos uma
+das seguintes provid@^{e}ncias:
 
 @enumerate a
 @item
-Incluir na obra todo o código-fonte da Biblioteca, passível de
-leitura pela máquina, incluindo quaisquer
-modificações que foram usadas na obra (as quais devem ser distribuídas conforme
-as Cláusulas 1 e 2 acima); e, se a obra for um executável ligado
-à Biblioteca, com toda a "obra que
-usa a Bilblioteca" passível de leitura pela máquina, como código-objeto e/ou código-fonte, de modo que o
-usuário possa modificar a biblioteca e, depois, religar para produzir um executável modificado
+Incluir na obra todo o c@'{o}digo-fonte da Biblioteca, pass@'{i}vel de
+leitura pela m@'{a}quina, incluindo quaisquer
+modifica@,{c}@~{o}es que foram usadas na obra (as quais devem ser distribu@'{i}das conforme
+as Cl@'{a}usulas 1 e 2 acima); e, se a obra for um execut@'{a}vel ligado
+@`{a} Biblioteca, com toda a "obra que
+usa a Bilblioteca" pass@'{i}vel de leitura pela m@'{a}quina, como c@'{o}digo-objeto e/ou c@'{o}digo-fonte, de modo que o
+usu@'{a}rio possa modificar a biblioteca e, depois, religar para produzir um execut@'{a}vel modificado
 contendo a Biblioteca modificada. (Fica entendido
-que o usuário que modificar o conteúdo dos arquivos de definições da
-Biblioteca não necessariamente será capaz de recompilar a aplicação
-para usar as definições modificadas).
+que o usu@'{a}rio que modificar o conte@'{u}do dos arquivos de defini@,{c}@~{o}es da
+Biblioteca n@~{a}o necessariamente ser@'{a} capaz de recompilar a aplica@,{c}@~{a}o
+para usar as defini@,{c}@~{o}es modificadas).
 
 @item
 Usar um mecanismo adequado de biblioteca compartilhada para ligar com a
-Biblioteca. Um mecanismo adequado é aquele que (a) usa, ao tempo da execução, uma
-cópia da biblioteca já presente no sistema do computador do usuário, e (2)
-irá operar adequadamente com uma versão modificada da biblioteca, se
-o usuário instalar uma, desde que a versão modificada seja
-compatível com a interface da versão com a qual a obra foi feita.
+Biblioteca. Um mecanismo adequado @'{e} aquele que (a) usa, ao tempo da execu@,{c}@~{a}o, uma
+c@'{o}pia da biblioteca j@'{a} presente no sistema do computador do usu@'{a}rio, e (2)
+ir@'{a} operar adequadamente com uma vers@~{a}o modificada da biblioteca, se
+o usu@'{a}rio instalar uma, desde que a vers@~{a}o modificada seja
+compat@'{i}vel com a interface da vers@~{a}o com a qual a obra foi feita.
 
 @item
-Incluir na obra uma oferta por escrito, válida por pelo
-menos 3 anos, oferencendo ao mesmo usuário os materiais
-especificados na letra "a" da Cláusula 6 acima, por um custo não superior
-ao custo de fazer esta distribuição.
+Incluir na obra uma oferta por escrito, v@'{a}lida por pelo
+menos 3 anos, oferencendo ao mesmo usu@'{a}rio os materiais
+especificados na letra "a" da Cl@'{a}usula 6 acima, por um custo n@~{a}o superior
+ao custo de fazer esta distribui@,{c}@~{a}o.
 
 @item
-Se a distribuição da obra for feita com a permissão de acesso para copiar,
+Se a distribui@,{c}@~{a}o da obra for feita com a permiss@~{a}o de acesso para copiar,
 a partir de um local designado, oferecer acesso equivalente para copiar os materiais
 acima especificados, a partir do mesmo local.
 
 @item
-Certificar-se se o usuário já recebeu uma cópia desses
-materiais ou de que você já enviou uma cópia a esse usuário.
+Certificar-se se o usu@'{a}rio j@'{a} recebeu uma c@'{o}pia desses
+materiais ou de que voc@^{e} j@'{a} enviou uma c@'{o}pia a esse usu@'{a}rio.
 @end enumerate
 
-Para um executável, o formato exigido da "obra que usa a
-Biblioteca" deve incluir quaisquer dados e programas utilitários necessários para
-reprodução do executável a partir dele. Todavia, como uma exceção especial,
-os materiais a serem distribuídos não necessitam incluir algo que seja
-normalmente distribuído (tanto no formato fonte quanto binário) com os componentes mais
+Para um execut@'{a}vel, o formato exigido da "obra que usa a
+Biblioteca" deve incluir quaisquer dados e programas utilit@'{a}rios necess@'{a}rios para
+reprodu@,{c}@~{a}o do execut@'{a}vel a partir dele. Todavia, como uma exce@,{c}@~{a}o especial,
+os materiais a serem distribu@'{i}dos n@~{a}o necessitam incluir algo que seja
+normalmente distribu@'{i}do (tanto no formato fonte quanto bin@'{a}rio) com os componentes mais
 importantes (compilador, kernel, e assim por diante) do sistema operacional
-no qual executável é executado, a menos que esse componente, em si,
-acompanhe o executável.
+no qual execut@'{a}vel @'{e} executado, a menos que esse componente, em si,
+acompanhe o execut@'{a}vel.
 
-Pode ocorrer que essa exigência contradiga as restrições da
-licença de outras bibliotecas proprietárias que normalmente não
-acompanham o sistema operacional. Essa contradição significa que você não pode
-utilizar ambas e a Biblioteca juntas em um executável distribuído
-por você.
+Pode ocorrer que essa exig@^{e}ncia contradiga as restri@,{c}@~{o}es da
+licen@,{c}a de outras bibliotecas propriet@'{a}rias que normalmente n@~{a}o
+acompanham o sistema operacional. Essa contradi@,{c}@~{a}o significa que voc@^{e} n@~{a}o pode
+utilizar ambas e a Biblioteca juntas em um execut@'{a}vel distribu@'{i}do
+por voc@^{e}.
 
 @item
-Você pode colocar dispositivos da biblioteca que sejam uma obra baseada na
-Biblioteca lado-a-lado em uma única biblioteca junto com outros dispositivos de
-bibliotecas, desde que uma distribuição separada da obra baseada na
+Voc@^{e} pode colocar dispositivos da biblioteca que sejam uma obra baseada na
+Biblioteca lado-a-lado em uma @'{u}nica biblioteca junto com outros dispositivos de
+bibliotecas, desde que uma distribui@,{c}@~{a}o separada da obra baseada na
 Biblioteca e dos outros dispositivos de bibliotecas seja, de outro modo,
-permitida e desde que você tome uma das seguintes providências:
+permitida e desde que voc@^{e} tome uma das seguintes provid@^{e}ncias:
 
 @enumerate a
 @item
-Incluir na biblioteca combinada uma cópia dessa obra
-baseada na Biblioteca sem a combinação com quaisquer outros dispositivos de
-biblioteca. Essa cópia tem de ser distribuída de acordo com as condições das
-cláusulas acima.
+Incluir na biblioteca combinada uma c@'{o}pia dessa obra
+baseada na Biblioteca sem a combina@,{c}@~{a}o com quaisquer outros dispositivos de
+biblioteca. Essa c@'{o}pia tem de ser distribu@'{i}da de acordo com as condi@,{c}@~{o}es das
+cl@'{a}usulas acima.
 
 @item
 Junto com a biblioteca combinada, fornecer um aviso, em destaque, sobre o fato de
-que parte dela é uma obra baseada na Biblioteca, e explicando
-onde encontrar o formato não combinado incluso dessa mesma obra.
+que parte dela @'{e} uma obra baseada na Biblioteca, e explicando
+onde encontrar o formato n@~{a}o combinado incluso dessa mesma obra.
 @end enumerate
 
 @item
-Você não poderá copiar, modificar, sublicenciar, ligar, ou distribuir
-a Biblioteca, exceto conforme expressamente disposto nesta Licença. Qualquer
+Voc@^{e} n@~{a}o poder@'{a} copiar, modificar, sublicenciar, ligar, ou distribuir
+a Biblioteca, exceto conforme expressamente disposto nesta Licen@,{c}a. Qualquer
 tentativa de, de outro modo, copiar, modificar, sublicenciar, ligar ou
-distribuir a Biblioteca é inválida, e automaticamente terminará seus
-direitos sob esta Licença. Todavia, terceiros que tiverem recebido cópias
-ou direitos de você, de acordo com esta Licença, não terão seus direitos
+distribuir a Biblioteca @'{e} inv@'{a}lida, e automaticamente terminar@'{a} seus
+direitos sob esta Licen@,{c}a. Todavia, terceiros que tiverem recebido c@'{o}pias
+ou direitos de voc@^{e}, de acordo com esta Licen@,{c}a, n@~{a}o ter@~{a}o seus direitos
 rescindidos, enquanto estes terceiros mantiverem o seu pleno cumprimento.
 
 @item
-Você não é obrigado a aceitar esta Licença, uma vez que você não
-a assinou. Entretanto, nada mais concede a você permissão para modificar ou
-distribuir a Biblioteca ou suas obras derivadas. Esses atos são
-proibidos por lei se você não aceitar esta Licença. Portanto, ao
+Voc@^{e} n@~{a}o @'{e} obrigado a aceitar esta Licen@,{c}a, uma vez que voc@^{e} n@~{a}o
+a assinou. Entretanto, nada mais concede a voc@^{e} permiss@~{a}o para modificar ou
+distribuir a Biblioteca ou suas obras derivadas. Esses atos s@~{a}o
+proibidos por lei se voc@^{e} n@~{a}o aceitar esta Licen@,{c}a. Portanto, ao
 modificar ou distribuir a Biblioteca (ou qualquer obra baseada na
-Biblioteca), você manifesta sua aceitação desta Licença para fazê-lo,
-bem como de todos os seus termos e condições para cópia, distribuição ou modificação
+Biblioteca), voc@^{e} manifesta sua aceita@,{c}@~{a}o desta Licen@,{c}a para faz@^{e}-lo,
+bem como de todos os seus termos e condi@,{c}@~{o}es para c@'{o}pia, distribui@,{c}@~{a}o ou modifica@,{c}@~{a}o
 da Biblioteca ou obras nela baseadas.
 
 @item
-A cada vez que você redistribuir a Biblioteca (ou qualquer obra nela baseada),
-o receptor automaticamente recebe uma licença do
+A cada vez que voc@^{e} redistribuir a Biblioteca (ou qualquer obra nela baseada),
+o receptor automaticamente recebe uma licen@,{c}a do
 licenciante original para copiar, distribuir, ligar ou modificar a Biblioteca,
-sujeito a estes respectivos termos e condições. Você não poderá impor quaisquer restrições
-adicionais ao exercício, pelos receptores, dos direitos concedidos por este instrumento.
-Você não tem responsabilidade de promover o cumprimento desta licença por parte
+sujeito a estes respectivos termos e condi@,{c}@~{o}es. Voc@^{e} n@~{a}o poder@'{a} impor quaisquer restri@,{c}@~{o}es
+adicionais ao exerc@'{i}cio, pelos receptores, dos direitos concedidos por este instrumento.
+Voc@^{e} n@~{a}o tem responsabilidade de promover o cumprimento desta licen@,{c}a por parte
 de terceiros.
 
 @item
-Se, como resultado de uma sentença judicial ou alegação de violação de patente,
-ou por qualquer outro motivo (não restrito às questões de patentes),
-forem impostas a você condições (tanto através de mandado judicial, contrato ou
-qualquer outra forma) que contradigam as condições desta Licença, você não estará
-desobrigado quanto às condições desta Licença. Se você não puder
-atuar como distribuidor de modo a satisfazer simultaneamente suas obrigações sob esta
-Licença e quaisquer outras obrigações pertinentes, então, como conseqüência, você
-não poderá distribuir a Biblioteca de nenhuma forma. Por exemplo, se uma licença
-sob uma patente não permite a redistribuição por parte de
-todos aqueles que tiverem recebido cópias, direta ou indiretamente de você, sem o pagamento de royalties, então,
-a única forma de cumprir tanto com esta exigência quanto com esta licença será
+Se, como resultado de uma senten@,{c}a judicial ou alega@,{c}@~{a}o de viola@,{c}@~{a}o de patente,
+ou por qualquer outro motivo (n@~{a}o restrito @`{a}s quest@~{o}es de patentes),
+forem impostas a voc@^{e} condi@,{c}@~{o}es (tanto atrav@'{e}s de mandado judicial, contrato ou
+qualquer outra forma) que contradigam as condi@,{c}@~{o}es desta Licen@,{c}a, voc@^{e} n@~{a}o estar@'{a}
+desobrigado quanto @`{a}s condi@,{c}@~{o}es desta Licen@,{c}a. Se voc@^{e} n@~{a}o puder
+atuar como distribuidor de modo a satisfazer simultaneamente suas obriga@,{c}@~{o}es sob esta
+Licen@,{c}a e quaisquer outras obriga@,{c}@~{o}es pertinentes, ent@~{a}o, como conseq@"{u}@^{e}ncia, voc@^{e}
+n@~{a}o poder@'{a} distribuir a Biblioteca de nenhuma forma. Por exemplo, se uma licen@,{c}a
+sob uma patente n@~{a}o permite a redistribui@,{c}@~{a}o por parte de
+todos aqueles que tiverem recebido c@'{o}pias, direta ou indiretamente de voc@^{e}, sem o pagamento de royalties, ent@~{a}o,
+a @'{u}nica forma de cumprir tanto com esta exig@^{e}ncia quanto com esta licen@,{c}a ser@'{a}
 deixar de distribuir, por completo, a Biblioteca.
 
-Se qualquer parte desta Cláusula for considerada inválida ou não executável, sob
-qualquer circunstância específica, o restante da cláusula deverá continuar a ser
-aplicado e a cláusula, como um todo, deverá ser aplicada em outras
-circunstâncias.
+Se qualquer parte desta Cl@'{a}usula for considerada inv@'{a}lida ou n@~{a}o execut@'{a}vel, sob
+qualquer circunst@^{a}ncia espec@'{i}fica, o restante da cl@'{a}usula dever@'{a} continuar a ser
+aplicado e a cl@'{a}usula, como um todo, dever@'{a} ser aplicada em outras
+circunst@^{a}ncias.
 
-Esta cláusula não tem a finalidade de induzir você a infringir quaisquer
+Esta cl@'{a}usula n@~{a}o tem a finalidade de induzir voc@^{e} a infringir quaisquer
 patentes ou direitos de propriedade, nem de contestar a validade de quaisquer
-reivindicações deste tipo; a única finalidade desta cláusula é proteger a
-integridade do sistema de distribuição do software livre, o qual é
-implementado mediante práticas de licenças públicas. Muitas pessoas têm feito
-generosas contribuições à ampla gama de software distribuído
-através desse sistema, confiando na aplicação consistente deste
+reivindica@,{c}@~{o}es deste tipo; a @'{u}nica finalidade desta cl@'{a}usula @'{e} proteger a
+integridade do sistema de distribui@,{c}@~{a}o do software livre, o qual @'{e}
+implementado mediante pr@'{a}ticas de licen@,{c}as p@'{u}blicas. Muitas pessoas t@^{e}m feito
+generosas contribui@,{c}@~{o}es @`{a} ampla gama de software distribu@'{i}do
+atrav@'{e}s desse sistema, confiando na aplica@,{c}@~{a}o consistente deste
 sistema; cabe ao autor/doador decidir se deseja distribuir software
-através de qualquer outro sistema e um licenciado não pode
+atrav@'{e}s de qualquer outro sistema e um licenciado n@~{a}o pode
 impor esta escolha.
 
-Esta cláusula visa deixar absolutamente claro o que se acredita
-ser uma conseqüência do restante desta Licença.
+Esta cl@'{a}usula visa deixar absolutamente claro o que se acredita
+ser uma conseq@"{u}@^{e}ncia do restante desta Licen@,{c}a.
 
 @item
-Se a distribuição e/ou uso da Biblioteca for restrito em
-determinados países, tanto por patentes ou por interfaces protegidas por direito autoral, o
-titular original dos direitos autorais que colocar a Biblioteca sob esta Licença
-poderá acrescentar uma limitação geográfica de distribuição explícita excluindo esses
-países, de modo que a distribuição seja permitida somente nos países ou entre os
-países que não foram excluídos dessa forma. Nesse caso, esta Licença passa a incorporar
-a limitação como se esta tivesse sido escrita no corpo desta Licença
+Se a distribui@,{c}@~{a}o e/ou uso da Biblioteca for restrito em
+determinados pa@'{i}ses, tanto por patentes ou por interfaces protegidas por direito autoral, o
+titular original dos direitos autorais que colocar a Biblioteca sob esta Licen@,{c}a
+poder@'{a} acrescentar uma limita@,{c}@~{a}o geogr@'{a}fica de distribui@,{c}@~{a}o expl@'{i}cita excluindo esses
+pa@'{i}ses, de modo que a distribui@,{c}@~{a}o seja permitida somente nos pa@'{i}ses ou entre os
+pa@'{i}ses que n@~{a}o foram exclu@'{i}dos dessa forma. Nesse caso, esta Licen@,{c}a passa a incorporar
+a limita@,{c}@~{a}o como se esta tivesse sido escrita no corpo desta Licen@,{c}a
 
 @item
-A Free Software Foundation [Fundação Software Livre] poderá de tempos em tempos
-publicar versões revisadas e/ou novasda Licença Pública Geral Menor.
-Essas novas versões serão semelhantes em espírito à presente versão, podendo,
-porém, ter diferenças nos detalhes, para tratar de novos problemas ou preocupações.
+A Free Software Foundation [Funda@,{c}@~{a}o Software Livre] poder@'{a} de tempos em tempos
+publicar vers@~{o}es revisadas e/ou novasda Licen@,{c}a P@'{u}blica Geral Menor.
+Essas novas vers@~{o}es ser@~{a}o semelhantes em esp@'{i}rito @`{a} presente vers@~{a}o, podendo,
+por@'{e}m, ter diferen@,{c}as nos detalhes, para tratar de novos problemas ou preocupa@,{c}@~{o}es.
 
-Cada versão recebe um número distinto de versão. Se a Biblioteca
-especificar um número de versão desta Licença, aplicável à Biblioteca ou a
-"qualquer versão posterior", você terá a opção de seguir os termos e
-condições tanto daquela versão como de qualquer versão posterior publicada pela
-Free Software Foundation. Se a Biblioteca não especificar um
-número de licença da versão, você poderá escolher qualquer versão já publicada pela
+Cada vers@~{a}o recebe um n@'{u}mero distinto de vers@~{a}o. Se a Biblioteca
+especificar um n@'{u}mero de vers@~{a}o desta Licen@,{c}a, aplic@'{a}vel @`{a} Biblioteca ou a
+"qualquer vers@~{a}o posterior", voc@^{e} ter@'{a} a op@,{c}@~{a}o de seguir os termos e
+condi@,{c}@~{o}es tanto daquela vers@~{a}o como de qualquer vers@~{a}o posterior publicada pela
+Free Software Foundation. Se a Biblioteca n@~{a}o especificar um
+n@'{u}mero de licen@,{c}a da vers@~{a}o, voc@^{e} poder@'{a} escolher qualquer vers@~{a}o j@'{a} publicada pela
 Free Software Foundation.
 
 @item
-Se você desejar incorporar partes da Biblioteca em outros programas
-livres cujas condições de distribuição sejam incompatíveis com estas,
-escreva ao autor para solicitar permissão. Para software cujos
-direitos autorais pertencerem à Free Software Foundation, escreva à
-Fundação; algumas vezes, fazemos exceções nesse sentido. Nossa
-decisão será guiada pelos dois objetivos de preservar a condição livre
+Se voc@^{e} desejar incorporar partes da Biblioteca em outros programas
+livres cujas condi@,{c}@~{o}es de distribui@,{c}@~{a}o sejam incompat@'{i}veis com estas,
+escreva ao autor para solicitar permiss@~{a}o. Para software cujos
+direitos autorais pertencerem @`{a} Free Software Foundation, escreva @`{a}
+Funda@,{c}@~{a}o; algumas vezes, fazemos exce@,{c}@~{o}es nesse sentido. Nossa
+decis@~{a}o ser@'{a} guiada pelos dois objetivos de preservar a condi@,{c}@~{a}o livre
 de todos os derivados de nosso software livre e de promover o compartilhamento
-e reutilização de softwares, de modo geral.
+e reutiliza@,{c}@~{a}o de softwares, de modo geral.
 
-@heading EXCLUSÃO DE GARANTIA
+@heading EXCLUS@~{A}O DE GARANTIA
 
 @item
-COMO A BIBLIOTECA É LICENCIADA SEM CUSTO, NÃO HÁ NENHUMA
-GARANTIA PARA A BIBLIOTECA, NO LIMITE PERMITIDO PELA LEI APLICÁVEL.
+COMO A BIBLIOTECA @'{E} LICENCIADA SEM CUSTO, N@~{A}O H@'{A} NENHUMA
+GARANTIA PARA A BIBLIOTECA, NO LIMITE PERMITIDO PELA LEI APLIC@'{A}VEL.
 EXCETO QUANDO DE OUTRA FORMA ESTABELECIDO POR ESCRITO, OS TITULARES DOS DIREITOS AUTORAIS E/OU
 OUTRAS PARTES FORNECEM A BIBLIOTECA "NO ESTADO EM QUE SE ENCONTRA", SEM NENHUMA GARANTIA DE QUALQUER
-TIPO, TANTO EXPRESSA COMO IMPLÍCITA, INCLUINDO, DENTRE OUTRAS, AS
-GARANTIAS IMPLÍCITAS DE COMERCIABILIDADE E ADEQUAÇÃO PARA UMA
-FINALIDADE ESPECÍFICA. O RISCO INTEGRAL QUANTO À QUALIDADE E DESEMPENHO DA BIBLIOTECA É ASSUMIDO POR VOCÊ. CASO A
-BIBLIOTECA CONTENHA DEFEITOS, VOCÊ ARCARÁ COM
-OS CUSTOS DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIAS.
+TIPO, TANTO EXPRESSA COMO IMPL@'{I}CITA, INCLUINDO, DENTRE OUTRAS, AS
+GARANTIAS IMPL@'{I}CITAS DE COMERCIABILIDADE E ADEQUA@,{C}@~{A}O PARA UMA
+FINALIDADE ESPEC@'{I}FICA. O RISCO INTEGRAL QUANTO @`{A} QUALIDADE E DESEMPENHO DA BIBLIOTECA @'{E} ASSUMIDO POR VOC@^{E}. CASO A
+BIBLIOTECA CONTENHA DEFEITOS, VOC@^{E} ARCAR@'{A} COM
+OS CUSTOS DE TODOS OS SERVI@,{C}OS, REPAROS OU CORRE@,{C}@~{O}ES NECESS@'{A}RIAS.
 
 @item
-EM NENHUMA CIRCUNSTÂNCIA, A MENOS QUE EXIGIDO PELA LEI APLICÁVEL OU ACORDADO
+EM NENHUMA CIRCUNST@^{A}NCIA, A MENOS QUE EXIGIDO PELA LEI APLIC@'{A}VEL OU ACORDADO
 POR ESCRITO, QUALQUER TITULAR DE DIREITOS AUTORAIS OU QUALQUER OUTRA PARTE QUE POSSA MODIFICAR
-E/OU REDISTRIBUIR A BIBLIOTECA, CONFORME PERMITIDO ACIMA, SERÁ RESPONSÁVEL PARA COM VOCÊ
+E/OU REDISTRIBUIR A BIBLIOTECA, CONFORME PERMITIDO ACIMA, SER@'{A} RESPONS@'{A}VEL PARA COM VOC@^{E}
 POR DANOS, INCLUINDO ENTRE OUTROS QUAISQUER
 DANOS GERAIS, ESPECIAIS, FORTUITOS OU EMERGENTES, ADVINDOS DO USO OU IMPOSSIBILIDADE DE USO DA
 BIBLIOTECA (INCLUINDO, ENTRE OUTROS, PERDA DE DADOS, DADOS SENDO
-GERADOS DE FORMA IMPRECISA, PERDAS SOFRIDAS POR VOCÊ OU TERCEIROS OU A
+GERADOS DE FORMA IMPRECISA, PERDAS SOFRIDAS POR VOC@^{E} OU TERCEIROS OU A
 IMPOSSIBILIDADE DA BIBLIOTECA DE OPERAR COM QUALQUER OUTRO SOFTWARE), MESMO QUE
 ESSE TITULAR, OU OUTRA PARTE, TENHA SIDO AVISADO SOBRE A POSSIBILIDADE DESSES
 DANOS.
 @end enumerate
 
-@heading FINAL DOS TERMOS E CONDIÇÕES
+@heading FINAL DOS TERMOS E CONDI@,{C}@~{O}ES
 
 @page
 @unnumberedsec Como Aplicar Estes Termos para Suas Novas Bibliotecas
-Se você desenvolver uma nova biblioteca e quiser que ela seja da maior
-utilidade possível para o público, nós recomendamos fazer dela um software livre que
-todos possam redistribuir e modificar. Você pode fazer isto permitindo
-a redistribuição sob estes termos (ou, alternativamente, sob os termos
-da Licença Pública Geral comum)
+Se voc@^{e} desenvolver uma nova biblioteca e quiser que ela seja da maior
+utilidade poss@'{i}vel para o p@'{u}blico, n@'{o}s recomendamos fazer dela um software livre que
+todos possam redistribuir e modificar. Voc@^{e} pode fazer isto permitindo
+a redistribui@,{c}@~{a}o sob estes termos (ou, alternativamente, sob os termos
+da Licen@,{c}a P@'{u}blica Geral comum)
 
-Para fazer isto, anexe as notificações seguintes à biblioteca.
-É mais seguro anexá-las ao começo de cada arquivo-fonte, de modo a
-transmitir do modo mais eficiente a exclusão de garantia; e cada arquivo deve
-ter ao menos a linha de "direitos autorais reservados" e uma indicação de onde a notificação
+Para fazer isto, anexe as notifica@,{c}@~{o}es seguintes @`{a} biblioteca.
+@'{E} mais seguro anex@'{a}-las ao come@,{c}o de cada arquivo-fonte, de modo a
+transmitir do modo mais eficiente a exclus@~{a}o de garantia; e cada arquivo deve
+ter ao menos a linha de "direitos autorais reservados" e uma indica@,{c}@~{a}o de onde a notifica@,{c}@~{a}o
 completa se encontra.
 
 
 @smallexample
-@var{uma linha para informar o nome da biblioteca e uma breve idéia do que ela faz.}
+@var{uma linha para informar o nome da biblioteca e uma breve id@'{e}ia do que ela faz.}
 Direitos Autorais Reservados (C) <ano>  @var{nome do autor}
 
-Esta biblioteca é software livre; você pode redistribuí-la e/ou
-modificá-la sob os termos da Licença Pública Geral
+Esta biblioteca @'{e} software livre; voc@^{e} pode redistribu@'{i}-la e/ou
+modific@'{a}-la sob os termos da Licen@,{c}a P@'{u}blica Geral
 Menor do GNU conforme publicada pela Free Software Foundation; tanto a
-versão 2.1 da Licença, ou (a seu critério) qualquer versão posterior.
+vers@~{a}o 2.1 da Licen@,{c}a, ou (a seu crit@'{e}rio) qualquer vers@~{a}o posterior.
 
-Esta biblioteca é distribuído na expectativa de que seja útil,
-porém, SEM NENHUMA GARANTIA; nem mesmo a garantia implícita de
-COMERCIABILIDADE OU ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. Consulte a Licença Pública
+Esta biblioteca @'{e} distribu@'{i}do na expectativa de que seja @'{u}til,
+por@'{e}m, SEM NENHUMA GARANTIA; nem mesmo a garantia impl@'{i}cita de
+COMERCIABILIDADE OU ADEQUA@,{C}@~{A}O A UMA FINALIDADE ESPEC@'{I}FICA. Consulte a Licen@,{c}a P@'{u}blica
 Geral Menor do GNU para mais detalhes.
 
-Você deve ter recebido uma cópia da Licença Pública Geral Menor
-do GNU junto com esta biblioteca; se não, escreva para a Free Software
-Foundation, Inc., no endereço 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
+Voc@^{e} deve ter recebido uma c@'{o}pia da Licen@,{c}a P@'{u}blica Geral Menor
+do GNU junto com esta biblioteca; se n@~{a}o, escreva para a Free Software
+Foundation, Inc., no endere@,{c}o 59 Temple Street, Suite 330, Boston, MA 02111-1307 USA.
 @end smallexample
 
-Inclua também informações sobre como contatar você por correio eletrônico e por meio
+Inclua tamb@'{e}m informa@,{c}@~{o}es sobre como contatar voc@^{e} por correio eletr@^{o}nico e por meio
 postal.
-Você também pode solicitar a seu empregador (se você for um programador) ou
-a sua instituição acadêmica, se for o caso, para assinar uma "renúncia de direitos autorais" sobre a biblioteca, se
-necessário. Segue um exemplo; altere os nomes:
+Voc@^{e} tamb@'{e}m pode solicitar a seu empregador (se voc@^{e} for um programador) ou
+a sua institui@,{c}@~{a}o acad@^{e}mica, se for o caso, para assinar uma "ren@'{u}ncia de direitos autorais" sobre a biblioteca, se
+necess@'{a}rio. Segue um exemplo; altere os nomes:
     
 @smallexample
 A Yoyodyne Ltda., neste ato, renuncia a todos eventuais direitos autorais sobre a
@@ -704,7 +708,7 @@ Random Hacker.
 Ty Coon, Presidente
 @end smallexample
 
-Isso é tudo!
+Isso @'{e} tudo!
 
 @node History, Platforms, Copying, Top
 @unnumbered History of Geomview's Development
@@ -771,9 +775,9 @@ Geomview.
 
 Tamara Munzner, Stuart Levy, e Mark Phillips s@~{a}o os autores originais do
 Geomview. Celeste Fowler, Charlie Gunn, e Nathaniel Thurston tamb@'{e}m
-fazem contribui@,c@~{o}es sgnificativas.  Daniel Krech e Scott Wisdom fizeram o
-NeXTStep e a adapta@,c@~{a}o do RenderMan, e Daeron Meyer e Tim Rowley fizeram a
-adapta@,c@~{a}o para o X windows.  Muitos outros membros do estado maior do Geometry Center, bem como
+fazem contribui@,{c}@~{o}es sgnificativas.  Daniel Krech e Scott Wisdom fizeram o
+NeXTStep e a adapta@,{c}@~{a}o do RenderMan, e Daeron Meyer e Tim Rowley fizeram a
+adapta@,{c}@~{a}o para o X windows.  Muitos outros membros do estado maior do Geometry Center, bem como
 muitas pessoas em muitos lugares, tamb@'{e}m contribu@'{i}ram.
 
 Mark Phillips escreveu essse manual, com ajuda substancial de Stuart Levy
@@ -788,7 +792,7 @@ Geomview 1.9 pode -- em princ@'{i}pio -- compilar e executarsobre qualquer clara
 recente sistemas operacionais semelhantes ao Unix. Especificamente, Geomview executa sobre Linux e sobre
 Cygwin (Cygwin emula um ambiente semelhante ao SystemV Unix environment sob o Microsoft
 Windows). Desafortunadamente Geomview compila com MacOS X (Darwin), mas
-aparentemente comunica@,c@~{o}es com Geomview por meio de pipes e sockets
+aparentemente comunica@,{c}@~{o}es com Geomview por meio de pipes e sockets
 causam falha de segmentac@~{a}o. Sinta-se livre para consertar essa falha! Veja @ref{Contributing},
 para detalhes.
 
@@ -816,7 +820,7 @@ para detalhes.
 @node Pronunciation, Overview, Platforms, Top
 @unnumbered How to Pronounce ``Geomview``
 
-A palavra 'Geomview' @'{e} uma combina@,c@~{a}o da primeira s@'{i}laba da palavra
+A palavra 'Geomview' @'{e} uma combina@,{c}@~{a}o da primeira s@'{i}laba da palavra
 'geometry', e da palavra 'view'. Os autores pronunciam Geomview
 como uma palavra ox@'{i}tona, isto @'{e}, tonicidade na primeira s@'{i}laba.
 
@@ -851,28 +855,28 @@ voc@^{e} pode criar seus pr@'{o}prios objetos.
 
 Voc@^{e} pode tamb@'{e}m usar Geomview para manusear os dados a serem mostrados provenientes de
 outro programa que est@'{a} sendo executado simult@^{a}neamente.  Como o outro programa
-modifica os dados, a im@'{a}gem no geomview reflete as modifica@,còes.  Programas
+modifica os dados, a im@'{a}gem no geomview reflete as modifica@,{c}òes.  Programas
 que geram objetos e utilizam o Geomview para mostr@'{a}-los s@~{a}o chamados
 @emph{m@'{o}dulos externos}.  M@'{o}dulos externos podem controlar quase todos os
-asp@'{e}ctos do Geomview.  A id@'{e}ia aqui @'{e} que muitos asp@'{e}ctos de visualiza@,c@~{a}o
-e partes da intera@,c@~{a}o de programas geom@'{e}tricos s@~{a}o independentes do
-conte@'{u}do geom@'{e}trico e podem ser coletados conjuntamente em uma pe@,ca simples de
-programa que pode ser usada em uma larga variedade de situa@,c@~{o}es.  O autor
-de um m@'{o}dulo externo pode concentrar-se sobre a implementa@,c@~{a}o dos algor@'{i}tmos
-desejados e deixar os asp@'{e}ctos de visualiza@,c@~{a}o ao Geomview.  Geomview @'{e} acompanhado
-por uma cole@,c@~{a}o de m@'{o}dulos externos a t@'{i}tulo de exemplo, e esse manual descreve
+asp@'{e}ctos do Geomview.  A id@'{e}ia aqui @'{e} que muitos asp@'{e}ctos de visualiza@,{c}@~{a}o
+e partes da intera@,{c}@~{a}o de programas geom@'{e}tricos s@~{a}o independentes do
+conte@'{u}do geom@'{e}trico e podem ser coletados conjuntamente em uma pe@,{c}a simples de
+programa que pode ser usada em uma larga variedade de situa@,{c}@~{o}es.  O autor
+de um m@'{o}dulo externo pode concentrar-se sobre a implementa@,{c}@~{a}o dos algor@'{i}tmos
+desejados e deixar os asp@'{e}ctos de visualiza@,{c}@~{a}o ao Geomview.  Geomview @'{e} acompanhado
+por uma cole@,{c}@~{a}o de m@'{o}dulos externos a t@'{i}tulo de exemplo, e esse manual descreve
 como escrever seu pr@'{o}prio @emph{m@'{o}dulo externo}.
 
-Geomview @'{e} o produto de um esfor@,co no @dfn{Geometry Center} para disponibilizar
+Geomview @'{e} o produto de um esfor@,{c}o no @dfn{Geometry Center} para disponibilizar
 um @dfn{software} de geometria interativa que @'{e} particularmente apropriado para
-pesquisa matem@'{a}tica e educa@,c@~{a}o.  Em particular, Geomview pode mostrar
-coisas no espa@,co hiperb@'{o}lico e no espa@,co esf@'{e}rico bem como no espa@,co Euclidiano.
+pesquisa matem@'{a}tica e educa@,{c}@~{a}o.  Em particular, Geomview pode mostrar
+coisas no espa@,{c}o hiperb@'{o}lico e no espa@,{c}o esf@'{e}rico bem como no espa@,{c}o Euclidiano.
 
 Geomview permite m@'{u}ltiplos objetos que s@~{a}o controlados independentemente e
 c@^{a}meras.  As c@^{a}meras fornecem controle interativo para movimento, apar@^{e}ncias
-(incluindo ilumina@,c@~{a}o, sombreamento, e materiais), selecionando um objeto,
+(incluindo ilumina@,{c}@~{a}o, sombreamento, e materiais), selecionando um objeto,
 aresta ou n@'{i}vel de v@'{e}rtice, instant@^{a}neos em um arquivo de imagem SGI ou no formato
-Renderman RIB, a adi@,c@~{a}o ou apagamento de objetos @'{e} poss@'{i}vel atrav@'{e}s da manipula@,c@~{a}o
+Renderman RIB, a adi@,{c}@~{a}o ou apagamento de objetos @'{e} poss@'{i}vel atrav@'{e}s da manipula@,{c}@~{a}o
 direta do mouse, pain@'{e}is de controle, e teclas de atalho via teclado.
 
 Geomview suporta os seguintes tipos de dados simples: poliedros com
@@ -880,8 +884,8 @@ v@'{e}rtices compartilhados (.off), quadril@'{a}teros, malhas retangulares, veto
 e ajustes em superf@'{i}cies de Bezier de grau arbitr@'{a}rio incluindo ajustes
 racionais. Hierarqu@'{i}as de objetos podem ser constru@'{i}das com listas de objetos
 e inst@^{a}ncias de objeto(s) transformado(s) por uma ou mais matrizes 4x4.
-Por@,c@~{o}es arbitr@'{a}rias de modifica@,c@~{o}es de hierarqu@'{i}as podem ser transmitidas por meio
-da cria@,c@~{a}o de refer@^{e}ncias nomeadas.
+Por@,{c}@~{o}es arbitr@'{a}rias de modifica@,{c}@~{o}es de hierarqu@'{i}as podem ser transmitidas por meio
+da cria@,{c}@~{a}o de refer@^{e}ncias nomeadas.
 
 Geomview pode mostrar sa@'{i}das gr@'{a}ficas tridimensionais provenientes do Mathematica e do Maple.
 
@@ -890,7 +894,7 @@ Geomview pode mostrar sa@'{i}das gr@'{a}ficas tridimensionais provenientes do Ma
 @chapter Tutorial
 
 Esse cap@'{i}tulo conduzir@'{a} voc@^{e} atrav@'{e}s de alguns usos elementares do Geomview.
-Trabalhando do come@,co ao fim desse cap@'{i}tulo de frente a um computador onde voc@^{e} pode tentar
+Trabalhando do come@,{c}o ao fim desse cap@'{i}tulo de frente a um computador onde voc@^{e} pode tentar
 acompanhar os exemplos fornecidos aqui voc@^{e} pegar@'{a} um pouco do que voc@^{e} pode fazer com
 Geomview.
 
@@ -927,18 +931,18 @@ adiante neste manual.
 
 Coloque o cursor do mouse na janela de c@^{a}mera e pressione e mantenha pressionado o
 bot@~{a}o esquerdo do mouse.  Agora, enquanto mant@'{e}m pressionado o bot@~{a}o, lentamente mova o
-mouse com movimentos pequenos.  Voc@^{e} ver@'{a} a figura rotacionar na dire@,c@~{a}o na qual voc@^{e}
+mouse com movimentos pequenos.  Voc@^{e} ver@'{a} a figura rotacionar na dire@,{c}@~{a}o na qual voc@^{e}
 mover o mouse.    Se voc@^{e} liberar o bot@~{a}o do mouse enquanto move o
-mesmo, a figura continua girando.  Para parar o movimento de rota@,c@~{a}o, mantenha o mouse sobre a
+mesmo, a figura continua girando.  Para parar o movimento de rota@,{c}@~{a}o, mantenha o mouse sobre a
 figura e pressione rapdamente o bot@~{a}o esquerdo do mesmo.
 
 Geomview utiliza o modelo da @emph{esfera de vidro} para os movimentos iniciados atrav@'{e}s do mouse.  Isso
 significa que voc@^{e} est@'{a} supondo o objeto como estando dentro de uma
-esfera invis@'{i}vel e o cursor do mouse como sendo uma al@,ca fora da esfera provida de uma ventosa.
-Quando voc@^{e} mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse, a ventosa da al@,ca gruda na
-esfera; quando voc@^{e} libera o bot@~{a}o do mouse, a ventosa da al@,ca libera a
+esfera invis@'{i}vel e o cursor do mouse como sendo uma al@,{c}a fora da esfera provida de uma ventosa.
+Quando voc@^{e} mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse, a ventosa da al@,{c}a gruda na
+esfera; quando voc@^{e} libera o bot@~{a}o do mouse, a ventosa da al@,{c}a libera a
 esfera.  Movendo o mouse enquanto mant@'{e}m pressionado o bot@~{a}o faz com que a
-esfera (e conceq@"{u}@^{e}ntemente o objeto) mova-se na mesma dire@,c@~{a}o que o
+esfera (e conceq@"{u}@^{e}ntemente o objeto) mova-se na mesma dire@,{c}@~{a}o que o
 mouse.
 
 Adicionalmente para os dois s@'{o}lidos que est@~{a}o atualmente na tela voc@^{e} pode tamb@'{e}m ver duas molduras de fios
@@ -954,24 +958,24 @@ painel principal (@emph{Main}).  Clique (qualquer bot@~{a}o) sobre a palavra @em
 Isso faz com que o tetraedro seja o "objeto alvo".  Agora mova o cursor
 de volta @`{a} janela de c@^{a}mera e voc@^{e} poder@'{a} rotacionar apenas o tetraedro.
 
-O movimento que voc@^{e} aplicou at@'{e} agora foi a rota@,c@~{a}o,
+O movimento que voc@^{e} aplicou at@'{e} agora foi a rota@,{c}@~{a}o,
 porque esse @'{e} o modo de modo de movimento selecionado no painel de ferramentas
-(@emph{Tools}).  Para efetuar o movimento de transla@,c@~{a}o em lugar do movimento de rota@,c@~{a}o, clique sobre o bot@~{a}o transla@,c@~{a}o (@emph{Translate}).
+(@emph{Tools}).  Para efetuar o movimento de transla@,{c}@~{a}o em lugar do movimento de rota@,{c}@~{a}o, clique sobre o bot@~{a}o transla@,{c}@~{a}o (@emph{Translate}).
 Agora quando voc@^{e} mover o mouse na janela de c@^{a}mera enquanto mant@'{e}m pressionado o
 bot@~{a}o esquerdo, o tetraedro (que deve ser ainda o objeto alvo
-de antes) ir@'{a} ser transladado na dire@,c@~{a}o que voc@^{e} move o mouse.  Note
-que voc@^{e} pode transladas o tetraedro na dire@,c@~{a}o da borda da janela enquanto voc@^{e}
+de antes) ir@'{a} ser transladado na dire@,{c}@~{a}o que voc@^{e} move o mouse.  Note
+que voc@^{e} pode transladas o tetraedro na dire@,{c}@~{a}o da borda da janela enquanto voc@^{e}
 mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse.  Se voc@^{e} liberar o bot@~{a}o do
 mouse enquanto move o mesmo, o tetraedro ir@'{a} continuar o movimento sozinho.  O tetraedro
 mover-se-@'{a} ao contr@'{a}rio do que ocorria antes muito rapidamente de forma que @'{e} muito f@'{a}cil perder o rastro de onde ele se encontra.
 
-Se voc@^{e} acidentalmente perder o tetraedro atrav@'{e}s de transla@,c@~{a}o para muito longe
+Se voc@^{e} acidentalmente perder o tetraedro atrav@'{e}s de transla@,{c}@~{a}o para muito longe
 da vis@~{a}o da janela, voc@^{e} pode peg@'{a}-lo de vlta atrav@'{e}s de um clique sobre o
 bot@~{a}o Centro (@emph{Center}) no painel de ferramentas (@emph{Tools}).  Isso far@'{a} com que o tetraedro
-retorne para a sua posi@,c@~{a}o inicial.
+retorne para a sua posi@,{c}@~{a}o inicial.
 
 Clique sobre o bot@~{a}o Centro (@emph{Center}) para trazer o tetraedro ao centro da janela de c@^{a}mera, e
-ent@~{a}o coloque-o em uma posi@,c@~{a}o de forma que voc@^{e} possa ver completamente o
+ent@~{a}o coloque-o em uma posi@,{c}@~{a}o de forma que voc@^{e} possa ver completamente o
 dodecaedro.
 
 Seu mundo agora tem dois objetos que est@~{a}o um ao lado do outro.  Voc@^{e}
@@ -981,7 +985,7 @@ do tetraedro parcialmente fora da janela de c@^{a}mera.  Volte para o navegador 
 referido mundo novamente.  Agora clique sobre o bot@~{a}o "Olhar Para" (@emph{Look At}) no
 painel de ferramentas (@emph{Tools}). Voc@^{e} pode ver o dodecaedro e o tetraedro
 ajustando-se ao meio da janela (figura
-@pxref{figlookatworld}).  O bot@~{a}o "Olhar Para" (@emph{Look At}) posiciona a c@^{a}mera em uma posi@,c@~{a}o tal
+@pxref{figlookatworld}).  O bot@~{a}o "Olhar Para" (@emph{Look At}) posiciona a c@^{a}mera em uma posi@,{c}@~{a}o tal
 que o objeto alvo fique centrado na janela.
 @float Figure,figlookatworld
 @image{figs/fig2}
@@ -1010,8 +1014,8 @@ maneira como o Geomview desenha objetos.  Note os bot@~{o}es rotulados com @emph
 que Geomview est@'{a} agora ressalta/destaca as arestas do dodecaedro.  Clique sobre o @emph{[ae] Edges}
 novamente e as arestas desaparecem.  Clique muitas vezes e assista as arestas
 indo e voltando.  Quando voc@^{e} tiver feito isso o suficiente, deixe as arestas habilitadas
-e clique sobre o bot@~{a}o @emph{[af] Faces}.  Essa a@,c@~{a}o alterna entre exibir
-ou n@~{a}o as faces.  Clique sobre o bot@~{a}o novamente para de forma que a exibi@,c@~{a}o das face fique habilitada.
+e clique sobre o bot@~{a}o @emph{[af] Faces}.  Essa a@,{c}@~{a}o alterna entre exibir
+ou n@~{a}o as faces.  Clique sobre o bot@~{a}o novamente para de forma que a exibi@,{c}@~{a}o das face fique habilitada.
 
 Agora clique sobre o bot@~{a}o @emph{[Cf] Faces} sob a palavra @emph{COLOR}. Um
 painel de escolha de cores aparecer@'{a} (@pxref{figcolorchooser, Figure}).
@@ -1028,7 +1032,7 @@ ponto negro em volta para escolher uma nova cor para o dodecaedro.
 
 @ifclear forms
 Note os tr@^{e}s bot@~{o}es deslizantes, @emph{H}, @emph{S}, e @emph{V},
-controlando a matiz (@emph{hue}), satura@,c@~{a}o, e valor (ilumina@,c@~{a}o).
+controlando a matiz (@emph{hue}), satura@,{c}@~{a}o, e valor (ilumina@,{c}@~{a}o).
 Clicando sobre o bot@~{a}o @emph{HSV} fornece um diferente conjunto de bot@~{o}es deslizantes,
 um para vermelho (@emph{red}), outro para verde (@emph{green}), e outro para azul (@emph{ blue}).
 Valores num@'{e}ricos para ambos os sistemas de cores RGB e HSV
@@ -1055,7 +1059,7 @@ Clique sobre o bot@~{a}o @emph{[ab] BBox} sob a palavra @emph{Draw}.
 A caixa associada desaparece.  agora pona o cursor de volta na janela de
 c@^{a}mera.  No teclado, digite as teclas @kbd{a }b.  Note que a
 caixa associada aparece novamente.  @kbd{a }b @'{e} o atalho de teclado para
-o bot@~{a}o que alterna entre a exibi@,c@~{a}o ou n@~{a}o da caixa associada; a seq@"{u}@^{e}ncia de caracteres "[ab]" aparece sobre o
+o bot@~{a}o que alterna entre a exibi@,{c}@~{a}o ou n@~{a}o da caixa associada; a seq@"{u}@^{e}ncia de caracteres "[ab]" aparece sobre o
 bot@~{a}o para indicar isso.  A maioria dos bot@~{o}es do Geomview possuem atalhos
 de teclado que voc@^{e} pode usar se preferir.  Isso ser@'{a} @'{u}ltil quando voc@^{e}
 estiver familiarizado com o Geomview e n@~{a}o quiser ter de se mover
@@ -1087,7 +1091,7 @@ Agora clique sobre o bot@~{a}o @emph{Reset} no painel de ferramentas (@emph{Tool
 far@'{a} com que todas as figuras rtornem ao centro da janela de c@^{a}mera.  Voc@^{e} pode ver um
 dodecaedro e uma protuber@^{a}ncia do trevo (@pxref{figtrefdodec, Figure}).
 
-Brinque com a protuber@^{a}ncia do trevo e o dodecaedro.  Fa@,ca experi@^{e}ncias com
+Brinque com a protuber@^{a}ncia do trevo e o dodecaedro.  Fa@,{c}a experi@^{e}ncias com
 alguns outros bot@~{o}es no painel de ferramentas (@emph{Tools}).  Tente colorir o
 trevo com o painel de apar@^{e}ncia (@emph{Appearance}).
 
@@ -1109,8 +1113,8 @@ mouse e do teclado.
 
 @menu
 * Starting Geomview::           Iniciando o Geomview.
-* Command Line Options::        Op@,c@~{o}es de Linha de Comando.
-* Basic Interaction::           Intera@,c@~{o}es B@'{a}sicas: O Painel Principal.
+* Command Line Options::        Op@,{c}@~{o}es de Linha de Comando.
+* Basic Interaction::           Intera@,{c}@~{o}es B@'{a}sicas: O Painel Principal.
 * Loading::                     Chamando Objetos Dentro do Geomview.
 * Mouse Motions::               Usando o Mouse para Manipular Objetos.
 * Appearance::                  Modificando a Forma de Ver as Coisas.
@@ -1126,10 +1130,10 @@ mouse e do teclado.
 
 A forma usual para iniciar o Geomview @'{e} digitar @kbd{geomview @key{Enter}} em uma janela
 de shell (@key{Enter} significa pressionar a tecla "Enter").  Esse procedimento carrega o Geomview na mem@'{o}ria do computador em
-uns poucos segundos; uma ou mais janelas ir@~{a}o aparecer e voc@^{e} pode come@,car a
+uns poucos segundos; uma ou mais janelas ir@~{a}o aparecer e voc@^{e} pode come@,{c}ar a
 interagir com o Geomview imediatamente.
 
-@'{E} tamb@'{e}m poss@'{i}vel especificar a@,c@~{o}es para o Geomview executar no
+@'{E} tamb@'{e}m poss@'{i}vel especificar a@,{c}@~{o}es para o Geomview executar no
 momento de iniciar fornecendo argumentos na linha de comando do shell.
 Veja @ref{Command Line Options}.
 
@@ -1138,7 +1142,7 @@ Veja @ref{Command Line Options}.
 @node Command Line Options, Basic Interaction, Starting Geomview, Interaction
 @section Command Line Options
 
-Aqui est@~{a}o as op@,c@~{o}es de linha de comando que o Geomview permite:
+Aqui est@~{a}o as op@,{c}@~{o}es de linha de comando que o Geomview permite:
 
 @table @samp
 @item -b @var{r} @var{g} @var{}b
@@ -1151,7 +1155,7 @@ Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @d -b 0.5 0.5 0.5 - cinza
 @item -c @var{arquivo}
 Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
-especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,c@~{a}o de GCL,
+especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,{c}@~{a}o de GCL,
 veja @ref{GCL}.
 
 @item -c @var{comando}
@@ -1160,20 +1164,20 @@ Comandos podem tamb@'{e}m serem fornecidos literalmente, como em
 -c "(ui-panel main off)"
 @end example
 Uma vez que @var{comando} inclui par@^{e}ntesis, que possuem significado especial para
-o shell, @var{comando} deve receber ap@'{o}strofo.  Multiplas op@,c@~{o}es @var{-c} s@~{a}o permitidas.
+o shell, @var{comando} deve receber ap@'{o}strofo.  Multiplas op@,{c}@~{o}es @var{-c} s@~{a}o permitidas.
 
 @item -wins @var{n}
 Faz com que Geomview mostre inicialmente @var{n} janelas de c@^{a}mera.
 
 @item -wpos @var{largura},@var{altura}[@@@var{xmin},@var{ymin}]
-Especifica a localiza@,c@~{a}o inicial e o tamanho da primeira janela de c@^{a}mera.  Os
+Especifica a localiza@,{c}@~{a}o inicial e o tamanho da primeira janela de c@^{a}mera.  Os
 valores para @var{largura}, @var{altura}, @var{xmin}, e @var{ymin} est@~{a}o em
 coordenadas de tela (pixel).
 
 @item -M[cg][ps[un|in|in6]] @var{PIPENOME}|@var{TCPPORT}
-A op@,c@~{a}o @samp{-M} aceita modificadores: um sufixo @samp{g} espera
+A op@,{c}@~{a}o @samp{-M} aceita modificadores: um sufixo @samp{g} espera
 dados geom@'{e}tricos (o padr@~{a}o), enquanto um sufixo @samp{c} espera comandos
-GCL. Um @samp{p} implica que a conec@,c@~{a}o pode usar um pipe nomeado (o
+GCL. Um @samp{p} implica que a conec@,{c}@~{a}o pode usar um pipe nomeado (o
 padr@~{a}o para tudo exceto para "NeXT"), enquanto @samp{s} implica no uso de
 um "UNIX-domain socket" (o padr@~{a}o em "NeXT"). Uma vez que na vers@~{a}o 1.9 do
 Geomview "Internet domain sockets" s@~{a}o tamb@'{e}m suportados; use @samp{sin} para
@@ -1185,8 +1189,8 @@ inicia com uma barra ('/'), ent@~{a}o esse nome @'{e} assumido ser um caminho
 absoluto, de outra forma o pipe nomeado  ou socket @'{e} criado sob o diret@'{o}rio
 @file{$@{TMPDIR@}/geomview/}.
 
-@b{Escutando fluxo de comando em portas TCP pode ser um risco de seguran@,ca,
-como Geomview por si mesmo n@~{a}o toma nenhum tipo de precau@,c@~{a}o de seguran@,ca, Geomview simplesmente
+@b{Escutando fluxo de comando em portas TCP pode ser um risco de seguran@,{c}a,
+como Geomview por si mesmo n@~{a}o toma nenhum tipo de precau@,{c}@~{a}o de seguran@,{c}a, Geomview simplesmente
 executa todos os comandos alimentados a ele atrav@'{e}s do socket de rede. Isso
 tamb@'{e}m implica entrada e sa@'{i}da para unidades de armazenamento locais devem ser permitidas remotamente.}
 
@@ -1194,7 +1198,7 @@ Exemplos:
 @table @code
 @item -M @var{nome_de_objeto}
 Mostra (possivelmente mudando dinamicamente) geometria enviada de
-programas @code{geomstuff} ou @code{togeomview}.  Essa op@,c@~{a}o "-M" escuta o
+programas @code{geomstuff} ou @code{togeomview}.  Essa op@,{c}@~{a}o "-M" escuta o
 pipe nomeado @file{/tmp/geomview/nome_de_objeto}; voc@^{e} pode conseguir o mesmo
 efeito com os comandos de shell abaixo:
 @example
@@ -1210,7 +1214,7 @@ executando o comando GCL:
 
 @item -Mc @var{pipenome}
 Como @samp{-M} acima, mas espera comandos GCL, em lugar de dados
-geom@'{e}tricos OOGL, na conec@,c@~{a}o.
+geom@'{e}tricos OOGL, na conec@,{c}@~{a}o.
 
 @item -Mcs nome
 L@^{e} comandos a partir do "UNIX-domain socket" nomeado.
@@ -1218,7 +1222,7 @@ L@^{e} comandos a partir do "UNIX-domain socket" nomeado.
 
 @item -Mcsin 40000
 L@^{e} comandos a partir da porta IPv4 @samp{40000}. Geomview por si mesmo n@~{a}o
-toma qualquer precau@,c@~{a}o de seguran@,ca, de forma que "-Mcsin 40000" pode ser um risco de seguran@,ca.
+toma qualquer precau@,{c}@~{a}o de seguran@,{c}a, de forma que "-Mcsin 40000" pode ser um risco de seguran@,{c}a.
 @end table
 
 @item -noopengl
@@ -1234,7 +1238,7 @@ invocados mais tarde da forma usual com as teclas de atalho @kbd{Px} ou com
 comando @code{ui-panel}. Veja @ref{ui-panel, @code{(ui-panel @dots{})}}.
 
 @item -noinit
-N@~{a}o l@^{e} nenum arquivo de inicializa@,c@~{a}o. Por padr@~{a}o, geomview l@^{e} o arquivo
+N@~{a}o l@^{e} nenum arquivo de inicializa@,{c}@~{a}o. Por padr@~{a}o, geomview l@^{e} o arquivo
 @file{.geomview} do systema, seguido daqueles em @file{$@{HOME@}/.geomview} e em
 @file{./.geomview}.
 
@@ -1263,8 +1267,8 @@ s@~{a}o anexados ao final do caminho de busca do UNIX quando for invocado o @var
 Normalmente quando voc@^{e} invoca Geomview, tr@^{e}s janelas aparecem: O
 painel principal (@emph{Main}), o painel de ferramentas (@emph{Tools}), e uma janela de c@^{a}mera.
 Geomview tem muitas outras janelas mas muitas coisas podem ser realizadas com essas
-tr@^{e}s de forma que por padr@~{a}o as outras n@~{a}o aparecem.  Essa se@,c@~{a}o do
-manual introduz alguns conceitos b@'{a}sicos que s@~{a}o usados nas se@,c@~{o}es restantes
+tr@^{e}s de forma que por padr@~{a}o as outras n@~{a}o aparecem.  Essa se@,{c}@~{a}o do
+manual introduz alguns conceitos b@'{a}sicos que s@~{a}o usados nas se@,{c}@~{o}es restantes
 do manual e descreve o painel principal (@emph{Main}).
 @c
 @float Figure,figmainpanel
@@ -1278,7 +1282,7 @@ os objetos dos quais Geomview atualmente abertos.  Esse navegador tem uma
 linha para cada objeto que voc@^{e} tiver chamado, adicionalmente algumas linhas para outros
 objetos.  Um desses outros objetos @'{e} chamado @code{World} e corresponde a
 a todos os objetos atualmente chamados, tratados como se eles fossem um
-objeto.  A maioria das opera@,c@~{o}eos que voc@^{e} pode fazer sobre um objeto, tais como
+objeto.  A maioria das opera@,{c}@~{o}eos que voc@^{e} pode fazer sobre um objeto, tais como
 aplicar um movimento ou mudar uma cor, pode tamb@'{e}m ser feita para o objeto
 "World".
 
@@ -1290,18 +1294,18 @@ trata objetos geom@'{e}tricos.  Por exemplo, voc@^{e} pode mover c@^{a}meras pel
 e adicion@'{a}-las e apag@'{a}-las como objetos geom@'{e}tricos.  C@^{a}meras n@~{a}o
 s@~{a}o mostradas na tela como um objeto que voc@^{e} v@^{e}.  Cada
 c@^{a}mera tem uma janela de c@^{a}mera separada que mostra a vis@~{a}o como vista atrav@'{e}s da lente
-daquela c@^{a}mera.  (@'{E} pass@'{i}vel para cada c@^{a}mera mostrar uma representa@,c@~{a}o
+daquela c@^{a}mera.  (@'{E} pass@'{i}vel para cada c@^{a}mera mostrar uma representa@,{c}@~{a}o
 geom@'{e}trica de outras c@^{a}meras.  Veja @ref{Cameras}.)
 
 Devido ao fato de Geomview tratar c@^{a}meras e objetos geom@'{e}tricos muito similarmente,
-o termo @dfn{objeto} nessa documenta@,c@~{a}o @'{e} usado para referir-se a qualquer dos dois
+o termo @dfn{objeto} nessa documenta@,{c}@~{a}o @'{e} usado para referir-se a qualquer dos dois
 indistintamente.  Quando precisamos disting@"{u}ir entre os dois tipos de objetos, usamos
 o termo "@dfn{geom}" para denotar um objeto geom@'{e}trico e a palavra
 @dfn{c@^{a}mera} para denotar uma c@^{a}mera.
 
 O objeto que est@'{a} selecionado (luminosidade alta) no navegador
 "@emph{Targets}" @'{e} chamado objeto alvo.  Esse @'{e} o objeto que
-recebe quaisquer a@,c@~{o}es que voc@^{e} faz com o mouse ou com o teclado.  Voc@^{e} pode
+recebe quaisquer a@,{c}@~{o}es que voc@^{e} faz com o mouse ou com o teclado.  Voc@^{e} pode
 mudar o objeto alvo selecionando uma linha diferente no
 navegador de alvos (@emph{Targets}).  Outro caminho de modificar o objeto alvo @'{e}
 colocar o cursor do mouse diretamente sobre um geom na janela de c@^{a}mera
@@ -1324,14 +1328,14 @@ aplicados pressionando ou o bot@~{a}o esquerdo ou o bot@~{a}o do meio do mouse e
 movendo o mouse.  Existem muitos modos de movimento diferentes, cada modo de movimento
 aplicando um diferente tipo de movimento.  O navegador de modos de movimento (@emph{MOTION MODE})
 no painel principal indica o modo de movimento atual.  O
-padr@~{a}o @'{e} a rota@,c@~{a}o ("Rotate").  Voc@^{e} pode mudar o modo corrente de movimento
+padr@~{a}o @'{e} a rota@,{c}@~{a}o ("Rotate").  Voc@^{e} pode mudar o modo corrente de movimento
 selecionando um no modo de movimento no navegador de modos de movimento (@emph{MOTION MODE}), ou usando o
-painel de ferramentas (@emph{Tools}).  Para maiores informa@,c@~{o}es sobre modos de movimento,
+painel de ferramentas (@emph{Tools}).  Para maiores informa@,{c}@~{o}es sobre modos de movimento,
 veja @ref{Mouse Motions}.
 
 O navegador de m@'{o}dulos (@emph{Modules}) lista m@'{o}dulos externos do Geomview.  Um
 m@'{o}dulo externo @'{e} um programa separado que interage com Geomview para
-extender suas funcionalidades.  Para informa@,c@~{o}es sobre m@'{o}dulos externos,
+extender suas funcionalidades.  Para informa@,{c}@~{o}es sobre m@'{o}dulos externos,
 veja @ref{Modules}.
 
 @ifset forms
@@ -1347,16 +1351,16 @@ Geomview aagar@'{a} todos os geoms.
 
 Os tr@^{e}s bot@~{o}es na parte de baixo do painel principal (@emph{Main}), rotulados
 @emph{Euclidean}, @emph{Hyperbolic}, e @emph{Spherical}, permitem
-a voc@^{e} modificar a geometria do espa@,co que Geomview mostra.  Por
+a voc@^{e} modificar a geometria do espa@,{c}o que Geomview mostra.  Por
 padr@~{a}o @emph{Euclidean} @'{e} selecionado.  Para detalhes sobre como usar
-espa@,cos @emph{Hyperbolic} e @emph{Spherical}, veja @ref{Non-Euclidean
+espa@,{c}os @emph{Hyperbolic} e @emph{Spherical}, veja @ref{Non-Euclidean
 Geometry}.
 @end ifset
 
 @ifclear forms
-A barra de menu no topo do painel principal oferece menus para opera@,c@~{o}es comuns.
+A barra de menu no topo do painel principal oferece menus para opera@,{c}@~{o}es comuns.
 
-Para criar novas janelas, chame novos objetos, grave os objetos ou outras informa@,c@~{o}es,
+Para criar novas janelas, chame novos objetos, grave os objetos ou outras informa@,{c}@~{o}es,
 ou saia do geomview, veja o menu @emph{File}.  
 
 Para copiar ou apagar objetos, veja o menu @emph{Edit}.
@@ -1365,13 +1369,13 @@ Voc@^{e} pode chamar qualquer painel a partir do menu @emph{Inspect}.
 
 O menu @emph{Space} permite a voc@^{e} escolher se geomview trabalha
 no modo Euclidiano, Hiperbolico ou Esf@'{e}rico.  O modo Euclideano @'{e} usado
-por padr@~{a}o.  Para detalhes sobre a utiliza@,c@~{a}o do modo espa@,co @emph{Hyperbolic} e do modo
+por padr@~{a}o.  Para detalhes sobre a utiliza@,{c}@~{a}o do modo espa@,{c}o @emph{Hyperbolic} e do modo
 @emph{Spherical}, veja @ref{Non-Euclidean Geometry}.
 @end ifclear
 
-A maioria das a@,c@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possuem equivalentes
-atalhos de teclado de forma que voc@^{e} pode fazer a mesma a@,c@~{a}o atav@'{e}s de digita@,c@~{a}o de uma
-seq@"{u}@^{e}ncia de teclas no teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,cados que
+A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possuem equivalentes
+atalhos de teclado de forma que voc@^{e} pode fazer a mesma a@,{c}@~{a}o atav@'{e}s de digita@,{c}@~{a}o de uma
+seq@"{u}@^{e}ncia de teclas no teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
 est@~{a}o familiarizados com as capacidades do Geomview e querem trabalhar rapidamente
 sem ter montanhas de pain@'{e}is amontoando-se na tela.
 Atalhos de teclado s@~{a}o usualmente indicados ente colch@^{e}tes ([ ]) pr@'{o}ximo
@@ -1488,14 +1492,14 @@ veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
 @section Using the Mouse to Manipulate Objects
 
 Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
-diferentes modos de movimento do mouse: rota@,c@~{a}o (@emph{Rotate}), transla@,c@~{a}o (@emph{Translate}),
+diferentes modos de movimento do mouse: rota@,{c}@~{a}o (@emph{Rotate}), transla@,{c}@~{a}o (@emph{Translate}),
 v@^{o}o da c@^{a}mera (@emph{Cam Fly}), zoom da c@^{a}mera (@emph{Cam Zoom}), homotetia de um objeto geom@'{e}trico (@emph{Geom Scale}), e
 @'{o}rbita de c@^{a}mera (@emph{Cam Orbit}).  O painel de ferramentas tem um bot@~{a}o para cada um desses
 modos; para tracar os modos, clique sobre o bot@~{a}o correspondente.  voc@^{e} pode tamb@'{e}m
 selecionar um modo atrav@'{e}s do navegador de modos de movimento (@emph{Motion Mode}) no
 painel principal (@emph{Main}).@refill
 
-Essa se@,c@~{a}o descreve a intera@,c@~{a}o b@'{a}sica com o mouse.  Para detalhes,
+Essa se@,{c}@~{a}o descreve a intera@,{c}@~{a}o b@'{a}sica com o mouse.  Para detalhes,
 veja @ref{Commands}.
 
 @float Figure,figtools
@@ -1520,10 +1524,10 @@ O atual objeto do centro @'{e} mostrado no campo @emph{Center} no
 painel de ferramentas(@emph{Tools}).  Seu valor padr@~{a}o @'{e} a palavra especial "target",
 que significa que o odbjeto do centro @'{e} o objeto que estiver designado como objeto alvo.
 Voc@^{e} pode mudar o objeto atual do centro para qualquer objeto digitando seu nome no campo
-@emph{Center}.  A or@'{i}gem do objeto do centro @'{e} mantido fixo no modo rota@,c@~{a}o @emph{Rotate} e
+@emph{Center}.  A or@'{i}gem do objeto do centro @'{e} mantido fixo no modo rota@,{c}@~{a}o @emph{Rotate} e
 no modo @emph{Orbit}.  Normalmente o objeto do centro @'{e} um dos objetos geom@'{e}tricos
 (geoms) existentes listados no navegador de alvos (@emph{Targets}), o centro atual das
-rota@,c@~{o}es @'{e} a or@'{i}gem daquele sistema de coordenadas daquele objeto.
+rota@,{c}@~{o}es @'{e} a or@'{i}gem daquele sistema de coordenadas daquele objeto.
 @'{E} poss@'{i}vel, todavia, selecionar um ponto arbitr@'{a}rio de interesse sobre
 um objeto como o centro. Para detalhes, veja @ref{Point of Interest}.
 
@@ -1531,7 +1535,7 @@ Isso tamb@'{e}m @'{e} poss@'{i}vel mudando o bot@~{a}o @emph{BBox Center} para e
 centro de movimento como sendo o centro do objeto atual da caixa
 associada. Uma vez modificado o centro da caixa geom@'{e}trica ativa associada ir@'{a} tornar-se
 o centro do movimento, se voc@^{e} selecionar outro objeto, ent@~{a}o o centro do
-movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nada modifica@,c@~{a}o
+movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nada modifica@,{c}@~{a}o
 ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado, voc@^{e} tem que
 digitar a palavra @code{target} no campo @emph{Center} para retornar ao
 valor padr@~{a}o.
@@ -1540,16 +1544,16 @@ Voc@^{e} aplica um movimento de mouse pressionando ou o bot@~{a}o esquerdo ou o 
 do mouse com o cursor em uma janela de c@^{a}mera e movendo o mouse.  A maioria dos
 modos de movimento possui in@'{e}rcia (@emph{inertia}), que significa que se voc@^{e} soltar o
 bot@~{a}o enquanto move o mouse, o movimento ir@'{a} continuar.  Para imaginar a in@'{e}rcia pode ser
-@'{u}til imaginar o cursor do mouse como sendo uma al@,ca; quando voc@^{e} pressiona um
+@'{u}til imaginar o cursor do mouse como sendo uma al@,{c}a; quando voc@^{e} pressiona um
 bot@~{a}o do mouse para baixo, o mouse agarra firmemente no objeto alvo e voc@^{e} pode mover esse objeto.  Quando
-voc@^{e} libera o bot@~{a}o do mouse, a al@,ca libera o objeto.
+voc@^{e} libera o bot@~{a}o do mouse, a al@,{c}a libera o objeto.
 Liberando o bot@~{a}o do mouse enquanto move o mesmo @'{e} como abandonar
 o objeto --- o objeto continua movendo-se independentemente do mouse.
 In@'{e}rcia pode ser desligada; veja o menu de movimento (@emph{Motion}) no painel principal (@emph{Main}),
 descrito abaixo.
 
 Generally, the bot@~{a}o esquerdo do mouse controla movimento no plano da tela,
-enquanto o bot@~{a}o m@'{e}dio do mouse controla movimento ao longo ou em torno da dire@,c@~{a}o de avan@,co.
+enquanto o bot@~{a}o m@'{e}dio do mouse controla movimento ao longo ou em torno da dire@,{c}@~{a}o de avan@,{c}o.
 
 Pressionando o tecla "shift" enquanto arrasta com o bot@~{a}o esquerdo ou m@'{e}dio do mouse
 na maioria dos modos de movimento fornece movimentos de baixa velocidade , @'{u}til para ajustes finos.
@@ -1561,15 +1565,15 @@ isso escolhe o ponto de interesse.
 @table @emph
 
 @item Rotate
-No modo rota@,c@~{a}o (@emph{Rotate}), pressione o bot@~{a}o esquerdo do mouse para rotacionar o
-objeto alvo en torno do objeto do centro.  A rota@,c@~{a}o ocorre na
-dire@,c@~{a}o que voc@^{e} move o mouse.  Especificamente, o eixo de rota@,c@~{a}o
+No modo rota@,{c}@~{a}o (@emph{Rotate}), pressione o bot@~{a}o esquerdo do mouse para rotacionar o
+objeto alvo en torno do objeto do centro.  A rota@,{c}@~{a}o ocorre na
+dire@,{c}@~{a}o que voc@^{e} move o mouse.  Especificamente, o eixo de rota@,{c}@~{a}o
 passa atrav@'{e}s da or@'{i}gem do objeto do centro, @'{e} paralelo ao
-plano de vis@~{a}o da c@^{a}mera, e @'{e} perpendicular @`{a} dire@,c@~{a}o do movimento do
+plano de vis@~{a}o da c@^{a}mera, e @'{e} perpendicular @`{a} dire@,{c}@~{a}o do movimento do
 mouse.  Quando o centro for o alvo ("target"), isso significa que o objeto
 alvo rotaciona em torno de sua pr@'{o}pria or@'{i}gem.
 
-O bot@~{a} do meio do mouse no modo de movimento tipo rota@,c@~{a}o (@emph{Rotate}) rotaciona o objeto
+O bot@~{a} do meio do mouse no modo de movimento tipo rota@,{c}@~{a}o (@emph{Rotate}) rotaciona o objeto
 alvo em torno de um eixo perpendicular ao plano de vis@~{a}o.
 
 @item Translate
