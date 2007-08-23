@@ -1,0 +1,8 @@
+#! /bin/sh
+/usr/bin/rcs2log \
+ -u "rotdrop	Claus-Justus Heine	Claus.Heine@Mathematik.Uni-Freiburg.DE"\
+ -u "mphillips	Mark Phillips	mbp@geomtech.com"\
+ -u "lloydwood	Lloyd Wood	L.Wood@surrey.ac.uk"\
+ -u "smr99	Steve M. Robbins	steve@sumost.ca"\
+ -u "ficmatinfmag	Jorge Barros de Abreu	ficmatin01@solar.com.br"\
+ "$@"
