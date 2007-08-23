@@ -25,13 +25,6 @@ nobase_infoimg_DATA = $(PNGIMAGES)
 geomview_pt_BR_texi_MAKEINFOFLAGS = --enable-encoding --lang=pt
 
 dochtmldir = $(docdir)/html
-dochtml_DATA = htdocs/*.html
-dochtmlfigsdir = $(docdir)/html/figs
-dochtmlfigs_DATA = htdocs/figs/*.png
-dochtml_pt_BRdir = $(docdir)/html/pt_BR
-dochtml_pt_BR_DATA = htdocs/pt_BR/*.html
-dochtml_pt_BRfigsdir = $(docdir)/html/pt_BR/figs
-dochtml_pt_BRfigs_DATA = htdocs/pt_BR/figs/*.png
 doc_DATA = geomview.pdf geomview-pt_BR.pdf
 
 geomview.pdf:  $(PDFIMAGES)
@@ -58,10 +51,10 @@ htdocs: geomview.html geomview-pt_BR.html
 	  else \
             htmldir=geomview$${loc}.html; \
 	  fi; \
-	  loc2=`echo $${loc}|sed -e 's/-//g'`; \
-	  $(mkdir_p) $@/$${loc2}; \
+	  loc2=`echo $${loc}|$(SED) -e 's/-//g'`; \
+	  $(MKDIR_P) $@/$${loc2}; \
 	  cp -R $${htmldir}/. $@/$${loc2}/.; \
-	  $(mkdir_p) $@/$${loc2}/figs; \
+	  $(MKDIR_P) $@/$${loc2}/figs; \
 	  chmod 0755 $@/$${loc2}/figs; \
 	  for f in $(PNGIMAGES); do \
 	    test -f $(srcdir)/$$f && f=$(srcdir)/$$f; \
@@ -71,16 +64,26 @@ htdocs: geomview.html geomview-pt_BR.html
 	chmod 0755 $@; \
 	find $@ -type f -exec chmod 644 \{\} \;
 
+install-data-local: htdocs
+	$(MKDIR_P) $(DESTDIR)$(dochtmldir)
+	cp -pR htdocs/. $(DESTDIR)$(dochtmldir)/.
+	chmod 0755 $(DESTDIR)$(dochtmldir)
+	find $(DESTDIR)$(dochtmldir) -type d -exec chmod 0755 \{\} \;
+	find $(DESTDIR)$(dochtmldir) -type f -exec chmod 644 \{\} \;
+
+uninstall-local:
+	rm -rf $(DESTDIR)$(dochtmldir)
+
 .ps.eps:
-	@D=`dirname $@`; test -d $$D || mkdir $$D
+	@D=`dirname $@`; $(MKDIR_P) $$D
 	$(PS2EPSI) $< $@
 
 .eps.pdf:
-	@D=`dirname $@`; test -d $$D || mkdir $$D
+	@D=`dirname $@`; $(MKDIR_P) $$D
 	$(EPSTOPDF) $<
 
 .pdf.png:
-	@test -d figs || mkdir figs
+	$(MKDIR_P) figs
 	$(PDFIMAGESPROG) $< $(<:.pdf=)
 	$(PNMTOPNG) $(<:.pdf=-000.ppm) > $@
 	-rm -f $(<:.pdf=-000.ppm)
