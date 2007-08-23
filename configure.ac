@@ -1,5 +1,5 @@
 AC_PREREQ(2.59)
-AC_INIT(geomview, [1.9.3], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
+AC_INIT(geomview, [1.9.4], Claus-Justus Heine <Claus.Heine@Mathematik.Uni-Freiburg.DE>)
 AC_MSG_RESULT([configuring $PACKAGE_NAME $PACKAGE_VERSION])
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE([dist-bzip2 1.10])
@@ -467,24 +467,24 @@ fi
 #       target_os       linux-gnu
 
 case "$target" in
-  *linux*) MACHTYPE="linux"
+  *linux*) MACHTYPE=`echo ${target}|sed 's/unknown/pc/g'`
           ;;
-  *irix*) MACHTYPE="sgi"
+  *irix*) MACHTYPE="${target}"
 	  AC_DEFINE(sgi, 1, [Define to 1 if we are compiling for sgi])
           if test "$CC" = "cc" ; then
             CFLAGS="$CFLAGS -float"
             LIBS="$LIBS -lmalloc"
           fi
           ;;
-  *darwin*) MACHTYPE=$target_os
+  *darwin*) MACHTYPE="${target}"
           AC_DEFINE(unix, 1, [Define to 1 since we are compiling for unix])
           ;;
-  *rs6000*) MACHTYPE="rs6000"
+  *rs6000*) MACHTYPE="${target}"
           AC_DEFINE(AIX, 1, [Define to 1 if we are compiling for AIX])
 	  ACCEPT_ARG3_TYPE="unsigned long"
           AC_DEFINE(unix, 1, [Define to 1 if we are compiling for unix???])
 	  ;;
-       *) MACHTYPE=$target_os
+       *) MACHTYPE="${target}"
           ;;
 esac
 
