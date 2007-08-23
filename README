@@ -1,6 +1,6 @@
-		     Geomview/OOGL Release 1.9.3
-			      JUNE 2007
-			      ---------
+		     Geomview/OOGL Release 1.9.4
+			     AUGUST 2007
+			     -----------
 
 CONTENTS
 --------
@@ -24,7 +24,7 @@ CONTENTS
 INTRODUCTION
 ------------
                                    
-This is version 1.9.3 of Geomview/OOGL.  See the file NEWS for a summary
+This is version 1.9.4 of Geomview/OOGL.  See the file NEWS for a summary
 of changes in this release, and the file ChangeLog for specific
 details.
 
@@ -260,11 +260,11 @@ developing OOGL in conjunction with MinneView.  In 1991 a team of
 programmers headed by Mark Phillips, Stuart Levy, and Tamara Munzner
 set about developing a revised version of OOGL and a new viewer which
 they named Geomview.  In the time since then, many people have
-contributed, including (in alphabetical order): Steve Anderson,
-Rex Dieter, Celeste Fowler, Claus-Justus Heine, Todd Kaplan, Daniel Krech,
-Mario Lopez, Daeron Meyer, Mark Meuer, Steve Robbins, Timothy Rowley,
-Nathaniel Thurston, Scott Wisdom, Lloyd Wood and others.
-
+contributed, including (in alphabetical order): Jorge Barros de Abreu,
+Steve Anderson, Rex Dieter, Celeste Fowler, Claus-Justus Heine, Todd
+Kaplan, Daniel Krech, Mario Lopez, Mark Meuer, Daeron Meyer, Steve
+Robbins, Timothy Rowley, Nathaniel Thurston, Scott Wisdom, Lloyd
+Woodand others.
 
 MISCELLANEOUS
 -------------
