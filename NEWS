@@ -1,3 +1,19 @@
+1.9.4 August 2007
+
+   * Translation of the manual to Brazilian Portuguese, courtesy of
+     Jorge Barros de Abreu <ficmatin01@solar.com.br>.
+
+   * Image-stream filter bug fixes.
+
+   * Fixed (transform ...), (transform-incr ...) interests (broken by
+     previous change since 1.9.0)
+
+   * Improved computation of averaged per-vertex polygon normals
+     (taking the relative orientation of the facets in to account).
+
+   * Loading of textured meshes was broken by a previous change since
+     1.9.0, fix that.
+
 1.9.3 June 2007
 
    * Drawing of spheres was severely broken.
