@@ -72,8 +72,6 @@ void ui_manual_browser(const char *type)
   if ((lang = getenv("LANG")) != NULL) {
     snprintf(helper, PATH_MAX, langfile, docdir, lang);
     file = findfile(NULL, helper);
-    OOGLWarn("Lang-File: \"%s\", found \"%s\"\n",
-	     helper, file);
   }
   if (file == NULL) {
     snprintf(helper, PATH_MAX, dfltfile, docdir);
