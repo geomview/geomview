@@ -1,3 +1,129 @@
+2007-08-23  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* AUTHORS, NEWS: Version to 1.9.4
+
+	* README: Add Jorge Barros, bump version to 1.9.4.
+
+	* geomview.sh:
+	Revive the GEOMROOT environment variable, because the StageTools suite
+	needs its presence.
+
+	* configure.ac: Use a more verbose MACHTYPE.
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi, doc/version-pt_BR.texi, doc/version.texi:
+	Update.
+
+2007-08-22  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Translation pt_BR small corrections.
+	Thanks to Patrice Dumas.
+
+2007-08-19  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial translation pt_BR
+
+2007-08-12  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial translation pt_BR
+
+2007-08-05  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial translation pt_BR
+
+2007-08-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
+	Removing version-pt_BR.texi for keeping only version.texi
+	Adjusting geomview-pt_BR.texi pointing to version.texi
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
+	Partial pt_BR translation
+
+2007-08-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/Makefile.am: Fix typo (ooglttour-pt_BR -> oogltour-pt_BR).
+
+2007-08-01  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/.cvsignore, doc/Makefile.am, doc/geomview-pt_BR.texi, doc/oogltour-pt_BR, doc/version-pt_BR.texi, doc/version.texi:
+	Restructuring pt_BR translation.
+
+2007-07-31  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/shade/image.c:
+	run_filter(): did not close the write-end of the pipe.
+
+	ImgStreamIn(): need to save the contents of w = iobfdelimtok(), it is
+	overwritten on the next call to iobfdelimtok().
+
+2007-07-29  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview.texi: replacing "and and" by "and"
+
+2007-07-28  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/oogltour: adjusting "Obscure panel" to "Inspect pull-down menu"
+
+	* doc/oogltour: adjusting "More panels" to "Inspect pull-down menu"
+
+2007-07-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi:
+	Some button names were wrong in the Tutorial (reported by Jorge Barros
+	de Abreu <ficmatin01@solar.com.br>)
+
+2007-07-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/motion.c:
+	Revert a previous change and do NOT call drawer_transform() directly,
+	instead go throught he Lisp-functions (transform ...) and
+	(transform-incr ...). Otherwise interest stuff does not work as before.
+
+	* configure.ac:
+	Give OPENGLINCLUDE an empty value instead of giving it a value of 0 if
+	OpengGL cannot be found.
+
+	* doc/geomview.texi: Fix a typo.
+
+2007-07-18  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/comm.c:
+	Fix not restoring pool->outf for a temporary (from string) command pool.
+
+	* src/lib/oogl/util/iobuffer.c: Typo in comment.
+
+2007-07-11  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/mg/opengl/mgopengldraw.c:
+	Only use the GLU tesselator if APF_CONCAVE is set (as was the previous behaviour)
+
+	* src/lib/mg/opengl/mgopenglshade.c:
+	Set GL_UNPACK_ALIGNMENT to 1 before scaling images; the default is 4.
+
+	* src/lib/mg/opengl/mgopengldraw.c: Typo.
+
+	* src/lib/gprim/polylist/plnormal.c:
+	Use fneg() to evaluate the sign of scalar products.
+
+2007-07-10  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/polylist/plnormal.c:
+	Improved computation of per-vertex normals.
+
+2007-07-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/mesh/meshload.c:
+	Fix a bug introduced by the previous change.
+
+2007-07-05  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/polylist/plsphere.c:
+	Fix a memory leak; bounding sphere was created twice.
+
+2007-06-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi: Update.
+
 2007-06-21    <claus@mathematik.uni-freiburg.de>
 
 	*  Release of Geomview 1.9.3

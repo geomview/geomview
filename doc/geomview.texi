@@ -8910,7 +8910,7 @@ all other directives.
 The Mathematica to RenderMan conversion is actually a two-step process:
 Mathematica->OOGL (math2oogl), and OOGL->RenderMan (oogl2rib).
 
-In the @code{WriteOOGL} and @code{WriteRI}b commands, filename can
+In the @code{WriteOOGL} and @code{WriteRIB} commands, filename can
 either be a string containing a filename, an @code{OutputStream} object,
 or a string starting with a @code{!} to send the output to a command.
 Object can be a @code{Graphics3D} object, a @code{SurfaceGraphics}
@@ -8922,6 +8922,20 @@ the Geomview display is always on the local host.
 @comment ================================================================
 @node Package Installation,  , Package Details, Mathematica
 @section Installing the Mathematica Packages
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+
+The installed Mathematica data-files can be found in
+@file{PREFIX/share/geomview/Mathematica/}.
+@end quotation
 
 If Geomview is properly installed on your system according to the
 instructions in @xref{Installation}, then the Mathematica-to-Geomview
@@ -8944,9 +8958,9 @@ one of the binary distributions or the source distribution.
 @item
 The relevant mathematica files are @file{OOGL.m}, @file{Geomview.m}, and
 @file{BezierPlot.m}; Mathematica must be able to find these files.  They
-are distributed in the @file{$GEOMROOT/mathematica} subdirectory of the
-binary distributions, and in the
-@file{$GEOMROOT/src/bin/geomutil/math2oogl} subdirectory of the source
+are distributed in the @file{PREFIX/share/geomview/Mathematica}
+subdirectory of the binary distributions, and in the
+@file{TOPSRCDIR/src/bin/geomutil/math2oogl} subdirectory of the source
 distribution.  These files need to be in a directory that is on
 Mathematica's search path.  You can look at the value of the
 @code{$Path} variable in a Mathematica session on your system to see a
@@ -8961,17 +8975,17 @@ run Mathematica.
 
 @item
 The package @file{OOGL.m} needs to be able to invoke the programs
-@file{geomview}, @file{math2oogl}, and @file{oogl2ri}b.  The Geomview
+@file{geomview}, @file{math2oogl}, and @file{oogl2rib}.  The Geomview
 installation procedure installs these programs into a directory that you
 specify for executables (@code{BINDIR}).  Ideally, this directory should
-be on your shell's @code{$path}.  More specifically, it should be on
-the @code{$path} of the shell in which Mathematica runs; the directory
+be on your shell's @code{$PATH}.  More specifically, it should be on
+the @code{$PATH} of the shell in which Mathematica runs; the directory
 @file{/usr/local/bin} is usually a good choice.  You can see the list of
 directories on this path by giving the command @code{!echo $path} in
 Mathematica.
 
 If for some reason you can't arrange for @file{geomview},
-@file{math2oogl}, and @file{oogl2ri}b to be in a directory on the
+@file{math2oogl}, and @file{oogl2rib} to be in a directory on the
 shell's @code{$path}, you can modify @file{OOGL.m} to cause it to look
 for them using absolute pathnames.  To do this, change the definitions
 of the variables @code{$GeomviewPath} and @code{$GeomRoot}, which are
@@ -8997,6 +9011,17 @@ invoke Geomview, it's worth double-checking that the settings in the
 @node Installation, Support, Mathematica, Top
 @chapter Installation
 
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
+
 What you do to install Geomview depends on which kind of computer you
 have and on whether you have the source distribution or
 the binary distribution.
@@ -9014,6 +9039,17 @@ installing the source code.
 @comment ================================================================
 @node Unix Binary Installation, Source Code Installation, Installation, Installation
 @section Installing the Unix Binary Distribution
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
 
 If you have just obtained a copy of the binary distribution 
 for a Unix system (Linux, SGI, Solaris, HP, etc),
@@ -9081,6 +9117,17 @@ You can remove all the files in this directory.
 @node Unix Binary Detail,  , Unix Binary Installation, Unix Binary Installation
 @subsection Details of the Unix Binary Installation
 
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
+
 The @code{install} script should be self-explanatory; just run it and
 answer the questions.  This section gives some details for system
 administrators and other users who may want to know more about the
@@ -9130,6 +9177,17 @@ connect to Geomview, @pxref{Package Installation}.
 @comment ================================================================
 @node Source Code Installation,  , Unix Binary Installation, Installation
 @section Compiling and Installing the Source Code Distribution
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
 
 The main reason to get the source code distribution is to look at and/or
 work with the source code.  If you are only concered with @emph{using}

@@ -1152,7 +1152,7 @@ Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @c -b 0 0 1 - azul
 @c -b 0 0 0 - preto
 @c -b 1 1 1 - branco
-@d -b 0.5 0.5 0.5 - cinza
+@c -b 0.5 0.5 0.5 - cinza
 @item -c @var{arquivo}
 Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
 especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,{c}@~{a}o de GCL,
