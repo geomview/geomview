@@ -1,5 +1,23 @@
 2007-08-23  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
+	* NEWS: Mention GEOMROOT environment variable.
+
+	* doc/Makefile.am: install/uninstall-local hook for the html stuff.
+
+	* src/bin/geomview/common/help.c: Undo a debugging message.
+
+	* doc/Makefile.am, src/bin/geomview/common/help.c:
+	Support for installing and viewing a language specific manual (by
+	examining the LANG environment variable).
+
+	* doc/Makefile.am: Forgot to distribute geomview-pt_BR.pdf.
+
+	* doc/version-pt_BR.texi, doc/version.texi: Update to 1.9.4.
+
+	* rcs2log: Initial revision.
+
+	* ChangeLog: Update.
+
 	* AUTHORS, NEWS: Version to 1.9.4
 
 	* README: Add Jorge Barros, bump version to 1.9.4.
