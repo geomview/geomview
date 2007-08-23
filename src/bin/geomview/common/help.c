@@ -40,7 +40,9 @@ void ui_manual_browser(const char *type)
   char *docdir;
   char *browser;
   char *fmt;
-
+  char *lang;
+  const char *file = NULL, *dfltfile, *langfile;
+  
   if ((docdir = getenv("GEOMVIEW_DOC_DIR")) == NULL) {
     docdir = DOCDIR; /* compile-time default */
   }
@@ -53,7 +55,8 @@ void ui_manual_browser(const char *type)
     } else {
       browser = htmlbrowser;
     }
-    fmt = "%s %s/html/index.html &";
+    dfltfile = "%s/html/index.html";
+    langfile = "%s/html/%s/index.html";
   } else { /* if (strncasecmp(type, "pdf", strlen("pdf")) == 0) { */
     if (*pdfviewer == '\0') {
       if ((browser = getenv("PDFVIEWER")) == NULL) {
@@ -62,10 +65,26 @@ void ui_manual_browser(const char *type)
     } else {
       browser = pdfviewer;
     }
-    fmt = "%s %s/geomview.pdf &";
+    dfltfile = "%s/geomview.pdf";
+    langfile = "%s/geomview-%s.pdf";
   }
-  snprintf(helper, PATH_MAX, fmt, browser, docdir);
-  system(helper);
+
+  if ((lang = getenv("LANG")) != NULL) {
+    snprintf(helper, PATH_MAX, langfile, docdir, lang);
+    file = findfile(NULL, helper);
+    OOGLWarn("Lang-File: \"%s\", found \"%s\"\n",
+	     helper, file);
+  }
+  if (file == NULL) {
+    snprintf(helper, PATH_MAX, dfltfile, docdir);
+    file = findfile(NULL, helper);
+  }
+  if (file == NULL) {
+    OOGLError(0, "Unable to locate the Geomview manual (\"%s\").", helper);
+  } else {
+    snprintf(helper, PATH_MAX, "%s %s &", browser, file);
+    system(helper);
+  }
 }
 
 LDEFINE(ui_html_browser, LVOID,

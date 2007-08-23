@@ -28,6 +28,10 @@ dochtmldir = $(docdir)/html
 dochtml_DATA = htdocs/*.html
 dochtmlfigsdir = $(docdir)/html/figs
 dochtmlfigs_DATA = htdocs/figs/*.png
+dochtml_pt_BRdir = $(docdir)/html/pt_BR
+dochtml_pt_BR_DATA = htdocs/pt_BR/*.html
+dochtml_pt_BRfigsdir = $(docdir)/html/pt_BR/figs
+dochtml_pt_BRfigs_DATA = htdocs/pt_BR/figs/*.png
 doc_DATA = geomview.pdf geomview-pt_BR.pdf
 
 geomview.pdf:  $(PDFIMAGES)
@@ -48,12 +52,6 @@ htdocs/*.html htdocs/figs/*.png: htdocs
 
 htdocs: geomview.html geomview-pt_BR.html
 	if test -d $@; then rm -rf $@; fi
-	$(mkdir_p) $@/figs; \
-	chmod 0755 $@/figs; \
-	for f in $(PNGIMAGES); do \
-	  test -f $(srcdir)/$$f && f=$(srcdir)/$$f; \
-	  cp $$f $@/figs/; \
-	done; \
 	for loc in $(LANGUAGES); do \
 	  if test -d $(srcdir)/geomview$${loc}.html; then \
             htmldir=$(srcdir)/geomview$${loc}.html; \
@@ -63,6 +61,12 @@ htdocs: geomview.html geomview-pt_BR.html
 	  loc2=`echo $${loc}|sed -e 's/-//g'`; \
 	  $(mkdir_p) $@/$${loc2}; \
 	  cp -R $${htmldir}/. $@/$${loc2}/.; \
+	  $(mkdir_p) $@/$${loc2}/figs; \
+	  chmod 0755 $@/$${loc2}/figs; \
+	  for f in $(PNGIMAGES); do \
+	    test -f $(srcdir)/$$f && f=$(srcdir)/$$f; \
+	    cp $$f $@/$${loc2}/figs/; \
+	  done; \
 	done; \
 	chmod 0755 $@; \
 	find $@ -type f -exec chmod 644 \{\} \;
