@@ -10,7 +10,8 @@ LANGUAGES = "" "-pt_BR"
 
 man_MANS = geomview.5gv lisp.3gv oogl.5gv
 
-EXTRA_DIST = geomview.pdf geomview.html geomview-pt_BR.html\
+EXTRA_DIST = geomview.pdf geomview.html\
+  geomview-pt_BR.pdf geomview-pt_BR.html\
   README README.gvplot oogltour oogltour-pt_BR\
   example1.c example2.c example3.c example4.tcl\
   OOGL.m.txt motion.tex $(man_MANS)\
