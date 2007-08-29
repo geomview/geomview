@@ -2820,6 +2820,30 @@ reconfigure_view(DView *dv)
 static void
 really_draw_view(DView *dv)
 {
+#if 0
+#include <sys/time.h>
+  static int cnt;
+  static struct timeval tv_old[1];
+
+  if (cnt % 100 == 0) {
+    struct timeval tv_new[1];
+    double elapsed;
+
+    gettimeofday(tv_new, NULL);
+    
+    if (cnt > 0) {
+      elapsed  = (double)(tv_new->tv_sec - tv_old->tv_sec);
+      elapsed += (double)(tv_new->tv_usec - tv_old->tv_usec) / 1e6;      
+      fprintf(stderr, "%d frames in %e seconds, fps = %e\n",
+	      cnt, elapsed, (double)cnt/elapsed);
+      cnt = 0;
+    }
+    *tv_old = *tv_new;
+  }
+  
+  cnt++;
+#endif
+
   mgpushappearance();
   mgworldbegin();
 
