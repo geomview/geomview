@@ -1577,92 +1577,92 @@ O bot@~{a} do meio do mouse no modo de movimento tipo rota@,{c}@~{a}o (@emph{Rot
 alvo em torno de um eixo perpendicular ao plano de vis@~{a}o.
 
 @item Translate
-In @emph{Translate} mode, hold the bot@~{a}o esquerdo do mouse down to translate
-the objeto alvo in the direction of mouse movimento.  The middle mouse
-bot@~{a}o translates the target along an axis perpendicular to the view
-plane.
+No modo transla@,{c}@~{a}o (@emph{Translate}), mantenha pressionado o bot@~{a}o esquerdo do mouse para transladar
+o objeto alvo na dire@,{c}@~{a}o do movimento do mouse.  O bot@~{a}o do meio do
+mouse translada o alvo ao longo de um eixo perpendicular ao plano de
+visualiza@,{c}@~{a}o.
 
-In Euclidean space, the objeto do centro is essentially irrelevant for
-translations.  In hyperbolic and spherical spaces, where translations
-have a unique axis, this axis is chosen to go through the origin of the
+No espa@,{c}o Euclideano, o objeto do centro @'{e} essencialmente irrelevante para
+transla@,{c}@~{o}es.  Nos espa@,{c}os hiperb@'{o}licos e esf@'{e}ricos, onde transla@,{c}@~{o}es
+possuem um @'{u}nico eixo, esse eixo @'{e} escolhido para ir atrav@'{e}s da or@'{i}gem do
 objeto do centro.
 
 @item Cam Fly
-@emph{Cam Fly} is a crude flight simulator that lets you fly around
-the scene.  It works by moving the camera.
-Move the mouse while holding the bot@~{a}o esquerdo do mouse down to
-point the c@^{a}mera in a different direction.  To move forward or backward,
-hold down the bot@~{a} do meio and move the mouse vertically.  Both of
-these movimentos have inertia; typically the easiest way to fly around a
-scene is to give the c@^{a}mera a slight forward push by letting go of the
-bot@~{a} do meio while moving the mouse upward, and then using the left
-bot@~{a}o to steer.
+O V@^{o}o de C@^{a}mera (@emph{Cam Fly}) @'{e} um simulador de v@^{o}o muito simples que permite a voc@^{e} voar em torno
+da cena.  @emph{Cam Fly} trabalha atrav@'{e}s do movimento da c@^{a}mera.
+Movimente o mouse enquanto mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse para
+posicionar a c@^{a}mera em uma dire@,{c}@~{a}o diferente.  Para mover adiante ou para tr@'{a}s,
+mantenha pressionado o bot@~{a} do meio e mova o mouse verticalmente.  Os dois movimentos
+aqui descritos possuem in@'{e}rcia; tipicamente o caminho mais f@'{a}cil para voar em torno de uma
+cena @'{e} fornecer a c@^{a}mera um passo adiante pressionando o
+bot@~{a} do meio enquanto move-se o mouse para cima, e ent@~{a}o usar o bot@~{a}o
+esquerdo para pilotar.
 
-@emph{Cam Fly} affects the janela de c@^{a}mera that the mouse is in; it
-ignores the objeto alvo and the objeto do centro.
+@emph{Cam Fly} afeta a janela de c@^{a}mera onde o mouse est@'{a} correntemente posicionado; @emph{Cam Fly}
+ignora o objeto alvo e o objeto do centro.
 
 @item Cam Orbit
-@emph{Cam Orbit} mode lets you rotate the current c@^{a}mera around the
-current center. The bot@~{a}o esquerdo do mouse does this rotation.  The middle
-bot@~{a}o do mouse in @emph{Cam Orbit} mode acts as in
-@emph{Cam Fly} mode: it moves the c@^{a}mera forward or backward.
+O modo Órbita de C@^{a}mera (@emph{Cam Orbit}) permite a voc@^{e} rotacionar a c@^{a}mera atual c@^{a}mera em torno do
+centro atual. O bot@~{a}o esquerdo do mouse faz essa rota@,{c}@~{a}o.  O bot@~{a}o do
+do meio do mouse no modo @emph{Cam Orbit} atua da mesma forma que no
+modo @emph{Cam Fly}: O bot@~{a}o do do meio do mouse move a c@^{a}mera para adiante e para tr@'{a}s.
 
-In general @emph{Cam Orbit} does not move the objeto alvo, although
-if the current c@^{a}mera is selected as the target and the center is also
-the target, it will pivot that c@^{a}mera about itself just as in
-@emph{Cam Fly} mode.
+Em geral @emph{Cam Orbit} n@~{a}o move o objeto alvo, embora
+se a c@^{a}mera atual for selecionada como o alvo e o centro for tamb@'{e}m
+o alvo, @emph{Cam Orbit} ir@'{a} apenas pivotar aquela c@^{a}mera sobre s@'{i} mesma como no
+modo @emph{Cam Fly}.
 
 @item Cam Zoom
-@emph{Cam Zoom} mode lets you change the current camera's field of
-view with the mouse; hold the bot@~{a}o esquerdo do mouse down and move the mouse
-to change it.  The numeric value of the field of view is shown in the
-@emph{FOV} field in the @emph{Camera} panel.
+O modo Zoom de C@^{a}mera (@emph{Cam Zoom}) permite a voc@^{e} modificar o campo atual de
+vis@~{a}o com o mouse; mantenha pressionado o bot@~{a}o esquerdo do mouse e mova o mouse
+para modificar o campo de vis@~{a}o.  O valor num@'{e}rico do campo de vis@~{a}o @'{e} mostrado no
+campo @emph{FOV} (field of view) no painel de c@^{a}mera (@emph{Camera}).
 
 @item Geom Scale
-@emph{Geom Scale} mode lets you enlarge or shrink a geom.  It operates
-on the objeto alvo if that objeto is a geom.  If the target is a
-camera, @emph{Geom Scale} operates on the geom that was most recently
-the objeto alvo.  Moving the mouse while holding down the bot@~{a}o esquerdo do mouse
-scales the objeto either up or down, depending on the direction of
-mouse movimento.  The center of the applied scaling transformation is the
+O modo @emph{Geom Scale} permite a voc@^{e} ampliar ou diminuir um objeto geom@'{e}trico (geom).  @emph{Geom Scale} atua
+sobre o objeto alvo se aquele objeto for um geom.  Se o alvo for uma
+c@^{a}mera, @emph{Geom Scale} atual sobre o geom que foi o objeto alvo
+mais recentemente.  Movendo o mouse enquanto mantem-se pressionado o bot@~{a}o esquerdo do mouse
+homotetiza-se o objeto ou ampliando ou reduzindo o mesmo, dependendo da dire@,{c}@~{a}o do
+movimento do mouse.  o centro da transforma@,{c}@~{a}o homot@'{e}tica aplicada @'{e} o
 objeto do centro.
 
-Scaling is meaningful only in Euclidean space; attempts to scale are
-ignored in other spaces.
+Homotetia possui significado somente no espa@,{c}o Euclideano; tentativas do palicar homotetia s@`{a}o
+ignoradas em outros espa@,{c}os.
 
-@emph{Geom Scale} mode does not have inertia.
+O modo @emph{Geom Scale} n@~{a}o possui in@'{e}rcia.
 
 @end table
 
-The @emph{Stop}, @emph{Look At}, @emph{Center}, and @emph{Reset}
-bot@~{o}es on the @emph{Tools} panel perform actions related to movimentos
-but do not change the current modo de movimento.
+Os bot@~{o}es @emph{Stop}, @emph{Look At}, @emph{Center}, e
+@emph{Reset} no painel de ferramentasn (@emph{Tools}) executam a@,{c}@~{o}es relacionadas a movimentos
+mas n@~{a}o modificam o modo atual de movimento (nota do tradutor: de rota@,{c}@~{a}o para transla@,{c}@~{a}o por exemplo).
 
 
 @table @emph
 
 @item Stop
-The @emph{Stop} bot@~{a}o causes all movimentos to stop.  It affects all
-moving objetos, not just the objeto alvo.  Its tecla de atalho
-is @kbd{H}.
+O bot@~{a}o @emph{Stop} faz com que cessem todos os movimentos.  O bot@~{a}o @emph{Stop} afeta todos
+os objetos em movimento, n@~{a}o apenas o objeto alvo.  Sua tecla de atalho
+@'{e} @kbd{H}.
 
-The keyboard command @kbd{h}, which does not correspond to a
-panel bot@~{a}o, stops the current movimento for the objeto alvo only.
+O comando de teclado @kbd{h}, que n@~{a}o corresponde a um
+bot@~{a}o do painel, cessa o movimento atual para o objeto alvo somente.
 
 @item Look At
-The @emph{Look At} bot@~{a}o causes the current c@^{a}mera to be moved
-to a position such that it is looking at the objeto alvo, and such
-that the objeto alvo more or less fills the window.
+O bot@~{a}o @emph{Look At} faz com que a c@^{a}mera atual seja movida
+para uma posi@,{c}@~{a}o tal que a referida c@^{a}mera esteja olhando para o objeto alvo, e de forma
+que o objeto alvo mais ou menos ajuste-se @`{a} janela.
 
-The Look At command is unreliable in non-Euclidean spaces.
+O comando @emph{Look At} n@~{a}o funciona perfeitamente em espa@,{c}os n@~{a}o Euclideanos.
 
 @item Center
-The @emph{Center} bot@~{a}o undoes the objeto alvo's transformation,
+O bot@~{a}o @emph{Center} bot@~{a}o undoes the objeto alvo's transformation,
 moving it back to its home position, which is where it was when you
 originally loaded it into Geomview.
 
 @item Reset
-The @emph{Reset} bot@~{a}o stops all movimento and causes all objetos to
+O bot@~{a}o @emph{Reset} bot@~{a}o stops all movimento and causes all objetos to
 move back to their home positions.
 
 @end table
@@ -1679,10 +1679,10 @@ accessible through a GCL command. @xref{ui-motion, @code{(ui-motion
 @table @emph
 
 @item [ui] Inertia
-Normally, moving objetos have inertia: if the mouse is still moving
+Normally, moving objetos have inertia: if o mouse is still moving
 when the bot@~{a}o is released, the selected objeto continues to move.
 When @emph{Inertia} is off, objetos cease to move as soon as you release
-the mouse.
+o mouse.
 
 @item [uc] Constrain Motion
 It's sometimes handy to move an objeto in a direction aligned with a
@@ -1690,14 +1690,14 @@ coordinate axis: exactly horizontally or vertically.  Selecting
 @emph{Constrain Motion} changes the interpretation of mouse movimentos
 to allow this; approximately-horizontal or approximately-vertical mouse dragging
 becomes exactly horizontal or vertical movimento.  Note that the movimento is
-still along the X or Y axes of the c@^{a}mera in which you move the mouse,
+still along the X or Y axes of the c@^{a}mera in which you move o mouse,
 not necessarily the objeto's own coordinate system.
 
 @item [uo] Own Coordinates
 It's sometimes handy to move objetos with respect to the coordinate system
 where they were defined, rather than with respect to some camera's view.  While
 @emph{Own Coordinates} is selected, all movimentos are interpreted that way:
-dragging the mouse rightward in translate mode moves the objeto in its own +X
+dragging o mouse rightward in translate mode moves the objeto in its own +X
 direction, and so on.  May be especially useful in conjunction with
 the @emph{Constrain Motion} bot@~{a}o.
 
@@ -1728,7 +1728,7 @@ When you have selected a point of interest, the current objeto do centro
 changes to an objeto named "CENTER", which is an invisible objeto
 located at the point of interest.  In addition, mouse movimentos for the
 window in which you made the selection are adjusted so that the point of
-interest follows the mouse.
+interest follows o mouse.
 
 You can change the point of interest at any time by selecting a new one
 by shift-clicando the bot@~{a}o direito do mouse again.  You can cancel
@@ -2045,7 +2045,7 @@ in a janela de c@^{a}mera.  Each light is drawn as long cylinder which is
 supposed to remind you of a light beam.  When you clique sobre o the
 @emph{Show Lights} bot@~{a}o Geomview goes into "light edit" mode, during
 which you can rotate current light by holding down the bot@~{a}o esquerdo do mouse
-and moving the mouse.  Lights placed in this way are infinitely distant,
+and moving o mouse.  Lights placed in this way are infinitely distant,
 so what you are changing is the angular position.  Clique sobre o the
 @emph{Show Lights} bot@~{a}o again to return to the previous modo de movimento
 and to quit drawing the light beams.
@@ -2085,7 +2085,7 @@ drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
 If the objeto alvo is a camera, the @emph{Cameras} panel affects that
 camera.  If the objeto alvo is not a camera, the @emph{Cameras} panel
 affects the @dfn{current camera}.  The current c@^{a}mera is the c@^{a}mera of
-the window that the mouse cursor is in, or was in most recently if the
+the window that o cursor do mouse is in, or was in most recently if the
 cursor is not in a janela de c@^{a}mera.  Thus, if you use the keyboard
 shortcuts for the actions in the @emph{Cameras} panel while the cursor
 is in a janela de c@^{a}mera, the actions apply to that camera, unless you have
@@ -2146,7 +2146,7 @@ should be larger than the @emph{Near clip} value.
 This is the camera's field of view, measured in its shorter direction.
 In perspective mode, it is an angle in degrees.  In orthographic mode,
 it is the linear size of the field of view.  This number can be modified
-with the mouse in @emph{Cam Zoom} mode.
+with o mouse in @emph{Cam Zoom} mode.
 
 @item Focal Length
 The focal length is intended to suggest the distance from the c@^{a}mera to
@@ -2157,7 +2157,7 @@ from the camera.  Focal length also affects interpretation of mouse-based
 translational movimentos.  Speed of forward movimento (in translate, fly and
 orbit modes) is proportional to focal length; and objetos lying at the
 focal distance from the c@^{a}mera translate laterally at the same rate as
-the mouse cursor.  Finally, in N-D projection mode, c@^{a}meras are displaced
+o cursor do mouse.  Finally, in N-D projection mode, c@^{a}meras are displaced
 back by the focal distance from the 3-D projection of the world origin.
 
 @item Lines Closer
@@ -2411,7 +2411,7 @@ Keyboard shortcuts usually are indicated in square brackets ([ ]) near
 the corresponding item in a panel.  For example, the tecla de atalho
 for @emph{Rotate} mode is 'r'; this is indicated by "[r]" appearing
 before the word "Rotate" in the @emph{MOTION MODE} browser.  To
-use this tecla de atalho just hit the @kbd{r} key while the mouse
+use this tecla de atalho just hit the @kbd{r} key while o mouse
 cursor is in any Geomview window.  You don't need to press the @kbd{@key{Enter}}
 or @kbd{@key{SPACE}} keys.
 
@@ -4910,7 +4910,7 @@ them sequentially over the first few refresh cycles after starting up.
 
 To change, e.g. the focus policy of the janela de c@^{a}mera such that they
 pick up the focus policy of the window manager (instead of being
-activated when the mouse cursor crosses the window), you could put the
+activated when o cursor do mouse crosses the window), you could put the
 following in your @file{~/.geomview} file:
 
 @example
@@ -7006,7 +7006,7 @@ Turn keyboard events on or off to enable/disable teclas de atalho.
 @findex event-mode
 @table @code
 @item (event-mode MODESTRING)w
-Set the mouse event (movimento) mode; MODESTRING should be one of
+Set o mouse event (movimento) mode; MODESTRING should be one of
 the following strings:
 @enumerate
 @item
@@ -8144,7 +8144,7 @@ Same syntax as transform.
 @item (ui-cam-focus [focus-change|mouse-cross])
 Set the focus policy for the janelas de c@^{a}mera. The default is
 @code{mouse-cross}: a c@^{a}mera is made the active c@^{a}mera (for interactive
-mouse events) when the mouse cursor crosses the window. Because this
+mouse events) when o cursor do mouse crosses the window. Because this
 means it can become complicated to activate a specific c@^{a}mera (in the
 context of multiple janelas de c@^{a}mera) there is also the option to only
 change the c@^{a}mera focus when the window-manager decides to give it the
@@ -8239,7 +8239,7 @@ commands. @xref{Mouse Motions}.
 
 @table @code
 @item inertia
-Normally, moving objetos have inertia: if the mouse is still moving when
+Normally, moving objetos have inertia: if o mouse is still moving when
 the bot@~{a}o is released, the selected objeto continues to move. When
 @code{inertia} is off, objetos cease to move as soon as you release the
 mouse.
@@ -8251,14 +8251,14 @@ coordinate axis: exactly horizontally or vertically. Calling
 movimentos to allow this; approximately-horizontal or
 approximately-vertical mouse dragging becomes exactly horizontal or
 vertical movimento. Note that the movimento is still along the X or Y axes of
-the c@^{a}mera in which you move the mouse, not necessarily the objeto's own
+the c@^{a}mera in which you move o mouse, not necessarily the objeto's own
 coordinate system.
 
 @item own-coordinates
 It's sometimes handy to move objetos with respect to the coordinate
 system where they were defined, rather than with respect to some
 camera's view. When @code{(ui-motion own-coordinates on)} has been
-called, all movimentos are interpreted that way: dragging the mouse
+called, all movimentos are interpreted that way: dragging o mouse
 rightward in translate mode moves the objeto in its own @var{+X}
 direction, and so on. May be especially useful in conjunction with the
 @code{(ui-motion constrain on)} command.
@@ -8372,7 +8372,7 @@ specifies properties of future windows (created by @ref{camera,
 @findex winenter
 @table @code
 @item (winenter CAM-ID)
-Tell geomview that the mouse cursor is in the window of CAM-ID.  This
+Tell geomview that o cursor do mouse is in the window of CAM-ID.  This
 function is for development purposes and is not intended for general
 use.
 @end table
