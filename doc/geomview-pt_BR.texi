@@ -16,7 +16,7 @@
 * Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,{c}@~ao tridimensional.
 @end direntry
 
-@c baseado na vers@~{a}o 1.42 do cvs
+@c baseado na vers@~{a}o 1.44 do cvs
 @titlepage
 @sp 1
 @center @titlefont{Manual do Geomview}
@@ -1635,7 +1635,7 @@ O modo @emph{Geom Scale} n@~{a}o possui in@'{e}rcia.
 @end table
 
 Os bot@~{o}es @emph{Stop}, @emph{Look At}, @emph{Center}, e
-@emph{Reset} no painel de ferramentasn (@emph{Tools}) executam a@,{c}@~{o}es relacionadas a movimentos
+@emph{Reset} no painel de ferramentas (@emph{Tools}) executam a@,{c}@~{o}es relacionadas a movimentos
 mas n@~{a}o modificam o modo atual de movimento (nota do tradutor: de rota@,{c}@~{a}o para transla@,{c}@~{a}o por exemplo).
 
 
@@ -1657,23 +1657,23 @@ que o objeto alvo mais ou menos ajuste-se @`{a} janela.
 O comando @emph{Look At} n@~{a}o funciona perfeitamente em espa@,{c}os n@~{a}o Euclideanos.
 
 @item Center
-O bot@~{a}o @emph{Center} bot@~{a}o undoes the objeto alvo's transformation,
-moving it back to its home position, which is where it was when you
-originally loaded it into Geomview.
+O bot@~{a}o @emph{Center} desfaz transformaçào do objeto alvo,
+movendo o objeto alvo de volta à sua posição inicial padrão, que é onde ele estava quando você
+originalmente o chamou a partir do Geomview.
 
 @item Reset
-O bot@~{a}o @emph{Reset} bot@~{a}o stops all movimento and causes all objetos to
-move back to their home positions.
+O bot@~{a}o @emph{Reset} cessa todo movimento e faz com que todos os objetos sejam
+movidos de vota às suas posições iniciais padrão.
 
 @end table
 
-The @emph{Tools} panel also sports a @emph{Main} bot@~{a}o, to invoke the
-main panel in case it was dismissed or buried, and a @emph{Done} bot@~{a}o
-to close the @emph{Tools} panel.
+O painel de ferramentas (@emph{Tools}) possui um botão @emph{Main}, para invocar o
+painel principal no caso de esse painel tiver sido dispensado ou sepultado, e um botão @emph{Done}
+para fechar o painel de ferramentas @emph{Tools}.
 
-The @emph{Main} panel's @emph{Motion} menu has special controls
-affecting how mouse movimentos are interpreted; the toggles are also
-accessible through a GCL command. @xref{ui-motion, @code{(ui-motion
+O painel principal do menu de movimento (@emph{Motion}) tem controles especiais
+que afetam como movimentos do mouse são interpretados; as modificações são também
+acessíveis através de comandos GCL. @xref{ui-motion, @code{(ui-motion
 @dots{})}}.
 
 @table @emph
@@ -8727,7 +8727,7 @@ Geometry of Curves and Surfaces} textbook.
 
 In addition to the @code{WriteOOGL} and @code{Geomview} commands
 described above, the package @file{OOGL.m} also defines the command
-@code{WriteRI}b which writes a 3D graphics objeto to a RenderMan RIB
+@code{WriteRIB} which writes a 3D graphics objeto to a RenderMan RIB
 file:  @code{WriteRIB[@var{file}, @var{graphics}]} writes @var{graphics}
 to file @var{file}.  RenderMan is a commercial rendering system available
 from Pixar, Inc., which can produce extremely high quality images.
@@ -8953,6 +8953,20 @@ the Geomview display is always on the local host.
 @node Package Installation,  , Package Details, Mathematica
 @section Installing the Mathematica Packages
 
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+
+The installed Mathematica data-files can be found in
+@file{PREFIX/share/geomview/Mathematica/}.
+@end quotation
+
 If Geomview is properly installed on your system according to the
 instructions in @xref{Installation}, then the Mathematica-to-Geomview
 packages should work as described here; there should be no need for
@@ -8974,9 +8988,9 @@ one of the binary distributions or the source distribution.
 @item
 The relevant mathematica files are @file{OOGL.m}, @file{Geomview.m}, and
 @file{BezierPlot.m}; Mathematica must be able to find these files.  They
-are distributed in the @file{$GEOMROOT/mathematica} subdirectory of the
-binary distributions, and in the
-@file{$GEOMROOT/src/bin/geomutil/math2oogl} subdirectory of the source
+are distributed in the @file{PREFIX/share/geomview/Mathematica}
+subdirectory of the binary distributions, and in the
+@file{TOPSRCDIR/src/bin/geomutil/math2oogl} subdirectory of the source
 distribution.  These files need to be in a directory that is on
 Mathematica's search path.  You can look at the value of the
 @code{$Path} variable in a Mathematica session on your system to see a
@@ -8991,18 +9005,18 @@ run Mathematica.
 
 @item
 The package @file{OOGL.m} needs to be able to invoke the programs
-@file{geomview}, @file{math2oogl}, and @file{oogl2ri}b.  The Geomview
+@file{geomview}, @file{math2oogl}, and @file{oogl2rib}.  The Geomview
 installation procedure installs these programs into a directory that you
 specify for executables (@code{BINDIR}).  Ideally, this directory should
-be on your shell's @code{$path}.  More specifically, it should be on
-the @code{$path} of the shell in which Mathematica runs; the directory
+be on your shell's @code{$PATH}.  More specifically, it should be on
+the @code{$PATH} of the shell in which Mathematica runs; the directory
 @file{/usr/local/bin} is usually a good choice.  You can see the list of
 directories on this path by giving the command @code{!echo $path} in
 Mathematica.
 
 If for some reason you can't arrange for @file{geomview},
-@file{math2oogl}, and @file{oogl2ri}b to be in a directory on the
-shell's @code{$path}, you can modify @file{OOGL.m} to cause it to look
+@file{math2oogl}, and @file{oogl2rib} to be in a directory on the
+shell's @code{$PATH}, you can modify @file{OOGL.m} to cause it to look
 for them using absolute pathnames.  To do this, change the definitions
 of the variables @code{$GeomviewPath} and @code{$GeomRoot}, which are
 defined near the top of the file.  Change @code{$GeomviewPath} to the
@@ -9010,7 +9024,7 @@ absolute pathname of the @file{geomview} shell script on your system.
 Change @code{$GeomRoot} to the absolute pathname of the
 @file{$GEOMROOT} directory on your system.  If you do this, you should
 also make sure there are copies of @file{geomview}, @file{math2oogl},
-and @file{oogl2ri}b in the @file{$GEOMROOT/bin/<CPU>}.
+and @file{oogl2rib} in the @file{$GEOMROOT/bin/<CPU>}.
 
 @item
 The @file{geomview} shell script, which @file{OOGL.m} uses to invoke
@@ -9026,6 +9040,17 @@ invoke Geomview, it's worth double-checking that the settings in the
 @comment ****************************************************************
 @node Installation, Support, Mathematica, Top
 @chapter Installation
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
 
 What you do to install Geomview depends on which kind of computer you
 have and on whether you have the source distribution or
@@ -9044,6 +9069,26 @@ installing the source code.
 @comment ================================================================
 @node Unix Binary Installation, Source Code Installation, Installation, Installation
 @section Installing the Unix Binary Distribution
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
+section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
 
 If you have just obtained a copy of the binary distribution 
 for a Unix system (Linux, SGI, Solaris, HP, etc),
@@ -9111,6 +9156,17 @@ You can remove all the files in this directory.
 @node Unix Binary Detail,  , Unix Binary Installation, Unix Binary Installation
 @subsection Details of the Unix Binary Installation
 
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
+
 The @code{install} script should be self-explanatory; just run it and
 answer the questions.  This section gives some details for system
 administrators and other users who may want to know more about the
@@ -9160,6 +9216,17 @@ connect to Geomview, @pxref{Package Installation}.
 @comment ================================================================
 @node Source Code Installation,  , Unix Binary Installation, Installation
 @section Compiling and Installing the Source Code Distribution
+
+@quotation @b{BUG}
+This section is out of date. @code{Geomview} follows the
+GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
+user executables to @file{PREFIX/bin/}, private executables to
+@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
+@code{PREFIX} denotes the installation prefiex specified for the
+@file{TOPSRCDIR/configure} script. Please have a look at the files
+@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
+installation instructions.
+@end quotation
 
 The main reason to get the source code distribution is to look at and/or
 work with the source code.  If you are only concered with @emph{using}
