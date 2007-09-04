@@ -1657,104 +1657,104 @@ que o objeto alvo mais ou menos ajuste-se @`{a} janela.
 O comando @emph{Look At} n@~{a}o funciona perfeitamente em espa@,{c}os n@~{a}o Euclideanos.
 
 @item Center
-O bot@~{a}o @emph{Center} desfaz transformaçào do objeto alvo,
-movendo o objeto alvo de volta à sua posição inicial padrão, que é onde ele estava quando você
+O bot@~{a}o @emph{Center} desfaz transforma@,{c}@`{a}o do objeto alvo,
+movendo o objeto alvo de volta @`{a} sua posi@,{c}@~{a}o inicial padr@~{a}o, que @'{e} onde ele estava quando voc@^{e}
 originalmente o chamou a partir do Geomview.
 
 @item Reset
 O bot@~{a}o @emph{Reset} cessa todo movimento e faz com que todos os objetos sejam
-movidos de vota às suas posições iniciais padrão.
+movidos de vota @`{a}s suas posi@,{c}@~{o}es iniciais padr@~{a}o.
 
 @end table
 
-O painel de ferramentas (@emph{Tools}) possui um botão @emph{Main}, para invocar o
-painel principal no caso de esse painel tiver sido dispensado ou sepultado, e um botão @emph{Done}
+O painel de ferramentas (@emph{Tools}) possui um bot@~{a}o @emph{Main}, para invocar o
+painel principal no caso de esse painel tiver sido dispensado ou sepultado, e um bot@~{a}o @emph{Done}
 para fechar o painel de ferramentas @emph{Tools}.
 
 O painel principal do menu de movimento (@emph{Motion}) tem controles especiais
-que afetam como movimentos do mouse são interpretados; as modificações são também
-acessíveis através de comandos GCL. @xref{ui-motion, @code{(ui-motion
+que afetam como movimentos do mouse s@~{a}o interpretados; as modifica@,{c}@~{o}es s@~{a}o tamb@'{e}m
+acess@'{i}veis atrav@'{e}s de comandos GCL. @xref{ui-motion, @code{(ui-motion
 @dots{})}}.
 
 @table @emph
 
 @item [ui] Inertia
-Normally, moving objetos have inertia: if o mouse is still moving
-when the bot@~{a}o is released, the selected objeto continues to move.
-When @emph{Inertia} is off, objetos cease to move as soon as you release
+Normalmente, ao mover objetos tem-se in@'{e}rcia: se o mouse estiver ainda se movendo
+quando o bot@~{a}o for liberado, o objeto selecionado continua a mover-se.
+Quando a in@'{e}rcia (@emph{Inertia}) for desabilitada, objetos cessam se movimento no momento em que voc@^{e} libera
 o mouse.
 
 @item [uc] Constrain Motion
-It's sometimes handy to move an objeto in a direction aligned with a
-coordinate axis: exactly horizontally or vertically.  Selecting
-@emph{Constrain Motion} changes the interpretation of mouse movimentos
-to allow this; approximately-horizontal or approximately-vertical mouse dragging
-becomes exactly horizontal or vertical movimento.  Note that the movimento is
-still along the X or Y axes of the c@^{a}mera in which you move o mouse,
-not necessarily the objeto's own coordinate system.
+@'{E} necess@'{a}rio algumas vezes ter ao alcance da m@~{a}o o movimento de um objeto em uma dire@,{c}@~{a}o alinhada com um
+eixo coordenado: exatamente na horizontal ou na vertical.  Selecionando
+restringir movimento (@emph{Constrain Motion}) a interpreta@,{c}@~{a}o de movimentos do mouse @'{e} modificada
+para permitir isso; arrastros de mouse aproximadamente horizontais ou aproximadamente verticais
+transformam-se em movimentos exatamente horizontais ou exatamente verticais.  Note que o movimento @'{e}
+ainda ao longo dos eixos X ou Y da c@^{a}mera na qual voc@^{e} move o mouse,
+n@~{a}o necess@'{a}riamente no sistema de coordenadas do objeto.
 
 @item [uo] Own Coordinates
-It's sometimes handy to move objetos with respect to the coordinate system
-where they were defined, rather than with respect to some camera's view.  While
-@emph{Own Coordinates} is selected, all movimentos are interpreted that way:
-dragging o mouse rightward in translate mode moves the objeto in its own +X
-direction, and so on.  May be especially useful in conjunction with
-the @emph{Constrain Motion} bot@~{a}o.
+@'{E} necess@'{a}rio algumas vezes ter ao alcance da m@~{a}o o movimento de objetos objetos com rela@,{c}@~{a}o ao sistema de coordenadas
+onde o referido objeto foi definido, em lugar de com rela@,{c}@~{a}o ao sistema de coordenadas da c@^{a}mera atrav@'{e}s da qual esse objeto est@'{a} sendo visto.  Enquanto
+@emph{Own Coordinates} estiver selecionado, todos os movimentos s@~{a}o interpretados da forma citada nesse item:
+arrastando o mouse para a diretia no modo transla@,{c}@~{a}o corresponde a mover o objeto em sua pr@'{o}pria dire@,{c}@~{a}o
++X, e assim por diante.  Pode ser especialmente @'{u}til conjuntamente com
+o bot@~{a}o Restringir Movimento (@emph{Constrain Motion}).
 
 @end table
 
 @comment ================================================================
 @menu
-* Point of Interest::           Point of Interest.
+* Point of Interest::           Pontos de Interesse.
 @end menu
 
 @node Point of Interest,  , Mouse Motions, Mouse Motions
 @subsection Selecting a Point of Interest
 
-It is sometimes useful to specify a particular point on some objeto in a
-geomview window as the center point for mouse movimentos.  You can do this
-by shift-clicando the bot@~{a}o direito do mouse (i.e. clique it once
-while holding down the shift key on the keyboard) with the cursor over
-the desired point.  This point then becomes the @emph{point of
-interest}.  The point of interest must be on an existing objeto.
+@'{E} algumas vezes @'{u}til especificar um ponto em particular sobre algum objeto em uma
+janela do window como o ponto de centro para movimentos do mouse.  Voc@^{e} pode fazer isso
+segurando a tecla shift e clicando o bot@~{a}o direito do mouse (i.e. clique no bot@~{a}o direito uma vez
+enquanto mant@'{e}m pressionada a tecla shift do teclado) com o cursor sobre
+o ponto desejado.  Esse ponto torna-se ent@~{a}o o @emph{ponto de
+interesse}.  O ponto de interesse deve estar sobre um objeto existente.
 
-Selecting a point of interest simplifies examining a small portion of a
-larger objeto.  Shift-right-clique sobre o an interesting point, and select
-@emph{Orbit} mode.  Use the bot@~{a} do meio do mouse to approach, and the
-left mouse to orbit the point, examining the region from different
-directions.
+Selecionado um ponto de interesse simplifica o exame de uma pequena por@,{c}@~{a}o de um
+grande objeto.  Mantendo a tecla shift pressionada e clicando sobre o ponto de interesse com o bot@`{a}o direito do mouse, e seleccionando
+o modo @'{o}rbita (@emph{Orbit}).  Use o bot@~{a} do meio do mouse para aproximar, e o
+esquerdo para orbitar o ponto, examinando a regi@~{a}o de diferentes
+dire@,{c}@~{o}es.
 
-When you have selected a point of interest, the current objeto do centro
-changes to an objeto named "CENTER", which is an invisible objeto
-located at the point of interest.  In addition, mouse movimentos for the
-window in which you made the selection are adjusted so that the point of
-interest follows o mouse.
+Quando voc@^{e} tiver selecionado um ponto de interesse, o atual objeto do centro
+@'{e} modificado para um objeto chamado "CENTER", que @'{e} um objeto invis@'{i}vel
+localizado no ponto de interesse.  Adicionalmente, movimentos de mouse para a
+janela na qual voc@^{e} fez a sele@,{c}@~{a}o s@~{a}o ajustados de forma que o ponto de
+interesse acompanhe o mouse.
 
-You can change the point of interest at any time by selecting a new one
-by shift-clicando the bot@~{a}o direito do mouse again.  You can cancel
-the point of interest altogether by shift-clicando the right
-bot@~{a}o do mouse with the cursor on the background (i.e. not on any objeto).
-This changes the objeto do centro back to its default value, "target".
+Voc@^{e} pode mudar o ponto de interesse a qualqeur momento selecionando um novo ponto de interesse
+shift-clicando o bot@~{a}o direito do mouse novamente.  Voc@^{e} pode cancelar
+o ponto de interesse completamente shift-clicando o bot@~{a}o
+direito do mouse com o cursor no plano de fundo (i.e. n@~{a}o sobre qualquer objeto).
+Isso modifica o objeto do centro de volta a seu valor padr@~{a}o, "target".
 
-The objeto named "CENTER", which serves as the objeto do centro for the
-point of interest, is a special kind of geom called an "alien".  It does
-not appear in the @emph{Targets} browser.  By default it has no geometry
-associated with it and hence is invisible.  You can, however, explicitly
-give it some geometry using a GCL command, causing it to appear.  Use
-the @code{geometry} command for this: @code{(geometry CENTER
-@var{geometry})}, where @var{geometry} is any valid geometry.  For
-example, @code{(geometry CENTER @{ < xyz.vect @})} causes the file
-@file{xyz.vect}, which is one of the standard example files distributed
-with geomview, to be used at the geometry for CENTER. @xref{geometry,
+O objeto que possui o nome de "CENTER", que serve como um objeto do centro para o
+ponto de interesse, @'{e} um tipo especial de geom chamado "alien".  Esse "Alien"
+n@~{a}o aparece no navegador de alvos (@emph{Targets}).  Por padr@~{a}o esse objeto "Alien" n@~{a}o tem geometria
+associada e concequ@"{u}@^{e}ntemente @'{e} invis@'{i}vel.  Voc@^{e} pode, Todavia, explicitamente
+fornecer ao Alien alguma geometria usando um comando GCL, fazendo com que o Alien aparece no navegador de alvos.  Use
+o comando @code{geometry} para fazer isso: @code{(geometry CENTER
+@var{geometry})}, onde @var{geometry} @'{e} qualquer geometria v@'{a}lida.  Por
+exemplo, @code{(geometry CENTER @{ < xyz.vect @})} faz com que o arquivo
+@file{xyz.vect}, que @'{e} um dos arquivos de exemplo padronizados distribu@'{i}dos
+com geomview, seja usado na geometria para CENTER. Veja @ref{geometry,
 @code{(geometry @dots{})}}.
 
 
-What happens internally when you select a point of interest is
-that the center is set to the objeto called CENTER, and that objeto is
-positioned at the point of interest.  In addition, in order for mouse
-movimentos to track the point of interest, the current camera's focal
-length is set to be the distance from the c@^{a}mera to the point of
-interest.  You can accomplish this via GCL with the following commands:
+O que acontece internamente quando voc@^{e} seleciona um ponto de interesse @'{e}
+que o contro @'{e} escolhido par o objeto chamado CENTER, e aquele objeto @'{e}
+posicionado no ponto de interesse.  Adicionalmente, com o ovjetivo de para movimentos de
+mouse rastreiem o ponto de interesse, o atual comprimento focal da
+c@^{a}mera @'{e} escolhido para ser a dist@^{a}ncia da c@^{a}mera at@'{e} o ponto de
+interesse.  Voc@^{e} pode realizar isso via GCL com os seguintes comandos:
 @example
 (if (real-id CENTER) nil (new-alien CENTER @{@}))
 (ui-center CENTER)
@@ -1762,10 +1762,10 @@ interest.  You can accomplish this via GCL with the following commands:
 (merge camera @var{cam-id} @{ focus @var{d} @})
 @end example
 @noindent
-where @code{(@var{x},@var{y},@var{z})} are the (universe) coordinates of
-the point of interest, and @var{d} is the distance from that point to
-the current camera, @var{cam-id}.  The first command above creates the
-"alien" CENTER if it does not yet exist.
+onde @code{(@var{x},@var{y},@var{z})} s@~{a}o as coordenadas (universe)
+do ponto de interesse, e @var{d} @'{e} a dist@^{a}ncia daquele ponto @`{a}
+atual c@^{a}mera, @var{cam-id}.  O primeiro comando acima cria o
+"alien" CENTER se esse Alien n@~{a}o existir ainda.
 
 @comment ================================================================
 @node Appearance, Cameras, Mouse Motions, Interaction
