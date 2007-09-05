@@ -1,6 +1,4 @@
-@set UPDATED 23 August 2007
+@set UPDATED 23 de Agosto 2007
 @set UPDATED-MONTH Agosto de 2007
 @set EDITION 1.9.4
 @set VERSION 1.9.4
-@set TRANSLATEDBY Jorge Barros de Abreu
-@set HPTRANSLATOR http://usr.solar.com.br/~ficmatin
