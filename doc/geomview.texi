@@ -1835,7 +1835,7 @@ and back to red at 1.0.  Saturation gives the fraction of white mixed
 into the color, from 0 for pure gray to 1 for pure color.  Value gives the
 brightness, from 0 for black to 1 for full brightness.
 
-Pressing the @emph{RG}b or @emph{HSV} button at top center switches
+Pressing the @emph{RGB} or @emph{HSV} button at top center switches
 the sliders to the other color system.  You can adjust colors either via
 the sliders, or by typing in either the RGB or HSV text boxes.
 
