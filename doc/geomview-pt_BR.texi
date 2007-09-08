@@ -2,10 +2,7 @@
 \tolerance=2000
 \input texinfo
 
-@iftex
 @letterpaper
-@end iftex
-
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
@@ -1771,137 +1768,137 @@ atual c@^{a}mera, @var{cam-id}.  O primeiro comando acima cria o
 @node Appearance, Cameras, Mouse Motions, Interaction
 @section Changing the Way Things Look
 
-Geomview uses a hierarchy of appearances to control the way things look.
-An @dfn{appearance} is a specification of information about how
-something should be drawn.  This can include many things such things as
-color, lighting, material properties, and more.  Appearances work in a
-hierarchal manner: if a certain appearance property, for example face
-color, is not specified in a particular objeto's appearance, that objeto
-is drawn using that property from the parent appearance.  If both the
-parent and the child appearance specify a property, the child's setting
-takes precedence unless the parent appearance is set to override.
+Geomview utiliza uma hierarquia de apar@^{e}ncias para controlar o caminho atrav@'{e}s do qual olha-se coisas.
+Uma apar@^{e}ncia (@dfn{appearance}) @'{e} uma especifica@,{c}@~{a}o de informa@,{c}@~{a}o sobre como
+alguma coisa pode ser desenhada.  Isso pode incluir muitas caracter@'{i}sticas como
+cor, brilho, propriedades do material, etc.  Apar@^{e}ncias trabalham de uma
+maneira hier@'{a}rquica: se uma certa propriedade de apar@^{e}ncia, por exemplo cor
+de face, n@~{a}o for especificada em uma apar@^{e}ncia particular de algum objeto, esse bojeto
+@'{e} desenhado usando aquele propriedade de uma hierarquia superior.  Se ambas as
+apar@^{e}ncias de hierarquias, a atual e a superior, especificam uma propriedade, a hierarquia atual tem
+preced@^{e}ncia a menos que a hierarquia superior n@~{a}o for escolhida para sobrescrev@^{e}-la.
 
-Every geom in Geomview has an appearance associated with it.  There is
-also an appearance associated with the "World" geom, which serves as the
-parent of each individual geom's appearance.  Finally, there is a
-global "base" appearance, which is the parent of the World appearance.
+Todo geom no Geomview tem uma apa@^{e}ncia associada.  Existe
+tamb@'{e}m uma apar@^{e}ncia associada ao geom do tipo "World", que comporta-se como
+hierarquia superior a cada apar@^{e}ncia individual de qualquer geom.  Finalmente, existe uma
+apa@^{e}ncia b@'{a}sica global, que @'{e} a hierarquia superior da apar@^{e}ncia "World".
 
-The base appearance specifies reasonable values for all appearance
-information, and by default none of the other appearances specify
-anything, which means they inherit their values from the base
-appearance.  This means that by default all objetos are drawn using the
-base appearance.
+A apar@^{e}ncia b@'{a}sica especifica valores razo@'{a}veis para toda informa@,{c}@~{a}o de
+apar@^{e}ncia, e por padr@~{a}o nenhuma outra apar@^{e}ncia especifica
+qualquer coisa, o que significa que as apar@^{e}ncias erdam seus valores a apartir da apar@^{e}ncia
+b@'{a}sica.  Isso significa que por padr@~{a}o todos os objetos s@~{a}o desenhados usando a
+apar@^{e}ncia b@'{a}sica.
 
-If you change a certain appearance property for a geom, that property
-is used in drawing that geom.  The parent appearance is used for any
-properties that you do not explicitly set.
+Se voc@^{e} modificar uma certa propriedade de apar@^{e}ncia de um geom, aquela propriedade
+@'{e} usada na constru@,{c}@~{a}o daquele geom.  A apar@^{e}ncia de hierarquia superior @'{e} usada para quaisquer
+propriedades que voc@^{e} n@~{a}o explicitamente escolheu.
 
-Geomview has three panels which let you modify appearances.  
+Geomview possui tr@^{e}s pain@'{e}is que levam voc@^{e} a modificar apar@^{e}ncias.  
 
 @menu
-* Appearance Panel::            Color etc.
-* Materials Panel::             Surface Material properties.
-* Lighting Panel::              Lighting Parameters.
+* Appearance Panel::            Cor etc.
+* Materials Panel::             Propriedades do Material da Superf@'{i}cie.
+* Lighting Panel::              Par@^{a}metros de Ilumina@,{c}@~{a}o.
 @end menu
 
 @comment ----------------------------------------------------------------
 @node Appearance Panel, Materials Panel, Appearance, Appearance
 @subsection The Appearance Panel
 
-The @emph{Appearance} panel lets you change most common appearance
-properties of the objeto alvo.
+O painel de Apar@^{e}ncia (@emph{Appearance}) leva voc@^{e} a modificar os mais comuns propriedades de
+apar@^{e}ncia do objeto alvo.
 @float Figure,figap
 @image{figs/ap}
-@caption{The Appearance Panel.}
+@caption{O Painel de Apar@^{e}ncia.}
 @end float
-If the target is an individual geom, then changes you make in the
-appearance panel apply to that geometry's appearance.  If the target is the
-World, then appearance panel changes apply to the World appearance
-@emph{and} to all individual geom appearances.  (Users have found that
-this is more desirable than having the changes only apply to the World
-appearance.)  If the target is a camera, then appearance panel changes
-apply to the geom that was most recently the target.
+Se o alvo for um geom individual, então modificaçãoes que você fizer no
+painel de aparências aplicam-se a aparência daquele objeto geométrico.  Se o alvo for o
+"World", então as modificações no painel de aparências aplicam-se à aparênca do objeto atual
+@emph{e} a aparência de todos os outros objetos individuais.  (Usuários acham que
+esse comportamento é mais desejável que ter as modificações somente aplicadas a aparência do
+"World"e.)  Se o alvo for uma câmera, então as modificações do painel de aparência
+aplica-se ao geom que ocupou mais recentemente a posição de alvo.
 
-The five bot@~{o}es near the upper right corner under the word
-@emph{Draw} control what parts of the target geom are drawn.
+Os cinco bot@~{o}es próximos ao canto superior esquerdo sob a palavra
+@emph{Show} (mostrar) controlam que partes do geom alvo são desenhadas.
 
 @table @emph
 
 @item Faces
-This bot@~{a}o specifies whether faces are drawn.
+Esse bot@~{a}o especifica se faces são desenhadas.
 
 @item Edges
-This bot@~{a}o specifies whether edges are drawn.
-
-@item BBox
-This bot@~{a}o specifies whether the bounding box is drawn.
-
-@item Vects
-This bot@~{a}o specifies whether VECT objetos are drawn.  VECTs are a type
-of OOGL objeto that represent points and line segments in 3-space;
-they are distinct from edges of other kinds of objetos, and it is sometimes
-desirable to have separate control over whether they are drawn.
+Esse bot@~{a}o especifica se edges são desenhadas.
 
 @item Normals
-This bot@~{a}o specifies whether surface normal vectors are drawn.
+Esse bot@~{a}o especifica se vetores normais à superfície são desenhados.
+
+@item BBox
+Esse bot@~{a}o especifica se a caixa associada é desenhada.
+
+@item Vects
+Esse bot@~{a}o especifica se objetos VECT são desenhados.  VECTs são um tipo
+de objeto OOGL que representa pontos e segmentos de reta em espaço tridimencional;
+os VECTs são distintos de arestas ou de outros tipos de objetos, e é desejável
+algumas vezes ter controle separado sobre se eles são desenhados.
 
 @end table
 
-The four bot@~{o}es under @emph{Color} labeled @emph{Faces}, @emph{Edges},
-@emph{Normals}, and @emph{BBox} let you specify the color of
-the corresponding aspect of the target geom.  Clicando on one
-of them brings up a color chooser panel.
+Os quatro bot@~{o}es sob @emph{Color} rotulados @emph{Faces}, Arestas (@emph{Edges}),
+Normais (@emph{Normals}), e @emph{BBox} permitem a você especificar a cor do
+aspecto correspondente de um geom alvo.  Clicando sobre um
+deles faz com que apareça um painel de escolha de cores.
 @float Figure,figcolorchooserpanel
 @image{figs/color}
-@caption{Color Chooser Panel.}
+@caption{Painel de Escolha de Cor.}
 @end float
-This panel offers two sets of sliders: H(ue) S(aturation) V(alue), or
-R(ed) G(reen) B(lue), each in the range 0 through 1.  The square
-shows the current color, which is given numerically in both HSV and RGB systems
-in the corresponding text boxes.
+Esse painel oferece dois conjuntos de botões deslizantes: H(ue) S(Saturation) V(alue), ou
+R(ed) G(reen) B(lue), cada um no intervalo real fechado de 0 a 1.  O quadrado
+mostra a cor atual, que é fornecida numericamente em ambos os sitemas HSV e RGB
+nas caixas de texto correspondentes.
 
-In the HSV color system, hue H runs from red at 0, green at .333, blue at .667,
-and back to red at 1.0.  Saturation gives the fraction of white mixed
-into the color, from 0 for pure gray to 1 for pure color.  Value gives the
-brightness, from 0 for black to 1 for full brightness.
+No sistema de cores HSV, hue H mostra vermelho em 0, verde em .333, azul em .667,
+e volta ao vermelho em 1.0.  Saturação fornece a fração de branco misturada
+na cor, de 0 para cinza puro a 1 para a cor pura.  Valor fornece o
+brilho, de 0 para preto a 1 para brilho máximo.
 
-Pressing the @emph{RG}b or @emph{HSV} bot@~{a}o at top center switches
-the sliders to the other color system.  You can adjust colors either via
-the sliders, or by typing in either the RGB or HSV text boxes.
+Pressionado o botão @emph{RGB} ou o botão @emph{HSV} ao centro do topo do painel alterna
+os botões deslizantes para outro sistema de cores.  Você pode ajustar cores ou através dos
+botões deslizantes, ou através de digitação nas caixas de texto RGB ou HSV.
 
-Clique @emph{OK} to accept the color that you have chosen, or
-@emph{Cancel} to retain the previous color setting.
+Clique @emph{OK} para aceitar as cores que voc6e tiver escolhido, ou
+@emph{Cancel} para reter as escolhas anteriores de cor.
 
 
-The @emph{SHADING} browser lets you specify the shading model that
-Geomview uses to paint the target geom.
+O navegador @emph{SHADING} permite a você especificar o modelo de tonalidade que
+Geomview utilizará para desenhar o geom alvo.
 
 @table @emph
 
 @item Constant
-Every face of the objeto is drawn with a constant color which does not
-depend on the location of the face, the camera, or the light sources.
+Toda face do objeto is drawn with a constant color which does not
+depend on the location da face, the camera, or the light sources.
 If the objeto does not contain per-face or per-vertex colors, the
-diffuse color of the objeto's appearance is used.  If the objeto
+diffuse color da object's appearance is used.  If the object
 contains per-face colors, they are used.  If the objeto contains
 per-vertex colors, each face is painted using the color of its first
 vertex.
 
 @item Flat
-Each face of the objeto is drawn with a color that depends on the
-relative location of the face, the camera, and the light sources.
+Each face do objeto is drawn with a color that depends on the
+relative location da face, the camera, and the light sources.
 The color is constant across the face but may change as the face,
 camera, or lights move.
 
 @item Smooth
-Each face of the objeto is drawn with smoothly interpolated colors based
+Each face do objeto is drawn with smoothly interpolated colors based
 on the normal vectors at each vertex.  If the objeto does not contain
 per-vertex normals, this has the same effect as flat shading.  If the
 objeto has reasonable per-vertex normals, the effect is to smooth
 over the edges between the faces.
 
 @item CSmooth
-Each face of the objeto is drawn with exactly the specified color(s),
+Each face do objeto is drawn with exactly the specified color(s),
 independent of lighting, orientation, and material properties.  If the
 objeto is defined with per-vertex colors, the colors are interpolated
 smoothly across the face; otherwise the effect is the same as in
@@ -1910,17 +1907,17 @@ Constant shading style.
 @end table
 
 The @emph{Facing Normals} bot@~{a}o on the @emph{Appearance} panel
-indicates whether or not Geomview should arrange that normal vectors
+indicates se or not Geomview should arrange that normal vectors
 always face the viewer.  If a normal vector points away from the viewer
-the color of the corresponding face or vertex usually is darker than is
+the color da corresponding face or vertex usually is darker than is
 desired.  Geomview can avoid this by using the opposite normal in
 shading calculations.  This is the default.  Using @emph{Facing Normals}
 can give strange flickering dark or light shading effects, though, near
 the horizon of a fairly smooth facetted objeto.
-Press this bot@~{a}o to use the normals given with the objeto.
+Press esse bot@~{a}o to use the normals given with the objeto.
 
 
-The three text fields in the lower left corner of the @emph{Appearance}
+The three text fields in the lower left corner do @emph{Appearance}
 panel are:
 
 @table @emph
@@ -1935,7 +1932,7 @@ number.
 
 @item Patch Dicing
 Geomview draws Bezier patches by first converting them to meshes.  This
-parameter specifies the resolution of the mesh: if @emph{Patch Dicing}
+parameter especifica the resolution da mesh: if @emph{Patch Dicing}
 is @var{n}, then an @var{n} by @var{n} mesh is used to draw each Bezier
 patch.  if @emph{Patch Dicing} is 1, the resolution reverts to a
 built-in default value.
@@ -1951,7 +1948,7 @@ appearance controls should override settings in the objetos themselves --
 for example, setting the face color will affect all faces of objetos with
 multi-colored facets.  Otherwise, appearance controls only provide settings
 which the objetos themselves do not specify.
-By default, @emph{Override} is enabled.  This bot@~{a}o applies to all objetos,
+By default, @emph{Override} is enabled.  Esse bot@~{a}o applies to all objetos,
 and to all appearance-related panels.
 
 @comment ----------------------------------------------------------------
@@ -1970,7 +1967,7 @@ It works with the objeto alvo in the same way that the
 
 @item Transparent
 
-This bot@~{a}o determines whether transparency is enabled.  Geomview itself
+Esse bot@~{a}o determines se transparency is enabled.  Geomview itself
 does not fully support transparency yet and on some machines it does not
 work at all.  (The missing piece is implementation of a depth-sorting
 algorithm in the rendering engine; not difficult, but just not done
@@ -1991,7 +1988,7 @@ size of specular highlights on the surface.  Lower values give the
 surface a duller appearance.
 
 @item Ambient Reflectance
-This slider controls how much of the ambient light a surface reflects.
+This slider controls how much da ambient light a surface reflects.
 
 @item Specular Reflectance
 This slider controls the specular reflectance of a surface.  This
@@ -1999,7 +1996,7 @@ has to do with how directly the surface reflects light rays.  Higher
 values give brighter specular highlights.
 
 @item Done
-This bot@~{a}o dismisses the @emph{Materials} panel.
+Esse bot@~{a}o dismisses the @emph{Materials} panel.
 
 @end table
 
@@ -2027,20 +2024,20 @@ made using the other widgets on this panel apply to this light.  There
 is always at least one light, the ambient light.
 
 @item Intensity
-This slider controls the intensity of the current light.
+This slider controls the intensity da current light.
 
 @item Color
-This bot@~{a}o brings up a color chooser which lets you select the color
-of the current light.
+Esse bot@~{a}o brings up a color chooser which lets you select the color
+da current light.
 
 @item Add
-This bot@~{a}o adds a light.
+Esse bot@~{a}o adds a light.
 
 @item Delete
-This bot@~{a}o deletes the current light.
+Esse bot@~{a}o deletes the current light.
 
 @item Show Lights
-This bot@~{a}o lets you see and change the positions of the light sources
+Esse bot@~{a}o lets you see and change the positions da light sources
 in a janela de c@^{a}mera.  Each light is drawn as long cylinder which is
 supposed to remind you of a light beam.  When you clique sobre o the
 @emph{Show Lights} bot@~{a}o Geomview goes into "light edit" mode, during
@@ -2051,12 +2048,12 @@ so what you are changing is the angular position.  Clique sobre o the
 and to quit drawing the light beams.
 
 @item Done
-This bot@~{a}o dismisses the @emph{Lighting} panel.
+Esse bot@~{a}o dismisses the @emph{Lighting} panel.
 
 @end table
 
 Geomview's @emph{Appearance}, @emph{Materials}, and @emph{Lighting}
-panels are constructed to allow you to easily do most of the appearance
+panels are constructed to allow you to easily do most das appearance
 related things that you might want to do.  The appearance hierarchy that
 Geomview supports internally, however, is very complex and there are
 certain operations that you cannot do with the panels.  The Geomview
@@ -2076,7 +2073,7 @@ specified in OOGL files; for details,
 
 A c@^{a}mera in Geomview is the objeto that corresponds to a janela de c@^{a}mera.
 By default there is only one camera, but it is possible to have as many
-as you want.  You can control certain aspects of the way the world is
+as you want.  You can control certain aspects do way the world is
 drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
 @float Figure,figcamerapanel
 @image{figs/cam}
@@ -2118,7 +2115,7 @@ This isn't always desirable, though.  Turning @emph{Dither} off
 gives less grainy, but less accurately colored, images.
 
 @item Software Shading
-This bot@~{a}o controls whether Geomview does shading calculations in software.
+Esse bot@~{a}o controls se Geomview does shading calculations in software.
 The default is to let the hardware handle them, and in Euclidean space
 this is almost certainly best because it is faster.  In hyperbolic and
 spherical space, however, the shading calculations that the hardware
@@ -2126,26 +2123,26 @@ does are incorrect.  Clique this bot@~{a}o to turn on correct but slower
 software shading.
 
 @item Background Color
-This bot@~{a}o brings up a color chooser which you can use to set the
-background color of the camera's window.
+Esse bot@~{a}o brings up a color chooser which you can use to set the
+background color da camera's window.
 
 @item PROJECTION
 This browser lets you pick between perspective and orthogonal projection
 for this camera.
 
 @item Near clip
-This determines the distance in world coordinates of the near clipping
+This determines the distance in world coordinates do near clipping
 plane from the eye point.  It must be a positive number.
 
 @item Far clip
-This determines the distance in world coordinates of the far clipping
+This determines the distance in world coordinates do far clipping
 plane from the eye point.  It must be a positive number and in general
 should be larger than the @emph{Near clip} value.
 
 @item FOV
 This is the camera's field of view, measured in its shorter direction.
 In perspective mode, it is an angle in degrees.  In orthographic mode,
-it is the linear size of the field of view.  This number can be modified
+it is the linear size do field of view.  This number can be modified
 with o mouse in @emph{Cam Zoom} mode.
 
 @item Focal Length
@@ -2158,13 +2155,13 @@ translational movimentos.  Speed of forward movimento (in translate, fly and
 orbit modes) is proportional to focal length; and objetos lying at the
 focal distance from the c@^{a}mera translate laterally at the same rate as
 o cursor do mouse.  Finally, in N-D projection mode, c@^{a}meras are displaced
-back by the focal distance from the 3-D projection of the world origin.
+back by the focal distance from the 3-D projection da world origin.
 
 @item Lines Closer
 This number has to do with the way lines are drawn.  Normally Geomview's
 z-buffering algorithm can get confused when drawing lines that lie
 exactly on surfaces (such as the edges of an objeto); due to machine
-round-off error, sometimes the lines appear to be in front of the
+round-off error, sometimes the lines appear to be in front da
 surface and sometimes they appear behind it.  The @emph{Lines Closer}
 value is a fudge factor --- Geomview nudges all the lines that it draws
 closer to the c@^{a}mera by this amount.  The number should be a small
@@ -2184,7 +2181,7 @@ the space.
 
 @item Projective
 The projective model of hyperbolic and spherical space.  Geoms move
-under isometries of the space, and c@^{a}meras move by Euclidean movimentos.
+under isometries do space, and c@^{a}meras move by Euclidean movimentos.
 By default in the projective model, the Euclidean unit sphere is drawn.
 In hyperbolic space this is the sphere at infinity.  In Euclidean space
 the projective model is the same as the virtual model except that the
@@ -2192,19 +2189,19 @@ sphere is drawn by default.
 
 @item Conformal
 The conformal model of hyperbolic and spherical space.  Geoms move under
-isometries of the space, and c@^{a}meras move by Euclidean movimentos.  In
+isometries do space, and c@^{a}meras move by Euclidean movimentos.  In
 Euclidean space, the conformal model amounts to inverting everything in
 the unit sphere.
 @end table
 
 @item Draw Sphere
-This controls whether Geomview draws the unit sphere.  By default the
+This controls se Geomview draws the unit sphere.  By default the
 unit sphere appears in the projective and conformal models.  In
 hyperbolic space this is the sphere at infinity.  In spherical space it
 is the equatorial sphere.
 
 @item Done
-This bot@~{a}o dismisses the @emph{Cameras} panel.
+Esse bot@~{a}o dismisses the @emph{Cameras} panel.
 
 @end table
 
@@ -2220,9 +2217,9 @@ programs.
 @caption{The Save Panel.}
 @end float
 To use the @emph{Save} panel you select the desired format in the
-browser next to the word @emph{Save}, enter the name of the objeto you
+browser next to the word @emph{Save}, enter the name do objeto you
 want to save in the text field next to the word @emph{for}, and enter
-the name of the file you wish to save to in the long text field next to
+the name do file you wish to save to in the long text field next to
 the word @emph{in}.  You can then either hit @kbd{@key{Enter}} or clique
 on the @emph{OK} bot@~{a}o.  When the file has been written, the @emph{Save}
 panel disappears.  If you want to dismiss the @emph{Save} panel without
@@ -2244,16 +2241,16 @@ all other information about it, such as appearance, transformations,
 etc.
 
 @item Geometry alone @asis{(geom)}
-This writes an OOGL file containing just the geometry of the objeto.
+This writes an OOGL file containing just the geometry do objeto.
 
 @item Geometry [in world] @asis{(geom)}
-This writes an OOGL file containing just the geometry of the objeto,
+This writes an OOGL file containing just the geometry do objeto,
 transformed under Geomview's current transformation for this objeto.
 Use this if you have moved the objeto from its initial position and want
 to save the new position relative to the world.
 
 @item Geometry [in universe] @asis{(geom)}
-This writes an OOGL file containing just the geometry of the geom,
+This writes an OOGL file containing just the geometry do geom,
 transformed under both the objeto's transformation and the world's
 transformation.
 
@@ -2281,7 +2278,7 @@ window (but do not close it!), activate the screen-saver and go to bed
 while some script advances the scenes and takes snapshots.
 
 @item PPM Screen snapshot @asis{(camera)}
-Take a snapshot of the given window and save it as a PPM image.
+Take a snapshot da given window and save it as a PPM image.
 If you specify a string beginning with a vertical bar (@kbd{|})
 as the file name, it's interpreted as a Bourne shell command
 to which the PPM data should be piped, as in
@@ -2298,12 +2295,12 @@ Writes a snapshot of that window's current view, as a PPM image, to the
 given file.  The file name may be a Bourne shell command preceded by a vertical
 bar (@kbd{|}), as with the PPM screen snapshot.  The software snapshot, though,
 is produced by using a built-in software renderer (related to the X-windows
-renderer).  It doesn't matter whether the window is visible or not,
+renderer).  It doesn't matter se the window is visible or not,
 and doesn't depend on GL or OpenGL.  It also doesn't support some features,
 such as texture mapping.
 
 @item Postscript snapshot @asis{(camera)}
-Writes a Postscript snapshot of the camera's view.  It's made by
+Writes a Postscript snapshot da camera's view.  It's made by
 breaking up the scene into lines and polygons, sorting by depth, and
 generating Postscript lines and polygons for each one.  Advantages over
 pixel-based snapshot images: resolution is very high, so edges
@@ -2352,7 +2349,7 @@ text field as a command.
 
 @ifset forms
 The @emph{Obscure} panel is for relatively obscure things that don't
-really belong on any of the other panels.  In the present version of
+really belong on any dos other panels.  In the present version of
 Geomview, the @emph{Obscure} panel includes the @emph{NORMALIZE GEOMETRY}
 browser, which controls the kind of geometry normalization that Geomview does,
 and several bot@~{o}es affecting movimento style.
@@ -2388,7 +2385,7 @@ Normalize this geom to fit within a unit sphere.
 This resembles "Individual", except when an objeto is changing.  Then,
 "Individual" tightly fits the bounding box around the objeto whenever it
 changes and normalizes accordingly, while "Sequence" normalizes the
-union of all variants of the objeto and normalizes accordingly.
+union of all variants do objeto and normalizes accordingly.
 
 @item Keep
 This leaves the current normalization transform unchanged when the
@@ -2430,7 +2427,7 @@ prefix to the command key(s).  For example, the shortcut for
 clip plane to @samp{0.5}, type @kbd{0.5vn}.  Commands that don't take a
 numeric prefix toggle or reset the current value.
 
-Most commands allow one of the following selection prefixes.  If none is
+Most commands allow one dos following selection prefixes.  If none is
 provided the command applies to the objeto alvo.
 
 @table @kbd
@@ -2456,11 +2453,11 @@ that only happens when a command, like @kbd{ae}, follows the prefix.
 To select an objeto as the target without doing anything else to it,
 use the @kbd{p} command.  So @kbd{g3p} selects objeto g3.
 
-The text field in the upper left corner of the @emph{Main} panel
-shows the state of the current tecla de atalho.
+The text field in the upper left corner do @emph{Main} panel
+shows the state da current tecla de atalho.
 
 In addition to the teclas de atalho for the panel commands, there is
-also a shortcut for picking a objeto alvo: type the short name of the
+also a shortcut for picking a objeto alvo: type the short name do
 objeto followed by @kbd{p}.  For example, to select objeto @emph{g3},
 type @kbd{g 3 p}.  This only works with the short names --- the ones
 that appear in square brackets ([ ]) in the @emph{Targets} browser of
@@ -2700,7 +2697,7 @@ Most OOGL objeto file formats are free-format ASCII --- any amount of
 white space (blanks, tabs, newlines) may appear between tokens (numbers,
 key words, etc.).  Line breaks are almost always insignificant, with a
 couple of exceptions as noted.  Comments begin with # and continue to
-the end of the line; they're allowed anywhere a newline is.
+the end da line; they're allowed anywhere a newline is.
 
 Binary formats are also defined for several objetos; @xref{Binary
 format}, and the individual objeto descriptions.
@@ -2775,7 +2772,7 @@ Values are separated by white space, and line breaks
 are immaterial.
 
 Letters in the objeto's header key word must appear in a specific order;
-that's the reverse of the order in which the data is given for each vertex.
+that's the reverse da order in which the data is given for each vertex.
 So a @samp{CN4OFF} objeto's vertices contain first the 4-component space
 position, then the 3-component normal, finally the 4-component color.
 You can't change the data order by changing the header key word; an
@@ -2817,9 +2814,9 @@ Color components usually can be specified like for 3D vertices,
 @subsection Surface normal directions
 
 Geomview uses normal vectors to determine how an objeto is shaded.
-The direction of the normal is significant in this calculation.
+The direction da normal is significant in this calculation.
 
-When normals are supplied with an objeto, the direction of the normal
+When normals are supplied with an objeto, the direction da normal
 is determined by the data given.
 
 When normals are not supplied with the objeto, Geomview computes normal
@@ -2937,7 +2934,7 @@ braces is generally required when the objeto is in a larger context,
 e.g. when it is part of a larger objeto or embedded in a Geomview
 command stream.
 
-For example, each of the following three lines:
+For example, each das following three lines:
 @example
 	@{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
@@ -2965,7 +2962,7 @@ The "<" construct causes a disk file to be read.  Note that this isn't a
 general textual "include" mechanism; a complete OOGL objeto must appear
 in the referenced file.
 
-Files read using "<" are sought first in the directory of the file which
+Files read using "<" are sought first in the directory do file which
 referred to them, if any; failing that, the normal search path
 (@pxref{load-path, @code{(load-path @dots{})}}) is used.  The default search
 looks first in the current directory, then in the Geomview data
@@ -3009,7 +3006,7 @@ There is a separate section concerning the definition of textures
 @item Transparency
 Rendering translucent objetos is not supported by all drawing back
 ends. The OpenGL renderer has limited support for it: top-level objetos
-(i.e. those which appear in the objeto browser of the main panel
+(i.e. those which appear in the objeto browser do main panel
 (@pxref{Basic Interaction, The Main Panel}) are rendered correctly by
 means of alpha-blending). Also, the RenderMan snapshots will include
 opacity values.
@@ -3072,7 +3069,7 @@ appearance @{
       ambient .3 .5 .3 # ambient color (red, green, blue components)
                       # The ambient contribution to the shading is
                       # the product of ka, the ambient color,
-                      # and the color of the ambient light.
+                      # and the color da ambient light.
 
       kd  0.8         # diffuse-reflection coefficient.
       diffuse .9 1 .4 # diffuse color.
@@ -3183,14 +3180,14 @@ mapping. A texture is specified as part of an appearance structure
 in @code{(s,t)} parameter space in the range 0 <= s <= 1, 0 <= t <= 1.
 Then one provides a geometric primitive, with each vertex tagged with
 @code{(s,t)} texture coordinates.  If texturing is enabled, the
-appropriate portion of the texture image is pasted onto each face of the
+appropriate portion da texture image is pasted onto each face do
 textured objeto.
 
 There is (currently) no provision for inheritance of part of a texture
 structure; if the @code{texture} keyword is mentioned in an appearance,
 it supplants any other texture specification.
 
-The appearance attribute @code{texturing} controls whether textures are
+The appearance attribute @code{texturing} controls se textures are
 used; there's no performance penalty for having texture @{ @dots{} @} fields
 defined when texturing is off.
 
@@ -3216,9 +3213,9 @@ image @{ <image specification> (@pxref{image, Image objects}) @}
   objetos. The alpha-channel is only interpreted as mask: where the mask
   is zero, pixels are simply not drawn. An exception is the case where
   @emph{apply} is equal to @emph{modulate} and translucency is enabled:
-  in this case the resulting alpha value is the result of the
-  multiplication of the surface color with the alpha value of the
-  texture's alpha channel.
+  in this case the resulting alpha value is the result da
+  multiplication da surface color with the alpha value do
+  canal alfa da textura.
 
 file      filename
 alphafile filename
@@ -3228,11 +3225,11 @@ alphafile filename
 
   Specifies image file(s) containing the texture.
        
-  The @emph{file} keyword specifies a file with color or lightness information;
-  @emph{alphafile} if present, specifies a transparency ("alpha") mask;
+  The @emph{file} keyword especifica a file with color or lightness information;
+  @emph{alphafile} if present, especifica a transparency ("alpha") mask;
   where the mask is zero, pixels are simply not drawn.
   Several image file formats are available; the file type must be
-  indicated by the last few characters of the file name:
+  indicated by the last few characters do file name:
     .ppm or .ppm.Z or .ppm.gz  24-bit 3-color image in PPM format
     .pgm or .pgm.Z or .pgm.gz  8-bit grayscale image in PGM format
     .sgi or .sgi.Z or .sgi.gz  8-bit, 24-bit, or 32-bit SGI image
@@ -3278,11 +3275,11 @@ background  R G B A
   is selected.
 
 transform @code{transformation-matrix}
-  Expects a list of 16 numbers, or one of the other ways of representing
+  Expects a list of 16 numbers, or one dos other ways of representing
   a transformation (@code{: handlename} or @code{< filename}).
   The 4x4 transformation matrix is applied to texture coordinates,
   in the sense of a 4-component row vector (s,t,0,1) multiplied on
-  the left of the matrix, to produce new coordinates (s',t')
+  the left da matrix, to produce new coordinates (s',t')
   which actually index the texture.
 @end example
 
@@ -3326,7 +3323,7 @@ The file syntax is
 The leading key word is @code{[C][N][4]QUAD} or @code{[C][N][4]POLY},
 where the optional @code{C} and @code{N} prefixes indicate that each vertex
 includes colors and normals respectively.  That is, these files
-begin with one of the words
+begin with one das words
 
 @code{QUAD} @code{CQUAD} @code{NQUAD} @code{CNQUAD} @code{POLY}
 @code{CPOLY} @code{NPOLY} @code{CNPOLY}
@@ -3403,7 +3400,7 @@ Note that the order of prefix characters is significant; a colored,
 u-wrapped mesh is a @code{CuMESH} not a @code{uCMESH}.
 
 Following the mesh header are integers @var{Nu} and @var{Nv},
-the dimensions of the mesh.
+the dimensions da mesh.
 
 Then follow @var{Nu}*@var{Nv} vertices, each in the form given by the header.
 They appear in v-major order, i.e. if we name each vertex by (u,v)
@@ -3425,7 +3422,7 @@ are 32-bit floats.
 @subsection BBOX: simple bounding boxes
 
 This is a very simple toy-objeto: it takes 2 vertices and draws a
-(hyper-) cube which is the bounding box of the two vertices.
+(hyper-) cube which is the bounding box dos two vertices.
 
 Syntax:
 
@@ -3462,8 +3459,8 @@ or
 @end example
 
 There is no BBOX binary format. The @code{4} modifyer has different
-meanings depending on the dimension of the bounding box: @code{4BBOX}
-means that the 4 components of the vertices make up a 4-dimensional
+meanings depending on the dimension da bounding box: @code{4BBOX}
+means that the 4 components dos vertices make up a 4-dimensional
 bounding-box. Using @code{4} in conjunction with @code{n} --
 @code{4nBBOX @var{NDim}} -- means that the vertices specified in the
 file have @var{NDim+1} components, but the component at index 0 is the
@@ -3512,11 +3509,11 @@ degrees up to 6, and with 3-D or 4-D (rational) vertices.
 
 The header keyword has the forms @code{[ST]BBP} or
 @code{[C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]} (the '<' and '>' are
-not part of the keyword.
+not part da keyword.
 
 The @code{ST} prefix on @code{BBP}, or @code{_ST} suffix on
 @code{BEZuvn}, indicates that each patch includes four pairs of
-floating-point texture-space coordinates, one for each corner of the
+floating-point texture-space coordinates, one for each corner do
 patch.
 
 The @code{C} prefix on @code{BEZuvn} indicates a colored patch,
@@ -3551,7 +3548,7 @@ as specified by the header.
    
 If the header calls for ST coordinates, four pairs of floating-point
 numbers follow: the texture-space coordinates for the (0,0),
-(@var{Nu},0), (0,@var{Nv}), and (@var{Nu},@var{Nv}) corners of the
+(@var{Nu},0), (0,@var{Nv}), and (@var{Nu},@var{Nv}) corners do
 patch, respectively.
 
 If the header calls for colors, four four-component (red, green, blue,
@@ -3628,7 +3625,7 @@ vertices (in the range 0..@var{NVertices}-1).
 
 The optional @var{color} may take several forms.  Line breaks are
 significant here: the @var{color} description begins after @var{VertN}
-and ends with the end of the line (or the next # comment).  A
+and ends with the end da line (or the next # comment).  A
 @var{color} may be:
 
 @table @asis
@@ -3646,7 +3643,7 @@ For the one-integer case, the colormap is currently read from the file
 @file{cmap.fmap} in Geomview's @file{data} directory.  Some better
 mechanism for supplying a colormap is likely someday.
 
-The meaning of "default color" varies.  If no face of the objeto has a
+The meaning of "default color" varies.  If no face do objeto has a
 color, all inherit the environment's default material color.  If some
 but not all faces have colors, the default is gray (R,G,B,A=.666).
 
@@ -3716,7 +3713,7 @@ Next come @var{NLines} @b{16-bit} integers
 
 giving the number of vertices in each polyline.  A negative number
 indicates a closed polyline; 1 denotes a single-pixel point.  The sum
-(of absolute values) of the @var{Nv[i]} must equal @var{NVertices}.
+(of absolute values) da @var{Nv[i]} must equal @var{NVertices}.
 
 Next come @var{NLines} more @b{16-bit} integers @var{Nc[i]}: the number
 of colors in each polyline.  Normally one of three values:
@@ -3847,13 +3844,13 @@ The sphere lives in spherical space. @xref{Non-Euclidean Geometry}.
 Sphere objetos are drawn using meshes which are rectangular in a polar
 co-ordinate system, with the equatorial plane parallel to the
 @code{x,y}-plane. Their smoothness, and the time taken to draw them,
-depends on the setting of the dicing level, 10x10 by default.  From
+depends on the setting do dicing level, 10x10 by default.  From
 Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or a
 @code{dice nu nv} Appearance attribute sets this.
 
 Texture co-ordinates are generated for @code{STSPHERE} objetos; the
 keyword following the initial @code{STSPHERE} keyword defines the way
-this is done. It follows the conventions of the @command{mktxmesh}
+this is done. It follows the conventions do @command{mktxmesh}
 Perl-script which comes with the @emph{Orrery}.
 
 @table @var
@@ -3885,14 +3882,14 @@ ND-viewing) transformation to another OOGL objeto.  It begins with
 geom @var{oogl-object}
 @end example
 @noindent
-specifies the OOGL objeto to be instantiated.  @xref{References}, for
+especifica the OOGL objeto to be instantiated.  @xref{References}, for
 the syntax of an @var{oogl-object}.  The keyword @code{unit} is a
 synonym for @code{geom}.
 @example
 transform   ["@{"] @code{4x4 transform} ["@}"]
 @end example
 @noindent
-specifies a single transformation matrix.  Either the
+especifica a single transformation matrix.  Either the
 matrix may appear literally as 16 numbers, or there may be
 a reference to a "transform" objeto, i.e.
 @example
@@ -3963,7 +3960,7 @@ with @code{origin} unequal to @code{local} will not be drawn, though the
 @example
 location [global or camera or ndc or screen or local]
 @end example
-Normally an INST specifies a position relative to its parent objeto;
+Normally an INST especifica a position relative to its parent objeto;
 the @code{location} field allows putting an objeto elsewhere.
 @itemize @bullet
 @item
@@ -3973,7 +3970,7 @@ alien geometry, and c@^{a}meras are placed.
 @item
 @code{location camera} places the objeto relative to the camera.
 (Thus if there are multiple views, it may appear in a different 
-spatial position in each view.)  The center of the camera's view
+spatial position in each view.)  The center da camera's view
 is along its negative Z axis; positive X is rightward, positive Y upward.
 Normally the units of c@^{a}mera space are the same as global coordinates.
 When a c@^{a}mera is reset, the global origin is at (0,0,-3.0).
@@ -3991,15 +3988,15 @@ INST  transform  1 0 0 0  0 1 0 0  0 0 1 0  -.9 -.9 -.999 1
 @end example
 pastes @code{label.vect} onto the lower left corner of each window,
 and in front of nearly everything else, assuming @code{label.vect}'s
-contents lie in the positive quadrant of the X-Y plane.
-It's tempting to use -1 rather than -.999 as the Z component of the
+contents lie in the positive quadrant do X-Y plane.
+It's tempting to use -1 rather than -.999 as the Z component da
 position, but that may put the objeto just nearer than the near clipping
 plane and make it (partially) invisible, due to floating-point error.
 @item
 @code{location screen} places the objeto in screen coordinates.
 The range of Z is still -1 through +1 as for ndc coordinates;
 X and Y are measured in pixels, and range from (0,0) at the @emph{lower left}
-corner of the window, increasing rightward and upward.
+corner da window, increasing rightward and upward.
 @end itemize
 
 @code{location local} is the default; the objeto is positioned relative
@@ -4009,8 +4006,8 @@ to its parent.
 @example
 origin [global or camera or ndc or screen or local] x y z
 @end example
-The @code{origin} field translates the contents of the INST to
-place the origin at the specified point of the given coordinate system.
+The @code{origin} field translates the contents da INST to
+place the origin at the specified point do given coordinate system.
 Unlike @code{location}, it doesn't change the orientation, only the choice
 of origin.  Both @code{location} and @code{origin} can be used together.
 
@@ -4024,9 +4021,9 @@ So for example
 @}
 @end example
 
-places xyz.vect's origin in the center of the window, just beyond the
+places xyz.vect's origin in the center da window, just beyond the
 near clipping plane.  The unit-length X and Y edges are scaled to be just 100
-screen units -- pixels -- long, regardless of the size of the window.
+screen units -- pixels -- long, regardless do size da window.
 
 @menu
 * INST Examples::               Some example of @code{INST} Files.
@@ -4075,7 +4072,7 @@ INST
 @end example
 
 This one resembles the @code{origin} example in the section above,
-but makes the X and Y edges be 1/4 the size of the window (1/4, not 1/2,
+but makes the X and Y edges be 1/4 the size da window (1/4, not 1/2,
 since the range of ndc X and Y coordinates is -1 to +1).
 @example
 @{ INST
@@ -4103,7 +4100,7 @@ LIST
 
 Note that there's no explicit separation between the oogl-objetos, so
 they should be enclosed in curly braces (@{ @}) for sanity.  Likewise
-there's no explicit marker for the end of the list; unless appearing
+there's no explicit marker for the end da list; unless appearing
 alone in a disk file, the whole construct should also be wrapped in
 braces, as in:
 
@@ -4142,7 +4139,7 @@ TLIST			# key word
 
 @code{TLIST}s are used only within the @code{transforms} clause of an
 @code{INST} objeto.  They cause the @code{INST}s @code{geom} objeto to
-be instantiated once under each of the transforms in the @code{TLIST}.
+be instantiated once under each das transforms in the @code{TLIST}.
 The effect is like that of a @code{LIST} of @code{INST}s each with a
 single transform, and all referring to the same objeto, but is more
 efficient.
@@ -4291,7 +4288,7 @@ Image objetos are used to specify pixmap data for either textures
 
 At the time of this writing images are comprised of 1 to 4 channels, a
 channel provides a single number in the range from 0 to @code{maxval}
-for each pixel; and @code{maxval} is tied to 255. The interpretation of the image data depending on the number of channels is like follows:
+for each pixel; and @code{maxval} is tied to 255. The interpretation dos image data depending on the number of channels is like follows:
 
 @multitable @columnfractions 0.2 0.2 0.6
 @headitem #Channels @tab Channel No. @tab Interpretation
@@ -4338,7 +4335,7 @@ The general syntax of image objetos is like follows:
 @example
 <image> ::= 
   [ "@{" ]             (curly brace, generally needed to make
-                       the end of the objeto unambiguous.)
+                       the end do objeto unambiguous.)
   [ "image" ]          (optional keyword; unnecessary if the type
                        is determined by the context, which it
                        usually is.)
@@ -4356,10 +4353,10 @@ The general syntax of image objetos is like follows:
                        must come last, after defining the width and
                        height and number of channels)
 
-      "width"          (width of the image, auto-detected from image data
+      "width"          (width da image, auto-detected from image data
                        if possible)
 
-      "height"         (height of the image, auto-detected from image data
+      "height"         (height da image, auto-detected from image data
                        if possible)
 
       "channels"       (number of channels, auto-detected from image data
@@ -4370,7 +4367,7 @@ The general syntax of image objetos is like follows:
       "data DESTMASK [FILTER] [@{] < FILENAME [@}]"
       "data DESTMASK [FILTER] DATASIZE [@{][\n]LITERAL_IMAGE_DATA[@}]"
                        (either external or embedded image data, see below
-                       for a detailed description of the meaning of
+                       for a detailed description do meaning of
                        @emph{MASK} and @emph{FILTER}. An image can (and
                        has, in general) multiple data sections.)
 
@@ -4383,21 +4380,21 @@ The general syntax of image objetos is like follows:
 @item DESTMASK
 This is a bit-field describing where the specified image data should be
 placed in the destination pixmap. The bit-field is specified by an
-integer in one of the known formats (decimal, octal, hexadecimal). The
-channels of the source data are always enumbered consecutively. If,
+integer in one dos known formats (decimal, octal, hexadecimal). The
+channels dos source data are always enumbered consecutively. If,
 e.g. @samp{FILENAME} or @samp{LITERAL_IMAGE_DATA} specify a
 three-channel (probably RGB @dots{}) image and @samp{DESTMASK} equals
-@code{0xD} (i.e. bit 1 is 0), then the 3rd channel of the source pixmap
-would be placed in the 4th channel of the destination image objeto (the
+@code{0xD} (i.e. bit 1 is 0), then the 3rd channel do source pixmap
+would be placed in the 4th channel do destination image objeto (the
 alpha channel), the 2nd source channel would determine the @samp{blue}
 destination value and the 1st source channel the @samp{red} destination
 value.
 
-The number of channels of the source data always has to match the number
+The number of channels dos source data always has to match the number
 of bits set in @samp{DESTMASK}. @b{Exception:} if the source pixmap has
 only one channel, then it can be used to fill any number of destination
 channels; all channels specified in @samp{DESTMASK} are filled with the
-data of the single channel source pixmap.
+data do single channel source pixmap.
 
 Geomview knows the following symbolic constants, which can be used
 instead of specifying the @samp{DESTMASK} bit-field numerically:
@@ -4413,7 +4410,7 @@ same as @samp{15}, @samp{0xf}, @samp{\017}
 @item ALPHA
 depends on the context: the absolute number of channels must be known;
 i.e. @samp{data ALPHA @dots{}} must be prepended by something determining
-the number of channels of the image, e.g.
+the number of channels da image, e.g.
 @example
 ...
 data RGB ...
@@ -4442,13 +4439,13 @@ historical reasons @dots{}) and NetPBM image formats (for practical
 reasons). The auto-detection of NetPBM formats includes the new
 @dfn{PAM} image format which allows (among other things) to store an
 alpha channel together with the luminance or RGB data. Likewise, the
-final output of any of the specified filters must either be in SGI image
+final output of any dos specified filters must either be in SGI image
 file format, or specify a PAM, PNM or PGM image.  If the image file
 format cannot be determined by either the filenmae suffix or the filter
 specification or by auto-deteciong of SGI or NetPBM data, then Geomview
 assume that it is raw-data. See below.
 
-The decompression filters may be prepended to either one of the know
+The decompression filters may be prepended to either one dos know
 image formats or an explicitly specified filter, e.g. the following is
 valid:
 @example
@@ -4459,7 +4456,7 @@ The above should be equivalent to
 data LUMINANCE raw @{ < greymapfile @},
 @end example
 provided that the decompressed data carries single channel data, with
-the first pixel corresponding to the lower-left corner (because of the
+the first pixel corresponding to the lower-left corner (because do
 @samp{raw} image format, see below).
 
 Geomview has builtin knowledge for the following filters/suffixes:
@@ -4501,7 +4498,7 @@ as the NetPBM convention, the image co-ordinate systems has its origin
 in the left/top corner, as usual).
 @end table
 @item Explicitly Specified Filters
-If none of the suffixes specified above should match, then the
+If none dos suffixes specified above should match, then the
 suffix/filter is interpreted as an external filter program; the filter
 program must read from @code{STDIN} and write to @code{STDOUT}. The
 output must either be in SGI image format, or in PNM or PGM
@@ -4556,7 +4553,7 @@ Syntax for a transform objeto is
 @example
 <transform> ::= 
   [ "@{" ]             (curly brace, generally needed to make
-                       the end of the objeto unambiguous.)
+                       the end do objeto unambiguous.)
 
    [ "transform" ]    (optional keyword; unnecessary if the type
                        is determined by the context, which it
@@ -4581,7 +4578,7 @@ Syntax for a transform objeto is
 @end example
 
 The whole should be enclosed in @{ braces @}.  Braces are not essential
-if exactly one of the above items is present, so e.g. a 4x4 array of
+if exactly one dos above items is present, so e.g. a 4x4 array of
 floats standing alone may but needn't have braces.
 
 Some examples, in contexts where they might be used:
@@ -4627,18 +4624,18 @@ where usually @var{NRows} = @var{N+1} in the context of
 @code{transform} objetos where it is located at column
 three). @code{ntransform} objetos operate on points of any dimension: if
 a point is to be transformed by an @code{ntransform} objeto and the
-dimension of the point does not match the number of rows of the
+dimension do point does not match the number of rows do
 @code{ntransform} objeto, then either the point is implicitly padded
 with zeros to match @var{NRows} or the matrix is implicitly padded with
 ones down its diagonal (and zeros everywhere else) such that it will
-operate as identity on the excess dimensions of the input point.
+operate as identity on the excess dimensions do input point.
 
 Syntax for an @code{ntransform} objeto is
 
 @example
 <ntransform> ::= 
   [ "@{" ]             (curly brace, generally needed to make
-                       the end of the objeto unambiguous.)
+                       the end do objeto unambiguous.)
 
    [ "ntransform" ]    (optional keyword; unnecessary if the type
                        is determined by the context, which it
@@ -4649,7 +4646,7 @@ Syntax for an @code{ntransform} objeto is
                        its value from the stuff which follows)
 
      @var{NRows} @var{NCols}
-                       (number of rows and columns of the matrix,
+                       (number of rows and columns da matrix,
                        typically @var{N+1} @var{N+1}, but any dimensions
                        are possible)
      <@var{NRows} x @var{NCols} floating-point numbers>
@@ -4711,7 +4708,7 @@ Some examples, in contexts where they might be used:
 @node camera, window, ntransform, Non-geometric objects
 @subsection cameras
 
-A c@^{a}mera objeto specifies the following properties of a camera:
+A c@^{a}mera objeto especifica the following properties of a camera:
 
 @table @asis
 @item position and orientation
@@ -4726,7 +4723,7 @@ interest; used for default c@^{a}mera positioning (the c@^{a}mera is placed at
 switching between perspective and orthographic views.
 @item window aspect ratio
 True aspect ratio in the sense <Xsize>/<Ysize>.  This normally should
-agree with the aspect ratio of the camera's window.  Geomview normally
+agree with the aspect ratio da camera's window.  Geomview normally
 adjusts the aspect ratio of its c@^{a}meras to match their associated
 windows.
 @item near and far clipping plane distances
@@ -4756,9 +4753,9 @@ This odd-seeming definition is (a) easy to calculate with and
 (b) well-defined in both orthographic and perspective views.
 
 @item background color
-Arguably not a property of a camera, but of the scene. Nevertheless, as
+Arguably not a property of a camera, but da scene. Nevertheless, as
 there is no "background" OOGL objeto, and the background color should
-not be a property of the drawing device, it can be specified here. At
+not be a property do drawing device, it can be specified here. At
 the time of this writing, however, the GUI always overrides the
 background color with its own settings.
 
@@ -4784,7 +4781,7 @@ The syntax for a c@^{a}mera is:
       |
         ":" <name>
       |
-                                (or any number of the following,
+                                (or any number dos following,
                                  in any order@dots{})
 
         "perspective"  @{"0" | "1"@}            (default 1)
@@ -4830,7 +4827,7 @@ The syntax for a c@^{a}mera is:
 @node window,  , camera, Non-geometric objects
 @subsection window
 
-A window objeto specifies size, position, and other window-system
+A window objeto especifica size, position, and other window-system
 related information about a window in a device-independent way.
 
 The syntax for a window objeto is:
@@ -4841,21 +4838,21 @@ window ::=
 	[ "window" ]			(optional keyword)
 	  [ "@{" ]			(curly brace, often required)
 
-	    			(any of the following, in any order)
+	    			(any dos following, in any order)
 
 		"size"  <xsize> <ysize>
-				(size of the window)
+				(size da window)
 
 		"position"  <xmin> <xmax> <ymin> <ymax>
 				(position & size)
 
 
 		"noborder"
-				(specifies the window should
+				(especifica the window should
 				 have no window border)
 
 		"pixelaspect"  <aspect>
-			    (specifies the true visual aspect ratio
+			    (especifica the true visual aspect ratio
 			     of a pixel in this window in the sense
 			     xsize/ysize, normally 1.0.
 			     For stereo hardware which stretches the
@@ -4880,7 +4877,7 @@ to change those of an existing window. @xref{window, @code{(window
 
 When Geomview is started, it loads and executes commands in a
 system-wide startup file named @file{.geomview}.  This file is in the
-@file{data} subdirectory of the Geomview distribution directory
+@file{data} subdirectory do Geomview distribution directory
 and
 contains GCL commands to configure Geomview in a way
 common to all users on the system.
@@ -4908,8 +4905,8 @@ It is a good idea to enclose all the commands you put in a
 Geomview to execute them all at once.  Otherwise Geomview might execute
 them sequentially over the first few refresh cycles after starting up.
 
-To change, e.g. the focus policy of the janela de c@^{a}mera such that they
-pick up the focus policy of the window manager (instead of being
+To change, e.g. the focus policy da janela de c@^{a}mera such that they
+pick up the focus policy do window manager (instead of being
 activated when o cursor do mouse crosses the window), you could put the
 following in your @file{~/.geomview} file:
 
@@ -4936,7 +4933,7 @@ user interface.
 In many cases an external module is a specialized program that
 implements some mathematical algorithm that creates a geometric
 objeto that changes shape as the algorithm progresses.  The module
-informs Geomview of the new objeto shape at each step, so the objeto
+informs Geomview da new objeto shape at each step, so the objeto
 appears to evolve with time in the Geomview window.  In this way
 Geomview serves as a @emph{display engine} for the module.
 
@@ -4962,8 +4959,8 @@ External modules appear in the @emph{Modules} browser in Geomview's
 the module's entry in the browser.  While the module is running, an
 additional line for that module will appear in red in the browser.
 This line begins with a number in brackets, which indicates the
-@emph{instace} number of the module.  (For some modules it makes sense
-to have more than one instance of the module running at the same
+@emph{instace} number do module.  (For some modules it makes sense
+to have more than one instance do module running at the same
 time.)  You can kill an external module by clicando on its red
 instance entry.
 
@@ -4993,7 +4990,7 @@ out about from Geomview.
 @section Example 1: Simple External Module
 
 This section gives a very simple external module which displays an
-oscillating mesh.  To try out this example, make a copy of the file
+oscillating mesh.  To try out this example, make a copy do file
 @file{example1.c} (it is distributed with Geomview in the @file{doc}
 subdirectory) in your directory and compile it with the command
 
@@ -5103,7 +5100,7 @@ UpdateMesh(xmin, xmax, ymin, ymax, xdim, ydim, t)
 @end example
 
 The module begins by defining a function @code{F(x,y,t)} that
-specifies a time-varying surface.  The purpose of the module is to
+especifica a time-varying surface.  The purpose do module is to
 animate this surface over time.
 
 The main program begins by defining some variables that specify
@@ -5117,12 +5114,12 @@ line to standard output
 @end example
 
 This tells Geomview to create a geom called @code{example} which is an
-instance of the handle @code{foo}.  @emph{Handles} are a part of the
+instance do handle @code{foo}.  @emph{Handles} are a part do
 OOGL file format which allow you to name a piece of geometry whose value
 can be specified elsewhere (and in this case updated many times); for
 more information on handles, @xref{OOGL File Formats}. In this case,
 @code{example} is the title by which the user will see the objeto in
-Geomview's objeto browser, and @code{foo} is the internal name of the
+Geomview's objeto browser, and @code{foo} is the internal name do
 handle that the objeto is a reference to.
 
 We then do @code{fflush(stdout)} to ensure that Geomview
@@ -5133,7 +5130,7 @@ sure Geomview has actually received everything it has printed out.
 The last thing in the main program is an infinite loop that cycles
 through calls to the procedure @code{UpdateMesh} with increasing
 values of @code{t}.  @code{UpdateMesh} sends Geomview a command
-of the form
+da form
 
 @example
 (read geometry @{ define foo 
@@ -5145,13 +5142,13 @@ MESH
 
 @noindent
 where @code{@dots{}} is a long list of numbers.  This command tells Geomview
-to make the value of the handle @code{foo} be the specified mesh.  As
+to make the value do handle @code{foo} be the specified mesh.  As
 soon as Geomview receives this command, the geom being displayed
 changes to reflect the new geometry.
 
 The mesh is given in the format of an OOGL MESH.  This begins with
 the keyword @code{MESH}.  Next come two numbers that give the x and y
-dimensions of the mesh; in this case they are both 24.  This line is
+dimensions da mesh; in this case they are both 24.  This line is
 followed by 24 lines, each containing 24 triples of numbers.  Each of
 these triples is a point on the surface.  Then finally there is a line
 with "@code{@})}" on it that ends the "@code{@{}" which began the
@@ -5159,7 +5156,7 @@ with "@code{@})}" on it that ends the "@code{@{}" which began the
 more details on the format of MESH data, @pxref{MESH}.
 
 This module could be written without the use of handles by having it
-write out commands of the form
+write out commands da form
 
 @example
 (geometry example @{
@@ -5173,7 +5170,7 @@ MESH
 This first time Geomview receives a command of this form it would create
 a geom called @code{example} with the given @code{MESH} data.
 Subsequent @code{(geometry example @dots{})} commands would cause
-Geomview to replace the geometry of the geom @code{example} with the new
+Geomview to replace the geometry do geom @code{example} with the new
 @code{MESH} data.  If done in this way there would be no need to send
 the initial @code{(geometry example @{ : foo @})} command as above.  The
 handle technique is useful, however, because it can be used in more
@@ -5184,7 +5181,7 @@ having to retransmit the entire geom.  For more information on handles,
 @dots{})}}. @xref{read,@code{(read @dots{})}}.
 
 The module loops through calls to @code{UpdateMesh} which print out
-commands of the above form one after the other as fast as possible.
+commands da above form one after the other as fast as possible.
 The loop continues indefinitely; the module will terminate when the
 user kills it by clicando on its instance line in the @emph{Modules}
 browser, or else when Geomview exits.
@@ -5205,13 +5202,13 @@ commands it prints out.  You will have to kill it with
 @node Example2, XForms, Example1, Modules
 @section Example 2: Simple External Module with FORMS Control Panel
 
-This section gives a new version of the above module --- one that
-includes a user interface panel for controlling the velocity of the
+This section gives a new version do above module --- one that
+includes a user interface panel for controlling the velocity da
 oscillation.  We use the FORMS library by Mark Overmars for the control
 panel.  The FORMS library is a public domain user interface toolkit for
 IRISes; for more information @xref{Forms}.
 
-To try out this example, make a copy of the file
+To try out this example, make a copy do file
 @file{example2.c} (distributed with Geomview in the @file{doc}
 subdirectory) in your directory and compile it with the command
 
@@ -5221,7 +5218,7 @@ cc -I/u/gcg/ngrap/include -o example2 example2.c \
 @end example
 
 You should
-replace the string @file{/u/gcg/ngrap} above with the pathname of the
+replace the string @file{/u/gcg/ngrap} above with the pathname do
 Geomview distribution directory on your system.  (The forms library is
 distributed with Geomview and the @code{-I} and @code{-L} options above
 tell the compiler where to find it.)
@@ -5236,7 +5233,7 @@ Then put the line
 in a file called @file{.geomview} in the current directory and invoke
 Geomview from that directory.  Clique sobre o the "Example 2" entry in the
 @emph{Modules} browser to invoke the module.  A small control panel
-should appear.  You can then control the velocity of the mesh
+should appear.  You can then control the velocity da mesh
 oscillation by moving the slider.
 
 @example
@@ -5380,7 +5377,7 @@ and the FORMS library.  It then declares global variables for holding a
 pointer to the slider FORMS objeto and the velocity @code{dt}.  These
 are global because they are needed in the slider callback procedure
 @code{SetVelocity}, which forms calls every time the user moves the
-slider bar. @code{SetVelocity} sets @code{dt} to be the new value of the
+slider bar. @code{SetVelocity} sets @code{dt} to be the new value do
 slider.
 
 @code{Quit} is the callback procedure for the @emph{Quit} bot@~{a}o;
@@ -5402,10 +5399,10 @@ the process to run in the foreground.  By default GL programs run in the
 background, and for various reasons external modules that use FORMS
 (which is based on GL) need to run in the foreground.  We then call
 @code{create_panel} to create the panel and @code{fl_set_slider_value}
-to set the initial value of the slider.  The call to @code{fl_show_form}
+to set the initial value do slider.  The call to @code{fl_show_form}
 causes the panel to appear on the screen.
 
-The first three lines of the main loop, starting with 
+The first three lines do main loop, starting with 
 @example
 fdmask = (1 << fileno(stdin)) | (1 << qgetfd());
 @end example
@@ -5414,7 +5411,7 @@ check for and deal with events in the panel.  The call to @code{select}
 imposes a delay on each pass through the main loop.  This call returns
 either after a delay of 1/5 second or when the next GL event occurs, or
 when data appears on standard input, whichever comes first.  The
-@code{timeout} variable specifies the amount of time to wait on this
+@code{timeout} variable especifica the amount of time to wait on this
 call; the first member (0 in this example) gives the number of seconds,
 and the second member (200000 in this example) gives the number of
 microseconds.  Finally, @code{fl_check_forms()} checks for and processes
@@ -5422,7 +5419,7 @@ any FORMS events that have happened; in this case this means calling
 @code{SetVelocity} if the user has moved the slider or calling
 @code{Quit} if the user has clicado on the @emph{Quit} bot@~{a}o.
 
-The purpose of the delay in the loop is to keep the program from using
+The purpose da delay in the loop is to keep the program from using
 excessive amounts of CPU time running around its main loop when there
 are no events to be processed.  This is not so crucial in this example,
 and in fact may actually slow down the animation somewhat, but in
@@ -5431,7 +5428,7 @@ do something like this because otherwise the module will needlessly take
 CPU cycles away from other running programs (such as Geomview!)  even
 when it isn't doing anything.
 
-The last line of the main loop in this example, the call to
+The last line do main loop in this example, the call to
 @code{UpdateMesh}, is the same as in the previous example.
 
 @comment ================================================================
@@ -5474,7 +5471,7 @@ essentially echoes of GCL commands.  The external module sends
 Geomview a command expressing interest in a certain command, and then
 every time Geomview executes that command, the module receives a copy of
 it.  This happens regardless of who sent the command to Geomview; it can
-be the result of the user doing something with a Geomview panel, or
+be the result do user doing something with a Geomview panel, or
 it may have come from another module or from a file that Geomview reads.
 This is how a module can find out about and act on things that happen in
 Geomview.
@@ -5491,7 +5488,7 @@ when the user cliques the bot@~{a}o direito do mouse with the cursor over a geom
 in a Geomview janela de c@^{a}mera.  When this happens Geomview generates an
 internal call to a procedure called @code{pick}; the arguments to the
 procedure give information about the pick, such as what objeto was
-picked, the coordinates of the picked point, etc.  If an external module
+picked, the coordinates do picked point, etc.  If an external module
 has expressed interest in calls to @code{pick}, then whenever
 @code{pick} is called Geomview will echo the call to the module's
 standard input.  The module can then do whatever it wants with the pick
@@ -5507,7 +5504,7 @@ cyan boxes at its endpoints and drawing a yellow line along the edge.
 
 Note that in order for this module to actually do anything you must have
 a geom loaded into Geomview and you must clique the bot@~{a}o direito do mouse
-with the cursor over a part of the geom.
+with the cursor over a part do geom.
 
 @example
 @comment #include "example3.c"
@@ -5746,7 +5743,7 @@ main()
 
 The code begins by defining procedures @code{progn()} and
 @code{endprogn()} which begin and end a Geomview @code{progn} group.
-The purpose of the Geomview @code{progn} command is to group commands
+The purpose do Geomview @code{progn} command is to group commands
 together and cause Geomview to execute them all at once, without
 refreshing any graphics windows until the end.  It is a good idea to
 group blocks of commands that a module sends to Geomview like this so
@@ -5760,7 +5757,7 @@ once before calling any other lisp library functions.  It then calls
 is defined further down with a call to the @code{PICKFUNC} macro.  Then
 it sends a bunch of setup commands to Geomview, grouped in a
 @code{progn} block.  This includes defining a handle called
-@code{littlebox} that stores the geometry of the little box.  Next it
+@code{littlebox} that stores the geometry da little box.  Next it
 sends the command
 
 @example
@@ -5772,13 +5769,13 @@ which tells Geomview to notify us when a pick event happens.
 
 The syntax of this @code{interest} statement merits some explanation.
 In general @code{interest} takes one argument which is a (parenthesized)
-expression representing a Geomview function call.  It specifies a type
+expression representing a Geomview function call.  It especifica a type
 of call that the module is interested in knowing about.  The arguments
 can be any particular argument values, or the special symbols @code{*}
 or @code{nil}.  For example, the first argument in the @code{pick}
 expression above is @code{world}.  This means that the module is
 interested in calls to @code{pick} where the first argument, which
-specifies the coordinate system, is @code{world}.  A @code{*} is like a
+especifica the coordinate system, is @code{world}.  A @code{*} is like a
 wild-card; it means that the module is interested in calls where the
 corresponding argument has any value.  The word @code{nil} is like
 @code{*}, except that the argument's value is not reported to the
@@ -5791,7 +5788,7 @@ command give the name, pick point coordinates, vertex coordinates, and
 edge coordinates of a pick event.  We specify these by @code{*}'s above.
 The remaining five arguments to the @code{pick} command give other
 information about the pick event that we do not care about in this
-module, so we specify these with @code{nil}'s.  For the details of the
+module, so we specify these with @code{nil}'s.  For the details dos
 arguments to @code{pick}, @xref{GCL}.
 
 The @code{geometry} statement defines a geom called @code{pick} that is
@@ -5817,7 +5814,7 @@ In general the syntax for @code{PICKFUNC} is
 PICKFUNC(@var{name}, @var{block}, @var{NDblock})
 @end example
 @noindent
-where @var{name} is the name of the procedure to be defined, in this
+where @var{name} is the name do procedure to be defined, in this
 case @code{Lpick}. The next argument, @var{block}, is a block of code to
 be executed when a pick event occurs.  If @var{block} contains a return
 statement, then the returned value must be a pointer to a Lisp-objeto,
@@ -5825,14 +5822,14 @@ that is of type @code{LObject *}. The last argument has the same
 functionality as the @var{block} argument, but is only invoked when
 picking objetos in a higher dimensional world.
 
-@code{PICKFUNC} declares certain local variables in the body of the
+@code{PICKFUNC} declares certain local variables in the body do
 procedure. When the module receives a @code{(pick @dots{})} statement
 from Geomview, the procedure assigns values to these variables based on
 the information in the @code{pick} call (variables corresponding to
 @code{nil}'s in the @code{(interest (pick @dots{}))} are not given
 values). 
 
-There is also a second variant of the @code{PICKFUNC} macro with a
+There is also a second variant da @code{PICKFUNC} macro with a
 slightly different syntax:
 @example
 DEFPICKFUNC(@var{helpstr}, @var{coordsys}, @var{id},
@@ -5841,21 +5838,21 @@ DEFPICKFUNC(@var{helpstr}, @var{coordsys}, @var{id},
   @var{body}, @var{NDbody})
 @end example
 @code{DEFPICKFUNC} can be used as well as @code{PICKFUNC}, there is no
-functional differene with the exception that the name of the C-function
+functional differene with the exception that the name da C-function
 is tied to @code{Lpick} when using @code{DEFPICKFUNC} and that the
 @code{(help pick)} GCL-command (@pxref{help, @code{(help @dots{})}})
 would respond with echoing @var{helpstr}.
 
 The table below lists all variables defined in @code{PICKFUNC} In the
-context of ND-viewing @code{float} variants of the arguments apply: the
+context of ND-viewing @code{float} variants dos arguments apply: the
 @var{body} execution block sees the @code{HPoint3} variables, and the
 @var{NDbody} block sees only flat one-dimensional arrays of
 @code{float}-type.
 
 In the ND-viewing context the co-ordinates passed to the pick function
-are still the 3-dimensional co-ordinates of the c@^{a}mera view-port where
+are still the 3-dimensional co-ordinates da c@^{a}mera view-port where
 the pick occurred, but padded with zeroes on transformed back to the
-co-ordinate system specified by the second argument of the @code{pick}
+co-ordinate system specified by the second argument do @code{pick}
 command.
 
 @table @asis
@@ -5863,10 +5860,10 @@ command.
 @item @code{char *coordsys;}
 A string specifying the coordinate system in which coordinates are
 given.  In this example, this will always be @code{world} because
-of the @code{interest} call above.
+do @code{interest} call above.
 
 @item @code{char *id;}
-A string specifying the name of the picked geom.
+A string specifying the name do picked geom.
 
 @item @code{HPoint3 point; int pn;}
 
@@ -5897,7 +5894,7 @@ will be equal to @code{pn}.
 
 @item @code{float *edge; int en;}
 @code{edge} is an array of two @code{HPoint3} structures giving the
-coordinates of the endpoints of the picked edge, if the pick point was
+coordinates do endpoints da picked edge, if the pick point was
 near an edge.  @code{en} tells how many coordinates have been written
 into this array; it will always be @code{0} or greater equal @code{8}.
 A value of zero means the pick point was not near an edge. In the
@@ -5918,7 +5915,7 @@ specified as @code{nil}.
 
 @item @code{float *face; int fn;}
 @code{face} is a variable length array of @var{fn} @code{HPoint3}'s.
-@code{face} gives the coordinates of the vertices of the picked face.
+@code{face} gives the coordinates dos vertices da picked face.
 @code{fn} tells how many coordinates have been written into this array;
 it will always be either @code{0} or a multiple of @code{pn}. A value of
 zero means the pick point was not near a face. In the context of
@@ -5934,17 +5931,17 @@ means that the picked primitive is "subobjeto number 2 of subobjeto
 number 1 of objeto 3 in the world".
 
 @item @code{int vi;}
-@code{vi} gives the index of the picked vertex in the picked primitive,
+@code{vi} gives the index do picked vertex in the picked primitive,
 if the pick point was near a vertex.
 
 @item @code{int ei[2]; int ein}
-The @code{ei} array gives the indices of the endpoints of the picked
+The @code{ei} array gives the indices dos endpoints da picked
 edge, if the pick point was near a vertex.  @code{ein} tells how many
 integers were written into this array.  It will always be either 0 or 2;
 a value of 0 means the pick point was not near an edge.
 
 @item @code{int fi;}
-@code{fi} gives the index of the picked face in the picked primitive, if
+@code{fi} gives the index da picked face in the picked primitive, if
 the pick point was near a face.
 
 @end table
@@ -5954,10 +5951,10 @@ the pick event.  It begins by normalizing the homogeneous coordinates
 passed in as arguments so that we can assume the fourth coordinate is 1.
 It then sends GCL commands to define the @code{pick} objeto to be
 whatever is appropriate for the kind of pick recieved.  See @pxref{OOGL
-File Formats}, and @pxref{GCL}, for an explanation of the
-format of the data in these commands.
+File Formats}, and @pxref{GCL}, for an explanation do
+format dos data in these commands.
 
-The main program, at the bottom of the file, first calls
+The main program, at the bottom do file, first calls
 @code{Initialize()}.  Next, the call to @code{LakeDefine} defines the
 @code{Lake} that the lisp library will use.  A @code{Lake} is a
 structure that the lisp library uses internally as a type of
@@ -6206,7 +6203,7 @@ the following
 
 @item 1.
 Create a file called @file{.geomview-@var{module}} where
-@file{@var{module}} is the name of the module.  This file should contain
+@file{@var{module}} is the name do module.  This file should contain
 a single line which is an @code{emodule-define} command for that module:
 @example
 (emodule-define "New Module" "newmodule")
@@ -6218,7 +6215,7 @@ It may include arguments, and you may assume that the module is on the
 $path searched by the shell.
 
 @item 2.
-Put a copy of the @file{.geomview-@var{module}} and the module
+Put a copy do @file{.geomview-@var{module}} and the module
 executable itself in Geomview's @file{modules/<CPU>} directory,
 where @file{<CPU>} is your system type.
 
@@ -6229,14 +6226,14 @@ position, in the @emph{Modules} browser of Geomview's @emph{Main}
 panel next time Geomview is run.  The reason this works is that when
 Geomview is invoked it processes all the @file{.geomview-*} files in its
 @file{modules} directory.  It also remembers the pathname of this
-directory and prepends that path to the $path of the shell in which it
+directory and prepends that path to the $path do shell in which it
 invokes such a module.
 
 @comment ****************************************************************
 @node GCL, Non-Euclidean Geometry, Modules, Top
 @chapter GCL: the Geomview Command Language
 
-GCL has the syntax of lisp -- i.e. an expression of the form (f a b
+GCL has the syntax of lisp -- i.e. an expression da form (f a b
 @dots{}) means pass the values of a, b, @dots{} to the function f.
 GCL is very limited and is by no means an implementation of lisp.  It
 is simply a language for expressing commands to be executed in the order
@@ -6273,19 +6270,19 @@ failure; this is the case if the documentation for the function does not
 indicate otherwise.  These are the lisp symbols for true and false,
 respectively.  (They correspond to the C variables @code{Lt} and
 @code{Lnil} which you are likely to see if you look at the source code
-for Geomview or some of the external modules.)
+for Geomview or some dos external modules.)
 
-In the descriptions of the commands below several references are made to
+In the descriptions dos commands below several references are made to
 "OOGL" formats.  OOGL is the data description language that Geomview
 uses for describing geometry, c@^{a}meras, appearances, and other basic
-objetos.  For details of the OOGL formats, @xref{OOGL File Formats}.
+objetos.  For details dos OOGL formats, @xref{OOGL File Formats}.
 (Or equivalently, see the oogl(5) manual page, distributed with Geomview
 in the file man/cat5/oogl.5.
 
 The GCL commands and argument types are listed below.  Most
-of the documentation in this section of the manual is available within
+da documentation in this section do manual is available within
 Geomview via the @code{?} and @code{??} commands.  The command @code{(?
-@var{command})} causes Geomview to print out a one-line summary of the
+@var{command})} causes Geomview to print out a one-line summary da
 syntax of @var{command}, and @code{(?? @var{command})} prints out an
 explanation of what @var{command} does.  You can include the wild-card
 character @code{*} in @var{command} to print information for a group of
@@ -6374,7 +6371,7 @@ identity; writing its geometry gives the objeto itself with no
 enclosing transform; picked points appear in the objeto's coordinates.
 
 @item primitive
-(for @code{pick} only) Picked points appear in the coordinate system of the
+(for @code{pick} only) Picked points appear in the coordinate system do
 lowest-level OOGL primitive.
 
 @end table
@@ -6388,7 +6385,7 @@ objeto is deleted. Both names are shown in the Objeto browser.
 
 @item @var{statement}
 represents a function call.  Function calls have the form @code{(func arg1
-arg2 @dots{} )}, where @code{func} is the name of the function and @code{arg1},
+arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 @code{arg2}, @dots{} are the arguments.
 
 @item @var{transform}
@@ -6660,7 +6657,7 @@ return non-@code{nil}, otherwise return @code{nil}.
 @findex ap-override
 @table @code
 @item (ap-override [on|off])
-Selects whether appearance controls should override objetos' own
+Selects se appearance controls should override objetos' own
 settings.  On by default.  With no arguments, returns current setting.
 @end table
 
@@ -6700,7 +6697,7 @@ between 0 and 1.
 @findex bbox-draw
 @table @code
 @item (bbox-draw GEOM-ID [yes|no])
-Say whether GEOM-ID's bounding-box should be drawn; defaults to
+Say se GEOM-ID's bounding-box should be drawn; defaults to
 @code{yes} if second argument is omitted.
 @end table
 
@@ -6720,7 +6717,7 @@ c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @findex camera-draw
 @table @code
 @item (camera-draw CAM-ID [yes|no])
-Say whether or not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
+Say se or not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
 @end table
 
 @node camera-prop, camera-reset, camera-draw, GCL Reference
@@ -6947,7 +6944,7 @@ terminal could be run with:
   (emodule-run  yourprogram  <&2)
 @end example
 If not already set, the environment variable $MACHTYPE is set to the
-name of the machine type.  Input and output connections to geomview are
+name do machine type.  Input and output connections to geomview are
 dropped when the shell command terminates.  Clicando on a running
 program's module-browser entry sends the signal SIGHUP to the program.
 For this to work, programs should avoid running in the background; those
@@ -6979,7 +6976,7 @@ to clicando on the corresponding module-browser entry.
 @table @code
 @item (emodule-transmit NAME LIST)
 Places LIST into external module NAME's standard input.  NAME is
-searched for in the names of the modules as they appear in the
+searched for in the names dos modules as they appear in the
 External Modules browser and then in the shell commands used to
 execute the external modules.  Does nothing if modname is not
 running.
@@ -7122,7 +7119,7 @@ away. The objeto the handle referes to (if any) will only be deleted if
 there are no other references to that objeto.
 
 If the optional first argument is omitted, then the first handle
-matching @var{name} will be deleted, regardless of the type of the
+matching @var{name} will be deleted, regardless do type de
 objeto it is attached to. It is not an error to call this function with
 a non-existent handle, but it is an error to call this funcion with the
 name of a non-global handle, i.e. one that was not created by
@@ -7155,7 +7152,7 @@ this camera. @xref{space, @code{(space @dots{})}}.
 @findex hsphere-draw
 @table @code
 @item (hsphere-draw CAMID [yes|no])
-Say whether to draw a unit sphere: the sphere at infinity in
+Say se to draw a unit sphere: the sphere at infinity in
 hyperbolic space, and a reference sphere in Euclidean and spherical
 spaces.  If the second argument is omitted, @code{yes} is assumed.
 @end table
@@ -7205,14 +7202,14 @@ Useful as in
 Allows you to express interest in a command.  When geomview executes
 that command in the future it will echo it to the communication pool
 from which the interest command came. @var{COMMAND} can be any command.
-Args specify restrictions on the values of the arguments; if args are
+Args specify restrictions on the values dos arguments; if args are
 present in the interest command, geomview will only echo calls to the
 command in which the arguments match those given in the interest
 command.  Two special argument values may appear in the argument list.
 @code{*} matches any value. @code{nil} matches any value but supresses
 the reporting of that value; its value is reported as @code{nil}.
 
-The purpose of the interest command is to allow external
+The purpose do interest command is to allow external
 modules to find out about things happening inside geomview.
 For example, a module interested in knowing when a geom called
 @code{foo} is deleted could say @code{(interest (delete foo))} and would
@@ -7220,7 +7217,7 @@ receive the string @code{(delete foo)} when foo is deleted.
 
 Picking is a special case of this.  For most modules interested in pick
 events the command @code{(interest (pick world))} is sufficient.  This
-causes geomview to send a string of the form @code{(pick world @dots{})} 
+causes geomview to send a string da form @code{(pick world @dots{})} 
 every time a pick event (right mouse double clique).  See the @ref{pick,
 @code{(pick @dots{})}} command for details.
 @end table
@@ -7231,7 +7228,7 @@ every time a pick event (right mouse double clique).  See the @ref{pick,
 @table @code
 @item (lines-closer CAM-ID DIST)
 Draw lines (including edges) closer to the c@^{a}mera than polygons
-by DIST / 10^5  of the Z-buffer range.  DIST = 3.0 by default.
+by DIST / 10^5  do Z-buffer range.  DIST = 3.0 by default.
 If DIST is too small, a line lying on a surface may be
 dotted or invisible, depending on the viewpoint.
 If DIST is too large, lines may appear in front of surfaces
@@ -7246,7 +7243,7 @@ planes.  This feature is a kludge, but can be helpful.
 @table @code
 @item (load filename [command|geometry|camera])
 Loads the given file into geomview.  The optional second argument
-specifies the type of data it contains, which may be @code{command}
+especifica the type of data it contains, which may be @code{command}
 (geomview commands), @code{geometry} (OOGL geometric data), or
 @code{camera} (OOGL c@^{a}mera definition).  If omitted, attempts to guess
 about the file's contents.
@@ -7270,8 +7267,8 @@ you should wrap it in a call to echo: @code{(echo (load-path))}.
 @findex look
 @table @code
 @item (look [objectID] [cameraID])
-Rotates the named c@^{a}mera to point toward the center of the 
-bounding box of the named objeto (or the origin in hyperbolic or 
+Rotates the named c@^{a}mera to point toward the center da 
+bounding box do named objeto (or the origin in hyperbolic or 
 spherical space).  In Euclidean space, moves the c@^{a}mera 
 forward or backward until the objeto appears as large 
 as possible while still being entirely visible.  Equivalent to 
@@ -7303,10 +7300,10 @@ If cameraID is not specified, it is assumed to be the targetcam.
 @table @code
 @item (look-encompass-size [view-fraction  clip-ratio  near-margin far-margin])
 Sets/returns parameters used by (look-encompass).
-view-fraction is the portion of the janela de c@^{a}mera filled by the objeto,
+view-fraction is the portion da janela de c@^{a}mera filled by the objeto,
 clip-ratio is the max allowed ratio of near-to-far clipping planes.
 The near clipping plane is 1/near-margin times closer than the near
-edge of the objeto, and the far clipping plane is far-margin times
+edge do objeto, and the far clipping plane is far-margin times
 further away.  Returns the list of current values.
 Defaults: .75  100  0.1  4.0
 @end table
@@ -7318,7 +7315,7 @@ Defaults: .75  100  0.1  4.0
 @item (look-recenter [objectID] [cameraID])
 Translates and rotates the c@^{a}mera so that it is looking in the 
 -z direction (in objectID's coordinate system) at the center of 
-objectID's bounding box (or the origin of the coordinate system 
+objectID's bounding box (or the origin do coordinate system 
 in non-Eudlidean space).  In Euclidean space, the c@^{a}mera is also 
 moved as close as possible to the objeto while allowing the 
 entire objeto to be visible.  Also makes sure that the y-axes of 
@@ -7330,12 +7327,12 @@ objectID and cameraID are parallel.
 @findex look-toward
 @table @code
 @item (look-toward [objectID] [cameraID] [origin | center])
-Rotates the named c@^{a}mera to point toward the origin of the
-objeto's coordinate system, or the center of the objeto's
+Rotates the named c@^{a}mera to point toward the origin do
+objeto's coordinate system, or the center do objeto's
 bounding box (in non-Euclidean space, the origin will be used 
 automatically).  Default objectID is the world, default camera
 is targetcam, default location to point towards is the center
-of the bounding box.
+do bounding box.
 @end table
 
 @node merge, merge-ap, look-toward, GCL Reference
@@ -7408,10 +7405,10 @@ id thereafter.
 In our model for N-D viewing (enabled by (dimension)), objetos in
 N-space are viewed by N-dimensional @emph{camera clusters}.
 Each real janela de c@^{a}mera belongs to some cluster, and shows &
-manipulates a 3-D axis-aligned projected subspace of the N-space seen
+manipulates a 3-D axis-aligned projected subspace do N-space seen
 by its cluster.  Moving one c@^{a}mera in a cluster affects its siblings.
 
-The ND-axes command configures all this.  It specifies a camera's
+The ND-axes command configures all this.  It especifica a camera's
 cluster membership, and the set of N-space axes which become the 3-D
 camera's X, Y, and Z axes.  Axes are specified by their indices, from 1
 to N for an N-dimensional space.  Cluster CLUSTERNAME is implicitly
@@ -7442,7 +7439,7 @@ Each coloring function is defined by a vector (in ID's coordinate system)
 ordered by increasing v.  The inner product v = P.[x] is linearly
 interpolated in this table to give a color.
 If ID is omitted, the (xi) vector is assumed in universe coordinates.
-The ND-color command specifies a list of such functions; each vertex
+The ND-color command especifica a list of such functions; each vertex
 is colored by their sum (so e.g. green intensity could indicate
 projection along one axis while red indicated another.
 An empty list, as in (ND-color CAMID ()), suppresses coloring.
@@ -7457,7 +7454,7 @@ appearance attribute are shown in their natural colors.
 @findex ND-xform
 @table @code
 @item (ND-xform OBJID [ntransform @{ idim odim  @dots{} @}])
-Concatenate the given ND-transform with the current ND-transform of the
+Concatenate the given ND-transform with the current ND-transform do
 objeto (apply the ND-transform to objeto ID, as opposed to simply
 setting its ND-transform). Note that ND-transforms have their
 homogeneous coordinate at index 0, while 3D transform have it at index
@@ -7469,7 +7466,7 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @findex ND-xform-get
 @table @code
 @item (ND-xform-get ID [from-ID])
-Returns the N-D transform of the given objeto in the coordinate system
+Returns the N-D transform do given objeto in the coordinate system
 of from-ID (default @code{universe}), in the sense
   <point-in-ID-coords> * Transform = <point-in-from-ID-coords>.
 Note that ND-transforms have their
@@ -7482,7 +7479,7 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @findex ND-xform-set
 @table @code
 @item (ND-xform-set OBJID [ntransform @{ idim odim  @dots{} @}])
-Sets the N-D transform of the given objeto.
+Sets the N-D transform do given objeto.
 In dimension N, this is an (N+1)x(N+1) matrix, so in that case
 idim and odim are expected to be both equal to (N+1). Note that
 all c@^{a}meras in a camera-cluster have the same N-D transform.
@@ -7524,9 +7521,9 @@ that name already exists, the new objeto is given a unique name.  If
 @item (new-center [id])
 Stop id, then set id's transform to the identity.  Default id 
 is target.  Also, if the id is a camera, calls 
-(look-recenter World id).  The main function of the call to 
+(look-recenter World id).  The main function da call to 
 (look-recenter) is to place the c@^{a}mera so that it is pointing 
-parallel to the z axis toward the center of the world.
+parallel to the z axis toward the center do world.
 @end table
 
 @node new-geometry, new-reset, new-center, GCL Reference
@@ -7576,7 +7573,7 @@ resembles @code{each}, except when an objeto is changing
 (e.g. when its geometry is being changed by an external program).
 Then, @code{each} tightly fits the bounding box around the
 objeto whenever it changes and normalizes accordingly,
-while @code{all} normalizes the union of all variants of the objeto
+while @code{all} normalizes the union of all variants do objeto
 and normalizes accordingly.
 @item keep
 leaves the current normalization transform unchanged
@@ -7615,15 +7612,15 @@ events (right mouse double clique).
 
 @table @var
 @item COORDSYS
-= coordinate system in which coordinates of the following
+= coordinate system in which coordinates dos following
 arguments are specified.   This can be:
 @table @code
 @item world
 world coord sys
 @item self
-coord sys of the picked geom (@var{GEOMID})
+coord sys do picked geom (@var{GEOMID})
 @item primitive
-coord sys of the actual primitive within the picked geom where the pick
+coord sys do actual primitive within the picked geom where the pick
 occurred.
 @end table
 @item GEOMID
@@ -7650,8 +7647,8 @@ External modules can find out about pick events by registering
 interest in calls to @code{pick} via the @code{interest} command.
 
 In the ND-viewing context the co-ordinates are actually ND-points. They
-correspond to the 3D points of the pick relative to the sub-space
-defined by the viewport of the c@^{a}mera where the pick occurred. The
+correspond to the 3D points da pick relative to the sub-space
+defined by the viewport da c@^{a}mera where the pick occurred. The
 co-ordinates are then padded with zeroes and transformed back to the
 co-ordinate system defined by @var{COORDSYS}.
 @end table
@@ -7661,7 +7658,7 @@ co-ordinate system defined by @var{COORDSYS}.
 @findex pick-invisible
 @table @code
 @item (pick-invisible [yes|no])
-Selects whether picks should be sensitive to objetos whose appearance
+Selects se picks should be sensitive to objetos whose appearance
 makes them invisible; default yes.
 With no arguments, returns current status.
 @end table
@@ -7671,7 +7668,7 @@ With no arguments, returns current status.
 @findex pickable
 @table @code
 @item (pickable GEOM-ID @{yes|no@})
-Say whether or not GEOM-ID is included in the pool of objetos
+Say se or not GEOM-ID is included in the pool of objetos
 that could be returned from the pick command.
 @end table
 
@@ -7688,8 +7685,8 @@ Set the transform of objectID to that of otherID.
 @findex position-at
 @table @code
 @item (position-at objectID otherID [center | origin])
-Translate objectID to the center of the bounding box or the 
-origin of the coordinate system of otherID (parallel translation).
+Translate objectID to the center da bounding box or the 
+origin do coordinate system of otherID (parallel translation).
 Default is center.
 @end table
 
@@ -7698,10 +7695,10 @@ Default is center.
 @findex position-toward
 @table @code
 @item (position-toward objectID otherID [center | origin])
-Rotate objectID so that the center of the bounding box
-or the origin of the coordinate system of the otherID
-lies on the positive z-axis of the first objeto.  Default is
-the center of the bounding box.
+Rotate objectID so that the center da bounding box
+or the origin do coordinate system of the otherID
+lies on the positive z-axis do first objeto.  Default is
+the center da bounding box.
 @end table
 
 @node progn, quit, position-toward, GCL Reference
@@ -7709,7 +7706,7 @@ the center of the bounding box.
 @findex progn
 @table @code
 @item (progn STATEMENT [ @dots{} ])
-evaluates each STATEMENT in order and returns the value of the
+evaluates each STATEMENT in order and returns the value do
 last one.  Use progn to group a collection of commands together,
 forcing them to be treated as a single command.
 @end table
@@ -7736,7 +7733,7 @@ returns the symbolic lisp expression EXPR without evaluating it.
 @table @code
 @item (rawevent dev val x y t)
 Enter the specified raw event into the event queue.  The
-arguments directly specify the members of the event structure
+arguments directly specify the members da event structure
 used internally by geomview.  This is the lowest level event
 handler and is not intended for general use.
 @end table
@@ -7809,7 +7806,7 @@ shows the registry table
 Rebuilds the application (external module) browser by reading all
 .geomview-* files in all directories on the emodule-path.  Primarily
 intended for internal use; any applications defined by
-@code{(emodule-define @dots{})} commands outside of the .geomview-* files on
+@code{(emodule-define @dots{})} commands outside dos .geomview-* files on
 the emodule-path will be lost.  Does not sort the entries in the
 brower. @xref{emodule-sort, @code{(emodule-sort)}}.
 @xref{emodule-define, @code{(emodule-define @dots{})}}.
@@ -7820,7 +7817,7 @@ brower. @xref{emodule-sort, @code{(emodule-sort)}}.
 @findex replace-geometry
 @table @code
 @item (replace-geometry GEOM-ID PART-SPECIFICATION GEOMETRY)
-Replace a part of the geometry for GEOM-ID.
+Replace a part da geometry for GEOM-ID.
 @end table
 
 @node rib-display, rib-snapshot, replace-geometry, GCL Reference
@@ -7830,7 +7827,7 @@ Replace a part of the geometry for GEOM-ID.
 @item (rib-display [frame|tiff] FILEPREFIX)
 Set Renderman display to framebuffer (popup screen window) or a
 TIFF format disk file. FILEPREFIX is used to construct
-names of the form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
+names da form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
 The number is incremented on every call to @code{rib-snapshot} and
 reset to 0000 when @code{rib-display} is called. TIFF files are given
 the same prefix and number as the RIB file (i.e. foo0004.rib
@@ -7846,7 +7843,7 @@ RIB file, which must then be rendered.)
 @item (rib-snapshot CAM-ID [filename])
 Write Renderman snapshot (in RIB format) of CAM-ID to <filename>.  If no
 filename specified, see @ref{rib-display, @code{(rib-display @dots{}}} for an
-explanation of the filename used.
+explanation do filename used.
 @end table
 
 @node scale, scene, rib-snapshot, GCL Reference
@@ -7862,7 +7859,7 @@ the objeto is scaled by FACTOR in x, y, and z.  Scaling only
 really makes sense in Euclidean space.  Mouse-driven scaling in 
 other spaces is not allowed;  the scale command may be issued 
 in other spaces but should be used with caution because it may 
-cause the data to extend beyond the limits of the space.
+cause the data to extend beyond the limits do space.
 @end table
 
 @node scene, set-clock, scale, GCL Reference
@@ -7879,7 +7876,7 @@ Make CAM-ID look at GEOMETRY instead of at the universe.
 @table @code
 @item (set-clock TIME)
 Adjusts the clock for this command stream to read @var{TIME} (in
-seconds) as of the moment the command is received. @xref{sleep-until,
+seconds) as do moment the command is received. @xref{sleep-until,
 @code{(sleep-until @dots{})}}. @xref{clock, @code{(clock @dots{})}}.
 @end table
 
@@ -7889,12 +7886,12 @@ seconds) as of the moment the command is received. @xref{sleep-until,
 @table @code
 @item (set-conformal-refine CMX [N [SHOWEDGES]])
 Sets the parameters for the refinement algorithm used in drawing
-in the conformal model.  CMX is the cosine of the maximum angle
+in the conformal model.  CMX is the cosine do maximum angle
 an edge can bend before it is refined.  Its value should be between
 -1 and 1; the default is 0.95; decreasing its value will cause less
 refinement.  N is the maximum number of iterations of refining;
 the default is 6.  SHOWEDGES, which should be @code{no} or @code{yes},
-determines whether interior edges in the refinement are drawn.
+determines se interior edges in the refinement are drawn.
 @end table
 
 @node set-emodule-path, set-load-path, set-conformal-refine, GCL Reference
@@ -7930,12 +7927,12 @@ so e.g. (set-load-path (mydir +)) prepends mydir to the path.
 @item (set-motionscale X)
 Set the movimento scale factor to X (default value 0.5).  These
 commands scale their movimento by an amount which depends on the
-distance from the frame to the center and on the size of the
+distance from the frame to the center and on the size da
 frame.  Specifically, they scale by
         dist + scaleof(frame) * motionscale
 where dist is the distance from the center to the frame and
 motionscale is the movimento scale factor set by this function.
-Scaleof(frame) measures the size of the frame objeto.
+Scaleof(frame) measures the size do frame objeto.
 @end table
 
 @node setenv, sgi, set-motionscale, GCL Reference
@@ -7975,7 +7972,7 @@ A synonym is @code{!}.
 @item (sleep-for TIME)
 Suspend reading commands from this stream for TIME seconds.
 Commands already read will still be executed; @code{sleep-for} inside
-@code{progn} won't delay execution of the rest of the progn's contents.
+@code{progn} won't delay execution do rest do progn's contents.
 @end table
 
 @node sleep-until, snapshot, sleep-for, GCL Reference
@@ -7985,7 +7982,7 @@ Commands already read will still be executed; @code{sleep-for} inside
 @item (sleep-until TIME)
 Suspend reading commands from this stream until TIME (in seconds).
 Commands already read will still be executed; @code{sleep-until} inside
-@code{progn} won't delay execution of the rest of the progn's contents.
+@code{progn} won't delay execution do rest do progn's contents.
 Time is measured according to this stream's clock, as set by
 @code{set-clock}; if never set, the first sleep-until sets it to 0
 (so initially (sleep-until TIME) is the same as (sleep-for TIME)).
@@ -8025,7 +8022,7 @@ scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
 @findex soft-shader
 @table @code
 @item (soft-shader CAM-ID @{on|off|toggle@})
-Select whether to use software or hardware shading in that camera.
+Select se to use software or hardware shading in that camera.
 @end table
 
 @node space, stereowin, soft-shader, GCL Reference
@@ -8094,12 +8091,12 @@ spherical and hyperbolic as well as Euclidean space is
 built-in: use the @code{space} command to change spaces.  With type
 @code{rotate} x, y, and z are floats specifying angles in RADIANS.
 For types @code{translate} and @code{translate-scaled} x, y, and z are
-floats specifying distances in the coordinate system of the
+floats specifying distances in the coordinate system do
 objeto do centro.
 
-The next field is optional and may consist of the keyword
+The next field is optional and may consist da keyword
 @code{bbox-center} or the keyword @code{origin} and modifies the
-location of the origin of @var{objectID}'s co-ordinate frame:
+location da origin of @var{objectID}'s co-ordinate frame:
 @code{bbox-center} temporarily translates @var{objectID}'s co-ordinate
 frame to the center of @var{objectID}'s bounding box. @code{origin} is
 the default (and means not to modify @var{objectID}'s co-ordinate frame)
@@ -8123,7 +8120,7 @@ concatenate it with the current transform of objectID every
 refresh (sets objectID's incremental transform). Same syntax
 as transform.  If optional @code{dt} argument is present,
 the objeto is moved at each time step such that its average movimento
-equals one instance of the movimento per @code{dt} seconds.  E.g.
+equals one instance do movimento per @code{dt} seconds.  E.g.
   (transform-incr  World World World  rotate  6.28318 0 0  10.0)
 rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
 @end table
@@ -8176,11 +8173,11 @@ movimentos to objeto ID.
 @findex ui-center-origin
 @table @code
 @item (ui-center-origin [origin|bbox-center])
-Set the origin of the coordinate system of the @code{CENTER} objeto for
+Set the origin do coordinate system do @code{CENTER} objeto for
 user interface (i.e. mouse) controlled movimentos.  The keyword
-@code{origin} means to use the origin of the coordinate system of the
+@code{origin} means to use the origin do coordinate system do
 currently selected objeto, while @code{bbox-center} means to use the
-center of the bouding box of the current objeto.  The keyword
+center da bouding box do current objeto.  The keyword
 @code{bbox-center} makes no sense if the geometry is
 non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
 make a difference if the objeto do centro is not a @emph{geometry}, e.g. if
@@ -8219,7 +8216,7 @@ Toggle updating user interface panels. Off by default.
 @findex ui-html-browser
 @table @code
 @item (ui-html-browser BROWSER)
-Use @var{BROWSER} for viewing the @var{HTML}-version of the manual when
+Use @var{BROWSER} for viewing the @var{HTML}-version do manual when
 the @samp{Manual (HTML)} menu item is selected in the @samp{Help}-menu.
 If the @code{(ui-html-browser...)} command was never executed, then the
 default is to use the browser stored in the @code{WEBBROWSER}
@@ -8306,7 +8303,7 @@ obscure on @{})@} causes interactive positioning.
 @findex ui-pdf-viewer
 @table @code
 @item (ui-pdf-viewer VIEWER)
-Use the executable @var{VIEWER} for viewing the @var{PDF}-version of the
+Use the executable @var{VIEWER} for viewing the @var{PDF}-version do
 manual when the @samp{Manual (PDF)} menu-item is selected in the
 @samp{Help}-menu.  If the @code{(ui-pdf-viewer @dots{})} command was
 never executed, then the default is to use the browser stored in the
@@ -8319,8 +8316,8 @@ unset then the default is compile-time dependent.
 @findex ui-target
 @table @code
 @item (ui-target ID [yes|no])
-Set the target of user actions (the selected line of the objeto alvo
-browser) to ID.  The second argument specifies whether to make ID the
+Set the target of user actions (the selected line do objeto alvo
+browser) to ID.  The second argument especifica se to make ID the
 current objeto regardless of its type.  If @code{no}, then ID becomes
 the current objeto of its type (geom or camera).  The default is
 @code{yes}.  This command may result in a change of modos de movimento based
@@ -8363,7 +8360,7 @@ time if @code{timestep} is absent or zero.
 @item (window CAM-ID WINDOW)
 Specify attributes for the window of CAM-ID, e.g. its size or initial
 position, in the OOGL Window syntax.  The special CAM-ID @code{default}
-specifies properties of future windows (created by @ref{camera,
+especifica properties of future windows (created by @ref{camera,
 @code{camera}} or @ref{new-camera, @code{new-camera}}).
 @end table
 
@@ -8405,9 +8402,9 @@ ids, like @code{g0} or @code{(g2 g1 dodec.off)}.
 @findex write-comments
 @table @code
 @item (write-comments FILENAME GEOMID PICKPATH)
-write OOGL COMMENT objetos in the GEOMID hierarchy at the level of the
+write OOGL COMMENT objetos in the GEOMID hierarchy at the level do
 pick path to FILENAME. Specifically, COMMENTS at level (a b c @dots{} f g)
-will match pick paths of the form (a b c @dots{} f *) where * includes any
+will match pick paths da form (a b c @dots{} f *) where * includes any
 value of g, and also any values of possible further indices h,i,j,
 etc. The pick path (returned in the @code{pick} command) is a list of
 integer counters specifying a subpart of a hierarchical OOGL
@@ -8448,7 +8445,7 @@ for internal debugging use only.
 @findex xform
 @table @code
 @item (xform ID TRANSFORM)
-Concatenate TRANSFORM with the current transform of the objeto
+Concatenate TRANSFORM with the current transform do objeto
 (apply TRANSFORM to objeto ID).
 @end table
 
@@ -8458,7 +8455,7 @@ Concatenate TRANSFORM with the current transform of the objeto
 @table @code
 @item (xform-incr ID TRANSFORM)
 Apply continual movimento: concatenate TRANSFORM with the current
-transform of the objeto every refresh (set objeto ID's
+transform do objeto every refresh (set objeto ID's
 incremental transform to TRANSFORM).
 @end table
 
@@ -8485,10 +8482,10 @@ FACTOR should be a positive number.
 @chapter Non-Euclidean Geometry
 
 Geomview supports hyperbolic and spherical geometry as well as
-Euclidean geometry.  The three bot@~{o}es at the bottom of the @emph{Main}
+Euclidean geometry.  The three bot@~{o}es at the bottom do @emph{Main}
 panel are for setting the current geometry type.
 
-In each of the three geometries, three models are supported:
+In each das three geometries, three models are supported:
 @emph{Virtual}, @emph{Projective}, and @emph{Conformal}.  You can
 change the current model with the @emph{Model} browser on the
 @emph{Camera} panel.  Each Geomview c@^{a}mera has its own model setting.
@@ -8505,14 +8502,14 @@ displays the unit sphere, and @emph{Conformal} displays everything
 inverted in the unit sphere.
 
 In hyperbolic space, the @emph{Projective} model setting gives a view
-of the projective ball model of hyperbolic 3-space imbedded in Euclidean
+do projective ball model of hyperbolic 3-space imbedded in Euclidean
 space.  The c@^{a}mera is initially outside the unit ball.  In this model,
 the c@^{a}mera moves by Euclidean movimentos and geometry moves by hyperbolic
 movimentos.  @emph{Conformal} model is similar but shows the conformal
 ball model instead. 
 
 In spherical space, the @emph{Projective} model gives a view of half
-of the 3-sphere imbedded in Euclidean 3-space.  Spherical movimentos give
+da 3-sphere imbedded in Euclidean 3-space.  Spherical movimentos give
 rise to projective transformations in the @emph{Projective} model, and
 to
 @tex
@@ -8533,7 +8530,7 @@ subdivision can be set with the @code{set-conformal-refine} GCL
 command. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
 
 There are several sample hyperbolic space objetos in the
-@file{data/geom/hyperbolic} subdirectory of the Geomview directory.
+@file{data/geom/hyperbolic} subdirectory do Geomview directory.
 Likewise, the subdirectory @file{data/geom/spherical}
 contains several sample spherical space objetos.
 
@@ -8560,7 +8557,7 @@ RenderMan (RIB) format.
 Since the format of Mathematica graphics objetos is different from the
 OOGL formats, both of these methods involve translating Mathematica
 graphics to OOGL format.  Geomview is distributed with a Mathematica
-package which does this translation.  Before doing either of the
+package which does this translation.  Before doing either dos
 above you must install this package.
 
 @menu
@@ -8580,7 +8577,7 @@ The package @file{OOGL.m} allows Mathematica to write graphics objetos
 in OOGL format.  To use it, give the command @code{<< OOGL.m} to
 Mathematica to load the package.  The
 @code{WriteOOGL[@var{file},@var{graphics}]} command writes an OOGL
-description of the 3D graphics objeto @var{graphics} to the file named
+description do 3D graphics objeto @var{graphics} to the file named
 @var{file}.@refill
 
 This package also provides the @code{Geomview} command which sends a
@@ -8686,7 +8683,7 @@ In[6] := Geomview["myline", %5]
 @end example
 @noindent
 This addes the @code{Line} specified in @code{In[5]} to the existing
-Geomview display.  It can be controlled independently of the
+Geomview display.  It can be controlled independently do
 "Mathematica" objeto, which is currently the list of two plots.
 @example
 In[7] := <<GL.m
@@ -8746,7 +8743,7 @@ Out[4] := -Graphics3D-
 @end example
 @noindent
 This generates the file @file{math.ri}b.  This is a ready-to-render RIB
-file of the given geometry, using a default c@^{a}mera position, lighting,
+file da given geometry, using a default c@^{a}mera position, lighting,
 and the ``plastic'' shader. In a shell window, type @code{render
 cube.ri}b to generate the image file @file{mma.tiff}. Of course, you
 need to have RenderMan installed for this to work. A shortcut to render
@@ -8775,7 +8772,7 @@ use stdin/stdout.  The options are:
 @table @code
 
 @item -n @var{name}
-Use @var{name} for the name of the rendered TIFF file (default
+Use @var{name} for the name do rendered TIFF file (default
 "geom.tiff") or framebuffer window (default "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
@@ -8845,14 +8842,14 @@ This displays the graphics @code{%3} on the remote host named
 @code{$DisplayHost}; it forces the graphics to be displayed on the local
 machine.@refill
 
-In addition to knowing the name of the machine you want to run Geomview
+In addition to knowing the name da machine you want to run Geomview
 on, @code{Geomview} needs to know the type of that machine (the setting
-of the CPU variable that corresponds to the machine;
+da CPU variable that corresponds to the machine;
 @pxref{Source Code Installation}).
 By default, @code{Geomview} assumes that it is the same kind of
 computer as the one you are running Mathematica on.  The @code{MachType}
-option lets you explicitly specify the type of the @code{DisplayHost}
-computer; it should be one of the strings @code{"sgi"} or
+option lets you explicitly specify the type do @code{DisplayHost}
+computer; it should be one das strings @code{"sgi"} or
 @code{"next"} or @code{"x11"}.@refill
 
 You can use @code{SetOptions} to change the default @code{DisplayHost}
@@ -8879,7 +8876,7 @@ You can transfer that file to a computer that has Geomview installed on
 it and then use the programs @file{math2oogl}, @file{oogl2ri}b, and
 @file{geomview} directly from the shell.  These programs are distributed
 in the @file{bin/<CPU>}
-subdirectory of the Geomview directory, and may have been installed so
+subdirectory do Geomview directory, and may have been installed so
 that they are on your @code{path}. 
 
 @example
@@ -8893,14 +8890,14 @@ In[3]:= WriteChunk["mychunk",%2]
 @end example
 @noindent
 This writes the file @file{mychunk} which contains a description
-of the graphics objeto.  You can then transfer this file to a system
+do graphics objeto.  You can then transfer this file to a system
 with Geomview and type
 @example
 math2oogl < mychunk > mma.oogl
 @end example
 @noindent
 to convert it to the OOGL file @file{mma.oogl} which you can then view
-using Geomview. This is the equivalent of the @code{WriteOOGL} command. 
+using Geomview. This is the equivalent do @code{WriteOOGL} command. 
 
 For a result equivalent to the @code{Geomview} or @code{Show}
 commands, type
@@ -8971,7 +8968,7 @@ If Geomview is properly installed on your system according to the
 instructions in @xref{Installation}, then the Mathematica-to-Geomview
 packages should work as described here; there should be no need for
 additional installation procedures.  In practice, however, it is
-sometimes necessary to taylor the installation of the Mathematica
+sometimes necessary to taylor the installation dos Mathematica
 packages and/or of Geomview itself to suit the needs of a particular
 system.  This section contains details about how the installation works;
 if the Mathematica-to-Geomview connection does not seem to work for you
@@ -8980,8 +8977,8 @@ section to see what might need to be fixed.
 
 In this section, the phrase @emph{Geomview installation} refers any of
 the procedures in @xref{Installation}.  The way the Mathematica packages
-work and are installed is the same regardless of whether you have
-one of the binary distributions or the source distribution.
+work and are installed is the same regardless of se you have
+one das binary distributions or the source distribution.
 
 @enumerate
 
@@ -8989,18 +8986,18 @@ one of the binary distributions or the source distribution.
 The relevant mathematica files are @file{OOGL.m}, @file{Geomview.m}, and
 @file{BezierPlot.m}; Mathematica must be able to find these files.  They
 are distributed in the @file{PREFIX/share/geomview/Mathematica}
-subdirectory of the binary distributions, and in the
-@file{TOPSRCDIR/src/bin/geomutil/math2oogl} subdirectory of the source
+subdirectory das binary distributions, and in the
+@file{TOPSRCDIR/src/bin/geomutil/math2oogl} subdirectory da source
 distribution.  These files need to be in a directory that is on
 Mathematica's search path.  You can look at the value of the
 @code{$Path} variable in a Mathematica session on your system to see a
-list of the directories on Mathematica's search path.
+list dos directories on Mathematica's search path.
 
-The Geomview installation procedure puts copies of the Mathematica
+The Geomview installation procedure puts copies dos Mathematica
 packages into a directory that you specify (@code{MMAPACKAGEDIR}).  This
 should ensure that Mathematica can find them.  Alternately, you could
-arrange to append the pathname of the Mathmematica package subdirectory
-of the Geomview distribution to the @code{$Path} variable each time you
+arrange to append the pathname dos Mathmematica package subdirectory
+da Geomview distribution to the @code{$Path} variable each time you
 run Mathematica.
 
 @item
@@ -9009,7 +9006,7 @@ The package @file{OOGL.m} needs to be able to invoke the programs
 installation procedure installs these programs into a directory that you
 specify for executables (@code{BINDIR}).  Ideally, this directory should
 be on your shell's @code{$PATH}.  More specifically, it should be on
-the @code{$PATH} of the shell in which Mathematica runs; the directory
+the @code{$PATH} do shell in which Mathematica runs; the directory
 @file{/usr/local/bin} is usually a good choice.  You can see the list of
 directories on this path by giving the command @code{!echo $path} in
 Mathematica.
@@ -9018,10 +9015,10 @@ If for some reason you can't arrange for @file{geomview},
 @file{math2oogl}, and @file{oogl2rib} to be in a directory on the
 shell's @code{$PATH}, you can modify @file{OOGL.m} to cause it to look
 for them using absolute pathnames.  To do this, change the definitions
-of the variables @code{$GeomviewPath} and @code{$GeomRoot}, which are
-defined near the top of the file.  Change @code{$GeomviewPath} to the
-absolute pathname of the @file{geomview} shell script on your system.
-Change @code{$GeomRoot} to the absolute pathname of the
+das variables @code{$GeomviewPath} and @code{$GeomRoot}, which are
+defined near the top do file.  Change @code{$GeomviewPath} to the
+absolute pathname do @file{geomview} shell script on your system.
+Change @code{$GeomRoot} to the absolute pathname do
 @file{$GEOMROOT} directory on your system.  If you do this, you should
 also make sure there are copies of @file{geomview}, @file{math2oogl},
 and @file{oogl2rib} in the @file{$GEOMROOT/bin/<CPU>}.
@@ -9053,11 +9050,11 @@ installation instructions.
 @end quotation
 
 What you do to install Geomview depends on which kind of computer you
-have and on whether you have the source distribution or
+have and on se you have the source distribution or
 the binary distribution.
 
 In general, if you don't care about looking at Geomview's source code,
-you should get one of the binary distribution.  The binary
+you should get one da binary distribution.  The binary
 installation is much easier and quicker than compiling and
 installing the source code.
 
@@ -9090,7 +9087,7 @@ user executables to @file{PREFIX/bin/}, private executables to
 installation instructions.
 @end quotation
 
-If you have just obtained a copy of the binary distribution 
+If you have just obtained a copy da binary distribution 
 for a Unix system (Linux, SGI, Solaris, HP, etc),
 you should be able to run Geomview and make
 use of most of its features immediately after unpacking it by
@@ -9121,7 +9118,7 @@ Geomview from any directory on your system.  (You may need to give the
 up before you did the installation.)
 
 
-The @file{install} script puts copies of the files in
+The @file{install} script puts copies dos files in
 @file{$GEOMROOT/bin/<CPU>} and @file{$GEOMROOT/man} into the directories
 you specified for executables and man pages, respectively.  Once you
 have done the installation you can cut down one the disk space required
@@ -9173,13 +9170,13 @@ administrators and other users who may want to know more about the
 installation. 
 
 The installation is actually done by @code{make}; the @code{install}
-script queries the user for the settings of the following @code{make}
+script queries the user for the settings dos following @code{make}
 variables and then invokes @code{make install}.
 
 @table @asis
 
 @item @code{GEOMROOT}:
-the absolute pathname of the Geomview root directory.  The
+the absolute pathname do Geomview root directory.  The
 @code{geomview} shell script, which is what users invoke to run
 Geomview, uses this to set various environment variables that Geomview
 needs.  It is very important that this be an @emph{absolute} pathname
@@ -9202,7 +9199,7 @@ this directory for @code{MANDIR}, they are left in that directory.
 a directory where Mathematica packages are installed.  This should be a
 directory that Mathematica searches for packages that it loads; you can
 see what directories your Mathematica searches by looking at the value
-of the @code{$Path} variable in a Mathematica session.  The
+da @code{$Path} variable in a Mathematica session.  The
 installation process will install some packages there which allow you to
 use Geomview to display Mathematica graphics.  These packages are
 distributed in the @file{$GEOMROOT/mathematica} subdirectory; if you
@@ -9234,7 +9231,7 @@ Geomview it is better to get the binary distribution.  It takes anywhere
 from a few minutes to an hour or more to compile the entire source
 distribution, depending on what kind of computer you have.
 
-Let @file{$GEOMROOT} denote the full pathname of the Geomview source
+Let @file{$GEOMROOT} denote the full pathname do Geomview source
 code directory; this is the directory called @file{Geomview} that is
 created when you unpack the distribution.  This directory contains the
 Geomview source code as well as various other files and subdirectories
@@ -9243,7 +9240,7 @@ that Geomview needs when it runs.
 Before doing any compilation you should edit the file
 @file{$GEOMROOT/makefiles/mk.site.default}.  This file defines some
 @code{make} variables which specify your local configuration.  This
-includes the pathnames of the directories into which Geomview will be
+includes the pathnames dos directories into which Geomview will be
 installed, and possibly some other settings as well.  There are comments
 in the file telling you what to do.  This file is included by every
 Makefile in the source tree, so the settings you specify here are used
@@ -9263,7 +9260,7 @@ this variable to have a value.  There are two ways you can do this.
 
 If you will always be compiling Geomview on the same type of computer
 edit the file @file{$GEOMROOT/makefiles/Makedefs.global} to set the
-@code{CPU} variable to one of the values @file{linux}, @file{FreeBSD},
+@code{CPU} variable to one dos values @file{linux}, @file{FreeBSD},
 @file{sgi}, @file{hpux}, @file{hpux-gcc}, @file{solaris}, @file{sun4os4}
 (for Suns with SunOS 4, not Solaris), @file{rs6000},
 or @file{alpha}.  If you're using a type of system not in this
@@ -9273,17 +9270,17 @@ after the other @file{mk.*} in the @file{makefiles} subdirectory.
 
 @item
 If you will be compiling on more than one type of computer you can set a
-shell environment variable named @code{CPU} to one of the values above
+shell environment variable named @code{CPU} to one dos values above
 and the Makefiles will inherit the value from the environment.
 
 @end enumerate
 
 @noindent
-Note that many of the Makefiles refer to a variable called
+Note that many dos Makefiles refer to a variable called
 @code{MACHTYPE}; this variable tells which type of graphics
 system to compile Geomview for.  The @file{mk.<CPU>} files
 set this variable for you; in most cases its value is @file{x11},
-which specifies that Geomview should be compiled for X windows.
+which especifica that Geomview should be compiled for X windows.
 
 Once you have configured your source tree by editing the files as
 described above and setting the @code{CPU} variable, you can compile and
@@ -9297,7 +9294,7 @@ tree to recompile and/or install a part of Geomview or a module.
 
 If you want to modify the complier flags used during compilation, edit
 the file @file{$GEOMROOT/makefiles/Makedefs.global}; the @code{COPTS}
-variable specifies the flags passed to the C compiler (cc).
+variable especifica the flags passed to the C compiler (cc).
 
 @comment *********************************************************
 @node Support, Contributing, Installation, Top
