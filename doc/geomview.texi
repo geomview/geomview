@@ -1792,8 +1792,8 @@ this is more desirable than having the changes only apply to the World
 appearance.)  If the target is a camera, then appearance panel changes
 apply to the geom that was most recently the target.
 
-The five buttons near the upper right corner under the word
-@emph{Draw} control what parts of the target geom are drawn.
+The five buttons near the upper left corner under the word
+@emph{Show} control what parts of the target geom are drawn.
 
 @table @emph
 
