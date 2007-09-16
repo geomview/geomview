@@ -4,5 +4,8 @@ Makefile
 Makefile.in
 lex.yy.c
 libwa.la
+wa.lex.c
+wa.yacc.c
+wa.yacc.h
 y.tab.c
 y.tab.h
