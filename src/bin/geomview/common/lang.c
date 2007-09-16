@@ -158,23 +158,28 @@ void lang_init()
   /*
    * Define various synonyms
    */
-  LDefun("!", Lshell,   "! is a synonym for \"shell\"");
-  LDefun("|", Lemodule_run, "| is a synonym for \"emodule-run\"");
+  LDefun("!", Lshell,
+	 "(! COMMAND)\n`!' is a synonym for \"shell\"");
+  LDefun("|", Lemodule_run,
+	 "(| EMODULE)\n`|' is a synonym for \"emodule-run\"");
   LDefun("ui-emotion-program", Lui_emodule_define,
-	  "ui-emotion-program is an obsolete command.\n\
-	Use its new eqivalent \"emodule-define\" instead.");
+	 "(ui-emotion-program ...)\n"
+	 "ui-emotion-program is an obsolete command."
+	 "Use its new eqivalent \"emodule-define\" instead.");
   LDefun("ui-emotion-run", Lui_emodule_start,
-	  "ui-emotion-run is an obsolete command.\n\
-	Use its new eqivalent \"emodule_start\" instead.");
-  LDefun("quit", Lexit, "quit is a synonym for \"exit\"");
-  LDefun("merge-base-ap",	Lmerge_baseap,
-	  "merge-base-ap is a synonym for merge-baseap.");
+	 "(ui-emotion-run ...)\n"
+	 "ui-emotion-run is an obsolete command."
+	 "Use its new eqivalent \"emodule_start\" instead.");
+  LDefun("quit", Lexit,
+	 "(quit)\n`quit' is a synonym for \"exit\"");
+  LDefun("merge-base-ap", Lmerge_baseap,
+	 "(merge-base-ap)\n`merge-base-ap' is a synonym for merge-baseap.");
   
   /*
    * And some extra help entries.
    */
   LHelpDef("ID",
-	  "ID is a string which names a geometry or camera.  Besides\n\
+	  "\nID is a string which names a geometry or camera. Besides\n\
 	those you create, valid ones are:\n\
 \n\
 	World, world,\n\
@@ -218,22 +223,28 @@ void lang_init()
 	are shown in the Object browser.");
   
   LHelpDef("CAM-ID",
-	  "CAM-ID is an ID that refers to a camera.");
+	   "\nCAM-ID is an ID that refers to a camera.");
   
   LHelpDef("GEOM-ID",
-	  "GEOM-ID is an ID that refers to a geometry.");
+	   "\nGEOM-ID is an ID that refers to a geometry.");
   
   LHelpDef("GEOMETRY",
-	  "GEOMETRY is an OOGL geometry specification.");
+	   "\nGEOMETRY is an OOGL geometry specification.");
   
   LHelpDef("CAMERA",
-	  "CAMERA is an OOGL camera specification.");
+	   "\nCAMERA is an OOGL camera specification.");
   
   LHelpDef("APPEARANCE",
-	  "APPEARANCE is an OOGL appearance specification.");
+	   "\nAPPEARANCE is an OOGL appearance specification.");
   
+  LHelpDef("IMAGE",
+	   "\nIMAGE is an OOGL image specification.");
+
   LHelpDef("TRANSFORM",
-	  "TRANSFORM is an OOGL 4x4 transformation matrix.");
+	   "\nTRANSFORM is an OOGL 4x4 transformation matrix.");
+
+  LHelpDef("NTRANSFORM",
+	   "\nNTRANSFORM is an OOGL NxM transformation matrix.");
 }
 
 HandleOps *keyword2ops(Keyword keyword)
@@ -254,9 +265,9 @@ HandleOps *keyword2ops(Keyword keyword)
 /**********************************************************************/
 
 LDEFINE(shell, LVOID,
-"(shell         SHELL-COMMAND)\n\
-	Execute the given UNIX SHELL-COMMAND using /bin/sh.  Geomview\n\
-	waits for it to complete and will be unresponsive until it does.")
+	"(shell SHELL-COMMAND)\n"
+	"Execute the given UNIX SHELL-COMMAND using /bin/sh. Geomview"
+	"waits for it to complete and will be unresponsive until it does.")
 {
   char *cmd;
   int status;

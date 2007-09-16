@@ -782,7 +782,7 @@ LDEFINE(write, LVOID,
     return Lnil;
   }
 
-  if (idobj->type == LSTRING) {
+  if (idobj->type == LSTRING || idobj->type == LSYMBOL) {
     if (!LFROMOBJ(LID)(idobj, &id)) {
       fprintf(stderr, "write: expects ID or list of IDs in arg position 2\n");
       return Lnil;

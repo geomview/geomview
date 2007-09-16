@@ -859,6 +859,7 @@ void echo_to_fp(LList *arglist, FILE *fp)
       arg = arglist->car;
       val = LEval(arg);
       if (val->type == LSTRING) {
+	/* omit the quotes */
 	fputs(LSTRINGVAL(val), fp);
       } else {
 	LWrite(fp, val);
@@ -950,15 +951,18 @@ LDEFINE(read, LVOID,
   char *opsname = NULL;
   HandleOps *ops;
   LObject *kw = NULL;
-  int c;
 
   if (lake != NULL) {
     /* parse first arg [ops]: */
-    if (!LakeMore(lake, c) ||
+    if (!LakeMore(lake) ||
 	(kw = LSexpr(lake)) == Lnil ||
-	!LFROMOBJ(LSTRING)(kw, &opsname) ||
+	!LSTRINGFROMOBJ(kw, &opsname) ||
 	!(ops = str2ops(opsname))) {
-      OOGLSyntax(lake->streamin, "\"read\" in \"%s\": keyword expected {command|geometry|camera|window|transform|ntransform|image|appearance}, got \"%s\"",
+      OOGLSyntax(lake->streamin,
+		 "\"read\" in \"%s\": keyword "
+		 "{command|geometry|camera|window|transform|"
+		 "ntransform|image|appearance} expected, "
+		 "got \"%s\"",
 		 LakeName(lake), opsname);
       goto fail;
     }
@@ -966,7 +970,7 @@ LDEFINE(read, LVOID,
     /* parse 2nd arg, using ops determined by 1st arg.
        Note: we don't actually store the 1st arg because this function's
        work is all done during parsing.  */
-    if (!LakeMore(lake,c) || (*ops->strmin)(POOL(lake), NULL, NULL) == 0) {
+    if (!LakeMore(lake) || (*ops->strmin)(POOL(lake), NULL, NULL) == 0) {
       OOGLSyntax(lake->streamin, "\"read %s\" in \"%s\": error reading %s's",
 		 opsname, PoolName(POOL(lake)), opsname);
       goto fail;
@@ -990,11 +994,11 @@ void gv_merge(HandleOps *ops, int camid, Ref *object)
   cs.cam = REFGET(Camera, object);     /* Since (merge ...) will delete it */
 #endif
 
-  LFree( LEvalFunc("merge",
-		   LSTRING, ops == &CamOps ? "camera" : "window",
-		   LID, camid,
-		   ops == &CamOps ? LCAMERA : LWINDOW, &cs,
-		   LEND) );
+  LFree(LEvalFunc("merge",
+		  LSTRING, ops == &CamOps ? "camera" : "window",
+		  LID, camid,
+		  ops == &CamOps ? LCAMERA : LWINDOW, &cs,
+		  LEND) );
 }
 
 LDEFINE(merge, LVOID,
@@ -1011,21 +1015,22 @@ LDEFINE(merge, LVOID,
 {
   char *opsname = NULL;
   HandleOps *ops;
-  int c, id;
+  int id;
   LObject *kw = NULL, *idarg = NULL, *item = NULL;
 
   if (lake != NULL) {
     /* parse first arg [ops]: */
-    if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
-	!LFROMOBJ(LSTRING)(kw, &opsname) ||
+    if (!LakeMore(lake) || (kw = LSexpr(lake)) == Lnil ||
+	!LSTRINGFROMOBJ(kw, &opsname) ||
 	((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
       OOGLSyntax(lake->streamin,
-		 "\"merge\" in \"%s\": expected \"camera\" or \"window\", got \"%s\"", LakeName(lake), opsname);
+		 "\"merge\" in \"%s\": expected \"camera\" or \"window\", "
+		 "got \"%s\"", LakeName(lake), opsname);
       goto parsefail;
     }
 
     /* parse 2nd arg; it's a string (id) */
-    if (! LakeMore(lake,c) || (idarg = LEvalSexpr(lake)) == Lnil) {
+    if (!LakeMore(lake) || (idarg = LEvalSexpr(lake)) == Lnil) {
       OOGLSyntax(lake->streamin,"\"merge\" in \"%s\": expected CAM-ID",
 		 LakeName(lake));
       goto parsefail;
@@ -1046,8 +1051,8 @@ LDEFINE(merge, LVOID,
   kw = LListEntry(args, 1);
   idarg = LListEntry(args, 2);
   item = LListEntry(args, 3);
-  if (!LFROMOBJ(LSTRING)(kw, &opsname) ||
-     ((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
+  if (!LSTRINGFROMOBJ(kw, &opsname) ||
+      ((ops = str2ops(opsname)) != &CamOps && ops != &WindowOps)) {
     OOGLError(0, "\"merge\": expected \"camera\" or \"window\", got %s",
 	      LSummarize(idarg));
     return Lnil;
@@ -1275,7 +1280,6 @@ LDEFINE(hdefine, LVOID,
   char *hname;
   char *opsname = NULL;
   Ref *obj;
-  int c;
   LObject *kw = NULL, *name = NULL, *item = NULL;
   union {
     GeomStruct gs;
@@ -1290,8 +1294,8 @@ LDEFINE(hdefine, LVOID,
 
   if (lake != NULL) {
     /* parse first arg [ops]: */
-    if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
-	!LFROMOBJ(LSTRING)(kw, &opsname) ||
+    if (! LakeMore(lake) || (kw = LSexpr(lake)) == Lnil ||
+	!LSTRINGFROMOBJ(kw, &opsname) ||
 	(ops = str2ops(opsname)) == NULL ||
 	(ltype = ops2ltype(ops)) == NULL) {
       OOGLSyntax(lake->streamin,
@@ -1304,7 +1308,7 @@ LDEFINE(hdefine, LVOID,
     }
 
     /* parse 2nd arg; it's a string (id) */
-    if (! LakeMore(lake,c) || (name = LEvalSexpr(lake)) == Lnil) {
+    if (! LakeMore(lake) || (name = LEvalSexpr(lake)) == Lnil) {
       OOGLSyntax(lake->streamin,
 		 "\"hdefine %s\" in \"%s\": expected handle name",
 		 LakeName(lake), opsname);
@@ -1327,14 +1331,14 @@ LDEFINE(hdefine, LVOID,
   kw = LListEntry(args, 1);
   name = LListEntry(args, 2);
   item = LListEntry(args, 3);
-  if (!LFROMOBJ(LSTRING)(kw, &opsname) ||
-     (ops = str2ops(opsname)) == NULL ||
-     (ltype = ops2ltype(ops)) == NULL) {
+  if (!LSTRINGFROMOBJ(kw, &opsname) ||
+      (ops = str2ops(opsname)) == NULL ||
+      (ltype = ops2ltype(ops)) == NULL) {
     OOGLError(0, "\"hdefine\": expected data type, got %s",
 	      LSummarize(kw));
     return Lnil;
   }
-  if (!LFROMOBJ(LSTRING)(name, &hname)) {
+  if (!LSTRINGFROMOBJ(name, &hname)) {
     OOGLError(0, "\"hdefine\": expected handle name, got %s", LSummarize(name));
     return Lnil;
   }

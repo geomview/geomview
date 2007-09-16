@@ -104,9 +104,33 @@ typedef struct Lake {
   const char *initial, *prefix, *suffix; /* printf format strings */
 } Lake;
 
-#define LakeNewSexpr(lake) (iobfnextc(lake->streamin, 0) == '(')
-#define LakeMore(lake, c) ((c=iobfnextc(lake->streamin,0)) != ')' && c != EOF)
 #define POOL(lake)  ((lake)->river)
+
+/* Return true if the next character starts a new S-expr, i.e. if the
+ * next character is an opening parenthesis.
+ */
+static inline bool LakeNewSexpr(Lake *lake)
+{
+  return (iobfnextc(lake->streamin, 0) == '(');
+}
+
+/* Return true if the next token is NOT a closing parenthesis. */
+static inline bool LakeMore(Lake *lake)
+{
+  int c;
+  
+  return (c = iobfnextc(lake->streamin,0)) != ')' && c != EOF;
+}
+
+/* Return the next token from LAKE or NULL.  If the token was quoted
+ * then store the quote character in *QUOTE.
+ */
+static inline const char *LakeNextToken(Lake *lake, int *quote)
+{
+  return iobfquotedelimtok("()", lake->streamin, 0, quote);
+}
+
+/************************ end of lake stuff ***********************************/
 
 typedef struct LList {
   LObject * 	car;
@@ -139,9 +163,25 @@ extern LType LFilterp;
 extern LObject *Lnil, *Lt;
 
 /*
+ * S-expr delimiters, returned by LakeNextToken().
+ */
+extern LObject *LLParen, *LRParen;
+
+/*
  * Built-in object types: string, list, and function.  Function type
  *  is only used internally.  See lisp.c for the code that initializes
  *  these type pointers.
+ */
+
+/* A symbol is just a string which can be bound to a value in a lambda
+ * expression. Symbols can be parsed into strings.
+ */
+extern LType LSymbolp;
+#define LSYMBOL (&LSymbolp)
+#define LSYMBOLVAL(obj) ((char*)((obj)->cell.p))
+
+/* A string is just a symbol which cannot be bound to a value in a
+ * lambda expression. Strings can be parsed into symbols, however.
  */
 extern LType LStringp;
 #define LSTRING (&LStringp)
@@ -179,6 +219,10 @@ static inline LObject *LLISTTOOBJ(LList *list)
 {
   return LTOOBJ(LLIST)(&list);
 }
+static inline LObject *LSYMBOLTOOBJ(const char *string)
+{
+  return LTOOBJ(LSYMBOL)(&string);
+}
 static inline LObject *LSTRINGTOOBJ(const char *string)
 {
   return LTOOBJ(LSTRING)(&string);
@@ -198,6 +242,15 @@ static inline LObject *LFLOATTOOBJ(float value)
 static inline LObject *LDOUBLETOOBJ(double value)
 {
   return LTOOBJ(LDOUBLE)(&value);
+}
+
+static inline bool LSTRINGFROMOBJ(LObject *obj, char **str)
+{
+  if (obj->type == LSTRING || obj->type == LSYMBOL) {
+    *str = LSTRINGVAL(obj);
+    return true;
+  }
+  return false;
 }
 
 /*
@@ -248,36 +301,62 @@ extern LType Lrest;
  * Function prototypes:
  */
 
-void 	RemoveLakeInterests(Lake *lake);
-void	  	LInit();
-Lake *    	LakeDefine(IOBFILE *streamin, FILE *streamout, void *river);
-void	  	LakeFree(Lake *lake);
-LObject * 	_LNew(LType *type, LCell *cell);
-#define   	LNew(type,cell) _LNew(type,(LCell*)(void *)cell)
-LObject * 	LRefIncr(LObject *obj);
-void	  	LRefDecr(LObject *obj);
-void	  	LWrite(FILE *fp, LObject *obj);
-void	  	LFree(LObject *obj);
-LObject	* 	LCopy(LObject *obj);
-LObject * 	LSexpr(Lake *lake);
-LObject *	LEvalSexpr(Lake *lake);
-LObject * 	LEval(LObject *obj);
-LList	* 	LListNew();
-LList	* 	LListAppend(LList *list, LObject *obj);
-void	  	LListFree(LList *list);
-LList *	  	LListCopy(LList *list);
-LObject * 	LListEntry(LList *list, int n);
-int	  	LListLength(LList *list);
+void            RemoveLakeInterests(Lake *lake);
+void            LInit();
+Lake *          LakeDefine(IOBFILE *streamin, FILE *streamout, void *river);
+void            LakeFree(Lake *lake);
+LObject *       LNew(LType *type, void *cell);
+/* LObject *    LRefIncr(LObject *obj); */
+/* void         LRefDecr(LObject *obj); */
+void            LWrite(FILE *fp, LObject *obj);
+/* void         LFree(LObject *obj); */
+/* LObject      *LCopy(LObject *obj); */
+LObject *       LSexpr(Lake *lake);
+LObject *       LEvalSexpr(Lake *lake);
+LObject *       LEval(LObject *obj);
+LList   *       LListNew();
+LList   *       LListAppend(LList *list, LObject *obj);
+void            LListFree(LList *list);
+LList *         LListCopy(LList *list);
+LObject *       LListEntry(LList *list, int n);
+int             LListLength(LList *list);
 LParseResult    LParseArgs(const char *name, Lake *lake, LList *args, ...);
-bool	  	LDefun(const char *name, LObjectFunc func, const char *help);
-void		LListWrite(FILE *fp, LList *list);
-LInterest *	LInterestList(const char *funcname);
-LObject *	LEvalFunc(const char *name, ...);
-bool		LArgClassValid(LType *type);
-void		LHelpDef(const char *key, const char *message);
-const char *	LakeName(Lake *lake);
-const char *	LSummarize(LObject *obj);
-LObject *	LMakeArray(LType *basetype, char *data, int count);
+bool            LDefun(const char *name, LObjectFunc func, const char *help);
+void            LListWrite(FILE *fp, LList *list);
+LInterest *     LInterestList(const char *funcname);
+LObject *       LEvalFunc(const char *name, ...);
+bool            LArgClassValid(LType *type);
+void            LHelpDef(const char *key, const char *message);
+const char *    LakeName(Lake *lake);
+const char *    LSummarize(LObject *obj);
+LObject *       LMakeArray(LType *basetype, char *data, int count);
+
+static inline LObject *LRefIncr(LObject *obj)
+{
+  ++(obj->ref);
+  return obj;
+}
+
+static inline int LRefDecr(LObject *obj)
+{
+  return --(obj->ref);
+}
+
+static inline void LFree(LObject *obj)
+{
+  extern void _LFree(LObject *);
+  if (obj == NULL || obj == Lnil || obj == Lt) return;
+  if (LRefDecr(obj) == 0) {
+    _LFree(obj);
+  }
+}
+
+static inline LObject *LCopy(LObject *obj)
+{
+  if (obj == Lnil) return Lnil;
+  if (obj == Lt) return Lt;
+  return LTOOBJ(obj->type)(&(obj->cell));
+}
 
 void LShow(LObject *obj);	/* for debugging; writes obj to stderr */
 void LListShow(LList *list);

@@ -697,8 +697,10 @@ LType LImagep = {
 
 static bool idfromobj(LObject *obj, int *x)
 {
-  if (obj->type == LSTRING) {
-    *x = drawer_idbyname(LSTRINGVAL(obj));
+  char *tmp;
+  
+  if (LSTRINGFROMOBJ(obj, &tmp)) {
+    *x = drawer_idbyname(tmp);
     if (*x == NOID) return 0;
   } else if (obj->type == LID) {
     *x = LIDVAL(obj);
@@ -770,13 +772,19 @@ LType LIdp = {
 
 static bool keywordfromobj(LObject *obj, int *x)
 {
-  if (obj->type == LSTRING) {
-    *x = (int)(long)fsa_parse(lang_fsa, LSTRINGVAL(obj));
-    if (*x == REJECT) return 0;
+  char *tmp;
+  
+  if (LSTRINGFROMOBJ(obj, &tmp)) {
+    *x = (int)(long)fsa_parse(lang_fsa, tmp);
+    if (*x == REJECT) {
+      return false;
+    }
   } else if (obj->type == LKEYWORD) {
     *x = LKEYWORDVAL(obj);
-  } else return 0;
-  return 1;
+  } else {
+    return false;
+  }
+  return true;
 }
 
 static LObject *keyword2obj(int *x)
@@ -840,37 +848,56 @@ LType LKeywordp = {
 /************************************************************************
  * STRINGS LISP OBJECT							*
  * (a "strings" object is a string with possibly embedded spaces)	*
+ *                                                                      *
+ * cH: actually, this function just sucks everything in until a closing *
+ * paren is found. We now also take care of quoting and embedded parens *
  ************************************************************************/
 
 static bool stringsfromobj(LObject *obj, char * *x)
 {
-  if (obj->type != LSTRING  && obj->type != LSTRINGS) return 0;
-  *x = LSTRINGVAL(obj);
-  return 1;
+  if (LSTRINGFROMOBJ(obj, x)) {
+    return true;
+  } else if (obj->type == LSTRINGS) {
+    *x = LSTRINGVAL(obj);
+    return true;
+  }
+  return false;
 }
 
 static LObject *stringsparse(Lake *lake)
 {
-  char *tok;
-  int toklen, c, first=1;
-  static char *delims = "()";
+  const char *tok;
+  int toklen, quote, paren = 0;
+  bool first = true;
   vvec svv;
 
   VVINIT(svv, char, 80);
 
-  *VVINDEX(svv, char, 0) = '\0';
-  while ( LakeMore(lake,c) ) {
-    tok = iobfdelimtok( delims, lake->streamin, 0 );
+  while (paren > 0 || LakeMore(lake)) {
+    paren -= !LakeMore(lake);
+    paren += LakeNewSexpr(lake);
+    tok = LakeNextToken(lake, &quote);
     toklen = strlen(tok);
-    vvneeds(&svv, strlen(VVEC(svv,char))+toklen+2);
-    if (!first) strcat(VVEC(svv,char), " ");
-    else first = 0;
-    strcat(VVEC(svv,char), tok);
+    if (first) {
+      first = false;
+      quote = '\0'; /* we do not quote the first token */
+    } else {
+      *VVAPPEND(svv, char) = ' ';
+    }
+    if (quote != '\0') {
+      *VVAPPEND(svv, char) = (char)quote;
+    }
+    vvneeds(&svv, VVCOUNT(svv)+toklen);
+    memcpy(VVEC(svv, char)+VVCOUNT(svv), tok, toklen);
+    VVCOUNT(svv) += toklen;
+    if (quote != '\0') {
+      *VVAPPEND(svv, char) = (char)quote;
+    }
   }
-  VVCOUNT(svv) = strlen(VVEC(svv,char))+1;
+  *VVAPPEND(svv, char) = '\0';
   vvtrim(&svv);
   tok = VVEC(svv, char);
-  return LNew( LSTRINGS, &tok );
+  return LNew(LSTRINGS, &tok);
 }
 
 LType LStringsp;		/* initialized in lispext_init() */
