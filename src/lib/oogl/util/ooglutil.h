@@ -94,6 +94,27 @@ extern void *OOG_RenewE(void *, int, char *);
 #define	GeomError  		OOGLError
 
 /*
+ * Error handling
+ */
+extern char *_GFILE;		/* Name of file where error is found */
+extern int _GLINE;		/* Line number in file where error is found */
+extern int OOGL_Errorcode;	/* Unique integer error code */
+extern void OOGLWarn (char *fmt, ...);
+extern const char *sperrno(unsigned int);
+extern const char *sperror(void);
+
+/* Kludge for obtaining file name and line number of error: */
+#define OOGLError (_GFILE= __FILE__, _GLINE=__LINE__,0)?0:_OOGLError
+
+extern int _OOGLError(int, char *fmt, ...);
+
+extern void OOGLSyntax(IOBFILE *, char *fmt, ...); 
+
+	/* Bit fields in error codes */
+#define	OE_VERBOSE	0x1
+#define	OE_FATAL	0x2
+
+/*
  * Variable-sized arrays ("vectors").  Manipulates variables of type "vvec".
  * Maintains the data they point to, but doesn't allocate the vvec's themselves;
  * typical use might be
@@ -115,6 +136,8 @@ typedef struct vvec {
 	char malloced;	/* "base" has been malloced */
 	char spare1, spare2; /* for future extensions */
 } vvec;
+
+#include <vvec.h> /* inline vv-functions */
 
 /*
  * Macros take 'vvec' arguments, while functions take addresses of vvec's.
@@ -143,38 +166,14 @@ typedef struct vvec {
  * vvcopy() : copies one vvec into another, allocating space in the 
  *              destination to accommodate the data and copying everything.
  */
-extern void vvinit(vvec *v, int elsize, int minelems);
-extern void vvuse(vvec *v, void *buf, int allocated);
-extern void vvtrim(vvec *v);		/* Trim allocated but unused data */
-extern void vvfree(vvec *v);		/* Free all malloced data */
-extern void vvneeds(vvec *v, int needed);
-extern void *vvindex(vvec *v, int index);
-extern void vvzero(vvec *v);
-extern void vvcopy(vvec *src, vvec *dest);
-
-
-
-/*
- * Error handling
- */
-extern char *_GFILE;		/* Name of file where error is found */
-extern int _GLINE;		/* Line number in file where error is found */
-extern int OOGL_Errorcode;	/* Unique integer error code */
-extern void OOGLWarn (char *fmt, ...);
-extern const char *sperrno(unsigned int);
-extern const char *sperror(void);
-
-/* Kludge for obtaining file name and line number of error: */
-#define OOGLError (_GFILE= __FILE__, _GLINE=__LINE__,0)?0:_OOGLError
-
-extern int _OOGLError(int, char *fmt, ...);
-
-extern void OOGLSyntax(IOBFILE *, char *fmt, ...); 
-
-	/* Bit fields in error codes */
-#define	OE_VERBOSE	0x1
-#define	OE_FATAL	0x2
-
+static inline void vvinit(vvec *v, int elsize, int minelems);
+static inline void vvuse(vvec *v, void *buf, int allocated);
+static inline void vvtrim(vvec *v); /* Trim allocated but unused data */
+static inline void vvfree(vvec *v); /* Free all malloced data */
+static inline void vvneeds(vvec *v, int needed);
+static inline void *vvindex(vvec *v, int index);
+static inline void vvzero(vvec *v);
+static inline void vvcopy(vvec *src, vvec *dest);
 
 /*
  * File-I/O utility routines
@@ -257,7 +256,11 @@ extern void OOGLSyntax(IOBFILE *, char *fmt, ...);
 extern int async_iobfgetc(IOBFILE *f);
 extern int async_iobfnextc(IOBFILE *f, int flags);
 extern char *iobfcontext(IOBFILE *f);
-extern char *iobfdelimtok(char *delims, IOBFILE *iobf, int flags);
+extern char *iobftoken(IOBFILE *iobf, int flags);
+extern char *iobfquotetoken(IOBFILE *iobf, int flags, int *quote);
+extern char *
+iobfquotedelimtok(const char *delims, IOBFILE *iobf, int flags, int *quote);
+extern char *iobfdelimtok(const char *delims, IOBFILE *iobf, int flags);
 extern int iobfescape(IOBFILE *f);
 extern int iobfexpectstr(IOBFILE *iobf, char *str);
 extern int iobfexpecttoken(IOBFILE *iobf, char *str);
@@ -268,9 +271,8 @@ extern int iobfgetns(IOBFILE *f, int maxs, short *sv, int binary);
 extern int iobfgettransform(IOBFILE *iobf, int ntrans, float *trans, int bin);
 extern int iobfhasdata(IOBFILE *f);
 extern int iobfnextc(IOBFILE *f, int flags);
-extern char *iobftoken(IOBFILE *iobf, int flags);
 
-extern char *fdelimtok(char *delims, FILE *f, int flags);
+extern char *fdelimtok(const char *delims, FILE *f, int flags);
 extern int fescape(FILE *f);
 extern int fexpectstr(FILE *f, char *str);
 extern int fexpecttoken(FILE *f, char *str);
@@ -292,6 +294,12 @@ char *envexpand(char *s);
 extern char **ooglglob(char *s);
 extern void ooglblkfree(char **av0);
 
+/* gettimeofday, where WHEN may be NULL */
+struct timeval *timeof(struct timeval *when);
+/* Add offset to base, yielding result */
+void addtime(struct timeval *result, struct timeval *base, double offset);
+/* Time in second since base */
+double timeoffset(struct timeval *base, struct timeval *when);
 
 /*
  * macro for grabbing the next value from either a region of
