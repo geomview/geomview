@@ -136,8 +136,9 @@ BEGIN { cprefix="'$cprefix'" ;
 	fcount = 0 ;
     inldeclare=0 ;
     type["LINT"]	= "int" ;
-    type["LULONG"]	= "unsigned long" ;
+    type["LLONG"]	= "long" ;
     type["LFLOAT"]	= "float" ;
+    type["LDOUBLE"]	= "double" ;
     type["LSTRING"]	= "char *" ;
     type["LLIST"]	= "LList  *" ;
     type["LLOBJECT"]    = "LObject *" ;
@@ -154,19 +155,20 @@ BEGIN { cprefix="'$cprefix'" ;
     type["LREST"]	= "LList *" ;
     }
 $1 == "LDEFINE" {
+    haveldefine = 1;            # allow only one LDECLARE per LDEFINE
     fstem = $2 ;		# stem from which function names are built
     ftype = $3 ;		# functions return type
     next ;
     }
 $1 == "LDECLARE" {
     name = substr($2,2,length($2)-2) ;	# lisp function name
-    inldeclare=1 ;
+    inldeclare=haveldefine ;
     lakearg = 0;
     argc = 0 ;
     next
     }
 $NF == "LEND" || atend == 1 {
-    if (inldeclare) {
+    if (haveldefine && inldeclare) {
 	# remember data for this function
 	++fcount;
 	cname = cprefix fstem ;
@@ -211,7 +213,8 @@ $NF == "LEND" || atend == 1 {
 	printf "  LFree(val);\n"
 	if (type[ftype] != "void") printf "  return retval;\n"
 	printf "}\n\n"
-	inldeclare=0 ;
+        haveldefine = 0;
+	inldeclare = 0;
 	atend = 0;
 	next
 	}
