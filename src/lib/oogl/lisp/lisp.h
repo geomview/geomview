@@ -36,16 +36,17 @@ typedef struct LObject LObject;
 
 
 typedef union {
-  int i;
-  float f;
   void *p;
-  unsigned long ul;
+  int i;
+  unsigned long l;
+  float f;
+  double d;
 } LCell;
 
 struct LType
 {
   /* name of type */
-  char *name;
+  const char *name;
 
   /* size of corresponding C type */
   int size;
@@ -100,11 +101,11 @@ typedef struct Lake {
   int   timing_interests;	/* Are we time-stamping interest reports? */
   float deltatime;		/* delta time between timestamps */
   float nexttime;		/* Pool time when next timestamp'll be needed */
-  char *initial, *prefix, *suffix; /* printf format strings */
+  const char *initial, *prefix, *suffix; /* printf format strings */
 } Lake;
 
-
-#define LakeMore(lake,c) ((c=iobfnextc(lake->streamin,0)) != ')' && c != EOF)
+#define LakeNewSexpr(lake) (iobfnextc(lake->streamin, 0) == '(')
+#define LakeMore(lake, c) ((c=iobfnextc(lake->streamin,0)) != ')' && c != EOF)
 #define POOL(lake)  ((lake)->river)
 
 typedef struct LList {
@@ -150,13 +151,17 @@ extern LType LIntp;
 #define LINT (&LIntp)
 #define LINTVAL(obj) ((obj)->cell.i)
 
-extern LType LULongp;
-#define LULONG (&LULongp)
-#define LULONGVAL(obj) ((obj)->cell.ul)
+extern LType LLongp;
+#define LLONG (&LLongp)
+#define LLONGVAL(obj) ((obj)->cell.l)
 
 extern LType LFloatp;
 #define LFLOAT (&LFloatp)
 #define LFLOATVAL(obj) ((obj)->cell.f)
+
+extern LType LDoublep;
+#define LDOUBLE (&LDoublep)
+#define LDOUBLEVAL(obj) ((obj)->cell.d)
 
 extern LType LListp;
 #define LLIST (&LListp)
@@ -168,6 +173,32 @@ extern LType LLakep;
 
 extern LType LObjectp;
 #define LLOBJECT (&LObjectp)
+
+/* Convenience functions for generating objects */
+static inline LObject *LLISTTOOBJ(LList *list)
+{
+  return LTOOBJ(LLIST)(&list);
+}
+static inline LObject *LSTRINGTOOBJ(const char *string)
+{
+  return LTOOBJ(LSTRING)(&string);
+}
+static inline LObject *LINTTOOBJ(int value)
+{
+  return LTOOBJ(LINT)(&value);
+}
+static inline LObject *LLONGTOOBJ(long value)
+{
+  return LTOOBJ(LLONG)(&value);
+}
+static inline LObject *LFLOATTOOBJ(float value)
+{
+  return LTOOBJ(LFLOAT)(&value);
+}
+static inline LObject *LDOUBLETOOBJ(double value)
+{
+  return LTOOBJ(LDOUBLE)(&value);
+}
 
 /*
  * Function definition stuff:
@@ -181,6 +212,9 @@ enum lparseresult {
 };
 
 typedef enum lparseresult LParseResult;
+
+#define LPARSEMODE (lake != NULL)
+#define LEVALMODE  (!LPARSEMODE)
 
 #define LDECLARE(stuff) \
   switch (LParseArgs stuff) { \
@@ -234,21 +268,20 @@ void	  	LListFree(LList *list);
 LList *	  	LListCopy(LList *list);
 LObject * 	LListEntry(LList *list, int n);
 int	  	LListLength(LList *list);
-LParseResult    LParseArgs(char *name, Lake *lake, LList *args, ...);
-bool	  	LDefun(char *name, LObjectFunc func, char *help);
+LParseResult    LParseArgs(const char *name, Lake *lake, LList *args, ...);
+bool	  	LDefun(const char *name, LObjectFunc func, const char *help);
 void		LListWrite(FILE *fp, LList *list);
-LInterest *	LInterestList(char *funcname);
-LObject *	LEvalFunc(char *name, ...);
+LInterest *	LInterestList(const char *funcname);
+LObject *	LEvalFunc(const char *name, ...);
 bool		LArgClassValid(LType *type);
-void		LHelpDef(char *key, char *message);
-void		LHelpRedef(char *key, char *newmessage);
-char *		LakeName(Lake *lake);
-char *		LSummarize(LObject *obj);
+void		LHelpDef(const char *key, const char *message);
+const char *	LakeName(Lake *lake);
+const char *	LSummarize(LObject *obj);
 LObject *	LMakeArray(LType *basetype, char *data, int count);
 
 void LShow(LObject *obj);	/* for debugging; writes obj to stderr */
 void LListShow(LList *list);
-void LWriteFile(char *fname, LObject *obj);
+void LWriteFile(const char *fname, LObject *obj);
 
 #include "clisp.h"
 

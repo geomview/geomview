@@ -1122,9 +1122,9 @@ snap_entry snapshot_table[] = {
 void
 ui_init_snaphelp()
 {
-  LHelpRedef("snapshot",
-	     "(snapshot       CAM-ID     FILENAME [FORMAT [XSIZE [YSIZE]]])\n"
-	     "Save a snapshot of CAM-ID in the FILENAME (a string). The FORMAT \
+  LHelpDef("snapshot",
+	   "(snapshot       CAM-ID     FILENAME [FORMAT [XSIZE [YSIZE]]])\n"
+	   "Save a snapshot of CAM-ID in the FILENAME (a string). The FORMAT \
 argument is optional; it may be \"ppmscreen\" (the default), \"ps\",	\
 \"ppm\", \"sgi\" (on SGI machines), \"ppmosmesa\" (if built with	\
 libOSMesa) or \"ppmosglx\".  A \"ppmscreen\" snapshot is created by	\

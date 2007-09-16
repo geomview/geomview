@@ -248,7 +248,7 @@ LDEFINE(rawevent, LVOID,
 	    LINT, &event.val,
 	    LINT, &event.x,
 	    LINT, &event.y,
-	    LULONG, &event.t,
+	    LLONG, &event.t,
 	    LEND));
 
   PRINT_EVENT(("in gv_rawevent", &event));

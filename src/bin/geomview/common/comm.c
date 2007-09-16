@@ -857,16 +857,16 @@ void echo_to_fp(LList *arglist, FILE *fp)
   } else {
     for(;;) {
       arg = arglist->car;
-      if (arg->type == LSTRING)
-	fputs(LSTRINGVAL(arg), fp);
-      else if (arg->type == LLIST) {
-	val = LEval(arg);
+      val = LEval(arg);
+      if (val->type == LSTRING) {
+	fputs(LSTRINGVAL(val), fp);
+      } else {
 	LWrite(fp, val);
-	LFree(val);
-      } else
-	LWrite(fp, arg);
-      if ((arglist = arglist->cdr) == NULL)
+      }
+      LFree(val);
+      if ((arglist = arglist->cdr) == NULL) {
 	break;
+      }
       fputs(" ", fp);
     }
   }
@@ -874,7 +874,7 @@ void echo_to_fp(LList *arglist, FILE *fp)
 }
 
 LDEFINE(echo, LVOID,
-	"(echo          ...)\n\
+	"(echo ...)\n\
 	Write the given data to the special file \"-\".  Strings are written\n\
 	literally; lisp expressions are evaluated and their values written.\n\
 	If received from an external program, \"echo\" sends to the program's\n\
@@ -884,9 +884,11 @@ LDEFINE(echo, LVOID,
   Lake *powderhorn;
   LList *arglist = NULL;
   FILE *fp;
+
   LDECLARE(("echo", LBEGIN,
 	    LHOLD,
 	    LLAKE, &powderhorn,
+	    LHOLD,
 	    LREST, &arglist));
   
   if ( (fp = PoolOutputFile(POOL(powderhorn))) == NULL)
