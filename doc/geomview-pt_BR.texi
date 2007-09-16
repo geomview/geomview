@@ -9069,14 +9069,6 @@ installing the source code.
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-@end quotation
 section is out of date. @code{Geomview} follows the
 GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
 user executables to @file{PREFIX/bin/}, private executables to
