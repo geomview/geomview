@@ -6,6 +6,8 @@
 Makefile Makefile.in .deps
 geomview 
 geomview-pt_BR
+geomview-pt_BR.html
+geomview-pt_BR.pdf
 geomview.html
 geomview.pdf
 geomview.ps
