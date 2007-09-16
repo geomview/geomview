@@ -7,3 +7,4 @@ surf.h
 iobuffer.h
 dbllist.h
 freelist.h
+vvec.h
