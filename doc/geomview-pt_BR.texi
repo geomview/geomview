@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-
+@c based on /geomview.texi/1.46/Sat Sep  8 12:11:05 2007//
 @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -13,7 +13,6 @@
 * Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,{c}@~ao tridimensional.
 @end direntry
 
-@c baseado na vers@~{a}o 1.44 do cvs
 @titlepage
 @sp 1
 @center @titlefont{Manual do Geomview}
@@ -911,7 +910,7 @@ ir@~{a}o aparecer; @pxref{figinitial, Figure}.
 
 @float Figure,figinitial
 @image{figs/initial}
-@caption{Initial Geomview display.}
+@caption{Tela Inicial do Geomview.}
 @end float
 
 O painel @`{a} esquerda @'{e} o painel de controle principal do Geomview; Esse painel @'{e} chamado
@@ -1270,7 +1269,7 @@ do manual e descreve o painel principal (@emph{Main}).
 @c
 @float Figure,figmainpanel
 @image{figs/main}
-@caption{The Main Panel}
+@caption{O Painel Principal}
 @end float
 @c
 Geomview pode mostrar um n@'{u}mero arbitr@'{a}rio de objetos simultaneamente.  O
@@ -1472,7 +1471,7 @@ com @kbd{<}, voc@^{e} decidir que quer usar o grande painel de arquivos (@emph{F
 ap@'{o}s tudo, pressione o bot@~{a}o @emph{File Browser}.
 @float Figure,figloadpanel
 @image{figs/load}
-@caption{The Load Panel.}
+@caption{O Painel de Chamar Arquivos.}
 @end float
 
 @item comandos para chamar objetos geom@'{e}tricos:
@@ -1811,137 +1810,137 @@ apar@^{e}ncia do objeto alvo.
 @image{figs/ap}
 @caption{O Painel de Apar@^{e}ncia.}
 @end float
-Se o alvo for um geom individual, então modificaçãoes que você fizer no
-painel de aparências aplicam-se a aparência daquele objeto geométrico.  Se o alvo for o
-"World", então as modificações no painel de aparências aplicam-se à aparênca do objeto atual
-@emph{e} a aparência de todos os outros objetos individuais.  (Usuários acham que
-esse comportamento é mais desejável que ter as modificações somente aplicadas a aparência do
-"World"e.)  Se o alvo for uma câmera, então as modificações do painel de aparência
-aplica-se ao geom que ocupou mais recentemente a posição de alvo.
+Se o alvo for um geom individual, ent@~{a}o modifica@,{c}@~{a}oes que voc@^{e} fizer no
+painel de apar@^{e}ncias aplicam-se a apar@^{e}ncia daquele objeto geom@'{e}trico.  Se o alvo for o
+"World", ent@~{a}o as modifica@,{c}@~{o}es no painel de apar@^{e}ncias aplicam-se @`{a} apar@^{e}nca do objeto atual
+@emph{e} a apar@^{e}ncia de todos os outros objetos individuais.  (Usu@'{a}rios acham que
+esse comportamento @'{e} mais desej@'{a}vel que ter as modifica@,{c}@~{o}es somente aplicadas a apar@^{e}ncia do
+"World"e.)  Se o alvo for uma c@^{a}mera, ent@~{a}o as modifica@,{c}@~{o}es do painel de apar@^{e}ncia
+aplica-se ao geom que ocupou mais recentemente a posi@,{c}@~{a}o de alvo.
 
-Os cinco bot@~{o}es próximos ao canto superior esquerdo sob a palavra
-@emph{Show} (mostrar) controlam que partes do geom alvo são desenhadas.
+Os cinco bot@~{o}es pr@'{o}ximos ao canto superior esquerdo sob a palavra
+@emph{Show} (mostrar) controlam que partes do geom alvo s@~{a}o desenhadas.
 
 @table @emph
 
 @item Faces
-Esse bot@~{a}o especifica se faces são desenhadas.
+Esse bot@~{a}o especifica se faces s@~{a}o desenhadas.
 
 @item Edges
-Esse bot@~{a}o especifica se edges são desenhadas.
+Esse bot@~{a}o especifica se arestass s@~{a}o desenhadas.
 
 @item Normals
-Esse bot@~{a}o especifica se vetores normais à superfície são desenhados.
+Esse bot@~{a}o especifica se vetores normais @`{a} superf@'{i}cie s@~{a}o desenhados.
 
 @item BBox
-Esse bot@~{a}o especifica se a caixa associada é desenhada.
+Esse bot@~{a}o especifica se a caixa associada @'{e} desenhada.
 
 @item Vects
-Esse bot@~{a}o especifica se objetos VECT são desenhados.  VECTs são um tipo
-de objeto OOGL que representa pontos e segmentos de reta em espaço tridimencional;
-os VECTs são distintos de arestas ou de outros tipos de objetos, e é desejável
-algumas vezes ter controle separado sobre se eles são desenhados.
+Esse bot@~{a}o especifica se objetos VECT s@~{a}o desenhados.  VECTs s@~{a}o um tipo
+de objeto OOGL que representa pontos e segmentos de reta em espa@,{c}o tridimencional;
+os VECTs s@~{a}o distintos de arestas ou de outros tipos de objetos, e @'{e} desej@'{a}vel
+algumas vezes ter controle separado sobre se eles s@~{a}o desenhados.
 
 @end table
 
 Os quatro bot@~{o}es sob @emph{Color} rotulados @emph{Faces}, Arestas (@emph{Edges}),
-Normais (@emph{Normals}), e @emph{BBox} permitem a você especificar a cor do
+Normais (@emph{Normals}), e @emph{BBox} permitem a voc@^{e} especificar a cor do
 aspecto correspondente de um geom alvo.  Clicando sobre um
-deles faz com que apareça um painel de escolha de cores.
+deles faz com que apare@,{c}a um painel de escolha de cores.
 @float Figure,figcolorchooserpanel
 @image{figs/color}
 @caption{Painel de Escolha de Cor.}
 @end float
-Esse painel oferece dois conjuntos de botões deslizantes: H(ue) S(Saturation) V(alue), ou
+Esse painel oferece dois conjuntos de bot@~{o}es deslizantes: H(ue) S(Saturation) V(alue), ou
 R(ed) G(reen) B(lue), cada um no intervalo real fechado de 0 a 1.  O quadrado
-mostra a cor atual, que é fornecida numericamente em ambos os sitemas HSV e RGB
+mostra a cor atual, que @'{e} fornecida numericamente em ambos os sitemas HSV e RGB
 nas caixas de texto correspondentes.
 
 No sistema de cores HSV, hue H mostra vermelho em 0, verde em .333, azul em .667,
-e volta ao vermelho em 1.0.  Saturação fornece a fração de branco misturada
+e volta ao vermelho em 1.0.  Satura@,{c}@~{a}o fornece a fra@,{c}@~{a}o de branco misturada
 na cor, de 0 para cinza puro a 1 para a cor pura.  Valor fornece o
-brilho, de 0 para preto a 1 para brilho máximo.
+brilho, de 0 para preto a 1 para brilho m@'{a}ximo.
 
-Pressionado o botão @emph{RGB} ou o botão @emph{HSV} ao centro do topo do painel alterna
-os botões deslizantes para outro sistema de cores.  Você pode ajustar cores ou através dos
-botões deslizantes, ou através de digitação nas caixas de texto RGB ou HSV.
+Pressionado o bot@~{a}o @emph{RGB} ou o bot@~{a}o @emph{HSV} ao centro do topo do painel alterna
+os bot@~{o}es deslizantes para outro sistema de cores.  Voc@^{e} pode ajustar cores ou atrav@'{e}s dos
+bot@~{o}es deslizantes, ou atrav@'{e}s de digita@,{c}@~{a}o nas caixas de texto RGB ou HSV.
 
 Clique @emph{OK} para aceitar as cores que voc6e tiver escolhido, ou
 @emph{Cancel} para reter as escolhas anteriores de cor.
 
 
-O navegador @emph{SHADING} permite a você especificar o modelo de tonalidade que
-Geomview utilizará para desenhar o geom alvo.
+O navegador @emph{SHADING} permite a voc@^{e} especificar o modelo de tonalidade que
+Geomview utilizar@'{a} para desenhar o geom alvo.
 
 @table @emph
 
 @item Constant
-Toda face do objeto is drawn with a constant color which does not
-depend on the location da face, the camera, or the light sources.
-If the objeto does not contain per-face or per-vertex colors, the
-diffuse color da object's appearance is used.  If the object
-contains per-face colors, they are used.  If the objeto contains
-per-vertex colors, each face is painted using the color of its first
-vertex.
+Toda face do objeto @'{e} desenhada com uma cor constante que n@~{a}o
+depende da localiza@,{c}@~{a}o da face, nem da c@^{a}mera, nem tamb@'{e}m das fontes de luz.
+Se o objeto n@~{a}o contiver cores por face ou por v@'{e}rtice, a
+cor difusa de apar@^{e}ncia do objeto @'{e} usada.  Se o objeto
+contiver cores por face, essas cores ser@~{a}o usadas.  Se o objeto contiver
+cores por v@'{e}rtice, cada face @'{e} pintada usando a cor de seu primeiro
+v@'{e}rtice.
 
 @item Flat
-Each face do objeto is drawn with a color that depends on the
-relative location da face, the camera, and the light sources.
-The color is constant across the face but may change as the face,
-camera, or lights move.
+Cada face do objeto @'{e} desenhadacom uma cor que depende da
+localiza@,{c}@~{a}o relaiva da face, da c@^{a}mera, e das fontes de luz.
+A cor @'{e} constante ao longo da face mas pode mudar conforme muda a face,
+a c@^{a}mera, ou o movimento das luzes.
 
 @item Smooth
-Each face do objeto is drawn with smoothly interpolated colors based
-on the normal vectors at each vertex.  If the objeto does not contain
-per-vertex normals, this has the same effect as flat shading.  If the
-objeto has reasonable per-vertex normals, the effect is to smooth
-over the edges between the faces.
+Cada face do objeto @'{e} desenhada com cores lisamente interpoladas baseadas
+nos vetores normais em cada v@'{e}rtice.  Se o objeto n@~{a}o contiver
+normais por v@'{e}rtice, "Smooth" tem o mesmo efeito que o modo de tonalidade "Flat".  Se o
+objeto tiver normais por v@'{e}rtice raso@'{a}veis, o efeito @'{e} alisamento
+sobre as arestas e entre as faces.
 
 @item CSmooth
-Each face do objeto is drawn with exactly the specified color(s),
-independent of lighting, orientation, and material properties.  If the
-objeto is defined with per-vertex colors, the colors are interpolated
-smoothly across the face; otherwise the effect is the same as in
-Constant shading style.
+Cada face do objeto @'{e} desenhada com as cores exatamente especificada(s),
+independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e porpriedades de material.  Se o
+objeto for definido com cores por v@'{e}rtice, as cores ser@~{a}o interpoladas
+lisamente ao longo da face; de outra forma o efieto @'{e} o mesmo que ocorre no
+estilo de tonalidade "0Constant".
 
 @end table
 
-The @emph{Facing Normals} bot@~{a}o on the @emph{Appearance} panel
-indicates se or not Geomview should arrange that normal vectors
-always face the viewer.  If a normal vector points away from the viewer
-the color da corresponding face or vertex usually is darker than is
-desired.  Geomview can avoid this by using the opposite normal in
-shading calculations.  This is the default.  Using @emph{Facing Normals}
-can give strange flickering dark or light shading effects, though, near
-the horizon of a fairly smooth facetted objeto.
-Press esse bot@~{a}o to use the normals given with the objeto.
+O bot@~{a}o @emph{Facing Normals} no painel de apar@^{e}ncia (@emph{Appearance})
+indica se indicates se Geomview pode arranjar aqueles vetores normais ou se n@~{a}o pode
+sempre conforme a visualiza@,{c}@~{a}o.  Se um vetor normal direciona-se afastando-se do visualizador
+a cor da face correspondente ou v@'{e}rtice correspondente usualmente @'{e} mais forte do que @'{e}
+desejado.  Geomview pode evitar isso atrav@'{e}s do uso da normal oposta em
+c@'{a}lculos de tonalidade.  Esse comportametno @'{e} o padr@~{a}o.  Usando @emph{Facing Normals}
+podemos fornecer estranha suavidade pesada ou estranhos efeitos de tonalidade de luz, embora, proximo
+ao horizonte de um objet distantemente liso facetado.
+Pressione esse bot@~{a}o para usar as normais fornecidas com o objeto.
 
 
-The three text fields in the lower left corner do @emph{Appearance}
-panel are:
+Os tr@^{e}s campos no canto inferior esquerdo no canto inferior esquerdo do painel de apar@^{e}ncia
+(@emph{Appearance}) s@~{a}o:
 
 @table @emph
 
 @item Line Width
-The width, in pixels, for lines drawn by Geomview.
+A espessura, em pixels, para linhas desenhadas pelo Geomview.
 
 @item Normal Length
-This is actually a scale factor; when normal vectors are drawn, Geomview
-draws them to have a length that is their natural length times this
-number.
+Isso @'{e} atualmente um fator de homotetia; quando vetores normais forem desenhados, Geomview
+desenha-os de forma que tenham um comprimento que @'{e} seu comprimento natural vezes esse
+n@'{u}mero.
 
 @item Patch Dicing
-Geomview draws Bezier patches by first converting them to meshes.  This
-parameter especifica the resolution da mesh: if @emph{Patch Dicing}
-is @var{n}, then an @var{n} by @var{n} mesh is used to draw each Bezier
-patch.  if @emph{Patch Dicing} is 1, the resolution reverts to a
-built-in default value.
+Geomview desenha retalhos de Bezier primeiro convertendo-so em malhas.  Esse
+par6ametro especifica a resolu@,{c}@~{a}o da malha: se @emph{Patch Dicing}
+for @var{n}, ent@~{a}o uma malha @var{n} por @var{n} @'{e} usada para desenhar cada retalho de
+Bezier.  Se @emph{Patch Dicing} for 1, a resolu@,{c}@~{a}o reverte-se para um
+valor padr@~{a}o interno.
 
 @end table
 
-The @emph{Revert} bot@~{a}o on the @emph{Appearance} panel undoes all
-settings in the target appearance.  This causes the target geom to
-inherit all its appearance properties from its parent.
+O bot@~{a}o @emph{Revert} no painel de apar@^{e}ncia (@emph{Appearance}) desfaz todas
+as escolhas na apar@^{e}ncia do alvo.  Isso faz com que o geom alvo
+erde todas as suas propriedades de apar@^{e}ncia de seus pais.
 
 The @emph{Appearance} panel's @emph{Override} bot@~{a}o determines whether
 appearance controls should override settings in the objetos themselves --
@@ -1960,7 +1959,7 @@ It works with the objeto alvo in the same way that the
 @emph{Appearance} panel does.
 @float Figure,figmatpanel
 @image{figs/mat}
-@caption{The Materials Panel.}
+@caption{O Painel de Materiais.}
 @end float
 
 @table @emph
@@ -2077,7 +2076,7 @@ as you want.  You can control certain aspects do way the world is
 drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
 @float Figure,figcamerapanel
 @image{figs/cam}
-@caption{The Cameras Panel.}
+@caption{O Painel de C@^{a}mera.}
 @end float
 If the objeto alvo is a camera, the @emph{Cameras} panel affects that
 camera.  If the objeto alvo is not a camera, the @emph{Cameras} panel
@@ -2214,7 +2213,7 @@ information in files that you can read back into Geomview or other
 programs.
 @float Figure,figsavepanel
 @image{figs/save}
-@caption{The Save Panel.}
+@caption{O Painel Gravar.}
 @end float
 To use the @emph{Save} panel you select the desired format in the
 browser next to the word @emph{Save}, enter the name do objeto you
@@ -2344,7 +2343,7 @@ panel, Geomview tries to interpret whatever text you have typed in the
 text field as a command.
 @float Figure,figcommandpanel
 @image{figs/command}
-@caption{The Commands Panel.}
+@caption{O Painel de Comandos.}
 @end float
 
 @ifset forms
@@ -2730,19 +2729,19 @@ valid.
 @subsection Vertices
 
 Several objetos share a common style of representing vertices with
-optional per-vertex surface-normal and color.  All vertices within an
+optional por v@'{e}rtice surface-normal and color.  All vertices within an
 objeto have the same format, specified by the header key word.
 
-All data for a vertex is grouped together (as opposed to e.g. giving
+All data for a v@'{e}rtice is grouped together (as opposed to e.g. giving
 coordinates for all vertices, then colors for all vertices, and so on).
 
 The syntax is
 
 @table @samp
 @item @var{x}  @var{y}  @var{z}
-(3-D floating-point vertex coordinates) or
+(3-D floating-point coordenadas do v@'{e}rtice) or
 @item @var{x}  @var{y}  @var{z}  @var{w}
-(4-D floating-point vertex coordinates)
+(4-D floating-point coordenadas do v@'{e}rtice)
 @end table
 
 optionally followed by
@@ -2772,7 +2771,7 @@ Values are separated by white space, and line breaks
 are immaterial.
 
 Letters in the objeto's header key word must appear in a specific order;
-that's the reverse da order in which the data is given for each vertex.
+that's the reverse da order in which the data is given for each v@'{e}rtice.
 So a @samp{CN4OFF} objeto's vertices contain first the 4-component space
 position, then the 3-component normal, finally the 4-component color.
 You can't change the data order by changing the header key word; an
@@ -2783,19 +2782,19 @@ You can't change the data order by changing the header key word; an
 @subsection @var{N}-dimensional Vertices
 
 Several objetos share a common style of representing vertices with
-optional per-vertex surface-normal and color.  All vertices within an
+optional por v@'{e}rtice surface-normal and color.  All vertices within an
 objeto have the same format, specified by the header key word.
 
-All data for a vertex is grouped together (as opposed to e.g. giving
+All data for a v@'{e}rtice is grouped together (as opposed to e.g. giving
 coordinates for all vertices, then colors for all vertices, and so on).
 
 The syntax for @var{N}-dimensional vertices (@var{N} > 3) is
 
 @table @samp
 @item @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
-(@var{N} floating-point vertex coordinates) or
+(@var{N} floating-point coordenadas do v@'{e}rtice) or
 @item @var{x[0]} @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
-(@var{(N+1)} floating-point vertex coordinates, if the @code{4} modifier
+(@var{(N+1)} floating-point coordenadas do v@'{e}rtice, if the @code{4} modifier
 has been specified in the objeto's header line)
 @end table
 
@@ -3178,7 +3177,7 @@ mapping. A texture is specified as part of an appearance structure
 (@pxref{Appearances}).  Briefly, one provides a texture image
 (@pxref{image, Image objects}), which is considered to lie in a square
 in @code{(s,t)} parameter space in the range 0 <= s <= 1, 0 <= t <= 1.
-Then one provides a geometric primitive, with each vertex tagged with
+Then one provides a geometric primitive, with each v@'{e}rtice tagged with
 @code{(s,t)} texture coordinates.  If texturing is enabled, the
 appropriate portion da texture image is pasted onto each face do
 textured objeto.
@@ -3321,7 +3320,7 @@ The file syntax is
 @end example
 
 The leading key word is @code{[C][N][4]QUAD} or @code{[C][N][4]POLY},
-where the optional @code{C} and @code{N} prefixes indicate that each vertex
+where the optional @code{C} and @code{N} prefixes indicate that each v@'{e}rtice
 includes colors and normals respectively.  That is, these files
 begin with one das words
 
@@ -3367,15 +3366,15 @@ The optional prefix characters mean:
 
 @table @samp
 @item U
-Each vertex includes a 3-component texture space parameter.
+Each v@'{e}rtice includes a 3-component texture space parameter.
 The first two components are the usual @code{S} and @code{T} texture
-parameters for that vertex; the third should be specified as zero.
+parameters for that v@'{e}rtice; the third should be specified as zero.
 @item C
-Each vertex (see Vertices above) includes a 4-component color.
+Each v@'{e}rtice (see Vertices above) includes a 4-component color.
 @item N
-Each vertex includes a surface normal vector.
+Each v@'{e}rtice includes a surface normal vector.
 @item Z
-Of the 3 vertex position values, only the Z component is present; X and
+Of the 3 posi@,{c}@~{a}o de v@'{e}rtice values, only the Z component is present; X and
 Y are omitted, and assumed to equal the mesh (u,v) coordinate so X
 ranges from 0 .. (Nu-1), Y from 0 .. (Nv-1) where Nu and Nv are the mesh
 dimensions -- see below.
@@ -3384,15 +3383,15 @@ Vertices are 4D, each consists of 4 floating values.  @code{Z} and
 @code{4} cannot both be present.
 @item u
 The mesh is wrapped in the u-direction, so the 
-(0,v)'th vertex is connected to the (@var{Nu}-1,v)'th for all v.
+(0,v)'th v@'{e}rtice is connected to the (@var{Nu}-1,v)'th for all v.
 @item v
-The mesh is wrapped in the v-direction, so the (u,0)'th vertex is
+The mesh is wrapped in the v-direction, so the (u,0)'th v@'{e}rtice is
 connected to the (u,@var{Nv}-1)'th for all u.  Thus a u-wrapped or
 v-wrapped mesh is topologically a cylinder, while a uv-wrapped mesh is a
 torus.
 @item n
 Specifies a mesh whose vertices live in a higher dimensional space.
-The dimension follows the "MESH" keyword.  Each vertex then has @var{Ndim}
+The dimension follows the "MESH" keyword.  Each v@'{e}rtice then has @var{Ndim}
 components.
 @end table
 
@@ -3403,7 +3402,7 @@ Following the mesh header are integers @var{Nu} and @var{Nv},
 the dimensions da mesh.
 
 Then follow @var{Nu}*@var{Nv} vertices, each in the form given by the header.
-They appear in v-major order, i.e. if we name each vertex by (u,v)
+They appear in v-major order, i.e. if we name each v@'{e}rtice by (u,v)
 then the vertices appear in the order
 
 @example
@@ -3523,7 +3522,7 @@ blue, and alpha) in the range 0..1, one color for each corner.
 @var{Nu} and @var{Nv}, each a single digit in the range 1..6, are the
 patch's polynomial degree in the u and v direction respectively. 
 
-@var{Nd} is the number of components in each patch vertex, and must be
+@var{Nd} is the number of components in each patch v@'{e}rtice, and must be
 either @code{3} for 3-D or @code{4} for homogeneous coordinates, that
 is, rational patches.
 
@@ -3535,7 +3534,7 @@ of patch vertices, followed by optional (s,t) texture coordinates,
 followed by optional (r,g,b,a) colors.
 
 Each patch has (@var{Nu}+1)*(@var{Nv}+1) vertices in v-major order, so that if we
-designate a vertex by its control point indices (u,v) the order is
+designate a v@'{e}rtice by its control point indices (u,v) the order is
 @example
      (0,0) (1,0) (2,0) @dots{}  (@var{Nu},0)
      (0,1) (1,1) (2,1) @dots{}  (@var{Nu},1)
@@ -3543,7 +3542,7 @@ designate a vertex by its control point indices (u,v) the order is
      (0,@var{Nv})            @dots{}  (@var{Nu},@var{Nv})
 @end example
 @noindent
-with each vertex containing either 3 or 4 floating-point numbers
+with each v@'{e}rtice containing either 3 or 4 floating-point numbers
 as specified by the header.
    
 If the header calls for ST coordinates, four pairs of floating-point
@@ -3608,7 +3607,7 @@ Three ASCII integers follow: @var{NVertices}, @var{NFaces}, and
 respectively.  Current software does not use nor check @var{NEdges}; it
 needn't be correct but must be present.
 
-The vertex coordinates follow: dimension * @var{Nvertices}
+The coordenadas do v@'{e}rtice follow: dimension * @var{Nvertices}
 floating-point values.  They're implicitly numbered 0 through
 @var{NVertices}-1.  dimension is either 3 (default) or 4 (specified by
 the key character @code{4} directly before @code{OFF} in the keyword).
@@ -3649,12 +3648,12 @@ but not all faces have colors, the default is gray (R,G,B,A=.666).
 
 A @code{[ST][C][N][n]OFF BINARY} format is accepted; @xref{Binary
 format}.  It resembles the ASCII format in almost the way you'd expect,
-with 32-bit integers for all counters and vertex indices and 32-bit
-floats for vertex positions (and texture coordinates or vertex colors or
+with 32-bit integers for all counters and @'{i}ndices do v@'{e}rtice and 32-bit
+floats for posi@,{c}@~{o}es de v@'{e}rtice (and texture coordinates or cores de v@'{e}rtice or
 normals if
 @code{COFF}/@code{NOFF}/@code{CNOFF}/@code{STCNOFF}/etc. format).
 
-Exception: each face's vertex indices are followed by an integer
+Exception: each face's @'{i}ndices do v@'{e}rtice are followed by an integer
 indicating how many color components accompany it.  Face color
 components must be floats, not integer values.  Thus a colorless
 triangular face might be represented as
@@ -3726,14 +3725,14 @@ as the previous polyline.
 A single color is specified.  The entire polyline is drawn in that
 color.
 @item abs(@var{Nv[i]})
-Each vertex has a color.  Either each segment is drawn in the
+Each v@'{e}rtice has a color.  Either each segment is drawn in the
 corresponding color, or the colors are smoothly interpolated along the
 line segments, depending on the implementation.
 @end table
 
 Next come @var{NVertices} groups of 3 or 4 floating-point numbers: the
 coordinates of all the vertices.  If the keyword is @var{4VECT} then
-there are 4 values per vertex.  The first abs(@var{Nv[0]}) of them form
+there are 4 values por v@'{e}rtice.  The first abs(@var{Nv[0]}) of them form
 the first polyline, the next abs(@var{Nv[1]}) form the second and so on.
 
 Finally @var{NColors} groups of 4 floating-point numbers give red,
@@ -3744,7 +3743,7 @@ A @var{VECT BINARY} format is accepted; @pxref{Binary format}.  The
 binary format exactly follows the ASCII format, with 32-bit Big-Endian
 integers where ordinary integer numbers appear, and with @b{16-bit}
 Big-Endian integers where 16-bit integers appear; 32-bit Big-Endian
-floats where real values appear.  @b{BIG FAT NOTE:} The vertex counts
+floats where real values appear.  @b{BIG FAT NOTE:} The v@'{e}rtice counts
 @var{Nv[i]} and the color counts @var{Nc[i]} are @b{16-bit} Big-Endian
 integers.
 
@@ -3786,16 +3785,16 @@ The syntax resembles that of @code{OFF} files, with a table of vertices
 followed by a sequence of polyline descriptions, each referring to vertices
 by index in the table.  Each polyline has an optional color.
 
-For @code{nSKEL} objetos, each vertex has @var{NDim} components.
-For @code{4nSKEL} objetos, each vertex has @var{NDim+1} components;
+For @code{nSKEL} objetos, each v@'{e}rtice has @var{NDim} components.
+For @code{4nSKEL} objetos, each v@'{e}rtice has @var{NDim+1} components;
 the final component is the homogeneous divisor.
 
 A @var{[4][n]SKEL BINARY} format is accepted; @xref{Binary format}.
 It resembles the ASCII format in almost the way you'd expect,
-with 32-bit integers for all counters and vertex indices and 32-bit
-floats for vertex positions.
+with 32-bit integers for all counters and @'{i}ndices do v@'{e}rtice and 32-bit
+floats for posi@,{c}@~{o}es de v@'{e}rtice.
 
-Exception: each polyline's vertex indices are followed by an integer
+Exception: each polyline's @'{i}ndices do v@'{e}rtice are followed by an integer
 indicating how many color components accompany it. Polyline color
 components must be floats, not integer values.  Thus a colorless
 polyline with 3 vertices might be represented as
@@ -5498,7 +5497,7 @@ This module is the same as the @emph{Nose} module that comes with
 Geomview.  Its purpose is to illustrate picking.  Whenever you pick on a
 geom by clicando the bot@~{a}o direito do mouse on it, the module draws a little
 box at the spot where you clicado.  Usually the box is yellow.  If you
-pick a vertex, the box is colored magenta.  If you pick a point on an
+pick a v@'{e}rtice, the box is colored magenta.  If you pick a point on an
 edge of an objeto, the module will also highlight the edge by drawing
 cyan boxes at its endpoints and drawing a yellow line along the edge.
 
@@ -5660,7 +5659,7 @@ handle_pick(picked, p, vert, v, edge, e)
       printf("(geometry \"pick\" @{ LIST @} )\n");
     @} else @{
       /*
-       * Put the box in place, and color it magenta if it's on a vertex,
+       * Put the box in place, and color it magenta if it's on a v@'{e}rtice,
        * yellow if not.
        */
       printf("(xform-set pick @{ 1 0 0 0  0 1 0 0  0 0 1 0  %g %g %g 1 @})\n",
@@ -5784,7 +5783,7 @@ be transmitted in cases where there are arguments that the module
 doesn't care about.
 
 The second, third, fourth, and fifth arguments to the @code{pick}
-command give the name, pick point coordinates, vertex coordinates, and
+command give the name, pick point coordinates, coordenadas do v@'{e}rtice, and
 edge coordinates of a pick event.  We specify these by @code{*}'s above.
 The remaining five arguments to the @code{pick} command give other
 information about the pick event that we do not care about in this
@@ -5883,10 +5882,10 @@ case the ordinary @var{block} 3d instruction block is executed.
 
 @item @code{float *vertex; int vn;}
 @code{vertex} is an @code{HPoint3} structure giving the coordinates of
-the picked vertex, if the pick point was near a vertex.  @code{vn} tells
+the v@'{e}rtice selecionado, if the pick point was near a v@'{e}rtice.  @code{vn} tells
 how many coordinates have been written into this array; it will always
 be either @code{0} or greater equal @code{4}. A value of zero means the
-pick point was not near a vertex. In the context of ND-viewing
+pick point was not near a v@'{e}rtice. In the context of ND-viewing
 @code{vertex} will be an array of @code{vn} @code{float}s and @code{vn}
 will be equal to @code{pn}.
 
@@ -5900,8 +5899,8 @@ into this array; it will always be @code{0} or greater equal @code{8}.
 A value of zero means the pick point was not near an edge. In the
 context of ND-viewing @code{edge} will be a flat one-dimensional array
 of @code{en} many @code{float}s: the first @code{pn} @code{float}s
-define the first vertex, and the second @code{pn} many @code{float}s
-define the second vertex; @code{en} will be two times @code{pn}.
+define the first v@'{e}rtice, and the second @code{pn} many @code{float}s
+define the second v@'{e}rtice; @code{en} will be two times @code{pn}.
 
 @end table
 
@@ -5920,7 +5919,7 @@ specified as @code{nil}.
 it will always be either @code{0} or a multiple of @code{pn}. A value of
 zero means the pick point was not near a face. In the context of
 ND-viewing @code{face} is a flat one-dimensional array of @code{fn} many
-floats of which each vertex occupies @code{pn} many components.
+floats of which each v@'{e}rtice occupies @code{pn} many components.
 
 @item @code{int ppath[]; int ppn;}
 @code{ppath} is an array of @var{maxpathlen} @code{int}'s.  @code{ppath}
@@ -5931,12 +5930,12 @@ means that the picked primitive is "subobjeto number 2 of subobjeto
 number 1 of objeto 3 in the world".
 
 @item @code{int vi;}
-@code{vi} gives the index do picked vertex in the picked primitive,
-if the pick point was near a vertex.
+@code{vi} gives the index do v@'{e}rtice selecionado in the picked primitive,
+if the pick point was near a v@'{e}rtice.
 
 @item @code{int ei[2]; int ein}
 The @code{ei} array gives the indices dos endpoints da picked
-edge, if the pick point was near a vertex.  @code{ein} tells how many
+edge, if the pick point was near a v@'{e}rtice.  @code{ein} tells how many
 integers were written into this array.  It will always be either 0 or 2;
 a value of 0 means the pick point was not near an edge.
 
@@ -7432,14 +7431,14 @@ The return value is an array of 4 integers, the last one should 0.
 @item (ND-color CAMID
 	[ (( [ID] (x1 x2 @dots{} xN) v r g b a   v r g b a  @dots{} )
 	   ((x1 @dots{} xN)  v r g b a  v r g b a @dots{}) @dots{})] )
-Specifies a function, applied to each N-D vertex, which determines the
+Specifies a function, applied to each N-D v@'{e}rtice, which determines the
 colors of N-dimensional objetos as shown in camera CAMID.
 Each coloring function is defined by a vector (in ID's coordinate system)
 [x1 @dots{} xN] and by a sequence of value (v)/color(r g b a) tuples,
 ordered by increasing v.  The inner product v = P.[x] is linearly
 interpolated in this table to give a color.
 If ID is omitted, the (xi) vector is assumed in universe coordinates.
-The ND-color command especifica a list of such functions; each vertex
+The ND-color command especifica a list of such functions; each v@'{e}rtice
 is colored by their sum (so e.g. green intensity could indicate
 projection along one axis while red indicated another.
 An empty list, as in (ND-color CAMID ()), suppresses coloring.
@@ -7628,7 +7627,7 @@ occurred.
 @item G
  = picked point (actual intersection of pick ray with objeto)
 @item V
- = picked vertex, if any
+ = v@'{e}rtice selecionado, if any
 @item E
  = picked edge, if any
 @item F
@@ -7636,7 +7635,7 @@ occurred.
 @item P
  = path to picked primitive [0 or more]
 @item VI
- = index of picked vertex in primitive
+ = index of v@'{e}rtice selecionado in primitive
 @item EI
  = list of indices of endpoints of picked edge, if any
 @item FI
