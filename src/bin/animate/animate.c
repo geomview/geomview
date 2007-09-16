@@ -627,7 +627,7 @@ void anim_load(char *in_glob)
 static char **get_script(char *in_scr)
 {
   FILE *scriptfile;
-  char *scrbuf, **result, ch = (char) NULL;
+  char *scrbuf, **result, ch = '\0';
   int   bufsize = 1000;
   int   position = 0, wait = 0, inword = 0;
 
@@ -699,11 +699,11 @@ static char **get_script(char *in_scr)
 
   fclose(scriptfile);
 
-  scrbuf[position] = (char) NULL;	/* terminate buffer */
-  result = glob(scrbuf);		/* glob it */
-  free(scrbuf);				/* remove the buffer */
+  scrbuf[position] = '\0';	/* terminate buffer */
+  result = glob(scrbuf);	/* glob it */
+  free(scrbuf);			/* remove the buffer */
 
-  return result;			/* return globbed list of files */
+  return result;		/* return globbed list of files */
 }
 
 /*****************************************************************************/
