@@ -1,6 +1,6 @@
 /* Copyright (C) 1992-1998 The Geometry Center
  * Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips
- * Copyright (C) 2002-2006 Claus-Justus Heine
+ * Copyright (C) 2002-2007 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -70,13 +70,13 @@
  *	  2 : Skip blanks, tabs, and newlines, but stop at #.
  *	  3 : Skip blanks and tabs but stop at # or \n.
  *
- * int async_iobfnextc(IOBFILE *f, int flags, int fd)
+ * int async_iobfnextc(IOBFILE *f, int flags)
  *	Like fnextc() above, but guarantees not to block if no data is
  *	immediately available.  It returns either an interesting character,
  *	EOF, or the special code NODATA (== -2).
  *      if fd == -1, then fileno(f) is used, otherwise fd.
  *
- * int async_iobfgetc(IOBFILE *f, int fd)
+ * int async_iobfgetc(IOBFILE *f, false)
  *	Like getc(), but guarantees not to block.  Returns NODATA if
  *	nothing is immediately available.
  *
@@ -530,22 +530,22 @@ int iobfescape(IOBFILE *f)
 {
   int n, k, c = iobfgetc(f);
 
-  switch(c) {
+  switch (c) {
   case 'n': return '\n';
   case 'b': return '\b';
   case 't': return '\t';
   case 'r': return '\r';
   }
-  if(c < '0' || c > '7')
+  if (c < '0' || c > '7')
     return c;
     
   n = c-'0';  k = 2;
-  while((c = iobfgetc(f)) >= '0' && c <= '7') {
+  while ((c = iobfgetc(f)) >= '0' && c <= '7') {
     n = (n*8) | (c-'0');
     if(--k <= 0)
       return n;
   }
-  if(c != EOF) iobfungetc(c, f);
+  if (c != EOF) iobfungetc(c, f);
   return n;
 }
 
@@ -556,12 +556,13 @@ int iobfescape(IOBFILE *f)
  * needed before the next call to ftoken().
  */
 char *
-iobftoken(IOBFILE *iobf, int flags)
+iobfquotedelimtok(const char *delims, IOBFILE *iobf, int flags, int *quote)
 {
   static char *token = NULL;
   static int troom = 0;
   int c;
   char *p;
+  const char *q;
   int term;
 
   if((term = iobfnextc(iobf, flags)) == EOF)
@@ -575,14 +576,15 @@ iobftoken(IOBFILE *iobf, int flags)
   }
 
   p = token;
-  switch(term) {
+  switch (term) {
   case '"':
   case '\'':
-    (void) iobfgetc(iobf);
+    *quote = term;
+    (void)iobfgetc(iobf);
     for(;;) { 
       if((c = iobfgetc(iobf)) == EOF || c == term)
 	break;
-      else if(c == '\\')
+      else if (c == '\\')
 	c = iobfescape(iobf);
       *p++ = c;
       if(p == &token[troom]) {
@@ -596,75 +598,7 @@ iobftoken(IOBFILE *iobf, int flags)
     break;
 
   default:
-    if(isspace(term))
-      return NULL;
-    while((c = iobfgetc(iobf)) != EOF && !isspace(c)) {
-      if(c == '\\')
-	c = iobfescape(iobf);
-      *p++ = c;
-      if(p == &token[troom]) {
-	token = realloc(token, troom * 2);
-	if(token == NULL)
-	  return NULL;
-	p = &token[troom];
-	troom *= 2;
-      }
-    }
-    break;
-  }
-  *p = '\0';
-  return token;
-}
-
-
-/*
- * Get a token, return a string or NULL.
- * Tokens may be "quoted" or 'quoted'; backslashes accepted.
- * The string is statically allocated and should be copied if
- * needed before the next call to ftoken().
- */
-char *
-iobfdelimtok(char *delims, IOBFILE *iobf, int flags)
-{
-  static char *token = NULL;
-  static int troom = 0;
-  int c;
-  char *p;
-  char *q;
-  int term;
-
-  if((term = iobfnextc(iobf, flags)) == EOF)
-    return NULL;
-
-  if(token == NULL) {
-    troom = 50;
-    token = malloc(troom * sizeof(char));
-    if(token == NULL)
-      return NULL;
-  }
-
-  p = token;
-  switch(term) {
-  case '"':
-  case '\'':
-    (void) iobfgetc(iobf);
-    for(;;) { 
-      if((c = iobfgetc(iobf)) == EOF || c == term)
-	break;
-      else if(c == '\\')
-	c = iobfescape(iobf);
-      *p++ = c;
-      if(p == &token[troom]) {
-	token = realloc(token, troom * 2);
-	if(token == NULL)
-	  return NULL;
-	p = &token[troom];
-	troom *= 2;
-      }
-    }
-    break;
-
-  default:
+    *quote = '\0';
     if(isspace(term))
       return NULL;
     while((c = iobfgetc(iobf)) != EOF && !isspace(c)) {
@@ -694,6 +628,28 @@ iobfdelimtok(char *delims, IOBFILE *iobf, int flags)
   return token;
 }
 
+char *iobfdelimtok(const char *delims, IOBFILE *iobf, int flags)
+{
+  int tmp;
+  return iobfquotedelimtok(delims, iobf, flags, &tmp);
+}
+/*
+ * Get a token, return a string or NULL.
+ * Tokens may be "quoted" or 'quoted'; backslashes accepted.
+ * The string is statically allocated and should be copied if
+ * needed before the next call to ftoken().
+ */
+char *
+iobfquotetoken(IOBFILE *iobf, int flags, int *quote)
+{
+  return iobfquotedelimtok("", iobf, flags, quote);
+}
+
+char *
+iobftoken(IOBFILE *iobf, int flags)
+{
+  return iobfdelimtok("", iobf, flags);
+}
 
 /*
  * Load one or more Transforms from a file.
