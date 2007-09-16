@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.18 2007/05/16 19:38:07 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.19 2007/09/16 09:55:01 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -664,13 +664,13 @@ ftoken(FILE *file, int flags)
  * needed before the next call to ftoken().
  */
 char *
-fdelimtok(char *delims, FILE *file, int flags)
+fdelimtok(const char *delims, FILE *file, int flags)
 {
 	static char *token = NULL;
 	static int troom = 0;
 	int c;
 	char *p;
-	char *q;
+	const char *q;
 	int term;
 
 	if((term = fnextc(file, flags)) == EOF)
