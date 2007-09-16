@@ -72,7 +72,7 @@ static MenuItem file_menu[] = {
         file_menu_callbacks, "O", (MenuItem *)NULL},
   { "Save               ", &xmPushButtonGadgetClass, 'S', "Ctrl<Key>S","[ > ]",
         file_menu_callbacks, "S", (MenuItem *)NULL},
-  { "_sepr", &xmSeparatorGadgetClass, (char)NULL, (char*)NULL, (char*)NULL,
+  { "_sepr", &xmSeparatorGadgetClass, (char)0, (char*)NULL, (char*)NULL,
         (void (*)())NULL, (XtPointer)NULL, (MenuItem *)NULL },
   { "Exit                   ", &xmPushButtonGadgetClass, 'E', "Ctrl<Key>X","[ Q ]",
         file_menu_callbacks, "X", (MenuItem *)NULL},
@@ -118,7 +118,7 @@ static MenuItem space_menu[] = {
 static MenuItem motion_menu[] = {
   { "Tools", &xmPushButtonGadgetClass, 'T', "Ctrl<Key>T", "[Pt]",
         motion_menu_callbacks, "T", (MenuItem *)NULL},
-  { "_sepr", &xmSeparatorGadgetClass, (char)NULL, (char*)NULL, (char*)NULL,
+  { "_sepr", &xmSeparatorGadgetClass, (char)0, (char*)NULL, (char*)NULL,
         (void (*)())NULL, (XtPointer)NULL, (MenuItem *)NULL },
   { "Inertia", &xmToggleButtonGadgetClass, 'I', "Alt<Key>I", "[ui]",
         motion_menu_callbacks, "1", (MenuItem *)NULL},
