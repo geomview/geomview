@@ -39,7 +39,6 @@ void ui_manual_browser(const char *type)
   char helper[PATH_MAX];
   char *docdir;
   char *browser;
-  char *fmt;
   char *lang;
   const char *file = NULL, *dfltfile, *langfile;
   
