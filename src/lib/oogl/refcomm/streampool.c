@@ -755,30 +755,6 @@ PoolInAll(fd_set *fds, int *nfds)
     return got;
 }
 
-/*
- * Handle NULL or uninitialized times.
- */
-static struct timeval *
-timeof(struct timeval *when)
-{
-   static struct timeval now;
-   if ((when == NULL && (when = &now)) || !timerisset(when))
-	gettimeofday(when, NULL);
-   return when;
-}
-    
-static void
-addtime(struct timeval *base, double offset, struct timeval *result)
-{
-    double osec = floor(offset);
-    result->tv_sec = base->tv_sec + osec;
-    result->tv_usec = base->tv_usec + (int)((offset - osec)*1000000);
-    while(result->tv_usec >= 1000000) {
-	result->tv_sec++;
-	result->tv_usec -= 1000000;
-    }
-}
-
 static void
 asleep(Pool *p, struct timeval *base, double offset)
 {
@@ -787,7 +763,7 @@ asleep(Pool *p, struct timeval *base, double offset)
     base = timeof(base);
     if (p->inf != NULL) {
 	p->flags |= PF_ASLEEP;
-	addtime(base, offset, &until);
+	addtime(base, &until, offset);
 	if (timercmp(&until, &nexttowake, <))
 	    nexttowake = until;
 	if (p->infd >= 0) {
@@ -816,7 +792,7 @@ void
 PoolSetTime(Pool *p, struct timeval *base, double time_at_base)
 {
     base = timeof(base);
-    addtime(base, -time_at_base, &p->timebase);
+    addtime(base, &p->timebase, -time_at_base);
 }
 
 double
