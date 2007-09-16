@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Id: fsa.c,v 1.4 2006/07/14 17:47:21 rotdrop Exp $
+/* $Id: fsa.c,v 1.5 2007/09/16 09:50:46 rotdrop Exp $
  *
  * fsa.c: finite state automaton for matching a finite set of strings
  *
@@ -81,7 +81,7 @@ struct Fsa_s {
 #include "fsa.h"
 
 static Trule *new_trule_node(Fsa, int);
-static void *fsa_execute(Fsa, char *, void *, int);
+static void *fsa_execute(Fsa, const char *, void *, int);
 static int next_state(Fsa, int, char, void *, int);
 static int new_state(Fsa);
 static void delete_trule_list(Trule *);
@@ -93,7 +93,7 @@ static void delete_trule_list(Trule *);
  *		reject: value to return when parsing unacceptable
  *		  string
  */
-Fsa fsa_initialize(Fsa fsa,void *reject)
+Fsa fsa_initialize(Fsa fsa, void *reject)
 {
   if (fsa == NULL)
     fsa = OOGLNewE(struct Fsa_s, "struct Fsa");
@@ -113,6 +113,25 @@ Fsa fsa_initialize(Fsa fsa,void *reject)
 }
 
 /*-----------------------------------------------------------------------
+ * Function:	fsa_delete
+ * Description:	Delete an FSA
+ * Args  IN:	fsa: the fsa to delete;
+ */
+void fsa_delete(Fsa fsa)
+{
+  if (fsa == NULL) {
+    return;
+  }
+  /* Clear out current program: */
+  while (fsa->state_count--) {
+    delete_trule_list( (fsa->state[fsa->state_count])->tlist );
+    OOGLFree((char*)(fsa->state[fsa->state_count]));
+  }
+  OOGLFree((char*)(fsa->state));
+  OOGLFree(fsa);
+}
+
+/*-----------------------------------------------------------------------
  * Function:	fsa_install
  * Description:	Install a string in an FSA
  * Args  IN:	fsa: the fsa to install into
@@ -122,9 +141,9 @@ Fsa fsa_initialize(Fsa fsa,void *reject)
  *		which case the fsa's reject value is returned
  */
 void *
-fsa_install(Fsa fsa,char *s,void *v)
+fsa_install(Fsa fsa, const char *s, void *v)
 {
-  return(fsa_execute(fsa, s, v, PROGRAM));
+  return fsa_execute(fsa, s, v, PROGRAM);
 }
 
 /*-----------------------------------------------------------------------
@@ -139,9 +158,9 @@ fsa_install(Fsa fsa,char *s,void *v)
  * Notes:	
  */
 void *
-fsa_parse(Fsa fsa, char *s)
+fsa_parse(Fsa fsa, const char *s)
 {
-  return(fsa_execute(fsa, s, 0, PARSE));
+  return fsa_execute(fsa, s, 0, PARSE);
 }
 
 /*-----------------------------------------------------------------------
@@ -171,8 +190,7 @@ fsa_parse(Fsa fsa, char *s)
  *		corresponding to s, or reject value if s is not
  *		acceptable.
  */
-static void *
-fsa_execute(Fsa fsa,char *s, void *v, int op)
+static void *fsa_execute(Fsa fsa, const char *s, void *v, int op)
 {
   int cs;			/* current state */
 

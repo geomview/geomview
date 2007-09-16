@@ -27,8 +27,8 @@
 
 typedef struct Fsa_s *Fsa;
 extern Fsa fsa_initialize(Fsa, void *);
-extern void *fsa_install(Fsa fsa,char *s,void *v);
-
-void *fsa_parse();
+extern void fsa_delete(Fsa);
+extern void *fsa_install(Fsa fsa, const char *s, void *v);
+extern void *fsa_parse(Fsa fsa, const char *s);
 
 #endif /* ! FSA_H */
