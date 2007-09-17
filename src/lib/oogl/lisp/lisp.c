@@ -116,7 +116,7 @@ typedef struct {
   Fsa  parser;
 } LNameSpace;
 
-static LNameSpace *lambda_args;
+static LNameSpace *lambda_namespace;
 
 /* we also support a global variable name-space, accessible via
  *
@@ -650,7 +650,7 @@ LType LDoublep = {
  */
 
 
-static bool stringfromobj(LObject *obj, char * *x)
+static bool stringfromobj(LObject *obj, char **x)
 {
   if (obj->type == LSTRING || obj->type == LSYMBOL) {
     *x = LSTRINGVAL(obj);
@@ -660,13 +660,13 @@ static bool stringfromobj(LObject *obj, char * *x)
   return true;
 }
 
-static LObject *string2obj(char * *x)
+static LObject *string2obj(char **x)
 {
   char *copy = *x ? strdup(*x) : NULL;
   return LNew( LSTRING, &copy );
 }
 
-static void stringfree(char * *x)
+static void stringfree(char **x)
 {
   if (*x) free(*x);
 }
@@ -678,12 +678,12 @@ static bool stringmatch(char **a, char **b)
   return strcmp(*a,*b)==0 ;
 }
 
-static void stringwrite(FILE *fp, char * *x)
+static void stringwrite(FILE *fp, char **x)
 {
   fprintf(fp, "\"%s\"", *x);
 }
 
-static void stringpull(va_list *a_list, char * *x)
+static void stringpull(va_list *a_list, char **x)
 {
   *x = va_arg(*a_list, char *);
 }
@@ -718,7 +718,7 @@ LType LStringp = {
  * evaluation of lambda expressions.
  */
 
-static bool symbolfromobj(LObject *obj, char * *x)
+static bool symbolfromobj(LObject *obj, char **x)
 {
   if (obj->type == LSYMBOL) {
     *x = LSYMBOLVAL(obj);
@@ -728,13 +728,13 @@ static bool symbolfromobj(LObject *obj, char * *x)
   return true;
 }
 
-static LObject *symbol2obj(char * *x)
+static LObject *symbol2obj(char **x)
 {
   char *copy = *x ? strdup(*x) : NULL;
   return LNew(LSYMBOL, &copy);
 }
 
-static void symbolwrite(FILE *fp, char * *x)
+static void symbolwrite(FILE *fp, char **x)
 {
   fprintf(fp, "%s", *x);
 }
@@ -817,20 +817,22 @@ void LListWrite(FILE *fp, LList *list)
 
 /**********************************************************************/
 
-bool listfromobj(LObject *obj, LList * *x)
+bool listfromobj(LObject *obj, LList **x)
 {
-  if (obj->type != LLIST) return false;
+  if (obj->type != LLIST) {
+    return false;
+  }
   *x = LLISTVAL(obj);
   return true;
 }
 
-LObject *list2obj(LList * *x)
+LObject *list2obj(LList **x)
 {
   LList *list = *x ? LListCopy(*x) : NULL;
   return LNew( LLIST, &list );
 }
 
-void listfree(LList * *x)
+void listfree(LList **x)
 {
   if (*x) LListFree(*x);
 }
@@ -840,12 +842,12 @@ bool listmatch(LList **a, LList **b)
   return *a == *b;
 }
 
-void listwrite(FILE *fp, LList * *x)
+void listwrite(FILE *fp, LList **x)
 {
   LListWrite(fp, *x);
 }
 
-void listpull(va_list *a_list, LList * *x)
+void listpull(va_list *a_list, LList **x)
 {
   *x = va_arg(*a_list, LList *);
 }
@@ -863,19 +865,19 @@ LType LListp = {
   LTypeMagic
 };
 
-bool objfromobj(LObject *obj, LObject * *x)
+bool objfromobj(LObject *obj, LObject **x)
 {
   *x = obj;
   return true;
 }
 
-LObject *obj2obj(LObject * *x)
+LObject *obj2obj(LObject **x)
 {
   if (*x) LRefIncr(*x);
   return *x;
 }
 
-void objpull(va_list *a_list, LObject * *x)
+void objpull(va_list *a_list, LObject **x)
 {
   *x = va_arg(*a_list, LObject *);
 }
@@ -925,7 +927,7 @@ void LakeFree(Lake *lake)
  */
 
 
-bool lakefromobj(LObject *obj, Lake * *x)
+bool lakefromobj(LObject *obj, Lake **x)
 {
   if (obj->type == LLAKE) {
     *x = LLAKEVAL(obj);
@@ -934,15 +936,15 @@ bool lakefromobj(LObject *obj, Lake * *x)
   return false;
 }
 
-LObject *lake2obj(Lake * *x)
+LObject *lake2obj(Lake **x)
 {
   return LNew( LLAKE, x );
 }
 
-void lakefree(Lake * *x)
+void lakefree(Lake **x)
 {}
 
-void lakewrite(FILE *fp, Lake * *x)
+void lakewrite(FILE *fp, Lake **x)
 {
   fprintf(fp,"-lake-");
 }
@@ -1036,9 +1038,10 @@ void LInit()
   VVINIT(funcvvec, LFunction, 256);
   func_fsa = fsa_initialize( NULL, (void*)REJECT );
 
-  /* setq name-space */
+  /* estabilish the global setq name-space */
   VVINIT(setq_namespace->table, LObject *, 256);
   setq_namespace->parser = fsa_initialize(NULL, (void *)REJECT);
+  lambda_namespace = setq_namespace;
 
   nullcell.p = NULL;
   nil.type = &niltype;
@@ -1123,12 +1126,7 @@ LDEFINE(DoLEval, LLOBJECT,
 	    LLOBJECT, &arg,
 	    LEND));
 
-  /* When we reach here LEval() already has recursed into arg and
-   * evaluated the entire expression.
-   */
-
-  LRefIncr(arg);
-  return arg;
+  return LEval(arg);
 }
 
 LDEFINE(lambda, LLOBJECT,
@@ -1153,9 +1151,138 @@ LDEFINE(lambda, LLOBJECT,
 	    LEND));
 
   /* We avaluate to ourselves */
-  lambda = LNew(LLIST, NULL);
-  lambda->cell.p = LListCopy(args);
+  lambda = list2obj(&args);
   return lambda;
+}
+
+LDEFINE(let, LLOBJECT,
+	"(let ARGUMENTS EXPR1 ... EXPRN)\n"
+	"Generate a lambda expression from EXRP1 ... EXPRN, with the "
+	"argument bindings described by ARGUMENTS. ARGUMENTS is a list "
+	"of symbols (bound to nil by default) or lists of the form "
+	"`(ARG VALUE)' where ARG is a symbol and not evaluated and VALUE "
+	"is a S-expr which is first evaluated, then its value is bound to "
+	"ARG. The entire expression evaluates to the value of EXPRN, the "
+	"last expression in the body of the statement. The argument list "
+	"must be present, but can be empty; in the latter case the "
+	"`(let () ...)' statement is equivalent to a `(progn ...)'")
+{
+  Lake *caller;
+
+  if (!LPARSEMODE) {
+    return LEvalLambda(NULL, args);
+  } else {
+    /* We cannot use LParseArgs() to parse the lake into ARGLIST,
+     * otherwise the parameter names would be turned into function
+     * calls, and in case of a matching function name the following
+     * data would be parsed according to the rules of the function
+     * which is not appropriate here. The strategy is to convert the
+     * let-expression into an equivalent lambda-expression during
+     * parsing.
+     */
+    LList *lambda;
+    LList *arglist;
+    LList *argvals;
+    LList **arglistp, **bodyp;
+    int quote;
+    bool par;
+
+    if (!LakeMore(lake) || !LakeNewSexpr(lake)) {
+      OOGLSyntax(lake->streamin,
+		 "Llet(): Reading \"%s\": missing parameter list",
+		 LakeName(lake));
+    }
+
+    /* lambda-expression */
+    lambda = LListNew();
+    LListAppend(args, LNew(LLIST, &lambda));
+    args = args->cdr;
+
+    /* head of lambda expression */
+    lambda->car = FUNCTOOBJ("lambda");
+    /* lambda argument list */
+    lambda->cdr = LListNew();
+    lambda->cdr->car = LNew(LLIST, NULL);
+    arglistp = (LList **)&lambda->cdr->car->cell.p;
+
+    /* stash the lake as first argument value */
+    LListAppend(args, lake2obj(&lake));
+    args = args->cdr;
+
+    /* argument values then go to args->cdr, if present */
+
+    LakeNextToken(lake, &quote); /* consume '(' */
+    while (LakeMore(lake)) {
+      LObject *larg, *lval;
+      char *arg;
+      
+      if ((par = LakeNewSexpr(lake))) {
+	/* (ARG VALUE) */
+	LakeNextToken(lake, &quote); /* consume '(' */
+      }
+      /* fetch the argument name */
+      if ((larg = LLiteral(lake)) == Lnil || !symbolfromobj(larg, &arg)) {
+	OOGLSyntax(lake->streamin,
+		   "Llet(): Reading \"%s\": "
+		   "argument name missing or not a symbol (`%s'?!)",
+		   LakeName(lake), LSummarize(larg));
+	goto parsebad;
+      }
+
+      if (par) {
+	/* fetch the argument value */
+	lval = LSexpr(lake);
+	if (LakeMore(lake)) {
+	  OOGLSyntax(lake->streamin,
+		     "Llet(): Reading \"%s\": "
+		     "excess data in argument definition",
+		     LakeName(lake));
+	  LFree(lval);
+	  goto parsebad;
+	}
+	LakeNextToken(lake, &quote); /* consume ')' */
+      } else {
+	lval = Lnil;
+      }
+      
+      /* put the argument name into the argument list of the lambda
+       * expression
+       */
+      *arglistp = LListNew();
+      (*arglistp)->car = larg;
+      arglistp = &(*arglistp)->cdr;
+
+      /* put the argument value into the value list of the lambda
+       * function call, i.e. just append to args.
+       */
+      LListAppend(args, lval);
+      args = args->cdr;
+    }
+    LakeNextToken(lake, &quote); /* consume ')' */
+
+    /* suck the body of the let statement in */
+    args = lambda->cdr;
+    LDECLARE(("let", LBEGIN,
+	      LHOLD, LREST, NULL,
+	      LEND));
+
+    return Lt; /* not reached */
+  parsebad:
+    /* Consume the remainder of the expression */
+    while (LakeMore(lake)) {
+      LFree(LSexpr(lake));
+    }
+    LakeNextToken(lake, &quote); /* consume ')' */
+    if (par) {
+      par = false;
+      goto parsebad;
+    }
+    /* this was for the argument list, now go for the body */
+    while (LakeMore(lake)) {
+      LFree(LSexpr(lake));
+    }
+    return Lnil;
+  }
 }
 
 LDEFINE(defun, LLOBJECT,
@@ -1176,7 +1303,7 @@ LDEFINE(defun, LLOBJECT,
   int fidx, nargs, helpsize;
   char *help, *argname;
 
-  /* No pretty standard: in order that our Sexpr0() uses the correct
+  /* Not pretty standard: in order that our Sexpr0() uses the correct
    * function for parsing the arguments of the defun we have to add a
    * dummy function entry right at the start. That entry points to
    * EvalDefun(), which makes sure we have a LAKE and the remaining
@@ -1191,15 +1318,14 @@ LDEFINE(defun, LLOBJECT,
 	      LEND));
   } else {
     LObject *lname;
+    char *name;
     
     /* Dequeue the function name */
     if (!LakeMore(lake) ||
-	(lname = ParseArg(LSYMBOL, lake)) == Lnil ||
-	!LSTRINGFROMOBJ(lname, &name)) {
+	(lname = LLiteral(lake)) == Lnil || !symbolfromobj(lname, &name)) {
       OOGLSyntax(lake->streamin,
 		 "Ldefun(): Reading \"%s\": missing function name",
 		 LakeName(lake));
-      LFree(lname);
       return Lnil;
     }
 
@@ -1297,11 +1423,14 @@ LDEFINE(setq, LLOBJECT,
 	"(setq (bar STUFF) foo)\n\n"
 	"will also not work, even if (bar ...) would evaluate to an "
 	"unqualified symbol: varible names must be literals. "
-	"Note that the binding is global: it will effect the "
-	"evaluation of all SEXPR after binding SYM. Also: it is NOT possible "
-	"to un-bind a symbol. However, subsequent (set SYM OTHERVAL) "
-	"invocations will re-bind SYM to the value of OTHERVAL and release "
-	"the lisp-object previously bound to SYM.")
+	"Note that calling `(setq SYM ...)' will alter the value of "
+	"SYM within the current name-space: if SYM, e.g., is bound as "
+	"local variable by a lambda, let or defun expression, then "
+	"`(setq SYM ...)' will change the value of the local variable, "
+	"the global binding will remain unchanged. "
+	"It is NOT possible to un-bind a symbol. However, subsequent "
+	"`(setq SYM ...)' invocations will re-bind SYM to another value "
+	"and free the lisp-object previously bound to SYM.")
 {
   Lake *caller;
   LObject *sym, *val;
@@ -1321,7 +1450,7 @@ LDEFINE(setq, LLOBJECT,
     return Lnil;
   }
 
-  namespace_put(setq_namespace, LSYMBOLVAL(sym), val, true);
+  namespace_put(lambda_namespace, LSYMBOLVAL(sym), val, true);
   
   return LRefIncr(val);
 }
@@ -1414,7 +1543,7 @@ LDEFINE(or, LLOBJECT,
   }
 }
 
-LDEFINE(and, LINT,
+LDEFINE(and, LLOBJECT,
 	"(and EXPR1 EXPR2\n\
 	Evaluate EXPR1 and EXPR2 and return t if both return non-nil,\n\
 	otherwise return nil.")
@@ -1427,7 +1556,7 @@ LDEFINE(and, LINT,
   return (expr1 != Lnil && expr2 != Lnil) ? Lt : Lnil;
 }
 
-LDEFINE(greater, LINT,
+LDEFINE(greater, LLOBJECT,
 	"(> EXPR1 EXPR2)\n\
 	Returns t if EXPR1 is greater than EXPR2.  EXPR1 and EXPR2 should\n\
 	be either both integers or floats, or both strings.")
@@ -1725,7 +1854,20 @@ LDEFINE(progn, LLOBJECT,
 
 void LListShow(LList *list)
 {
-  LListWrite(stderr,list);
+  LListWrite(stderr, list);
+}
+
+const char *LListSummarize(LList *list) 
+{
+  const char *msg;
+  LObject *lobj;
+  
+  lobj = LNew(LLIST, &list);
+  msg = LSummarize(lobj);
+  lobj->cell.p = NULL;
+  LFree(lobj);
+  
+  return msg;
 }
 
 /*
@@ -1846,11 +1988,11 @@ static inline LObject *namespace_get(LNameSpace *ns, char *name)
   LObject **obj;
   
   if (ns == NULL) {
-    return Lnil;
+    return NULL;
   }
 
   obj = _namespace_get(ns, name);
-  return obj ? LRefIncr(*obj) : Lnil;
+  return obj ? LRefIncr(*obj) : NULL;
 }
 
 static inline bool
@@ -1917,59 +2059,86 @@ static inline bool lambdafromobj(LObject *lambda, LList **args, LList **body)
  * the name-space defined by ARGNS. LAKE and CALL are only used to
  * report syntax errors.
  */
-static inline bool LBindParameters(Lake *lake, LList *call,
-				   LNameSpace *argns,
-				   LList *args, LList *argvals)
+static inline bool BindLambdaParameters(Lake *lake, LList *call,
+					LNameSpace *argns,
+					LList *args, LList *argvals)
 {
-  LObject *lobj;
+  LObject *lval;
+  bool rest = false, optional = false;
+  int ngot = 0;
+  int nreq = 0;
   
-  while (args && argvals) {
+  for (; args && argvals; args = args->cdr) {
     char *argname;
-	    
+    
+    lval = NULL;
     if (!LFROMOBJ(LSYMBOL)(args->car, &argname)) {
-      lobj = LNew(LLIST, NULL); lobj->cell.p = call;
+      char *sumcall = strdup(LListSummarize(call));
       OOGLSyntax(lake->streamin,
 		 "LParseLambda: Reading \"%s\": parsing \"%s\": "
 		 "parameter name `%s' is not a symbol (unquoted atom)",
-		 LakeName(lake),
-		 LSummarize(lobj),
-		 LSummarize(args->car));
-      lobj->cell.p = NULL; LFree(lobj);
-      return false;
+		 LakeName(lake), sumcall, LSummarize(args->car));
+      free(sumcall);
+      goto errorout;
     }
-    if (!namespace_put(argns, argname, argvals->car, false)) {
-      lobj = LNew(LLIST, NULL); lobj->cell.p = call;
+    if (strcmp("&rest", argname) == 0) {
+      rest = true;
+      continue;
+    } else if (strcmp("&loptional", argname) == 0) {
+      optional = true;
+      continue;
+    }
+    nreq += !optional;
+    if (rest) {
+      lval = list2obj(&argvals);
+    } else {
+      lval = LRefIncr(argvals->car);
+    }
+    if (!namespace_put(argns, argname, lval, false)) {
       OOGLSyntax(lake->streamin,
-		 "LBindParameters: Reading \"%s\": parsing \"%s\": "
+		 "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
 		 "duplicate parameter name `%s'",
-		 LakeName(lake),
-		 LSummarize(lobj),
-		 LSummarize(args->car));
-      lobj->cell.p = NULL; LFree(lobj);
-      return false;
+		 LakeName(lake), LListSummarize(call), argname);
+      goto errorout;
     }
-    args    = args->cdr;
+    ++ngot;
+    LFree(lval);
+    if (rest) {
+      args = args->cdr;
+      break;
+    }
     argvals = argvals->cdr;
   }
-  if ((args == NULL) != (argvals == NULL)) {
-    if (args) {
-      lobj = LNew(LLIST, NULL); lobj->cell.p = call;
-      OOGLSyntax(lake->streamin,
-		 "LBindParameters: Reading \"%s\": parsing \"%s\": "
-		 "missing parameter values",
-		 LakeName(lake), LSummarize(lobj));
-      lobj->cell.p = NULL; LFree(lobj);
-    } else {
-      lobj = LNew(LLIST, NULL); lobj->cell.p = call;
-      OOGLSyntax(lake->streamin,
-		 "LBindParameters: Reading \"%s\": parsing \"%s\": "
-		 "excess parameter values",
-		 LakeName(lake), LSummarize(lobj));
-      lobj->cell.p = NULL; LFree(lobj);
-    }
-    return false;
+
+  /* Error checking */
+  if (rest && args) {
+    char *sumcall = strdup(LListSummarize(call));
+    OOGLSyntax(lake->streamin,
+	       "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
+	       "excess argument names after `&rest' parameter: `%s'",
+	       LakeName(lake), sumcall, LListSummarize(args));
+    free(sumcall);
+    goto errorout;
+  } else if (nreq > ngot) {
+    OOGLSyntax(lake->streamin,
+	       "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
+	       "missing parameter values",
+	       LakeName(lake), LListSummarize(call));
+    goto errorout;
+  } else if (ngot > nreq) {
+    char *sumcall = strdup(LListSummarize(call));
+    OOGLSyntax(lake->streamin,
+	       "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
+	       "excess parameter values: `%s'",
+	       LakeName(lake), sumcall, LListSummarize(argvals));
+    free(sumcall);
+    goto errorout;
   }
   return true;
+
+ errorout:
+  LFree(lval);
+  return false;
 }
 
 /* Copy the body of a lambda expression and substitute LAKE for each
@@ -2048,9 +2217,9 @@ LDEFINE(EvalLambda, LLOBJECT,
   }
   
   /* push a new name-space */
-  old_ns = namespace_push(&lambda_args, &lambda_ns);
-  if (!LBindParameters(caller, args->cdr, &lambda_ns, largs, argvals)) {
-    namespace_pop(&lambda_args, old_ns);
+  old_ns = namespace_push(&lambda_namespace, &lambda_ns);
+  if (!BindLambdaParameters(caller, args->cdr, &lambda_ns, largs, argvals)) {
+    namespace_pop(&lambda_namespace, old_ns);
     return Lnil;
   }
 
@@ -2071,7 +2240,7 @@ LDEFINE(EvalLambda, LLOBJECT,
   LFree(body);
   
   /* pop the saved name-space */
-  namespace_pop(&lambda_args, old_ns);
+  namespace_pop(&lambda_namespace, old_ns);
 
   return val;
 }
@@ -2176,9 +2345,10 @@ static inline LObject *LSexpr0(Lake *lake, int listhow)
   if (quote == '\0' && *tok == '(') {
     obj = LNew(LLIST, NULL);
     if(listhow == LIST_LITERAL) {
-      while (LakeMore(lake))
+      while (LakeMore(lake)) {
 	obj->cell.p = (void*) LListAppend((LList*)(obj->cell.p),
 					  LSexpr0(lake, LIST_LITERAL));
+      }
     } else if (LakeMore(lake)) {
       /* if we have a non-empty list ... */
       /* ... get the first element and see if it's a function name */
@@ -2241,13 +2411,13 @@ LObject *LEval(LObject *obj)
   if (obj->type == LSYMBOL) {
     LObject *val;
 
-    val = namespace_get(lambda_args, LSYMBOLVAL(obj));
-    if (val != Lnil) {
+    val = namespace_get(lambda_namespace, LSYMBOLVAL(obj));
+    if (val != NULL) {
       return val;
     }
 
     val = namespace_get(setq_namespace, LSYMBOLVAL(obj));
-    if (val != Lnil) {
+    if (val != NULL) {
       return val;
     }
   }
@@ -2292,8 +2462,7 @@ LList *LListAppend(LList *list, LObject *obj)
   LList *l, *new = LListNew();
 
   new->car = obj;
-  l = list;
-  if (l) {
+  if ((l = list) != NULL) {
     while (l->cdr) l = l->cdr;
     l->cdr = new;
     return list;
@@ -2809,7 +2978,7 @@ LObject *LEvalFunc(const char *name, ...)
       
       tail->cdr = rest;
       if (va_arg(a_list, LType *) != LEND) {
-	OOGLError(0, "LEvalFunc(%s): Error: excess arguments after LREST.",
+	OOGLError(0, "LEvalFunc%(s): Error: excess arguments after LREST.",
 		  name);
 	LListFree(list);
 	return Lnil;
@@ -2842,14 +3011,14 @@ LObject *LEvalFunc(const char *name, ...)
   return val;
 }
 
-static bool filterfromobj(LObject *obj, LFilter * *x)
+static bool filterfromobj(LObject *obj, LFilter **x)
 {
   if (obj->type != LFILTER) return false;
   *x = LFILTERVAL(obj);
   return true;
 }
 
-static LObject *filter2obj(LFilter * *x)
+static LObject *filter2obj(LFilter **x)
 {
   LFilter *copy = OOGLNew(LFilter);
   copy->flag = (*x)->flag;
@@ -2857,7 +3026,7 @@ static LObject *filter2obj(LFilter * *x)
   return LNew( LFILTER, &copy );
 }
 
-static void filterfree(LFilter * *x)
+static void filterfree(LFilter **x)
 {
   if (*x) {
     if ((*x)->value) LFree((*x)->value);
@@ -2865,7 +3034,7 @@ static void filterfree(LFilter * *x)
   }
 }
 
-static void filterwrite(FILE *fp, LFilter * *x)
+static void filterwrite(FILE *fp, LFilter **x)
 {
   switch ((*x)->flag) {
   case VAL:
@@ -3485,12 +3654,15 @@ const char *LSummarize(LObject *obj)
   len = ftell(f);
   rewind(f);
   if(len >= 80) len = 79;
-  if(summary) free(summary);
+  if(summary) {
+    free(summary);
+  }
   summary = malloc(len+1);
   summary[len] = '\0';
   fread(summary, len, 1, f);
-  if(len >= 79)
+  if(len >= 79) {
     strcpy(summary+75, " ...");
+  }
   return summary;
 }
 

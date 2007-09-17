@@ -312,6 +312,7 @@ void            LWrite(FILE *fp, LObject *obj);
 /* void         LFree(LObject *obj); */
 /* LObject      *LCopy(LObject *obj); */
 LObject *       LSexpr(Lake *lake);
+LObject *       LLiteral(Lake *lake);
 LObject *       LEvalSexpr(Lake *lake);
 LObject *       LEval(LObject *obj);
 LList   *       LListNew();
@@ -329,6 +330,7 @@ bool            LArgClassValid(LType *type);
 void            LHelpDef(const char *key, const char *message);
 const char *    LakeName(Lake *lake);
 const char *    LSummarize(LObject *obj);
+const char *    LListSummarize(LList *list);
 LObject *       LMakeArray(LType *basetype, char *data, int count);
 
 static inline LObject *LRefIncr(LObject *obj)
