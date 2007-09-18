@@ -111,10 +111,13 @@ vvec funcvvec;
 static Fsa func_fsa;
 
 /* lambda expression parameters */
-typedef struct {
-  vvec table;
-  Fsa  parser;
-} LNameSpace;
+typedef struct LNameSpace LNameSpace;
+struct LNameSpace
+{
+  vvec       table;
+  Fsa        parser;
+  LNameSpace *next;
+};
 
 static LNameSpace *lambda_namespace;
 
@@ -167,15 +170,17 @@ static inline LObject *ParseArg(LType *type, Lake *lake);
  * nil object implementation
  */
 
+#if 0
 /* Should not be this an empty list? */
-
 static void nilwrite(FILE *fp, void *value)
 {
   fprintf(fp, "nil");
 }
+#endif
 
 static LCell nullcell;
 
+#if 0
 static LType niltype = {
   "nil",
   sizeof(int),
@@ -189,6 +194,10 @@ static LType niltype = {
   LTypeMagic
 };
 static LObject nil; /* = {&niltype, 1, nullcell }; */
+#else
+static LObject nil = {LLIST, 1, { NULL } };
+#endif
+
 LObject *Lnil = &nil;
 
 /*
@@ -780,11 +789,33 @@ LList *LListCopy(LList *list)
 {
   LList *new;
 
-  if (! list) return NULL;
+  if (!list) {
+    return NULL;
+  }
   new = LListNew();
-  if (list->car)
+  if (list->car) {
     new->car = LCopy(list->car);
+  } else {
+    new->car = NULL;
+  }
   new->cdr = LListCopy(list->cdr);
+  return new;
+}
+
+LList *LListShallowCopy(LList *list)
+{
+  LList *new;
+
+  if (!list) {
+    return NULL;
+  }
+  new = LListNew();
+  if (list->car) {
+    new->car = LRefIncr(list->car);
+  } else {
+    new->car = NULL;
+  }
+  new->cdr = LListShallowCopy(list->cdr);
   return new;
 }
 
@@ -803,16 +834,20 @@ void LListFree(LList *list)
 void LListWrite(FILE *fp, LList *list)
 {
   int first = 1;
-  fprintf(fp,"(");
-  while (list != NULL) {
-    if (!first) {
-      fprintf(fp," ");
+  if (list == NULL) {
+    fprintf(fp, "nil");
+  } else {
+    fprintf(fp,"(");
+    while (list != NULL) {
+      if (!first) {
+	fprintf(fp," ");
+      }
+      first = 0;
+      LWrite(fp, list->car);
+      list = list->cdr;
     }
-    first = 0;
-    LWrite(fp, list->car);
-    list = list->cdr;
+    fprintf(fp,")");
   }
-  fprintf(fp,")");
 }
 
 /**********************************************************************/
@@ -929,7 +964,7 @@ void LakeFree(Lake *lake)
  */
 
 
-bool lakefromobj(LObject *obj, Lake **x)
+static bool lakefromobj(LObject *obj, Lake **x)
 {
   if (obj->type == LLAKE) {
     *x = LLAKEVAL(obj);
@@ -938,15 +973,15 @@ bool lakefromobj(LObject *obj, Lake **x)
   return false;
 }
 
-LObject *lake2obj(Lake **x)
+static LObject *lake2obj(Lake **x)
 {
   return LNew( LLAKE, x );
 }
 
-void lakefree(Lake **x)
+static void lakefree(Lake **x)
 {}
 
-void lakewrite(FILE *fp, Lake **x)
+static void lakewrite(FILE *fp, Lake **x)
 {
   fprintf(fp,"-lake-");
 }
@@ -1045,9 +1080,11 @@ void LInit()
   setq_namespace->parser = fsa_initialize(NULL, (void *)REJECT);
   lambda_namespace = setq_namespace;
 
+#if 0
   nullcell.p = NULL;
   nil.type = &niltype;
   nil.cell = nullcell;
+#endif
   t.type = &ttype;
   t.cell = nullcell;
 
@@ -1083,50 +1120,79 @@ void LInit()
 }
   
 LDEFINE(quote, LLOBJECT,
-	"(quote EXPR)\n\
-	returns the symbolic lisp expression EXPR without evaluating it.")
+	"(quote EXPR)\n"
+	"returns the symbolic lisp expression EXPR without evaluating it.")
 {
   LObject *arg;
 
-  LDECLARE(("quote", lake, args,
-	    LLITERAL, LLOBJECT, &arg,
-	    LEND));
-  LRefIncr(arg);
-  return arg;
-}
-
-LDEFINE(Quote, LLOBJECT,
-	"(Quote EXPR)\n"
-	"Quote (with a capital 'Q') a lisp object. The difference between "
-	"\"(quote EXPR)\" and \"(Quote EXPR)\" is that the result of the "
-	"latter implies parsing of EXPR, parsing S-expression as if "
-	"EXPR was not quote, just the final evaluation is skipped. It "
-	"is possible to pass the result of \"(Quote ...)\" as argument to "
-	"\"(Eval ...)\", which will then evaluate the expression and return "
-	"its result.")
-{
-  LObject *arg;
-
-  LDECLARE(("Quote", lake, args,
+  LDECLARE(("quote", LBEGIN,
 	    LHOLD, LLOBJECT, &arg,
 	    LEND));
   LRefIncr(arg);
   return arg;
 }
 
+/* The purpose of the function below is to allow the evaluation of
+ * quoted lists, or lists constructed via cons, car, cdr, or the &rest
+ * argument of defun: if the car of a list is a symbol and not a
+ * function call, then it is first replaced by a matching function
+ * call if possible, and a lake argument is added as second arg.
+ */
+static void LListSexpr(LList *expr, Lake *lake)
+{
+  LList *subexpr, *cdr = expr->cdr;
+  int fidx;
+  
+  if (expr->car && expr->car->type != LFUNC && funcfromobj(expr->car, &fidx)) {
+    /* try to convert into a function name and add a lake argument. */
+    LList *lakenode = LListNew();
+    
+    lakenode->cdr = cdr;
+    lakenode->car = lake2obj(&lake);
+
+    if (expr->car->type == LSYMBOL) {
+      /* Builtin function or defun */
+      LFree(expr->car);
+      expr->car = LNew(LFUNC, &fidx);
+      expr->cdr = lakenode;
+    } else {
+      /* anonymous lambda expression */
+      expr->cdr = LListNew();
+      expr->cdr->car = expr->car;
+      expr->car = LNew(LFUNC, &fidx);
+      expr->cdr->cdr = lakenode;
+    }
+  }
+  while (cdr) {
+    if (expr->car) {
+      if (expr->car->type == LLAKE) {
+	expr->car->cell.p = lake;
+      } else if (listfromobj(expr->car, &subexpr)) {
+	LListSexpr(subexpr, lake);
+      }
+    }
+    cdr = cdr->cdr;
+  }
+}
+
 LDEFINE(eval, LLOBJECT,
-	"(Eval EXPR)\n"
+	"(eval EXPR)\n"
 	"Evaluate a lisp expression. If EXPR is an unevaluated S-expression "
-	"as returned by the \"(Quote ...)\" command then the effect will be "
-	"as if calling the un-Quoted expression directly. Note the capital "
-	"'Q', \"(quoted ...)\" expression (lower-case 'q') cannot be "
-	"\"(Eval ...)\"uated")
+	"as returned by the \"(quote ...)\" command then the effect will be "
+	"as if calling the un-Quoted expression directly.")
 {
   LObject *arg;
+  LList *sexpr;
+  Lake *caller;
 
-  LDECLARE(("eval", lake, args,
+  LDECLARE(("eval", LBEGIN,
+	    LLAKE, &caller,
 	    LLOBJECT, &arg,
 	    LEND));
+
+  if (listfromobj(arg, &sexpr)) {
+    LListSexpr(sexpr, caller);
+  }
 
   return LEval(arg);
 }
@@ -1391,7 +1457,7 @@ LDEFINE(defun, LLOBJECT,
       LFROMOBJ(LSYMBOL)(arg->car, &argname);
       helpsize += sprintf(help + helpsize, " %s", argname);
     }
-    strcpy(help + helpsize, ")\n"); helpsize += 3;
+    strcpy(help + helpsize, ")\n"); helpsize += 2;
     strcpy(help + helpsize, helpstring);
     break;
   }
@@ -1406,8 +1472,9 @@ LDEFINE(defun, LLOBJECT,
     return Lnil;
   }
   functable[fidx].lambda = lambda;
+  functable[fidx].help = strdup(help);
 
-  LHelpDef(functable[fidx].name, help);
+  LHelpDef(functable[fidx].name, functable[fidx].help);
 
   return LTOOBJ(LSYMBOL)(&name);
 }
@@ -1465,10 +1532,8 @@ LDEFINE(while, LVOID,
 	"Iterate: \"evaluate TEST, if non nil, evaluate BODY\".")
 {
   LObject *test, *body, *val, *cp;
-  Lake *caller;
   
   LDECLARE(("while", LBEGIN,
-	    LLAKE, &caller,
 	    LHOLD, LLOBJECT, &test,
 	    LHOLD, LLOBJECT, &body,
 	    LEND));
@@ -1940,22 +2005,18 @@ void LRefDecr(LObject *obj)
 /* lambda-expression argument name-space handling */
 
 /* push a new namespace */
-static inline LNameSpace *namespace_push(LNameSpace **ns, LNameSpace *new_ns)
+static inline void namespace_push(LNameSpace **ns, LNameSpace *new_ns)
 {
-  LNameSpace *old = *ns;
-  
   if (new_ns) {
     new_ns->parser = fsa_initialize(NULL, (void *)REJECT);
     VVINIT(new_ns->table, LObject *, 8);
+    new_ns->next = *ns;
+    *ns = new_ns;
   }
-  
-  *ns = new_ns;
-
-  return old;
 }
 
 /* pop the current name-space and destroy it */
-static inline void namespace_pop(LNameSpace **ns, LNameSpace *old)
+static inline void namespace_pop(LNameSpace **ns)
 {
   int i;
   
@@ -1967,12 +2028,12 @@ static inline void namespace_pop(LNameSpace **ns, LNameSpace *old)
     fsa_delete((*ns)->parser);
   }
   
-  *ns = old;
+  *ns = (*ns)->next;
 }
 
 static inline LObject **_namespace_get(LNameSpace *ns, char *name) 
 {
-  int idx;
+  int idx = REJECT;
   
   idx = (int)(long)fsa_parse(ns->parser, name);
   if (idx == REJECT) {
@@ -1989,7 +2050,10 @@ static inline LObject *namespace_get(LNameSpace *ns, char *name)
     return NULL;
   }
 
-  obj = _namespace_get(ns, name);
+  do {
+    obj = _namespace_get(ns, name);
+  } while (obj == NULL && (ns = ns->next) != NULL);
+
   return obj ? LRefIncr(*obj) : NULL;
 }
 
@@ -2065,6 +2129,7 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
   bool rest = false, optional = false;
   int ngot = 0;
   int nreq = 0;
+  int nargs = 0;
   
   for (; args; args = args->cdr) {
     char *argname;
@@ -2086,9 +2151,10 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
       optional = true;
       continue;
     }
+    ++nargs;
     nreq += !optional;
     if (rest) {
-      lval = LLISTTOOBJ(argvals ? argvals : LListAppend(NULL, Lnil));
+      lval = argvals ? LLISTTOOBJ(argvals) : Lnil;
     } else {
       lval = argvals ? LRefIncr(argvals->car) : Lnil;
     }
@@ -2119,13 +2185,13 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
 	       LakeName(lake), sumcall, LListSummarize(args));
     free(sumcall);
     goto errorout;
-  } else if (nreq > ngot) {
+  } else if (ngot < nreq) {
     OOGLSyntax(lake->streamin,
 	       "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
 	       "missing parameter values",
 	       LakeName(lake), LListSummarize(call));
     goto errorout;
-  } else if (ngot > nreq) {
+  } else if (ngot > nargs) {
     char *sumcall = strdup(LListSummarize(call));
     OOGLSyntax(lake->streamin,
 	       "BindLambdaParameters: Reading \"%s\": parsing \"%s\": "
@@ -2163,10 +2229,9 @@ static LList *LBody(LList *lbody, Lake *lake)
   }
   body = LListNew();
   if (lbody->car) {
+    body->car = LCopy(lbody->car);
     if (body->car->type == LLAKE) {
       body->car->cell.p = lake;
-    } else {
-      body->car = LCopy(lbody->car);
     }
   }
   body->cdr = LBody(lbody->cdr, lake);
@@ -2188,7 +2253,7 @@ LDEFINE(EvalLambda, LLOBJECT,
 	"Evaluate the given lambda-expression with the given arguments. "
 	"Internal use only. DO NOT USE THIS FUNCTION.")
 {
-  LNameSpace lambda_ns, *old_ns;
+  LNameSpace lambda_ns;
   Lake *caller;
   LList *argvals, *largs, *lbody;
   LObject *val, *lexpr, *body;
@@ -2217,9 +2282,9 @@ LDEFINE(EvalLambda, LLOBJECT,
   }
   
   /* push a new name-space */
-  old_ns = namespace_push(&lambda_namespace, &lambda_ns);
+  namespace_push(&lambda_namespace, &lambda_ns);
   if (!BindLambdaParameters(caller, args->cdr, &lambda_ns, largs, argvals)) {
-    namespace_pop(&lambda_namespace, old_ns);
+    namespace_pop(&lambda_namespace);
     return Lnil;
   }
 
@@ -2240,7 +2305,7 @@ LDEFINE(EvalLambda, LLOBJECT,
   LFree(body);
   
   /* pop the saved name-space */
-  namespace_pop(&lambda_namespace, old_ns);
+  namespace_pop(&lambda_namespace);
 
   return val;
 }
@@ -2489,32 +2554,55 @@ LObject *LListEntry(LList *list, int n)
 }
 
 LDEFINE(car, LLOBJECT,
-	"(car LIST)\n\
-	returns the first element of LIST.")
+	"(car LIST)\n"
+	"returns the first element of LIST.")
 {
   LList *list;
   LDECLARE(("car", LBEGIN,
 	    LLIST, &list,
 	    LEND));
   if (list && list->car) {
-    return LCopy(list->car);
+    return LRefIncr(list->car);
   }
   return Lnil;
 }
 
 LDEFINE(cdr, LLOBJECT,
-	"(cdr LIST)\n\
-	returns the list obtained by removing the first element of LIST.")
+	"(cdr LIST)\n"
+	"returns the list obtained by removing the first element of LIST.")
 {
   LList *list;
+
   LDECLARE(("cdr", LBEGIN,
 	    LLIST, &list,
 	    LEND));
+
   if (list && list->cdr) {
-    LList *copy = LListCopy(list->cdr);
+    LList *copy = LListShallowCopy(list->cdr);
     return LNew(LLIST, &copy);
   }
   return Lnil;
+}
+
+LDEFINE(cons, LLOBJECT,
+	"(cons EXPR LIST)\n"
+	"returns the list obtained by adding EXPR as first element of LIST.")
+{
+  LObject *llist;
+  LObject *car;
+  LList *cdr;
+
+  LDECLARE(("cons", LBEGIN,
+	    LLOBJECT, &car,
+	    LLIST, &cdr,
+	    LEND));
+
+  llist = LNew(LLIST, NULL);
+  llist->cell.p = LListNew();
+  LLISTVAL(llist)->car = LRefIncr(car);
+  LLISTVAL(llist)->cdr = LListShallowCopy(cdr);
+
+  return llist;
 }
 
 /*
@@ -2715,8 +2803,16 @@ static bool obj2array(LObject *obj, LType *type, char *x, int *n, bool hold)
   }
   
   list = LLISTVAL(obj);
-  if (obj->type != LLIST) return false;
-  while (list && list->car && *n<max) {
+  if (obj->type != LLIST) {
+    return false;
+  }
+  if (list == NULL || list->car == NULL) {
+    return true;
+  }
+  if (list->car->type == LLAKE) {
+    list = list->cdr;
+  }
+  while (list && list->car && *n < max) {
     LObject *obj = hold ? LRefIncr(list->car) : LEval(list->car);
     if (!LFROMOBJ(type)(obj, (void*)(x + (*n)*LSIZE(type)))) {
       LFree(obj);
@@ -2757,13 +2853,17 @@ static bool obj2vararray(LObject *obj, LType *type, char **x, int *n, bool hold)
     *n = 0;
     return false;
   }
-  if ((*n = LListLength(list)) == 0) {
+  if (list == NULL || list->car == NULL) {
     if (*x) {
       OOGLFree(*x);
     }
     *x = NULL;
     return true;
   }
+  if (list->car->type == LLAKE) {
+    list = list->cdr;
+  }
+  *n = LListLength(list);
   *x = OOGLRenewNE(char, *x, (*n)*LSIZE(type), "C-lisp vararray");
   *n = 0;
   while (list && list->car) {
@@ -2799,10 +2899,14 @@ static LParseResult AssignArgs(const char *name, LList *args, va_list a_list)
 {
   bool moreargspecs = true, hold = false, convok;
   int argsgot = 0, argsrequired= -1, argspecs = 0;
+  Lake *lake = NULL;
   LObject *arg;
   LType *argtype;
   
   while (moreargspecs) {
+    if (args && args->car && lakefromobj(args->car, &lake)) {
+      args = args->cdr;
+    }
     argtype=va_arg(a_list, LType *);
     if (argtype->size < 0) {
       if (argtype == LEND) {
@@ -2889,10 +2993,8 @@ static LParseResult AssignArgs(const char *name, LList *args, va_list a_list)
 	args = NULL; /* Don't complain of excess args */
       }
     } else if (argtype == LLAKE) {
-      if (args) {
-	arg = args->car;
-	*va_arg(a_list, Lake **) = LLAKEVAL(arg);
-	args = args->cdr;
+      if (lake) {
+	*va_arg(a_list, Lake **) = lake;
       } else {
 	OOGLError(0, "%s: internal lake assignment out of whack.", name);
 	return LASSIGN_BAD;
