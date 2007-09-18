@@ -145,6 +145,9 @@ extern int PoolClearMark(Pool *p);
 extern void PoolFPrint(Pool *p, FILE *f, const char *format, ...);
 extern void PoolPrint(Pool *p, const char *format, ...);
 
+extern void PoolDetach(Pool *p);
+extern void PoolReattach(Pool *p);
+
 #endif /*_STREAMPOOL_*/
 
 /*

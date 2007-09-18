@@ -652,6 +652,22 @@ void PoolDelete(Pool *p)
     FREELIST_FREE(Pool, p);
 }
 
+void PoolDetach(Pool *p)
+{
+    if ((p->flags & PF_TEMP) == 0) {
+	DblListDelete(&p->node);
+    }
+}
+
+void PoolReattach(Pool *p)
+{
+    if ((p->flags & PF_TEMP) == 0) {
+	if (DblListEmpty(&p->node)) {
+	    DblListAddTail(&AllPools, &p->node);
+	}
+    }
+}
+
 /*
  * Marks a Pool as being awake.  Doesn't update nexttowake;
  * so this should only be called where awaken_until() gets a chance to run.

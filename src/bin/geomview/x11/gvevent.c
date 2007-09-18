@@ -95,13 +95,86 @@ void print_event(char *s, Event *e) {
 }
 #endif
 
+static void process_events(int queuefd)
+{
+  struct timeval await;
+#define	BRIEF	0.1
+  static struct timeval brief = { 0, 100000 };
+  float timelimit;
+  fd_set thesefds;
+  XtInputMask xim;
+
+  if (queuefd < 0) {
+    queuefd = ConnectionNumber(dpy);
+  }
+
+  if(drawerstate.pause) {
+    if(!dragging && !drawer_moving())
+      select(0, NULL, NULL, NULL, &brief);
+    nseen = 0;
+  } else {
+    int nwatch = 0;
+
+    timelimit = PoolInputFDs( &thesefds, &nwatch );
+
+    if(timelimit > 0 && drawer_moving())
+      timelimit = 0;	/* "Is anything moving?" */
+
+    if (queuefd >= 0 )
+      FD_SET(queuefd, &thesefds);
+
+    if(queuefd >= nwatch)
+      nwatch = queuefd+1;
+
+    if(timelimit > BRIEF) timelimit = BRIEF;
+
+    await.tv_sec = floor(timelimit);
+    await.tv_usec = 1000000*(timelimit - await.tv_sec);
+
+    nseen = select(nwatch, &thesefds, NULL, NULL, &await);
+  }
+
+  gettimeofday(&perf.then, NULL);
+
+  if(!drawerstate.pause)
+    PoolInAll( &thesefds, &nseen );
+
+  ui_update();
+
+  justdragged = 0;
+  deldrag = gev.t;
+
+
+  while ((xim = XtAppPending(App)) != 0) {
+    XtAppProcessEvent(App, xim);
+  }
+
+  if (dragging && !justdragged && !dragstop) {
+    D1PRINT(("gvevent at 1\n"));
+    GV_RAWEVENT( gev.dev, -1, gev.x, gev.y, gev.t);
+    dragstop = 1;
+  }
+
+  if (dragging) {
+    deldrag = gev.t - deldrag;
+  } else {
+    deldrag = 0;
+  }
+
+  XSync(dpy, False);
+
+  gv_update_draw( ALLCAMS, 0.001 * (float)deldrag );
+  mg_textureclock();
+
+  if(perf.interval > 0)
+    perftick();
+
+  numdrags = 0;
+}
+
 void main_loop()
 {
-
-  fd_set thesefds;
-  int nwatch = 0;
   int queuefd;
-  XtInputMask xim;
 
   queuefd = ConnectionNumber(dpy);
   dragging = 0;
@@ -111,76 +184,26 @@ void main_loop()
   numdrags = 0;
 
   while (1) {
-    struct timeval await;
-#define	BRIEF	0.1
-    static struct timeval brief = { 0, 100000 };
-    float timelimit;
+    process_events(queuefd);
+  }
+}
 
-    if(drawerstate.pause)
-    {
-	if(!dragging && !drawer_moving())
-	    select(0, NULL, NULL, NULL, &brief);
-	nseen = 0;
-    }
-    else
-    {
-      timelimit = PoolInputFDs( &thesefds, &nwatch );
+LDEFINE(processevents, LVOID,
+	"(process-events)\n"
+	"Pass control back to the event loop of Geomview, then continue "
+	"evaluating the current command-script.")
+{
+  Lake *caller;
+  
+  LDECLARE(("process-events", LBEGIN,
+	    LLAKE, &caller,
+	    LEND));
 
-      if(timelimit > 0 && drawer_moving())
-	    timelimit = 0;	/* "Is anything moving?" */
-
-      if (queuefd >= 0 )
-	FD_SET(queuefd, &thesefds);
-
-      if(queuefd >= nwatch)
-	  nwatch = queuefd+1;
-
-      if(timelimit > BRIEF) timelimit = BRIEF;
-
-      await.tv_sec = floor(timelimit);
-	await.tv_usec = 1000000*(timelimit - await.tv_sec);
-
-	nseen = select(nwatch, &thesefds, NULL, NULL, &await);
-    }
-
-    gettimeofday(&perf.then, NULL);
-
-    if(!drawerstate.pause)
-	PoolInAll( &thesefds, &nseen );
-
-    ui_update();
-
-    justdragged = 0;
-    deldrag = gev.t;
-
-
-    while ((xim = XtAppPending(App)) != 0) {
-      XtAppProcessEvent(App, xim);
-    }
-
-    if (dragging && !justdragged && !dragstop) {
-D1PRINT(("gvevent at 1\n"));
-      GV_RAWEVENT( gev.dev, -1, gev.x, gev.y, gev.t);
-      dragstop = 1;
-    }
-
-    if (dragging) {
-      deldrag = gev.t - deldrag;
-    } else {
-      deldrag = 0;
-    }
-
-    XSync(dpy, False);
-
-    gv_update_draw( ALLCAMS, 0.001 * (float)deldrag );
-    mg_textureclock();
-
-    if(perf.interval > 0)
-        perftick();
-
-    numdrags = 0;
- }
-
+  PoolDetach(POOL(caller));
+  process_events(-1);
+  PoolReattach(POOL(caller));
+  
+  return Lt;
 }
 
 /*****************************************************************************/
