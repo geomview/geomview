@@ -36,13 +36,11 @@ void norm(FILE *fp);
 int verbose = 0;
 
 void handle_pick(FILE *fp, int picked, HPoint3 *gotten,
-		 int vert, HPoint3 *v, int edge, HPoint3 e[])
+		 bool vert, HPoint3 *v, bool edge, HPoint3 e[])
 {
-  static int first = 1;
-  HPoint3 got, e0, e1;
+  static bool first = true;
+  HPoint3 got;
 
-  HPt3Dehomogenize(&e[0], &e0);
-  HPt3Dehomogenize(&e[1], &e1);
   HPt3Dehomogenize(gotten, &got);
   fprintf(fp, "(progn\n");
   if (!picked) {
@@ -56,9 +54,14 @@ void handle_pick(FILE *fp, int picked, HPoint3 *gotten,
     fprintf(fp, "  { LIST { :littlebox }\n");
 
     if (edge && !vert) {
-	e0.x -= got.x; e0.y -= got.y; e0.z -= got.z;
-	e1.x -= got.x; e1.y -= got.y; e1.z -= got.z;
-	fprintf(fp,"{ appearance { material { diffuse 0 1 1 } }\n\
+      HPoint3 e0, e1;
+
+      HPt3Dehomogenize(&e[0], &e0);
+      HPt3Dehomogenize(&e[1], &e1);
+
+      e0.x -= got.x; e0.y -= got.y; e0.z -= got.z;
+      e1.x -= got.x; e1.y -= got.y; e1.z -= got.z;
+      fprintf(fp,"{ appearance { material { diffuse 0 1 1 } }\n\
   LIST\n\
    { INST transform 1 0 0 0 0 1 0 0 0 0 1 0 %f %f %f 1 geom :littlebox }\n\
    { INST transform 1 0 0 0 0 1 0 0 0 0 1 0 %f %f %f 1 geom :littlebox }\n\
@@ -71,25 +74,25 @@ void handle_pick(FILE *fp, int picked, HPoint3 *gotten,
 	  1 1 0 1\n\
    }\n\
   }\n",
-	     e0.x, e0.y, e0.z,
-	     e1.x, e1.y, e1.z,
-	     e0.x, e0.y, e0.z,
-	     e1.x, e1.y, e1.z);
+	      e0.x, e0.y, e0.z,
+	      e1.x, e1.y, e1.z,
+	      e0.x, e0.y, e0.z,
+	      e1.x, e1.y, e1.z);
     }
     fprintf(fp,"    }\n  }\n)\n");
   }
   if (first) {
     fprintf(fp, "(pickable \"pick\" no)\n");
-    first = 0;
+    first = false;
   }
   fprintf(fp, ")\n");
   fflush(fp);
 }
 
 void handle_ND_pick(FILE *fp, int picked, HPtNCoord *gotten, int dim,
-		    int vert, HPtNCoord *v, int edge, HPtNCoord *e)
+		    bool vert, HPtNCoord *v, bool edge, HPtNCoord *e)
 {
-  static int first = 1;
+  static bool first = true;
   HPointN got, e0, e1;
   TransformN *trans;
   int i;
