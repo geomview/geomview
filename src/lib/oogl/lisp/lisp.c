@@ -2495,13 +2495,16 @@ LObject *LEval(LObject *obj)
   list = LLISTVAL(obj);
 
   /* the empty list evaluates to itself */
-  if (list == NULL || list->car == NULL) return obj;
+  if (list == NULL || list->car == NULL) {
+    return Lnil;
+  }
 
   /* a nonempty list corresponds to a function call;
      the list's value is the value returned by the function */
   if (list->car->type == LFUNC) {
     fentry = &functable[LFUNCVAL(list->car)];
-
+    args = list->cdr;
+    
     /* deal with any interests in the function first */
     if ((interest=fentry->interested) != NULL) {
       while (interest) {
