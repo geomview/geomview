@@ -779,7 +779,7 @@ asleep(Pool *p, struct timeval *base, double offset)
     base = timeof(base);
     if (p->inf != NULL) {
 	p->flags |= PF_ASLEEP;
-	addtime(base, &until, offset);
+	addtime(&until, base, offset);
 	if (timercmp(&until, &nexttowake, <))
 	    nexttowake = until;
 	if (p->infd >= 0) {
@@ -808,7 +808,7 @@ void
 PoolSetTime(Pool *p, struct timeval *base, double time_at_base)
 {
     base = timeof(base);
-    addtime(base, &p->timebase, -time_at_base);
+    addtime(&p->timebase, base, -time_at_base);
 }
 
 double
