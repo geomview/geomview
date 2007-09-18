@@ -834,7 +834,9 @@ LObject *list2obj(LList **x)
 
 void listfree(LList **x)
 {
-  if (*x) LListFree(*x);
+  if (*x) {
+    LListFree(*x);
+  }
 }
 
 bool listmatch(LList **a, LList **b)
@@ -1112,7 +1114,7 @@ LDEFINE(Quote, LLOBJECT,
   return arg;
 }
 
-LDEFINE(DoLEval, LLOBJECT,
+LDEFINE(eval, LLOBJECT,
 	"(Eval EXPR)\n"
 	"Evaluate a lisp expression. If EXPR is an unevaluated S-expression "
 	"as returned by the \"(Quote ...)\" command then the effect will be "
@@ -1122,7 +1124,7 @@ LDEFINE(DoLEval, LLOBJECT,
 {
   LObject *arg;
 
-  LDECLARE(("Eval", lake, args,
+  LDECLARE(("eval", lake, args,
 	    LLOBJECT, &arg,
 	    LEND));
 
@@ -1167,8 +1169,6 @@ LDEFINE(let, LLOBJECT,
 	"must be present, but can be empty; in the latter case the "
 	"`(let () ...)' statement is equivalent to a `(progn ...)'")
 {
-  Lake *caller;
-
   if (!LPARSEMODE) {
     return LEvalLambda(NULL, args);
   } else {
@@ -1181,9 +1181,7 @@ LDEFINE(let, LLOBJECT,
      * parsing.
      */
     LList *lambda;
-    LList *arglist;
-    LList *argvals;
-    LList **arglistp, **bodyp;
+    LList **arglistp;
     int quote;
     bool par;
 
@@ -2068,7 +2066,7 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
   int ngot = 0;
   int nreq = 0;
   
-  for (; args && argvals; args = args->cdr) {
+  for (; args; args = args->cdr) {
     char *argname;
     
     lval = NULL;
@@ -2082,17 +2080,17 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
       goto errorout;
     }
     if (strcmp("&rest", argname) == 0) {
-      rest = true;
+      optional = rest = true; /* rest implies optional */
       continue;
-    } else if (strcmp("&loptional", argname) == 0) {
+    } else if (strcmp("&optional", argname) == 0) {
       optional = true;
       continue;
     }
     nreq += !optional;
     if (rest) {
-      lval = list2obj(&argvals);
+      lval = LLISTTOOBJ(argvals ? argvals : LListAppend(NULL, Lnil));
     } else {
-      lval = LRefIncr(argvals->car);
+      lval = argvals ? LRefIncr(argvals->car) : Lnil;
     }
     if (!namespace_put(argns, argname, lval, false)) {
       OOGLSyntax(lake->streamin,
@@ -2101,13 +2099,15 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
 		 LakeName(lake), LListSummarize(call), argname);
       goto errorout;
     }
-    ++ngot;
+    ngot += argvals != NULL;
     LFree(lval);
     if (rest) {
       args = args->cdr;
       break;
     }
-    argvals = argvals->cdr;
+    if (argvals) {
+      argvals = argvals->cdr;
+    }
   }
 
   /* Error checking */
