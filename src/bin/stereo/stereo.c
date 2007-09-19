@@ -391,24 +391,24 @@ LDEFINE(merge, LVOID,
        "(merge camera CAM-ID  { CAMERA ... } )")
 {
   char *opsname = NULL;
-  int c;
   LObject *kw = NULL, *idarg = NULL;
   float newfocallen = focallen;
 
-  if (lake == NULL)
+  if (!LPARSEMODE)
     return Lt;
 
   /* All the work of this function is done at parse time. */
 
   /* parse first arg [ops]: */
-  if (! LakeMore(lake,c) || (kw = LSexpr(lake)) == Lnil ||
+  if (!LakeMore(lake) || (kw = LSexpr(lake)) == Lnil ||
       !LFROMOBJ(LSTRING)(kw, &opsname) || strcmp(opsname, "camera") != 0) {
-    OOGLSyntax(lake->streamin, "merge: expected \"camera\", got \"%s\"", opsname);
+    OOGLSyntax(lake->streamin,
+	       "merge: expected \"camera\", got \"%s\"", opsname);
     goto parsefail;
   }
 
   /* parse 2nd arg; it's a string (id) */
-  if (! LakeMore(lake,c) || (idarg = LEvalSexpr(lake)) == Lnil) {
+  if (!LakeMore(lake) || (idarg = LEvalSexpr(lake)) == Lnil) {
     OOGLSyntax(lake->streamin,"\"merge\": expected CAM-ID");
     goto parsefail;
   }
