@@ -520,9 +520,11 @@ void
 LmCopyLights(LmLighting *from, LmLighting *to)
 {
     int i;
-    LtLight **lp;
+    LtLight **lp, *tmp;
+
     LM_FOR_ALL_LIGHTS(from, i, lp) {
-	LmAddLight(to, *lp);
+	LmAddLight(to, tmp = LtCopy(*lp, NULL));
+	LtDelete(tmp);
     }
 }
   
