@@ -617,11 +617,11 @@ drawer_name2metaid(char *name)
 
 
 LDEFINE(name_object, LVOID,
-	"(name-object    ID NAME)\n\
-	Assign a new NAME (a string) to ID.  A number is appended if\n\
-	that name is in use (for example, \"foo\" -> \"foo<2>\").  The new\n\
-	name, possibly with number appended, may be used as object's\n\
-	id thereafter.")
+	"(name-object ID NAME)\n"
+	"Assign a new NAME (a string) to ID.  A number is appended if "
+	"that name is in use (for example, \"foo\" -> \"foo<2>\").  The new "
+	"name, possibly with number appended, may be used as object's "
+	"id thereafter.")
 {
   int id;
   char *name;
@@ -644,10 +644,10 @@ drawer_name_object(int id, int ni, char *name)
 }
 
 LDEFINE(update_draw, LVOID,
-	"(update-draw    CAM-ID  [timestep_in_seconds])\n\
-	Apply each incremental motion once and then draw CAM-ID.\n\
-	Applies \"timestep\" seconds' worth of motion, or uses elapsed real\n\
-	time if \"timestep\" is absent or zero.")
+	"(update-draw CAM-ID  [timestep_in_seconds])\n"
+	"Apply each incremental motion once and then draw CAM-ID. "
+	"Applies \"timestep\" seconds' worth of motion, or uses elapsed real "
+	"time if \"timestep\" is absent or zero.")
 {
   int id;
   float dt = 0;
@@ -661,8 +661,8 @@ LDEFINE(update_draw, LVOID,
 }
 
 LDEFINE(draw, LVOID,
-	"(draw           CAM-ID)\n\
-	Draw the view in CAM-ID, if it needs redrawing.  See also \"redraw\".")
+	"(draw CAM-ID)\n"
+	"Draw the view in CAM-ID, if it needs redrawing. See also \"redraw\".")
 {
   DView *dv;
   int index;
@@ -679,9 +679,9 @@ LDEFINE(draw, LVOID,
 }
 
 LDEFINE(update, LVOID,
-	"(update [timestep_in_seconds])\n\
-	Apply each incremental motion once.  Uses timestep if it's present and\n\
-	nonzero; otherwise motions are proportional to elapsed real time.")
+	"(update [timestep_in_seconds])\n"
+	"Apply each incremental motion once. Uses timestep if it's present and "
+	"nonzero; otherwise motions are proportional to elapsed real time.")
 {
   float realdt, dt = 0;
   LDECLARE(("update", LBEGIN,
@@ -709,9 +709,9 @@ drawer_updateproc(int id, PFI func)
 }
 
 LDEFINE(redraw, LVOID,
-	"(redraw         CAM-ID)\n\
-	States that the view in CAM-ID should be redrawn on the\n\
-	next pass through the main loop or the next invocation of \"draw\".")
+	"(redraw CAM-ID)\n"
+	"States that the view in CAM-ID should be redrawn on the "
+	"next pass through the main loop or the next invocation of \"draw\".")
 {
   DView *dv;
   int index;
@@ -729,12 +729,13 @@ LDEFINE(redraw, LVOID,
 }
 
 LDEFINE(freeze, LVOID,
-	"(freeze         CAM-ID  [hard-freeze])\n\
-	Freeze CAM-ID; drawing in this camera's window is turned off\n\
-	until it is explicitly redrawn with \"(redraw CAM-ID)\", after\n\
-	which time drawing resumes as normal.  hard-freeze (default false)\n\
-	is intended to be \"true\" only when windows are iconified,\n\
- 	making them immune even to \"redraw\" until another \"(freeze CAM-ID false)\".")
+	"(freeze         CAM-ID  [hard-freeze])\n"
+	"Freeze CAM-ID; drawing in this camera's window is turned off "
+	"until it is explicitly redrawn with \"(redraw CAM-ID)\", after "
+	"which time drawing resumes as normal.  hard-freeze (default false) "
+	"is intended to be \"true\" only when windows are iconified, "
+ 	"making them immune even to \"redraw\" until another "
+	"\"(freeze CAM-ID false)\".")
 {
   DView *dv;
   int index;
@@ -804,9 +805,9 @@ void drawer_center(int id)
 
 
 LDEFINE(xform_set, LVOID,
-	"(xform-set      ID TRANSFORM)\n\
-	Overwrite the current object transform with TRANSFORM (set\n\
-	object ID's transform to TRANSFORM).")
+	"(xform-set ID TRANSFORM)\n"
+	"Overwrite the current object transform with TRANSFORM (set "
+	"object ID's transform to TRANSFORM).")
 {
   DObject *obj;
   int index;
@@ -848,11 +849,11 @@ LDEFINE(xform_set, LVOID,
 }
 
 LDEFINE(xform, LVOID,
-	"(xform          ID TRANSFORM)\n\
-	Apply TRANSFORM to object ID, as opposed to simply setting its\n\
-	transform, so the effective position\n\
-	of the object will be the concatenation of TRANSFORM with the\n\
-	current object transform.")
+	"(xform ID TRANSFORM)\n"
+	"Apply TRANSFORM to object ID, as opposed to simply setting its "
+	"transform, so the effective position "
+	"of the object will be the concatenation of TRANSFORM with the "
+	"current object transform.")
 {
   int id;
   TransformStruct *ts;
@@ -881,10 +882,10 @@ LDEFINE(xform, LVOID,
 }
 
 LDEFINE(xform_incr, LVOID,
-	"(xform-incr     ID TRANSFORM)\n\
-	Apply continual motion: concatenate TRANSFORM with the current\n\
-	transform of the object every refresh (set object ID's\n\
-	incremental transform to TRANSFORM).")
+	"(xform-incr     ID TRANSFORM)\n"
+	"Apply continual motion: concatenate TRANSFORM with the current "
+	"transform of the object every refresh (set object ID's "
+	"incremental transform to TRANSFORM).")
 {
   DObject *obj;
   int index;
@@ -915,10 +916,10 @@ LDEFINE(xform_incr, LVOID,
 }
 
 LDEFINE(new_camera, LID,
-	"(new-camera     name [CAMERA])\n\
-	Create a new camera with the given name (a string).  If a\n\
-	camera with that name already exists, the new object is given\n\
-	a unique name.  If CAMERA is omitted a default camera is used.")
+	"(new-camera     name [CAMERA])\n"
+	"Create a new camera with the given name (a string).  If a "
+	"camera with that name already exists, the new object is given "
+	"a unique name.  If CAMERA is omitted a default camera is used.")
 {
   DView *dv;
   int id;
@@ -946,11 +947,11 @@ LDEFINE(new_camera, LID,
 }
 
 LDEFINE(camera, LINT,
-	"(camera         CAM-ID [CAMERA])\n\
-	Specify data for CAM-ID; CAMERA is a string giving an OOGL\n\
-	camera specification.  If no camera CAM-ID exists,\n\
-	it is created; in this case, the second argument is optional,\n\
-	and if omitted, a default camera is used.  See also: new-camera.")
+	"(camera CAM-ID [CAMERA])\n"
+	"Specify data for CAM-ID; CAMERA is a string giving an OOGL "
+	"camera specification.  If no camera CAM-ID exists, "
+	"it is created; in this case, the second argument is optional, "
+	"and if omitted, a default camera is used.  See also: new-camera.")
 {
   DView *dv;
   int index;
@@ -992,8 +993,8 @@ LDEFINE(camera, LINT,
 }
 
 LDEFINE(camera_reset, LVOID,
-	"(camera-reset   CAM-ID)\n\
-	Reset CAM-ID to its default value.")
+	"(camera-reset CAM-ID)\n"
+	"Reset CAM-ID to its default value.")
 {
   DView *dv;
   int index;
@@ -1045,17 +1046,17 @@ drawer_new_dgeom(char *name, GeomStruct *gs, enum citizenship citizenship)
 }
 
 LDEFINE(new_alien, LID,
-	"(new-alien      name [GEOMETRY])\n\
-	Create a new alien (geom not in the world) with the given name\n\
-	(a string).  GEOMETRY is a string giving an OOGL geometry\n\
-	specification.  If GEOMETRY is omitted, the new alien\n\
-	is given an empty geometry.  If an object with that name\n\
-	already exists, the new alien is given a unique name.  The\n\
-	light beams that are used to move around the lights are an\n\
-	example of aliens. They're drawn but are not controllable the\n\
-	way ordinary objects are: they don't appear in the object\n\
-	browser and the user can't move them with the normal motion\n\
-	modes.")
+	"(new-alien      name [GEOMETRY])\n"
+	"Create a new alien (geom not in the world) with the given name "
+	"(a string).  GEOMETRY is a string giving an OOGL geometry "
+	"specification.  If GEOMETRY is omitted, the new alien "
+	"is given an empty geometry.  If an object with that name "
+	"already exists, the new alien is given a unique name.  The "
+	"light beams that are used to move around the lights are an "
+	"example of aliens. They're drawn but are not controllable the "
+	"way ordinary objects are: they don't appear in the object "
+	"browser and the user can't move them with the normal motion "
+	"modes.")
 {
   GeomStruct *gs = &nullgs;
   char *name;

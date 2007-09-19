@@ -290,9 +290,10 @@ commandclose(Pool *p)
 
 
 LDEFINE(setenv, LVOID,
-	"(setenv  name string)  sets the environment variable ``name'' to the value\n\
-``string''; the name is visible to geomview (as in pathnames containing $name)\n\
-and to processes it creates, e.g. external modules.")
+	"(setenv  name string)\n"
+	"Sets the environment variable ``name'' to the value ``string''; the "
+	"name is visible to geomview (as in pathnames containing $name) "
+	"and to processes it creates, e.g. external modules.")
 {
   char *name, *string = NULL;
   char buf[10240];
@@ -309,12 +310,13 @@ and to processes it creates, e.g. external modules.")
 
 
 LDEFINE(input_translator, LVOID,
-	"(input-translator  \"#prefix_string\"  \"Bourne-shell-command\")\n\
-Defines an external translation program for special input types.\n\
-When asked to read a file which begins with the specified string,\n\
-geomview invokes that program with standard input coming from the given file.\n\
-The program is expected to emit OOGL geometric data to its standard output.\n\
-In this implementation, only prefixes beginning with # are recognized.")
+	"(input-translator  \"#prefix_string\"  \"Bourne-shell-command\")\n"
+	"Defines an external translation program for special input types. "
+	"When asked to read a file which begins with the specified string, "
+	"Geomview invokes that program with standard input coming from the "
+	"given file. The program is expected to emit OOGL geometric data to "
+	"its standard output. In this implementation, only prefixes beginning "
+	"with # are recognized.")
 {
   char *prefix, *cmd;
   LDECLARE(("input-translator", LBEGIN,
@@ -537,6 +539,7 @@ LDEFINE(emodule_run, LVOID,
   LDECLARE(("emodule-run", LBEGIN,
 	    LSTRINGS, &cmd,
 	    LEND));
+
   em.text = em.name = cmd;
   em.data = NULL;
   em.dir = NULL;
@@ -596,6 +599,7 @@ LDEFINE(emodule_isrunning, LVOID,
   LDECLARE(("emodule-isrunning", LBEGIN,
 	    LSTRING, &modname,
 	    LEND));
+
   if (emodule_running_index(modname) != -1) return Lt;
   else return Lnil;
 }
@@ -756,11 +760,13 @@ LDEFINE(command, LVOID,
 	by default.")
 {
   char *file, *ofile = NULL;
+
   LDECLARE(("command", LBEGIN,
 	    LSTRING, &file,
 	    LOPTIONAL,
 	    LSTRING, &ofile,
 	    LEND));
+
   if (PoolStreamOpen(file, NULL, 0, &CommandOps) == NULL) {
     OOGLError(0,"command: cannot open input %s: %s\n", file, sperror());
     return Lnil;
@@ -790,6 +796,7 @@ LDEFINE(sleep_for, LVOID,
 	    LLAKE, &sweenie,
 	    LFLOAT, &time,
 	    LEND));
+
   PoolSleepFor(POOL(sweenie), time);
   return Lt;
 }
@@ -811,6 +818,7 @@ LDEFINE(sleep_until, LFLOAT,
 	    LLAKE, &bass,
 	    LFLOAT, &time,
 	    LEND));
+
   PoolSleepUntil(POOL(bass), time);
   time -= PoolTimeAt(POOL(bass), NULL);	/* NULL => now. */
   return LNew(LFLOAT, &time);
@@ -823,18 +831,21 @@ LDEFINE(set_clock, LVOID,
 {
   Lake *bass;
   float time;
+
   LDECLARE(("set-clock", LBEGIN,
 	    LLAKE, &bass,
 	    LFLOAT, &time,
 	    LEND));
+
   PoolSetTime(POOL(bass), NULL, time);
+
   return Lt;
 }
 
 LDEFINE(clock, LVOID,
-	"(clock)\n\
-	Returns the current time, in seconds, as shown by this stream's clock.\n\
-	See also set-clock and sleep-until.")
+	"(clock)\n"
+	"Returns the current time, in seconds, as shown by this stream's "
+	"clock.	See also set-clock and sleep-until.")
 {
   Lake *rainy;
   float time;
@@ -875,12 +886,12 @@ void echo_to_fp(LList *arglist, FILE *fp)
 }
 
 LDEFINE(echo, LVOID,
-	"(echo ...)\n\
-	Write the given data to the special file \"-\".  Strings are written\n\
-	literally; lisp expressions are evaluated and their values written.\n\
-	If received from an external program, \"echo\" sends to the program's\n\
-	input.  Otherwise writes to geomview's own standard output\n\
-	(typically the terminal).")
+	"(echo ...)\n"
+	"Write the given data to the special file \"-\".  Strings are written "
+	"literally; lisp expressions are evaluated and their values written. "
+	"If received from an external program, \"echo\" sends to the "
+	"program's input. Otherwise writes to geomview's own standard output "
+	"(typically the terminal).")
 {
   Lake *powderhorn;
   LList *arglist = NULL;
@@ -890,10 +901,12 @@ LDEFINE(echo, LVOID,
 	    LHOLD,
 	    LLAKE, &powderhorn,
 	    LHOLD,
-	    LREST, &arglist));
+	    LREST, &arglist,
+	    LEND));
   
-  if ( (fp = PoolOutputFile(POOL(powderhorn))) == NULL)
+  if ((fp = PoolOutputFile(POOL(powderhorn))) == NULL) {
     fp = stdout;
+  }
   echo_to_fp(arglist, fp);
 
   return Lt;
@@ -912,13 +925,17 @@ LDEFINE(emodule_transmit, LVOID,
   emodule *em;
   LList *message = NULL;
   int i;
+
   LDECLARE(("emodule-transmit", LBEGIN,
 	    LSTRING, &modname,
 	    LHOLD,
-	    LREST, &message));
+	    LREST, &message,
+	    LEND));
 
   i = emodule_running_index(modname);
-  if (i == -1) return Lnil;
+  if (i == -1) {
+    return Lnil;
+  }
   em = VVINDEX(uistate.emod, emodule, i);
   if (em->link && em->link->outf) {
     echo_to_fp(message, em->link->outf);
@@ -930,7 +947,8 @@ LDEFINE(emodule_transmit, LVOID,
 
 
 LDEFINE(read, LVOID,
-	"(read {geometry|camera|image|appearance|transform|ntransform|command} {GEOMETRY or CAMERA or ...})\n"
+	"(read {geometry|camera|image|appearance|transform|ntransform|command} "
+	"{GEOMETRY or CAMERA or ...})\n"
 	"Read and interpret the text in ... as containing the "
 	"given type of data.  Useful for defining objects using OOGL "
 	"reference syntax, e.g. "
@@ -952,7 +970,7 @@ LDEFINE(read, LVOID,
   HandleOps *ops;
   LObject *kw = NULL;
 
-  if (lake != NULL) {
+  if (LPARSEMODE) {
     /* parse first arg [ops]: */
     if (!LakeMore(lake) ||
 	(kw = LSexpr(lake)) == Lnil ||
@@ -980,6 +998,7 @@ LDEFINE(read, LVOID,
      no evaluation work; it's all in the parsing */
   LFree(kw);
   return Lt;
+
  fail:
   LFree(kw);
   return Lnil;
@@ -1002,12 +1021,12 @@ void gv_merge(HandleOps *ops, int camid, Ref *object)
 }
 
 LDEFINE(merge, LVOID,
-	"(merge          {window|camera} CAM-ID  { WINDOW or CAMERA ... } )\n\
-	Modify the given window or camera, changing just those properties\n\
-	specified in the last argument.  E.g.\n\
-		(merge camera \"Camera\" { far 20 })\n\
-	sets Camera's far clipping plane to 20 while leaving\n\
-	other attributes untouched.")
+	"(merge {window|camera} CAM-ID  { WINDOW or CAMERA ... } )\n"
+	"Modify the given window or camera, changing just those properties "
+	"specified in the last argument. E.g.\n\n"
+	"               (merge camera \"Camera\" { far 20 })\n\n"
+	"sets Camera's far clipping plane to 20 while leaving "
+	"other attributes untouched.")
 /*
   Since we don't use LDECLARE we must remember to LDefun()
   this function manually in lang_init() in file lang.c.
@@ -1018,7 +1037,7 @@ LDEFINE(merge, LVOID,
   int id;
   LObject *kw = NULL, *idarg = NULL, *item = NULL;
 
-  if (lake != NULL) {
+  if (LPARSEMODE) {
     /* parse first arg [ops]: */
     if (!LakeMore(lake) || (kw = LSexpr(lake)) == Lnil ||
 	!LSTRINGFROMOBJ(kw, &opsname) ||
@@ -1046,6 +1065,8 @@ LDEFINE(merge, LVOID,
     LListAppend(args, idarg);
     LListAppend(args, item);
     return Lt;
+  } else {
+    LParseArgs("merge", LBEGIN, LREST, &args, LEND);
   }
 
   kw = LListEntry(args, 1);
@@ -1070,8 +1091,7 @@ LDEFINE(merge, LVOID,
     }
     drawer_merge_camera(id, cs->cam);
     /* CamDelete(cs->cam); */
-  }
-  else {
+  } else {
     WindowStruct *ws;
     if (!LFROMOBJ(LWINDOW)(item, &ws)) {
       OOGLError(0,"\"merge\": expected window in arg position 3");
@@ -1265,13 +1285,15 @@ LDEFINE(hdelete, LVOID,
 
 
 LDEFINE(hdefine, LVOID,
-	"(hdefine {geometry|camera|window|image|appearance|transform|ntransform} name value)\n"
-	"Sets the value of a handle of a given type."
-	"(hdefine  <type>  <name>  <value>)  is generally equivalent to"
-	"(read <type>  { define <name> <value> })"
-	"except that the assignment is done when hdefine is executed,"
-	"(possibly not at all if inside a conditional statement),"
-	"while the ``read ... define'' performs assignment as soon as the"
+	"(hdefine "
+	"{geometry|camera|window|image|appearance|transform|ntransform} "
+	"name value)\n"
+	"Sets the value of a handle of a given type. "
+	"(hdefine  <type>  <name>  <value>)  is generally equivalent to "
+	"(read <type>  { define <name> <value> }) "
+	"except that the assignment is done when hdefine is executed, "
+	"(possibly not at all if inside a conditional statement), "
+	"while the ``read ... define'' performs assignment as soon as the "
 	"text is read.")
 {
   Handle *h = NULL;
@@ -1292,7 +1314,7 @@ LDEFINE(hdefine, LVOID,
     LObject lobj;
   } *s;
 
-  if (lake != NULL) {
+  if (LPARSEMODE) {
     /* parse first arg [ops]: */
     if (! LakeMore(lake) || (kw = LSexpr(lake)) == Lnil ||
 	!LSTRINGFROMOBJ(kw, &opsname) ||
@@ -1308,7 +1330,7 @@ LDEFINE(hdefine, LVOID,
     }
 
     /* parse 2nd arg; it's a string (id) */
-    if (! LakeMore(lake) || (name = LEvalSexpr(lake)) == Lnil) {
+    if (!LakeMore(lake) || (name = LEvalSexpr(lake)) == Lnil) {
       OOGLSyntax(lake->streamin,
 		 "\"hdefine %s\" in \"%s\": expected handle name",
 		 LakeName(lake), opsname);
@@ -1325,8 +1347,11 @@ LDEFINE(hdefine, LVOID,
     LListAppend(args, kw);
     LListAppend(args, name);
     LListAppend(args, item);
+
     return Lt;
   }
+
+  LParseArgs("hdefine", LBEGIN, LREST, &args, LEND);
 
   kw = LListEntry(args, 1);
   name = LListEntry(args, 2);
@@ -1360,7 +1385,6 @@ LDEFINE(hdefine, LVOID,
   if (ops == &TransOps) {
     REFPUT(obj); /* otherwise obj will never be deleted */
   }
-
   return Lt;
 
  parsefail:
