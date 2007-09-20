@@ -6849,8 +6849,10 @@ the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Not that
 automatically.  @var{EXPR1} cannot be a string if @code{DOCSTRING} is
 omitted; it would be interpreted as the doc-string. The return value of
 @code{(defun @dots{})} is the function name. Functions can be recursive
-and self-modifying. Argument values may be altered by @code{setq}; the
-new binding is discarded after evaluation of the surrounding
+and self-modifying. It is possible to redefine builtin-functions, in
+this case the old definition is still available under the name
+@code{-builtin-OLDNAME-}. Argument values may be altered by @code{setq};
+the new binding is discarded after evaluation of the surrounding
 @code{defun}-body. The special keywords @code{&optional} and
 @code{&rest} have the same meaning as for anonymous lambda-expression,
 see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
