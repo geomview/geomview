@@ -1,3 +1,16 @@
+1.9.5 October 2007
+
+   * vastly extended lisp-interpreter, including lambda-expression, defun,
+     let, while, setq
+
+   * (process-events) lisp function to branch out of a command-script
+     and temporarily give the control back to the main command-loop
+
+   * Proper handling of quoted input tokens: those cannot serve as
+     function or variable names
+
+   * other bug-fixes
+
 1.9.4 August 2007
 
    * Translation of the manual to Brazilian Portuguese, courtesy of

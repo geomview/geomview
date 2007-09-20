@@ -1,4 +1,4 @@
 @set UPDATED 17 September 2007
 @set UPDATED-MONTH September 2007
-@set EDITION 1.9.4
-@set VERSION 1.9.4
+@set EDITION post-1.9.4
+@set VERSION post-1.9.4
