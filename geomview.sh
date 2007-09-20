@@ -17,6 +17,9 @@ fi
 %LD_LIBRARY_PATH_SETTINGS%
 export LD_LIBRARY_PATH
 
+# Really necessary?
+export LC_NUMERIC="POSIX"
+
 ### Geomview and/or its modules use the following environment
 ### variables.  For each of these that does not already have a value,
 ### this shell script assigns a value based on the setting of
