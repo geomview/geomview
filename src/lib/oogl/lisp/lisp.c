@@ -945,7 +945,7 @@ Lake *LakeDefine(IOBFILE *streamin, FILE *streamout, void *river)
 {
   Lake *lake = OOGLNewE(Lake, "new Lake");
   lake->streamin = streamin;
-  lake->streamout = streamout;
+  lake->streamout = streamout ? streamout : stdout;
   lake->river = river;
   lake->timing_interests = 0;
   return lake;
@@ -2503,10 +2503,28 @@ LObject *LEval(LObject *obj)
      the list's value is the value returned by the function */
   if (list->car->type == LFUNC) {
     fentry = &functable[LFUNCVAL(list->car)];
-    args = list->cdr;
     
+#if 0
     /* deal with any interests in the function first */
     if ((interest=fentry->interested) != NULL) {
+      args = list->cdr;
+      while (interest) {
+	if (FilterArgMatch(interest->filter, args)) {
+	  InterestOutput(fentry->name, args, interest);
+	}
+	interest = interest->next;
+      }
+    }
+#endif
+
+    /* then call the function */
+    ans = fentry->fptr(NULL, list);
+
+    /* deal with any interests in the function after calling the
+     * function; otherwise the arguments are in an unevaluated state.
+     */
+    if ((interest=fentry->interested) != NULL) {
+      args = list->cdr;
       while (interest) {
 	if (FilterArgMatch(interest->filter, args)) {
 	  InterestOutput(fentry->name, args, interest);
@@ -2515,8 +2533,6 @@ LObject *LEval(LObject *obj)
       }
     }
 
-    /* then call the function */
-    ans = fentry->fptr(NULL, list);
     return ans;
   } else {
     OOGLError(0, "lisp error: call to unknown function %s",
@@ -3018,7 +3034,7 @@ static LParseResult AssignArgs(const char *name, LList *args, va_list a_list)
 	convok = LFROMOBJ(argtype)(args->car, va_arg(a_list, void *));
 	if (!convok) {
 	  OOGLError(0,"%s: %s expected in arg position %1d (got %s)\n",
-		    name,LNAME(argtype),argsgot,LSummarize(arg));
+		    name, LNAME(argtype), argsgot, LSummarize(args->car));
 	  return LASSIGN_BAD;
 	}
 	args = args->cdr;
