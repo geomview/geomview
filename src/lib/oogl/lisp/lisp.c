@@ -1179,7 +1179,7 @@ LDEFINE(eval, LLOBJECT,
 	"(eval EXPR)\n"
 	"Evaluate a lisp expression. If EXPR is an unevaluated S-expression "
 	"as returned by the \"(quote ...)\" command then the effect will be "
-	"as if calling the un-Quoted expression directly.")
+	"as if calling the un-quoted expression directly.")
 {
   LObject *arg;
   LList *sexpr;
@@ -1200,7 +1200,7 @@ LDEFINE(eval, LLOBJECT,
 LDEFINE(lambda, LLOBJECT,
 	"(lambda (arg1 arg2 ...) EXPR1 ... EXPRN)\n"
 	"A lambda expression is like a function; it is self-quoting. "
-	"TO \"call\" a lambda expression, it has to be evoked like a "
+	"To \"call\" a lambda expression, it has to be evoked like a "
 	"function:\n\n"
 	"((lambda (arg) (+ 1 arg)) 2)\n\n"
 	"In this example, the value of the entire expression would be 3. "
@@ -1356,7 +1356,7 @@ LDEFINE(defun, LLOBJECT,
 	"called as a function. Also, install DOCSTRING as response to the "
 	"commands \"(help NAME)\" and \"(morehelp NAME)\". Not that DOCSTRING "
 	"need not contain the command-synopsis, it is generated automatically. "
-	"EXPR1 cannot be a string if DOCSTRING is omitted; it"
+	"EXPR1 cannot be a string if DOCSTRING is omitted; it "
 	"would be interpreted as the doc-string. The return value of "
 	"(defun ...) is the function name.")
 {
@@ -1482,7 +1482,7 @@ LDEFINE(defun, LLOBJECT,
 LDEFINE(setq, LLOBJECT,
 	"(setq SYM SEXPR)\n"
 	"Bind the symbold SYM to the value of SEXPR. SYM must be an "
-	"unqualified symbols, i.e. not quoted, and literal:\n\n"
+	"unqualified symbol, i.e. not quoted, and literal:\n\n"
 	"(setq \"foo\" bar)\n\n"
 	"will not work. Likewise\n\n"
 	"(setq (bar STUFF) foo)\n\n"
