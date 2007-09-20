@@ -780,8 +780,10 @@ asleep(Pool *p, struct timeval *base, double offset)
     if (p->inf != NULL) {
 	p->flags |= PF_ASLEEP;
 	addtime(&until, base, offset);
-	if (timercmp(&until, &nexttowake, <))
+	if (timercmp(&until, &nexttowake, <)) {
 	    nexttowake = until;
+	}
+	p->awaken = until;
 	if (p->infd >= 0) {
 	    unwatchfd(p->infd);
 	    if (FD_ISSET(p->infd, &poolreadyfds)) {
@@ -826,6 +828,20 @@ PoolAwaken(Pool *p)
     awaken(p);
     if (timercmp(&p->awaken, &nexttowake, <=))
 	awaken_until(&nexttowake);
+}
+
+bool
+PoolASleep(Pool *p)
+{
+    if (p->flags & PF_ASLEEP) {
+	struct timeval now;
+	gettimeofday(&now, NULL);
+	if (timercmp(&p->awaken, &now, >)) {
+	    return true;
+	}
+	awaken(p);
+    }
+    return false;
 }
 
 #if 0

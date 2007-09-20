@@ -200,7 +200,9 @@ LDEFINE(processevents, LVOID,
 	    LEND));
 
   PoolDetach(POOL(caller));
-  process_events(-1);
+  do {
+    process_events(-1);
+  } while (PoolASleep(POOL(caller)));
   PoolReattach(POOL(caller));
   
   return Lt;

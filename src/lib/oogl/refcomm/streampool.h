@@ -135,6 +135,7 @@ extern void PoolSleepUntil(Pool *, double seconds);
 extern void PoolSetTime(Pool *, struct timeval *basis, double time_at_basis);
 extern double PoolTimeAt(Pool *, struct timeval *at_this_time);
 extern void PoolAwaken(Pool *);
+extern bool PoolASleep(Pool *p);
 
 extern int PoolIncLevel(Pool *p, int incr);
 
