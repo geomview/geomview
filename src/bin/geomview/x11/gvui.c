@@ -863,11 +863,13 @@ LDEFINE(ui_freeze, LVOID,
         Toggle updating user interface panels. Off by default."
 )
 {
-  int kw = -1;
+  Keyword kw = NOT_A_KEYWORD;
+
   LDECLARE(("ui-freeze", LBEGIN,
         LOPTIONAL,
         LKEYWORD, &kw,
         LEND));
+
   return Lnil;
 }
 

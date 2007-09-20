@@ -208,17 +208,19 @@ LDEFINE(pick_invisible, LVOID,
 	makes them invisible; default yes.\n\
 	With no arguments, returns current status.")
 {
-  Keyword kw = NO_KEYWORD;
+  Keyword kw = NOT_A_KEYWORD;
 
   LDECLARE(("pick-invisible", LBEGIN,
 	    LOPTIONAL,
 	    LKEYWORD, &kw,
 	    LEND));
 
-  if(kw < 0)
+  if(kw == NOT_A_KEYWORD) {
     return uistate.pick_invisible ? Lt : Lnil;
+  }
 
   uistate.pick_invisible = boolval("pick_invisible", kw);
+
   return Lt;
 }
   

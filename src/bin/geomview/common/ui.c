@@ -373,14 +373,15 @@ LDEFINE(ap_override, LVOID,
 	Selects whether appearance controls should override objects' own\n\
 	settings.  On by default.  With no arguments, returns current setting.")
 {
-  Keyword kw = NO_KEYWORD;
+  Keyword kw = NOT_A_KEYWORD;
 
   LDECLARE(("ap-override", LBEGIN,
 	LOPTIONAL,
 	LKEYWORD, &kw,
 	LEND));
-  if(kw < 0) {
-    int on = uistate.apoverride ? ON_KEYWORD : OFF_KEYWORD;
+
+  if (kw == NOT_A_KEYWORD) {
+    Keyword on = uistate.apoverride ? ON_KEYWORD : OFF_KEYWORD;
     return LNew(LKEYWORD, &on);
   }
   drawer_int(WORLDGEOM, DRAWER_APOVERRIDE, boolval("ap-override", kw));

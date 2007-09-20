@@ -28,6 +28,7 @@
 extern char geomview_version[];
 
 typedef enum {
+  NOT_A_KEYWORD = -1,
   NO_KEYWORD=0,
   YES_KEYWORD,
   ON_KEYWORD,

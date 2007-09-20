@@ -742,6 +742,7 @@ LDEFINE(freeze, LVOID,
   int id;
   Keyword hard = NO_KEYWORD;
   int freeze;
+
   LDECLARE(("freeze", LBEGIN,
 	    LID, &id,
 	    LOPTIONAL,
@@ -1519,7 +1520,7 @@ LDEFINE(stereowin, LLIST,
 	``window'' to set the pixel aspect ratio & window position if needed.")
 {
   int id;
-  Keyword kw = NO_KEYWORD;
+  Keyword kw = NOT_A_KEYWORD;
   DView *dv;
   int gapsize = 0;
 
@@ -1534,19 +1535,23 @@ LDEFINE(stereowin, LLIST,
     OOGLError(0, "stereowin: expected camera, got %s", drawer_id2name(id));
     return Lnil;
   }
-  if(kw < 0) {
-    char *me = "stereowin";
-    LList *a = LListAppend(
-			   LListAppend( LListAppend( LListAppend(NULL, 
-								 LTOOBJ(LSTRING)(&me)),
-						     LTOOBJ(LID)(&id)),
-					LTOOBJ(LKEYWORD)(&dv->stereo)),
-			   LTOOBJ(LINT)(&dv->stereogap));
-    return LTOOBJ(LLIST)(&a);
+  if(kw == NOT_A_KEYWORD) {
+    return LLISTTOOBJ
+      ( LListAppend
+	( LListAppend
+	  ( LListAppend
+	    ( LListAppend(NULL, LSYMBOLTOOBJ("stereowin")),
+	      LTOOBJ(LID)(&id)),
+	    LTOOBJ(LKEYWORD)(&dv->stereo)),
+	  LTOOBJ(LINT)(&dv->stereogap)));
   }
   if(kw != NO_KEYWORD && kw != HORIZONTAL_KEYWORD && kw != VERTICAL_KEYWORD
      && kw != COLORED_KEYWORD) {
-    OOGLError(0, "stereowin: expected \"no\" or \"horizontal\" or \"vertical\" or \"colored\", not \"%s\"", keywordname(kw));
+    OOGLError(0, "stereowin: expected "
+	      "\"no\" or "
+	      "\"horizontal\" or "
+	      "\"vertical\" or "
+	      "\"colored\", not \"%s\"", keywordname(kw));
     return Lnil;
   }
   dv->stereo = kw;
