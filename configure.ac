@@ -23,15 +23,7 @@ done
 
 ## Autoheader stuff.
 AH_TOP([#ifndef CONFIG_H_INCLUDED
-#define CONFIG_H_INCLUDED])
-AH_BOTTOM([#if D1_DEBUG
-#define D1PRINT(args) printf args
-#else
-#define D1PRINT(args)
-#endif
-#if !HAVE_WORKING_FORK
-# error FIXME! We need fork()
-#endif
+#define CONFIG_H_INCLUDED
 
 /* AIX requires this to be the first thing in the file.  */
 #ifndef __GNUC__
@@ -46,6 +38,14 @@ char *alloca ();
 #   endif
 #  endif
 # endif
+#endif])
+AH_BOTTOM([#if D1_DEBUG
+#define D1PRINT(args) printf args
+#else
+#define D1PRINT(args)
+#endif
+#if !HAVE_WORKING_FORK
+# error FIXME! We need fork()
 #endif
 
 #if !HAVE_LSTAT || \

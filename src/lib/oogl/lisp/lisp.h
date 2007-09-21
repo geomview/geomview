@@ -163,11 +163,6 @@ extern LType LFilterp;
 extern LObject *Lnil, *Lt;
 
 /*
- * S-expr delimiters, returned by LakeNextToken().
- */
-extern LObject *LLParen, *LRParen;
-
-/*
  * Built-in object types: string, list, and function.  Function type
  *  is only used internally.  See lisp.c for the code that initializes
  *  these type pointers.

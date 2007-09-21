@@ -15,6 +15,15 @@
 
 %{
 
+#if 0
+static char copyright[] =
+  "Copyright (C) 1991 Mark B. Phillips, The Geometry Center";
+#endif
+
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,11 +33,6 @@
 
 #define MAXSTATES 100
 #define MAXGENS 128
-
-#if 0
-static char copyright[] =
-  "Copyright (C) 1991 Mark B. Phillips, The Geometry Center";
-#endif
 
 static int adj[MAXSTATES];
 static int adj_index = 0;

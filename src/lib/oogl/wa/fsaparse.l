@@ -10,6 +10,10 @@
  * mbp@thales.urich.edu
  */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h> /* for atof() */
 #include <math.h>

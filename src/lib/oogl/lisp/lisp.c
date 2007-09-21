@@ -20,14 +20,14 @@
  * USA, or visit http://www.gnu.org.
  */
 
-#include <ctype.h>
-#include "../../../../config.h"
-
 #if 0
 static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
-Copyright (C) 199hile8-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
+Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 /* Authors: Stuart Levy, Tamara Munzner, Mark Phillips */
 
@@ -39,6 +39,10 @@ Copyright (C) 199hile8-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <ctype.h>
+#if HAVE_ALLOCA_H
+# include <alloca.h>
+#endif
 #include "lisp.h"
 #include "clisp.c"
 #include "freelist.h"
@@ -70,9 +74,11 @@ static char nomatch[] = "No commands match \"%s\"; see \"(? *)\" for a list.\n";
 static bool FilterArgMatch(LList *filter, LList *args);
 static void InterestOutput(char *name, LList *args, LInterest *interest);
 
-static LObject *LFAny, *LFNil;
 static LFilter FAny = {ANY, NULL};
 static LFilter FNil = {NIL, NULL};
+static LObject LFAny[1] = {{ LFILTER, 1, { &FAny } }};
+static LObject LFNil[1] = {{ LFILTER, 1, { &FNil } }};
+     
 
 static bool obj2array(LObject *obj,
 		      LType *type, char *x, int *n, bool hold);
@@ -170,34 +176,7 @@ static inline LObject *ParseArg(LType *type, Lake *lake);
  * nil object implementation
  */
 
-#if 0
-/* Should not be this an empty list? */
-static void nilwrite(FILE *fp, void *value)
-{
-  fprintf(fp, "nil");
-}
-#endif
-
-static LCell nullcell;
-
-#if 0
-static LType niltype = {
-  "nil",
-  sizeof(int),
-  NULL,
-  NULL,
-  NULL,
-  nilwrite,
-  NULL,
-  NULL,
-  NULL,
-  LTypeMagic
-};
-static LObject nil; /* = {&niltype, 1, nullcell }; */
-#else
 static LObject nil = {LLIST, 1, { NULL } };
-#endif
-
 LObject *Lnil = &nil;
 
 /*
@@ -221,20 +200,8 @@ static LType ttype = {
   NULL,
   LTypeMagic
 } ;
-static LObject t; /* = {&ttype, 1, nullcell }; */
+static LObject t  = {&ttype, 1, { NULL } };
 LObject *Lt = &t;
-
-/*
- * Left paren symbol
- */
-static LObject LLParenp = { LSYMBOL, 1, { "(" } };
-LObject *LLParen = &LLParenp;
-
-/*
- * Right paren symbol
- */
-static LObject LRParenp = { LSYMBOL, 1, { ")" } };
-LObject *LRParen = &LRParenp;
 
 /*
  * int object implementation
@@ -1080,42 +1047,27 @@ void LInit()
   setq_namespace->parser = fsa_initialize(NULL, (void *)REJECT);
   lambda_namespace = setq_namespace;
 
-#if 0
-  nullcell.p = NULL;
-  nil.type = &niltype;
-  nil.cell = nullcell;
-#endif
-  t.type = &ttype;
-  t.cell = nullcell;
-
-  {
-    LCell cell;
-    cell.p = (void*)(&FAny);
-    LFAny = LNew(LFILTER, &cell);
-    cell.p = (void*)(&FNil);
-    LFNil = LNew(LFILTER, &cell);
-  }
-
   {
     extern LObject *Lhelp(Lake *lake, LList *args);
     extern LObject *Lmorehelp(Lake *lake, LList *args);
     LDefun("?", Lhelp,
-	   "(?  [command])\n\
-	Command may include \"*\"s as wildcards; see also \"??\"\n\
-	One-line command help; lists names only if multiple commands match.\n\
-	? is a synonym for \"help\"");
+	   "(?  [command])"
+	   "Command may include \"*\"s as wildcards; see also \"??\". "
+	   "One-line command help; lists names only if multiple commands match."
+	   "? is a synonym for \"help\".");
     LDefun("??", Lmorehelp,
-	   "(?? command)  \"command\" may include \"*\" wildcards\n\
-	Prints more info than \"(? command)\".  ?? is a synonym\n\
-	for \"morehelp\"");
+	   "(?? command)\n"
+	   "\"command\" may include \"*\" wildcards"
+	   "Prints more info than \"(? command)\".  ?? is a synonym "
+	   "for \"morehelp\".");
   }
 
   clisp_init();
 
   LHelpDef("STATEMENT",
-	   "STATEMENT represents a function call.  Function calls have\n\
-	   the form \"( func arg1 arg2 ... )\", where func is the name\n\
-	   of the function and arg1, arg2, ... are the arguments.");
+	   "\nSTATEMENT represents a function call.  Function calls have "
+	   "the form \"( func arg1 arg2 ... )\", where func is the name "
+	   "of the function and arg1, arg2, ... are the arguments.");
 
 }
   
@@ -1199,15 +1151,19 @@ LDEFINE(eval, LLOBJECT,
 
 LDEFINE(lambda, LLOBJECT,
 	"(lambda (arg1 arg2 ...) EXPR1 ... EXPRN)\n"
-	"A lambda expression is like a function; it is self-quoting. "
+	"A lambda expression is like a function. "
 	"To \"call\" a lambda expression, it has to be evoked like a "
 	"function:\n\n"
 	"((lambda (arg) (+ 1 arg)) 2)\n\n"
 	"In this example, the value of the entire expression would be 3. "
 	"In general, the value of the call will be the value of exprN. "
-	"The first list serves to define formal parameters. The lambda "
+	"The first list serves to define formal parameters. The values "
+	"of the formal parameters can be changed using `(setq ...)'. The "
+	"binding will only be in effect during the evaluation of the "
+	"lambda-expression. The lambda "
 	"expression itself is just a list, starting with the key-word lambda, "
-	"followed by several quoted lists.")
+	"followed by several quoted lists; it evaluates to itself if not "
+	"called as a function.")
 {
   LObject *lambda;
   LList *arglist;
@@ -1664,7 +1620,7 @@ LDEFINE(equal, LINT,
 /* Note: comparison is promoted to the weakest numerical type, with
  * the ordering LINT < LLONG < LFLOAT < LSTRING.
  *
- * The return value is ((expr1 > expr2) - expr1 < expr2))
+ * The return value is ((expr1 > expr2) - (expr1 < expr2))
  */
 static int LCompare(const char *name, LObject *expr1, LObject *expr2)
 {
@@ -2212,13 +2168,6 @@ static inline bool BindLambdaParameters(Lake *lake, LList *call,
  * lambda-expression, and the lambda-expression could also stem from a
  * (defun ...). In both case the lake arguments stored in the original
  * body are out of date.
- *
- * Further: if we encounter a list where the first argument is a
- * string, then we try to convert the beast to a function object. This
- * is because lambda expressions can stem from a (defun ...) where the
- * body contains -- e.g. -- recursive invocations of the defun itself,
- * or calls to functions which were still undefined at the time the
- * (defun ...) was evaluated.
  */
 static LList *LBody(LList *lbody, Lake *lake)
 {
@@ -2312,8 +2261,8 @@ LDEFINE(EvalLambda, LLOBJECT,
 
 /* Evaluate a (defun ...). This function is what is entered into the
  * function-table to evaluate a named lambda expression. The hard work
- * is done in LEvalLambda(), we simply call that function and replace
- * the progn function entry with the real one from the defun.
+ * is done in LEvalLambda(), we simply call that function with the
+ * lambda expression saved in the function table.
  *
  * To allow recursion we must be careful; the actual parsing of the
  * substituted lambda-expression must go to the evaluation pass. For
@@ -2635,7 +2584,7 @@ bool LDefun(const char *name, LObjectFunc func, const char *help)
   if (index >= 0) {
     lfunction = VVINDEX(funcvvec, LFunction, index);
     if (lfunction->lambda == NULL) {
-      char builtin[strlen(name)+sizeof("-builtin--")];
+      VARARRAY(builtin, char, strlen(name)+sizeof("-builtin--"));
       OOGLWarn("Warning: replacing existing definition of builtin function\n"
 	       "                       \"%s\"\n"
 	       "The old definition is still available under the new name\n"
@@ -3111,24 +3060,11 @@ LObject *LEvalFunc(const char *name, ...)
       tail = tail->cdr;
     }
   }
-#if 0
   /* This makes a copy of "list", slow but safe. */
   obj = LNew(LLIST, &list);
   val = LEval(obj);
   tail->cdr = NULL; /* Do not delete rest! */
   LFree(obj);
-#else
-  /* This variant generates an insecure shallow copy. This should work
-   * juts fine because our caller still holds the references to the
-   * arguments of list and obj itself cannot be deleted by the call to
-   * LEval, because we are its owner.
-   */
-  obj = LNew(LLIST, NULL);
-  obj->cell.p = list;
-  val = LEval(obj);
-  tail->cdr = NULL; /* Do not delete rest! */
-  LFree(obj);
-#endif
   return val;
 }
 
@@ -3670,8 +3606,8 @@ void LHelpDef(const char *key, const char *message)
 }
 
 LDEFINE(help, LVOID,
-	"(help [command])\n"
-	"Command may include \"*\"s as wildcards; see also \"??\""
+	"(help [COMMAND])\n"
+	"\"COMMAND\" may include \"*\"s as wildcards; see also \"??\". "
 	"One-line command help; lists names only if multiple commands match.")
 {
   char *pat = "*";
@@ -3713,8 +3649,9 @@ LDEFINE(help, LVOID,
 }
 
 LDEFINE(morehelp, LVOID,
-	"(morehelp    command)  \"command\" may include \"*\" wildcards\n"
-	"Prints more info than \"(help command)\"")
+	"(morehelp COMMAND)\n"
+	"\"COMMAND\" may include \"*\" wildcards\n"
+	"Prints more info than \"(help COMMAND)\".")
 {
   char *pat;
   pattern p;
