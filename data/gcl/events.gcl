@@ -1,0 +1,30 @@
+#
+# This file demonstrates how to create a simple geometric object -- a
+# sphere -- manipulate its position, draw it and then temporarily give
+# the control back to the main event loop, allowing for user
+# interaction etc.
+#
+# NOTES:
+# 
+# (sleep-for 1e-1), followed by (process-events) will post-pone the
+# execution of this loop for at least a tenth of a second, possibly
+# more. (sleep-for ...) without (process-events) will NOT pass the
+# control back to the main event-loop.
+#
+# (echo .) is just for animation, it draws a "." on every cycle
+#
+# (transform ...) just changes the position of the sphere a little bit
+#
+# (redraw focus) forces a redraw when (process-events) is entered,
+# otherwise the change in the position of the sphere would not be
+# reflected immediately on the screen.
+#
+(geometry sphere { SPHERE 1 0 0 0 })
+(while t
+  (progn
+    (sleep-for 1e-1)
+    (process-events)
+    (echo .)
+    (transform sphere sphere focus rotate 0 1e-3 0)
+    (redraw focus)))
+(quit)

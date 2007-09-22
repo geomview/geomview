@@ -1,0 +1,85 @@
+# This file demonstrates how to implement multi-argument +, -, *, /,
+# >, <, =, <=, >= in GCL (Geomview Command Language). This example
+# implementation uses recursive defuns. OF COURSE, it is also possible
+# (and slightly more efficient) to use non-recursive constructs,
+# utilizing the (while TEST BODY) construct.
+
+#
+# + and *
+#
+(defun + (&rest args)
+  "Adds all arguments and returns the result."
+  (if (car args)
+    (-builtin-+-
+      (car args)
+      (eval (cons + (cdr args))))
+    0))
+(defun * (&rest args)
+      "Multiplies all arguments and returns the result."
+  (if (car args)
+    (-builtin-*-
+      (car args)
+      (eval (cons * (cdr args))))
+    1))
+#
+# '-' and '/'
+#
+(defun - (arg &rest args)
+  "Substracts from the first argument all following ones, with only one argument return its negative."
+  (if args
+    (-builtin--- arg (eval (cons + args)))
+    (-builtin--- 0 arg)))
+(defun / (arg &rest args)
+  "Divides the first argument by all following ones, with only one argument return its inverse."
+  (if args
+    (-builtin-/- arg (eval (cons * args)))
+    (-builtin-/- 1 arg)))
+#
+# >, <, =, >=, <=, for monotone sequences
+#
+(defun > (&rest args)
+  "Returns t if ARGS is a strictly decreasing sequence, otherwise nil."
+  (let ((tmp (cdr args)))
+    (if tmp
+      (and
+	(-builtin->- (car args) (car tmp))
+	(eval (cons > tmp)))
+      t)))
+(defun < (&rest args)
+  "Returns t if ARGS is a strictly increasing sequence, otherwise nil."
+  (let ((tmp (cdr args)))
+    (if tmp
+      (and
+	(-builtin-<- (car args) (car tmp))
+	(eval (cons < tmp)))
+      t)))
+(defun = (&rest args)
+  "Returns t if ARGS is a sequence of equal elements, otherwise nil."
+  (let ((tmp (cdr args)))
+    (if tmp
+      (and
+	(-builtin-=- (car args) (car tmp))
+	(eval (cons = tmp)))
+      t)))
+(defun geq (arg1 arg2)
+  "return t if ARG1 >= ARG2, otherwise nil"
+  (or (-builtin->- arg1 arg2) (-builtin-=- arg1 arg2)))
+(defun >= (&rest args)
+  "Returns t if ARGS is a non-increasing sequence"
+  (let ((tmp (cdr args)))
+    (if tmp
+      (and
+	(geq (car args) (car tmp))
+	(eval (cons >= tmp)))
+      t)))
+(defun leq (arg1 arg2)
+  "return t if ARG1 <= ARG2, otherwise nil"
+  (or (-builtin-<- arg1 arg2) (-builtin-=- arg1 arg2)))
+(defun <= (&rest args)
+  "Returns t if ARGS is a non-increasing sequence"
+  (let ((tmp (cdr args)))
+    (if tmp
+      (and
+	(geq (car args) (car tmp))
+	(eval (cons <= tmp)))
+      t)))
