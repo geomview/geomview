@@ -28,7 +28,6 @@ geomview
 geomview*.tar.*
 geomview-1*
 glTexEnvf.3gl
-gvcl-mode.el
 include
 install-sh
 libtool
