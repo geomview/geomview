@@ -11,9 +11,11 @@
 # more. (sleep-for ...) without (process-events) will NOT pass the
 # control back to the main event-loop.
 #
-# (echo .) is just for animation, it draws a "." on every cycle
+# (echo .) is just for animation, it prints a "." to the console on
+# every iteration of the loop.
 #
-# (transform ...) just changes the position of the sphere a little bit
+# (transform ...) just changes the position of the sphere a little
+# bit.
 #
 # (redraw focus) forces a redraw when (process-events) is entered,
 # otherwise the change in the position of the sphere would not be
@@ -23,8 +25,8 @@
 (while t
   (progn
     (sleep-for 1e-1)
-    (process-events)
     (echo .)
     (transform sphere sphere focus rotate 0 1e-3 0)
     (redraw focus)))
+    (process-events)
 (quit)
