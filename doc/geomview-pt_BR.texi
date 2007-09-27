@@ -709,61 +709,61 @@ Isso @'{e} tudo!
 @node History, Platforms, Copying, Top
 @unnumbered History of Geomview's Development
 
-Geomview was originally written at the Geometry Center at the University
+Geomview foi originalmente escrito no Geometry Center da the University
 of Minnesota in Minneapolis.
-The Geometry Center was a research and education center
-funded by the National Science Foundation, with a mission to promote
-research and communication of mathematics.  Much of the work there
-involved the use of computers to help visualize mathematical concepts.
+O Geometry Center era um centro de pesquisa e educação
+fundado pela National Science Foundation, com a missão de promover
+pesquisa e comunicação de assuntos relacionados à matemática.  A maioria do trabalho era
+direcionado ao uso de computadores para ajudar a visualização de conceitos matemáticos.
 
-The project that eventually led to Geomview
-began in the summer of 1988 with the work of Pat
-Hanrahan on a viewing program called MinneView.  Shortly
-thereafter Charlie Gunn begin developing OOGL
-(Object Oriented Graphics Language) in conjunction with
-MinneView.  Many people contributed to OOGL and MinneView,
-including Stuart Levy, Mark Meuer, Tamara Munzner, Steve
+O projeto que eventualmente levou ao Geomview
+começou no verão de 1988 com o trabalho de Pat
+Hanrahan sobre um programa de visualização chamado MinneView.  Pouco tempo
+depois Charlie Gunn começou o desenvolvimento da OOGL
+(Object Oriented Graphics Language) juntamente com o
+MinneView.  Muitas pessoas comtribuiram para a OOGL e o MinneView,
+incluindo Stuart Levy, Mark Meuer, Tamara Munzner, Steve
 Anderson, Mario Lopez, Todd Kaplan.
 
-In 1991 the staff of the Geometry Center began work on a new improved
-version of OOGL, and a new and improved viewing program, which they
-called Geomview.  At that time essentially the only game in town for
-interactive 3D graphics was Silicon Graphics (SGI), so Geomview was
-developed initially on SGI workstations, using IRIS GL.  The first
-version was finished in January of 1992.  It immediately became very
-popular among visitors to the Geometry Center, and through the Center's
-ftp archive (this was before the web) people at other institutions began
-using it too.
+Em 1991 o staff do Geometry Center começou o trabalho sobre uma nva e melhorada
+versão da OOGL, e um novo e melhorado programa de visualização, o qual eles
+chamaram Geomview.  Naquele tempo essencialmente o único jogo no comercio para
+gráficos interativos em três dimensões era Silicon Graphics (SGI), de forma que Geomview foi
+desenvolvido inicialmente em estações de trabalho SGI, usando a IRIS GL.  A primeira
+versão foi finalizada em Janeiro de 1992.  Essa primeira versào tornou-se muito
+popular entre visitantes do Geometry Center, e através do ftp do
+Centro (isso ocorreu antes do advento da web) pessoas em outras instituições começaram
+a usar essa primeira versão também.
 
-In addition to SGI workstations the Geometry Center had
-quite a few NeXT stations, so soon after Geomview was running
-on SGIs the staff developed a version for NeXTStep as well.
-By this time there were several thousand people using it
-around the world.
+Adicionalmente a estações de trabalho SGI o Geometry Center tinha
+algumas estações NeXT completas, de forma que após Geomview estar sendo executado
+em máquinas SGIs a equipe desenvolveu uma versão para NeXTStep também.
+Nessa época ouveram muitos milhares de pessoas usando Geomview
+ao redor do mundo.
 
-A few years later the staff ported Geomview to X windows and OpenGL, and
-eventually, with the demise of NeXT, the NeXT version fell by the
-wayside.
+Alguns anos depois a equipe portou Geomview para o X windows e a OpenGL, e
+eventualmente, com o desaparecimento da NeXT, a versão para NeXT seguiu o mesmo
+caminho.
 
-In its mission to foster communication among researchers and educators,
-the Geometry Center developed a web site, www.geom.umn.edu, in late
-1993.  It was one of the first 300 web sites in existence.  A part of
-the web site was of course devoted to Geomview, and helped to spread the
-word about its existence.
+Nessa missão de incentivar a comunicação entre pesquisadores e educadores,
+o Geometry Center desenvolveu um web site, www.geom.umn.edu, mais tarde
+em 1993.  esse foi um dos primeiros 300 web sites que existiram no mundo.  Uma parte desse
+web site era certamente devotado ao Geomview, e ajudou a propagar o
+trabalho durante sua existência.
 
-The Geometry Center closed its "brick and mortar" facilities in August
-of 1998 (NSF cut its funding), but the web site continued to exist, and
-Geomview continued to be very popular around the world.  In December of
-1999 some of the former Geometry Center staff set up
-@uref{http://www.geomview.org} as a permanent home on the web for
+O Geometry Center fechou suas facilidades de "tijolos e cimento" em Agosto
+de 1998 (NSF cortou suas verbas), mas o web site continuou a exixtir, e
+Geomview continuou a ser popular ao redor do mundo.  Em Dezembro de
+1999 algum membro da equipe original do Geometry Center configurou
+@uref{http://www.geomview.org} como casa permanente na web para o
 Geomview.
 
-Geomview's original authors, as well as a number of other volunteers
-around the world, are still actively involved in using and developing
+Os autores originais do Geomview, bem como vários outros volunários
+ao redor do mundo, estão ainda ativamente envolvidos na utilização e no desenvolvimento do
 Geomview.
 
 @menu
-* Authors::                     Authors.
+* Authors::                     Autores.
 @end menu
 
 @node Authors,  , History, History
@@ -776,7 +776,7 @@ NeXTStep e a adapta@,{c}@~{a}o do RenderMan, e Daeron Meyer e Tim Rowley fizeram
 adapta@,{c}@~{a}o para o X windows.  Muitos outros membros do estado maior do Geometry Center, bem como
 muitas pessoas em muitos lugares, tamb@'{e}m contribu@'{i}ram.
 
-Mark Phillips escreveu essse manual, com ajuda substancial de Stuart Levy
+Mark Phillips escreveu esse manual, com ajuda substancial de Stuart Levy
 e Tamara Munzner.  Incont@'{a}veis usu@'{a}rios do Geomview tamb@'{e}m foram de grande
 ajuda por meio da leitura do manual e indicando nossos enganos.
 
@@ -1940,15 +1940,15 @@ valor padr@~{a}o interno.
 
 O bot@~{a}o @emph{Revert} no painel de apar@^{e}ncia (@emph{Appearance}) desfaz todas
 as escolhas na apar@^{e}ncia do alvo.  Isso faz com que o geom alvo
-erde todas as suas propriedades de apar@^{e}ncia de seus pais.
+herde todas as suas propriedades de apar@^{e}ncia de seus pais.
 
-The @emph{Appearance} panel's @emph{Override} bot@~{a}o determines whether
-appearance controls should override settings in the objetos themselves --
-for example, setting the face color will affect all faces of objetos with
-multi-colored facets.  Otherwise, appearance controls only provide settings
-which the objetos themselves do not specify.
-By default, @emph{Override} is enabled.  Esse bot@~{a}o applies to all objetos,
-and to all appearance-related panels.
+O botão do painel de aparência (@emph{Appearance}) determina se
+controles de aparência devem sobrescrever escolhas feitas nos objetos em si mesmos --
+por exemplos, escolhendo a cor de face irá afetar todas as faces de objetos com
+faces multicoloridas.  De outra forma, controles de aparência somente fornecem escolhas
+que não forem especificadas nos objetos em si mesmos não especificarem.
+Por padrão, @emph{Override} está habilitado.  Esse bot@~{a}o aplica-se a todos os objetos,
+e a todos os painéis relacionados a aparência.
 
 @comment ----------------------------------------------------------------
 @node Materials Panel, Lighting Panel, Appearance Panel, Appearance
@@ -6408,6 +6408,10 @@ is an OOGL winddow specification.
 * lt::                          @code{(< EXPR1 EXPR2)}
 * eq::                          @code{(= EXPR1 EXPR2)}
 * gt::                          @code{(> EXPR1 EXPR2)}
+* mul::                         @code{(* EXPR1 EXPR2)}
+* div::                         @code{(/ EXPR1 EXPR2)}
+* add::                         @code{(+ EXPR1 EXPR2)}
+* sub::                         @code{(- EXPR1 EXOR2)}
 * help::                        @code{(? COMMAND)}
 * morehelp::                    @code{(?? COMMAND)}
 * emodule-run::                 @code{(| NAME)}
@@ -6426,9 +6430,11 @@ is an OOGL winddow specification.
 * cdr::                         @code{(cdr LIST)}
 * clock::                       @code{(clock)}
 * command::                     @code{(command INFILE [OUTFILE])}
+* cons::                        @code{(cons EXPR LIST)}
 * copy::                        @code{(copy [ID] [name])}
 * cursor-still::                @code{(cursor-still [INT])}
 * cursor-twitch::               @code{(cursor-twitch [INT])}
+* defun::                       @code{(defun NAME ARGS [DOC] BODY)}
 * delete::                      @code{(delete ID)}
 * dice::                        @code{(dice GEOM-ID N)}
 * dimension::                   @code{(dimension [N])}
@@ -6446,6 +6452,7 @@ is an OOGL winddow specification.
 * emodule-start::               @code{(emodule-start  NAME)}
 * emodule-transmit::            @code{(emodule-transmit NAME LIST)}
 * escale::                      @code{(escale GEOM-ID FACTOR)}
+* eval::                        @code{(eval EXPR)}
 * event-keys::                  @code{(event-keys @{on|off@})}
 * event-mode::                  @code{(event-mode MODESTRING)}
 * event-pick::                  @code{(event-pick @{on|off@})}
@@ -6464,6 +6471,8 @@ is an OOGL winddow specification.
 * inhibit-warning::             @code{(inhibit-warning STRING)}
 * input-translator::            @code{(input-translator "#pfx" "sh-command")}
 * interest::                    @code{(interest (COMMAND [args]))}
+* lambda::                      @code{(lambda ARGS BODY)}
+* let::                         @code{(let (ARGS) BODY)}
 * lines-closer::                @code{(lines-closer CAM-ID DIST)}
 * load::                        @code{(load filename [command|geometry|camera])}
 * load-path::                   @code{(load-path)}
@@ -6476,6 +6485,7 @@ is an OOGL winddow specification.
 * merge-ap::                    @code{(merge-ap GEOM-ID APPEARANCE)}
 * merge-base-ap::               @code{(merge-base-ap APPEARANCE)}
 * merge-baseap::                @code{(merge-baseap APPEARANCE)}
+* mod::                         @code{(mod NUMERATOR DENOMINATOR)}
 * morehelp::                    @code{(?? COMMAND)}
 * name-object::                 @code{(name-object ID NAME)}
 * ND-axes::                     @code{(ND-axes CAMID [CLUSTER [Xidx Yidx Zidx [Widx]]])}
@@ -6498,6 +6508,7 @@ is an OOGL winddow specification.
 * position::                    @code{(position objectID otherID)}
 * position-at::                 @code{(position-at objectID otherID [center | origin])}
 * position-toward::             @code{(position-toward objID othID [center|origin])}
+* process-events::              @code{(process-events)}
 * progn::                       @code{(progn STATEMENT [ @dots{} ])}
 * quit::                        @code{(quit)}
 * quote::                       @code{(quote EXPR)}
@@ -6519,6 +6530,7 @@ is an OOGL winddow specification.
 * set-load-path::               @code{(set-load-path (PATH1 @dots{} PATHN))}
 * set-motionscale::             @code{(set-motionscale X)}
 * setenv::                      @code{(setenv name string)}
+* setq::                        @code{(setq SYM EXPR)}
 * sgi::                         @code{(sgi)}
 * shell::                       @code{(! SHELLCOMMAND)}
 * sleep-for::                   @code{(sleep-for TIME)}
@@ -6531,6 +6543,7 @@ is an OOGL winddow specification.
 * transform::                   @code{(transform objectID centerID frameID [rotate|@dots{}] @dots{})}
 * transform-incr::              @code{(transform-incr objectID centerID frameID @dots{})}
 * transform-set::               @code{(transform-set objectID centerID frameID @dots{})}
+* truncate::                    @code{(truncate NUMBER)}
 * ui-cam-focus::                @code{(ui-cam-focus @{focus-change|mouse-cross@})}
 * ui-center::                   @code{(ui-center ID)}
 * ui-center-origin::            @code{(ui-center-origin @{origin|bbox-center@})}
@@ -6545,6 +6558,7 @@ is an OOGL winddow specification.
 * uninterest::                  @code{(uninterest (COMMAND [args]))}
 * update::                      @code{(update [timestep_in_seconds])}
 * update-draw::                 @code{(update-draw CAM-ID  [timestep_in_seconds])}
+* while::                       @code{(while TEST BODY)}
 * window::                      @code{(window CAM-ID WINDOW)}
 * winenter::                    @code{(winenter CAM-ID)}
 * write::                       @code{(write command|geometry|@dots{} FILENAME @dots{})}
@@ -6584,7 +6598,7 @@ Returns t if EXPR1 is equal to EXPR2.  EXPR1 and EXPR2 should
 be either both integers or floats, or both strings.
 @end table
 
-@node gt, help, eq, GCL Reference
+@node gt, mul, eq, GCL Reference
 @subsection >
 @findex >
 @table @code
@@ -6593,7 +6607,39 @@ Returns t if EXPR1 is greater than EXPR2.  EXPR1 and EXPR2 should
 be either both integers or floats, or both strings.
 @end table
 
-@node help, morehelp, gt, GCL Reference
+@node mul, div, gt, GCL Reference
+@subsection *
+@findex *
+@table @code
+@item (* EXPR1 EXPR2)
+Multiplies @var{EXPR1} and @var{EXPR2} and returns the result.
+@end table
+
+@node div, add, mul, GCL Reference
+@subsection /
+@findex /
+@table @code
+@item (/ EXPR1 EXPR2)
+Divides @var{EXPR1} by @var{EXPR2} and returns the result.
+@end table
+
+@node add, sub, div, GCL Reference
+@subsection +
+@findex +
+@table @code
+@item (+ EXPR1 EXPR2)
+Adds @var{EXPR1} and @var{EXPR2} and returns the result.
+@end table
+
+@node sub, help, add, GCL Reference
+@subsection -
+@findex -
+@table @code
+@item (- EXPR1 EXPR2)
+Substracts @var{EXPR2} from @var{EXPR1} and returns the result.
+@end table
+
+@node help, morehelp, sub, GCL Reference
 @subsection ?
 @findex ?
 @table @code
@@ -6767,7 +6813,7 @@ Returns the current time, in seconds, as shown by this stream's clock.
 @code{(sleep-until @dots{})}}.
 @end table
 
-@node command, copy, clock, GCL Reference
+@node command, cons, clock, GCL Reference
 @subsection command
 @findex command
 @table @code
@@ -6777,7 +6823,16 @@ Read commands from INFILE; send corresponding responses
 by default.
 @end table
 
-@node copy, cursor-still, command, GCL Reference
+@node cons, copy, command, GCL Reference
+@subsection cons
+@findex cons
+@table @code
+@item (cons EXPR LIST)
+Returns the list obtained by adding @var{EXPR} as first element of
+@var{LIST}. Note that the second argument has to be a list.
+@end table
+
+@node copy, cursor-still, cons, GCL Reference
 @subsection copy
 @findex copy
 @table @code
@@ -6797,7 +6852,7 @@ move to register as holding still.  If INT is not specified,
 the value will be reset to the default.
 @end table
 
-@node cursor-twitch, delete, cursor-still, GCL Reference
+@node cursor-twitch, defun, cursor-still, GCL Reference
 @subsection cursor-twitch
 @findex cursor-twitch
 @table @code
@@ -6807,7 +6862,30 @@ y) to register as holding still.  If INT is not specified,
 the value will be reset to the default.
 @end table
 
-@node delete, dice, cursor-twitch, GCL Reference
+@node defun, delete, cursor-twitch, GCL Reference
+@subsection defun
+@findex defun
+@table @code
+@item (defun NAME (ARG1 @dots{}) [DOCSTRING] EXPR1 @dots{})
+Define a named lambda-expression, that is: define @var{NAME} to evaluate
+to the lambda-expression @code{(lambda (ARG1 @dots{}) (EXPR1 @dots{}))}
+when called as a function. Also, install @var{DOCSTRING} as response to
+the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Not that
+@var{DOCSTRING} need not contain the command-synopsis, it is generated
+automatically.  @var{EXPR1} cannot be a string if @code{DOCSTRING} is
+omitted; it would be interpreted as the doc-string. The return value of
+@code{(defun @dots{})} is the function name. Functions can be recursive
+and self-modifying. It is possible to redefine builtin-functions, in
+this case the old definition is still available under the name
+@code{-builtin-OLDNAME-}. Argument values may be altered by @code{setq};
+the new binding is discarded after evaluation of the surrounding@code{defun}-body. The special keywords @code{&optional} and
+@code{&rest} have the same meaning as for anonymous lambda-expression,
+see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
+@code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
+@end table
+
+@node delete, dice, defun, GCL Reference
+
 @subsection delete
 @findex delete
 @table @code
@@ -6981,7 +7059,7 @@ execute the external modules.  Does nothing if modname is not
 running.
 @end table
 
-@node escale, event-keys, emodule-transmit, GCL Reference
+@node escale, eval, emodule-transmit, GCL Reference
 @subsection escale
 @findex escale
 @table @code
@@ -6989,7 +7067,20 @@ running.
 Same as scale but multiplies by exp(scale).  Obsolete.
 @end table
 
-@node event-keys, event-mode, escale, GCL Reference
+@node eval, event-keys, escale, GCL Reference
+@subsection eval
+@findex eval
+@table @code
+@item (eval EXPR)
+Evaluate a lisp expression. If @var{EXPR} is an unevaluated S-expression
+as returned by the @code{(quote @dots{})} command then the effect will
+be as if calling the un-quoted expression directly. It is also possible
+to evaluate S-expression constructed via @code{car}, @code{cdr} and
+@code{cons}. @xref{car, @code{(car @dots{})}}.  @xref{cdr, @code{(cdr
+@dots{})}}. @xref{cons, @code{(cons @dots{})}}.
+@end table
+
+@node event-keys, event-mode, eval, GCL Reference
 @subsection event-keys
 @findex event-keys
 @table @code
@@ -7193,7 +7284,7 @@ Useful as in
 @end example
 @end table
 
-@node interest, lines-closer, input-translator, GCL Reference
+@node interest, lambda, input-translator, GCL Reference
 @subsection interest
 @findex interest
 @table @code
@@ -7221,7 +7312,54 @@ every time a pick event (right mouse double clique).  See the @ref{pick,
 @code{(pick @dots{})}} command for details.
 @end table
 
-@node lines-closer, load, interest, GCL Reference
+@node lambda, let, interest, GCL Reference
+@subsection lambda
+@findex lambda
+@table @code
+@item (lambda (ARG1 @dots{}) EXPR1 @dots{} EXPRN)
+A lambda expression is like a function. To ``call'' a lambda expression,
+it has to be evoked like a function: @code{((lambda (arg) (+ 1 arg))
+2)}. In this example, the value of the entire expression would be 3.  In
+general, the value of the call will be the value of @var{EXPRN}. The
+first list serves to define formal parameters. The lambda expression
+itself is just a list, starting with the key-word lambda, followed by
+several quoted lists.  @xref{defun, @code{(defun @dots{})}}.
+@xref{setq, @code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
+Note the argument list may contain the special keywords
+@table @code
+@item &optional
+giving values to the following identifiers is optional,
+their default value will be @code{nil}
+@item &rest
+all excess arguments will be collected in a list, and that list will be
+assigned to the following argument, like so:
+@example
+((lambda (&rest rest) (echo rest)) a b c d)
+@end example
+The output would be @code{(a b c d)}.
+@end table
+@end table
+
+@node let, lines-closer, lambda, GCL Reference
+@subsection let
+@findex let
+@table @code
+@item (let ARGUMENTS EXPR1 @dots{} EXPRN)
+Generate a lambda expression from @var{EXRP1} @dots{} @var{EXPRN}, with
+the argument bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
+list of symbols (bound to @code{nil} by default) or lists of the form
+@code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
+@var{VALUE} is an S-expression which is first evaluated, then its value
+is bound to @var{ARG}. The entire expression evaluates to the value of
+@var{EXPRN}, the last expression in the body of the statement. The
+argument list must be present, but can be empty; in the latter case the
+@code{(let () @dots{})} statement is equivalent to a @code{(progn
+@dots{})}. @xref{lambda, @code{(lambda @dots{})}}.
+@xref{defun, @code{(defun @dots{})}}.
+@xref{setq, @code{(setq @dots{})}}.
+@end table
+
+@node lines-closer, load, let, GCL Reference
 @subsection lines-closer
 @findex lines-closer
 @table @code
@@ -7366,7 +7504,7 @@ style, line width, and lighting.
 @code{merge-base-ap} is a synonym for @ref{merge-baseap, @code{merge-baseap}}.
 @end table
 
-@node merge-baseap, morehelp, merge-base-ap, GCL Reference
+@node merge-baseap, mod, merge-base-ap, GCL Reference
 @subsection merge-baseap
 @findex merge-baseap
 @table @code
@@ -7376,7 +7514,15 @@ appearance (applied to every geom before its own apperance).
 Lighting is typically included in the base appearance.
 @end table
 
-@node morehelp, name-object, merge-baseap, GCL Reference
+@node mod, morehelp, merge-baseap, GCL Reference
+@subsection mod
+@findex mod
+@table @code
+@item (mod EXPR1 EXPR2)
+Divides @var{EXPR1} by @var{EXPR2} and returns the remainder.
+@end table
+
+@node morehelp, name-object, mod, GCL Reference
 @subsection morehelp
 @findex morehelp
 @table @code
@@ -7689,7 +7835,7 @@ origin do coordinate system of otherID (parallel translation).
 Default is center.
 @end table
 
-@node position-toward, progn, position-at, GCL Reference
+@node position-toward, process-events, position-at, GCL Reference
 @subsection position-toward
 @findex position-toward
 @table @code
@@ -7700,7 +7846,21 @@ lies on the positive z-axis do first objeto.  Default is
 the center da bounding box.
 @end table
 
-@node progn, quit, position-toward, GCL Reference
+@node process-events, progn, position-toward, GCL Reference
+@subsection process-events
+@findex process-events
+@table @code
+@item (process-events)
+Pass control back to the event loop of Geomview, then continue
+evaluating the current command-script. If the current input stream has
+been put to sleep by one of the @code{(sleep-@dots{})} commands, then
+the control remains by the main-loop until the current input streams
+``sleep'' is over.
+@xref{sleep-until, @code{(sleep-until @dots{})}}.
+@xref{sleep-for, @code{(sleep-for @dots{})}}.
+@end table
+
+@node progn, quit, process-events, GCL Reference
 @subsection progn
 @findex progn
 @table @code
@@ -7723,7 +7883,9 @@ forcing them to be treated as a single command.
 @findex quote
 @table @code
 @item (quote EXPR)
-returns the symbolic lisp expression EXPR without evaluating it.
+returns the symbolic lisp expression @var{EXPR} without evaluating
+it. Note, however, that @code{quote} parses @var{EXPR} as if it should
+be evaluated. @xref{eval, @code{(eval @dots{})}}.
 @end table
 
 @node rawevent, rawpick, quote, GCL Reference
@@ -7934,7 +8096,7 @@ motionscale is the movimento scale factor set by this function.
 Scaleof(frame) measures the size do frame objeto.
 @end table
 
-@node setenv, sgi, set-motionscale, GCL Reference
+@node setenv, setq, set-motionscale, GCL Reference
 @subsection setenv
 @findex setenv
 @table @code
@@ -7944,7 +8106,29 @@ the name is visible to geomview (as in pathnames containing @code{$name})
 and to processes it creates, e.g. external modules.
 @end table
 
-@node sgi, shell, setenv, GCL Reference
+@node setq, sgi, setenv, GCL Reference
+@subsection setq
+@findex setq
+@table @code
+@item (setq SYM EXPR)
+Bind the symbold @var{SYM} to the value of @var{EXPR}. @var{SYM} must be
+an unqualified symbol, i.e. not quoted, and literal: @code{(setq "foo"
+bar)} will not work. Likewise @code{(setq (bar STUFF) foo)} will also
+not work, even if @code{(bar @dots{})} would evaluate to an unqualified
+symbol: varible names must be literals.  Note that calling @code{(setq
+SYM @dots{})} will alter the value of @var{SYM} within the current
+name-space: if @var{SYM}, e.g., is bound as local variable by a lambda,
+let or defun expression, then @code{(setq SYM @dots{})} will change the
+value of the local variable, the global binding will remain unchanged.
+It is NOT possible to un-bind a symbol. However, subsequent @code{(setq
+SYM @dots{})} invocations will re-bind @var{SYM} to another value and free
+the lisp-object previously bound to @var{SYM}.
+@xref{lambda, @code{(lambda @dots{})}}.
+@xref{defun, @code{(defun @dots{})}}.
+@xref{let, @code{(let @dots{})}}.
+@end table
+
+@node sgi, shell, setq, GCL Reference
 @subsection sgi
 @findex sgi
 @table @code
@@ -8124,7 +8308,7 @@ equals one instance do movimento per @code{dt} seconds.  E.g.
 rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
 @end table
 
-@node transform-set, ui-cam-focus, transform-incr, GCL Reference
+@node transform-set, truncate, transform-incr, GCL Reference
 @subsection transform-set
 @findex transform-set
 @table @code
@@ -8133,7 +8317,15 @@ Set objectID's transform to the constructed transform.
 Same syntax as transform.
 @end table
 
-@node ui-cam-focus, ui-center, transform-set, GCL Reference
+@node truncate, ui-cam-focus, transform-set, GCL Reference
+@subsection truncate
+@findex truncate
+@table @code
+@item (truncate EXPR)
+Rounds @var{EXPR} towards zero.
+@end table
+
+@node ui-cam-focus, ui-center, truncate, GCL Reference
 @subsection ui-cam-focus
 @findex ui-cam-focus
 @table @code
@@ -8217,7 +8409,7 @@ Toggle updating user interface panels. Off by default.
 @item (ui-html-browser BROWSER)
 Use @var{BROWSER} for viewing the @var{HTML}-version do manual when
 the @samp{Manual (HTML)} menu item is selected in the @samp{Help}-menu.
-If the @code{(ui-html-browser...)} command was never executed, then the
+If the @code{(ui-html-browser @dots{})} command was never executed, then the
 default is to use the browser stored in the @code{WEBBROWSER}
 environment variable. If the environment variable is unset then the
 default is compile-time dependent.
@@ -8333,7 +8525,7 @@ be identical to those used in the @ref{interest, @code{interest}}
 command.
 @end table
 
-@node update, update-draw, uninterest, GCL Reference
+@node update-draw, while, update, GCL Reference
 @subsection update
 @findex update
 @table @code
@@ -8352,7 +8544,15 @@ Applies @code{timestep} seconds' worth of movimento, or uses elapsed real
 time if @code{timestep} is absent or zero.
 @end table
 
-@node window, winenter, update-draw, GCL Reference
+@node while, window, update-draw, GCL Reference
+@subsection while
+@findex while
+@table @code
+@item (while TEST BODY)
+Iterate: @emph{evaluate @var{TEST}, if non nil, evaluate @var{BODY}}.
+@end table
+
+@node window, winenter, while, GCL Reference
 @subsection window
 @findex window
 @table @code
@@ -9068,7 +9268,6 @@ installing the source code.
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
-section is out of date. @code{Geomview} follows the
 GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
 user executables to @file{PREFIX/bin/}, private executables to
 @file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
