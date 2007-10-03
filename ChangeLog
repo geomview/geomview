@@ -1,3 +1,196 @@
+2007-10-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version-pt_BR.texi, doc/version.texi:
+	Update. These files to not belong to the CVS archive.
+
+	* data/Makefile.am:
+	Add GCL examples to demonstrate the new lisp-features.
+
+	* configure.ac: Version to 1.9.5.
+
+	* NEWS: Cosmetics.
+
+2007-09-27  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt-BR translation and adjusts
+
+2007-09-24  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* data/gcl/events.gcl: Cosmetics.
+
+2007-09-23  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* .cvsignore: No longer ignore gvcl-mode.el
+
+2007-09-22  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* gvcl-mode.el, data/gcl/arithmetic.gcl, data/gcl/events.gcl:
+	Initial revision.
+
+2007-09-21  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac, doc/version-pt_BR.texi, src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h, src/lib/oogl/lisp/lisp2c, src/lib/oogl/wa/fsaparse.l, src/lib/oogl/wa/fsaparse.y:
+	Some cleanup after examining the diff w.r.t. 1.9.4.
+
+2007-09-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi: Also mention redefining of builtin-functions.
+
+	* doc/geomview.texi, doc/version-pt_BR.texi: Update.
+
+	* doc/version.texi: Document the new lisp-features.
+
+	* src/lib/oogl/lisp/lisp.c: Doc typos.
+
+	* NEWS, configure.ac: Update.
+
+	* src/lib/oogl/lisp/lisp.c:
+	Use stdout as default output channel of a lake if nothing else is specified.
+
+	* src/bin/geomview/x11/gvevent.c, src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h:
+	Make use of pool->awaken (and set it!).
+
+	* geomview.sh: Add LC_NUMERIC=POSIX
+
+	* src/bin/geomview/x11/gvui.c, src/bin/geomview/common/drawer.c, src/bin/geomview/common/event.c, src/bin/geomview/common/lang.h, src/bin/geomview/common/ui.c:
+	Introduce NOT_A_KEYWORD as undefined keyword value and fix some
+	stereowin related issues.
+
+2007-09-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/shade/light.c: LmCopyLights(): really copy the lights.
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/comm.c:
+	Mostly cosmetics.
+
+	* src/bin/stereo/stereo.c: Update to changed lisp stuff.
+
+2007-09-18  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/refcomm/streampool.c:
+	addtime() wrongly called, caused by previous change.
+
+	* src/lib/oogl/lisp/lisp.c: Interests were broken by previous  changes.
+
+	* src/bin/nose/nose.c:
+	If no edge was picked then one must not try to access the edge
+	co-ordintates.
+
+	* src/lib/oogl/refcomm/streampool.c, src/lib/oogl/refcomm/streampool.h, src/bin/geomview/x11/gvevent.c:
+	New lisp-function (process-events) which passes control back to
+	geomview event-loop, in principle it is now possible to control
+	geomview entirely out of a lisp-script.
+
+	* src/lib/oogl/lisp/lisp.c: Fix the name-space implementation.
+
+	* src/lib/oogl/lisp/lisp.c: &rest/&optional fix.
+
+2007-09-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h:
+	let function, local variables, &rest and &optional for defun
+
+	* doc/version-pt_BR.texi, doc/version.texi: Update.
+
+2007-09-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/comm.c, src/bin/geomview/common/lang.c, src/bin/geomview/common/lispext.c, src/bin/geomview/common/worldio.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h, src/lib/oogl/lisp/lisp2c:
+	Distinguish between quoted and un-quoted strings. Function names have
+	to be unquoted, also parameters and global variables
+	(i.e. setq). Quoted strings are never bound to function, parameter or
+	variable names. A quoted paren cannot terminate or begin a S-expr, it
+	just stands for itself.
+
+	* src/bin/geomview/common/help.c:
+	Fix help messages for synonymous commands.
+
+	* src/bin/animate/animate.c: char ch = (char)NULL -> char ch = '\0'
+
+2007-09-16  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt-BR translation
+
+2007-09-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi, doc/version.texi:
+	Fix a copy'n paste "bug".
+
+	* src/bin/geomview/common/comm.c, src/bin/geomview/common/event.c, src/bin/geomview/x11/gvcamui.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/lisp/lisp.h:
+	Basic lambda-expression/defun/setq support.
+
+	* src/bin/geomview/x11/gvmnpanel.c: Replace (char)NULL by (char)0.
+
+	* doc/.cvsignore: Add translated manual output files.
+
+	* src/lib/oogl/lisp/lisp2c:
+	Just pick up the first LDECLARE after an LDEFINE.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	Move gettimeofday() stuff to ../util/time.c
+
+	* src/lib/oogl/util/ooglutil.h: inline vvec stuff, proto-types.
+
+	* src/lib/oogl/util/futil.c: char * <-> const char *
+
+	* src/lib/oogl/util/iobfutil.c:
+	Optionally report the quote-state of a token.
+
+	* src/lib/oogl/wa/.cvsignore: Ignore autogenerated wa.... stuff.
+
+	* src/lib/oogl/util/time.c, src/lib/oogl/util/vvec.h: Initial revision.
+
+	* src/lib/oogl/util/fsa.c, src/lib/oogl/util/fsa.h:
+	New function fsa_delete() to get rid of an entire parser, needed by
+	lambda-expression stuff.
+
+	* src/lib/oogl/util/Makefile.am: Add time.c
+
+	* src/lib/oogl/util/Headers: Add vvec.h
+
+2007-09-08  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt-BR translation
+
+	* doc/geomview.texi: {RG}b to {RGB}
+
+	* doc/geomview.texi:
+	"Draw" to "Show" and "right" to "left" in Appearence panel.
+	Faces, Edges, Normals, BBox and Vects are under "show"
+	and not under "draw" and in "upper left corner" and not in
+	"upper right corner".
+
+2007-09-05  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/version-pt_BR.texi: Update day of month in version-pt_BR.texi
+
+2007-09-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/version-pt_BR.texi: Update day of month in version-pt_BR.texi
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
+	Partial Translation pt_BR of geomview-pt_BR.texi
+	Update of month in version-pt_BR.texi
+
+2007-09-02  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial Translation pt_BR
+
+2007-09-01  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial Translation pt_BR
+
+2007-08-30  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/list/listdraw.c: Use alloca() less often.
+
+2007-08-29  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/drawer.c: Optional timing stuff.
+
+2007-08-27  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* ChangeLog: Claim to have released v1.9.4
+
 2007-08-27    <claus@mathematik.uni-freiburg.de>
 
 	*  Release of Geomview 1.9.4
