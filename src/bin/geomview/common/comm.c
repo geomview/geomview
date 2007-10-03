@@ -868,14 +868,22 @@ void echo_to_fp(LList *arglist, FILE *fp)
   } else {
     for(;;) {
       arg = arglist->car;
-      val = LEval(arg);
-      if (val->type == LSTRING) {
+      /* Note that -- for compatibility -- we distinguish the case of
+       * a function which evaluates to a string and a literal
+       * string. A literal string is written without quotes, a
+       * function evaluating to a string results in printing a quoted
+       * string. An example is (echo (read-id focus)) which used to
+       * result in printing the id of the active camera as quoted
+       * string.
+       */
+      if (arg->type == LSTRING) {
 	/* omit the quotes */
-	fputs(LSTRINGVAL(val), fp);
+	fputs(LSTRINGVAL(arg), fp);
       } else {
+	val = LEval(arg);
 	LWrite(fp, val);
+	LFree(val);
       }
-      LFree(val);
       if ((arglist = arglist->cdr) == NULL) {
 	break;
       }
@@ -898,7 +906,6 @@ LDEFINE(echo, LVOID,
   FILE *fp;
 
   LDECLARE(("echo", LBEGIN,
-	    LHOLD,
 	    LLAKE, &powderhorn,
 	    LHOLD,
 	    LREST, &arglist,
