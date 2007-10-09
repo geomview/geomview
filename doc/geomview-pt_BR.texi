@@ -711,45 +711,45 @@ Isso @'{e} tudo!
 
 Geomview foi originalmente escrito no Geometry Center da the University
 of Minnesota in Minneapolis.
-O Geometry Center era um centro de pesquisa e educação
-fundado pela National Science Foundation, com a missão de promover
-pesquisa e comunicação de assuntos relacionados à matemática.  A maioria do trabalho era
-direcionado ao uso de computadores para ajudar a visualização de conceitos matemáticos.
+O Geometry Center era um centro de pesquisa e educa@,{c}@~{a}o
+fundado pela National Science Foundation, com a miss@~{a}o de promover
+pesquisa e comunica@,{c}@~{a}o de assuntos relacionados @`{a} matem@'{a}tica.  A maioria do trabalho era
+direcionado ao uso de computadores para ajudar a visualiza@,{c}@~{a}o de conceitos matem@'{a}ticos.
 
 O projeto que eventualmente levou ao Geomview
-começou no verão de 1988 com o trabalho de Pat
-Hanrahan sobre um programa de visualização chamado MinneView.  Pouco tempo
-depois Charlie Gunn começou o desenvolvimento da OOGL
+come@,{c}ou no ver@~{a}o de 1988 com o trabalho de Pat
+Hanrahan sobre um programa de visualiza@,{c}@~{a}o chamado MinneView.  Pouco tempo
+depois Charlie Gunn come@,{c}ou o desenvolvimento da OOGL
 (Object Oriented Graphics Language) juntamente com o
 MinneView.  Muitas pessoas comtribuiram para a OOGL e o MinneView,
 incluindo Stuart Levy, Mark Meuer, Tamara Munzner, Steve
 Anderson, Mario Lopez, Todd Kaplan.
 
-Em 1991 o staff do Geometry Center começou o trabalho sobre uma nva e melhorada
-versão da OOGL, e um novo e melhorado programa de visualização, o qual eles
-chamaram Geomview.  Naquele tempo essencialmente o único jogo no comercio para
-gráficos interativos em três dimensões era Silicon Graphics (SGI), de forma que Geomview foi
-desenvolvido inicialmente em estações de trabalho SGI, usando a IRIS GL.  A primeira
-versão foi finalizada em Janeiro de 1992.  Essa primeira versào tornou-se muito
-popular entre visitantes do Geometry Center, e através do ftp do
-Centro (isso ocorreu antes do advento da web) pessoas em outras instituições começaram
-a usar essa primeira versão também.
+Em 1991 o staff do Geometry Center come@,{c}ou o trabalho sobre uma nva e melhorada
+vers@~{a}o da OOGL, e um novo e melhorado programa de visualiza@,{c}@~{a}o, o qual eles
+chamaram Geomview.  Naquele tempo essencialmente o @'{u}nico jogo no comercio para
+gr@'{a}ficos interativos em tr@^{e}s dimens@~{o}es era Silicon Graphics (SGI), de forma que Geomview foi
+desenvolvido inicialmente em esta@,{c}@~{o}es de trabalho SGI, usando a IRIS GL.  A primeira
+vers@~{a}o foi finalizada em Janeiro de 1992.  Essa primeira vers@`{a}o tornou-se muito
+popular entre visitantes do Geometry Center, e atrav@'{e}s do ftp do
+Centro (isso ocorreu antes do advento da web) pessoas em outras institui@,{c}@~{o}es come@,{c}aram
+a usar essa primeira vers@~{a}o tamb@'{e}m.
 
-Adicionalmente a estações de trabalho SGI o Geometry Center tinha
-algumas estações NeXT completas, de forma que após Geomview estar sendo executado
-em máquinas SGIs a equipe desenvolveu uma versão para NeXTStep também.
-Nessa época ouveram muitos milhares de pessoas usando Geomview
+Adicionalmente a esta@,{c}@~{o}es de trabalho SGI o Geometry Center tinha
+algumas esta@,{c}@~{o}es NeXT completas, de forma que ap@'{o}s Geomview estar sendo executado
+em m@'{a}quinas SGIs a equipe desenvolveu uma vers@~{a}o para NeXTStep tamb@'{e}m.
+Nessa @'{e}poca ouveram muitos milhares de pessoas usando Geomview
 ao redor do mundo.
 
 Alguns anos depois a equipe portou Geomview para o X windows e a OpenGL, e
-eventualmente, com o desaparecimento da NeXT, a versão para NeXT seguiu o mesmo
+eventualmente, com o desaparecimento da NeXT, a vers@~{a}o para NeXT seguiu o mesmo
 caminho.
 
-Nessa missão de incentivar a comunicação entre pesquisadores e educadores,
+Nessa miss@~{a}o de incentivar a comunica@,{c}@~{a}o entre pesquisadores e educadores,
 o Geometry Center desenvolveu um web site, www.geom.umn.edu, mais tarde
 em 1993.  esse foi um dos primeiros 300 web sites que existiram no mundo.  Uma parte desse
 web site era certamente devotado ao Geomview, e ajudou a propagar o
-trabalho durante sua existência.
+trabalho durante sua exist@^{e}ncia.
 
 O Geometry Center fechou suas facilidades de "tijolos e cimento" em Agosto
 de 1998 (NSF cortou suas verbas), mas o web site continuou a exixtir, e
@@ -758,8 +758,8 @@ Geomview continuou a ser popular ao redor do mundo.  Em Dezembro de
 @uref{http://www.geomview.org} como casa permanente na web para o
 Geomview.
 
-Os autores originais do Geomview, bem como vários outros volunários
-ao redor do mundo, estão ainda ativamente envolvidos na utilização e no desenvolvimento do
+Os autores originais do Geomview, bem como v@'{a}rios outros volun@'{a}rios
+ao redor do mundo, est@~{a}o ainda ativamente envolvidos na utiliza@,{c}@~{a}o e no desenvolvimento do
 Geomview.
 
 @menu
@@ -1942,21 +1942,21 @@ O bot@~{a}o @emph{Revert} no painel de apar@^{e}ncia (@emph{Appearance}) desfaz 
 as escolhas na apar@^{e}ncia do alvo.  Isso faz com que o geom alvo
 herde todas as suas propriedades de apar@^{e}ncia de seus pais.
 
-O botão do painel de aparência (@emph{Appearance}) determina se
-controles de aparência devem sobrescrever escolhas feitas nos objetos em si mesmos --
-por exemplos, escolhendo a cor de face irá afetar todas as faces de objetos com
-faces multicoloridas.  De outra forma, controles de aparência somente fornecem escolhas
-que não forem especificadas nos objetos em si mesmos não especificarem.
-Por padrão, @emph{Override} está habilitado.  Esse bot@~{a}o aplica-se a todos os objetos,
-e a todos os painéis relacionados a aparência.
+O bot@~{a}o do painel de apar@^{e}ncia (@emph{Appearance}) determina se
+controles de apar@^{e}ncia devem sobrescrever escolhas feitas nos objetos em si mesmos --
+por exemplos, escolhendo a cor de face ir@'{a} afetar todas as faces de objetos com
+faces multicoloridas.  De outra forma, controles de apar@^{e}ncia somente fornecem escolhas
+que n@~{a}o forem especificadas nos objetos em si mesmos n@~{a}o especificarem.
+Por padr@~{a}o, @emph{Override} est@'{a} habilitado.  Esse bot@~{a}o aplica-se a todos os objetos,
+e a todos os pain@'{e}is relacionados a apar@^{e}ncia.
 
 @comment ----------------------------------------------------------------
 @node Materials Panel, Lighting Panel, Appearance Panel, Appearance
 @subsection The Materials Panel
 
-The @emph{Materials} panel controls material properties of surfaces.
-It works with the objeto alvo in the same way that the
-@emph{Appearance} panel does.
+O painel de materiais (@emph{Materials}) controla as propriedades materiais das surperf@'{i}cies.
+O painel de materiais trabalha com o objeto alvo da mesma forma que o
+painel de apar@^{e}ncia (@emph{Appearance}) faz.
 @float Figure,figmatpanel
 @image{figs/mat}
 @caption{O Painel de Materiais.}
@@ -1966,36 +1966,36 @@ It works with the objeto alvo in the same way that the
 
 @item Transparent
 
-Esse bot@~{a}o determines se transparency is enabled.  Geomview itself
-does not fully support transparency yet and on some machines it does not
-work at all.  (The missing piece is implementation of a depth-sorting
-algorithm in the rendering engine; not difficult, but just not done
-yet.)  Use RenderMan if you want real transparency: when transparency is
-enabled, a RenderMan snapshot will contain the alpha information.
+Esse bot@~{a}o determina se a transpar@^{e}ncia est@'{a} habilitada.  Geomview por si mesmo
+n@~{a}o suporta a transpar@^{e}ncia completamente ainda e o funcionando em algumas m@'{a}quinas a transpar@^{e}ncia n@~{a}o
+trabalha de forma completa.  (A pe@,{c}a omitida @'{e} implementa@,{c}@~{a}o de um algor@'{i}timo
+intensidade e precis@~{a}o num@'{e}rica no bloco de redenriza@,{c}@~{a}o; n@~{a}o @'{e} dif@'{i}cil, mas @'{e} simplesmente n@~{a}o realizado
+ainda.)  Use RenderMan se voc@^{e} quiser transpar@^{e}ncia real: Quando a transpar@^{e}ncia estiver
+habilitada, um instant@^{a}neo de RenderMan ir@'{a} conter a informa@,{c}@~{a}o alfa.
 
 @item Alpha
-This slider determines the opacity/transparency when transparency is
-enabled.  0 means totally transparent, 1 means totally opaque.
+O bot@~{a}o deslizante determina a opacidade/transpar@^{e}ncia quando a transpar@^{e}ncia estiver
+habilitada.  0 (zero) significa totalmente transparente, 1 significa totalmente opaco.
 
 @item Diffuse Reflectance
-This slider controls the diffuse reflectance of a surface.  This has
-to do with how much the surface scatters light that it reflects.
+Esse bot@~{a}o deslizante controla a reflect@^{a}ncia difusa de uma superf@'{i}cie.  Isso tem
+a ver com o quanto a superf@'{i}cie dispersa a luz que reflete.
 
 @item Shininess
-This slider controls how shiny a surface is.   This determines the
-size of specular highlights on the surface.  Lower values give the
-surface a duller appearance.
+Esse bot@~{a}o deslizante controla o quanto brilhante a superf@'{i}cie @'{e}. Esse bot@~{a}o  determina o
+tamanho de destaques especulares sobre a superf@'{i}cie.  Valores pequenos fornecem @`{a}
+superf@'{i}cie uma apar@^{e}ncia sombria.
 
 @item Ambient Reflectance
-This slider controls how much da ambient light a surface reflects.
+This bot@~{a}o deslizante controla o quanto da luz ambiente uma superf@'{i}cie reflete.
 
 @item Specular Reflectance
-This slider controls the specular reflectance of a surface.  This
-has to do with how directly the surface reflects light rays.  Higher
-values give brighter specular highlights.
+Esse bot@~{a}o deslizante controla a reflect@^{a}ncia especular de uma  superf@'{i}cie.  Isso tem
+a ver com como a superf@'{i}cie reflete diretamente os raios luminosos.  Valores
+maiores fornecem destaques de brilho especular.
 
 @item Done
-Esse bot@~{a}o dismisses the @emph{Materials} panel.
+Esse bot@~{a}o dispensa o painel de materiais (@emph{Materials}).
 
 @end table
 
@@ -2003,67 +2003,67 @@ Esse bot@~{a}o dismisses the @emph{Materials} panel.
 @node Lighting Panel,  , Materials Panel, Appearance
 @subsection The Lighting Panel
 
-The @emph{Lighting} panel controls the number, position, and color of
-the light sources used in shading.
+O painel de ilumina@,{c}@~{a}o (@emph{Lighting}) controla o n@'{u}mero, a posi@,{c}@~{a}o, e a cor das
+fontes de luz usadas no sombreamento.
 @float
 @image{figs/light}
-@caption{The Lighting Panel.}
+@caption{O Painel de Ilumina@,{c}@~{a}o.}
 @end float
 
-The @emph{Lighting} panel is different from the @emph{Appearance} and
-@emph{Material} panels in that it always works with the base
-appearance.  This is because it usually makes sense to use the same set
-of lights for drawing all objetos in your scene.
+O painel de ilumina@,{c}@~{a}o (@emph{Lighting}) @'{e} diferente do painel de apar@^{e}ncia (@emph{Appearance}) e
+dos pain@'{e}is de material (@emph{Material}) no sentido de que o painel de ilumina@,{c}@~{a}o sempre trabalha com a apar@^{e}ncia
+base.  Isso ocorre pelo fato de fazer sentido usar o mesmo conjunto
+de luzes para desenhar todos os objetos na sua cena.
 
 @table @emph
 
 @item LIGHTS
-The @emph{LIGHTS} browser shows the currently selected light.  Changes
-made using the other widgets on this panel apply to this light.  There
-is always at least one light, the ambient light.
+O navegador de luzes (@emph{LIGHTS}) mostra a luz atualmente selecionada.  Modifica@,{c}@~{o}es
+s@~{a}o feitas usando os outros meios de escolha sobre esse painel aplicado a essa luz.  Existe
+sempre pelo menos uma luz, a luz ambiente.
 
 @item Intensity
-This slider controls the intensity da current light.
+Esse bot@~{a}o deslizante controla a intensidade da luz atual.
 
 @item Color
-Esse bot@~{a}o brings up a color chooser which lets you select the color
-da current light.
+Esse bot@~{a}o faz surgir um modificador de corres que lhe permite selecionar a cor
+da luz que atualmente ilumina o objeto.
 
 @item Add
-Esse bot@~{a}o adds a light.
+Esse bot@~{a}o adiciona uma luz.
 
 @item Delete
-Esse bot@~{a}o deletes the current light.
+Esse bot@~{a}o exclui a luz atual.
 
 @item Show Lights
-Esse bot@~{a}o lets you see and change the positions da light sources
-in a janela de c@^{a}mera.  Each light is drawn as long cylinder which is
-supposed to remind you of a light beam.  When you clique sobre o the
-@emph{Show Lights} bot@~{a}o Geomview goes into "light edit" mode, during
-which you can rotate current light by holding down the bot@~{a}o esquerdo do mouse
-and moving o mouse.  Lights placed in this way are infinitely distant,
-so what you are changing is the angular position.  Clique sobre o the
-@emph{Show Lights} bot@~{a}o again to return to the previous modo de movimento
-and to quit drawing the light beams.
+Esse bot@~{a}o permite a voc@^{e} ver e modificar a posi@,{c}@~{a}o das fontes de ilumina@,{c}@~{a}o
+em uma janela de c@^{a}mera.  Cada luz @'{e} movida ao longo de um cilindro que @'{e}
+suposto para lembrar a voc@^{e} um raio de luz.  Quando voc@^{e} clica sobre o bot@~{a}o
+@emph{Show Lights} Geomview entra no modo "light edit", durante
+o qual voc@^{e} pode rotacionar a ilumina@,{c}@~{a}o atual mantendo pressionado o bot@~{a}o esquerdo do mouse
+e movendo o mouse.  Ilumina@,{c}@~{a}o colocada dessa forma est@~{a}o infinitamente distantes,
+de forma que o que voc@^{e} est@'{a} modificando @'{e} a posi@,{c}@~{a}o angular.  Clique sobre o bot@~{a}o
+@emph{Show Lights} novamente para retornar ao modo anterior de movimento
+e para sair movendo os raios de luz.
 
 @item Done
-Esse bot@~{a}o dismisses the @emph{Lighting} panel.
+Esse bot@~{a}o dispensa o painel de ilumina@,{c}@~{a}o (@emph{Lighting}).
 
 @end table
 
-Geomview's @emph{Appearance}, @emph{Materials}, and @emph{Lighting}
-panels are constructed to allow you to easily do most das appearance
-related things that you might want to do.  The appearance hierarchy that
-Geomview supports internally, however, is very complex and there are
-certain operations that you cannot do with the panels.  The Geomview
-command language (GCL) provides complete support for appearance
-operations.  In particular, the @code{merge-baseap} command can be used
-to change the base appearance (which, except for lighting, cannot be
-changed by Geomview's panels).  The @code{merge-ap} command can be used
-to change an individual geom's appearance.  Appearances can also be
-specified in OOGL files; for details,
-@pxref{Appearances}. @xref{merge-baseap,@code{(merge-baseap
-@dots{})}}. @xref{merge-ap,@code{(merge-ap @dots{})}}.
+Os pain@'{e}is do Geomview @emph{Appearance}, @emph{Materials}, e
+@emph{Lighting} s@~{a}o constru@'{i}dos para permitir a voc@^{e} fazer facilmente a maioria das coisas
+relacionadas a apar@^{e}ncia que voc@^{e} pode querer fazer.  A hierarquia de apar@^{e}ncia
+Geomview suporta internamente, todavia, @'{e} muito complexa e existem
+certas opera@,{c}@~{o}es que voc@^{e} n@~{a}o pode fazer com os pain@'{e}is.  A linguagem de comandos
+co geomview (GCL) fornece suporte completo a opera@,{c}@~{o}es sobre
+apar@^{e}ncia.  Em particular, o comando @code{merge-baseap} pode ser usado
+para modificar a apar@^{e}ncia de base (a qual, exceto para ilumina@,{c}@~{a}o, n@~{a}o pode ser
+modificada atrav@'{e}s de pain@'{e}is do Geomview).  O comando @code{merge-ap} pode ser usado
+para modificar a apar@^{e}ncia de um geom individualmente.  Apar@^{e}ncias podem tamb@'{e}m serem
+especificadas nos arquivos OOGL; para detalhes veja,
+@ref{Appearances}. @ef{merge-baseap,@code{(merge-baseap
+@dots{})}}. @ref{merge-ap,@code{(merge-ap @dots{})}}.
 
 
 @comment ================================================================
@@ -5233,7 +5233,7 @@ in a file called @file{.geomview} in the current directory and invoke
 Geomview from that directory.  Clique sobre o the "Example 2" entry in the
 @emph{Modules} browser to invoke the module.  A small control panel
 should appear.  You can then control the velocity da mesh
-oscillation by moving the slider.
+oscillation by moving the bot@~{a}o deslizante.
 
 @example
 @comment #include "example2.c"
@@ -5373,17 +5373,17 @@ UpdateMesh(xmin, xmax, ymin, ymax, xdim, ydim, t)
 
 The code begins by including some header files needed for the event loop
 and the FORMS library.  It then declares global variables for holding a
-pointer to the slider FORMS objeto and the velocity @code{dt}.  These
-are global because they are needed in the slider callback procedure
+pointer to the bot@~{a}o deslizante FORMS objeto and the velocity @code{dt}.  These
+are global because they are needed in the bot@~{a}o deslizante callback procedure
 @code{SetVelocity}, which forms calls every time the user moves the
-slider bar. @code{SetVelocity} sets @code{dt} to be the new value do
-slider.
+bot@~{a}o deslizante bar. @code{SetVelocity} sets @code{dt} to be the new value do
+bot@~{a}o deslizante.
 
 @code{Quit} is the callback procedure for the @emph{Quit} bot@~{a}o;
 it provides a graceful way for the user to terminate the program.
 
 The procedure @code{create_panel} calls a bunch of FORMS library
-procedures to set up the control panel with slider and bot@~{a}o.  For more
+procedures to set up the control panel with bot@~{a}o deslizante and bot@~{a}o.  For more
 information on using FORMS to create interface panels see the FORMS
 documentation.  In particular, FORMS comes with a graphical panel
 designer that lets you design your panels interactively and generates
@@ -5398,7 +5398,7 @@ the process to run in the foreground.  By default GL programs run in the
 background, and for various reasons external modules that use FORMS
 (which is based on GL) need to run in the foreground.  We then call
 @code{create_panel} to create the panel and @code{fl_set_slider_value}
-to set the initial value do slider.  The call to @code{fl_show_form}
+to set the initial value do bot@~{a}o deslizante.  The call to @code{fl_show_form}
 causes the panel to appear on the screen.
 
 The first three lines do main loop, starting with 
@@ -5415,7 +5415,7 @@ call; the first member (0 in this example) gives the number of seconds,
 and the second member (200000 in this example) gives the number of
 microseconds.  Finally, @code{fl_check_forms()} checks for and processes
 any FORMS events that have happened; in this case this means calling
-@code{SetVelocity} if the user has moved the slider or calling
+@code{SetVelocity} if the user has moved the bot@~{a}o deslizante or calling
 @code{Quit} if the user has clicado on the @emph{Quit} bot@~{a}o.
 
 The purpose da delay in the loop is to keep the program from using
