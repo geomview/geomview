@@ -2070,91 +2070,91 @@ especificadas nos arquivos OOGL; para detalhes veja,
 @node Cameras, Saving, Appearance, Interaction
 @section Cameras
 
-A c@^{a}mera in Geomview is the objeto that corresponds to a janela de c@^{a}mera.
-By default there is only one camera, but it is possible to have as many
-as you want.  You can control certain aspects do way the world is
-drawn in each janela de c@^{a}mera via the @emph{Cameras} panel.
+Uma c@^{a}mera no Geomview é o objeto que corresponde a uma janela de c@^{a}mera.
+Por padrão existe somente uma câmera, mas é possível ter tantas quantas
+você quiser.  Você pode controlar certos aspectos do objeto visível atualmente na janela de câmera
+arrastando em cada janela de c@^{a}mera via o painel @emph{Cameras}.
 @float Figure,figcamerapanel
 @image{figs/cam}
 @caption{O Painel de C@^{a}mera.}
 @end float
-If the objeto alvo is a camera, the @emph{Cameras} panel affects that
-camera.  If the objeto alvo is not a camera, the @emph{Cameras} panel
-affects the @dfn{current camera}.  The current c@^{a}mera is the c@^{a}mera of
-the window that o cursor do mouse is in, or was in most recently if the
-cursor is not in a janela de c@^{a}mera.  Thus, if you use the keyboard
-shortcuts for the actions in the @emph{Cameras} panel while the cursor
-is in a janela de c@^{a}mera, the actions apply to that camera, unless you have
-explicitly selected another camera.
+Se o objeto alvo for uma câmera, o painel de câmeras (@emph{Cameras}) afeta essa
+câmera.  Se o objeto alvo não for uma câmera, o painel de câmeras (@emph{Cameras})
+afeta a câmera atual (@dfn{current camera}).  A c@^{a}mera atual é a  c@^{a}mera da
+janela que o cursor do mouse está nela, ou estava mais recentemente se o
+cursor não estiver em uma janela de c@^{a}mera.  Dessa forma, se você usa teclas
+de atalho para as ações no painel de câmeras (@emph{Cameras}) enquanto o cursor
+estiver em uma janela de c@^{a}mera, as ações aplicam-se a aquela  câmera, a menos que você tenha
+explicitamente selecionado outra câmera.
 
-To create new janelas de c@^{a}mera, use the @kbd{v+} tecla de atalho,
-or see the @emph{File} menu on the @emph{Main} panel.
+Para criar novas janelas de c@^{a}mera, use a tecla de atalho @kbd{v+},
+ou veja o menu arquivo (@emph{File}) no painel principal (@emph{Main}).
 
 @table @emph
 
 @item Single-Buffering
-Normally, geomview windows are @emph{double-buffered}: geomview draws the
-next picture into a hidden window, then switches buffers to make
-it visible all at once.  On many systems, the memory for the hidden buffer
-comes from stealing half the bits in each screen pixel, reducing the color
-resolution.  When single-buffering is enabled, the window flickers as each
-scene is being drawn, but you may get smoother images with reduced grainy
-dithering artifacts.  Single-buffering is possible if Geomview is compiled with
-GL or OpenGL, but not with plain-X graphics.
+Normalmente, janelas do geomview são armazenadas em áreas de memória duplas (@emph{double-buffered}): geomview desenha a
+figura seguinte em uma janela escondida, então alterna as áreas de memória para fazer
+essa janela completamente visível em algum momento.  Sobre muitos sistemas operacionais, a memória para a área de memória escondida
+vem da apropriação indevida de metade dos bits de cada pixel de tela, reduzindo a resolução de
+cor.  Quando a opção área de memória simples (single-buffering) for habilitada, as películas de tela de cada
+cena está sendo desenhada, mas você pode pegar imagens planas com redução de granularidade
+estremecendo artefatos.  Área de memória simples é possível se Geomview for compilado com
+GL ou com OpenGL, mas não com gráficos desennhados com recursos únicos e exclusivos do X.
 
 @item Dither
-Many displays offer less than the 24 bits per pixel (8 bits each of red, green,
-and blue) conventionally needed to show smooth gradations of color.  
-When trying to show a color not accurately available on the display,
-Geomview normally @emph{dithers}, choosing pixel colors sometimes brighter,
-sometimes darker than the desired value, so that the average color over an area
-is a better approximation to the true color than a single pixel could be.
-Effectively this loses spatial resolution to gain color resolution.
-This isn't always desirable, though.  Turning @emph{Dither} off
-gives less grainy, but less accurately colored, images.
+Muitos monitores oferecem menos que 24 bits por pixel (8 bits apra cada vermelho, verde,
+e azul) convencionalmente suficiente para mostrar gradações de cor simplesmente.  
+Quando tenta mostrar uma cor não acuradamente disponível no monitor,
+Geomview normalmente estremece (@emph{dithers}), modificando as cores do pixel para algumas vezes mais brilhante,
+algumas vezes mais escuro que o valor desejado, de forma que a cor disponível sobre uma área
+é uma melhor aproximação para a cor verdadeira que um pixel simples pode ter.
+Efetivamente perdas de resolução espacial são para ganhar resolução de cor.
+Esse compartamento não é sempre desejável, todavia.  Desabilitando @emph{Dither}
+fornece menor granularidade, mas a precisão de cores é menor, das imagens.
 
 @item Software Shading
-Esse bot@~{a}o controls se Geomview does shading calculations in software.
-The default is to let the hardware handle them, and in Euclidean space
-this is almost certainly best because it is faster.  In hyperbolic and
-spherical space, however, the shading calculations that the hardware
-does are incorrect.  Clique this bot@~{a}o to turn on correct but slower
-software shading.
+Esse bot@~{a}o controla se Geomview faz cálculos de tonalidade via software.
+O padrão é permitir que o hardware manseie esses cálculos, e no espaço Euclideano
+esse caminho é o melhor sempre porque é o caminho mais rápido.  No espaço hiperbólico e
+também no espaço esférico, todavia, os cálculos de tonalidade que o hardware
+faz são incorretos.  Clique sobre esse bot@~{a}o para habilitar a forma correta mas lenta
+do cálculo de tonalidade via software.
 
 @item Background Color
-Esse bot@~{a}o brings up a color chooser which you can use to set the
-background color da camera's window.
+Esse bot@~{a}o faz surgir um modificador de cores que você pode usar para escolher a
+cor de fundo da janela da câmera.
 
 @item PROJECTION
-This browser lets you pick between perspective and orthogonal projection
-for this camera.
+Esse navegador permite a você selecionar entre projeção perspectiva ou projeção ortográfica
+para essa câmera.
 
 @item Near clip
-This determines the distance in world coordinates do near clipping
-plane from the eye point.  It must be a positive number.
+Essa caixa de texto determina a distância nas coordenadas do mundo do próximo plano de
+corte a partir do ponto de visão.  Deve ser um número positivo.
 
 @item Far clip
-This determines the distance in world coordinates do far clipping
-plane from the eye point.  It must be a positive number and in general
-should be larger than the @emph{Near clip} value.
+Essa caixa de texto determina a distância nas coordenadas do mundo do plano de corte
+mais distante a partir do ponto de visão.  Deve ser um número positivo e em geral
+deve ser maior que o valor de @emph{Near clip}.
 
 @item FOV
-This is the camera's field of view, measured in its shorter direction.
-In perspective mode, it is an angle in degrees.  In orthographic mode,
-it is the linear size do field of view.  This number can be modified
-with o mouse in @emph{Cam Zoom} mode.
+Essa caixa de texto é o campo de visão da câmera, medido em sua menor direção.
+No modo perspectiva, essa caixa corresponde a um ângulo em graus.  No modo ortográfico,
+essa caixa de texto corresponde ao tamanho lineardo campo de visão.  Esse número pode ser modificado
+com o mouse no modo @emph{Cam Zoom}.
 
 @item Focal Length
-The focal length is intended to suggest the distance from the c@^{a}mera to
-an imaginary plane of interest.  Its value is used when switching
-between orthographic and perspective views (and during stereo viewing),
-so as to preserve apparent size of objetos lying at the focal distance
-from the camera.  Focal length also affects interpretation of mouse-based
-translational movimentos.  Speed of forward movimento (in translate, fly and
-orbit modes) is proportional to focal length; and objetos lying at the
-focal distance from the c@^{a}mera translate laterally at the same rate as
-o cursor do mouse.  Finally, in N-D projection mode, c@^{a}meras are displaced
-back by the focal distance from the 3-D projection da world origin.
+A distância focal pretende pretende sugerir a distância da c@^{a}mera a
+um plano imaginário de interesse.  Seu valor é usado quando alternamos
+entre as visualizações ortográfica e perspectiva (e durante visualização stereo),
+de forma a preservar o tamanho aparente de objetos sendo desonesto quanto à distância focal
+da câmera.  Distância focal também afeta a interpolação de movimentos de translação
+efetuados usando o mouse.  A velocidade do movimento para adiante (nos modos translação, vôo e
+no modo orbital) é proporcional à distância focal; e objetos desonestos quanto à
+distância focal da c@^{a}mera translacionam lateralmente na mesma razão que
+o cursor do mouse.  Finalmente, no modo de projeção N-Dimencional, c@^{a}meras são substituídas
+de volta através da distância focal a partir da projeção tridimensional a partir da orígem do objeto mundo.
 
 @item Lines Closer
 This number has to do with the way lines are drawn.  Normally Geomview's
