@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.46/Sat Sep  8 12:11:05 2007//
+@c based on /geomview.texi/1.48/Tue Sep 25 23:09:21 2007//
 @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -1901,7 +1901,7 @@ Cada face do objeto @'{e} desenhada com as cores exatamente especificada(s),
 independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e porpriedades de material.  Se o
 objeto for definido com cores por v@'{e}rtice, as cores ser@~{a}o interpoladas
 lisamente ao longo da face; de outra forma o efieto @'{e} o mesmo que ocorre no
-estilo de tonalidade "0Constant".
+estilo de tonalidade "Constant".
 
 @end table
 
@@ -2194,13 +2194,13 @@ esfera unit@'{a}ria.
 @end table
 
 @item Draw Sphere
-This controls se Geomview draws the unit sphere.  By default the
-unit sphere appears in the projective and conformal models.  In
-hyperbolic space this is the sphere at infinity.  In spherical space it
-is the equatorial sphere.
+Essa op@,{c}@~{a}o controla se Geomview desenha a esfera unit@'{a}ria ou n@~{a}o.  Por padr@~{a}o a
+esfera unit@'{a}ria aparece no modelo projetivo e no modelo conformal.  No
+espa@,{c}o hiperb@'{o}lico a esfera @'{e} colocada no infinito.  No espa@,{c}o esf@'{e}rico corresponde
+@`{a} esfera equatorial.
 
 @item Done
-Esse bot@~{a}o dismisses the @emph{Cameras} panel.
+Esse bot@~{a}o dispensa o painel de @emph{Cameras}.
 
 @end table
 
@@ -2208,80 +2208,80 @@ Esse bot@~{a}o dismisses the @emph{Cameras} panel.
 @node Saving, Commands, Cameras, Interaction
 @section Saving your work
 
-Geomview's @emph{Save} panel lets you store Geomview objetos and other
-information in files that you can read back into Geomview or other
-programs.
+O painel @emph{Save} do Geomview permite a voc@^{e} armazenar objetos do Geomview e outra
+informa@,{c}@~{a}o em arquivos que voc@^{e} pode recuperar dentro do Geomview ou a partir de outros
+programas.
 @float Figure,figsavepanel
 @image{figs/save}
 @caption{O Painel Gravar.}
 @end float
-To use the @emph{Save} panel you select the desired format in the
-browser next to the word @emph{Save}, enter the name do objeto you
-want to save in the text field next to the word @emph{for}, and enter
-the name do file you wish to save to in the long text field next to
-the word @emph{in}.  You can then either hit @kbd{@key{Enter}} or clique
-on the @emph{OK} bot@~{a}o.  When the file has been written, the @emph{Save}
-panel disappears.  If you want to dismiss the @emph{Save} panel without
-writing a file, clique the @emph{Cancel} bot@~{a}o.
+Para usar o painel @emph{Save} voc@^{e} seleciona o formato desejado no
+navegador perto da palavra @emph{Save}, informe o nome do objeto que voc@^{e}
+quer gravar no campo de texto perto da palavra @emph{for}, e informe
+o nome do local no qual voc@^{e} deseja gravar o arquivo no campo longo de texto perto
+da palavra @emph{in}.  Voc@^{e} pode ou pressionar @kbd{@key{Enter}} ou clicar
+sobre o bot@~{a}o @emph{OK}.  Quando o arquivo tiver sido gravado no local desejado, o painel 
+@emph{Save} desaparecer@'{a}.  Caso voc@^{e} queira dispensar o painel @emph{Save} sem
+gravar um arquivo, clique no bot@~{a}o @emph{Cancel}.
 
-If you specify @file{-} as the file name, Geomview will write the file
-to standard output, i.e. in the shell window from which you invoked
+Caso voc@^{e} especifique @file{-} como nome de arquivo, Geomview mostrar gravar o arquivo
+a sa@'{i}da padr@~{a}o, i.e. na janela de shell a partir da qual voc@^{e} invocou o
 Geomview.
 
-The possible formats are given below.  The kind of objeto that can
-be written with each format is given in parentheses.
+Os poss@'{i}veis formatos s@~{a}o fornecidos abaixo.  O tipo de objeto que pode
+ser escrito com cada formato @'{e} fornecido entre par@^{e}ntesis.
 
 @table @emph
 
-@item Commands @asis{(any objeto)}
-This write a file of GCL commands containing all information about
-the objeto.  Loading this file later will restore the objeto as well as
-all other information about it, such as appearance, transformations,
+@item Commands @asis{(qualquer objeto)}
+A op@,{c}@~{a}o "Commands" escreve um arquivo de comandos GCL contendo todas as informa@,{c}@~{o}es sobre
+o objeto.  Chamando o arquivo posteriormente ir@'{a} restaurar o objeto bem como
+todas as outras informa@,{c}@~{o}es sobre o referido objeto, tais como apar@^{e}ncia, transforma@,{c}@~{o}es,
 etc.
 
 @item Geometry alone @asis{(geom)}
-This writes an OOGL file containing just the geometry do objeto.
+A op@,{c}@~{a}o "Geometry alone" escreve um arquivo OOGL contendo apenas a geometria do objeto.
 
 @item Geometry [in world] @asis{(geom)}
-This writes an OOGL file containing just the geometry do objeto,
-transformed under Geomview's current transformation for this objeto.
-Use this if you have moved the objeto from its initial position and want
-to save the new position relative to the world.
+A op@,{c}@~{a}o "Geometry [in world]" escreve um arquivo OOGL contendo a geometria do objeto,
+transformado sob a transforma@,{c}@~{a}o atual do Geomview para esse objeto.
+Use a op@,{c}@~{a}o "Geometry [in world]" caso voc@^{e} tenha movido o objeto de sua posi@,{c}@~{a}o inicial e queira
+a nova posi@,{c}@~{a}o em rela@,{c}@~{a}o ao mundo.
 
 @item Geometry [in universe] @asis{(geom)}
-This writes an OOGL file containing just the geometry do geom,
-transformed under both the objeto's transformation and the world's
-transformation.
+A op@,{c}@~{a}o "Geometry [in universe]" grava um arquivo OOGL contendo apenas a geometria do geom,
+transformado sob transforma@,{c}@~{o}es sofridas pelo objeto e tamb@'{e}m sob transforma@,{c}@~{o}es sofridas
+pelo mundo.
 
 @item RMan [->tiff] @asis{(camera)}
-Writes a RenderMan file which when rendered creates a tiff
-image. Transparency and texturing (the latter only to some extent) will
-be available.
+A op@,{c}@~{a}o "RMan [->tiff]" escreve um arquivo que quando for renderizado cria uma im@'{a}gem
+tiff. Transpar@^{e}ncia e textura (a mais recente somente at@'{e} certo ponto) estar@'{a}
+dispon@'{i}vel.
 
 @item RMan [->frame] @asis{(camera)}
-Writes a RenderMan file which when rendered causes an image to appear in
-a window on the screen. Transparency and texturing (the latter only to
-some extent) will be available.
+A op@,{c}@~{a}o "RMan [->frame]" escreve um arquivo RenderMan que quando for rederizado faz com que uma imagem apare@,{c}a em
+uma janela na tela. Transpar@^{e}ncia e textura (a mais recente somente at@'{e}
+certo ponto) estar@'{a} dispon@'{i}vel.
 
 @item SGI snapshot @asis{(camera)}
-Write an SGI raster file.  A bell rings when the snapshot is complete.
-Only available on SGI systems.
+A op@,{c}@~{a}o "SGI snapshot" escreve um arquivo de varredura SGI.  Uma campainha toca quando o instant@^{a}neo for completado.
+Somente dispon@'{i}vel em sistemas SGI.
 
 @item PPM GLX-offscreen snapshot @asis{(camera)}
-Render the complete scene anew into off-screen memory; GLX provides the
-means to use a Pixmap as rendering area. The advantage of rendering into
-@emph{off}-screen memory over taking screen snapshot is that the camera
-windows need not be mapped and even raised at the time the snapshot is
-taken. So with off-screen snapshot one can safely iconify the camera
-window (but do not close it!), activate the screen-saver and go to bed
-while some script advances the scenes and takes snapshots.
+Renderiza uma cena completa novamente dendo da mem@'{o}ria off-screen; GLX fornece os
+meios para usar um Pixmap como @'{a}rea de renderiza@,{c}@~{a}o. A vantagem de renderizar dentro
+da mem@'{o}ria @emph{off}-screen em rela@,{c}@~{a}o a pegar um instant@^{a}neo de tela @'{e} que a janela
+de c@^{a}mera n@~{a}o precisa ser mapeada e tamb@'{e}m n@~{a}o precisa aparece na hora do intant@^{a}neo @'{e}
+realizado. De forma que com o intant@^{a}nei off-screen se pode seguramente colocar a janela de c@^{a}mera don formato
+de @'{i}cone (mas n@~{a}o fech@'{a}-la!), ativar a prote@,{c}@~{a}o de tela e ir dormir
+enquanto algum script avan@,{c}a as cenas e grava os instant@^{a}neos.
 
 @item PPM Screen snapshot @asis{(camera)}
-Take a snapshot da given window and save it as a PPM image.
-If you specify a string beginning with a vertical bar (@kbd{|})
-as the file name, it's interpreted as a Bourne shell command
-to which the PPM data should be piped, as in
-@samp{| pnmtotiff > snap.tiff} or @samp{| convert -geometry 50% ppm:- snap.gif}.
+Grava os instant@^{a}neos a partir da janela fornecida e grava no formato de imagem PPM.
+Se voc@^{e} especificar uma seq@"{u}@^{e}ncia de caracteres come@,{c}ando com um barra vertical (@kbd{|})
+como nome de arquivo, isso @'{e} interpretado com um ocmando de redirecionmento do shell
+para o qual os dados do PPM dever@~{a}o ser canalizados, como em
+@samp{| pnmtotiff > snap.tiff} ou em @samp{| convert -geometry 50% ppm:- snap.gif}.
 
 PPM screen snapshots are only available with GL and Open GL, not plain X
 graphics.  The window should be entirely on the screen.  Geomview will
@@ -6365,7 +6365,7 @@ the universe, in which the World, lights and c@^{a}meras live.  C@^{a}meras'
 world2cam transforms might better be called universe2cam, etc.
 
 @item self
-"this Geomview objeto".  Transform from an objeto to @code{self} is the
+"this objeto do Geomview".  Transform from an objeto to @code{self} is the
 identity; writing its geometry gives the objeto itself with no
 enclosing transform; picked points appear in the objeto's coordinates.
 
@@ -8862,7 +8862,7 @@ In[3] := Plot3D[@{x*y + 6, RGBColor[0,x,y]@}, @{x,0,1@}, @{y,0,1@}]
 Out[3] := -SurfaceGraphics-
 @end example
 @noindent
-This replaces the previous Geomview objeto by the new objeto. 
+This replaces the previous objeto do Geomview by the new objeto. 
 @example
 In[4] := Geomview[@{%2,%3@}]
 
