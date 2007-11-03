@@ -2268,7 +2268,7 @@ A op@,{c}@~{a}o "SGI snapshot" escreve um arquivo de varredura SGI.  Uma campain
 Somente dispon@'{i}vel em sistemas SGI.
 
 @item PPM GLX-offscreen snapshot @asis{(camera)}
-Renderiza uma cena completa novamente dendo da mem@'{o}ria off-screen; GLX fornece os
+Renderiza uma cena completa novamente dentro da mem@'{o}ria off-screen; GLX fornece os
 meios para usar um Pixmap como @'{a}rea de renderiza@,{c}@~{a}o. A vantagem de renderizar dentro
 da mem@'{o}ria @emph{off}-screen em rela@,{c}@~{a}o a pegar um instant@^{a}neo de tela @'{e} que a janela
 de c@^{a}mera n@~{a}o precisa ser mapeada e tamb@'{e}m n@~{a}o precisa aparece na hora do intant@^{a}neo @'{e}
@@ -2283,50 +2283,50 @@ como nome de arquivo, isso @'{e} interpretado com um ocmando de redirecionmento 
 para o qual os dados do PPM dever@~{a}o ser canalizados, como em
 @samp{| pnmtotiff > snap.tiff} ou em @samp{| convert -geometry 50% ppm:- snap.gif}.
 
-PPM screen snapshots are only available with GL and Open GL, not plain X
-graphics.  The window should be entirely on the screen.  Geomview will
-ensure that no other windows cover it while the snapshot is taken. It is
-probably a better idea to use GLX-@emph{off-screen} snapshots, as
-explained above.
+Instant@^{a}neos de tela PPM est@~{a}o somente dispon@'{i}veis com GL e open GL, n@~{a}o com gr@'{a}ficos 
+X somente.  A janela pode ocupar inteiramente tela.  Geomview ir@'{a}
+garantir que n@~{a}o aja outras janelas seja copiada enquanto o instant@^{a}neo @'{e} gravado. Esse comportamento @'{e}
+provavelmente o melhor usar instant@^{a}neos GLX-@emph{off-screen}, como
+acima exposto.
 
 @item PPM software snapshot @asis{(camera)}
-Writes a snapshot of that window's current view, as a PPM image, to the
-given file.  The file name may be a Bourne shell command preceded by a vertical
-bar (@kbd{|}), as with the PPM screen snapshot.  The software snapshot, though,
-is produced by using a built-in software renderer (related to the X-windows
-renderer).  It doesn't matter se the window is visible or not,
-and doesn't depend on GL or OpenGL.  It also doesn't support some features,
-such as texture mapping.
+Escreve um instant@^{a}neo da janela atualmente visualizada, como uma imagem PPM, apra o
+arquivo fornecido.  O nome do arquivo pode ser um comando do shell Bourne precedido por uma barra
+vertical (@kbd{|}), da mesma forma que com o inst@^{a}nt@^{a}neo de tela PPM (PPM screen snapshot).  O instant@^{a}neo de software, apesar disso,
+@'{e} produzido atrav@'{e}s do uso de software renderizador interno (relacionado ao renderizador do
+sistema X-window).  N@~{a}o @'{e} importante se a janela est@'{a} vis@'{i}vel ou n@~{a}o,
+e @'{e} independente do GL ou do OpenGL.  Tamb@'{e}m essa op@,{c}@~{a}o n@~{a}o suporta alguns recursos,
+tais como mapeamento de textura.
 
 @item Postscript snapshot @asis{(camera)}
-Writes a Postscript snapshot da camera's view.  It's made by
-breaking up the scene into lines and polygons, sorting by depth, and
-generating Postscript lines and polygons for each one.  Advantages over
-pixel-based snapshot images: resolution is very high, so edges
-look sharp even on high-resolution printers, or comparable-resolution images
-are typically much more compact.  Disadvantages: depth-sorting
-gives good results on some scenes, but can be wildly wrong as a hidden-surface
-removal algorithm for other scenes.  Also, Postscript doesn't offer
-smoothly interpolated shading, only flat shading for each facet.
+Escreve um instant@^{a}neo Postscript da vis@~{a}o da c@^{a}mera.  O instant@^{a}neo @'{e} feito atrav@'{e}s
+decompondo a cena em linhas e pol@'{i}gonos, ordenando por intensidade, e
+gerando linhas no formato Postscript e pol@'{i}gonos para cada uma.  Vantagens desse processo sobre
+o processo baseado em pixes do instant@^{a}neo de imagens: a resolu@,{c}@~{a}o @'{e} muito alta, de forma que arestas
+parecem na posi@,{c}@~{a}o correta mesmo em impressoras de alta resolu@,{c}@~{a}o, ou imagens de resolu@,{c}@~{a}o compar@'{a}vel
+s@~{a}o tipicamente muito mais compactas.  Desvantagens: ordena@,{c}@~{a}o por intensidade
+fornece bons resultados em algumas cenas, mas pode ser grandemente ruim como no algor@'{i}tmo de remo@,{c}@~{a}o
+de cenas ocultas em outras cenas.  Tamb@'{e}m, Postscript n@~{a}o oferece
+sombreamento interpolado linear, somente sombreamento linear simples para cada faceta.
 
 @item Camera @asis{(camera)}
-Writes an OOGL file of a camera.
+Escreve um arquivo OOGL de uma c@^{a}mera.
 
-@item Transform [to world] @asis{(any objeto)}
-Writes an OOGL transform file giving Geomview's transform for the objeto.
+@item Transform [to world] @asis{(qualquerobjeto)}
+Escreve um arquivo de transforma@,{c}@~{a}o OOGL fornecendo transforma@,{c}@~{a}o do Geomview para o objeto.
 
-@item Transform [to universe] @asis{(any objeto)}
-Writes an OOGL transform file giving a transform which is the
-composition of Geomview's transform for the objeto and the transform for
-the world.
+@item Transform [to universe] @asis{(qualquerobjeto)}
+Escreve um arquivo de transforma@,{c}@~{a}o OOGL fornecendo uma transforma@,{c}@~{a}o que @'{e} a
+composi@,{c}@~{a}o de transforma@,{c}@~{a}o do Geomview para o objeto e a transforma@,{c}@~{a}o sofrida
+pelo mundo.
 
 @item Window @asis{(camera)}
-Writes an OOGL window file for a camera.
+Escreve um arquivo de janela OOGL para uma c@^{a}mera.
 
 @item Panels
-Writes a GCL file containing commands which record
-the state of all the Geomview panels.  Loading this file later will
-restore the positions of all the panels.
+Escreve um arquivo GCL contendo comandos que gravam
+o estado de todos os pain@'{e}is do Geomview.  Chamando esse arquivo posteriormente ir@'{a}
+restaurar as posi@,{c}@~{o}es de todos os pain@'{e}is.
 
 @end table
 
