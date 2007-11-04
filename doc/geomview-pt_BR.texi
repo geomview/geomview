@@ -2062,7 +2062,7 @@ para modificar a apar@^{e}ncia de base (a qual, exceto para ilumina@,{c}@~{a}o, 
 modificada atrav@'{e}s de pain@'{e}is do Geomview).  O comando @code{merge-ap} pode ser usado
 para modificar a apar@^{e}ncia de um geom individualmente.  Apar@^{e}ncias podem tamb@'{e}m serem
 especificadas nos arquivos OOGL; para detalhes veja,
-@ref{Appearances}. @ef{merge-baseap,@code{(merge-baseap
+@ref{Appearances}. @ref{merge-baseap,@code{(merge-baseap
 @dots{})}}. @ref{merge-ap,@code{(merge-ap @dots{})}}.
 
 
@@ -2334,63 +2334,63 @@ restaurar as posi@,{c}@~{o}es de todos os pain@'{e}is.
 @node Commands, Keyboard Shortcuts, Saving, Interaction
 @section The Commands Panel
 
-The @emph{Commands} panel lets you type in a GCL command.  When
-you hit @kbd{@key{Enter}}, Geomview interprets the command and prints any
-resulting output or error messages on standard output.  You can edit the
-text and hit @kbd{@key{Enter}} as many times as you like, in general,
-whenever you hit @kbd{@key{Enter}} with the cursor in the @emph{Commands}
-panel, Geomview tries to interpret whatever text you have typed in the
-text field as a command.
+O painel de comandos (@emph{Commands}) permite a voc@^{e} digitar comandos GCL.  Quando
+voc@^{e} pressionar @kbd{@key{Enter}}, Geomview interpreta o comando e imprime qualquer
+sa@'{i}da resultante ou uma mensagens de erro para a sa@'{i}da padr@~{a}o.  Voc@^{e} pode editar o
+texto e pressionar @kbd{@key{Enter}} tantas vezes quantas voc@^{e} quiser, em geral,
+mesmo que voc@^{e} pressione (@kbd{@key{Enter}}) com o cursor no painel de
+comandos ( @emph{Commands}), Geomview tenta interpretar se aquele texto que voc@^{e} tiver digitado no
+campo de texto como um comando.
 @float Figure,figcommandpanel
 @image{figs/command}
 @caption{O Painel de Comandos.}
 @end float
 
 @ifset forms
-The @emph{Obscure} panel is for relatively obscure things that don't
-really belong on any dos other panels.  In the present version of
-Geomview, the @emph{Obscure} panel includes the @emph{NORMALIZE GEOMETRY}
-browser, which controls the kind of geometry normalization that Geomview does,
-and several bot@~{o}es affecting movimento style.
+O painel obscuro (@emph{Obscure}) @'{e} para coisas relativamente obscuras que n@~{a}o
+pertencem realmente a qualquer dos outros paine@'{e}is.  Na atual vers@~{a}o do
+Geomview, o painel obscuro (@emph{Obscure}) inclui o navegador 
+@emph{NORMALIZE GEOMETRY}, que controla o tipo de normaliza@,{c}@~{a}o de geometria que Geomview faz,
+e muitos bot@~{o}es que afetam estilo de movimento.
 @float Figure,figobscurepanel
 @image{figs/obscure}
-@caption{The Obscure Panel.}
+@caption{O painel Obscuro.}
 @end float
 @end ifset
 [Move this.]
-Normalization is a kind of scaling; Geomview can scale an objeto so that
-it fits within a certain region.  The main point of normalization is to
-allow you to easily view all of an objeto without having to worry about
-how big it is.  We are gradually replacing Geomview's normalization
-feature with more robust c@^{a}mera positioning features.  In general, the
-best way to make sure you are seeing all of an objeto is to use the
-@emph{Look At} bot@~{a}o on the @emph{Tools} panel.  Normalization may
-be completely replaced by this and other features in a future version of
+Normaliza@,{c}@~{a}o @'{e} um tipo de homotetia; Geomview pode alterar o tamanho de um objeto proporcionalmente de forma que
+esse objeto se ajuste dentro de uma certa regi@~{a}o.  O objetivo principal da normaliza@,{c}@~{a}o @'{e}
+permitir a voc@^{e} facilmente visualizar um objeto sem ter que se preocupar com
+o tamanho do mesmo.  Estamos substituindo gradualmente o recurso de normaliza@,{c}@~{a}o
+do Geomview por recursos mais robustos de posicionamento de c@^{a}mera.  Em geral, o
+melhor caminho de garantir que voc@^{e} est@'{a} vendo tudo de um objeto @'{e} usar o
+bot@~{a}o @emph{Look At} do painel de ferramentas (@emph{Tools}).  A normaliza@,{c}@~{a}o pode
+ser completamente substitu@'{i}da por esse bot@~{a}o do painel de ferramentas e por outros recursos em uma vers@~{a}o futura do
 Geomview.
 
-Normalization is a property that applies to each geom separately.  The
-@emph{NORMALIZE GEOMETRY} browser affects the normalization property
-of target geom.  If the target geom is "World", it affects all geoms.
+Normaliza@,{c}@~{a}o @'{e} uma propriedade que aplica-se a cada geom separadamente.  o
+navegador @emph{NORMALIZE GEOMETRY} afeta a propriedade de normaliza@,{c}@~{a}o
+do geom alvo.  Se o geom alvo for "World", a normaliza@,{c}@~{a}o afetar@'{a} todos os geoms.
 
 @table @emph
 
 @item None
-Do no normalization.
+Sem normaliza@,{c}@~{a}o.
 
 @item Individual
-Normalize this geom to fit within a unit sphere.
+Normaliza o geom atual para ajustar-se dentro de uma esfera unit@'{a}ria.
 
 @item Sequence
-This resembles "Individual", except when an objeto is changing.  Then,
-"Individual" tightly fits the bounding box around the objeto whenever it
-changes and normalizes accordingly, while "Sequence" normalizes the
-union of all variants do objeto and normalizes accordingly.
+Assemelha-se a "Individual", exceto quando um objeto est@'{a} mudando.  Ent@~{a}o,
+"Individual" com muita precis@~{a}o ajusta a caixa associada em torno do objeto quando esse objeto
+modifica-se e normaliza-se adequadamente, enquanto "Sequence" normaliza a
+uni@~{a}o de todas as variantes do objeto e normaliza adequadamente.
 
 @item Keep
-This leaves the current normalization transform unchanged when the
-objeto changes.  It may be useful to apply "Individual" or "Sequence"
-normalization to the first version of a changing objeto to bring
-it in view, then switch to "Keep".
+Mantem a transforma@,{c}@~{a}o de normaliza@,{c}@~{a}o inalterada quando o
+objeto modifica-se.  @emph{Keep} pode ser @'{u}til para aplicar a normaliza@,{c}@~{a}o "Individual" ou a normaliza@,{c}@~{a}o
+"Sequence" @`{a} primeira vers@~{a}o de um objeto que se modifica para trazer
+esse mesmo objeto ao campo de vis@~{a}o.
 
 @end table
 
@@ -2398,53 +2398,53 @@ it in view, then switch to "Keep".
 @node Keyboard Shortcuts,  , Commands, Interaction
 @section Keyboard Shortcuts
 
-Most actions that you can do through Geomview's panels have equivalent
-teclas de atalho so that you can do the same action by typing a
-sequence of keys on the keyboard.  This is useful for advanced users who
-are familiar with Geomview's capabilities and want to work quickly
-without having to have lots of panels cluttering up the screen.
-Keyboard shortcuts usually are indicated in square brackets ([ ]) near
-the corresponding item in a panel.  For example, the tecla de atalho
-for @emph{Rotate} mode is 'r'; this is indicated by "[r]" appearing
-before the word "Rotate" in the @emph{MOTION MODE} browser.  To
-use this tecla de atalho just hit the @kbd{r} key while o mouse
-cursor is in any Geomview window.  You don't need to press the @kbd{@key{Enter}}
-or @kbd{@key{SPACE}} keys.
+A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possui as equivalentes
+teclas de atalho de forma que voc@^{e} pode fazer a mesma a@,{c}@~{a}o digitando uma
+seq@"{u}@^{e}ncia de teclas usando o teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
+forem familiarizados com as capacidades do Geomview e que queiram trabalhar rapidamente
+sem ter montes de pain@'{e}is confundindo a tela.
+Teclas de atalho comumente s@~{a}o indicadas entre colch@^{e}tes ([ ]) pr@'{o}ximo
+ao item correspondente em um pain@'{e}l.  Por exemplo, a tecla de atalho
+para o modo de rota@,{c}@~{a}o (@emph{Rotate}) @'{e} 'r'; isso @'{e} indicado por "[r]" aparecendo
+antes da palavra "Rotate" no navegador @emph{MOTION MODE}.  Para
+utilizar essa tecla de atalho apenas pressione a tecla @kbd{r} enquanto o cursor do
+mouse estiver sobre qualqer janela do Geomview.  Voc@^{e} n@~{a}o precisa pressionar a tecla @kbd{@key{Enter}}
+ou teclas de @kbd{@key{SPACE}}.
 
-Some teclas de atalho consist of more than one key.  In these cases
-just type the keys one after the other, with no @kbd{@key{Enter}}
-afterwards.  Keyboard shortcuts are case sensitive.  You can cancel a
-multi-key tecla de atalho that you have started by typing any invalid
-key, for example the space bar.
+Alguns atalhos consistem de mais que uma tecla.  Nesses casos
+apenas digite as teclas indicadas uma ap@'{o}s a outra e na ordem indicada, sem @kbd{@key{Enter}}
+ap@'{o}s cada tecla.  Atalhos de teclado s@~{a}o sens@'{i}veis @`{a} caixa alta/baixa.  Voc@^{e} pode cancelar
+atalhos compostos por v@'{a}rias teclas que voc@^{e} tiver iniciado a digita@,{c}@~{a}o digitando qualquer tecla
+inv@'{a}lida como de atalho, por exemplo a barra de espa@,{c}o.
 
-Keyboard commands apply while the cursor is in any janela de c@^{a}mera and
-most control panels.
+Comandos de teclado aplicam-se enquanto o cursor estiver em qualquer janela de c@^{a}mera e
+na maioria dos pain@'{e}is de controle.
 
-Many teclas de atalho allow numeric arguments which you type as a
-prefix to the command key(s).  For example, the shortcut for
-@emph{Near clip} in the c@^{a}mera panel is @kbd{v n}.  To set the near
-clip plane to @samp{0.5}, type @kbd{0.5vn}.  Commands that don't take a
-numeric prefix toggle or reset the current value.
+Muitas teclas de atalho permitem argumentos num@'{e}ricos que voc@^{e} digitarcomo um
+prefixo a tecla(s) de comando.  Por exemplo, a tecla de atalho para
+@emph{Near clip} no painel de c@^{a}mera @'{e} @kbd{v n}.  Para escolher o pr@'{o}ximo
+plano de corte para @samp{0.5}, digite @kbd{0.5vn}.  Comandos que n@~{a}o pegam um
+prefixo num@'{e}rico modificam ou mudam para zero o valor atual.
 
-Most commands allow one dos following selection prefixes.  If none is
-provided the command applies to the objeto alvo.
+A maioria dos comando permitem um dos seguintes prefixos de sele@,{c}@~{a}o.  Se nenhum objeto for
+fornecido o comando aplica-se ao objeto alvo.
 
 @table @kbd
 @item g
-world geom	
+objeto geom@'{e}trico mundo ("world")
 @item g#
-#'th geom
+#'@'{e}simo objeto geom@'{e}trico ("geom")
 @item g*
-All geoms
+Todos os objetos geom@'{e}tricos ("geoms")
 @item c
-current camera
+c@^{a}mera atual
 @item c#
-#'th camera
+#'@'{e}sima c@^{a}mera
 @item c*
-All c@^{a}meras
+Todas as c@^{a}meras
 @end table
 
-For example, @kbd{g4af} means toggle the face drawing of objeto
+Por exemplo, @kbd{g4af} significa modifique a face desenhada do objeto
 @emph{g4}.
 
 Simply typing a selection prefix, like @kbd{g4}, doesn't yet select an objeto;
