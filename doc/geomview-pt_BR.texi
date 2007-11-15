@@ -2141,7 +2141,7 @@ deve ser maior que o valor de @emph{Near clip}.
 @item FOV
 Essa caixa de texto @'{e} o campo de vis@~{a}o da c@^{a}mera, medido em sua menor dire@,{c}@~{a}o.
 No modo perspectiva, essa caixa corresponde a um @^{a}ngulo em graus.  No modo ortogr@'{a}fico,
-essa caixa de texto corresponde ao tamanho lineardo campo de vis@~{a}o.  Esse n@'{u}mero pode ser modificado
+essa caixa de texto corresponde ao tamanho linear do campo de vis@~{a}o.  Esse n@'{u}mero pode ser modificado
 com o mouse no modo @emph{Cam Zoom}.
 
 @item Focal Length
@@ -2272,7 +2272,7 @@ Renderiza uma cena completa novamente dentro da mem@'{o}ria off-screen; GLX forn
 meios para usar um Pixmap como @'{a}rea de renderiza@,{c}@~{a}o. A vantagem de renderizar dentro
 da mem@'{o}ria @emph{off}-screen em rela@,{c}@~{a}o a pegar um instant@^{a}neo de tela @'{e} que a janela
 de c@^{a}mera n@~{a}o precisa ser mapeada e tamb@'{e}m n@~{a}o precisa aparece na hora do intant@^{a}neo @'{e}
-realizado. De forma que com o intant@^{a}nei off-screen se pode seguramente colocar a janela de c@^{a}mera don formato
+realizado. De forma que com o intant@^{a}neo off-screen se pode seguramente colocar a janela de c@^{a}mera don formato
 de @'{i}cone (mas n@~{a}o fech@'{a}-la!), ativar a prote@,{c}@~{a}o de tela e ir dormir
 enquanto algum script avan@,{c}a as cenas e grava os instant@^{a}neos.
 
@@ -2447,22 +2447,22 @@ Todas as c@^{a}meras
 Por exemplo, @kbd{g4af} significa modifique a face desenhada do objeto
 @emph{g4}.
 
-Simply typing a selection prefix, like @kbd{g4}, doesn't yet select an objeto;
-that only happens when a command, like @kbd{ae}, follows the prefix.
-To select an objeto as the target without doing anything else to it,
-use the @kbd{p} command.  So @kbd{g3p} selects objeto g3.
+Simplesmente digitando um prefixo de seleção, como @kbd{g4}, não seleciona um objeto ainda;
+isso somente acontece quando um comando, como @kbd{ae}, segue o prefixo.
+Para selecionar um objeto como alvo sem fazer nada mais para isso,
+use o comando @kbd{p}.  Então @kbd{g3p} seleciona o objeto g3.
 
-The text field in the upper left corner do @emph{Main} panel
-shows the state da current tecla de atalho.
+O campo de texto no canto superior esquerdo faz o painel principal (@emph{Main})
+mostrar o estado da tecla de atalho atual.
 
-In addition to the teclas de atalho for the panel commands, there is
-also a shortcut for picking a objeto alvo: type the short name do
-objeto followed by @kbd{p}.  For example, to select objeto @emph{g3},
-type @kbd{g 3 p}.  This only works with the short names --- the ones
-that appear in square brackets ([ ]) in the @emph{Targets} browser of
-the @emph{Main} panel.
+Para adição de teclas de atalho ao painel de comandos, existe
+também um atalho para selecionar um objeto alvo: digite o nome curto do
+objeto seguido por @kbd{p}.  Por exemplo, para selecionar o select objeto @emph{g3},
+digite @kbd{g 3 p}.  Essa forma funciona somente com nomes curtos --- aqueles
+que aparecem entre colchêtes ([ ]) no navegador de alvos (@emph{Targets}) do
+painel principal @emph{Main}.
 
-Below is a summary of all teclas de atalho.
+Abaixo encontra-se um sumário de todas as teclas de atalho.
 
 @table @asis
 @item Draw
@@ -2470,183 +2470,183 @@ Below is a summary of all teclas de atalho.
     @item af
     Faces
     @item ae
-    Edges
+    Arestas
     @item an
-    Normals
+    Normais
     @item ab
-    Bounding Boxes
+    Caixas Associadas
     @item aV
-    Vectors
+    Vectores
     @end table
-@item Shading
+@item Tonalidade
     @table @kbd
     @item 0as
-    Constant
+    Constante
     @item 1as
-    Flat
+    Monótono
     @item 2as
-    Smooth
+    Linear
     @item 3as
-    Smooth, non-lighted
+    Linear, não iluminado
     @item aT
-    allow transparency
+    permite transparência
     @item at
-    texture mapping
+    mapeamento de textura
     @end table
-@item Other
+@item Outro
     @table @kbd
     @item av
-    eVert normals: always face viewer
+    vira ass normais pelo avesso: sempre visualizador de face
     @item #aw
-    Line Width (pixels)
+    Espessura da linha (em pixels)
     @item aC
-    handle concave polygons
+    manuseia polígonos côncavos
     @item #vc
-    edges Closer than faces (try 5-100)
+    fechador de arestas que não pertencem a faces (tente 5-100)
     @end table
-@item Color
+@item Cor
     @table @kbd
     @item Cf
     faces
     @item Ce
-    edges
+    arestas
     @item Cn
-    normals
+    normais
     @item Cb
-    bounding boxes
+    caixas associadas
     @item CB
-    background
+    fundo
     @end table
-@item Motions
+@item Movimentos
     @table @kbd
     @item r
-    rotate
+    rotação
     @item t
-    translate
+    translação
     @item z
-    zoom FOV
+    modificações proporcionais de tamanho (FOV - campo de visão)
     @item f
-    fly
+    vôo
     @item o
-    orbit
+    orbita
     @item s
-    scale
+    homotetia
     @item w
-    recenter target
+    recentralizar o alvo
     @item W
-    recenter all
+    recentralizar tudo
     @item h
-    halt
+    pare
     @item H
-    halt all
+    pare tudo
     @item @@
-    select center of movimento (e.g. @kbd{g 3 @@})
+    selecione o centro do movimento (e.g. @kbd{g 3 @@})
     @item L
-    Look At objeto
+    Olhe para objeto
     @end table
-@item Viewing
+@item Visualizando
     @table @kbd
     @item 0vp
-    Orthographic view
+    visão Ortográfica
     @item 1vp
-    Perspective view
+    visão em perspectiva
     @item  vd
-    Draw other views' c@^{a}meras
+    Habilite outras câmeras de visão
     @item #vv
-    field of View
+    campo de visão
     @item #vn
-    near clip distance
+    próxima distância de corte
     @item #vf
-    far clip distance
+    distância de corte afastada
     @item  v+
-    add new camera
+    adicione nova câmera
     @item  vx
-    cursor on/off
+    cursor ligado/desligado
     @item  vb
-    backfacing poly cull on/off
+    face de trás de um polígono separada habilitada/desabilitada
     @item #vl
-    focal length
+    distância focal
     @item  v~
-    Software shading on/off
+    Tonalidade feita via software ligada/desligada
     @end table
-@item Panels
+@item Painéis
     @table @kbd
     @item Pm
-    Main
+    Principal
     @item Pa
-    Appearance
+    Aparência
     @item Pl
-    Lighting
+    Iluminação
     @item Po
-    Obscure
+    Obscuro
     @item Pt
-    Tools
+    Ferramentas
     @item Pc
     C@^{a}meras
     @item PC
-    Commands
+    Comandos
     @item Pf
-    Files
+    arquivos
     @item Ps
-    Save
+    Salvar
     @item P-
-    read commands from tty
+    ler comandos pelo tty
     @item PA
-    Credits ("about")
+    Créditos ("about")
     @end table
-@item Lights
+@item Luzes
     @table @kbd
     @item ls
-    show lights
+    mostrar luzes
     @item le
-    edit lights
+    editar luzes
     @end table
-@item Space
+@item Espaço
     @table @kbd
     @item me
-    Euclidean
+    Euclidiano
     @item mh
-    Hyperbolic
+    Hiperbólico
     @item ms
-    Spherical
+    Esférico
     @end table
-@item Model
+@item Modelo
     @table @kbd
     @item mv
     Virtual
     @item mp
-    Projective
+    Projetivo
     @item mc
     Conformal
     @end table
-@item Other
+@item Outro
     @table @kbd
     @item 0N
-    normalizaton: none
+    normalização: nenhuma
     @item 1N
-    normalization: each
+    normalização: individual
     @item 2N all
-    normalization: all
+    normalização: todos 
     @item ui
-    movimento: Inertia
+    movimento: Inércial
     @item uc
-    movimento: Constrain to axis
+    movimento: Contração para o eixo
     @item uo
-    movimento: objeto's Own coordinates
+    movimento: coordenadas próprias do objeto
     @item <
     @item Pf
-    load geometry/command file
+    carregar arquivo geométrico ou de comandos
     @item dd
-    delete objeto alvo
+    apagar objeto alvo
     @item >
     @item Ps
-    save state to file
+    grave o estado atual em um arquivo
     @item TV
-    NTSC mode toggle
+    mudar para o modo NTSC
     @item p
-    pick as objeto alvo (e.g. @kbd{g 3 p})
-    With no prefix, selects the objeto under the
-    mouse cursor (like double-clicando the right mouse)
+    selecionar como objeto alvo (e.g. @kbd{g 3 p})
+    Sem preixo, seleciona o objeto sob o
+    cursor do mouse (da mesma forma que duplo-clicando o botão direito do mouse)
     @end table
 @end table
 

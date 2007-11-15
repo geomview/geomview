@@ -2596,7 +2596,7 @@ Below is a summary of all keyboard shortcuts.
 @item Other
     @table @kbd
     @item 0N
-    normalizaton: none
+    normalization: none
     @item 1N
     normalization: each
     @item 2N all
