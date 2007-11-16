@@ -2447,22 +2447,22 @@ Todas as c@^{a}meras
 Por exemplo, @kbd{g4af} significa modifique a face desenhada do objeto
 @emph{g4}.
 
-Simplesmente digitando um prefixo de seleção, como @kbd{g4}, não seleciona um objeto ainda;
+Simplesmente digitando um prefixo de sele@,{c}@~{a}o, como @kbd{g4}, n@~{a}o seleciona um objeto ainda;
 isso somente acontece quando um comando, como @kbd{ae}, segue o prefixo.
 Para selecionar um objeto como alvo sem fazer nada mais para isso,
-use o comando @kbd{p}.  Então @kbd{g3p} seleciona o objeto g3.
+use o comando @kbd{p}.  Ent@~{a}o @kbd{g3p} seleciona o objeto g3.
 
 O campo de texto no canto superior esquerdo faz o painel principal (@emph{Main})
 mostrar o estado da tecla de atalho atual.
 
-Para adição de teclas de atalho ao painel de comandos, existe
-também um atalho para selecionar um objeto alvo: digite o nome curto do
+Para adi@,{c}@~{a}o de teclas de atalho ao painel de comandos, existe
+tamb@'{e}m um atalho para selecionar um objeto alvo: digite o nome curto do
 objeto seguido por @kbd{p}.  Por exemplo, para selecionar o select objeto @emph{g3},
 digite @kbd{g 3 p}.  Essa forma funciona somente com nomes curtos --- aqueles
-que aparecem entre colchêtes ([ ]) no navegador de alvos (@emph{Targets}) do
+que aparecem entre colch@^{e}tes ([ ]) no navegador de alvos (@emph{Targets}) do
 painel principal @emph{Main}.
 
-Abaixo encontra-se um sumário de todas as teclas de atalho.
+Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
 
 @table @asis
 @item Draw
@@ -2483,13 +2483,13 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
     @item 0as
     Constante
     @item 1as
-    Monótono
+    Mon@'{o}tono
     @item 2as
     Linear
     @item 3as
-    Linear, não iluminado
+    Linear, n@~{a}o iluminado
     @item aT
-    permite transparência
+    permite transpar@^{e}ncia
     @item at
     mapeamento de textura
     @end table
@@ -2500,9 +2500,9 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
     @item #aw
     Espessura da linha (em pixels)
     @item aC
-    manuseia polígonos côncavos
+    manuseia pol@'{i}gonos c@^{o}ncavos
     @item #vc
-    fechador de arestas que não pertencem a faces (tente 5-100)
+    fechador de arestas que n@~{a}o pertencem a faces (tente 5-100)
     @end table
 @item Cor
     @table @kbd
@@ -2520,13 +2520,13 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
 @item Movimentos
     @table @kbd
     @item r
-    rotação
+    rota@,{c}@~{a}o
     @item t
-    translação
+    transla@,{c}@~{a}o
     @item z
-    modificações proporcionais de tamanho (FOV - campo de visão)
+    modifica@,{c}@~{o}es proporcionais de tamanho (FOV - campo de vis@~{a}o)
     @item f
-    vôo
+    v@^{o}o
     @item o
     orbita
     @item s
@@ -2547,36 +2547,36 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
 @item Visualizando
     @table @kbd
     @item 0vp
-    visão Ortográfica
+    vis@~{a}o Ortogr@'{a}fica
     @item 1vp
-    visão em perspectiva
+    vis@~{a}o em perspectiva
     @item  vd
-    Habilite outras câmeras de visão
+    Habilite outras c@^{a}meras de vis@~{a}o
     @item #vv
-    campo de visão
+    campo de vis@~{a}o
     @item #vn
-    próxima distância de corte
+    pr@'{o}xima dist@^{a}ncia de corte
     @item #vf
-    distância de corte afastada
+    dist@^{a}ncia de corte afastada
     @item  v+
-    adicione nova câmera
+    adicione nova c@^{a}mera
     @item  vx
     cursor ligado/desligado
     @item  vb
-    face de trás de um polígono separada habilitada/desabilitada
+    face de tr@'{a}s de um pol@'{i}gono separada habilitada/desabilitada
     @item #vl
-    distância focal
+    dist@^{a}ncia focal
     @item  v~
     Tonalidade feita via software ligada/desligada
     @end table
-@item Painéis
+@item Pain@'{e}is
     @table @kbd
     @item Pm
     Principal
     @item Pa
-    Aparência
+    Apar@^{e}ncia
     @item Pl
-    Iluminação
+    Ilumina@,{c}@~{a}o
     @item Po
     Obscuro
     @item Pt
@@ -2592,7 +2592,7 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
     @item P-
     ler comandos pelo tty
     @item PA
-    Créditos ("about")
+    Cr@'{e}ditos ("about")
     @end table
 @item Luzes
     @table @kbd
@@ -2601,14 +2601,14 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
     @item le
     editar luzes
     @end table
-@item Espaço
+@item Espa@,{c}o
     @table @kbd
     @item me
     Euclidiano
     @item mh
-    Hiperbólico
+    Hiperb@'{o}lico
     @item ms
-    Esférico
+    Esf@'{e}rico
     @end table
 @item Modelo
     @table @kbd
@@ -2622,20 +2622,20 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
 @item Outro
     @table @kbd
     @item 0N
-    normalização: nenhuma
+    normaliza@,{c}@~{a}o: nenhuma
     @item 1N
-    normalização: individual
+    normaliza@,{c}@~{a}o: individual
     @item 2N all
-    normalização: todos 
+    normaliza@,{c}@~{a}o: todos 
     @item ui
-    movimento: Inércial
+    movimento: In@'{e}rcial
     @item uc
-    movimento: Contração para o eixo
+    movimento: Contra@,{c}@~{a}o para o eixo
     @item uo
-    movimento: coordenadas próprias do objeto
+    movimento: coordenadas pr@'{o}prias do objeto
     @item <
     @item Pf
-    carregar arquivo geométrico ou de comandos
+    carregar arquivo geom@'{e}trico ou de comandos
     @item dd
     apagar objeto alvo
     @item >
@@ -2646,7 +2646,7 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
     @item p
     selecionar como objeto alvo (e.g. @kbd{g 3 p})
     Sem preixo, seleciona o objeto sob o
-    cursor do mouse (da mesma forma que duplo-clicando o botão direito do mouse)
+    cursor do mouse (da mesma forma que duplo-clicando o bot@~{a}o direito do mouse)
     @end table
 @end table
 
@@ -2654,15 +2654,15 @@ Abaixo encontra-se um sumário de todas as teclas de atalho.
 @node OOGL File Formats, Customization, Interaction, Top
 @chapter OOGL File Formats
 
-The objetos that you can load into Geomview are called OOGL objetos.
-OOGL stands for ``Objeto Oriented Graphics Library''; it is the library
-upon which Geomview is built.
+Os objetos que voc@^{e} pode carregar dentro do Geomview s@~{a}o chamados objetos OOGL.
+OOGL significa ``Object Oriented Graphics Library'' (biblioteca gr@'{a}fica orientada a objetos); @'{e} a biblioteca
+sobre a qual Geomview @'{e} constru@'{i}do.
 
-There are many different kinds of OOGL objetos.  This chapter gives
-syntactic descriptions of file formats for OOGL objetos.
+Existem muitos tipos diferentes de objetos OOGL.  Esse cap@'{i}tulo fornece
+descri@,{c}@~{o}es sint@'{a}ticas de formatos de arquivo para objetos OOGL.
 
-Examples of most file types live in Geomview's @file{data/geom}
-directory.
+Exemplos da maioria dos tipos de arquivo podem ser encontrados no diret@'{o}rio @file{data/geom}
+do Geomview.
 
 @menu
 * Conventions::                 Conventions and general remarks.
@@ -2675,135 +2675,135 @@ directory.
 @section Conventions
 
 @menu
-* Common syntax::               Syntax Common to All OOGL File Formats.
-* File names::                  File Names.
-* Vertices::                    Vertices.
-* ND-Vertices::                 @var{N}-dimensional Vertices.
-* Surface normal directions::   Surface normal directions.
-* Transformation matrices::     Transformation matrices.
-* ND Transformation matrices::  @var{N}-dimensional transformation matrices.
-* Binary format::               Binary format.
-* References::                  Embedded objetos and external-objeto references.
-* Appearances::                 Appearances.
-* Texture Mapping::             Texture mapping.
+* Common syntax::               Sintaxe Comum a Todos os formatos de arquivo da OOGL.
+* File names::                  Nomes de Arquivo.
+* Vertices::                    V@'{e}rtices.
+* ND-Vertices::                 V@'{e}rtices @var{N}-dimensionais.
+* Surface normal directions::   Dire@,{c}@~{a}o de superf@'{i}cies normais.
+* Transformation matrices::     Matrizes de transforma@,{c}@~{a}o.
+* ND Transformation matrices::  Matrizes de transforma@,{c}@~{a}o @var{N}-dimensional.
+* Binary format::               Formato bin@'{a}rio.
+* References::                  Objetos embargados e refer@^{e}ncias externa a objeto.
+* Appearances::                 Apar@^{e}ncias.
+* Texture Mapping::             Mapeamento de textura.
 @end menu
 
 @comment ----------------------------------------------------------------
 @node Common syntax, File names, Conventions, Conventions
 @subsection Syntax Common to All OOGL File Formats
 
-Most OOGL objeto file formats are free-format ASCII --- any amount of
-white space (blanks, tabs, newlines) may appear between tokens (numbers,
-key words, etc.).  Line breaks are almost always insignificant, with a
-couple of exceptions as noted.  Comments begin with # and continue to
-the end da line; they're allowed anywhere a newline is.
+A maioria dos formatos de arquivo de objeto OOGL s@~{a}o do formato livre ASCII --- qualquer quantidade de
+espa@,{c}os em branco (caracteres n@~{a}o imprim@'{i}veis, tabula@,{c}@~{o}es, caractere de nova linha) pode aparecer entre os sinalizadores (n@'{u}meros,
+palavras chave, etc.).  Paradas de linha s@~{a}o na maioria das vezes sempre insignificantes, com
+algumas execess@~{o}es devidamente ressaltadas.  Coment@'{a}rios come@,{c}am com # e continuam at@'{e}
+o fim da linha; esses coment@'{a}rios s@~{a}o permitidos em qualquer lugar onde um caractere de nova linha for permitido tamb@'{e}m.
 
-Binary formats are also defined for several objetos; @xref{Binary
-format}, and the individual objeto descriptions.
+Formatos bin@'{a}rios s@~{a}o tamb@'{e}m definidos para muitos objetos; Veja @ref{Binary
+format}, e as descri@,{c}@~{o}es individuais do objeto.
 
-Typical OOGL objetos begin with a key word designating objeto type,
-possibly with modifiers indicating presence of color information etc.
-In some formats the key word is optional, for compatibility with file
-formats defined elsewhere.  Objeto type is then determined by
-guessing from the file suffix (if any) or from the data itself.
+Objetos t@'{i}picos OOGL come@,{c}am com uma palavra chave designando o tipo de objeto,
+possivelmente com modificadores indicando a presen@,{c}a de informa@,{c}@~{o}es de cor, etc.
+Em alguns formatos a palavra chave @'{e} opcional, por quest@~{o}es de compatibilidade com formatos
+de arquivo definidos em outros lugares.  O tipos de objeto @'{e} ent@~{a}o determinado por
+suposi@,{c}@~{a}o sobre o sufixo do arquivo (se houver) ou pelos dados em si mesmos.
 
-Key words are case sensitive.  Some have optional prefix letters
-indicating presence of color or other data; in this case the order of
-prefixes is significant, e.g. @code{CNMESH} is meaningful but
-@code{NCMESH} is invalid.
+Palavras chave s@~{a}o sens@'{i}veis @`{a} caixa alta/baixa.  Algumas palavras chave possuem letras de prefixo adicionais
+indicando a presen@,{c}a de cor ou outros dados; nesse caso a ordem dos
+prefixos @'{e} importante, e.g. @code{CNMESH} @'{e} significativo mas
+@code{NCMESH} @'{e} inv@'{a}lido.
 
 @comment ----------------------------------------------------------------
 @node File names, Vertices, Common syntax, Conventions
 @subsection File Names
 
-When OOGL objetos are read from disk files, the OOGL library uses the
-file suffix to guess at the file type.
+Quando objetos OOGL s@~{a}o lidos de arquivos localizados em disco, a biblioteca OOGL usa o
+sufixo do arquivo para supor o tipo de arquivo.
 
-If the suffix is unrecognized, or if no suffix is available (e.g. for an
-objeto being read from a pipe, or embedded in another OOGL objeto), all
-known types of objetos are tried in turn until one accepts the data as
-valid.
+Se o sufixo for desconhecido, ou estiver aus@^{e}nte (e.g. para um
+objeto sendo lido a partir da sa@'{i}da de um outro comando diretamente, ou lido diretamente de dentro de um outro objeto objeto OOGL), todos
+os tipos conhecidos de objeto s@~{a}o tentados por sua vez at@'{e} que se aceite os dados como
+v@'{a}lidos.
 
 @comment ----------------------------------------------------------------
 @node Vertices, ND-Vertices, File names, Conventions
 @subsection Vertices
 
-Several objetos share a common style of representing vertices with
-optional por v@'{e}rtice surface-normal and color.  All vertices within an
-objeto have the same format, specified by the header key word.
+Muitos objetos compartilham um estilo comum de representar v@'{e}rtices com
+op@,{c}@~{o}es de superf@'{i}cie normal de v@'{e}rtice e cor.  Todos os v@'{e}rtices dentro de um
+objeto possuem o mesmo formato, especificado pela palavra chave no cabe@,{c}alho.
 
-All data for a v@'{e}rtice is grouped together (as opposed to e.g. giving
-coordinates for all vertices, then colors for all vertices, and so on).
+Todos os dados para um v@'{e}rtice est@~{a}o agrupados juntos (em oposi@,{c}@~{a}o a e.g. fornecimento
+de coordenadas para todos os v@'{e}rtices, em seguida cores para todos os v@'{e}rtices, e assim por diante).
 
-The syntax is
+A sintaxe @'{e}
 
 @table @samp
 @item @var{x}  @var{y}  @var{z}
-(3-D floating-point coordenadas do v@'{e}rtice) or
+(coordenadas do v@'{e}rtice tridimensionais em ponto flutuante) ou
 @item @var{x}  @var{y}  @var{z}  @var{w}
-(4-D floating-point coordenadas do v@'{e}rtice)
+(coordenadas do v@'{e}rtice tetradimensionais em ponto flutuante)
 @end table
 
-optionally followed by
+opcionalmente seguida por
 
 @table @samp
 @item @var{nx}  @var{ny}  @var{nz}
-(normalized 3-D surface-normal if present)
+(superf@'{i}cie normalizada tridimensional se presente)
 @end table
 
-optionally followed by
+opcionalmente seguida por
 
 @table @samp
 @item @var{r}  @var{g}  @var{}b  @var{a}
-(4-component floating-point color if present, each component in range
-0..1.  The @var{a} (alpha) component represents opacity: 0 transparent, 1
-opaque.)
+(componente qu@'{a}drupla em ponto flutuante se presente, cada componente no intervalo
+0..1.  A componente @var{a} (alfa) representa a opacidade: 0 transparente, 1
+opaco.)
 
-optionally followed by
+opcionalmente seguida por
 @item @var{s} @var{t}
-@item or
+@item ou
 @item @var{s} @var{t} @var{u}
 @end table
 
-(two or three texture-coordinate values).
+(duas ou tr@^{e}s valores coordenados de textura).
 
-Values are separated by white space, and line breaks
-are immaterial.
+Valores s@~{a}o separados por espa@,{c}os em branco, e paradas de linha
+s@~{a}o inmateriais.
 
-Letters in the objeto's header key word must appear in a specific order;
-that's the reverse da order in which the data is given for each v@'{e}rtice.
-So a @samp{CN4OFF} objeto's vertices contain first the 4-component space
-position, then the 3-component normal, finally the 4-component color.
-You can't change the data order by changing the header key word; an
-@samp{NCOFF} is just not recognized.
+Letras na palavra chave de cabe@,{c}alho do objeto devem aparecer numa ordem espec@'{i}fica;
+isto @'{e} a ordem reversa na qual os dados s@~{a}o fornecidos para cada v@'{e}rtice.
+Ent@~{a}o v@'{e}rtices de objeto do tipo @samp{CN4OFF} possuem primeiramente as componentes quadridimensionais de
+posicionamento no espa@,{c}o, a seguir as componentes normais tridimensionais, finalmente as componentes quadridimensionais de cor.
+Voc@^{e} pode modificar a ordem dos dados modificando o cabe@,{c}alho de palavra chave; um
+@samp{NCOFF} @'{e} apenas n@~{a}o reconhecido.
 
 @comment ----------------------------------------------------------------
 @node ND-Vertices, Surface normal directions, Vertices, Conventions
 @subsection @var{N}-dimensional Vertices
 
-Several objetos share a common style of representing vertices with
-optional por v@'{e}rtice surface-normal and color.  All vertices within an
-objeto have the same format, specified by the header key word.
+Muitos objetos compartilham um estilo comum de representa@,{c}@~{a}o de v@'{e}rtice com
+opcionais de superf@'{i}cie normal e cor.  Todos os v@'{e}rtices dentro de um
+objeto possuem o mesmo formato, especificado pela palavra chave do cabe@,{c}alho.
 
-All data for a v@'{e}rtice is grouped together (as opposed to e.g. giving
-coordinates for all vertices, then colors for all vertices, and so on).
+Todos os dados para um v@'{e}rtice est@~{a}o agrupados juntos (em oposi@,{c}@~{a}o a e.g. fornecendo
+coordenadas para todos os v@'{e}rtices, a seguir cores para todos os v@'{e}rtices, e assim por diante).
 
-The syntax for @var{N}-dimensional vertices (@var{N} > 3) is
+A sintaxe para v@'{e}rtices @var{N}-dimensionais (@var{N} > 3) @'{e}
 
 @table @samp
 @item @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
-(@var{N} floating-point coordenadas do v@'{e}rtice) or
+(@var{N} coordenadas do v@'{e}rtice em ponto flutuante) ou
 @item @var{x[0]} @var{x[1]}  @var{x[2]}  @var{x[3]} @var{x[4]} @dots{}
-(@var{(N+1)} floating-point coordenadas do v@'{e}rtice, if the @code{4} modifier
-has been specified in the objeto's header line)
+(@var{(N+1)} coordenadas do v@'{e}rtice em ponto flutuante, se o modificador @code{4}
+tiver sido especificado na linha de cabe@,{c}alho do objeto)
 @end table
 
-Note, however, that @var{N}-dimensional objetos internally always have
-@var{(N+1)}-dimensional points; the first component @var{x[0]} -- if
-present in the objeto file -- is used as homogeneous divisor. This is
-different from the ordinary 3D case where the @code{4} modifier
-generates a 4D objeto where the homogeneous component implicitly is set
-to 1.
+Note, todavia, que objetos @var{N}-dimensionais internamente sempre possuem
+pontos @var{(N+1)}-dimensionais; a primeira componente @var{x[0]} -- se
+presente no arquivo do objeto file -- @'{e} usada como divisor homog@^{e}neo. Isso @'{e}
+diferente do caso tridimensional comum onde o modificador @code{4}
+gera um objeto quadridimensional onde a componente quadridimensional implicitamente @'{e} escolhida
+para 1.
 
 Color components usually can be specified like for 3D vertices,
 @pxref{Vertices}, while specifying normals does not make sense.
@@ -2832,7 +2832,7 @@ is in the direction dP/du cross dP/dv.
 Some objetos incorporate 4x4 real matrices for homogeneous objeto
 transformations.  These matrices act by multiplication on the right of
 vectors.  Thus, if p is a 4-element row vector representing homogeneous
-coordinates of a point in the OOGL objeto, and A is the 4x4 matrix, then
+coordinates of a point in the objeto OOGL, and A is the 4x4 matrix, then
 the transformed point is p' = p A.  This matrix convention is common in
 computer graphics; it's the transpose of that often used in mathematics,
 where points are column vectors multiplied on the right of matrices.
@@ -2850,7 +2850,7 @@ In the context of @var{N}-dimensional space (@var{N} < 3) some objetos
 incorporate @var{(N+1)}x@var{(N+1)} real matrices for homogeneous objeto
 transformations.  These matrices act by multiplication on the right of
 vectors.  Thus, if p is an @var{(N+1)}-element row vector representing
-homogeneous coordinates of a point in the OOGL objeto, and A
+homogeneous coordinates of a point in the objeto OOGL, and A
 @var{(N+1)}x@var{(N+1)} is the matrix, then the transformed point is p'
 = p A.
 
@@ -2865,7 +2865,7 @@ elements). A's first column (at column index zero) is typically 1, 0,
 @node Binary format, References, ND Transformation matrices, Conventions
 @subsection Binary format
 
-Many OOGL objetos accept binary as well as ASCII file formats.
+Many objetos OOGL accept binary as well as ASCII file formats.
 These files begin with the usual ASCII token (e.g. @code{CQUAD})
 followed by the word @code{BINARY}.
 Binary data begins at the byte following the first newline after
@@ -2886,7 +2886,7 @@ though, specifically in the @code{QUAD}, @code{OFF} and @code{COMMENT}
 file formats.  Details are given in the individual file format
 descriptions.  @xref{QUAD}, @xref{OFF}, and @xref{COMMENT}.
 
-Binary OOGL objetos may be freely mixed in ASCII objeto streams:
+Binary objetos OOGL may be freely mixed in ASCII objeto streams:
 
 @example
 LIST
@@ -2910,7 +2910,7 @@ binary data.
 @subsection Embedded objects and external-object references
 
 Some objeto types (@code{LIST}, @code{INST}) allow references to other
-OOGL objetos, which may appear literally in the data stream, be loaded
+objetos OOGL, which may appear literally in the data stream, be loaded
 from named disk files, or be communicated from elsewhere via named
 objetos.  GCL commands also accept geometry in these forms.
 
@@ -2944,7 +2944,7 @@ For example, each das following three lines:
 	VECT 1 2 0   2 0   0 0 0   1 1 2
 @end example
 @noindent
-is a valid OOGL objeto.  The last example is only valid when it is
+is a valid objeto OOGL.  The last example is only valid when it is
 delimited unambiguously by residing in its own disk file.
 
 The ":" construct allows references to symbols, created with
@@ -2958,7 +2958,7 @@ definition. @xref{read,@code{(read @dots{})}}. @xref{hdefine,@code{(hdefine
 @dots{})}}.
 
 The "<" construct causes a disk file to be read.  Note that this isn't a
-general textual "include" mechanism; a complete OOGL objeto must appear
+general textual "include" mechanism; a complete objeto OOGL must appear
 in the referenced file.
 
 Files read using "<" are sought first in the directory do file which
@@ -2993,7 +2993,7 @@ preceded by an appearance definition like in the following example:
 @}
 @end example
 
-Appearances are also OOGL objetos in their own right and can be given
+Appearances are also objetos OOGL in their own right and can be given
 symbolic names and referenced by them
 (@pxref{References}). @xref{appearance, Appearance objects}.
 
@@ -3875,13 +3875,13 @@ The conventional suffix for a @code{INST} file is @file{.inst}.
 There is no INST BINARY format.
 
 An @code{INST} applies a 4x4 (or @var{(N+1)}x@var{(N+1)} in the context of
-ND-viewing) transformation to another OOGL objeto.  It begins with
+ND-viewing) transformation to another objeto OOGL.  It begins with
 @code{INST} followed by these sections which may appear in any order:
 @example
 geom @var{oogl-object}
 @end example
 @noindent
-especifica the OOGL objeto to be instantiated.  @xref{References}, for
+especifica the objeto OOGL to be instantiated.  @xref{References}, for
 the syntax of an @var{oogl-object}.  The keyword @code{unit} is a
 synonym for @code{geom}.
 @example
@@ -4086,7 +4086,7 @@ since the range of ndc X and Y coordinates is -1 to +1).
 
 The conventional suffix for a @code{LIST} file is @file{.list}.
 
-A list of OOGL objetos
+A list of objetos OOGL
 
 Syntax:
 
@@ -4208,7 +4208,7 @@ See discgrp(5).
 @subsection COMMENT Objects
 
 The COMMENT objeto is a mechanism for encoding arbitrary data within an
-OOGL objeto. It can be used to keep track of data or pass data back and
+objeto OOGL. It can be used to keep track of data or pass data back and
 forth between external modules. 
 
 Syntax:
@@ -4228,7 +4228,7 @@ conventions.
 @code{COMMENT} objetos are intended to be associated with other objetos
 through inclusion in a @code{LIST} objeto. (@xref{LIST}.)  The "#" OOGL
 comment syntax does not suffice for data exchange since these comments
-are stripped when an OOGL objeto is read in to Geomview.  The
+are stripped when an objeto OOGL is read in to Geomview.  The
 @code{COMMENT} objeto is preserved when loaded into Geomview and is
 written out intact.
 
@@ -4273,7 +4273,7 @@ alternative choices.
 @comment ----------------------------------------------------------------
 @node appearance, image, Non-geometric objects, Non-geometric objects
 @subsection Appearance Objects
-Appearances are OOGL objetos of their own right, which simply means that
+Appearances are objetos OOGL of their own right, which simply means that
 it is possible to give them symbolic names (@pxref{References}). There
 are other sections dealing with appearance
 details. @xref{Appearances}.
@@ -4753,7 +4753,7 @@ This odd-seeming definition is (a) easy to calculate with and
 
 @item background color
 Arguably not a property of a camera, but da scene. Nevertheless, as
-there is no "background" OOGL objeto, and the background color should
+there is no "background" objeto OOGL, and the background color should
 not be a property do drawing device, it can be specified here. At
 the time of this writing, however, the GUI always overrides the
 background color with its own settings.
@@ -8616,7 +8616,7 @@ parentheses.
         
 Note that arbitrary data can only be passed through the OOGL libraries
 as full-fledged OOGL COMMENT objetos, which can be attached to other
-OOGL objetos via the LIST type as described above. Ordinary comments in
+objetos OOGL via the LIST type as described above. Ordinary comments in
 OOGL files (i.e. everything after '#' on a line) are ignored at when the
 file is loaded and cannot be returned.
 @end table
