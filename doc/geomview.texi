@@ -2820,7 +2820,7 @@ the fourth row (last four elements) of A.  A's last column (4th, 8th,
 @node ND Transformation matrices, Binary format, Transformation matrices, Conventions
 @subsection ND Transformation matrices
 
-In the context of @var{N}-dimensional space (@var{N} < 3) some objects
+In the context of @var{N}-dimensional space (@var{N} > 3) some objects
 incorporate @var{(N+1)}x@var{(N+1)} real matrices for homogeneous object
 transformations.  These matrices act by multiplication on the right of
 vectors.  Thus, if p is an @var{(N+1)}-element row vector representing
