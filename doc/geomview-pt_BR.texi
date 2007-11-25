@@ -2805,116 +2805,116 @@ diferente do caso tridimensional comum onde o modificador @code{4}
 gera um objeto quadridimensional onde a componente quadridimensional implicitamente @'{e} escolhida
 para 1.
 
-Componentes de cor usualmente podem ser especificadas da mesma forma que para vértices tridimensionais,
-Veja @ref{Vertices}, enquanto especificando componentes de cor em normais não faz sentido.
+Componentes de cor usualmente podem ser especificadas da mesma forma que para v@'{e}rtices tridimensionais,
+Veja @ref{Vertices}, enquanto especificando componentes de cor em normais n@~{a}o faz sentido.
 
 @comment ----------------------------------------------------------------
 @node Surface normal directions, Transformation matrices, ND-Vertices, Conventions
 @subsection Surface normal directions
 
-Geomview utiliza vetores normais para determinar como um objeto é compartilhado.
-A direção da normal é importante nesse cálculo.
+Geomview utiliza vetores normais para determinar como um objeto @'{e} compartilhado.
+A dire@,{c}@~{a}o da normal @'{e} importante nesse c@'{a}lculo.
 
-Quando normais forem fornecidos com um objeto, a direção da normal
-é determinada pelos dados fornecidos.
+Quando normais forem fornecidos com um objeto, a dire@,{c}@~{a}o da normal
+@'{e} determinada pelos dados fornecidos.
 
-Quando normais não forem fornecidos com o objeto, Geomview calcula vetores
+Quando normais n@~{a}o forem fornecidos com o objeto, Geomview calcula vetores
 normais automaticamente; nesse caso normais apontam para adiante do lado do
-qual os vértices aparecem na ordem anti-horária.
+qual os v@'{e}rtices aparecem na ordem anti-hor@'{a}ria.
 
-Sobre superfícies paramétricas (retalhos de Bezier), o vetor normal no ponto P(u,v)
-está na direção dP/du multiplicado vetorialmente por dP/dv.
+Sobre superf@'{i}cies param@'{e}tricas (retalhos de Bezier), o vetor normal no ponto P(u,v)
+est@'{a} na dire@,{c}@~{a}o dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
 @node Transformation matrices, ND Transformation matrices, Surface normal directions, Conventions
 @subsection Transformation matrices
 
-Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transformações sobre
-objetos homogêneos.  Essas matrizes atuam através de multiplicação à direita de
+Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transforma@,{c}@~{o}es sobre
+objetos homog@^{e}neos.  Essas matrizes atuam atrav@'{e}s de multiplica@,{c}@~{a}o @`{a} direita de
 vetores.  Dessa forma, se p for um vetor linha de 4 elementos representando coordenadas
-homogêneas de um ponto no objeto OOGL, e A for a matrix 4x4, então
-o ponto resultante da transformação é p' = p A.  Essaconvenção matricial é comum em
-computação gráfica; it's the transpose daquela muitas vezes usada em matemática,
-onde pontos são vetores coluna multiplicados à direita pelas matrizes.
+homog@^{e}neas de um ponto no objeto OOGL, e A for a matrix 4x4, ent@~{a}o
+o ponto resultante da transforma@,{c}@~{a}o @'{e} p' = p A.  Essaconven@,{c}@~{a}o matricial @'{e} comum em
+computa@,{c}@~{a}o gr@'{a}fica; it's the transpose daquela muitas vezes usada em matem@'{a}tica,
+onde pontos s@~{a}o vetores coluna multiplicados @`{a} direita pelas matrizes.
 
 
-Dessa forma para transformações Euclideanas, as componentes para translação aparecem na
-quarta linha (os últimos quatro elementos) da matriz A.  A última coluna da matriz A (quarto, oitavo,
-décimo segundo e décimo sexto elementos) são tipicamente 0, 0, 0, e 1 respectivamente.
+Dessa forma para transforma@,{c}@~{o}es Euclideanas, as componentes para transla@,{c}@~{a}o aparecem na
+quarta linha (os @'{u}ltimos quatro elementos) da matriz A.  A @'{u}ltima coluna da matriz A (quarto, oitavo,
+d@'{e}cimo segundo e d@'{e}cimo sexto elementos) s@~{a}o tipicamente 0, 0, 0, e 1 respectivamente.
 
 @comment ----------------------------------------------------------------
 @node ND Transformation matrices, Binary format, Transformation matrices, Conventions
 @subsection ND Transformation matrices
 
-No contexto do espaço @var{N}-dimensional (@var{N} > 3) alguns objetos
-incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transformações sobre objetos
-homogêneos.  Essas matrizes atuam através de multiplicação à direita de
+No contexto do espa@,{c}o @var{N}-dimensional (@var{N} > 3) alguns objetos
+incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transforma@,{c}@~{o}es sobre objetos
+homog@^{e}neos.  Essas matrizes atuam atrav@'{e}s de multiplica@,{c}@~{a}o @`{a} direita de
 vetores.  Dessa forma, se p for um vetor linha de @var{(N+1)}-elementos representando
-coordenadas homogêneas de um ponto no objeto OOGL, e A
-é a matriz quadrada de ordem @var{(N+1)}, então o ponto resultante da transformação é p'
+coordenadas homog@^{e}neas de um ponto no objeto OOGL, e A
+@'{e} a matriz quadrada de ordem @var{(N+1)}, ent@~{a}o o ponto resultante da transforma@,{c}@~{a}o @'{e} p'
 = p A.
 
-Note que (a excessão de matrizes de transformação 4x4,
-veja @ref{Transformation matrices}) a componente homogênea é localizada nos elementos com
-índice @b{zero}, de forma que componentes de transformação para transformações
-Euclideanas aparecem na @b{zero}-ésima linha (primeiros @var{(N+1)}
-elementos). A primeira coluna da matriz A (a coluna com índice zero) é tipicamente 1, 0,
+Note que (a excess@~{a}o de matrizes de transforma@,{c}@~{a}o 4x4,
+veja @ref{Transformation matrices}) a componente homog@^{e}nea @'{e} localizada nos elementos com
+@'{i}ndice @b{zero}, de forma que componentes de transforma@,{c}@~{a}o para transforma@,{c}@~{o}es
+Euclideanas aparecem na @b{zero}-@'{e}sima linha (primeiros @var{(N+1)}
+elementos). A primeira coluna da matriz A (a coluna com @'{i}ndice zero) @'{e} tipicamente 1, 0,
 @dots{}, 0.
 
 @comment ----------------------------------------------------------------
 @node Binary format, References, ND Transformation matrices, Conventions
 @subsection Binary format
 
-Muitos objetos OOGL aceitam formatos o formato de arquivo binário bem como o formato de arquivo ASCII.
-Esses arquivos começam com a indicação usual (e.g. @code{CQUAD})
+Muitos objetos OOGL aceitam formatos o formato de arquivo bin@'{a}rio bem como o formato de arquivo ASCII.
+Esses arquivos come@,{c}am com a indica@,{c}@~{a}o usual (e.g. @code{CQUAD})
 seguida pela palavra @code{BINARY}.
-Dados binários iniciam-se no byte imediatamente seguinte ao primeiro caractere de nova linha após
-a palavra @code{BINARY}.  Espaços em branco e um simples comentário podem atrapalhar, e.g.
+Dados bin@'{a}rios iniciam-se no byte imediatamente seguinte ao primeiro caractere de nova linha ap@'{o}s
+a palavra @code{BINARY}.  Espa@,{c}os em branco e um simples coment@'{a}rio podem atrapalhar, e.g.
 
 @example
 OFF BINARY	# binary-format "OFF" data follows 
 @end example
 
-Dados binários compreendem inteiros de 32 bits e os inteiros em ponto flutuante de 32 bits conforme definido pela IEEE (IEEE Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985 - Institute of Electrical and Electronics Engineers), ambos os formatos
-seguem à forma de ordenação "big-endian" (i.e., com o byte mais significativo em primeiro lugar).  Esse é
+Dados bin@'{a}rios compreendem inteiros de 32 bits e os inteiros em ponto flutuante de 32 bits conforme definido pela IEEE (IEEE Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985 - Institute of Electrical and Electronics Engineers), ambos os formatos
+seguem @`{a} forma de ordena@,{c}@~{a}o "big-endian" (i.e., com o byte mais significativo em primeiro lugar).  Esse @'{e}
 o formato nativo para tipos de dado int e tipos de dado float em sistemas do tipo Sun-3, Sun-4, e
-Irises, além de muitos outros sistemas.
+Irises, al@'{e}m de muitos outros sistemas.
 
-Formatos de dados binários assemelham-se aos formatos correspondentes em ASCII, com tipos de dado "int"
-e tipos de dado "float" nos lugares que você está acostumado a encontrar.  Existe alumas excessões
+Formatos de dados bin@'{a}rios assemelham-se aos formatos correspondentes em ASCII, com tipos de dado "int"
+e tipos de dado "float" nos lugares que voc@^{e} est@'{a} acostumado a encontrar.  Existe alumas excess@~{o}es
 todavia, especificamente dos formatos d arquivo @code{QUAD}, @code{OFF} e
-@code{COMMENT}.  Detalhes são fornecidos no arquivo individual das descrições do
-formato específico.  Veja em @ref{QUAD}, @ref{OFF}, e em @xref{COMMENT}.
+@code{COMMENT}.  Detalhes s@~{a}o fornecidos no arquivo individual das descri@,{c}@~{o}es do
+formato espec@'{i}fico.  Veja em @ref{QUAD}, @ref{OFF}, e em @xref{COMMENT}.
 
-Objetos OOGL binários podem ser livremente misturados em fluxos de objetos ASCII:
+Objetos OOGL bin@'{a}rios podem ser livremente misturados em fluxos de objetos ASCII:
 
 @example
 LIST
 @{ = MESH BINARY
-@dots{} dados binários de uma malha aqui @dots{}
+@dots{} dados bin@'{a}rios de uma malha aqui @dots{}
 @}
 @{ = QUAD
 	1 0 0   0 0 1   0 1 0  0 1 0
 @}
 @end example
 
-Note que dados ASCII continuam seguindo imediatamente o último byte dos
-dados binários.
+Note que dados ASCII continuam seguindo imediatamente o @'{u}ltimo byte dos
+dados bin@'{a}rios.
 
-Naturalmente, é impossível incluit comentários dentro de um objeto em formato
-binário OOGL, todavia comentários podem aparecer no cabeçalho antes do início dos
-dados binários.
+Naturalmente, @'{e} imposs@'{i}vel incluit coment@'{a}rios dentro de um objeto em formato
+bin@'{a}rio OOGL, todavia coment@'{a}rios podem aparecer no cabe@,{c}alho antes do in@'{i}cio dos
+dados bin@'{a}rios.
 
 @comment ----------------------------------------------------------------
 @node References, Appearances, Binary format, Conventions
 @subsection Embedded objects and external-object references
 
-Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem referências a outros
+Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem refer@^{e}ncias a outros
 objetos OOGL, que podem aparecer literalmente no fluxo de dados, serem chamados
 a partir de arquivos em disco, ou serem comunicados a aprtir de outro lugar via objetos
-nomeados.  Comandos GCL tamb;em aceitam objetos geométricos através desses meios citados.
+nomeados.  Comandos GCL tamb;em aceitam objetos geom@'{e}tricos atrav@'{e}s desses meios citados.
 
-A sintaxe genérica é
+A sintaxe gen@'{e}rica @'{e}
 
 @example
  <oogl-object>  ::=
@@ -2926,14 +2926,14 @@ A sintaxe genérica é
 	[ "@}" ]
 @end example
 
-onde os itens entre aspas duplas são seqüências de caracteres literais (que aparecem sem as
-aspas), os itens entre colchêtes ([]) são opcionais, e a barra vertical (|) denotes alternatives.
-Chaves ({}), quando estiverem presentes, apenas indicam coincidência; o par mais externo de
-chaves é geralmente requerido quando o objeto estiver em um contexto maior,
-e.g. quando for aprte de um objeto maior ou incluído em um fluxo de comando do
+onde os itens entre aspas duplas s@~{a}o seq@"{u}@^{e}ncias de caracteres literais (que aparecem sem as
+aspas), os itens entre colch@^{e}tes ([]) s@~{a}o opcionais, e a barra vertical (|) denotes alternatives.
+Chaves, quando estiverem presentes, apenas indicam coincid@^{e}ncia; o par mais externo de
+chaves @'{e} geralmente requerido quando o objeto estiver em um contexto maior,
+e.g. quando for aprte de um objeto maior ou inclu@'{i}do em um fluxo de comando do
 Geomview.
 
-Por exemplo, cada uma das três linhas seguintes:
+Por exemplo, cada uma das tr@^{e}s linhas seguintes:
 @example
 	@{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
@@ -2944,30 +2944,30 @@ Por exemplo, cada uma das três linhas seguintes:
 	VECT 1 2 0   2 0   0 0 0   1 1 2
 @end example
 @noindent
-é um bojeto OOGL válido.  O último exemplo é válido somente quando estiver
-delimitado de forma clara como residindo de forma clara no seu próprio arquivo em disco.
+@'{e} um bojeto OOGL v@'{a}lido.  O @'{u}ltimo exemplo @'{e} v@'{a}lido somente quando estiver
+delimitado de forma clara como residindo de forma clara no seu pr@'{o}prio arquivo em disco.
 
-A construção com ":" permite referência a símbolos, criados com
-@code{define}. Um valor inicial de um símbolo é um objeto nulo.  Quando um
-símbolo for (re)definido, todas as referências a esse símbolo são automaticamente modificadas.
+A constru@,{c}@~{a}o com ":" permite refer@^{e}ncia a s@'{i}mbolos, criados com
+@code{define}. Um valor inicial de um s@'{i}mbolo @'{e} um objeto nulo.  Quando um
+s@'{i}mbolo for (re)definido, todas as refer@^{e}ncias a esse s@'{i}mbolo s@~{a}o automaticamente modificadas.
 
-A construção "@code{define} NOME" permite definir um simbolo global para
-um objeto especificado. Se "NOME" referir-se a um objeto que já existia anteriormente, então o antigo
-objeto é descartado e substituído pela nova
-definição. Veja @ref{read,@code{(read @dots{})}}. @ref{hdefine,@code{(hdefine
+A constru@,{c}@~{a}o "@code{define} NOME" permite definir um simbolo global para
+um objeto especificado. Se "NOME" referir-se a um objeto que j@'{a} existia anteriormente, ent@~{a}o o antigo
+objeto @'{e} descartado e substitu@'{i}do pela nova
+defini@,{c}@~{a}o. Veja @ref{read,@code{(read @dots{})}}. @ref{hdefine,@code{(hdefine
 @dots{})}}.
 
-A construção "<" faz com que um arquivo em disco seja lido.  Note que isso não é um
-mecanismo textual genérico de uso da diretiva de programação "include"; um objeto OOGL completo deve aparecer
-no arquivo referenciado na construção  "<".
+A constru@,{c}@~{a}o "<" faz com que um arquivo em disco seja lido.  Note que isso n@~{a}o @'{e} um
+mecanismo textual gen@'{e}rico de uso da diretiva de programa@,{c}@~{a}o "include"; um objeto OOGL completo deve aparecer
+no arquivo referenciado na constru@,{c}@~{a}o  "<".
 
-Arquivos lidos usando "<" são procurados primeiramente no diretório do arquivo que
-é refrenciado em "<", se existir; se essa busca falhar, o caminho normal de busca
-(veja @ref{load-path, @code{(load-path @dots{})}}) é usado.  A busca padrão
-olha primeiro no diretório atual, a seguir nos diretórios de dados do 
+Arquivos lidos usando "<" s@~{a}o procurados primeiramente no diret@'{o}rio do arquivo que
+@'{e} refrenciado em "<", se existir; se essa busca falhar, o caminho normal de busca
+(veja @ref{load-path, @code{(load-path @dots{})}}) @'{e} usado.  A busca padr@~{a}o
+olha primeiro no diret@'{o}rio atual, a seguir nos diret@'{o}rios de dados do 
 Geomview.
 
-Ressaltando, espaços em branco e caracteres indicadores de final de linha são insignificantes, e comentários de "#"
+Ressaltando, espa@,{c}os em branco e caracteres indicadores de final de linha s@~{a}o insignificantes, e coment@'{a}rios de "#"
 padem aparecer em qualquer lugar.
 
 
