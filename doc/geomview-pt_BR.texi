@@ -2805,116 +2805,116 @@ diferente do caso tridimensional comum onde o modificador @code{4}
 gera um objeto quadridimensional onde a componente quadridimensional implicitamente @'{e} escolhida
 para 1.
 
-Color components usually can be specified like for 3D vertices,
-@pxref{Vertices}, while specifying normals does not make sense.
+Componentes de cor usualmente podem ser especificadas da mesma forma que para vértices tridimensionais,
+Veja @ref{Vertices}, enquanto especificando componentes de cor em normais não faz sentido.
 
 @comment ----------------------------------------------------------------
 @node Surface normal directions, Transformation matrices, ND-Vertices, Conventions
 @subsection Surface normal directions
 
-Geomview uses normal vectors to determine how an objeto is shaded.
-The direction da normal is significant in this calculation.
+Geomview utiliza vetores normais para determinar como um objeto é compartilhado.
+A direção da normal é importante nesse cálculo.
 
-When normals are supplied with an objeto, the direction da normal
-is determined by the data given.
+Quando normais forem fornecidos com um objeto, a direção da normal
+é determinada pelos dados fornecidos.
 
-When normals are not supplied with the objeto, Geomview computes normal
-vectors automatically; in this case normals point toward the side from
-which the vertices appear in counterclockwise order.
+Quando normais não forem fornecidos com o objeto, Geomview calcula vetores
+normais automaticamente; nesse caso normais apontam para adiante do lado do
+qual os vértices aparecem na ordem anti-horária.
 
-On parametric surfaces (Bezier patches), the normal at point P(u,v)
-is in the direction dP/du cross dP/dv.
+Sobre superfícies paramétricas (retalhos de Bezier), o vetor normal no ponto P(u,v)
+está na direção dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
 @node Transformation matrices, ND Transformation matrices, Surface normal directions, Conventions
 @subsection Transformation matrices
 
-Some objetos incorporate 4x4 real matrices for homogeneous objeto
-transformations.  These matrices act by multiplication on the right of
-vectors.  Thus, if p is a 4-element row vector representing homogeneous
-coordinates of a point in the objeto OOGL, and A is the 4x4 matrix, then
-the transformed point is p' = p A.  This matrix convention is common in
-computer graphics; it's the transpose of that often used in mathematics,
-where points are column vectors multiplied on the right of matrices.
+Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transformações sobre
+objetos homogêneos.  Essas matrizes atuam através de multiplicação à direita de
+vetores.  Dessa forma, se p for um vetor linha de 4 elementos representando coordenadas
+homogêneas de um ponto no objeto OOGL, e A for a matrix 4x4, então
+o ponto resultante da transformação é p' = p A.  Essaconvenção matricial é comum em
+computação gráfica; it's the transpose daquela muitas vezes usada em matemática,
+onde pontos são vetores coluna multiplicados à direita pelas matrizes.
 
 
-Thus for Euclidean transformations, the translation components appear in
-the fourth row (last four elements) of A.  A's last column (4th, 8th,
-12th and 16th elements) are typically 0, 0, 0, and 1 respectively.
+Dessa forma para transformações Euclideanas, as componentes para translação aparecem na
+quarta linha (os últimos quatro elementos) da matriz A.  A última coluna da matriz A (quarto, oitavo,
+décimo segundo e décimo sexto elementos) são tipicamente 0, 0, 0, e 1 respectivamente.
 
 @comment ----------------------------------------------------------------
 @node ND Transformation matrices, Binary format, Transformation matrices, Conventions
 @subsection ND Transformation matrices
 
-In the context of @var{N}-dimensional space (@var{N} < 3) some objetos
-incorporate @var{(N+1)}x@var{(N+1)} real matrices for homogeneous objeto
-transformations.  These matrices act by multiplication on the right of
-vectors.  Thus, if p is an @var{(N+1)}-element row vector representing
-homogeneous coordinates of a point in the objeto OOGL, and A
-@var{(N+1)}x@var{(N+1)} is the matrix, then the transformed point is p'
+No contexto do espaço @var{N}-dimensional (@var{N} > 3) alguns objetos
+incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transformações sobre objetos
+homogêneos.  Essas matrizes atuam através de multiplicação à direita de
+vetores.  Dessa forma, se p for um vetor linha de @var{(N+1)}-elementos representando
+coordenadas homogêneas de um ponto no objeto OOGL, e A
+é a matriz quadrada de ordem @var{(N+1)}, então o ponto resultante da transformação é p'
 = p A.
 
-Note that (unlike for the 4x4 transformation matrices,
-@pxref{Transformation matrices}) the homogeneous component is located at
-index @b{zero}, so the translation components for Euclidean
-transformations appear in the @b{zero}-th row (first @var{(N+1)}
-elements). A's first column (at column index zero) is typically 1, 0,
+Note que (a excessão de matrizes de transformação 4x4,
+veja @ref{Transformation matrices}) a componente homogênea é localizada nos elementos com
+índice @b{zero}, de forma que componentes de transformação para transformações
+Euclideanas aparecem na @b{zero}-ésima linha (primeiros @var{(N+1)}
+elementos). A primeira coluna da matriz A (a coluna com índice zero) é tipicamente 1, 0,
 @dots{}, 0.
 
 @comment ----------------------------------------------------------------
 @node Binary format, References, ND Transformation matrices, Conventions
 @subsection Binary format
 
-Many objetos OOGL accept binary as well as ASCII file formats.
-These files begin with the usual ASCII token (e.g. @code{CQUAD})
-followed by the word @code{BINARY}.
-Binary data begins at the byte following the first newline after
-@code{BINARY}.  White space and a single comment may intervene, e.g.
+Muitos objetos OOGL aceitam formatos o formato de arquivo binário bem como o formato de arquivo ASCII.
+Esses arquivos começam com a indicação usual (e.g. @code{CQUAD})
+seguida pela palavra @code{BINARY}.
+Dados binários iniciam-se no byte imediatamente seguinte ao primeiro caractere de nova linha após
+a palavra @code{BINARY}.  Espaços em branco e um simples comentário podem atrapalhar, e.g.
 
 @example
 OFF BINARY	# binary-format "OFF" data follows 
 @end example
 
-Binary data comprise 32-bit integers and 32-bit IEEE-format floats, both
-in big-endian format (i.e., with most significant byte first).  This is
-the native format for 'int's and 'float's on Sun-3's, Sun-4's, and
-Irises, among others.
+Dados binários compreendem inteiros de 32 bits e os inteiros em ponto flutuante de 32 bits conforme definido pela IEEE (IEEE Standard for Binary Floating-Point Arithmetic (ANSI/IEEE Std 754-1985 - Institute of Electrical and Electronics Engineers), ambos os formatos
+seguem à forma de ordenação "big-endian" (i.e., com o byte mais significativo em primeiro lugar).  Esse é
+o formato nativo para tipos de dado int e tipos de dado float em sistemas do tipo Sun-3, Sun-4, e
+Irises, além de muitos outros sistemas.
 
-Binary data formats resemble the corresponding ASCII formats, with ints
-and floats in just the places you'd expect.  There are some exceptions
-though, specifically in the @code{QUAD}, @code{OFF} and @code{COMMENT}
-file formats.  Details are given in the individual file format
-descriptions.  @xref{QUAD}, @xref{OFF}, and @xref{COMMENT}.
+Formatos de dados binários assemelham-se aos formatos correspondentes em ASCII, com tipos de dado "int"
+e tipos de dado "float" nos lugares que você está acostumado a encontrar.  Existe alumas excessões
+todavia, especificamente dos formatos d arquivo @code{QUAD}, @code{OFF} e
+@code{COMMENT}.  Detalhes são fornecidos no arquivo individual das descrições do
+formato específico.  Veja em @ref{QUAD}, @ref{OFF}, e em @xref{COMMENT}.
 
-Binary objetos OOGL may be freely mixed in ASCII objeto streams:
+Objetos OOGL binários podem ser livremente misturados em fluxos de objetos ASCII:
 
 @example
 LIST
 @{ = MESH BINARY
-@dots{} binary data for mesh here @dots{}
+@dots{} dados binários de uma malha aqui @dots{}
 @}
 @{ = QUAD
 	1 0 0   0 0 1   0 1 0  0 1 0
 @}
 @end example
 
-Note that ASCII data resumes immediately following the last byte of
-binary data.
+Note que dados ASCII continuam seguindo imediatamente o último byte dos
+dados binários.
 
-Naturally, it's impossible to embed comments inside a binary-format OOGL
-objeto, though comments may appear in the header before the beginning of
-binary data.
+Naturalmente, é impossível incluit comentários dentro de um objeto em formato
+binário OOGL, todavia comentários podem aparecer no cabeçalho antes do início dos
+dados binários.
 
 @comment ----------------------------------------------------------------
 @node References, Appearances, Binary format, Conventions
 @subsection Embedded objects and external-object references
 
-Some objeto types (@code{LIST}, @code{INST}) allow references to other
-objetos OOGL, which may appear literally in the data stream, be loaded
-from named disk files, or be communicated from elsewhere via named
-objetos.  GCL commands also accept geometry in these forms.
+Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem referências a outros
+objetos OOGL, que podem aparecer literalmente no fluxo de dados, serem chamados
+a partir de arquivos em disco, ou serem comunicados a aprtir de outro lugar via objetos
+nomeados.  Comandos GCL tamb;em aceitam objetos geométricos através desses meios citados.
 
-The general syntax is
+A sintaxe genérica é
 
 @example
  <oogl-object>  ::=
@@ -2926,14 +2926,14 @@ The general syntax is
 	[ "@}" ]
 @end example
 
-where "quoted" items are literal strings (which appear without the
-quotes), [bracketed] items are optional, and | denotes alternatives.
-Curly braces, when present, must match; the outermost set of curly
-braces is generally required when the objeto is in a larger context,
-e.g. when it is part of a larger objeto or embedded in a Geomview
-command stream.
+onde os itens entre aspas duplas são seqüências de caracteres literais (que aparecem sem as
+aspas), os itens entre colchêtes ([]) são opcionais, e a barra vertical (|) denotes alternatives.
+Chaves ({}), quando estiverem presentes, apenas indicam coincidência; o par mais externo de
+chaves é geralmente requerido quando o objeto estiver em um contexto maior,
+e.g. quando for aprte de um objeto maior ou incluído em um fluxo de comando do
+Geomview.
 
-For example, each das following three lines:
+Por exemplo, cada uma das três linhas seguintes:
 @example
 	@{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
@@ -2944,31 +2944,31 @@ For example, each das following three lines:
 	VECT 1 2 0   2 0   0 0 0   1 1 2
 @end example
 @noindent
-is a valid objeto OOGL.  The last example is only valid when it is
-delimited unambiguously by residing in its own disk file.
+é um bojeto OOGL válido.  O último exemplo é válido somente quando estiver
+delimitado de forma clara como residindo de forma clara no seu próprio arquivo em disco.
 
-The ":" construct allows references to symbols, created with
-@code{define}. A symbol's initial value is a null objeto.  When a
-symbol is (re)defined, all references to it are automatically changed.
+A construção com ":" permite referência a símbolos, criados com
+@code{define}. Um valor inicial de um símbolo é um objeto nulo.  Quando um
+símbolo for (re)definido, todas as referências a esse símbolo são automaticamente modificadas.
 
-The "@code{define} NAME" construct allows to define a global symbol for
-the given objeto. If "NAME" already references an objeto, then the old
-objeto is discarded and replaced by the new
-definition. @xref{read,@code{(read @dots{})}}. @xref{hdefine,@code{(hdefine
+A construção "@code{define} NOME" permite definir um simbolo global para
+um objeto especificado. Se "NOME" referir-se a um objeto que já existia anteriormente, então o antigo
+objeto é descartado e substituído pela nova
+definição. Veja @ref{read,@code{(read @dots{})}}. @ref{hdefine,@code{(hdefine
 @dots{})}}.
 
-The "<" construct causes a disk file to be read.  Note that this isn't a
-general textual "include" mechanism; a complete objeto OOGL must appear
-in the referenced file.
+A construção "<" faz com que um arquivo em disco seja lido.  Note que isso não é um
+mecanismo textual genérico de uso da diretiva de programação "include"; um objeto OOGL completo deve aparecer
+no arquivo referenciado na construção  "<".
 
-Files read using "<" are sought first in the directory do file which
-referred to them, if any; failing that, the normal search path
-(@pxref{load-path, @code{(load-path @dots{})}}) is used.  The default search
-looks first in the current directory, then in the Geomview data
-directories.
+Arquivos lidos usando "<" são procurados primeiramente no diretório do arquivo que
+é refrenciado em "<", se existir; se essa busca falhar, o caminho normal de busca
+(veja @ref{load-path, @code{(load-path @dots{})}}) é usado.  A busca padrão
+olha primeiro no diretório atual, a seguir nos diretórios de dados do 
+Geomview.
 
-Again, white space and line breaks are insignificant, and "#" comments
-may appear anywhere.
+Ressaltando, espaços em branco e caracteres indicadores de final de linha são insignificantes, e comentários de "#"
+padem aparecer em qualquer lugar.
 
 
 @comment ----------------------------------------------------------------
