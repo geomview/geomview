@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.48/Tue Sep 25 23:09:21 2007//
+@c based on /geomview.texi/1.50/Sat Nov 17 21:55:04 2007//
 @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -2968,85 +2968,85 @@ olha primeiro no diret@'{o}rio atual, a seguir nos diret@'{o}rios de dados do
 Geomview.
 
 Ressaltando, espa@,{c}os em branco e caracteres indicadores de final de linha s@~{a}o insignificantes, e coment@'{a}rios de "#"
-padem aparecer em qualquer lugar.
+podem aparecer em qualquer lugar.
 
 
 @comment ----------------------------------------------------------------
 @node Appearances, Texture Mapping, References, Conventions
 @subsection Appearances
 
-Geometric objetos can have associated "appearance" information,
-specifying shading, lighting, color, wire-frame vs. shaded-surface
-display, and so on.  Appearances are inherited through objeto
-hierarchies, e.g. attaching an appearance to a @code{LIST} means that the
-appearance is applied to all the @code{LIST}'s members.
+Objetos geom@'{e}tricos podem ter informa@,{c}@~{o}es de apar@^{e}ncia associada,
+especificando tonalidade, brilho, cor, visualiza@,{c}@~{a}o wire-frame vs.
+shaded-surface, e assim por diante.  Apar@^{e}ncias s@~{a}o erdadas atrav@'{e}s de hierarqu@'{i}as de
+objetos, e.g. anexando uma apar@^{e}ncia a uma lista (@code{LIST}) significa que a
+apar@^{e}ncia @'{e} aplicada a todos os membros de @code{LIST}.
 
-Some appearance-related properties are relegated to "material",
-"lighting" and "texture" substructures. Take care to note which
-properties belong to which structure. Any geometric objeto can be
-preceded by an appearance definition like in the following example:
+Algumas propriedades relacionada a apar@^{e}ncia s@~{a}o relegadas a subestruturas tais como
+"material", "lighting" e "texture". Seja cuidadoso para notar quais
+propriedade pertencem a qual estrutura. Qualquer objeto geom@'{e}trico pode ser
+precedido por uma defini@,{c}@~{a}o de apar@^{e}ncia como no sguinte exemplo:
 
 @example
 @{ 
    appearance @{ +edge @}
-   LIST @{ < "file1" @} @{ QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
+   LIST @{ < "arquivo1" @} @{ QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 @}
 @end example
 
-Appearances are also objetos OOGL in their own right and can be given
-symbolic names and referenced by them
-(@pxref{References}). @xref{appearance, Appearance objects}.
+Apar@^{e}ncias s@~{a}o tamb@'{e}m objetos OOGL no seu pr@'{o}prio direito e pode ser fornecido
+nomes simb@'{o}licos e refer@^{e}ncia a elas. Veja 
+(@ref{References}) e em @ref{appearance, Appearance objects}.
 
 @table @b
 @item Texture Mapping
-There is a separate section concerning the definition of textures
-(@pxref{Texture Mapping}).
+Existe uma se@,{c}@~{a}o separada com rela@,{c}@~{a}o a defini@,{c}@~{a}o de texturas:
+(@ref{Texture Mapping}).
 
 @item Transparency
-Rendering translucent objetos is not supported by all drawing back
-ends. The OpenGL renderer has limited support for it: top-level objetos
-(i.e. those which appear in the objeto browser do main panel
-(@pxref{Basic Interaction, The Main Panel}) are rendered correctly by
-means of alpha-blending). Also, the RenderMan snapshots will include
-opacity values.
+Objetos de renderiza@,{c}@~{a}o transl@'{u}cida n@~{a}o s@~{a}o suportados por todos os desenhadores
+que funcionam no geomview. O renderizador OpenGL tem suporte limitado para isso: objetos de n@'{i}vel mais alto
+(i.e. aqueles que aparecem no navegador de objetos do painel principal
+(veja @ref{Basic Interaction, The Main Panel}) s@~{a}o renderizados corretamente por
+meio de alpha-blending). Tamb@'{e}m, os instant@^{a}neos do RenderMan ir@~{a}o incluir
+valores de opacidade.
 @end table
 
-Here's an example appearance structure including values for all
-attributes.  Order of attributes is unimportant.  As usual, white space
-is irrelevant.  Boolean attributes may be preceded by "+" or "-" to turn
-them on or off; "+" is assumed if only the attribute name appears.
+Aqui est@'{a} um exemplo de estrutura de apar@^{e}ncia incluindo valores para todos
+atributos.  A ordem dos atributos n@~{a}o @'{e} importante.  Como usual, espa@,{c}os em branco
+ss@~{a}o irrelevates.  Atributos Booleanos podem ser precedidos por "+" ou "-" para torn@'{a}-los
+habilitados ou desabilitados; "+" @'{e} assumido se somente o nome do atributo aparecer.
 Other attributes expect values.
 
-A "*" prefix on any attribute, e.g. "*+edge" or "*linewidth 2"
-or "material @{ *diffuse 1 1 .25 @}", selects "override" status for
-that attribute.
+Um "*" prefixado a um atributo, e.g. "*+edge" ou "*linewidth 2"
+ou "material @{ *diffuse 1 1 .25 @}", seleciona a situa@,{c}@~{a}o atual para sobrescrever ("override") para
+aquele atributo.
 
 @example
 appearance @{
-  +face               # (Do) draw faces of polygons.  On by default.
-  -edge               # (Don't) draw edges of polygons
-  +vect               # (Do) draw VECTs.  On by default.
-  -transparent        # (Disable) transparency. Enabling transparency 
-                      # does not (necessarily) result in a correct Geomview
-                      # pictures, but alpha values are used in RenderMan
-                      # snapshots.
-  -normal             # (Do) draw surface-normal vectors
-  normscale 1         # @dots{} with length 1.0 in objeto coordinates
+  +face               # (Faz) desenho de faces dos pol@'{i}gonos.  Habilitado por padr@~{a}o.
+  -edge               # (N@~{a}o faz) desenho de arestas de pol@'{i}gonos.
+  +vect               # (Faz) desenho de vetores (VECTs).  Habilitado por padr@~{a}o.
+  -transparent        # (Desabilita) transparency. Habilita@,{c}@~{a}o de transpar@^{e}ncia.
+                      # n@~{a}o (necessariamente) resulta em cores corretas no
+                      # Geomview, mas os valores de alfa s@~{a}o usados em instant@^{a}neos
+                      # RenderMan.
+  -normal             # (Faz) desenho de vetores normais a uma superf@'{i}cie.
+  normscale 1         # @dots{} com comprimento 1.0 em coordenadas do objeto.
 
-  +evert              # do evert polygon normals where needed so as
-                      #   to always face the camera
+  +evert              # faz a invers@~{a}o de normais de pol@'{i}gono onde necess@'{a}rio de forma que
+                      #   para toda face a camera
 
-  +texturing          # (Enable) texture mapping
-  +linear             # (Enable) linear average of closest texture elements
-  +mipmap             # (Enable) texture mip-mapping
-  +mipinterp          # (Enable) linear mip-mapping
-  -backcull           # (Don't) discard clockwise-oriented faces
-  -concave            # (Don't) expect and handle concave polygons
-  -shadelines	      # (Don't) shade lines as if they were lighted cylinders
-		      # These four are only effective where the graphics system
-		      # supports them, namely on GL and Open GL.
+  +texturing          # (Habilita) mapeamento de textura
+  +linear             # (Habilita) m@'{e}dia linear de elementos de textura mais fechados
+  +mipmap             # (Habilita) mapeamento mip de textura
+  +mipinterp          # (Habilita) mapeamento mip linear
+  -backcull           # (N@~{a}o faz) descarte da orienta@,{c}@~{a}o de faces no sentido anti-hor@'{a}rio
+  -concave            # (N@~{a}o faz) presun@,{c}@~{a}o e manuseio de pol@'{i}gonos c@^{o}ncavos
+  -shadelines	      # (N@~{a}o faz) linhas de tonalidade como se elas estivessem iluminando cilindros
+		      # Esses quatro (mipinterp, backcull, concave, shadelines) s@~{a}o somente efetivos onde o sistema gr@'{a}fico
+		      # suport@'{a}-los, a saber em GL e Open GL.
 
-  -keepcolor	      # Normally, when N-D positional coloring is enabled as
+  -keepcolor	      # Normalmente, quando N-D positional coloring is enabled as
 		      # with geomview's (ND-color ...) command, all
 		      # objetos' colors are affected.  But, objetos with the
 		      # "+keepcolor" attribute are immune to N-D coloring.
@@ -3291,7 +3291,7 @@ transform @code{transformation-matrix}
 * MESH::                        Rectangularly-connected mesh.
 * BBOX::                        Simple bounding-boxes.
 * BBP and BEZ::                 List of Bezier surface patches.
-* OFF::                         Polyhedra: polygons with shared vertices.
+* OFF::                         Polyhedra: pol@'{i}gonos with shared vertices.
 * VECT::                        List of points and lines.
 * SKEL::                        List of points and lines, with shared vertices.
 * SPHERE::                      Sphere
@@ -3595,9 +3595,9 @@ Syntax:
 @end example
 
 @code{OFF} files (name for "object file format") represent collections
-of planar polygons with possibly shared vertices, a convenient way to
-describe polyhedra.  The polygons may be concave but there's no
-provision for polygons containing holes.
+of planar pol@'{i}gonos with possibly shared vertices, a convenient way to
+describe polyhedra.  The pol@'{i}gonos may be concave but there's no
+provision for pol@'{i}gonos containing holes.
 
 An @code{OFF} file may begin with the keyword @code{OFF}; it's
 recommended but optional, as many existing files lack this keyword.
@@ -7364,7 +7364,7 @@ argument list must be present, but can be empty; in the latter case the
 @findex lines-closer
 @table @code
 @item (lines-closer CAM-ID DIST)
-Draw lines (including edges) closer to the c@^{a}mera than polygons
+Draw lines (including edges) closer to the c@^{a}mera than pol@'{i}gonos
 by DIST / 10^5  do Z-buffer range.  DIST = 3.0 by default.
 If DIST is too small, a line lying on a surface may be
 dotted or invisible, depending on the viewpoint.
@@ -8723,7 +8723,7 @@ models the c@^{a}mera moves by Euclidean movimentos.
 In @emph{Projective} and @emph{Conformal} models, the unit sphere is
 drawn by default.  You can turn it off and on at will using the
 @emph{Draw Sphere} bot@~{a}o in the @emph{Camera} panel.  In the
-@emph{Conformal} model, polygons and edges are subdivided as necessary
+@emph{Conformal} model, pol@'{i}gonos and edges are subdivided as necessary
 to make them look curved.  The parameters which determine this
 subdivision can be set with the @code{set-conformal-refine} GCL
 command. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
