@@ -3046,123 +3046,123 @@ appearance @{
 		      # Esses quatro (mipinterp, backcull, concave, shadelines) s@~{a}o somente efetivos onde o sistema gr@'{a}fico
 		      # suport@'{a}-los, a saber em GL e Open GL.
 
-  -keepcolor	      # Normalmente, quando N-D positional coloring is enabled as
-		      # with geomview's (ND-color ...) command, all
-		      # objetos' colors are affected.  But, objetos with the
-		      # "+keepcolor" attribute are immune to N-D coloring.
+  -keepcolor	      # Normalmente, quando informa@,{c}@~{a}o de cor N-D posicional est@'{a} habilitada como
+		      # com o comando do geomview (ND-color ...), todas as 
+		      # cores de objetos s@~{a}o afetadas.  Mas, objetos com o
+		      # atributo "+keepcolor" s@~{a}o imunes a informa@,{c}@~{o}es de cor N-D.
 
-  shading smooth      # or ``shading constant'' or ``shading flat'' or
-                      # or ``shading csmooth''.
+  shading smooth      # ou ``shading constant'' ou ``shading flat'' ou
+                      # ou ``shading csmooth''.
                       # smooth = Gouraud shading, flat = faceted,
                       # csmooth = smoothly interpolated but unlighted.
 
-  linewidth 1         # lines, points, and edges are 1 pixel wide.
+  linewidth 1         # linhas, pontos, e arestas s@~{a}o da largura de 1 pixel.
 
-  patchdice 10 10     # subdivide Bezier patches this finely in u and v
+  patchdice 10 10     # subdivide retalhos de Bezier esmiu@,{c}adamente em u e v
 
-  material @{         # Here's a material definition;
-                      # it could also be read from a file as in
-                      #  ``material < file.mat''
+  material @{         # Aqui est@'{a} uma defini@,{c}@~{a}o material;
+                      # pode tamb@'{e}m ser lido de um arquivo como em
+                      #  ``material < arquivo.mat''
 
-      ka  1.0         # ambient reflection coefficient.
-      ambient .3 .5 .3 # ambient color (red, green, blue components)
-                      # The ambient contribution to the shading is
-                      # the product of ka, the ambient color,
-                      # and the color da ambient light.
+      ka  1.0         # coeficiente de reflex@~{a}o ambiente.
+      ambient .3 .5 .3 # cor do ambiente (em componentes de vermelho, verde, azul)
+                      # A contribui@,{c}@~{a}o ambiente para a tonalidade @'{e}
+                      # o produto de ka, a cor do ambiente,
+                      # pela cor da luz ambiente.
 
-      kd  0.8         # diffuse-reflection coefficient.
-      diffuse .9 1 .4 # diffuse color.
-                        # (In ``shading constant'' mode, the surface
-                        # is colored with the diffuse color.)
+      kd  0.8         # coeficiente de reflex@~{a}o difusa.
+      diffuse .9 1 .4 # cor difusa.
+                        # (No modo ``shading constant'' (tonalidade constante), a superf@'{i}cie
+                        # @'{e} colorida com a cor difusa.)
 
-      ks 1.0          # specular reflection coefficient.
-      specular 1 1 1  # specular (highlight) color.
-      shininess  25   # specular exponent; larger values give
-                      # sharper highlights.
+      ks 1.0          # coeficiente de reflex@~{a}o especular.
+      specular 1 1 1  # cor especular (destacada).
+      shininess  25   # expoente especular; grandes valores fornecem
+                      # destaques falsos.
 
-      backdiffuse .7 .5 0 # back-face color for two-sided surfaces
-                        # If defined, this field determines the diffuse
-                        # color for the back side of a surface.
-                        # It's implemented by the software shader, and
-                        # by hardware shading on GL systems which support
-                        # two-sided lighting, and under Open GL.
+      backdiffuse .7 .5 0 # cor da face de tr@'{a}s para superf@'{i}cies com dois lados
+                        # Se definido, esse campo determina a cor
+                        # difusa para o lado de tr@'{a}s de uma superf@'{i}cie.
+                        # @'{E} implementada atrav@'{e}s de tonalidade via software, e
+                        # por tonalidade via hardware sobre sistemas GL que suportam
+                        # ilumina@,{c}@~{a}o de dois lados, e sob Open GL.
 
-      alpha   1.0     # opacity; 0 = transparent (invisible), 1 = opaque.
-                      # Ignored when transparency is disabled.
+      alpha   1.0     # opacidade; 0 = transparente (invis@'{i}vel), 1 = opaco.
+                      # Ignorado quando transpar@^{e}ncia estiver desabilitada.
 
-      edgecolor   1 1 0  # line & edge color
+      edgecolor   1 1 0  # cor de linha & aresta
 
-      normalcolor 0 0 0  # color for surface-normal vectors
+      normalcolor 0 0 0  # cor para vetores noramis a uma superf@'{i}cie
   @}
 
-  lighting @{         # Lighting model
+  lighting @{         # Modelo de ilumina@,{c}@~{a}o
 
-      ambient  .3 .3 .3  # ambient light
+      ambient  .3 .3 .3  # luz ambiente
 
-      replacelights   # ``Use only the following lights to
-                      # illuminate the objetos under this
-                      # appearance.''
-                      # Without "replacelights", any lights listed
-                      # are added to those already in the scene.
+      replacelights   # ``Use somente as seguintes luzes para
+                      # iluminar os objetos sob essa
+                      # apar@^{e}ncia.''
+                      # Sem "replacelights" (substitui@,{c}@~{a}o de luzes), quaisquer luzes listadas
+                      # s@~{a}o adicionadas a esses na cena.
 
-                      # Now a collection of sample lights:
+                      # Agora uma cole@,{c}@~{a}o exemplo de luzes:
       light @{ 
-          color  1 .7 .6      # light color
-          position  1 0 .5 0  # light position [distant light]
-                              # given in homogeneous coordinates.
-                              # With fourth component = 0,
-                              # this means a light coming from
-                              # direction (1,0,.5).
+          color  1 .7 .6      # cor da luz
+          position  1 0 .5 0  # posi@,{c}@~{a}o da luz [distant light]
+                              # fornecida em coordenadas homog@^{e}neas.
+                              # Com a quarta componente = 0,
+                              # isso significa uma luz vindo da
+                              # dire@,{c}@~{a}o (1,0,.5).
       @}
 
-      light @{                        # Another light.
+      light @{                        # Outra luz.
           color 1 1 1
-          position  0 0 .5 1  # light at finite position @dots{}
-          location camera     # specified in camera coordinates.
-                              # (Since the camera looks toward -Z,
-                              # this example places the light
-                              # .5 unit behind the eye.)
-          # Possible "location" keywords:
-          #  global    light position is in world (well, universe) coordinates
-          #             This is the default if no location specified.
-          #  camera   position is in the camera's coordinate system
-          #  local    position is in the coordinate system where
-          #                   the appearance was defined
+          position  0 0 .5 1  # luz na posi@,{c}@~{a}o finita @dots{}
+          location camera     # especificada em coordenadas de c@^{a}mera.
+                              # (Uma vez que a c@^{a}mera olha adiante -Z,
+                              # esse exemplo coloca a luz
+                              # .5 unidade atr@'{a}s do olho.)
+          # Poss@'{i}vel palavra chave de localiza@,{c}@~{a}o ("location"):
+          #  global   posi@,{c}@~{a}o da luz global em coordenadas de mundo (bem, universo)
+          #             Esse @'{e} o padr@~{a}o se nenhuma localiza@,{c}@~{a}o for espedcificada.
+          #  camera   posi@,{c}@~{a}o da c@^{a}mera em coordenadas do sistema de c@^{a}mera
+          #  local    posi@,{c}@~{a}o local em coordenadas do sistema onde
+          #                   a apar@^{e}ncia foi definida
       @}
-  @}                   # end lighting model
+  @}                   # fim do modelo de ilumina@,{c}@~{a}o
   texture @{
-        clamp st               # or ``s'' or ``t'' or ``none''
-        file lump.tiff         # file supplying texture-map image
-        alphafile mask.pgm.Z   # file supplying transparency-mask image
-        apply blend            # or ``modulate'' or ``decal''
-        transform  1 0 0 0     # surface (s,t,0,1) * tfm -> texture coords
+        clamp st               # ou ``s'' ou ``t'' ou ``none''
+        file lump.tiff         # arquivo fornecendo imagem de mapa de textura
+        alphafile mask.pgm.Z   # arquivo fornecendo imagem de m@'{a}scara de transpar@^{e}ncia
+        apply blend            # ou ``modulate'' ou ``decal''
+        transform  1 0 0 0     # superf@'{i}cie (s,t,0,1) * tfm -> coordenadas de textura
                    0 1 0 0
                    0 0 1 0
                   .5 0 0 1
 
-        background 1 0 0 1     # relevant for ``apply blend''
+        background 1 0 0 1     # relevante para ``apply blend''
   @}
-@}                     # end appearance
+@}                     # fim de apar@^{e}ncia
 @end example
 
 
-There are rules for inheritance of appearance attributes when several
-are imposed at different levels in the hierarchy.
+Existem regras para heran@,{c}a de atributos de apar@^{e}ncia quando muitas apar@^{e}ncia
+s@~{a}o impostas em diferentes n@'{i}veis na hierarqu@'{i}a.
 
-For example, Geomview installs a backstop appearance which provides
-default values for most parameters; its control panels install other
-appearances which supply new values for a few attributes; user-supplied
-geometry may also contain appearances.
+Por exemplo, Geomview instala uma apar@^{e}ncia de parada de seguran@,{c}a que fornece
+valores padr@~{a}o para a maioria dos par@^{a}metros; seu painel de controle instala outras
+apar@^{e}ncias que fornecem novos valores para uns poucos atributos; a geometria
+fornecida pelo usu@'{a}rio pode tamb@'{e}m conter apar@^{e}ncias.
 
-The general rule is that the child's appearance (the one closest to the
-geometric primitives) wins.  Further, appearance controls with
-"override" status (e.g. @code{*+face or material @{ *diffuse 1 1 0 @}})
-win over those without it.
+A regra geral @'{e} que the child's appearance (aquelas fechadas para as
+primitivas geom@'{e}tricas) vencem.  Adicionalmente, controles de apar@^{e}ncia com
+situa@,{c}@~{a}o atual em sobrescrever ("override") (e.g. @code{*+face ou material @{ *diffuse 1 1 0 @}})
+vencem sobre as outras que estiverem sem o atributo de sobrescrever.
 
-Geomview's appearance controls use the "override" feature so as to be
-effective even if user-supplied objetos contain their own appearance settings.
-However, if a user-supplied objeto contains an appearance field with
-override status set, that property will be immune to Geomview's controls.
+Os controles de apar@^{e}ncia do Geomview usam o recurso de sobrescrever "override" de forma a ser
+efetivo mesmo se objetos fornecidos pelo usu@'{a}rio contiverem suas pr@'{o}prias escolhas de apar@^{e}ncia.
+Todavia, Se um objeto fornecido pelo usu@'{a}rio contiver um campo de apar@^{e}ncia com
+o recurso de sobrescrever ativado, esse campo de apar@^{e}ncia ser@'{a} imune aos controles do Geomview.
 
 @comment ----------------------------------------------------------------
 @node Texture Mapping,  , Appearances, Conventions
