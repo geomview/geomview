@@ -3168,14 +3168,14 @@ o recurso de sobrescrever ativado, esse campo de apar@^{e}ncia ser@'{a} imune ao
 @node Texture Mapping,  , Appearances, Conventions
 @subsection Texture Mapping
 
-Some rendering back-ends support texture-mapped objetos, actually only
-the OpenGL and the RenderMan interface at the time of this
-writing. There are also some issues with the RMan interface when using
-an alpha-channel in the texture image. Those rendering back-ends which
-don't support texturing silently ignore attempts to use texture
-mapping. A texture is specified as part of an appearance structure
-(@pxref{Appearances}).  Briefly, one provides a texture image
-(@pxref{image, Image objects}), which is considered to lie in a square
+Alguns programas que trabalham sem contato direto com o usu@'{a}rio suportam objetos mapeados em textura, atualmente apenas
+o OpenGL e a interface RenderMan no momento dessa
+escrita. Existe tamb@'{e}m alguns recursos com a interface RMan quando em uso
+um canal alfa na imagem de textura. Aqueles programas que n@~{a}o trabalham diretamente com  o usu@'{a}rio cujo
+suporte a textura n@~{a}o existe silenciosamente ignoram tentativas de uso de mapeamento
+de textura. Uma textura @'{e} especificada como parte de uma estrutura de apar@^{e}ncia
+(Veja @ref{Appearances}).  Briefly, one provides a texture image
+(Veja tamb@'{e}m @pxref{image, Image objects}), which is considered to lie in a square
 in @code{(s,t)} parameter space in the range 0 <= s <= 1, 0 <= t <= 1.
 Then one provides a geometric primitive, with each v@'{e}rtice tagged with
 @code{(s,t)} texture coordinates.  If texturing is enabled, the
