@@ -3174,53 +3174,53 @@ escrita. Existe tamb@'{e}m alguns recursos com a interface RMan quando em uso
 um canal alfa na imagem de textura. Aqueles programas que n@~{a}o trabalham diretamente com  o usu@'{a}rio cujo
 suporte a textura n@~{a}o existe silenciosamente ignoram tentativas de uso de mapeamento
 de textura. Uma textura @'{e} especificada como parte de uma estrutura de apar@^{e}ncia
-(Veja @ref{Appearances}).  Briefly, one provides a texture image
-(Veja tamb@'{e}m @pxref{image, Image objects}), which is considered to lie in a square
-in @code{(s,t)} parameter space in the range 0 <= s <= 1, 0 <= t <= 1.
-Then one provides a geometric primitive, with each v@'{e}rtice tagged with
-@code{(s,t)} texture coordinates.  If texturing is enabled, the
-appropriate portion da texture image is pasted onto each face do
-textured objeto.
+(Veja @ref{Appearances}).  Resumidamente, se fornece uma imagem de textura
+(Veja tamb@'{e}m @pxref{image, Image objects}), a qual @'{e} considerada contida em um quadrado
+no espa@,{c}o parametrizado @code{(s,t)} no intervalo 0 <= s <= 1, 0 <= t <= 1.
+Ent@~{a}o se fornece uma primitiva geom@'{e}trica, com cada v@'{e}rtice acompanhado com
+as coordenadas de textura @code{(s,t)}.  Se a texturiza@,{c}@~{a}o estiver habilitada, a
+por@,{c}@~{a}o apropriada da imagem de textura @'{e} colada sobre cada face do
+objeto texturizado.
 
-There is (currently) no provision for inheritance of part of a texture
-structure; if the @code{texture} keyword is mentioned in an appearance,
-it supplants any other texture specification.
+N@~{a}o existe (atualmente) nenhuma provis@~{a}o para heran@,{c}a de parte de uma estrutura de
+textura; se a palavra chave @code{texture} @'{e} mencionada em uma apar@^{e}ncia,
+essa mens@~{a}o suplanta qualquer outra especifica@,{c}@~{a}o de textura.
 
-The appearance attribute @code{texturing} controls se textures are
-used; there's no performance penalty for having texture @{ @dots{} @} fields
-defined when texturing is off.
+O atributo de apar@^{e}ncia @code{texturing} controla se texturas s@~{a}o
+usadas; n@~{a}o existe perda de performace tendo campos "texture @{ @dots{} @}"
+definidos quando a utiliza@,{c}@~{a}o de texturas est@'{a} desabilitada.
 
-The available fields are:
+Os campos de textura dispon@'{i}veis s@~{a}o:
 
 @example
-clamp   none  -or-  s  -or-  t  -or-  st
-  Determines the meaning of texture coordinates outside the range 0..1.
-  With @code{clamp none}, the default, coordinates are interpreted
-  modulo 1, so (s,t) = (1.25,0), (.25,0), and (-.75,0) all refer to
-  the same point in texture space.  With @code{s} or @code{t} or
-  @code{st}, either or both of s- or t-coordinates less than 0 or
-  greater than 1 are clamped to 1 or 0, respectively.
+clamp   none  -ou-  s  -ou-  t  -ou-  st
+  Determines o significado de coordenadas de textura fora do intervalo 0..1.
+  Com @code{clamp none}, o padr@~{a}o, coordenadas s@~{a}o interpretadas
+  modulo 1, ent@~{a}o (s,t) = (1.25,0), (.25,0), e (-.75,0) referem-se todos ao
+  mesmo ponto no espa@,{c}o das texturas.  Com @code{clamp s} ou @code{clamp t} ou
+  @code{clamp st}, individualmente ou ambos de s-coordenadas ou t-coordenadas menor que 0 ou
+  maior que 1 s@~{a}o remapeadas para 1 ou para 0, respectivamente.
 
-image @{ <image specification> (@pxref{image, Image objects}) @}
-  Specify the actual texture image. Images can have 1, 2, 3 or 4 channels:
-    1 channel:  luminance
-    2 channels: luminance and alpha
-    3 channels: RGB data
-    4 channels: RGBA data
+image @{ <especifica@,{c}@~{a}o de imagem> (veja @ref{image, Image objects}) @}
+  Especifica a atual imagem de textura. Imagens de textura podem ter 1, 2, 3 ou 4 canais:
+    1 canal:  lumin@^{a}ncia
+    2 canais: lumin@^{a}ncia e alfa (opcidade:0 transparente, 1 opaco)
+    3 canais: dados RGB
+    4 canais: dados RGBA
 
-  @xref{image, Image objects}, for the actual definition of image
-  objetos. The alpha-channel is only interpreted as mask: where the mask
-  is zero, pixels are simply not drawn. An exception is the case where
-  @emph{apply} is equal to @emph{modulate} and translucency is enabled:
-  in this case the resulting alpha value is the result da
-  multiplication da surface color with the alpha value do
+  Veja @ref{image, Image objects}, para a defini@,{c}@~{a}o atual de objetos de
+  imagem. O canal usado por alfa @'{e} somente interpretado como m@'{a}scara: onde a m@'{a}cara
+  @'{e} zero, pixels s@~{a}o simplesmente n@~{a}o desenhados. Uma exce@,{c}@~{a}o @'{e} o caso onde
+  @emph{apply} @'{e} igual a @emph{modulate} e a transluc@^{e}ncia est@'{a} habilitada:
+  nesse caso o valor de alfa resultante @'{e} o resultado da
+  multiplica@,{c}@~{a}o da cor da superf@'{i}cie pelo valor de alfa do
   canal alfa da textura.
 
-file      filename
-alphafile filename
-  @emph{This is considered obsolete, and only kept for compatibility,
-  the modern way is to use the new OOGL image objeto. @xref{image, Image objects}.
-  The stuff documented here should still work, though}
+file      nomearquivo
+alphafile nomearquivo
+  @emph{Isso @'{e} considerado obsoleto, e somente mantido por compatibilidade,
+  o moderno caminho @'{e} usar o novo objeto imagem OOGL. Veja @ref{image, Image objects}.
+  O material documentado aqui pode ainda trabalhar apesar disso}
 
   Specifies image file(s) containing the texture.
        
@@ -3247,7 +3247,7 @@ alphafile filename
   @emph{Image objetos provide a more flexible way to specify texture
   data. @xref{image, Image objects}.}
 
-apply   modulate  -or-  blend  -or-  decal
+apply   modulate  -ou-  blend  -ou-  decal
   Indicates how the texture image is applied to the surface.
   Here the "surface color" means the color that surface would have
   in the absence of texture mapping.
@@ -4285,9 +4285,9 @@ Image objetos are used to specify pixmap data for either textures
 (@pxref{Texture Mapping}), or for background images of c@^{a}meras
 (@pxref{camera, Camera objects}).
 
-At the time of this writing images are comprised of 1 to 4 channels, a
-channel provides a single number in the range from 0 to @code{maxval}
-for each pixel; and @code{maxval} is tied to 255. The interpretation dos image data depending on the number of channels is like follows:
+At the time of this writing images are comprised of 1 to 4 canais, a
+canal provides a single number in the range from 0 to @code{maxval}
+for each pixel; and @code{maxval} is tied to 255. The interpretation dos image data depending on the number of canais is like follows:
 
 @multitable @columnfractions 0.2 0.2 0.6
 @headitem #Channels @tab Channel No. @tab Interpretation
@@ -4350,7 +4350,7 @@ The general syntax of image objetos is like follows:
   |
                        (actual stuff defining the image; image data
                        must come last, after defining the width and
-                       height and number of channels)
+                       height and number of canais)
 
       "width"          (width da image, auto-detected from image data
                        if possible)
@@ -4358,7 +4358,7 @@ The general syntax of image objetos is like follows:
       "height"         (height da image, auto-detected from image data
                        if possible)
 
-      "channels"       (number of channels, auto-detected from image data
+      "channels"       (number of canais, auto-detected from image data
                        and @code{data} specifications, if possible)
 
       "maxval"         (unsupported, must be @code{255} if specified)
@@ -4380,20 +4380,20 @@ The general syntax of image objetos is like follows:
 This is a bit-field describing where the specified image data should be
 placed in the destination pixmap. The bit-field is specified by an
 integer in one dos known formats (decimal, octal, hexadecimal). The
-channels dos source data are always enumbered consecutively. If,
+canais dos source data are always enumbered consecutively. If,
 e.g. @samp{FILENAME} or @samp{LITERAL_IMAGE_DATA} specify a
-three-channel (probably RGB @dots{}) image and @samp{DESTMASK} equals
-@code{0xD} (i.e. bit 1 is 0), then the 3rd channel do source pixmap
-would be placed in the 4th channel do destination image objeto (the
-alpha channel), the 2nd source channel would determine the @samp{blue}
-destination value and the 1st source channel the @samp{red} destination
+three-canal (probably RGB @dots{}) image and @samp{DESTMASK} equals
+@code{0xD} (i.e. bit 1 is 0), then the 3rd canal do source pixmap
+would be placed in the 4th canal do destination image objeto (the
+alpha canal), the 2nd source canal would determine the @samp{blue}
+destination value and the 1st source canal the @samp{red} destination
 value.
 
-The number of channels dos source data always has to match the number
+The number of canais dos source data always has to match the number
 of bits set in @samp{DESTMASK}. @b{Exception:} if the source pixmap has
-only one channel, then it can be used to fill any number of destination
-channels; all channels specified in @samp{DESTMASK} are filled with the
-data do single channel source pixmap.
+only one canal, then it can be used to fill any number of destination
+canais; all canais specified in @samp{DESTMASK} are filled with the
+data do single canal source pixmap.
 
 Geomview knows the following symbolic constants, which can be used
 instead of specifying the @samp{DESTMASK} bit-field numerically:
@@ -4407,9 +4407,9 @@ same as @samp{7}, @samp{0x7}, @samp{\07}
 @item RGBA
 same as @samp{15}, @samp{0xf}, @samp{\017}
 @item ALPHA
-depends on the context: the absolute number of channels must be known;
+depends on the context: the absolute number of canais must be known;
 i.e. @samp{data ALPHA @dots{}} must be prepended by something determining
-the number of channels da image, e.g.
+the number of canais da image, e.g.
 @example
 ...
 data RGB ...
@@ -4423,9 +4423,9 @@ data ALPHA ...
 <whatever else ...>
 @end example
 is not valid, because Geomview has not means to determine the
-destination channel from the context.
+destination canal from the context.
 @item AUTO
-PGM image data is interpreted as single grey-scale channel, RGB PNM data
+PGM image data is interpreted as single grey-scale canal, RGB PNM data
 as RGB image data. @code{AUTO} cannot work with @samp{raw} image data.
 @end table
 
@@ -4437,7 +4437,7 @@ image data, Geomview is able to auto-detectc SGI image file formats (for
 historical reasons @dots{}) and NetPBM image formats (for practical
 reasons). The auto-detection of NetPBM formats includes the new
 @dfn{PAM} image format which allows (among other things) to store an
-alpha channel together with the luminance or RGB data. Likewise, the
+alpha canal together with the luminance or RGB data. Likewise, the
 final output of any dos specified filters must either be in SGI image
 file format, or specify a PAM, PNM or PGM image.  If the image file
 format cannot be determined by either the filenmae suffix or the filter
@@ -4454,7 +4454,7 @@ The above should be equivalent to
 @example
 data LUMINANCE raw @{ < greymapfile @},
 @end example
-provided that the decompressed data carries single channel data, with
+provided that the decompressed data carries single canal data, with
 the first pixel corresponding to the lower-left corner (because do
 @samp{raw} image format, see below).
 
@@ -4488,8 +4488,8 @@ executable can be fond in the current excution path.
 @code{GIF} image file format. Only supported if the @code{giftoppm}
 executable can be fond in the current excution path.
 @item raw
-Raw image data; the number of channels must match the number of bits set
-in @samp{DESTMASK}. Pixels are specified with 1 byte per channel. The
+Raw image data; the number of canais must match the number of bits set
+in @samp{DESTMASK}. Pixels are specified with 1 byte per canal. The
 pixels are organized in rows as @samp{liminance[-alpha]} or
 @samp{RGB[A]} samples. The left-most pixel is the first pixel in each
 data-row, the top-most image row must come first (this is just the same
@@ -4522,14 +4522,14 @@ Geomview will try to decompress the stuff with @samp{bzip2 -dc}.
 
 @end table
 
-@b{Missing image data:} Normally, the number of image channels is
+@b{Missing image data:} Normally, the number of image canais is
 determined automatically from the image @code{data} specifications; if
-the image specification carries an explicit number of channels via the
-@code{channels} keyword which exceeds the number of channels found in
+the image specification carries an explicit number of canais via the
+@code{channels} keyword which exceeds the number of canais found in
 the image @code{data} specifications, or if the union of all
 @samp{DESTMASK} specfications has holes, then missing luminance and RGB
-channels are initialized to 0, and a missing alpha-channel is
-initialized to @code{maxval}, i.e. omitting the alpha channel data for
+canais are initialized to 0, and a missing alpha-canal is
+initialized to @code{maxval}, i.e. omitting the alpha canal data for
 an RGBA image is just the same as defining an RGB image.
 
 @node transform, ntransform, image, Non-geometric objects
