@@ -228,11 +228,12 @@ IOBFILE *iobfileopen(FILE *istream)
     }
 
     /* No stdio buffereing */
-#if SETVBUF_REVERSED
+#if defined(__GLIBC__) && __GLIBC__ >= 2
+# if SETVBUF_REVERSED
     setvbuf(istream, _IONBF, NULL, 0);
-#else
+# else
     setvbuf(istream, NULL, _IONBF, 0);
-#endif
+# endif
 #if HAVE_FCNTL
     iobf->fflags = fcntl(iobf->fd, F_GETFL);
     if (iobf->fflags != -1 && (iobf->fflags & o_nonblock)) {
