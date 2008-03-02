@@ -486,7 +486,21 @@ void HandleDelete(Handle *h)
    /* Don't let Pool code think we have something cached in this handle! */
   if (h->whence && h->whence->seekable) {
     h->whence->flags &= ~PF_ANY;
-    PoolClose(h->whence);
+    if (!h->permanent) {
+#if 1
+      /* Should we do this? If we are not permanent and attached to a
+       * pool, then we are a dummy pool-handle assigned to an object
+       * just read from the pool. Still the pool could belong to a
+       * pipe, and maybe we should not close and delete the pool.
+       *
+       * I think closing and deleting is ok here ...
+       *
+       * If we are permanent, then we should not close whence.
+       */
+      PoolClose(h->whence);
+      PoolDelete(h->whence);
+#endif
+    }
   }
 
   if(h->name) {
