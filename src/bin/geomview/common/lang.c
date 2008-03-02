@@ -344,6 +344,21 @@ LDEFINE(dump_handles, LVOID,
   return Lt;
 }
 
+LDEFINE(dump_pools, LVOID,
+	"(dump-pools)\n"
+	"Dump the list of currently active input-\"pools\" to stdout."
+	"This function is intended for internal debugging use only.")
+{
+  extern void pool_dump(void);
+
+  LDECLARE(("dump-pools", LBEGIN,
+	    LEND));
+
+  pool_dump();
+
+  return Lt;
+}
+
 LDEFINE(geomview_version, LSTRING,
 	"(geomview-version)\n\
 	Returns a string representing the version of geomview that is\n\
