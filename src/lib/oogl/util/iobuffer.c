@@ -234,6 +234,7 @@ IOBFILE *iobfileopen(FILE *istream)
 # else
     setvbuf(istream, NULL, _IONBF, 0);
 # endif
+#endif
 #if HAVE_FCNTL
     iobf->fflags = fcntl(iobf->fd, F_GETFL);
     if (iobf->fflags != -1 && (iobf->fflags & o_nonblock)) {
