@@ -182,6 +182,7 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 	} else {
 	    h = ph; /* otherwise we return the handle returned by PoolIn(). */
 	}
+	HandleDelete(hknown);
     } else if (p) {
 	/* If we have a pool but not handle, then generate one for
 	 * this pool; callers of this functinos treat handle == NULL
@@ -203,8 +204,6 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
 	    DblListAdd(&p->handles, &h->poolnode);
 	}
     }
-
-    HandleDelete(hknown);
 
     if (hp) {
 	if (*hp) {
@@ -240,6 +239,22 @@ PoolByName(char *fname, HandleOps *ops)
     return NULL;
 }
 
+void pool_dump(void)
+{
+    Pool *p;
+    Handle *h;
+
+    OOGLWarn("Active Pools:");
+    DblListIterateNoDelete(&AllPools, Pool, node, p) {
+	OOGLWarn("  %s[%s]%p",
+		 p->ops ? p->ops->prefix : "none",
+		 p->poolname, (void *)p);
+	OOGLWarn("    Attached Handles:");
+	DblListIterateNoDelete(&p->handles, Handle, poolnode, h) {
+	    OOGLWarn("    %s", h->name);
+	}
+    }
+}
 
 static
 void watchfd(int fd)
@@ -483,8 +498,9 @@ PoolStreamOpen(char *name, FILE *f, int rw, HandleOps *ops)
 	if (rw != 1) {
 	    p->inf = iobfileopen(f);
 	}
-	if (rw > 0)
+	if (rw > 0) {
 	    p->outf = (rw == 2) ? fdopen(dup(fileno(f)), "wb") : f;
+	}
     }
 
     if (p->inf == NULL && p->outf == NULL) {
@@ -605,10 +621,11 @@ PoolDoReread(Pool *p)
 
 void PoolClose(Pool *p)
 {
-    if (p->ops->close && !(p->flags & PF_CLOSING)) {
+    if (p->ops->close && (p->flags & PF_CLOSING) == 0) {
 	p->flags |= PF_CLOSING;
-	if ((*p->ops->close)(p))
+	if ((*p->ops->close)(p)) {
 	    return;
+	}
     }
 
     if (p->type == P_STREAM) {
@@ -637,6 +654,7 @@ void PoolDelete(Pool *p)
     if (p == NULL || (p->flags & PF_DELETED) != 0) {
 	return;
     }
+
     p->flags |= PF_DELETED;
 
     if ((p->flags & PF_TEMP) == 0) {
@@ -886,10 +904,12 @@ Handle *PoolIn(Pool *p)
 		     * ownership of the object to the Handle.
 		     */
 		    REFPUT(r);
-		    /* Increment the reference count lest PoolDelete()
-		     * will also consume the attached object.
-		     */
-		    REFGET(Handle, h);
+		    if (h->whence == NULL) {
+			/* Increment the reference count lest PoolDelete()
+			 * will also consume the attached object.
+			 */
+			REFGET(Handle, h);
+		    }
 		}
 	    } else {
 		/* Increment the count such that the calling function
@@ -918,6 +938,9 @@ Handle *PoolIn(Pool *p)
 	     * containing multiple objects, so we actually do reread if asked.
 	     */
 	    p->flags |= (p->flags & PF_ANY) ? PF_REREAD : PF_ANY;
+
+	    /* handle_dump(); */
+
 	} else {
 	    if (p->flags & PF_DELETED)
 		return NULL;
