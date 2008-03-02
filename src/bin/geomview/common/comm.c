@@ -1677,7 +1677,7 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
  * Since (new_)geometry and (new_)camera take ownership of the object,
  * increasing its reference count, we decr the ref count after handing it over.
  */
-void
+static void
 useconnection(char *name, HandleOps *ops, Handle *h, Ref *obj, int unique)
 {
   char *tail;
@@ -1690,9 +1690,11 @@ useconnection(char *name, HandleOps *ops, Handle *h, Ref *obj, int unique)
   if (ops == &GeomOps) {
     GeomStruct gs;
     if(h && !h->permanent) {
+#if 0
       /* same logic as in geomparse() */
       HandleDelete(h);
       h = NULL;
+#endif
     }
     gs.h = h;
     gs.geom = (Geom *)obj;
@@ -1705,9 +1707,11 @@ useconnection(char *name, HandleOps *ops, Handle *h, Ref *obj, int unique)
   } else if (ops == &CamOps) {
     CameraStruct cs;
     if(h && !h->permanent) {
+#if 0
       /* same logic as in geomparse() */
       HandleDelete(h);
       h = NULL;
+#endif
     }
     cs.h = h;
     cs.cam = (Camera *)obj;
