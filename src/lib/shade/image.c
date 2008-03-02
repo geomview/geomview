@@ -1,4 +1,4 @@
-/* Copyright (C) 2007 Claus-Justus Heine
+/* Copyright (C) 2007-2008 Claus-Justus Heine
  *
  * This file is part of Geomview.
  * 
@@ -1053,7 +1053,7 @@ static bool readimage(Image *img, unsigned *chmask, char *filtertype,
   }
   
   if (filtertype == NULL) {
-    filtertype = strdup(imgfname);
+    filtertype = imgfname ? strdup(imgfname) : NULL;
   } else {
     filtertype = strdup(filtertype);
     explicit_filter = filtertype;
