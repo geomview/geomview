@@ -1,4 +1,102 @@
+2008-03-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version-pt_BR.texi, doc/version.texi, NEWS: Update.
+
+	* src/lib/oogl/util/iobuffer.c: Missing #endif. Gnah.
+
+	* src/lib/oogl/util/iobuffer.c:
+	Only disable stdio buffering if __GLIBC__ is defined. In particular
+	this should fix performance problems with MAC OS/X.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	Reference count for "pool-handles" was increased too often for
+	multi-object files.
+
+	* src/bin/geomview/common/comm.c:
+	Do attach temporary pool-handles to geoemtries; this is needed to read
+	sequences of objects from non-command-language files.
+
+	* src/bin/geomview/common/lang.c:
+	New debugging function (dump-pools) which dumps the list of currently
+	active pools to stderr.
+
+	* src/lib/oogl/refcomm/handle.c:
+	Only close and delete pools attached to non-permanent handles.
+
+	* src/lib/shade/image.c:
+	Default to "raw" filter if no filter was specified; fix a NULL-pointer
+	reference.
+
+2008-02-19  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt_BR translation
+
+2008-02-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt_BR translation
+
+2007-11-29  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt_BR translation
+
+2007-11-28  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi:
+	Partial pt_BR translation and fouth line adjust
+
+2007-11-25  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Adjusting diacritical marks only
+
+	* doc/geomview-pt_BR.texi: Partial translation pt_BR
+
+2007-11-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview.texi: changing "N < 3" to "N > 3"
+
+2007-11-16  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+2007-11-15  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi:
+	geomview.texi - changing "normalizaton" to "normalization"
+	geomview-pt_BR.texi partial translation
+
+2007-11-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+2007-11-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+2007-10-22  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+2007-10-20  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+2007-10-09  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
+
+	* doc/version-pt_BR.texi: Translating month name to portuguese
+
 2007-10-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/comm.c:
+	(echo ...) command: for compatibility switch back to the old and
+	inconsistent behaviour: strings are printed without quotes, but if the
+	argument is the result of a function evaluating to string, do not omit
+	the quote.  This way (echo (real-id focus)) will be printed with
+	quotes (e.g. as `"Camera"'), but (echo "Camera") will be printed
+	without quotes.
+
+	* ChangeLog: Update.
 
 	* doc/version-pt_BR.texi, doc/version.texi:
 	Update. These files to not belong to the CVS archive.
