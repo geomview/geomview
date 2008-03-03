@@ -27,6 +27,6 @@
     (sleep-for 1e-1)
     (echo .)
     (transform sphere sphere focus rotate 0 1e-3 0)
-    (redraw focus)))
-    (process-events)
+    (redraw focus)
+    (process-events)))
 (quit)
