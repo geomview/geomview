@@ -2995,7 +2995,7 @@ precedido por uma defini@,{c}@~{a}o de apar@^{e}ncia como no sguinte exemplo:
 
 Apar@^{e}ncias s@~{a}o tamb@'{e}m objetos OOGL no seu pr@'{o}prio direito e pode ser fornecido
 nomes simb@'{o}licos e refer@^{e}ncia a elas. Veja 
-(@ref{References}) e em @ref{appearance, Appearance objects}.
+(@ref{References}) e em @ref{appearance objects, Appearance objects}.
 
 @table @b
 @item Texture Mapping
@@ -4262,7 +4262,7 @@ without quotes, square bracketed ([ ]) items are optional, and | separates
 alternative choices.
 
 @menu
-* appearance::                  Appearance objetos.
+* appearance objects::          Appearance objetos.
 * image::                       Image objetos.
 * transform::                   Transformation matrices.
 * ntransform::                  N-dimensional transformation matrices.
@@ -4271,14 +4271,14 @@ alternative choices.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node appearance, image, Non-geometric objects, Non-geometric objects
+@node appearance objects, image, Non-geometric objects, Non-geometric objects
 @subsection Appearance Objects
 Appearances are objetos OOGL of their own right, which simply means that
 it is possible to give them symbolic names (@pxref{References}). There
 are other sections dealing with appearance
 details. @xref{Appearances}.
 
-@node image, transform, appearance, Non-geometric objects
+@node image, transform, appearance objects, Non-geometric objects
 @subsection Image Objects
 
 Image objetos are used to specify pixmap data for either textures
@@ -6885,7 +6885,6 @@ see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
 @end table
 
 @node delete, dice, defun, GCL Reference
-
 @subsection delete
 @findex delete
 @table @code
@@ -8525,7 +8524,7 @@ be identical to those used in the @ref{interest, @code{interest}}
 command.
 @end table
 
-@node update-draw, while, update, GCL Reference
+@node update, update-draw, uninterest, GCL Reference
 @subsection update
 @findex update
 @table @code
@@ -8534,7 +8533,7 @@ Apply each incremental movimento once.  Uses timestep if it's present and
 nonzero; otherwise movimentos are proportional to elapsed real time.
 @end table
 
-@node update-draw, window, update, GCL Reference
+@node update-draw, while, update, GCL Reference
 @subsection update-draw
 @findex update-draw
 @table @code

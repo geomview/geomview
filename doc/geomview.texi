@@ -2969,7 +2969,7 @@ preceded by an appearance definition like in the following example:
 
 Appearances are also OOGL objects in their own right and can be given
 symbolic names and referenced by them
-(@pxref{References}). @xref{appearance, Appearance objects}.
+(@pxref{References}). @xref{appearance objects, Appearance objects}.
 
 @table @b
 @item Texture Mapping
@@ -4236,7 +4236,7 @@ without quotes, square bracketed ([ ]) items are optional, and | separates
 alternative choices.
 
 @menu
-* appearance::                  Appearance objects.
+* appearance objects::          Appearance objects.
 * image::                       Image objects.
 * transform::                   Transformation matrices.
 * ntransform::                  N-dimensional transformation matrices.
@@ -4245,14 +4245,14 @@ alternative choices.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node appearance, image, Non-geometric objects, Non-geometric objects
+@node appearance objects, image, Non-geometric objects, Non-geometric objects
 @subsection Appearance Objects
 Appearances are OOGL objects of their own right, which simply means that
 it is possible to give them symbolic names (@pxref{References}). There
 are other sections dealing with appearance
 details. @xref{Appearances}.
 
-@node image, transform, appearance, Non-geometric objects
+@node image, transform, appearance objects, Non-geometric objects
 @subsection Image Objects
 
 Image objects are used to specify pixmap data for either textures
