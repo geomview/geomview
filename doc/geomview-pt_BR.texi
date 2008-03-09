@@ -1,8 +1,8 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.50/Sat Nov 17 21:55:04 2007//
-@letterpaper
+@c based on /geomview.texi/1.51/Sat Mar  8 22:29:37 2008//
+@c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
@@ -36,6 +36,7 @@
 @center Copyright @copyright{} 2006-2007 Claus-Justus Heine
 
 @end titlepage
+
 @page
 
 @node Top, Intro, (dir), (dir)
@@ -3015,7 +3016,7 @@ Aqui est@'{a} um exemplo de estrutura de apar@^{e}ncia incluindo valores para to
 atributos.  A ordem dos atributos n@~{a}o @'{e} importante.  Como usual, espa@,{c}os em branco
 ss@~{a}o irrelevates.  Atributos Booleanos podem ser precedidos por "+" ou "-" para torn@'{a}-los
 habilitados ou desabilitados; "+" @'{e} assumido se somente o nome do atributo aparecer.
-Other attributes expect values.
+Outros valores esperados de atributo.
 
 Um "*" prefixado a um atributo, e.g. "*+edge" ou "*linewidth 2"
 ou "material @{ *diffuse 1 1 .25 @}", seleciona a situa@,{c}@~{a}o atual para sobrescrever ("override") para
@@ -3248,38 +3249,38 @@ alphafile nomearquivo
   data. @xref{image, Image objects}.}
 
 apply   modulate  -ou-  blend  -ou-  decal
-  Indicates how the texture image is applied to the surface.
-  Here the "surface color" means the color that surface would have
-  in the absence of texture mapping.
+  Indica como a imagem de textura @'{e} aplicada @`{a} superf@'{i}cie.
+  Aqui a "surface color" (cor da superf@'{i}cie) significa a cor que a superf@'{i}cie pode ter
+  na aus@^{e}ncia de mapeamento de textura.
 
-  With @code{modulate}, the default, the texture color (or lightness,
-  if textured by a gray-scale image) is multiplied by the surface color.
+  Com @code{modulate}, o padr@~{a}o, a cor de textura (ou ilumina@,{c}@~{a}o,
+  se texturado por meio de uma imagem de escala de cinza) @'{e} multiplicada pela cor da superf@'{i}cie.
 
-  With @code{blend}, texture blends between the @code{background} color
-  and the surface color.  The @code{file} parameter must specify a
-  gray-scale image.  Where the texture image is 0, the surface color is
-  unaffected; where it's 1, the surface is painted in the color given
-  by @code{background}; and color is interpolated for intermediate values.
+  Com @code{blend}, textura harmoniza-se entre cor de fundo (@code{background})
+  e a cor da superf@'{i}cie.  O par@^{a}metro @code{file} deve especificar uma
+  imagem de escala de cinza.  Onde a imagem de textura @'{e} 0, a cor da superf@'{i}cie permanece
+  inalterada; onde for 1, a superf@'{i}cie @'{e} colorida na cor dada
+  por @code{background}; e cor @'{e} interpolada para valores imediatos.
 
-  With @code{decal}, the @code{file} parameter must specify a
-  3-color image.  If an @code{alphafile} parameter is present,
-  its value interpolates between the surface color (where alpha=0)
-  and the texture color (where alpha=1).  Lighting does not affect the
-  texture color in @code{decal} mode; effectively the texture is
-  constant-shaded.
+  Com @code{decal}, o par@^{a}metro @code{file} deve especificar uma
+  imagem de tres cores.  Se um par@^{a}metro @code{alphafile} estiver presente,
+  seus valores interpolam-se entre a cor da superf@'{i}cie (onde alpha=0)
+  e a cor de textura (onde alpha=1).  Ilumina@,{c}@~{a}o n@~{a}o afeta a
+  cor de textura no modo @code{decal}; efetivamente a textura @'{e}
+  tonalidademente constante.
 
 background  R G B A
-  Specifies a 4-component color, with R, G, B, and A floating-point
-  numbers normally in the range 0..1, used when @code{apply blend}
-  is selected.
+  Especifica uma cor com 4 componentes, com n@'{u}meros R, G, B, e A em
+  ponto flutuante normalmente no intervalo 0..1, usados quando @code{apply blend}
+  for selecionado.
 
-transform @code{transformation-matrix}
-  Expects a list of 16 numbers, or one dos other ways of representing
-  a transformation (@code{: handlename} or @code{< filename}).
-  The 4x4 transformation matrix is applied to texture coordinates,
-  in the sense of a 4-component row vector (s,t,0,1) multiplied on
-  the left da matrix, to produce new coordinates (s',t')
-  which actually index the texture.
+transform @code{matriz-de-trnaforma@,{c}@~{a}o}
+  Espera uma lista de 16 n@'{u}meros, ou um dos outros caminhos de representar
+  uma transforma@,{c}@~{a}o (@code{: nomecabe@,{c}alho} ou @code{< nomearquivo}).
+  A matriz 4x4 de transforma@,{c}@~{a}o @'{e} aplicada a coordenadas de textura,
+  no sentido de um vetor linha de 4 componentes (s,t,0,1) multiplicado @`{a}
+  esquerda pela matriz, para produzir novas coordenadas (s',t')
+  @`{a}s quais atualmente indexam a textura.
 @end example
 
 @comment ================================================================
@@ -3287,20 +3288,20 @@ transform @code{transformation-matrix}
 @section Object File Formats
 
 @menu
-* QUAD::                        List of quadrilaterals.
-* MESH::                        Rectangularly-connected mesh.
-* BBOX::                        Simple bounding-boxes.
-* BBP and BEZ::                 List of Bezier surface patches.
-* OFF::                         Polyhedra: pol@'{i}gonos with shared vertices.
-* VECT::                        List of points and lines.
-* SKEL::                        List of points and lines, with shared vertices.
-* SPHERE::                      Sphere
-* INST::                        Transformed Instance of another objeto.
-* LIST::                        List of other objetos.
-* TLIST::                       Collection of 4x4 transformation matrices.
-* GROUP::                       Obsolete format for collections of objetos.
-* DISCGRP::                     Discrete Group objetos.
-* COMMENT::                     Comment objeto, for caching information.
+* QUAD::                        Lista de quadril@'{a}teros.
+* MESH::                        Grade retangular associada.
+* BBOX::                        Caixa associada simples.
+* BBP and BEZ::                 Lista retalhos de superf@'{i}cies de belzier.
+* OFF::                         Poliedros: pol@'{i}gonos com v@'{e}rtices compartilhados.
+* VECT::                        Lista de pontos e linhas.
+* SKEL::                        Lista de pontos e linhas, com v@'{e}rtices compartilhados.
+* SPHERE::                      Esfera
+* INST::                        Ins@^{a}ncia transformada de outro objeto.
+* LIST::                        Lista de outros objetos.
+* TLIST::                       Cole@,{c}@~{a}o de matrizes de transforma@,{c}@~{a}o 4x4.
+* GROUP::                       Formato obsoleto para cole@,{c}@~{a}o de objetos.
+* DISCGRP::                     Grupo deiscreto de objetos.
+* COMMENT::                     Objeto coment@'{a}rio, para informa@,{c}@~{o}es n@~{a}o exibidas.
 @end menu
 
 
@@ -3308,76 +3309,76 @@ transform @code{transformation-matrix}
 @node QUAD, MESH, Object File Formats, Object File Formats
 @subsection QUAD: collection of quadrilaterals
 
-The conventional suffix for a @code{QUAD} file is @file{.quad}.
+O sufixo convencional para um arquivo @code{QUAD} @'{e} @file{.quad}.
 
-The file syntax is
+A sintaxe do arquivo @'{e}
 
 @example
-   [C][N][4]QUAD  -or-  [C][N][4]POLY		   # Key word
-   @var{vertex}  @var{vertex}  @var{vertex}  @var{vertex}  # 4*N vertices for some N
-   @var{vertex}  @var{vertex}  @var{vertex}  @var{vertex}
+   [C][N][4]QUAD  -ou-  [C][N][4]POLY		   # Palavra chave
+   @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  # v@'{e}rtices quadridimensionais para algum N
+   @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}
    @dots{}
 @end example
 
-The leading key word is @code{[C][N][4]QUAD} or @code{[C][N][4]POLY},
-where the optional @code{C} and @code{N} prefixes indicate that each v@'{e}rtice
-includes colors and normals respectively.  That is, these files
-begin with one das words
+A palavra chave inicial @'{e} @code{[C][N][4]QUAD} ou @code{[C][N][4]POLY},
+onde o prefixos opcionais @code{C} e @code{N} indicam que cada v@'{e}rtice
+inclui cores e retas normais respectivamente.  Isto @'{e}, esses arquivos
+iniciam-se com uma das palavras
 
 @code{QUAD} @code{CQUAD} @code{NQUAD} @code{CNQUAD} @code{POLY}
 @code{CPOLY} @code{NPOLY} @code{CNPOLY}
 
-(but not @code{NCQUAD} or @code{NCPOLY}).  @code{QUAD} and @code{POLY}
-are synonymous; both forms are allowed just for compatibility with
+(mas n@~{a}o com @code{NCQUAD} ou @code{NCPOLY}).  @code{QUAD} e @code{POLY}
+s@~{a}o sin@^{o}nimos; ambas as formas s@~{a}o permitidas apenas por compatibilidade com
 ChapReyes.
 
-Following the key word is an arbitrary number of groups of four
-vertices, each group describing a quadrilateral.  See the Vertex syntax
-above.  The objeto ends at end-of-file, or with a close-brace if
-incorporated into an objeto reference (see above).
+Seguindo a palavra chave est@'{a} um n@'{u}mero arbitr@'{a}rio de grupos de quatro
+v@'{e}rtices, cada grupo descrevendo um quadril@'{a}tero.  Veja a sintaxe de v@'{e}rtice
+acima.  O objeto termina no caractere de fim de arquivo, ou com uma chave fechada se
+incorporado dentro de uma refer@^{e}ncia de objeto (veja acima).
 
-A @code{QUAD BINARY} file format is accepted; @xref{Binary format}.  The
-first word of binary data must be a 32-bit integer giving the number of
-quads in the objeto; following that is a series of 32-bit floats,
-arranged just as in the ASCII format.
+Um formato de arquivo @code{QUAD BINARY} @'{e} aceito; veja @ref{Binary format}.  A
+primeira palavra de dados bin@'{a}rios deve ser um inteiro de 32 bits fornecendo o n@'{u}mero de
+quads no objeto; seguindo esse inteiro encontra-se uma s@'{e}rie de inteiros em ponto flutuante de 32 bits,
+arranjados apenas como no formato ASCII.
 
 @comment ----------------------------------------------------------------
 @node MESH, BBOX, QUAD, Object File Formats
 @subsection MESH: rectangularly-connected mesh
 
-The conventional suffix for a @code{MESH} file is @file{.mesh}.
+O sufixo convencional para um arquivo @code{MESH} @'{e} @file{.mesh}.
 
-The file syntax is
+A sintaxe do arquivo @'{e}
 
 @example
-[U][C][N][Z][4][u][v][n]MESH # Key word
-[@var{Ndim}]                 # Space dimension, present only if nMESH
-@var{Nu} @var{Nv}            # Mesh grid dimensions
-                             # @var{Nu}*@var{Nv} vertices, in format specified
-                             # by initial key word
-@var{vertex}(u=0,v=0)  @var{vertex}(1,0)  @dots{} @var{vertex}(@var{Nu}-1,0)
-@var{vertex}(0,1) @dots{}    @var{vertex}(@var{Nu}-1,1)
+[U][C][N][Z][4][u][v][n]MESH # Palavra chave
+[@var{Ndim}]                 # Dimens@~{a}o do espa@,{c}o, presente somente se nMESH
+@var{Nu} @var{Nv}            # dimens@~{o}es da grade da malha
+                             # @var{Nu}*@var{Nv} v@'{e}rtices, no formato especificado
+                             # pela palavra chave inicial
+@var{v@'{e}rtice}(u=0,v=0)  @var{v@'{e}rtice}(1,0)  @dots{} @var{v@'{e}rtice}(@var{Nu}-1,0)
+@var{v@'{e}rtice}(0,1) @dots{}    @var{v@'{e}rtice}(@var{Nu}-1,1)
 @dots{}
-@var{vertex}(0,@var{Nv}-1) @dots{} @var{vertex}(@var{Nu}-1,@var{Nv}-1)
+@var{v@'{e}rtice}(0,@var{Nv}-1) @dots{} @var{v@'{e}rtice}(@var{Nu}-1,@var{Nv}-1)
 @end example
 
-The key word is  @code{[U][C][N][Z][4][u][v][n]MESH}.
-The optional prefix characters mean:
+A palavra chave @'{e} @code{[U][C][N][Z][4][u][v][n]MESH}.
+Os caracteres opcionais prefixados significam:
 
 @table @samp
 @item U
-Each v@'{e}rtice includes a 3-component texture space parameter.
-The first two components are the usual @code{S} and @code{T} texture
-parameters for that v@'{e}rtice; the third should be specified as zero.
+Cada v@'{e}rtice inclue uma textura de 3 par@^{a}metros de espa@,{c}o de componente.
+As primeiras duas componentes s@~{a}o par@^{a}metros usuais de textura @code{S} e
+@code{T} para quele v@'{e}rtice; o terceiro pode ser especificado como zero.
 @item C
-Each v@'{e}rtice (see Vertices above) includes a 4-component color.
+Cada v@'{e}rtice (veja Vertices acima) inclui uma cor de quatro componentes.
 @item N
-Each v@'{e}rtice includes a surface normal vector.
+Cada v@'{e}rtice inclui um vetr normal @`{a} superf@'{i}cie.
 @item Z
-Of the 3 posi@,{c}@~{a}o de v@'{e}rtice values, only the Z component is present; X and
-Y are omitted, and assumed to equal the mesh (u,v) coordinate so X
-ranges from 0 .. (Nu-1), Y from 0 .. (Nv-1) where Nu and Nv are the mesh
-dimensions -- see below.
+Dos valores dos 3 eixos coordenados (x , y e z) de v@'{e}rtice somente a componente Z est@'{a} presente; X e
+Y s@~{a}o omitidos, e assumidos ambos como sendo iguais @`{a}s coordenadas de malha (u,v) de forma que X
+varia de 0 .. (Nu-1), Y varia de 0 .. (Nv-1) onde Nu e Nv s@~{a}o as dimenss@~{o}es
+de malha -- veja acima.
 @item 4
 Vertices are 4D, each consists of 4 floating values.  @code{Z} and
 @code{4} cannot both be present.
@@ -3390,7 +3391,7 @@ connected to the (u,@var{Nv}-1)'th for all u.  Thus a u-wrapped or
 v-wrapped mesh is topologically a cylinder, while a uv-wrapped mesh is a
 torus.
 @item n
-Specifies a mesh whose vertices live in a higher dimensional space.
+Specifies a mesh whose v@'{e}rtices live in a higher dimensional space.
 The dimension follows the "MESH" keyword.  Each v@'{e}rtice then has @var{Ndim}
 components.
 @end table
@@ -3401,9 +3402,9 @@ u-wrapped mesh is a @code{CuMESH} not a @code{uCMESH}.
 Following the mesh header are integers @var{Nu} and @var{Nv},
 the dimensions da mesh.
 
-Then follow @var{Nu}*@var{Nv} vertices, each in the form given by the header.
+Then follow @var{Nu}*@var{Nv} v@'{e}rtices, each in the form given by the header.
 They appear in v-major order, i.e. if we name each v@'{e}rtice by (u,v)
-then the vertices appear in the order
+then the v@'{e}rtices appear in the order
 
 @example
 (0,0) (1,0) (2,0) (3,0) @dots{}  (@var{Nu}-1,0)
@@ -3420,8 +3421,8 @@ are 32-bit floats.
 @node BBOX, BBP and BEZ, MESH, Object File Formats
 @subsection BBOX: simple bounding boxes
 
-This is a very simple toy-objeto: it takes 2 vertices and draws a
-(hyper-) cube which is the bounding box dos two vertices.
+This is a very simple toy-objeto: it takes 2 v@'{e}rtices and draws a
+(hyper-) cube which is the bounding box dos two v@'{e}rtices.
 
 Syntax:
 
@@ -3459,9 +3460,9 @@ or
 
 There is no BBOX binary format. The @code{4} modifyer has different
 meanings depending on the dimension da bounding box: @code{4BBOX}
-means that the 4 components dos vertices make up a 4-dimensional
+means that the 4 components dos v@'{e}rtices make up a 4-dimensional
 bounding-box. Using @code{4} in conjunction with @code{n} --
-@code{4nBBOX @var{NDim}} -- means that the vertices specified in the
+@code{4nBBOX @var{NDim}} -- means that the v@'{e}rtices specified in the
 file have @var{NDim+1} components, but the component at index 0 is the
 homogeneous divisor (in contrast to the ordinary 3d case where the
 homogeneous divisor would be the @code{w} -- the third -- component).
@@ -3504,7 +3505,7 @@ Syntax:
 @end example
 
 These formats represent collections of Bezier surface patches, of
-degrees up to 6, and with 3-D or 4-D (rational) vertices.
+degrees up to 6, and with 3-D or 4-D (rational) v@'{e}rtices.
 
 The header keyword has the forms @code{[ST]BBP} or
 @code{[C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]} (the '<' and '>' are
@@ -3526,14 +3527,14 @@ patch's polynomial degree in the u and v direction respectively.
 either @code{3} for 3-D or @code{4} for homogeneous coordinates, that
 is, rational patches.
 
-@code{BBP} patches are bicubic patches with 3-D vertices, so @code{BBP}
+@code{BBP} patches are bicubic patches with 3-D v@'{e}rtices, so @code{BBP}
 = @code{BEZ333} and @code{STBBP} = @code{BEZ333_ST}.
 
 Any number of patches follow the header.  Each patch comprises a series
-of patch vertices, followed by optional (s,t) texture coordinates,
+of patch v@'{e}rtices, followed by optional (s,t) texture coordinates,
 followed by optional (r,g,b,a) colors.
 
-Each patch has (@var{Nu}+1)*(@var{Nv}+1) vertices in v-major order, so that if we
+Each patch has (@var{Nu}+1)*(@var{Nv}+1) v@'{e}rtices in v-major order, so that if we
 designate a v@'{e}rtice by its control point indices (u,v) the order is
 @example
      (0,0) (1,0) (2,0) @dots{}  (@var{Nu},0)
@@ -3566,23 +3567,23 @@ Syntax:
 
 @example
 [ST][C][N][4][n]OFF	# Header keyword
-[@var{Ndim}]		# Space dimension of vertices, present only if nOFF
+[@var{Ndim}]		# Space dimension of v@'{e}rtices, present only if nOFF
 @var{NVertices}  @var{NFaces}  @var{NEdges}   # NEdges not used or checked
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]	# Vertices, possibly with normals,
 			# colors, and/or texture coordinates, in that order,
 			# if the prefixes @code{N}, @code{C}, @code{ST}
 			# are present.
-			# If 4OFF, each vertex has 4 components,
+			# If 4OFF, each v@'{e}rtice has 4 components,
 			# including a final homogeneous component.
-			# If nOFF, each vertex has @var{Ndim} components.
-			# If 4nOFF, each vertex has @var{Ndim}+1 components.
+			# If nOFF, each v@'{e}rtice has @var{Ndim} components.
+			# If 4nOFF, each v@'{e}rtice has @var{Ndim}+1 components.
 @dots{}
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
     			# Faces
-    			# @var{Nv} = # vertices on this face
-    			# @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices
+    			# @var{Nv} = # v@'{e}rtices on this face
+    			# @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices
     			#		in range 0..@var{NVertices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  @var{colorspec}
 @dots{}
@@ -3595,7 +3596,7 @@ Syntax:
 @end example
 
 @code{OFF} files (name for "object file format") represent collections
-of planar pol@'{i}gonos with possibly shared vertices, a convenient way to
+of planar pol@'{i}gonos with possibly shared v@'{e}rtices, a convenient way to
 describe polyhedra.  The pol@'{i}gonos may be concave but there's no
 provision for pol@'{i}gonos containing holes.
 
@@ -3603,11 +3604,11 @@ An @code{OFF} file may begin with the keyword @code{OFF}; it's
 recommended but optional, as many existing files lack this keyword.
 
 Three ASCII integers follow: @var{NVertices}, @var{NFaces}, and
-@var{NEdges}.  Thease are the number of vertices, faces, and edges,
+@var{NEdges}.  Thease are the number of v@'{e}rtices, faces, and edges,
 respectively.  Current software does not use nor check @var{NEdges}; it
 needn't be correct but must be present.
 
-The coordenadas do v@'{e}rtice follow: dimension * @var{Nvertices}
+The coordenadas do v@'{e}rtice follow: dimension * @var{Nv@'{e}rtices}
 floating-point values.  They're implicitly numbered 0 through
 @var{NVertices}-1.  dimension is either 3 (default) or 4 (specified by
 the key character @code{4} directly before @code{OFF} in the keyword).
@@ -3618,9 +3619,9 @@ with one line per face.  Each has the form
 @var{N}  @var{Vert1} @var{Vert2} @dots{} @var{VertN}  [@var{color}]
 @end example
 @noindent
-Here @var{N} is the number of vertices on this face,
+Here @var{N} is the number of v@'{e}rtices on this face,
 and @var{Vert1} through @var{VertN} are indices into the list of
-vertices (in the range 0..@var{NVertices}-1).
+v@'{e}rtices (in the range 0..@var{NVertices}-1).
 
 The optional @var{color} may take several forms.  Line breaks are
 significant here: the @var{color} description begins after @var{VertN}
@@ -3683,13 +3684,13 @@ Syntax:
 [4]VECT
 @var{NPolylines}  @var{NVertices}  @var{NColors}
 
-@var{Nv[0]} @dots{} @var{Nv[NPolylines-1]}     # number of vertices
+@var{Nv[0]} @dots{} @var{Nv[NPolylines-1]}     # number of v@'{e}rtices
                                            # in each polyline
 
 @var{Nc[0]} @dots{} @var{Nc[NPolylines-1]}     # number of colors supplied
                                            # in each polyline
 
-@var{Vert[0]} @dots{} @var{Vert[NVertices-1]}  # All the vertices
+@var{Vert[0]} @dots{} @var{Vert[NVertices-1]}  # All the v@'{e}rtices
                                            # (3*NVertices floats)
 
 @var{Color[0]} @dots{} @var{Color[NColors-1]}  # All the colors
@@ -3703,14 +3704,14 @@ represent a point.
 A @code{VECT} file begins with the key word @code{VECT} or @code{4VECT}
 and three integers: @var{NLines}, @var{NVertices}, and @var{NColors}.
 Here @var{NLines} is the number of polylines in the file,
-@var{NVertices} the total number of vertices, and @var{NColors} the
+@var{NVertices} the total number of v@'{e}rtices, and @var{NColors} the
 number of colors as explained below.
 
 Next come @var{NLines} @b{16-bit} integers
 
 @center @var{Nv[0]} @var{Nv[1]} @var{Nv[2]} @dots{} @var{Nv[NLines-1]}
 
-giving the number of vertices in each polyline.  A negative number
+giving the number of v@'{e}rtices in each polyline.  A negative number
 indicates a closed polyline; 1 denotes a single-pixel point.  The sum
 (of absolute values) da @var{Nv[i]} must equal @var{NVertices}.
 
@@ -3731,7 +3732,7 @@ line segments, depending on the implementation.
 @end table
 
 Next come @var{NVertices} groups of 3 or 4 floating-point numbers: the
-coordinates of all the vertices.  If the keyword is @var{4VECT} then
+coordinates of all the v@'{e}rtices.  If the keyword is @var{4VECT} then
 there are 4 values por v@'{e}rtice.  The first abs(@var{Nv[0]}) of them form
 the first polyline, the next abs(@var{Nv[1]}) form the second and so on.
 
@@ -3752,7 +3753,7 @@ integers.
 @subsection SKEL Files
 
 @code{SKEL} files represent collections of points and polylines, with
-shared vertices.
+shared v@'{e}rtices.
 The conventional suffix for @code{SKEL} files is @file{.skel}.
 
 Syntax:
@@ -3763,16 +3764,16 @@ Syntax:
 @var{NVertices}  @var{NPolylines}
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
-				    # if 4SKEL, each vertex has 4 components
-				    # if nSKEL, each vertex has NDim components
-                                    # if C[4][n]SKEL vertex coordinates are
+				    # if 4SKEL, each v@'{e}rtice has 4 components
+				    # if nSKEL, each v@'{e}rtice has NDim components
+                                    # if C[4][n]SKEL v@'{e}rtice coordinates are
                                     # followed by an RGBA color specification
 @dots{}
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
                         # Polylines
-                        # @var{Nv} = # vertices on this polyline (1 = point)
-                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices                        #               in range 0..@var{NVertices}-1
+                        # @var{Nv} = # v@'{e}rtices on this polyline (1 = point)
+                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices                        #               in range 0..@var{NVertices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
 @dots{}
                         # @var{colorspec} continues past @var{v}[@var{Nv}-1]
@@ -3781,8 +3782,8 @@ Syntax:
 			# 3 or 4 floats: RGB[A] values 0..1
 @end example
 
-The syntax resembles that of @code{OFF} files, with a table of vertices
-followed by a sequence of polyline descriptions, each referring to vertices
+The syntax resembles that of @code{OFF} files, with a table of v@'{e}rtices
+followed by a sequence of polyline descriptions, each referring to v@'{e}rtices
 by index in the table.  Each polyline has an optional color.
 
 For @code{nSKEL} objetos, each v@'{e}rtice has @var{NDim} components.
@@ -3797,7 +3798,7 @@ floats for posi@,{c}@~{o}es de v@'{e}rtice.
 Exception: each polyline's @'{i}ndices do v@'{e}rtice are followed by an integer
 indicating how many color components accompany it. Polyline color
 components must be floats, not integer values.  Thus a colorless
-polyline with 3 vertices might be represented as
+polyline with 3 v@'{e}rtices might be represented as
 
 @example
 int int int int int
@@ -5648,7 +5649,7 @@ handle_pick(picked, p, vert, v, edge, e)
      int vert;                  /* was the pick near a vertex?        */
      int edge;                  /* was the pick near an edge?         */
      HPoint3 *p;                /* coords of pick point               */
-     HPoint3 *v;                /* coords of picked vertex            */
+     HPoint3 *v;                /* coords of picked v@'{e}rtice            */
      HPoint3 e[2];              /* coords of endpoints of picked edge */
 @{
   Normalize(&e[0]);             /* Normalize makes 4th coord 1.0 */
@@ -5914,7 +5915,7 @@ specified as @code{nil}.
 
 @item @code{float *face; int fn;}
 @code{face} is a variable length array of @var{fn} @code{HPoint3}'s.
-@code{face} gives the coordinates dos vertices da picked face.
+@code{face} gives the coordinates dos v@'{e}rtices da picked face.
 @code{fn} tells how many coordinates have been written into this array;
 it will always be either @code{0} or a multiple of @code{pn}. A value of
 zero means the pick point was not near a face. In the context of
@@ -6031,7 +6032,7 @@ proc readsomething @{@} @{
 #          E = picked edge, if any
 #          F = picked face
 #          P = path to picked primitive [0 or more]
-#          VI = index of picked vertex in primitive
+#          VI = index of picked v@'{e}rtice in primitive
 #          EI = list of indices of endpoints of picked edge, if any
 #          FI = index of picked face
 
