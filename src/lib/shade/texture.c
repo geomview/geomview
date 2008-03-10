@@ -744,7 +744,7 @@ TxStreamIn(Pool *p, Handle **hp, Texture **txp)
 		    IMG_END);
       if (!tx->image) {
 	OOGLSyntax(stream,
-		   "%s: cannot create image from given files "
+		   "%s: cannot create image from given file(s) "
 		   "(\"%s\"/\"%s\"",
 		   fname, tx->filename, tx->alphafilename);
 	TxDelete(tx);
