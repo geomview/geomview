@@ -306,9 +306,9 @@ AC_CHECK_DECLS([errno],[],[],[
 # include <errno.h>
 #endif])
 AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
-  gethostname getopt gettimeofday isascii mallinfo memset mkdir pow rint \
+  gethostname getopt gettimeofday isascii mallinfo memset mkdir pow read rint \
   select sqrt strchr strcspn strdup strerror strncasecmp strpbrk \
-  strrchr strstr strtol strerror sysinfo waitpid wait3])
+  strrchr strstr strtol strerror sysinfo waitpid wait3 write])
 AC_CHECK_DECLS([getopt, optarg, optind, opterr, optopt],[],[])
 AC_CHECK_FUNCS([setlocale],
   [AC_CHECK_DECLS([LC_ALL],[],[],[
