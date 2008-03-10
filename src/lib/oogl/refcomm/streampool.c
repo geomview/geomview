@@ -761,13 +761,20 @@ PoolInputFDs(fd_set *fds, int *maxfd)
  * Each fd used is removed from *fds, and *nfds is decremented.
  * The return value is 1 if anything was read from any pool, 0 otherwise.
  */
+
 int
 PoolInAll(fd_set *fds, int *nfds)
 {
-    Pool *p, *nextp;
+    Pool *p;
     int got = 0;
 
-    DblListIterate(&AllPools, Pool, node, p, nextp) {
+    /* We use DblListIterateNoDelete() _NOT_ because PoolIn() could
+     * not delete the current Pool p, because PoolIn() can delete
+     * _ANY_ pool so we need to work harder to make this
+     * PoolInAll()-loop failsafe.
+     */
+
+    DblListIterateNoDelete(&AllPools, Pool, node, p) {
 	if (p->type != P_STREAM || p->inf == NULL || p->infd < 0) {
 	    continue;
 	}
@@ -784,6 +791,15 @@ PoolInAll(fd_set *fds, int *nfds)
 	    if (PoolIn(p)) {
 		got++;
 	    }
+	}
+	/* We need to be very careful here: PoolIn() can have _ANY_
+	 * sort of side effect, in particular it might delete _ANY_
+	 * pool. Luckily we do not really delete pools; if "p" is
+	 * actually in the deleted state, then it has its PF_DELETED
+	 * flag set. In this case we simply restart the loop.
+	 */
+	if (p->flags & PF_DELETED) {
+	    p = DblListContainer(&AllPools, Pool, node);
 	}
     }
     return got;
