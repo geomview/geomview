@@ -36,7 +36,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 Skel *SkelTransform( Skel *s, Transform T, TransformN *TN )
 {
-#if 0
+#if 1
+  (void)T;
+  (void)TN;
+#else
   if (T && T != TM_IDENTITY) {
 
     if(s->pdim == 4) {

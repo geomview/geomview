@@ -38,14 +38,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 
 PolyList *
-PolyListFSave(polylist, outf, fname)
-	PolyList *polylist;	/* Thing to save */
-	FILE *outf;			/* Stream to save it on */
-	char *fname;			/* File name for error msgs */
+PolyListFSave(PolyList *polylist, FILE *outf, char *fname)
 {
 	int i, n;
 	Poly *p;
 	Vertex **vp, *v;
+
+	(void)fname;
 
 	/* We don't really know the number of edges and it's a pain to count.
 	 * Assume Euler number 2.

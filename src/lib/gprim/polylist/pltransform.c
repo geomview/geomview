@@ -39,6 +39,8 @@ PolyList *PolyListTransform(PolyList *p, Transform T, TransformN *TN)
 {
   int i;
 
+  (void)TN;
+
   if (!T) {
     return p;
   }

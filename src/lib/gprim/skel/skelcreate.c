@@ -76,6 +76,8 @@ Skel *SkelCreate(Skel *exist, GeomClass *classp, va_list *a_list)
 {
   Skel *s;
 
+  (void)a_list;
+
   if (exist == NULL) {
     s = OOGLNewE(Skel, "new skel");
     GGeomInit (s, classp, SKELMAGIC, NULL);
@@ -211,7 +213,7 @@ int SkelSane(Skel *s)
       return 0;
   }
   for (i = 0; i < s->nvi; i++)
-    if ((unsigned)s->vi[i] >= s->nvi)
+    if ((unsigned)s->vi[i] >= (unsigned)s->nvi)
       return 0;
   return 1;
 }

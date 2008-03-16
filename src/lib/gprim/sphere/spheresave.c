@@ -38,6 +38,8 @@ Sphere *SphereFSave(Sphere *sphere, FILE *f, char *fname)
 {
   int texmeth = 0;
 
+  (void)fname;
+
   if (sphere == NULL) {
     return NULL;
   }

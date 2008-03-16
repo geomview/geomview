@@ -41,6 +41,8 @@ QuadFSave(Quad *q, FILE *f, char *fname)
 	Point3 *n;
 	ColorA *c;
 
+	(void)fname;
+
 	if(q == NULL || f == NULL)
 		return(NULL);
 	if(q->geomflags & QUAD_C) fputc('C', f);

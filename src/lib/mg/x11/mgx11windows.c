@@ -1108,7 +1108,8 @@ void Xmg_getwinsize(int *xsize, int *ysize, int *xorig, int *yorig)
   WnGet(_mgc->win, WN_YSIZE, &yold);
   if (_mgx11c->bitdepth == 0)
     return;
-  if ((xold != width) || (yold != height) || (_mgx11c->myxwin->image == NULL))
+  if ((xold != (int)width) || (yold != (int)height) ||
+      (_mgx11c->myxwin->image == NULL))
     {
       if (_mgx11c->myxwin->image != NULL)
 	{

@@ -439,7 +439,7 @@ static void tex_predef(GLuint id)
   if(has_texture_object()) {
     glBindTextureEXT(GL_TEXTURE_2D, id);
   } else {
-    if (_mgopenglc->n_texture_lists <= id) {
+    if ((GLuint)_mgopenglc->n_texture_lists <= id) {
       _mgopenglc->texture_lists =
 	mgopengl_realloc_lists(_mgopenglc->texture_lists,
 			       &_mgopenglc->n_texture_lists);

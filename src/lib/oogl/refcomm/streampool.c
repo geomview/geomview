@@ -96,7 +96,7 @@ static fd_set poolreadyfds;
 static int poolnready = 0;
 
 #define	FOREVER  ((((unsigned)1)<<31)-1)
-static struct timeval nexttowake = { FOREVER };
+static struct timeval nexttowake = { FOREVER, };
 
 static Pool *newPool(char *name);
 
@@ -141,7 +141,7 @@ HandleReferringTo(int prefixch, char *str, HandleOps *ops, Handle **hp)
     } else {			/*   <  file:name */
 	name = sep+1;
 	fname = nb;
-	if (sep-str >= sizeof(nb)) {
+	if ((size_t)(sep-str) >= sizeof(nb)) {
 	    sep = &str[sizeof(nb)-1];
 	}
 	memcpy(fname, str, sep-str);
@@ -580,6 +580,7 @@ PoolIncLevel(Pool *p, int incr)
 int
 PoolOType(Pool *p, int otype)
 {
+    (void)otype;
     return p->otype;
 }
 

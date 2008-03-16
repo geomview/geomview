@@ -106,6 +106,8 @@ HandleUpdRef(Handle **hp, Ref *parent, Ref **objp)
 {
   Handle *h;
 
+  (void)parent;
+
   if((h = *hp) != NULL && objp != NULL && h->object != *objp) {
     if (*objp) {
       if (h->ops->delete) {

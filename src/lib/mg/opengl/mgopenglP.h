@@ -109,7 +109,7 @@ typedef struct mgopenglcontext {
   int n_texture_lists;
   GLuint *translucent_lists;
   int n_translucent_lists;
-  int translucent_seq;
+  GLuint translucent_seq;
 } mgopenglcontext;
 
 #define DPYLIST_INCR 10

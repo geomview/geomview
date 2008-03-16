@@ -28,6 +28,8 @@
 
 NPolyList *NPolyListTransform(NPolyList *np, Transform dummy, TransformN *T)
 {
+  (void)dummy;
+  
   if (T != NULL && T != (void *)TM_IDENTITY) {
     HPointN *tmp = HPtNCreate(np->pdim, NULL);
     float *tmp_data = tmp->v;

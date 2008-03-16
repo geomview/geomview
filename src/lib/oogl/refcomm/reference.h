@@ -33,7 +33,7 @@
  */
 
 #define REFERENCEFIELDS				\
-  int magic;					\
+  unsigned magic;				\
   int ref_count;				\
   DblListNode handles
 

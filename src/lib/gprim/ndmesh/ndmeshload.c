@@ -43,6 +43,9 @@ getmeshvert(IOBFILE *file, int flag, int pdim, int u, int v, HPointN **p,
   int readdim = flag&MESH_4D ? pdim : pdim - 1;
   int binary = flag&MESH_BINARY;
 
+  (void)u;
+  (void)v;
+
   inputs[0] = 1.0;
   if (iobfgetnf(file, readdim, readv, binary) < readdim) {
     return false;

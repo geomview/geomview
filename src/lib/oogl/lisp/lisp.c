@@ -89,13 +89,13 @@ LObject *LMakeArray(LType *basetype, char *array, int count);
 /* Use -1 as the item size of special type markers
  * for quick detection in LParseArgs()/AssignArgs().
  */
-LType Larray = { NULL, -1 };
-LType Lvararray = { NULL, -1 };
-LType Lend = { NULL, -1 };
-LType Lrest = { NULL, -1 };
-LType Lhold = { NULL, -1 };
-LType Lliteral = { NULL, -1 };
-LType Loptional = { NULL, -1 };
+LType Larray = { NULL, -1, };
+LType Lvararray = { NULL, -1, };
+LType Lend = { NULL, -1, };
+LType Lrest = { NULL, -1, };
+LType Lhold = { NULL, -1, };
+LType Lliteral = { NULL, -1, };
+LType Loptional = { NULL, -1, };
 
 #define REJECT -1
 
@@ -185,6 +185,7 @@ LObject *Lnil = &nil;
 
 static void twrite(FILE *fp, void *value)
 {
+  (void)value;
   fprintf(fp,"t");
 }
 
@@ -257,7 +258,9 @@ static LObject *int2obj(int *x)
 }
 
 static void intfree(int *x)
-{}
+{
+  (void)x;
+}
 
 static bool intmatch(int *a, int *b)
 {
@@ -365,7 +368,9 @@ static LObject *long2obj(long *x)
 }
 
 static void longfree(long *x)
-{}
+{
+  (void)x;
+}
 
 static bool longmatch(long *a, long *b)
 {
@@ -457,7 +462,9 @@ static LObject *float2obj(float *x)
 }
 
 static void floatfree(float *x)
-{}
+{
+  (void)x;
+}
 
 static bool floatmatch(float *a, float *b)
 {
@@ -558,7 +565,9 @@ static LObject *double2obj(double *x)
 }
 
 static void doublefree(double *x)
-{}
+{
+  (void)x;
+}
 
 static bool doublematch(double *a, double *b)
 {
@@ -946,10 +955,13 @@ static LObject *lake2obj(Lake **x)
 }
 
 static void lakefree(Lake **x)
-{}
+{
+  (void)x;
+}
 
 static void lakewrite(FILE *fp, Lake **x)
 {
+  (void)x;
   fprintf(fp,"-lake-");
 }
 
@@ -994,7 +1006,9 @@ LObject *func2obj(int *x)
 }
 
 void funcfree(int *x)
-{}
+{
+  (void)x;
+}
 
 bool funcmatch(int *a, int *b)
 {

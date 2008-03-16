@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.18 2007/04/25 19:02:31 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.19 2008/03/16 19:08:41 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -219,6 +219,8 @@ NPolyList *NPolyListDraw(NPolyList *pl)
 /* A dummy, just to make GeomBSPTree() not bail out. */
 NPolyList *NPolyListBSPTree(NPolyList *pl, BSPTree *tree, int action)
 {
+  (void)tree;
+  (void)action;
   return pl;
 }
 

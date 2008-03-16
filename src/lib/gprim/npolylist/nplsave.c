@@ -45,6 +45,8 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
   HPtNCoord *v;
   ColorA *c;
 
+  (void)fname;
+
   /* We don't really know the number of edges and it's a pain to count.
    * Assume Euler number 2.
    */
