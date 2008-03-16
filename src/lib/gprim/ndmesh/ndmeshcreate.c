@@ -174,6 +174,8 @@ NDMeshCreate (NDMesh *exist, GeomClass *classp, va_list *a_list)
 static int
 ndmeshfield(int copy, int amount, void **fieldp, void *value, char *name)
 {
+    (void)name;
+
     if(value) {
 	if(copy) {
 	    if(*fieldp == NULL)

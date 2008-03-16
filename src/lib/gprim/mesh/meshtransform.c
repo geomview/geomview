@@ -38,6 +38,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 Mesh *MeshTransform(Mesh *m, Transform T, TransformN *TN)
 {
+  (void)TN;
+
   if (!T) {
     return m;
   }

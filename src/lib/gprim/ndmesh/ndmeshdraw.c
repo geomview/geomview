@@ -169,6 +169,8 @@ NDMeshDraw(NDMesh *mesh)
 /* A dummy, just to make GeomBSPTree() not bail out. */
 NDMesh *NDMeshBSPTree(NDMesh *mesh, BSPTree *tree, int action)
 {
+  (void)tree;
+  (void)action;
   return mesh;
 }
 

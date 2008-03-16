@@ -134,6 +134,8 @@ mnormq(HPoint3 *ap, Point3 *an, int nu, int nv,
   int u, v, prevu, prevv;
   HPoint3 *vq[4];
 
+  (void)evert;
+
   if (vwrap) {
     v0 = 0, prev0v = nv-1;
   }
