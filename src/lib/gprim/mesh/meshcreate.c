@@ -178,9 +178,10 @@ tossmesh(Mesh *m)
   return 0;
 }
 
-static int
-meshfield(int copy, int amount, void **fieldp, void *value, char *name)
+static int meshfield(int copy, int amount, void **fieldp, void *value, char *name)
 {
+  (void)name;
+  
   if(value) {
     if(copy) {
       if(*fieldp == NULL)

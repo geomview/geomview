@@ -59,6 +59,8 @@ int PickFillIn(Pick *pick, int n_verts, Point3 *got, int vertex, int edge, Appea
 {
   int found = 0;
 
+  (void)ap;
+
   pick->got = *got;
 
   vvcopy(&pick->gcur, &pick->gpath);
@@ -143,6 +145,8 @@ GenericPick(Geom *g, Pick *p, Appearance *ap,
 {
     Geom *bbox;
     HPoint3 min, max;
+
+    (void)ap;
 
     if (TN) {
 	TransformN *proj;
