@@ -40,7 +40,7 @@ HandleOps AppearanceOps = {
   (int ((*)(Pool *p, Handle *h, Ref *r)))ApStreamOut,
   (void ((*)(Ref *rp)))ApDelete,
   NULL,
-  NULL
+  NULL,
 };
 
 static struct {
@@ -327,7 +327,7 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap)
   fprintf(f, "appearance {\n");
   PoolIncLevel(p, 1);
   if (PoolStreamOutHandle(p, h, ap != NULL)) {
-    for (i = 0; i < sizeof(ap_kw)/sizeof(ap_kw[0]); i++) {
+    for (i = 0; i < (int)(sizeof(ap_kw)/sizeof(ap_kw[0])); i++) {
       mask = ap_kw[i].amask;
       if ((valid & mask) == 0)
 	continue;

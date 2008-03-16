@@ -58,7 +58,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #if defined(unix) || defined(__unix) /* Don't try to compile this for Windows */
 
-static int npps = 0;
+static unsigned npps = 0;
 static unsigned short *pps;
 
 
@@ -100,7 +100,7 @@ ppopen(char *cmd, FILE **frompgm, FILE **topgm)
   close(pfrom.w);
   *frompgm = fdopen(pfrom.r, "r");
   *topgm = fdopen(pto.w, "w");
-  if(pfrom.r < npps) {
+  if(pfrom.r < (int)npps) {
     int newsize = (pfrom.r + 10)*sizeof(pps[0]);
     npps = pfrom.r + 10;
     pps = (unsigned short *) (pps ? realloc(pps, newsize) : malloc(newsize));
