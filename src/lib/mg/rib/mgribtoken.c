@@ -665,7 +665,7 @@ void binary_token(int token, va_list *alist)
     
 	case mr_subarray3: {
 	    arraysize-=3;
-	    if(arraysize<0) /* ERROR */;
+	    if(arraysize<0) { /* ERROR */ };
 	    check_buffer(12); /* 3*sizeof(float) */
 	    floatptr = va_arg(*alist, float*);
 	    COPYFLOAT(floatptr[0]);
@@ -679,7 +679,7 @@ void binary_token(int token, va_list *alist)
   
 	case mr_subarray2: {
 	    arraysize-=2;
-	    if(arraysize<0) /* ERROR */;
+	    if(arraysize<0) { /* ERROR */ };
 	    check_buffer(8); /* 3*sizeof(float) */
 	    floatptr = va_arg(*alist, float*);
 	    COPYFLOAT(floatptr[0]);
