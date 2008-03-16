@@ -355,7 +355,7 @@ HandleOps TextureOps = {
   (int ((*)()))TxStreamOut,
   (void ((*)()))TxDelete,
   NULL,
-  NULL
+  NULL,
 };
 
 static struct txkw {
@@ -797,6 +797,8 @@ TxStreamOut(Pool *p, Handle *h, Texture *tx)
   static const char *applies[] = {"modulate", "decal", "blend", "replace"};
   FILE *f = PoolOutputFile(p);
 
+  (void)h;
+
   if (f == NULL) {
     return 0;
   }
@@ -864,6 +866,8 @@ TxCopy(Texture *src, Texture *dst)
 Texture *
 TxMerge(Texture *src, Texture *dst, int mergeflags)
 {
+  (void)mergeflags;
+
   if (src == NULL)
     return REFGET(Texture, dst);
   if (dst == NULL) {
