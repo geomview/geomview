@@ -439,7 +439,7 @@ int MtFSave(Material *mat, FILE *f, Pool *p)
   float v;
   Color *c;
 
-  for (i = 0; i < sizeof(mt_kw)/sizeof(mt_kw[0]); i++) {
+  for (i = 0; i < (int)(sizeof(mt_kw)/sizeof(mt_kw[0])); i++) {
     if (Apsavepfx(mat->valid, mat->override, mt_flags[i], mt_kw[i], f, p)) {
       switch(mt_flags[i]) {
       case MTF_Ka: v = mat->ka; goto pfloat;
