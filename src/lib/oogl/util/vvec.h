@@ -73,6 +73,8 @@ vvtrim(vvec *v)
     int want = newalloc * v->elsize;
     static char why[] = "trimming vvec";
 
+    (void)why;
+
     if(!v->malloced) {
 	void *base = OOGLNewNE(char, want, why);
 	if(v->base) memcpy(base, v->base, want);

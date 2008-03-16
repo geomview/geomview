@@ -742,6 +742,8 @@ LmFSave(LmLighting *li, FILE *f, char *fname, Pool *p)
     LtLight **lp;
     int i;
 
+    (void)fname;
+
     PoolFPrint(p, f, "ambient %.8g %.8g %.8g\n", 
 	li->ambient.r,
 	li->ambient.g,
