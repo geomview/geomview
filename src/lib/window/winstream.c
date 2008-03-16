@@ -247,7 +247,7 @@ WnStreamOut( Pool *p, Handle *h, WnWindow *win )
     fprintf(f, "window {");
 
     if(PoolStreamOutHandle( p, h, win != NULL)) {
-	for(i = 2; i < sizeof(wn_kw)/sizeof(wn_kw[0]); i++) {
+	for(i = 2; i < (int)(sizeof(wn_kw)/sizeof(wn_kw[0])); i++) {
 	    if(win->flag & wn_kw[i].flag) {
 		if(wn_kw[i].flag & WNF_HASNAME)
 		    continue;
