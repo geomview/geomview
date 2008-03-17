@@ -94,13 +94,13 @@ HandleOps TransOps = {
 	(int ((*)()))TransObjStreamOut,
 	(void ((*)()))TransDelete,
 	NULL,
-	NULL
 };
 
 void TransUpdate(Handle **hp, Ref *ignored, Transform Tfixme)
 {
     Handle *h = *hp;
-    
+
+    (void)ignored;
     if (h != NULL && h->object != NULL) {
 	TmCopy(((TransObj *)(h->object))->T, Tfixme);
     }

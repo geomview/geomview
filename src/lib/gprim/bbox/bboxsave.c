@@ -36,6 +36,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 BBox *BBoxFSave(BBox *bbox, FILE *f, char *fname)
 {
   int i;
+
+  (void)fname;
 	
   if (bbox->pdim == 4) {
     fprintf(f, "BBOX\n");

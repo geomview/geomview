@@ -44,6 +44,8 @@ DiscGrpBound(DiscGrp *discgrp, Transform T, TransformN *TN)
     int nels;
 #endif
 
+    (void)TN;
+
     if( discgrp == NULL)
 	return NULL;
 

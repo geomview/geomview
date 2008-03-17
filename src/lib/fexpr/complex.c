@@ -249,6 +249,8 @@ void fcomplex_arccosh(fcomplex *s,fcomplex *op)
 
 void fcomplex_arcsinh(fcomplex *s,fcomplex *op)
 {
+  (void)op;
+
   /* zi=sin[iw]=isinh[w]
      arcsinh[z] = w = arcsin[zi]/i 
      arcsinh[z] = arcsin[zi]/i */
@@ -266,6 +268,8 @@ void fcomplex_arctanh(fcomplex *s,fcomplex *op)
 {
   /* works same as arcsinh.. */
   fcomplex tmp1,tmp2;
+
+  (void)op;
   /* tmp1 = i*z */
   tmp1.real = -s->imag;
   tmp1.imag = s->real;
@@ -361,10 +365,12 @@ void fcomplex_atan2(fcomplex *y, fcomplex *x, fcomplex *op)
 
 void fcomplex_monstub(fcomplex *arg, fcomplex *op)
 {
+  (void)arg;
   op->real = op->imag = atof("NaN");
 }
 
 void fcomplex_binstub(fcomplex *arg1, fcomplex *arg2, fcomplex *op)
 {
+  (void)arg1;
   op->real = op->imag = atof("NaN");
 }

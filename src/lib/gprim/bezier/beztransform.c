@@ -43,6 +43,8 @@ BezierTransform(Bezier *b, Transform T, TransformN *dummy)
   Point3 *p;
   HPoint3 *hp;
   int limit = (b->degree_u + 1)*(b->degree_v + 1);
+
+  (void)dummy;
  
   if (b->CtrlPnts != NULL) {
     if (b->dimn == 3)

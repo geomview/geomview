@@ -45,6 +45,8 @@ DiscGrpPick(DiscGrp *dg, Pick *p, Appearance *ap, Transform T,
   GeomIter *it;
   DiscGrp *v = NULL;
 
+  (void)axes;
+  
   if (TN)
     return NULL;
 

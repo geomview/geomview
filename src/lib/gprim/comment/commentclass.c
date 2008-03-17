@@ -52,7 +52,12 @@ CommentName()
 static Geom *
 CommentPick(Geom *g, Pick *p, Appearance *ap, Transform T, TransformN *TN)
 {
- return NULL;
+  (void)g;
+  (void)p;
+  (void)ap;
+  (void)T;
+  (void)TN;
+  return NULL;
 }
 
 GeomClass *

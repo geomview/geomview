@@ -36,6 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 void
 CoPrint( Color *c )
 {
+  (void)c;
 }
 
 void

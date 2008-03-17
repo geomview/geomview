@@ -300,6 +300,9 @@ QuadToLinkedPolyList(Transform T, Transform Tdual, Transform TxT,
   Poly *qpoly;
   int i, j, concave;
 
+  (void)Tdual;
+  (void)TxT;
+
   if (!plistp) {
     plistp = &plist;
   }
@@ -976,6 +979,7 @@ void BSPTreeFreeTree(const BSPTree *_tree)
  */
 void BSPTreeInvalidate(Handle **chp, Ref *unused, BSPTree *self)
 {
+  (void)unused;
   BSPTreeFreeTree(self);
 }
 

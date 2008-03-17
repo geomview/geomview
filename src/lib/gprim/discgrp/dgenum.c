@@ -163,6 +163,8 @@ dumb_enumerate(int depth, DiscGrpEl *dgel)
 	char *word;
 	extern char  *pop_old_stack();
 
+	(void)depth;
+
 	init_stack();
 	process(dgel, 1);
 	for (j = 0; j < MAXDEPTH ; ++j)

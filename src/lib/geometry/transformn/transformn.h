@@ -143,6 +143,7 @@ TmNDelete(TransformN *T)
 static inline int 
 TmNSpace(const TransformN *T)
 {
+  (void)T;
   return TM_EUCLIDEAN;
 }
 

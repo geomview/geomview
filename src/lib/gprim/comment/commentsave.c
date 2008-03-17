@@ -40,12 +40,10 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 #include "commentP.h"
 
-Comment *
-CommentFSave( comment, file, fname )
-    Comment *comment;
-    FILE *file;
-    char *fname;
+Comment *CommentFSave(Comment *comment, FILE *file, char *fname)
 {
+  (void)fname;
+
     if(comment == NULL || file == NULL)
 	return NULL;
 

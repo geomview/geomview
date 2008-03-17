@@ -53,6 +53,7 @@ double freal_re(double a)
 
 double freal_im(double a)
 {
+  (void)a;
   return 0;
 }
 
@@ -60,6 +61,7 @@ double freal_monstub(double a)
 {
   double b = 0.0;
   double c = 0.0;
+  (void)a;
   return b/c;
 }
 
@@ -67,5 +69,7 @@ double freal_binstub(double a1, double a2)
 {
   double a = 0.0;
   double b = 0.0;
+  (void)a1;
+  (void)a2;
   return a/b;
 }

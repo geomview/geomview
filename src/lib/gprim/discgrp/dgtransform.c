@@ -36,10 +36,9 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "discgrpP.h"
 
 DiscGrp *
-DiscGrpTransform( dg, T )
-     DiscGrp *dg;
-     Transform T;
+DiscGrpTransform(DiscGrp *dg, Transform T)
 {
+  (void)T;
   return dg;
 }
 

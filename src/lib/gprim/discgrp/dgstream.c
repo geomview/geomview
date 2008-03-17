@@ -188,7 +188,7 @@ included_file(IOBFILE *fp)
 static void
 parse_group_name(char *gname)
 {
-
+  (void)gname;
   cgroup.attributes = DG_GENERAL | DG_REAL;	/* type of entry */
   cgroup.dimn = 4;		/* dimension of matrices */
   cgroup.sig = 0;		/* signature of quadratic form */

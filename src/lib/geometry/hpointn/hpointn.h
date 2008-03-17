@@ -352,6 +352,7 @@ HPtNAdd(const HPointN *pt1, const HPointN *pt2, HPointN *sum)
 static inline int 
 HPtNSpace(const HPointN *pt)
 {
+  (void)pt;
   return TM_EUCLIDEAN;
 }
 
