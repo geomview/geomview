@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Claus-Justus Heine
+ * Copyright (C) 2006-2008 Claus-Justus Heine
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,9 @@
 #ifdef HAVE_CONFIG_H
 # include "config.h"
 #endif
+
+#define _FILE_OFFSET_BITS 64
+#define _LARGEFILE64_SOURCE
 
 #include <stdio.h>
 #include <string.h>
@@ -62,6 +65,31 @@ static const int o_nonblock =
 #endif
 
 #endif
+
+#if HAVE_OFF64_T && HAVE_LSEEK64
+# define HAVE_SOME_LSEEK 1
+typedef off64_t offset_t;
+# define LSEEK lseek64
+# ifndef HAVE_DECL_LSEEK64
+extern off64_t lseek64(int fd, off64_t offset, int whence);
+# endif
+#elif HAVE_LOFF_T && HAVE_LLSEEK
+# define HAVE_SOME_LSEEK 1
+typedef loff_t offset_t;
+# define LSEEK llseek
+# ifndef HAVE_DECL_LLSEEK
+loff_t llseek(int fd, loff_t offset, int whence);
+# endif
+#elif HAVE_OFF_T && HAVE_LSEEKO
+# define HAVE_SOME_LSEEK 1
+typedef off_t offset_t;
+# define LSEEK lseek
+# ifndef HAVE_DECL_LSEEK
+off_t lseek(int fd, off_t offset, int whence);
+# endif
+#endif
+
+#define POSIX_SHORTCUT (HAVE_READ && HAVE_SOME_LSEEK)
 
 #include "iobuffer.h"
 
@@ -107,8 +135,9 @@ struct IOBFILE
   int      mark_set:1;
   int      eof:2;
   int      ungetc;
-  fpos_t   stdiomark;
-  size_t   mark_pos;
+  fpos_t   stdiomark;   /**< stdio mark interface */
+  offset_t posixmark;   /**< using read(), write() and a flavour of lseek() */
+  size_t   mark_pos;    /**< Offset into our buffer structures (pipe, tty) */
   int      mark_ungetc; /**< Copy of what ungetc was when setmark() was called
 			 */
   int      fd;
@@ -222,18 +251,17 @@ IOBFILE *iobfileopen(FILE *istream)
 
   if (iobf->fd >= 0) {
     /* Determine whether we have file positioning support */
-    if (lseek(iobf->fd, 0, SEEK_CUR) != -1 &&
-	!isatty(iobf->fd)) {
+    if (lseek(iobf->fd, 0, SEEK_CUR) != -1 && !isatty(iobf->fd)) {
       iobf->can_seek = -1;
     }
 
-    /* No stdio buffereing */
-#if defined(__GLIBC__) && __GLIBC__ >= 2
-# if SETVBUF_REVERSED
+    /* If we have read(2) and write(2), then we disable stdio
+     * completely and use the system calls directly.
+     */
+#if SETVBUF_REVERSED
     setvbuf(istream, _IONBF, NULL, 0);
-# else
+#else
     setvbuf(istream, NULL, _IONBF, 0);
-# endif
 #endif
 #if HAVE_FCNTL
     iobf->fflags = fcntl(iobf->fd, F_GETFL);
@@ -364,15 +392,29 @@ long iobftell(IOBFILE *iobf)
   if (!iobf->can_seek) {
     return ~0L;
   }
+#if POSIX_SHORTCUT
+  pos = (long)LSEEK(iobf->fd, 0, SEEK_CUR);
+#else
   pos = ftell(iobf->istream);
+#endif
 
-  return pos - (iobf->ioblist.tot_size - iobf->ioblist.tot_pos);
+  return pos < 0
+    ? pos
+    : (long)(pos - (iobf->ioblist.tot_size - iobf->ioblist.tot_pos));
 }
 
 int iobfseek(IOBFILE *iobf, long offset, int whence)
 {
-  if (iobf->can_seek &&
-      fseek(iobf->istream, offset, whence) == 0) {
+  if (iobf->can_seek) {
+#if POSIX_SHORTCUT
+    if ((long)LSEEK(iobf->fd, (offset_t)offset, whence) < 0) {
+      return -1;
+    }
+#else
+    if (fseek(iobf->istream, offset, whence) != 0) {
+      return -1;
+    }
+#endif
     iob_release_buffer(&iobf->ioblist);
     iob_init_buffer(&iobf->ioblist);
     return 0;
@@ -626,6 +668,7 @@ void iobfrewind(IOBFILE *iobf)
   iobf->mark_wrap = 0;
   iobf->mark_pos  = ~0;
   memset(&iobf->stdiomark, ~0, sizeof(iobf->stdiomark));
+  iobf->posixmark = -1;
 
   /* Clear status flags */
   iobf->ungetc = EOF;
@@ -636,7 +679,7 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 {
   IOBLIST *ioblist = &iobf->ioblist;
   size_t rq_size = size * nmemb, rd_size, rd_tot;
-  size_t tail_rd;
+  ssize_t tail_rd;
   char *buf = ptr;
 #if HAVE_FCNTL
   int first = 1;
@@ -662,7 +705,7 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
       break;
     }
     if (tail_rd && rq_size && !iobf->eof) {
-      size_t tail_space;
+      ssize_t tail_space;
       
       iob_check_space(iobf);
       tail_space = BUFFER_SIZE - ioblist->tail_size;
@@ -671,20 +714,43 @@ size_t iobfread(void *ptr, size_t size, size_t nmemb, IOBFILE *iobf)
 	if (first && iobf->fflags != -1) {
 	  fcntl_err = fcntl(iobf->fd, F_SETFL, iobf->fflags | o_nonblock);
 	}
-	if (!first || (iobf->fd && iobf->fflags == -1) || fcntl_err) {
-	  tail_space = min(tail_space, rq_size);
+	if (!first || (iobf->fd >= 0 && iobf->fflags == -1) || fcntl_err) {
+	  tail_space = min(tail_space, (ssize_t)rq_size);
 	}
       }
 #else
-      if (!iobf->can_seek && iobf->fd)
+      if (!iobf->can_seek && iobf->fd >= 0)
 	  tail_space = min(tail_space, rq_size);
 #endif
-      tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
-		      1, tail_space, iobf->istream);
-      ioblist->tail_size += tail_rd;
-      ioblist->tot_size  += tail_rd;
-      if (tail_rd < tail_space && feof(iobf->istream)) {
-	iobf->eof = 1;
+#if POSIX_SHORTCUT
+      if (iobf->fd >= 0) {
+	tail_rd = read(iobf->fd,
+		       ioblist->buf_tail->buffer + ioblist->tail_size,
+		       tail_space);
+	if (tail_rd < 0) {
+	  if (errno == EAGAIN) {
+	    tail_rd = 0; /* probably a pipe */
+	  } else {
+	    tail_rd = 0; /* maybe do something else in this case */
+	  }
+	} else {
+	  /* EOF is indicated by returning 0 for a request size > 0 */
+	  if (tail_rd == 0 && tail_space > 0) {
+	    iobf->eof = 1; /* eof is a counter! */
+	  }
+	}
+	ioblist->tail_size += tail_rd;
+	ioblist->tot_size  += tail_rd;
+      } else {
+#endif
+	tail_rd = fread(ioblist->buf_tail->buffer + ioblist->tail_size,
+			1, tail_space, iobf->istream);
+      
+	ioblist->tail_size += tail_rd;
+	ioblist->tot_size  += tail_rd;
+	if (tail_rd < tail_space && feof(iobf->istream)) {
+	  iobf->eof = 1;
+	}
       }
 #if HAVE_FCNTL
       if (!iobf->can_seek && first && iobf->fflags != -1 && !fcntl_err) {
@@ -743,7 +809,13 @@ int iobfsetmark(IOBFILE *iobf)
   iobf->mark_ungetc = iobf->ungetc;
 
   if (iobf->can_seek) {
+#if POSIX_SHORTCUT
+    if ((iobf->posixmark = LSEEK(iobf->fd, 0, SEEK_CUR)) < 0) {
+      result = -1;
+    }
+#else
     result = fgetpos(iobf->istream, &iobf->stdiomark);
+#endif
     iob_copy_buffer(&iobf->ioblist_mark, &iobf->ioblist);
   }
 
@@ -758,10 +830,16 @@ int iobfseekmark(IOBFILE *iobf)
     return -1;
   }
 
-  if (iobf->mark_wrap) {
+  if (iobf->mark_wrap) { /* implies can_seek */
+#if POSIX_SHORTCUT
+    if (LSEEK(iobf->fd, iobf->posixmark, SEEK_SET) != iobf->posixmark) {
+      return -1;
+    }
+#else
     if (fsetpos(iobf->istream, &iobf->stdiomark) != 0) {
       return -1;
     }
+#endif
     iob_release_buffer(&iobf->ioblist);
     iob_copy_buffer(&iobf->ioblist, &iobf->ioblist_mark);
     iobf->mark_wrap = 0;

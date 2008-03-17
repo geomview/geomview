@@ -44,6 +44,10 @@ AH_BOTTOM([#if D1_DEBUG
 #else
 #define D1PRINT(args)
 #endif
+
+#define _FILE_OFFSET_BITS 64
+#define _LARGEFILE64_SOURCE
+
 #if !HAVE_WORKING_FORK
 # error FIXME! We need fork()
 #endif
@@ -305,6 +309,12 @@ AC_CHECK_DECLS([errno],[],[],[
 #if HAVE_ERRNO_H
 # include <errno.h>
 #endif])
+ac_gv_save_CPPFLAGS="${CPPFLAGS}"
+CPPFLAGS="${CPPFLAGS} -D_FILE_OFFSET_BITS=64 -D_LARGEFILE64_SOURCE"
+AC_CHECK_FUNCS([lseek64 llseek lseek])
+AC_CHECK_DECLS([lseek64, llseek, lseek])
+AC_CHECK_TYPES([off64_t, loff_t, off_t])
+CPPFLAGS="${ac_gv_save_CPPFLAGS}"
 AC_CHECK_FUNCS([alarm basename bzero bcopy dirname dup2 floor fcntl finite \
   gethostname getopt gettimeofday isascii mallinfo memset mkdir pow read rint \
   select sqrt strchr strcspn strdup strerror strncasecmp strpbrk \
