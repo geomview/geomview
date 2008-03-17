@@ -58,7 +58,7 @@ HandleOps ImageOps = {
   (int ((*)(Pool *p, Handle *h, Ref *r)))ImgStreamOut,
   (void ((*)(Ref *rp)))ImgDelete,
   NULL,
-  NULL
+  NULL,
 };
 
 struct imgheader {
@@ -85,6 +85,8 @@ static bool readdata(Image *img, IOBFILE *imgf, unsigned chmask,
 static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp);
 static int data_pipe(const char *data, int datalen, int *cpidp);
 #if HAVE_LIBZ
+static int zlib_data_pipe(const char *data, int datalen, int *cpidp);
+static int gzip_data_pipe(const char *data, int datalen, int *cpidp);
 static int gv_compress2(Bytef *dest, uLongf *destLen,
 			const Bytef *source, uLong sourceLen,
 			int level);
@@ -798,11 +800,11 @@ int ImgWritePGM(Image *img, int channel, bool compressed, char **buffer)
     }
   }
 
-  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : (int)n_bytes;
 }
 
 /* Pack up to 3 channels of the image data into an PNM image and write
- * that data to *buffer. *buffer is allocated in this functions, its
+ * that data to *buffer. *buffer is allocated in this function, its
  * length is returned. Missing channels are filled with 0's.
  *
  * Optionally compress the image.
@@ -851,7 +853,7 @@ int ImgWritePNM(Image *img, unsigned chmask, bool compressed, char **buffer)
     }
   }
 
-  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : (int)n_bytes;
 }
 
 /* Pack any number of channels into a PAM image. Optionally compress
@@ -912,7 +914,7 @@ int ImgWritePAM(Image *img, unsigned chmask, bool compressed, char **buffer)
     }
   }
 
-  return compressed ? maybe_compress_buffer(buffer, n_bytes) : n_bytes;
+  return compressed ? maybe_compress_buffer(buffer, n_bytes) : (int)n_bytes;
 }
 
 /* Dump an image to disk through the given filter. The filter must
@@ -1010,19 +1012,21 @@ struct filter
 {
   struct filter *next;
   const char *program;
+  int (*builtin)(const char *data, int datalen, int *cpidp);
   const char *suffixes[10];
 };
 
 static struct filter decompressors[] = {
-  { decompressors+1, "gzip -dc", { "z", "gz", "gzip", NULL } },
-  { NULL, "bzip2 -dc", { "bz2", "bzip2", NULL } },
+  { decompressors+1, "gzip -dc", gzip_data_pipe, { "z", "gz", "gzip", NULL } },
+  { decompressors+2, "bzip2 -dc", NULL, { "bz2", "bzip2", NULL } },
+  { NULL, NULL, zlib_data_pipe, { "zlib", NULL } },
 };
 
 static struct filter converters[] = {
-  { converters+1, "tifftopnm", { "tiff", "tif", NULL } },
-  { converters+2, "pngtopnm", { "png", NULL } },
-  { converters+3, "giftoppm", { "gif", NULL } },
-  { NULL, "jpegtopnm", { "jpeg", "jpg", NULL } },
+  { converters+1, "tifftopnm", NULL, { "tiff", "tif", NULL } },
+  { converters+2, "pngtopnm", NULL, { "png", NULL } },
+  { converters+3, "giftoppm", NULL, { "gif", NULL } },
+  { NULL, "jpegtopnm", NULL, { "jpeg", "jpg", NULL } },
 };
 
 static bool readimage(Image *img, unsigned *chmask, char *filtertype,
@@ -1069,18 +1073,27 @@ static bool readimage(Image *img, unsigned *chmask, char *filtertype,
       for (filter = filters[j]; filter != NULL; filter = filter->next) {
 	for (i = 0; filter->suffixes[i] != NULL; i++) {
 	  if (strcasecmp(suffix, filter->suffixes[i]) == 0) {
-	    if (imgfd == -1) {
-	      imgfd = data_pipe(imgdata, datalen, &datapid);
+	    if (imgfd == -1 && filter->builtin != NULL) {
+	      /* tail-filter: maybe use builtin */
+	      imgfd = filter->builtin(imgdata, datalen, &datapid);
 	      if (imgfd < 0) {
 		result = false;
 		goto out;
 	      }
-	    }
-	    filterfds[j] =
-	      run_filter(filter->program, imgfd, false, &filterpids[j]);
-	    if (filterfds[j] < 0) {
-	      result = false;
-	      goto out;
+	    } else {
+	      if (imgfd == -1) {
+		imgfd = data_pipe(imgdata, datalen, &datapid);
+		if (imgfd < 0) {
+		  result = false;
+		  goto out;
+		}
+	      }
+	      filterfds[j] =
+		run_filter(filter->program, imgfd, false, &filterpids[j]);
+	      if (filterfds[j] < 0) {
+		result = false;
+		goto out;
+	      }
 	    }
 	    if (suffix != filtertype) {
 	      suffix--;
@@ -1693,7 +1706,6 @@ static int run_filter(const char *filter, int fdin, bool wronly, int *cpidp)
  */
 static int data_pipe(const char *data, int datalen, int *cpidp)
 {
-
   int pfd[2];
   int cpid;
 
@@ -1732,6 +1744,96 @@ static int data_pipe(const char *data, int datalen, int *cpidp)
 }
 
 #if HAVE_LIBZ
+/* Same as data_pipe(), but also decompress the data, assuming it is
+ * in zlib format.
+ *
+ * NOTE: we use _exit() and not exit() to avoid calling atexit()
+ * functions inherited from the parent.
+ */
+static inline
+int __zlib_data_pipe(const char *data, int datalen, int *cpidp, bool gzip)
+{
+
+  int pfd[2];
+  int cpid;
+
+  if (pipe(pfd) == -1) {
+    OOGLError(1, "data_pipe(): pipe() failed");
+    return -1;
+  }
+  
+  if ((cpid = fork()) == -1) {
+    OOGLError(1, "data_pipe(): fork() failed");
+    return -1;
+  }
+  
+  if (cpid == 0) { /* child */
+    Bytef outBuffer[32*1024]; /* 32k, so what */
+    z_stream stream;
+    int err, chunklen;
+
+    close(pfd[0]); /* close the reader */
+
+    /* Initialize the zlib interface */
+    memset(&stream, 0, sizeof(stream)); /* safety */
+    stream.next_in   = (Bytef*)data;
+    stream.avail_in  = (uInt)datalen;
+    stream.next_out  = outBuffer;
+    stream.avail_out = (uInt)sizeof(outBuffer);
+
+    err = inflateInit2(&stream, MAX_WBITS + (gzip ? 16 : 0));
+    if (err != Z_OK) {
+      OOGLError(1, "zlib_data_pipe(): infalteInite2() failed");
+      _exit(EXIT_FAILURE);
+    }
+
+    do {
+      err = inflate(&stream, false /* no flush */);
+      if (err != Z_OK && err != Z_STREAM_END) {
+	OOGLError(1, "zlib_data_pipe(): inflate() returned %d", err);
+	_exit(EXIT_FAILURE);
+      }
+      chunklen = sizeof(outBuffer) - stream.avail_out;
+      if (write(pfd[1], outBuffer, chunklen) != chunklen) {
+	OOGLError(1, "zlib_data_pipe(): write() failed");
+	_exit(EXIT_FAILURE);
+      }
+      /* reset output buffer state to idle */
+      stream.next_out  = outBuffer;
+      stream.avail_out = (uInt)sizeof(outBuffer);
+    } while (err != Z_STREAM_END);
+    
+    inflateEnd(&stream); /* cleanup (should be a no-op here) */
+
+    if (close(pfd[1]) < 0) {
+      OOGLError(1, "zlib_data_pipe(): close() failed");
+      _exit(EXIT_FAILURE);
+    }
+    _exit(EXIT_SUCCESS);
+  } else {         /* parent */
+    if (cpidp) {
+      *cpidp = cpid;
+    }
+    close(pfd[1]); /* close the write end */
+  }
+
+  return pfd[0]; /* return the read end */
+}
+
+static int zlib_data_pipe(const char *data, int datalen, int *cpidp)
+{
+  return __zlib_data_pipe(data, datalen, cpidp, false);
+}
+
+static int gzip_data_pipe(const char *data, int datalen, int *cpidp)
+{
+  return __zlib_data_pipe(data, datalen, cpidp, true);
+}
+
+/* Munge a little bit with zlib's interna. The magic bits are the
+ * "+16" in the "..., MAX_WBITS+16, ..." argument: it instructs zlib
+ * to emit a gzip header, instead of the simpler zlib header. Mmmh.
+ */
 static int gv_compress2(Bytef *dest, uLongf *destLen,
 			const Bytef *source, uLong sourceLen,
 			int level)
