@@ -3195,7 +3195,7 @@ Os campos de textura dispon@'{i}veis s@~{a}o:
 
 @example
 clamp   none  -ou-  s  -ou-  t  -ou-  st
-  Determines o significado de coordenadas de textura fora do intervalo 0..1.
+  Determina o significado de coordenadas de textura fora do intervalo 0..1.
   Com @code{clamp none}, o padr@~{a}o, coordenadas s@~{a}o interpretadas
   modulo 1, ent@~{a}o (s,t) = (1.25,0), (.25,0), e (-.75,0) referem-se todos ao
   mesmo ponto no espa@,{c}o das texturas.  Com @code{clamp s} ou @code{clamp t} ou
@@ -3380,31 +3380,31 @@ Y s@~{a}o omitidos, e assumidos ambos como sendo iguais @`{a}s coordenadas de ma
 varia de 0 .. (Nu-1), Y varia de 0 .. (Nv-1) onde Nu e Nv s@~{a}o as dimenss@~{o}es
 de malha -- veja acima.
 @item 4
-Vertices are 4D, each consists of 4 floating values.  @code{Z} and
-@code{4} cannot both be present.
+V@'{e}rtices s@~{a}o quadridimensionais, cada v@'{e}rtice consiste em 4 valores em ponto flutuante.  @code{Z} e
+@code{4} n@~{a}o podem ambos estarem presentes ao mesmo tempo.
 @item u
-The mesh is wrapped in the u-direction, so the 
-(0,v)'th v@'{e}rtice is connected to the (@var{Nu}-1,v)'th for all v.
+A mallha @'{e} ajustada na dire@,{c}@~{a}o u, de forma que o 
+(0,v)'@'{e}simo v@'{e}rtice est@'{a} conectado ao (@var{Nu}-1,v)'@'{e}simo para todo v.
 @item v
-The mesh is wrapped in the v-direction, so the (u,0)'th v@'{e}rtice is
-connected to the (u,@var{Nv}-1)'th for all u.  Thus a u-wrapped or
-v-wrapped mesh is topologically a cylinder, while a uv-wrapped mesh is a
-torus.
+A malha @'{e} ajustada na dire@,{c}@~{a}o v, de forma que o (u,0)'´esimo v@'{e}rtice est@'{a}
+conectado ao (u,@var{Nv}-1)'@'{e}simo para todo u.  Dessa forma uma malha
+u-ajustada ou v-ajustada @'{e} topologicamente um cilindro, enquanto uma malha uv-ajustada @'{e} um
+toro.
 @item n
-Specifies a mesh whose v@'{e}rtices live in a higher dimensional space.
-The dimension follows the "MESH" keyword.  Each v@'{e}rtice then has @var{Ndim}
-components.
+Especifica uma malha cujos v@'{e}rtices existem em um espa@,{c}o de dimens@~{a}o mais alta.
+A dimens@~{a}o segue a palavra chave "MESH".  Cada v@'{e}rtice ent@~{a}o tem @var{Ndim}
+componentes.
 @end table
 
-Note that the order of prefix characters is significant; a colored,
-u-wrapped mesh is a @code{CuMESH} not a @code{uCMESH}.
+Note que a ordem dos caracteres do prefixo @'{e} significativa; uma malha
+colorida, u-ajustada @'{e} uma @code{CuMESH} n@~{a}o uma @code{uCMESH}.
 
-Following the mesh header are integers @var{Nu} and @var{Nv},
-the dimensions da mesh.
+Seguindo o cabe@,{c}alho da malha est@~{a}o os inteiros @var{Nu} e @var{Nv},
+as simens@~{o}es da malha.
 
-Then follow @var{Nu}*@var{Nv} v@'{e}rtices, each in the form given by the header.
-They appear in v-major order, i.e. if we name each v@'{e}rtice by (u,v)
-then the v@'{e}rtices appear in the order
+Ent@~{a}o segue-se @var{Nu}*@var{Nv} v@'{e}rtices, cada um desses v@'{e}rtices na forma fornecida atrav@'{e}s do cabe@,{c}alho.
+Eles aparecem na seq@"{u}@^{e}ncia v-maior, i.e. se chamarmos cada v@'{e}rtice de (u,v)
+ent@~{a}o os v@'{e}rtices aparecer@~{a}o na ordem
 
 @example
 (0,0) (1,0) (2,0) (3,0) @dots{}  (@var{Nu}-1,0)
@@ -3413,9 +3413,9 @@ then the v@'{e}rtices appear in the order
 (0,Nv-1)		@dots{}  (@var{Nu}-1,@var{Nv}-1)
 @end example
 
-A @code{MESH BINARY} format is accepted; @xref{Binary format}.  The
-values of @var{Nu} and @var{Nv} are 32-bit integers; all other values
-are 32-bit floats.
+O formato @code{MESH BINARY} @'{e} aceito; Veja @ref{Binary format}.  Os
+valores de @var{Nu} e @var{Nv} s@~{a}o inteiros de 32-bit; todos os outros valores
+s@~{a}o n@'{u}meros em ponto flutuante de 32-bit.
 
 @comment ----------------------------------------------------------------
 @node BBOX, BBP and BEZ, MESH, Object File Formats
