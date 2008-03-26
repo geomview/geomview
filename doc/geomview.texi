@@ -3577,7 +3577,7 @@ An @code{OFF} file may begin with the keyword @code{OFF}; it's
 recommended but optional, as many existing files lack this keyword.
 
 Three ASCII integers follow: @var{NVertices}, @var{NFaces}, and
-@var{NEdges}.  Thease are the number of vertices, faces, and edges,
+@var{NEdges}.  These are the number of vertices, faces, and edges,
 respectively.  Current software does not use nor check @var{NEdges}; it
 needn't be correct but must be present.
 

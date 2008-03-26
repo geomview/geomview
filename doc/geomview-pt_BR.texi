@@ -17,11 +17,13 @@
 @sp 1
 @center @titlefont{Manual do Geomview}
 @sp 4
-@center Vers@~ao @value{VERSION} do Geomview 
+@c @center Vers@~ao @value{VERSION} do Geomview 
+@center Vers@~ao 1.9.5 do Geomview 
 @sp 1
 @center para GNU/Linux/Unix
 @sp 1
-@center @value{UPDATED-MONTH}
+@c @center @value{UPDATED-MONTH}
+@center Mar@,{c}o de 2008
 @comment 19 de Novembro de 2000
 @sp 2
 @center Mark Phillips et al.
@@ -3421,10 +3423,10 @@ s@~{a}o n@'{u}meros em ponto flutuante de 32-bit.
 @node BBOX, BBP and BEZ, MESH, Object File Formats
 @subsection BBOX: simple bounding boxes
 
-This is a very simple toy-objeto: it takes 2 v@'{e}rtices and draws a
-(hyper-) cube which is the bounding box dos two v@'{e}rtices.
+Esse @'{e} um objeto-brinquedo muito simples: Toma 2 v@'{e}rtices e desenha um
+(hiper-) cubo que @'{e} a caixa associada dos dois v@'{e}rtices.
 
-Syntax:
+Sintaxe:
 
 @example
   BBOX
@@ -3432,7 +3434,7 @@ Syntax:
   @var{x}[1] @var{y}[1] @var{z}[1]
 @end example
 
-or
+ou
 
 @example
   4BBOX
@@ -3440,7 +3442,7 @@ or
   @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1]
 @end example
 
-or
+ou
 
 @example
   nBBOX
@@ -3449,7 +3451,7 @@ or
   @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1] @dots{}
 @end example
 
-or
+ou
 
 @example
   4nBBOX
@@ -3458,84 +3460,84 @@ or
   @var{d}[0] @var{x}[1] @var{y}[1] @var{z}[1] @var{w}[1] @dots{}
 @end example
 
-There is no BBOX binary format. The @code{4} modifyer has different
-meanings depending on the dimension da bounding box: @code{4BBOX}
-means that the 4 components dos v@'{e}rtices make up a 4-dimensional
-bounding-box. Using @code{4} in conjunction with @code{n} --
-@code{4nBBOX @var{NDim}} -- means that the v@'{e}rtices specified in the
-file have @var{NDim+1} components, but the component at index 0 is the
-homogeneous divisor (in contrast to the ordinary 3d case where the
-homogeneous divisor would be the @code{w} -- the third -- component).
+N@~{a}o existe formato bin@'{a}rio BBOX. O modificador @code{4} tem diferentes
+significados dependendo da dimens@~{a}o da caixa associada: @code{4BBOX}
+significa que as 4 componentes dos v@'{e}rtices constroem uma caixa associada
+tetradimensional. Usando @code{4} em conjun@,{c}@~{a}o com @code{n} --
+@code{4nBBOX @var{NDim}} -- significa que os v@'{e}rtices especificados no
+arquivo possuem @var{NDim+1} componentes, mas a componente no @'{i}ndice 0 @'{e} o
+divisor homog@^{e}neo (em oposi@,{c}@~{a}o ao caso comum tridimensional onde o
+divisor homog@^{e}neo pode ser @code{w} -- a terceira -- componente).
 
 @comment ----------------------------------------------------------------
 @node BBP and BEZ, OFF, BBOX, Object File Formats
 @subsection Bezier Surfaces
 
-The conventional file suffixes for Bezier surface files are @file{.bbp}
-or @file{.bez}.  A file with either suffix may contain either type of
-patch.
+O sufixo de arquivo convencional para arquivos de superf@'{i}cie de Bezier @'{e} @file{.bbp}
+ou @file{.bez}.  A arquivo com qualquer dos dois sufixos pode conter qualquer dos dois tipos de
+parte de superf@'{i}cie de Bezier.
 
-Syntax:
+Sintaxe:
 
 @example
-  [ST]BBP -or- [C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]
-			# @var{Nu}, @var{Nv} are u- and v-direction 
-			# polynomial degrees in range 1..6
-			# @var{Nd} = dimension: 3->3-D, 4->4-D (rational)
-			# (The '<' and '>' do not appear in the input.)
-			# @var{Nu},@var{Nv},@var{Nd} are each a single decimal digit.
-			# BBP form implies @var{Nu}=@var{Nv}=@var{Nd}=3 so BBP = BEZ333.
+  [ST]BBP -ou- [C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]
+			# @var{Nu}, @var{Nv} s@~{a}o dire@,{c}@~{o}es nos eixos u e v 
+			# graus de polin@^{o}mios variam 1..6
+			# @var{Nd} = dimens@~{a}o: 3->3-D, 4->4-D (racional)
+			# (O sinal '<' e o sinal '>' n@~{a}o aparecem na entrada.)
+			# @var{Nu},@var{Nv},@var{Nd} s@~{a}o cada um d@'{i}gito decimal simples.
+			# a forma BBP implica @var{Nu}=@var{Nv}=@var{Nd}=3 de forma que BBP = BEZ333.
 
-		# Any number of patches follow the header
-			# (@var{Nu}+1)*(@var{Nv}+1) patch control points
-			# each 3 or 4 floats according to header
+		# Qualquer n@'{u}mero de partes de superf@'{i}cie de Bezier segue o cabe@,{c}alho
+			# (@var{Nu}+1)*(@var{Nv}+1) pontos de controle do peda@,{c}o da sperf@'{i}cie de Bezier
+			# cada 3 ou 4 n@'{u}meros em ponto flutuante conforme o cabe@,{c}alho
   @var{vertex}(u=0,v=0)  @var{vertex}(1,0) @dots{} @var{vertex}(@var{Nu},0)
   @var{vertex}(0,1)			   @dots{} @var{vertex}(@var{Nu},1)
   @dots{}
   @var{vertex}(0,@var{Nv})		   @dots{} @var{vertex}(@var{Nu},@var{Nv})
 
-			# ST texture coordinates if mentioned in header
+			# coordenadas de textura ST se mencionado no cabe@,{c}alho
   @code{S}(u=0,v=0)	@code{T}(0,0)	@code{S}(0,@var{Nv}) @code{T}(0,@var{Nv})
   @code{S}(@var{Nu},0)	@code{T}(@var{Nu},0)	@code{S}(@var{Nu},@var{Nv}) @code{T}(@var{Nu},@var{Nv})
 
-			# 4-component float (0..1) R G B A colors
-			# for each patch corner if mentioned in header
+			# n@'{u}mero em ponto flutuante com 4 componentes no intervalo (0..1) de cores R G B A
+			# para cada canto se mencionado no cabe@,{c}alho
   @code{RGBA}(0,0)   @code{RGBA}(0,@var{Nv})
   @code{RGBA}(@var{Nu},0)  @code{RGBA}(@var{Nu},@var{Nv})
 @end example
 
-These formats represent collections of Bezier surface patches, of
-degrees up to 6, and with 3-D or 4-D (rational) v@'{e}rtices.
+Esses formatos representam cole@,{c}@~{o}es de partes de superf@'{i}cies de Bezier, de
+graus maiores que 6, e com v@'{e}rtices 3-D ou 4-D (racionais).
 
-The header keyword has the forms @code{[ST]BBP} or
-@code{[C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]} (the '<' and '>' are
-not part da keyword.
+A palavra chave de cabe@,{c}alho pode assumir as formas @code{[ST]BBP} ou
+@code{[C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]} (os s@'{i}mbolos '<' e '>' n@~{a}o
+s@~{a}o parte da palara chave.
 
-The @code{ST} prefix on @code{BBP}, or @code{_ST} suffix on
-@code{BEZuvn}, indicates that each patch includes four pairs of
-floating-point texture-space coordinates, one for each corner do
-patch.
+O prefixo @code{ST} sobre @code{BBP}, ou o sufixo @code{_ST} sobre
+@code{BEZuvn}, indicam que cada peda@,{c}o de sperf@'{i}cie inclui quatro pares de
+pontos com coordenadas em ponto flutuante no espa@,{c}o de textura, um em cada canto do
+peda@,{c}o.
 
-The @code{C} prefix on @code{BEZuvn} indicates a colored patch,
-including four sets of four-component floating-point colors (red, green,
-blue, and alpha) in the range 0..1, one color for each corner.
+O prefixo @code{C} sobre @code{BEZuvn} indica um peda@,{c}o colorido,
+incluindo quatro conjuntos de quatro componentes com os n@'{u}meros que especificam as cores em ponto flutuante (vermelho, verde,
+azul, e alfa) no intervalo 0..1, uma cor para cada canto.
 
-@var{Nu} and @var{Nv}, each a single digit in the range 1..6, are the
-patch's polynomial degree in the u and v direction respectively. 
+@var{Nu} E @var{Nv}, cada um @'{e} um simples d@'{i}gito no intervalo 1..6, s@~{a}o os
+graus do polin@^{o}mio do peda@,{c}o nas dire@,{c}@~{o}es u e v respectivamente. 
 
-@var{Nd} is the number of components in each patch v@'{e}rtice, and must be
-either @code{3} for 3-D or @code{4} for homogeneous coordinates, that
-is, rational patches.
+@var{Nd} @'{e} o n@'{u}mero de componentes no v@'{e}rtice de cada peda@,{c}o, e deve ser
+ou @code{3} oara 3-D ou @code{4} para coordenadas homog@^{e}neas, isto
+@'{e}, peda@,{c}os racionais.
 
-@code{BBP} patches are bicubic patches with 3-D v@'{e}rtices, so @code{BBP}
-= @code{BEZ333} and @code{STBBP} = @code{BEZ333_ST}.
+Peda@,{c}os @code{BBP} s@~{a}o peda@,{c}os bic@'{u}bicos com v@'{e}rtices tridimensionais, de forma que @code{BBP}
+= @code{BEZ333} e @code{STBBP} = @code{BEZ333_ST}.
 
-Any number of patches follow the header.  Each patch comprises a series
-of patch v@'{e}rtices, followed by optional (s,t) texture coordinates,
-followed by optional (r,g,b,a) colors.
+Qualquer n@'{u}mero de peda@,{c}os segue o cabe@,{c}alho.  Cada peda@,{c}o compreende uma s@'{e}rie
+de v@'{e}rtices do peda@,{c}o, seguido por coordenadas opcionais de textura (s,t),
+seguidas por cores opcionais no formato (r,g,b,a).
 
-Each patch has (@var{Nu}+1)*(@var{Nv}+1) v@'{e}rtices in v-major order, so that if we
-designate a v@'{e}rtice by its control point indices (u,v) the order is
+Cada peda@,{c}o tem (@var{Nu}+1)*(@var{Nv}+1) v@'{e}rtices na ordem v-maior, de forma que se
+designarmos um v@'{e}rtice atrav@'{e}s de seus @'{i}ndices (u, v) de controle de ponto a ordem @'{e}
 @example
      (0,0) (1,0) (2,0) @dots{}  (@var{Nu},0)
      (0,1) (1,1) (2,1) @dots{}  (@var{Nu},1)
@@ -3543,85 +3545,85 @@ designate a v@'{e}rtice by its control point indices (u,v) the order is
      (0,@var{Nv})            @dots{}  (@var{Nu},@var{Nv})
 @end example
 @noindent
-with each v@'{e}rtice containing either 3 or 4 floating-point numbers
-as specified by the header.
+com cada v@'{e}rtice contendo ou 3 ou 4 n@'{u}meros em ponto flutuantes
+como especificado pelo cabe@,{c}alho.
    
-If the header calls for ST coordinates, four pairs of floating-point
-numbers follow: the texture-space coordinates for the (0,0),
-(@var{Nu},0), (0,@var{Nv}), and (@var{Nu},@var{Nv}) corners do
-patch, respectively.
+Se o cabe@,{c}alho chama por coordenadas ST, quatro pares de n@'{u}meros em
+ponto flutuante seguem: o espa@,{c}o de coordenadas de testura para (0,0),
+(@var{Nu},0), (0,@var{Nv}), e os cantos (@var{Nu},@var{Nv}) do
+peda@,{c}o, respectivamente.
 
-If the header calls for colors, four four-component (red, green, blue,
-alpha) floating-point colors follow, one for each patch corner.
+Se o cabe@,{c}alho chama por cores, segue quatro grupos de quatro componentes (vermelho, verde, azul,
+alfa) d cores em ponto flutuante, um para cada canto do peda@,{c}o.
 
-The series of patches ends at end-of-file, or with a closebrace if
-incorporated in an objeto reference.
+A s@'{e}rie de peda@,{c}os termina em um caractere de fim de arquivo, ou com uma chave fechada se
+incorporado em uma refer@^{e}ncia de objeto.
 
 @comment ----------------------------------------------------------------
 @node OFF, VECT, BBP and BEZ, Object File Formats
 @subsection OFF Files
 
-The conventional suffix for @code{OFF} files is @file{.off}.
+O sufixo convencional para arquivos @code{OFF} @'{e} @file{.off}.
 
-Syntax:
+Sintaxe:
 
 @example
-[ST][C][N][4][n]OFF	# Header keyword
-[@var{Ndim}]		# Space dimension of v@'{e}rtices, present only if nOFF
-@var{NVertices}  @var{NFaces}  @var{NEdges}   # NEdges not used or checked
+[ST][C][N][4][n]OFF	# Palavra chave do cabe@,{c}alho
+[@var{Ndim}]		# Dimens@~{a}o do espa@,{c}o dos v@'{e}rtices, presente somente se nOFF estiver tamb@'{e}m presente
+@var{NV@'{e}rtices}  @var{NFaces}  @var{NArestas}   # NEdges n@~{a}o @'{e} usado nem checado
 
-@var{x}[0]  @var{y}[0]  @var{z}[0]	# Vertices, possibly with normals,
-			# colors, and/or texture coordinates, in that order,
-			# if the prefixes @code{N}, @code{C}, @code{ST}
-			# are present.
-			# If 4OFF, each v@'{e}rtice has 4 components,
-			# including a final homogeneous component.
-			# If nOFF, each v@'{e}rtice has @var{Ndim} components.
-			# If 4nOFF, each v@'{e}rtice has @var{Ndim}+1 components.
+@var{x}[0]  @var{y}[0]  @var{z}[0]	# V@'{e}rtices, possivelmente com normais,
+			# cores, e/ou coordenadas de textura, nessa ordem,
+			# se os prefixo @code{N}, @code{C}, @code{ST}
+			# estiverem presentes.
+			# Se 4OFF, cada v@'{e}rtice possui 4 componentes,
+			# incluindo uma componente final homog@^{e}nea.
+			# Se nOFF, cada v@'{e}rtice possui @var{Ndim} componentes.
+			# Se 4nOFF, cada v@'{e}rtice possui @var{Ndim}+1 componentes.
 @dots{}
-@var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
+@var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
     			# Faces
-    			# @var{Nv} = # v@'{e}rtices on this face
-    			# @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices
-    			#		in range 0..@var{NVertices}-1
+    			# @var{Nv} = # v@'{e}rtices na referida face
+    			# @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: @'{i}ndices dos v@'{e}rtices
+    			#		no intervalo 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  @var{colorspec}
 @dots{}
-    			# @var{colorspec} continues past @var{v}[@var{Nv}-1]
-    			# to end-of-line; may be 0 to 4 numbers
-    			# nothing: default
-    			# integer: colormap index
-    			# 3 or 4 integers: RGB[A] values 0..255
-			# 3 or 4 floats: RGB[A] values 0..1
+    			# @var{colorspec} colar cont@'{i}nuo @var{v}[@var{Nv}-1]
+    			# at@'{e} o aparecer um caractere de fim de linha; pode ser de 0 a 4 n@'{u}meros
+    			# nenhum: padr@~{a}o
+    			# inteiro: @'{i}ndice do mapa de cores
+    			# 3 ou 4 inteiros: valores RGB[A] no intervalo 0..255
+			# 3 ou 4 n@'{u}meros em ponto flutuante: valores RGB[A] no intervalo 0..1
 @end example
 
-@code{OFF} files (name for "object file format") represent collections
-of planar pol@'{i}gonos with possibly shared v@'{e}rtices, a convenient way to
-describe polyhedra.  The pol@'{i}gonos may be concave but there's no
-provision for pol@'{i}gonos containing holes.
+Arquivos @code{OFF} (nome  para "object file format" formato de arquivo de objeto) representa cole@,{c}@~{o}es
+de pol@'{i}gonos planos com v@'{e}rtices possivelmente compartilhados, um caminho conveniente para
+descrever poliedros.  Os pol@'{i}gonos podem ser c@^{o}ncavos mas n@~{a}o existe
+suporte para pol@'{i}gonos contendo buracos.
 
-An @code{OFF} file may begin with the keyword @code{OFF}; it's
-recommended but optional, as many existing files lack this keyword.
+Um arquivo @code{OFF} pode come@,{c}ar com a palavra chave @code{OFF}; isso @'{e}
+recomendado mas tamb@'{e}m @'{e} opcional, muitos arquivos existentes precisam dessa palavra chave.
 
-Three ASCII integers follow: @var{NVertices}, @var{NFaces}, and
-@var{NEdges}.  Thease are the number of v@'{e}rtices, faces, and edges,
-respectively.  Current software does not use nor check @var{NEdges}; it
-needn't be correct but must be present.
+Tr@^{e}s inteiros ASCII seguem a palavra chave @code{OFF}: @var{NV@'{e}rtices}, @var{NFaces}, e
+@var{NArestas}.  Esses s@~{a}o o n@'{u}mero de v@'{e}rtices, faces, e arestas,
+respectivamente.  Atualmente o software n@~{a}o utiliza nem verificak @var{NArestas}; ele
+n@~{a}o precisa ser correto mas deve estar presente.
 
-The coordenadas do v@'{e}rtice follow: dimension * @var{Nv@'{e}rtices}
-floating-point values.  They're implicitly numbered 0 through
-@var{NVertices}-1.  dimension is either 3 (default) or 4 (specified by
-the key character @code{4} directly before @code{OFF} in the keyword).
+As coordenadas do v@'{e}rtice seguem: dimens@~{a}o * @var{Nv@'{e}rtices}
+valores em ponto flutuante.  Esses valores em ponto flutuante est@~{a}o implicitamente numerados de 0 a
+@var{NV@'{e}rtices}-1.  A dimens@~{a}o @'{e} ou 3 (o padr@~{a}o) ou 4 (especificado pelo
+caractere chave @code{4} diretamente antes da palavra chave @code{OFF}).
 
-Following these are the face descriptions, typically written
-with one line per face.  Each has the form
+Seguindo esses acima citados est@~{a}o as descri@,{c}@~{o}es das faces, tipicamente escritos
+com uma linha por face.  Cada linha tem a forma
 @example
-@var{N}  @var{Vert1} @var{Vert2} @dots{} @var{VertN}  [@var{color}]
+@var{N}  @var{Vert1} @var{Vert2} @dots{} @var{VertN}  [@var{cor}]
 @end example
 @noindent
-Here @var{N} is the number of v@'{e}rtices on this face,
+Aqui @var{N} is the number of v@'{e}rtices on this face,
 and @var{Vert1} through @var{VertN} are indices into the list of
-v@'{e}rtices (in the range 0..@var{NVertices}-1).
+v@'{e}rtices (in the range 0..@var{NV@'{e}rtices}-1).
 
 The optional @var{color} may take several forms.  Line breaks are
 significant here: the @var{color} description begins after @var{VertN}
@@ -3682,7 +3684,7 @@ Syntax:
 
 @example
 [4]VECT
-@var{NPolylines}  @var{NVertices}  @var{NColors}
+@var{NPolylines}  @var{NV@'{e}rtices}  @var{NColors}
 
 @var{Nv[0]} @dots{} @var{Nv[NPolylines-1]}     # number of v@'{e}rtices
                                            # in each polyline
@@ -3702,9 +3704,9 @@ line segments, possibly closed).  A degenerate polyline can be used to
 represent a point.
 
 A @code{VECT} file begins with the key word @code{VECT} or @code{4VECT}
-and three integers: @var{NLines}, @var{NVertices}, and @var{NColors}.
+and three integers: @var{NLines}, @var{NV@'{e}rtices}, and @var{NColors}.
 Here @var{NLines} is the number of polylines in the file,
-@var{NVertices} the total number of v@'{e}rtices, and @var{NColors} the
+@var{NV@'{e}rtices} the total number of v@'{e}rtices, and @var{NColors} the
 number of colors as explained below.
 
 Next come @var{NLines} @b{16-bit} integers
@@ -3713,7 +3715,7 @@ Next come @var{NLines} @b{16-bit} integers
 
 giving the number of v@'{e}rtices in each polyline.  A negative number
 indicates a closed polyline; 1 denotes a single-pixel point.  The sum
-(of absolute values) da @var{Nv[i]} must equal @var{NVertices}.
+(of absolute values) da @var{Nv[i]} must equal @var{NV@'{e}rtices}.
 
 Next come @var{NLines} more @b{16-bit} integers @var{Nc[i]}: the number
 of colors in each polyline.  Normally one of three values:
@@ -3731,7 +3733,7 @@ corresponding color, or the colors are smoothly interpolated along the
 line segments, depending on the implementation.
 @end table
 
-Next come @var{NVertices} groups of 3 or 4 floating-point numbers: the
+Next come @var{NV@'{e}rtices} groups of 3 or 4 floating-point numbers: the
 coordinates of all the v@'{e}rtices.  If the keyword is @var{4VECT} then
 there are 4 values por v@'{e}rtice.  The first abs(@var{Nv[0]}) of them form
 the first polyline, the next abs(@var{Nv[1]}) form the second and so on.
@@ -3761,7 +3763,7 @@ Syntax:
 @example
 [C][4][n]SKEL
 [@var{NDim}]                    # Vertex dimension, present only if nSKEL
-@var{NVertices}  @var{NPolylines}
+@var{NV@'{e}rtices}  @var{NPolylines}
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
 				    # if 4SKEL, each v@'{e}rtice has 4 components
@@ -3769,11 +3771,12 @@ Syntax:
                                     # if C[4][n]SKEL v@'{e}rtice coordinates are
                                     # followed by an RGBA color specification
 @dots{}
-@var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
+@var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
                         # Polylines
                         # @var{Nv} = # v@'{e}rtices on this polyline (1 = point)
-                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices                        #               in range 0..@var{NVertices}-1
+                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices
+                        #               in range 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
 @dots{}
                         # @var{colorspec} continues past @var{v}[@var{Nv}-1]
