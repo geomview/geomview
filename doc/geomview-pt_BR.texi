@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.51/Sat Mar  8 22:29:37 2008//
+@c based on /geomview.texi/1.53/Wed Mar 26 06:11:33 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -3621,52 +3621,52 @@ com uma linha por face.  Cada linha tem a forma
 @var{N}  @var{Vert1} @var{Vert2} @dots{} @var{VertN}  [@var{cor}]
 @end example
 @noindent
-Aqui @var{N} is the number of v@'{e}rtices on this face,
-and @var{Vert1} through @var{VertN} are indices into the list of
-v@'{e}rtices (in the range 0..@var{NV@'{e}rtices}-1).
+Aqui @var{N} @'{e} o n@'{u}mero de v@'{e}rtices sobre a considerada face,
+e @var{Vert1} a @var{VertN} s@~{a}o @'{i}ndices dentro da lista de
+v@'{e}rtices (no intervalo 0..@var{NV@'{e}rtices}-1).
 
-The optional @var{color} may take several forms.  Line breaks are
-significant here: the @var{color} description begins after @var{VertN}
-and ends with the end da line (or the next # comment).  A
-@var{color} may be:
+O modificador opcional @var{cor} no final da linha acima pode tomar v@'{a}rias formas.  Caracteres de fim de linha s@~{a}o
+significativos nesse ponto: a descri@,{c}@~{a}o @var{cor} inicia-se ap@'{o}s @var{VertN}
+e termina com o caractere de fim de linha (ou pr@'{o}ximo caractere cerquilha # representativo de coment@'{a}rio).  Uma
+@var{cor} pode ser:
 
 @table @asis
-@item nothing
-the default color
-@item one integer
-index into "the" colormap; see below
-@item three or four integers
-RGB and possibly alpha values in the range 0..255
-@item three or four floating-point numbers
-RGB and possibly alpha values in the range 0..1
+@item aus@^{e}ncia de caractere
+a cor padr@~{a}o
+@item um inteiro
+@'{i}ndice dentro "do" mapa de cores; veja abaixo
+@item tr@^{e}s ou quatro inteiros
+valores de RGB e possivelmente alfa no intervalo 0..255
+@item tr@^{e}s ou quatro n@'{u}mers em ponto flutuante
+valores RGB e possivelmente alfa no intervalo 0..1
 @end table
 
-For the one-integer case, the colormap is currently read from the file
-@file{cmap.fmap} in Geomview's @file{data} directory.  Some better
-mechanism for supplying a colormap is likely someday.
+Para o caso de um inteiro, o mapa de cores @'{e} lido diretamente do arquivo
+@file{cmap.fmap} em sua forma atual no diret@'{o}rio @file{data} do Geomview.  Algum melhor
+mecanismo para fornecer um mapa de cor ser@'{a} fornecido provavelmente algum dia.
 
-The meaning of "default color" varies.  If no face do objeto has a
-color, all inherit the environment's default material color.  If some
-but not all faces have colors, the default is gray (R,G,B,A=.666).
+O significado de "cor padr@~{a}o" varia.  Se nenhuma face do objeto tem uma
+cor, tudo recebe como heran@,{c}a a cor material padr@~{a}o do ambiente.  Se alguma
+mas n@~{a}o todas as faces possuem cores, o padr@~{a}o @'{e} cinza (R,G,B,A=.666).
 
-A @code{[ST][C][N][n]OFF BINARY} format is accepted; @xref{Binary
-format}.  It resembles the ASCII format in almost the way you'd expect,
-with 32-bit integers for all counters and @'{i}ndices do v@'{e}rtice and 32-bit
-floats for posi@,{c}@~{o}es de v@'{e}rtice (and texture coordinates or cores de v@'{e}rtice or
-normals if
-@code{COFF}/@code{NOFF}/@code{CNOFF}/@code{STCNOFF}/etc. format).
+Um formato @code{[ST][C][N][n]OFF BINARY} @'{e} aceito; veja @ref{Binary
+format}.  Esse formato assemelha-se ao formato ASCII em quase tudo que voc@^{e} poderia esperar,
+com inteiros de 32-bit para todos os contadores e @'{i}ndices de v@'{e}rtice e n@'{u}meros em ponto flutuante de
+32-bit para posi@,{c}@~{o}es de v@'{e}rtice (e coordenadas de textura ou cores de v@'{e}rtice ou
+retas normais se algum dos formatos
+@code{COFF}/@code{NOFF}/@code{CNOFF}/@code{STCNOFF}/etc. estiver presente).
 
-Exception: each face's @'{i}ndices do v@'{e}rtice are followed by an integer
-indicating how many color components accompany it.  Face color
-components must be floats, not integer values.  Thus a colorless
-triangular face might be represented as
+Exce@,{c}@~{a}o: cada um dos @'{i}ndices de face do v@'{e}rtice s@~{a}o seguidos por um inteiro
+indicando quantas componentes de cor o acompanhamt.  Componentes de
+cor de face devem ser n@'{u}meros em ponto flutuante, n@~{a}o valores inteiros.  Dessa forma uma face triangular
+ pouco colorida pode ser representada como
 
 @example
 int int int int int
 3   17   5   9   0
 @end example
 
-while the same face colored red might be
+enquanto a mesma face colorida com vermelho pode ser
 
 @example
 int int int int int float float float float
@@ -3678,59 +3678,59 @@ int int int int int float float float float
 @node VECT, SKEL, OFF, Object File Formats
 @subsection VECT Files
 
-The conventional suffix for @code{VECT} files is @file{.vect}.
+O sufixo convencional para arquivos @code{VECT} @'{e} @file{.vect}.
 
-Syntax:
+Sintaxe:
 
 @example
 [4]VECT
-@var{NPolylines}  @var{NV@'{e}rtices}  @var{NColors}
+@var{NLinhaspoligonais}  @var{NV@'{e}rtices}  @var{NCores}
 
-@var{Nv[0]} @dots{} @var{Nv[NPolylines-1]}     # number of v@'{e}rtices
-                                           # in each polyline
+@var{Nv[0]} @dots{} @var{Nv[NLinhaspoligonais-1]}     # n@'{u}mero de v@'{e}rtices
+                                           # em cada linha poligonal
 
-@var{Nc[0]} @dots{} @var{Nc[NPolylines-1]}     # number of colors supplied
-                                           # in each polyline
+@var{Nc[0]} @dots{} @var{Nc[NLinhaspoligonais-1]}     # n@'{u}mero de cores fornecido
+                                           # em cada linha poligonal
 
-@var{Vert[0]} @dots{} @var{Vert[NVertices-1]}  # All the v@'{e}rtices
-                                           # (3*NVertices floats)
+@var{Vert[0]} @dots{} @var{Vert[NVertices-1]}  # Todos os v@'{e}rtices
+                                           # (3*NVertices n@'{u}meros em ponto flutuante)
 
-@var{Color[0]} @dots{} @var{Color[NColors-1]}  # All the colors
-                                           # (4*NColors floats, RGBA)
+@var{Color[0]} @dots{} @var{Color[NCores-1]}  # Todas as cores
+                                           # (4*NCores n@'{u}meros em ponto flutuante, RGBA)
 @end example
 
-@code{VECT} objetos represent lists of polylines (strings of connected
-line segments, possibly closed).  A degenerate polyline can be used to
-represent a point.
+Objetos do tipo @code{VECT} representam listas de linhas poligonais (seq@"{u}@^{e}ncia de caacteres que representam
+segmentos de reta, possivelmente fechados).  Uma linha poligonal degenerada pode ser usada para
+representar um ponto.
 
-A @code{VECT} file begins with the key word @code{VECT} or @code{4VECT}
-and three integers: @var{NLines}, @var{NV@'{e}rtices}, and @var{NColors}.
-Here @var{NLines} is the number of polylines in the file,
-@var{NV@'{e}rtices} the total number of v@'{e}rtices, and @var{NColors} the
-number of colors as explained below.
+Um arquivo @code{VECT} inicia-se com a palavra chave @code{VECT} ou com @code{4VECT}
+e tr@^{e}s inteiros: @var{NLinhas}, @var{NV@'{e}rtices}, e @var{NCores}.
+Aqui @var{NLinhas} @'{e} o n´umero de linhas poligonais no arquivo,
+@var{NV@'{e}rtices} o n@'{u}mero total de vertices v@'{e}rtices, e @var{NCores} o
+n@'{u}mero de cores como explanado abaixo.
 
-Next come @var{NLines} @b{16-bit} integers
+A seguir vem @var{NLinhas} que s@~{a}o inteiros de @b{16-bit}
 
-@center @var{Nv[0]} @var{Nv[1]} @var{Nv[2]} @dots{} @var{Nv[NLines-1]}
+@center @var{Nv[0]} @var{Nv[1]} @var{Nv[2]} @dots{} @var{Nv[NLinhas-1]}
 
-giving the number of v@'{e}rtices in each polyline.  A negative number
-indicates a closed polyline; 1 denotes a single-pixel point.  The sum
-(of absolute values) da @var{Nv[i]} must equal @var{NV@'{e}rtices}.
+fornecendo o n@'{u}mero de v@'{e}rtices em cada linha poligonal.  Um n@'{u}mero negativo
+indica uma linha poligonal fechada; 1 denota ponto composto por um pixel simples.  O somat@'{o}rio
+(dos valores absolutos) de @var{Nv[i]} deve ser igual a @var{NV@'{e}rtices}.
 
-Next come @var{NLines} more @b{16-bit} integers @var{Nc[i]}: the number
-of colors in each polyline.  Normally one of three values:
+A seguir vem @var{NLinhas} qua s@~{a}o formadas por inteiros de @b{16-bit} @var{Nc[i]}: o n@'{u}mero
+de cores em cada linha poligonal. Normalmente um dos tr@^{e}s valores abaixo:
 
 @table @asis
 @item 0
-No color is specified for this polyline.  It's drawn in the same color
-as the previous polyline.
+Nenhuma cor @'{e} especificada para esta linha poligonal.  Seu desenho na mesma cor
+que a linha poligonal anterior.
 @item 1
-A single color is specified.  The entire polyline is drawn in that
-color.
+Uma cor simples @'{e} especificada.  A linha poligonal completa @'{e} desenhada nessa
+cor.
 @item abs(@var{Nv[i]})
-Each v@'{e}rtice has a color.  Either each segment is drawn in the
-corresponding color, or the colors are smoothly interpolated along the
-line segments, depending on the implementation.
+Cada v@'{e}rtice tem uma cor.  Ou cada segmento @'{e} desenhado na
+correspondente cor, ou as cores s@~{a}o linearmente interpoladas ao longo dos
+segmentos de reta, dependendo da implementa@,{c}@~{a}o.
 @end table
 
 Next come @var{NV@'{e}rtices} groups of 3 or 4 floating-point numbers: the
@@ -3738,7 +3738,7 @@ coordinates of all the v@'{e}rtices.  If the keyword is @var{4VECT} then
 there are 4 values por v@'{e}rtice.  The first abs(@var{Nv[0]}) of them form
 the first polyline, the next abs(@var{Nv[1]}) form the second and so on.
 
-Finally @var{NColors} groups of 4 floating-point numbers give red,
+Finally @var{NCores} groups of 4 floating-point numbers give red,
 green, blue and alpha (opacity) values.  The first @var{Nc[0]} of them
 apply to the first polyline, and so on.
 
@@ -3754,7 +3754,7 @@ integers.
 @node SKEL, SPHERE, VECT, Object File Formats
 @subsection SKEL Files
 
-@code{SKEL} files represent collections of points and polylines, with
+@code{SKEL} files represent collections of points and linhas poligonais, with
 shared v@'{e}rtices.
 The conventional suffix for @code{SKEL} files is @file{.skel}.
 
@@ -3763,7 +3763,7 @@ Syntax:
 @example
 [C][4][n]SKEL
 [@var{NDim}]                    # Vertex dimension, present only if nSKEL
-@var{NV@'{e}rtices}  @var{NPolylines}
+@var{NV@'{e}rtices}  @var{NLinhaspoligonais}
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
 				    # if 4SKEL, each v@'{e}rtice has 4 components
@@ -3773,7 +3773,7 @@ Syntax:
 @dots{}
 @var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
-                        # Polylines
+                        # linhas poligonais
                         # @var{Nv} = # v@'{e}rtices on this polyline (1 = point)
                         # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices
                         #               in range 0..@var{NV@'{e}rtices}-1
