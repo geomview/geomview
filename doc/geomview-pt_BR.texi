@@ -3733,22 +3733,22 @@ correspondente cor, ou as cores s@~{a}o linearmente interpoladas ao longo dos
 segmentos de reta, dependendo da implementa@,{c}@~{a}o.
 @end table
 
-Next come @var{NV@'{e}rtices} groups of 3 or 4 floating-point numbers: the
-coordinates of all the v@'{e}rtices.  If the keyword is @var{4VECT} then
-there are 4 values por v@'{e}rtice.  The first abs(@var{Nv[0]}) of them form
-the first polyline, the next abs(@var{Nv[1]}) form the second and so on.
+A seguir vem @var{NV@'{e}rtices} grupos de 3 ou 4 n@'{u}meros em ponto flutuante: as
+coordenadas de todos os v@'{e}rtices.  Se a palavra chave for @var{4VECT} ent@~{a}o
+existir@~{a}o 4 valores por v@'{e}rtice.  O primeiro grupo abs(@var{Nv[0]}) forma
+a primeira linha poligonal, o grupo seguinte abs(@var{Nv[1]}) forma a segunda e assim por diante.
 
-Finally @var{NCores} groups of 4 floating-point numbers give red,
-green, blue and alpha (opacity) values.  The first @var{Nc[0]} of them
-apply to the first polyline, and so on.
+Finalmente @var{NCores} grupos de 4 n@'{u}meros em ponto flutuante fornecendo valores de
+vermelho, verde, azul e alfa (opacidade).  O primeiro grupo @var{Nc[0]}
+aplica-se @`{a} primeira linha poligonal, e assim por diante.
 
-A @var{VECT BINARY} format is accepted; @pxref{Binary format}.  The
-binary format exactly follows the ASCII format, with 32-bit Big-Endian
-integers where ordinary integer numbers appear, and with @b{16-bit}
-Big-Endian integers where 16-bit integers appear; 32-bit Big-Endian
-floats where real values appear.  @b{BIG FAT NOTE:} The v@'{e}rtice counts
-@var{Nv[i]} and the color counts @var{Nc[i]} are @b{16-bit} Big-Endian
-integers.
+Um formato @var{VECT BINARY} @'{e} aceito; veja @ref{Binary format}.  O
+formato bin@'{a}rio segue exatamente o formato ASCII, com inteiros de 32-bit
+Big-Endian onde aparecem os n@'{u}meros inteiros comuns, e com inteiros de
+@b{16-bit} Big-Endian onde aparecem inteiros de 16-bit; n@'{u}meros em ponto flutuante de 
+32-bit Big-Endian onde aparecem os valores reais.  @b{BIG FAT NOTE:} Os contadores de v@'{e}rtice
+@var{Nv[i]} e os contadores de cor @var{Nc[i]} s@~{a}o inteiros de @b{16-bit}
+Big-Endian.
 
 @comment ----------------------------------------------------------------
 @node SKEL, SPHERE, VECT, Object File Formats
@@ -3756,27 +3756,28 @@ integers.
 
 @code{SKEL} files represent collections of points and linhas poligonais, with
 shared v@'{e}rtices.
-The conventional suffix for @code{SKEL} files is @file{.skel}.
+O sufixo convencional para arquivos @code{SKEL} @'{e} @file{.skel}.
 
-Syntax:
+Sintaxe:
 
 @example
 [C][4][n]SKEL
-[@var{NDim}]                    # Vertex dimension, present only if nSKEL
+[@var{NDim}]                    # Dimens@~{a}o dos v@'{e}rtices, presente somente se nSKEL tamb@'{e}m estiver presente
 @var{NV@'{e}rtices}  @var{NLinhaspoligonais}
 
-@var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
-				    # if 4SKEL, each v@'{e}rtice has 4 components
-				    # if nSKEL, each v@'{e}rtice has NDim components
-                                    # if C[4][n]SKEL v@'{e}rtice coordinates are
-                                    # followed by an RGBA color specification
+@var{x}[0]  @var{y}[0]  @var{z}[0]  # V@'{e}rtices
+				    # se 4SKEL, cada v@'{e}rtice ter@'{a} 4 componentes
+				    # se nSKEL, each v@'{e}rtice ter@'{a} NDim componentes
+                                    # se C[4][n]SKEL coordenadas de v@'{e}rtice s@~{a}o
+                                    # seguidas por uma especifica@,{c}@~{a}o de cor RGBA
 @dots{}
 @var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
                         # linhas poligonais
-                        # @var{Nv} = # v@'{e}rtices on this polyline (1 = point)
-                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: v@'{e}rtice indices
-                        #               in range 0..@var{NV@'{e}rtices}-1
+                        # @var{Nv} = 
+                        # v@'{e}rtices sobre essa linha poligonal (1 = point)
+                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: @'{i}ndices de v@'{e}rtice
+                        #               no intervalo 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
 @dots{}
                         # @var{colorspec} continues past @var{v}[@var{Nv}-1]
@@ -3789,8 +3790,8 @@ The syntax resembles that of @code{OFF} files, with a table of v@'{e}rtices
 followed by a sequence of polyline descriptions, each referring to v@'{e}rtices
 by index in the table.  Each polyline has an optional color.
 
-For @code{nSKEL} objetos, each v@'{e}rtice has @var{NDim} components.
-For @code{4nSKEL} objetos, each v@'{e}rtice has @var{NDim+1} components;
+For @code{nSKEL} objetos, each v@'{e}rtice has @var{NDim} componentes.
+For @code{4nSKEL} objetos, each v@'{e}rtice has @var{NDim+1} componentes;
 the final component is the homogeneous divisor.
 
 A @var{[4][n]SKEL BINARY} format is accepted; @xref{Binary format}.
@@ -3799,8 +3800,8 @@ with 32-bit integers for all counters and @'{i}ndices do v@'{e}rtice and 32-bit
 floats for posi@,{c}@~{o}es de v@'{e}rtice.
 
 Exception: each polyline's @'{i}ndices do v@'{e}rtice are followed by an integer
-indicating how many color components accompany it. Polyline color
-components must be floats, not integer values.  Thus a colorless
+indicating how many color componentes accompany it. Polyline color
+componentes must be floats, not integer values.  Thus a colorless
 polyline with 3 v@'{e}rtices might be represented as
 
 @example
@@ -3975,7 +3976,7 @@ alien geometry, and c@^{a}meras are placed.
 (Thus if there are multiple views, it may appear in a different 
 spatial position in each view.)  The center da camera's view
 is along its negative Z axis; positive X is rightward, positive Y upward.
-Normally the units of c@^{a}mera space are the same as global coordinates.
+Normally the units of c@^{a}mera space are the same as global coordenadas.
 When a c@^{a}mera is reset, the global origin is at (0,0,-3.0).
 @item
 @code{location ndc} places the objeto relative to the normalized unit
@@ -3996,8 +3997,8 @@ It's tempting to use -1 rather than -.999 as the Z component da
 position, but that may put the objeto just nearer than the near clipping
 plane and make it (partially) invisible, due to floating-point error.
 @item
-@code{location screen} places the objeto in screen coordinates.
-The range of Z is still -1 through +1 as for ndc coordinates;
+@code{location screen} places the objeto in screen coordenadas.
+The range of Z is still -1 through +1 as for ndc coordenadas;
 X and Y are measured in pixels, and range from (0,0) at the @emph{lower left}
 corner da window, increasing rightward and upward.
 @end itemize
@@ -4076,7 +4077,7 @@ INST
 
 This one resembles the @code{origin} example in the section above,
 but makes the X and Y edges be 1/4 the size da window (1/4, not 1/2,
-since the range of ndc X and Y coordinates is -1 to +1).
+since the range of ndc X and Y coordenadas is -1 to +1).
 @example
 @{ INST
   location ndc
@@ -4740,7 +4741,7 @@ Specified in either of two forms.
 is the field of view -- in degrees if perspective, or linear
 distance if orthographic -- in the @emph{shorter} direction.
   @item halfyfield 
-is half the projected Y-axis field, in world coordinates (not angle!),
+is half the projected Y-axis field, in world coordenadas (not angle!),
 at unit distance from the camera.  For a perspective camera, halfyfield
 is related to angular field:
 
@@ -5491,7 +5492,7 @@ when the user cliques the bot@~{a}o direito do mouse with the cursor over a geom
 in a Geomview janela de c@^{a}mera.  When this happens Geomview generates an
 internal call to a procedure called @code{pick}; the arguments to the
 procedure give information about the pick, such as what objeto was
-picked, the coordinates do picked point, etc.  If an external module
+picked, the coordenadas do picked point, etc.  If an external module
 has expressed interest in calls to @code{pick}, then whenever
 @code{pick} is called Geomview will echo the call to the module's
 standard input.  The module can then do whatever it wants with the pick
@@ -5787,8 +5788,8 @@ be transmitted in cases where there are arguments that the module
 doesn't care about.
 
 The second, third, fourth, and fifth arguments to the @code{pick}
-command give the name, pick point coordinates, coordenadas do v@'{e}rtice, and
-edge coordinates of a pick event.  We specify these by @code{*}'s above.
+command give the name, pick point coordenadas, coordenadas do v@'{e}rtice, and
+edge coordenadas of a pick event.  We specify these by @code{*}'s above.
 The remaining five arguments to the @code{pick} command give other
 information about the pick event that we do not care about in this
 module, so we specify these with @code{nil}'s.  For the details dos
@@ -5861,7 +5862,7 @@ command.
 @table @asis
 
 @item @code{char *coordsys;}
-A string specifying the coordinate system in which coordinates are
+A string specifying the coordinate system in which coordenadas are
 given.  In this example, this will always be @code{world} because
 do @code{interest} call above.
 
@@ -5871,10 +5872,10 @@ A string specifying the name do picked geom.
 @item @code{HPoint3 point; int pn;}
 
 @item @code{float *point; int pn;}
-@code{point} is an @code{HPoint3} structure giving the coordinates of
+@code{point} is an @code{HPoint3} structure giving the coordenadas of
 the picked point.  @code{HPoint3} is a homogeneous point coordinate
 representation equivalent to an array of 4 floats. @code{pn} tells how
-many coordinates have been written into this array; it will always be
+many coordenadas have been written into this array; it will always be
 either @code{0}, @code{4} or greater than @code{4}. If it is greater
 than @code{4}, then the @var{NDbody} instruction block is invoked and in
 this case @code{point} is a flat array of @code{pn} many @code{float}s.
@@ -5885,9 +5886,9 @@ case the ordinary @var{block} 3d instruction block is executed.
 @item @code{HPoint3 vertex; int vn;}
 
 @item @code{float *vertex; int vn;}
-@code{vertex} is an @code{HPoint3} structure giving the coordinates of
+@code{vertex} is an @code{HPoint3} structure giving the coordenadas of
 the v@'{e}rtice selecionado, if the pick point was near a v@'{e}rtice.  @code{vn} tells
-how many coordinates have been written into this array; it will always
+how many coordenadas have been written into this array; it will always
 be either @code{0} or greater equal @code{4}. A value of zero means the
 pick point was not near a v@'{e}rtice. In the context of ND-viewing
 @code{vertex} will be an array of @code{vn} @code{float}s and @code{vn}
@@ -5897,8 +5898,8 @@ will be equal to @code{pn}.
 
 @item @code{float *edge; int en;}
 @code{edge} is an array of two @code{HPoint3} structures giving the
-coordinates do endpoints da picked edge, if the pick point was
-near an edge.  @code{en} tells how many coordinates have been written
+coordenadas do endpoints da picked edge, if the pick point was
+near an edge.  @code{en} tells how many coordenadas have been written
 into this array; it will always be @code{0} or greater equal @code{8}.
 A value of zero means the pick point was not near an edge. In the
 context of ND-viewing @code{edge} will be a flat one-dimensional array
@@ -5918,12 +5919,12 @@ specified as @code{nil}.
 
 @item @code{float *face; int fn;}
 @code{face} is a variable length array of @var{fn} @code{HPoint3}'s.
-@code{face} gives the coordinates dos v@'{e}rtices da picked face.
-@code{fn} tells how many coordinates have been written into this array;
+@code{face} gives the coordenadas dos v@'{e}rtices da picked face.
+@code{fn} tells how many coordenadas have been written into this array;
 it will always be either @code{0} or a multiple of @code{pn}. A value of
 zero means the pick point was not near a face. In the context of
 ND-viewing @code{face} is a flat one-dimensional array of @code{fn} many
-floats of which each v@'{e}rtice occupies @code{pn} many components.
+floats of which each v@'{e}rtice occupies @code{pn} many componentes.
 
 @item @code{int ppath[]; int ppn;}
 @code{ppath} is an array of @var{maxpathlen} @code{int}'s.  @code{ppath}
@@ -5950,7 +5951,7 @@ the pick point was near a face.
 @end table
 
 The @code{handle_pick} procedure actually does the work of dealing with
-the pick event.  It begins by normalizing the homogeneous coordinates
+the pick event.  It begins by normalizing the homogeneous coordenadas
 passed in as arguments so that we can assume the fourth coordinate is 1.
 It then sends GCL commands to define the @code{pick} objeto to be
 whatever is appropriate for the kind of pick recieved.  See @pxref{OOGL
@@ -6023,7 +6024,7 @@ proc readsomething @{@} @{
 #          The pick command is executed internally in response to pick
 #          events (right mouse double clique).
 #
-#          COORDSYS = coordinate system in which coordinates of the following
+#          COORDSYS = coordinate system in which coordenadas of the following
 #              arguments are specified.   This can be:
 #               world: world coord sys
 #               self:  coord sys of the picked geom (GEOMID)
@@ -6371,7 +6372,7 @@ world2cam transforms might better be called universe2cam, etc.
 @item self
 "this objeto do Geomview".  Transform from an objeto to @code{self} is the
 identity; writing its geometry gives the objeto itself with no
-enclosing transform; picked points appear in the objeto's coordinates.
+enclosing transform; picked points appear in the objeto's coordenadas.
 
 @item primitive
 (for @code{pick} only) Picked points appear in the coordinate system do
@@ -6912,7 +6913,7 @@ which makes this command obsolete.
 @table @code
 @item (dimension [N])
 Sets or reads the space dimension for N-dimensional viewing.
-(Since calculations are done using homogeneous coordinates,
+(Since calculations are done using homogeneous coordenadas,
 this means matrices are (N+1)x(N+1).)
 With no arguments, returns the current dimension, or 0 if
 N-dimensional viewing has not been enabled.
@@ -7586,7 +7587,7 @@ Each coloring function is defined by a vector (in ID's coordinate system)
 [x1 @dots{} xN] and by a sequence of value (v)/color(r g b a) tuples,
 ordered by increasing v.  The inner product v = P.[x] is linearly
 interpolated in this table to give a color.
-If ID is omitted, the (xi) vector is assumed in universe coordinates.
+If ID is omitted, the (xi) vector is assumed in universe coordenadas.
 The ND-color command especifica a list of such functions; each v@'{e}rtice
 is colored by their sum (so e.g. green intensity could indicate
 projection along one axis while red indicated another.
@@ -7760,7 +7761,7 @@ events (right mouse double clique).
 
 @table @var
 @item COORDSYS
-= coordinate system in which coordinates dos following
+= coordinate system in which coordenadas dos following
 arguments are specified.   This can be:
 @table @code
 @item world
@@ -7908,7 +7909,7 @@ handler and is not intended for general use.
 @table @code
 @item (rawpick CAMID X Y)
 Process a pick event in camera CAMID at location (X,Y) given in
-integer pixel coordinates.  This is a low-level procedure not
+integer pixel coordenadas.  This is a low-level procedure not
 intended for external use.
 @end table
 
@@ -8585,7 +8586,7 @@ write description of ID in given format to FILENAME.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the objeto, no transformation or appearance (geometry only)
 world: the objeto as positioned within the World.
-universe: objeto's position in universal coordinates;
+universe: objeto's position in universal coordenadas;
 includes Worldtransform
 other ID: the objeto transformed to otherID's coordinate system.
 
@@ -9303,7 +9304,7 @@ To install Geomview on your system, arrange for the @file{$GEOMROOT}
 directory to be in a permanent place.  Then, in a shell window,
 @code{cd} to that directory and type @code{install}.  This runs a shell
 script which does the installation after asking you several questions
-about where you want to install the various components of Geomview.
+about where you want to install the various componentes of Geomview.
 
 After running the @code{install} script you should now be able to run
 Geomview from any directory on your system.  (You may need to give the

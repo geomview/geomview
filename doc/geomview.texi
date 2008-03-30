@@ -3745,7 +3745,8 @@ Syntax:
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
                         # Polylines
-                        # @var{Nv} = # vertices on this polyline (1 = point)
+                        # @var{Nv} = 
+                        # vertices on this polyline (1 = point)
                         # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices
                         #               in range 0..@var{NVertices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
