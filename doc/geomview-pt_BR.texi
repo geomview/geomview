@@ -3780,36 +3780,36 @@ Sintaxe:
                         #               no intervalo 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
 @dots{}
-                        # @var{colorspec} continues past @var{v}[@var{Nv}-1]
-                        # to end-of-line; may be nothing, or 3 or 4 numbers.
-                        # nothing: default color
-			# 3 or 4 floats: RGB[A] values 0..1
+                        # @var{colorspec} continua adiante de @var{v}[@var{Nv}-1]
+                        # at@'{e}m encontrar um fim de linha; pode ser vazia, ou 3 ou 4 n@'{u}meros.
+                        # vazia: cor padr@~{a}o
+			# 3 ou 4 n@'{u}meros em ponto flutuante: valores RGB[A] no intervalo 0..1
 @end example
 
-The syntax resembles that of @code{OFF} files, with a table of v@'{e}rtices
-followed by a sequence of polyline descriptions, each referring to v@'{e}rtices
-by index in the table.  Each polyline has an optional color.
+A sintaxe @'{e} semelhante @`{a} sintaxe dos arquivos @code{OFF}, com uma tabela de v@'{e}rtices
+seguidos de uma seq@"{u}@^{e}ncia de descri@,{c}@~{o}es de linhas poligonais, cada descri@,{c}@~{a}o referindo-se a v@'{e}rtices
+atrav@'{e}s de @'{i}ndices na tabela.  Cada linha poligonal tem uma cor opcional.
 
-For @code{nSKEL} objetos, each v@'{e}rtice has @var{NDim} componentes.
-For @code{4nSKEL} objetos, each v@'{e}rtice has @var{NDim+1} componentes;
-the final component is the homogeneous divisor.
+Para objetos @code{nSKEL}, cada v@'{e}rtice tem @var{NDim} componentes.
+Para objetos @code{4nSKEL}, cada v@'{e}rtice tem @var{NDim+1} componentes;
+a componente final @'{e} o divisor homog@^{e}neo.
 
-A @var{[4][n]SKEL BINARY} format is accepted; @xref{Binary format}.
-It resembles the ASCII format in almost the way you'd expect,
-with 32-bit integers for all counters and @'{i}ndices do v@'{e}rtice and 32-bit
-floats for posi@,{c}@~{o}es de v@'{e}rtice.
+Um formato @var{[4][n]SKEL BINARY} @'{e} aceito; veja @ref{Binary format}.
+Esse formato assemelha-se ao formato ASCII na maioria das formas que voc@^{e} pode esperar,
+com inteiros de 32-bit para todos os contadores e @'{i}ndices de v@'{e}rtice e n@'{u}meros em ponto flutuante de
+32-bit para posi@,{c}@~{o}es de v@'{e}rtice.
 
-Exception: each polyline's @'{i}ndices do v@'{e}rtice are followed by an integer
-indicating how many color componentes accompany it. Polyline color
-componentes must be floats, not integer values.  Thus a colorless
-polyline with 3 v@'{e}rtices might be represented as
+Exce@,{c}@~{a}o: cada @'{i}ndice do v@'{e}rtice de linhas poligonais @'{e} seguido de um inteiro
+indicando quantas componentes de cor o acompanham. Componentes de cor de
+linhas poligonais devem ser inteiros em ponto flutuante, n@~{a}o valores inteiros.  Dessa forma uma pouco colorida
+linha poligonal com 3 v@'{e}rtices pode ser representada como
 
 @example
 int int int int int
 3   17   5   9   0
 @end example
 
-while the same polyline colored red might be
+enquanto a mesma linha poligonal colorida em vermelho pode ser
 
 @example
 int int int int int float float float float
@@ -3820,200 +3820,200 @@ int int int int int float float float float
 @node SPHERE, INST, SKEL, Object File Formats
 @subsection SPHERE Files
 
-The conventional suffix for @code{SPHERE} files is @file{.sph}.
+O sufixo convencional para arquivos @code{SPHERE} @'{e} @file{.sph}.
 
 @example
-[ST][E|H|S]SPHERE # Keyword
-# auto-generated texture co-ordinates, only allowed with @emph{ST}SPHERE objetos
+[ST][E|H|S]SPHERE # Palavra chave
+# coordenadas de textura geradas automaticamente, somente permitido com objetos @emph{ST}SPHERE
 [SINUSOIDAL|CYLINDRICAL|RECTANGULAR|STEREOGRAPHIC|ONEFACE]
-# next four fields are required
+# os pr@'{o}ximos quatro campos s@~{a}o requeridos
 @var{Radius}
 @var{Xcenter} @var{Ycenter} @var{Zcenter}
 @end example
 
-The key word is  @code{[ST][E|H|S]SPHERE}.
-The optional prefix characters mean:
+A palavra chave @'{e} @code{[ST][E|H|S]SPHERE}.
+Os caracteres prefixados opcionais significam:
 
 @table @samp
 @item ST
-The sphere carries automatically generated texture co-ordinates. See below.
+A esfera @'{e} desenhada com coordenadas de textura geradas automaticamente. Veja abaixo.
 @item E
-The sphere lives in Euclidean space.
+Assume-se que a esfera encontra-se dentro do espa@,{c}o Euclidiano.
 @item H
-The sphere lives in Hyperbolic space. @xref{Non-Euclidean Geometry}.
+Assume-se que a esfera encontra-se dentro de um espa@,{c}o Hiperb@'{o}lico. Veja @ref{Non-Euclidean Geometry}.
 @item S
-The sphere lives in spherical space. @xref{Non-Euclidean Geometry}.
+Assume-se que a esfera encontra-se dentro de um espa@,{c}o esf@'{e}rico. Veja @ref{Non-Euclidean Geometry}.
 @end table
 
-Sphere objetos are drawn using meshes which are rectangular in a polar
-co-ordinate system, with the equatorial plane parallel to the
-@code{x,y}-plane. Their smoothness, and the time taken to draw them,
-depends on the setting do dicing level, 10x10 by default.  From
-Geomview, the Appearance panel, the @code{<N>ad} keyboard command, or a
-@code{dice nu nv} Appearance attribute sets this.
+Objetos do tipo esfera s@~{a}o desenhados usando malhas que s@~{a}o retangulares em um sistema de
+coordenadas polares, com o plano equatorial paralelo ao plano
+@code{x,y}. Sua suavidade superficial, e o tempo gasto para desenh@'{a}-la,
+depende da escolha dos cortes quadrados, 10x10 por padr@~{a}o.  Para
+Geomview, o painel de apar@^{e}ncia, o comando de teclado @code{<N>ad}, ou um
+atributo de apar@^{e}ncia @code{dice nu nv} escolhe isso.
 
-Texture co-ordinates are generated for @code{STSPHERE} objetos; the
-keyword following the initial @code{STSPHERE} keyword defines the way
-this is done. It follows the conventions do @command{mktxmesh}
-Perl-script which comes with the @emph{Orrery}.
+Coordenadas de textura s@~{a}o geradas para objetos @code{STSPHERE}; a
+palavra chave seguindo a palavra chave inicial @code{STSPHERE} define o caminho
+para fazer isso. A palavra chave que segue a papavra chave inicial segue as conven@,{c}@~{o}es do script perl
+@command{mktxmesh} que acompanha o diret@'{o}rio @emph{Orrery} na @'{a}rvore de diret@'{o}rios instalados que acompanha o Geomview.
 
 @table @var
 @item SINUSOIDAL
-sinusoidal equal-area projection
+proje@,{c}@~{a}o sinusoidal de @'{a}rea equivalente
 @item CYLINDRICAL
-cylindrical proj: @var{s} is the longitude, @var{t} is the latitude
+proje@,{c}@~{a}o cil@'{i}drica: @var{s} @'{e} a longitude, @var{t} @'{e} a latitude
 @item RECTANGULAR
-rectangular proj: @var{s} is the longitude, @var{t} is @code{sin(latitude)}
-(i.e. @code{z} co-ordinate in the sphere's co-ordinate system)
+proje@,{c}@~{a}o retangular: @var{s} @'{e} a longitude, @var{t} @'{e}  @code{sin(latitude)}
+(i.e. a coordenada @code{z} no sistema de coordenadas da esfera)
 @item STEREOGRAPHIC
-stereographic projection from the south (@code{z=-1}) pole
+proje@,{c}@~{a}o estereogr@'{a}fica a partir do p@'{o}lo sul (@code{z=-1})
 @item ONEFACE
-stretch orthographic view of @code{+y} hemisphere over both, mirroring
+vis@~{a}o ortogr@'{a}fica extendida do hemisf@'{e}rio @code{+y} sobre ambos, espelhando
 @end table
 
 @comment ----------------------------------------------------------------
 @node INST, LIST, SPHERE, Object File Formats
 @subsection INST Files
 
-The conventional suffix for a @code{INST} file is @file{.inst}.
+O sufixo convencional para um arquivo @code{INST} @'{e} @file{.inst}.
 
-There is no INST BINARY format.
+N@~{a}o existe formato INST BINARY.
 
-An @code{INST} applies a 4x4 (or @var{(N+1)}x@var{(N+1)} in the context of
-ND-viewing) transformation to another objeto OOGL.  It begins with
-@code{INST} followed by these sections which may appear in any order:
+Um @code{INST} aplica uma transofrma@,{c}@~{a}o 4x4 (ou @var{(N+1)}x@var{(N+1)} no contexto de
+ND-viewing) a outro objeto OOGL.  Um arquivo do tipo @code{INST} inicia-se com
+@code{INST} seguido de as se@,{c}@~{o}es mostradas adiante que podem vir em qualquer ordem:
 @example
 geom @var{oogl-object}
 @end example
 @noindent
-especifica the objeto OOGL to be instantiated.  @xref{References}, for
-the syntax of an @var{oogl-object}.  The keyword @code{unit} is a
-synonym for @code{geom}.
+especifica o objeto OOGL a ser instanciado.  Veja @ref{References}, para
+a sintaxe de um @var{oogl-object}.   palavra chave @code{unit} @'{e} um
+sin@^{o}nimo para @code{geom}.
 @example
-transform   ["@{"] @code{4x4 transform} ["@}"]
+transform   ["@{"] @code{transforma@,{c}@~{a}o 4x4} ["@}"]
 @end example
 @noindent
-especifica a single transformation matrix.  Either the
-matrix may appear literally as 16 numbers, or there may be
-a reference to a "transform" objeto, i.e.
+especifica uma matriz de transforma@,{c}@~{a}o simples.  Ou a
+matriz pode aparecer literalmente como 16 n@'{u}meros, ou a matriz pode aparecer
+como uma refer@^{e}ncia a um objeto "transform", i.e.
 @example
-    "<" file-containing-4x4-matrix
+    "<" arquivo-contendo-matriz-4x4
 @end example
-or
+ou
 @example
-    ":" symbol-representing-transform-object
+    ":" s@'{i}mbolo-representando-transforma@,{c}@~{a}o-de-objeto
 @end example
-Another way to specify the transformation is
+Outra forma de especificar a transforma@,{c}@~{a}o @'{e}
 @example
 transforms
-    @var{oogl-object}
+    @var{objeto-oogl}
 @end example
-The @var{oogl-object} must be a @code{TLIST} objeto (list of
-transformations) objeto, or a @code{LIST} whose members are ultimately
-@code{TLIST} objetos.  In effect, the @code{transforms} keyword takes a
-collection of 4x4 matrices and replicates the @code{geom} objeto, making
-one copy for each 4x4 matrix.
+The @var{objeto-oogl} deve ser um objeto @code{TLIST} (lista de
+transforma@,{c}@~{o}es), ou uma @code{LIST} cujos membros dessa lista s@~{a}o objetos
+@code{TLIST} mais recentes.  Com efeito, a palavra chave @code{transforms} toma uma
+cole@,{c}@~{a}o de matrizes 4x4 e replica o objeto @code{geom}, fazendo
+uma c@'{o}pia para cada matriz 4x4.
 
-If no @code{transform} nor @code{transforms} keyword appears, no
-transformation is applied (actually the identity is applied).  You could
-use this for, e.g., wrapping an appearance around an externally-supplied
-objeto, though a single-membered LIST would do this more efficiently.
+Se nem a palavra chave @code{transform} nem a palavra chave @code{transforms} aparecerem, nenhuma
+transforma@,{c}@~{a}o @'{e} aplicada (atualmente a identidade @'{e} aplicada).  Voc@^{e} pode
+usar isso para, e.g., empacotar uma apar@^{e}ncia em torno de um objeto externo
+fornecido, atrav@'{e}s de uma LIST de membros simples pode-se fazer isso mais eficientemente.
 
-@xref{Transformation matrices}, for the matrix format.
+Veja @ref{Transformation matrices}, para o formato de matriz.
 
-When replicating a single geometry by means of a @code{TLIST} objeto
-(see @samp{transforms} above) it may be useful to transform texture
-co-ordinates by another list of transformations; that list can be
-specified by
+A c@'{o}pia de um objeto geom@'{e}trico simples por meio de um objeto @code{TLIST}
+(veja @samp{transforms} acima) pode ser @'{u}til para transformar coordenadas de
+textura atrav@'{e}s de outra lista de transforma@,{c}@~{o}es; essa lista pode ser
+especificada por
 @example
 txtransforms
-    @var{TLIST-object}
+    @var{objeto-TLIST}
 @end example
-The number of texture transformations must match the number of geometry
-transformations. The @code{SPHERE} objeto (@pxref{SPHERE, Sphere
-Objetos}) uses this technique to generate an entire textured sphere out
-of some fraction of a sphere (usually one octant).
+O n@'{u}mero de transoforma@,{c}@~{o}es de textura deve coincidir com o n@'{u}mero de transforma@,{c}@~{o}es
+geom@'{e}tricas. O objeto @code{SPHERE} (Veja @ref{SPHERE, Sphere
+Objects}) utiliza essa t@'{e}cnica para gerar um esfera completaente texturizada fora
+de alguma fra@,{c}@~{a}o de uma esfera (usualmente um octante).
 
-A single @var{(N+1)}-dimensional transformation can be specified by
+Uma transforma@,{c}@~{a}o @var{(N+1)}-dimensional pode ser especificada por
 
 @example
 ntransform ["@{"] @var{N+1} @var{N+1} @code{(N+1)x(N+1) floats} ["@}"]
 @end example
 @noindent
-This gives a single @var{N+1}-dimensional transformation matrix.  Either
-the matrix may appear literally as @var{(N+1)}x@var{(N+1)} numbers, or
-there may be a reference to an @samp{ntransform} objeto, i.e.
+A linha acima fornece uma matriz de transforma@,{c}@~{a}o @var{N+1}-dimensional.  Ou
+a matriz pode aparecer literalmente como @var{(N+1)}x@var{(N+1)} n@'{u}meros, ou
+pode existir uma refer@^{e}ncia a um objeto @samp{ntransform}, i.e.
 @example
-    "<" file-containing-@var{(N+1)}x@var{(N+1)}-matrix
+    "<" arquivo-contendo-matriz-@var{(N+1)}x@var{(N+1)}
 @end example
-or
+ou
 @example
-    ":" symbol-representing-ntransform-object
+    ":" s@'{i}mbolo-representando-objeto-ntransform
 @end example
 
-@xref{ND Transformation matrices}, for the matrix format.
+Veja @ref{ND Transformation matrices}, para o formato de matriz.
 
-Two more INST fields are accepted: @code{location} and @code{origin}.
+Mais dois campos INST s@~{a}o aceitos: @code{location} e @code{origin}.
 
-Note that @code{location} as well as @code{origin} are ignored if this
-@code{INST} objeto carries an @code{ntransform}. Also, if ND-viewing is
-active (@code{ND-axes} command, @pxref{GCL}) then @code{INST} objetos
-with @code{origin} unequal to @code{local} will not be drawn, though the
-@code{location} stuff may work (or not).
+Note que @code{location} bem como @code{origin} s@~{a}o ignorados se esse
+objeto @code{INST} realiza uma @code{ntransform}. Tamb@'{e}m, se a visualiza@,{c}@~{a}o ND est@'{a}
+ativada (comando @code{ND-axes}, veja @ref{GCL}) ent@~{a}o objetos @code{INST}
+com @code{origin} diferente de @code{local} n@~{a}o ir@~{a}o ser desenhados, embora o
+material @code{location} possa trabalhar (ou n@~{a}o).
 
 @example
-location [global or camera or ndc or screen or local]
+location [global ou camera ou ndc ou screen ou local]
 @end example
-Normally an INST especifica a position relative to its parent objeto;
-the @code{location} field allows putting an objeto elsewhere.
+Normalmente um INST especifica uma posi@,{c}@~{a}o relativa a seu objeto genitores;
+o campo @code{location} permite colocar um objeto em qualquer lugar.
 @itemize @bullet
 @item
-@code{location global} attaches the objeto to the global (a.k.a. universe)
-coordinate system -- the same as that in which geomview's World objetos,
-alien geometry, and c@^{a}meras are placed.
+@code{location global} anexa o objeto ao ambiente do sistema de coordenadas global
+(tamb@'{e}m conhecido como "universe") -- o mesmo dos objetos mundo do geomview's,
+das geometrias alien@'{i}genas, e c@^{a}meras s@~{a}o colocados.
 @item
-@code{location camera} places the objeto relative to the camera.
-(Thus if there are multiple views, it may appear in a different 
-spatial position in each view.)  The center da camera's view
-is along its negative Z axis; positive X is rightward, positive Y upward.
-Normally the units of c@^{a}mera space are the same as global coordenadas.
-When a c@^{a}mera is reset, the global origin is at (0,0,-3.0).
+@code{location camera} coloca os parentes do objeto como sendo uma c@^{a}mera.
+(Dessa forma se houverem multiplas visualiza@,{c}@~{o}es, essas visualiza@,{c}@~{o}es podem aparecer em uma diferente
+posi@,{c}@~{a}o espacial em cada visualiza@,{c}@~{a}o.)  O centro de vis@~{a}o da camera
+est@'{a} em volta da parte negativa do seu eixo z; X positivo est@'{a} @`{a} direita e adiante, Y positivo est@'{a} acima e adiante.
+Normalmente as unidades do espa@,{c}o da c@^{a}mera s@~{a}o as mesmas das coordenadas globais.
+Quando uma c@^{a}mera @'{e} colocada de volta @`{a} sua posi@,{c}@~{a}o inicial, a or@'{i}gem global est@'{a} localizada em (0,0,-3.0).
 @item
-@code{location ndc} places the objeto relative to the normalized unit
-cube into which the camera's projection (perspective or orthographic)
-maps the visible world.  X, Y, and Z are each in the range from -1 to +1,
-with Z = -1 the near and Z = +1 the far clipping plane, and X and Y
-increasing rightward and upward respectively.
-Thus something like
+@code{location ndc} coloca os parentes do objeto no cubo unit@'{a}rio
+normalizado no qual a proje@,{c}@~{a}o da c@^{a}mera (perspectiva ou ortogr@'{a}fica)
+mapeia o mundo vis@'{i}vel.  X, Y, e Z est@~{a}o no intervalo de -1 a +1,
+com Z = -1 estando mais pr@'{o}ximo e Z = +1 ao longe do plano de corte, e X e Y
+nas dire@,{c}@~{o}es @`{a} direita e adiante e acima e adiante respectivamente.
+Dessa forma alguma coisa como
 @example
 INST  transform  1 0 0 0  0 1 0 0  0 0 1 0  -.9 -.9 -.999 1
       location ndc
       geom < label.vect
 @end example
-pastes @code{label.vect} onto the lower left corner of each window,
-and in front of nearly everything else, assuming @code{label.vect}'s
-contents lie in the positive quadrant do X-Y plane.
-It's tempting to use -1 rather than -.999 as the Z component da
-position, but that may put the objeto just nearer than the near clipping
-plane and make it (partially) invisible, due to floating-point error.
+cola @code{label.vect} dentro do canto infeiror esquerdo de cada janela,
+e em frente de tudo mais que estiver pr@'{o}ximo, assumindo o conte@'{u}do
+@code{label.vect} como localizado no quadrante positivo do plano XY.
+@'{E} tentado usar -1 em lugar de como a componente Z da
+posi@,{c}@~{a}o, mas o -1 pode colocar o objeto apenas nas proximidades em lugar de muito perto do
+plano de corte e tornar o objeto (parcialmente) invis@'{i}vel, devido a algum erro de c@'{a}lculo com n@'{u}meros em ponto flutuante.
 @item
-@code{location screen} places the objeto in screen coordenadas.
-The range of Z is still -1 through +1 as for ndc coordenadas;
-X and Y are measured in pixels, and range from (0,0) at the @emph{lower left}
-corner da window, increasing rightward and upward.
+@code{location screen} coloca o objeto objeto em coordenadas de tela.
+O intervalo de Z @'{e} ainda de -1 a +1 como para coordenadas ndc;
+X e Y s@~{a}o medidos em pixels, e a posi@,{c}@~{a}o de (0,0) localiza-se no canto
+@emph{inferior esquerdo} da janela, avan@,{c}ado para a direita e adiante e para cima e adiante.
 @end itemize
 
-@code{location local} is the default; the objeto is positioned relative
-to its parent.
+@code{location local} @'{e} o padr@~{a}o; o objeto est@'{a} posicionado relativametne
+a seus genitores.
 
 
 @example
-origin [global or camera or ndc or screen or local] x y z
+origin [global ou camera ou ndc ou screen ou local] x y z
 @end example
-The @code{origin} field translates the contents da INST to
-place the origin at the specified point do given coordinate system.
-Unlike @code{location}, it doesn't change the orientation, only the choice
-of origin.  Both @code{location} and @code{origin} can be used together.
+O campo @code{origin} reposiciona o conte@'{u}do da INST de forma que
+o local da or@'{i}gem seja o ponto especificado do sistema de coordenadas fornecido.
+A menos que @code{location} seja especificado, essa op@,{c}@~{a}o n@~{a}o muda a orienta@,{c}@~{a}o, somente a escolha da
+or@'{i}gem.  Ambas as op@,{c}@~{o}es @code{location} e @code{origin} podem ser usadas juntas.
 
 So for example
 @example
