@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.53/Wed Mar 26 06:11:33 2008//
+@c based on /geomview.texi/1.54/Sun Mar 30 00:13:25 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -4015,7 +4015,7 @@ o local da or@'{i}gem seja o ponto especificado do sistema de coordenadas fornec
 A menos que @code{location} seja especificado, essa op@,{c}@~{a}o n@~{a}o muda a orienta@,{c}@~{a}o, somente a escolha da
 or@'{i}gem.  Ambas as op@,{c}@~{o}es @code{location} e @code{origin} podem ser usadas juntas.
 
-So for example
+Ent@~{a}o por exemplo
 @example
 @{ INST
   location screen
@@ -4025,19 +4025,19 @@ So for example
 @}
 @end example
 
-places xyz.vect's origin in the center da window, just beyond the
-near clipping plane.  The unit-length X and Y edges are scaled to be just 100
-screen units -- pixels -- long, regardless do size da window.
+coloca a or@'{i}gem de xyz.vect's no centro da janela, apenas transformando o
+plano de corte mais pr@'{o}ximo.  O comprimento da unidade das arestas X e Y s@~{a}o ajustados proporcionalmente para ter o comprimento de apenas 100
+unidades de tela -- pixels -- , independentemente do tamanho da janela.
 
 @menu
-* INST Examples::               Some example of @code{INST} Files.
+* INST Examples::               alguns exemplos de arquivos do tipo @code{INST}.
 @end menu
 
 @comment ................................................................
 @node INST Examples,  , INST, INST
 @subsubsection INST Examples
 
-Here are some examples of @code{INST} files
+Aqui est@~{a}o alguns exemplos de arquivos @code{INST}
 
 @example
 INST
@@ -4069,15 +4069,15 @@ INST
      	
          @}
      geom
-         @{ # stuff replicated by all the above matrices
+         @{ # material copiado a partir de todas as matrizes acima
      	@dots{}
          @}
 @}
 @end example
 
-This one resembles the @code{origin} example in the section above,
-but makes the X and Y edges be 1/4 the size da window (1/4, not 1/2,
-since the range of ndc X and Y coordenadas is -1 to +1).
+O exemplo adiante assemelham-se ao exemplo de @code{origin} na se@,{c}@~{a}o acima,
+mas fazem com que as arestas X e Y sejam 1/4 do tamanho da janela (1/4, n@~{a}o 1/2,
+uma vez que o intervalo das coordenadas ndc de X e Y estejam de -1 a +1).
 @example
 @{ INST
   location ndc
@@ -4089,11 +4089,11 @@ since the range of ndc X and Y coordenadas is -1 to +1).
 @node LIST, TLIST, INST, Object File Formats
 @subsection LIST Files
 
-The conventional suffix for a @code{LIST} file is @file{.list}.
+O sufixo convencional para um arquivo @code{LIST} @'{e} @file{.list}.
 
-A list of objetos OOGL
+Uma lista de objetos OOGL
 
-Syntax:
+Sintaxe:
 
 @example
 LIST
@@ -4102,22 +4102,22 @@ LIST
     @dots{}
 @end example
 
-Note that there's no explicit separation between the oogl-objetos, so
-they should be enclosed in curly braces (@{ @}) for sanity.  Likewise
-there's no explicit marker for the end da list; unless appearing
-alone in a disk file, the whole construct should also be wrapped in
-braces, as in:
+Note que n@~{a}o existe separa@,{c}@~{a}o expl@'{i}cita entre os objetos oogl, de forma que
+eles podem ser colocados entre chaves (@{ @}) por quest@~{o}es de clareza.  Da mesma forma
+n@~{a}o existe um marcador expl@'{i}cito para o final da lista; a menos que o arquivo apare@,{c}a
+sozinho em um arquivo de disco, a constru@,{c}@~{a}o completa pode tamb@'{e}m ser empacotada entre
+chaves, como em:
 
 @example
    @{ LIST @{ QUAD @dots{} @} @{ < xyz.quad @} @}
 @end example
 
-A @code{LIST} with no elements, i.e. @code{@{ LIST @}}, is valid, and is
-the easiest way to create an empty objeto.  For example, to remove a
-symbol's definition you might write
+Uma @code{LIST} vazia, i.e. @code{@{ LIST @}}, @'{e} v@'{a}lida, e @'{e}
+o caminho mais f@'{a}cil para criar um objeto vazio.  Por exemplo, para remover uma
+defini@,{c}@~{a}o de s@'{i}mbolo voc@^{e} pode escrever
 
 @example
-   @{ define somesymbol  @{ LIST @} @}
+   @{ define algums@'{i}mbolo  @{ LIST @} @}
 @end example
 
 
@@ -4126,57 +4126,57 @@ symbol's definition you might write
 @subsection TLIST Files
 
 
-The conventional suffix for a @code{TLIST} file is @file{.grp} ("group")
-or or @file{.prj} ("projective" matrices).
+O sufixo convencional para um arquivo @code{TLIST} @'{e} @file{.grp} ("grupo")
+ou @file{.prj} (matrizes "projetivas").
 
-Collection of 4x4 matrices, used in the @code{transforms} section of and
-@code{INST} objeto.
+Cole@,{c}@~{o}es de matrizes 4x4, usadas na se@,{c}@~{a}o @code{transforms} de/e
+objeto @code{INST}.
 
-Syntax:
+Sintaxe:
 
 @example
-TLIST			# key word
+TLIST			# palavra chave
 
-<4x4 matrix (16 floats)>
-@dots{}				# Any number of 4x4 matrices
+<matriz 4x4 (16 n@'{u}meros em ponto flutuante)>
+@dots{}				# qualquer n@'{u}mero de matrizes 4x4
 @end example
 
-@code{TLIST}s are used only within the @code{transforms} clause of an
-@code{INST} objeto.  They cause the @code{INST}s @code{geom} objeto to
-be instantiated once under each das transforms in the @code{TLIST}.
-The effect is like that of a @code{LIST} of @code{INST}s each with a
-single transform, and all referring to the same objeto, but is more
-efficient.
+Objetos @code{TLIST} s@~{a}o usados somente dentro de cl@'{a}usulas @code{transforms} de um
+objeto @code{INST}.  Objetos @code{TLIST} fazem com que os objetos @code{geom} @code{INST}s sejam
+instanciados uma vez sob cada uma das transforma@,{c}@~{o}es na @code{TLIST}.
+O efeito @'{e} como aquele de um @code{LIST} de @code{INST}s cada uma com uma
+transforma@,{c}@~{a}o simples, e todas as transforma@,{c}@~{o}es referindo-se ao mesmo objeto, mas @'{e} mais
+eficiente.
 
-Be aware that a @code{TLIST} is a kind of geometry objeto, distinct from a 
-@code{transform} objeto.  Some contexts expect one type of objeto,
-some the other.  For example in
+Esteja informado de que uma @code{TLIST} @'{e} um tipo de geom, distinto de um 
+objeto @code{transform}.  Alguns contextos esperam um geom,
+alguns contextos esperam um @code{transform}.  Por exemplo em
 @example
-INST transform @{ : @var{myT} @} geom @{ @dots{} @}
-@end example
-@noindent
-@var{myT} must be a transform objeto, which might have been
-created with the GCL
-@example
-(read transform @{ define myT 1 0 0 1 @dots{} @})
+INST transform @{ : @var{meuT} @} geom @{ @dots{} @}
 @end example
 @noindent
-while in
+@var{meuT} deve ser um objeto transform, que pode ter sido
+criado com a GCL
 @example
-  INST transforms @{ : @var{myTs} @} geom @{ @dots{} @}
-  or
-  INST transforms @{ LIST @{: @var{myTs}@} @{< more.prj@} @} geom @{ @dots{} @}
+(read transform @{ define meuT 1 0 0 1 @dots{} @})
 @end example
 @noindent
-@var{myTs} must be a geometry objeto, defined e.g. with
+enquanto em
 @example
-  (read geometry @{ define @var{myTs} @{ TLIST 1 0 0 1 @dots{} @} @})
+  INST transforms @{ : @var{meusTs} @} geom @{ @dots{} @}
+  ou
+  INST transforms @{ LIST @{: @var{meusTs}@} @{< more.prj@} @} geom @{ @dots{} @}
+@end example
+@noindent
+@var{meusTs} deve ser um objeto geom, definido e.g. com
+@example
+  (read geometry @{ define @var{meusTs} @{ TLIST 1 0 0 1 @dots{} @} @})
 @end example
 
-A @code{TLIST BINARY} format is accepted.  Binary data begins with a
-32-bit integer giving the number of transformations, followed by that
-number of 4x4 matrices in 32-bit floating-point format.  The order of
-matrix elements is the same as in the ASCII format.
+O formato @code{TLIST BINARY} @'{e} aceito.  Dados bin@'{a}rios iniciam-se com um
+inteiro de 32-bit fornecendo o n@'{u}meros de transforma@,{c}@~{o}es, seguido por aquele
+n@'{u}mero de matrizes 4x4 no formato em n@'{u}mero de ponto flutuante de 32-bit.  A ordena@,{c}@~{a}o dos
+elementos da matriz matrix @'{e} o mesmo do formato ASCII.
 
 
 @comment ----------------------------------------------------------------

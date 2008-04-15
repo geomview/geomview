@@ -4098,7 +4098,7 @@ symbol's definition you might write
 
 
 The conventional suffix for a @code{TLIST} file is @file{.grp} ("group")
-or or @file{.prj} ("projective" matrices).
+or @file{.prj} ("projective" matrices).
 
 Collection of 4x4 matrices, used in the @code{transforms} section of and
 @code{INST} object.
