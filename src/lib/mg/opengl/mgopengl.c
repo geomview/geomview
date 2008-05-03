@@ -1170,7 +1170,7 @@ mgopengl_settransform( Transform T )
 GLuint mgopengl_new_translucent(Transform T)
 {
   
-  if (_mgopenglc->n_translucent_lists <= _mgopenglc->translucent_seq) {
+  if (_mgopenglc->n_translucent_lists <= (int)_mgopenglc->translucent_seq) {
     _mgopenglc->translucent_lists =
       mgopengl_realloc_lists(_mgopenglc->translucent_lists,
 			     &_mgopenglc->n_translucent_lists);
