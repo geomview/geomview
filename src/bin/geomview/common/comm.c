@@ -276,15 +276,17 @@ comm_object(char *str, HandleOps *ops, Handle **hp, Ref **rp, int now)
 
 /*
  * Arrange that later attempts to read the same file will actually re-read it.
+ *
+ * cH: above comment is crap: at least since v1.6 a PoolClose() would
+ * result in actually closing the file, so a new PoolStreamOpen()
+ * would position right at the start of the data. We just delete the
+ * pool.
  */
 static int
 commandclose(Pool *p)
 {
-  PoolDoReread(p);
   PoolClose(p);
-#if 1 /* should we really cache handles for command-files??? */
-  PoolDelete(p);
-#endif
+  MyPoolDelete(p);
   return 0;
 }
 
