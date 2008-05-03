@@ -1,0 +1,19 @@
+appearance {
+  * texturing
+  shading flat
+  * mipmap
+  * mipinterp
+  * linear
+  texture {
+    clamp none
+    apply replace
+    image { data RGBA { < Earth.pam.bz2 } }
+  }
+}
+STOFF
+4 1 -1
+0 0 0  0 0
+1 0 0  1 0
+1 1 0  1 1
+0 1 0  0 1
+4 0 1 2 3
