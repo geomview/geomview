@@ -899,7 +899,9 @@ int iobfeof(IOBFILE *iobf)
   } else if (iobf->ioblist.tot_pos < iobf->ioblist.tot_size) {
     return 0;
   } else if (iobf->eof == -1) {
-    if (feof(iobf->istream)) {
+    if (POSIX_SHORTCUT && iobf->fd >= 0) {
+      return 1;
+    } else if (feof(iobf->istream)) {
       return 1;
     }
     iobf->eof = 0;
