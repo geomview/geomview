@@ -92,7 +92,7 @@
 		   ;; apperance keywords
 		   '("\\<\\(apply\\|shading\\|localviewer\\|attenconst\\|attenmult2?\\|normscale\\|shading\\|linewidth\\|patchdice\\|ka\\|ambient\\|kd\\|diffuse\\|ks\\|specular\\|shininess\\|backdiffuse\\|alpha\\|edgecolor\\|normalcolor\\|color\\|position\\|file\\|alphafile\\|background\\|texturing\\)\\>" . font-lock-keyword-face)
 		   ;; some more types
-		   '("\\<\\(texture\\|light\\|material\\|lighting\\|light\\|image\\|appearance\\|n?transforms?\\)\\>" . font-lock-type-face)
+		   '("\\<\\(texture\\|light\\|material\\|lighting\\|light\\|image\\|appearance\\|n?transforms?\\|tlist\\)\\>" . font-lock-type-face)
 		   ;; some more constants
 		   '("\\<\\(yes\\|no\\|on\\|off\\|toggle\\|center\\|none\\)\\>" . font-lock-constant-face)
 		   ))
