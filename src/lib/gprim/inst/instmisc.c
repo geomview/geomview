@@ -163,6 +163,7 @@ InstTransform(Inst *inst, Transform T, TransformN *TN)
 				      CR_NELEM, 1, CR_ELEM, T, 
 				      CR_HANDLE_GEOM, inst->tlisthandle, tl,
 				      CR_END);
+	    GeomDelete((Geom *)tl); /* tl now belongs to the new Tlist */
 	    inst->tlisthandle = NULL;
 	}
     }
