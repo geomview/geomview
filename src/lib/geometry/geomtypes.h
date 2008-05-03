@@ -74,7 +74,8 @@ typedef float HPtNCoord;
 typedef struct HPtN {
 	int dim;	/* Dimension, including homogeneous divisor */
 	int flags;	/* Space tag */
-	HPtNCoord *v;	/* Array of coordinates; v[dim-1] is the homogenous divisor */
+	int size;       /* allocated size */
+	HPtNCoord *v;	/* Array of coordinates; v[0] is the homogenous divisor */
 } HPointN;
 #endif
 

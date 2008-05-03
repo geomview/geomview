@@ -108,10 +108,15 @@ HPtNCreate(int dim, const HPtNCoord *vec)
 
   FREELIST_NEW(HPointN, pt);
 
-  if(dim <= 0) dim = 1;
+  if(dim <= 0) {
+    dim = 1;
+  }
   pt->dim = dim;
   pt->flags = 0; /* for now */
-  pt->v = OOGLNewNE(HPtNCoord, dim, "new HPointN data");
+  if (pt->size < dim) {
+    pt->v = OOGLRenewNE(HPtNCoord, pt->v, dim, "new HPointN data");
+    pt->size = dim;
+  }
   if(vec == NULL) {
     memset(pt->v+1, 0, (dim-1)*sizeof(HPtNCoord));
     pt->v[0] = 1.0;
@@ -125,7 +130,7 @@ static inline void
 HPtNDelete(HPointN *pt)
 {
   if(pt) {
-    if(pt->v) OOGLFree(pt->v);
+    /* if(pt->v) OOGLFree(pt->v); */
     FREELIST_FREE(HPointN, pt);
   }
 }
