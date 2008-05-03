@@ -40,6 +40,7 @@
 struct Tlist {
     GEOMFIELDS;
     int   	nelements;
+    int         nallocated;
     Transform 	*elements;
     Geom 	*tlist;		/* More transformations: take product */
     Handle	*tlisthandle;
