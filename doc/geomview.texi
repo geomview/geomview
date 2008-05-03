@@ -2405,7 +2405,7 @@ provided the command applies to the target object.
 
 @table @kbd
 @item g
-world geom	
+world geom      
 @item g#
 #'th geom
 @item g*
@@ -2846,7 +2846,7 @@ Binary data begins at the byte following the first newline after
 @code{BINARY}.  White space and a single comment may intervene, e.g.
 
 @example
-OFF BINARY	# binary-format "OFF" data follows 
+OFF BINARY      # binary-format "OFF" data follows 
 @end example
 
 Binary data comprise 32-bit integers and 32-bit IEEE-format floats, both
@@ -2868,7 +2868,7 @@ LIST
 @dots{} binary data for mesh here @dots{}
 @}
 @{ = QUAD
-	1 0 0   0 0 1   0 1 0  0 1 0
+        1 0 0   0 0 1   0 1 0  0 1 0
 @}
 @end example
 
@@ -2892,12 +2892,12 @@ The general syntax is
 
 @example
  <oogl-object>  ::=
-	[ "@{" ]
-	    [ "define" @code{symbolname} ]
-	    [ ["="] @code{object-keyword} @dots{}
-		 | "<" @code{filename}
-		 | ":" @code{symbolname} ]
-	[ "@}" ]
+        [ "@{" ]
+            [ "define" @code{symbolname} ]
+            [ ["="] @code{object-keyword} @dots{}
+                 | "<" @code{filename}
+                 | ":" @code{symbolname} ]
+        [ "@}" ]
 @end example
 
 where "quoted" items are literal strings (which appear without the
@@ -2909,13 +2909,13 @@ command stream.
 
 For example, each of the following three lines:
 @example
-	@{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
+        @{ define fred   QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
-	@{ define fred = QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
+        @{ define fred = QUAD 1 0 0  0 0 1  0 1 0  1 0 0 @}
 
-	@{ appearance @{ +edge @} LIST @{ < "file1" @} @{ : fred @} @}
+        @{ appearance @{ +edge @} LIST @{ < "file1" @} @{ : fred @} @}
 
-	VECT 1 2 0   2 0   0 0 0   1 1 2
+        VECT 1 2 0   2 0   0 0 0   1 1 2
 @end example
 @noindent
 is a valid OOGL object.  The last example is only valid when it is
@@ -3016,14 +3016,14 @@ appearance @{
   +mipinterp          # (Enable) linear mip-mapping
   -backcull           # (Don't) discard clockwise-oriented faces
   -concave            # (Don't) expect and handle concave polygons
-  -shadelines	      # (Don't) shade lines as if they were lighted cylinders
-		      # These four are only effective where the graphics system
-		      # supports them, namely on GL and Open GL.
+  -shadelines         # (Don't) shade lines as if they were lighted cylinders
+                      # These four are only effective where the graphics system
+                      # supports them, namely on GL and Open GL.
 
-  -keepcolor	      # Normally, when N-D positional coloring is enabled as
-		      # with geomview's (ND-color ...) command, all
-		      # objects' colors are affected.  But, objects with the
-		      # "+keepcolor" attribute are immune to N-D coloring.
+  -keepcolor          # Normally, when N-D positional coloring is enabled as
+                      # with geomview's (ND-color ...) command, all
+                      # objects' colors are affected.  But, objects with the
+                      # "+keepcolor" attribute are immune to N-D coloring.
 
   shading smooth      # or ``shading constant'' or ``shading flat'' or
                       # or ``shading csmooth''.
@@ -3287,7 +3287,7 @@ The conventional suffix for a @code{QUAD} file is @file{.quad}.
 The file syntax is
 
 @example
-   [C][N][4]QUAD  -or-  [C][N][4]POLY		   # Key word
+   [C][N][4]QUAD  -or-  [C][N][4]POLY              # Key word
    @var{vertex}  @var{vertex}  @var{vertex}  @var{vertex}  # 4*N vertices for some N
    @var{vertex}  @var{vertex}  @var{vertex}  @var{vertex}
    @dots{}
@@ -3383,7 +3383,7 @@ then the vertices appear in the order
 (0,0) (1,0) (2,0) (3,0) @dots{}  (@var{Nu}-1,0)
 (0,1) (1,1) (2,1) (3,1) @dots{}  (@var{Nu}-1,1)
 @dots{}
-(0,Nv-1)		@dots{}  (@var{Nu}-1,@var{Nv}-1)
+(0,Nv-1)                @dots{}  (@var{Nu}-1,@var{Nv}-1)
 @end example
 
 A @code{MESH BINARY} format is accepted; @xref{Binary format}.  The
@@ -3452,27 +3452,27 @@ Syntax:
 
 @example
   [ST]BBP -or- [C]BEZ<@var{Nu}><@var{Nv}><@var{Nd}>[_ST]
-			# @var{Nu}, @var{Nv} are u- and v-direction 
-			# polynomial degrees in range 1..6
-			# @var{Nd} = dimension: 3->3-D, 4->4-D (rational)
-			# (The '<' and '>' do not appear in the input.)
-			# @var{Nu},@var{Nv},@var{Nd} are each a single decimal digit.
-			# BBP form implies @var{Nu}=@var{Nv}=@var{Nd}=3 so BBP = BEZ333.
+                        # @var{Nu}, @var{Nv} are u- and v-direction 
+                        # polynomial degrees in range 1..6
+                        # @var{Nd} = dimension: 3->3-D, 4->4-D (rational)
+                        # (The '<' and '>' do not appear in the input.)
+                        # @var{Nu},@var{Nv},@var{Nd} are each a single decimal digit.
+                        # BBP form implies @var{Nu}=@var{Nv}=@var{Nd}=3 so BBP = BEZ333.
 
-		# Any number of patches follow the header
-			# (@var{Nu}+1)*(@var{Nv}+1) patch control points
-			# each 3 or 4 floats according to header
+                # Any number of patches follow the header
+                        # (@var{Nu}+1)*(@var{Nv}+1) patch control points
+                        # each 3 or 4 floats according to header
   @var{vertex}(u=0,v=0)  @var{vertex}(1,0) @dots{} @var{vertex}(@var{Nu},0)
-  @var{vertex}(0,1)			   @dots{} @var{vertex}(@var{Nu},1)
+  @var{vertex}(0,1)                        @dots{} @var{vertex}(@var{Nu},1)
   @dots{}
-  @var{vertex}(0,@var{Nv})		   @dots{} @var{vertex}(@var{Nu},@var{Nv})
+  @var{vertex}(0,@var{Nv})                 @dots{} @var{vertex}(@var{Nu},@var{Nv})
 
-			# ST texture coordinates if mentioned in header
-  @code{S}(u=0,v=0)	@code{T}(0,0)	@code{S}(0,@var{Nv}) @code{T}(0,@var{Nv})
-  @code{S}(@var{Nu},0)	@code{T}(@var{Nu},0)	@code{S}(@var{Nu},@var{Nv}) @code{T}(@var{Nu},@var{Nv})
+                        # ST texture coordinates if mentioned in header
+  @code{S}(u=0,v=0)     @code{T}(0,0)   @code{S}(0,@var{Nv}) @code{T}(0,@var{Nv})
+  @code{S}(@var{Nu},0)  @code{T}(@var{Nu},0)    @code{S}(@var{Nu},@var{Nv}) @code{T}(@var{Nu},@var{Nv})
 
-			# 4-component float (0..1) R G B A colors
-			# for each patch corner if mentioned in header
+                        # 4-component float (0..1) R G B A colors
+                        # for each patch corner if mentioned in header
   @code{RGBA}(0,0)   @code{RGBA}(0,@var{Nv})
   @code{RGBA}(@var{Nu},0)  @code{RGBA}(@var{Nu},@var{Nv})
 @end example
@@ -3539,33 +3539,33 @@ The conventional suffix for @code{OFF} files is @file{.off}.
 Syntax:
 
 @example
-[ST][C][N][4][n]OFF	# Header keyword
-[@var{Ndim}]		# Space dimension of vertices, present only if nOFF
+[ST][C][N][4][n]OFF     # Header keyword
+[@var{Ndim}]            # Space dimension of vertices, present only if nOFF
 @var{NVertices}  @var{NFaces}  @var{NEdges}   # NEdges not used or checked
 
-@var{x}[0]  @var{y}[0]  @var{z}[0]	# Vertices, possibly with normals,
-			# colors, and/or texture coordinates, in that order,
-			# if the prefixes @code{N}, @code{C}, @code{ST}
-			# are present.
-			# If 4OFF, each vertex has 4 components,
-			# including a final homogeneous component.
-			# If nOFF, each vertex has @var{Ndim} components.
-			# If 4nOFF, each vertex has @var{Ndim}+1 components.
+@var{x}[0]  @var{y}[0]  @var{z}[0]      # Vertices, possibly with normals,
+                        # colors, and/or texture coordinates, in that order,
+                        # if the prefixes @code{N}, @code{C}, @code{ST}
+                        # are present.
+                        # If 4OFF, each vertex has 4 components,
+                        # including a final homogeneous component.
+                        # If nOFF, each vertex has @var{Ndim} components.
+                        # If 4nOFF, each vertex has @var{Ndim}+1 components.
 @dots{}
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
-    			# Faces
-    			# @var{Nv} = # vertices on this face
-    			# @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices
-    			#		in range 0..@var{NVertices}-1
+                        # Faces
+                        # @var{Nv} = # vertices on this face
+                        # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices
+                        #               in range 0..@var{NVertices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  @var{colorspec}
 @dots{}
-    			# @var{colorspec} continues past @var{v}[@var{Nv}-1]
-    			# to end-of-line; may be 0 to 4 numbers
-    			# nothing: default
-    			# integer: colormap index
-    			# 3 or 4 integers: RGB[A] values 0..255
-			# 3 or 4 floats: RGB[A] values 0..1
+                        # @var{colorspec} continues past @var{v}[@var{Nv}-1]
+                        # to end-of-line; may be 0 to 4 numbers
+                        # nothing: default
+                        # integer: colormap index
+                        # 3 or 4 integers: RGB[A] values 0..255
+                        # 3 or 4 floats: RGB[A] values 0..1
 @end example
 
 @code{OFF} files (name for "object file format") represent collections
@@ -4033,14 +4033,14 @@ INST
 @{ INST
      transforms
          @{ LIST
-     	@{ < some-matrices.prj @}
-     	@{ < others.prj @}
-     	@{ TLIST <still more of them> @}
-     	
+        @{ < some-matrices.prj @}
+        @{ < others.prj @}
+        @{ TLIST <still more of them> @}
+        
          @}
      geom
          @{ # stuff replicated by all the above matrices
-     	@dots{}
+        @dots{}
          @}
 @}
 @end example
@@ -4105,10 +4105,15 @@ Collection of 4x4 matrices, used in the @code{transforms} section of and
 Syntax:
 
 @example
-TLIST			# key word
-
+TLIST                    # key word
 <4x4 matrix (16 floats)>
-@dots{}				# Any number of 4x4 matrices
+@dots{}                  # any number of 4x4 matrices
+transform @{             # reference to a transform object
+<transform object (can be a handle)>
+@}
+tlist @{                 # nested TLIST
+<TLIST OOGL object (can be a handle)>
+@}
 @end example
 
 @code{TLIST}s are used only within the @code{transforms} clause of an
@@ -4117,6 +4122,10 @@ be instantiated once under each of the transforms in the @code{TLIST}.
 The effect is like that of a @code{LIST} of @code{INST}s each with a
 single transform, and all referring to the same object, but is more
 efficient.
+
+@code{TLIST}s can be nested: effectively this means that all
+transformations in each nested @code{TLIST} object are multiplied (from
+the left) by the transformations in the outer @code{TLIST} object.
 
 Be aware that a @code{TLIST} is a kind of geometry object, distinct from a 
 @code{transform} object.  Some contexts expect one type of object,
@@ -4166,8 +4175,8 @@ is still accepted and effectively translated into
 
 @example
 INST
-	transforms @{ TLIST @dots{} <matrices> @dots{} @}
-	unit @{ @var{oogl-object} @}
+        transforms @{ TLIST @dots{} <matrices> @dots{} @}
+        unit @{ @var{oogl-object} @}
 @end example
 
 @comment ----------------------------------------------------------------
@@ -4190,7 +4199,7 @@ Syntax:
 
 @example
 COMMENT                 # key word
-			
+                        
 @var{name} @var{type}   # individual name and type specifier
 @{ @dots{} @}             # arbitrary data
 @end example
@@ -4538,7 +4547,7 @@ Syntax for a transform object is
 
       <sixteen floating-point numbers>
                       (interpreted as a 4x4 homogeneous transform
-		       given row by row, intended to apply to a
+                       given row by row, intended to apply to a
                        row vector multiplied on its LEFT, so that e.g.
                        Euclidean translations appear in the bottom row)
    | 
@@ -4809,34 +4818,34 @@ The syntax for a window object is:
 @example
 window ::=
 
-	[ "window" ]			(optional keyword)
-	  [ "@{" ]			(curly brace, often required)
+        [ "window" ]                    (optional keyword)
+          [ "@{" ]                      (curly brace, often required)
 
-	    			(any of the following, in any order)
+                                (any of the following, in any order)
 
-		"size"  <xsize> <ysize>
-				(size of the window)
+                "size"  <xsize> <ysize>
+                                (size of the window)
 
-		"position"  <xmin> <xmax> <ymin> <ymax>
-				(position & size)
+                "position"  <xmin> <xmax> <ymin> <ymax>
+                                (position & size)
 
 
-		"noborder"
-				(specifies the window should
-				 have no window border)
+                "noborder"
+                                (specifies the window should
+                                 have no window border)
 
-		"pixelaspect"  <aspect>
-			    (specifies the true visual aspect ratio
-			     of a pixel in this window in the sense
-			     xsize/ysize, normally 1.0.
-			     For stereo hardware which stretches the
-			     display vertically by a factor of 2,
-			     ``pixelaspect 0.5'' might do.
-			     The value is used when computing the
-			     projection of a camera associated with
-			     this window.)
+                "pixelaspect"  <aspect>
+                            (specifies the true visual aspect ratio
+                             of a pixel in this window in the sense
+                             xsize/ysize, normally 1.0.
+                             For stereo hardware which stretches the
+                             display vertically by a factor of 2,
+                             ``pixelaspect 0.5'' might do.
+                             The value is used when computing the
+                             projection of a camera associated with
+                             this window.)
 
-	  [ "@}" ]			(matching closebrace)
+          [ "@}" ]                      (matching closebrace)
 @end example
 
 Window objects are used in the Geomview @code{window} and
@@ -5555,7 +5564,7 @@ endprogn()
 Initialize()
 @{
   extern LObject *Lpick();  /* This is defined by PICKFUNC below but must */
-  			    /* be used in the following LDefun() call */
+                            /* be used in the following LDefun() call */
   LInit();
   LDefun("pick", Lpick, NULL);
 
@@ -6107,8 +6116,8 @@ fileevent stdin readable @{readsomething@}
 
 puts @{
         (interest (pick primitive))
-        (interest (rawevent 32))	# Be notified when user presses space
-        (interest (rawevent 8))		# or backspace keys.
+        (interest (rawevent 32))        # Be notified when user presses space
+        (interest (rawevent 8))         # or backspace keys.
         (geometry thing < hdodec.off)
         (normalization world none)
 @}
@@ -7386,8 +7395,8 @@ forward or backward until the object appears as large
 as possible while still being entirely visible.  Equivalent to 
 @example
 progn ( 
-	(look-toward [objectID] [cameraID] @{center | origin@})
-	[(look-encompass [objectID] [cameraID])] 
+        (look-toward [objectID] [cameraID] @{center | origin@})
+        [(look-encompass [objectID] [cameraID])] 
 ) 
 @end example
 If objectID is not specified, it is assumed to be World.  If 
@@ -7455,7 +7464,7 @@ of the bounding box.
 Modify the given window or camera, changing just those properties
 specified in the last argument.  E.g.
 @example
-	(merge camera @code{Camera} @{ far 20 @})
+        (merge camera @code{Camera} @{ far 20 @})
 @end example
 sets Camera's far clipping plane to 20 while leaving
 other attributes untouched.
@@ -7550,8 +7559,8 @@ The return value is an array of 4 integers, the last one should 0.
 @findex ND-color
 @table @code
 @item (ND-color CAMID
-	[ (( [ID] (x1 x2 @dots{} xN) v r g b a   v r g b a  @dots{} )
-	   ((x1 @dots{} xN)  v r g b a  v r g b a @dots{}) @dots{})] )
+        [ (( [ID] (x1 x2 @dots{} xN) v r g b a   v r g b a  @dots{} )
+           ((x1 @dots{} xN)  v r g b a  v r g b a @dots{}) @dots{})] )
 Specifies a function, applied to each N-D vertex, which determines the
 colors of N-dimensional objects as shown in camera CAMID.
 Each coloring function is defined by a vector (in ID's coordinate system)
@@ -8224,9 +8233,9 @@ whose argument is the current clock time (in seconds) on that stream.
 A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 (time-interests .1 @code{(set-clock %g)} @code{(sleep-until %g)})  or@*
 (time-interests .1 @code{(set-clock %g)}
-	"(sleep-until %g) (progn (set-clock %g)" ")")    or@*
+        "(sleep-until %g) (progn (set-clock %g)" ")")    or@*
 (time-interests .1 "(set-clock %g)"
-		   "(if (> 0 (sleep-until %g)) (" "))".
+                   "(if (> 0 (sleep-until %g)) (" "))".
 @end table
 
 @node transform, transform-incr, time-interests, GCL Reference
@@ -8881,10 +8890,10 @@ In[10] := Show[%8]
 Out[10] := -Graphics3D-
 
 In[11] := ParametricPlot3D[
-	   @{(2*(Cos[u] + u*Sin[u])*Sin[v])/(1 + u^2*Sin[v]^2),
-	   (2*(Sin[u] - u*Cos[u])*Sin[v])/(1 + u^2*Sin[v]^2),
-	   Log[Tan[v/2]] + (2*Cos[v])/(1 + u^2*Sin[v]^2)@},
-	  @{u,-4,4@},@{v,.01,Pi-.01@}]
+           @{(2*(Cos[u] + u*Sin[u])*Sin[v])/(1 + u^2*Sin[v]^2),
+           (2*(Sin[u] - u*Cos[u])*Sin[v])/(1 + u^2*Sin[v]^2),
+           Log[Tan[v/2]] + (2*Cos[v])/(1 + u^2*Sin[v]^2)@},
+          @{u,-4,4@},@{v,.01,Pi-.01@}]
 
 Out[11] := -Graphics3D-
 @end example
