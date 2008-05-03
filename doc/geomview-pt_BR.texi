@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.54/Sun Mar 30 00:13:25 2008//
+@c based on /geomview.texi/1.55/Mon Apr 14 21:06:41 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -4183,7 +4183,7 @@ elementos da matriz matrix @'{e} o mesmo do formato ASCII.
 @node GROUP, DISCGRP, TLIST, Object File Formats
 @subsection GROUP Files
 
-This format is obsolete, but is still accepted.  It combined the
+Esse formato @'{e} obsoleto, mas ainda @'{e} aceito.  It combined the
 functions of @code{INST} and @code{TLIST}, taking a series of
 transformations and a single Geom (@code{unit}) objeto, and replicating
 the objeto under each transformation.
@@ -4204,41 +4204,41 @@ INST
 @node DISCGRP, COMMENT, GROUP, Object File Formats
 @subsection DISCGRP Files
 
-This format is for discrete groups, such as appear in the theory of
-manifolds or in symmetry patterns.  This format has its own man page.
-See discgrp(5).
+Esse formato @'{e} para grupos discretos, tais como aparecem na teoria dos
+coletores (manifolds) ou em modelos de simetria.  Esse formato tem sua pr@'{o}pria p@'{a}gina de manual.
+Veja discgrp(5).
 
 @comment ----------------------------------------------------------------
 @node COMMENT,  , DISCGRP, Object File Formats
 @subsection COMMENT Objects
 
-The COMMENT objeto is a mechanism for encoding arbitrary data within an
-objeto OOGL. It can be used to keep track of data or pass data back and
-forth between external modules. 
+O objeto COMMENT @'{e} um mecanismo para codificar dados arbitr@'{a}rios dentro de um
+objeto OOGL. O objeto COMMENT pode ser usado para manter trilhas de dados ou para passagem de dados de retorno e
+passar dados adiante entre m@'{o}dulos externos. 
 
-Syntax:
+Sintaxe:
 
 @example
-COMMENT                 # key word
+COMMENT                 # palavra chave
 			
-@var{name} @var{type}   # individual name and type specifier
-@{ @dots{} @}             # arbitrary data
+@var{nome} @var{tipo}   # nome individual e especificador de tipo
+@{ @dots{} @}             # dados arbitr@'{a}rios
 @end example
 
-The data, which must be enclosed by curly braces, can include anything
-except unbalanced curly braces.  The @var{type} field can be used to
-identify data of interest to a particular program through naming
-conventions. 
+Os dados, que devem ser sontidos dentro de chaves, podem incluir qualquer coisa
+exceto chaves n@~{a}o balanceadas (aberta mas sem o fechamento correspondente ou fechada mas sem a abertura correspondente).  O campo @var{type} pode ser usado para
+identificar dados de interesse de um programa em particular apesar de nomear
+conven@,{c}@~{o}es. 
 
-@code{COMMENT} objetos are intended to be associated with other objetos
-through inclusion in a @code{LIST} objeto. (@xref{LIST}.)  The "#" OOGL
-comment syntax does not suffice for data exchange since these comments
-are stripped when an objeto OOGL is read in to Geomview.  The
-@code{COMMENT} objeto is preserved when loaded into Geomview and is
-written out intact.
+Objetos @code{COMMENT} s@~{a}o intendidos como estando associados com outros objetos
+apesar da inclus@~{a}o em um objeto @code{LIST}. (Veja @ref{LIST}.)  A sintaxe da cerquilha
+"#" OOGL de coment@'{a}rio n@~{a}o @'{e} suficiente para troca de dados uma vez que esses coment@'{a}rios
+s@~{a}o removidos quando um objeto OOGL @'{e} lido dentro do Geomview.  O
+objeto @code{COMMENT} @'{e} preservado quando chamado dentro do Geomview e @'{e}
+mantido intacto na sa@'{i}da.
 
-Here is an example associating a WorldWide Web URL with a piece of
-geometry:
+Aqui est@'{a} um exemplo associando uma localiza@,{c}@~{a}o na internet a uma pe@,{c}a de
+geometria:
 
 @example
 @{ LIST 
@@ -4247,161 +4247,167 @@ geometry:
 @}
 @end example
 
-A binary @code{COMMENT} format is accepted. Its format is not consistent
-with the other OOGL binary formats. @xref{Binary format}. The
-@code{name} and @code{type} are followed by
+Um formato de @code{COMMENT} bin@'{a}rio @'{e} aceito. Esse formato bin@'{a}rio de coment@'{a}rio n@~{a}o @'{e} consistente
+com outros formatos bin@'{a}rios OOGL. Veja @ref{Binary format}. O
+@code{nome} e o @code{tipo} s@~{a}o seguidos por
 
 @example
 @var{N} @var{Byte1} @var{Byte2} @dots{} @var{ByteN}
 @end example
  
-instead of data enclosed in curly braces. 
+Em lugar de dados contidos dentro de chaves. 
 
 @comment ================================================================
 @node Non-geometric objects,  , Object File Formats, OOGL File Formats
 @section Non-geometric objects
 
-The syntax of these objetos is given in the form used in
-@xref{References}, where "quoted" items should appear literally but
-without quotes, square bracketed ([ ]) items are optional, and | separates
-alternative choices.
+A sintaxe desses objetos @'{e} fornecida na forma usada em
+@ref{References}, onde itens "entre aspas duplas" devem aparecer literalmente mas
+sem aspas duplas, itens entre colch@^{e}tes ([ ]) s@~{a}o opcionais, e a barra vertical "|" separa
+escolhas alternativas.
 
 @menu
-* appearance objects::          Appearance objetos.
-* image::                       Image objetos.
-* transform::                   Transformation matrices.
-* ntransform::                  N-dimensional transformation matrices.
+* appearance objects::          Objetos de apar@^{e}ncia.
+* image::                       Objetos de imagem.
+* transform::                   Matrizes de transforma@,{c}@~{a}o.
+* ntransform::                  Matrizes de Transforma@,{c}@~{a}o N-dimensional.
 * camera::                      C@^{a}meras.
-* window::                      Windows.
+* window::                      Janelas.
 @end menu
 
 @comment ----------------------------------------------------------------
 @node appearance objects, image, Non-geometric objects, Non-geometric objects
 @subsection Appearance Objects
-Appearances are objetos OOGL of their own right, which simply means that
-it is possible to give them symbolic names (@pxref{References}). There
-are other sections dealing with appearance
-details. @xref{Appearances}.
+Apar@^{e}ncias s@~{a}o objetos OOGL com caracter@'{i}sticas pr@'{o}prias, que simplesmente significam que
+@'{e} poss@'{i}vel fornecer a eles nomes simb@'{o}licos (Veja @ref{References}). Existem
+outras se@,{c}@~{o}es manuseado detalhes de
+apar@^{e}ncia. Veja @ref{Appearances}.
 
 @node image, transform, appearance objects, Non-geometric objects
 @subsection Image Objects
 
-Image objetos are used to specify pixmap data for either textures
-(@pxref{Texture Mapping}), or for background images of c@^{a}meras
-(@pxref{camera, Camera objects}).
+Objetos de imagem s@`{a}o usados para especificar dados de pixmap ou para texturas
+(Veja @ref{Texture Mapping}), ou para imagens de fundo de c@^{a}meras
+(Veja @ref{camera, Camera objects}).
 
-At the time of this writing images are comprised of 1 to 4 canais, a
-canal provides a single number in the range from 0 to @code{maxval}
-for each pixel; and @code{maxval} is tied to 255. The interpretation dos image data depending on the number of canais is like follows:
+ao mesmo tempo em que imagens s@~{a}o escritas elas s@~{a}o tamb@'{e}m comprimidas de 1 a 4 canais, um
+canal fornece um n@'{u}mero simples no intervalo que vai de 0 a @code{maxval}
+para cada ponto de imagem (pixel); e @code{maxval} @'{e} colocado em 255. A interpreta@,{c}@~{a}o dos dados de imagem dependente do n@'{u}mero de canais @'{e} como segue:
 
 @multitable @columnfractions 0.2 0.2 0.6
-@headitem #Channels @tab Channel No. @tab Interpretation
+@headitem #Canais @tab No. do Canal @tab Interpreta@,{c}@~{a}o
 @item 1
 @tab 1
-@tab greyscale or luminance data
+@tab escala de cinza ou dados de lumn@^{a}ncia
 @item 2
 @tab 1
-@tab greyscale or luminance data
+@tab escala de cinza ou dados de lumn@^{a}ncia
 @item @code{ }
 @tab 2
-@tab alpha channel (0: transparent, @code{maxval}: opaque)
+@tab canal alfa (0: transparente, @code{maxval}: opaco)
 @item 3
 @tab 1
-@tab red channel
+@tab canal vermelho
 @item @code{}
 @tab 2
-@tab green channel
+@tab canal verde
 @item @code{}
 @tab 3
-@tab blue channel
+@tab canal azul
 @item 4
 @tab 1
-@tab red channel
+@tab canal vermelho
 @item @code{}
 @tab 2
-@tab green channel
+@tab canal verde
 @item @code{}
 @tab 3
-@tab blue channel
+@tab canal azul
 @item @code{}
 @tab 4
-@tab alpha channel (0: transparent, @code{maxval}: opaque)
+@tab canal alfa (0: transparente, @code{maxval}: opaco)
 @end multitable
 
-Image data can be specified inline (embedded into the current data stream)
-or via file references; in both cases the data is read in and
-interpreted at the time the image objeto is parsed. @emph{This is
-different from the old (and deprecated) texture image specification,
-where the the image data on-disk would eventually be re-read by
+Dados de imagem podem ser especificados inline (embutidos dentro do fluxo de dados atual)
+ou via refer@^{e}ncias de arquivos; em ambos os casos os dados s@~{a}o lidos e
+interpretados ao mesmo tempo que o objeto de imagem @'{e} passado. @emph{Essa forma
+@'{e} diferente da antiga (e desatualizada) forma de especifica@,{c}@~{a}o de textura de imagem,
+onde dos dados de imagem em uma m@'{i}dia podem eventualmente serem re-lidos pelo
 Geomview}.
 
-The general syntax of image objetos is like follows:
+A sintaxe geral de objetos de imagem @'{e} como segue:
 @example
 <image> ::= 
-  [ "@{" ]             (curly brace, generally needed to make
-                       the end do objeto unambiguous.)
-  [ "image" ]          (optional keyword; unnecessary if the type
-                       is determined by the context, which it
-                       usually is.)
-  [ "define" <name> ]
-                       (defines an image named <name>, setting
-                       its value from the stuff which follows)
+  [ "@{" ]             (abertura de chave, geralmente precisam informar
+                       o fim do objeto de forma clara.)
+  [ "image" ]          (palavra chave opcional; desnecess@'{a}ria se o tipo
+                       @'{e} determinado pelo contexto, o que
+                       usualmente acontece.)
+  [ "define" <nome> ]
+                       (define uma imagem chamada <nome>, escolhendo
+                       seus valores a partir do material adiante)
   | 
-      "<" <filename>   (meaning: read image from that file)
+      "<" <nomedearquivo>   (significando: leia a imagem de contida
+                       em nomedearquivo)
   |
-      ":" <name>       (meaning: use variable @var{name},
-                       defined elsewhere; if undefined the image
-                       carries no data)
+      ":" <nome>       (significando: use a vari@'{a}vel @var{nome},
+                       definida em algum lugar; se a vari@'{a}vel n@~{a}o
+                       for definida em algum lugar a imagem
+                       @'{e} tida como vazia)
   |
-                       (actual stuff defining the image; image data
-                       must come last, after defining the width and
-                       height and number of canais)
+                       (material atual de defini@,{c}@~{a}o de imagem; dados
+                       da imagem obrigat@'{o}riamente v@^{e}m por ultimo,
+                       ap@'{o}s a defini@,{c}@~{a}o da largura e da altura
+                       e do n@'{u}mero de canais)
 
-      "width"          (width da image, auto-detected from image data
-                       if possible)
+      "width"          (largura da imagem, detectado automaticamente
+                       a partir dos dados da imagem se poss@'{i}vel)
 
-      "height"         (height da image, auto-detected from image data
-                       if possible)
+      "height"         (altura da imagem, detectado automaticamente
+                       a partir dos dados da imagem se poss@'{i}vel)
 
-      "channels"       (number of canais, auto-detected from image data
-                       and @code{data} specifications, if possible)
+      "channels"       (n@'{u}mero de canais, detectado automaticamente
+                       a partir dos dados da imagem e a partir das
+                       especifica@,{c}@~{o}es @code{data} descrita
+                       adiante, se poss@'{i}vel)
 
-      "maxval"         (unsupported, must be @code{255} if specified)
+      "maxval"         (n@~{a}o suportado, obrigatoriamente deve ser @code{255} se
+                       especificado)
 
-      "data DESTMASK [FILTER] [@{] < FILENAME [@}]"
-      "data DESTMASK [FILTER] DATASIZE [@{][\n]LITERAL_IMAGE_DATA[@}]"
-                       (either external or embedded image data, see below
-                       for a detailed description do meaning of
-                       @emph{MASK} and @emph{FILTER}. An image can (and
-                       has, in general) multiple data sections.)
+      "data MASCDEST [FILTRO] [@{] < NOMEDOARQUIVO [@}]"
+      "data MASCDEST [FILTRO] TAMAN_IMAGEM [@{][\n]DADOS_LIT_IMAGEM[@}]"
+                       (dados de imagem ou externos ou embutidos, veja
+                       abaixo para uma descri@,{c}@~{a}o detalhada do
+                       significado de @emph{MASCDEST} e @emph{FILTRO}. Uma imagem pode
+                       -e tem, em geral- multiplas se@,{c}@~{o}es de dados.)
 
-  [ "@}" ]             (matching curly brace)
+  [ "@}" ]             (fechamento correspondente da chave)
 @end example
 
-@b{Details concerning the image data specification:}
+@b{Detalhes relativos @`{a} especifica@,{c}@~{a}o dos dados de uma imagem:}
 
 @table @samp
-@item DESTMASK
-This is a bit-field describing where the specified image data should be
-placed in the destination pixmap. The bit-field is specified by an
-integer in one dos known formats (decimal, octal, hexadecimal). The
-canais dos source data are always enumbered consecutively. If,
-e.g. @samp{FILENAME} or @samp{LITERAL_IMAGE_DATA} specify a
-three-canal (probably RGB @dots{}) image and @samp{DESTMASK} equals
-@code{0xD} (i.e. bit 1 is 0), then the 3rd canal do source pixmap
-would be placed in the 4th canal do destination image objeto (the
-alpha canal), the 2nd source canal would determine the @samp{blue}
-destination value and the 1st source canal the @samp{red} destination
-value.
+@item MASCDEST
+Esse @'{e} um campo-bit descrevendo onde os dados da imagem especificada devem ser
+colocados no pixmap de destino. O campo-bit @'{e} especificado por meio de um
+inteiro em um dos formatos conhecidos (decimal, octal, hexadecimal). Os
+canais dos dados fonte s@~{a}o sempre enumerados consecutivamente. Se,
+e.g. @samp{NOMEDOARQUIVO} ou @samp{DADOS_LIT_IMAGEM} especificam um
+imagem (provavelmente RGB @dots{}) de tr@^{e}s canais e @samp{MASCDEST} for igual a
+@code{0xD} (i.e. o primeiro bit @'{e} 0), ent@~{a}o o terceiro canal do pixmap fonte
+pode ser substitu@'{i}do no quarto canal do objeto imagem de destino (o
+canal alfa), o segundo canal pode determinar o valor de destino
+@samp{azul} e o primeiro canal da fonte determina o valor de destino
+correspondente ao @samp{vermelho}.
 
-The number of canais dos source data always has to match the number
-of bits set in @samp{DESTMASK}. @b{Exception:} if the source pixmap has
-only one canal, then it can be used to fill any number of destination
-canais; all canais specified in @samp{DESTMASK} are filled with the
-data do single canal source pixmap.
+O n@'{u}mero de canais dos dados fontes sempre tem que coincidir com o n@'{u}mero
+de bits especificado como @samp{MASCDEST}. @b{Exce@,{c}@~{a}o:} se o pixmap fonte possui
+somente um canal, ent@~{a}o o n@'{u}mero de canais dos dados fonte pode ser usado para preencher qualquer n@'{u}mero de canais de
+destino; todos os canais especificados em @samp{MASCDEST} s@~{a}o preenchidos com os
+dados do canal simples do pixmap fonte.
 
-Geomview knows the following symbolic constants, which can be used
-instead of specifying the @samp{DESTMASK} bit-field numerically:
+Geomview conhece as seguintes constantes simb@'{o}licas, que podem ser usadas
+em lugar de especificar o campo-bit @samp{MASCDEST} numericamente:
 @table @code
 @item LUMINANCE
 same as @samp{1}, @samp{0x1}, @samp{\01}
@@ -4412,31 +4418,31 @@ same as @samp{7}, @samp{0x7}, @samp{\07}
 @item RGBA
 same as @samp{15}, @samp{0xf}, @samp{\017}
 @item ALPHA
-depends on the context: the absolute number of canais must be known;
-i.e. @samp{data ALPHA @dots{}} must be prepended by something determining
-the number of canais da image, e.g.
+dependendo do contexto: o n@'{u}mero absoluto de canais deve obrigatoriamente ser conhecido;
+i.e. @samp{data ALPHA @dots{}} deve obrigatoriamente ser colocado antes de alguma coisa de forma a determinar
+o n@'{u}mero de canais da imagem, e.g.
 @example
 ...
 data RGB ...
 data ALPHA
 ...
 @end example
-is valid, but
+@'{e} v@'{a}lido, mas
 @example
-<no other channel or image data specification>
+<nenhum outro canal ou especifica@,{c}@~{a}o de dados de imagem>
 data ALPHA ...
-<whatever else ...>
+<todo o resto ...>
 @end example
-is not valid, because Geomview has not means to determine the
-destination canal from the context.
+n@~{a}o @'{e} v@'{a}lido, porque Geomview n@~{a}o tem meios de determinar o
+canal de destino a partir do contexto.
 @item AUTO
-PGM image data is interpreted as single grey-scale canal, RGB PNM data
-as RGB image data. @code{AUTO} cannot work with @samp{raw} image data.
+Dados de imagem no formato PGM @'{e} interpretado como canal simples em escala de cinza, dados RGB PNM
+como dados de imagem RGB. @code{AUTO} n@~{a}o pode trabalhar com dados de imagem no formato @samp{raw}.
 @end table
 
-@item FILTER
-The @samp{FILTER} specification is optional. If it is missing, then
-Geomview tries to determine the image type from the @samp{FILENAME}
+@item FILTRO
+The @samp{FILTRO} specification is optional. If it is missing, then
+Geomview tries to determine the image type from the @samp{NOMEDOARQUIVO}
 suffix. If there is no suffix or the suffix is unknown, or for embedded
 image data, Geomview is able to auto-detectc SGI image file formats (for
 historical reasons @dots{}) and NetPBM image formats (for practical
@@ -4494,7 +4500,7 @@ executable can be fond in the current excution path.
 executable can be fond in the current excution path.
 @item raw
 Raw image data; the number of canais must match the number of bits set
-in @samp{DESTMASK}. Pixels are specified with 1 byte per canal. The
+in @samp{MASCDEST}. Pixels are specified with 1 byte per canal. The
 pixels are organized in rows as @samp{liminance[-alpha]} or
 @samp{RGB[A]} samples. The left-most pixel is the first pixel in each
 data-row, the top-most image row must come first (this is just the same
@@ -4532,7 +4538,7 @@ determined automatically from the image @code{data} specifications; if
 the image specification carries an explicit number of canais via the
 @code{channels} keyword which exceeds the number of canais found in
 the image @code{data} specifications, or if the union of all
-@samp{DESTMASK} specfications has holes, then missing luminance and RGB
+@samp{MASCDEST} specfications has holes, then missing luminance and RGB
 canais are initialized to 0, and a missing alpha-canal is
 initialized to @code{maxval}, i.e. omitting the alpha canal data for
 an RGBA image is just the same as defining an RGB image.
@@ -6424,7 +6430,7 @@ is an OOGL winddow specification.
 * and::                         @code{(and EXPR1 EXPR2)}
 * ap-override::                 @code{(ap-override [on|off])}
 * backcolor::                   @code{(backcolor      CAM-ID R G B)}
-* background-image::            @code{(background-image CAM-ID [FILENAME])}
+* background-image::            @code{(background-image CAM-ID [NOMEDOARQUIVO])}
 * bbox-color::                  @code{(bbox-color GEOM-ID R G B)}
 * bbox-draw::                   @code{(bbox-draw GEOM-ID [yes|no])}
 * camera::                      @code{(camera CAM-ID [CAMERA])}
@@ -6540,7 +6546,7 @@ is an OOGL winddow specification.
 * shell::                       @code{(! SHELLCOMMAND)}
 * sleep-for::                   @code{(sleep-for TIME)}
 * sleep-until::                 @code{(sleep-until TIME)}
-* snapshot::                    @code{(snapshot CAM-ID FILENAME [FORMAT [XSIZE [YSIZE]]])}
+* snapshot::                    @code{(snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])}
 * soft-shader::                 @code{(soft-shader CAM-ID @{on|off|toggle@})}
 * space::                       @code{(space @{euclidean|hyperbolic|spherical@})}
 * stereowin::                   @code{(stereowin CAM-ID [no|horizontal|@dots{}] [gap])}
@@ -6566,10 +6572,10 @@ is an OOGL winddow specification.
 * while::                       @code{(while TEST BODY)}
 * window::                      @code{(window CAM-ID WINDOW)}
 * winenter::                    @code{(winenter CAM-ID)}
-* write::                       @code{(write command|geometry|@dots{} FILENAME @dots{})}
-* write-comments::              @code{(write-comments FILENAME GEOMID PICKPATH)}
-* write-handle::                @code{(write-handle PREFIX FILENAME HANDLE)}
-* write-sexpr::                 @code{(write-sexpr FILENAME LISPOBJECT)}
+* write::                       @code{(write command|geometry|@dots{} NOMEDOARQUIVO @dots{})}
+* write-comments::              @code{(write-comments NOMEDOARQUIVO GEOMID PICKPATH)}
+* write-handle::                @code{(write-handle PREFIX NOMEDOARQUIVO HANDLE)}
+* write-sexpr::                 @code{(write-sexpr NOMEDOARQUIVO LISPOBJECT)}
 * xform::                       @code{(xform ID TRANSFORM)}
 * xform-incr::                  @code{(xform-incr ID TRANSFORM)}
 * xform-set::                   @code{(xform-set ID TRANSFORM)}
@@ -6724,7 +6730,7 @@ between 0 and 1.
 @subsection background-image
 @findex background-image
 @table @code
-@item (background-image CAM-ID [FILENAME])
+@item (background-image CAM-ID [NOMEDOARQUIVO])
 Use the given image as the background of camera CAM-ID (which must be a
 real camera, not @code{default} or @code{allcams}). Centers the image on
 the window area.  Works only with GL and OpenGL graphics.
@@ -8180,8 +8186,8 @@ Returns the number of seconds until TIME.
 @subsection snapshot
 @findex snapshot
 @table @code
-@item (snapshot CAM-ID FILENAME [FORMAT [XSIZE [YSIZE]]])
-Save a snapshot of @var{CAM-ID} in the @var{FILENAME} (a string). The
+@item (snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])
+Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a string). The
 @var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
 "ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
 libOSMesa) or "ppmosglx". A "ppmscreen" snapshot is created by reading
@@ -8197,7 +8203,7 @@ the background, or when a screen safer is active. With "ps", dumps a
 Postscript picture representing the view from that window;
 hidden-surface removal might be incorrect. With "ppm", dumps a
 PPM-format image produced by geomview's internal software renderer; this
-may be of arbitrary size. If the @var{FILENAME} argument begins with
+may be of arbitrary size. If the @var{NOMEDOARQUIVO} argument begins with
 "|", it's interpreted as a @code{/bin/sh} command to which the PPM or PS
 data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
 relevant only for "ppm" formats, and render to a window of that size (or
@@ -8581,8 +8587,8 @@ use.
 @subsection write
 @findex write
 @table @code
-@item (write @{command|geometry|camera|transform|ntransform|window@} FILENAME [ID|(ID @dots{})] [self|world|universe|otherID])
-write description of ID in given format to FILENAME.  Last
+@item (write @{command|geometry|camera|transform|ntransform|window@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
+write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the objeto, no transformation or appearance (geometry only)
 world: the objeto as positioned within the World.
@@ -8604,9 +8610,9 @@ ids, like @code{g0} or @code{(g2 g1 dodec.off)}.
 @subsection write-comments
 @findex write-comments
 @table @code
-@item (write-comments FILENAME GEOMID PICKPATH)
+@item (write-comments NOMEDOARQUIVO GEOMID PICKPATH)
 write OOGL COMMENT objetos in the GEOMID hierarchy at the level do
-pick path to FILENAME. Specifically, COMMENTS at level (a b c @dots{} f g)
+pick path to NOMEDOARQUIVO. Specifically, COMMENTS at level (a b c @dots{} f g)
 will match pick paths da form (a b c @dots{} f *) where * includes any
 value of g, and also any values of possible further indices h,i,j,
 etc. The pick path (returned in the @code{pick} command) is a list of
@@ -8629,8 +8635,8 @@ file is loaded and cannot be returned.
 @subsection write-handle
 @findex write-handle
 @table @code
-@item (write-handle PREFIX FILENAME HANDLE)
-Writes the objeto underlying the given handle to @var{FILENAME}. This
+@item (write-handle PREFIX NOMEDOARQUIVO HANDLE)
+Writes the objeto underlying the given handle to @var{NOMEDOARQUIVO}. This
 function is intended for internal debugging use only.
 @end table
 
@@ -8638,8 +8644,8 @@ function is intended for internal debugging use only.
 @subsection write-sexpr
 @findex write-sexpr
 @table @code
-@item (write-sexpr FILENAME LISPOBJECT)
-Writes the given LISPOBJECT to FILENAME. This function is intended
+@item (write-sexpr NOMEDOARQUIVO LISPOBJECT)
+Writes the given LISPOBJECT to NOMEDOARQUIVO. This function is intended
 for internal debugging use only.
 @end table
 
