@@ -298,7 +298,7 @@ LDEFINE(write_sexpr, LVOID,
 }
 
 LDEFINE(write_handle, LVOID,
-	"(write-handle PREFIX FILENAME HANDLE)\n"
+	"(write-handle HANDLEOPS FILENAME HANDLE)\n"
 	"Writes the object underlying the given handle to FILENAME."
 	"This function is intended for internal debugging use only.")
 {
