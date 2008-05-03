@@ -644,7 +644,7 @@ void PoolClose(Pool *p)
 	    if (p->outf != stdout) fclose(p->outf);
 	    p->outf = NULL;
 	}
-	/* PoolDelete(p);*/ /* Shouldn't we delete the Pool? */
+	/* PoolDelete(p); */ /* Shouldn't we delete the Pool? */
     }
 }
 
@@ -965,7 +965,7 @@ Handle *PoolIn(Pool *p)
 		(*p->ops->resync)(p);
 	    } else if (p->softEOF) {
 		iobfrewind(p->inf);
-	    } else if (p->inf != NULL) {	/* Careful lest already PoolClose()d */
+	    } else if (p->inf != NULL) { /* Careful lest already PoolClose()d */
 		if (p->infd >= 0) {
 		    if (FD_ISSET(p->infd, &poolreadyfds)) {
 			FD_CLR(p->infd, &poolreadyfds);
@@ -996,6 +996,7 @@ Handle *PoolIn(Pool *p)
 		 */
 	} else {
 	    PoolClose(p);
+	    PoolDelete(p);
 	    return h;
 	}
     }
