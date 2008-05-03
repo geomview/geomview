@@ -174,6 +174,7 @@ extern char *GeomToken(IOBFILE *f);
   Handle           *aphandle;						\
   int              geomflags;						\
   int              pdim; /* does this belong here? */			\
+  FreeListNode     **freelisthead; /* memory management */		\
   /* The following three fields are used to attach data to a geometry	\
    * objects which depends on the position of the Geom in the object	\
    * hierarchy. As a Geom object can be referenced by Handles the Geom	\

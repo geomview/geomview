@@ -107,7 +107,14 @@ void GeomDelete(Geom *object)
     }
 
     object->magic ^= 0x80000000;
-    OOGLFree(object);
+
+    if (object->freelisthead) {
+	FreeListNode *reuse = (FreeListNode *)object;
+	reuse->next = *object->freelisthead;
+	*object->freelisthead = reuse;
+    } else {
+	OOGLFree(object);
+    }
 }
 
 /*

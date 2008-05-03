@@ -130,6 +130,7 @@ GGeomInit(Geom *g, GeomClass *Class, int magic, Appearance *ap)
   g->aphandle = NULL;
   g->geomflags = 0;
   g->pdim = 4;
+  g->freelisthead = NULL; /* has to be overridden by derived class */
   g->bsptree = NULL;
   g->ppath = NULL;
   g->ppathlen = 0;
