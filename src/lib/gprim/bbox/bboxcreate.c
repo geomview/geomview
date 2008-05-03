@@ -33,6 +33,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "bboxP.h"
 #include "appearance.h"
 
+DEF_FREELIST(BBox);
+
 #ifndef max
 # define max(a,b) ((a) > (b) ? (a) : (b))
 #endif
@@ -91,11 +93,12 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
   int attr, copy = 1, need_update = 0;
 
   if (exist == NULL) {
-    bbox = OOGLNewE(BBox, "BBoxCreate BBox");
+    FREELIST_NEW(BBox, bbox);
+    GGeomInit(bbox, classp, BBOXMAGIC, NULL);
+    bbox->freelisthead = &BBoxFreeList;
     bbox->min = HPtNCreate(4, NULL);
     bbox->max = HPtNCreate(4, NULL);
     bbox->center = HPtNCreate(4, NULL);
-    GGeomInit (bbox, classp, BBOXMAGIC, NULL);
   } else {
     /* FIXME: Check that exist is in fact a BBox. */
     bbox = exist;
@@ -154,12 +157,12 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
       maxNp = need_update = 1;
       break;
     default:
-      if (GeomDecorate (bbox, &copy, attr, a_list)) {
+      if (GeomDecorate (bbox, &copy, attr, a_list) && exist == NULL) {
 	OOGLError(0, "BBoxCreate: Undefined attribute: %d", attr);
 	HPtNDelete(bbox->min);
 	HPtNDelete(bbox->max);
 	HPtNDelete(bbox->center);
-	OOGLFree(bbox);
+	FREELIST_FREE(BBox, bbox);
 	return NULL;
       }
     }
@@ -223,10 +226,12 @@ BBox *BBoxCreate (BBox *exist, GeomClass *classp, va_list *a_list)
   return bbox;
 
  error:
-  HPtNDelete(bbox->min);
-  HPtNDelete(bbox->max);
-  HPtNDelete(bbox->center);
-  OOGLFree(bbox);
+  if (exist == NULL) {
+    HPtNDelete(bbox->min);
+    HPtNDelete(bbox->max);
+    HPtNDelete(bbox->center);
+    FREELIST_FREE(BBox, bbox);
+  }
   return NULL;
 }
 

@@ -32,6 +32,8 @@
 #include "sphereP.h"
 #include "tlist.h"
 
+DEF_FREELIST(Sphere);
+
 #if BEZIER_SPHERES
 #include "bezier.h"
 
@@ -193,8 +195,9 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
   HPoint3 *encompass_points = NULL;
 
   if (exist == NULL) {
-    sphere = OOGLNewE(Sphere, "SphereCreate:  new Sphere");
+    FREELIST_NEW(Sphere, sphere);
     GGeomInit(sphere, classp, SPHEREMAGIC, NULL);
+    sphere->freelisthead = &SphereFreeList;
     TmIdentity(sphere->axis);
     sphere->NDaxis = NULL;
     sphere->geomhandle = NULL;
