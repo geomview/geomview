@@ -41,6 +41,7 @@ typedef struct FreeListNode
 #define FREELIST_NEW(type, name)		\
   if (type##FreeList == NULL) {			\
     name = OOGLNewE(type, #type);		\
+    memset(name, 0, sizeof(type));		\
   } else {					\
     type##FreeNode *reused;			\
     reused = (type##FreeNode *)type##FreeList;	\
