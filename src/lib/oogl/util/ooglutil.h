@@ -47,7 +47,7 @@ extern int strcasecmp(char *s1, char *s2);
 #endif
 
 
-#define	COUNT(array)	(sizeof(array)/sizeof(array[0]))
+#define	COUNT(array)	(int)(sizeof(array)/sizeof(array[0]))
 
 /*
  * Public definitions for miscellaneous useful OOGL internal stuff.
@@ -76,10 +76,18 @@ extern void *OOG_NewE(int, char *);
 extern void *OOG_RenewE(void *, int, char *);
 #endif
 
-#define	OOGLNew(t)		(t *)OOG_NewP(sizeof(t))
-#define	OOGLNewN(t,N)		(t *)OOG_NewP(sizeof(t)*(N))
-#define	OOGLRenewN(t,p,N)	(t *)OOG_RenewP(p, sizeof(t)*(N))
-#define	OOGLRealloc(t,p)	(t *)OOG_RenewP(p, sizeof(t))
+static inline void *_OOGLNew(size_t size)
+{
+  return OOG_NewP(size);
+}
+static inline void *_OOGLRenew(void *p, size_t size)
+{
+  return OOG_RenewP(p, size);
+}
+#define	OOGLNew(t)		(t *)_OOGLNew(sizeof(t))
+#define	OOGLNewN(t,N)		(t *)_OOGLNew(sizeof(t)*(N))
+#define	OOGLRenewN(t,p,N)	(t *)_OOGLRenew(p, sizeof(t)*(N))
+#define	OOGLRealloc(t,p)	(t *)_OOGLRenew(p, sizeof(t))
 
 #define	OOGLNewE(t, errmsg)	(t *)OOG_NewE(sizeof(t), errmsg)
 #define	OOGLNewNE(t,N, errmsg)	(t *)OOG_NewE(sizeof(t)*(N), errmsg)
