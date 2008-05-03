@@ -3737,16 +3737,15 @@ Syntax:
 @var{NVertices}  @var{NPolylines}
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]  # Vertices
-				    # if 4SKEL, each vertex has 4 components
-				    # if nSKEL, each vertex has NDim components
+                                    # if 4SKEL, each vertex has 4 components
+                                    # if nSKEL, each vertex has NDim components
                                     # if C[4][n]SKEL vertex coordinates are
                                     # followed by an RGBA color specification
 @dots{}
 @var{x}[@var{NVertices}-1]  @var{y}[@var{NVertices}-1]  @var{z}[@var{NVertices}-1]
 
                         # Polylines
-                        # @var{Nv} = 
-                        # vertices on this polyline (1 = point)
+                        # @var{Nv} = vertices on this polyline (1 = point)
                         # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: vertex indices
                         #               in range 0..@var{NVertices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
@@ -3754,7 +3753,7 @@ Syntax:
                         # @var{colorspec} continues past @var{v}[@var{Nv}-1]
                         # to end-of-line; may be nothing, or 3 or 4 numbers.
                         # nothing: default color
-			# 3 or 4 floats: RGB[A] values 0..1
+                        # 3 or 4 floats: RGB[A] values 0..1
 @end example
 
 The syntax resembles that of @code{OFF} files, with a table of vertices
