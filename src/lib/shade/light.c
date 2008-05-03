@@ -41,17 +41,35 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "appearance.h"
 #include "ooglutil.h"
 
-static void norm();
+static inline void
+norm(Color *color, float *coeff);
 
+DEF_FREELIST(LtLight);
+
+#if 0
 #define	NewLtLight()	OOGLNewE(LtLight, "new LtLight")
 #define	FreeLtLight(lt)	OOGLFree(lt)
+#else
+static inline LtLight* NewLtLight(void)
+{
+    LtLight *newlt;
+    
+    FREELIST_NEW(LtLight, newlt);
+    
+    return newlt;
+}
+static inline void FreeLtLight(LtLight *old)
+{
+    FREELIST_FREE(LtLight, old);
+}
+
+#endif
 
 /*
  * Default light is full white and position along the z-axis.
  */
 
 static Color black = { 0.0, 0.0, 0.0 };
-/* static LtLight *freelights = NULL; */
 
 LtLight *
 _LtSet(LtLight *light, int a1, va_list *alist)
@@ -614,10 +632,8 @@ LmDeleteLights(LmLighting *lm)
 # define max(a, b) ((a) > (b) ?( a) : (b))
 #endif
 
-static void
-norm( color, coeff )
-    Color *color;
-    float *coeff;
+static inline void
+norm(Color *color, float *coeff)
 {
     *coeff = max(color->r, color->g);
     *coeff = max(color->b, *coeff);
