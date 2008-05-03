@@ -377,9 +377,9 @@ void cam_mouse(Widget w, XtPointer data, XPointerMovedEvent *event,
 
   gev.x = event->x_root; gev.y = YScrnSize - event->y_root; gev.t = event->time;
 
-PRINT_EVENT(("cam_mouse", &gev));
+  PRINT_EVENT(("cam_mouse", &gev));
 
-  if ((gev.t - lastt) > uistate.cursor_still)
+  if ((int)(gev.t - lastt) > uistate.cursor_still)
   {
     if (abs(gev.x - lastx) < uistate.cursor_twitch &&
 	abs(gev.y - lasty) < uistate.cursor_twitch)
@@ -393,7 +393,7 @@ PRINT_EVENT(("cam_mouse", &gev));
   }
   dragx = gev.x;
   dragy = gev.y;
-  if (lasthere != gev.t) {
+  if (lasthere != (int)gev.t) {
 D1PRINT(("cam_mouse: at 1\n"));
     GV_RAWEVENT( gev.dev, -1, gev.x, gev.y, gev.t);
   } else {

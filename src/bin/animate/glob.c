@@ -474,6 +474,7 @@ slash:
 	}
 }
 
+#if 0
 static int
 Gmatch(s, p)
 	char *s, *p;
@@ -535,6 +536,7 @@ Gmatch(s, p)
 		}
 	}
 }
+#endif
 
 static void
 Gcat(s1, s2)

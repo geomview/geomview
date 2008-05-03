@@ -629,7 +629,7 @@ ui_keyboard(int ch)
   } else if(ch == 0177) {
     ui_keyboard('^'); ui_keyboard('?');
   } else {
-    if(nextc >= sizeof(kybd)-1) {
+    if(nextc >= (int)sizeof(kybd)-1) {
 	memcpy(kybd, kybd+1, sizeof(kybd)-2);
 	nextc = sizeof(kybd)-2;
     } else if(nextc == 0) {

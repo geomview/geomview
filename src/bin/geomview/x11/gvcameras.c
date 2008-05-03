@@ -444,7 +444,7 @@ void   ui_target_cameraspanel(int id)
 
     update_x11_depth(dv, DepthMenu, DitherToggle, &depth_state, &dither_state);
 
-    if (modelpos != (dv->hmodel + 1))
+    if (modelpos != (int)(dv->hmodel + 1))
     {
       XmListSelectPos(ModelList, dv->hmodel + 1, False);
       modelpos = dv->hmodel + 1;

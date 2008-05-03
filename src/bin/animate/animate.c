@@ -99,7 +99,7 @@ static char *concat_strings(char **str, int numstr)
   pos++;
   for (n = 0; n < numstr; n++)
   {
-    for (ch = 0; ch < strlen(str[n]); ch++)
+    for (ch = 0; ch < (int)strlen(str[n]); ch++)
     {
       scrbuf[pos] = (str[n])[ch];
       pos++;
