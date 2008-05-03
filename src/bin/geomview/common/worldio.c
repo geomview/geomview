@@ -760,7 +760,7 @@ LDEFINE(write, LVOID,
 	    LEND));
 
   p = POOL(hiawatha);
-  if ( (ops=str2ops(opsname)) == NULL) {
+  if ((ops = str2ops(opsname)) == NULL) {
     OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window|image, got \"%s\"", opsname);
     return Lnil;
   }
@@ -784,7 +784,7 @@ LDEFINE(write, LVOID,
 
   if (idobj->type == LSTRING || idobj->type == LSYMBOL) {
     if (!LFROMOBJ(LID)(idobj, &id)) {
-      fprintf(stderr, "write: expects ID or list of IDs in arg position 2\n");
+      fprintf(stderr, "write: expects ID or list of IDs in arg position 4\n");
       return Lnil;
     }
     val = (worldio(ops, op, coords, id) == 1);
