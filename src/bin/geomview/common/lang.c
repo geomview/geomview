@@ -317,7 +317,11 @@ LDEFINE(write_handle, LVOID,
       (h = HandleByName(handle, ops)) != NULL) {
     REFPUT(h);
     if (h->ops->strmout) {
-      p = PoolStreamTemp(filename, NULL, NULL, 1, &CommandOps);
+      FILE *outf = NULL;
+      if (strcmp(filename, "-") == 0) {
+	outf = stdout;
+      }
+      p = PoolStreamTemp(filename, NULL, outf, 1, &CommandOps);
       h->ops->strmout(p, h, HandleObject(h));
       PoolClose(p);
       PoolDelete(p);
