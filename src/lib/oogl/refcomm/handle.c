@@ -245,7 +245,7 @@ HandleOps *HandleOpsByName(char *name)
   HandleOps *ops;
 
   DblListIterateNoDelete(&AllHandles, HandleOps, node, ops) {
-    if (strcmp(name, ops->prefix)) {
+    if (strcmp(name, ops->prefix) == 0) {
       return ops;
     }
   }
