@@ -39,7 +39,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mgP.h"
 #include "bsptreeP.h"
 
-static TmCoord (*coords2W(int system))[4]
+static inline
+TmCoord (*coords2W(int system, TransformPtr T))[4]
 {
   WnPosition vp;
   static Transform Tndc;
@@ -54,11 +55,12 @@ static TmCoord (*coords2W(int system))[4]
     CtmTranslate(Tndc, 1.0, 1.0, 0.0);
     TmConcat(Tndc, _mgc->S2W, Tndc);
     return Tndc;
-  default:  return _mgc->xstk->T;  /* Default is local coords: obj->world */
+  default:  return T;  /* Default is local coords: obj->world */
   }
 }
 
-static TmCoord (*coordsto(int from, int to))[4]
+static inline
+TmCoord (*coordsto(int from, int to, TransformPtr T, TransformPtr Tinv))[4]
 {
   WnPosition vp;
   static Transform Tmap;
@@ -69,11 +71,11 @@ static TmCoord (*coordsto(int from, int to))[4]
     return TM3_IDENTITY;
 
   switch(to) {
-  case L_GLOBAL: return coords2W(from);
+  case L_GLOBAL: return coords2W(from, T);
   case L_LOCAL:
     if(!(_mgc->has & HAS_S2O)) mg_findS2O();
     switch(from) {
-    case L_GLOBAL: return _mgc->xstk->Tinv;	/* W2O */
+    case L_GLOBAL: return Tinv;	/* W2O */
     case L_SCREEN: return _mgc->S2O;
     }
     break;
@@ -94,7 +96,9 @@ static TmCoord (*coordsto(int from, int to))[4]
     break;
   case L_NDC:
     switch(from) {
-    case L_GLOBAL: TmConcat(_mgc->W2S, coordsto(L_SCREEN, L_NDC), Tmap);
+    case L_GLOBAL: TmConcat(_mgc->W2S,
+			    coordsto(L_SCREEN, L_NDC, T, Tinv),
+			    Tmap);
       return Tmap;
     case L_SCREEN:
       WnGet(_mgc->win, WN_VIEWPORT, &vp);
@@ -111,7 +115,7 @@ static TmCoord (*coordsto(int from, int to))[4]
   }
 
   /* It's safe to call both of these, since coords2W() can never return Tmap. */
-  TmConcat(coords2W(from), coordsto(L_GLOBAL, to), Tmap);
+  TmConcat(coords2W(from, T), coordsto(L_GLOBAL, to, T, Tinv), Tmap);
   return Tmap;
 }
     
@@ -204,8 +208,9 @@ Inst *InstDraw(Inst *inst)
        * in 'origin' coords such that (0,0,0) in location
        * coords maps to originpt in origin coords.
        */
-      o2W = coords2W(inst->origin);
-      l2o = coordsto(inst->location, inst->origin);
+      o2W = coords2W(inst->origin, _mgc->xstk->T);
+      l2o = coordsto(inst->location, inst->origin,
+		     _mgc->xstk->T, _mgc->xstk->Tinv);
       HPt3TransPt3(l2o, &zero, &originwas);
       Pt3Sub(&inst->originpt, &originwas, &delta);
       TmTranslate(tT, delta.x, delta.y, delta.z);
@@ -214,7 +219,7 @@ Inst *InstDraw(Inst *inst)
       TmConcat(tT, o2W, T);
       mgsettransform(T);
     } else if (inst->location > L_LOCAL) {
-      TmConcat(T, coords2W(inst->location), T);
+      TmConcat(T, coords2W(inst->location, _mgc->xstk->T), T);
       mgsettransform(T);
     } else {
       mgtransform(T);
@@ -249,6 +254,7 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
   TransformPtr oldT, oldTxT;
   GeomIter *it, *txit;
   Transform T, tT, Tl2o, TxT;
+  Transform oldTinv;
 
   if (inst->geom) {
     GeomMakePath(inst, 'I', path, pathlen);
@@ -306,6 +312,10 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
     oldT = BSPTreePushTransform(bsptree, TM_IDENTITY);
     oldTxT = BSPTreePushTxTransform(bsptree, TM_IDENTITY);
 
+    if (inst->origin != L_NONE) {
+      TmInvert(oldT, oldTinv);
+    }
+
     it = GeomIterate((Geom *)inst, DEEP);
     txit = GeomIterate((Geom *)inst->txtlist, DEEP);
     while (NextTransform(it, T)) {
@@ -320,8 +330,8 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
 	 * in 'origin' coords such that (0,0,0) in location
 	 * coords maps to originpt in origin coords.
 	 */
-	o2W = coords2W(inst->origin);
-	l2o = coordsto(inst->location, inst->origin);
+	o2W = coords2W(inst->origin, oldT);
+	l2o = coordsto(inst->location, inst->origin, oldT, oldTinv);
 	HPt3TransPt3(l2o, &zero, &originwas);
 	Pt3Sub(&inst->originpt, &originwas, &delta);
 	TmTranslate(tT, delta.x, delta.y, delta.z);
@@ -331,11 +341,13 @@ Inst *InstBSPTree(Inst *inst, BSPTree *bsptree, int action)
 	/* finally concat with tree->Tid^{-1} to get the correct
 	 * absolute positioning.
 	 */
-	if (bsptree->Tid != TM_IDENTITY) {
-	  TmConcat(T, bsptree->Tidinv, T);
+	if (inst->location > L_LOCAL) {
+	  if (bsptree->Tid != TM_IDENTITY) {
+	    TmConcat(T, bsptree->Tidinv, T);
+	  }
 	}
       } else if (inst->location > L_LOCAL) {
-	TmConcat(T, coords2W(inst->location), T);
+	TmConcat(T, coords2W(inst->location, oldT), T);
 	if (bsptree->Tid != TM_IDENTITY) {
 	  TmConcat(T, bsptree->Tidinv, T);
 	}
