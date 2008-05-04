@@ -677,9 +677,14 @@ static LObject *stringparse(Lake *lake)
 {
   LObject *obj = LSexpr(lake);
 
+#if 0
+  /* Don't otherwise unquoted strings will not be bound to argument
+   * valus; or I would have to edit all LDEFUN() invocations.
+   */
   if (obj->type == LSYMBOL) {
     obj->type = LSTRING;
   }
+#endif
   return obj;
 }
 
@@ -728,6 +733,11 @@ static LObject *symbolparse(Lake *lake)
 {
   LObject *obj = LSexpr(lake);
 
+  /* Mmmh. Shouldn't it be the otherway round: somebody requesting an
+   * LSYMBOL in the input stream would rather expect to get the symbol
+   * value; so maybe we should promote from LSYMBOL to LSTRING
+   * here. Maybe not. Leave it as is for the moment.
+   */
   if (obj->type == LSTRING) {
     obj->type = LSYMBOL;
   }
