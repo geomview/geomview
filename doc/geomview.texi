@@ -3223,7 +3223,7 @@ alphafile filename
 
 apply   modulate  -or-  blend  -or-  decal
   Indicates how the texture image is applied to the surface.
-  Here the "surface color" means the color that surface would have
+  Here the "surface color" means the color the surface would have
   in the absence of texture mapping.
 
   With @code{modulate}, the default, the texture color (or lightness,
