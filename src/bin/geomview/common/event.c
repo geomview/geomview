@@ -422,7 +422,7 @@ LDEFINE(rawevent, LVOID,
 
     mote:
       id = retarget(NOID);
-      if (k) gv_ui_target( id, IMMEDIATE);
+      if (id) gv_ui_target( id, IMMEDIATE);
       gv_event_mode( s );
       break;
 
