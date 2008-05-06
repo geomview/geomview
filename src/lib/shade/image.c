@@ -103,7 +103,7 @@ Image *ImgDefault(Image *img)
 Image *_ImgSet(Image *img, int attr1, va_list *alist)
 {
   int attr, val;
-  bool newimg;
+  bool newimg = false;
   char *chanfile, *filter;
   unsigned chmask;
   void *chandata;
@@ -212,7 +212,7 @@ Image *_ImgSet(Image *img, int attr1, va_list *alist)
     ImgDelete(img);
   }
   return NULL;
-  }
+}
 
 Image *ImgCreate(int a1, ...)
 {
