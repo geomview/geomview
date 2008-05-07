@@ -80,7 +80,7 @@ typedef loff_t offset_t;
 # ifndef HAVE_DECL_LLSEEK
 loff_t llseek(int fd, loff_t offset, int whence);
 # endif
-#elif HAVE_OFF_T && HAVE_LSEEKO
+#elif HAVE_OFF_T && HAVE_LSEEK
 # define HAVE_SOME_LSEEK 1
 typedef off_t offset_t;
 # define LSEEK lseek
@@ -136,7 +136,9 @@ struct IOBFILE
   int      eof:2;
   int      ungetc;
   fpos_t   stdiomark;   /**< stdio mark interface */
+#if POSIX_SHORTCUT
   offset_t posixmark;   /**< using read(), write() and a flavour of lseek() */
+#endif
   size_t   mark_pos;    /**< Offset into our buffer structures (pipe, tty) */
   int      mark_ungetc; /**< Copy of what ungetc was when setmark() was called
 			 */
