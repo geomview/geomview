@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.55/Mon Apr 14 21:06:41 2008//
+@c based on /geomview.texi/1.58/Sun May 11 09:16:26 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -23,7 +23,7 @@
 @center para GNU/Linux/Unix
 @sp 1
 @c @center @value{UPDATED-MONTH}
-@center Mar@,{c}o de 2008
+@center Maio de 2008
 @comment 19 de Novembro de 2000
 @sp 2
 @center Mark Phillips et al.
@@ -1207,9 +1207,10 @@ mknod /tmp/geomview/nome_de_objeto p
 (assumindo que o diret@'{o}rio e o pipe nomeado n@~{a}o existam atualmente), ent@~{a}o
 executando o comando GCL:
 @example
-(geometry nome_de_objeto  < /tmp/geomview/nome_de_objeto)
+(geometry nome_de_objeto  <
+/tmp/geomview/nome_de_objeto)
 @end example
-(@pxref{geometry,@code{(geometry @dots{})}})
+(veja @ref{geometry,@code{(geometry @dots{})}})
 
 @item -Mc @var{pipenome}
 Como @samp{-M} acima, mas espera comandos GCL, em lugar de dados
@@ -3026,56 +3027,81 @@ aquele atributo.
 
 @example
 appearance @{
-  +face               # (Faz) desenho de faces dos pol@'{i}gonos.  Habilitado por padr@~{a}o.
+  +face               # (Faz) desenho de faces dos pol@'{i}gonos.  Habili-
+                      # tado por padr@~{a}o.
   -edge               # (N@~{a}o faz) desenho de arestas de pol@'{i}gonos.
-  +vect               # (Faz) desenho de vetores (VECTs).  Habilitado por padr@~{a}o.
-  -transparent        # (Desabilita) transparency. Habilita@,{c}@~{a}o de transpar@^{e}ncia.
-                      # n@~{a}o (necessariamente) resulta em cores corretas no
-                      # Geomview, mas os valores de alfa s@~{a}o usados em instant@^{a}neos
-                      # RenderMan.
-  -normal             # (Faz) desenho de vetores normais a uma superf@'{i}cie.
-  normscale 1         # @dots{} com comprimento 1.0 em coordenadas do objeto.
+  +vect               # (Faz) desenho de vetores (VECTs).  Habilitado
+                      # por padr@~{a}o.
 
-  +evert              # faz a invers@~{a}o de normais de pol@'{i}gono onde necess@'{a}rio de forma que
-                      #   para toda face a camera
+  -transparent        # (Desabilita) transparency. Habilita@,{c}@~{a}o de
+                      # transpar@^{e}ncia.
+
+                      # n@~{a}o (necessariamente) resulta em cores corretas
+                      # no Geomview, mas os valores de alfa s@~{a}o usados
+                      # em instant@^{a}neos RenderMan.
+
+  -normal             # (Faz) desenho de vetores normais a uma
+                      # superf@'{i}cie.
+
+  normscale 1         # @dots{} com comprimento 1.0 em coordenadas do
+                      # objeto.
+
+  +evert              # faz a invers@~{a}o de normais de pol@'{i}gono onde
+                      # necess@'{a}rio de forma que sempre tenha
+                      # c@^{a}mera naquela face
 
   +texturing          # (Habilita) mapeamento de textura
-  +linear             # (Habilita) m@'{e}dia linear de elementos de textura mais fechados
+  +linear             # (Habilita) m@'{e}dia linear de elementos de textura
+                      # mais fechados
+
   +mipmap             # (Habilita) mapeamento mip de textura
   +mipinterp          # (Habilita) mapeamento mip linear
-  -backcull           # (N@~{a}o faz) descarte da orienta@,{c}@~{a}o de faces no sentido anti-hor@'{a}rio
-  -concave            # (N@~{a}o faz) presun@,{c}@~{a}o e manuseio de pol@'{i}gonos c@^{o}ncavos
-  -shadelines	      # (N@~{a}o faz) linhas de tonalidade como se elas estivessem iluminando cilindros
-		      # Esses quatro (mipinterp, backcull, concave, shadelines) s@~{a}o somente efetivos onde o sistema gr@'{a}fico
-		      # suport@'{a}-los, a saber em GL e Open GL.
 
-  -keepcolor	      # Normalmente, quando informa@,{c}@~{a}o de cor N-D posicional est@'{a} habilitada como
-		      # com o comando do geomview (ND-color ...), todas as 
-		      # cores de objetos s@~{a}o afetadas.  Mas, objetos com o
-		      # atributo "+keepcolor" s@~{a}o imunes a informa@,{c}@~{o}es de cor N-D.
+  -backcull           # (N@~{a}o faz) descarte da orienta@,{c}@~{a}o de faces
+                      # no sentido anti-hor@'{a}rio
+
+  -concave            # (N@~{a}o faz) presun@,{c}@~{a}o e manuseio de pol@'{i}-
+                      # gonos c@^{o}ncavos
+
+  -shadelines	      # (N@~{a}o faz) linhas de tonalidade como se elas esti-
+                      # vessem iluminando cilindros
+                      # Esses quatro (mipinterp, backcull, concave,
+                      # shadelines) s@~{a}o somente efetivos onde o
+                      # sistema gr@'{a}fico suport@'{a}-los, a saber em GL e
+                      # Open GL.
+
+  -keepcolor	      # Normalmente, quando informa@,{c}@~{a}o de cor N-D posi-
+                      # cional est@'{a} habilitada como
+                      # com o comando do geomview (ND-color ...), todas
+                      # as cores de objetos s@~{a}o afetadas.  Mas, objetos
+                      # com o atributo "+keepcolor" s@~{a}o imunes a infor-
+                      # ma@,{c}@~{o}es de cor N-D.
 
   shading smooth      # ou ``shading constant'' ou ``shading flat'' ou
                       # ou ``shading csmooth''.
                       # smooth = Gouraud shading, flat = faceted,
                       # csmooth = smoothly interpolated but unlighted.
 
-  linewidth 1         # linhas, pontos, e arestas s@~{a}o da largura de 1 pixel.
+  linewidth 1         # linhas, pontos, e arestas s@~{a}o da largura de
+                      # 1 pixel.
 
-  patchdice 10 10     # subdivide retalhos de Bezier esmiu@,{c}adamente em u e v
+  patchdice 10 10     # subdivide retalhos de Bezier esmiu@,{c}adamente em
+                      # u e v
 
   material @{         # Aqui est@'{a} uma defini@,{c}@~{a}o material;
                       # pode tamb@'{e}m ser lido de um arquivo como em
                       #  ``material < arquivo.mat''
 
       ka  1.0         # coeficiente de reflex@~{a}o ambiente.
-      ambient .3 .5 .3 # cor do ambiente (em componentes de vermelho, verde, azul)
-                      # A contribui@,{c}@~{a}o ambiente para a tonalidade @'{e}
-                      # o produto de ka, a cor do ambiente,
+      ambient .3 .5 .3 # cor do ambiente (em componentes de vermelho,
+                      # verde, azul). A contribui@,{c}@~{a}o ambiente para a to-
+                      # nalidade @'{e} o produto de ka, a cor do ambiente,
                       # pela cor da luz ambiente.
 
       kd  0.8         # coeficiente de reflex@~{a}o difusa.
       diffuse .9 1 .4 # cor difusa.
-                        # (No modo ``shading constant'' (tonalidade constante), a superf@'{i}cie
+                        # (No modo ``shading constant'' (tonalidade
+                        # constante), a superf@'{i}cie
                         # @'{e} colorida com a cor difusa.)
 
       ks 1.0          # coeficiente de reflex@~{a}o especular.
@@ -3083,19 +3109,21 @@ appearance @{
       shininess  25   # expoente especular; grandes valores fornecem
                       # destaques falsos.
 
-      backdiffuse .7 .5 0 # cor da face de tr@'{a}s para superf@'{i}cies com dois lados
-                        # Se definido, esse campo determina a cor
-                        # difusa para o lado de tr@'{a}s de uma superf@'{i}cie.
-                        # @'{E} implementada atrav@'{e}s de tonalidade via software, e
-                        # por tonalidade via hardware sobre sistemas GL que suportam
-                        # ilumina@,{c}@~{a}o de dois lados, e sob Open GL.
+      backdiffuse .7 .5 0 # cor da face de tr@'{a}s para superf@'{i}cies com
+                      # dois lados. Se definido, esse campo determina
+                      # a cor difusa para o lado de tr@'{a}s de uma super-
+                      # f@'{i}cie. @'{E} implementada atrav@'{e}s de tonalidade
+                      # via software, e por tonalidade via hardware
+                      # sob sistemas GL que suportam ilumina@,{c}@~{a}o de
+                      # dois lados, e sob Open GL.
 
-      alpha   1.0     # opacidade; 0 = transparente (invis@'{i}vel), 1 = opaco.
-                      # Ignorado quando transpar@^{e}ncia estiver desabilitada.
+      alpha   1.0     # opacidade; 0 = transparente (invis@'{i}vel),
+                      # 1 = opaco. Ignorado quando a transpar@^{e}ncia
+                      # estiver desabilitada.
 
       edgecolor   1 1 0  # cor de linha & aresta
 
-      normalcolor 0 0 0  # cor para vetores noramis a uma superf@'{i}cie
+      normalcolor 0 0 0  # cor para vetores normais a uma superf@'{i}cie
   @}
 
   lighting @{         # Modelo de ilumina@,{c}@~{a}o
@@ -3105,8 +3133,9 @@ appearance @{
       replacelights   # ``Use somente as seguintes luzes para
                       # iluminar os objetos sob essa
                       # apar@^{e}ncia.''
-                      # Sem "replacelights" (substitui@,{c}@~{a}o de luzes), quaisquer luzes listadas
-                      # s@~{a}o adicionadas a esses na cena.
+                      # Sem "replacelights" (substitui@,{c}@~{a}o de luzes),
+                      # quaisquer luzes listadas s@~{a}o adicionadas
+                      # a esses na cena.
 
                       # Agora uma cole@,{c}@~{a}o exemplo de luzes:
       light @{ 
@@ -3126,20 +3155,24 @@ appearance @{
                               # esse exemplo coloca a luz
                               # .5 unidade atr@'{a}s do olho.)
           # Poss@'{i}vel palavra chave de localiza@,{c}@~{a}o ("location"):
-          #  global   posi@,{c}@~{a}o da luz global em coordenadas de mundo (bem, universo)
-          #             Esse @'{e} o padr@~{a}o se nenhuma localiza@,{c}@~{a}o for espedcificada.
-          #  camera   posi@,{c}@~{a}o da c@^{a}mera em coordenadas do sistema de c@^{a}mera
+          #  global   posi@,{c}@~{a}o da luz global em coordenadas de mundo
+          #             (bem, universo). Esse @'{e} o padr@~{a}o se nenhuma
+          #             localiza@,{c}@~{a}o for especificada.
+          #  camera   posi@,{c}@~{a}o da c@^{a}mera em coordenadas do sistemade
+          #             c@^{a}mera
           #  local    posi@,{c}@~{a}o local em coordenadas do sistema onde
           #                   a apar@^{e}ncia foi definida
       @}
   @}                   # fim do modelo de ilumina@,{c}@~{a}o
   texture @{
         clamp st               # ou ``s'' ou ``t'' ou ``none''
-        file lump.tiff         # arquivo fornecendo imagem de mapa de textura
-        alphafile mask.pgm.Z   # arquivo fornecendo imagem de m@'{a}scara de transpar@^{e}ncia
+        file lump.tiff         # arquivo fornecendo imagem de mapa de
+                               # textura
+        alphafile mask.pgm.Z   # arquivo fornecendo imagem de m@'{a}scara
+                               # de transpar@^{e}ncia
         apply blend            # ou ``modulate'' ou ``decal''
-        transform  1 0 0 0     # superf@'{i}cie (s,t,0,1) * tfm -> coordenadas de textura
-                   0 1 0 0
+        transform  1 0 0 0     # superf@'{i}cie (s,t,0,1) * tfm -> coor-
+                   0 1 0 0     # denadas de textura
                    0 0 1 0
                   .5 0 0 1
 
@@ -3774,8 +3807,7 @@ Sintaxe:
 @var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
                         # linhas poligonais
-                        # @var{Nv} = 
-                        # v@'{e}rtices sobre essa linha poligonal (1 = point)
+                        # @var{Nv} = v@'{e}rtices sobre essa linha poligonal (1 = ponto)
                         # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: @'{i}ndices de v@'{e}rtice
                         #               no intervalo 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
@@ -4136,9 +4168,14 @@ Sintaxe:
 
 @example
 TLIST			# palavra chave
-
 <matriz 4x4 (16 n@'{u}meros em ponto flutuante)>
 @dots{}				# qualquer n@'{u}mero de matrizes 4x4
+transform @{             # refer@^{e}ncia a um objeto de transforma@,{c}@~{a}o
+<objeto de transforma@,{c}@~{a}o (pode ser um manipulador)>
+@}
+tlist @{                 # TLIST aninhada
+<objeto TLIST OOGL (pode ser um manipulador)>
+@}
 @end example
 
 Objetos @code{TLIST} s@~{a}o usados somente dentro de cl@'{a}usulas @code{transforms} de um
@@ -4147,6 +4184,10 @@ instanciados uma vez sob cada uma das transforma@,{c}@~{o}es na @code{TLIST}.
 O efeito @'{e} como aquele de um @code{LIST} de @code{INST}s cada uma com uma
 transforma@,{c}@~{a}o simples, e todas as transforma@,{c}@~{o}es referindo-se ao mesmo objeto, mas @'{e} mais
 eficiente.
+
+@code{TLIST}s podem ser aninhadas: efetivamente isto significa que todas as
+transforma@,{c}@~{o}es em cada objeto @code{TLIST} aninhado s@~{a}o multiplicadas (@`{a}
+esquerda) atrav@'{e}s das trnasforma@,{c}@~{o}es no objeto @code{TLIST} mais externo.
 
 Esteja informado de que uma @code{TLIST} @'{e} um tipo de geom, distinto de um 
 objeto @code{transform}.  Alguns contextos esperam um geom,
