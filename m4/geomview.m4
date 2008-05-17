@@ -235,6 +235,15 @@ typedef bool _Bool;
 # else
 #  define PATH_MAX _POSIX_PATH_MAX
 # endif
+#endif
+
+#if HAVE_ISO_C99
+# define VARARRAY(name, type, len) type name[len]
+# define VARARRAY2(name, type, len1, len2) type name[len1][len2]
+#else
+# define VARARRAY(name, type, len) type *name = alloca((len)*sizeof(type))
+# define VARARRAY2(name, type, len1, len2) \
+  type (*name)[len2] = alloca((len1)*(len2)*sizeof(type))
 #endif])
 ])
 
