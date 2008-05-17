@@ -1,3 +1,226 @@
+2008-05-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* NEWS: Update.
+
+	* m4/geomview.m4:
+	Define VARARRAY() macros to select either alloca() or C99 variadic arrays.
+
+	* INSTALL.Geomview: Add Raphael's install notes for OS/X
+
+	* README: Add Raphael.
+
+	* AUTHORS: Dump version to 1.9.5
+
+	* src/lib/shade/material.c, src/lib/shade/light.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/geometry/hpoint3/hpoint3.h, src/lib/geomutil/plutil/anytopl.c, src/bin/geomview/common/pickfunc.h, src/bin/geomview/common/transform.c, src/lib/geometry/cmodel/cmodel.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/drawer.c, src/bin/geomutil/plutil/polymerge.c, src/bin/geomview/common/comm.c, src/bin/animate/glob.c, src/bin/geomutil/clip/clipoogl.c, doc/version-pt_BR.texi:
+	Fix a couple of "strict aliasing" warnings.
+
+	* src/lib/oogl/lisp/lisp.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/geom/bsptree.c, src/lib/geometry/hpointn/hpointn.h, src/lib/geomutil/plutil/anytopl.c, src/lib/gprim/bbox/bboxdraw.c, src/bin/geomview/x11/gvcamui.c:
+	Get rid of alloca in a variety of places, most notably fix an
+	allocation bug in the list-drawing code.
+
+	* src/bin/geomview/common/drawer.c: Get rid of alloca.
+
+2008-05-11  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi --> updating to 1.58 english cvs version
+	                        (1.95 manual version)
+
+2008-05-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/oogl/util/iobuffer.c:
+	Forgot to commit the LSEEKO -> LSEEK change.
+
+2008-05-06  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/event.c: Fix use of uninitialized variable.
+
+	* src/lib/shade/image.c:
+	Fix error handling when image data cannot be read.
+
+2008-05-05  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/lang.c (write-handle ...):
+	reset h->obj_saved (this is just a debugging function).
+
+2008-05-04  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/common/lang.c:
+	(write-handle ...) : accept - as stdout.
+
+	* doc/version.texi, doc/geomview.texi: Sync.
+
+	* src/lib/oogl/refcomm/handle.c:
+	Fix reverse-logic bug in HandleOpsByName().
+
+	* src/lib/oogl/lisp/lisp.c:
+	Do not force strings to LSTRING type, otherwise parameter substitution fails.
+
+	* src/lib/gprim/inst/instdraw.c: translucency INST fixes. Hopefully.
+
+2008-05-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/version.texi, doc/version-pt_BR.texi:
+	Update (both files do not belong to the CVS).
+
+	* doc/geomview.texi: Document nested Tlist's.
+
+	* src/bin/geomview/common/worldio.c:
+	Fix an error diagnostices message (wrong position of args reported).
+
+	* src/bin/geomview/common/lang.c:
+	Fix online help for write-handle function.
+
+	* src/bin/geomview/common/comm.c: Delete command pools on close.
+
+	* src/bin/geomview/x11/gvevent.c, src/bin/geomview/x11/gvmnpanel.c, src/bin/geomview/x11/gvcameras.c, src/bin/animate/animate.c, src/bin/animate/glob.c:
+	Get rid of signed/unsigned comparison warnings
+
+	* src/lib/geometry/geomtypes.h, src/lib/geometry/hpointn/hpointn.h:
+	Remember the size of a hpoint, and do not free the data when moving
+	the beast to the free-list.
+
+	* src/lib/gprim/inst/instmisc.c:
+	InstTransform(): forgot to decrease ref-count when moving a Tlist
+	behind a single-transform Tlist.
+
+	* src/lib/gprim/bbox/bboxcreate.c, src/lib/gprim/sphere/spherecreate.c:
+	Use free-list allocation.
+
+	* src/lib/gprim/geom/create.c, src/lib/gprim/geom/delete.c, src/lib/gprim/geom/geomclass.h:
+	Optionally use free-list allocation for Geom's.
+
+	* src/lib/gprim/tlist/tlcreate.c, src/lib/gprim/tlist/tlistP.h:
+	Use a free-list for Tlists.
+
+	* src/lib/mg/opengl/mgopengl.c:
+	fix some signed/assigned comparison warnings.
+
+	* src/lib/shade/light.c:
+	Use free-list allocation for LtLight in order to avoid calling
+	malloc() all the time.
+
+	* src/lib/oogl/refcomm/streampool.c:
+	PoolIn(): delete pools on EOF (if backed by seekable files).
+
+	* src/lib/oogl/util/ooglutil.h:
+	Use some inline functions to be able to set break-points on the
+	memory-allocation functions (without having to set a break-point in malloc).
+
+	* src/lib/oogl/util/iobuffer.c:
+	EOF-recognition was broken with POSIX_SHORTCUT.
+
+	* src/lib/oogl/util/freelist.h: Initialize allocated memory.
+
+	* gvcl-mode.el: Some more keywords.
+
+	* doc/geomview.texi: Cosmetics.
+
+	* data/geom/textured/image.gcl: Initial revision.
+
+2008-05-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+	geomview.texi       --> "MASK" to "DATEMASK"
+
+2008-04-15  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi:
+	geomview-pt_BR.texi --> partial translation
+	geomview.texi       --> "or or" to "or"
+
+2008-04-14  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+
+2008-03-30  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview.texi, doc/geomview-pt_BR.texi:
+	geomview.texi       --> adjusting missing end of line
+	geomview-pt_BR.texi --> partial translation
+
+2008-03-27  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: partial translation.
+
+2008-03-26  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview.texi: ajusting line break in line 3749 - geomview.texi
+
+	* doc/geomview.texi, doc/geomview-pt_BR.texi:
+	Partial pt_BR translation of geomview-pt_BR
+	Changing "Thease" to "These" in geomview.texi
+
+2008-03-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: Partial pt_BR translation of geomview-pt_BR
+	Its ok for keeping version-pt_BR.texi.
+
+2008-03-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/shade/image.c:
+	New "zlib" filter which reads data in zlib format, i.e. without gzip
+	header. File extension is ".zlib". Also: don't spawn gzip if not
+	necessary, use zlib directly
+
+	* doc/version.texi, doc/version-pt_BR.texi:
+	Update (these files do not belong to the CVS archives).
+
+	* src/lib/oogl/util/iobuffer.c, configure.ac:
+	Try to use read(2) directly rather than unbuffered stdio.
+
+	* src/lib/color/color.c, src/lib/fexpr/complex.c, src/lib/fexpr/real.c, src/lib/geometry/hpointn/hpointn.h, src/lib/geometry/transformn/transformn.h, src/lib/geometry/transobj/transobj.c, src/lib/gprim/bbox/bboxsave.c, src/lib/gprim/bezier/beztransform.c, src/lib/gprim/comment/commentclass.c, src/lib/gprim/comment/commentsave.c, src/lib/gprim/discgrp/dgbound.c, src/lib/gprim/discgrp/dgenum.c, src/lib/gprim/discgrp/dgpick.c, src/lib/gprim/discgrp/dgstream.c, src/lib/gprim/discgrp/dgtransform.c, src/lib/gprim/geom/bsptree.c:
+	Signed/unsigned warning and/or unused parameter warning.
+
+2008-03-16  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/pick.c, src/lib/gprim/mesh/meshcreate.c, src/lib/gprim/mesh/meshnormal.c, src/lib/gprim/mesh/meshtransform.c, src/lib/gprim/ndmesh/ndmeshcreate.c, src/lib/gprim/ndmesh/ndmeshdraw.c, src/lib/gprim/ndmesh/ndmeshload.c, src/lib/gprim/npolylist/npldraw.c, src/lib/gprim/npolylist/nplsave.c, src/lib/gprim/npolylist/npltransform.c, src/lib/gprim/polylist/plsave.c, src/lib/gprim/polylist/pltransform.c, src/lib/gprim/quad/quadsave.c, src/lib/gprim/skel/skelcreate.c, src/lib/gprim/skel/skeltransform.c, src/lib/gprim/sphere/spheresave.c, src/lib/mg/opengl/mgopenglP.h, src/lib/mg/opengl/mgopenglshade.c:
+	Signed/unsigned warning and/or unused parameter warning.
+
+	* src/lib/mg/rib/mgribtoken.c: Empty if body.
+
+	* src/lib/mg/x11/mgx11windows.c, src/lib/oogl/lisp/lisp.c, src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/reference.h, src/lib/oogl/refcomm/streampool.c:
+	Signed/unsigned warning and/or unused parameter warning.
+
+	* src/lib/oogl/util/ppopen.c: Signed/unsigned warning.
+
+	* src/lib/oogl/util/vvec.h: Unused parameter.
+
+	* src/lib/shade/apstream.c: Signed/unsigned warning.
+
+	* src/lib/shade/light.c: Unused parameter.
+
+	* src/lib/shade/material.c: signed/unsigned warning.
+
+	* src/lib/shade/texture.c: Unused parameter warning.
+
+	* src/lib/window/winstream.c: signed/unsigned compiler warning.
+
+2008-03-10  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* configure.ac:
+	Check for read(2), write(2) in preparation for Mac OS/X fixes for iobuffer.c
+
+	* src/lib/oogl/refcomm/streampool.c:
+	Protect PoolInAll() against pool deletion. Should be ok now.
+
+	* src/lib/shade/texture.c: Cosmetics on error message.
+
+2008-03-09  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
+	Partial pt_BR translation of geomview-pt_BR
+	Removing @letterpaper in geomview-pt_BR
+	updating version-pt_BR.texi
+
+2008-03-03  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi:
+	Fixes for broken case-insensitive file-systems.
+
+	* data/gcl/events.gcl:
+	Contained non-working debugging left-over code. Fix that.
+
 2008-03-02  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* doc/version-pt_BR.texi, doc/version.texi, NEWS: Update.
