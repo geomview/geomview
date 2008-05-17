@@ -53,9 +53,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "cmodel.h"
 #include "mouse.h"
 #include <stdlib.h>
-#ifndef alloca		/* if no alloca in stdlib.h */
-#include <alloca.h>
-#endif
 #include <string.h>
 #include <sys/stat.h>
 #include <math.h>
@@ -1226,7 +1223,8 @@ LDEFINE(copy, LVOID,
   /* If the user copies the world, this will crash unless we remember not
    * to copy things that are copies of something else.  That is what this 
    * array is for. */
-  char *iscopy;
+  VARARRAY(iscopy, char, 2*dgeom_max);
+
   LDECLARE(("copy", LBEGIN,
 	    LOPTIONAL,
 	    LID, &id,
@@ -1236,7 +1234,6 @@ LDEFINE(copy, LVOID,
   id = real_id(id);
   geomstruct.h = camstruct.h = transformstruct.h = apstruct.h = NULL;
 
-  iscopy = alloca(2*dgeom_max*sizeof(char));
   memset(iscopy, 0, 2*dgeom_max * sizeof(char));
 
   MAYBE_LOOP(id, i, T_NONE, DObject, obj) {
