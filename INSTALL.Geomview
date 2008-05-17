@@ -1,5 +1,5 @@
 
-$Id: INSTALL.Geomview,v 1.17 2007/04/24 11:11:17 rotdrop Exp $
+$Id: INSTALL.Geomview,v 1.18 2008/05/17 13:29:57 rotdrop Exp $
 
 	Instructions for using Geomview's `configure' script
 
@@ -97,6 +97,11 @@ variables are specific to Geomview:
 
 PLATFORM SPECIFIC NOTES:
 
+Up-to-date instructions can also be accessed through the Geomview
+web-pages at
+
+              http://www.geomview.org/download/
+
 
 LinuxPPC
 --------
@@ -151,4 +156,32 @@ this case, the following switches are needed:
 
 ./configure --with-motif=/usr/X11R6 --with-opengl=/usr/X11R6 OTHERSWICHES
 
+
+Mac OS X
+--------
+
+Reported by Raphael Straub:
+
+X11 (on the Mac OS X Install DVD) and the X11SDK (part of the Xcode
+Developer Tools) must be installed before Geomview can be
+compiled. OpenMotif or Lesstif can be manually compiled from source or
+installed with a package manager like Fink (http://www.finkproject.org/)
+or MacPorts (http://www.macports.org/). Both package managers also provide
+their own Geomview package.
+
+On Mac OS X 10.5 please execute the following line before running
+configure (see: http://developer.apple.com/qa/qa2007/qa1567.html)
+
+export LDFLAGS="-dylib_file \
+  /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:\
+/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
+
+In most cases Geomview can be configured with
+
+./configure --with-opengl=/usr/X11R6 --with-htmlbrowser=open \
+  --with-pdfviewer=open \
+  --with-motif=/path/to/your/motif/installation
+
+This enables OpenGL support and uses your default HTML browser and PDF
+viewer for viewing the Geomview documentation.
 
