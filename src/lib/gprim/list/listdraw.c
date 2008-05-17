@@ -36,22 +36,38 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mg.h"
 #include "bsptreeP.h"
 
+#define INITIAL_ALLOC_SHIFT 4
+
 List *ListDraw(List *list)
 {
   List *l;
   char *lpath;
-  int lpathlen, cnt;
+  int lpathlen, allocsz;
 
   GeomMakePath(list, 'L', path, pathlen);
 
   list->geomflags &= ~GEOM_ALPHA;
 
-  for (lpathlen = pathlen, cnt = 0, l = list; l != NULL; l = l->cdr, cnt++) {
+  /* Use alloca() for moderately large lists, fall back to malloc
+   * afterwards.
+   */
+  if (pathlen < (1 << (INITIAL_ALLOC_SHIFT+1))) {
+    allocsz = 1 << (INITIAL_ALLOC_SHIFT+1);
+    lpath = alloca(allocsz);
+    memcpy(lpath, path, pathlen+1);
+  }
 
-    if (cnt % 4096 == 0) {
-      lpath = alloca(lpathlen+4096+1);
-      memcpy(lpath, path, pathlen + cnt);
-      path = lpath;
+  for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
+
+    if (lpathlen >= allocsz) {
+      /* give up on alloca */
+      allocsz <<= 1;
+      path = OOGLNewNE(char, allocsz, "List PATH");
+      memcpy(path, lpath, lpathlen+1);
+      if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+	OOGLFree(lpath);
+      }
+      lpath = path;
     }
 
     lpath[lpathlen-1] = 'l';
@@ -74,19 +90,35 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 {
   List *l;
   char *lpath;
-  int lpathlen, cnt;
+  int lpathlen, allocsz;
 
   GeomMakePath(list, 'L', path, pathlen);
 
   switch (action) {
   case BSPTREE_CREATE:
-    for (lpathlen = pathlen, l = list, cnt = 0; l != NULL; l = l->cdr, ++cnt) {
-      if (cnt % 4096 == 0) {
-	lpath = alloca(lpathlen+4096+1);
-	memcpy(lpath, path, pathlen + cnt);
-	path = lpath;
+    
+    /* Use alloca() for moderately large lists, fall back to malloc
+     * afterwards.
+     */
+    if (pathlen < (1 << (INITIAL_ALLOC_SHIFT+1))) {
+      allocsz = 1 << (INITIAL_ALLOC_SHIFT+1);
+      lpath = alloca(allocsz);
+      memcpy(lpath, path, pathlen+1);
+    }
+
+    for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
+
+      if (lpathlen >= allocsz) {
+	/* give up on alloca */
+	allocsz <<= 1;
+	path = OOGLNewNE(char, allocsz, "List PATH");
+	memcpy(path, lpath, lpathlen+1);
+	if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+	  OOGLFree(lpath);
+	}
+	lpath = path;
       }
-      lpathlen = pathlen+cnt+1;      
+      
       lpath[lpathlen-1] = 'l';
       lpath[lpathlen] = '\0';
 
@@ -100,13 +132,29 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
     return list;
     
   case BSPTREE_DELETE:
-    for (lpathlen = pathlen, l = list, cnt = 0; l != NULL; l = l->cdr, ++cnt) {
-      if (cnt % 4096 == 0) {
-	lpath = alloca(lpathlen+4096+1);
-	memcpy(lpath, path, pathlen + cnt);
-	path = lpath;
+
+    /* Use alloca() for moderately large lists, fall back to malloc
+     * afterwards.
+     */
+    if (pathlen < (1 << (INITIAL_ALLOC_SHIFT+1))) {
+      allocsz = 1 << (INITIAL_ALLOC_SHIFT+1);
+      lpath = alloca(allocsz);
+      memcpy(lpath, path, pathlen+1);
+    }
+
+    for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
+
+      if (lpathlen >= allocsz) {
+	/* give up on alloca */
+	allocsz <<= 1;
+	path = OOGLNewNE(char, allocsz, "List PATH");
+	memcpy(path, lpath, lpathlen+1);
+	if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+	  OOGLFree(lpath);
+	}
+	lpath = path;
       }
-      lpathlen = pathlen+cnt+1;      
+      
       lpath[lpathlen-1] = 'l';
       lpath[lpathlen] = '\0';
 
@@ -120,13 +168,29 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
     return list;
     
   case BSPTREE_ADDGEOM:
-    for (lpathlen = pathlen, l = list, cnt = 0; l != NULL; l = l->cdr, ++cnt) {
-      if (cnt % 4096 == 0) {
-	lpath = alloca(lpathlen+4096+1);
-	memcpy(lpath, path, pathlen + cnt);
-	path = lpath;
+
+    /* Use alloca() for moderately large lists, fall back to malloc
+     * afterwards.
+     */
+    if (pathlen < (1 << (INITIAL_ALLOC_SHIFT+1))) {
+      allocsz = 1 << (INITIAL_ALLOC_SHIFT+1);
+      lpath = alloca(allocsz);
+      memcpy(lpath, path, pathlen+1);
+    }
+
+    for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
+
+      if (lpathlen >= allocsz) {
+	/* give up on alloca */
+	allocsz <<= 1;
+	path = OOGLNewNE(char, allocsz, "List PATH");
+	memcpy(path, lpath, lpathlen+1);
+	if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+	  OOGLFree(lpath);
+	}
+	lpath = path;
       }
-      lpathlen = pathlen+cnt+1;      
+      
       lpath[lpathlen-1] = 'l';
       lpath[lpathlen] = '\0';
 
