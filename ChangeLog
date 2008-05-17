@@ -1,5 +1,15 @@
 2008-05-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
+	* src/lib/gprim/list/listdraw.c:
+	Reduce memory consumption and drawing time for huge LIST objects.
+
+	* src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/handle.h, src/lib/gprim/sphere/spherecreate.c:
+	Reduce the load-time of "bulk"-sphere files.
+
+	* ChangeLog, NEWS: Update.
+
+2008-05-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
 	* NEWS: Update.
 
 	* m4/geomview.m4:
