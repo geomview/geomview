@@ -1,4 +1,4 @@
-1.9.5 February 2008
+1.9.5 May 2008
 
    * vastly extended lisp-interpreter, including lambda-expression, defun,
      let, while, setq, eval
@@ -10,6 +10,8 @@
      function or variable names
 
    * other bug-fixes (notably: multi-object geometry-only files work again)
+
+   * memory allocation fixes
 
 1.9.4 August 2007
 
