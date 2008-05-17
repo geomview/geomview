@@ -354,6 +354,19 @@ HandleSetObject(Handle *h, Ref *object)
 }
 
 /*
+ * Unconditionally create a new handle.
+ */
+Handle *
+HandleDoCreate(char *name, HandleOps *ops)
+{
+  Handle *h;
+
+  h = handlecreate(name, ops);
+
+  return h;
+}
+
+/*
  * Create a Handle, don't reassign its value.
  */
 Handle *

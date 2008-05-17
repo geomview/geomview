@@ -162,7 +162,7 @@ static inline void sphere_make_meshhandle(Sphere *sphere)
     Handle *handle;
 
     sprintf(meshhname, "\aSphere::%lx", (unsigned long)sphere);
-    handle = HandleCreate(meshhname, &GeomOps);
+    handle = HandleDoCreate(meshhname, &GeomOps);
     GeomCCreate((Geom *)sphere, InstMethods(),
 		CR_NOCOPY, CR_GEOMHANDLE, handle, CR_END);
 }

@@ -116,6 +116,11 @@ extern Handle *HandleByName( char *, HandleOps * );
 extern Handle *HandleCreate( char *name, HandleOps *ops );
 
 	/*
+	 * Unconditionally create a new Handle with NULL value.
+	 */
+extern Handle *HandleDoCreate( char *name, HandleOps *ops );
+
+	/*
 	 * Same as HandleCreate() for an existing global handle, but
 	 * if the handle does not already exist increment the
 	 * ref-count twice s.t. the handle cannot be deleted.
