@@ -296,12 +296,20 @@ LtFLoad(LtLight *lite, IOBFILE *f, char *fname)
 	return NULL;
       }
       switch(i) {
-      case 0: l.ambient = *(Color *)(void *)v; break;
-      case 1: l.color = *(Color *)(void *)v; 
-	norm( &l.color, &l.intensity ); break;
-      case 2: l.position = *(HPoint3 *)(void *)v; break;
-      case 3: break;
-      default: l.location = ~largs[i]; break;
+      case 0:
+	  memcpy(&l.ambient, v, sizeof(Color));
+	  break;
+      case 1:
+	  memcpy(&l.color, v, sizeof(Color));
+	  norm( &l.color, &l.intensity );
+	  break;
+      case 2:
+	  memcpy(&l.position, v, sizeof(HPoint3));
+	  break;
+      case 3:
+	  break;
+      default:
+	  l.location = ~largs[i]; break;
       }
     }
   }
@@ -730,7 +738,7 @@ LmFLoad(LmLighting *lgt, IOBFILE *f, char *fname)
 	lgt->valid |= lbits[i];
 	if(over) lgt->override |= lbits[i];
 	switch(i) {
-	case 0: lgt->ambient = *(Color *)(void *)v; break;
+	case 0: memcpy(&lgt->ambient, v, sizeof(Color)); break;
 	case 1: lgt->localviewer = v[0]; break;
 	case 2: lgt->attenconst = v[0]; break;
 	case 3: lgt->attenmult = v[0]; break;

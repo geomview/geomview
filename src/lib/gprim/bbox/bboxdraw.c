@@ -44,7 +44,9 @@ draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
   HPointN *ptN;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
-  *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+  edgecolor.r = ap->mat->edgecolor.r;
+  edgecolor.g = ap->mat->edgecolor.g;
+  edgecolor.b = ap->mat->edgecolor.b;
   edgecolor.a = 1;
 
   dim = bbox->pdim-1;
@@ -65,7 +67,9 @@ draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
     }
     HPtNDelete(ptN);
 
-    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.r = ap->mat->edgecolor.r;
+    edgecolor.g = ap->mat->edgecolor.g;
+    edgecolor.b = ap->mat->edgecolor.b;
     edgecolor.a = 1;
 
     for(i = 0; i < numvert; i++) {
@@ -127,8 +131,11 @@ BBox *BBoxDraw(BBox *bbox)
 
   /* turn on the edge color to draw the bbox */
 
-  *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+  edgecolor.r = ap->mat->edgecolor.r;
+  edgecolor.g = ap->mat->edgecolor.g;
+  edgecolor.b = ap->mat->edgecolor.b;
   edgecolor.a = 1;
+
   for(i = 0; i < numvert; i++) {
     int j, incr;
     HPoint3 edge[2];

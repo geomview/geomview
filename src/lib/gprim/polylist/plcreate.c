@@ -209,9 +209,11 @@ PolyListCreate(PolyList *exist, GeomClass *classp, va_list *a_list)
     i = pl->n_verts;
     if (dimn == 3) {
       while(--i >= 0) {
-	*(Point3 *)(void *)&(v->pt) = *v3++;
+	v->pt.x = v3->x;
+	v->pt.y = v3->y;
+	v->pt.z = v3->z;
 	v->pt.w = 1.0;
-	v++;
+	v++; v3++;
       }
     } else {
       while(--i >= 0) {

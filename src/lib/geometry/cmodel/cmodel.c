@@ -412,8 +412,11 @@ void cmodel_draw(int plflags)
 	col[0] = ep->v1->V.vcol;
 	col[1] = ep->v2->V.vcol;
 	mgpolyline(2, pts, 2, col, 0);
-      } else 
-	*(Color *)(void *)&col[0] = _mgc->astk->ap.mat->edgecolor;
+      } else {
+	col[0].r =  _mgc->astk->ap.mat->edgecolor.r;
+	col[0].g =  _mgc->astk->ap.mat->edgecolor.g;
+	col[0].b =  _mgc->astk->ap.mat->edgecolor.b;
+      }
       col[0].a = 1;
       mgpolyline(2, pts, 1, &col[0], 0);
     }

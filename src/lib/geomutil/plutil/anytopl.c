@@ -712,9 +712,11 @@ PLaddseg(PLData *PL, int v0, int v1, ColorA *c)
   Material *mat = PL->ap->mat;
   if(mat && (mat->valid & MTF_EDGECOLOR)) {
     if(c == NULL || mat->override & MTF_EDGECOLOR) {
-	    *(Color *)(void *)&fp->fcolor = mat->edgecolor;
-	fp->fcolor.a = mat->diffuse.a;
-	PL->some |= PL_HASPC;
+      fp->fcolor.r = mat->edgecolor.r;
+      fp->fcolor.g = mat->edgecolor.g;
+      fp->fcolor.b = mat->edgecolor.b;
+      fp->fcolor.a = mat->diffuse.a;
+      PL->some |= PL_HASPC;
     } else if(c) {
 	fp->fcolor = *c;
 	PL->some |= PL_HASPC;
@@ -757,9 +759,11 @@ PLaddvect(PLData *PL, int nv, int verts[], ColorA *c)
     if(mat->override & MTF_EDGECOLOR)
 	c = NULL;
     if((mat->valid & MTF_EDGECOLOR) && c == NULL) {
-	    *(Color *)(void *)&edgec = mat->edgecolor;
-	edgec.a = mat->diffuse.a;
-	c = &edgec;
+      edgec.r = mat->edgecolor.r;
+      edgec.g = mat->edgecolor.g;
+      edgec.b = mat->edgecolor.b;
+      edgec.a = mat->diffuse.a;
+      c = &edgec;
     }
   }
   if(c) {

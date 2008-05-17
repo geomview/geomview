@@ -52,12 +52,12 @@ int BBoxGet(BBox *bbox, int attr, void *attrp)
   case CR_MIN:
     HPtNToHPt3(bbox->min, NULL, &min3);
     HPt3Dehomogenize(&min3, &min3);
-    *(Point3 *)attrp = *(Point3 *)(void *)&min3;
+    memcpy(attrp, &min3, sizeof(Point3));
     break;
   case CR_MAX:
     HPtNToHPt3(bbox->max, NULL, &max3);
     HPt3Dehomogenize(&max3, &max3);
-    *(Point3 *)attrp = *(Point3 *)(void *)&max3;
+    memcpy(attrp, &max3, sizeof(Point3));
     break;
   case CR_4MIN: HPtNToHPt3(bbox->min, NULL, (HPoint3 *)attrp); break;
   case CR_4MAX: HPtNToHPt3(bbox->max, NULL, (HPoint3 *)attrp); break;

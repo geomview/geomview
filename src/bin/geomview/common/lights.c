@@ -282,7 +282,9 @@ static void build_light_rack(LmLighting *lgt)
   lightno = 1;
   LM_FOR_ALL_LIGHTS(lgt, i,lp) {
     light = *lp;
-    axis = *(Point3*)(void *)(&(light->position));
+    axis.x = light->position.x;
+    axis.y = light->position.y;
+    axis.z = light->position.z;
     lr.lights[lightno] = light;
     lr.lightgeoms[lightno] = make_light(axis, &(light->color));
     lr.list = ListAppend(lr.list, lr.lightgeoms[lightno]);

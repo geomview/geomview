@@ -277,7 +277,9 @@ HPt3TransPt3( Transform3 T, HPoint3 *pin, Point3 *pout )
     pout->y = tp.y / tp.w;
     pout->z = tp.z / tp.w;
   } else {
-    *pout = *(Point3 *)(void *)&tp;
+    pout->x = tp.x;
+    pout->y = tp.y;
+    pout->z = tp.z;
   }
   return tp.w;
 }

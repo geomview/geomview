@@ -55,9 +55,15 @@ _MtSet(Material *mat, int attr1, va_list *alist)
       mat->valid |= MTF_AMBIENT;
       break;
     case MT_DIFFUSE:
-      *(Color *)(void *)&mat->diffuse = *NEXT(Color *);
+    {
+      Color tmp;
+      tmp = *NEXT(Color *);
+      mat->diffuse.r = tmp.r;
+      mat->diffuse.g = tmp.g;
+      mat->diffuse.b = tmp.b;
       mat->valid |= MTF_DIFFUSE;
       break;
+    }
     case MT_SPECULAR:
       mat->specular = *NEXT(Color *);
       mat->valid |= MTF_SPECULAR;
@@ -146,13 +152,17 @@ MtGet(Material *mat, int attr, void * value)
 
   switch (attr) {
   case MT_AMBIENT:
-    *(Color *) value = mat->ambient;
+    *(Color *)value = mat->ambient;
     break;
   case MT_DIFFUSE:
-    *(Color *) value = *(Color *)(void *)&mat->diffuse;
+  {
+    ((Color *)value)->r = mat->diffuse.r;
+    ((Color *)value)->g = mat->diffuse.g;
+    ((Color *)value)->b = mat->diffuse.b;
     break;
+  }
   case MT_SPECULAR:
-    *(Color *) value = mat->specular;
+    *(Color *)value = mat->specular;
     break;
   case MT_EMISSION:
     *(Color *) value = mat->emission;
@@ -416,12 +426,12 @@ MtFLoad(Material *mat, IOBFILE *f, char *fname)
 	case 2: m.kd = v[0]; break;
 	case 3: m.ks = v[0]; break;
 	case 4: m.diffuse.a = v[0]; break;
-	case 5: case 6: m.emission = *(Color *)(void *)v; break;
-	case 7: m.ambient = *(Color *)(void *)v; break;
-	case 8: *(Color *)(void *)&m.diffuse = *(Color *)(void *)v; break;
-	case 9: m.specular = *(Color *)(void *)v; break;
-	case 10: m.edgecolor = *(Color *)(void *)v; break;
-	case 11: m.normalcolor = *(Color *)(void *)v; break;
+	case 5: case 6: memcpy(&m.emission, v, sizeof(Color)); break;
+	case 7: memcpy(&m.ambient, v, sizeof(Color)); break;
+	case 8: memcpy(&m.diffuse, v, sizeof(Color)); break;
+	case 9: memcpy(&m.specular, v, sizeof(Color)); break;
+	case 10: memcpy(&m.edgecolor, v, sizeof(Color)); break;	 
+	case 11: memcpy(&m.normalcolor, v, sizeof(Color)); break;
 	}
 	m.valid |= mt_flags[i];
 	if (over) m.override |= mt_flags[i];

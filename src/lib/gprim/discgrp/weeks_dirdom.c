@@ -453,7 +453,9 @@ WEpolyhedron	*polyhedron;
 		initial_faces[i]->some_edge		= initial_edges[fdata[i]];
 		initial_faces[i]->inverse		= NULL;
 		initial_faces[i]->next			= initial_faces[i+1];
-		initial_faces[i]->prv			= initial_faces[i-1];
+		if (i > 0) {
+		  initial_faces[i]->prv			= initial_faces[i-1];
+		}
 		initial_faces[i]->nxt			= initial_faces[i+1];
 	}
 	initial_faces[5]->next	= NULL;

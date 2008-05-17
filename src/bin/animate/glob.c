@@ -71,7 +71,9 @@ static  void matchdir(char *);
 static  int  execbrc(char *, char *);
 static  int  match(char *, char *);
 static  int  amatch(char *, char *);
+#if 0
 static  int  Gmatch(char *, char *);
+#endif
 static  void Gcat(char *, char *);
 static  void addpath(char);
 static  void fatal(char *);

@@ -189,7 +189,7 @@
 									\
     if (pn <= 4) {							\
       HPoint3 point;							\
-      HPoint3 vertex;							\
+      HPoint3 vertex = { 0.0, 0.0, 0.0 };				\
 									\
       if (var##point) {							\
 	point = *(HPoint3 *)var##point;					\

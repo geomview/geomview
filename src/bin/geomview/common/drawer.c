@@ -3602,7 +3602,7 @@ LDEFINE(write_comments, LVOID,
   /* get to the right starting place */
   GeomGet(((DGeom *)drawer_get_object(id))->Lgeom, CR_GEOM, &where);
   fprintf(PoolOutputFile(op), "( ");
-  traverse(op,where,pickpath,curpath-1,curpath,pn);
+  traverse(op, where, pickpath, curpath-1, curpath, pn);
   fprintf(PoolOutputFile(op), ")\n");
   fflush(PoolOutputFile(op));
   if (temppool) {

@@ -1564,7 +1564,7 @@ usepipe(char *pipedir, char *suffix, char *pipetype)
     inetsocket = 3,
     inet6socket = 4
   } usepipe = nopipe;
-  int port;
+  int port = -1;
 
   while (*pipetype) switch(*pipetype++) {
   case 's':

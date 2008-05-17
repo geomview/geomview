@@ -1108,7 +1108,9 @@ advance_geodesic(Geod *g, E *avoid)
 		dir[i]  = bestdir.x*T[0][i] + bestdir.y*T[1][i]
 			+ bestdir.z*T[2][i];
 	    }
-	    g->dir = *(P *)(void *)dir;
+	    g->dir.x = dir[0];
+	    g->dir.y = dir[1];
+	    g->dir.z = dir[2];
 	} else {
 	    /* There's no neighboring face.  Must have reached a boundary. */
 	    g->face = NULL;

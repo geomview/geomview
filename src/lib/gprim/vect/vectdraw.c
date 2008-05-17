@@ -142,7 +142,9 @@ VectDraw(v)
     !(ap->mat && (ap->mat->override & MTF_EDGECOLOR));
 
   if (!hascolor && ap->mat) {
-    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.r = ap->mat->edgecolor.r;
+    edgecolor.g = ap->mat->edgecolor.g;
+    edgecolor.b = ap->mat->edgecolor.b;
     edgecolor.a = 1;
     c = &edgecolor;
     nc = 1;

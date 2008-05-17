@@ -585,8 +585,7 @@ void apply_motion(Motion *motion, float dt)
    */
   if (motion->timeunit < .00001) {
     if (motion->timeunit) 
-      fprintf(stderr, "motion->timeunit = %x\n", 
-	      *(unsigned *)(void *)&motion->timeunit);
+      fprintf(stderr, "motion->timeunit = %x\n", (unsigned)motion->timeunit);
     motion->timeunit = 0.0;
   } 
   tscale = (motion->timeunit != 0.) ? dt / motion->timeunit : 1.0;
