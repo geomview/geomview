@@ -35,9 +35,6 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
-#ifndef alloca
-#include <alloca.h>
-#endif
 #include <stdlib.h>
 #include <math.h>
 #include <ooglutil.h>
@@ -518,6 +515,7 @@ HPtNTransform(const TransformN *T, const HPointN *from, HPointN *to)
 {
   int idim, odim, dim = from->dim;
   int i, j;
+  VARARRAY(vspace, HPtNCoord, dim);
   HPtNCoord *v;
 
   if (!T) {
@@ -528,7 +526,7 @@ HPtNTransform(const TransformN *T, const HPointN *from, HPointN *to)
   odim = T->odim;
 
   if (from == to) {
-    v = (HPtNCoord *)alloca(dim*sizeof(HPtNCoord));
+    v = vspace;
     for (i = 0; i < dim; i++) {
       v[i] = from->v[i];
     }
@@ -590,6 +588,7 @@ HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to)
 {
   int idim, odim, dim = from->dim;
   int i, j;
+  VARARRAY(vspace, HPtNCoord, dim);
   HPtNCoord *v;
 
   if (!T) {
@@ -600,7 +599,7 @@ HPtNTTransform(const TransformN *T, const HPointN *from, HPointN *to)
   odim = T->odim;
 
   if (from == to) {
-    v = (HPtNCoord *)alloca(dim*sizeof(HPtNCoord));
+    v = vspace;
     for (i = 0; i < dim; i++) {
       v[i] = from->v[i];
     }

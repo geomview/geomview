@@ -70,7 +70,11 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
 
+#if !NO_ALLOCA
   newp = (HPoint3 *)alloca(s->nvert*sizeof(HPoint3));
+#else
+  newp = OOGLNewNE(HPoint3, s->nvert, "projected SKEL points");
+#endif
 
   h = HPtNCreate(s->pdim, NULL);
   if (ap->flag & APF_KEEPCOLOR) {
@@ -161,6 +165,9 @@ draw_projected_skel(mgNDctx *NDctx, Skel *s, int flags,
       mgpolyline(nleft, tv, 1, lastcolor, flags);
     }
   }
+#if !!NO_ALLOCA
+  OOGLFree(newp);
+#endif
 }
 
 Skel *SkelDraw(Skel *s)

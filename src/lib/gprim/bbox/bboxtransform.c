@@ -35,17 +35,17 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 static BBox *BBoxTransformN(BBox *bbox, TransformN *TN)
 {
-  int dim, numvert, i, j;
-  HPointN **ptN, *p;
+  HPointN *p;
   HPtNCoord c = bbox->min->v[0] != 1.0 ? bbox->min->v[0] : 1.0;
   HPtNCoord C = bbox->max->v[0] != 1.0 ? bbox->max->v[0] : 1.0;
+  int dim = bbox->pdim-1;
+  int numvert = 1 << dim;
+  VARARRAY(ptN, HPointN *, numvert);
+  int i, j;
   
-  if (!TN)
+  if (!TN) {
     return bbox;
-
-  dim = bbox->pdim-1;
-  numvert = 1 << dim;
-  ptN = (HPointN **)alloca(numvert*sizeof(HPointN *));
+  }
   
   for (i = 0; i < numvert; i++) {
     ptN[i] = HPtNCreate(bbox->pdim, NULL);

@@ -40,9 +40,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <math.h>
 #include <stdlib.h>
 #include <ctype.h>
-#if HAVE_ALLOCA_H
-# include <alloca.h>
-#endif
 #include "lisp.h"
 #include "clisp.c"
 #include "freelist.h"
@@ -1420,8 +1417,8 @@ LDEFINE(defun, LLOBJECT,
     helpsize += strlen(argname);
   }
   helpsize += nargs; /* spaces */
-
-  help = alloca(helpsize+1+ /* safeguard */ 10);
+  
+  help = malloc(helpsize+1+ /* safeguard */ 10);
   
   switch (nargs) {
   case 0:
@@ -1447,12 +1444,13 @@ LDEFINE(defun, LLOBJECT,
    */
   lambda = LEvalFunc("lambda", LLIST, arglist, LREST, body, LEND);
   if (lambda == Lnil) {
+    free(help);
     OOGLError(0, "Ldefun(%s): Error: could not generate lambda-expression.",
 	      name);
     return Lnil;
   }
   functable[fidx].lambda = lambda;
-  functable[fidx].help = strdup(help);
+  functable[fidx].help = help;
 
   LHelpDef(functable[fidx].name, functable[fidx].help);
 

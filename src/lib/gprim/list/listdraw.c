@@ -39,16 +39,21 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 List *ListDraw(List *list)
 {
   List *l;
+  char *lpath;
+  int lpathlen, cnt;
 
   GeomMakePath(list, 'L', path, pathlen);
 
   list->geomflags &= ~GEOM_ALPHA;
 
-  for (l = list; l != NULL; l = l->cdr) {
-    int lpathlen = pathlen+1;
-    char *lpath = alloca(lpathlen+1);
+  for (lpathlen = pathlen, cnt = 0, l = list; l != NULL; l = l->cdr, cnt++) {
 
-    memcpy(lpath, path, pathlen);
+    if (cnt % 4096 == 0) {
+      lpath = alloca(lpathlen+4096+1);
+      memcpy(lpath, path, pathlen + cnt);
+      path = lpath;
+    }
+
     lpath[lpathlen-1] = 'l';
     lpath[lpathlen] = '\0';
 
@@ -60,8 +65,6 @@ List *ListDraw(List *list)
 	list->geomflags |= GEOM_ALPHA;
       }
     }
-    path = lpath;
-    pathlen = lpathlen;
   }
 
   return list;
@@ -70,9 +73,8 @@ List *ListDraw(List *list)
 List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 {
   List *l;
-  int cnt;
   char *lpath;
-  int lpathlen;
+  int lpathlen, cnt;
 
   GeomMakePath(list, 'L', path, pathlen);
 

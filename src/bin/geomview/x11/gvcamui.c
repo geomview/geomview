@@ -127,7 +127,9 @@ extern Pixmap   geomicon;
 /*****************************************************************************/
 
 static void ui_delete_camera(Widget, XtPointer, XmAnyCallbackStruct *);
+#if MGOPENGL
 static Colormap getcmapfor(XVisualInfo *vi);
+#endif
 
 /*****************************************************************************/
 enum buffering { SGL=0, DBL=1, BUFTYPES };
@@ -302,9 +304,11 @@ Widget ui_create_camera(Widget parent, DView *dv)
   Atom   AProtocol;
   Widget shell, camform, camdraw[2] = { NULL, NULL };
   int i;
+#if MGOPENGL
   XSetWindowAttributes xswa;
   Window cmw[32];
   int cmwneeded;
+#endif
 
 #if MGOPENGL
   struct oglstuff {
@@ -1297,7 +1301,10 @@ LDEFINE(bgimagefile, LSTRING,
 {
   char *fname = NULL;
   int camid;
+#if MGOPENGL || MGGL
   DView *dv;
+#endif
+
   LDECLARE(("background-image", LBEGIN,
 	    LID, &camid,
 	    LOPTIONAL,

@@ -35,9 +35,6 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mg.h"
 #include "hpointn.h"
 #include <stdlib.h>
-#ifndef alloca
-#include <alloca.h>
-#endif
 
 static void
 draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
@@ -45,7 +42,6 @@ draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
   int i, e, numvert, dim;
   ColorA edgecolor;
   HPointN *ptN;
-  HPoint3 *pts3;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
   *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
@@ -57,35 +53,37 @@ draw_projected_bbox(mgNDctx *NDctx, BBox *bbox, const Appearance *ap)
 
   ptN = HPtNCreate(dim+1, NULL);
   numvert = 1 << dim;
-  pts3 = (HPoint3 *)alloca(numvert*sizeof(HPoint3));
+  {
+    VARARRAY(pts3, HPoint3, numvert);
 
-  for (i = 0; i < numvert; i++) {
-    int mask;
-    for (mask = 1, e = 1; e < dim+1; e++, mask <<= 1) {
-      ptN->v[e] = (i & mask) ? bbox->min->v[e] : bbox->max->v[e];
+    for (i = 0; i < numvert; i++) {
+      int mask;
+      for (mask = 1, e = 1; e < dim+1; e++, mask <<= 1) {
+	ptN->v[e] = (i & mask) ? bbox->min->v[e] : bbox->max->v[e];
+      }
+      mapHPtN(NDctx, ptN, &pts3[i], NULL);
     }
-    mapHPtN(NDctx, ptN, &pts3[i], NULL);
-  }
-  HPtNDelete(ptN);
+    HPtNDelete(ptN);
 
-  *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
-  edgecolor.a = 1;
+    *(Color *)(void *)&edgecolor = ap->mat->edgecolor;
+    edgecolor.a = 1;
 
-  for(i = 0; i < numvert; i++) {
-    int j, incr;
-    HPoint3 edge[2];
+    for(i = 0; i < numvert; i++) {
+      int j, incr;
+      HPoint3 edge[2];
 
-    for(j = 0; j < dim; j ++) {
-      /* connect this vertex to its nearest neighbors if they
-       * follow it in lexicographical order */
-      incr = 1 << j;
-      /* is the j_th bit a zero? */
-      if ( ! (i & incr) )	{
-	/* if so, draw the edge to the vertex whose number is
-	 * gotten from i by making the j_th bit a one */
-	edge[0] = pts3[i];
-	edge[1] = pts3[i + incr];
-	mgpolyline(2, edge, 1,  &edgecolor, 0) ;
+      for(j = 0; j < dim; j ++) {
+	/* connect this vertex to its nearest neighbors if they
+	 * follow it in lexicographical order */
+	incr = 1 << j;
+	/* is the j_th bit a zero? */
+	if ( ! (i & incr) )	{
+	  /* if so, draw the edge to the vertex whose number is
+	   * gotten from i by making the j_th bit a one */
+	  edge[0] = pts3[i];
+	  edge[1] = pts3[i + incr];
+	  mgpolyline(2, edge, 1,  &edgecolor, 0) ;
+	}
       }
     }
   }

@@ -1126,8 +1126,8 @@ static inline void SplitPolyNode(PolyListNode *plnode,
 				 struct obstack *scratch)
 {
   const void **tagged_app = plnode->tagged_app;
-  Poly *poly, savedp;
-  Vertex *v0, *v1, **vpos, **savedv;
+  Poly *poly;
+  Vertex *v0, *v1, **vpos;
   int istart[2], iend[2], i, nv[2];
   Vertex *vstart[2], *vend[2];
 
@@ -1299,8 +1299,10 @@ static inline void SplitPolyNode(PolyListNode *plnode,
   }
 
   if (poly->flags & POLY_SCRATCH) {
+    Poly savedp;
+    VARARRAY(savedv, Vertex *, poly->n_vertices);
+
     savedp = *poly;
-    savedv = alloca(poly->n_vertices*sizeof(Vertex *));
     memcpy(savedv, poly->v, poly->n_vertices*sizeof(Vertex *));
 
     if (nv[0] <= poly->n_vertices) {

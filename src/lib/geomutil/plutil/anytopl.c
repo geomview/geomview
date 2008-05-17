@@ -162,10 +162,11 @@ static float *ndpoints(PLData *PL)
   float *pts = OOGLNewNE(float, hdim*VVCOUNT(PL->verts), "PL ndverts");
   float *p = pts;
   Vert *v = VVEC(PL->verts, Vert);
-  int *comp = (int *)alloca(hdim*sizeof(int));
+  VARARRAY(comp, int, hdim);
 
-  for(i = 0; i < hdim; i++)
+  for(i = 0; i < hdim-1; i++) {
     comp[i] = i;
+  }
   comp[hdim-1] = -1;
 
   for(i = 0; i < VVCOUNT(PL->verts); i++, v++, p += hdim) {

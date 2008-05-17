@@ -206,7 +206,11 @@ MeshDraw(Mesh *mesh)
   } else if((_mgc->astk->flags & MGASTK_SHADER) &&
 	    !(mesh->geomflags & GEOM_ALPHA)) {
     int i, npts = mesh->nu * mesh->nv;
+#if !NO_ALLOCA
     ColorA *c = (ColorA *)alloca(npts * sizeof(ColorA));
+#else
+    ColorA *c = OOGLNewNE(ColorA, npts, "software shaded mesh colors");
+#endif
     Point3 *n;
 
     switch (ap->shading) {
@@ -226,6 +230,9 @@ MeshDraw(Mesh *mesh)
     }
     mgmeshst(MESH_MGWRAP(mesh->geomflags), mesh->nu, mesh->nv, mesh->p,
 	     mesh->n, mesh->nq, c, mesh->u, mesh->geomflags | MESH_C);
+#if !!NO_ALLOCA
+    OOGLFree(c);
+#endif
   } else {
     mgmeshst(MESH_MGWRAP(mesh->geomflags), mesh->nu, mesh->nv, mesh->p,
 	     mesh->n, mesh->nq, mesh->c, mesh->u, mesh->geomflags);

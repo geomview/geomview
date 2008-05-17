@@ -273,13 +273,11 @@ void SphereEncompassHPtNN(Sphere *sphere, HPointN **point, int n,
 			  Transform T, TransformN *TN, int *axes)
 {
   int i, dim = point[0]->dim-1;
-  HPointN **spanPts;
-  HPoint3 *spanPts3;
+  VARARRAY(spanPts, HPointN *, 2*dim);
+  VARARRAY(spanPts3, HPoint3, 2*dim);
 
   if (!n) return;
 
-  spanPts = alloca(2*dim*sizeof(HPointN *));
-  spanPts3 = alloca(2*dim*sizeof(HPoint3));
   spanPts[0] = HPtNCopy(point[0], NULL);
   HPtNDehomogenize(spanPts[0], spanPts[0]);
   for (i = 1; i < 2*dim; i++) {
@@ -308,11 +306,12 @@ void MaxDimensionalSpanHPtN(HPointN **spanPts, HPointN *point)
 {
   int dim = point->dim, i;
   HPointN tmp;
+  VARARRAY(tmpdata, HPtNCoord, dim);
 
   if (point->v[dim-1] != 1 && point->v[dim-1] != 0) {
     tmp.dim = dim;
     tmp.flags = 0;
-    tmp.v = alloca(dim*sizeof(float));
+    tmp.v = tmpdata;
     point = HPtNCopy(point, &tmp);
     HPtNDehomogenize(point, point);
   }
@@ -342,7 +341,7 @@ int SphereAddPoint(Sphere *sphere, float *point, int vert_4d, int pdim,
   float radius, old_to_p, old_to_new;
   HPoint3 center, newpoint, tmp3;
   HPointN tmp;
-  HPtNCoord v[5];
+  VARARRAY(v, HPtNCoord, 5);
 
   tmp.flags = 0;
   if (pdim == 4) {
@@ -402,50 +401,53 @@ void SphereEncompassPoints(Sphere *sphere,
 			   Transform T, TransformN *TN, int *axes)
 {
   int i, dim;
-  HPointN **spanPts;
-  HPoint3 *spanPts3;
 
-  if (!n) 
+  if (!n) {
     return;
-
-  if (pdim != 4)
-    vert_4d = 0;
-
-  dim = vert_4d ? pdim : pdim - 1;
-
-  spanPts = alloca(2*dim*sizeof(HPointN *));
-  spanPts3 = alloca(2*dim*sizeof(HPoint3));
-  if (pdim == 4) {
-    if (vert_4d) {
-      spanPts[0] = Pt4ToHPtN((HPoint3 *)points, NULL);
-    } else {
-      spanPts[0] = HPt3ToHPtN((HPoint3 *)points, NULL, NULL);
-    }
-  } else {
-    spanPts[0] = HPtNCreate(pdim, points);
   }
-  HPtNDehomogenize(spanPts[0], spanPts[0]);
-  for (i = 1; i < 2*dim; i++) {
-    spanPts[i] = HPtNCopy(spanPts[0], NULL);
+
+  if (pdim != 4) {
+    vert_4d = 0;
   }
   
-  MaxNDimensionalSpanN(spanPts, points+pdim, vert_4d, pdim, n-1);
-  if (TN) {
-    for (i = 0; i < 2*dim; i++) {
-      HPtNTransformComponents(TN, spanPts[i], axes, &spanPts3[i]);
-    }
-  } else {
-    HPoint3 pt3;
+  dim = vert_4d ? pdim : pdim - 1;
+  
+  {
+    VARARRAY(spanPts, HPointN *, 2*dim);
+    VARARRAY(spanPts3, HPoint3, 2*dim);
 
-    for (i = 0; i < 2*dim; i++) {
-      HPtNToHPt3(spanPts[i], axes, &pt3);
-      HPt3Transform(T, &pt3, &spanPts3[i]);
+    if (pdim == 4) {
+      if (vert_4d) {
+	spanPts[0] = Pt4ToHPtN((HPoint3 *)points, NULL);
+      } else {
+	spanPts[0] = HPt3ToHPtN((HPoint3 *)points, NULL, NULL);
+      }
+    } else {
+      spanPts[0] = HPtNCreate(pdim, points);
     }
-  }
-  SphereEncompassBoundsN(sphere, spanPts3, dim);
-  SphereAddPoints(sphere, points, vert_4d, pdim, n, T, TN, axes);
-  for (i = 0; i < 2*dim; i++) {
-    HPtNDelete(spanPts[i]);
+    HPtNDehomogenize(spanPts[0], spanPts[0]);
+    for (i = 1; i < 2*dim; i++) {
+      spanPts[i] = HPtNCopy(spanPts[0], NULL);
+    }
+  
+    MaxNDimensionalSpanN(spanPts, points+pdim, vert_4d, pdim, n-1);
+    if (TN) {
+      for (i = 0; i < 2*dim; i++) {
+	HPtNTransformComponents(TN, spanPts[i], axes, &spanPts3[i]);
+      }
+    } else {
+      HPoint3 pt3;
+
+      for (i = 0; i < 2*dim; i++) {
+	HPtNToHPt3(spanPts[i], axes, &pt3);
+	HPt3Transform(T, &pt3, &spanPts3[i]);
+      }
+    }
+    SphereEncompassBoundsN(sphere, spanPts3, dim);
+    SphereAddPoints(sphere, points, vert_4d, pdim, n, T, TN, axes);
+    for (i = 0; i < 2*dim; i++) {
+      HPtNDelete(spanPts[i]);
+    }
   }
 }
 

@@ -52,9 +52,14 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   Appearance *ap = &_mgc->astk->ap;
 
   /* TODO: do NOT use alloca */
+#if !!NO_ALLOCA
   q.p  = (QuadP *)alloca(npts*sizeof(HPoint3));
-  q.n  = NULL;
   q.c  = (QuadC *)alloca(npts*sizeof(ColorA));
+#else
+  q.p  = OOGLNewNE(QuadP, npts, "projected QUAD points");
+  q.c  = OOGLNewNE(QuadC, npts, "ND QUAD colors");
+#endif
+  q.n  = NULL;
   q.ap = NULL;
   RefInit((Ref *)(void *)&q, qquad->magic);
   DblListInit(&q.pernode);
@@ -121,6 +126,10 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 
   OOGLFree(q.n);
   HPtNDelete(h);
+#if !!NO_ALLOCA
+  OOGLFree(q.p);
+  OOGLFree(q.c);
+#endif
 }
 
 Quad *
@@ -159,7 +168,11 @@ QuadDraw(Quad *q)
     Point3 *n = q->n[0];
     int cquad = q->c && !(_mgc->astk->mat.override & MTF_DIFFUSE);
     ColorA *oc = cquad ? q->c[0] : (ColorA *)&_mgc->astk->mat.diffuse;
+#if !NO_ALLOCA
     ColorA *c = (ColorA *)alloca(lim * sizeof(ColorA));
+#else
+    c = OOGLNewNE(ColorA, lim, "software shaded QUAD colors");
+#endif
     ColorA *tc = c;
 
     step = (_mgc->astk->ap.shading == APF_SMOOTH) ? 1 : 4;
@@ -176,6 +189,9 @@ QuadDraw(Quad *q)
       }
     }
     mgquads(q->maxquad, q->p[0], q->n[0], c, q->geomflags);
+#if !!NO_ALLOCA
+    OOGLFree(c);
+#endif
   } else {
     /*
      * Ordinary shading

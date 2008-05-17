@@ -62,8 +62,13 @@ draw_projected_vect(mgNDctx *NDctx,
   int i, nc = 0, colored = 0;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
 
+#if !NO_ALLOCA
   newp = (HPoint3 *)alloca(v->nvert*sizeof(HPoint3));
   newc = (ColorA *)alloca(v->nvert*sizeof(ColorA));
+#else
+  newp = OOGLNewNE(HPoint3, v->nvert, "projected VECT points");
+  newc = OOGLNewNE(ColorA, v->nvert, "ND VECT colors");
+#endif
 
   if (v->geomflags & VERT_4D) {
     for(i = 0, op = v->p, np = newp; i < v->nvert; i++, op++, np++) {
@@ -100,6 +105,10 @@ draw_projected_vect(mgNDctx *NDctx,
     flags = (i < penultimate) ? 6 : 2;	/* 2: not first batch member */
   }
   HPtNDelete(h);
+#if !!NO_ALLOCA
+  OOGLFree(newp);
+  OOGLFree(newc);
+#endif
 }
 
 Vect *
