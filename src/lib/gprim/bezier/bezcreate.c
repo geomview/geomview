@@ -43,7 +43,7 @@ static inline void bez_make_meshhandle(Bezier *bezier)
     extern HandleOps GeomOps;
 
     sprintf(meshhname, "\aBezier::%lx", (unsigned long)bezier);
-    bezier->meshhandle = HandleCreate(meshhname, &GeomOps);
+    bezier->meshhandle = HandleDoCreate(meshhname, &GeomOps);
     HandleSetObject(bezier->meshhandle, (Ref *)bezier->mesh);
 }
 
