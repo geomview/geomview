@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.19 2008/03/16 19:08:41 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.20 2008/05/19 04:46:04 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -181,6 +181,8 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 	}
 	mgpolygon(np->n_vertices, V, 1, &np->pn, np->n_vertices, C);
       }
+      break;
+    default:
       break;
     }
   } else {
