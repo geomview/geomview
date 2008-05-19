@@ -41,6 +41,8 @@ MeshDelete(Mesh *m)
       GeomFree(m->p);
     if (m->n)
       GeomFree(m->n);
+    if (m->nq)
+      GeomFree(m->nq);
     if (m->c)
       GeomFree(m->c);
     if (m->u)
