@@ -34,6 +34,20 @@
 
 DEF_FREELIST(Sphere);
 
+void SphereFreeListPrune(void)
+{
+  FreeListNode *old;
+  size_t size = 0;
+  
+  while (SphereFreeList) {
+    old = SphereFreeList;
+    SphereFreeList = old->next;
+    OOGLFree(old);
+    size += sizeof(Sphere);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 #if BEZIER_SPHERES
 #include "bezier.h"
 
@@ -48,6 +62,9 @@ static float ctrlPnts[] = {
   2, 0, 0, 2,  2, 0, 0, 2,  4, 0, 0, 4,
 #endif
 };
+
+#define V4 geomtfm[0]
+
 #endif
 
 /* To support all texture mappings supported by mktxmesh we have to
@@ -154,6 +171,10 @@ static const Transform textfm[][8] = {
     {{-1, 0, 0, 0}, {0,-1, 0, 0}, {0, 0, 1, 0}, {1, 1, 0, 1}},
   }
 };
+
+/* Cache the tlists, there is no need to copy them over and over again. */
+static Geom *geomTlist[COUNT(geomtfm)];
+static Geom *texTlist[COUNT(textfm)];
 
 static inline void sphere_make_meshhandle(Sphere *sphere)
 {
@@ -304,7 +325,6 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere_make_meshhandle(sphere);
   }
   if (texmeth != (sphere->geomflags & SPHERE_TXMASK)) {
-    Geom *txtlist = NULL;
     int texidx = SPHERE_TXMETH(texmeth);
     
     /* force remeshing on redraw, but not earlier. */
@@ -312,27 +332,28 @@ Sphere *SphereCreate(Geom *exist, GeomClass *classp, va_list *a_list)
     sphere->geomflags &= ~SPHERE_TXMASK;
     sphere->geomflags |= texmeth;
 
-    if (texmeth > 0) {
-      txtlist = GeomCCreate(NULL , TlistMethods(),
-			    CR_NELEM, ngeomtfm[texidx],
-			    CR_ELEM, textfm[texidx],
-			    CR_END);
+    if (texidx > 0 && texTlist[texidx] == NULL) {
+      texTlist[texidx] = GeomCCreate(NULL , TlistMethods(),
+				     CR_NELEM, ngeomtfm[texidx],
+				     CR_ELEM, textfm[texidx],
+				     CR_END);
     }
     GeomCCreate((Geom *)sphere, InstMethods(),
-		CR_NOCOPY, CR_TLIST, NULL, CR_TXTLIST, txtlist, CR_END);
+		CR_TLIST, NULL, CR_TXTLIST, texTlist[texidx], CR_END);
   }
   if (sphere->tlist == NULL) {
-    Geom *tlist;
     int texidx = SPHERE_TXMETH(sphere->geomflags);
 
     /* force remeshing on redraw, but not earlier. */
     sphere->geomflags |= SPHERE_REMESH;
 
-    tlist = GeomCCreate(NULL , TlistMethods(),
-			CR_NELEM, ngeomtfm[texidx],
-			CR_ELEM, geomtfm[texidx], CR_END);
-    GeomCCreate((Geom *)sphere, InstMethods(), CR_NOCOPY, CR_TLIST, tlist,
-		CR_END);
+    if (geomTlist[texidx] == NULL) {
+      geomTlist[texidx] = GeomCCreate(NULL , TlistMethods(),
+				      CR_NELEM, ngeomtfm[texidx],
+				      CR_ELEM, geomtfm[texidx], CR_END);
+    }
+    GeomCCreate((Geom *)sphere, InstMethods(),
+		CR_TLIST, geomTlist[texidx], CR_END);
   }
 #endif
 
