@@ -35,6 +35,21 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 DEF_FREELIST(BBox);
 
+void BBoxFreeListPrune(void)
+{
+  FreeListNode *old;
+  size_t size = 0;
+
+  HPtNFreeListPrune();
+  while (BBoxFreeList) {
+    old = BBoxFreeList;
+    BBoxFreeList = old->next;
+    OOGLFree(old);
+    size += sizeof(BBox);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 #ifndef max
 # define max(a,b) ((a) > (b) ? (a) : (b))
 #endif
