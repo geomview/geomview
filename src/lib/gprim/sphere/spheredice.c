@@ -129,6 +129,7 @@ void SphereReDice(Sphere *sphere)
     OOGLError(1, "SphereReDice: can't create Mesh");
   }
 
+  sphere->geom = facet;
   HandleSetObject(sphere->geomhandle, (Ref *)facet);
 
   sphere->geomflags &= ~SPHERE_REMESH;
