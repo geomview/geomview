@@ -206,7 +206,8 @@ typedef struct HGeom {  /* This tuple appears in hierarchy objects */
 
 static inline bool GeomHasAlpha(Geom *geom, const Appearance *ap)
 {
-  if ((ap->flag & APF_TRANSP) && (ap->flag & APF_FACEDRAW)) {
+  if ((ap->flag & APF_TRANSP) && (ap->flag & APF_FACEDRAW) &&
+      ap->translucency == APF_ALPHA_BLENDING) {
     if ((ap->flag & APF_TEXTURE) &&
 	ap->tex && ap->tex->apply != TXF_DECAL &&
 	ap->tex->image && (ap->tex->image->channels % 2 == 0)) {
