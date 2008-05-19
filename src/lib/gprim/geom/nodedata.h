@@ -126,4 +126,18 @@ static inline void GeomNodeDataPrune(Geom *geom)
   }
 }
 
+static inline void NodeDataFreeListPrune(void)
+{
+  FreeListNode *old;
+  size_t size = 0;
+  
+  while (NodeDataFreeList) {
+    old = NodeDataFreeList;
+    NodeDataFreeList = old->next;
+    OOGLFree(old);
+    size += sizeof(NodeData);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 #endif

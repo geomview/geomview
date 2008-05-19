@@ -35,6 +35,11 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mg.h"
 #include "bsptreeP.h"
 
+void GeomDrawNodeDataFreeListPrune(void)
+{
+  NodeDataFreeListPrune();
+}
+
 static inline void maybe_tag_appearance(Geom *geom, const Appearance *ap)
 {
   NodeData *data;

@@ -80,6 +80,11 @@ static int tree_depth;
 				 * on our obstack
 				 */
 
+void BSPTreeNodeDataFreeListPrune(void)
+{
+  NodeDataFreeListPrune();
+}
+
 static void check_poly(Poly *poly)
 {
   int i;
@@ -1126,7 +1131,8 @@ static inline void SplitPolyNode(PolyListNode *plnode,
 				 struct obstack *scratch)
 {
   const void **tagged_app = plnode->tagged_app;
-  Poly *poly;
+  Poly *poly = plnode->poly, savedp;
+  VARARRAY(savedv, Vertex *, poly->n_vertices);
   Vertex *v0, *v1, **vpos;
   int istart[2], iend[2], i, nv[2];
   Vertex *vstart[2], *vend[2];
@@ -1134,8 +1140,6 @@ static inline void SplitPolyNode(PolyListNode *plnode,
 #if BSPTREE_STATS
   ++n_tree_polys;
 #endif
-
-  poly = plnode->poly;
 
   vstart[0] = vstart[1] = vend[0] = vend[1] = NULL;
   istart[0] = istart[1] = iend[0] = iend[1] = -1;
@@ -1299,8 +1303,6 @@ static inline void SplitPolyNode(PolyListNode *plnode,
   }
 
   if (poly->flags & POLY_SCRATCH) {
-    Poly savedp;
-    VARARRAY(savedv, Vertex *, poly->n_vertices);
 
     savedp = *poly;
     memcpy(savedv, poly->v, poly->n_vertices*sizeof(Vertex *));

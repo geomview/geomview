@@ -39,6 +39,34 @@ static DBLLIST(AllHandles);
 static DEF_FREELIST(HRef);
 static DEF_FREELIST(Handle);
 
+void HRefFreeListPrune(void)
+{
+  FreeListNode *old;
+  size_t size = 0;
+  
+  while (HRefFreeList) {
+    old = HRefFreeList;
+    HRefFreeList = old->next;
+    OOGLFree(old);
+    size += sizeof(HRef);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
+void HandleFreeListPrune(void)
+{
+  FreeListNode *old;
+  size_t size = 0;
+  
+  while (HandleFreeList) {
+    old = HandleFreeList;
+    HandleFreeList = old->next;
+    OOGLFree(old);
+    size += sizeof(Handle);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 #define HANDLE_DEBUG 0
 
 void handle_dump(void);
@@ -132,6 +160,7 @@ void HandleUnregister(Handle **hp)
   DblListIterate(&h->refs, HRef, node, r, rn) {
     if(r->hp == hp) {
       DblListDelete(&r->node);
+      memset(r, 0, sizeof(*r));
       FREELIST_FREE(HRef, r);
       REFPUT(h);
     }
@@ -154,6 +183,7 @@ void HandleUnregisterJust(Handle **hp, Ref *obj, void *info,
        (info == NULL || rp->info == info) &&
        (update == NULL || rp->update == update)) {
       DblListDelete(&rp->node);
+      memset(rp, 0, sizeof(*rp));
       FREELIST_FREE(HRef, rp);
       REFPUT(h);
     }
@@ -178,6 +208,7 @@ void HandleUnregisterAll(Ref *obj,
  	   (info == NULL || r->info == info) &&
 	   (update == NULL || r->update == update)) {
 	  DblListDelete(&r->node);
+	  memset(r, 0, sizeof(*r));
 	  FREELIST_FREE(HRef, r);
 	  REFPUT(h);
 	}
@@ -522,6 +553,7 @@ void HandleDelete(Handle *h)
     free(h->name);
   }
 
+  memset(h, 0, sizeof(*h));
   FREELIST_FREE(Handle, h);
 
   /*  handle_dump();*/

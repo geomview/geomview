@@ -37,6 +37,26 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 DEF_FREELIST(Tlist);
 
+void TlistFreeListPrune(void)
+{
+  FreeListNode *old;
+  Tlist *oldtl;
+  size_t size = 0;
+  
+  while (TlistFreeList) {
+    old = TlistFreeList;
+    TlistFreeList = old->next;
+    oldtl = (Tlist *)old;
+    if (oldtl->elements != NULL && oldtl->nallocated != 0) {
+      OOGLFree(oldtl->elements);
+    }
+    size += sizeof(Transform) * oldtl->nallocated;
+    OOGLFree(old);
+    size += sizeof(Tlist);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 void TlistDelete(Tlist *tlist)
 {
     if(tlist) {
@@ -104,6 +124,7 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list *a_list)
     Handle *h;
     int  copy   = true;
     bool copyel = false;
+    bool doinit = false;
     int attr;
     int i;
     Transform *elements = NULL;
@@ -156,9 +177,13 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list *a_list)
 		tlist->elements   = NULL;
 		tlist->nallocated = 0;
 	    }
+	    if (elements == NULL) {
+	      doinit = true;
+	    }
 	    break;
 	case CR_NELEM:
 	    tlist->nelements = va_arg (*a_list, int);
+	    doinit = true;
 	    break;
 	default:
 	    if(GeomDecorate(tlist, &copy, attr, a_list)) {
@@ -169,30 +194,30 @@ TlistCreate(Tlist *exist, GeomClass *Classp, va_list *a_list)
 		return NULL;
 	    }
     }
-
-    if (tlist->nallocated < tlist->nelements && tlist->nelements > 0) {
-	if (elements != NULL && !copyel) {
-	    if (tlist->elements) {
-		OOGLFree(tlist->elements);
-	    }
-	    tlist->elements   = elements;
-	    tlist->nallocated = tlist->nelements;
-	} else {
-	    if (tlist->nallocated < tlist->nelements) {
-		tlist->elements =
-		    OOGLRenewNE(Transform, tlist->elements, tlist->nelements,
-				"TlistCreate: matrices");
-		tlist->nallocated = tlist->nelements;
-	    }
-	    if (elements == NULL) {
-		for (i = 0; i < tlist->nelements; i++) {
-		    TmIdentity (tlist->elements[i] );
-		}
-	    } else {
-		memcpy (tlist->elements, elements,
-			tlist->nelements * sizeof (Transform));
-	    }
-	}    
+    
+    if (elements != NULL && !copyel) {
+      if (tlist->elements) {
+	OOGLFree(tlist->elements);
+      }
+      tlist->elements   = elements;
+      tlist->nallocated = tlist->nelements;
+    } else {
+      if (tlist->nallocated < tlist->nelements) {
+	tlist->elements =
+	  OOGLRenewNE(Transform, tlist->elements, tlist->nelements,
+		      "TlistCreate: matrices");
+	tlist->nallocated = tlist->nelements;
+      }
+      if (elements == NULL) {
+	if (doinit) {
+	  for (i = 0; i < tlist->nelements; i++) {
+	    TmIdentity (tlist->elements[i] );
+	  }
+	}
+      } else {
+	memcpy (tlist->elements, elements,
+		tlist->nelements * sizeof (Transform));
+      }
     }
 
     return tlist;
