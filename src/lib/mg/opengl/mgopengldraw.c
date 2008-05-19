@@ -36,6 +36,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "polylistP.h"
 #include "quadP.h"
 #include "bsptreeP.h"
+#include "mgopenglstipple.h"
 
 #ifdef GLUT
 # include <GL/glut.h>
@@ -86,7 +87,6 @@ mgopengl_polygon(int nv,  HPoint3 *V,
   ColorA *c;
   int ninc;
   int flag;
-
 
   flag = _mgc->astk->ap.flag;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
@@ -146,6 +146,7 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
   Point3 *n;
   ColorA *c;
   int flag;
+  bool stippled, colors_masked = false;
 
 #define QUAD(stuff)  {				\
     int k = 4;					\
@@ -161,6 +162,9 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
     C = NULL;
   }
 
+  stippled =
+    (flag & APF_TRANSP) != 0 && _mgc->astk->ap.translucency == APF_SCREEN_DOOR;
+
   /* reestablish correct drawing color if necessary */
 
   if ((flag & APF_FACEDRAW) && !(qflags & GEOM_ALPHA)) {
@@ -172,20 +176,59 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 
     i = count;
     v = V; c = C; n = N;
-    glBegin(GL_QUADS);
     if (c) {
-      if (n) {
+      if ((qflags & COLOR_ALPHA) && stippled) {
 	do {
-	  QUAD( (D4F(c++), N3F(n++,v), glVertex4fv((float*)v++)) );
+	  if (c->a == 0.0f) {
+	    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	    colors_masked = true;
+	  } else {
+	    if (colors_masked) {
+	      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	      colors_masked = false;
+	    }
+	    if (c->a < 1.0f) {
+	      glEnable(GL_POLYGON_STIPPLE);
+	      glPolygonStipple(mgopengl_get_polygon_stipple(c->a));
+	    } else {
+	      glDisable(GL_POLYGON_STIPPLE);
+	    }
+	  }
+	  glBegin(GL_QUADS);
+	  if (n) {
+	    QUAD( (D4F(c++), N3F(n++,v), glVertex4fv((float*)v++)) );
+	  } else {
+	    /* Colors, no normals */
+	    QUAD( (D4F(c++), glVertex4fv((float*)v++)) );
+	  }
+	  glEnd();
 	} while(--i > 0);
       } else {
-	/* Colors, no normals */
-	do {
-	  QUAD( (D4F(c++), glVertex4fv((float*)v++)) );
-	} while(--i > 0);
+	glBegin(GL_QUADS);
+	if (n) {
+	  do {
+	    QUAD( (D4F(c++), N3F(n++,v), glVertex4fv((float*)v++)) );
+	  } while(--i > 0);
+	} else {
+	  /* Colors, no normals */
+	  do {
+	    QUAD( (D4F(c++), glVertex4fv((float*)v++)) );
+	  } while(--i > 0);
+	}
+	glEnd();
       }
     } else {
       c = (ColorA*)&_mgc->astk->ap.mat->diffuse;
+      if (stippled) {
+	if (c->a == 0.0f) {
+	  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	  colors_masked = true;
+	} else if (c->a < 1.0f) {
+	  glEnable(GL_POLYGON_STIPPLE);
+	  glPolygonStipple(mgopengl_get_polygon_stipple(c->a));
+	}
+      }
+      glBegin(GL_QUADS);
       if (n) {
 	D4F(c);
 	do {
@@ -197,8 +240,15 @@ mgopengl_quads(int count, HPoint3 *V, Point3 *N, ColorA *C, int qflags)
 	  QUAD( (glVertex4fv((float*)v++)) );
 	} while(--i > 0);
       }
+      glEnd();
     }
-    glEnd();
+
+    if (stippled) {
+      glDisable(GL_POLYGON_STIPPLE);
+      if (colors_masked) {
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+      }
+    }
   }
 
   if ( flag & (APF_EDGEDRAW|APF_NORMALDRAW) ) {
@@ -799,10 +849,13 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
   Vertex **v, *vp;
   struct mgastk *ma = _mgc->astk;
   int flag, shading;
+  bool stippled, colors_masked, change_stipple = false;
   int nonsurf = -1;
+  float alpha = 1.0f;
 
   flag = ma->ap.flag;
   shading = ma->ap.shading;
+  stippled = (flag & APF_TRANSP) != 0 && ma->ap.translucency == APF_SCREEN_DOOR;
 
   switch(shading) {
   case APF_FLAT:
@@ -811,14 +864,43 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
       plflags &= ~PL_HASVCOL;
     }
     break;
-  case APF_SMOOTH: plflags &= ~PL_HASPN; break;
-  case APF_VCFLAT: plflags &= ~PL_HASVN; break;
-  default: plflags &= ~(PL_HASVN|PL_HASPN); break;
+  case APF_SMOOTH:
+    plflags &= ~PL_HASPN;
+    if (plflags & PL_HASVCOL) {
+      plflags &= ~PL_HASPCOL;
+    }
+    break;
+  case APF_VCFLAT:
+    plflags &= ~PL_HASVN;
+    if (plflags & PL_HASVCOL) {
+      plflags &= ~PL_HASPCOL;
+    }
+    break;
+  case APF_CSMOOTH:
+    plflags &= ~(PL_HASVN|PL_HASPN);
+    if (plflags & PL_HASVCOL) {
+      plflags &= ~PL_HASPCOL;
+    }
+    break;
+  case APF_CONSTANT:
+    plflags &= ~(PL_HASVN|PL_HASPN);
+    if (plflags & PL_HASPCOL) {
+      plflags &= ~PL_HASVCOL;
+    }
+    break;
+  default:
+    plflags &= ~(PL_HASVN|PL_HASPN);
+    break;
   }
 
   if ((_mgc->astk->mat.override & MTF_DIFFUSE)) {
     if (!(_mgc->astk->flags & MGASTK_SHADER)) {
       plflags &= ~GEOM_COLOR;
+    }
+  }
+  if ((_mgc->astk->mat.override & MTF_ALPHA)) {
+    if (!(_mgc->astk->flags & MGASTK_SHADER)) {
+      plflags &= ~COLOR_ALPHA;
     }
   }
 
@@ -830,6 +912,17 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
     if (!(plflags & (PL_HASPCOL | PL_HASVCOL))) {
       D4F(&(ma->ap.mat->diffuse));
     }
+    if (!(plflags & COLOR_ALPHA) && stippled) {
+      alpha = ma->ap.mat->diffuse.a;
+      if (alpha == 0.0f) {
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	colors_masked = true;
+      } else if (alpha < 1.0f) {
+	glEnable(GL_POLYGON_STIPPLE);
+	glPolygonStipple(mgopengl_get_polygon_stipple(alpha));
+	change_stipple = true;
+      }
+    }
     if ((_mgc->astk->ap.flag & APF_TEXTURE) && (_mgc->astk->ap.tex != NULL)) {
       if (plflags & PL_HASST)
 	mgopengl_needtexture();
@@ -838,10 +931,61 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
     }
 
     for (p = _p, i = 0; i < np; i++, p++) {
-      if (plflags & PL_HASPCOL)
+      if (plflags & PL_HASPCOL) {
 	D4F(&p->pcol);
-      if (plflags & PL_HASPN)
+      }
+      if (change_stipple) {
+	glPolygonStipple(mgopengl_get_polygon_stipple(alpha));
+      } else if ((plflags & COLOR_ALPHA) && stippled && (p->n_vertices >= 3)) {
+	if (plflags & PL_HASPCOL) {
+	  if (p->pcol.a == 0.0f) {
+	    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	    colors_masked = true;
+	  } else {
+	    if (colors_masked) {
+	      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	      colors_masked = false;
+	    }
+	    if (p->pcol.a < 1.0f) {
+	      glEnable(GL_POLYGON_STIPPLE);
+	      glPolygonStipple(mgopengl_get_polygon_stipple(p->pcol.a));
+	    } else {
+	      glDisable(GL_POLYGON_STIPPLE);
+	    }
+	  }
+	} else if (plflags & PL_HASVCOL) {
+	  /* Compute an average alpha value */
+	  int n_zero, n_one;
+	  for (n_zero = n_one = 0, alpha = 0.0f, j = 0;
+	       j < p->n_vertices; j++) {
+	    if (p->v[j]->vcol.a == 0.0f) {
+	      ++n_zero;
+	    } else if (p->v[j]->vcol.a == 1.0f) {
+	      ++n_one;
+	    }
+	    alpha += p->v[j]->vcol.a;
+	  }
+	  if (n_zero == p->n_vertices) {
+	    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	    colors_masked = true;
+	  } else {
+	    if (colors_masked) {
+	      glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	      colors_masked = false;
+	    }
+	    if (n_one < p->n_vertices) {
+	      alpha /= (float)p->n_vertices;
+	      glEnable(GL_POLYGON_STIPPLE);
+	      glPolygonStipple(mgopengl_get_polygon_stipple(alpha));
+	    } else {
+	      glDisable(GL_POLYGON_STIPPLE);
+	    }
+	  }
+	}
+      }
+      if (plflags & PL_HASPN) {
 	N3F(&p->pn, &(*p->v)->pt);
+      }
       v = p->v;
       if ((j = p->n_vertices) <= 2) {
 	nonsurf = i;
@@ -902,6 +1046,13 @@ void mgopengl_polylist(int np, Poly *_p, int nv, Vertex *V, int plflags)
 	  break;
 	}
 	glEnd();
+      }
+    }
+
+    if (stippled) {
+      glDisable(GL_POLYGON_STIPPLE);
+      if (colors_masked) {
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
       }
     }
   }

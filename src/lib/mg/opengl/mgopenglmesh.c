@@ -41,6 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <mgP.h>
 #include <mgopenglP.h>
 #include <meshflag.h>
+#include <mgopenglstipple.h>
 
 #undef P
 /* ^^^ evil kludge XXX to get the P variables here to not get confused
@@ -71,15 +72,21 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   int i;
   int has;
   Appearance *ap;
+  bool stippled, colors_masked = false;
 
-
-  if(nu <= 0 || nv <= 0)
+  if (nu <= 0 || nv <= 0)
     return;
 
   ap = &_mgc->astk->ap;
   if ((_mgc->astk->mat.override & MTF_DIFFUSE) &&
-      !(_mgc->astk->flags & MGASTK_SHADER))
+      !(_mgc->astk->flags & MGASTK_SHADER)) {
     meshC = 0;
+  }
+  if ((_mgc->astk->mat.override & MTF_ALPHA)) {
+    if (!(_mgc->astk->flags & MGASTK_SHADER)) {
+      mflags &= ~COLOR_ALPHA;
+    }
+  }
 
   has = 0;
   if (meshN && !(_mgc->astk->flags & MGASTK_SHADER)) {
@@ -94,6 +101,9 @@ mgopenglsubmesh(int wrap, int nu, int nv,
   if (IS_SMOOTH(ap->shading)) {
     has |= HAS_SMOOTH;
   }
+
+  stippled =
+    (ap->flag & APF_TRANSP) != 0 && ap->translucency == APF_SCREEN_DOOR;
 
   switch (ap->shading) {
   case APF_VCFLAT:
@@ -127,13 +137,38 @@ mgopenglsubmesh(int wrap, int nu, int nv,
     glEnable(GL_COLOR_MATERIAL);
     MAY_LIGHT();
 
-    if(!(has & HAS_C))
+    if (!(has & HAS_C)) {
       D4F(&ap->mat->diffuse);
+    }
+    if (stippled) {
+      if (!(mflags & COLOR_ALPHA)) {
+	float alpha = ap->mat->diffuse.a;
+	if (alpha == 0.0f) {
+	  glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	colors_masked = true;
+	} else if (alpha < 1.0f) {
+	  glEnable(GL_POLYGON_STIPPLE);
+	  glPolygonStipple(mgopengl_get_polygon_stipple(alpha));
+	}
+      } else {
+	static bool was_here = false;
+	if (!was_here) {
+	  was_here = true;
+	  OOGLWarn("Polygon-stipples with per-vertex colors not yet "
+		   "implemented for meshes.");
+	}
+	/* Howto do this? As we may not alter the stipple pattern in
+	 * between glBegin() and glEnd() this would be somewhat
+	 * involved. We would have to duplicate the code below for the
+	 * HAS_C and COLOR_ALPHA case.
+	 */
+      }
+    }
 
     v = vmax - vmin + 1;
     du = umin + vmin * nu;
 
-    if(wrap & MM_VWRAP) {
+    if (wrap & MM_VWRAP) {
       /* V-wrapping: cur = mesh[vmin,u], prev = mesh[vmax,u] */
       prev = nu * (v - 1);
     } else {
@@ -377,8 +412,8 @@ mgopenglsubmesh(int wrap, int nu, int nv,
           break;
         }
 
-        if(ucnt == 0) {
-          if(douwrap) {
+        if (ucnt == 0) {
+          if (douwrap) {
             douwrap = 0;        /* Loop again on first vertex */
             ucnt = 1;
             P = meshP + du;
@@ -398,15 +433,22 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       prev = -nu;
       du += nu;
     } while(--v > 0);
+
+    if (stippled) {
+      glDisable(GL_POLYGON_STIPPLE);
+      if (colors_masked) {
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+      }
+    }
   }
 
-  if(ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)
+  if (ap->flag & (APF_EDGEDRAW|APF_NORMALDRAW)
      || (ap->flag & APF_FACEDRAW && (nu == 1 || nv == 1))) {
     glDisable(GL_COLOR_MATERIAL);
     mgopengl_notexture();
     DONT_LIGHT();
-    if(_mgopenglc->znudge) mgopengl_closer();
-    if(ap->flag & APF_EDGEDRAW) {			/* Draw edges */
+    if (_mgopenglc->znudge) mgopengl_closer();
+    if (ap->flag & APF_EDGEDRAW) {			/* Draw edges */
       glColor3fv((float *)&ap->mat->edgecolor);
 
       du = umin + vmin * nu;
@@ -414,7 +456,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       vcnt = vmax - vmin + 1;
       v = vcnt;
       do {
-	if(wrap & MM_UWRAP)
+	if (wrap & MM_UWRAP)
 	  glBegin(GL_LINE_LOOP);
 	else
 	  glBegin(GL_LINE_STRIP);
@@ -424,7 +466,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	  glVertex4fv((float *)P);
 	  P++;
 	} while(--u > 0);
-	if(wrap & MM_UWRAP)
+	if (wrap & MM_UWRAP)
 	  glEnd();
 	else
 	  glEnd();
@@ -435,7 +477,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       u = ucnt;
       do {
 	v = vcnt;
-	if(wrap & MM_VWRAP)
+	if (wrap & MM_VWRAP)
 	  glBegin(GL_LINE_LOOP);
 	else
 	  glBegin(GL_LINE_STRIP);
@@ -444,7 +486,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	  glVertex4fv((float *)P);
 	  P += nu;
 	} while(--v > 0);
-	if(wrap & MM_VWRAP)
+	if (wrap & MM_VWRAP)
 	  glEnd();
 	else
 	  glEnd();
@@ -452,7 +494,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
       } while(--u > 0);
     }
 
-    if(ap->flag & APF_NORMALDRAW) {
+    if (ap->flag & APF_NORMALDRAW) {
       if (has & HAS_N) {
 	glColor3fv((float *)&ap->mat->normalcolor);
 
@@ -467,7 +509,7 @@ mgopenglsubmesh(int wrap, int nu, int nv,
 	}
       }
     }
-    if(_mgopenglc->znudge) mgopengl_farther();
+    if (_mgopenglc->znudge) mgopengl_farther();
   }
 }
 

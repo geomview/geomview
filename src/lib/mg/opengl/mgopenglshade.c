@@ -65,18 +65,30 @@ mgopengl_appearance(struct mgastk *ma, int mask)
 
   if (mask & APF_TRANSP) {
     if (ap->flag & APF_TRANSP) {
-#if 0
-      /* Do not do this here; alpha-blending will be enabled as needed
-       * in mgopengl_bsptree(). This is for the sake of efficiency: if
-       * a geometry does not have any translucent component it is much
-       * more efficient to use the depth buffer instead of alpha
-       * blending, especially when there is no hardware rendering
-       * support.
-       */
-      glDepthMask(GL_FALSE);
-      glBlendFunc(GL_SRC_ALPHA,  GL_ONE_MINUS_SRC_ALPHA);
-      glEnable(GL_BLEND);
-#endif
+      switch (ap->translucency) {
+      case APF_ALPHA_BLENDING:
+	break;
+      case APF_SCREEN_DOOR:
+	glDepthMask(GL_TRUE);
+	glBlendFunc(GL_ONE,  GL_ZERO);
+	glDisable(GL_BLEND);
+	/* Stipple pattern will be set later, based on alpha-value */
+	break;
+      case APF_NAIVE_BLENDING:
+	/* Do not do this here; alpha-blending will be enabled as needed
+	 * in mgopengl_bsptree(). This is for the sake of efficiency: if
+	 * a geometry does not have any translucent component it is much
+	 * more efficient to use the depth buffer instead of alpha
+	 * blending, especially when there is no hardware rendering
+	 * support.
+	 */
+	glDepthMask(GL_FALSE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	break;
+      default:
+	break; /* ??? */
+      }
     } else {
       glDepthMask(GL_TRUE);
       glBlendFunc(GL_ONE,  GL_ZERO);
@@ -777,7 +789,7 @@ mgopengl_d4f(float c[4])
 /* cH: even for constant shading we want to have the possibility that
  * the material alpha overrides the alpha value of the color. Also,
  * the decision about that can be done in mgopengl_appearance(). We
- * just define a 4 functions: shaded w/o alpha override and constant
+ * just define 4 functions: shaded w/o alpha override and constant
  * w/o alpha override.
  */
 

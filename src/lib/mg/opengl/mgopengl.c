@@ -34,6 +34,8 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include "mgopenglP.h"
 #include "windowP.h"
 #include "mgopenglshade.h"
+#include "mgopenglstipple.h"
+
 #ifdef GLUT
 # include <GL/glut.h>
 #else
@@ -859,8 +861,15 @@ mgopengl_initwin()
 void
 mgopengl_worldbegin( void )
 {
+  static bool first_time = true;
   Transform V;
   int which = (_mgc->opts & MGO_DOUBLEBUFFER) ? DBL : SGL;
+
+  if (first_time) {
+    first_time = false;
+    
+    mgopengl_init_polygon_stipple();
+  }
 
   mg_worldbegin();	/* Initialize W2C, C2W, W2S, S2W, etc. */
 
