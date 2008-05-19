@@ -98,6 +98,26 @@ static inline void HPtNMinMax(HPointN *min, HPointN *max, HPointN *other);
 # define min(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+static inline void HPtNFreeListPrune(void)
+{
+  FreeListNode *old;
+  HPointN *oldpt;
+  size_t size = 0;
+  
+  while (HPointNFreeList) {
+    old = HPointNFreeList;
+    HPointNFreeList = old->next;
+    oldpt = (HPointN *)old;
+    if (oldpt->size && oldpt->v) {
+      OOGLFree(oldpt->v);
+      size += oldpt->size * sizeof(HPtNCoord);
+    }
+    OOGLFree(old);
+    size += sizeof(HPointN);
+  }
+  OOGLWarn("Freed %ld bytes.\n", size);
+}
+
 static inline HPointN *
 HPtNCreate(int dim, const HPtNCoord *vec)
 {
