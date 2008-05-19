@@ -83,6 +83,10 @@ List *ListDraw(List *list)
     }
   }
 
+  if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+    OOGLFree(lpath);
+  }
+
   return list;
 }
 
@@ -129,6 +133,11 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
       }
       HandleRegister(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
     }
+
+    if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+      OOGLFree(lpath);
+    }
+
     return list;
     
   case BSPTREE_DELETE:
@@ -165,6 +174,11 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
       }
       HandleUnregisterJust(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
     }
+
+    if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+      OOGLFree(lpath);
+    }
+
     return list;
     
   case BSPTREE_ADDGEOM:
@@ -200,6 +214,11 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 	GeomBSPTree(l->car, bsptree, action);
       }
     }
+
+    if (allocsz > (1 << (INITIAL_ALLOC_SHIFT+2))) {
+      OOGLFree(lpath);
+    }
+
     return list;
     
   default:
