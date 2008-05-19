@@ -114,6 +114,12 @@ extern UIState uistate;
 #define SMOOTHSHADE	APF_SMOOTH
 extern char *shades[5];
 
+/* translucency */
+#define BSPTREE_BLENDING APF_ALPHA_BLENDING
+#define SCREEN_DOOR      APF_SCREEN_DOOR
+#define SIMPLE_BLENDING  APF_NAIVE_BLENDING
+extern char *translucencies[3];
+
 /* normalization --- these must be consective beginning with 0 ---
    they are used as indices into the "norm" array !!! */
 typedef enum { NONE = 0, EACH, ALL, KEEP } Normalization;

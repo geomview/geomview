@@ -1,13 +1,13 @@
 char Root[] = "\
-TotalWidgets: 20\n\
+TotalWidgets: 21\n\
 Ref: 1\n\
 Widget: \"RootForm\"\n\
-Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20\n\
+Children: 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21\n\
 Parent: 1\n\
 Public-\n\
 Name: \"Root\"\n\
-Xmwidth: 249\n\
-Xmheight: 269\n\
+Xmwidth: 259\n\
+Xmheight: 319\n\
 XmtopAttachment: 5\n\
 XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
@@ -18,12 +18,30 @@ XmleftOffset: 0\n\
 XmrightOffset: 0\n\
 Private-\n\
 EndWidget.\n\
+Ref: 21\n\
+Widget: \"List\"\n\
+Children: X\n\
+Parent: 1\n\
+Public-\n\
+Name: \"TranslucencyList\"\n\
+Xmwidth: 200\n\
+Xmheight: 53\n\
+XmtopAttachment: 5\n\
+XmbottomAttachment: 5\n\
+XmleftAttachment: 5\n\
+XmrightAttachment: 5\n\
+XmtopOffset: 258\n\
+XmbottomOffset: 6\n\
+XmleftOffset: 8\n\
+XmrightOffset: 40\n\
+Private-\n\
+EndWidget.\n\
 Ref: 2\n\
 Widget: \"Toggle\"\n\
 Children: X\n\
 Parent: 1\n\
 Public-\n\
-Name: \"TransparentToggle\"\n\
+Name: \"TranslucentToggle\"\n\
 Xmwidth: 0\n\
 Xmheight: 0\n\
 XmtopAttachment: 0\n\
@@ -31,11 +49,11 @@ XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 238\n\
-XmbottomOffset: 6\n\
+XmbottomOffset: 66\n\
 XmleftOffset: 8\n\
 XmrightOffset: 241\n\
 Private-\n\
-label: \"[aT] Transparent\"\n\
+label: \"[aT] Translucent\"\n\
 indicatorSize: 0\n\
 EndWidget.\n\
 Ref: 3\n\
@@ -51,7 +69,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 0\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 170\n\
-XmbottomOffset: 69\n\
+XmbottomOffset: 129\n\
 XmleftOffset: 172\n\
 XmrightOffset: 7\n\
 Private-\n\
@@ -69,7 +87,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 0\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 132\n\
-XmbottomOffset: 107\n\
+XmbottomOffset: 167\n\
 XmleftOffset: 172\n\
 XmrightOffset: 7\n\
 Private-\n\
@@ -87,7 +105,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 0\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 95\n\
-XmbottomOffset: 144\n\
+XmbottomOffset: 204\n\
 XmleftOffset: 172\n\
 XmrightOffset: 7\n\
 Private-\n\
@@ -105,7 +123,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 0\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 56\n\
-XmbottomOffset: 183\n\
+XmbottomOffset: 243\n\
 XmleftOffset: 172\n\
 XmrightOffset: 7\n\
 Private-\n\
@@ -123,7 +141,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 175\n\
-XmbottomOffset: 74\n\
+XmbottomOffset: 134\n\
 XmleftOffset: 6\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -142,7 +160,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 137\n\
-XmbottomOffset: 112\n\
+XmbottomOffset: 172\n\
 XmleftOffset: 6\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -161,7 +179,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 99\n\
-XmbottomOffset: 150\n\
+XmbottomOffset: 210\n\
 XmleftOffset: 6\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -180,7 +198,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 60\n\
-XmbottomOffset: 189\n\
+XmbottomOffset: 249\n\
 XmleftOffset: 6\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -199,7 +217,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 151\n\
-XmbottomOffset: 88\n\
+XmbottomOffset: 148\n\
 XmleftOffset: 4\n\
 XmrightOffset: 106\n\
 Private-\n\
@@ -218,7 +236,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 114\n\
-XmbottomOffset: 125\n\
+XmbottomOffset: 185\n\
 XmleftOffset: 4\n\
 XmrightOffset: 178\n\
 Private-\n\
@@ -237,7 +255,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 75\n\
-XmbottomOffset: 164\n\
+XmbottomOffset: 224\n\
 XmleftOffset: 4\n\
 XmrightOffset: 109\n\
 Private-\n\
@@ -256,7 +274,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 37\n\
-XmbottomOffset: 202\n\
+XmbottomOffset: 262\n\
 XmleftOffset: 4\n\
 XmrightOffset: 116\n\
 Private-\n\
@@ -275,7 +293,7 @@ XmbottomAttachment: 5\n\
 XmleftAttachment: 5\n\
 XmrightAttachment: 5\n\
 XmtopOffset: 6\n\
-XmbottomOffset: 234\n\
+XmbottomOffset: 294\n\
 XmleftOffset: 201\n\
 XmrightOffset: 6\n\
 Private-\n\
@@ -294,7 +312,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 9\n\
-XmbottomOffset: 238\n\
+XmbottomOffset: 298\n\
 XmleftOffset: 78\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -313,7 +331,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 0\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 208\n\
-XmbottomOffset: 31\n\
+XmbottomOffset: 91\n\
 XmleftOffset: 172\n\
 XmrightOffset: 7\n\
 Private-\n\
@@ -331,7 +349,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 1\n\
 XmtopOffset: 213\n\
-XmbottomOffset: 36\n\
+XmbottomOffset: 96\n\
 XmleftOffset: 6\n\
 XmrightOffset: 81\n\
 Private-\n\
@@ -350,7 +368,7 @@ XmbottomAttachment: 0\n\
 XmleftAttachment: 1\n\
 XmrightAttachment: 0\n\
 XmtopOffset: 189\n\
-XmbottomOffset: 50\n\
+XmbottomOffset: 110\n\
 XmleftOffset: 3\n\
 XmrightOffset: 179\n\
 Private-\n\

@@ -104,6 +104,11 @@ _ApSet(Appearance *ap, int attr1, va_list *alist)
       ap->shading = NEXT(int);
       ap->valid |= APF_SHADING;
       break;
+    case AP_TRANSLUCENCY:
+      /* should be APF_ALPHA_BLENDING or APF_SCREEN_DOOR */
+      ap->translucency = NEXT(int);
+      ap->valid |= APF_TRANSP;
+      break;
     case AP_DICE:
       ap->dice[0] = NEXT(int);
       ap->dice[1] = NEXT(int);
@@ -149,17 +154,18 @@ ApGet(Appearance *ap, int attr, void *value)
 
   switch (attr) {
   case AP_DO:
-  case AP_DONT:	*(int *) value =  ap->flag; break;
+  case AP_DONT:         *(int *) value =  ap->flag; break;
   case AP_OVERRIDE:
-  case AP_NOOVERRIDE: *(int *) value = ap->override; break;
+  case AP_NOOVERRIDE:   *(int *) value = ap->override; break;
   case AP_VALID:
-  case AP_INVALID:	*(int *) value = ap->valid; break;
-  case AP_MAT:	*(Material **) value = ap->mat; break;
-  case AP_LGT:	*(LmLighting **) value = ap->lighting; break;
-  case AP_NORMSCALE: *(double *) value = ap->nscale; break;
-  case AP_LINEWIDTH: *(int *) value = ap->linewidth; break;
-  case AP_SHADING:	*(int *)value = ap->shading; break;
-  case AP_DICE:	((int *)value)[0] = ap->dice[0];
+  case AP_INVALID:      *(int *) value = ap->valid; break;
+  case AP_MAT:          *(Material **) value = ap->mat; break;
+  case AP_LGT:          *(LmLighting **) value = ap->lighting; break;
+  case AP_NORMSCALE:    *(double *) value = ap->nscale; break;
+  case AP_LINEWIDTH:    *(int *) value = ap->linewidth; break;
+  case AP_SHADING:      *(int *)value = ap->shading; break;
+  case AP_TRANSLUCENCY: *(int *)value = ap->translucency; break;
+  case AP_DICE: ((int *)value)[0] = ap->dice[0];
     ((int *)value)[1] = ap->dice[1];
     break;
   default:
@@ -177,7 +183,7 @@ ApDelete(Appearance *ap)
     return;
   if (ap->magic != APMAGIC) {
     OOGLError(1, "ApDelete(%x) of non-Appearance: magic %x != %x",
-	      ap, ap->magic, APMAGIC);
+              ap, ap->magic, APMAGIC);
     return;
   }
   if (ap->mat) MtDelete(ap->mat);
@@ -212,6 +218,7 @@ ApCopyShallow(const Appearance *ap, Appearance *into )
     into->nscale = ap->nscale;
     into->linewidth = ap->linewidth;
     into->shading = ap->shading;
+    into->translucency = ap->translucency;
     into->dice[0] = ap->dice[0];
     into->dice[1] = ap->dice[1];
   }
@@ -288,8 +295,8 @@ ApMerge(const Appearance *src, Appearance *dst, int mergeflags )
   tex = TxMerge(src->tex, dst->tex, mergeflags);
   if ((mergeflags & APF_INPLACE)
       || (mask == 0 && mt == dst->mat &&
-	  lts == dst->lighting && bmt == dst->backmat
-	  && tex == dst->tex)) {
+          lts == dst->lighting && bmt == dst->backmat
+          && tex == dst->tex)) {
     /*
      * No changes, or we're asked to merge in place.  Bump ref count.
      */
@@ -326,6 +333,7 @@ ApMerge(const Appearance *src, Appearance *dst, int mergeflags )
     if (mask & APF_NORMSCALE) dst->nscale = src->nscale;
     if (mask & APF_LINEWIDTH) dst->linewidth = src->linewidth;
     if (mask & APF_SHADING) dst->shading = src->shading;
+    if (mask & APF_TRANSP) dst->translucency = src->translucency;
     if (mask & APF_DICE) {
       dst->dice[0] = src->dice[0];
       dst->dice[1] = src->dice[1];

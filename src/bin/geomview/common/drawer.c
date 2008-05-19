@@ -1791,13 +1791,19 @@ drawer_int(int id, DrawerKeyword key, int ival)
   case DRAWER_TEXTUREDRAW: flag = override = APF_TEXTURE; goto setflag;
   case DRAWER_TEXTUREQUAL: flag = override = APF_TXMIPMAP|APF_TXMIPINTERP|APF_TXLINEAR; goto setflag;
   case DRAWER_BACKCULL: flag = override = APF_BACKCULL; goto setflag;
-  case DRAWER_TRANSPARENT: flag = override = APF_TRANSP; goto setflag;
   case DRAWER_EVERT: flag = override = APF_EVERT; goto setflag;
   case DRAWER_SHADELINES: flag = override = APF_SHADELINES; goto setflag;
   case DRAWER_CONCAVE: flag = override = APF_CONCAVE; goto setflag;
   setflag:
     as.ap = ApCreate(ival ? AP_DO : AP_DONT, flag,
 		     AP_OVERRIDE, override & uistate.apoverride, AP_END);
+    goto mergeap;
+
+  case DRAWER_TRANSLUCENCY:
+    flag = override = APF_TRANSP;
+    as.ap = ApCreate(ival < 0 ? AP_DONT : AP_DO, flag,
+		     AP_TRANSLUCENCY, abs(ival) - 1,
+		     AP_OVERRIDE, APF_TRANSP & uistate.apoverride, AP_END);
     goto mergeap;
 
   case DRAWER_SHADING:

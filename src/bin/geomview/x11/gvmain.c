@@ -74,6 +74,8 @@ int main(int argc, char **argv)
   int i;
   CameraStruct  cs;
 
+  unsetenv("LD_PRELOAD");
+
 #if defined(_FPU_SETCW)
   fpu_control_t hctrlword = _FPU_IEEE;
   _FPU_SETCW(hctrlword);

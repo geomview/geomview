@@ -46,37 +46,60 @@ HandleOps AppearanceOps = {
 static struct {
   char *word;
   int amask;
-  int aval;
+  enum {
+    _flag    = 0,
+    _appearance,
+    _shading,
+    _normscale,
+    _linewidth,
+    _material,
+    _backmaterial,
+    _patchdice,
+    _light,
+    _texture,
+    _translucency,
+    _ap_alpha_blending = AP_TRANSLUCENCY + APF_ALPHA_BLENDING,
+    _ap_screen_door = AP_TRANSLUCENCY + APF_SCREEN_DOOR,
+    _ap_naive_blending = AP_TRANSLUCENCY + APF_NAIVE_BLENDING,
+    _ap_smooth = AP_SHADING + APF_SMOOTH,
+    _ap_flat  = AP_SHADING + APF_FLAT,
+    _ap_constant = AP_SHADING + APF_CONSTANT,
+    _ap_csmooth = AP_SHADING + APF_CSMOOTH,
+    _ap_vcflat = AP_SHADING + APF_VCFLAT,
+  } aval;
 } ap_kw[] = {
-  { "appearance",	0,		1 },
-  { "face",	APF_FACEDRAW,	0 },
-  { "edge",	APF_EDGEDRAW,	0 },
-  { "vect",	APF_VECTDRAW,	0 },
-  { "transparent", APF_TRANSP,	0 },
-  { "evert",	APF_EVERT,	0 },
-  { "keepcolor",	APF_KEEPCOLOR,	0 },
-  { "texturing",	APF_TEXTURE,	0 },
-  { "backcull",	APF_BACKCULL,	0 },
-  { "shadelines",	APF_SHADELINES,	0 },
-  { "concave",	APF_CONCAVE,	0 },
-  { "shading",	APF_SHADING,	2 },
-  { "smooth",	APF_SHADING,	AP_SHADING + APF_SMOOTH },
-  { "flat",	APF_SHADING,	AP_SHADING + APF_FLAT },
-  { "constant",	APF_SHADING,	AP_SHADING + APF_CONSTANT },
-  { "csmooth",	APF_SHADING,	AP_SHADING + APF_CSMOOTH },
-  { "vcflat",	APF_VCFLAT,	AP_SHADING + APF_VCFLAT },
-  { "mipmap",	APF_TXMIPMAP,	0 },
-  { "mipinterp",	APF_TXMIPINTERP, 0 },
-  { "linear",	APF_TXLINEAR,   0 },
-  { "normal",	APF_NORMALDRAW,	0 },
-  { "normscale",	APF_NORMSCALE,  3 },
-  { "linewidth",	APF_LINEWIDTH,	4 },
-  { "material",	0,		5 },
-  { "backmaterial", 0,		7 },
-  { "patchdice",	APF_DICE,	9 },
-  { "light",	0,		6 },
-  { "lighting",	0,		6 },
-  { "texture",	0,		8 },
+  { "appearance",       0,      _appearance },
+  { "face",     APF_FACEDRAW,   _flag },
+  { "edge",     APF_EDGEDRAW,   _flag },
+  { "vect",     APF_VECTDRAW,   _flag },
+  { "transparent", APF_TRANSP,  _translucency },
+  { "screendoor", APF_TRANSP, _ap_screen_door },
+  { "blending", APF_TRANSP, _ap_alpha_blending },
+  { "naive", APF_TRANSP, _ap_naive_blending },
+  { "evert",    APF_EVERT,      _flag },
+  { "keepcolor",        APF_KEEPCOLOR,  _flag },
+  { "texturing",        APF_TEXTURE,    _flag },
+  { "backcull", APF_BACKCULL,   _flag },
+  { "shadelines",       APF_SHADELINES, _flag },
+  { "concave",  APF_CONCAVE,    _flag },
+  { "shading",  APF_SHADING,    _shading },
+  { "smooth",   APF_SHADING,    _ap_smooth },
+  { "flat",     APF_SHADING,    _ap_flat },
+  { "constant", APF_SHADING,    _ap_constant },
+  { "csmooth",  APF_SHADING,    _ap_csmooth },
+  { "vcflat",   APF_VCFLAT,     _ap_vcflat },
+  { "mipmap",   APF_TXMIPMAP,   _flag },
+  { "mipinterp",        APF_TXMIPINTERP, _flag },
+  { "linear",   APF_TXLINEAR,   _flag },
+  { "normal",   APF_NORMALDRAW, _flag },
+  { "normscale",        APF_NORMSCALE,  _normscale },
+  { "linewidth",        APF_LINEWIDTH,  _linewidth },
+  { "material", 0,              _material },
+  { "backmaterial", 0,          _backmaterial },
+  { "patchdice",        APF_DICE,       _patchdice },
+  { "light",    0,              _light },
+  { "lighting", 0,              _light },
+  { "texture",  0,              _texture },
 };
 
 int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
@@ -92,7 +115,7 @@ int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
   bool over, not, more, empty, braces;
   int value;
   int mask, flagmask;
-  bool mine = true;	/* Questionable -- we'll report all errors */
+  bool mine = true;     /* Questionable -- we'll report all errors */
     
   if (p == NULL || (inf = PoolInputFile(p)) == NULL) {
     return 0;
@@ -150,7 +173,7 @@ int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
 	break;
       }
       if (strcmp(w, "define") == 0) {
-	hname = HandleCreateGlobal(iobftoken(inf, 0), &AppearanceOps);	
+	hname = HandleCreateGlobal(iobftoken(inf, 0), &AppearanceOps);  
 	break;
       }
       for (i = sizeof(ap_kw)/sizeof(ap_kw[0]); --i >= 0; ) {
@@ -158,7 +181,7 @@ int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
 	  break;
 	}
       }
-		
+                
       if (i < 0) {
 	if (mine) {
 	  OOGLError(1,
@@ -176,60 +199,82 @@ int ApStreamIn(Pool *p, Handle **hp, Appearance **app)
       mask = flagmask = ap_kw[i].amask;
       if (not) {
 	switch(ap_kw[i].aval) {
-	case 5: MtDelete(ap->mat); ap->mat = NULL; break;
-	case 6: LmDelete(ap->lighting); ap->lighting = NULL; break;
-	case 8: TxDelete(ap->tex); ap->tex = NULL; break;
+	case _material: MtDelete(ap->mat); ap->mat = NULL; break;
+	case _backmaterial: MtDelete(ap->backmat); ap->mat = NULL; break;
+	case _light: LmDelete(ap->lighting); ap->lighting = NULL; break;
+	case _texture: TxDelete(ap->tex); ap->tex = NULL; break;
+	default: break;
 	}
 	ap->flag &= ~mask;
 	if (!over) ap->valid &= ~mask;
 	ap->override &= ~mask;
       } else {
 	switch(ap_kw[i].aval) {
-	case 0: break;
-	case 1: mine = more = 1; break;
-	case 2: iobfgetni(inf, 1, &ap->shading, 0); break;
-	case 3:
+	case _flag:
+	  break;
+	case _appearance:
+	  mine = more = 1;
+	  break;
+	case _translucency:
+	  ap->translucency = APF_ALPHA_BLENDING;
+	  iobfgetni(inf, 1, (int *)&ap->translucency, 0);
+	  break;
+	case _ap_alpha_blending:
+	case _ap_screen_door:
+	case _ap_naive_blending:
+	  ap->translucency = ap_kw[i].aval - AP_TRANSLUCENCY;
+	  break;
+	case _shading:
+	  iobfgetni(inf, 1, (int *)&ap->shading, 0);
+	  break;
+	case _ap_smooth:
+	case _ap_flat:
+	case _ap_constant:
+	case _ap_csmooth:
+	case _ap_vcflat:
+	  ap->shading = ap_kw[i].aval - AP_SHADING;
+	  break;
+	case _normscale:
 	  if (iobfgetnf(inf, 1, &ap->nscale, 0) <= 0) {
 	    OOGLError(1,"ApFLoad: %s: \"normscale\": value expected", fname);
-	  }	  
+	  }       
 	  break;
-	case 4:
+	case _linewidth:
 	  if (iobfgetni(inf, 1, &ap->linewidth, 0) <= 0) {
 	    OOGLSyntax(inf, "%s \"linewidth\": value expected", fname);
 	  }
 	  break;
-	case 5:
+	case _material:
 	  if ((ap->mat = MtFLoad(ap->mat, inf, fname)) == NULL) {
 	    OOGLSyntax(inf,"Can't read material in %s", fname);
 	  }
 	  break;
-	case 6:
+	case _backmaterial:
+	  if ((ap->backmat = MtFLoad(ap->backmat, inf, fname)) == NULL) {
+	    OOGLError(1,"Can't read backmaterial, file %s", fname);
+	  }
+	  break;
+	case _light:
 	  ap->lighting = LmFLoad(ap->lighting, inf, fname);
 	  if (ap->lighting == NULL) {
 	    OOGLError(1,"Can't read lighting, file %s", fname);
 	  }
 	  break;
-	case 7:
-	  if ((ap->backmat = MtFLoad(ap->backmat, inf, fname)) == NULL) {
-	    OOGLError(1,"Can't read backmaterial, file %s", fname);
-	  }
-	  break;
-	case 8:
+	case _texture:
 	  if (!TxStreamIn(p, NULL, &ap->tex)) {
 	    OOGLError(1, "%s: Can't read texture", fname);
 	  }
 	  break;
-	case 9:
-	  if (iobfgetns(inf, 2, ap->dice, 0) < 2) {
+	case _patchdice:
+	  if (iobfgetni(inf, 2, ap->dice, 0) < 2) {
 	    OOGLSyntax(inf,
 		       "%s \"patchdice\": "
 		       "expected integer u- and v- dicing values", fname);
 	  }
 	  break;
 	default:
-	  if (ap_kw[i].aval >= AP_SHADING) {
-	    ap->shading = ap_kw[i].aval - AP_SHADING;
-	  }
+	  OOGLSyntax(inf,
+		     "%s unknown appearance keyword", fname);
 	}
 	if (value) {
 	  ap->flag |= flagmask;
@@ -329,24 +374,44 @@ int ApStreamOut(Pool *p, Handle *h, Appearance *ap)
   if (PoolStreamOutHandle(p, h, ap != NULL)) {
     for (i = 0; i < (int)(sizeof(ap_kw)/sizeof(ap_kw[0])); i++) {
       mask = ap_kw[i].amask;
-      if ((valid & mask) == 0)
+      if ((valid & mask) == 0) {
 	continue;
+      }
       Apsavepfx(valid, ap->override, mask, "", f, p);
-      if (ap_kw[i].aval == 0) {
-	if ((mask & ap->flag) == 0)
+      if (ap_kw[i].aval == 0 || ap_kw[i].aval == _translucency) {
+	if ((mask & ap->flag) == 0) {
 	  fputc('-', f);
+	}
 	fputs(ap_kw[i].word, f);
       }
       valid &= ~mask;
-      switch(mask) {
+      switch (mask) {
+      case APF_TRANSP:
+	if ((mask & ap->flag) != 0) {
+	  switch (ap->translucency) {
+	  case APF_SCREEN_DOOR:
+	    fputs(" screendoor", f);
+	    break;
+	  case APF_NAIVE_BLENDING:
+	    fputs(" naive", f);
+	    break;
+	  case APF_ALPHA_BLENDING:
+	    fputs(" blending", f);
+	    break;
+	  default:
+	    fprintf(f, "%d", ap->translucency); break;
+	    break;
+	  }
+	}
+	break;
       case APF_SHADING:
 	fputs("shading ", f);
 	switch(ap->shading) {
-	case APF_SMOOTH:   fputs("smooth", f);	break;
-	case APF_FLAT:     fputs("flat", f);	break;
-	case APF_CONSTANT: fputs("constant", f);	break;
-	case APF_CSMOOTH:  fputs("csmooth", f);	break;
-	case APF_VCFLAT:   fputs("vcflat", f);	break;
+	case APF_SMOOTH:   fputs("smooth", f);  break;
+	case APF_FLAT:     fputs("flat", f);    break;
+	case APF_CONSTANT: fputs("constant", f);        break;
+	case APF_CSMOOTH:  fputs("csmooth", f); break;
+	case APF_VCFLAT:   fputs("vcflat", f);  break;
 	default:           fprintf(f, "%d", ap->shading); break;
 	}
 	break;

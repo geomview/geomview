@@ -56,6 +56,12 @@ char *shades[5] = {
 	"[4as] VCflat",	        /* APF_VCFLAT */
 };
 
+char *translucencies[3] = {
+  "[0mt] BSP-Tree Alpha Blending",
+  "[1mt] Screen Door",
+  "[2mt] Simple Alpha Blending"
+};
+
 char *norm[4] = {
 	"[0N] None",		/* NONE */
 	"[1N] Individual",	/* EACH */
