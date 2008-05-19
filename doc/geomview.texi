@@ -1846,7 +1846,7 @@ Click @emph{OK} to accept the color that you have chosen, or
 The @emph{SHADING} browser lets you specify the shading model that
 Geomview uses to paint the target geom.
 
-@table @emph
+@table @code
 
 @item Constant
 Every face of the object is drawn with a constant color which does not
@@ -1876,6 +1876,11 @@ independent of lighting, orientation, and material properties.  If the
 object is defined with per-vertex colors, the colors are interpolated
 smoothly across the face; otherwise the effect is the same as in
 Constant shading style.
+
+@item VCflat
+A combination of @code{CSmooth} and @code{Flat} shading. So the shading
+is constant on each face, depending on the relative orientation of the
+light sources, the camera and the surface normal of the face.
 
 @end table
 
@@ -1938,14 +1943,34 @@ It works with the target object in the same way that the
 
 @table @emph
 
-@item Transparent
+@item Translucent
 
-This button determines whether transparency is enabled.  Geomview itself
-does not fully support transparency yet and on some machines it does not
-work at all.  (The missing piece is implementation of a depth-sorting
-algorithm in the rendering engine; not difficult, but just not done
-yet.)  Use RenderMan if you want real transparency: when transparency is
-enabled, a RenderMan snapshot will contain the alpha information.
+This button determines whether translucency is enabled. Geomview
+supports three different flavours of translucency:
+
+@table @emph
+@item Alpha-blending with BSP-tree depth-sorting
+This is the most accurate flavour for online viewing, but consumes vast
+amounts of computation time and memory. In this mode single translucent
+objects are displayed correctly with respect to themselves; however
+multiple translucent objects may appear in the wrong order on the
+screen. The notion @emph{object} means here: top-level geometries as
+displayed in the geometry target browser.
+
+@item Screen Door Translucency
+If the machine support OpenGL then there is support for kind-of
+translucency by masking out (completely) transparent pixels by means of
+a stipple mask. This is currently very experimental, and the result is
+somewhat ugly, but fast.
+
+@item Alphe-blending without depth-sorting
+This is the old naive way of doing quick and dirty translucency. It is
+fast, but the results are completely incorrect.
+@end table
+
+When transparency is enabled, a RenderMan snapshot will contain the
+alpha information, a RenderMan compliant renderer can then generate
+high-quality pictures, including correct translucency.
 
 @item Alpha
 This slider determines the opacity/transparency when transparency is
@@ -3000,10 +3025,20 @@ appearance @{
   +face               # (Do) draw faces of polygons.  On by default.
   -edge               # (Don't) draw edges of polygons
   +vect               # (Do) draw VECTs.  On by default.
-  -transparent        # (Disable) transparency. Enabling transparency 
+  transparent screendoor
+                      # (Enable) transparency. Enabling transparency 
                       # does not (necessarily) result in a correct Geomview
                       # pictures, but alpha values are used in RenderMan
                       # snapshots.
+                      # The allowed keywords are ``screendoor'' (masking out
+                      # out pixels by means of a stipple pattern),
+                      # ``blending'' for alpha-blending with BSP-tree
+                      # space paritioning and depth-sorting (slow) and
+                      # ``naive'' for alpha-blending without even
+                      # depth-sorting, not to talk about space
+                      # partioning. Omitting the keyword will default to
+                      # alpha-blending with BSP-tree space-partioning
+                      # and depth-sorting.
   -normal             # (Do) draw surface-normal vectors
   normscale 1         # @dots{} with length 1.0 in object coordinates
 
@@ -3026,9 +3061,10 @@ appearance @{
                       # "+keepcolor" attribute are immune to N-D coloring.
 
   shading smooth      # or ``shading constant'' or ``shading flat'' or
-                      # or ``shading csmooth''.
+                      # or ``shading csmooth'' or ``shading vcflat''.
                       # smooth = Gouraud shading, flat = faceted,
-                      # csmooth = smoothly interpolated but unlighted.
+                      # csmooth = smoothly interpolated but unlighted,
+                      # vcflat = flat shading, but smoothly interpolated colors.
 
   linewidth 1         # lines, points, and edges are 1 pixel wide.
 
