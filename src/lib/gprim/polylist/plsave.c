@@ -78,9 +78,9 @@ PolyListFSave(PolyList *polylist, FILE *outf, char *fname)
 	    fprintf(outf, "\n%d	", n);
 	    for(vp = p->v; --n >= 0; vp++)
 		    fprintf(outf, " %d", (int)((*vp) - polylist->vl));
-	    if((polylist->geomflags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
-		fprintf(outf, "\t%g %g %g %g",
-			p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
+	    if ((polylist->geomflags & PL_HASPCOL)) {
+	      fprintf(outf, "\t%g %g %g %g",
+		      p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
 	    }
 	}
 	fputc('\n', outf);

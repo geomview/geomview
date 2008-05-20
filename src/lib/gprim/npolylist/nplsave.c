@@ -101,7 +101,7 @@ NPolyListFSave(NPolyList *pl, FILE *outf, char *fname)
     fprintf(outf, "\n%d	", p->n_vertices);
     for(k = 0; k < p->n_vertices; k++)
       fprintf(outf, " %d", pl->vi[pl->pv[i] + k]);
-    if((pl->geomflags & (PL_HASPCOL|PL_HASVCOL)) == PL_HASPCOL) {
+    if((pl->geomflags & PL_HASPCOL)) {
       fprintf(outf, "\t%.8g %.8g %.8g %.8g",
 	      p->pcol.r, p->pcol.g, p->pcol.b, p->pcol.a);
     }
