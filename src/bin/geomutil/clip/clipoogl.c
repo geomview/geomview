@@ -52,14 +52,14 @@ void readVerts(Clip *clip, vertex_list *pv, Geom *g, int isnd)
 
     for(i = 0; i < pv->numvtx; i++, point++) {
 	point->next = point+1;
-	if(isnd) {
+	if (isnd) {
 	    point->coord = &npl->v[i*(clip->dim+1)];
 	    colors = &npl->vcol[i];
 	} else {
 	    point->coord = &pl->vl[i].pt.x;
 	    colors = &pl->vl[i].vcol;
 	}
-	if(colored) {
+	if (colored) {
 	    point->c = *(Color *)colors;
 	}
     }
@@ -142,7 +142,7 @@ void readPolys(Clip *clip, poly_list *ph, Geom *g, int isnd)
   ph->head = point;
   for(i = 0; i < ph->numpoly; i++, point++) {
     point->next = point+1;
-    if(isnd) readNDPoly(point, npl, i);
+    if (isnd) readNDPoly(point, npl, i);
     else readPoly(point, pl, i);
   }
   point--;
@@ -160,33 +160,33 @@ void setGeom(struct clip *clip, void *aGeom)
     int isnd;
 
     clip_destroy(clip);
-    if(aGeom==NULL) {
+    if (aGeom==NULL) {
 	return;		/* clip_destroy() already created null object */
     }
     classname = GeomName(aGeom);
     clip->polyhedron.has = 0;
-    if(strcmp(classname, "polylist") == 0) {
+    if (strcmp(classname, "polylist") == 0) {
 	PolyList *pl = (PolyList *)aGeom;
-	if(pl->geomflags & PL_HASVCOL)
+	if (pl->geomflags & PL_HASVCOL)
 	    clip->polyhedron.has = HAS_VC;
-	if(pl->geomflags & PL_HASPCOL)
+	if (pl->geomflags & PL_HASPCOL)
 	    clip->polyhedron.has |= HAS_PC;
 	isnd = 0;
 	clip->dim = pl->geomflags & VERT_4D ? 4 : 3;
 	clip->polyvertex.numvtx = pl->n_verts;
 	isnd = 0;
-    } else if(strcmp(classname, "npolylist") == 0) {
+    } else if (strcmp(classname, "npolylist") == 0) {
 	NPolyList *npl = (NPolyList *)aGeom;
 
 	clip->dim = npl->pdim-1;
-	if(clip->dim >= MAXDIM-1) {
+	if (clip->dim >= MAXDIM-1) {
 	    fprintf(stderr, "clip: can't handle objects of dimension %d\n\
 (change MAXDIM, now %d, and recompile)\n", clip->dim, MAXDIM);
 	    exit(1);
 	}
-	if(npl->geomflags & PL_HASVCOL)
+	if (npl->geomflags & PL_HASVCOL)
 	    clip->polyhedron.has = HAS_VC;
-	if(npl->geomflags & PL_HASPCOL)
+	if (npl->geomflags & PL_HASPCOL)
 	    clip->polyhedron.has |= HAS_PC;
 	isnd = 1;
 	clip->polyvertex.numvtx = npl->n_verts;
@@ -215,7 +215,7 @@ void *getGeom(Clip *clip)
   int hdim = (dim == 3 || dim == 4) ? 4 : dim+1;
   int has = clip->polyhedron.has;
 
-  if(clip->polyvertex.numvtx==0) {
+  if (clip->polyvertex.numvtx==0) {
       return NULL;
   }
   point = clip->polyhedron.head;
@@ -227,20 +227,20 @@ void *getGeom(Clip *clip)
   }
   points = (float *)malloc(hdim*clip->polyvertex.numvtx*sizeof(*points));
   vertex_counts = (int *)malloc(clip->polyhedron.numpoly*sizeof(int));
-  if(has & HAS_PC)
+  if (has & HAS_PC)
       poly_color = (ColorA *)malloc(clip->polyhedron.numpoly*sizeof(ColorA));
   vertex_indices = (int *)malloc(total*sizeof(int));
-  if(has & HAS_VC)
+  if (has & HAS_VC)
       colors = (ColorA *)malloc(clip->polyvertex.numvtx*sizeof(ColorA));
 
   ptp = points;
   ctp = colors;
   for(vert=clip->polyvertex.head; vert != NULL; vert = vert->next) {
-    if(!vert->clip) {
+    if (!vert->clip) {
 	memcpy(ptp, vert->coord, dim*sizeof(float));
 	ptp += dim;
-	if(hdim > dim) *ptp++ = 1.;
-	if(has & HAS_VC) {
+	if (hdim > dim) *ptp++ = 1.;
+	if (has & HAS_VC) {
 	    *(Color *)ctp = vert->c;
 	    ctp->a = 1;
 	    ctp++;
@@ -278,7 +278,7 @@ void *getGeom(Clip *clip)
     }
     point = point->next;
   }
-  if(dim == 3 || dim == 4) {
+  if (dim == 3 || dim == 4) {
     aGeom = GeomCreate("polylist",
 	CR_NPOLY, clip->polyhedron.numpoly,
 	CR_POINT4, points,
@@ -294,14 +294,14 @@ void *getGeom(Clip *clip)
 	CR_VERT, vertex_indices,
 	CR_END);
   }
-  if(has & HAS_PC)
+  if (has & HAS_PC)
       GeomSet(aGeom, CR_POLYCOLOR, poly_color, CR_END);
-  else if(has & HAS_VC)
+  if (has & HAS_VC)
       GeomSet(aGeom, CR_COLOR, colors, CR_END);
   free(points);
   free(vertex_counts);
   free(vertex_indices);
-  if(colors) free(colors);
-  if(poly_color) free(poly_color);
+  if (colors) free(colors);
+  if (poly_color) free(poly_color);
   return aGeom;
 }
