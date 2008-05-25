@@ -1876,7 +1876,7 @@ Clique @emph{OK} para aceitar as cores que voc6e tiver escolhido, ou
 O navegador @emph{SHADING} permite a voc@^{e} especificar o modelo de tonalidade que
 Geomview utilizar@'{a} para desenhar o geom alvo.
 
-@table @emph
+@table @code
 
 @item Constant
 Toda face do objeto @'{e} desenhada com uma cor constante que n@~{a}o
@@ -1906,6 +1906,11 @@ independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e porpriedades de materi
 objeto for definido com cores por v@'{e}rtice, as cores ser@~{a}o interpoladas
 lisamente ao longo da face; de outra forma o efieto @'{e} o mesmo que ocorre no
 estilo de tonalidade "Constant".
+
+@item VCflat
+Uma combina@,{c}@~{a}o de @code{CSmooth} e tonalidade @code{Flat}. Dessa forma a tonalidade
+@'{e} constante em cada face, de acordo com a orienta@,{c}@~{a}o relativa das
+fontes de luz, a c@^{a}mera e a superf@'{i}cie normal da face.
 
 @end table
 
@@ -1968,14 +1973,34 @@ painel de apar@^{e}ncia (@emph{Appearance}) faz.
 
 @table @emph
 
-@item Transparent
+@item Translucent
 
-Esse bot@~{a}o determina se a transpar@^{e}ncia est@'{a} habilitada.  Geomview por si mesmo
-n@~{a}o suporta a transpar@^{e}ncia completamente ainda e o funcionando em algumas m@'{a}quinas a transpar@^{e}ncia n@~{a}o
-trabalha de forma completa.  (A pe@,{c}a omitida @'{e} implementa@,{c}@~{a}o de um algor@'{i}timo
-intensidade e precis@~{a}o num@'{e}rica no bloco de redenriza@,{c}@~{a}o; n@~{a}o @'{e} dif@'{i}cil, mas @'{e} simplesmente n@~{a}o realizado
-ainda.)  Use RenderMan se voc@^{e} quiser transpar@^{e}ncia real: Quando a transpar@^{e}ncia estiver
-habilitada, um instant@^{a}neo de RenderMan ir@'{a} conter a informa@,{c}@~{a}o alfa.
+Esse bot@~{a}o determina se a capacidade de ser transl@'{u}cido est@'{a} habilitada. Geomview
+suporta tr@^{e}s diferentes formas da capacidade de ser transl@'{u}cido (transluc@^{e}ncia):
+
+@table @emph
+@item Alpha-blending com BSP-tree depth-sorting
+Esse @'{e} o n@'{i}vel mais acurado de prefer@^{e}ncia de visualiza@,{c}@~{a}o imediata, mas consome vastos
+montantess de tempo de computa@,{c}@~{a}o e mem@'{o}ria. No modo simples de transluc@^{e}ncia
+objetos s@~{a}o mostrados corretamente em rela@,{c}@~{a}o a si mesmos; todavia
+multiplos objetos transl@'{u}cidos podem aparecer na ordem inadequada na
+tela. A no@,{c}@~{a}o @emph{objeto} significa aqui: geometria de n@'{i}vel mais alto como
+mostrado no navegador de alvo de geometria.
+
+@item Screen Door Translucency
+Se a m@'{a}quina suporta OpenGL ent@~{a}o existe suporte para tipo de
+transluc@^{e}ncia por mascaramento de sa@'{i}da (completamente) de pixels transparentes por meio de
+uma mascara de ponteamento. Essa forma @'{e} atualmente muito experimental, e o resultado @'{e}
+de certa forma o ideal, mas funciona e @'{e} r@'{a}pido.
+
+@item Alphe-blending sem depth-sorting
+Esse @'{e} a antiga forma de fazer uma transluc@^{e}ncia r@'{a}pida e com muitas falhas. Essa @'{e}
+r@'{a}pida, mas os resultados s@~{a}o completamente incorretos.
+@end table
+
+Quando a transpar@^{e}ncia estiver habilitada, um instant@^{a}neo RenderMan ir@'{a} conter a
+informa@,{c}@~{a}o alfa, um renderizador obediente de pode ent@~{a}o gerar
+figuras de alta qualidade, incluindo a transluc@^{e}ncia correta.
 
 @item Alpha
 O bot@~{a}o deslizante determina a opacidade/transpar@^{e}ncia quando a transpar@^{e}ncia estiver
@@ -3033,13 +3058,25 @@ appearance @{
   +vect               # (Faz) desenho de vetores (VECTs).  Habilitado
                       # por padr@~{a}o.
 
-  -transparent        # (Desabilita) transparency. Habilita@,{c}@~{a}o de
+  transparent screendoor
+                      # (Habilita) transpar@^{e}ncia. Habilita@,{c}@~{a}o de 
                       # transpar@^{e}ncia.
-
                       # n@~{a}o (necessariamente) resulta em cores corretas
                       # no Geomview, mas os valores de alfa s@~{a}o usados
                       # em instant@^{a}neos RenderMan.
-
+                      # As papavras chave permitidas s@~{a}o ``screendoor'' 
+                      # (mascarando pixels de sa@'{i}da por meio de um
+                      # modelo de ponteamento), ``blending'' para
+                      # alpha-blending ( harmoniza@,{c}@~{a}o de alfa)
+                      # com BSP-tree (@'{a}rvore BSP) particionando o
+                      # espa@,{c}o e ordenando com precis@~{a}o 
+                      # (lento) e ``naive'' para harmoniza@,{c}@~{a}o de
+                      # alfa sem mesmo ordenar com precis@~{a}o, n@~{a}o
+                      # para falar sobre particionamento de espa@,{c}o.
+                      # Omitindo a palavra chave o padr@~{a}o ser@'{a}
+                      # harmoniza@,{c}@~{a}o de alfa com @'{a}rvore
+                      # particionando o espa@,{c}o e ordenando com
+                      # precis@~{a}o.
   -normal             # (Faz) desenho de vetores normais a uma
                       # superf@'{i}cie.
 
@@ -3078,9 +3115,11 @@ appearance @{
                       # ma@,{c}@~{o}es de cor N-D.
 
   shading smooth      # ou ``shading constant'' ou ``shading flat'' ou
-                      # ou ``shading csmooth''.
-                      # smooth = Gouraud shading, flat = faceted,
-                      # csmooth = smoothly interpolated but unlighted.
+                      # ou ``shading csmooth'' ou ``shading vcflat''.
+                      # smooth = tonalidade de Gouraud, flat = facetado,
+                      # csmooth = linearmente interpolado mas n@~{a}o 
+                      # iluminado, vcflat = tonalidade mon@'{o}tona, mas
+                      # cores linearmente interpoladas.
 
   linewidth 1         # linhas, pontos, e arestas s@~{a}o da largura de
                       # 1 pixel.
@@ -3230,24 +3269,27 @@ Os campos de textura dispon@'{i}veis s@~{a}o:
 
 @example
 clamp   none  -ou-  s  -ou-  t  -ou-  st
-  Determina o significado de coordenadas de textura fora do intervalo 0..1.
-  Com @code{clamp none}, o padr@~{a}o, coordenadas s@~{a}o interpretadas
-  modulo 1, ent@~{a}o (s,t) = (1.25,0), (.25,0), e (-.75,0) referem-se todos ao
-  mesmo ponto no espa@,{c}o das texturas.  Com @code{clamp s} ou @code{clamp t} ou
-  @code{clamp st}, individualmente ou ambos de s-coordenadas ou t-coordenadas menor que 0 ou
+  Determina o significado de coordenadas de textura fora do intervalo
+  0..1. Com @code{clamp none}, o padr@~{a}o, coordenadas s@~{a}o
+  interpretadas modulo 1, ent@~{a}o (s,t) = (1.25,0), (.25,0), e (-.75,0)
+  referem-se todos ao mesmo ponto no espa@,{c}o das texturas.  Com
+  @code{clamp s} ou @code{clamp t} ou @code{clamp st}, individualmente
+  ou ambos de s-coordenadas ou t-coordenadas menor que 0 ou
   maior que 1 s@~{a}o remapeadas para 1 ou para 0, respectivamente.
 
-image @{ <especifica@,{c}@~{a}o de imagem> (veja @ref{image, Image objects}) @}
-  Especifica a atual imagem de textura. Imagens de textura podem ter 1, 2, 3 ou 4 canais:
+image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Image objects}) @}
+  Especifica a atual imagem de textura. Imagens de textura podem ter 
+  1, 2, 3 ou 4 canais:
     1 canal:  lumin@^{a}ncia
     2 canais: lumin@^{a}ncia e alfa (opcidade:0 transparente, 1 opaco)
     3 canais: dados RGB
     4 canais: dados RGBA
 
-  Veja @ref{image, Image objects}, para a defini@,{c}@~{a}o atual de objetos de
-  imagem. O canal usado por alfa @'{e} somente interpretado como m@'{a}scara: onde a m@'{a}cara
-  @'{e} zero, pixels s@~{a}o simplesmente n@~{a}o desenhados. Uma exce@,{c}@~{a}o @'{e} o caso onde
-  @emph{apply} @'{e} igual a @emph{modulate} e a transluc@^{e}ncia est@'{a} habilitada:
+  Veja @ref{image, Image objects}, para a defini@,{c}@~{a}o atual de
+  objetos de imagem. O canal usado por alfa @'{e} somente interpretado
+  como m@'{a}scara: onde a m@'{a}cara @'{e} zero, pixels s@~{a}o simplesmente
+  n@~{a}o desenhados. Uma exce@,{c}@~{a}o @'{e} o caso onde @emph{apply}
+  @'{e} igual a @emph{modulate} e a transluc@^{e}ncia est@'{a} habilitada:
   nesse caso o valor de alfa resultante @'{e} o resultado da
   multiplica@,{c}@~{a}o da cor da superf@'{i}cie pelo valor de alfa do
   canal alfa da textura.
@@ -3285,17 +3327,19 @@ alphafile nomearquivo
 
 apply   modulate  -ou-  blend  -ou-  decal
   Indica como a imagem de textura @'{e} aplicada @`{a} superf@'{i}cie.
-  Aqui a "surface color" (cor da superf@'{i}cie) significa a cor que a superf@'{i}cie pode ter
-  na aus@^{e}ncia de mapeamento de textura.
+  Aqui a "surface color" (cor da superf@'{i}cie) significa a cor que a
+  superf@'{i}cie pode ter   na aus@^{e}ncia de mapeamento de textura.
 
   Com @code{modulate}, o padr@~{a}o, a cor de textura (ou ilumina@,{c}@~{a}o,
-  se texturado por meio de uma imagem de escala de cinza) @'{e} multiplicada pela cor da superf@'{i}cie.
+  se texturado por meio de uma imagem de escala de cinza) @'{e} multiplicada
+  pela cor da superf@'{i}cie.
 
   Com @code{blend}, textura harmoniza-se entre cor de fundo (@code{background})
   e a cor da superf@'{i}cie.  O par@^{a}metro @code{file} deve especificar uma
-  imagem de escala de cinza.  Onde a imagem de textura @'{e} 0, a cor da superf@'{i}cie permanece
-  inalterada; onde for 1, a superf@'{i}cie @'{e} colorida na cor dada
-  por @code{background}; e cor @'{e} interpolada para valores imediatos.
+  imagem de escala de cinza.  Onde a imagem de textura @'{e} 0, a cor da
+  superf@'{i}cie permanece inalterada; onde for 1, a superf@'{i}cie @'{e}
+  colorida na cor dada por @code{background}; e cor @'{e} interpolada para
+  valores imediatos.
 
   Com @code{decal}, o par@^{a}metro @code{file} deve especificar uma
   imagem de tres cores.  Se um par@^{a}metro @code{alphafile} estiver presente,
@@ -3306,16 +3350,17 @@ apply   modulate  -ou-  blend  -ou-  decal
 
 background  R G B A
   Especifica uma cor com 4 componentes, com n@'{u}meros R, G, B, e A em
-  ponto flutuante normalmente no intervalo 0..1, usados quando @code{apply blend}
-  for selecionado.
+  ponto flutuante normalmente no intervalo 0..1, usados quando
+  @code{apply blend} for selecionado.
 
 transform @code{matriz-de-trnaforma@,{c}@~{a}o}
-  Espera uma lista de 16 n@'{u}meros, ou um dos outros caminhos de representar
-  uma transforma@,{c}@~{a}o (@code{: nomecabe@,{c}alho} ou @code{< nomearquivo}).
-  A matriz 4x4 de transforma@,{c}@~{a}o @'{e} aplicada a coordenadas de textura,
-  no sentido de um vetor linha de 4 componentes (s,t,0,1) multiplicado @`{a}
-  esquerda pela matriz, para produzir novas coordenadas (s',t')
-  @`{a}s quais atualmente indexam a textura.
+  Espera uma lista de 16 n@'{u}meros, ou um dos outros caminhos de
+  representar uma transforma@,{c}@~{a}o (@code{: nomecabe@,{c}alho} ou
+  @code{< nomearquivo}). A matriz 4x4 de transforma@,{c}@~{a}o @'{e}
+  aplicada a coordenadas de textura, no sentido de um vetor linha de 
+  4 componentes (s,t,0,1) multiplicado @`{a} esquerda pela matriz, para
+  produzir novas coordenadas (s',t') @`{a}s quais atualmente indexam a
+  textura.
 @end example
 
 @comment ================================================================
@@ -3350,7 +3395,7 @@ A sintaxe do arquivo @'{e}
 
 @example
    [C][N][4]QUAD  -ou-  [C][N][4]POLY		   # Palavra chave
-   @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  # v@'{e}rtices quadridimensionais para algum N
+   @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  # v@'{e}rtices 4-D para algum N
    @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}  @var{v@'{e}rtice}
    @dots{}
 @end example
@@ -3533,8 +3578,8 @@ Sintaxe:
   @code{S}(u=0,v=0)	@code{T}(0,0)	@code{S}(0,@var{Nv}) @code{T}(0,@var{Nv})
   @code{S}(@var{Nu},0)	@code{T}(@var{Nu},0)	@code{S}(@var{Nu},@var{Nv}) @code{T}(@var{Nu},@var{Nv})
 
-			# n@'{u}mero em ponto flutuante com 4 componentes no intervalo (0..1) de cores R G B A
-			# para cada canto se mencionado no cabe@,{c}alho
+			# n@'{u}mero em ponto flutuante com 4 componentes no intervalo (0..1) de
+			# cores R G B A para cada canto se mencionado no cabe@,{c}alho
   @code{RGBA}(0,0)   @code{RGBA}(0,@var{Nv})
   @code{RGBA}(@var{Nu},0)  @code{RGBA}(@var{Nu},@var{Nv})
 @end example
