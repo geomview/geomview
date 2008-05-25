@@ -3353,7 +3353,7 @@ background  R G B A
   ponto flutuante normalmente no intervalo 0..1, usados quando
   @code{apply blend} for selecionado.
 
-transform @code{matriz-de-trnaforma@,{c}@~{a}o}
+transform @code{matriz-de-transforma@,{c}@~{a}o}
   Espera uma lista de 16 n@'{u}meros, ou um dos outros caminhos de
   representar uma transforma@,{c}@~{a}o (@code{: nomecabe@,{c}alho} ou
   @code{< nomearquivo}). A matriz 4x4 de transforma@,{c}@~{a}o @'{e}
@@ -3647,7 +3647,8 @@ Sintaxe:
 
 @example
 [ST][C][N][4][n]OFF	# Palavra chave do cabe@,{c}alho
-[@var{Ndim}]		# Dimens@~{a}o do espa@,{c}o dos v@'{e}rtices, presente somente se nOFF estiver tamb@'{e}m presente
+[@var{Ndim}]		# Dimens@~{a}o do espa@,{c}o dos v@'{e}rtices, presente somente se nOFF
+			# estiver tamb@'{e}m presente
 @var{NV@'{e}rtices}  @var{NFaces}  @var{NArestas}   # NEdges n@~{a}o @'{e} usado nem checado
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]	# V@'{e}rtices, possivelmente com normais,
@@ -3668,7 +3669,8 @@ Sintaxe:
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  @var{colorspec}
 @dots{}
     			# @var{colorspec} colar cont@'{i}nuo @var{v}[@var{Nv}-1]
-    			# at@'{e} o aparecer um caractere de fim de linha; pode ser de 0 a 4 n@'{u}meros
+    			# at@'{e} o aparecer um caractere de fim de linha; pode ser de 0 a 4
+    			# n@'{u}meros
     			# nenhum: padr@~{a}o
     			# inteiro: @'{i}ndice do mapa de cores
     			# 3 ou 4 inteiros: valores RGB[A] no intervalo 0..255
@@ -3715,7 +3717,7 @@ a cor padr@~{a}o
 @'{i}ndice dentro "do" mapa de cores; veja abaixo
 @item tr@^{e}s ou quatro inteiros
 valores de RGB e possivelmente alfa no intervalo 0..255
-@item tr@^{e}s ou quatro n@'{u}mers em ponto flutuante
+@item tr@^{e}s ou quatro n@'{u}meros em ponto flutuante
 valores RGB e possivelmente alfa no intervalo 0..1
 @end table
 
@@ -3771,10 +3773,12 @@ Sintaxe:
                                            # em cada linha poligonal
 
 @var{Vert[0]} @dots{} @var{Vert[NVertices-1]}  # Todos os v@'{e}rtices
-                                           # (3*NVertices n@'{u}meros em ponto flutuante)
+                                           # (3*NVertices n@'{u}meros em
+                                           # ponto flutuante)
 
 @var{Color[0]} @dots{} @var{Color[NCores-1]}  # Todas as cores
-                                           # (4*NCores n@'{u}meros em ponto flutuante, RGBA)
+                                           # (4*NCores n@'{u}meros em ponto
+                                           # flutuante, RGBA)
 @end example
 
 Objetos do tipo @code{VECT} representam listas de linhas poligonais (seq@"{u}@^{e}ncia de caacteres que representam
@@ -3840,25 +3844,29 @@ Sintaxe:
 
 @example
 [C][4][n]SKEL
-[@var{NDim}]                    # Dimens@~{a}o dos v@'{e}rtices, presente somente se nSKEL tamb@'{e}m estiver presente
+[@var{NDim}]                    # Dimens@~{a}o dos v@'{e}rtices, presente somente 
+				    # se nSKEL tamb@'{e}m estiver presente
 @var{NV@'{e}rtices}  @var{NLinhaspoligonais}
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]  # V@'{e}rtices
 				    # se 4SKEL, cada v@'{e}rtice ter@'{a} 4 componentes
 				    # se nSKEL, each v@'{e}rtice ter@'{a} NDim componentes
-                                    # se C[4][n]SKEL coordenadas de v@'{e}rtice s@~{a}o
-                                    # seguidas por uma especifica@,{c}@~{a}o de cor RGBA
+                                    # se C[4][n]SKEL coordenadas de
+                                    # v@'{e}rtice s@~{a}o seguidas por uma
+                                    # especifica@,{c}@~{a}o de cor RGBA
 @dots{}
 @var{x}[@var{NV@'{e}rtices}-1]  @var{y}[@var{NV@'{e}rtices}-1]  @var{z}[@var{NV@'{e}rtices}-1]
 
                         # linhas poligonais
-                        # @var{Nv} = v@'{e}rtices sobre essa linha poligonal (1 = ponto)
+                        # @var{Nv} = v@'{e}rtices sobre essa linha poligonal
+                        # (1 = ponto)
                         # @var{v}[0] @dots{} @var{v}[@var{Nv}-1]: @'{i}ndices de v@'{e}rtice
                         #               no intervalo 0..@var{NV@'{e}rtices}-1
 @var{Nv}  @var{v}[0] @var{v}[1] @dots{} @var{v}[@var{Nv}-1]  [@var{colorspec}]
 @dots{}
                         # @var{colorspec} continua adiante de @var{v}[@var{Nv}-1]
-                        # at@'{e}m encontrar um fim de linha; pode ser vazia, ou 3 ou 4 n@'{u}meros.
+                        # at@'{e}m encontrar um fim de linha; pode ser
+                        # vazia, ou 3 ou 4 n@'{u}meros.
                         # vazia: cor padr@~{a}o
 			# 3 ou 4 n@'{u}meros em ponto flutuante: valores RGB[A] no intervalo 0..1
 @end example
@@ -3901,8 +3909,9 @@ O sufixo convencional para arquivos @code{SPHERE} @'{e} @file{.sph}.
 
 @example
 [ST][E|H|S]SPHERE # Palavra chave
-# coordenadas de textura geradas automaticamente, somente permitido com objetos @emph{ST}SPHERE
-[SINUSOIDAL|CYLINDRICAL|RECTANGULAR|STEREOGRAPHIC|ONEFACE]
+# coordenadas de textura geradas automaticamente, somente permitido
+# com objetos @emph{ST}SPHERE [SINUSOIDAL|CYLINDRICAL|RECTANGULAR|
+# STEREOGRAPHIC|ONEFACE]
 # os pr@'{o}ximos quatro campos s@~{a}o requeridos
 @var{Radius}
 @var{Xcenter} @var{Ycenter} @var{Zcenter}
