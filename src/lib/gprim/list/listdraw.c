@@ -59,12 +59,15 @@ List *ListDraw(List *list)
 
   for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
 
-    while (lpathlen >= allocsz) {
+    if (lpathlen >= allocsz) {
       /* give up on alloca */
-      allocsz <<= 1;
+      bool doFree = allocsz > INITIAL_ALLOC_SIZE;
+      while (lpathlen >= allocsz) {
+	allocsz <<= 1;
+      }
       path = OOGLNewNE(char, allocsz, "List PATH");
       memcpy(path, lpath, lpathlen-1);
-      if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+      if (doFree) {
 	OOGLFree(lpath);
       }
       lpath = path;
@@ -83,7 +86,7 @@ List *ListDraw(List *list)
     }
   }
 
-  if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+  if (allocsz > INITIAL_ALLOC_SIZE) {
     OOGLFree(lpath);
   }
 
@@ -112,12 +115,15 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
 
-      while (lpathlen >= allocsz) {
+      if (lpathlen >= allocsz) {
 	/* give up on alloca */
-	allocsz <<= 1;
+	bool doFree = allocsz > INITIAL_ALLOC_SIZE;
+	while (lpathlen >= allocsz) {
+	  allocsz <<= 1;
+	}
 	path = OOGLNewNE(char, allocsz, "List PATH");
 	memcpy(path, lpath, lpathlen-1);
-	if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+	if (doFree) {
 	  OOGLFree(lpath);
 	}
 	lpath = path;
@@ -134,7 +140,7 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
       HandleRegister(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
     }
 
-    if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+    if (allocsz > INITIAL_ALLOC_SIZE) {
       OOGLFree(lpath);
     }
 
@@ -153,12 +159,15 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
 
-      while (lpathlen >= allocsz) {
+      if (lpathlen >= allocsz) {
 	/* give up on alloca */
-	allocsz <<= 1;
+	bool doFree = allocsz > INITIAL_ALLOC_SIZE;
+	while (lpathlen >= allocsz) {
+	  allocsz <<= 1;
+	}
 	path = OOGLNewNE(char, allocsz, "List PATH");
 	memcpy(path, lpath, lpathlen-1);
-	if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+	if (doFree) {
 	  OOGLFree(lpath);
 	}
 	lpath = path;
@@ -175,7 +184,7 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
       HandleUnregisterJust(&l->carhandle, (Ref *)l, bsptree, BSPTreeInvalidate);
     }
 
-    if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+    if (allocsz > INITIAL_ALLOC_SIZE) {
       OOGLFree(lpath);
     }
 
@@ -194,12 +203,15 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
 
-      while (lpathlen >= allocsz) {
+      if (lpathlen >= allocsz) {
 	/* give up on alloca */
-	allocsz <<= 1;
+	bool doFree = allocsz > INITIAL_ALLOC_SIZE;
+	while (lpathlen >= allocsz) {
+	  allocsz <<= 1;
+	}
 	path = OOGLNewNE(char, allocsz, "List PATH");
 	memcpy(path, lpath, lpathlen-1);
-	if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+	if (doFree) {
 	  OOGLFree(lpath);
 	}
 	lpath = path;
@@ -215,7 +227,7 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
       }
     }
 
-    if (allocsz > 2*INITIAL_ALLOC_SIZE) {
+    if (allocsz > INITIAL_ALLOC_SIZE) {
       OOGLFree(lpath);
     }
 
