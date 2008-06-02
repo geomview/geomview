@@ -4471,10 +4471,11 @@ A sintaxe geral de objetos de imagem @'{e} como segue:
 
       "data MASCDEST [FILTRO] [@{] < NOMEDOARQUIVO [@}]"
       "data MASCDEST [FILTRO] TAMAN_IMAGEM [@{][\n]DADOS_LIT_IMAGEM[@}]"
-                       (dados de imagem ou externos ou embutidos, veja
-                       abaixo para uma descri@,{c}@~{a}o detalhada do
-                       significado de @emph{MASCDEST} e @emph{FILTRO}. Uma imagem pode
-                       -e tem, em geral- multiplas se@,{c}@~{o}es de dados.)
+                       (dados de imagem ou externos ou embutidos,
+                       veja abaixo para uma descri@,{c}@~{a}o detalhada do
+                       significado de @emph{MASCDEST} e @emph{FILTRO}. Uma imagem
+                       pode -e tem, em geral- multiplas se@,{c}@~{o}es de
+                       dados.)
 
   [ "@}" ]             (fechamento correspondente da chave)
 @end example
@@ -4524,7 +4525,7 @@ data ALPHA
 @end example
 @'{e} v@'{a}lido, mas
 @example
-<nenhum outro canal ou especifica@,{c}@~{a}o de dados de imagem>
+<nenhumoutrocanalouespecifica@,{c}@~{a}odedadosdeimagem>
 data ALPHA ...
 <todo o resto ...>
 @end example
@@ -4535,162 +4536,165 @@ Dados de imagem no formato PGM @'{e} interpretado como canal simples em escala d
 como dados de imagem RGB. @code{AUTO} n@~{a}o pode trabalhar com dados de imagem no formato @samp{raw}.
 @end table
 
-@item FILTRO
-The @samp{FILTRO} specification is optional. If it is missing, then
-Geomview tries to determine the image type from the @samp{NOMEDOARQUIVO}
-suffix. If there is no suffix or the suffix is unknown, or for embedded
-image data, Geomview is able to auto-detectc SGI image file formats (for
-historical reasons @dots{}) and NetPBM image formats (for practical
-reasons). The auto-detection of NetPBM formats includes the new
-@dfn{PAM} image format which allows (among other things) to store an
-alpha canal together with the luminance or RGB data. Likewise, the
-final output of any dos specified filters must either be in SGI image
-file format, or specify a PAM, PNM or PGM image.  If the image file
-format cannot be determined by either the filenmae suffix or the filter
-specification or by auto-deteciong of SGI or NetPBM data, then Geomview
-assume that it is raw-data. See below.
+@item FILTER
+A especifica@,{c}@~{a}o @samp{FILTRO} @'{e} opcional. se for omtida, ent@~{a}o
+Geomview tenta determinar o tipode imagem usando o sufixo de
+@samp{NOMEDOARQUIVO}. Se @~{a}o houver sufixo ou o sufixo for desconhecido, ou para dados
+embutidos de imagem, Geomview est@'{a} apto a auto-detectar  o formato do arquivo de imagem SGI (por
+raz@~{o}es hist@'{o}ricas @dots{}) e formatos de imagem NetPBM (por raz@~{o}es
+pr@'{a}ticas). A auto-detec@,{c}@~{a}o de formatos NetPBM incluem o novo
+formato de imagem @dfn{PAM} que permite (em meio a um monte de outras coisas) armazenar um
+canal alfa juntamente com os dados de lumin@^{a}nica ou de RGB. Da mesma forma, a
+sa@'{i}da final de qualquer dos filtros especificados devem ou ser no formato de arquivo de
+imagem SGI, ou especificar uma imagem PAM, PNM ou PGM.  Se o formato de arquivo de
+imagem n@~{a}o puder ser determinado por ou pelo sufixo do nome de arquivo ou pela especifica@,{c}@~{a}o
+de filtro ou pela auto-detec@,{c}@~{a}o de dados SGI ou NetPBM, ent@~{a}o Geomview
+assume que os dados sejam "raw". Veja abaixo.
 
-The decompression filters may be prepended to either one dos know
-image formats or an explicitly specified filter, e.g. the following is
-valid:
+Os filtros de descompress@~{a}o podem ser deduzidos ou de um dos formatos
+de imagem conhecidos ou de um especificador de filtro expl@'{i}cito, e.g. o seguinte @'{e}
+v@'{a}lido:
 @example
-data LUMINANCE raw.gzip @{ < gzippedgreymapfile @}
+data LUMINANCE raw.gzip @{ < arquivoemtonsdecinzagzipado @}
 @end example
 The above should be equivalent to
 @example
-data LUMINANCE raw @{ < greymapfile @},
+data LUMINANCE raw @{ < arquivoemtonsdecinza @},
 @end example
-provided that the decompressed data carries single canal data, with
-the first pixel corresponding to the lower-left corner (because do
-@samp{raw} image format, see below).
+fornece dados descomprimidos realizados atrav@'{e}s de dados de canal simples, com
+o primeiro pixel correspondendo ao canto inferior esquerdo (devido ao
+formato @samp{raw} de imagem, veja abaixo).
 
-Geomview has builtin knowledge for the following filters/suffixes:
+Geomview tem conhecimento interno dos seguintes filtros/sufixos:
 @table @b
-@item Data Decompression
+@item Descompress@~{a}o de Dados
 @table @samp
 @item z
 @item gz
 @item gzip
-data is piped through @samp{gzip -dc}
+os dados s@~{a}o direcionados por @samp{gzip -dc}
 @item bz2
 @item bzip2
-data is piped through @samp{bzip2 -dc}
+os dados s@~{a}o direcionados por @samp{bzip2 -dc}
 @end table
 
-@item Image Formats
+@item Formatos de Imagem
 @table @samp
 @item tiff
 @item tif
-@code{TIFF} image file format. Only supported if the @code{tifftopnm}
-executable can be fond in the current excution path.
+Formato de imagem @code{TIFF}. Somente suportado se o execut@'{a}vel
+@code{tifftopnm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item png
-@code{PNG} image file format. Only supported if the @code{pngtopnm}
-executable can be fond in the current excution path.
+Formato de imagem @code{PNG}. Somente suportado se o execut@'{a}vel
+@code{pngtopnm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item jpg
 @item jpeg
-@code{JPEG} image file format. Only supported if the @code{jpegtopnm}
-executable can be fond in the current excution path.
+Formato de imagem @code{JPEG} image file format. Somente suportado se o execut@'{a}vel
+@code{jpegtopnm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item gif
-@code{GIF} image file format. Only supported if the @code{giftoppm}
-executable can be fond in the current excution path.
+Formato de imagem @code{GIF} image file format. Somente suportado se o execut@'{a}vel
+@code{giftoppm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item raw
-Raw image data; the number of canais must match the number of bits set
-in @samp{MASCDEST}. Pixels are specified with 1 byte per canal. The
-pixels are organized in rows as @samp{liminance[-alpha]} or
-@samp{RGB[A]} samples. The left-most pixel is the first pixel in each
-data-row, the top-most image row must come first (this is just the same
-as the NetPBM convention, the image co-ordinate systems has its origin
-in the left/top corner, as usual).
+Dados de imagem em Raw; o n@'{u}mero de canais deve coincidir com o n@'{u}mero de bits informado
+em @samp{MASCDEST}. Pixels s@~{a}o especificados com 1 byte por canal. Os
+pixels s@~{a}o organizados em linhas como em @samp{liminance[-alpha]} ou
+em amostras @samp{RGB[A]}. O pixel mais @`{a} esquerda @'{e} o primeiro pixel em cada
+linha de dados, a linha de dados mais acima deve vir primeiramente (isso @'{e} apenas o mesmo
+que a conven@,{c}@~{a}o de NetPBM, os sistemas de coordenadas de imagem t@^{e}m sua or@'{i}gem
+no canto superior esquerdo, da forma usual).
 @end table
-@item Explicitly Specified Filters
-If none dos suffixes specified above should match, then the
-suffix/filter is interpreted as an external filter program; the filter
-program must read from @code{STDIN} and write to @code{STDOUT}. The
-output must either be in SGI image format, or in PNM or PGM
-format. Otherwise the output data is interpreted as raw image data (see
-above).
+@item Filtros Explicitamente Especificados
+Se nenhum dos sufixos especificados acima coincidirem, ent@~{a}o o
+sufixo/filtro @'{e} interpretado como um filtro de programa externo; o programa do
+filtro externo deve ler de @code{STDIN} (da entrada padr@~{a}o) e escrever para @code{STDOUT} (a sa@'{i}da padr@~{a}o). A
+sa@'{i}da deve ou ser no formato de imagem SGI, ou no formatos de image
+PNM ou PGM. De outra forma os dados de sa@'{i}da s@~{a}o interpretados como dados de imagem no formato raw (veja
+acima).
 
-Something like the following should work, provided that the program
-@file{$@{HOME@}/bin/bububfilter} exists, is executable and does
-something useful:
+Alguma coisa como o seguinte pode trabalhar, garantindo que o programa
+@file{$@{HOME@}/bin/bububfilter} exista, seja execut@'{a}vel e fa@,{c}a
+alguma co@'{i}sa @'{u}til:
 @example
 ...
-data RGB "$@{HOME@}/bin/bububfilter.bzip2" 7 @{ # binary data follows
+data RGB "$@{HOME@}/bin/bububfilter.bzip2" 7 
+@{ # dados bin@'{a}rios seguem
 bububub
 @}
 ...
 @end example
 
-Note that -- prior to feeding the data to the @samp{bububfilter} --
-Geomview will try to decompress the stuff with @samp{bzip2 -dc}.
+Note que -- previamente fornecendo os dados para @samp{bububfilter} --
+Geomview ir@'{a} tentar descompactar o material com @samp{bzip2 -dc}.
 
 @end table
 
 @end table
 
-@b{Missing image data:} Normally, the number of image canais is
-determined automatically from the image @code{data} specifications; if
-the image specification carries an explicit number of canais via the
-@code{channels} keyword which exceeds the number of canais found in
-the image @code{data} specifications, or if the union of all
-@samp{MASCDEST} specfications has holes, then missing luminance and RGB
-canais are initialized to 0, and a missing alpha-canal is
-initialized to @code{maxval}, i.e. omitting the alpha canal data for
-an RGBA image is just the same as defining an RGB image.
+@b{Omitindo dados de imagem:} Normalmente, o n@'{u}mero de canais de imagem @'{e}
+determinado automaticamente a partir das especifica@,{c}@~{o}es dos @code{dados} de imagem; se
+a especifica@,{c}@~{a}o de imagem carrega um n@'{u}mero expl@'{i}cito de canais via
+palavra chave @code{channels} que excede o n@'{u}mero de canais encontrado nas
+especifica@,{c}@~{o}es de @code{dados}, ou se a uni@~{a}o de todas
+as especifica@,{c}@~{o}es @samp{MASCDEST} possuem buracos, ent@~{a}o omitindo lumin@^{a}ncia e
+canais RGB s@~{a}o initializados para 0, e um canal alfa omitido @'{e}
+inicializado para @code{maxval}, i.e. omitindo os dados do canal alfa para
+uma imagem RGBA @'{e} apenas o mesmo que definir uma imagem RGB.
 
 @node transform, ntransform, image, Non-geometric objects
 @subsection Transform Objects
 
-Where a single 4x4 matrix is expected -- as in the @code{INST}
-@code{transform} field, the camera's @code{camtoworld} transform and the
-Geomview @code{xform*} commands -- use a transform objeto.
+Onde uma matriz simples 4x4 @'{e} esperada -- como no campo de @code{transform}
+@code{INST}, a transforma@,{c}@~{a}o da c@^{a}mera @code{camtoworld} e os
+comandos do Geomview @code{xform*} -- use um objeto de transforma@,{c}@~{a}o.
 
-Note that a transform is distinct from a @code{TLIST}, which is a type
-of geometry.  @code{TLIST}s can contain one or more 4x4 transformations;
-"transform" objetos must have exactly one.
+Note que uma transforma@,{c}@~{a}o @'{e} diferente de uma @code{TLIST}, que @'{e} um tipo
+de geometria.  @code{TLIST}s podem cnter uma ou mais transforma@,{c}@~{o}es 4x4;
+objetos "transform" devem ter exatamente uma.
 
-Why have both?  In many places -- e.g. c@^{a}mera positioning -- it's only
-meaningful to have a single transform.  Using a separate objeto type
-enforces this.
+Por que temos ambos ("transform" e TLIST)?  Em muitos lugares -- e.g. posicionamento de c@^{a}meras -- @'{e} somente
+significativo ter uma transofrma@,{c}@~{a}o simples.  Usando um tipo separado de oobjeto
+refor@,{c}a isso.
 
-Syntax for a transform objeto is
+A sintaxe para um objeto de transforma@,{c}@~{a}o "transform" @'{e}
 
 @example
 <transform> ::= 
-  [ "@{" ]             (curly brace, generally needed to make
-                       the end do objeto unambiguous.)
+  [ "@{" ]             (Abertura de chave, geralmentenecess@'{a}rio para
+                       tornar o fim do objeto claramente explicitado.)
 
-   [ "transform" ]    (optional keyword; unnecessary if the type
-                       is determined by the context, which it
-                       usually is.)
-   [ "define" <name> ]
-                      (defines a transform named <name>, setting
-                       its value from the stuff which follows)
+   [ "transform" ]    (palavra chave opcional; desnecess@'{a}ria se o tipo
+                       for determinado pelo contexto, o que comumente
+                       ocorre.)
+   [ "define" <nome> ]
+                      (define uma transforma@,{c}@~{a}o chamada <nome>,
+                      escolhendo seus valores de material adiante)
 
-      <sixteen floating-point numbers>
-                      (interpreted as a 4x4 homogeneous transform
-		       given row by row, intended to apply to a
-                       row vector multiplied on its LEFT, so that e.g.
-                       Euclidean translations appear in the bottom row)
+      <dezesseis n@'{u}meros em ponto flutuante>
+                      (interpretado como uma transforma@,{c}@~{a}o homog@^{e}nea 4x4
+		       fornecida linha por linha, intencionalmente aplicada a um
+                       vetor linha multiplicado @`{a} esquerda, de forma que
+                       e.g. transla@,{c}@~{o}es euclidianas apare@,{c}am na linha
+                       inferior)
    | 
-      "<" <filename>  (meaning: read transform from that file)
+      "<" <nomedearquivo>  (significando: leia a transforma@,{c}@~{a}o a partir
+                       daquele arquivo)
    |
-      ":" <name>      (meaning: use variable <name>,
-                        defined elsewhere; if undefined the initial
-                        value is the identity transform)
+      ":" <nome>      (significando: use a vari@'{a}vel <nome>,
+                        definida em algum lugar; se n@~{a}o definido o valor
+                        inicial @'{e} a transforma@,{c}@~{a}o identidade)
 
- [ "@}" ]              (matching curly brace)
+ [ "@}" ]              (fechamento de chave correspondente)
 @end example
 
-The whole should be enclosed in @{ braces @}.  Braces are not essential
-if exactly one dos above items is present, so e.g. a 4x4 array of
-floats standing alone may but needn't have braces.
+O conjunto pode ser colocado entre @{ chaves @}.  As chaves n@~{a}o s@~{a}o essenciais
+se exatamente um dos itens acima estiver presente, ent@~{a}o e.g. um array 4x4 de
+n@'{u}meros em ponto flutuante independente n@~{a}o precisa necessariamente ter chaves.
 
-Some examples, in contexts where they might be used:
+Alguns exemplos, em contextos onde eles podem ser usados:
 
 @example
-# Example 1: A GCL command to define a transform
-# called "fred"
+# Exemplo 1: Um comando GCL para definir uma transforma@,{c}@~{a}o
+# chamada "fred"
 
 (read transform @{ transform  define fred
          1 0 0 0
@@ -4702,10 +4706,10 @@ Some examples, in contexts where they might be used:
 @end example
 
 @example
-# Example 2:  A camera objeto using transform
-# "fred" for camera positioning
-# Given the definition above, this puts the camera at
-# (-3, 0, 1), looking toward -Z.
+# Exemplo 2:  Um objeto c@^{a}mera usando a transforma@,{c}@~{a}o
+# "fred" para posicionamento de c@^{a}mera
+# Fornecida a defini@,{c}@~{a}o acima, isso coloca a c@^{a}mera em
+# (-3, 0, 1), olhando na dire@,{c}@~{a}o -Z.
 
 @{ camera
         halfyfield 1
