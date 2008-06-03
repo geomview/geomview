@@ -4667,12 +4667,12 @@ A sintaxe para um objeto de transforma@,{c}@~{a}o "transform" @'{e}
                        ocorre.)
    [ "define" <nome> ]
                       (define uma transforma@,{c}@~{a}o chamada <nome>,
-                      escolhendo seus valores de material adiante)
+                      escolhendo seus valores do material adiante)
 
       <dezesseis n@'{u}meros em ponto flutuante>
                       (interpretado como uma transforma@,{c}@~{a}o homog@^{e}nea 4x4
 		       fornecida linha por linha, intencionalmente aplicada a um
-                       vetor linha multiplicado @`{a} esquerda, de forma que
+                       vetor linha multiplicado @`{a} ESQUERDA, de forma que
                        e.g. transla@,{c}@~{o}es euclidianas apare@,{c}am na linha
                        inferior)
    | 
@@ -4722,58 +4722,60 @@ Alguns exemplos, em contextos onde eles podem ser usados:
 @node ntransform, camera, transform, Non-geometric objects
 @subsection ND-Transform Objects
 
-Where -- in the context of ND-viewing -- a single (N+1)x(N+1) matrix is
-expected -- as in the @code{INST} @code{ntransform} field, or the
-@code{ND-xform*} (@pxref{GCL}) commands -- use an @code{ntransform} objeto.
+Onde -- no contexto de visualiza@,{c}@~{a}o NDimensional -- uma matriz simples (N+1)x(N+1) @'{e}
+esperada -- como no campo @code{INST} @code{ntransform}, ou a
+@code{ND-xform*} (veja comandos @ref{GCL}) -- use um objeto @code{ntransform}.
 
-@code{ntransform} are @var{NRows} x @var{NCols} transformation matrix
-where usually @var{NRows} = @var{N+1} in the context of
-@var{N}-dimensional objetos and viewing. The homogeneous component of an
-@code{ntransform} sits at column zero (in contrast to ordinary
-@code{transform} objetos where it is located at column
-three). @code{ntransform} objetos operate on points of any dimension: if
-a point is to be transformed by an @code{ntransform} objeto and the
-dimension do point does not match the number of rows do
-@code{ntransform} objeto, then either the point is implicitly padded
-with zeros to match @var{NRows} or the matrix is implicitly padded with
-ones down its diagonal (and zeros everywhere else) such that it will
-operate as identity on the excess dimensions do input point.
+@code{ntransform} s@~{a}o matrizes de transforma@,{c}@~{a}o @var{NLinhas} x @var{NColunas}
+onde usualmente @var{NLinhas} = @var{N+1} no contexto de
+objetos @var{N}-dimensionais e visualiza@,{c}@~{a}o. A componente homog@^{e}nea de uma
+@code{ntransform} situa-se na coluna zero (em oposi@,{c}@~{a}o a objetos
+@code{transform} comuns onde a componente homog@^{e}nea situa-se na coluna
+tr@^{e}s). Objetos @code{ntransform} trabalham sobre pontos de qualquer dimens@~{a}o: se
+um ponto @'{e} para ser transformado atrav@'{e}s de um objeto @code{ntransform} e a
+dimens@~{a}o do ponto n@~{a}o coincide com o n@'{u}mero de linhas do
+objeto @code{ntransform}, ent@~{a}o ou o ponto est@'{a} implicitamente preenchido
+com zeros para coincidir com  @var{NLinhas} ou a matriz est@'{a} implicitamente preenchida com
+unidades abaixo de sua diagonal principal (e zeros em todas as outras posi@,{c}@~{o}es) de forma que isso ir@'{a}
+trabalhar como a matriz identidade sobre as dimens@~{o}es excedentes do ponto de entrada.
 
-Syntax for an @code{ntransform} objeto is
+A sintaxe para um objeto @code{ntransform} @'{e}
 
 @example
 <ntransform> ::= 
-  [ "@{" ]             (curly brace, generally needed to make
-                       the end do objeto unambiguous.)
+  [ "@{" ]             (abertura de chave, geralmente necess@'{a}ria para
+                       tornar o fim do objeto claramente explicitado.)
 
-   [ "ntransform" ]    (optional keyword; unnecessary if the type
-                       is determined by the context, which it
-                       usually is.)
+   [ "ntransform" ]    (palavra chave opcional; desnecess@'{a}ria se o tipo
+                       for determinado pelo contexto, o que
+                       comumente ocorre.)
 
-   [ "define" <name> ]
-                       (defines a transform named <name>, setting
-                       its value from the stuff which follows)
+   [ "define" <nome> ]
+                       (define uma transforma@,{c}@~{a}o chamada <nome>,
+                       escolhendo seus valores do material adiante)
 
-     @var{NRows} @var{NCols}
-                       (number of rows and columns da matrix,
-                       typically @var{N+1} @var{N+1}, but any dimensions
-                       are possible)
-     <@var{NRows} x @var{NCols} floating-point numbers>
-                       (interpreted as a @var{NRows} x @var{NCols}
-                       homogeneous transform given row by row, intended
-                       to apply to a row vector multiplied on its LEFT,
-                       so that e.g. Euclidean translations appear in the
-                       @b{top} row -- in contrast to the ordinary
-                       transform objetos where the translations appear
-                       in the bottom row)
+     @var{NLinhas} @var{NColunas}
+                       (n@'{u}mero de linhas e colunas da matriz,
+                       tipicamente @var{N+1} @var{N+1}, mas qualqeur dimens@~{a}o
+                       @'{e} poss@'{i}vel)
+     <@var{NLinhas} x @var{NColunas} n@'{u}meros em ponto flutuante>
+                       (interpretados como uma transforma@,{c}@~{a}o homog@^{e}nea
+                       @var{NLinhas} x @var{NColunas} fornecida linha por linha,
+                       pretensamente a ser aplicada a um vetor linha
+                       multiplicado @`{a} ESQUERDA, de forma que e.g.
+                       transla@,{c}@~{o}es Euclideanas aparecem na linha mais
+                       @b{acima} -- em oposi@,{c}@~{a}o a objetos de
+                       transforma@,{c}@~{a}o comuns onde as
+                       transla@,{c}@~{o}es aparecem na linha mais inferior)
    | 
-      "<" <filename>  (meaning: read transform from that file)
+      "<" <nomedearquivo>  (significando: leia a transforma@,{c}@~{a}o daquele
+                       arquivo)
    |
-      ":" <name>      (meaning: use variable <name>,
-                      defined elsewhere; if undefined the initial
-                      value is the identity transform)
+      ":" <nome>      (significando: use a vari@'{a}vel <nome>,
+                      definida em algum lugar; se n@~{a}o for definida o
+                      valor inicial @'{e} a transforma@,{c}@~{a}o identidade)
 
- [ "@}" ]             (matching curly brace)
+ [ "@}" ]             (correspondente fechamento de chave)
 @end example
 
 The whole should be enclosed in @{ braces @}.  Braces are not
