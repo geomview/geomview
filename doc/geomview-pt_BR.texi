@@ -4778,18 +4778,18 @@ A sintaxe para um objeto @code{ntransform} @'{e}
  [ "@}" ]             (correspondente fechamento de chave)
 @end example
 
-The whole should be enclosed in @{ braces @}.  Braces are not
-necessarily essential, so e.g. two integers -- @var{NRows} @var{NCols}
--- followed by a @var{NRows} x @var{NCols} array of floats standing alone
-may but needn't have braces.
+O conjunto deve ser delimitado entre @{ chaves @}.  Chaves n@~{a}o s@~{a}o
+necessariamente essenciais, de forma que e.g. dois inteiros -- @var{NLinhas} @var{NColunas}
+-- seguidos por um array composto de @var{NLinhas} x @var{NColunas} n@'{u}meros em ponto flutuante independentes
+pode mas n@~{a}o precisa ter chaves.
 
-Some examples, in contexts where they might be used:
+Alguns exemplos, em contextos onde eles possivelmente podem ser usados:
 
 @example
-# Example 1: A GCL command to define a @code{6x6} transform called
-# "fred", a mere translation by the vector @code{-3 0 1 1 0}. This
-# transform is meant for a five dimensional space, with an homogeneous
-# component a index zero.
+# Exemplo 1: Um comando GCL para definir uma transforma@,{c}@~{a}o @code{6x6} chamada
+# "fred", uma mera transla@,{c}@~{a}o por meio do vetor @code{-3 0 1 1 0}. Essa
+# transforma@,{c}@~{a}o @'{e} significativa para um espa@,{c}o pentadimensional, com uma componente
+# homog@^{e}nea um @'{i}ndice zero.
 
 (read ntransform @{ ntransform  define fred
          6 6
@@ -4804,13 +4804,13 @@ Some examples, in contexts where they might be used:
 @end example
 
 @example
-# Example 2: Set the ND-xform of an objeto -- a geometry or a camera
-# cluster. Given the definition above, this puts the objeto at (-3 0 1 1
-# 0) in the five dimensional space.
+# Exemplo 2: Escolhe o ND-xform de um objeto -- um geom@'{e}trico ou um grupo de
+# cameras. Fornecendo a defini@,{c}@~{a}o acima, o ND-xform escolhido coloca o objeto em (-3 0 1 1
+# 0) no espa@,{c}o pentadimensional.
 
 (ND-xform-set focus : fred)
 
-# or
+# ou
 
 (ND-xform-set g1 : fred)
 @end example
@@ -4819,118 +4819,124 @@ Some examples, in contexts where they might be used:
 @node camera, window, ntransform, Non-geometric objects
 @subsection cameras
 
-A c@^{a}mera objeto especifica the following properties of a camera:
+Um objeto c@^{a}mera especifica as seguintes propriedades de uma c@^{a}mera:
 
 @table @asis
-@item position and orientation
-specified by either a camera-to-world or world-to-camera transformation;
-this transformation does not include the projection, so it's typically
-just a combination of translation and rotation.  Specified as a
-transform objeto, typically a 4x4 matrix.
-@item "focus" distance
-Intended to suggest a typical distance from the c@^{a}mera to the objeto of
-interest; used for default c@^{a}mera positioning (the c@^{a}mera is placed at
-(X,Y,Z) = (0,0,focus) when reset) and for adjusting field-of-view when
-switching between perspective and orthographic views.
-@item window aspect ratio
-True aspect ratio in the sense <Xsize>/<Ysize>.  This normally should
-agree with the aspect ratio da camera's window.  Geomview normally
-adjusts the aspect ratio of its c@^{a}meras to match their associated
-windows.
-@item near and far clipping plane distances
-Note that both must be strictly greater than zero.  Very large
-<far>/<near> distance ratios cause Z-buffering to behave badly; part of
-an objeto may be visible even if somewhat more distant than another.
-@item field of view
-Specified in either of two forms.
+@item posi@,{c}@~{a}o e orienta@,{c}@~{a}o
+especificada por ou uma transforma@,{c}@~{a}o camera para o mundo ou uma transforma@,{c}@~{a}o mundo para a c@^{a}mera;
+essa transforma@,{c}@~{a}o n@~{a}o inclui a proje@,{c}@~{a}o, de forma que essa transforma@,{c}@~{a}o @'{e} tipicamente
+apenas uma composi@,{c}@~{a}o de transla@,{c}@~{a}o e rota@,{c}@~{a}o.  Especificado como um
+objeto transform, tipicamente uma matriz 4x4.
+@item "focus" - dist@^{a}ncia focal
+Ao inv@'{e}s de sugerir uma dist@^{a}ncia t@'{i}pica da c@^{a}mera ao objeto de
+interesse; usada para o posicionamento padr@~{a}o da c@^{a}mera (a c@^{a}mera @'{e} colocada em
+(X,Y,Z) = (0,0,focus) quando resetada) e para ajustar o campo de vis@~{a}o quando
+alternando entre os modos de visualiza@,{c}@~{a}o ortogr@'{a}fico e perspectivo.
+@item raz@~{a}o de aspecto da janela
+A verdadeira raz@~{a}o de aspecto no sentido <Xsize>/<Ysize>.  Essa raz@~{a}o de aspecto normalmente pode
+concordar com a raz@~{a}o de aspecto da janela de camera.  Geomview normalmente
+ajusta a raz@~{a}o de aspecto de suas c@^{a}meras para coincidir com suas janelas
+associadas.
+@item dist@^{a}ncia de plano de corte pr@'{o}ximo e distante
+Note que ambas as dist@^{a}ncias devem ser estritamente maiores que zero.  Raz@~{o}es de dist@^{a}ncia
+<distante>/<pr@'{o}ximo> muito grandes fazem com que a @'{a}rea de armazenamento tempor@'{a}rio do eixo Z comporte-se de forma p@'{e}ssima; parte de um
+objeto pode ser vis@'{i}vel mesmo se estiver em algum lugar mais distante que outro.
+@item campo de vis@~{a}o
+Especificado em uma das duas formas a seguir.
 @table @samp
   @item fov 
-is the field of view -- in degrees if perspective, or linear
-distance if orthographic -- in the @emph{shorter} direction.
+@'{e} o campo de vis@~{a}o -- em graus se perpectivo, ou dist@^{a}ncia
+linear se ortogr@'{a}fico -- na @emph{menor} dire@,{c}@~{a}o.
   @item halfyfield 
-is half the projected Y-axis field, in world coordenadas (not angle!),
-at unit distance from the camera.  For a perspective camera, halfyfield
-is related to angular field:
+@'{e} metade do campo projetado no eixo Y, em coordenadas do mundo (n@~{a}o angulo!),
+em unidades de dist@^{a}ncia a partir da c@^{a}mera.  Para uma c@^{a}mera em perpectiva, halfyfield
+@'{e} relacionado ao campo angular:
 
 @center halfyfield = tan( Y_axis_angular_field / 2 )
 
-while for an orthographic one it's simply:
+enquanto para uma c@^{a}mera em vis@~{a}o ortogr@'{a}fica temos simplesmente:
 
 @center halfyfield = Y_axis_linear_field / 2
 
 @end table
 
-This odd-seeming definition is (a) easy to calculate with and
-(b) well-defined in both orthographic and perspective views.
+Essa defini@,{c}@~{a}o singular de visualiza@,{c}@~{a}o @'{e} (a) maneira f@'{a}cil de fazer c@'{a}lculos que a envolvam e
+(b) @'{e} bem definida em ambas as formas de visualiza@,{c}@~{a}o ortogr@'{a}fica e perspectiva.
 
-@item background color
-Arguably not a property of a camera, but da scene. Nevertheless, as
-there is no "background" objeto OOGL, and the background color should
-not be a property do drawing device, it can be specified here. At
-the time of this writing, however, the GUI always overrides the
-background color with its own settings.
+@item cor de fundo
+Argumentavelmente (de forma discut@'{i}vel) n@~{a}o @'{e} uma propriedade de uma c@^{a}mera, mas da cena (do cen@'{a}rio). Todavia, como
+n@~{a}o existe o objeto "cordefundo" no OOGL, e a cor de fundo pode
+n@~{a}o ser uma propriedade do equipamento de desenho, essa propriedade pode ser especificada aqui. No
+momento em que esse manual est@'{a} sendo escrito, todavia, a interface gr@'{a}fica de usu@'{a}rio (GUI) sempre sobrescreve a
+cor de fundo com suas pr@'{o}prias escolhas.
 
-@item background image
-Same reasoning as above, only that the GUI does not override this
-setting. The image is centered at NDC co-ordinates @code{(0,0,-1)}; it
-is not resized, just painted behind everything else as is. @xref{image,
-Image objetos}.
+@item imagem de fundo
+Pelas mesmas raz@~{o}es mostradas acima,somente a referida GUI n@~{a}o sobrescreve essa
+op@,{c}@~{a}o. A imagem @'{e} centralizada em "Normalized-Device-Coordinates"/NDC @code{(0,0,-1)}; a imagem
+n@~{a}o @'{e} redimensonada, apenas desenhada por tr@'{a}s de tudo mais como @'{e}. Veja @ref{image,
+Image objects}.
 
 @end table
 
 
-The syntax for a c@^{a}mera is:
+A sintaxe para uma c@^{a}mera @'{e}:
 
 @example
-<camera> ::=
+<nomecamera> ::=
 
-   [ "camera" ]                 (optional keyword)
-    [ "@{" ]                    (opening brace, generally required)
-        [ "define" <name> ]
+   [ "camera" ]                 (palavra chave opcional)
+    [ "@{" ]                    (abertura de chave, geralmente requerida)
+        [ "define" <nome> ]
 
-        "<" <filename>
+        "<" <nomearquivo>
       |
-        ":" <name>
+        ":" <nome>
       |
-                                (or any number dos following,
-                                 in any order@dots{})
+                                (ou qualquer n@'{u}mero dos seguintes,
+                                 em qualquer ordem@dots{})
 
-        "perspective"  @{"0" | "1"@}            (default 1)
-                                        (otherwise orthographic)
+        "perspective"  @{"0" | "1"@}            (padr@~{a}o 1)
+                                        (de outra forma "ortographic")
 
-        "stereo"       @{"0" | "1"@}            (default 0)
-                                        (otherwise mono)
+        "stereo"       @{"0" | "1"@}            (padr@~{a}o 0)
+                                        (de outra forma mono)
 
-        "worldtocam" <transform>        (see transform syntax above)
+        "worldtocam" <transforma@,{c}@~{a}o>        (veja a sintaxe de transfor-
+                                        ma@,{c}@~{a}o acima)
 
-        "camtoworld" <transform>
-                                (no point in specifying both
-                                 camtoworld and worldtocam; one is
-                                 constrained to be the inverse of                                                the other)
+        "camtoworld" <transforma@,{c}@~{a}o>
+                                (nenhum ponto na especifica@,{c}@~{a}o de ambos
+                                 camtoworld e worldtocam; se @'{e}
+                                 restingido para ser o inverso de                                                the other)
 
-        "halfyfield" <half-linear-Y-field-at-unit-distance>
-                                (default tan 40/2 degrees)
+        "halfyfield" <meio-campo-linear-Y-em-unidade-de-dist@^{a}ncia>
+                                (o padr@~{a}o @'{e} tan 40/2 graus)
+                                Nota de tradu@,{c}@~{a}o:40 @'{e} o valor padr@~{a}o
+                                do campo de vis@~{a}o (fov).
 
-        "fov"           (angular field-of-view if perspective,
-                         linear field-of-view otherwise.
-                         Measured in whichever direction is smaller,
-                         given the aspect ratio.  When aspect ratio
-                         changes -- e.g. when a window is reshaped --
-                         "fov" is preserved.)
+        "fov"           (campo de vis@~{a}o angular se "perspective",
+                         campo de vis@~{a}o linear em caso contr@'{a}rio.
+                         Medido em qualquer dire@,{c}@~{a}o @'{e} menor,
+                         dando a raz@~{a}o aspecto.  Quando a raz@~{a}o de
+                         aspecto muda -- e.g. quando uma janela @'{e}
+                         reajustada -- "fov" @'{e} preservado.)
 
-        "frameaspect" <aspect-ratio>    (X/Y) (default 1.333)
+        "frameaspect" <raz@~{a}o-de-aspecto>    (X/Y) (padr@~{a}o 1.333)
 
-        "near"  <near-clipping-distance>        (default 0.1)
+        "near"  <dist@^{a}ncia-de-corte-pr@'{o}xima>        (padr@~{a}o 0.1)
         
-        "far"   <far-clipping-distance>         (default 10.0)
+        "far"   <dist@^{a}ncia-de-corte-afastada>     (padr@~{a}o 10.0)
 
-        "focus" <focus-distance>                (default 3.0)
+        "focus" <dist@^{a}ncia-focal>                 (padr@~{a}o 3.0)
 
-        "bgcolor" <float RGB(A) color>          (default 1/3 1/3 1/3 1)
+        "bgcolor" <cor RGB(A) em ponto flutuanter>    
+                                                (padr@~{a}o 1/3 1/3 1/3 1)
 
-        "bgimage" @{ <image specification> @}     (default no background image)
+        "bgimage" @{ <especifica@,{c}@~{a}o de imagem> @}
+                                        (padr@~{a}o nenhuma imagem de fundo)
 
-     [ "@}" ]                           (matching closebrace)
+
+     [ "@}" ]                       (correspondente fechamento de chave)
 @end example
 
 
@@ -4938,88 +4944,88 @@ The syntax for a c@^{a}mera is:
 @node window,  , camera, Non-geometric objects
 @subsection window
 
-A window objeto especifica size, position, and other window-system
-related information about a window in a device-independent way.
+Um objeto janela especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es
+relacionadas ao sistema de janelas sobre uma janela de forma que essas informa@,{c}@~{o}es sejam independentes do dispositivo.
 
-The syntax for a window objeto is:
+A sintaxe de um objeto janela @'{e}:
 
 @example
-window ::=
+nomejanela ::=
 
-	[ "window" ]			(optional keyword)
-	  [ "@{" ]			(curly brace, often required)
+	[ "window" ]			(palavra chave opcional)
+	  [ "@{" ]			(abertura de chave, requerida na maioria das vezes)
 
-	    			(any dos following, in any order)
+	    			(qualquer dos seguintes, em qualquer ordem)
 
-		"size"  <xsize> <ysize>
-				(size da window)
+		"size"  <tamanhox> <tamanhoy>
+				(tamanho da janela)
 
 		"position"  <xmin> <xmax> <ymin> <ymax>
-				(position & size)
+				(posi@,{c}@~{a}o & tamanho)
 
 
 		"noborder"
-				(especifica the window should
-				 have no window border)
+				(especifica se a janela pode
+				 ter ou n@~{a}o uma borda)
 
-		"pixelaspect"  <aspect>
-			    (especifica the true visual aspect ratio
-			     of a pixel in this window in the sense
-			     xsize/ysize, normally 1.0.
-			     For stereo hardware which stretches the
-			     display vertically by a factor of 2,
-			     ``pixelaspect 0.5'' might do.
-			     The value is used when computing the
-			     projection of a camera associated with
-			     this window.)
+		"pixelaspect"  <aspecto>
+			    (especifica a raz@~{a}o de aspecto real visualizada
+			     de um pixel nessa janela no sentido
+			     tamanhox/tamanhoy, normalmente 1.0.
+			     Para hardware stereo o qual corta o
+			     display verticalmente por um fator de 2,
+			     ``pixelaspect 0.5'' pode funcionar.
+			     O valor @'{e} usado no c@'{a}lculo da
+			     proje@,{c}@~{a}o de uma c@^{a}mera associada a
+			     essa janela.)
 
-	  [ "@}" ]			(matching closebrace)
+	  [ "@}" ]			(correspondente fechamento de chave)
 @end example
 
-Window objetos are used in the Geomview @code{window} and
-@code{ui-panel} commands to set default properties for future windows or
-to change those of an existing window. @xref{window, @code{(window
-@dots{})}}. @xref{ui-panel, @code{(ui-panel @dots{})}}.
+Objetos janela s@~{a}o usados em @code{janelas} do Geomview e em
+comandos do painel de intera@,{c}@~{a}o/interface com o usu@'{a}rio (@code{ui-panel}) para escolher propriedades padronizadas para futuras janelas ou
+mudar as mesmas propriedades padronizadas de uma janela existente. Veeja @ref{window, @code{(window
+@dots{})}}. Veja tamb@'{e}m @ref{ui-panel, @code{(ui-panel @dots{})}}.
 
 
 @comment ****************************************************************
 @node Customization, Modules, OOGL File Formats, Top
 @chapter Customization: @file{.geomview} files
 
-When Geomview is started, it loads and executes commands in a
-system-wide startup file named @file{.geomview}.  This file is in the
-@file{data} subdirectory do Geomview distribution directory
-and
-contains GCL commands to configure Geomview in a way
-common to all users on the system.
+Quando Geomview @'{e} inciado, ele chama e executa comando em um
+arquivo de inicializa@,{c}@~{a}o dependente do sistema operacional chamado @file{.geomview}.  Esse arquivo est@'{a} no
+subdiret@'{o}rio @file{data} do diret@'{o}rio de distribui@,{c}@~{a}o do Geomview
+e
+cont@'{e}m comandos GCL para configurar Geomview de uma forma
+comum para todos os usu@'{a}rios no sistema.
 
-Next, Geomview looks for the file @file{~/.geomview} (@file{~}
-stands for your home directory).  You can use this to configure
-your own default Geomview behavior to suit your tastes.
+A seguir, Geomview procura o arquivo @file{~/.geomview} (@file{~}
+corresponde a seu diret@'{o}rio base).  Voc@^{e} pode usar esse arquivo para configurar
+seu pr@'{o}prio comportamento padr@~{a}o do Geomview de forma que ele se ajuste @`{a}s suas prefer@^{e}ncias.
 
-After reading @file{~/.geomview}, Geomview looks for a file named
-@file{.geomview} in the current directory.  If such a file exists
-Geomview reads it, unless it is the same as @file{~/.geomview} (which
-would be the case if you are running Geomview from your home directory).
-You can use the current directory's @file{.geomview} to create a Geomview
-customization specific to a certain project.
+Ap@'{o}s a leitura de @file{~/.geomview}, Geomview procura por um arquivo chamado
+@file{.geomview} no diret@'{o}rio atual.  Se tal arquivo existir
+Geomview l@^{e} esse arquivo, a menos que esse arquivo seja o mesmo que @file{~/.geomview} (o que
+pode ser o caso se voc@^{e} estiver executando o Geomview a partir de seu diret@'{o}rio base).
+Voc@^{e} pode usar o @file{.geomview} do diret@'{o}rio atual para criar uma personaliza@,{c}@~{a}o no
+Geomview espec@'{i}fica para um certo projeto.
 
-You can use @file{.geomview} files to control all kinds of things about
-Geomview.  They can contain any valid GCL statements.  Especially useful
-is the @code{ui-panel} command which controls the initial placement of
-Geomview's panels.  For an example see the system-wide @file{.geomview}
-file mentioned above.  @xref{GCL}. @xref{ui-panel, @code{(ui-panel
+Voc@^{e} pode usar arquivos @file{.geomview} para controlar todos os tipos de coisa no
+Geomview.  Eles podem conter quaisquer declara@,{c}@~{o}es GCL v@'{a}lidas.  Especialmente @'{u}til
+@'{e} o comando @code{ui-panel} que controla a localiza@,{c}@~{a}o inicial dos
+pain@'{e}is do Geomview.  Para um exemplo veja o arquivo dependente do sistema 
+@file{.geomview} mencionado acima.  Veja @ref{GCL}. Veja @ref{ui-panel, @code{(ui-panel
 @dots{})}}.
 
-It is a good idea to enclose all the commands you put in a
-@file{.geomview} file in a @code{progn} statement in order to cause
-Geomview to execute them all at once.  Otherwise Geomview might execute
-them sequentially over the first few refresh cycles after starting up.
+Ë uma boa id@'{e}ia colocar juntos todos os comandos que voc@^{e} coloca em um
+arquivo @file{.geomview} em uma declara@,{c}@~{a}o @code{progn} com o objetivo de fazer com que
+Geomview execute todos de uma s@'{o} vez.  Caso voc@^{e} n@~{a}o fa@,{c}a isso Geomview possivelmente pode executar
+esses comando sequ@^{e}ncialmente sobre os primeiros poucos ciclos de atualiza@,{c}@~{a}o ap@'{o}s a incializa@,{c}@~{a}o.
 
-To change, e.g. the focus policy da janela de c@^{a}mera such that they
-pick up the focus policy do window manager (instead of being
-activated when o cursor do mouse crosses the window), you could put the
-following in your @file{~/.geomview} file:
+Para modificar, e.g. a pol@'{i}tica de focaliza@,{c}@~{a}o da janela de c@^{a}mera de forma que ela
+selecione a pol@'{i}tica de focaliza@,{c}@~{a}o do gerenciador de janela (em lugar de ser
+ativada quando o cursor do mouse cruza a janela), voc@^{e} pode colocar o
+seguinte no seu arquivo @file{~/.geomview}:
 
 @example
 (progn
@@ -5028,52 +5034,52 @@ following in your @file{~/.geomview} file:
 )
 @end example
 
-You can put any valid @code{GCL} command into your @file{.geomview}
-files,@pxref{GCL}. @xref{progn,@code{(progn
-@dots{})}}. @xref{ui-cam-focus,@code{(ui-cam-focus @dots{})}}.
+Voc@^{e} pode colocar qualquer comando @code{GCL} v@'{a}lido nos seus arquivos
+@file{.geomview}, Veja @ref{GCL}. Veja @ref{progn,@code{(progn
+@dots{})}}. Veja @ref{ui-cam-focus,@code{(ui-cam-focus @dots{})}}.
 
 @comment ****************************************************************
 @node Modules, GCL, Customization, Top
 @chapter External Modules
 
-An external module is a program that interacts with Geomview.  A
-module communicates with Geomview through GCL and can
-control any apsect of Geomview that you can control through Geomview's
-user interface.
+Um m@'{o}dulo externo @'{e} um programa que interagi com Geomview.  Um
+m@'{o}dulo comunica-se com Geomview atrav@'{e}s de GCL e pode
+controlar qualquer aspecto do Geomview que voc@^{e} possa controlar atrav@'{e}s da interface
+de usu@'{a}rio do Geomview.
 
-In many cases an external module is a specialized program that
-implements some mathematical algorithm that creates a geometric
-objeto that changes shape as the algorithm progresses.  The module
-informs Geomview da new objeto shape at each step, so the objeto
-appears to evolve with time in the Geomview window.  In this way
-Geomview serves as a @emph{display engine} for the module.
+Em muitos casos um m@'{o}dulo externo @'{e} um programa especializado que
+imprementa algum algor@'{i}tmo matem@'{a}tico que cria um bojeto
+geom@'{e}trico que modifica apar@^{a}ncia @`{a} medida que o algor@'{i}tmo progride. O m@'{o}dulo
+informa ao Geomview da nova apar@^{e}ncia do objeto a cada passo, de forma que o objeto
+aparenta evoluir com o tempo na janela do Geomview.  Dessa modo
+Geomview serve como um @emph{ferramenta de exibi@,{c}@~{a}o} para o m@'{o}dulo.
 
-An external module may be interactive.  It can respond to mouse and
-keyboard events that take place in a Geomview window, thus extending
-the capability of Geomview itself.
+Um m@'{o}dulo externo pode ser interativo.  Esse m@'{o}dulo pode responder po eventos de mouse
+e por eventos de teclado que tomem lugar em uma janela do Geomview, dessa forma extendendo
+a capacidade do Geomview em si mesmo.
 
 @menu
-* Interface::                   How External Modules Interface with Geomview.
-* Example1::                    Simple External Module.
-* Example2::                    Simple External Module with FORMS Control Panel.
-* XForms::                      The XForms library.
-* Example3::                    External Module with Bi-Directional Communication.
-* Example4::                    Simple Tcl/Tk Module Demonstrating Picking.
-* Module Installation::         Module Installation.
+* Interface::                   Como M@'{o}dulos Externos Interagem com Geomview.
+* Example1::                    M@'{o}dulo Externo Simples.
+* Example2::                    M@'{o}dulo Externo Simples com Painel de Controle FORMS.
+* XForms::                      A Biblioteca XForms.
+* Example3::                    M@'{o}dulo Externo com Comunica@,{c}@~{a}o Bi-Direcional.
+* Example4::                    M@'{o}dulo Simples em Tcl/Tk Demonstrando Selecionar.
+* Module Installation::         Instala@,{c}@~{a}o de M@'{o}dulo.
 @end menu
 
 @node Interface, Example1, Modules, Modules
 @section How External Modules Interface with Geomview
 
-External modules appear in the @emph{Modules} browser in Geomview's
-@emph{Main} panel.  To run a module, clique the bot@~{a}o esquerdo do mouse on
-the module's entry in the browser.  While the module is running, an
-additional line for that module will appear in red in the browser.
-This line begins with a number in brackets, which indicates the
-@emph{instace} number do module.  (For some modules it makes sense
-to have more than one instance do module running at the same
-time.)  You can kill an external module by clicando on its red
-instance entry.
+M@'{o}dulos externos aparecem no navegador de M@'{o}dulos (@emph{Modules}) no painel
+principal (@emph{Main}) do Geomview.  Para executar um m@'{o}dulo, clique no bot@~{a}o esquerdo do mouse sobre
+a entrada do m@'{o}dulo no nvaegador.  Enquanto o m@'{o}dulo estiver sendo executado, uma
+linha adicional para aquele m@'{o}dulo ir@'{a} aparecer em vermelho no navegador.
+Essa linha inicia-se com um n@'{u}mero entre colch@^{e}tes, que indica o
+n@'{u}mero de @emph{inst@^{a}ncia} do m@'{o}dulo.  (Para alguns m@'{o}dulos isso faz sentido
+ter mais de uma inst@^{a}ncia do m@'{o}dule sendo executado ao mesmo
+tempo.)  Voc@^{e} pode encerrar um m@'{o}dulo externo atrav@'{e}s de um clique sobre sua entrada
+vermelha de inst@^{a}ncia.
 
 By default when Geomview starts, it displays all the modules that have
 been installed on your system. 
