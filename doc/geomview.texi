@@ -4976,11 +4976,11 @@ the capability of Geomview itself.
 External modules appear in the @emph{Modules} browser in Geomview's
 @emph{Main} panel.  To run a module, click the left mouse button on
 the module's entry in the browser.  While the module is running, an
-additional line for that module will appear in red in the browser.
+additional line for that module will appear in the browser.
 This line begins with a number in brackets, which indicates the
 @emph{instace} number of the module.  (For some modules it makes sense
 to have more than one instance of the module running at the same
-time.)  You can kill an external module by clicking on its red
+time.)  You can kill an external module by clicking on its
 instance entry.
 
 By default when Geomview starts, it displays all the modules that have
@@ -5030,7 +5030,7 @@ the @file{.geomview} file, and invoke Geomview all in the same
 directory.  You should see "Example 1" in the @emph{Modules} browser
 of Geomview's @emph{Main} panel; click on this entry in the browser to
 start the module.  A surface should appear in your camera window and should
-begin oscillating.  You can stop the module by clicking on the red "[1]
+begin oscillating.  You can stop the module by clicking on the "[1]
 Example 1" line in the @emph{Modules} browser.
 
 @example
