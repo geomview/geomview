@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.58/Sun May 11 09:16:26 2008//
+@c based on /geomview.texi/1.60/Tue Jul 15 10:42:58 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -5074,62 +5074,62 @@ a capacidade do Geomview em si mesmo.
 M@'{o}dulos externos aparecem no navegador de M@'{o}dulos (@emph{Modules}) no painel
 principal (@emph{Main}) do Geomview.  Para executar um m@'{o}dulo, clique no bot@~{a}o esquerdo do mouse sobre
 a entrada do m@'{o}dulo no nvaegador.  Enquanto o m@'{o}dulo estiver sendo executado, uma
-linha adicional para aquele m@'{o}dulo ir@'{a} aparecer em vermelho no navegador.
+linha adicional para aquele m@'{o}dulo ir@'{a} aparecer no navegador.
 Essa linha inicia-se com um n@'{u}mero entre colch@^{e}tes, que indica o
 n@'{u}mero de @emph{inst@^{a}ncia} do m@'{o}dulo.  (Para alguns m@'{o}dulos isso faz sentido
 ter mais de uma inst@^{a}ncia do m@'{o}dule sendo executado ao mesmo
 tempo.)  Voc@^{e} pode encerrar um m@'{o}dulo externo atrav@'{e}s de um clique sobre sua entrada
 vermelha de inst@^{a}ncia.
 
-By default when Geomview starts, it displays all the modules that have
-been installed on your system. 
+Por padr@~{a}o quando Geomview inicia, mostra todos os m@'{o}dulos que tiverem
+sido instalados no seu sistema. 
 
-For instructions on installing a module on your system so that it will
-appear in the @emph{Modules} browser every time Geomview is run by
-anyone on your system, @xref{Module Installation}.
+Para instru@,{c}@~{o}es sobre intala@,{c}@~{a}o de algum m@'{o}dulo no seu sistema de forma que esse m@'{o}dulo
+apare@,{c}a no navegador de m@'{o}dulos (@emph{Modules}) toda vez que Geomview estiver sendo executado por
+algu@'{e}m no seu sistema, veja @ref{Module Installation}.
 
-When Geomview invokes an external module, it creates pipes connected
-to the module's standard input and output. (Pipes are like files
-except they are used for communication between programs rather than
-for storing things on a disk.)  Geomview interprets anything that the
-module writes to its standard output as a GCL command.
-Likewise, if the external module requests any data from Geomview,
-Geomview writes that data to the module's standard input.  Thus all a
-module has to do in order to communicate with Geomview is write
-commands to standard output and (optionally) receive data on standard
-input.  Note that this means that the module cannot use standard input
-and output for communicating with the user.  If a module needs to
-communicate with the user it can do so either through a control
-panel of its own or else by responding to certain events that it finds
-out about from Geomview.
+Quando Geomview chama um m@'{o}dulo externo, cria pipes conectados
+@`{a}s sa@'{i}das e @`{a}s entradas padr@~{a}o do modulo. (Pipes s@~{a}o como arquivos
+exceto que eles s@~{a}o usados para comunica@,{c}@~{a}o entre programas em lugar de
+armazenar coisas em um disco.)  Geomview interpreta quualquer coisa que o
+modulo escreve em sua sa@'{i}da padr@~{a}o como um comando GCL.
+Da mesma forma, Se um m@'{o}dulo externo requisita qualquer dado do Geomview,
+Geomview escreve aquele dado para a entrada padr@~{a}o do m@'{o}dulo.  Dessa forma tudo que um
+m@'{o}dulo tem de fazer com o objetivo de comunicar-se com Geomview @'{e} escrever
+comandos para sua sa@'{i}da padr@~{a}o e (opcionalmente) receber dados de sua entrada
+padr@~{a}o.  Note que isso significa que o m@'{o}dulo n@~{a}o pode usar a entrada padr@~{a}o e
+a sa@'{i}da padr@~{a}o para comunicar-se com o usu@'{a}rio.  Se um m@'{o}dulo precisar
+comunicar-se com o usu@'{a}rio isso pode ser feito ent@~{a}o ou atrav@'{e}s de um painel de
+controle de nele pr@'{o}prio ou em caso contr@'{a}rio atrav@'{e}s de respostas a certos eventos que esse m@'{o}dulo encontrar
+como sa@'{i}da vinda do Geomview.
 
 @node Example1, Example2, Interface, Modules
 @section Example 1: Simple External Module
 
-This section gives a very simple external module which displays an
-oscillating mesh.  To try out this example, make a copy do file
-@file{example1.c} (it is distributed with Geomview in the @file{doc}
-subdirectory) in your directory and compile it with the command
+Essa se@,{c}@~{a}o fornece um m@'{o}dulo externo extremamente simples que mostra uma
+malha oscilando.  Para experimentar esse exemplo, fa@,{c}a uma c@'{o}pia do arquivo
+@file{example1.c} (esse arquivo @'{e} distribu@'{i}do com Geomview no subdiretio
+@file{doc}) em seu diret@'{o}rio e compile @file{example1.c}  com o comando
 
 @example
 cc -o example1 example1.c -lm
 @end example
 
-Then put the line
+A seguir coloque a linha
 
 @example
 (emodule-define "Example 1" "./example1")
 @end example
 
 @noindent
-in a file called @file{.geomview} in your current directory.  Then invoke
-Geomview; it is important that you compile the example program, create
-the @file{.geomview} file, and invoke Geomview all in the same
-directory.  You should see "Example 1" in the @emph{Modules} browser
-of Geomview's @emph{Main} panel; clique sobre o this entry in the browser to
-start the module.  A surface should appear in your janela de c@^{a}mera and should
-begin oscillating.  You can stop the module by clicando on the red "[1]
-Example 1" line in the @emph{Modules} browser.
+em um arquivo chamado @file{.geomview} no seu diret@'{o}rio atual.  A seguir chame o
+Geomview; @'{E} importante que voc@^{e} compile o programa exemplo, crie
+o arquivo @file{.geomview}, e chame o Geomview tudo no mesmo
+diret@'{o}rio.  Voc@^{e} pode ver "Example 1" no navegador  de m@'{o}dulos (@emph{Modules})
+do painel principal (@emph{Main}) do Geomview; clique sobre essa entrada no navegador para
+iniciar o m@'{o}dulo.  Uma superf@'{i}cie deve aparecer na sua janela de c@^{a}mera e deve
+estar oscilando.  Voc@^{e} pode parar o m@'{o}dulo clicando sobre a linha "[1]
+Example 1" no navegador de m@'{o}dulos (@emph{Modules}).
 
 @example
 @comment #include "example1.c"
@@ -5216,38 +5216,38 @@ UpdateMesh(xmin, xmax, ymin, ymax, xdim, ydim, t)
 @comment #end include
 @end example
 
-The module begins by defining a function @code{F(x,y,t)} that
-especifica a time-varying surface.  The purpose do module is to
-animate this surface over time.
+O m@'{o}dulo inicia-se definindo uma fun@,{c}@~{a}o @code{F(x,y,t)} que
+especifica uma superf@'{i}cie variando com o tempo.  O prop@'{o}sito do m@'{o}dulo @'{e}
+animar essa superf@'{i}cie com o passar do tempo.
 
-The main program begins by defining some variables that specify
-the parameters with which the function is to be plotted.
+O programa principal come@,{c}a definindo algumas vari@'{a}veis que especificam
+os par@^{a}metros com os quais a fun@,{c}@~{a}o @'{e} para ser mostrada.
 
-The next bit of code in the main program prints the following
-line to standard output
+O pr@'{o}ximo peda@,{c}o de c@'{o}digo no programa principal envia a seguinte
+linha para a sa@'{i}da padr@~{a}o
 
 @example
 (geometry example @{ : foo @})
 @end example
 
-This tells Geomview to create a geom called @code{example} which is an
-instance do handle @code{foo}.  @emph{Handles} are a part do
-OOGL file format which allow you to name a piece of geometry whose value
-can be specified elsewhere (and in this case updated many times); for
-more information on handles, @xref{OOGL File Formats}. In this case,
-@code{example} is the title by which the user will see the objeto in
-Geomview's objeto browser, and @code{foo} is the internal name do
-handle that the objeto is a reference to.
+Isso diz ao Geomview para criar um geom chamado @code{example} que @'{e} uma
+inst@^{a}ncia do manipulador @code{foo}.  @emph{Manipuladores} s@~{a}o uma parte do
+formato de arquivo OOGL que permite a voc@^{e} nomear uma pe@,{c}a do objeto geom@'{e}trico cujo valor
+pode ser especificado em seu lugar (e nesse caso atualizado muitas vezes); para
+maiores informa@,{c}@~{o}es sobre manipuladores, veja @ref{OOGL File Formats}. Nesse caso,
+@code{example} @'{e} o t@'{i}tulo atrav@'{e}s do qual o usu@'{a}rio ir@'{a} ver o objeto no
+navegador de objeto do Geomview, e @code{foo} @'{e} o nome interno do
+manipulador para o qual o objeto aponta.
 
-We then do @code{fflush(stdout)} to ensure that Geomview
-receives this command immediately.  In general, since pipes may be
-buffered, an external module should do this whenever it wants to be
-sure Geomview has actually received everything it has printed out.
+N@'{o}s ent@~{a}o fazemos @code{fflush(stdout)} para garantir que Geomview
+receba esse comando imediatamente.  Em geral, uma vez que pipes podem ser
+colocados em uma @'{a}rea de mem@'{o}ria tempor@'{a}ria de armazenamento, um m@'{o}dulo externo deve fazer isso sempre que esse m@'{o}dulo externo tenha que
+gaantir que Geomview tenha atualmente recebido tudo que tenha sido mostrado na sa@'{i}da.
 
-The last thing in the main program is an infinite loop that cycles
-through calls to the procedure @code{UpdateMesh} with increasing
-values of @code{t}.  @code{UpdateMesh} sends Geomview a command
-da form
+A @'{u}ltima coisa no programa principal @'{e} um ciclo infinito que circula
+atrav@'{e}s de chamadas ao procedimento @code{UpdateMesh} com incremento dos
+valores de @code{t}.  @code{UpdateMesh} envia ao Geomview um comando
+da forma
 
 @example
 (read geometry @{ define foo 
@@ -5258,22 +5258,22 @@ MESH
 @end example
 
 @noindent
-where @code{@dots{}} is a long list of numbers.  This command tells Geomview
-to make the value do handle @code{foo} be the specified mesh.  As
-soon as Geomview receives this command, the geom being displayed
-changes to reflect the new geometry.
+onde @code{@dots{}} @'{e} uma longa lista de n@'{u}meros.  Esse comando diz ao Geomview
+fazer os valores do manipulador @code{foo} ser a malha especificada.  T@~{a}o
+breve quanto Geomview receba esse comando, o geom sendo mostrado
+muda para refletir o novo objeto geom@'{e}trico.
 
-The mesh is given in the format of an OOGL MESH.  This begins with
-the keyword @code{MESH}.  Next come two numbers that give the x and y
-dimensions da mesh; in this case they are both 24.  This line is
-followed by 24 lines, each containing 24 triples of numbers.  Each of
-these triples is a point on the surface.  Then finally there is a line
-with "@code{@})}" on it that ends the "@code{@{}" which began the
-@code{define} statement and the "@code{(}" that began the command.  For
-more details on the format of MESH data, @pxref{MESH}.
+A malha @'{e} fornecida no formato de uma OOGL MESH.  Esse formato come@,{c}a com
+a palavra chave @code{MESH}.  A seguir temos dois n@'{u}meros que fornecem as dimens@~{o}es
+x e y da malha; nesse caso elas s@~{a}o ambas 24.  Essa linha @'{e}
+seguida por 24 linhas, cada linha contendo 24 trios de n@'{u}meros.  Cada um
+desses trios representa um ponto sobre  superf@'{i}cie.  Ent@~{a}o finalmente existe uma linha
+com "@code{@})}" nesse formato que termina o "@code{@{}" que iniciou a
+declara@,{c}@~{a}o @code{define} e o "@code{(}" que iniciou o comando.  Para
+mais detalhes sobre o formato de dados MESH, veja @ref{MESH}.
 
-This module could be written without the use of handles by having it
-write out commands da form
+Esse m@'{o}dulo pode ser escrito sem o uso de manipuladores
+escrevendo comandos da forma
 
 @example
 (geometry example @{
@@ -5284,36 +5284,36 @@ MESH
 @end example
 
 @noindent
-This first time Geomview receives a command of this form it would create
-a geom called @code{example} with the given @code{MESH} data.
-Subsequent @code{(geometry example @dots{})} commands would cause
-Geomview to replace the geometry do geom @code{example} with the new
-@code{MESH} data.  If done in this way there would be no need to send
-the initial @code{(geometry example @{ : foo @})} command as above.  The
-handle technique is useful, however, because it can be used in more
-general situations where a handle represents only part of a complex
-geom, allowing an external module to replace only that part without
-having to retransmit the entire geom.  For more information on handles,
-@pxref{GCL}. @xref{References}. @xref{hdefine,@code{(hdefine
-@dots{})}}. @xref{read,@code{(read @dots{})}}.
+Nesse primeiro tempo Geomview recebe um comando e dessa forma pode criar
+um geom chamado @code{example} com os dados fornecidos da @code{MESH}.
+Subseq@"{u}entemente comandos @code{(geometry example @dots{})} podem fazer com que
+Geomview substitua a geometria do geom @code{example} com os novos
+dados da @code{MESH}.  Se realizado dessa forma pode n@~{a}o ser necess@'{a}rio enviar
+o comando inicial @code{(geometry example @{ : foo @})} como dito acima.  A
+t@'{e}cnica do manipuladro @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode ser usada em situa@,{c}@~{o}es
+mais gerais onde um manipulador representa somente parte de um complexo
+geom, permitindo a um m@'{o}dulo externo substituir somente aquela parte sem
+ter que retransmitir o geom completo.  Para mais informa@,{c}@~{o}es sobre manipuladores,
+veja @ref{GCL}. Veja @ref{References}. Veja @ref{hdefine,@code{(hdefine
+@dots{})}}. Veja @ref{read,@code{(read @dots{})}}.
 
-The module loops through calls to @code{UpdateMesh} which print out
-commands da above form one after the other as fast as possible.
-The loop continues indefinitely; the module will terminate when the
-user kills it by clicando on its instance line in the @emph{Modules}
-browser, or else when Geomview exits.
+O m@'{o}dulo entra em ciclos atrav@'{e}s de chamadas a @code{UpdateMesh} que fornece como sa@'{i}da
+comandos da forma acima um ap@'{o}s o outro t@~{a}o r@'{a}pido quanto poss@'{i}vel.
+O ciclo continua indefinidamente; o m@'{o}dulo ir@'{a} terminar quando o
+usu@'{a}rio fizer isso clicando sobre sua linha de inst@^{a}ncia no navegador de
+m@'{o}dulos (@emph{Modules}), ou em caso contr@'{a}rio quando Geomview for encerrado.
 
-Sometimes when you terminate this module by clicando on its instance
-entry the @emph{Modules} browser, Geomview will kill it while it is in
-the middle of sending a command to Geomview.  Geomview will then receive
-only a piece of a command and will print out a cryptic but harmless
-error message about this.  When a module has a user interface panel
-it can use a "Quit" bot@~{a}o to provide a more graceful way for the user
-to terminate the module.  See the next example.
+Algumas vezes quando voc@^{e} encerra o m@'{o}dulo clicando sobre sua entrada de
+inst@^{a}ncia no navegador de m@'{o}dulos (@emph{Modules}), Geomview ir@'{a} encerr@'{a}-lo enquanto o m@'{o}dulo est@'{a} no
+meio de um comando ao Geomview.  Geomview ir@'{a} ent@~{a}o receber
+somente uma pe@,{c}a de um comando e ir@'{a} mostrar uma cr@'{i}tica mas inofensiva
+mensagem de erro sobre isso.  uando um m@'{o}dulo tiver um painel de interface com o usu@'{a}rio
+o usu@'{a}rio pode usar um bot@~{a}o "Quit" para fornecer uma forma mais elegante para o usu@'{a}rio
+encerrar o m@'{o}dulo.  Veja o exemplo seguinte.
 
-You can run this module in a shell window without Geomview to see the
-commands it prints out.  You will have to kill it with
-@kbd{ctrl-C} to get it to stop.
+Voc@^{e} pode usar esse m@'{o}dulo em uma janela de shell sem o Geomview para ver os
+comando que o m@'{o}dulo mostra como sa@'{i}da.  Voc@^{e} ir@'{a} ter que encerr@'{a}-lo com
+@kbd{ctrl-C} para que ele pare.
 
 @comment ================================================================
 @node Example2, XForms, Example1, Modules
