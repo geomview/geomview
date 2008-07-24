@@ -5319,39 +5319,43 @@ comando que o m@'{o}dulo mostra como sa@'{i}da.  Voc@^{e} ir@'{a} ter que encerr
 @node Example2, XForms, Example1, Modules
 @section Example 2: Simple External Module with FORMS Control Panel
 
-This section gives a new version do above module --- one that
-includes a user interface panel for controlling the velocity da
-oscillation.  We use the FORMS library by Mark Overmars for the control
-panel.  The FORMS library is a public domain user interface toolkit for
-IRISes; for more information @xref{Forms}.
+Nota de tradu@,{c}@~{a}o: Este exemplo @'{e} muito antigo e n@~{a}o compila
+nas m@'{a}quinas atuais. At@'{e} o momento de digita@,{c}@~{a}o destas linhas de tradu@,{c}@~{a}o
+ele n@~{a}o tinha sido atualizado permanecendo portanto inoperante.
 
-To try out this example, make a copy do file
-@file{example2.c} (distributed with Geomview in the @file{doc}
-subdirectory) in your directory and compile it with the command
+Essa se@,{c}@~{a}o fornece uma nova vers@~{a}o do m@'{o}dulo acima --- uma vers@~{a}o que
+inclue uma interface de usu@'{a}rio para controlar a velocidade da
+oscila@,{c}@~{a}o.  Usamos a biblioteca FORMS criada por Mark Overmars para o painel de
+controle.  A biblioteca FORMS @'{e} uma cole@,{c}@~{a}o de ferramentas para interface de usu@'{a}rio de dom@'{i}nio p@'{u}blico para
+IRISes; para mais informa@,{c}@~{o}es veja @ref{Forms}.
+
+Para experimentar esse exemplo, fa@,{c}a uma c@'{o}pia do arquivo
+@file{example2.c} (distribu@'{i}do com Geomview no subdiret@'{o}rio
+@file{doc}) no seu diret@'{o}rio e compile-o com o comando
 
 @example
 cc -I/u/gcg/ngrap/include -o example2 example2.c \
   -L/u/gcg/ngrap/lib/sgi -lforms -lfm_s -lgl_s -lm
 @end example
 
-You should
-replace the string @file{/u/gcg/ngrap} above with the pathname do
-Geomview distribution directory on your system.  (The forms library is
-distributed with Geomview and the @code{-I} and @code{-L} options above
-tell the compiler where to find it.)
+Voc@^{e} pode
+substituir a seq@"{u}@^{e}ncia de caracteres @file{/u/gcg/ngrap} acima com o nome do caminho do
+diret@'{o}rio de distribui@,{c}@~{a}o do Geomview em seu sistema.  (A biblioteca forms @'{e}
+distribu@'{i}da com Geomview e as op@,{c}@~{o}es @code{-I} e @code{-L} acima
+dizem ao compilador onde encontr@'{a}-las.)
 
-Then put the line
+Ent@~{a}o coloque a linha
 
 @example
 (emodule-define "Example 2" "./example2")
 @end example
 
 @noindent
-in a file called @file{.geomview} in the current directory and invoke
-Geomview from that directory.  Clique sobre o the "Example 2" entry in the
-@emph{Modules} browser to invoke the module.  A small control panel
-should appear.  You can then control the velocity da mesh
-oscillation by moving the bot@~{a}o deslizante.
+em um arquivo chamado @file{.geomview} no diret@'{o}rio e chame
+Geomview do mesmo diret@'{o}rio.  Clique sobre a entrada "Example 2" no
+navegador de m@'{o}dulos (@emph{Modules}) para chamar o m@'{o}dulo.  Um pequeno painel de controle
+dever@'{a} aparecer.  Voc@^{e} pode ent@~{a}o controlar a velocidade da oscila@,{c}@~{a}o
+da malha movendo o bot@~{a}o deslizante.
 
 @example
 @comment #include "example2.c"
@@ -5552,9 +5556,9 @@ The last line do main loop in this example, the call to
 @node XForms, Example3, Example2, Modules
 @section The XForms Library
 
-XForms is a handy and relatively simple user interface toolkit for X11.
-Many Geomview external modules, including the examples in this manual,
-use XForms to create and manage control panels. XForms is available from
+XForms @'{e} uma interface de usu@'{a}rio ou conjunto de ferramentas muito f@'{a}cil de encontrar e relativamente simples para X11.
+Muitos m@'{o}dulos externos do Geomview, incluindo os exemplos nesse manual,
+usam XForms para criar e gerenciar pain@'{e}is de controle. XForms is available from
 @uref{http://www.nongnu.org/xforms/}. XForms is free-ware.  If you wish
 you may use any other interface toolkit instead of XForms in an external
 module.  We chose FORMS because it is free and relatively simple.
@@ -6267,12 +6271,12 @@ msg "Click right mouse in graphics window"
 @node Module Installation,  , Example4, Modules
 @section Module Installation
 
-This section tells how to install an external module so you can invoke
-it within Geomview.  There are two ways to install a module: you can
-install a @emph{private} module so that the module is available to you
-whenever you run Geomview, or you can install a @emph{system} module
-so that the module is available to all users on your system whenever they
-run Geomview.
+Essa se@,{c}@~{a}o diz como instalar um m@'{o}dulo externo de forma que voc@^{e} possa invoc@'{a}-lo
+dentro do Geomview.  Existem duas maneiras de instalar um m@'{o}dulo: voc@^{e} pode
+installar um m@'{o}dulo @emph{privado} de forma que o m@'{o}dulo esteja dispon@'{i}vel somente
+para voc@^{e} mesmo sempre que executar o Geomview, ou voc@^{e} pode instalar um m@'{o}dulo de @emph{sistema} de forma
+que o m@'{o}dulo esteja dispon@'{i}vel para todos os usu@'{a}rios do seu sistema sempre que eles
+executarem o Geomview.
 
 @menu
 * Private Module Installation::  Per-user modules.
@@ -6284,57 +6288,57 @@ run Geomview.
 @node Private Module Installation, System Module Installation, Module Installation, Module Installation
 @subsection Private Module Installation
 
-The @code{emodule-define} command arranges for a module to appear in
-Geomview's @emph{Modules} browser. The command takes two string
-arguments; the first is the name that will appear in the @emph{Modules}
-browser.  The second is the shell command for running the module; it may
-include arguments (@pxref{emodule-define,@code{(emodule-define @dots{})}}).
-Geomview executes this command in a subshell when you clique sobre o the
-module's entry in the browser.  For example
+O comando @code{emodule-define} providencia que um m@'{o}dulo apare@,{c}a no
+navegador de m@'{o}dulos (@emph{Modules}) do Geomview. O comando recebe dois arumentos que s@~{a}o
+seq@"{u}@^{e}ncias de caractere; o primeiro @'{e} o nome que ir@'{a} aparecer no navegador de
+m@'{o}dulos (@emph{Modules}).  O segundo @'{e} o comando de shell para executar o m@'{o}dulo; esse nome de shell
+pode incluir argumentos (veja @ref{emodule-define,@code{(emodule-define @dots{})}}).
+Geomview executa esse comando em um subshell quando voc@^{e} d@'{a} um clique sobre a
+entrada do m@'{o}dulo no navegador.  For exemplo
 
 @example
 (emodule-define "Foo" "/u/home/modules/foo -x")
 @end example
 
 @noindent
-adds a line labeled "Foo" to the @emph{Modules} browser which
-causes the command "/u/home/modules/foo -x" to be executed when selected.
+adiciona uma linha rotulada "Foo" ao navegador de m@'{o}dulos (@emph{Modules}) o qual
+faz com que o comando "/u/home/modules/foo -x" seja executado quando selecionado.
 
-You may put @code{emodule-define} commands in your @file{~/.geomview}
-file to arrange for certain modules to be available every time you run
-Geomview; @xref{Customization}.  You can also execute
-@code{emodule-define} commands from the @emph{Commands} panel
-to add a module to an already running copy of Geomview.
+Voc@^{e} pode colocr comandos @code{emodule-define} no seu arquivo
+@file{~/.geomview} para providenciar que certos m@'{o}dulos estejam dispon@'{i}veis sempre que voc@^{e} execute
+Geomview; veja @ref{Customization}.  voc@^{e} pode tamb@'{e}m executar
+comandos @code{emodule-define} a partir do painel de comandos (@emph{Commands})
+para adicionar um m@'{o}dulo a uma c@'{o}pia do Geomview que j@'{a} esteja sendo executada.
 
-There are several other GCL commands for controlling the entries
-in the @emph{Modules} browser; for details, @xref{GCL}.
+Existem muitos outros comandos GCL para controlar as entradas
+no navegador de m@'{o}dulos (@emph{Modules}); para detalhes, veja @ref{GCL}.
 
 @comment ----------------------------------------------------------------
 @node System Module Installation,  , Private Module Installation, Module Installation
 @subsection System Module Installation
 
-To install a module so that it is available to all Geomview users do
-the following
+Para instalar um m@'{o}dulo de forma que esse m@'{o}dulo esteja dispon@'{i}vel para todos os usu@'{a}rios do Geomview fa@,{c}a
+o seguinte
 
 @table @asis
 
 @item 1.
-Create a file called @file{.geomview-@var{module}} where
-@file{@var{module}} is the name do module.  This file should contain
-a single line which is an @code{emodule-define} command for that module:
+Crie um arquivo chamado @file{.geomview-@var{m@'{o}dulo}} 
+@file{@var{m@'{o}dulo}} @'{e} o nome do m@'{o}dulo.  Esse arquivo deve conter
+uma linha simples que @'{e} um comando @code{emodule-define} para aquele m@'{o}dulo:
 @example
-(emodule-define "New Module" "newmodule")
+(emodule-define "Novo M@'{o}dulo" "novomodulo")
 @end example
-The first argument, @code{"New Module"} above, is the string that will
-appear in the @emph{Modules} browser.  The second string,
-@code{"newmodule"} above, is the Bourne shell command for invoking the module.
-It may include arguments, and you may assume that the module is on the
-$path searched by the shell.
+O primeiro argumento, @code{"Novo M@'{o}dulo"} acima, @'{e} a sequ@^{e}ncia de caracteres que ir@'{a}
+aparecer no navegador de m@'{o}dulo (@emph{Modules}).  A segunda sequ@^{e}ncia de caracteres,
+@code{"novomodulo"} acima, @'{e} o comando de Bourne shell para invocar o m@'{o}dulo.
+Esse comando de shell pode incluir argumentos, e voc@^{e} pode assumir que o m@'{o}dulo encontra-se localizado em
+$PATH que representa os locais de busca do shell.
 
 @item 2.
-Put a copy do @file{.geomview-@var{module}} and the module
-executable itself in Geomview's @file{modules/<CPU>} directory,
-where @file{<CPU>} is your system type.
+Coloque uma c@'{o}pia do @file{.geomview-@var{m@'{o}dulo}} e o execut@'{a}vel do
+m@'{o}dulo propriamente dito no diret@'{o}rio do Geomview @file{modules/<CPU>},
+onde @file{<CPU>} @'{e} ajustado conforme o seu tipo de sistema.
 
 @end table
 
@@ -6375,12 +6379,12 @@ evaluates @code{(g a b)} and then evaluates @code{(f x)} where @code{x}
 is the result returned by @code{(g a b)}.  Geomview maintains these
 return values internally but does not normally print them out.
 To print out a return value pass it to the @code{echo} function.
-For example the @code{geomview-version} function returns a string
+For example the @code{geomview-version} function returns a sequ@^{e}ncia de caracteres
 representing the version of Geomview that is running, and
 @example
 (echo (geomview-version))
 @end example
-prints out this string.
+prints out this sequ@^{e}ncia de caracteres.
 
 Many functions simply return @code{t} for success or @code{nil} for
 failure; this is the case if the documentation for the function does not
@@ -6404,7 +6408,7 @@ syntax of @var{command}, and @code{(?? @var{command})} prints out an
 explanation of what @var{command} does.  You can include the wild-card
 character @code{*} in @var{command} to print information for a group of
 commands matching a pattern.  For example, @code{(?? *emodule*)} will
-print all information about all commands containing the string
+print all information about all commands containing the sequ@^{e}ncia de caracteres
 @code{emodule}.  @code{(? *)} will print a short list of all commands.
 
 @menu
@@ -6436,7 +6440,7 @@ is an @var{id} that refers to a geometry.
 is an OOGL geometry specification.
 
 @item @var{id}
-is a string which names a geometry or camera.  Besides
+is a sequ@^{e}ncia de caracteres which names a geometry or camera.  Besides
 those you create, valid ones are:
 
 @table @code
@@ -6869,7 +6873,7 @@ Say se GEOM-ID's bounding-box should be drawn; defaults to
 @findex camera
 @table @code
 @item (camera CAM-ID [CAMERA])
-Specify data for @var{CAM-ID}; @var{CAMERA} is a string giving an OOGL
+Specify data for @var{CAM-ID}; @var{CAMERA} is a sequ@^{e}ncia de caracteres giving an OOGL
 c@^{a}mera specification.  If no camera @var{CAM-ID} exists, it is created;
 in this case, the second argument is optional, and if omitted, a default
 c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
@@ -6990,7 +6994,7 @@ to the lambda-expression @code{(lambda (ARG1 @dots{}) (EXPR1 @dots{}))}
 when called as a function. Also, install @var{DOCSTRING} as response to
 the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Not that
 @var{DOCSTRING} need not contain the command-synopsis, it is generated
-automatically.  @var{EXPR1} cannot be a string if @code{DOCSTRING} is
+automatically.  @var{EXPR1} cannot be a sequ@^{e}ncia de caracteres if @code{DOCSTRING} is
 omitted; it would be interpreted as the doc-string. The return value of
 @code{(defun @dots{})} is the function name. Functions can be recursive
 and self-modifying. It is possible to redefine builtin-functions, in
@@ -7084,7 +7088,7 @@ Clears the geomview application (external module) browser.
 @table @code
 @item (emodule-define NAME SHELL-COMMAND @dots{})
 Define an external module called NAME, which then appears in the
-external-module browser.  The SHELL-COMMAND string is a UNIX shell
+external-module browser.  The SHELL-COMMAND sequ@^{e}ncia de caracteres is a UNIX shell
 command which invokes the module.  See @ref{emodule-run,
 @code{(emodule-run @dots{})}} for discussion of external modules.
 @end table
@@ -7095,8 +7099,8 @@ command which invokes the module.  See @ref{emodule-run,
 @table @code
 @item (emodule-defined @code{modulename})
 If the given external-module name is known, returns the name of
-the program invoked when it's run as a quoted string; otherwise
-returns nil.  @code{(echo (emodule-defined @code{name}))} prints the string.
+the program invoked when it's run as a quoted sequ@^{e}ncia de caracteres; otherwise
+returns nil.  @code{(echo (emodule-defined @code{name}))} prints the sequ@^{e}ncia de caracteres.
 @end table
 
 @node emodule-isrunning, emodule-path, emodule-defined, GCL Reference
@@ -7127,7 +7131,7 @@ you should wrap it in a call to echo: @code{(echo (emodule-path))}.
 @findex |, emodule-run
 @table @code
 @item (emodule-run SHELL-COMMAND ARGS@dots{})
-Runs the given SHELL-COMMAND (a string containing a UNIX shell
+Runs the given SHELL-COMMAND (a sequ@^{e}ncia de caracteres containing a UNIX shell
 command) as an external module.  The module's standard output
 is taken as geomview commands; responses (written to filename
 @code{-}) are sent to the module's standard input.  The shell
@@ -7278,7 +7282,7 @@ which time drawing resumes as normal.
 @findex geometry
 @table @code
 @item (geometry GEOM-ID [GEOMETRY])
-Specify the geometry for GEOM-ID.  GEOMETRY is a string
+Specify the geometry for GEOM-ID.  GEOMETRY is a sequ@^{e}ncia de caracteres
 giving an OOGL geometry specification.  If no objeto
 called GEOM-ID exists, it is created; in this case the
 GEOMETRY argument is optional, and if omitted, the new
@@ -7290,7 +7294,7 @@ objeto GEOM-ID is given an empty geometry.
 @findex geomview-version
 @table @code
 @item (geomview-version)
-Returns a string representing the version of geomview that is
+Returns a sequ@^{e}ncia de caracteres representing the version of geomview that is
 running.
 @end table
 
@@ -7391,7 +7395,7 @@ applies to, so this command is rather useless.
 @table @code
 @item (input-translator "#prefix_string" "Bourne-shell-command")
 Defines an external translation program for special input types.
-When asked to read a file which begins with the specified string,
+When asked to read a file which begins with the specified sequ@^{e}ncia de caracteres,
 geomview invokes that program with standard input coming from the given file.
 The program is expected to emit OOGL geometric data to its standard output.
 In this implementation, only prefixes beginning with # are recognized.
@@ -7420,11 +7424,11 @@ The purpose do interest command is to allow external
 modules to find out about things happening inside geomview.
 For example, a module interested in knowing when a geom called
 @code{foo} is deleted could say @code{(interest (delete foo))} and would
-receive the string @code{(delete foo)} when foo is deleted.
+receive the sequ@^{e}ncia de caracteres @code{(delete foo)} when foo is deleted.
 
 Picking is a special case of this.  For most modules interested in pick
 events the command @code{(interest (pick world))} is sufficient.  This
-causes geomview to send a string da form @code{(pick world @dots{})} 
+causes geomview to send a sequ@^{e}ncia de caracteres da form @code{(pick world @dots{})} 
 every time a pick event (right mouse double clique).  See the @ref{pick,
 @code{(pick @dots{})}} command for details.
 @end table
@@ -7653,7 +7657,7 @@ Prints more info than @ref{help, @code{(help command)}}.
 @findex name-object
 @table @code
 @item (name-object ID NAME)
-Assign a new NAME (a string) to ID.  A number is appended if
+Assign a new NAME (a sequ@^{e}ncia de caracteres) to ID.  A number is appended if
 that name is in use (for example, @code{foo} -> @code{foo<2>}).  The new
 name, possibly with number appended, may be used as objeto's
 id thereafter.
@@ -7756,7 +7760,7 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @table @code
 @item (new-alien name [GEOMETRY])
 Create a new alien (geom not in the world) with the given name (a
-string). @var{GEOMETRY} is a string giving an OOGL geometry
+sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a sequ@^{e}ncia de caracteres giving an OOGL geometry
 specification. If @var{GEOMETRY} is omitted, the new alien is given an
 empty geometry.  If an objeto with that name already exists, the new
 alien is given a unique name.  The light beams that are used to move
@@ -7771,7 +7775,7 @@ modes.
 @findex new-camera
 @table @code
 @item (new-camera name [CAMERA])
-Create a new c@^{a}mera with the given name (a string).  If a c@^{a}mera with
+Create a new c@^{a}mera with the given name (a sequ@^{e}ncia de caracteres).  If a c@^{a}mera with
 that name already exists, the new objeto is given a unique name.  If
 @var{CAMERA} is omitted a default c@^{a}mera is used.
 @end table
@@ -7793,8 +7797,8 @@ parallel to the z axis toward the center do world.
 @findex new-geometry
 @table @code
 @item (new-geometry name [GEOMETRY])
-Create a new geom with the given name (a string). @var{GEOMETRY} is a
-string giving an OOGL geometry specification.  If @var{GEOMETRY} is
+Create a new geom with the given name (a sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a
+sequ@^{e}ncia de caracteres giving an OOGL geometry specification.  If @var{GEOMETRY} is
 omitted, the new objeto is given an empty geometry.  If an objeto with
 that name already exists, the new objeto is given a unique name.
 @end table
@@ -8051,7 +8055,7 @@ reference syntax, e.g.
 @findex real-id
 @table @code
 @item (real-id ID)
-Returns a string canonically identifying the given ID,
+Returns a sequ@^{e}ncia de caracteres canonically identifying the given ID,
 or @code{nil} if the objeto does not exist.  Examples:
  (if (real-id fred) (delete fred))
 deletes @code{fred} if it exists but reports no error if it doesn't, and
@@ -8294,7 +8298,7 @@ Returns the number of seconds until TIME.
 @findex snapshot
 @table @code
 @item (snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])
-Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a string). The
+Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de caracteres). The
 @var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
 "ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
 libOSMesa) or "ppmosglx". A "ppmscreen" snapshot is created by reading
@@ -8360,7 +8364,7 @@ This command doesn't set stereo projection; use @code{merge camera} or
 @item (time-interests deltatime initial prefix [suffix])
 Indicates that all interest-related messages, when separated by at
 least @code{deltatime} seconds of real time, should be preceded by
-the string @code{prefix} and followed by @code{suffix}; the first message
+the sequ@^{e}ncia de caracteres @code{prefix} and followed by @code{suffix}; the first message
 is preceded by @code{initial}.  All three are printf format strings,
 whose argument is the current clock time (in seconds) on that stream.
 A @code{deltatime} of zero timestamps every message.  Typical usage:@*
@@ -8727,7 +8731,7 @@ integer counters specifying a subpart of a hierarchical OOGL
 objeto. Descent into a complex objeto (LIST or INST) adds a new integer
 to the path. Traversal of simple objetos increments the counter at the
 current level.  Individual COMMENTS are enclosed by curly braces, and
-the entire string of zero, one, or more COMMENTS (written in the order
+the entire sequ@^{e}ncia de caracteres of zero, one, or more COMMENTS (written in the order
 in which they are encountered during hierarchy traversal) is enclosed by
 parentheses.
         
@@ -9069,8 +9073,8 @@ from inside Mathematica is @code{WriteRIB["!render", foo]}.@refill
 objeto to OOGL format using @code{WriteOOGL} and then calls an external
 program @file{oogl2ri}b to convert OOGL to RIB format.  The
 oogl2rib program takes several options which you can specify in a
-string as an optional third argument to @code{WriteRI}b.  The default
-option string is @code{" -n mma.tiff "}, which indicates that the RIB
+sequ@^{e}ncia de caracteres as an optional third argument to @code{WriteRI}b.  The default
+option sequ@^{e}ncia de caracteres is @code{" -n mma.tiff "}, which indicates that the RIB
 file should generate a rendered TIFF file named @file{mma.tiff}.  A
 particularly useful option is @code{-g}, which tells oogl2rib to
 convert only the geometry into a RIB fragment. You can insert that
@@ -9139,7 +9143,7 @@ such that the Mathematica computer can successfully @code{rsh} to the
 Geomview computer without giving a password.
 
 You can also explicitly set the @code{DisplayHost} option to the
-@code{Geomview} command to a string which is the desired hostname, for
+@code{Geomview} command to a sequ@^{e}ncia de caracteres which is the desired hostname, for
 example:
 @example
 In[1] := << OOGL.m
@@ -9154,7 +9158,7 @@ In[3] := Geomview[%3, DisplayHost->"riemann"]
 This displays the graphics @code{%3} on the remote host named
 @code{riemann}.@refill
 
-@code{Geomview} recognizes the string @code{"local"} as a value for
+@code{Geomview} recognizes the sequ@^{e}ncia de caracteres @code{"local"} as a value for
 @code{$DisplayHost}; it forces the graphics to be displayed on the local
 machine.@refill
 
@@ -9254,8 +9258,8 @@ The Mathematica to RenderMan conversion is actually a two-step process:
 Mathematica->OOGL (math2oogl), and OOGL->RenderMan (oogl2rib).
 
 In the @code{WriteOOGL} and @code{WriteRI}b commands, filename can
-either be a string containing a filename, an @code{OutputStream} objeto,
-or a string starting with a @code{!} to send the output to a command.
+either be a sequ@^{e}ncia de caracteres containing a filename, an @code{OutputStream} objeto,
+or a sequ@^{e}ncia de caracteres starting with a @code{!} to send the output to a command.
 Objeto can be a @code{Graphics3D} objeto, a @code{SurfaceGraphics}
 objeto, or a list of these.@refill
 
@@ -9511,7 +9515,7 @@ installation process will install some packages there which allow you to
 use Geomview to display Mathematica graphics.  These packages are
 distributed in the @file{$GEOMROOT/mathematica} subdirectory; if you
 specify this directory for @code{MMAPACKAGEDIR}, or if you specify the
-empty string for @code{MMAPACKAGEDIR}, the packages are left in that
+empty sequ@^{e}ncia de caracteres for @code{MMAPACKAGEDIR}, the packages are left in that
 directory.  For more details about the way these Mathematica packages
 connect to Geomview, @pxref{Package Installation}.
 
