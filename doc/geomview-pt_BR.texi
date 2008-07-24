@@ -6337,8 +6337,7 @@ $PATH que representa os locais de busca do shell.
 
 @item 2.
 Coloque uma c@'{o}pia do @file{.geomview-@var{m@'{o}dulo}} e o execut@'{a}vel do
-m@'{o}dulo propriamente dito no diret@'{o}rio do Geomview @file{modules/<CPU>},
-onde @file{<CPU>} @'{e} ajustado conforme o seu tipo de sistema.
+m@'{o}dulo propriamente dito no diret@'{o}rio @file{/usr/local/libexec/geomview}.
 
 @end table
 

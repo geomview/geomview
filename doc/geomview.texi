@@ -6235,7 +6235,7 @@ $path searched by the shell.
 
 @item 2.
 Put a copy of the @file{.geomview-@var{module}} and the module
-executable itself in Geomview's @file{modules/<CPU>} directory,
+executable itself in @file{/usr/local/libexec/geomview} directory,
 where @file{<CPU>} is your system type.
 
 @end table
