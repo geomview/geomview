@@ -6231,7 +6231,7 @@ The first argument, @code{"New Module"} above, is the string that will
 appear in the @emph{Modules} browser.  The second string,
 @code{"newmodule"} above, is the Bourne shell command for invoking the module.
 It may include arguments, and you may assume that the module is on the
-$path searched by the shell.
+$PATH searched by the shell.
 
 @item 2.
 Put a copy of the @file{.geomview-@var{module}} and the module
@@ -6244,7 +6244,7 @@ position, in the @emph{Modules} browser of Geomview's @emph{Main}
 panel next time Geomview is run.  The reason this works is that when
 Geomview is invoked it processes all the @file{.geomview-*} files in its
 @file{modules} directory.  It also remembers the pathname of this
-directory and prepends that path to the $path of the shell in which it
+directory and prepends that path to the $PATH of the shell in which it
 invokes such a module.
 
 @comment ****************************************************************
