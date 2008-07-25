@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.60/Tue Jul 15 10:42:58 2008//
+@c based on /geomview.texi/1.63/Fri Jul 25 07:22:23 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -6279,8 +6279,8 @@ que o m@'{o}dulo esteja dispon@'{i}vel para todos os usu@'{a}rios do seu sistema
 executarem o Geomview.
 
 @menu
-* Private Module Installation::  Per-user modules.
-* System Module Installation::  System-wide modules.
+* Private Module Installation:: M@'{o}dulos para um @'{U}nico Usu@'{a}rio.
+* System Module Installation::  M@'{o}dulos para Todos os Usu@'{a}rio do Sistema.
 @end menu
 
 
@@ -6341,56 +6341,56 @@ m@'{o}dulo propriamente dito no diret@'{o}rio @file{/usr/local/libexec/geomview}
 
 @end table
 
-After these steps, the new module should appear, in alphabetical
-position, in the @emph{Modules} browser of Geomview's @emph{Main}
-panel next time Geomview is run.  The reason this works is that when
-Geomview is invoked it processes all the @file{.geomview-*} files in its
-@file{modules} directory.  It also remembers the pathname of this
-directory and prepends that path to the $path do shell in which it
-invokes such a module.
+Ap@'{o}s esses passos, o novo m@'{o}dulo deve aparecer, em ordem
+alfab@'{e}tica, no navegador de m@'{o}dulos (@emph{Modules}) do Geomview do painel
+principal (@emph{Main}) da pr@'{o}xima vez que o Geomview for inicializado.  A raz@~{a}o desse trabalho @'{e} que quando
+Geomview for invocado processar@'{a} todos os arquivos @file{.geomview-*} em seu
+diret@'{o}rio de @file{m@'{o}dulos}.  Geomview tamb@'{e}m lembra o caminho desse
+diret@'{o}rio e coloca aquele caminho em $PATH do shell no qual Geomview
+invoca tal m@'{o}dulo.
 
 @comment ****************************************************************
 @node GCL, Non-Euclidean Geometry, Modules, Top
 @chapter GCL: the Geomview Command Language
 
-GCL has the syntax of lisp -- i.e. an expression da form (f a b
-@dots{}) means pass the values of a, b, @dots{} to the function f.
-GCL is very limited and is by no means an implementation of lisp.  It
-is simply a language for expressing commands to be executed in the order
-given, rather than a programming language.  It does not support variable
-or function definition.
+GCL tem a sintaxe do lisp -- i.e. uma express@~{a}o da forma (f a b
+@dots{}) significa informar os vallores de a, b, @dots{} para a fun@,{c}@~{a}o f.
+GCL @'{e} muito limitado e GCL n@~{a}o @'{e} de forma alguma uma implementa@,{c}@~{a}o de lisp.  GCL
+@'{e} simplesmente uma linguagem para expressar comandos que s@~{a}o executados na ordem
+fornecida, ao contr@'{a}rio de uma linguagem de programa@,{c}@~{a}o.  GCL n@~{a}o suporta vari@'{a}vel
+ou defini@,{c}@~{a}o de fun@,{c}@~{a}o.
 
-GCL is the language that Geomview understands for files that it loads
-as well as for communication with other programs. 
-To execute a GCL command interactively, you can bring up the
-@emph{Commands} panel which lets you type in a command; Geomview
-executes the command when you hit the @key{Enter} key.  Output from such
-commands is printed to standard output.  Alternately, you can invoke
-Geomview as @code{geomview -c -} which causes it to read GCL commands
-from standard input.
+GCL @'{e} a linguagem que Geomview entende para arquivos que chama
+bem como para comunica@,{c}@~{a}o com outros programas. 
+Para executar um comando GCL interativamente, voc@^{e} pode trazer o
+painel de comandos (@emph{Commands}) que tr@'{a}s sua digita@,{c}@~{a}o em um comando; Geomview
+executa o comando quando voc@^{e} pressiona a tecla @key{Enter}.  A sa@'{i}da de tais
+comandos @'{e} mostrada na sa@'{i}da padr@~{a}o.  Alternativamente, voc@^{e} pode invocar
+Geomview com @code{geomview -c -} que faz com que o Geomview leia comandos GCL
+a partir da entrada padr@~{a}o.
 
-GCL functions return a value, and you can nest function calls in ways
-which use this returned value.  For example
+Fun@,{c}@~{o}es GCL retornam um valor, e voc@^{e} pode concaenar chamadas de fun@,{c}@~{a}o de forma
+que outras fun@,{c}@~{o}es usem esse valor retornado.  Por exemplo
 @example
 (f (g a b))
 @end example
-evaluates @code{(g a b)} and then evaluates @code{(f x)} where @code{x}
-is the result returned by @code{(g a b)}.  Geomview maintains these
-return values internally but does not normally print them out.
-To print out a return value pass it to the @code{echo} function.
-For example the @code{geomview-version} function returns a sequ@^{e}ncia de caracteres
-representing the version of Geomview that is running, and
+avalia @code{(g a b)} e ent@~{a}o avalia @code{(f x)} onde @code{x}
+@'{e} o resultado retornado por @code{(g a b)}.  Geomview mant@'{e}m esses
+valores de retorno internamente normalmente n@~{a}o fornece sa@'{i}da alguma com os resultados guardados.
+Para mostrar um valor de retorno esse valor de retorno deve ser fornecido @`{a} fun@,{c}@~{a}o @code{echo}.
+Por exemplo a fun@,{c}@~{a}o @code{geomview-version} retorna uma sequ@^{e}ncia de caracteres
+representado a vers@~{a}o do Geomview que est@'{a} sendo executada, e
 @example
 (echo (geomview-version))
 @end example
-prints out this sequ@^{e}ncia de caracteres.
+mostra essa sequ@^{e}ncia de caracteres.
 
-Many functions simply return @code{t} for success or @code{nil} for
-failure; this is the case if the documentation for the function does not
-indicate otherwise.  These are the lisp symbols for true and false,
-respectively.  (They correspond to the C variables @code{Lt} and
-@code{Lnil} which you are likely to see if you look at the source code
-for Geomview or some dos external modules.)
+Muitas fun@,{c}@~{a}o simplesmente retornam @code{t} ( de "true" - verdadeiro) caso tenham sido executadas como esperado ou @code{nil} ( nenhum )
+ em caso de falha; esse @'{e} o caso se a documenta@,{c}@~{a}o para a fun@,{c}@~{a}o n@~{a}o
+fornece o retorno esperado.  Esses s@~{a}o os s@'{i}mbolos do lisp para verdadeiro e falso,
+respectivamente.  (Eles correspondem @`{a}s vari@'{a}veis definidas em C @code{Lt} e
+@code{Lnil} que voc@^{e} ver@'{a} se olhar no c@'{o}digo fonte
+do Geomview ou em alguns dos m@'{o}dulos externos.)
 
 In the descriptions dos commands below several references are made to
 "OOGL" formats.  OOGL is the data description language that Geomview
