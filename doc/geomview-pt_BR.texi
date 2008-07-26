@@ -6390,118 +6390,118 @@ Muitas fun@,{c}@~{a}o simplesmente retornam @code{t} ( de "true" - verdadeiro) c
 fornece o retorno esperado.  Esses s@~{a}o os s@'{i}mbolos do lisp para verdadeiro e falso,
 respectivamente.  (Eles correspondem @`{a}s vari@'{a}veis definidas em C @code{Lt} e
 @code{Lnil} que voc@^{e} ver@'{a} se olhar no c@'{o}digo fonte
-do Geomview ou em alguns dos m@'{o}dulos externos.)
+do Geomview ou em algum dos m@'{o}dulos externos.)
 
-In the descriptions dos commands below several references are made to
-"OOGL" formats.  OOGL is the data description language that Geomview
-uses for describing geometry, c@^{a}meras, appearances, and other basic
-objetos.  For details dos OOGL formats, @xref{OOGL File Formats}.
-(Or equivalently, see the oogl(5) manual page, distributed with Geomview
-in the file man/cat5/oogl.5.
+Nas descri@,{c}@~{o}es ds comandos acima muitas refer6encias s@~{a}o feitas a
+formatos "OOGL" formats.  OOGL @'{e} a linguagem de descri@,{c}@~{a}o dos dados que Geomview
+utiliza para descrever objetos geom@'{e}tricos, c@^{a}meras, apar@^{e}ncias, e outos objetos
+b@'{a}sicos.  Para detalhes dos formatos OOGL, veja @ref{OOGL File Formats}.
+(Ou equivalentemente, veja a p@'{a}gina de manual oogl(5), distributed with Geomview
+in the file /share/man/man5/oogl.5gv.
 
-The GCL commands and argument types are listed below.  Most
-da documentation in this section do manual is available within
-Geomview via the @code{?} and @code{??} commands.  The command @code{(?
-@var{command})} causes Geomview to print out a one-line summary da
-syntax of @var{command}, and @code{(?? @var{command})} prints out an
-explanation of what @var{command} does.  You can include the wild-card
-character @code{*} in @var{command} to print information for a group of
-commands matching a pattern.  For example, @code{(?? *emodule*)} will
-print all information about all commands containing the sequ@^{e}ncia de caracteres
-@code{emodule}.  @code{(? *)} will print a short list of all commands.
+Os comandos GCL e tipos de argumentos s@~{a}o listados abaixo.  A maioria
+da documenta@,{c}@~{a}o nessa se@,{c}@~{a}o do manual est@'{a} dispon@'{i}vel dentro do
+Geomview via comandos @code{?} e @code{??}.  O comando @code{(?
+@var{comando})} faz com que Geomview mostre na tela um sum@'{a}rio de uma linha da
+sintaxe de @var{comando}, e @code{(?? @var{comando})} mostra na tela uma
+explana@,{c}@~{a}o de o que @var{comando} faz.  Voc@^{e} pode incluir o caractere
+coringa @code{*} no @var{comando} para mostrar informa@,{c}@~{o}es para um frupo de
+comandos coincidindo com um modelo.  Por exemplo, @code{(?? *emodule*)} ir@'{a}
+mostrar todas as informa@,{c}@~{o}es sobre todos os comandos contendo a sequ@^{e}ncia de caracteres
+@code{emodule}.  @code{(? *)} ir@'{a} mostrar um lista curta de todos os comandos.
 
 @menu
-* Argument Conventions::        Conventions used in describing argument types.
-* GCL Reference::               Documentation for each GCL command.
+* Argument Conventions::        Conven@,{c}@~{o}es usadas ao se descrever tipos de argumentos.
+* GCL Reference::               Documenta@,{c}@~{a}o para cada comandoo GCL.
 @end menu
 
 @node Argument Conventions, GCL Reference, GCL, GCL
 @section Conventions Used In Describing Argument Types
 
-The following symbols are used to describe argument types
-in the documentation for GCL functions.
+Os seguintes s@'{i}mbolos s@~{a}o suados para descrever tipos de argumentos
+na documenta@,{c}@~{a}o para fun@,{c}@~{o}es GCL.
 
 @table @code
 
-@item @var{appearance}
-is an OOGL appearance specification.
+@item @var{apar@^{e}ncia}
+@'{e} uma especifica@,{c}@~{a}o de apar@^{e}ncia OOGL.
 
 @item @var{cam-id}
-is an @var{id} that refers to a camera.
+@'{e} uma @var{id}entifica@,{c}@~{a}o que refre-se a uma c@^{a}mera.
 
-@item @var{camera}
-is an OOGL c@^{a}mera specification.
+@item @var{c@^{a}mera}
+@'{e} uma especifica@,{c}@~{a}o de c@^{a}mera do OOGL.
 
 @item @var{geom-id}
-is an @var{id} that refers to a geometry.
+@'{e} uma @var{id}entifica@,{c}@~{a}o que se refere a um objeto geom@'{e}trico.
 
 @item @var{geometry}
-is an OOGL geometry specification.
+@'{e} uma especifica@,{c}@~{a}o de objeto geom@'{e}trico do OOGL.
 
 @item @var{id}
-is a sequ@^{e}ncia de caracteres which names a geometry or camera.  Besides
-those you create, valid ones are:
+@'{e} uma sequ@^{e}ncia de caracteres que nomeia um objeto geom@'{e}trico ou c@^{a}mera.  Como
+aqueles que voc@^{e} cria, os valores permitidos s@~{a}o:
 
 @table @code
 
 @item @code{World, world, worldgeom, g0}
-the collection of all geom's
+a cole@,{c}@~{a}o de todos os objetos geom@'{e}tricos
 
 @item target
-selected objeto alvo (cam or geom)
+objeto alvo selecionado (c@^{a}mera ou objeto geom@'{e}trico)
 
 @item center
-selected center-of-movimento objeto
+objeto central do movimento selecionado
 
 @item targetcam
-last selected target camera
+a @'{u}ltima c@^{a}mera alvo selecionada
 
 @item targetgeom
-last selected target geom
+o @'{u}ltimo objeto geom@'{e}trico alvo selecionado
 
 @item focus
-c@^{a}mera where cursor is (or most recently was)
+c@^{a}mera onde o cursor est@'{a} (ou mais recentemente esteve)
 
 @item allgeoms
-all geom objetos
+todos os objetos geom@'{e}tricos
 
 @item allcams
-all c@^{a}meras
+todas as c@^{a}meras
 
 @item @code{default, defaultcam, prototype}
-future c@^{a}meras inherit default's settings
+c@^{a}meras futuras que herdar@~{a}o as escolhas padronizadas
 
 @end table
 
-The following @var{id}s are used to name coordinate systems,
-e.g. in @code{pick} and @code{write} commands:
+As seguintes @var{id}s s@~{a}o usadas para nomear sistemas de coordenadas,
+e.g. em comandos @code{pick} e @code{write}:
 
 @table @code
 
 @item @code{World, world, worldgeom, g0}
-the world, within which all other geoms live.
+o mundo, dentro do qual todos os objetos geom@'{e}tricos vivem.
 
 @item universe 
-the universe, in which the World, lights and c@^{a}meras live.  C@^{a}meras'
-world2cam transforms might better be called universe2cam, etc.
+o universo, no qual o no qual o Mundo, as luzes e as c@^{a}meras vivem.  Transforma@,{c}@~{o}es
+world2cam das c@^{a}meras podem melhor serem chamadas universe2cam, etc.
 
 @item self
-"this objeto do Geomview".  Transform from an objeto to @code{self} is the
-identity; writing its geometry gives the objeto itself with no
-enclosing transform; picked points appear in the objeto's coordenadas.
+"esse objeto do Geomview".  Transforma de um objeto para @code{si mesmo} @'{e} a
+identidade; escrevendo seu objeto geom@'{e}trico fornece o bojeto em si mesmo sem
+executar nenhuma transforma@,{c}@~{a}o; pontos selecionados aparecem nas coordenadas do objeto.
 
 @item primitive
-(for @code{pick} only) Picked points appear in the coordinate system do
-lowest-level OOGL primitive.
+(para objetos selecionados (@code{pick}) somente) Pontos selecionados aparecem no sistema de coordenadas da
+primitiva de menor n@'{i}vel do OOGL.
 
 @end table
 
-A name is also an acceptable id.  Given names are made unique by
-appending numbers if necessary (i.e. @code{foo<2>}). Every geom is also
-named g[n] and every c@^{a}mera is also named c[n] (@code{g0} is always the
-worldgeom): this name is used as a prefix to keyboard commands and can
-also be used as a GCL id.  Numbers are reused after an
-objeto is deleted. Both names are shown in the Objeto browser.
+Um nome tamb@'{e}m @'{e} uma @code{id}entifica@,{c}@~{a}o aceit@'{a}vel.  Fornecimento de nomes @'{e} feito @'{u}nico pela
+anexa@,{c}@~{a}o de n@'{u}meros se necess@'{a}rio (i.e. @code{foo<2>}). Todo objeto geom@'{e}trico @'{e} tamb@'{e}m
+chamado g[n] e toda c@^{a}mera @'{e} tamb@'{e}m chamada c[n] (@code{g0} @'{e} sempre o
+objeto geom@'{e}trico mundo - worldgeom): esse nome @'{e} usado como um prefixo a comandos de teclado e pode
+tamb@'{e}m ser usado como uma identifica@,{c}@~{a}o GCL.  N@'{u}meros s@~{a}o usados ap@'{o}s um
+objeto ser deletado. Ambos os nomes s@~{a}o mostrados no navegador de Objeto.
 
 @item @var{statement}
 represents a function call.  Function calls have the form @code{(func arg1
@@ -6509,13 +6509,13 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 @code{arg2}, @dots{} are the arguments.
 
 @item @var{transform}
-is an OOGL 4x4 transformation matrix.
+@'{e} uma OOGL 4x4 transformation matrix.
 
 @item @var{ntransform}
-is an OOGL (N+1)x(N+1) transformation matrix.
+@'{e} uma OOGL (N+1)x(N+1) transformation matrix.
 
 @item @var{window}
-is an OOGL winddow specification.
+@'{e} uma OOGL winddow specification.
 
 @end table
 
@@ -6823,7 +6823,7 @@ return non-@code{nil}, otherwise return @code{nil}.
 @findex ap-override
 @table @code
 @item (ap-override [on|off])
-Selects se appearance controls should override objetos' own
+Selects se apar@^{e}ncia controls should override objetos' own
 settings.  On by default.  With no arguments, returns current setting.
 @end table
 
@@ -7019,7 +7019,7 @@ Delete objeto or c@^{a}mera ID.
 @table @code
 @item (dice GEOM-ID N)
 Dice any Bezier patches within @var{GEOM-ID} into NxN meshes; default
-10. See also the appearance attribute @ref{Appearances, @code{patchdice}},
+10. See also the apar@^{e}ncia attribute @ref{Appearances, @code{patchdice}},
 which makes this command obsolete.
 @end table
 
@@ -7192,7 +7192,7 @@ Same as scale but multiplies by exp(scale).  Obsolete.
 @findex eval
 @table @code
 @item (eval EXPR)
-Evaluate a lisp expression. If @var{EXPR} is an unevaluated S-expression
+Evaluate a lisp expression. If @var{EXPR} @'{e} uma unevaluated S-expression
 as returned by the @code{(quote @dots{})} command then the effect will
 be as if calling the un-quoted expression directly. It is also possible
 to evaluate S-expression constructed via @code{car}, @code{cdr} and
@@ -7282,10 +7282,10 @@ which time drawing resumes as normal.
 @table @code
 @item (geometry GEOM-ID [GEOMETRY])
 Specify the geometry for GEOM-ID.  GEOMETRY is a sequ@^{e}ncia de caracteres
-giving an OOGL geometry specification.  If no objeto
+giving an OOGL objeto geom@'{e}trico specification.  If no objeto
 called GEOM-ID exists, it is created; in this case the
 GEOMETRY argument is optional, and if omitted, the new
-objeto GEOM-ID is given an empty geometry.
+objeto GEOM-ID is given an empty objeto geom@'{e}trico.
 @end table
 
 @node geomview-version, hdefine, geometry, GCL Reference
@@ -7301,7 +7301,7 @@ running.
 @subsection hdefine
 @findex hdefine
 @table @code
-@item (hdefine @code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform} name value)
+@item (hdefine @code{geometry}|@code{camera}|@code{window}|@code{apar@^{e}ncia}|@code{image}|@code{transform}|@code{ntransform} name value)
 Sets the value of a handle of a given type.
 @example
   (hdefine  <type>  <name>  <value>)
@@ -7321,7 +7321,7 @@ read. @xref{References}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @subsection hdelete
 @findex hdelete
 @table @code
-@item (hdelete [@code{geometry}|@code{camera}|@code{window}|@code{appearance}|@code{image}|@code{transform}|@code{ntransform}] name)
+@item (hdelete [@code{geometry}|@code{camera}|@code{window}|@code{apar@^{e}ncia}|@code{image}|@code{transform}|@code{ntransform}] name)
 Deletes the given handle. Note that the handle will not actually be
 deleted in case there are still other objetos referring to the handle,
 but once those objetos are gone, the handle will also automatically go
@@ -7331,7 +7331,7 @@ there are no other references to that objeto.
 If the optional first argument is omitted, then the first handle
 matching @var{name} will be deleted, regardless do type de
 objeto it is attached to. It is not an error to call this function with
-a non-existent handle, but it is an error to call this funcion with the
+a non-existent handle, but it @'{e} uma error to call this funcion with the
 name of a non-global handle, i.e. one that was not created by
 @code{(hdefine @dots{})} or @code{(read @dots{} @{ define
 @dots{}@})}. @xref{References}.  @xref{read,@code{(read
@@ -7353,7 +7353,7 @@ commands match.
 @findex hmodel
 @table @code
 @item (hmodel CAMID @{virtual|projective|conformal@})
-Set the model used to display geometry in
+Set the model used to display objeto geom@'{e}trico in
 this camera. @xref{space, @code{(space @dots{})}}.
 @end table
 
@@ -7469,7 +7469,7 @@ Generate a lambda expression from @var{EXRP1} @dots{} @var{EXPRN}, with
 the argument bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
 list of symbols (bound to @code{nil} by default) or lists of the form
 @code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
-@var{VALUE} is an S-expression which is first evaluated, then its value
+@var{VALUE} @'{e} uma S-expression which is first evaluated, then its value
 is bound to @var{ARG}. The entire expression evaluates to the value of
 @var{EXPRN}, the last expression in the body of the statement. The
 argument list must be present, but can be empty; in the latter case the
@@ -7513,7 +7513,7 @@ opens a new window; loading a command file executes those commands.
 @findex load-path
 @table @code
 @item (load-path)
-Returns the current search path for command, geometry, etc. files.
+Returns the current search path for command, objeto geom@'{e}trico, etc. files.
 Note: to actually see the value returned by this function
 you should wrap it in a call to echo: @code{(echo (load-path))}.
 @xref{set-load-path, @code{(set-load-path @dots{})}}.
@@ -7611,7 +7611,7 @@ other attributes untouched.
 @findex merge-ap
 @table @code
 @item (merge-ap GEOM-ID APPEARANCE)
-Merge in some appearance characteristics to GEOM-ID.
+Merge in some apar@^{e}ncia characteristics to GEOM-ID.
 Appearance parameters include surface and line color, shading
 style, line width, and lighting.
 @end table
@@ -7629,9 +7629,9 @@ style, line width, and lighting.
 @findex merge-baseap
 @table @code
 @item (merge-baseap APPEARANCE)
-Merge in some appearance characteristics to the base default
-appearance (applied to every geom before its own apperance).
-Lighting is typically included in the base appearance.
+Merge in some apar@^{e}ncia characteristics to the base default
+apar@^{e}ncia (applied to every geom before its own apperance).
+Lighting is typically included in the base apar@^{e}ncia.
 @end table
 
 @node mod, morehelp, merge-baseap, GCL Reference
@@ -7687,7 +7687,7 @@ Geomview does not support non-Euclidean geometries for in higher
 dimensions.
 
 To read a camera's configuration, use @code{(echo (ND-axes CAMID))}.
-The return value is an array of 4 integers, the last one should 0.
+The return value @'{e} uma array of 4 integers, the last one should 0.
 @end table
 
 @node ND-color, ND-xform, ND-axes, GCL Reference
@@ -7711,7 +7711,7 @@ An empty list, as in (ND-color CAMID ()), suppresses coloring.
 With no second argument, (ND-color CAMID) returns that camera's
 color-function list.
 Even when coloring is enabled, objetos tagged with the @code{keepcolor}
-appearance attribute are shown in their natural colors.
+apar@^{e}ncia attribute are shown in their natural colors.
 @end table
 
 @node ND-xform, ND-xform-get, ND-color, GCL Reference
@@ -7745,7 +7745,7 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @table @code
 @item (ND-xform-set OBJID [ntransform @{ idim odim  @dots{} @}])
 Sets the N-D transform do given objeto.
-In dimension N, this is an (N+1)x(N+1) matrix, so in that case
+In dimension N, this @'{e} uma (N+1)x(N+1) matrix, so in that case
 idim and odim are expected to be both equal to (N+1). Note that
 all c@^{a}meras in a camera-cluster have the same N-D transform.
 Note that ND-transforms have their
@@ -7759,9 +7759,9 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @table @code
 @item (new-alien name [GEOMETRY])
 Create a new alien (geom not in the world) with the given name (a
-sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a sequ@^{e}ncia de caracteres giving an OOGL geometry
+sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico
 specification. If @var{GEOMETRY} is omitted, the new alien is given an
-empty geometry.  If an objeto with that name already exists, the new
+empty objeto geom@'{e}trico.  If an objeto with that name already exists, the new
 alien is given a unique name.  The light beams that are used to move
 around the lights are an example of aliens. They're drawn but are not
 controllable the way ordinary objetos are: they don't appear in the
@@ -7797,8 +7797,8 @@ parallel to the z axis toward the center do world.
 @table @code
 @item (new-geometry name [GEOMETRY])
 Create a new geom with the given name (a sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a
-sequ@^{e}ncia de caracteres giving an OOGL geometry specification.  If @var{GEOMETRY} is
-omitted, the new objeto is given an empty geometry.  If an objeto with
+sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico specification.  If @var{GEOMETRY} is
+omitted, the new objeto is given an empty objeto geom@'{e}trico.  If an objeto with
 that name already exists, the new objeto is given a unique name.
 @end table
 
@@ -7835,7 +7835,7 @@ to the origin.  The box is scaled such that its long diagonal,
 sqrt((xmax-xmin)^2 + (ymax-ymin)^2 + (zmax-zmin)^2), is 2.
 @item all
 resembles @code{each}, except when an objeto is changing
-(e.g. when its geometry is being changed by an external program).
+(e.g. when its objeto geom@'{e}trico is being changed by an external program).
 Then, @code{each} tightly fits the bounding box around the
 objeto whenever it changes and normalizes accordingly,
 while @code{all} normalizes the union of all variants do objeto
@@ -7923,7 +7923,7 @@ co-ordinate system defined by @var{COORDSYS}.
 @findex pick-invisible
 @table @code
 @item (pick-invisible [yes|no])
-Selects se picks should be sensitive to objetos whose appearance
+Selects se picks should be sensitive to objetos whose apar@^{e}ncia
 makes them invisible; default yes.
 With no arguments, returns current status.
 @end table
@@ -8033,7 +8033,7 @@ intended for external use.
 @subsection read
 @findex read
 @table @code
-@item (read @{geometry|camera|appearance|image|ntransform|transform|command@} @{GEOMETRY or CAMERA or @dots{}@})
+@item (read @{geometry|camera|apar@^{e}ncia|image|ntransform|transform|command@} @{GEOMETRY or CAMERA or @dots{}@})
 Read and interpret the text in @dots{} as containing the
 given type of data.  Useful for defining objetos using OOGL
 reference syntax, e.g.
@@ -8098,7 +8098,7 @@ brower. @xref{emodule-sort, @code{(emodule-sort)}}.
 @findex replace-geometry
 @table @code
 @item (replace-geometry GEOM-ID PART-SPECIFICATION GEOMETRY)
-Replace a part da geometry for GEOM-ID.
+Replace a part da objeto geom@'{e}trico for GEOM-ID.
 @end table
 
 @node rib-display, rib-snapshot, replace-geometry, GCL Reference
@@ -8195,7 +8195,7 @@ so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
 @findex set-load-path
 @table @code
 @item (set-load-path (PATH1 @dots{} PATHN))
-Sets search path for command, geometry, etc. files.  The PATHi
+Sets search path for command, objeto geom@'{e}trico, etc. files.  The PATHi
 are strings giving the pathnames of directories to be searched.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-load-path (mydir +)) prepends mydir to the path.
@@ -8489,7 +8489,7 @@ user interface (i.e. mouse) controlled movimentos.  The keyword
 @code{origin} means to use the origin do coordinate system do
 currently selected objeto, while @code{bbox-center} means to use the
 center da bouding box do current objeto.  The keyword
-@code{bbox-center} makes no sense if the geometry is
+@code{bbox-center} makes no sense if the objeto geom@'{e}trico is
 non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
 make a difference if the objeto do centro is not a @emph{geometry}, e.g. if
 it is a camera. Same holds if the World is the currently selected
@@ -8501,7 +8501,7 @@ objeto.
 @findex ui-emotion-program
 @table @code
 @item (ui-emotion-program PROGRAM)
-This is an obsolete command.  Use its new eqivalent @ref{emodule-define,
+This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-define,
 @code{emodule-define}} instead.
 @end table
 
@@ -8510,7 +8510,7 @@ This is an obsolete command.  Use its new eqivalent @ref{emodule-define,
 @findex ui-emotion-run
 @table @code
 @item (ui-emotion-run EMODULE)
-This is an obsolete command.  Use its new eqivalent @ref{emodule-start,
+This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-start,
 @code{emodule_start}} instead.
 @end table
 
@@ -8587,7 +8587,7 @@ main panel
 @item tools
 movimento controls
 @item appearance
-appearance controls
+apar@^{e}ncia controls
 @item cameras
 c@^{a}mera controls
 @item lighting
@@ -8700,7 +8700,7 @@ use.
 @item (write @{command|geometry|camera|transform|ntransform|window@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
 write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
-self: just the objeto, no transformation or appearance (geometry only)
+self: just the objeto, no transformation or apar@^{e}ncia (objeto geom@'{e}trico only)
 world: the objeto as positioned within the World.
 universe: objeto's position in universal coordenadas;
 includes Worldtransform
@@ -8800,9 +8800,9 @@ FACTOR should be a positive number.
 @node Non-Euclidean Geometry, Mathematica, GCL, Top
 @chapter Non-Euclidean Geometry
 
-Geomview supports hyperbolic and spherical geometry as well as
-Euclidean geometry.  The three bot@~{o}es at the bottom do @emph{Main}
-panel are for setting the current geometry type.
+Geomview supports hyperbolic and spherical objeto geom@'{e}trico as well as
+Euclidean objeto geom@'{e}trico.  The three bot@~{o}es at the bottom do @emph{Main}
+panel are for setting the current objeto geom@'{e}trico type.
 
 In each das three geometries, three models are supported:
 @emph{Virtual}, @emph{Projective}, and @emph{Conformal}.  You can
@@ -8811,7 +8811,7 @@ change the current model with the @emph{Model} browser on the
 
 The default model is all three spaces is @emph{Virtual}.  This
 corresponds to the c@^{a}mera being in the same space as, and moving under
-the same set of transformations as, the geometry itself.
+the same set of transformations as, the objeto geom@'{e}trico itself.
 
 In Euclidean space @emph{Virtual} is the most useful model.
 The other models were implemented for hyperbolic and spherical
@@ -8823,7 +8823,7 @@ inverted in the unit sphere.
 In hyperbolic space, the @emph{Projective} model setting gives a view
 do projective ball model of hyperbolic 3-space imbedded in Euclidean
 space.  The c@^{a}mera is initially outside the unit ball.  In this model,
-the c@^{a}mera moves by Euclidean movimentos and geometry moves by hyperbolic
+the c@^{a}mera moves by Euclidean movimentos and objeto geom@'{e}trico moves by hyperbolic
 movimentos.  @emph{Conformal} model is similar but shows the conformal
 ball model instead. 
 
@@ -9062,7 +9062,7 @@ Out[4] := -Graphics3D-
 @end example
 @noindent
 This generates the file @file{math.ri}b.  This is a ready-to-render RIB
-file da given geometry, using a default c@^{a}mera position, lighting,
+file da given objeto geom@'{e}trico, using a default c@^{a}mera position, lighting,
 and the ``plastic'' shader. In a shell window, type @code{render
 cube.ri}b to generate the image file @file{mma.tiff}. Of course, you
 need to have RenderMan installed for this to work. A shortcut to render
@@ -9076,7 +9076,7 @@ sequ@^{e}ncia de caracteres as an optional third argument to @code{WriteRI}b.  T
 option sequ@^{e}ncia de caracteres is @code{" -n mma.tiff "}, which indicates that the RIB
 file should generate a rendered TIFF file named @file{mma.tiff}.  A
 particularly useful option is @code{-g}, which tells oogl2rib to
-convert only the geometry into a RIB fragment. You can insert that
+convert only the objeto geom@'{e}trico into a RIB fragment. You can insert that
 fragment into a full RIB file of your own making with c@^{a}mera positions
 and shaders of your choice, to harness the full power of RenderMan.
 
@@ -9105,7 +9105,7 @@ Rendered frame will be @var{width} by @var{height} pixels.
 RIB file renders to on-screen framebuffer instead of TIFF file.
 
 @item -g
-Output only the geometry in RIB format.
+Output only the objeto geom@'{e}trico in RIB format.
 
 @item -b
 Output only a Quick Renderman clip objeto.  Ignores -nBwhf.

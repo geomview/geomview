@@ -6295,7 +6295,7 @@ In the descriptions of the commands below several references are made to
 uses for describing geometry, cameras, appearances, and other basic
 objects.  For details of the OOGL formats, @xref{OOGL File Formats}.
 (Or equivalently, see the oogl(5) manual page, distributed with Geomview
-in the file man/cat5/oogl.5.
+in the file /share/man/man5/oogl.5gv.
 
 The GCL commands and argument types are listed below.  Most
 of the documentation in this section of the manual is available within
