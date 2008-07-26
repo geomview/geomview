@@ -30,7 +30,7 @@
 
 	* src/bin/geomview/common/drawer.c: Get rid of alloca.
 
-2008-05-11  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-05-11  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi:
 	geomview-pt_BR.texi --> updating to 1.58 english cvs version
@@ -128,32 +128,32 @@
 
 	* data/geom/textured/image.gcl: Initial revision.
 
-2008-05-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-05-03  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
 	geomview.texi       --> "MASK" to "DATEMASK"
 
-2008-04-15  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-04-15  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi, doc/geomview.texi:
 	geomview-pt_BR.texi --> partial translation
 	geomview.texi       --> "or or" to "or"
 
-2008-04-14  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-04-14  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
 
-2008-03-30  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-03-30  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview.texi, doc/geomview-pt_BR.texi:
 	geomview.texi       --> adjusting missing end of line
 	geomview-pt_BR.texi --> partial translation
 
-2008-03-27  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-03-27  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: partial translation.
 
-2008-03-26  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-03-26  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview.texi: ajusting line break in line 3749 - geomview.texi
 
@@ -161,7 +161,7 @@
 	Partial pt_BR translation of geomview-pt_BR
 	Changing "Thease" to "These" in geomview.texi
 
-2008-03-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-03-18  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt_BR translation of geomview-pt_BR
 	Its ok for keeping version-pt_BR.texi.
@@ -216,7 +216,7 @@
 
 	* src/lib/shade/texture.c: Cosmetics on error message.
 
-2008-03-09  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-03-09  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
 	Partial pt_BR translation of geomview-pt_BR
@@ -260,60 +260,60 @@
 	Default to "raw" filter if no filter was specified; fix a NULL-pointer
 	reference.
 
-2008-02-19  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-02-19  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt_BR translation
 
-2008-02-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2008-02-18  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt_BR translation
 
-2007-11-29  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-29  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt_BR translation
 
-2007-11-28  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-28  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi:
 	Partial pt_BR translation and fouth line adjust
 
-2007-11-25  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-25  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Adjusting diacritical marks only
 
 	* doc/geomview-pt_BR.texi: Partial translation pt_BR
 
-2007-11-18  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-18  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview.texi: changing "N < 3" to "N > 3"
 
-2007-11-16  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-16  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
-2007-11-15  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-15  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi, doc/geomview.texi:
 	geomview.texi - changing "normalizaton" to "normalization"
 	geomview-pt_BR.texi partial translation
 
-2007-11-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-04  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
-2007-11-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-11-03  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
-2007-10-22  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-10-22  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
-2007-10-20  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-10-20  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
-2007-10-09  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-10-09  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi partial translation
 
@@ -341,7 +341,7 @@
 
 	* NEWS: Cosmetics.
 
-2007-09-27  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-27  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt-BR translation and adjusts
 
@@ -437,7 +437,7 @@
 
 	* src/bin/animate/animate.c: char ch = (char)NULL -> char ch = '\0'
 
-2007-09-16  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-16  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt-BR translation
 
@@ -478,7 +478,7 @@
 
 	* src/lib/oogl/util/Headers: Add vvec.h
 
-2007-09-08  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-08  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial pt-BR translation
 
@@ -490,11 +490,11 @@
 	and not under "draw" and in "upper left corner" and not in
 	"upper right corner".
 
-2007-09-05  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-05  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/version-pt_BR.texi: Update day of month in version-pt_BR.texi
 
-2007-09-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-04  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/version-pt_BR.texi: Update day of month in version-pt_BR.texi
 
@@ -502,11 +502,11 @@
 	Partial Translation pt_BR of geomview-pt_BR.texi
 	Update of month in version-pt_BR.texi
 
-2007-09-02  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-02  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial Translation pt_BR
 
-2007-09-01  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-09-01  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial Translation pt_BR
 
@@ -559,24 +559,24 @@
 	* doc/geomview-pt_BR.texi, doc/geomview.texi, doc/version-pt_BR.texi, doc/version.texi:
 	Update.
 
-2007-08-22  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-08-22  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Translation pt_BR small corrections.
 	Thanks to Patrice Dumas.
 
-2007-08-19  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-08-19  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial translation pt_BR
 
-2007-08-12  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-08-12  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial translation pt_BR
 
-2007-08-05  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-08-05  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi: Partial translation pt_BR
 
-2007-08-04  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-08-04  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
 	Removing version-pt_BR.texi for keeping only version.texi
@@ -602,11 +602,11 @@
 	ImgStreamIn(): need to save the contents of w = iobfdelimtok(), it is
 	overwritten on the next call to iobfdelimtok().
 
-2007-07-29  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-07-29  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/geomview.texi: replacing "and and" by "and"
 
-2007-07-28  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+2007-07-28  Jorge Barros de Abreu  <ficmatin10@solar.com.br>
 
 	* doc/oogltour: adjusting "Obscure panel" to "Inspect pull-down menu"
 
@@ -616,7 +616,7 @@
 
 	* doc/geomview.texi:
 	Some button names were wrong in the Tutorial (reported by Jorge Barros
-	de Abreu <ficmatin01@solar.com.br>)
+	de Abreu <ficmatin10@solar.com.br>)
 
 2007-07-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
