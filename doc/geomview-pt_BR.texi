@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input texinfo
-@c based on /geomview.texi/1.63/Fri Jul 25 07:22:23 2008//
+@c based on /geomview.texi/1.65/Mon Jul 28 07:12:21 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -6418,7 +6418,7 @@ mostrar todas as informa@,{c}@~{o}es sobre todos os comandos contendo a sequ@^{e
 @node Argument Conventions, GCL Reference, GCL, GCL
 @section Conventions Used In Describing Argument Types
 
-Os seguintes s@'{i}mbolos s@~{a}o suados para descrever tipos de argumentos
+Os seguintes s@'{i}mbolos s@~{a}o usados para descrever tipos de argumentos
 na documenta@,{c}@~{a}o para fun@,{c}@~{o}es GCL.
 
 @table @code
@@ -6503,19 +6503,19 @@ objeto geom@'{e}trico mundo - worldgeom): esse nome @'{e} usado como um prefixo 
 tamb@'{e}m ser usado como uma identifica@,{c}@~{a}o GCL.  N@'{u}meros s@~{a}o usados ap@'{o}s um
 objeto ser deletado. Ambos os nomes s@~{a}o mostrados no navegador de Objeto.
 
-@item @var{statement}
+@item @var{declara@,{c}@~{a}o}
 represents a function call.  Function calls have the form @code{(func arg1
 arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 @code{arg2}, @dots{} are the arguments.
 
-@item @var{transform}
-@'{e} uma OOGL 4x4 transformation matrix.
+@item @var{transforma@,{c}@~{a}o}
+@'{e} uma OOGL 4x4 matriz de transforma@,{c}@~{a}o.
 
 @item @var{ntransform}
-@'{e} uma OOGL (N+1)x(N+1) transformation matrix.
+@'{e} uma OOGL (N+1)x(N+1) matriz de transforma@,{c}@~{a}o.
 
-@item @var{window}
-@'{e} uma OOGL winddow specification.
+@item @var{janela}
+@'{e} uma especifica@,{c}@~{a}o de janela do OOGL.
 
 @end table
 
@@ -6525,7 +6525,7 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 @c @table @code
 
 @menu
-* shell::                       @code{(! SHELLCOMMAND)}
+* shell::                       @code{(! COMANDOSHELL)}
 * lt::                          @code{(< EXPR1 EXPR2)}
 * eq::                          @code{(= EXPR1 EXPR2)}
 * gt::                          @code{(> EXPR1 EXPR2)}
@@ -6533,10 +6533,10 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 * div::                         @code{(/ EXPR1 EXPR2)}
 * add::                         @code{(+ EXPR1 EXPR2)}
 * sub::                         @code{(- EXPR1 EXOR2)}
-* help::                        @code{(? COMMAND)}
-* morehelp::                    @code{(?? COMMAND)}
-* emodule-run::                 @code{(| NAME)}
-* all::                         @code{(all geometry|camera|emodule)}
+* help::                        @code{(? COMANDO)}
+* morehelp::                    @code{(?? COMANDO)}
+* emodule-run::                 @code{(| NOME)}
+* all::                         @code{(all objetogeom@'{e}trico|c@^{a}mera|emodule)}
 * and::                         @code{(and EXPR1 EXPR2)}
 * ap-override::                 @code{(ap-override [on|off])}
 * backcolor::                   @code{(backcolor      CAM-ID R G B)}
@@ -6547,15 +6547,15 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 * camera-draw::                 @code{(camera-draw CAM-ID [yes|no])}
 * camera-prop::                 @code{(camera-prop @{ geometry object @} [projective])}
 * camera-reset::                @code{(camera-reset CAM-ID)}
-* car::                         @code{(car LIST)}
-* cdr::                         @code{(cdr LIST)}
+* car::                         @code{(car LISTA)}
+* cdr::                         @code{(cdr LISTA)}
 * clock::                       @code{(clock)}
-* command::                     @code{(command INFILE [OUTFILE])}
-* cons::                        @code{(cons EXPR LIST)}
-* copy::                        @code{(copy [ID] [name])}
+* command::                     @code{(command ARQENTRADA [ARQSAIDA])}
+* cons::                        @code{(cons EXPR LISTA)}
+* copy::                        @code{(copy [ID] [nome])}
 * cursor-still::                @code{(cursor-still [INT])}
 * cursor-twitch::               @code{(cursor-twitch [INT])}
-* defun::                       @code{(defun NAME ARGS [DOC] BODY)}
+* defun::                       @code{(defun NOME ARGS [DOC] CORPO)}
 * delete::                      @code{(delete ID)}
 * dice::                        @code{(dice GEOM-ID N)}
 * dimension::                   @code{(dimension [N])}
@@ -6564,60 +6564,60 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 * dump-handles::                @code{(dump-handles)}
 * echo::                        @code{(echo @dots{})}
 * emodule-clear::               @code{(emodule-clear)}
-* emodule-define::              @code{(emodule-define NAME SHELL-COMMAND @dots{})}
-* emodule-defined::             @code{(emodule-defined @code{modulename})}
-* emodule-isrunning::           @code{(emodule-isrunning NAME)}
+* emodule-define::              @code{(emodule-define NOME COMANDOSHELL @dots{})}
+* emodule-defined::             @code{(emodule-defined @code{NOMEMÓDULO})}
+* emodule-isrunning::           @code{(emodule-isrunning NOME)}
 * emodule-path::                @code{(emodule-path)}
-* emodule-run::                 @code{(| NAME)}
+* emodule-run::                 @code{(| NOME)}
 * emodule-sort::                @code{(emodule-sort)}
-* emodule-start::               @code{(emodule-start  NAME)}
-* emodule-transmit::            @code{(emodule-transmit NAME LIST)}
-* escale::                      @code{(escale GEOM-ID FACTOR)}
+* emodule-start::               @code{(emodule-start  NOME)}
+* emodule-transmit::            @code{(emodule-transmit NOME LISTA)}
+* escale::                      @code{(escale GEOM-ID FATOR)}
 * eval::                        @code{(eval EXPR)}
 * event-keys::                  @code{(event-keys @{on|off@})}
 * event-mode::                  @code{(event-mode MODESTRING)}
 * event-pick::                  @code{(event-pick @{on|off@})}
 * evert::                       @code{(evert GEOM-ID [yes|no])}
 * exit::                        @code{(exit)}
-* ezoom::                       @code{(ezoom GEOM-ID FACTOR)}
+* ezoom::                       @code{(ezoom GEOM-ID FATOR)}
 * freeze::                      @code{(freeze CAM-ID)}
-* geometry::                    @code{(geometry GEOM-ID [GEOMETRY])}
+* geometry::                    @code{(geometry GEOM-ID [OBJETOGEOM@'{E}TRICO])}
 * geomview-version::            @code{(geomview-version)}
-* hdefine::                     @code{(hdefine geometry|camera|@dots{} NAME VALUE)}
-* hdelete::                     @code{(hdelete [geometry|camera|@dots{}] name)}
-* help::                        @code{(? COMMAND)}
+* hdefine::                     @code{(hdefine geometry|camera|@dots{} NOME VALOR)}
+* hdelete::                     @code{(hdelete [geometry|camera|@dots{}] nome)}
+* help::                        @code{(? COMANDO)}
 * hmodel::                      @code{(hmodel CAMID @{virtual|projective|conformal@})}
 * hsphere-draw::                @code{(hsphere-draw CAMID [yes|no])}
 * if::                          @code{(if TEST EXPR1 [EXPR2])}
 * inhibit-warning::             @code{(inhibit-warning STRING)}
-* input-translator::            @code{(input-translator "#pfx" "sh-command")}
-* interest::                    @code{(interest (COMMAND [args]))}
-* lambda::                      @code{(lambda ARGS BODY)}
-* let::                         @code{(let (ARGS) BODY)}
+* input-translator::            @code{(input-translator "#pfx" "comando-shell")}
+* interest::                    @code{(interest (COMANDO [args]))}
+* lambda::                      @code{(lambda ARGS CORPO)}
+* let::                         @code{(let (ARGS) CORPO)}
 * lines-closer::                @code{(lines-closer CAM-ID DIST)}
-* load::                        @code{(load filename [command|geometry|camera])}
+* load::                        @code{(load nomearquivo [command|geometry|camera])}
 * load-path::                   @code{(load-path)}
 * look::                        @code{(look [objectID] [camID])}
 * look-encompass::              @code{(look-encompass [objID] [camID])}
 * look-encompass-size::         @code{(look-encompass-size [view clip near far])}
 * look-recenter::               @code{(look-recenter [objID] [camID])}
 * look-toward::                 @code{(look-toward [objID] [camID] [origin|center])}
-* merge::                       @code{(merge @{window|camera@} CAM-ID @{ WIN or CAM @dots{} @})}
-* merge-ap::                    @code{(merge-ap GEOM-ID APPEARANCE)}
-* merge-base-ap::               @code{(merge-base-ap APPEARANCE)}
-* merge-baseap::                @code{(merge-baseap APPEARANCE)}
-* mod::                         @code{(mod NUMERATOR DENOMINATOR)}
-* morehelp::                    @code{(?? COMMAND)}
-* name-object::                 @code{(name-object ID NAME)}
+* merge::                       @code{(merge @{janela|camera@} CAM-ID @{ WIN or CAM @dots{} @})}
+* merge-ap::                    @code{(merge-ap GEOM-ID APAR@^{E}NCIA)}
+* merge-base-ap::               @code{(merge-base-ap APAAR@^{E}NCIA)}
+* merge-baseap::                @code{(merge-baseap APAR@^{E}NCIA)}
+* mod::                         @code{(mod NUMERADOR DENOMINADOR)}
+* morehelp::                    @code{(?? COMANDO)}
+* name-object::                 @code{(name-object ID NOME)}
 * ND-axes::                     @code{(ND-axes CAMID [CLUSTER [Xidx Yidx Zidx [Widx]]])}
 * ND-color::                    @code{(ND-color CAMID @dots{}}
 * ND-xform::                    @code{(ND-xform OBJID [ntransform @{ @dots{} @}])}
 * ND-xform-get::                @code{(ND-xform-get ID [from-ID])}
 * ND-xform-set::                @code{(ND-xform-set OBJID [ntransform @{ @dots{} @}])}
-* new-alien::                   @code{(new-alien name [GEOMETRY])}
-* new-camera::                  @code{(new-camera name [CAMERA])}
+* new-alien::                   @code{(new-alien nome [GEOMETRY])}
+* new-camera::                  @code{(new-camera nome [CAMERA])}
 * new-center::                  @code{(new-center [id])}
-* new-geometry::                @code{(new-geometry name [GEOMETRY])}
+* new-geometry::                @code{(new-geometry nome [GEOMETRY])}
 * new-reset::                   @code{(new-reset)}
 * NeXT::                        @code{(NeXT)}
 * normalization::               @code{(normalization GEOM-ID @{each|none|all|keep@})}
@@ -6630,33 +6630,33 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 * position-at::                 @code{(position-at objectID otherID [center | origin])}
 * position-toward::             @code{(position-toward objID othID [center|origin])}
 * process-events::              @code{(process-events)}
-* progn::                       @code{(progn STATEMENT [ @dots{} ])}
+* progn::                       @code{(progn DECLARA@,{C}@~{A}O [ @dots{} ])}
 * quit::                        @code{(quit)}
 * quote::                       @code{(quote EXPR)}
 * rawevent::                    @code{(rawevent dev val x y t)}
 * rawpick::                     @code{(rawpick CAMID X Y)}
-* read::                        @code{(read geometry|camera|@dots{} @{GEOM or CAM or @dots{}@})}
+* read::                        @code{(read geometry|camera|@dots{} @{GEOM ou CAM ou @dots{}@})}
 * real-id::                     @code{(real-id ID)}
 * redraw::                      @code{(redraw CAM-ID)}
 * regtable::                    @code{(regtable)}
 * rehash-emodule-path::         @code{(rehash-emodule-path)}
 * replace-geometry::            @code{(replace-geometry GEOM-ID PART GEOMETRY)}
-* rib-display::                 @code{(rib-display [frame|tiff] FILEPREFIX)}
-* rib-snapshot::                @code{(rib-snapshot CAM-ID [filename])}
-* scale::                       @code{(scale GEOM-ID FACTOR [FACTORY FACTORZ])}
+* rib-display::                 @code{(rib-display [frame|tiff] PREFIXOARQUIVO)}
+* rib-snapshot::                @code{(rib-snapshot CAM-ID [nomearquivo])}
+* scale::                       @code{(scale GEOM-ID FATOR [FATORY FATORZ])}
 * scene::                       @code{(scene CAM-ID [GEOMETRY])}
-* set-clock::                   @code{(set-clock TIME)}
-* set-conformal-refine::        @code{(set-conformal-refine CMX [N [EDGES]])}
+* set-clock::                   @code{(set-clock TEMPO)}
+* set-conformal-refine::        @code{(set-conformal-refine CMX [N [ARESTAS]])}
 * set-emodule-path::            @code{(set-emodule-path (PATH1 @dots{} PATHN))}
 * set-load-path::               @code{(set-load-path (PATH1 @dots{} PATHN))}
 * set-motionscale::             @code{(set-motionscale X)}
-* setenv::                      @code{(setenv name string)}
+* setenv::                      @code{(setenv nome string)}
 * setq::                        @code{(setq SYM EXPR)}
 * sgi::                         @code{(sgi)}
-* shell::                       @code{(! SHELLCOMMAND)}
-* sleep-for::                   @code{(sleep-for TIME)}
-* sleep-until::                 @code{(sleep-until TIME)}
-* snapshot::                    @code{(snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])}
+* shell::                       @code{(! COMANDOSHELL)}
+* sleep-for::                   @code{(sleep-for TEMPO)}
+* sleep-until::                 @code{(sleep-until TEMPO)}
+* snapshot::                    @code{(snapshot CAM-ID NOMEDOARQUIVO [FORMATO [TAMANHOX [TAMANHOY]]])}
 * soft-shader::                 @code{(soft-shader CAM-ID @{on|off|toggle@})}
 * space::                       @code{(space @{euclidean|hyperbolic|spherical@})}
 * stereowin::                   @code{(stereowin CAM-ID [no|horizontal|@dots{}] [gap])}
@@ -6664,32 +6664,32 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 * transform::                   @code{(transform objectID centerID frameID [rotate|@dots{}] @dots{})}
 * transform-incr::              @code{(transform-incr objectID centerID frameID @dots{})}
 * transform-set::               @code{(transform-set objectID centerID frameID @dots{})}
-* truncate::                    @code{(truncate NUMBER)}
+* truncate::                    @code{(truncate N@'{U}MERO)}
 * ui-cam-focus::                @code{(ui-cam-focus @{focus-change|mouse-cross@})}
 * ui-center::                   @code{(ui-center ID)}
 * ui-center-origin::            @code{(ui-center-origin @{origin|bbox-center@})}
-* ui-emotion-program::          @code{(ui-emotion-program PROGRAM)}
+* ui-emotion-program::          @code{(ui-emotion-program PROGRAMA)}
 * ui-emotion-run::              @code{(ui-emotion-run EMODULE)}
 * ui-freeze::                   @code{(ui-freeze @{on|off@})}
-* ui-html-browser::             @code{(ui-html-browser BROWSER)}
+* ui-html-browser::             @code{(ui-html-browser NAVEGADOR)}
 * ui-motion::                   @code{(ui-motion @{inertia|@dots{}@} @{on|off@})}
-* ui-panel::                    @code{(ui-panel PANELNAME @{on|off@} [WINDOW])}
-* ui-pdf-viewer::               @code{(ui-pdf-viewer VIEWER)}
+* ui-panel::                    @code{(ui-panel NOMEPAINEL @{on|off@} [JANELA])}
+* ui-pdf-viewer::               @code{(ui-pdf-viewer VISUALIZADOR)}
 * ui-target::                   @code{(ui-target ID [yes|no])}
-* uninterest::                  @code{(uninterest (COMMAND [args]))}
+* uninterest::                  @code{(uninterest (COMANDO [args]))}
 * update::                      @code{(update [timestep_in_seconds])}
 * update-draw::                 @code{(update-draw CAM-ID  [timestep_in_seconds])}
-* while::                       @code{(while TEST BODY)}
-* window::                      @code{(window CAM-ID WINDOW)}
+* while::                       @code{(while TESTE CORPO)}
+* window::                      @code{(janela CAM-ID JANELA)}
 * winenter::                    @code{(winenter CAM-ID)}
 * write::                       @code{(write command|geometry|@dots{} NOMEDOARQUIVO @dots{})}
 * write-comments::              @code{(write-comments NOMEDOARQUIVO GEOMID PICKPATH)}
-* write-handle::                @code{(write-handle PREFIX NOMEDOARQUIVO HANDLE)}
-* write-sexpr::                 @code{(write-sexpr NOMEDOARQUIVO LISPOBJECT)}
+* write-handle::                @code{(write-handle PREFIX NOMEDOARQUIVO CABE@,{C}ALHO)}
+* write-sexpr::                 @code{(write-sexpr NOMEDOARQUIVO OBJETOLISP)}
 * xform::                       @code{(xform ID TRANSFORM)}
 * xform-incr::                  @code{(xform-incr ID TRANSFORM)}
 * xform-set::                   @code{(xform-set ID TRANSFORM)}
-* zoom::                        @code{(zoom CAM-ID FACTOR)}
+* zoom::                        @code{(zoom CAM-ID FATOR)}
 @end menu
 
 @node shell, lt, GCL Reference, GCL Reference
@@ -6698,7 +6698,7 @@ arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
 @findex shell, !
 @table @code
 @item !
-is a synonym for @code{shell}. @xref{shell}.
+@'{e} um sin@^{o}nimo de @code{shell}. Veja @ref{shell}.
 @end table
 
 @node lt, eq, shell, GCL Reference
@@ -6706,8 +6706,8 @@ is a synonym for @code{shell}. @xref{shell}.
 @findex <
 @table @code
 @item (< EXPR1 EXPR2)
-Returns t if EXPR1 is less than EXPR2.  EXPR1 and EXPR2 should
-be either both integers or floats, or both strings.
+Retorna t se EXPR1 for menor que EXPR2.  EXPR1 e EXPR2 devem
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
 @end table
 
 @node eq, gt, lt, GCL Reference
@@ -6715,8 +6715,8 @@ be either both integers or floats, or both strings.
 @findex =
 @table @code
 @item (= EXPR1 EXPR2)
-Returns t if EXPR1 is equal to EXPR2.  EXPR1 and EXPR2 should
-be either both integers or floats, or both strings.
+Retorna t se EXPR1 for igual a EXPR2.  EXPR1 e EXPR2 devem
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
 @end table
 
 @node gt, mul, eq, GCL Reference
@@ -6724,8 +6724,8 @@ be either both integers or floats, or both strings.
 @findex >
 @table @code
 @item (> EXPR1 EXPR2)
-Returns t if EXPR1 is greater than EXPR2.  EXPR1 and EXPR2 should
-be either both integers or floats, or both strings.
+Retorna t se EXPR1 for maior que EXPR2.  EXPR1 e EXPR2 devem
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
 @end table
 
 @node mul, div, gt, GCL Reference
@@ -6843,9 +6843,9 @@ between 0 and 1.
 @item (background-image CAM-ID [NOMEDOARQUIVO])
 Use the given image as the background of camera CAM-ID (which must be a
 real camera, not @code{default} or @code{allcams}). Centers the image on
-the window area.  Works only with GL and OpenGL graphics.
+the janela area.  Works only with GL and OpenGL graphics.
 Use "" for filename to remove background.  With no filename argument,
-returns name of that window's current background image, or "".  
+returns name of that janela's current background image, or "".  
 Any file type acceptable as a texture is allowed, e.g. .ppm.gz, .sgi, etc.
 @end table
 
@@ -7271,7 +7271,7 @@ Same as zoom but multiplies by exp(zoom).  Obsolete.
 @findex freeze
 @table @code
 @item (freeze CAM-ID)
-Freeze CAM-ID; drawing in this camera's window is turned off
+Freeze CAM-ID; drawing in this camera's janela is turned off
 until it is explicitly redrawn with @code{(redraw CAM-ID)}, after
 which time drawing resumes as normal.
 @end table
@@ -7311,7 +7311,7 @@ is generally equivalent to
   (read <type>  @{ define <name> <value> @})
 @end example
 except that the assignment is done when hdefine is executed, (possibly
-not at all if inside a conditional statement), while the @code{read
+not at all if inside a conditional declara@,{c}@~{a}o), while the @code{read
 @dots{} define} performs assignment as soon as the text is
 read. @xref{References}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @code{(hdelete @dots{})}}.
@@ -7471,9 +7471,9 @@ list of symbols (bound to @code{nil} by default) or lists of the form
 @code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
 @var{VALUE} @'{e} uma S-expression which is first evaluated, then its value
 is bound to @var{ARG}. The entire expression evaluates to the value of
-@var{EXPRN}, the last expression in the body of the statement. The
+@var{EXPRN}, the last expression in the body of the declara@,{c}@~{a}o. The
 argument list must be present, but can be empty; in the latter case the
-@code{(let () @dots{})} statement is equivalent to a @code{(progn
+@code{(let () @dots{})} declara@,{c}@~{a}o is equivalent to a @code{(progn
 @dots{})}. @xref{lambda, @code{(lambda @dots{})}}.
 @xref{defun, @code{(defun @dots{})}}.
 @xref{setq, @code{(setq @dots{})}}.
@@ -7505,7 +7505,7 @@ especifica the type of data it contains, which may be @code{command}
 @code{camera} (OOGL c@^{a}mera definition).  If omitted, attempts to guess
 about the file's contents.
 Loading geometric data creates a new visible objeto; loading a camera
-opens a new window; loading a command file executes those commands.
+opens a new janela; loading a command file executes those commands.
 @end table
 
 @node load-path, look, load, GCL Reference
@@ -7597,7 +7597,7 @@ do bounding box.
 @findex merge
 @table @code
 @item (merge @{window|camera@} CAM-ID  @{ WINDOW or CAMERA @dots{} @})
-Modify the given window or camera, changing just those properties
+Modify the given janela or camera, changing just those properties
 specified in the last argument.  E.g.
 @example
 	(merge camera @code{Camera} @{ far 20 @})
@@ -7984,8 +7984,8 @@ the control remains by the main-loop until the current input streams
 @subsection progn
 @findex progn
 @table @code
-@item (progn STATEMENT [ @dots{} ])
-evaluates each STATEMENT in order and returns the value do
+@item (progn DECLARA@,{C}@~{A}O [ @dots{} ])
+evaluates each DECLARA@,{C}@~{A}O in order and returns the value do
 last one.  Use progn to group a collection of commands together,
 forcing them to be treated as a single command.
 @end table
@@ -8106,7 +8106,7 @@ Replace a part da objeto geom@'{e}trico for GEOM-ID.
 @findex rib-display
 @table @code
 @item (rib-display [frame|tiff] FILEPREFIX)
-Set Renderman display to framebuffer (popup screen window) or a
+Set Renderman display to framebuffer (popup screen janela) or a
 TIFF format disk file. FILEPREFIX is used to construct
 names da form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
 The number is incremented on every call to @code{rib-snapshot} and
@@ -8301,22 +8301,22 @@ Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de c
 @var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
 "ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
 libOSMesa) or "ppmosglx". A "ppmscreen" snapshot is created by reading
-the image directly from the given window; the window is popped above
-other windows and redrawn first, then its contents are written as a PPM
+the image directly from the given janela; the janela is popped above
+other janelas and redrawn first, then its contents are written as a PPM
 format image. A "ppmosmesa" snapshot is drawn by Mesa's software
 renderer into a memory buffer in RAM. A "ppmosglx" snapshot is rendered
 into a GLX Pixmap buffer, which is also off-screen but may or may not
 reside in video RAM.  Rendering may or may not be accelerated. The
-problem with on-screen snapshots is that the window must be mapped and
-not obscured by other windows. So on-screen snapshots will not work in
+problem with on-screen snapshots is that the janela must be mapped and
+not obscured by other janelas. So on-screen snapshots will not work in
 the background, or when a screen safer is active. With "ps", dumps a
-Postscript picture representing the view from that window;
+Postscript picture representing the view from that janela;
 hidden-surface removal might be incorrect. With "ppm", dumps a
 PPM-format image produced by geomview's internal software renderer; this
 may be of arbitrary size. If the @var{NOMEDOARQUIVO} argument begins with
 "|", it's interpreted as a @code{/bin/sh} command to which the PPM or PS
 data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
-relevant only for "ppm" formats, and render to a window of that size (or
+relevant only for "ppm" formats, and render to a janela of that size (or
 scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
 @end table
 
@@ -8341,19 +8341,19 @@ Set the space associated with the world.
 @findex stereowin
 @table @code
 @item (stereowin CAM-ID [no|horizontal|vertical|colored] [gapsize])
-Configure CAM-ID as a stereo window.
-no: entire window is a single pane, stereo disabled@*
+Configure CAM-ID as a stereo janela.
+no: entire janela is a single pane, stereo disabled@*
 horizontal: split left/right: left is stereo eye#0, right is #1.@*
 vertical: split top/bottom: bottom is eye#0, top is #1.@*
 colored: panes overlap, red is stereo eye#0, cyan is #1.
 
-A gap of @code{gapsize} pixels is left between subwindows;
-if omitted, subwindows are adjacent.
+A gap of @code{gapsize} pixels is left between subjanelas;
+if omitted, subjanelas are adjacent.
 If both layout and gapsize are omitted, e.g. (stereowin CAM-ID),
 returns current settings as a @code{(stereowin @dots{})} command list.
 This command doesn't set stereo projection; use @code{merge camera} or
 @code{camera} to set the stereyes transforms, and @code{merge window} or
-@code{window} to set the pixel aspect ratio & window position if needed.
+@code{window} to set the pixel aspect ratio & janela position if needed.
 @end table
 
 @node time-interests, transform, stereowin, GCL Reference
@@ -8380,7 +8380,7 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 @table @code
 @item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
 Apply a movimento (rotation, translation, scaling) to objeto @code{objectID};
-that is, construct and concatenate a transformation matrix with
+that is, construct and concatenate a matriz de transforma@,{c}@~{a}o with
 objectID's transform  The 3 IDs involved are the objeto
 that moves, the center of movimento, and the frame of reference
 in which to apply the movimento.  The center is easiest understood
@@ -8418,7 +8418,7 @@ applied immediately.
 @findex transform-incr
 @table @code
 @item (transform-incr objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
-Apply continuing movimento: construct a transformation matrix and
+Apply continuing movimento: construct a matriz de transforma@,{c}@~{a}o and
 concatenate it with the current transform of objectID every
 refresh (sets objectID's incremental transform). Same syntax
 as transform.  If optional @code{dt} argument is present,
@@ -8452,12 +8452,12 @@ Rounds @var{EXPR} towards zero.
 @item (ui-cam-focus [focus-change|mouse-cross])
 Set the focus policy for the janelas de c@^{a}mera. The default is
 @code{mouse-cross}: a c@^{a}mera is made the active c@^{a}mera (for interactive
-mouse events) when o cursor do mouse crosses the window. Because this
+mouse events) when o cursor do mouse crosses the janela. Because this
 means it can become complicated to activate a specific c@^{a}mera (in the
 context of multiple janelas de c@^{a}mera) there is also the option to only
-change the c@^{a}mera focus when the window-manager decides to give it the
+change the c@^{a}mera focus when the janela-manager decides to give it the
 focus for input events. So, after specifying @code{focus-change} it
-depends on the focus-change configuration of your window-manager when a
+depends on the focus-change configuration of your janela-manager when a
 c@^{a}mera becomes the active c@^{a}mera for mouse-interaction. To change this
 behaviour permanently you could, e.g., place the following line in your
 @file{$@{HOME@}/.geomview} file (@pxref{Customization}):
@@ -8677,9 +8677,9 @@ Iterate: @emph{evaluate @var{TEST}, if non nil, evaluate @var{BODY}}.
 @findex window
 @table @code
 @item (window CAM-ID WINDOW)
-Specify attributes for the window of CAM-ID, e.g. its size or initial
+Specify attributes for the janela of CAM-ID, e.g. its size or initial
 position, in the OOGL Window syntax.  The special CAM-ID @code{default}
-especifica properties of future windows (created by @ref{camera,
+especifica properties of future janelas (created by @ref{camera,
 @code{camera}} or @ref{new-camera, @code{new-camera}}).
 @end table
 
@@ -8688,7 +8688,7 @@ especifica properties of future windows (created by @ref{camera,
 @findex winenter
 @table @code
 @item (winenter CAM-ID)
-Tell geomview that o cursor do mouse is in the window of CAM-ID.  This
+Tell geomview that o cursor do mouse is in the janela of CAM-ID.  This
 function is for development purposes and is not intended for general
 use.
 @end table
@@ -8700,7 +8700,7 @@ use.
 @item (write @{command|geometry|camera|transform|ntransform|window@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
 write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
-self: just the objeto, no transformation or apar@^{e}ncia (objeto geom@'{e}trico only)
+self: just the objeto, no transforma@,{c}@~{a}o or apar@^{e}ncia (objeto geom@'{e}trico only)
 world: the objeto as positioned within the World.
 universe: objeto's position in universal coordenadas;
 includes Worldtransform
@@ -9010,7 +9010,7 @@ In[7] := <<GL.m
 @noindent
 If you're on an SGI, loading @code{GL.m} returns Mathematica to its
 usual 3D graphics display.  The following
-plot will appear in a normal static Mathematica window.
+plot will appear in a normal static Mathematica janela.
 @example
 In[8] := ParametricPlot3D[@{Sin[x],Sin[y],Sin[x]*Cos[y]@}, @{x,0,Pi@},@{y,0,Pi@}]
 
@@ -9063,7 +9063,7 @@ Out[4] := -Graphics3D-
 @noindent
 This generates the file @file{math.ri}b.  This is a ready-to-render RIB
 file da given objeto geom@'{e}trico, using a default c@^{a}mera position, lighting,
-and the ``plastic'' shader. In a shell window, type @code{render
+and the ``plastic'' shader. In a shell janela, type @code{render
 cube.ri}b to generate the image file @file{mma.tiff}. Of course, you
 need to have RenderMan installed for this to work. A shortcut to render
 from inside Mathematica is @code{WriteRIB["!render", foo]}.@refill
@@ -9092,7 +9092,7 @@ use stdin/stdout.  The options are:
 
 @item -n @var{name}
 Use @var{name} for the name do rendered TIFF file (default
-"geom.tiff") or framebuffer window (default "geom.rib").
+"geom.tiff") or framebuffer janela (default "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
 Use background color (@var{r},@var{g},@var{}b).  Each component ranges
@@ -9417,7 +9417,7 @@ source-code.  We refer to the root directory of this tree as the
 that is created when you unpack the distribution file.
 
 To install Geomview on your system, arrange for the @file{$GEOMROOT}
-directory to be in a permanent place.  Then, in a shell window,
+directory to be in a permanent place.  Then, in a shell janela,
 @code{cd} to that directory and type @code{install}.  This runs a shell
 script which does the installation after asking you several questions
 about where you want to install the various componentes of Geomview.
@@ -9590,7 +9590,7 @@ Note that many dos Makefiles refer to a variable called
 @code{MACHTYPE}; this variable tells which type of graphics
 system to compile Geomview for.  The @file{mk.<CPU>} files
 set this variable for you; in most cases its value is @file{x11},
-which especifica that Geomview should be compiled for X windows.
+which especifica that Geomview should be compiled for X janelas.
 
 Once you have configured your source tree by editing the files as
 described above and setting the @code{CPU} variable, you can compile and
