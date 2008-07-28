@@ -6413,7 +6413,7 @@ is an OOGL 4x4 transformation matrix.
 is an OOGL (N+1)x(N+1) transformation matrix.
 
 @item @var{window}
-is an OOGL winddow specification.
+is an OOGL window specification.
 
 @end table
 
