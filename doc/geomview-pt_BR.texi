@@ -46,31 +46,31 @@
 Programa interativo de visualiza@,{c}@~ao tridimensional.
 
 @menu
-* Intro::                       Introdu@,{c}@~ao ao Geomview.
-* Distrib::                     Como acessar a vers@~ao mais recente do Geomview.
-* Copying::                     A Licen@,{c}a P@'ublica Geral Menor do GNU.
-* History::                     Hist@'oria do Desenvolvimento do Geomview.
-* Platforms::                   Plantaformas Suportadas.
-* Pronunciation::               Como Pronunciar ``Geomview''.
-* Overview::                    Vis@~ao Geral do Geomview.
-* Tutorial::                    Tutorial Introdut@'orio.
-* Interaction::                 Interagindo com Geomview.
-* OOGL File Formats::           Formatos para Inser@,{c}@~ao de Dados Geom@'etricos.
-* Customization::               Modificando o comportamento do Geomview.
-* Modules::                     Programas que usam Geomview para exibi@,{c}@~ao de imagens.
-* GCL::                         GCL: a Linguagem de Comandos do Geomview.
-* Non-Euclidean Geometry::      Geometrias N@~ao Euclideanas.
-* Mathematica::                 Gr@'aficos do Mathematica no Geomview ou no RenderMan.
-* Installation::                Instalando o Geomview no seu computador.
-* Support::                     acessando o Suporte T@'ecnico para o Geomview.
-
-* Contributing::                Como contribuir com o Geomview.
-* Function Index::              Acesso r@'apido a cada fun@,{c}@~ao da GCL.
-* List of Figures::             Lista de Figuras.
+* Intro::                         Introdu@,{c}@~ao ao Geomview.
+* Distrib::                       Como acessar a vers@~ao mais recente do Geomview.
+* Copying::                       A Licen@,{c}a P@'ublica Geral Menor do GNU.
+* History::                       Hist@'oria do Desenvolvimento do Geomview.
+* Platforms::                     Plantaformas Suportadas.
+* Pronunciation::                 Como Pronunciar ``Geomview''.
+* Overview::                      Vis@~ao Geral do Geomview.
+* Tutorial::                      Tutorial Introdut@'orio.
+* Interaction::                   Interagindo com Geomview.
+* Formatos dos Arquivos da OOGL:: Formatos para Inser@,{c}@~ao de Dados Geom@'etricos.
+* Customizacao::                 Modificando o comportamento do Geomview.
+* Modules::                       Programas que usam Geomview para exibi@,{c}@~ao de
+                                  imagens.
+* GCL::                           GCL: a Linguagem de Comandos do Geomview.
+* Non-Euclidean Geometry::        Geometrias N@~ao Euclideanas.
+* Mathematica::                   Gr@'aficos do Mathematica no Geomview ou no RenderMan.
+* Installation::                  Instalando o Geomview no seu computador.
+* Support::                       Acessando o Suporte T@'ecnico para o Geomview.
+* Contributing::                  Como contribuir com o Geomview.
+* Function Index::                Acesso r@'apido a cada fun@,{c}@~ao da GCL.
+* List of Figures::               Lista de Figuras.
 @end menu
 
 @node Intro, Distrib, Top, Top
-@unnumbered Introduction to Geomview
+@unnumbered Introdu@,{c}@~{a}o ao Geomview
 
 Geomview @'{e} um programa interativo para visualizar e manipular
 objetos geom@'{e}tricos, originalmente escrito pelos membros do estado maior do Geometry
@@ -97,7 +97,7 @@ enviam respostas a questionamentos existentes.  Para assinar a lista, visite a p
 no s@'{i}tio @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
 @node Distrib, Copying, Intro, Top
-@unnumbered Distribution
+@unnumbered Distribui@,{c}@~{a}o
 
 Geomview @'{e} um @dfn{software} livre; isso significa que qualquer um @'{e} livre para
 us@'{a}-lo e livre para redistribu@'{i}-lo sob certas condi@,{c}@~{o}es.  
@@ -124,7 +124,7 @@ Licen@,{c}a P@'{u}blica Geral Menor do GNU.  Em outras palavras, o programa deve
 quando voc@^{e} o receber, n@~{a}o apenas livre para o fabricante.
 
 @node Copying, History, Distrib, Top
-@unnumbered Copying
+@unnumbered Copiando
 
 @c cH: in my opinion the following paragraph is complete nonsense; programs
 @c which simply communicate with other programs by means of streams
@@ -138,7 +138,7 @@ se comunicam com a biblioteca".  Fazemos isso porque queremos especificamente
 permitir que programas propriet@'{a}rios e m@'{o}dulos usem o Geomview.
 @end smallexample
 
-@unnumbered GNU LESSER PUBLIC LICENSE
+@unnumbered LICEN@,{C}A P@'{U}BLICA GERAL DO GNU
 @center Version 2.1, February 1999
 
 @display
@@ -710,7 +710,7 @@ Ty Coon, Presidente
 Isso @'{e} tudo!
 
 @node History, Platforms, Copying, Top
-@unnumbered History of Geomview's Development
+@unnumbered Hist@'{o}ria do Desenvilvimento do Geomview
 
 Geomview foi originalmente escrito no Geometry Center da the University
 of Minnesota in Minneapolis.
@@ -770,7 +770,7 @@ Geomview.
 @end menu
 
 @node Authors,  , History, History
-@unnumberedsec Authors
+@unnumberedsec Autores
 
 Tamara Munzner, Stuart Levy, e Mark Phillips s@~{a}o os autores originais do
 Geomview. Celeste Fowler, Charlie Gunn, e Nathaniel Thurston tamb@'{e}m
@@ -785,7 +785,7 @@ ajuda por meio da leitura do manual e indicando nossos enganos.
 
 
 @node Platforms, Pronunciation, History, Top
-@unnumbered Supported Platforms
+@unnumbered Plantaformas Suportadas
 
 Geomview 1.9 pode -- em princ@'{i}pio -- compilar e executarsobre qualquer claramente
 recente sistemas operacionais semelhantes ao Unix. Especificamente, Geomview executa sobre Linux e sobre
@@ -817,7 +817,7 @@ para detalhes.
 @c There is also no version of Geomview for Macintosh.
 
 @node Pronunciation, Overview, Platforms, Top
-@unnumbered How to Pronounce ``Geomview``
+@unnumbered Como Pronunciar ``Geomview``
 
 A palavra 'Geomview' @'{e} uma combina@,{c}@~{a}o da primeira s@'{i}laba da palavra
 'geometry', e da palavra 'view'. Os autores pronunciam Geomview
@@ -839,7 +839,7 @@ s@'{i}laba.
 
 @comment ****************************************************************
 @node Overview, Tutorial, Pronunciation, Top
-@chapter Overview
+@chapter Vis@~{a}o Geral
 
 O principal objetivo do Geomview @'{e} mostrar objetos cuja geometria @'{e} fornecida,
 permitindo controle interativo sobre detalhes tais como ponto de vis@~{a}o, velocidade
@@ -1104,8 +1104,8 @@ naquele arquivo ir@~{a}o ser incorporadas em futuras vers@~{o}es desse manual.
 @end float
 
 @comment ****************************************************************
-@node Interaction, OOGL File Formats, Tutorial, Top
-@chapter Interaction
+@node Interaction, Formatos dos Arquivos da OOGL, Tutorial, Top
+@chapter Intera@,{c}@~{a}o
 
 Esse cap@'{i}tulo descreve como voc@^{e} interage com Geomview atrav@'{e}s do
 mouse e do teclado.
@@ -2680,8 +2680,8 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
 @end table
 
 @comment ****************************************************************
-@node OOGL File Formats, Customization, Interaction, Top
-@chapter OOGL File Formats
+@node Formatos dos Arquivos da OOGL, Customizacao, Interaction, Top
+@chapter Formatos dos Arquivos da OOGL
 
 Os objetos que voc@^{e} pode carregar dentro do Geomview s@~{a}o chamados objetos OOGL.
 OOGL significa ``Object Oriented Graphics Library'' (biblioteca gr@'{a}fica orientada a objetos); @'{e} a biblioteca
@@ -2700,7 +2700,7 @@ do Geomview.
 @end menu
 
 @comment ================================================================
-@node Conventions, Object File Formats, OOGL File Formats, OOGL File Formats
+@node Conventions, Object File Formats, Formatos dos Arquivos da OOGL, Formatos dos Arquivos da OOGL
 @section Conventions
 
 @menu
@@ -3364,7 +3364,7 @@ transform @code{matriz-de-transforma@,{c}@~{a}o}
 @end example
 
 @comment ================================================================
-@node Object File Formats, Non-geometric objects, Conventions, OOGL File Formats
+@node Object File Formats, Non-geometric objects, Conventions, Formatos dos Arquivos da OOGL
 @section Object File Formats
 
 @menu
@@ -4353,7 +4353,7 @@ com outros formatos bin@'{a}rios OOGL. Veja @ref{Binary format}. O
 Em lugar de dados contidos dentro de chaves. 
 
 @comment ================================================================
-@node Non-geometric objects,  , Object File Formats, OOGL File Formats
+@node Non-geometric objects,  , Object File Formats, Formatos dos Arquivos da OOGL
 @section Non-geometric objects
 
 A sintaxe desses objetos @'{e} fornecida na forma usada em
@@ -4989,7 +4989,7 @@ mudar as mesmas propriedades padronizadas de uma janela existente. Veeja @ref{wi
 
 
 @comment ****************************************************************
-@node Customization, Modules, OOGL File Formats, Top
+@node Customizacao, Modules, Formatos dos Arquivos da OOGL, Top
 @chapter Customization: @file{.geomview} files
 
 Quando Geomview @'{e} inciado, ele chama e executa comando em um
@@ -5039,7 +5039,7 @@ Voc@^{e} pode colocar qualquer comando @code{GCL} v@'{a}lido nos seus arquivos
 @dots{})}}. Veja @ref{ui-cam-focus,@code{(ui-cam-focus @dots{})}}.
 
 @comment ****************************************************************
-@node Modules, GCL, Customization, Top
+@node Modules, GCL, Customizacao, Top
 @chapter External Modules
 
 Um m@'{o}dulo externo @'{e} um programa que interagi com Geomview.  Um
@@ -5234,7 +5234,7 @@ Isso diz ao Geomview para criar um geom chamado @code{example} que @'{e} uma
 inst@^{a}ncia do manipulador @code{foo}.  @emph{Manipuladores} s@~{a}o uma parte do
 formato de arquivo OOGL que permite a voc@^{e} nomear uma pe@,{c}a do objeto geom@'{e}trico cujo valor
 pode ser especificado em seu lugar (e nesse caso atualizado muitas vezes); para
-maiores informa@,{c}@~{o}es sobre manipuladores, veja @ref{OOGL File Formats}. Nesse caso,
+maiores informa@,{c}@~{o}es sobre manipuladores, veja @ref{Formatos dos Arquivos da OOGL}. Nesse caso,
 @code{example} @'{e} o t@'{i}tulo atrav@'{e}s do qual o usu@'{a}rio ir@'{a} ver o objeto no
 navegador de objeto do Geomview, e @code{foo} @'{e} o nome interno do
 manipulador para o qual o objeto aponta.
@@ -6306,7 +6306,7 @@ faz com que o comando "/u/home/modules/foo -x" seja executado quando selecionado
 
 Voc@^{e} pode colocr comandos @code{emodule-define} no seu arquivo
 @file{~/.geomview} para providenciar que certos m@'{o}dulos estejam dispon@'{i}veis sempre que voc@^{e} execute
-Geomview; veja @ref{Customization}.  voc@^{e} pode tamb@'{e}m executar
+Geomview; veja @ref{Customizacao}.  voc@^{e} pode tamb@'{e}m executar
 comandos @code{emodule-define} a partir do painel de comandos (@emph{Commands})
 para adicionar um m@'{o}dulo a uma c@'{o}pia do Geomview que j@'{a} esteja sendo executada.
 
@@ -6395,7 +6395,7 @@ do Geomview ou em algum dos m@'{o}dulos externos.)
 Nas descri@,{c}@~{o}es ds comandos acima muitas refer6encias s@~{a}o feitas a
 formatos "OOGL" formats.  OOGL @'{e} a linguagem de descri@,{c}@~{a}o dos dados que Geomview
 utiliza para descrever objetos geom@'{e}tricos, c@^{a}meras, apar@^{e}ncias, e outos objetos
-b@'{a}sicos.  Para detalhes dos formatos OOGL, veja @ref{OOGL File Formats}.
+b@'{a}sicos.  Para detalhes dos formatos OOGL, veja @ref{Formatos dos Arquivos da OOGL}.
 (Ou equivalentemente, veja a p@'{a}gina de manual oogl(5), distributed with Geomview
 in the file /share/man/man5/oogl.5gv.
 
@@ -8460,7 +8460,7 @@ focus for input events. So, after specifying @code{focus-change} it
 depends on the focus-change configuration of your janela-manager when a
 c@^{a}mera becomes the active c@^{a}mera for mouse-interaction. To change this
 behaviour permanently you could, e.g., place the following line in your
-@file{$@{HOME@}/.geomview} file (@pxref{Customization}):
+@file{$@{HOME@}/.geomview} file (Veja @ref{Customizacao}):
 
 @example
 (progn
@@ -9608,7 +9608,7 @@ variable especifica the flags passed to the C compiler (cc).
 
 @comment *********************************************************
 @node Support, Contributing, Installation, Top
-@unnumbered Getting Technical Support for Geomview
+@unnumbered REcebendo Suporte T@'{e}cnico para o Geomview
 
 There are several ways to get support for Geomview.
 
@@ -9639,7 +9639,7 @@ the Geometry Technologies web site at @uref{http://www.geomtech.com}.
 
 @comment ############################################################
 @node Contributing, Function Index, Support, Top
-@unnumbered Contributing to Geomview's Development
+@unnumbered Contribuindo para o Desenvolvimento do Geomview
 
 If you are interested in contributing to the development of Geomview,
 there are several things you can do:
@@ -9678,7 +9678,7 @@ Thank you.
 
 @comment ****************************************************************
 @node Function Index, List of Figures, Contributing, Top
-@unnumbered Function Index
+@unnumbered @'{I}ndice das Fun@,{c}@~{o}es
 
 @printindex fn
 
@@ -9687,7 +9687,7 @@ Thank you.
 @contents
 
 @node List of Figures,  , Function Index, Top
-@unnumbered List of Figures
+@unnumbered Lista de Figuras
 @listoffloats Figure
 
 @bye
