@@ -48,25 +48,25 @@ Programa interativo de visualiza@,{c}@~ao tridimensional.
 @menu
 * Intro::                         Introdu@,{c}@~ao ao Geomview.
 * Distrib::                       Como acessar a vers@~ao mais recente do Geomview.
-* Copying::                       A Licen@,{c}a P@'ublica Geral Menor do GNU.
-* History::                       Hist@'oria do Desenvolvimento do Geomview.
-* Platforms::                     Plantaformas Suportadas.
-* Pronunciation::                 Como Pronunciar ``Geomview''.
-* Overview::                      Vis@~ao Geral do Geomview.
+* Copiando::                      A Licen@,{c}a P@'ublica Geral Menor do GNU.
+* Historia::                      Hist@'oria do Desenvolvimento do Geomview.
+* Plantaformas::                  Plantaformas Suportadas.
+* Pronuncia::                     Como Pronunciar ``Geomview''.
+* Visao Geral::                   Vis@~ao Geral do Geomview.
 * Tutorial::                      Tutorial Introdut@'orio.
-* Interaction::                   Interagindo com Geomview.
+* Interacao::                     Interagindo com Geomview.
 * Formatos dos Arquivos da OOGL:: Formatos para Inser@,{c}@~ao de Dados Geom@'etricos.
-* Customizacao::                 Modificando o comportamento do Geomview.
-* Modules::                       Programas que usam Geomview para exibi@,{c}@~ao de
+* Customizacao::                  Modificando o comportamento do Geomview.
+* Modulos::                       Programas que usam Geomview para exibi@,{c}@~ao de
                                   imagens.
 * GCL::                           GCL: a Linguagem de Comandos do Geomview.
-* Non-Euclidean Geometry::        Geometrias N@~ao Euclideanas.
+* Geometrias Nao-Euclidianas::    Geometrias N@~ao Euclideanas.
 * Mathematica::                   Gr@'aficos do Mathematica no Geomview ou no RenderMan.
-* Installation::                  Instalando o Geomview no seu computador.
-* Support::                       Acessando o Suporte T@'ecnico para o Geomview.
-* Contributing::                  Como contribuir com o Geomview.
-* Function Index::                Acesso r@'apido a cada fun@,{c}@~ao da GCL.
-* List of Figures::               Lista de Figuras.
+* Instalacao::                    Instalando o Geomview no seu computador.
+* Suporte::                       Acessando o Suporte T@'ecnico para o Geomview.
+* Contribuindo::                  Como contribuir com o Geomview.
+* Indice de Funcoes::             Acesso r@'apido a cada fun@,{c}@~ao da GCL.
+* Lista de Figuras::              Lista de Figuras.
 @end menu
 
 @node Intro, Distrib, Top, Top
@@ -81,7 +81,7 @@ muitos tipos de computadores Unix, incluindo Linux, SGI, Sun, e HP. Geomview tam
 executa com Cygwin. Esse manual descreve Geomview em sua vers@~{a}o 1.9. @refill
 
 Geomview @'{e} um @dfn{software} livre, dispon@'{i}vel sob os termos da Licen@,{c}a P@'{u}blica Geral 
-Menor do GNU ; veja @ref{Copying} para detalhes.
+Menor do GNU ; veja @ref{Copiando} para detalhes.
 
 Geomview e esse manual podem ser encontrados em
 @uref{http://www.geomview.org}.
@@ -96,7 +96,7 @@ Geomview.  Os autores do Geomview participam dessa lista e algumas vezes
 enviam respostas a questionamentos existentes.  Para assinar a lista, visite a p@'{a}gina da lista
 no s@'{i}tio @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
-@node Distrib, Copying, Intro, Top
+@node Distrib, Copiando, Intro, Top
 @unnumbered Distribui@,{c}@~{a}o
 
 Geomview @'{e} um @dfn{software} livre; isso significa que qualquer um @'{e} livre para
@@ -123,7 +123,7 @@ redistribua o Geomview recebido deles nos termos usuais da
 Licen@,{c}a P@'{u}blica Geral Menor do GNU.  Em outras palavras, o programa deve ser livre para voc@^{e}
 quando voc@^{e} o receber, n@~{a}o apenas livre para o fabricante.
 
-@node Copying, History, Distrib, Top
+@node Copiando, Historia, Distrib, Top
 @unnumbered Copiando
 
 @c cH: in my opinion the following paragraph is complete nonsense; programs
@@ -709,8 +709,8 @@ Ty Coon, Presidente
 
 Isso @'{e} tudo!
 
-@node History, Platforms, Copying, Top
-@unnumbered Hist@'{o}ria do Desenvilvimento do Geomview
+@node Historia, Plantaformas, Copiando, Top
+@unnumbered Hist@'{o}ria do Desenvolvimento do Geomview
 
 Geomview foi originalmente escrito no Geometry Center da the University
 of Minnesota in Minneapolis.
@@ -766,10 +766,10 @@ ao redor do mundo, est@~{a}o ainda ativamente envolvidos na utiliza@,{c}@~{a}o e
 Geomview.
 
 @menu
-* Authors::                     Autores.
+* Autores::                     Autores.
 @end menu
 
-@node Authors,  , History, History
+@node Autores,  , Historia, Historia
 @unnumberedsec Autores
 
 Tamara Munzner, Stuart Levy, e Mark Phillips s@~{a}o os autores originais do
@@ -784,7 +784,7 @@ e Tamara Munzner.  Incont@'{a}veis usu@'{a}rios do Geomview tamb@'{e}m foram de 
 ajuda por meio da leitura do manual e indicando nossos enganos.
 
 
-@node Platforms, Pronunciation, History, Top
+@node Plantaformas, Pronuncia, Historia, Top
 @unnumbered Plantaformas Suportadas
 
 Geomview 1.9 pode -- em princ@'{i}pio -- compilar e executarsobre qualquer claramente
@@ -792,7 +792,7 @@ recente sistemas operacionais semelhantes ao Unix. Especificamente, Geomview exe
 Cygwin (Cygwin emula um ambiente semelhante ao SystemV Unix environment sob o Microsoft
 Windows). Desafortunadamente Geomview compila com MacOS X (Darwin), mas
 aparentemente comunica@,{c}@~{o}es com Geomview por meio de pipes e sockets
-causam falha de segmentac@~{a}o. Sinta-se livre para consertar essa falha! Veja @ref{Contributing},
+causam falha de segmentac@~{a}o. Sinta-se livre para consertar essa falha! Veja @ref{Contribuindo},
 para detalhes.
 
 @c Geomview runs on a wide variety of Unix systems. It has been tested on
@@ -812,11 +812,11 @@ para detalhes.
 
 @c If you would like to see a version of Geomview for Windows, 
 @c you can contribute to its development in several ways.
-@c @xref{Contributing}, for details.
+@c @xref{Contribuindo}, for details.
 
 @c There is also no version of Geomview for Macintosh.
 
-@node Pronunciation, Overview, Platforms, Top
+@node Pronuncia, Visao Geral, Plantaformas, Top
 @unnumbered Como Pronunciar ``Geomview``
 
 A palavra 'Geomview' @'{e} uma combina@,{c}@~{a}o da primeira s@'{i}laba da palavra
@@ -838,7 +838,7 @@ s@'{i}laba.
 @comment
 
 @comment ****************************************************************
-@node Overview, Tutorial, Pronunciation, Top
+@node Visao Geral, Tutorial, Pronuncia, Top
 @chapter Vis@~{a}o Geral
 
 O principal objetivo do Geomview @'{e} mostrar objetos cuja geometria @'{e} fornecida,
@@ -889,7 +889,7 @@ da cria@,{c}@~{a}o de refer@^{e}ncias nomeadas.
 Geomview pode mostrar sa@'{i}das gr@'{a}ficas tridimensionais provenientes do Mathematica e do Maple.
 
 @comment ****************************************************************
-@node Tutorial, Interaction, Overview, Top
+@node Tutorial, Interacao, Visao Geral, Top
 @chapter Tutorial
 
 Esse cap@'{i}tulo conduzir@'{a} voc@^{e} atrav@'{e}s de alguns usos elementares do Geomview.
@@ -1104,28 +1104,28 @@ naquele arquivo ir@~{a}o ser incorporadas em futuras vers@~{o}es desse manual.
 @end float
 
 @comment ****************************************************************
-@node Interaction, Formatos dos Arquivos da OOGL, Tutorial, Top
+@node Interacao, Formatos dos Arquivos da OOGL, Tutorial, Top
 @chapter Intera@,{c}@~{a}o
 
 Esse cap@'{i}tulo descreve como voc@^{e} interage com Geomview atrav@'{e}s do
 mouse e do teclado.
 
 @menu
-* Starting Geomview::           Iniciando o Geomview.
-* Command Line Options::        Op@,{c}@~{o}es de Linha de Comando.
-* Basic Interaction::           Intera@,{c}@~{o}es B@'{a}sicas: O Painel Principal.
-* Loading::                     Chamando Objetos Dentro do Geomview.
-* Mouse Motions::               Usando o Mouse para Manipular Objetos.
-* Appearance::                  Modificando a Forma de Ver as Coisas.
+* Iniciando o Geomview::        Iniciando o Geomview.
+* Opcoes de Linha de Comando::  Op@,{c}@~{o}es de Linha de Comando.
+* Interacao Basica::            Intera@,{c}@~{o}es B@'{a}sicas: O Painel Principal.
+* Chamando::                    Chamando Objetos Dentro do Geomview.
+* Movimentos do Mouse::         Usando o Mouse para Manipular Objetos.
+* Aparencia::                   Modificando a Forma de Ver as Coisas.
 * Cameras::                     C@^{a}meras.
-* Saving::                      Gravando seu Trabalho.
-* Commands::                    O Painel de Comandos.
-* Keyboard Shortcuts::          Atalhos de Teclado.
+* Gravando::                    Gravando seu Trabalho.
+* Comandos::                    O Painel de Comandos.
+* Atalhos de Teclado::          Atalhos de Teclado.
 @end menu
 
 @comment ================================================================
-@node Starting Geomview, Command Line Options, Interaction, Interaction
-@section Starting Geomview
+@node Iniciando o Geomview, Opcoes de Linha de Comando, Interacao, Interacao
+@section Iniciando o Geomview
 
 A forma usual para iniciar o Geomview @'{e} digitar @kbd{geomview @key{Enter}} em uma janela
 de shell (@key{Enter} significa pressionar a tecla "Enter").  Esse procedimento carrega o Geomview na mem@'{o}ria do computador em
@@ -1134,12 +1134,12 @@ interagir com o Geomview imediatamente.
 
 @'{E} tamb@'{e}m poss@'{i}vel especificar a@,{c}@~{o}es para o Geomview executar no
 momento de iniciar fornecendo argumentos na linha de comando do shell.
-Veja @ref{Command Line Options}.
+Veja @ref{Opcoes de Linha de Comando}.
 
 
 @comment ================================================================
-@node Command Line Options, Basic Interaction, Starting Geomview, Interaction
-@section Command Line Options
+@node Opcoes de Linha de Comando, Interacao Basica, Iniciando o Geomview, Interacao
+@section Op@,{c}@~{o}es de Linha de Comando
 
 Aqui est@~{a}o as op@,{c}@~{o}es de linha de comando que o Geomview permite:
 
@@ -1261,8 +1261,8 @@ s@~{a}o anexados ao final do caminho de busca do UNIX quando for invocado o @var
 @end table
 
 @comment ================================================================
-@node Basic Interaction, Loading, Command Line Options, Interaction
-@section Basic Interaction: The Main Panel
+@node Interacao Basica, Chamando, Opcoes de Linha de Comando, Interacao
+@section Interacao Basica: O Painel Principal
 
 Normalmente quando voc@^{e} invoca Geomview, tr@^{e}s janelas aparecem: O
 painel principal (@emph{Main}), o painel de ferramentas (@emph{Tools}), e uma janela de c@^{a}mera.
@@ -1331,17 +1331,17 @@ no painel principal indica o modo de movimento atual.  O
 padr@~{a}o @'{e} a rota@,{c}@~{a}o ("Rotate").  Voc@^{e} pode mudar o modo corrente de movimento
 selecionando um no modo de movimento no navegador de modos de movimento (@emph{MOTION MODE}), ou usando o
 painel de ferramentas (@emph{Tools}).  Para maiores informa@,{c}@~{o}es sobre modos de movimento,
-veja @ref{Mouse Motions}.
+veja @ref{Movimentos do Mouse}.
 
 O navegador de m@'{o}dulos (@emph{Modules}) lista m@'{o}dulos externos do Geomview.  Um
 m@'{o}dulo externo @'{e} um programa separado que interage com Geomview para
 extender suas funcionalidades.  Para informa@,{c}@~{o}es sobre m@'{o}dulos externos,
-veja @ref{Modules}.
+veja @ref{Modulos}.
 
 @ifset forms
 O bot@~{a}o @emph{Load} no painel principal @emph{Main} faz surgir o
 painel de arquivos (@emph{Files}) para chmar um arquivo.  O arquivo pode conter ou um
-geom, ou uma c@^{a}mera, ou comandos GCL.  Para detalhes, veja @ref{Loading}.
+geom, ou uma c@^{a}mera, ou comandos GCL.  Para detalhes, veja @ref{Chamando}.
 
 O bot@~{a}o @emph{Delete} faz com que o objeto
 alvo seja apagado.  Geomview seleciona outro objeto para ser o novo
@@ -1370,7 +1370,7 @@ Voc@^{e} pode chamar qualquer painel a partir do menu @emph{Inspect}.
 O menu @emph{Space} permite a voc@^{e} escolher se geomview trabalha
 no modo Euclidiano, Hiperbolico ou Esf@'{e}rico.  O modo Euclideano @'{e} usado
 por padr@~{a}o.  Para detalhes sobre a utiliza@,{c}@~{a}o do modo espa@,{c}o @emph{Hyperbolic} e do modo
-@emph{Spherical}, veja @ref{Non-Euclidean Geometry}.
+@emph{Spherical}, veja @ref{Geometrias Nao-Euclidianas}.
 @end ifclear
 
 A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possuem equivalentes
@@ -1410,7 +1410,7 @@ Para uma lista de todas as teclas de atalho, pressione a telca @emph{@code{?}}.
 
 
 @comment ================================================================
-@node Loading, Mouse Motions, Basic Interaction, Interaction
+@node Chamando, Movimentos do Mouse, Interacao Basica, Interacao
 @section Loading Objects Into Geomview
 
 Existem muitos caminhos para chamar um objeto dentro do Geomview.
@@ -1488,7 +1488,7 @@ veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
 @end table
 
 @comment ================================================================
-@node Mouse Motions, Appearance, Loading, Interaction
+@node Movimentos do Mouse, Aparencia, Chamando, Interacao
 @section Using the Mouse to Manipulate Objects
 
 Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
@@ -1500,7 +1500,7 @@ selecionar um modo atrav@'{e}s do navegador de modos de movimento (@emph{Motion 
 painel principal (@emph{Main}).@refill
 
 Essa se@,{c}@~{a}o descreve a intera@,{c}@~{a}o b@'{a}sica com o mouse.  Para detalhes,
-veja @ref{Commands}.
+veja @ref{Comandos}.
 
 @float Figure,figtools
 @image{figs/tools}
@@ -1529,7 +1529,7 @@ no modo @emph{Orbit}.  Normalmente o objeto do centro @'{e} um dos objetos geom@
 (geoms) existentes listados no navegador de alvos (@emph{Targets}), o centro atual das
 rota@,{c}@~{o}es @'{e} a or@'{i}gem daquele sistema de coordenadas daquele objeto.
 @'{E} poss@'{i}vel, todavia, selecionar um ponto arbitr@'{a}rio de interesse sobre
-um objeto como o centro. Para detalhes, veja @ref{Point of Interest}.
+um objeto como o centro. Para detalhes, veja @ref{Ponto de Interesse}.
 
 Isso tamb@'{e}m @'{e} poss@'{i}vel mudando o bot@~{a}o @emph{BBox Center} para escolher o
 centro de movimento como sendo o centro do objeto atual da caixa
@@ -1705,10 +1705,10 @@ o bot@~{a}o Restringir Movimento (@emph{Constrain Motion}).
 
 @comment ================================================================
 @menu
-* Point of Interest::           Pontos de Interesse.
+* Ponto de Interesse::           Pontos de Interesse.
 @end menu
 
-@node Point of Interest,  , Mouse Motions, Mouse Motions
+@node Ponto de Interesse,  , Movimentos do Mouse, Movimentos do Mouse
 @subsection Selecting a Point of Interest
 
 @'{E} algumas vezes @'{u}til especificar um ponto em particular sobre algum objeto em uma
@@ -1768,7 +1768,7 @@ atual c@^{a}mera, @var{cam-id}.  O primeiro comando acima cria o
 "alien" CENTER se esse Alien n@~{a}o existir ainda.
 
 @comment ================================================================
-@node Appearance, Cameras, Mouse Motions, Interaction
+@node Aparencia, Cameras, Movimentos do Mouse, Interacao
 @section Changing the Way Things Look
 
 Geomview utiliza uma hierarquia de apar@^{e}ncias para controlar o caminho atrav@'{e}s do qual olha-se coisas.
@@ -1799,13 +1799,13 @@ propriedades que voc@^{e} n@~{a}o explicitamente escolheu.
 Geomview possui tr@^{e}s pain@'{e}is que levam voc@^{e} a modificar apar@^{e}ncias.  
 
 @menu
-* Appearance Panel::            Cor etc.
-* Materials Panel::             Propriedades do Material da Superf@'{i}cie.
-* Lighting Panel::              Par@^{a}metros de Ilumina@,{c}@~{a}o.
+* Painel de Aparencia::         Cor etc.
+* Painel de Materiais::         Propriedades do Material da Superf@'{i}cie.
+* Painel de Iluminacao::        Par@^{a}metros de Ilumina@,{c}@~{a}o.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node Appearance Panel, Materials Panel, Appearance, Appearance
+@node Painel de Aparencia, Painel de Materiais, Aparencia, Aparencia
 @subsection The Appearance Panel
 
 O painel de Apar@^{e}ncia (@emph{Appearance}) leva voc@^{e} a modificar os mais comuns propriedades de
@@ -1960,7 +1960,7 @@ Por padr@~{a}o, @emph{Override} est@'{a} habilitado.  Esse bot@~{a}o aplica-se a
 e a todos os pain@'{e}is relacionados a apar@^{e}ncia.
 
 @comment ----------------------------------------------------------------
-@node Materials Panel, Lighting Panel, Appearance Panel, Appearance
+@node Painel de Materiais, Painel de Iluminacao, Painel de Aparencia, Aparencia
 @subsection The Materials Panel
 
 O painel de materiais (@emph{Materials}) controla as propriedades materiais das surperf@'{i}cies.
@@ -2029,7 +2029,7 @@ Esse bot@~{a}o dispensa o painel de materiais (@emph{Materials}).
 @end table
 
 @comment ----------------------------------------------------------------
-@node Lighting Panel,  , Materials Panel, Appearance
+@node Painel de Iluminacao,  , Painel de Materiais, Aparencia
 @subsection The Lighting Panel
 
 O painel de ilumina@,{c}@~{a}o (@emph{Lighting}) controla o n@'{u}mero, a posi@,{c}@~{a}o, e a cor das
@@ -2096,7 +2096,7 @@ especificadas nos arquivos OOGL; para detalhes veja,
 
 
 @comment ================================================================
-@node Cameras, Saving, Appearance, Interaction
+@node Cameras, Gravando, Aparencia, Interacao
 @section Cameras
 
 Uma c@^{a}mera no Geomview @'{e} o objeto que corresponde a uma janela de c@^{a}mera.
@@ -2201,7 +2201,7 @@ escondidas.
 Essa op@,{c}@~{a}o determina o modelo usado para desenhar o mundo.  @'{E} mais @'{u}til em
 espa@,{c}os hiperb@'{o}licos e esf@'{e}ricos.  Voc@^{e} provavelmente n@~{a}o necessitar@'{a} tocar esse
 navegador se voc@^{e} permanecer no espa@,{c}o Euclideano.  Para mais informa@,{c}@~{a}o sobre
-esses modelos, veja @ref{Non-Euclidean Geometry}.
+esses modelos, veja @ref{Geometrias Nao-Euclidianas}.
 @table @emph
 @item Virtual
 Esse @'{e} o modelo padr@~{a}o e representa a visializa@,{c}@~{a}o natural de dentro
@@ -2234,7 +2234,7 @@ Esse bot@~{a}o dispensa o painel de @emph{Cameras}.
 @end table
 
 @comment ================================================================
-@node Saving, Commands, Cameras, Interaction
+@node Gravando, Comandos, Cameras, Interacao
 @section Saving your work
 
 O painel @emph{Save} do Geomview permite a voc@^{e} armazenar objetos do Geomview e outra
@@ -2360,7 +2360,7 @@ restaurar as posi@,{c}@~{o}es de todos os pain@'{e}is.
 @end table
 
 @comment ================================================================
-@node Commands, Keyboard Shortcuts, Saving, Interaction
+@node Comandos, Atalhos de Teclado, Gravando, Interacao
 @section The Commands Panel
 
 O painel de comandos (@emph{Commands}) permite a voc@^{e} digitar comandos GCL.  Quando
@@ -2424,8 +2424,8 @@ esse mesmo objeto ao campo de vis@~{a}o.
 @end table
 
 @comment ================================================================
-@node Keyboard Shortcuts,  , Commands, Interaction
-@section Keyboard Shortcuts
+@node Atalhos de Teclado,  , Comandos, Interacao
+@section Atalhos de Teclado
 
 A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possui as equivalentes
 teclas de atalho de forma que voc@^{e} pode fazer a mesma a@,{c}@~{a}o digitando uma
@@ -2680,7 +2680,7 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
 @end table
 
 @comment ****************************************************************
-@node Formatos dos Arquivos da OOGL, Customizacao, Interaction, Top
+@node Formatos dos Arquivos da OOGL, Customizacao, Interacao, Top
 @chapter Formatos dos Arquivos da OOGL
 
 Os objetos que voc@^{e} pode carregar dentro do Geomview s@~{a}o chamados objetos OOGL.
@@ -2694,31 +2694,31 @@ Exemplos da maioria dos tipos de arquivo podem ser encontrados no diret@'{o}rio 
 do Geomview.
 
 @menu
-* Conventions::                 Conventions and general remarks.
-* Object File Formats::         Objeto File Formats.
-* Non-geometric objects::       Non-geometric objetos.
+* Convencoes::                    Conventions and general remarks.
+* Formatos de Arquivo de Objeto:: Formatos de Arquivo de Objeto.
+* Objetos nao-geometricos::         Non-geometric objetos.
 @end menu
 
 @comment ================================================================
-@node Conventions, Object File Formats, Formatos dos Arquivos da OOGL, Formatos dos Arquivos da OOGL
-@section Conventions
+@node Convencoes, Formatos de Arquivo de Objeto, Formatos dos Arquivos da OOGL, Formatos dos Arquivos da OOGL
+@section Conven@,{c}@~{o}es
 
 @menu
-* Common syntax::               Sintaxe Comum a Todos os formatos de arquivo da OOGL.
-* File names::                  Nomes de Arquivo.
-* Vertices::                    V@'{e}rtices.
-* ND-Vertices::                 V@'{e}rtices @var{N}-dimensionais.
-* Surface normal directions::   Dire@,{c}@~{a}o de superf@'{i}cies normais.
-* Transformation matrices::     Matrizes de transforma@,{c}@~{a}o.
-* ND Transformation matrices::  Matrizes de transforma@,{c}@~{a}o @var{N}-dimensional.
-* Binary format::               Formato bin@'{a}rio.
-* References::                  Objetos embargados e refer@^{e}ncias externa a objeto.
-* Appearances::                 Apar@^{e}ncias.
-* Texture Mapping::             Mapeamento de textura.
+* Sintaxe comum::                   Sintaxe Comum a Todos os formatos de arquivo da OOGL.
+* Nomes de arquivos::               Nomes de Arquivo.
+* Vertices::                        V@'{e}rtices.
+* ND-Vertices::                     V@'{e}rtices @var{N}-dimensionais.
+* Direcoes de superficies normais:: Dire@,{c}@~{a}o de superf@'{i}cies normais.
+* Transformation matrices::         Matrizes de transforma@,{c}@~{a}o.
+* ND Transformation matrices::      Matrizes de transforma@,{c}@~{a}o @var{N}-dimensional.
+* Binary format::                   Formato bin@'{a}rio.
+* References::                      Objetos embargados e refer@^{e}ncias externa a objeto.
+* Appearances::                     Apar@^{e}ncias.
+* Texture Mapping::                 Mapeamento de textura.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node Common syntax, File names, Conventions, Conventions
+@node Sintaxe comum, Nomes de arquivos, Convencoes, Convencoes
 @subsection Syntax Common to All OOGL File Formats
 
 A maioria dos formatos de arquivo de objeto OOGL s@~{a}o do formato livre ASCII --- qualquer quantidade de
@@ -2742,7 +2742,7 @@ prefixos @'{e} importante, e.g. @code{CNMESH} @'{e} significativo mas
 @code{NCMESH} @'{e} inv@'{a}lido.
 
 @comment ----------------------------------------------------------------
-@node File names, Vertices, Common syntax, Conventions
+@node Nomes de arquivos, Vertices, Sintaxe comum, Convencoes
 @subsection File Names
 
 Quando objetos OOGL s@~{a}o lidos de arquivos localizados em disco, a biblioteca OOGL usa o
@@ -2754,7 +2754,7 @@ os tipos conhecidos de objeto s@~{a}o tentados por sua vez at@'{e} que se aceite
 v@'{a}lidos.
 
 @comment ----------------------------------------------------------------
-@node Vertices, ND-Vertices, File names, Conventions
+@node Vertices, ND-Vertices, Nomes de arquivos, Convencoes
 @subsection Vertices
 
 Muitos objetos compartilham um estilo comum de representar v@'{e}rtices com
@@ -2807,7 +2807,7 @@ Voc@^{e} pode modificar a ordem dos dados modificando o cabe@,{c}alho de palavra
 @samp{NCOFF} @'{e} apenas n@~{a}o reconhecido.
 
 @comment ----------------------------------------------------------------
-@node ND-Vertices, Surface normal directions, Vertices, Conventions
+@node ND-Vertices, Direcoes de superficies normais, Vertices, Convencoes
 @subsection @var{N}-dimensional Vertices
 
 Muitos objetos compartilham um estilo comum de representa@,{c}@~{a}o de v@'{e}rtice com
@@ -2838,8 +2838,8 @@ Componentes de cor usualmente podem ser especificadas da mesma forma que para v@
 Veja @ref{Vertices}, enquanto especificando componentes de cor em normais n@~{a}o faz sentido.
 
 @comment ----------------------------------------------------------------
-@node Surface normal directions, Transformation matrices, ND-Vertices, Conventions
-@subsection Surface normal directions
+@node Direcoes de superficies normais, Transformation matrices, ND-Vertices, Convencoes
+@subsection Dire@,{c}@~{o}es de superf@'{i}cies normais
 
 Geomview utiliza vetores normais para determinar como um objeto @'{e} compartilhado.
 A dire@,{c}@~{a}o da normal @'{e} importante nesse c@'{a}lculo.
@@ -2855,7 +2855,7 @@ Sobre superf@'{i}cies param@'{e}tricas (retalhos de Bezier), o vetor normal no p
 est@'{a} na dire@,{c}@~{a}o dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
-@node Transformation matrices, ND Transformation matrices, Surface normal directions, Conventions
+@node Transformation matrices, ND Transformation matrices, Direcoes de superficies normais, Convencoes
 @subsection Transformation matrices
 
 Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transforma@,{c}@~{o}es sobre
@@ -2872,7 +2872,7 @@ quarta linha (os @'{u}ltimos quatro elementos) da matriz A.  A @'{u}ltima coluna
 d@'{e}cimo segundo e d@'{e}cimo sexto elementos) s@~{a}o tipicamente 0, 0, 0, e 1 respectivamente.
 
 @comment ----------------------------------------------------------------
-@node ND Transformation matrices, Binary format, Transformation matrices, Conventions
+@node ND Transformation matrices, Binary format, Transformation matrices, Convencoes
 @subsection ND Transformation matrices
 
 No contexto do espa@,{c}o @var{N}-dimensional (@var{N} > 3) alguns objetos
@@ -2891,7 +2891,7 @@ elementos). A primeira coluna da matriz A (a coluna com @'{i}ndice zero) @'{e} t
 @dots{}, 0.
 
 @comment ----------------------------------------------------------------
-@node Binary format, References, ND Transformation matrices, Conventions
+@node Binary format, References, ND Transformation matrices, Convencoes
 @subsection Binary format
 
 Muitos objetos OOGL aceitam formatos o formato de arquivo bin@'{a}rio bem como o formato de arquivo ASCII.
@@ -2935,7 +2935,7 @@ bin@'{a}rio OOGL, todavia coment@'{a}rios podem aparecer no cabe@,{c}alho antes 
 dados bin@'{a}rios.
 
 @comment ----------------------------------------------------------------
-@node References, Appearances, Binary format, Conventions
+@node References, Appearances, Binary format, Convencoes
 @subsection Embedded objects and external-object references
 
 Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem refer@^{e}ncias a outros
@@ -3001,7 +3001,7 @@ podem aparecer em qualquer lugar.
 
 
 @comment ----------------------------------------------------------------
-@node Appearances, Texture Mapping, References, Conventions
+@node Appearances, Texture Mapping, References, Convencoes
 @subsection Appearances
 
 Objetos geom@'{e}tricos podem ter informa@,{c}@~{o}es de apar@^{e}ncia associada,
@@ -3035,7 +3035,7 @@ Existe uma se@,{c}@~{a}o separada com rela@,{c}@~{a}o a defini@,{c}@~{a}o de tex
 Objetos de renderiza@,{c}@~{a}o transl@'{u}cida n@~{a}o s@~{a}o suportados por todos os desenhadores
 que funcionam no geomview. O renderizador OpenGL tem suporte limitado para isso: objetos de n@'{i}vel mais alto
 (i.e. aqueles que aparecem no navegador de objetos do painel principal
-(veja @ref{Basic Interaction, The Main Panel}) s@~{a}o renderizados corretamente por
+(veja @ref{Interacao Basica, O Painel Principal}) s@~{a}o renderizados corretamente por
 meio de alpha-blending). Tamb@'{e}m, os instant@^{a}neos do RenderMan ir@~{a}o incluir
 valores de opacidade.
 @end table
@@ -3240,7 +3240,7 @@ Todavia, Se um objeto fornecido pelo usu@'{a}rio contiver um campo de apar@^{e}n
 o recurso de sobrescrever ativado, esse campo de apar@^{e}ncia ser@'{a} imune aos controles do Geomview.
 
 @comment ----------------------------------------------------------------
-@node Texture Mapping,  , Appearances, Conventions
+@node Texture Mapping,  , Appearances, Convencoes
 @subsection Texture Mapping
 
 Alguns programas que trabalham sem contato direto com o usu@'{a}rio suportam objetos mapeados em textura, atualmente apenas
@@ -3364,8 +3364,8 @@ transform @code{matriz-de-transforma@,{c}@~{a}o}
 @end example
 
 @comment ================================================================
-@node Object File Formats, Non-geometric objects, Conventions, Formatos dos Arquivos da OOGL
-@section Object File Formats
+@node Formatos de Arquivo de Objeto, Objetos nao-geometricos, Convencoes, Formatos dos Arquivos da OOGL
+@section Formatos de Arquivo de Objeto
 
 @menu
 * QUAD::                        Lista de quadril@'{a}teros.
@@ -3386,7 +3386,7 @@ transform @code{matriz-de-transforma@,{c}@~{a}o}
 
 
 @comment ----------------------------------------------------------------
-@node QUAD, MESH, Object File Formats, Object File Formats
+@node QUAD, MESH, Formatos de Arquivo de Objeto, Formatos de Arquivo de Objeto
 @subsection QUAD: collection of quadrilaterals
 
 O sufixo convencional para um arquivo @code{QUAD} @'{e} @file{.quad}.
@@ -3423,7 +3423,7 @@ quads no objeto; seguindo esse inteiro encontra-se uma s@'{e}rie de inteiros em 
 arranjados apenas como no formato ASCII.
 
 @comment ----------------------------------------------------------------
-@node MESH, BBOX, QUAD, Object File Formats
+@node MESH, BBOX, QUAD, Formatos de Arquivo de Objeto
 @subsection MESH: rectangularly-connected mesh
 
 O sufixo convencional para um arquivo @code{MESH} @'{e} @file{.mesh}.
@@ -3498,7 +3498,7 @@ valores de @var{Nu} e @var{Nv} s@~{a}o inteiros de 32-bit; todos os outros valor
 s@~{a}o n@'{u}meros em ponto flutuante de 32-bit.
 
 @comment ----------------------------------------------------------------
-@node BBOX, BBP and BEZ, MESH, Object File Formats
+@node BBOX, BBP and BEZ, MESH, Formatos de Arquivo de Objeto
 @subsection BBOX: simple bounding boxes
 
 Esse @'{e} um objeto-brinquedo muito simples: Toma 2 v@'{e}rtices e desenha um
@@ -3548,7 +3548,7 @@ divisor homog@^{e}neo (em oposi@,{c}@~{a}o ao caso comum tridimensional onde o
 divisor homog@^{e}neo pode ser @code{w} -- a terceira -- componente).
 
 @comment ----------------------------------------------------------------
-@node BBP and BEZ, OFF, BBOX, Object File Formats
+@node BBP and BEZ, OFF, BBOX, Formatos de Arquivo de Objeto
 @subsection Bezier Surfaces
 
 O sufixo de arquivo convencional para arquivos de superf@'{i}cie de Bezier @'{e} @file{.bbp}
@@ -3638,7 +3638,7 @@ A s@'{e}rie de peda@,{c}os termina em um caractere de fim de arquivo, ou com uma
 incorporado em uma refer@^{e}ncia de objeto.
 
 @comment ----------------------------------------------------------------
-@node OFF, VECT, BBP and BEZ, Object File Formats
+@node OFF, VECT, BBP and BEZ, Formatos de Arquivo de Objeto
 @subsection OFF Files
 
 O sufixo convencional para arquivos @code{OFF} @'{e} @file{.off}.
@@ -3755,7 +3755,7 @@ int int int int int float float float float
 
 
 @comment ----------------------------------------------------------------
-@node VECT, SKEL, OFF, Object File Formats
+@node VECT, SKEL, OFF, Formatos de Arquivo de Objeto
 @subsection VECT Files
 
 O sufixo convencional para arquivos @code{VECT} @'{e} @file{.vect}.
@@ -3833,7 +3833,7 @@ Big-Endian onde aparecem os n@'{u}meros inteiros comuns, e com inteiros de
 Big-Endian.
 
 @comment ----------------------------------------------------------------
-@node SKEL, SPHERE, VECT, Object File Formats
+@node SKEL, SPHERE, VECT, Formatos de Arquivo de Objeto
 @subsection SKEL Files
 
 @code{SKEL} files represent collections of points and linhas poligonais, with
@@ -3902,7 +3902,7 @@ int int int int int float float float float
 @end example
 
 @comment ----------------------------------------------------------------
-@node SPHERE, INST, SKEL, Object File Formats
+@node SPHERE, INST, SKEL, Formatos de Arquivo de Objeto
 @subsection SPHERE Files
 
 O sufixo convencional para arquivos @code{SPHERE} @'{e} @file{.sph}.
@@ -3926,9 +3926,9 @@ A esfera @'{e} desenhada com coordenadas de textura geradas automaticamente. Vej
 @item E
 Assume-se que a esfera encontra-se dentro do espa@,{c}o Euclidiano.
 @item H
-Assume-se que a esfera encontra-se dentro de um espa@,{c}o Hiperb@'{o}lico. Veja @ref{Non-Euclidean Geometry}.
+Assume-se que a esfera encontra-se dentro de um espa@,{c}o Hiperb@'{o}lico. Veja @ref{Geometrias Nao-Euclidianas}.
 @item S
-Assume-se que a esfera encontra-se dentro de um espa@,{c}o esf@'{e}rico. Veja @ref{Non-Euclidean Geometry}.
+Assume-se que a esfera encontra-se dentro de um espa@,{c}o esf@'{e}rico. Veja @ref{Geometrias Nao-Euclidianas}.
 @end table
 
 Objetos do tipo esfera s@~{a}o desenhados usando malhas que s@~{a}o retangulares em um sistema de
@@ -3958,7 +3958,7 @@ vis@~{a}o ortogr@'{a}fica extendida do hemisf@'{e}rio @code{+y} sobre ambos, esp
 @end table
 
 @comment ----------------------------------------------------------------
-@node INST, LIST, SPHERE, Object File Formats
+@node INST, LIST, SPHERE, Formatos de Arquivo de Objeto
 @subsection INST Files
 
 O sufixo convencional para um arquivo @code{INST} @'{e} @file{.inst}.
@@ -4172,7 +4172,7 @@ uma vez que o intervalo das coordenadas ndc de X e Y estejam de -1 a +1).
 @}
 @end example
 @comment ----------------------------------------------------------------
-@node LIST, TLIST, INST, Object File Formats
+@node LIST, TLIST, INST, Formatos de Arquivo de Objeto
 @subsection LIST Files
 
 O sufixo convencional para um arquivo @code{LIST} @'{e} @file{.list}.
@@ -4208,7 +4208,7 @@ defini@,{c}@~{a}o de s@'{i}mbolo voc@^{e} pode escrever
 
 
 @comment ----------------------------------------------------------------
-@node TLIST, GROUP, LIST, Object File Formats
+@node TLIST, GROUP, LIST, Formatos de Arquivo de Objeto
 @subsection TLIST Files
 
 
@@ -4275,7 +4275,7 @@ elementos da matriz matrix @'{e} o mesmo do formato ASCII.
 
 
 @comment ----------------------------------------------------------------
-@node GROUP, DISCGRP, TLIST, Object File Formats
+@node GROUP, DISCGRP, TLIST, Formatos de Arquivo de Objeto
 @subsection GROUP Files
 
 Esse formato @'{e} obsoleto, mas ainda @'{e} aceito.  It combined the
@@ -4296,7 +4296,7 @@ INST
 @end example
 
 @comment ----------------------------------------------------------------
-@node DISCGRP, COMMENT, GROUP, Object File Formats
+@node DISCGRP, COMMENT, GROUP, Formatos de Arquivo de Objeto
 @subsection DISCGRP Files
 
 Esse formato @'{e} para grupos discretos, tais como aparecem na teoria dos
@@ -4304,7 +4304,7 @@ coletores (manifolds) ou em modelos de simetria.  Esse formato tem sua pr@'{o}pr
 Veja discgrp(5).
 
 @comment ----------------------------------------------------------------
-@node COMMENT,  , DISCGRP, Object File Formats
+@node COMMENT,  , DISCGRP, Formatos de Arquivo de Objeto
 @subsection COMMENT Objects
 
 O objeto COMMENT @'{e} um mecanismo para codificar dados arbitr@'{a}rios dentro de um
@@ -4353,8 +4353,8 @@ com outros formatos bin@'{a}rios OOGL. Veja @ref{Binary format}. O
 Em lugar de dados contidos dentro de chaves. 
 
 @comment ================================================================
-@node Non-geometric objects,  , Object File Formats, Formatos dos Arquivos da OOGL
-@section Non-geometric objects
+@node Objetos nao-geometricos,  , Formatos de Arquivo de Objeto, Formatos dos Arquivos da OOGL
+@section Objetos nao-geometricos
 
 A sintaxe desses objetos @'{e} fornecida na forma usada em
 @ref{References}, onde itens "entre aspas duplas" devem aparecer literalmente mas
@@ -4371,14 +4371,14 @@ escolhas alternativas.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node appearance objects, image, Non-geometric objects, Non-geometric objects
+@node appearance objects, image, Objetos nao-geometricos, Objetos nao-geometricos
 @subsection Appearance Objects
 Apar@^{e}ncias s@~{a}o objetos OOGL com caracter@'{i}sticas pr@'{o}prias, que simplesmente significam que
 @'{e} poss@'{i}vel fornecer a eles nomes simb@'{o}licos (Veja @ref{References}). Existem
 outras se@,{c}@~{o}es manuseado detalhes de
 apar@^{e}ncia. Veja @ref{Appearances}.
 
-@node image, transform, appearance objects, Non-geometric objects
+@node image, transform, appearance objects, Objetos nao-geometricos
 @subsection Image Objects
 
 Objetos de imagem s@`{a}o usados para especificar dados de pixmap ou para texturas
@@ -4640,7 +4640,7 @@ canais RGB s@~{a}o initializados para 0, e um canal alfa omitido @'{e}
 inicializado para @code{maxval}, i.e. omitindo os dados do canal alfa para
 uma imagem RGBA @'{e} apenas o mesmo que definir uma imagem RGB.
 
-@node transform, ntransform, image, Non-geometric objects
+@node transform, ntransform, image, Objetos nao-geometricos
 @subsection Transform Objects
 
 Onde uma matriz simples 4x4 @'{e} esperada -- como no campo de @code{transform}
@@ -4719,7 +4719,7 @@ Alguns exemplos, em contextos onde eles podem ser usados:
 @end example
 
 @comment ----------------------------------------------------------------
-@node ntransform, camera, transform, Non-geometric objects
+@node ntransform, camera, transform, Objetos nao-geometricos
 @subsection ND-Transform Objects
 
 Onde -- no contexto de visualiza@,{c}@~{a}o NDimensional -- uma matriz simples (N+1)x(N+1) @'{e}
@@ -4816,7 +4816,7 @@ Alguns exemplos, em contextos onde eles possivelmente podem ser usados:
 @end example
 
 @comment ----------------------------------------------------------------
-@node camera, window, ntransform, Non-geometric objects
+@node camera, window, ntransform, Objetos nao-geometricos
 @subsection cameras
 
 Um objeto c@^{a}mera especifica as seguintes propriedades de uma c@^{a}mera:
@@ -4941,7 +4941,7 @@ A sintaxe para uma c@^{a}mera @'{e}:
 
 
 @comment ----------------------------------------------------------------
-@node window,  , camera, Non-geometric objects
+@node window,  , camera, Objetos nao-geometricos
 @subsection window
 
 Um objeto janela especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es
@@ -4989,8 +4989,8 @@ mudar as mesmas propriedades padronizadas de uma janela existente. Veeja @ref{wi
 
 
 @comment ****************************************************************
-@node Customizacao, Modules, Formatos dos Arquivos da OOGL, Top
-@chapter Customization: @file{.geomview} files
+@node Customizacao, Modulos, Formatos dos Arquivos da OOGL, Top
+@chapter Customiza@,{c}@~{a}o: arquivos @file{.geomview}
 
 Quando Geomview @'{e} inciado, ele chama e executa comando em um
 arquivo de inicializa@,{c}@~{a}o dependente do sistema operacional chamado @file{.geomview}.  Esse arquivo est@'{a} no
@@ -5039,8 +5039,8 @@ Voc@^{e} pode colocar qualquer comando @code{GCL} v@'{a}lido nos seus arquivos
 @dots{})}}. Veja @ref{ui-cam-focus,@code{(ui-cam-focus @dots{})}}.
 
 @comment ****************************************************************
-@node Modules, GCL, Customizacao, Top
-@chapter External Modules
+@node Modulos, GCL, Customizacao, Top
+@chapter M@'{o}dulos Externos
 
 Um m@'{o}dulo externo @'{e} um programa que interagi com Geomview.  Um
 m@'{o}dulo comunica-se com Geomview atrav@'{e}s de GCL e pode
@@ -5068,7 +5068,7 @@ a capacidade do Geomview em si mesmo.
 * Module Installation::         Instala@,{c}@~{a}o de M@'{o}dulo.
 @end menu
 
-@node Interface, Example1, Modules, Modules
+@node Interface, Example1, Modulos, Modulos
 @section How External Modules Interface with Geomview
 
 M@'{o}dulos externos aparecem no navegador de M@'{o}dulos (@emph{Modules}) no painel
@@ -5103,7 +5103,7 @@ comunicar-se com o usu@'{a}rio isso pode ser feito ent@~{a}o ou atrav@'{e}s de u
 controle de nele pr@'{o}prio ou em caso contr@'{a}rio atrav@'{e}s de respostas a certos eventos que esse m@'{o}dulo encontrar
 como sa@'{i}da vinda do Geomview.
 
-@node Example1, Example2, Interface, Modules
+@node Example1, Example2, Interface, Modulos
 @section Example 1: Simple External Module
 
 Essa se@,{c}@~{a}o fornece um m@'{o}dulo externo extremamente simples que mostra uma
@@ -5316,7 +5316,7 @@ comando que o m@'{o}dulo mostra como sa@'{i}da.  Voc@^{e} ir@'{a} ter que encerr
 @kbd{ctrl-C} para que ele pare.
 
 @comment ================================================================
-@node Example2, XForms, Example1, Modules
+@node Example2, XForms, Example1, Modulos
 @section Example 2: Simple External Module with FORMS Control Panel
 
 Nota de tradu@,{c}@~{a}o: Este exemplo @'{e} muito antigo e n@~{a}o compila
@@ -5553,7 +5553,7 @@ The last line do main loop in this example, the call to
 @code{UpdateMesh}, is the same as in the previous example.
 
 @comment ================================================================
-@node XForms, Example3, Example2, Modules
+@node XForms, Example3, Example2, Modulos
 @section The XForms Library
 
 XForms @'{e} uma interface de usu@'{a}rio ou conjunto de ferramentas muito f@'{a}cil de encontrar e relativamente simples para X11.
@@ -5569,7 +5569,7 @@ available from Geomview's
 page.
 
 @comment ================================================================
-@node Example3, Example4, XForms, Modules
+@node Example3, Example4, XForms, Modulos
 @section Example 3: External Module with Bi-Directional Communication
 
 The previous two example modules simply send commands to Geomview and do
@@ -6087,7 +6087,7 @@ argument to @code{LakeDefine} should be @code{NULL} for external modules
 which parses and evaluates expressions from standard input.
 
 @comment ****************************************************************
-@node Example4, Module Installation, Example3, Modules
+@node Example4, Module Installation, Example3, Modulos
 @section Example 4: Simple Tcl/Tk Module Demonstrating Picking
 
 It's not necessary to write a Geomview module in C.  The only requirement
@@ -6268,7 +6268,7 @@ msg "Click right mouse in graphics window"
 @end example
 
 @comment ****************************************************************
-@node Module Installation,  , Example4, Modules
+@node Module Installation,  , Example4, Modulos
 @section Module Installation
 
 Essa se@,{c}@~{a}o diz como instalar um m@'{o}dulo externo de forma que voc@^{e} possa invoc@'{a}-lo
@@ -6350,8 +6350,8 @@ diret@'{o}rio e coloca aquele caminho em $PATH do shell no qual Geomview
 invoca tal m@'{o}dulo.
 
 @comment ****************************************************************
-@node GCL, Non-Euclidean Geometry, Modules, Top
-@chapter GCL: the Geomview Command Language
+@node GCL, Geometrias Nao-Euclidianas, Modulos, Top
+@chapter GCL: a Linguagem de Comandos do Geomview
 
 GCL tem a sintaxe do lisp -- i.e. uma express@~{a}o da forma (f a b
 @dots{}) significa informar os vallores de a, b, @dots{} para a fun@,{c}@~{a}o f.
@@ -8543,7 +8543,7 @@ default is compile-time dependent.
 Enable or disable certain properties of mouse-controlled movimento. The
 purpose of this command is to give access to the respective toggles of
 the @emph{Main} panel's @emph{Motion} menu through GCL
-commands. @xref{Mouse Motions}.
+commands. @xref{Movimentos do Mouse}.
 
 @table @code
 @item inertia
@@ -8797,8 +8797,8 @@ FACTOR should be a positive number.
 @end table
 
 @comment ****************************************************************
-@node Non-Euclidean Geometry, Mathematica, GCL, Top
-@chapter Non-Euclidean Geometry
+@node Geometrias Nao-Euclidianas, Mathematica, GCL, Top
+@chapter Geometrias N@~{a}o-Euclidianas
 
 Geomview supports hyperbolic and spherical objeto geom@'{e}trico as well as
 Euclidean objeto geom@'{e}trico.  The three bot@~{o}es at the bottom do @emph{Main}
@@ -8854,8 +8854,8 @@ Likewise, the subdirectory @file{data/geom/spherical}
 contains several sample spherical space objetos.
 
 @comment ****************************************************************
-@node Mathematica, Installation, Non-Euclidean Geometry, Top
-@chapter Mathematica Graphics in Geomview or RenderMan
+@node Mathematica, Instalacao, Geometrias Nao-Euclidianas, Top
+@chapter Gr@'{a}ficos Matem@'{a}ticos no Geomview ou no RenderMan
 
 Geomview comes with some Mathematica packages that let you use use
 Geomview to display Mathematica graphics.  Mathematica is a commercial
@@ -9284,7 +9284,7 @@ The installed Mathematica data-files can be found in
 @end quotation
 
 If Geomview is properly installed on your system according to the
-instructions in @xref{Installation}, then the Mathematica-to-Geomview
+instructions in @xref{Instalacao}, then the Mathematica-to-Geomview
 packages should work as described here; there should be no need for
 additional installation procedures.  In practice, however, it is
 sometimes necessary to taylor the installation dos Mathematica
@@ -9295,7 +9295,7 @@ after following the Geomview installation procedure, consult this
 section to see what might need to be fixed.
 
 In this section, the phrase @emph{Geomview installation} refers any of
-the procedures in @xref{Installation}.  The way the Mathematica packages
+the procedures in @xref{Instalacao}.  The way the Mathematica packages
 work and are installed is the same regardless of se you have
 one das binary distributions or the source distribution.
 
@@ -9354,8 +9354,8 @@ invoke Geomview, it's worth double-checking that the settings in the
 @end enumerate
 
 @comment ****************************************************************
-@node Installation, Support, Mathematica, Top
-@chapter Installation
+@node Instalacao, Suporte, Mathematica, Top
+@chapter Instala@,{c}@~{a}o
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
@@ -9378,13 +9378,13 @@ installation is much easier and quicker than compiling and
 installing the source code.
 
 @menu
-* Unix Binary Installation::    Installing the Unix Binary Distribution
-* Source Code Installation::    Compiling and Installing the Source Code Distribution.
+* Unix Binary Installation::    Instalando os Bin@'{a}rios Unix
+* Source Code Installation::    Compilando e Instalando a Partir do C@'{o}digo Fonte.
 @end menu
 
 @comment ================================================================
-@node Unix Binary Installation, Source Code Installation, Installation, Installation
-@section Installing the Unix Binary Distribution
+@node Unix Binary Installation, Source Code Installation, Instalacao, Instalacao
+@section Instalando os Bin@'{a}rios Unix
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
@@ -9461,7 +9461,7 @@ You can remove all the files in this directory.
 @end menu
 
 @node Unix Binary Detail,  , Unix Binary Installation, Unix Binary Installation
-@subsection Details of the Unix Binary Installation
+@subsection Detalhes da Instala@,{c}@~{a}o dos Bin@'{a}rios Unix
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
@@ -9521,8 +9521,8 @@ connect to Geomview, @pxref{Package Installation}.
 @end table
 
 @comment ================================================================
-@node Source Code Installation,  , Unix Binary Installation, Installation
-@section Compiling and Installing the Source Code Distribution
+@node Source Code Installation,  , Unix Binary Installation, Instalacao
+@section Compilando e Instalando a Partir do C@'{o}digo Fonte.
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
@@ -9607,8 +9607,8 @@ the file @file{$GEOMROOT/makefiles/Makedefs.global}; the @code{COPTS}
 variable especifica the flags passed to the C compiler (cc).
 
 @comment *********************************************************
-@node Support, Contributing, Installation, Top
-@unnumbered REcebendo Suporte T@'{e}cnico para o Geomview
+@node Suporte, Contribuindo, Instalacao, Top
+@unnumbered Recebendo Suporte T@'{e}cnico para o Geomview
 
 There are several ways to get support for Geomview.
 
@@ -9638,7 +9638,7 @@ the Geometry Technologies web site at @uref{http://www.geomtech.com}.
 @end enumerate
 
 @comment ############################################################
-@node Contributing, Function Index, Support, Top
+@node Contribuindo, Indice de Funcoes, Suporte, Top
 @unnumbered Contribuindo para o Desenvolvimento do Geomview
 
 If you are interested in contributing to the development of Geomview,
@@ -9677,7 +9677,7 @@ Thank you.
 
 
 @comment ****************************************************************
-@node Function Index, List of Figures, Contributing, Top
+@node Indice de Funcoes, Lista de Figuras, Contribuindo, Top
 @unnumbered @'{I}ndice das Fun@,{c}@~{o}es
 
 @printindex fn
@@ -9686,7 +9686,7 @@ Thank you.
 
 @contents
 
-@node List of Figures,  , Function Index, Top
+@node Lista de Figuras,  , Indice de Funcoes, Top
 @unnumbered Lista de Figuras
 @listoffloats Figure
 
