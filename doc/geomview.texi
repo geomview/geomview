@@ -5225,7 +5225,7 @@ This section gives a new version of the above module --- one that
 includes a user interface panel for controlling the velocity of the
 oscillation.  We use the FORMS library by Mark Overmars for the control
 panel.  The FORMS library is a public domain user interface toolkit for
-IRISes; for more information @xref{Forms}.
+IRISes. @c For more information @xref{Forms}.
 
 To try out this example, make a copy of the file
 @file{example2.c} (distributed with Geomview in the @file{doc}

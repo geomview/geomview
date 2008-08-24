@@ -5327,7 +5327,7 @@ Essa se@,{c}@~{a}o fornece uma nova vers@~{a}o do m@'{o}dulo acima --- uma vers@
 inclue uma interface de usu@'{a}rio para controlar a velocidade da
 oscila@,{c}@~{a}o.  Usamos a biblioteca FORMS criada por Mark Overmars para o painel de
 controle.  A biblioteca FORMS @'{e} uma cole@,{c}@~{a}o de ferramentas para interface de usu@'{a}rio de dom@'{i}nio p@'{u}blico para
-@c IRISes; para mais informa@,{c}@~{o}es veja @ref{Forms}.
+IRISes. @c Para mais informa@,{c}@~{o}es veja @ref{Forms}.
 
 Para experimentar esse exemplo, fa@,{c}a uma c@'{o}pia do arquivo
 @file{example2.c} (distribu@'{i}do com Geomview no subdiret@'{o}rio
