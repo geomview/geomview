@@ -2091,7 +2091,7 @@ para modificar a apar@^{e}ncia de base (a qual, exceto para ilumina@,{c}@~{a}o, 
 modificada atrav@'{e}s de pain@'{e}is do Geomview).  O comando @code{merge-ap} pode ser usado
 para modificar a apar@^{e}ncia de um geom individualmente.  Apar@^{e}ncias podem tamb@'{e}m serem
 especificadas nos arquivos OOGL; para detalhes veja,
-@ref{Appearances}. @ref{merge-baseap,@code{(merge-baseap
+@ref{Aparencias}. @ref{merge-baseap,@code{(merge-baseap
 @dots{})}}. @ref{merge-ap,@code{(merge-ap @dots{})}}.
 
 
@@ -2709,12 +2709,12 @@ do Geomview.
 * Vertices::                        V@'{e}rtices.
 * ND-Vertices::                     V@'{e}rtices @var{N}-dimensionais.
 * Direcoes de superficies normais:: Dire@,{c}@~{a}o de superf@'{i}cies normais.
-* Transformation matrices::         Matrizes de transforma@,{c}@~{a}o.
-* ND Transformation matrices::      Matrizes de transforma@,{c}@~{a}o @var{N}-dimensional.
-* Binary format::                   Formato bin@'{a}rio.
-* References::                      Objetos embargados e refer@^{e}ncias externa a objeto.
-* Appearances::                     Apar@^{e}ncias.
-* Texture Mapping::                 Mapeamento de textura.
+* Matrizes de transformacao::       Matrizes de transforma@,{c}@~{a}o.
+* Matrizes de transformacao ND::    Matrizes de transforma@,{c}@~{a}o @var{N}-dimensional.
+* Formato binario::                 Formato bin@'{a}rio.
+* Referencias::                     Objetos embargados e refer@^{e}ncias externa a objeto.
+* Aparencias::                      Apar@^{e}ncias.
+* Mapeamento de Textura::           Mapeamento de textura.
 @end menu
 
 @comment ----------------------------------------------------------------
@@ -2727,8 +2727,8 @@ palavras chave, etc.).  Paradas de linha s@~{a}o na maioria das vezes sempre ins
 algumas execess@~{o}es devidamente ressaltadas.  Coment@'{a}rios come@,{c}am com # e continuam at@'{e}
 o fim da linha; esses coment@'{a}rios s@~{a}o permitidos em qualquer lugar onde um caractere de nova linha for permitido tamb@'{e}m.
 
-Formatos bin@'{a}rios s@~{a}o tamb@'{e}m definidos para muitos objetos; Veja @ref{Binary
-format}, e as descri@,{c}@~{o}es individuais do objeto.
+Formatos bin@'{a}rios s@~{a}o tamb@'{e}m definidos para muitos objetos; Veja @ref{Formato
+binario}, e as descri@,{c}@~{o}es individuais do objeto.
 
 Objetos t@'{i}picos OOGL come@,{c}am com uma palavra chave designando o tipo de objeto,
 possivelmente com modificadores indicando a presen@,{c}a de informa@,{c}@~{o}es de cor, etc.
@@ -2838,7 +2838,7 @@ Componentes de cor usualmente podem ser especificadas da mesma forma que para v@
 Veja @ref{Vertices}, enquanto especificando componentes de cor em normais n@~{a}o faz sentido.
 
 @comment ----------------------------------------------------------------
-@node Direcoes de superficies normais, Transformation matrices, ND-Vertices, Convencoes
+@node Direcoes de superficies normais, Matrizes de transformacao, ND-Vertices, Convencoes
 @subsection Dire@,{c}@~{o}es de superf@'{i}cies normais
 
 Geomview utiliza vetores normais para determinar como um objeto @'{e} compartilhado.
@@ -2855,8 +2855,8 @@ Sobre superf@'{i}cies param@'{e}tricas (retalhos de Bezier), o vetor normal no p
 est@'{a} na dire@,{c}@~{a}o dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
-@node Transformation matrices, ND Transformation matrices, Direcoes de superficies normais, Convencoes
-@subsection Transformation matrices
+@node Matrizes de transformacao, Matrizes de transformacao ND, Direcoes de superficies normais, Convencoes
+@subsection Matrizes de transformacao
 
 Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transforma@,{c}@~{o}es sobre
 objetos homog@^{e}neos.  Essas matrizes atuam atrav@'{e}s de multiplica@,{c}@~{a}o @`{a} direita de
@@ -2872,8 +2872,8 @@ quarta linha (os @'{u}ltimos quatro elementos) da matriz A.  A @'{u}ltima coluna
 d@'{e}cimo segundo e d@'{e}cimo sexto elementos) s@~{a}o tipicamente 0, 0, 0, e 1 respectivamente.
 
 @comment ----------------------------------------------------------------
-@node ND Transformation matrices, Binary format, Transformation matrices, Convencoes
-@subsection ND Transformation matrices
+@node Matrizes de transformacao ND, Formato binario, Matrizes de transformacao, Convencoes
+@subsection Matrizes de transformacao ND
 
 No contexto do espa@,{c}o @var{N}-dimensional (@var{N} > 3) alguns objetos
 incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transforma@,{c}@~{o}es sobre objetos
@@ -2884,15 +2884,15 @@ coordenadas homog@^{e}neas de um ponto no objeto OOGL, e A
 = p A.
 
 Note que (a excess@~{a}o de matrizes de transforma@,{c}@~{a}o 4x4,
-veja @ref{Transformation matrices}) a componente homog@^{e}nea @'{e} localizada nos elementos com
+veja @ref{Matrizes de transformacao}) a componente homog@^{e}nea @'{e} localizada nos elementos com
 @'{i}ndice @b{zero}, de forma que componentes de transforma@,{c}@~{a}o para transforma@,{c}@~{o}es
 Euclideanas aparecem na @b{zero}-@'{e}sima linha (primeiros @var{(N+1)}
 elementos). A primeira coluna da matriz A (a coluna com @'{i}ndice zero) @'{e} tipicamente 1, 0,
 @dots{}, 0.
 
 @comment ----------------------------------------------------------------
-@node Binary format, References, ND Transformation matrices, Convencoes
-@subsection Binary format
+@node Formato binario, Referencias, Matrizes de transformacao ND, Convencoes
+@subsection Formato binario
 
 Muitos objetos OOGL aceitam formatos o formato de arquivo bin@'{a}rio bem como o formato de arquivo ASCII.
 Esses arquivos come@,{c}am com a indica@,{c}@~{a}o usual (e.g. @code{CQUAD})
@@ -2935,7 +2935,7 @@ bin@'{a}rio OOGL, todavia coment@'{a}rios podem aparecer no cabe@,{c}alho antes 
 dados bin@'{a}rios.
 
 @comment ----------------------------------------------------------------
-@node References, Appearances, Binary format, Convencoes
+@node Referencias, Aparencias, Formato binario, Convencoes
 @subsection Embedded objects and external-object references
 
 Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem refer@^{e}ncias a outros
@@ -3001,8 +3001,8 @@ podem aparecer em qualquer lugar.
 
 
 @comment ----------------------------------------------------------------
-@node Appearances, Texture Mapping, References, Convencoes
-@subsection Appearances
+@node Aparencias, Mapeamento de Textura, Referencias, Convencoes
+@subsection Aparencias
 
 Objetos geom@'{e}tricos podem ter informa@,{c}@~{o}es de apar@^{e}ncia associada,
 especificando tonalidade, brilho, cor, visualiza@,{c}@~{a}o wire-frame vs.
@@ -3024,12 +3024,12 @@ precedido por uma defini@,{c}@~{a}o de apar@^{e}ncia como no sguinte exemplo:
 
 Apar@^{e}ncias s@~{a}o tamb@'{e}m objetos OOGL no seu pr@'{o}prio direito e pode ser fornecido
 nomes simb@'{o}licos e refer@^{e}ncia a elas. Veja 
-(@ref{References}) e em @ref{appearance objects, Appearance objects}.
+(@ref{Referencias}) e em @ref{Objetos de aparencia, Objetos de apar@^{e}ncia}.
 
 @table @b
 @item Texture Mapping
 Existe uma se@,{c}@~{a}o separada com rela@,{c}@~{a}o a defini@,{c}@~{a}o de texturas:
-(@ref{Texture Mapping}).
+(@ref{Mapeamento de Textura}).
 
 @item Transparency
 Objetos de renderiza@,{c}@~{a}o transl@'{u}cida n@~{a}o s@~{a}o suportados por todos os desenhadores
@@ -3240,8 +3240,8 @@ Todavia, Se um objeto fornecido pelo usu@'{a}rio contiver um campo de apar@^{e}n
 o recurso de sobrescrever ativado, esse campo de apar@^{e}ncia ser@'{a} imune aos controles do Geomview.
 
 @comment ----------------------------------------------------------------
-@node Texture Mapping,  , Appearances, Convencoes
-@subsection Texture Mapping
+@node Mapeamento de Textura,  , Aparencias, Convencoes
+@subsection Mapeamento de Textura
 
 Alguns programas que trabalham sem contato direto com o usu@'{a}rio suportam objetos mapeados em textura, atualmente apenas
 o OpenGL e a interface RenderMan no momento dessa
@@ -3249,8 +3249,8 @@ escrita. Existe tamb@'{e}m alguns recursos com a interface RMan quando em uso
 um canal alfa na imagem de textura. Aqueles programas que n@~{a}o trabalham diretamente com  o usu@'{a}rio cujo
 suporte a textura n@~{a}o existe silenciosamente ignoram tentativas de uso de mapeamento
 de textura. Uma textura @'{e} especificada como parte de uma estrutura de apar@^{e}ncia
-(Veja @ref{Appearances}).  Resumidamente, se fornece uma imagem de textura
-(Veja tamb@'{e}m @pxref{image, Image objects}), a qual @'{e} considerada contida em um quadrado
+(Veja @ref{Aparencias}).  Resumidamente, se fornece uma imagem de textura
+(Veja tamb@'{e}m @ref{image, Image objects}), a qual @'{e} considerada contida em um quadrado
 no espa@,{c}o parametrizado @code{(s,t)} no intervalo 0 <= s <= 1, 0 <= t <= 1.
 Ent@~{a}o se fornece uma primitiva geom@'{e}trica, com cada v@'{e}rtice acompanhado com
 as coordenadas de textura @code{(s,t)}.  Se a texturiza@,{c}@~{a}o estiver habilitada, a
@@ -3417,7 +3417,7 @@ v@'{e}rtices, cada grupo descrevendo um quadril@'{a}tero.  Veja a sintaxe de v@'
 acima.  O objeto termina no caractere de fim de arquivo, ou com uma chave fechada se
 incorporado dentro de uma refer@^{e}ncia de objeto (veja acima).
 
-Um formato de arquivo @code{QUAD BINARY} @'{e} aceito; veja @ref{Binary format}.  A
+Um formato de arquivo @code{QUAD BINARY} @'{e} aceito; veja @ref{Formato binario}.  A
 primeira palavra de dados bin@'{a}rios deve ser um inteiro de 32 bits fornecendo o n@'{u}mero de
 quads no objeto; seguindo esse inteiro encontra-se uma s@'{e}rie de inteiros em ponto flutuante de 32 bits,
 arranjados apenas como no formato ASCII.
@@ -3493,7 +3493,7 @@ ent@~{a}o os v@'{e}rtices aparecer@~{a}o na ordem
 (0,Nv-1)		@dots{}  (@var{Nu}-1,@var{Nv}-1)
 @end example
 
-O formato @code{MESH BINARY} @'{e} aceito; Veja @ref{Binary format}.  Os
+O formato @code{MESH BINARY} @'{e} aceito; Veja @ref{Formato binario}.  Os
 valores de @var{Nu} e @var{Nv} s@~{a}o inteiros de 32-bit; todos os outros valores
 s@~{a}o n@'{u}meros em ponto flutuante de 32-bit.
 
@@ -3729,8 +3729,8 @@ O significado de "cor padr@~{a}o" varia.  Se nenhuma face do objeto tem uma
 cor, tudo recebe como heran@,{c}a a cor material padr@~{a}o do ambiente.  Se alguma
 mas n@~{a}o todas as faces possuem cores, o padr@~{a}o @'{e} cinza (R,G,B,A=.666).
 
-Um formato @code{[ST][C][N][n]OFF BINARY} @'{e} aceito; veja @ref{Binary
-format}.  Esse formato assemelha-se ao formato ASCII em quase tudo que voc@^{e} poderia esperar,
+Um formato @code{[ST][C][N][n]OFF BINARY} @'{e} aceito; veja @ref{Formato
+binario}.  Esse formato assemelha-se ao formato ASCII em quase tudo que voc@^{e} poderia esperar,
 com inteiros de 32-bit para todos os contadores e @'{i}ndices de v@'{e}rtice e n@'{u}meros em ponto flutuante de
 32-bit para posi@,{c}@~{o}es de v@'{e}rtice (e coordenadas de textura ou cores de v@'{e}rtice ou
 retas normais se algum dos formatos
@@ -3824,7 +3824,7 @@ Finalmente @var{NCores} grupos de 4 n@'{u}meros em ponto flutuante fornecendo va
 vermelho, verde, azul e alfa (opacidade).  O primeiro grupo @var{Nc[0]}
 aplica-se @`{a} primeira linha poligonal, e assim por diante.
 
-Um formato @var{VECT BINARY} @'{e} aceito; veja @ref{Binary format}.  O
+Um formato @var{VECT BINARY} @'{e} aceito; veja @ref{Formato binario}.  O
 formato bin@'{a}rio segue exatamente o formato ASCII, com inteiros de 32-bit
 Big-Endian onde aparecem os n@'{u}meros inteiros comuns, e com inteiros de
 @b{16-bit} Big-Endian onde aparecem inteiros de 16-bit; n@'{u}meros em ponto flutuante de 
@@ -3879,7 +3879,7 @@ Para objetos @code{nSKEL}, cada v@'{e}rtice tem @var{NDim} componentes.
 Para objetos @code{4nSKEL}, cada v@'{e}rtice tem @var{NDim+1} componentes;
 a componente final @'{e} o divisor homog@^{e}neo.
 
-Um formato @var{[4][n]SKEL BINARY} @'{e} aceito; veja @ref{Binary format}.
+Um formato @var{[4][n]SKEL BINARY} @'{e} aceito; veja @ref{Formato binario}.
 Esse formato assemelha-se ao formato ASCII na maioria das formas que voc@^{e} pode esperar,
 com inteiros de 32-bit para todos os contadores e @'{i}ndices de v@'{e}rtice e n@'{u}meros em ponto flutuante de
 32-bit para posi@,{c}@~{o}es de v@'{e}rtice.
@@ -3972,7 +3972,7 @@ ND-viewing) a outro objeto OOGL.  Um arquivo do tipo @code{INST} inicia-se com
 geom @var{oogl-object}
 @end example
 @noindent
-especifica o objeto OOGL a ser instanciado.  Veja @ref{References}, para
+especifica o objeto OOGL a ser instanciado.  Veja @ref{Referencias}, para
 a sintaxe de um @var{oogl-object}.   palavra chave @code{unit} @'{e} um
 sin@^{o}nimo para @code{geom}.
 @example
@@ -4005,7 +4005,7 @@ transforma@,{c}@~{a}o @'{e} aplicada (atualmente a identidade @'{e} aplicada).  
 usar isso para, e.g., empacotar uma apar@^{e}ncia em torno de um objeto externo
 fornecido, atrav@'{e}s de uma LIST de membros simples pode-se fazer isso mais eficientemente.
 
-Veja @ref{Transformation matrices}, para o formato de matriz.
+Veja @ref{Matrizes de transformacao}, para o formato de matriz.
 
 A c@'{o}pia de um objeto geom@'{e}trico simples por meio de um objeto @code{TLIST}
 (veja @samp{transforms} acima) pode ser @'{u}til para transformar coordenadas de
@@ -4037,7 +4037,7 @@ ou
     ":" s@'{i}mbolo-representando-objeto-ntransform
 @end example
 
-Veja @ref{ND Transformation matrices}, para o formato de matriz.
+Veja @ref{Matrizes de transformacao ND}, para o formato de matriz.
 
 Mais dois campos INST s@~{a}o aceitos: @code{location} e @code{origin}.
 
@@ -4116,12 +4116,12 @@ plano de corte mais pr@'{o}ximo.  O comprimento da unidade das arestas X e Y s@~
 unidades de tela -- pixels -- , independentemente do tamanho da janela.
 
 @menu
-* INST Examples::               alguns exemplos de arquivos do tipo @code{INST}.
+* Exemplos INST::               alguns exemplos de arquivos do tipo @code{INST}.
 @end menu
 
 @comment ................................................................
-@node INST Examples,  , INST, INST
-@subsubsection INST Examples
+@node Exemplos INST,  , INST, INST
+@subsubsection Exemplos INST
 
 Aqui est@~{a}o alguns exemplos de arquivos @code{INST}
 
@@ -4343,7 +4343,7 @@ geometria:
 @end example
 
 Um formato de @code{COMMENT} bin@'{a}rio @'{e} aceito. Esse formato bin@'{a}rio de coment@'{a}rio n@~{a}o @'{e} consistente
-com outros formatos bin@'{a}rios OOGL. Veja @ref{Binary format}. O
+com outros formatos bin@'{a}rios OOGL. Veja @ref{Formato binario}. O
 @code{nome} e o @code{tipo} s@~{a}o seguidos por
 
 @example
@@ -4357,12 +4357,12 @@ Em lugar de dados contidos dentro de chaves.
 @section Objetos nao-geometricos
 
 A sintaxe desses objetos @'{e} fornecida na forma usada em
-@ref{References}, onde itens "entre aspas duplas" devem aparecer literalmente mas
+@ref{Referencias}, onde itens "entre aspas duplas" devem aparecer literalmente mas
 sem aspas duplas, itens entre colch@^{e}tes ([ ]) s@~{a}o opcionais, e a barra vertical "|" separa
 escolhas alternativas.
 
 @menu
-* appearance objects::          Objetos de apar@^{e}ncia.
+* Objetos de aparencia::        Objetos de apar@^{e}ncia.
 * image::                       Objetos de imagem.
 * transform::                   Matrizes de transforma@,{c}@~{a}o.
 * ntransform::                  Matrizes de Transforma@,{c}@~{a}o N-dimensional.
@@ -4371,18 +4371,18 @@ escolhas alternativas.
 @end menu
 
 @comment ----------------------------------------------------------------
-@node appearance objects, image, Objetos nao-geometricos, Objetos nao-geometricos
-@subsection Appearance Objects
+@node Objetos de aparencia, image, Objetos nao-geometricos, Objetos nao-geometricos
+@subsection Objetos de aparencia
 Apar@^{e}ncias s@~{a}o objetos OOGL com caracter@'{i}sticas pr@'{o}prias, que simplesmente significam que
-@'{e} poss@'{i}vel fornecer a eles nomes simb@'{o}licos (Veja @ref{References}). Existem
+@'{e} poss@'{i}vel fornecer a eles nomes simb@'{o}licos (Veja @ref{Referencias}). Existem
 outras se@,{c}@~{o}es manuseado detalhes de
-apar@^{e}ncia. Veja @ref{Appearances}.
+apar@^{e}ncia. Veja @ref{Aparencias}.
 
-@node image, transform, appearance objects, Objetos nao-geometricos
+@node image, transform, Objetos de aparencia, Objetos nao-geometricos
 @subsection Image Objects
 
 Objetos de imagem s@`{a}o usados para especificar dados de pixmap ou para texturas
-(Veja @ref{Texture Mapping}), ou para imagens de fundo de c@^{a}meras
+(Veja @ref{Mapeamento de Textura}), ou para imagens de fundo de c@^{a}meras
 (Veja @ref{camera, Camera objects}).
 
 ao mesmo tempo em que imagens s@~{a}o escritas elas s@~{a}o tamb@'{e}m comprimidas de 1 a 4 canais, um
@@ -5294,7 +5294,7 @@ t@'{e}cnica do manipuladro @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode
 mais gerais onde um manipulador representa somente parte de um complexo
 geom, permitindo a um m@'{o}dulo externo substituir somente aquela parte sem
 ter que retransmitir o geom completo.  Para mais informa@,{c}@~{o}es sobre manipuladores,
-veja @ref{GCL}. Veja @ref{References}. Veja @ref{hdefine,@code{(hdefine
+veja @ref{GCL}. Veja @ref{Referencias}. Veja @ref{hdefine,@code{(hdefine
 @dots{})}}. Veja @ref{read,@code{(read @dots{})}}.
 
 O m@'{o}dulo entra em ciclos atrav@'{e}s de chamadas a @code{UpdateMesh} que fornece como sa@'{i}da
@@ -7019,7 +7019,7 @@ Delete objeto or c@^{a}mera ID.
 @table @code
 @item (dice GEOM-ID N)
 Dice any Bezier patches within @var{GEOM-ID} into NxN meshes; default
-10. See also the apar@^{e}ncia attribute @ref{Appearances, @code{patchdice}},
+10. See also the apar@^{e}ncia attribute @ref{Aparencias, @code{patchdice}},
 which makes this command obsolete.
 @end table
 
@@ -7313,7 +7313,7 @@ is generally equivalent to
 except that the assignment is done when hdefine is executed, (possibly
 not at all if inside a conditional declara@,{c}@~{a}o), while the @code{read
 @dots{} define} performs assignment as soon as the text is
-read. @xref{References}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
+read. @xref{Referencias}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @code{(hdelete @dots{})}}.
 @end table
 
@@ -7334,7 +7334,7 @@ objeto it is attached to. It is not an error to call this function with
 a non-existent handle, but it @'{e} uma error to call this funcion with the
 name of a non-global handle, i.e. one that was not created by
 @code{(hdefine @dots{})} or @code{(read @dots{} @{ define
-@dots{}@})}. @xref{References}.  @xref{read,@code{(read
+@dots{}@})}. @xref{Referencias}.  @xref{read,@code{(read
 @dots{})}}. @xref{hdefine,@code{(hdefine @dots{})}}.
 @end table
 
@@ -8045,7 +8045,7 @@ reference syntax, e.g.
 @})
 (read  transform @{ define T <myfile@})
 @end example
-@xref{References}. @xref{hdefine, @code{(hdefine @dots{})}}. @xref{hdelete,
+@xref{Referencias}. @xref{hdefine, @code{(hdefine @dots{})}}. @xref{hdelete,
 @code{(hdelete @dots{})}}.
 @end table
 
