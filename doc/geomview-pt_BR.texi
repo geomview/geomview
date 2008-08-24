@@ -4368,7 +4368,7 @@ escolhas alternativas.
 * image::                       Objetos de imagem.
 * transform::                   Matrizes de transforma@,{c}@~{a}o.
 * ntransform::                  Matrizes de Transforma@,{c}@~{a}o N-dimensional.
-* camera::                      C@^{a}meras.
+* Objeto camera::               C@^{a}meras.
 * window::                      Janelas.
 @end menu
 
@@ -4721,7 +4721,7 @@ Alguns exemplos, em contextos onde eles podem ser usados:
 @end example
 
 @comment ----------------------------------------------------------------
-@node ntransform, camera, transform, Objetos nao-geometricos
+@node ntransform, Objeto camera, transform, Objetos nao-geometricos
 @subsection ND-Transform Objects
 
 Onde -- no contexto de visualiza@,{c}@~{a}o NDimensional -- uma matriz simples (N+1)x(N+1) @'{e}
@@ -4818,7 +4818,7 @@ Alguns exemplos, em contextos onde eles possivelmente podem ser usados:
 @end example
 
 @comment ----------------------------------------------------------------
-@node camera, window, ntransform, Objetos nao-geometricos
+@node Objeto camera, window, ntransform, Objetos nao-geometricos
 @subsection cameras
 
 Um objeto c@^{a}mera especifica as seguintes propriedades de uma c@^{a}mera:
@@ -4943,7 +4943,7 @@ A sintaxe para uma c@^{a}mera @'{e}:
 
 
 @comment ----------------------------------------------------------------
-@node window,  , camera, Objetos nao-geometricos
+@node window,  , Objeto camera, Objetos nao-geometricos
 @subsection window
 
 Um objeto janela especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es

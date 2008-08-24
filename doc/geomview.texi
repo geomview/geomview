@@ -4286,7 +4286,7 @@ alternative choices.
 * image::                       Image objects.
 * transform::                   Transformation matrices.
 * ntransform::                  N-dimensional transformation matrices.
-* camera::                      Cameras.
+* camera object::               Cameras.
 * window::                      Windows.
 @end menu
 
@@ -4629,7 +4629,7 @@ Some examples, in contexts where they might be used:
 @end example
 
 @comment ----------------------------------------------------------------
-@node ntransform, camera, transform, Non-geometric objects
+@node ntransform, camera object, transform, Non-geometric objects
 @subsection ND-Transform Objects
 
 Where -- in the context of ND-viewing -- a single (N+1)x(N+1) matrix is
@@ -4724,7 +4724,7 @@ Some examples, in contexts where they might be used:
 @end example
 
 @comment ----------------------------------------------------------------
-@node camera, window, ntransform, Non-geometric objects
+@node camera object, window, ntransform, Non-geometric objects
 @subsection cameras
 
 A camera object specifies the following properties of a camera:
@@ -4843,7 +4843,7 @@ The syntax for a camera is:
 
 
 @comment ----------------------------------------------------------------
-@node window,  , camera, Non-geometric objects
+@node window,  , camera object, Non-geometric objects
 @subsection window
 
 A window object specifies size, position, and other window-system
