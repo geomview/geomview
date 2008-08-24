@@ -1,2 +1,3 @@
 * adjust the format for oogl.5gv
 * update example2.c, example3.c and example4.tcl
+* Font code translations. ? Use .po or .ts files?
