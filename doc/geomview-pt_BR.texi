@@ -1,6 +1,6 @@
 %%% -*-texinfo-*-
 \tolerance=2000
-\input texinfo
+\input pt_BR/texinfo
 @c based on /geomview.texi/1.65/Mon Jul 28 07:12:21 2008//
 @c @letterpaper
 @setfilename geomview-pt_BR
@@ -3250,7 +3250,7 @@ um canal alfa na imagem de textura. Aqueles programas que n@~{a}o trabalham dire
 suporte a textura n@~{a}o existe silenciosamente ignoram tentativas de uso de mapeamento
 de textura. Uma textura @'{e} especificada como parte de uma estrutura de apar@^{e}ncia
 (Veja @ref{Aparencias}).  Resumidamente, se fornece uma imagem de textura
-(Veja tamb@'{e}m @ref{image, Image objects}), a qual @'{e} considerada contida em um quadrado
+(Veja tamb@'{e}m @ref{image, Objetos de imagem}), a qual @'{e} considerada contida em um quadrado
 no espa@,{c}o parametrizado @code{(s,t)} no intervalo 0 <= s <= 1, 0 <= t <= 1.
 Ent@~{a}o se fornece uma primitiva geom@'{e}trica, com cada v@'{e}rtice acompanhado com
 as coordenadas de textura @code{(s,t)}.  Se a texturiza@,{c}@~{a}o estiver habilitada, a
@@ -3277,7 +3277,7 @@ clamp   none  -ou-  s  -ou-  t  -ou-  st
   ou ambos de s-coordenadas ou t-coordenadas menor que 0 ou
   maior que 1 s@~{a}o remapeadas para 1 ou para 0, respectivamente.
 
-image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Image objects}) @}
+image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Objetos de imagem}) @}
   Especifica a atual imagem de textura. Imagens de textura podem ter 
   1, 2, 3 ou 4 canais:
     1 canal:  lumin@^{a}ncia
@@ -3285,7 +3285,7 @@ image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Image objects}) @}
     3 canais: dados RGB
     4 canais: dados RGBA
 
-  Veja @ref{image, Image objects}, para a defini@,{c}@~{a}o atual de
+  Veja @ref{image, Objetos de imagem}, para a defini@,{c}@~{a}o atual de
   objetos de imagem. O canal usado por alfa @'{e} somente interpretado
   como m@'{a}scara: onde a m@'{a}cara @'{e} zero, pixels s@~{a}o simplesmente
   n@~{a}o desenhados. Uma exce@,{c}@~{a}o @'{e} o caso onde @emph{apply}
@@ -3297,33 +3297,33 @@ image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Image objects}) @}
 file      nomearquivo
 alphafile nomearquivo
   @emph{Isso @'{e} considerado obsoleto, e somente mantido por compatibilidade,
-  o moderno caminho @'{e} usar o novo objeto imagem OOGL. Veja @ref{image, Image objects}.
+  o moderno caminho @'{e} usar o novo objeto imagem OOGL. Veja @ref{image, Objetos de imagem}.
   O material documentado aqui pode ainda trabalhar apesar disso}
 
-  Specifies image file(s) containing the texture.
+  Especifica arquivo(s0 de imagem contendo a textura.
        
-  The @emph{file} keyword especifica a file with color or lightness information;
-  @emph{alphafile} if present, especifica a transparency ("alpha") mask;
-  where the mask is zero, pixels are simply not drawn.
-  Several image file formats are available; the file type must be
-  indicated by the last few characters do file name:
-    .ppm or .ppm.Z or .ppm.gz  24-bit 3-color image in PPM format
-    .pgm or .pgm.Z or .pgm.gz  8-bit grayscale image in PGM format
-    .sgi or .sgi.Z or .sgi.gz  8-bit, 24-bit, or 32-bit SGI image
-    .tiff                      8-bit or 24-bit TIFF image
-    .gif                       GIF image
-  For this feature to work, some programs must be available in
-  geomview's search path:
-    zcat  for .Z files
-    gzip  for .gz files
-    tifftopnm for .tiff files
-    giftoppm for .gif files
+  A palavra chave @emph{file} especifica um arquivo com informa@,{c}@~{o}es de cor ou de brilho;
+  @emph{alphafile} se presente, especifica uma m@'{a}scara de transpar@^{e}ncia ("alpha");
+  onde a m@'{a}xcara for zero, pixels simplesmente n@~{a}o s@~{a}o desenhados.
+  Muitos formatos formatos de arquivo de imagem est@~{a}o dispon@'{i}veis; o tipo de arquivo deve ser
+  indicado pelos @'{u}ltmos poucos caracteres do nome do arquivo:
+    .ppm ou .ppm.Z ou .ppm.gz  24-bit 3-color imagem no formato PPM
+    .pgm ou .pgm.Z ou .pgm.gz  8-bit tons de cinza imagem no formato PGM
+    .sgi ou .sgi.Z ou .sgi.gz  8-bit, 24-bit, ou 32-bit imagem SGI
+    .tiff                      8-bit ou 24-bit imagem TIFF
+    .gif                       imagem GIF
+  Para ese recurso trabalhar, algunns programas devem estar dispon@'{i}veis no
+  caminho de busca do geomview:
+    zcat  para arquivo .Z
+    gzip  para arquivos .gz
+    tifftopnm para arquivos .tiff
+    giftoppm para arquivos .gif
 
-  If an @code{alphafile} image is supplied, it must be the same size
-  as the @code{file} image.
+  Se uma imagem @code{alphafile} for fornecida, essa imagem deve ser do mesmo tamanho
+  que a imagem @code{file}.
 
-  @emph{Image objetos provide a more flexible way to specify texture
-  data. @xref{image, Image objects}.}
+  @emph{Obejetos imagem fornecem um caminho mais flex@'{i}vel para especificar dados de
+  textura. Veja @ref{image, Objetos de imagem}.}
 
 apply   modulate  -ou-  blend  -ou-  decal
   Indica como a imagem de textura @'{e} aplicada @`{a} superf@'{i}cie.
@@ -4874,7 +4874,7 @@ cor de fundo com suas pr@'{o}prias escolhas.
 Pelas mesmas raz@~{o}es mostradas acima,somente a referida GUI n@~{a}o sobrescreve essa
 op@,{c}@~{a}o. A imagem @'{e} centralizada em "Normalized-Device-Coordinates"/NDC @code{(0,0,-1)}; a imagem
 n@~{a}o @'{e} redimensonada, apenas desenhada por tr@'{a}s de tudo mais como @'{e}. Veja @ref{image,
-Image objects}.
+Objetos de imagem}.
 
 @end table
 
@@ -5327,7 +5327,7 @@ Essa se@,{c}@~{a}o fornece uma nova vers@~{a}o do m@'{o}dulo acima --- uma vers@
 inclue uma interface de usu@'{a}rio para controlar a velocidade da
 oscila@,{c}@~{a}o.  Usamos a biblioteca FORMS criada por Mark Overmars para o painel de
 controle.  A biblioteca FORMS @'{e} uma cole@,{c}@~{a}o de ferramentas para interface de usu@'{a}rio de dom@'{i}nio p@'{u}blico para
-IRISes; para mais informa@,{c}@~{o}es veja @ref{Forms}.
+@c IRISes; para mais informa@,{c}@~{o}es veja @ref{Forms}.
 
 Para experimentar esse exemplo, fa@,{c}a uma c@'{o}pia do arquivo
 @file{example2.c} (distribu@'{i}do com Geomview no subdiret@'{o}rio
@@ -5530,14 +5530,14 @@ fdmask = (1 << fileno(stdin)) | (1 << qgetfd());
 @noindent
 check for and deal with events in the panel.  The call to @code{select}
 imposes a delay on each pass through the main loop.  This call returns
-either after a delay of 1/5 second or when the next GL event occurs, or
+either after a delay of 1/5 second ou when the next GL event occurs, or
 when data appears on standard input, whichever comes first.  The
 @code{timeout} variable especifica the amount of time to wait on this
 call; the first member (0 in this example) gives the number of seconds,
 and the second member (200000 in this example) gives the number of
 microseconds.  Finally, @code{fl_check_forms()} checks for and processes
 any FORMS events that have happened; in this case this means calling
-@code{SetVelocity} if the user has moved the bot@~{a}o deslizante or calling
+@code{SetVelocity} if the user has moved the bot@~{a}o deslizante ou calling
 @code{Quit} if the user has clicado on the @emph{Quit} bot@~{a}o.
 
 The purpose da delay in the loop is to keep the program from using
@@ -5593,7 +5593,7 @@ Geomview a command expressing interest in a certain command, and then
 every time Geomview executes that command, the module receives a copy of
 it.  This happens regardless of who sent the command to Geomview; it can
 be the result do user doing something with a Geomview panel, or
-it may have come from another module or from a file that Geomview reads.
+it may have come from another module ou from a file that Geomview reads.
 This is how a module can find out about and act on things that happen in
 Geomview.
 
@@ -5892,7 +5892,7 @@ The syntax of this @code{interest} statement merits some explanation.
 In general @code{interest} takes one argument which is a (parenthesized)
 expression representing a Geomview function call.  It especifica a type
 of call that the module is interested in knowing about.  The arguments
-can be any particular argument values, or the special symbols @code{*}
+can be any particular argument values, ou the special symbols @code{*}
 or @code{nil}.  For example, the first argument in the @code{pick}
 expression above is @code{world}.  This means that the module is
 interested in calls to @code{pick} where the first argument, which
@@ -5993,7 +5993,7 @@ A string specifying the name do picked geom.
 the picked point.  @code{HPoint3} is a homogeneous point coordinate
 representation equivalent to an array of 4 floats. @code{pn} tells how
 many coordenadas have been written into this array; it will always be
-either @code{0}, @code{4} or greater than @code{4}. If it is greater
+either @code{0}, @code{4} ou greater than @code{4}. If it is greater
 than @code{4}, then the @var{NDbody} instruction block is invoked and in
 this case @code{point} is a flat array of @code{pn} many @code{float}s.
 A value of zero means no point was picked, i.e. the user clicado the
@@ -6006,7 +6006,7 @@ case the ordinary @var{block} 3d instruction block is executed.
 @code{vertex} is an @code{HPoint3} structure giving the coordenadas of
 the v@'{e}rtice selecionado, if the pick point was near a v@'{e}rtice.  @code{vn} tells
 how many coordenadas have been written into this array; it will always
-be either @code{0} or greater equal @code{4}. A value of zero means the
+be either @code{0} ou greater equal @code{4}. A value of zero means the
 pick point was not near a v@'{e}rtice. In the context of ND-viewing
 @code{vertex} will be an array of @code{vn} @code{float}s and @code{vn}
 will be equal to @code{pn}.
@@ -6017,7 +6017,7 @@ will be equal to @code{pn}.
 @code{edge} is an array of two @code{HPoint3} structures giving the
 coordenadas do endpoints da picked edge, if the pick point was
 near an edge.  @code{en} tells how many coordenadas have been written
-into this array; it will always be @code{0} or greater equal @code{8}.
+into this array; it will always be @code{0} ou greater equal @code{8}.
 A value of zero means the pick point was not near an edge. In the
 context of ND-viewing @code{edge} will be a flat one-dimensional array
 of @code{en} many @code{float}s: the first @code{pn} @code{float}s
@@ -6038,7 +6038,7 @@ specified as @code{nil}.
 @code{face} is a variable length array of @var{fn} @code{HPoint3}'s.
 @code{face} gives the coordenadas dos v@'{e}rtices da picked face.
 @code{fn} tells how many coordenadas have been written into this array;
-it will always be either @code{0} or a multiple of @code{pn}. A value of
+it will always be either @code{0} ou a multiple of @code{pn}. A value of
 zero means the pick point was not near a face. In the context of
 ND-viewing @code{face} is a flat one-dimensional array of @code{fn} many
 floats of which each v@'{e}rtice occupies @code{pn} many componentes.
@@ -6058,7 +6058,7 @@ if the pick point was near a v@'{e}rtice.
 @item @code{int ei[2]; int ein}
 The @code{ei} array gives the indices dos endpoints da picked
 edge, if the pick point was near a v@'{e}rtice.  @code{ein} tells how many
-integers were written into this array.  It will always be either 0 or 2;
+integers were written into this array.  It will always be either 0 ou 2;
 a value of 0 means the pick point was not near an edge.
 
 @item @code{int fi;}
@@ -6071,8 +6071,8 @@ The @code{handle_pick} procedure actually does the work of dealing with
 the pick event.  It begins by normalizing the homogeneous coordenadas
 passed in as arguments so that we can assume the fourth coordinate is 1.
 It then sends GCL commands to define the @code{pick} objeto to be
-whatever is appropriate for the kind of pick recieved.  See @pxref{OOGL
-File Formats}, and @pxref{GCL}, for an explanation do
+whatever is appropriate for the kind of pick recieved.  Veja @ref{Formatos
+dos Arquivos da OOGL}, and veja @ref{GCL}, for an explanation do
 format dos data in these commands.
 
 The main program, at the bottom do file, first calls
@@ -6093,9 +6093,9 @@ which parses and evaluates expressions from standard input.
 It's not necessary to write a Geomview module in C.  The only requirement
 of an external module is that it send GCL commands to its standard output
 and expect responses (if any) on its standard input.   An external module
-can be written in C, perl, tcl/tk, or pretty much anything.
+can be written in C, perl, tcl/tk, ou pretty much anything.
 
-As an example, assuming you have Tcl/Tk version 4.0 or later,
+As an example, assuming you have Tcl/Tk version 4.0 ou later,
 here's an external module with a simple GUI which demonstrates interaction with
 geomview.  This manual doesn't discuss the Tcl/Tk language; see the good book
 on the subjeto by its originator John Ousterhout, published by Addison-Wesley,
@@ -6152,7 +6152,7 @@ proc readsomething @{@} @{
 #          V = picked vertex, if any
 #          E = picked edge, if any
 #          F = picked face
-#          P = path to picked primitive [0 or more]
+#          P = path to picked primitive [0 ou more]
 #          VI = index of picked v@'{e}rtice in primitive
 #          EI = list of indices of endpoints of picked edge, if any
 #          FI = index of picked face
@@ -6255,7 +6255,7 @@ fileevent stdin readable @{readsomething@}
 puts @{
         (interest (pick primitive))
         (interest (rawevent 32))	# Be notified when user presses space
-        (interest (rawevent 8))		# or backspace keys.
+        (interest (rawevent 8))		# ou backspace keys.
         (geometry thing < hdodec.off)
         (normalization world none)
 @}
@@ -6504,15 +6504,15 @@ tamb@'{e}m ser usado como uma identifica@,{c}@~{a}o GCL.  N@'{u}meros s@~{a}o us
 objeto ser deletado. Ambos os nomes s@~{a}o mostrados no navegador de Objeto.
 
 @item @var{declara@,{c}@~{a}o}
-represents a function call.  Function calls have the form @code{(func arg1
-arg2 @dots{} )}, where @code{func} is the name da function and @code{arg1},
-@code{arg2}, @dots{} are the arguments.
+representa uma chamada de fun@,{c}@~{a}o.  Chamadas a fun@,{c}@~{o}es possuem a forma @code{(func arg1
+arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
+@code{arg2}, @dots{} s@~{a}o os argumentos.
 
 @item @var{transforma@,{c}@~{a}o}
-@'{e} uma OOGL 4x4 matriz de transforma@,{c}@~{a}o.
+@'{e} uma matriz de transforma@,{c}@~{a}o OOGL 4x4.
 
 @item @var{ntransform}
-@'{e} uma OOGL (N+1)x(N+1) matriz de transforma@,{c}@~{a}o.
+@'{e} uma matriz de transforma@,{c}@~{a}o OOGL (N+1)x(N+1).
 
 @item @var{janela}
 @'{e} uma especifica@,{c}@~{a}o de janela do OOGL.
@@ -6842,10 +6842,10 @@ between 0 and 1.
 @table @code
 @item (background-image CAM-ID [NOMEDOARQUIVO])
 Use the given image as the background of camera CAM-ID (which must be a
-real camera, not @code{default} or @code{allcams}). Centers the image on
+real camera, not @code{default} ou @code{allcams}). Centers the image on
 the janela area.  Works only with GL and OpenGL graphics.
 Use "" for filename to remove background.  With no filename argument,
-returns name of that janela's current background image, or "".  
+returns name of that janela's current background image, ou "".  
 Any file type acceptable as a texture is allowed, e.g. .ppm.gz, .sgi, etc.
 @end table
 
@@ -6883,7 +6883,7 @@ c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @findex camera-draw
 @table @code
 @item (camera-draw CAM-ID [yes|no])
-Say se or not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
+Say se ou not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
 @end table
 
 @node camera-prop, camera-reset, camera-draw, GCL Reference
@@ -6958,7 +6958,7 @@ Returns the list obtained by adding @var{EXPR} as first element of
 @findex copy
 @table @code
 @item (copy [ID] [name])
-Copies an objeto or camera.  If ID is not specified, it 
+Copies an objeto ou camera.  If ID is not specified, it 
 is assumed to be targetgeom.  If name is not specified, it 
 is assumed to be the same as the name of ID.
 @end table
@@ -7010,7 +7010,7 @@ see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
 @findex delete
 @table @code
 @item (delete ID)
-Delete objeto or c@^{a}mera ID.
+Delete objeto ou c@^{a}mera ID.
 @end table
 
 @node dice, dimension, delete, GCL Reference
@@ -7028,10 +7028,10 @@ which makes this command obsolete.
 @findex dimension
 @table @code
 @item (dimension [N])
-Sets or reads the space dimension for N-dimensional viewing.
+Sets ou reads the space dimension for N-dimensional viewing.
 (Since calculations are done using homogeneous coordenadas,
 this means matrices are (N+1)x(N+1).)
-With no arguments, returns the current dimension, or 0 if
+With no arguments, returns the current dimension, ou 0 if
 N-dimensional viewing has not been enabled.
 @end table
 
@@ -7040,7 +7040,7 @@ N-dimensional viewing has not been enabled.
 @findex dither
 @table @code
 @item (dither CAM-ID @{on|off|toggle@})
-Turn dithering on or off in that camera.
+Turn dithering on ou off in that camera.
 @end table
 
 @node draw, dump-handles, dither, GCL Reference
@@ -7107,7 +7107,7 @@ returns nil.  @code{(echo (emodule-defined @code{name}))} prints the sequ@^{e}nc
 @findex emodule-isrunning
 @table @code
 @item (emodule-isrunning NAME)
-Returns Lt if the emodule NAME is running, or Lnil
+Returns Lt if the emodule NAME is running, ou Lnil
 if it is not running.  NAME is searched for in the
 names as they appear in the browser and in the shell commands
 used to execute the external modules (not including arguments).
@@ -7145,7 +7145,7 @@ name do machine type.  Input and output connections to geomview are
 dropped when the shell command terminates.  Clicando on a running
 program's module-browser entry sends the signal SIGHUP to the program.
 For this to work, programs should avoid running in the background; those
-using FORMS or GL should call foreground() before the first FORMS or
+using FORMS ou GL should call foreground() before the first FORMS or
 winopen() call.  @xref{emodule-define, @code{(emodule-define
 @dots{})}}. @xref{emodule-start, @code{(emodule-start @dots{})}}.
 @end table
@@ -7205,7 +7205,7 @@ to evaluate S-expression constructed via @code{car}, @code{cdr} and
 @findex event-keys
 @table @code
 @item (event-keys @{on|off@})
-Turn keyboard events on or off to enable/disable teclas de atalho.
+Turn keyboard events on ou off to enable/disable teclas de atalho.
 @end table
 
 @node event-mode, event-pick, event-keys, GCL Reference
@@ -7238,7 +7238,7 @@ the following strings:
 @findex event-pick
 @table @code
 @item (event-pick @{on|off@})
-Turn picking on or off.
+Turn picking on ou off.
 @end table
 
 @node evert, exit, event-pick, GCL Reference
@@ -7333,7 +7333,7 @@ matching @var{name} will be deleted, regardless do type de
 objeto it is attached to. It is not an error to call this function with
 a non-existent handle, but it @'{e} uma error to call this funcion with the
 name of a non-global handle, i.e. one that was not created by
-@code{(hdefine @dots{})} or @code{(read @dots{} @{ define
+@code{(hdefine @dots{})} ou @code{(read @dots{} @{ define
 @dots{}@})}. @xref{Referencias}.  @xref{read,@code{(read
 @dots{})}}. @xref{hdefine,@code{(hdefine @dots{})}}.
 @end table
@@ -7467,7 +7467,7 @@ The output would be @code{(a b c d)}.
 @item (let ARGUMENTS EXPR1 @dots{} EXPRN)
 Generate a lambda expression from @var{EXRP1} @dots{} @var{EXPRN}, with
 the argument bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
-list of symbols (bound to @code{nil} by default) or lists of the form
+list of symbols (bound to @code{nil} by default) ou lists of the form
 @code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
 @var{VALUE} @'{e} uma S-expression which is first evaluated, then its value
 is bound to @var{ARG}. The entire expression evaluates to the value of
@@ -7487,7 +7487,7 @@ argument list must be present, but can be empty; in the latter case the
 Draw lines (including edges) closer to the c@^{a}mera than pol@'{i}gonos
 by DIST / 10^5  do Z-buffer range.  DIST = 3.0 by default.
 If DIST is too small, a line lying on a surface may be
-dotted or invisible, depending on the viewpoint.
+dotted ou invisible, depending on the viewpoint.
 If DIST is too large, lines may appear in front of surfaces
 that they actually lie behind.  Good values for DIST vary with
 the scene, viewpoint, and distance between near and far clipping
@@ -7525,9 +7525,9 @@ you should wrap it in a call to echo: @code{(echo (load-path))}.
 @table @code
 @item (look [objectID] [cameraID])
 Rotates the named c@^{a}mera to point toward the center da 
-bounding box do named objeto (or the origin in hyperbolic or 
+bounding box do named objeto (or the origin in hyperbolic ou 
 spherical space).  In Euclidean space, moves the c@^{a}mera 
-forward or backward until the objeto appears as large 
+forward ou backward until the objeto appears as large 
 as possible while still being entirely visible.  Equivalent to 
 @example
 progn ( 
@@ -7544,7 +7544,7 @@ cameraID is not specified, it is assumed to be targetcam.
 @findex look-encompass
 @table @code
 @item (look-encompass [objectID] [cameraID])
-Moves cameraID backwards or forwards until its field of view
+Moves cameraID backwards ou forwards until its field of view
 surrounds objectID. This routine works only in Euclidean space.  
 If objectID is not specified, it is assumed to be the world.  
 If cameraID is not specified, it is assumed to be the targetcam.  
@@ -7585,7 +7585,7 @@ objectID and cameraID are parallel.
 @table @code
 @item (look-toward [objectID] [cameraID] [origin | center])
 Rotates the named c@^{a}mera to point toward the origin do
-objeto's coordinate system, or the center do objeto's
+objeto's coordinate system, ou the center do objeto's
 bounding box (in non-Euclidean space, the origin will be used 
 automatically).  Default objectID is the world, default camera
 is targetcam, default location to point towards is the center
@@ -7596,8 +7596,8 @@ do bounding box.
 @subsection merge
 @findex merge
 @table @code
-@item (merge @{window|camera@} CAM-ID  @{ WINDOW or CAMERA @dots{} @})
-Modify the given janela or camera, changing just those properties
+@item (merge @{window|camera@} CAM-ID  @{ WINDOW ou CAMERA @dots{} @})
+Modify the given janela ou camera, changing just those properties
 specified in the last argument.  E.g.
 @example
 	(merge camera @code{Camera} @{ far 20 @})
@@ -7681,7 +7681,7 @@ created if not previously known.
 
 In principle it is possible to map the homogeneous component of a
 conformal 4 point to some other index; this would be done by specifying
-0 for one of @code{Xindex}, @code{Yindex} or @code{Zindex} and giving
+0 for one of @code{Xindex}, @code{Yindex} ou @code{Zindex} and giving
 @code{Windex} some positive value. This is probably not useful because
 Geomview does not support non-Euclidean geometries for in higher
 dimensions.
@@ -7899,7 +7899,7 @@ occurred.
 @item F
  = picked face
 @item P
- = path to picked primitive [0 or more]
+ = path to picked primitive [0 ou more]
 @item VI
  = index of v@'{e}rtice selecionado in primitive
 @item EI
@@ -7933,7 +7933,7 @@ With no arguments, returns current status.
 @findex pickable
 @table @code
 @item (pickable GEOM-ID @{yes|no@})
-Say se or not GEOM-ID is included in the pool of objetos
+Say se ou not GEOM-ID is included in the pool of objetos
 that could be returned from the pick command.
 @end table
 
@@ -7950,7 +7950,7 @@ Set the transform of objectID to that of otherID.
 @findex position-at
 @table @code
 @item (position-at objectID otherID [center | origin])
-Translate objectID to the center da bounding box or the 
+Translate objectID to the center da bounding box ou the 
 origin do coordinate system of otherID (parallel translation).
 Default is center.
 @end table
@@ -8033,7 +8033,7 @@ intended for external use.
 @subsection read
 @findex read
 @table @code
-@item (read @{geometry|camera|apar@^{e}ncia|image|ntransform|transform|command@} @{GEOMETRY or CAMERA or @dots{}@})
+@item (read @{geometry|camera|apar@^{e}ncia|image|ntransform|transform|command@} @{GEOMETRY ou CAMERA ou @dots{}@})
 Read and interpret the text in @dots{} as containing the
 given type of data.  Useful for defining objetos using OOGL
 reference syntax, e.g.
@@ -8068,7 +8068,7 @@ deletes @code{targetgeom} if it is different from the World.
 @table @code
 @item (redraw CAM-ID)
 States that the view in CAM-ID should be redrawn on the
-next pass through the main loop or the next invocation of @code{draw}.
+next pass through the main loop ou the next invocation of @code{draw}.
 @end table
 
 @node regtable, rehash-emodule-path, redraw, GCL Reference
@@ -8106,7 +8106,7 @@ Replace a part da objeto geom@'{e}trico for GEOM-ID.
 @findex rib-display
 @table @code
 @item (rib-display [frame|tiff] FILEPREFIX)
-Set Renderman display to framebuffer (popup screen janela) or a
+Set Renderman display to framebuffer (popup screen janela) ou a
 TIFF format disk file. FILEPREFIX is used to construct
 names da form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
 The number is incremented on every call to @code{rib-snapshot} and
@@ -8171,7 +8171,7 @@ in the conformal model.  CMX is the cosine do maximum angle
 an edge can bend before it is refined.  Its value should be between
 -1 and 1; the default is 0.95; decreasing its value will cause less
 refinement.  N is the maximum number of iterations of refining;
-the default is 6.  SHOWEDGES, which should be @code{no} or @code{yes},
+the default is 6.  SHOWEDGES, which should be @code{no} ou @code{yes},
 determines se interior edges in the refinement are drawn.
 @end table
 
@@ -8238,7 +8238,7 @@ not work, even if @code{(bar @dots{})} would evaluate to an unqualified
 symbol: varible names must be literals.  Note that calling @code{(setq
 SYM @dots{})} will alter the value of @var{SYM} within the current
 name-space: if @var{SYM}, e.g., is bound as local variable by a lambda,
-let or defun expression, then @code{(setq SYM @dots{})} will change the
+let ou defun expression, then @code{(setq SYM @dots{})} will change the
 value of the local variable, the global binding will remain unchanged.
 It is NOT possible to un-bind a symbol. However, subsequent @code{(setq
 SYM @dots{})} invocations will re-bind @var{SYM} to another value and free
@@ -8300,21 +8300,21 @@ Returns the number of seconds until TIME.
 Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de caracteres). The
 @var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
 "ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
-libOSMesa) or "ppmosglx". A "ppmscreen" snapshot is created by reading
+libOSMesa) ou "ppmosglx". A "ppmscreen" snapshot is created by reading
 the image directly from the given janela; the janela is popped above
 other janelas and redrawn first, then its contents are written as a PPM
 format image. A "ppmosmesa" snapshot is drawn by Mesa's software
 renderer into a memory buffer in RAM. A "ppmosglx" snapshot is rendered
-into a GLX Pixmap buffer, which is also off-screen but may or may not
-reside in video RAM.  Rendering may or may not be accelerated. The
+into a GLX Pixmap buffer, which is also off-screen but may ou may not
+reside in video RAM.  Rendering may ou may not be accelerated. The
 problem with on-screen snapshots is that the janela must be mapped and
 not obscured by other janelas. So on-screen snapshots will not work in
-the background, or when a screen safer is active. With "ps", dumps a
+the background, ou when a screen safer is active. With "ps", dumps a
 Postscript picture representing the view from that janela;
 hidden-surface removal might be incorrect. With "ppm", dumps a
 PPM-format image produced by geomview's internal software renderer; this
 may be of arbitrary size. If the @var{NOMEDOARQUIVO} argument begins with
-"|", it's interpreted as a @code{/bin/sh} command to which the PPM or PS
+"|", it's interpreted as a @code{/bin/sh} command to which the PPM ou PS
 data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
 relevant only for "ppm" formats, and render to a janela of that size (or
 scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
@@ -8325,7 +8325,7 @@ scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
 @findex soft-shader
 @table @code
 @item (soft-shader CAM-ID @{on|off|toggle@})
-Select se to use software or hardware shading in that camera.
+Select se to use software ou hardware shading in that camera.
 @end table
 
 @node space, stereowin, soft-shader, GCL Reference
@@ -8398,7 +8398,7 @@ floats specifying distances in the coordinate system do
 objeto do centro.
 
 The next field is optional and may consist da keyword
-@code{bbox-center} or the keyword @code{origin} and modifies the
+@code{bbox-center} ou the keyword @code{origin} and modifies the
 location da origin of @var{objectID}'s co-ordinate frame:
 @code{bbox-center} temporarily translates @var{objectID}'s co-ordinate
 frame to the center of @var{objectID}'s bounding box. @code{origin} is
@@ -8490,7 +8490,7 @@ user interface (i.e. mouse) controlled movimentos.  The keyword
 currently selected objeto, while @code{bbox-center} means to use the
 center da bouding box do current objeto.  The keyword
 @code{bbox-center} makes no sense if the objeto geom@'{e}trico is
-non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
+non-Euclidean. Using either @code{bbox-center} ou @code{origin} does not
 make a difference if the objeto do centro is not a @emph{geometry}, e.g. if
 it is a camera. Same holds if the World is the currently selected
 objeto.
@@ -8540,7 +8540,7 @@ default is compile-time dependent.
 @findex ui-motion
 @table @code
 @item (ui-motion @{inertia|constrain|own-coordinates@} @{on|off@})
-Enable or disable certain properties of mouse-controlled movimento. The
+Enable ou disable certain properties of mouse-controlled movimento. The
 purpose of this command is to give access to the respective toggles of
 the @emph{Main} panel's @emph{Motion} menu through GCL
 commands. @xref{Movimentos do Mouse}.
@@ -8554,11 +8554,11 @@ mouse.
 
 @item constrain
 It's sometimes handy to move an objeto in a direction aligned with a
-coordinate axis: exactly horizontally or vertically. Calling
+coordinate axis: exactly horizontally ou vertically. Calling
 @code{(ui-motion constrain on)} changes the interpretation of mouse
 movimentos to allow this; approximately-horizontal or
 approximately-vertical mouse dragging becomes exactly horizontal or
-vertical movimento. Note that the movimento is still along the X or Y axes of
+vertical movimento. Note that the movimento is still along the X ou Y axes of
 the c@^{a}mera in which you move o mouse, not necessarily the objeto's own
 coordinate system.
 
@@ -8579,7 +8579,7 @@ direction, and so on. May be especially useful in conjunction with the
 @findex ui-panel
 @table @code
 @item (ui-panel PANELNAME @{on|off@} [WINDOW])
-Do or don't display the given user-interface panel.
+Do ou don't display the given user-interface panel.
 Case is ignored in panel names. Current @var{PANELNAMEs} are:
 @table @asis
 @item geomview
@@ -8630,7 +8630,7 @@ unset then the default is compile-time dependent.
 Set the target of user actions (the selected line do objeto alvo
 browser) to ID.  The second argument especifica se to make ID the
 current objeto regardless of its type.  If @code{no}, then ID becomes
-the current objeto of its type (geom or camera).  The default is
+the current objeto of its type (geom ou camera).  The default is
 @code{yes}.  This command may result in a change of modos de movimento based
 on target choice.
 @end table
@@ -8660,8 +8660,8 @@ nonzero; otherwise movimentos are proportional to elapsed real time.
 @table @code
 @item (update-draw CAM-ID  [timestep_in_seconds])
 Apply each incremental movimento once and then draw CAM-ID.
-Applies @code{timestep} seconds' worth of movimento, or uses elapsed real
-time if @code{timestep} is absent or zero.
+Applies @code{timestep} seconds' worth of movimento, ou uses elapsed real
+time if @code{timestep} is absent ou zero.
 @end table
 
 @node while, window, update-draw, GCL Reference
@@ -8677,10 +8677,10 @@ Iterate: @emph{evaluate @var{TEST}, if non nil, evaluate @var{BODY}}.
 @findex window
 @table @code
 @item (window CAM-ID WINDOW)
-Specify attributes for the janela of CAM-ID, e.g. its size or initial
+Specify attributes for the janela of CAM-ID, e.g. its size ou initial
 position, in the OOGL Window syntax.  The special CAM-ID @code{default}
 especifica properties of future janelas (created by @ref{camera,
-@code{camera}} or @ref{new-camera, @code{new-camera}}).
+@code{camera}} ou @ref{new-camera, @code{new-camera}}).
 @end table
 
 @node winenter, write, window, GCL Reference
@@ -8700,7 +8700,7 @@ use.
 @item (write @{command|geometry|camera|transform|ntransform|window@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
 write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
-self: just the objeto, no transforma@,{c}@~{a}o or apar@^{e}ncia (objeto geom@'{e}trico only)
+self: just the objeto, no transforma@,{c}@~{a}o ou apar@^{e}ncia (objeto geom@'{e}trico only)
 world: the objeto as positioned within the World.
 universe: objeto's position in universal coordenadas;
 includes Worldtransform
@@ -8712,8 +8712,8 @@ are sent to the module's standard input.  For commands not read from an
 external program, @code{-} means geomview's standard output
 (@pxref{command, @code{(command @dots{})}}).
 
-The ID can either be a single id or a parenthesized list of
-ids, like @code{g0} or @code{(g2 g1 dodec.off)}.
+The ID can either be a single id ou a parenthesized list of
+ids, like @code{g0} ou @code{(g2 g1 dodec.off)}.
 @end table
 
 @node write-comments, write-handle, write, GCL Reference
@@ -8727,10 +8727,10 @@ will match pick paths da form (a b c @dots{} f *) where * includes any
 value of g, and also any values of possible further indices h,i,j,
 etc. The pick path (returned in the @code{pick} command) is a list of
 integer counters specifying a subpart of a hierarchical OOGL
-objeto. Descent into a complex objeto (LIST or INST) adds a new integer
+objeto. Descent into a complex objeto (LIST ou INST) adds a new integer
 to the path. Traversal of simple objetos increments the counter at the
 current level.  Individual COMMENTS are enclosed by curly braces, and
-the entire sequ@^{e}ncia de caracteres of zero, one, or more COMMENTS (written in the order
+the entire sequ@^{e}ncia de caracteres of zero, one, ou more COMMENTS (written in the order
 in which they are encountered during hierarchy traversal) is enclosed by
 parentheses.
         
@@ -9086,13 +9086,13 @@ oogl2rib [-n @var{name}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{
 @end example
 @noindent
 By default it reads from stdin and writes to stdout.
-Either @var{infile} or @var{outfile} may be @file{-}, which means
+Either @var{infile} ou @var{outfile} may be @file{-}, which means
 use stdin/stdout.  The options are:
 @table @code
 
 @item -n @var{name}
 Use @var{name} for the name do rendered TIFF file (default
-"geom.tiff") or framebuffer janela (default "geom.rib").
+"geom.tiff") ou framebuffer janela (default "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
 Use background color (@var{r},@var{g},@var{}b).  Each component ranges
@@ -9169,7 +9169,7 @@ By default, @code{Geomview} assumes that it is the same kind of
 computer as the one you are running Mathematica on.  The @code{MachType}
 option lets you explicitly specify the type do @code{DisplayHost}
 computer; it should be one das strings @code{"sgi"} or
-@code{"next"} or @code{"x11"}.@refill
+@code{"next"} ou @code{"x11"}.@refill
 
 You can use @code{SetOptions} to change the default @code{DisplayHost}
 and @code{MachType}.  For example,
@@ -9218,7 +9218,7 @@ math2oogl < mychunk > mma.oogl
 to convert it to the OOGL file @file{mma.oogl} which you can then view
 using Geomview. This is the equivalent do @code{WriteOOGL} command. 
 
-For a result equivalent to the @code{Geomview} or @code{Show}
+For a result equivalent to the @code{Geomview} ou @code{Show}
 commands, type
 @example
 math2oogl -togeomview Mathematica geomview < mychunk
@@ -9249,7 +9249,7 @@ Geomview[objeto] sometimes works where Show[objeto] will give errors.
 
 The converter supports the @code{Polygon}, @code{Line}, and @code{Point}
 graphics primitives, @code{RGBColor Graphics3D} directives, and
-@code{SurfaceGraphics} objetos with or without @code{RGBColor}
+@code{SurfaceGraphics} objetos with ou without @code{RGBColor}
 directives, and lists of any combination of these. It silently ignores
 all other directives.
 
@@ -9260,9 +9260,9 @@ In the @code{WriteOOGL} and @code{WriteRI}b commands, filename can
 either be a sequ@^{e}ncia de caracteres containing a filename, an @code{OutputStream} objeto,
 or a sequ@^{e}ncia de caracteres starting with a @code{!} to send the output to a command.
 Objeto can be a @code{Graphics3D} objeto, a @code{SurfaceGraphics}
-objeto, or a list of these.@refill
+objeto, ou a list of these.@refill
 
-The packages work best with Mathematica 2.0 or better.  With version 1.2,
+The packages work best with Mathematica 2.0 ou better.  With version 1.2,
 the Geomview display is always on the local host. 
 
 @comment ================================================================
@@ -9297,7 +9297,7 @@ section to see what might need to be fixed.
 In this section, the phrase @emph{Geomview installation} refers any of
 the procedures in @xref{Instalacao}.  The way the Mathematica packages
 work and are installed is the same regardless of se you have
-one das binary distributions or the source distribution.
+one das binary distributions ou the source distribution.
 
 @enumerate
 
@@ -9513,7 +9513,7 @@ da @code{$Path} variable in a Mathematica session.  The
 installation process will install some packages there which allow you to
 use Geomview to display Mathematica graphics.  These packages are
 distributed in the @file{$GEOMROOT/mathematica} subdirectory; if you
-specify this directory for @code{MMAPACKAGEDIR}, or if you specify the
+specify this directory for @code{MMAPACKAGEDIR}, ou if you specify the
 empty sequ@^{e}ncia de caracteres for @code{MMAPACKAGEDIR}, the packages are left in that
 directory.  For more details about the way these Mathematica packages
 connect to Geomview, @pxref{Package Installation}.
@@ -9538,7 +9538,7 @@ installation instructions.
 The main reason to get the source code distribution is to look at and/or
 work with the source code.  If you are only concered with @emph{using}
 Geomview it is better to get the binary distribution.  It takes anywhere
-from a few minutes to an hour or more to compile the entire source
+from a few minutes to an hour ou more to compile the entire source
 distribution, depending on what kind of computer you have.
 
 Let @file{$GEOMROOT} denote the full pathname do Geomview source
@@ -9595,12 +9595,12 @@ which especifica that Geomview should be compiled for X janelas.
 Once you have configured your source tree by editing the files as
 described above and setting the @code{CPU} variable, you can compile and
 install Geomview by typing @code{make install} in the @file{$GEOMROOT}
-directory.  You can also type @code{make all}, or equivalently just
+directory.  You can also type @code{make all}, ou equivalently just
 @code{make}, to compile without installing, and then type @code{make
 install} later to install.
 
 You can use these same @code{make} comands in any subdirectory in the
-tree to recompile and/or install a part of Geomview or a module.
+tree to recompile and/or install a part of Geomview ou a module.
 
 If you want to modify the complier flags used during compilation, edit
 the file @file{$GEOMROOT/makefiles/Makedefs.global}; the @code{COPTS}
@@ -9624,7 +9624,7 @@ Send email to the geomview-users@@lists.sourceforge.net mailing list.
 This is a mailing list for discussing any issues related to using
 Geomview.  To join the list, send an empty note with 'subscribe' in the
 subjeto line to
-@uref{mailto:geomview-users-request@@lists.sourceforge.net,geomview-users-request@@lists.sourceforge.net}, or visit
+@uref{mailto:geomview-users-request@@lists.sourceforge.net,geomview-users-request@@lists.sourceforge.net}, ou visit
 the list web page at
 @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
@@ -9663,10 +9663,10 @@ To the extent that resources allow, Geometry Technologies supports the
 developement of Geomview; in particular it hosts the
 @uref{http://www.geomview.org} web site, and its staff make ongoing
 improvements to Geomview itself.  If you are in a position to pay for
-technical support or custom programming work, contracting with Geometry
+technical support ou custom programming work, contracting with Geometry
 Technologies indirectly supports Geomview.  You can also contract with
 with Geometry Technologies to have particular features that you want
-added to Geomview, or to port Geomview to a new platform.  For more
+added to Geomview, ou to port Geomview to a new platform.  For more
 information see Geometry Technologies web site at
 @uref{http://www.geomtech.com}.
 
