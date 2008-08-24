@@ -630,7 +630,8 @@ decis@~{a}o ser@'{a} guiada pelos dois objetivos de preservar a condi@,{c}@~{a}o
 de todos os derivados de nosso software livre e de promover o compartilhamento
 e reutiliza@,{c}@~{a}o de softwares, de modo geral.
 
-@heading EXCLUS@~{A}O DE GARANTIA
+@c @heading EXCLUS@~{A}O DE GARANTIA
+@emph{      EXCLUS@~{A}O DE GARANTIA}
 
 @item
 COMO A BIBLIOTECA @'{E} LICENCIADA SEM CUSTO, N@~{A}O H@'{A} NENHUMA
@@ -654,6 +655,7 @@ GERADOS DE FORMA IMPRECISA, PERDAS SOFRIDAS POR VOC@^{E} OU TERCEIROS OU A
 IMPOSSIBILIDADE DA BIBLIOTECA DE OPERAR COM QUALQUER OUTRO SOFTWARE), MESMO QUE
 ESSE TITULAR, OU OUTRA PARTE, TENHA SIDO AVISADO SOBRE A POSSIBILIDADE DESSES
 DANOS.
+
 @end enumerate
 
 @heading FINAL DOS TERMOS E CONDI@,{C}@~{O}ES
