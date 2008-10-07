@@ -713,7 +713,7 @@ PolyListToLinkedPoyList(Transform T, Transform Tdual, Transform TxT,
       ListPush(*plistp, new_pn);
       break;
 #if !HAVE_LIBGLU
-case 4: /* supported */
+    case 4: /* supported */
       if (pl->p[pnr].flags & (POLY_NONFLAT|POLY_CONCAVE)) {
 	/* split this polygon along a diagonal, if the polygon is
 	 * concave: split across the unique concave vertex.
@@ -768,6 +768,7 @@ case 4: /* supported */
 	new_pn->poly = poly;
 	ListPush(*plistp, new_pn);
       }
+      break;
       /* otherwise fall into the > 4 vertices case and leave
        * everything to the GLU tesselator.
        */
