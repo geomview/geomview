@@ -946,10 +946,12 @@ ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
   Camera *cam = NULL;
   Appearance *ap;
   WnWindow *win;
-  WnPosition vp;
+  WnPosition vp, oswp;
   int mgspace;
   mgshadefunc shader = NULL;
   int failed = 1;
+  double osfactor = 1.0;
+  char *osscale;
 
   if (gv_no_opengl) {
     OOGLError(0,
@@ -963,8 +965,18 @@ ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
     return -1;
   }
 
+  if ((osscale = getenv("GEOMVIEW_OFFSCREEN_FACTOR")) != NULL) {
+    osfactor = strtod(osscale, NULL);
+    if (osfactor == 0.0) {
+      osfactor = 1.0;
+    }
+  }
+
   xsize = wp->xmax - wp->xmin + 1;
   ysize = wp->ymax - wp->ymin + 1;
+  
+  xsize = (int)(osfactor * (double)xsize);
+  ysize = (int)(osfactor * (double)ysize);
 
   mgctxget(MG_CAMERA, &cam);
   mgctxget(MG_SPACE, &mgspace);
@@ -976,9 +988,9 @@ ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
 
   win = WnCopy(win);
   vp.xmin = vp.ymin = 0;
-  vp.xmax = xsize;
-  vp.ymax = ysize;
-  WnSet(win, WN_CURPOS, wp, WN_VIEWPORT, &vp, WN_END);
+  vp.xmax = xsize - 1;
+  vp.ymax = ysize - 1;
+  WnSet(win, WN_CURPOS, osfactor != 1.0 ? &vp : wp, WN_VIEWPORT, &vp, WN_END);
 
   /* Create an X11 pixmap and a GLX pixmap to render to */
   pixmap = XCreatePixmap(dpy, cw->shellwin, xsize, ysize, cw->vi[SGL]->depth);
