@@ -8387,7 +8387,7 @@ Set the origin of the coordinate system of the @code{CENTER} object for
 user interface (i.e. mouse) controlled motions.  The keyword
 @code{origin} means to use the origin of the coordinate system of the
 currently selected object, while @code{bbox-center} means to use the
-center of the bouding box of the current object.  The keyword
+center of the bounding box of the current object.  The keyword
 @code{bbox-center} makes no sense if the geometry is
 non-Euclidean. Using either @code{bbox-center} or @code{origin} does not
 make a difference if the center object is not a @emph{geometry}, e.g. if
