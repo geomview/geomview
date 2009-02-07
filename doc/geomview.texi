@@ -1503,11 +1503,11 @@ an object as the center. For details, @pxref{Point of Interest}.
 
 It is also possible to toggle the button @emph{BBox Center} to set the
 center of motion to the center of the current object's bounding
-box. Once toggled the active geometry's bounding box center will become
-the center of motion, if you select another object, then the center of
+box. Once toggled, the active geometry's bounding box center will become
+the center of motion. If you select another object, then the center of
 motion will become the center of that object's bounding box. Nothing
-changes when a camera or the @emph{World} is selected, you have to
-type in the word @code{target} in the @emph{Center} field the reset to
+changes when a camera or the @emph{World} is selected; you have to
+type in the word @code{target} in the @emph{Center} field to reset to
 the default.
 
 You apply a mouse motion by holding down either the left or middle mouse
