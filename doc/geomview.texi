@@ -8277,32 +8277,25 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 @subsection transform
 @findex transform
 @table @code
-@item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
-Apply a motion (rotation, translation, scaling) to object @code{objectID};
-that is, construct and concatenate a transformation matrix with
-objectID's transform  The 3 IDs involved are the object
-that moves, the center of motion, and the frame of reference
-in which to apply the motion.  The center is easiest understood
-for rotations: if centerID is the same as objectID then it will
-spin around its own axes; otherwise the moving object will orbit
-the center object.  Normally frameID, in whose coordinate system
-the (mouse) motions are interpreted, is @code{focus}, the current camera.
-Translations can be scaled proportional to the
-distance between the target and the center. Support for
-spherical and hyperbolic as well as Euclidean space is
-built-in: use the @code{space} command to change spaces.  With type
-@code{rotate} x, y, and z are floats specifying angles in RADIANS.
-For types @code{translate} and @code{translate-scaled} x, y, and z are
-floats specifying distances in the coordinate system of the
-center object.
-
-The next field is optional and may consist of the keyword
-@code{bbox-center} or the keyword @code{origin} and modifies the
-location of the origin of @var{objectID}'s co-ordinate frame:
-@code{bbox-center} temporarily translates @var{objectID}'s co-ordinate
-frame to the center of @var{objectID}'s bounding box. @code{origin} is
-the default (and means not to modify @var{objectID}'s co-ordinate frame)
-and @code{bbox-center} is only valid in Euclidean space.
+@item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt [@code{smooth}]])
+Apply a motion (rotation, translation, scaling) to object
+@code{objectID}; that is, construct and concatenate a transformation
+matrix with objectID's transform The 3 IDs involved are the object that
+moves, the center of motion, and the frame of reference in which to
+apply the motion.  The center is easiest understood for rotations: if
+centerID is the same as objectID then it will spin around its own axes;
+otherwise the moving object will orbit the center object. There is the
+special keyword @code{bbox-center} which may be used for
+@code{centerID}. As a result the motion will be relative to the center
+of the bounding box of @code{objectID}. Normally frameID, in whose
+coordinate system the (mouse) motions are interpreted, is @code{focus},
+the current camera.  Translations can be scaled proportional to the
+distance between the target and the center. Support for spherical and
+hyperbolic as well as Euclidean space is built-in: use the @code{space}
+command to change spaces.  With type @code{rotate} x, y, and z are
+floats specifying angles in RADIANS.  For types @code{translate} and
+@code{translate-scaled} x, y, and z are floats specifying distances in
+the coordinate system of the center object.
 
 The optional @code{dt} field allows a simple form of
 animation; if present, the object moves by just that amount during
@@ -8596,7 +8589,7 @@ use.
 @subsection write
 @findex write
 @table @code
-@item (write @{command|geometry|camera|transform|ntransform|window@} FILENAME [ID|(ID @dots{})] [self|world|universe|otherID])
+@item (write @{command|geometry|camera|transform|ntransform|window|bbox@} FILENAME [ID|(ID @dots{})] [self|world|universe|otherID])
 write description of ID in given format to FILENAME.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the object, no transformation or appearance (geometry only)
