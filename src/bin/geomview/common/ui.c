@@ -291,6 +291,8 @@ set_ui_center_origin(int use_bbox_center)
   uistate.bbox_center = use_bbox_center != 0; /* boolean value */
   if (uistate.bbox_center && uistate.targetid != WORLDGEOM) {
     make_center_from_bbox("CENTER", uistate.targetid);
+  } else {
+    gv_ui_center(TARGETID);
   }
 }
 
