@@ -98,7 +98,8 @@ typedef struct DGeom {
   OBJECTFIELDS;
   Geom *Inorm;          /* Inst holding normalization transform */
   Geom *Lgeom;          /* List node holding pointer to user's Geom */
-  Geom *Lbbox;          /* List node holding pointer to our Bbox */
+  Geom *Lbbox;          /* List node holding the pointer to our Bbox */
+  int  bbox_center;     /* bbox center as alien object */
   bool bboxdraw;        /* boolean */
   char normalization;   /* Normalization: NONE, EACH, or ALL */
   bool bboxvalid;       /* bbox is valid */
@@ -336,6 +337,7 @@ typedef struct DrawerState {
 #define	SELF		GEOMID(-9)	/* "this geomview object" */
 #define	UNIVERSE	GEOMID(-10)	/* the universe (as coordinate system) */
 #define	PRIMITIVE	GEOMID(-11)	/* this picked OOGL primitive (coord system) */
+#define BBOXCENTERID    GEOMID(-12)     /* center of bbox object */  
 
 #define ALLCAMS		CAMID(ALLINDEX)
 #define ALLGEOMS	GEOMID(ALLINDEX)

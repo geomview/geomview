@@ -84,6 +84,7 @@ static void _rotate(float amount[3], Point *pt, Transform T,
 		    int space, int frame);
 static void _scale(float amount[3], Point *pt, Transform T,
 		   int space, int frame);
+static int make_bbox_center(int obj_id); /* Should go to drawer.c ... */
 
 /* 
  * This should DEFINITELY go somewhere else, but I'm not sure where
@@ -213,11 +214,17 @@ int drawer_transform(int moving_id, int center_id, int frame_id,
 
   motion.moving_id = real_id(moving_id);
   motion.center_id = real_id(center_id);
-  if (motion.center_id == SELF)
+  if (motion.center_id == SELF) {
     motion.center_id = motion.moving_id;
+  } else if (motion.center_id == BBOXCENTERID) {
+    motion.center_id =  make_bbox_center(motion.moving_id);
+  }
   motion.frame_id = real_id(frame_id);
-  if (motion.frame_id == SELF)
+  if (motion.frame_id == SELF) {
     motion.frame_id = motion.moving_id;
+  } else if (motion.frame_id == BBOXCENTERID) {
+    motion.frame_id =  make_bbox_center(motion.moving_id);
+  }
   motion.amount[0] = fx;
   motion.amount[1] = fy;
   motion.amount[2] = fz;
@@ -1026,6 +1033,7 @@ int real_id(int id)
   switch(id) {
   case UNIVERSE: return UNIVERSE; break;
   case SELF: return SELF; break;
+  case BBOXCENTERID: return BBOXCENTERID; break;
   case FOCUSID: return CAMID(uistate.mousefocus); break;
   case TARGETID: return real_id(uistate.targetid); break;
   case CENTERID: return real_id(uistate.centerid); break;
@@ -2043,7 +2051,7 @@ apply_ND_transform(Transform delta,
   TmNDelete(Tfp);
 }
 
-void make_center(char *objname, Point3 *pt)
+int make_center_object(char *objname, Point3 *pt)
 {
   TransformStruct ts;
   int cid;
@@ -2058,10 +2066,15 @@ void make_center(char *objname, Point3 *pt)
   TmTranslate(ts.tm, pt->x, pt->y, pt->z);
   gv_xform_set( cid, &ts );
 
-  gv_ui_center(cid);
+  return cid;
 }
 
-void make_ND_center(char *objname, HPointN *pt)
+void make_center(char *objname, Point3 *pt)
+{
+  gv_ui_center(make_center_object(objname, pt));
+}
+
+int make_ND_center_object(char *objname, HPointN *pt)
 {
   TmNStruct ts;
   int cid;
@@ -2076,11 +2089,19 @@ void make_ND_center(char *objname, HPointN *pt)
   ts.tm = TmNTranslateOrigin(NULL, pt);
   gv_ND_xform_set( cid, &ts );
   TmNDelete(ts.tm);
-  gv_ui_center(cid);
+
+  return cid;
 }
 
-void make_center_from_bbox(char *objname, int obj_id)
+void make_ND_center(char *objname, HPointN *pt)
 {
+  gv_ui_center(make_ND_center_object(objname, pt));
+}
+
+int make_center_object_from_bbox(char *objname, int obj_id)
+{
+  int cid = NOID;
+
   if (spaceof(obj_id) == TM_EUCLIDEAN
       && ISGEOM(obj_id) && obj_id != WORLDGEOM) {
     DGeom *dg = (DGeom*)drawer_get_object(obj_id);
@@ -2104,10 +2125,11 @@ void make_center_from_bbox(char *objname, int obj_id)
 	  HPt3Transform(Tuni, &pt, &pt);
 	  HPt3Dehomogenize(&pt, &pt);
 
-	  make_center(objname, (Point3 *)(void *)&pt);
+	  cid = make_center_object(objname, (Point3 *)(void *)&pt);
 	} else {
 	  TransformN *Tuni;
 	  HPointN *pt;
+
 	  GeomGet(bbox, CR_NCENTER, &pt);
 
 	  /* tansform to universe co-ordinates */
@@ -2115,13 +2137,36 @@ void make_center_from_bbox(char *objname, int obj_id)
 	  HPtNTransform(Tuni, pt, pt);
 	  HPtNDehomogenize(pt, pt);
 
-	  make_ND_center(objname, pt);
+	  cid = make_ND_center_object(objname, pt);
 
 	  HPtNDelete(pt);
 	  TmNDelete(Tuni);
 	}
       }
     }
+  }
+
+  return cid;
+}
+
+void make_center_from_bbox(char *objname, int obj_id)
+{
+  gv_ui_center(make_center_object_from_bbox(objname, obj_id));
+}
+
+/* Should go to drawer.c ... */
+static int make_bbox_center(int obj_id)
+{
+  if (spaceof(obj_id) == TM_EUCLIDEAN
+      && ISGEOM(obj_id) && obj_id != WORLDGEOM) {
+    DGeom *dg = (DGeom*)drawer_get_object(obj_id);
+ 
+    if (dg->bbox_center == NOID) {
+      dg->bbox_center = make_center_object_from_bbox(NULL, obj_id);
+    }
+    return dg->bbox_center;
+  } else {
+    return NOID;
   }
 }
 

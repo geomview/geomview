@@ -440,6 +440,7 @@ drawer_id2name( int id )
   case DEFAULTCAMID:return "defaultcam";
   case TARGETID:   return "target";
   case CENTERID:   return "center";
+  case BBOXCENTERID: return "bbox-center";
   case PRIMITIVE:  return "primitive";
   case NOID:  return "none";
   default:
@@ -2253,6 +2254,12 @@ static void delete_geometry(DGeom *dg)
   if(dgeom[index] == NULL)	/* Already (being) deleted -- forget it */
     return;
 
+  if (dg->bbox_center != NOID) {
+    /* Delete the bbox-center object */
+    gv_delete(dg->bbox_center);
+    dg->bbox_center = NOID;
+  }
+
   dgeom[index] = NULL;
   switch (dg->citizenship) {
   case ORDINARY:
@@ -2369,7 +2376,8 @@ drawer_init(char *apdefault, char *defaultcam, char *windefault)
   fsa_install(name_fsa, "targetcam",	(void *)TARGETCAMID);
   fsa_install(name_fsa, "targetcamera",	(void *)TARGETCAMID);
   fsa_install(name_fsa, "c.",		(void *)TARGETCAMID);
-  fsa_install(name_fsa, "center",	(void *)CENTERID); 
+  fsa_install(name_fsa, "center",	(void *)CENTERID);
+  fsa_install(name_fsa, "bbox-center",  (void *)BBOXCENTERID);
   fsa_install(name_fsa, "allgeoms",	(void *)ALLGEOMS);
   fsa_install(name_fsa, "g*",		(void *)ALLGEOMS);
   fsa_install(name_fsa, "allcams",	(void *)ALLCAMS);
@@ -2532,6 +2540,7 @@ drawer_init_dgeom(DGeom *dg, int id, enum citizenship citizenship)
   dg->seqno = 0;
   dg->NDT = NULL;
   dg->NDTinv = NULL;
+  dg->bbox_center = NOID;
 #if 0
   GeomSet(dg->Item, CR_NDAXIS, dg->NDT, CR_END);
 #endif
@@ -2571,6 +2580,11 @@ drawer_make_bbox(DGeom *dg, bool combine)
       GeomReplace(dg->Lbbox, bbox);
       GeomDelete(bbox);		/* Only Lbbox needs it now */
       dg->bboxvalid = true;
+      if (dg->bbox_center != NOID) {
+	/* Delete the old center object */
+	gv_delete(dg->bbox_center);
+	dg->bbox_center = NOID;
+      }
     }
   }
 }
