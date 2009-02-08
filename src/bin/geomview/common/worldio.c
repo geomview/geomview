@@ -416,9 +416,25 @@ int worldio(HandleOps *ops, Pool *p, int to_coords, int id)
   if (to_coords == SELF) {
     wrap = false;
   }
-  if (ops == &CommandOps) ok = save_world(p, id, true, wrap, to_coords);
-  else if (ops == &GeomOps) ok = save_world(p, id, false, wrap, to_coords);
-  else if (ops == &CamOps && ISCAM(id)) {
+  if (ops == &CommandOps) {
+    ok = save_world(p, id, true, wrap, to_coords);
+  } else if (ops == &GeomOps) {
+    if (ISTYPE(T_NONE, id)) {
+      /* bounding-box requested */
+      DGeom *dg;
+
+      id = GEOMID(INDEXOF(id));
+      if ((dg = (DGeom *)drawer_get_object(id)) != NULL && dg->bboxvalid) {
+	Geom *bbox;
+	GeomGet(dg->Lbbox, CR_GEOM, &bbox);
+	if (bbox != NULL) {
+	  ok = GeomStreamOut(p, NULL, bbox);
+	}
+      }
+    } else {
+      ok = save_world(p, id, false, wrap, to_coords);
+    }
+  } else if (ops == &CamOps && ISCAM(id)) {
     DView *dv = (DView *)drawer_get_object(id);
     if (dv) ok = CamStreamOut(p, dv->camhandle, dv->cam);
   } else if (ops == &WindowOps) {
@@ -722,7 +738,7 @@ LDEFINE(camera_prop, LVOID,
 }
 
 LDEFINE(write, LVOID,
-	"(write {command|geometry|camera|transform|ntransform|window} FILENAME [ID|(ID ...)] [self|world|universe|otherID])\n\
+	"(write {command|geometry|camera|transform|ntransform|window|bbox} FILENAME [ID|(ID ...)] [self|world|universe|otherID])\n\
 	write description of ID in given format to FILENAME.  Last\n\
 	parameter chooses coordinate system for geometry & transform:\n\
 	self: just the object, no transformation or appearance (geometry only)\n\
@@ -749,6 +765,7 @@ LDEFINE(write, LVOID,
   Lake *hiawatha;
   int coords = UNIVERSE, val = 1, id;
   bool temppool = false;
+  bool do_bbox = false;
 
   LDECLARE(("write", LBEGIN,
 	    LLAKE, &hiawatha,
@@ -758,10 +775,15 @@ LDEFINE(write, LVOID,
 	    LOPTIONAL,
 	    LID, &coords,
 	    LEND));
-
+  
   p = POOL(hiawatha);
-  if ((ops = str2ops(opsname)) == NULL) {
-    OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window|image, got \"%s\"", opsname);
+
+  if (strcmp(opsname, "bbox") == 0) {
+    do_bbox = true;
+    ops = &GeomOps;
+  }
+  if (!do_bbox && (ops = str2ops(opsname)) == NULL) {
+    OOGLError(0, "write: expected one of command|geometry|camera|transform|ntransform|window, got \"%s\"", opsname);
     return Lnil;
   }
 
@@ -787,6 +809,9 @@ LDEFINE(write, LVOID,
       fprintf(stderr, "write: expects ID or list of IDs in arg position 4\n");
       return Lnil;
     }
+    if (do_bbox) {
+      id = ID(T_NONE, INDEXOF(id));
+    }
     val = (worldio(ops, op, coords, id) == 1);
   } else if (idobj->type == LLIST) {
     LList *list;
@@ -794,6 +819,9 @@ LDEFINE(write, LVOID,
       if (!LFROMOBJ(LID)(list->car, &id)) {
 	fprintf(stderr, "write: expects ID or list of IDs in arg position 2\n");
 	return Lnil;
+      }
+      if (do_bbox) {
+	id = ID(T_NONE, INDEXOF(id));
       }
       val &= (worldio(ops, op, coords, id) == 1);
     }
