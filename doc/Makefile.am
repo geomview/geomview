@@ -15,14 +15,15 @@ EXTRA_DIST = geomview.pdf geomview.html\
   README README.gvplot oogltour oogltour-pt_BR\
   example1.c example2.c example3.c example4.tcl\
   OOGL.m.txt motion.tex $(man_MANS)\
-  $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)
+  $(PSIMAGES) $(PNGIMAGES) $(PDFIMAGES) $(EPSIMAGES)\
+  pt_BR/texinfo.tex pt_BR/acentos_texinfo.sh pt_BR/geomview_cvs.sh
 
 AM_MAKEINFOFLAGS = --no-validate
 info_TEXINFOS = geomview.texi geomview-pt_BR.texi
 infoimgdir = $(infodir)
 nobase_infoimg_DATA = $(PNGIMAGES)
 
-geomview_pt_BR_texi_MAKEINFOFLAGS = --enable-encoding --lang=pt
+geomview_pt_BR_texi_MAKEINFOFLAGS = --enable-encoding --lang=pt_BR
 
 dochtmldir = $(docdir)/html
 doc_DATA = geomview.pdf geomview-pt_BR.pdf
@@ -38,7 +39,6 @@ geomview-pt_BR.dvi:  $(EPSIMAGES)
 geomview-pt_BR.html: $(PNGIMAGES)
 
 TEXINPUTS = $(srcdir):.:
-
 all-local: htdocs pdf
 
 htdocs/*.html htdocs/figs/*.png: htdocs

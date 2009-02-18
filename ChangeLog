@@ -1,3 +1,243 @@
+2009-02-08  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/geomview.texi, doc/version-pt_BR.texi, doc/version.texi:
+	Fix some documentation bugs.
+
+	* src/bin/geomview/common/drawer.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/transform.c:
+	New virtual "bbox-center" object id to allow motions relative to the
+	center of the bounding box of an object (which can be very different
+	from the origin of the co-ordinate system).
+
+	* src/bin/geomview/common/ui.c:
+	"bbox center" toggle did not really reset the center of motion.
+
+	* src/bin/geomview/common/worldio.c:
+	New "bbox" keyword for write command: just dump the bounding box of
+	the respective object to disc.
+
+2009-02-07  Lloyd Wood  <L.Wood@surrey.ac.uk>
+
+	* doc/geomview.texi: Manual grammar fix.
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi:
+	Manual typo fixes - bouding -> bounding.
+
+2009-01-09  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/bin/geomview/x11/gvcamui.c:
+	Optionally scale an offscreep ppm image.
+
+2008-10-07  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/geom/bsptree.c:
+	Forgot a "break" statement in a switch-clause. Gnah.
+
+2008-08-24  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* TODO: Including a note about font code translation
+
+	* doc/geomview.texi, doc/geomview-pt_BR.texi:
+	adjusting duplicate node "camera"
+
+	* doc/geomview-pt_BR.texi:
+	The command texinfo was causing unexpected @enumerate closing
+	change @heading by @emph
+
+	* doc/geomview.texi, doc/geomview-pt_BR.texi:
+	puting a "@c " comment before @pxref{Forms}
+
+	* doc/geomview-pt_BR.texi:
+	inclusion for translate "section", "chapter" and "page"
+
+	* doc/pt_BR/texinfo.tex: changed for pt_BR
+
+	* doc/pt_BR/acentos_texinfo.sh, doc/pt_BR/geomview_cvs.sh:
+	script for manual pt_BR creation only (adjust)
+	script for diacritical marks in pt_BR
+
+	* doc/pt_BR/geomview_cvs.sh: script for manual pt_BR creation only
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi  --> partial translation, nodes translation
+
+2008-08-23  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi  --> partial translation, nodes translation
+
+2008-08-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi  --> partial translation
+
+2008-07-28  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi  --> partial translation
+
+	* doc/geomview.texi: geomview.texi  --> Adjusting "winddow" to "window"
+
+	* TODO: TODO ---> Adding a TODO list.
+
+2008-07-26  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* ChangeLog, NEWS, rcs2log:
+	NEWS, ChangeLog ---> changing e-mail adress for Jorge.
+	rcs2log         ---> adding new entrie for new e-mail for Jorge.
+
+	* doc/geomview.texi, doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi --> partial translation
+	geomview.texi --> adjusting man page location for oogl:
+	changing "man/cat5/oogl.5" to "/share/man/man5/oogl.5gv"
+
+2008-07-25  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+
+	* doc/geomview.texi: geomview.texi --> adjusting $path to $PATH
+
+	* doc/geomview.texi:
+	geomview.texi --> adjusting local directory for modules
+	                        instalation for all users
+
+2008-07-24  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi, doc/geomview.texi:
+	geomview-pt_BR.texi --> adjusting local directory for modules
+	                        instalation for all users
+	geomview-pt_BR.texi --> echo for the above
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi --> partial pt_BR manual translation
+
+2008-07-15  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi --> partial pt_BR manual translation
+
+	* doc/geomview.texi:
+	geomview.texi --> removing "red" for external modules browser panel
+
+2008-07-12  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+
+2008-06-03  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+
+2008-06-02  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi: geomview-pt_BR.texi --> partial translation
+
+2008-05-28  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/list/listdraw.c: Hopefully fixed this time.
+
+2008-05-25  Jorge Barros de Abreu  <ficmatin01@solar.com.br>
+
+	* doc/geomview-pt_BR.texi:
+	geomview-pt_BR.texi --> adusting right margin for some pages
+
+	* doc/geomview-pt_BR.texi, doc/version-pt_BR.texi:
+	geomview-pt_BR.texi --> updating to 1.59 english cvs version
+	                        (1.95 manual version)
+	version-pt_BR.texi  --> adjusting 17 to 19
+
+2008-05-23  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/list/listdraw.c: Something still seems to be wrong ...
+
+	* src/lib/gprim/list/listdraw.c: allocsz was used uninitialized.
+
+	* src/bin/geomutil/clip/clipoogl.c:
+	Keep booth, vertex and poly colour, if both are present.
+
+2008-05-20  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* src/lib/gprim/polylist/plsave.c, src/lib/gprim/npolylist/nplsave.c:
+	Save the per-polygon colors even if we have vertex colours; which
+	color-set is selected depends then on the shading.
+
+2008-05-19  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* doc/figs/mat.ps, doc/version.texi: Update.
+
+	* doc/geomview.texi: Document the new translucency settings.
+
+	* doc/figs/mat.ps: Update (new widgets).
+
+	* src/lib/oogl/refcomm/handle.c: Free-list pruning.
+
+	* src/lib/mg/opengl/mgopenglmesh.c, src/lib/mg/opengl/mgopenglshade.c, src/lib/mg/opengl/mgopengldraw.c, src/lib/mg/opengl/mgopengl.c:
+	Support sort of screen-door translucency.
+
+	* src/lib/mg/opengl/Makefile.am: Add mgopenglstipple.[ch]
+
+	* src/lib/gprim/sphere/spheredice.c: Ref-count bug-fix.
+
+	* src/lib/gprim/sphere/spherecreate.c:
+	Cache the tlists needed to generate the different spheres.
+
+	* src/lib/gprim/tlist/tlcreate.c: Free-list pruning.
+
+	* src/lib/gprim/polylist/pldraw.c, src/lib/gprim/npolylist/npldraw.c:
+	Shut-up a compiler warning.
+
+	* src/lib/gprim/mesh/meshdelete.c:
+	Forgot to release the per-quad normals.
+
+	* src/lib/gprim/list/listdraw.c: memory allocation cleanup.
+
+	* src/lib/gprim/geom/nodedata.h: Free-list pruning.
+
+	* src/lib/gprim/geom/geomclass.h:
+	Account for different translucency models.
+
+	* src/lib/gprim/geom/draw.c, src/lib/gprim/geom/bsptree.c:
+	Free-list pruning.
+
+	* src/lib/gprim/bezier/bezcreate.c:
+	Use HandleDoCreate(), no need to check for existing handles here.
+
+	* src/lib/gprim/bbox/bboxcreate.c:
+	BBoxFreeListPrune(): new, release the memory allocated by the free-list.
+
+	* src/lib/geometry/hpointn/hpointn.h:
+	HPtNFReeListPrune(): new, release the memory allocated by the free-list.
+
+	* src/lib/shade/apstream.c, src/lib/shade/appearance.c, src/lib/shade/appearance.h, src/bin/geomview/x11/interface/Material.mib, src/bin/geomview/x11/gvmaterial.c, src/bin/geomview/x11/gvmain.c, src/bin/geomview/common/ui.h, src/bin/geomview/common/ui.c, src/bin/geomview/common/drawer.h, src/bin/geomview/common/drawer.c:
+	Support different translucency styles.
+
+	* src/lib/mg/opengl/mgopenglstipple.c, src/lib/mg/opengl/mgopenglstipple.h:
+	Initial revision.
+
+2008-05-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
+
+	* ChangeLog, src/lib/gprim/list/listdraw.c:
+	Reduce memory consumption and drawing time for huge LIST objects.
+
+	* src/lib/oogl/refcomm/handle.c, src/lib/oogl/refcomm/handle.h, src/lib/gprim/sphere/spherecreate.c:
+	Reduce the load-time of "bulk"-sphere files.
+
+	* ChangeLog, NEWS: Update.
+
+	* m4/geomview.m4:
+	Define VARARRAY() macros to select either alloca() or C99 variadic arrays.
+
+	* INSTALL.Geomview: Add Raphael's install notes for OS/X
+
+	* README: Add Raphael.
+
+	* AUTHORS: Dump version to 1.9.5
+
+	* src/lib/shade/material.c, src/lib/shade/light.c, src/lib/gprim/polylist/plcreate.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/bbox/bboxdraw.c, src/lib/gprim/discgrp/weeks_dirdom.c, src/lib/gprim/bbox/bboxcreate.c, src/lib/geometry/hpoint3/hpoint3.h, src/lib/geomutil/plutil/anytopl.c, src/bin/geomview/common/pickfunc.h, src/bin/geomview/common/transform.c, src/lib/geometry/cmodel/cmodel.c, src/bin/geomview/common/lights.c, src/bin/geomview/common/drawer.c, src/bin/geomutil/plutil/polymerge.c, src/bin/geomview/common/comm.c, src/bin/animate/glob.c, src/bin/geomutil/clip/clipoogl.c, doc/version-pt_BR.texi:
+	Fix a couple of "strict aliasing" warnings.
+
+	* src/lib/oogl/lisp/lisp.c, src/lib/gprim/sphere/spheremisc.c, src/lib/gprim/vect/vectdraw.c, src/lib/gprim/quad/quaddraw.c, src/lib/gprim/skel/skeldraw.c, src/lib/gprim/list/listdraw.c, src/lib/gprim/mesh/meshdraw.c, src/lib/gprim/bbox/bboxtransform.c, src/lib/gprim/geom/bsptree.c, src/lib/geometry/hpointn/hpointn.h, src/lib/geomutil/plutil/anytopl.c, src/lib/gprim/bbox/bboxdraw.c, src/bin/geomview/x11/gvcamui.c:
+	Get rid of alloca in a variety of places, most notably fix an
+	allocation bug in the list-drawing code.
+
+	* src/bin/geomview/common/drawer.c: Get rid of alloca.
+
 2008-05-17  Claus-Justus Heine  <Claus.Heine@Mathematik.Uni-Freiburg.DE>
 
 	* src/lib/gprim/list/listdraw.c:
