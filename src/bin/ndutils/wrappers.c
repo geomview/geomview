@@ -166,7 +166,11 @@ colorsCmd(ClientData data, Tcl_Interp * interp, int argc,
       buf[(j * 2 + 1) * 3 + v * 432 * 3 + 2] = blue;
     }
   }
+#if TK_MAJOR_VERSION == 8 && TK_MINOR_VERSION >= 5
+  Tk_PhotoPutBlock(interp, pp, &blk, 0, 0, 432, 20, TK_PHOTO_COMPOSITE_OVERLAY);
+#else
   Tk_PhotoPutBlock(pp, &blk, 0, 0, 432, 20, TK_PHOTO_COMPOSITE_OVERLAY);
+#endif
   return TCL_OK;
 }
 
