@@ -996,6 +996,7 @@ Handle *PoolIn(Pool *p)
 		 */
 	} else {
 	    PoolClose(p);
+	    REFGET(Handle, h); /* PoolDelete() deletes also the handle. */
 	    PoolDelete(p);
 	    return h;
 	}
