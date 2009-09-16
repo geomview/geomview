@@ -187,7 +187,8 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   AC_HEADER_STDBOOL
   AC_CHECK_HEADERS([limits.h stdlib.h sys/param.h sys/types.h stdio.h math.h])
   AC_CHECK_LIB([m],[sqrt])
-  AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
+  AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp, fmemopen,
+    getopt, optarg, optind, opterr, optopt])
   AC_CHECK_FUNCS([bcopy bzero finite sqrt])
   AC_MSG_CHECKING([for M_PI])
   AC_LANG_PUSH([C])
