@@ -41,7 +41,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 List *ListDraw(List *list)
 {
   List *l;
-  char *lpath;
+  char *lpath = NULL;
   int lpathlen, allocsz;
 
   GeomMakePath(list, 'L', path, pathlen);
@@ -55,6 +55,8 @@ List *ListDraw(List *list)
   if (pathlen < allocsz) {
     lpath = alloca(allocsz);
     memcpy(lpath, path, pathlen+1);
+  } else {
+    lpath = path;
   }
 
   for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
@@ -96,7 +98,7 @@ List *ListDraw(List *list)
 List *ListBSPTree(List *list, BSPTree *bsptree, int action)
 {
   List *l;
-  char *lpath;
+  char *lpath = NULL;
   int lpathlen, allocsz;
 
   GeomMakePath(list, 'L', path, pathlen);
@@ -111,6 +113,8 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
     if (pathlen < allocsz) {
       lpath = alloca(allocsz);
       memcpy(lpath, path, pathlen+1);
+    } else {
+      lpath = path;
     }
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
@@ -155,6 +159,8 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
     if (pathlen < allocsz) {
       lpath = alloca(allocsz);
       memcpy(lpath, path, pathlen+1);
+    } else {
+      lpath = path;
     }
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
@@ -199,6 +205,8 @@ List *ListBSPTree(List *list, BSPTree *bsptree, int action)
     if (pathlen < allocsz) {
       lpath = alloca(allocsz);
       memcpy(lpath, path, pathlen+1);
+    } else {
+      lpath = path;
     }
 
     for (lpathlen = pathlen+1, l = list; l != NULL; l = l->cdr, ++lpathlen) {
