@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.19 2007/09/16 09:55:01 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/oogl/util/futil.c,v 1.20 2010/03/13 16:41:35 rotdrop Exp $ */
 
 /*
  * Geometry object routines. These routines have their "back-seekable"
@@ -166,7 +166,9 @@ fputnf(FILE *file, int count, float *v, int binary)
 	  long w;
 	  for(i = 0; i < count; i++) {
 	    w = gv_htonl(*(long *)&v[i]);
-	    fwrite(&w, sizeof(float), 1, file);
+	    if (fwrite(&w, sizeof(float), 1, file) != 1) {
+	      return i;
+	    }
 	  }
 	  return count;
 #endif
