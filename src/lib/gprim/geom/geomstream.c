@@ -221,12 +221,16 @@ GeomInvokeTranslator(Pool *p, char *prefix, char *cmd, Handle **hp, Geom **gp)
     }
     oldstdin = dup(0);
     close(0);
-    dup(iobfileno(pf));
+    if (dup(iobfileno(pf)) < 0) {
+	/* ignorance */
+    }
     oldchld = signal(SIGCHLD, SIG_DFL);
     tf = iobpopen(cmd, POPEN_RB);
     close(0);
     if (oldstdin > 0) {
-	dup(oldstdin);
+	if (dup(oldstdin) < 0) {
+	    /* ignorance */
+	}
 	close(oldstdin);
     }
     tp = PoolStreamTemp(PoolName(p), tf, NULL, 0, &GeomOps);
