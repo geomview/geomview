@@ -40,9 +40,16 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #include <stdio.h>
 #include "commentP.h"
 
+static void ign_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+  size_t result;
+  
+  result = fwrite(ptr, size, nmemb, stream);
+}
+
 Comment *CommentFSave(Comment *comment, FILE *file, char *fname)
 {
-  (void)fname;
+    (void)fname;
 
     if(comment == NULL || file == NULL)
 	return NULL;
@@ -52,7 +59,7 @@ Comment *CommentFSave(Comment *comment, FILE *file, char *fname)
 	fprintf(file, " {%s}\n", comment->data);
     else {
     	fprintf(file, " %d ", comment->length);
-	fwrite(comment->data, comment->length, 1, file);
+	ign_fwrite(comment->data, comment->length, 1, file);
 	fprintf(file, "\n");
     }
     return comment;

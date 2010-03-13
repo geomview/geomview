@@ -616,6 +616,13 @@ int ImgStreamIn(Pool *p, Handle **hp, Image **imgp)
   return (h != NULL || img != NULL);
 }
 
+static void ign_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+  size_t result;
+  
+  result = fwrite(ptr, size, nmemb, stream);
+}
+
 /* We do not record the file-name, so we can only output raw image
  * data. What format to choose? Highly compressed would be best; we
  * choose "gzip --best" or "bzip --best" if available; the
@@ -650,7 +657,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       olen = ImgWritePAM(img, 0x3, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data LUMINANCE_ALPHA %s%d {\n",
 		 HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
@@ -658,7 +665,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
 #else
       olen = ImgWritePGM(img, 1, HAVE_LIBZ, obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
@@ -668,7 +675,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
       olen = ImgWritePGM(img, 0, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f,
 		 "data LUMINANCE %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
@@ -677,7 +684,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
 #if 1
       olen = ImgWritePAM(img, 0xf, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data RGBA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
@@ -685,7 +692,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
 #else
       olen = ImgWritePGM(img, 3, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data ALPHA %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
@@ -694,7 +701,7 @@ int ImgStreamOut(Pool *p, Handle *h, Image *img)
     case 3: /* RGB only */
       olen = ImgWritePNM(img, 0x07, HAVE_LIBZ, &obuf);
       PoolFPrint(p, f, "data RGB %s%d {\n", HAVE_LIBZ ? "gzip " : "", olen);
-      fwrite(obuf, olen, 1, f);
+      ign_fwrite(obuf, olen, 1, f);
       fprintf(f, "\n");
       PoolFPrint(p, f, "}\n");
       OOGLFree(obuf);
