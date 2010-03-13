@@ -3739,7 +3739,10 @@ const char *LSummarize(LObject *obj)
   }
   summary = malloc(len+1);
   summary[len] = '\0';
-  fread(summary, len, 1, f);
+  if (fread(summary, len, 1, f) != 1) {
+    free(summary);
+    return strdup("???");
+  }
   if(len >= 79) {
     strcpy(summary+75, " ...");
   }
