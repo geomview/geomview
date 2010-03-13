@@ -83,14 +83,13 @@ ppopen(char *cmd, FILE **frompgm, FILE **topgm)
 	return 0;
 
   case 0: {
-	static char rats[] = "Can't exec external module: ";
 	close(pfrom.r);
 	close(pto.w);
 	dup2(pto.r, 0);
 	dup2(pfrom.w, 1);
 	execl("/bin/sh", "sh", "-c", cmd, NULL);
 
-	write(2, rats, sizeof(rats)-1);
+	fprintf(stderr, "Can't exec external module: ");
 	perror(cmd);
 	exit(1);
       }
