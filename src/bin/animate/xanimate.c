@@ -93,6 +93,7 @@ void UIloadinterface()
   int		n, oldstderr;
   int		argcblah = 1;
   char 	       *argvblah[1] = { "Animate" };
+  FILE         *dummy;
 
   mib_Widget   *MainForm, *InfoForm, *CommandForm;
   String	fallbacks[] = {
@@ -124,7 +125,7 @@ void UIloadinterface()
   dpy = XtDisplay(TopLevel);
 
   oldstderr = dup(fileno(stderr));
-  freopen("/dev/null", "w", stderr);
+  dummy = freopen("/dev/null", "w", stderr);
 
   /* configure resize policy of window */
 
@@ -321,7 +322,7 @@ void UIloadinterface()
 		(XtPointer)NULL
 		);
 
-  freopen("/dev/null", "w", stderr);
+  dummy = freopen("/dev/null", "w", stderr);
   dup2(oldstderr, fileno(stderr));
   close(oldstderr);
 

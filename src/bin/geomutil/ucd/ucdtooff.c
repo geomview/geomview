@@ -24,6 +24,9 @@ static char copyright[] = "Copyright (C) 1992-1998 The Geometry Center\n\
 Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 #endif
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 /* File:	anytoucd.c:
    Author:	Charlie Gunn originally
@@ -62,6 +65,30 @@ typedef struct {
 #define UCD_RGB		3
 #define UCD_Z		4
 #define UCD_NUMDATAFIELDS	8
+
+/* Fool some Linux distros which are too eager to improve the quality
+ * of source code and turn on FORTIFY_SOURCE by default for the
+ * C-compiler gcc.
+ */
+#if HAVE_VFSCANF
+# if defined(__GNUC__) && __GNUC__ >= 3
+static int ign_fscanf(FILE *file, const char *format, ...)
+    __attribute__((format(scanf, 2, 3)));
+# endif
+
+static int ign_fscanf(FILE *file, const char *format, ...)
+{
+    int result;
+    va_list ap;
+    
+    va_start(ap, format);
+    result = vfscanf(file, format, ap);
+    va_end(ap);
+    return result;
+}
+#else
+# define ign_fscanf fscanf
+#endif
 
 int 
 gettype(str)
@@ -148,7 +175,7 @@ int main(int argc, char **argv)
     /* read the vertices */
     for (i=0; i<num_nodes; ++i)
  	{
-	    fscanf(fp,"%d%g%g%g",&ucdv[i].id,&ucdv[i].v.x,&ucdv[i].v.y,&ucdv[i].v.z);
+	    ign_fscanf(fp,"%d%g%g%g",&ucdv[i].id,&ucdv[i].v.x,&ucdv[i].v.y,&ucdv[i].v.z);
 	    ucdv[i].v.w = 1.0;
 	}
     /* translate the id's into indices */
@@ -164,9 +191,9 @@ int main(int argc, char **argv)
     for (i=0; i<num_cells; ++i)	{
 	int n;
 	char str[64];
-	fscanf(fp,"%d",&ucdp[i].id);
-	fscanf(fp,"%d",&ucdp[i].m);	/* unused ? */
-	fscanf(fp,"%s",str);
+	ign_fscanf(fp,"%d",&ucdp[i].id);
+	ign_fscanf(fp,"%d",&ucdp[i].m);	/* unused ? */
+	ign_fscanf(fp,"%s",str);
 	ucdp[i].faces = 1;
 	if (strcmp(str,"line") == 0)
 	    n = 2, num_vertinds += 2;
@@ -221,16 +248,16 @@ int main(int argc, char **argv)
 	
     /* get the node data descriptor */
     if (num_node_data_comp != 0)  {
-	fscanf(fp,"%d", &num_node_data_comp);
+	ign_fscanf(fp,"%d", &num_node_data_comp);
 	for (i=0; i<num_node_data_comp; ++i)
 	    {
-		fscanf(fp,"%d", &node_data_comp[i]);
+		ign_fscanf(fp,"%d", &node_data_comp[i]);
 	    }
 
 	/* get the node labels */
 	for (i=0; i<num_node_data_comp; ++i)	{
-	    fscanf(fp,"%31s",str[i]);
-	    fscanf(fp,"%31s",label[i]);	/* this is ignored */
+	    ign_fscanf(fp,"%31s",str[i]);
+	    ign_fscanf(fp,"%31s",label[i]);	/* this is ignored */
 	}
 
 	/* get the node data */
@@ -270,7 +297,7 @@ int main(int argc, char **argv)
 	    }	
 	}
 	for (j=0;j<num_nodes; ++j)	{
-	    fscanf(fp,"%d",&id);
+	    ign_fscanf(fp,"%d",&id);
 	    index = nodeidtoindex(id, ucdv, num_nodes);
 	    if (index < 0) OOGLError(1,"Bad node id %d in ucdtooff\n",id);
     	    for (i=0; i<num_node_data_comp; ++i)	{
@@ -279,12 +306,12 @@ int main(int argc, char **argv)
 		else offset = index * node_data_comp[i];
 		if (ncdptrs[i])	{
 		    for (k = 0; k < node_data_comp[i]; ++k)
-	    		fscanf(fp,"%g", ncdptrs[i] + offset + k);
+	    		ign_fscanf(fp,"%g", ncdptrs[i] + offset + k);
 		    if (gettype(str[i]) == UCD_RGB) ncdptrs[i][offset + 3] = 1.0;
 		}
 		else	{
 		    for (k = 0; k < node_data_comp[i]; ++k)
-	    		fscanf(fp,"%g", &tt);
+	    		ign_fscanf(fp,"%g", &tt);
 		}
 	    }
 	}
@@ -292,14 +319,14 @@ int main(int argc, char **argv)
 
     /* get the cell data descriptor */
     if (num_cell_data_comp != 0)  {
-	fscanf(fp,"%d", &num_cell_data_comp);
+	ign_fscanf(fp,"%d", &num_cell_data_comp);
 	for (i=0; i<num_cell_data_comp; ++i)
-	    fscanf(fp,"%d", &cell_data_comp[i]);
+	    ign_fscanf(fp,"%d", &cell_data_comp[i]);
 
 	/* get the cell labels */
 	for (i=0; i<num_cell_data_comp; ++i)	{
-	    fscanf(fp,"%31s",str[i]);
-	    fscanf(fp,"%31s",label[i]);	/* this is ignored */
+	    ign_fscanf(fp,"%31s",str[i]);
+	    ign_fscanf(fp,"%31s",label[i]);	/* this is ignored */
 	}
 
 	/* get the cell data */
@@ -339,7 +366,7 @@ int main(int argc, char **argv)
 	    }	
 	}
 	for (j=0;j<num_cells; ++j)	{
-	    fscanf(fp,"%d",&id);
+	    ign_fscanf(fp,"%d",&id);
 	    index = cellidtoindex(id, ucdp, num_cells);
 	    if (index < 0) OOGLError(1,"Bad cell id %d in ucdtooff\n",id);
     	    for (i=0; i<num_cell_data_comp; ++i)	{
@@ -347,7 +374,7 @@ int main(int argc, char **argv)
 		offset = index * incr;
 		if (ncdptrs[i])	{
 		    for (k = 0; k < cell_data_comp[i]; ++k)
-	    		fscanf(fp,"%g", ncdptrs[i] + offset + k);
+	    		ign_fscanf(fp,"%g", ncdptrs[i] + offset + k);
 		    if (gettype(str[i]) == UCD_RGB)
 			ncdptrs[i][offset + 3] = 1.0;
 		    /* Clone property over all faces of multifaced solid */
@@ -358,7 +385,7 @@ int main(int argc, char **argv)
 		}
 		else	{
 		    for (k = 0; k < cell_data_comp[i]; ++k)
-	    		fscanf(fp,"%g", &tt);
+	    		ign_fscanf(fp,"%g", &tt);
 		}
 	    }
 	}

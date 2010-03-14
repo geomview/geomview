@@ -101,9 +101,23 @@ char *toname = "Mathematica";
 
 char giveup[] = "Geomview graphics: math2oogl: Couldn't start geomview on ";
 
+/* Fool some Linux distros which are too eager to improve the quality
+ * of source code and turn on FORTIFY_SOURCE by default for the
+ * C-compiler gcc.
+ */
+static int ign_write(int fd, void *buffer, size_t size)
+{
+  return write(fd, buffer, size);
+}
+
+static int ign_dup(int fd)
+{
+  return dup(fd);
+}
+
 static void interrupt(int sig) { 
     char myname[1024];
-    write(2, giveup, sizeof(giveup));
+    ign_write(2, giveup, sizeof(giveup));
 
 #ifdef SVR4
 	/* jkirk@keck.tamu.edu reports no gethostname() in Solaris (SVR4).
@@ -114,8 +128,8 @@ static void interrupt(int sig) {
     gethostname(myname, sizeof(myname));
 #endif
 
-    write(2, myname, strlen(myname));
-    write(2, "\n", 1);
+    ign_write(2, myname, strlen(myname));
+    ign_write(2, "\n", 1);
     exit(1);
 }
 
@@ -146,7 +160,7 @@ void start_gv(char **gvpath, char *pipename, char *toname)
 
 
 	open("/dev/null", O_RDWR);	/* Open /dev/null as file descriptors */
-	dup(0);  dup(0);		/* 0(stdin), 1(stdout) and 2(stderr) */
+	ign_dup(0);  ign_dup(0);	/* 0(stdin), 1(stdout) and 2(stderr) */
 		/* (Could just close them, but that seems to poison geomview
 		 * if it tries to report an error.)
 		 */
@@ -157,9 +171,9 @@ void start_gv(char **gvpath, char *pipename, char *toname)
 	setpgrp(0,getpid());
 #endif
 	execvp(gvpath[0], &args[0]);
-	write(savederr, whynot, sizeof(whynot));
-	write(savederr, gvpath[0], strlen(gvpath[0]));
-	write(savederr, "\n", 1);
+	ign_write(savederr, whynot, sizeof(whynot));
+	ign_write(savederr, gvpath[0], strlen(gvpath[0]));
+	ign_write(savederr, "\n", 1);
 	execvp("geomview", &args[0]);
 	execvp("gv", &args[0]);
 
