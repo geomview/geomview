@@ -1,4 +1,9 @@
-Makefile.in Makefile
-*.lo
 *.la
+*.lo
 .libs
+Makefile.in Makefile
+libtool.m4
+ltoptions.m4
+ltsugar.m4
+ltversion.m4
+lt~obsolete.m4
