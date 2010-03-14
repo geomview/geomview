@@ -675,16 +675,18 @@ static int oldstderr = -1;
 void silence_errors()
 {
   if(!gv_debug) {
+    FILE *dummy;
     if(oldstderr < 0)
 	oldstderr = dup(fileno(stderr));
-    freopen("/dev/null", "w", stderr);
+    dummy = freopen("/dev/null", "w", stderr);
   }
 }
 
 void resume_errors()
 {
   if(oldstderr >= 0) {
-    freopen("/dev/null", "w", stderr);
+    FILE *dummy;
+    dummy = freopen("/dev/null", "w", stderr);
     dup2(oldstderr, fileno(stderr));
     close(oldstderr);
     oldstderr = -1;
