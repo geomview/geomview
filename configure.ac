@@ -177,9 +177,7 @@ AC_PROG_AWK
 AC_PROG_INSTALL
 AC_PROG_CPP
 AC_PROG_LEX
-#AC_PROG_RANLIB
 AC_PROG_YACC
-#AC_DISABLE_SHARED
 AM_CONDITIONAL([INSTALL_LIBGEOMVIEW],[true || test  "z${enable_shared}" = "zyes"])
 AC_PROG_LIBTOOL
 # Search path for "find" executable.  Use "find" unless
