@@ -987,7 +987,7 @@ QvIndexedFaceSet::ToWebOOGL(QvState *state)
 	sprintf(out, "%d", numvts);
 	OOGLoutraw(out);
 	for(int i=start;i<count;i++) {
-	 sprintf(out, " %d", firstindex[i]);
+	 sprintf(out, " %ld", firstindex[i]);
 	 OOGLoutraw(out);
 	}
 	OOGLoutraw("\n");
