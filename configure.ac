@@ -6,6 +6,7 @@ AM_INIT_AUTOMAKE([dist-bzip2 1.10])
 AM_MAINTAINER_MODE
 AC_CONFIG_SRCDIR([src/bin/geomview/x11/gvmain.c])
 AC_CONFIG_HEADER([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST(abs_top_builddir)
 AC_SUBST(abs_top_srcdir)
 
@@ -289,6 +290,7 @@ AC_CHECK_FUNCS([fmemopen],
 AC_REPLACE_FUNCS([acosh popen putenv strcasecmp strdup strncasecmp lstat stat])
 AC_CHECK_DECLS([putenv, strdup, acosh, strcasecmp, strncasecmp])
 AC_CHECK_FUNCS([fstat])
+AC_CHECK_FUNCS([vfscanf])
 AC_FUNC_SELECT_ARGTYPES
 AC_CHECK_FUNC([select],
   [AC_DEFINE(HAVE_SELECT, 1, [Define to 1 if you have the `select' function.])

@@ -32,6 +32,7 @@ AC_DEFUN([GV_INIT_GEOMVIEW],
   AM_MAINTAINER_MODE
   AM_INIT_AUTOMAKE([dist-bzip2 1.9])
   AC_CONFIG_HEADER([config.h])
+  AC_CONFIG_MACRO_DIR([m4])
 
   AC_REQUIRE([GEOMVIEW_SET_PREFIX])
 
@@ -174,7 +175,7 @@ Your version of Geomview seems to be $gv_major.$gv_minor.$gv_rev.
   AC_REQUIRE([AC_PROG_INSTALL])
   AC_REQUIRE([AC_PROG_LN_S])
   AC_REQUIRE([AC_PROG_MAKE_SET])
-  AC_REQUIRE([AC_PROG_RANLIB])
+  #AC_REQUIRE([AC_PROG_RANLIB])
   #
   # check for stuff s.t. Geomview's header files can be included,
   # notably "porting"; but we also make sure that bool_t is defined,
