@@ -1224,7 +1224,7 @@ emit_pick(int pickedid, Pick *pick)
       /*  T = transform converting to the coord system of coordsysid */
       /* This section does the setup for the total hack */    
       Transform T;
-      float got[4];
+      HPoint3 got;
       HPoint3 v, e[2];
       HPoint3 *f;
       int gn, vn, vi, en, ei[2], ein, fn, fi;
@@ -1246,8 +1246,8 @@ emit_pick(int pickedid, Pick *pick)
 	}
 
 	if (pickedid != NOID) {
-	  Pt3Transform(T, &pick->got, (Point3 *)(void *)got);
-	  got[3] = 1;
+	  Pt3Transform(T, &pick->got, HPoint3Point3(&got));
+	  got.w = 1;
 	  gn = 4;
 	} else {
 	  gn = 0;
@@ -1287,7 +1287,7 @@ emit_pick(int pickedid, Pick *pick)
 	 * This CANNOT be called once for every interested party - otherwise
 	 * every interested party will hear about it numerous times. */
 	gv_pick(coordsysid, pickedid,
-		got, gn,
+		HPoint3Data(&got), gn,
 		&v.x, vn,
 		&e[0].x, en,
 		(float *)f, fn, 	/* f, fn, */
