@@ -104,7 +104,7 @@ Sphere *SphereUnion3(Sphere *a, Sphere *b, Sphere *dest) {
 		"Euclidean space.");
     
     HPt3Sub(&b->center, &a->center, &diff);
-    Pt3Unit((Point3*)(void *)&diff);
+    Pt3Unit(HPoint3Point3(&diff));
     center.x = b->center.x + diff.x*b->radius;
     center.y = b->center.y + diff.y*b->radius;
     center.z = b->center.z + diff.z*b->radius;

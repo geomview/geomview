@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
 /*
- * $Id: mg.c,v 1.19 2007/05/16 19:38:06 rotdrop Exp $
+ * $Id: mg.c,v 1.20 2010/03/14 11:45:43 rotdrop Exp $
  * Machine-independent part of MG library.
  * Initialization, common code, and some mgcontext maintenance.
  *
@@ -1031,7 +1031,7 @@ void mg_findcam(void)
   /* XXX assumes left multiplication: we take C2W[3] as a point! */
   HPt3Transform(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[3][0], &_mgc->cpos);
   HPt3Transform(_mgc->xstk->Tinv, (HPoint3 *)&_mgc->C2W[2][0], &camZ);
-  camZ.w = Pt3Length((Point3 *)(void *)&camZ);
+  camZ.w = Pt3Length(HPoint3Point3(&camZ));
   HPt3ToPt3(&camZ, &_mgc->camZ);
   _mgc->has |= HAS_CPOS;
 }
