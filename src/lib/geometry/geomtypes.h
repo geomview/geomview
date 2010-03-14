@@ -42,8 +42,33 @@ typedef struct { Pt3Coord x, y, z; } Point3;
 
 #ifndef HPOINT3_TYPEDEF
 # define HPOINT3_TYPEDEF 1
-typedef float HPt3Coord;
+typedef Pt3Coord HPt3Coord;
 typedef struct { HPt3Coord x, y, z, w; } HPoint3;
+
+static inline Point3 *HPoint3Point3(HPoint3 *hpt3)
+{
+  typedef union
+  {
+    HPt3Coord array[4];
+    HPoint3   hpt3;
+    Point3    pt3;
+  } HPoint3Cast;  
+
+  return &((HPoint3Cast *)hpt3)->pt3;
+}
+
+static inline HPt3Coord *HPoint3Data(HPoint3 *hpt3)
+{
+  typedef union
+  {
+    HPt3Coord array[4];
+    HPoint3   hpt3;
+    Point3    pt3;
+  } HPoint3Cast;  
+
+  return ((HPoint3Cast *)hpt3)->array;
+}
+
 #endif
 
 #ifndef TRANSFORM3_TYPEDEF

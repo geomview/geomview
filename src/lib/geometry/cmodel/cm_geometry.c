@@ -48,7 +48,7 @@ void projective_to_conformal(int curv, HPoint3 *proj, Transform T, Point3 *conf)
    }
    else
        scale = -norm/pt.w;
-   Pt3Mul(1 / scale, (Point3 *)(void *)&pt, conf);
+   Pt3Mul(1 / scale, HPoint3Point3(&pt), conf);
    return;
    }
 
@@ -56,13 +56,13 @@ void TgtTransform(Transform T, HPoint3 *p, Point3 *v, HPoint3 *tp, Point3 *tv)
 {
    HPoint3 hv, thv;
    
-   Pt3Copy(v, (Point3 *)(void *)&hv);
+   Pt3Copy(v, HPoint3Point3(&hv));
    hv.w = 0;
    
    HPt3Transform(T, p, tp);
    HPt3Transform(T, &hv, &thv);
    
-   Pt3Comb(1/tp->w, (Point3 *)(void *)&thv,
+   Pt3Comb(1/tp->w, HPoint3Point3(&thv),
 	   -thv.w/tp->w/tp->w, (Point3 *)(void *)tp, tv);
    
    return;
@@ -90,7 +90,7 @@ void projective_vector_to_conformal(int curv, HPoint3 *pt,  Point3 *v,
    else
        scale = -norm/tp.w;
 
-   Pt3Mul(1 / scale, (Point3 *)(void *)&tp, ppt);
+   Pt3Mul(1 / scale, HPoint3Point3(&tp), ppt);
    if (curv)
        Pt3Comb(norm/scale, &tv, Pt3Dot(ppt, &tv), ppt, pv);
    else
