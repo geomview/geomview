@@ -946,7 +946,7 @@ ui_ppmglxsnapshot(char *fname, int id, DView *dv, WnWindow *wn, WnPosition *wp)
   Camera *cam = NULL;
   Appearance *ap;
   WnWindow *win;
-  WnPosition vp, oswp;
+  WnPosition vp;
   int mgspace;
   mgshadefunc shader = NULL;
   int failed = 1;
