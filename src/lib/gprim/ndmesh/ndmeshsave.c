@@ -33,6 +33,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "ndmeshP.h"
 
+static void ign_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+  size_t result;
+  
+  result = fwrite(ptr, size, nmemb, stream);
+}
+
 NDMesh *
 NDMeshFSave(NDMesh *m, FILE *outf)
 {
@@ -64,13 +71,13 @@ NDMeshFSave(NDMesh *m, FILE *outf)
   fprintf(outf, "nMESH %d", m->pdim-1);
   if (m->geomflags & MESH_BINARY) {   /* Hack -- should be sent by context */
     fprintf(outf, "BINARY\n");
-    fwrite(&m->mdim, sizeof(int), m->meshd, outf);
+    ign_fwrite(&m->mdim, sizeof(int), m->meshd, outf);
     for (i = 0; i < m->mdim[1]; i++) {
       for (j = 0; j < m->mdim[0]; j++) {
-	fwrite((*p)->v+offset, sizeof(float), wdim, outf);
+	ign_fwrite((*p)->v+offset, sizeof(float), wdim, outf);
 	p++;
-	if (m->geomflags & MESH_C) { fwrite(c, 4, 4, outf); c++; }
-	if (m->geomflags & MESH_U) { fwrite(u, 4, 3, outf); u++; }
+	if (m->geomflags & MESH_C) { ign_fwrite(c, 4, 4, outf); c++; }
+	if (m->geomflags & MESH_U) { ign_fwrite(u, 4, 3, outf); u++; }
       }
     }
   } else {

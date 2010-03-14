@@ -33,6 +33,13 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 #include "meshP.h"
 
+static void ign_fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream)
+{
+  size_t result;
+  
+  result = fwrite(ptr, size, nmemb, stream);
+}
+
 Mesh *MeshFSave(Mesh *m, FILE *outf)
 {
   int i, j;
@@ -60,17 +67,17 @@ Mesh *MeshFSave(Mesh *m, FILE *outf)
   if (m->geomflags & MESH_BINARY) /* Hack -- should be sent by context */
   {
     fprintf(outf, "MESH BINARY\n");
-    fwrite(&m->nu, 4, 1, outf);
-    fwrite(&m->nv, 4, 1, outf);
+    ign_fwrite(&m->nu, 4, 1, outf);
+    ign_fwrite(&m->nv, 4, 1, outf);
     for (i = 0; i < m->nv; i++) {
       for (j = 0; j < m->nu; j++) {
-	if (m->geomflags & MESH_Z) fwrite(&p->z, 4, 1, outf);
-	else if (m->geomflags & MESH_4D) fwrite(p, 4, 4, outf);
-	else fwrite(p, 4, 3, outf);
+	if (m->geomflags & MESH_Z) ign_fwrite(&p->z, 4, 1, outf);
+	else if (m->geomflags & MESH_4D) ign_fwrite(p, 4, 4, outf);
+	else ign_fwrite(p, 4, 3, outf);
 	p++;
-	if (m->geomflags & MESH_N) { fwrite(n, 4, 3, outf); n++; }
-	if (m->geomflags & MESH_C) { fwrite(c, 4, 4, outf); c++; }
-	if (m->geomflags & MESH_U) { fwrite(u, 4, 3, outf); u++; }
+	if (m->geomflags & MESH_N) { ign_fwrite(n, 4, 3, outf); n++; }
+	if (m->geomflags & MESH_C) { ign_fwrite(c, 4, 4, outf); c++; }
+	if (m->geomflags & MESH_U) { ign_fwrite(u, 4, 3, outf); u++; }
       }
     }
   }
