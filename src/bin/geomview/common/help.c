@@ -79,8 +79,9 @@ void ui_manual_browser(const char *type)
   if (file == NULL) {
     OOGLError(0, "Unable to locate the Geomview manual (\"%s\").", helper);
   } else {
+    int dummy;
     snprintf(helper, PATH_MAX, "%s %s &", browser, file);
-    system(helper);
+    dummy = system(helper);
   }
 }
 

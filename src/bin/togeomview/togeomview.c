@@ -394,7 +394,8 @@ int main(int argc, char *argv[])
     for (;;) {
       if (select(fd+1, &sset, NULL, NULL, &tenth) == 1) {
 	if ((n = read(fd, buffer, sizeof(buffer))) > 0) {
-	  write(1, buffer, n);
+	  int dummy;
+	  dummy = write(1, buffer, n);
 	}
       } else {
 	break;

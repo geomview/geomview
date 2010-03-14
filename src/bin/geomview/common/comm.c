@@ -108,6 +108,15 @@ static HandleOps listenOps = {	/* "Ops" structure for listening sockets */
 };
 #endif
 
+static int ign_read(int fd, void *buffer, size_t size)
+{
+  int result;
+  
+  result = read(fd, buffer, size);
+  
+  return result;
+}
+
 static int 
 commandimport(Pool *p, Handle **unused, Ref **unused_too )
 {
@@ -421,7 +430,7 @@ fatalsig(int sig)
 	  "dump core now (y/n) [n] ? ",
 	  getpid(), signal_name(sig));
   fflush(stderr);
-  read(2, &die, 1);
+  ign_read(2, &die, 1);
   fprintf(stderr, "got answer %c\n", (int)die % 0xff);
   fflush(stderr);
   if (die != 'y' && die != 'Y')
@@ -668,7 +677,6 @@ emodule_run(emodule *em)
     return NULL;
 
   case 0: {
-    static char rats[] = "Can't exec external module: ";
     char envbuf[10240];
 
     if (otherpgrp) {
@@ -707,7 +715,7 @@ emodule_run(emodule *em)
     signal(SIGCHLD, SIG_DFL);
     execl("/bin/sh", "sh", "-c", program, NULL);
 
-    write(STDERR_FILENO, rats, sizeof(rats)-1);
+    fprintf(stderr, "Can't exec external module: ");
     perror(em->text);
     exit(1);
   }
