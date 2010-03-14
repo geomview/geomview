@@ -798,9 +798,17 @@ PoolInAll(fd_set *fds, int *nfds)
 	 * pool. Luckily we do not really delete pools; if "p" is
 	 * actually in the deleted state, then it has its PF_DELETED
 	 * flag set. In this case we simply restart the loop.
+	 *
+	 * NOTE: Just using &AllPools triggers a strict aliasing
+	 * warning with gcc. Of course, I don't know if the funny
+	 * "next->prev" stuff simply confuses the compiler such that
+	 * it does no longer emit the warning, but still emits wrong
+	 * code. In principle the construct should be ok. "next->prev"
+	 * should always point back to &AllPools. Of course, the
+	 * compiler cannot know this. Maybe this is the difference.
 	 */
 	if (p->flags & PF_DELETED) {
-	    p = DblListContainer(&AllPools, Pool, node);
+	    p = DblListContainer(AllPools.next->prev, Pool, node);
 	}
     }
     return got;

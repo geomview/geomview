@@ -40,6 +40,27 @@ struct NDMesh {
   TxST    *u;           /* texture coordinates, should we need any */
 };
 
+static inline Ref *NDMeshRef(NDMesh *m)
+{
+  union castit {
+    Ref    ref;
+    NDMesh mesh;
+  };
+
+  return &((union castit *)m)->ref;
+}
+
+static inline Geom *NDMeshGeom(NDMesh *m)
+{
+  union castit {
+    Geom geom;
+    NDMesh mesh;
+  };
+
+  return &((union castit *)m)->geom;
+}
+
+
 /* NOTE that these meshes may have missing vertices; some of the p[]
  * and c[] entries may be NULL.
  */

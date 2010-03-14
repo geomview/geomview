@@ -295,7 +295,9 @@ Pt3ToHPt3(Point3 *v3, HPoint3 *v4, int n)
 {
   int i;
   for (i = 0; i < n; ++i) {
-    *(Point3 *)&v4[i] = v3[i];
+    v4[i].x = v3[i].x;
+    v4[i].y = v3[i].y;
+    v4[i].z = v3[i].z;
     v4[i].w = 1.0;
   }
 }
@@ -304,7 +306,7 @@ static inline void
 HPt3ToPt3( HPoint3 *hp, Point3 *p )
 {
   if(hp->w == 1.0 || hp->w == 0.0) {
-    *p = *(Point3 *)hp;
+    memcpy(p, hp, sizeof(Point3));
   } else {
     p->x = hp->x / hp->w;
     p->y = hp->y / hp->w;
@@ -354,7 +356,7 @@ HPt3Dehomogenize(HPoint3 *hp1, HPoint3 *hp2)
 {
   HPt3Coord inv;
   if (hp1->w == 1.0 || hp1->w == 0.0) {
-    if (hp2 != hp1) *hp2 = *hp1; 
+    if (true || hp2 != hp1) *hp2 = *hp1; 
     return;
   }
   /* else if ( || hp->w == 0.0) hp->w = .000001;*/	
@@ -692,7 +694,7 @@ HPt3SubPt3(HPoint3 *p1, HPoint3 *p2, Point3 *v)
     *v = *(Point3 *)p1;
     return;
   } else if (p2->w == 0) {
-    *v = *(Point3 *)p2;
+    *v = *HPoint3Point3(p2);
     Pt3Mul(-1.0, v, v);
     return;
   } else {

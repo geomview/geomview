@@ -31,7 +31,7 @@ Copyright (C) 1998-2000 Stuart Levy, Tamara Munzner, Mark Phillips";
 
 /* Authors: Charlie Gunn, Stuart Levy, Tamara Munzner, Mark Phillips */
 
-/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.20 2008/05/19 04:46:04 rotdrop Exp $ */
+/* $Header: /home/mbp/geomview-git/geomview-cvs/geomview/src/lib/gprim/npolylist/npldraw.c,v 1.21 2010/03/14 13:29:48 rotdrop Exp $ */
 
 /*
  * Draw a PolyList using mg library.
@@ -64,7 +64,7 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
 
   /* Copy the PolyList onto the stack. */
   memset(&npl, 0, sizeof(PolyList));
-  GGeomInit((Geom *)(void *)&npl, PolyListMethods(), PLMAGIC, NULL);
+  GGeomInit(PolyListGeom(&npl), PolyListMethods(), PLMAGIC, NULL);
   npl.n_polys   = pl->n_polys;
   npl.n_verts   = pl->n_verts;
   npl.geomflags = pl->geomflags;
@@ -129,7 +129,7 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
     case APF_SMOOTH: normal_need |= PL_HASVN; break;
     default: break;
     }
-    if (GeomHasAlpha((Geom *)(void *)&npl, ap)) {
+    if (GeomHasAlpha(PolyListGeom(&npl), ap)) {
       normal_need |= PL_HASPFL|PL_HASPN;
     }
   }
@@ -195,9 +195,9 @@ draw_projected_polylist(mgNDctx *NDctx, NPolyList *pl)
    * translucent.
    */
   if (NDctx->bsptree && (npl.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)pl, (Geom *)(void *)&npl);
-    GeomBSPTree((Geom *)(void *)&npl, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)(void *)&npl, (Geom *)pl);
+    GeomNodeDataMove(NPolyListGeom(pl), PolyListGeom(&npl));
+    GeomBSPTree(PolyListGeom(&npl), NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove(PolyListGeom(&npl), NPolyListGeom(pl));
   }
 
   h->v = hdata;

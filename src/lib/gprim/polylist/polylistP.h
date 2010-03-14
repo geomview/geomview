@@ -74,6 +74,26 @@ struct PolyList
   /* For 4-D points, see geomflags & VERT_4D */
 };
 
+static inline Ref *PolyListRef(PolyList *pl)
+{
+  union castit {
+    Ref      ref;
+    PolyList pl;
+  };
+
+  return &((union castit *)pl)->ref;
+}
+
+static inline Geom *PolyListGeom(PolyList *pl)
+{
+  union castit {
+    Geom     geom;
+    PolyList pl;
+  };
+
+  return &((union castit *)pl)->geom;
+}
+
 extern PolyList *PolyListCreate(PolyList *exist, GeomClass *Class, va_list *a_list);
 extern PolyList *PolyListCopy( PolyList *poly );
 extern PolyList *PolyListDelete( PolyList *poly );

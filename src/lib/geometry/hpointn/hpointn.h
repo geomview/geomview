@@ -491,7 +491,7 @@ HPtNTransform3(Transform3 T, int *perm, const HPointN *from, HPointN *to)
 {
   const int d3 = 4;
   int i;
-  HPt3Coord from3[4];
+  HPoint3Cast from3;
   int perm_dim;
 
   if (!perm) {
@@ -503,8 +503,8 @@ HPtNTransform3(Transform3 T, int *perm, const HPointN *from, HPointN *to)
     }
     ++perm_dim;
   }
-  HPtNToHPt3(from, perm, (HPoint3 *)(void *)from3);
-  HPt3Transform(T, (HPoint3 *)(void *)from3, (HPoint3 *)(void *)from3);
+  HPtNToHPt3(from, perm, &from3.hpt3);
+  HPt3Transform(T, &from3.hpt3, &from3.hpt3);
   if (from->dim < perm_dim) {
     to = HPtNPad(from, perm_dim, to);
   } else {
@@ -512,13 +512,13 @@ HPtNTransform3(Transform3 T, int *perm, const HPointN *from, HPointN *to)
   }
   if (perm) {
     for (i = 0; i < 4; i++) {
-      to->v[perm[i]] = from3[i];
+      to->v[perm[i]] = from3.array[i];
     }
   } else {
-    to->v[0] = from3[3];
-    to->v[1] = from3[0];
-    to->v[2] = from3[1];
-    to->v[3] = from3[2];
+    to->v[0] = from3.array[3];
+    to->v[1] = from3.array[0];
+    to->v[2] = from3.array[1];
+    to->v[3] = from3.array[2];
   }
   return to;
 }

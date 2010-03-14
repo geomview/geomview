@@ -41,6 +41,26 @@ struct Mesh {
   ColorA  *c;
 };
 
+static inline Ref *MeshRef(Mesh *m)
+{
+  union castit {
+    Ref  ref;
+    Mesh mesh;
+  };
+
+  return &((union castit *)m)->ref;
+}
+
+static inline Geom *MeshGeom(Mesh *m)
+{
+  union castit {
+    Geom geom;
+    Mesh mesh;
+  };
+
+  return &((union castit *)m)->geom;
+}
+
 #define nuverts(m) (m)->nu
 #define nvverts(m) (m)->nv
 #define nuquads(m) (((m)->flag & MESH_UWRAP) ? (m)->nu : (m)->nu - 1)

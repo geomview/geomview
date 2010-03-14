@@ -108,7 +108,7 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
     case APF_SMOOTH: normal_need |= MESH_N; break;
     default: break;
     }
-    if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
+    if (GeomHasAlpha(MeshGeom(&m), ap)) {
       /* could re-use per quad normals here */
     }
   }
@@ -137,9 +137,9 @@ draw_projected_ndmesh(mgNDctx *NDctx, NDMesh *mesh)
    * translucent.
    */
   if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)mesh, (Geom *)(void *)&m);
-    GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)(void *)&m, (Geom *)mesh);
+    GeomNodeDataMove(NDMeshGeom(mesh), MeshGeom(&m));
+    GeomBSPTree(MeshGeom(&m), NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove(MeshGeom(&m), NDMeshGeom(mesh));
   }
 
   if (m.n) {

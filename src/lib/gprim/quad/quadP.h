@@ -49,6 +49,26 @@ Quad *QuadPick(Quad *, Pick *, Appearance *,
 	       Transform, TransformN *, int *axes);
 Quad *QuadComputeNormals(Quad *q);
 
+static inline Ref *QuadRef(Quad *q)
+{
+  union castit {
+    Ref  ref;
+    Quad quad;
+  };
+
+  return &((union castit *)q)->ref;
+}
+
+static inline Geom *QuadGeom(Quad *q)
+{
+  union castit {
+    Geom geom;
+    Quad quad;
+  };
+
+  return &((union castit *)q)->geom;
+}
+
 #endif /* ! QUADPDEFS */
 
 /*

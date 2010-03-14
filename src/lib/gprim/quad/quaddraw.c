@@ -50,7 +50,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
   int i, colored = 0, alpha = 0;
   mgNDmapfunc mapHPtN = NDctx->mapHPtN;
   Appearance *ap = &_mgc->astk->ap;
-
+  
   /* TODO: do NOT use alloca */
 #if !!NO_ALLOCA
   q.p  = (QuadP *)alloca(npts*sizeof(HPoint3));
@@ -61,7 +61,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 #endif
   q.n  = NULL;
   q.ap = NULL;
-  RefInit((Ref *)(void *)&q, qquad->magic);
+  RefInit(QuadRef(&q), qquad->magic);
   DblListInit(&q.pernode);
   
   nc = q.c[0];
@@ -110,7 +110,7 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
     if (IS_SHADED(ap->shading)) {
       QuadComputeNormals(&q);
     }
-    if (GeomHasAlpha((Geom *)(void *)&q, ap)) {
+    if (GeomHasAlpha(QuadGeom(&q), ap)) {
       /* could re-use per quad normals here ? */
     }
   }
@@ -119,9 +119,9 @@ draw_projected_quad(mgNDctx *NDctx, Quad *qquad)
 	  q.p[0], q.n[0], colored ? q.c[0] : qquad->c[0], q.geomflags);
 
   if (NDctx->bsptree && (q.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)qquad, (Geom *)(void *)&q);
-    GeomBSPTree((Geom *)(void *)&q, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)(void *)&q, (Geom *)qquad);
+    GeomNodeDataMove(QuadGeom(qquad), QuadGeom(&q));
+    GeomBSPTree(QuadGeom(&q), NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove(QuadGeom(&q), QuadGeom(qquad));
   }
 
   OOGLFree(q.n);

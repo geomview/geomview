@@ -56,7 +56,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
   m.nq = NULL;
   m.c  = OOGLNewNE(ColorA, npts, "ND colors");
   m.ap = NULL;
-  RefInit((Ref *)(void *)&m, mesh->magic);
+  RefInit(MeshRef(&m), mesh->magic);
   DblListInit(&m.pernode);
 
   h = HPtNCreate(5, NULL);
@@ -110,7 +110,7 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
     case APF_SMOOTH: normal_need |= MESH_N; break;
     default: break;
     }
-    if (GeomHasAlpha((Geom *)(void *)&m, ap)) {
+    if (GeomHasAlpha(MeshGeom(&m), ap)) {
       /* could re-use per quad normals here */
     }
   }
@@ -146,9 +146,9 @@ draw_projected_mesh(mgNDctx *NDctx, Mesh *mesh)
    * translucent.
    */
   if (NDctx->bsptree && (m.geomflags & GEOM_ALPHA)) {
-    GeomNodeDataMove((Geom *)mesh, (Geom *)(void *)&m);
-    GeomBSPTree((Geom *)(void *)&m, NDctx->bsptree, BSPTREE_ADDGEOM);
-    GeomNodeDataMove((Geom *)(void *)&m, (Geom *)mesh);
+    GeomNodeDataMove(MeshGeom(mesh), MeshGeom(&m));
+    GeomBSPTree(MeshGeom(&m), NDctx->bsptree, BSPTREE_ADDGEOM);
+    GeomNodeDataMove(MeshGeom(&m), MeshGeom(mesh));
   }
 
   if (m.n) {

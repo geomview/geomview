@@ -55,6 +55,26 @@ struct NPolyList
 			 */
 };
 
+static inline Ref *NPolyListRef(NPolyList *pl)
+{
+  union castit {
+    Ref       ref;
+    NPolyList pl;
+  };
+
+  return &((union castit *)pl)->ref;
+}
+
+static inline Geom *NPolyListGeom(NPolyList *pl)
+{
+  union castit {
+    Geom      geom;
+    NPolyList pl;
+  };
+
+  return &((union castit *)pl)->geom;
+}
+
 #define NPL_HASVLVCOL GEOMFLAG(0x8000) /* pl->vl[i].vcol is uptodate */
 
 extern NPolyList *NPolyListCreate(NPolyList *exist, GeomClass *Class, va_list *a_list);
