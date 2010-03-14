@@ -1259,7 +1259,7 @@ QvPointSet::ToWebOOGL(QvState *state)
       return;
     }
     OOGLout("{ = VECT");
-    sprintf(out, "%d %d %d\n", numverts, numverts, numverts);
+    sprintf(out, "%ld %ld %ld\n", numverts, numverts, numverts);
     OOGLout(out);
 
     /* number of vertices in each poly line */
