@@ -1413,7 +1413,7 @@ Para uma lista de todas as teclas de atalho, pressione a telca @emph{@code{?}}.
 
 @comment ================================================================
 @node Chamando, Movimentos do Mouse, Interacao Basica, Interacao
-@section Loading Objects Into Geomview
+@section Disponibilizando Objetos dentro do Geomview
 
 Existem muitos caminhos para chamar um objeto dentro do Geomview.
 
@@ -1491,7 +1491,7 @@ veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
 
 @comment ================================================================
 @node Movimentos do Mouse, Aparencia, Chamando, Interacao
-@section Using the Mouse to Manipulate Objects
+@section Usando o Mouse para  Manipular Objetos
 
 Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
 diferentes modos de movimento do mouse: rota@,{c}@~{a}o (@emph{Rotate}), transla@,{c}@~{a}o (@emph{Translate}),
@@ -1711,7 +1711,7 @@ o bot@~{a}o Restringir Movimento (@emph{Constrain Motion}).
 @end menu
 
 @node Ponto de Interesse,  , Movimentos do Mouse, Movimentos do Mouse
-@subsection Selecting a Point of Interest
+@subsection Selecionando um Ponto de Interesse
 
 @'{E} algumas vezes @'{u}til especificar um ponto em particular sobre algum objeto em uma
 janela do window como o ponto de centro para movimentos do mouse.  Voc@^{e} pode fazer isso
@@ -1963,7 +1963,7 @@ e a todos os pain@'{e}is relacionados a apar@^{e}ncia.
 
 @comment ----------------------------------------------------------------
 @node Painel de Materiais, Painel de Iluminacao, Painel de Aparencia, Aparencia
-@subsection The Materials Panel
+@subsection O Painel de Materiais
 
 O painel de materiais (@emph{Materials}) controla as propriedades materiais das surperf@'{i}cies.
 O painel de materiais trabalha com o objeto alvo da mesma forma que o
@@ -2018,7 +2018,7 @@ tamanho de destaques especulares sobre a superf@'{i}cie.  Valores pequenos forne
 superf@'{i}cie uma apar@^{e}ncia sombria.
 
 @item Ambient Reflectance
-This bot@~{a}o deslizante controla o quanto da luz ambiente uma superf@'{i}cie reflete.
+Esse bot@~{a}o deslizante controla o quanto da luz ambiente uma superf@'{i}cie reflete.
 
 @item Specular Reflectance
 Esse bot@~{a}o deslizante controla a reflect@^{a}ncia especular de uma  superf@'{i}cie.  Isso tem
@@ -2032,9 +2032,9 @@ Esse bot@~{a}o dispensa o painel de materiais (@emph{Materials}).
 
 @comment ----------------------------------------------------------------
 @node Painel de Iluminacao,  , Painel de Materiais, Aparencia
-@subsection The Lighting Panel
+@subsection O Painel de Luzes
 
-O painel de ilumina@,{c}@~{a}o (@emph{Lighting}) controla o n@'{u}mero, a posi@,{c}@~{a}o, e a cor das
+O painel de luzes (@emph{Lights}) controla o n@'{u}mero, a posi@,{c}@~{a}o, e a cor das
 fontes de luz usadas no sombreamento.
 @float
 @image{figs/light}
@@ -2237,7 +2237,7 @@ Esse bot@~{a}o dispensa o painel de @emph{Cameras}.
 
 @comment ================================================================
 @node Gravando, Comandos, Cameras, Interacao
-@section Saving your work
+@section Gravando Seu Trabalho
 
 O painel @emph{Save} do Geomview permite a voc@^{e} armazenar objetos do Geomview e outra
 informa@,{c}@~{a}o em arquivos que voc@^{e} pode recuperar dentro do Geomview ou a partir de outros
@@ -2363,7 +2363,7 @@ restaurar as posi@,{c}@~{o}es de todos os pain@'{e}is.
 
 @comment ================================================================
 @node Comandos, Atalhos de Teclado, Gravando, Interacao
-@section The Commands Panel
+@section O Painel de Comandos
 
 O painel de comandos (@emph{Commands}) permite a voc@^{e} digitar comandos GCL.  Quando
 voc@^{e} pressionar @kbd{@key{Enter}}, Geomview interpreta o comando e imprime qualquer
@@ -2721,7 +2721,7 @@ do Geomview.
 
 @comment ----------------------------------------------------------------
 @node Sintaxe comum, Nomes de arquivos, Convencoes, Convencoes
-@subsection Syntax Common to All OOGL File Formats
+@subsection Sintaxe Comum a Todos os Formatos de Arquivo da OOGL
 
 A maioria dos formatos de arquivo de objeto OOGL s@~{a}o do formato livre ASCII --- qualquer quantidade de
 espa@,{c}os em branco (caracteres n@~{a}o imprim@'{i}veis, tabula@,{c}@~{o}es, caractere de nova linha) pode aparecer entre os sinalizadores (n@'{u}meros,
@@ -2745,7 +2745,7 @@ prefixos @'{e} importante, e.g. @code{CNMESH} @'{e} significativo mas
 
 @comment ----------------------------------------------------------------
 @node Nomes de arquivos, Vertices, Sintaxe comum, Convencoes
-@subsection File Names
+@subsection Nomes de Arquivo
 
 Quando objetos OOGL s@~{a}o lidos de arquivos localizados em disco, a biblioteca OOGL usa o
 sufixo do arquivo para supor o tipo de arquivo.
@@ -2757,7 +2757,7 @@ v@'{a}lidos.
 
 @comment ----------------------------------------------------------------
 @node Vertices, ND-Vertices, Nomes de arquivos, Convencoes
-@subsection Vertices
+@subsection V@'{e}rtices
 
 Muitos objetos compartilham um estilo comum de representar v@'{e}rtices com
 op@,{c}@~{o}es de superf@'{i}cie normal de v@'{e}rtice e cor.  Todos os v@'{e}rtices dentro de um
@@ -2810,7 +2810,7 @@ Voc@^{e} pode modificar a ordem dos dados modificando o cabe@,{c}alho de palavra
 
 @comment ----------------------------------------------------------------
 @node ND-Vertices, Direcoes de superficies normais, Vertices, Convencoes
-@subsection @var{N}-dimensional Vertices
+@subsection V@'{e}rtices @var{N}-dimensionais
 
 Muitos objetos compartilham um estilo comum de representa@,{c}@~{a}o de v@'{e}rtice com
 opcionais de superf@'{i}cie normal e cor.  Todos os v@'{e}rtices dentro de um
@@ -2858,7 +2858,7 @@ est@'{a} na dire@,{c}@~{a}o dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
 @node Matrizes de transformacao, Matrizes de transformacao ND, Direcoes de superficies normais, Convencoes
-@subsection Matrizes de transformacao
+@subsection Matrizes de transforma@'{c}@~{a}o
 
 Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transforma@,{c}@~{o}es sobre
 objetos homog@^{e}neos.  Essas matrizes atuam atrav@'{e}s de multiplica@,{c}@~{a}o @`{a} direita de
@@ -2875,7 +2875,7 @@ d@'{e}cimo segundo e d@'{e}cimo sexto elementos) s@~{a}o tipicamente 0, 0, 0, e 
 
 @comment ----------------------------------------------------------------
 @node Matrizes de transformacao ND, Formato binario, Matrizes de transformacao, Convencoes
-@subsection Matrizes de transformacao ND
+@subsection Matrizes de transforma@'{c}@~{a}o ND
 
 No contexto do espa@,{c}o @var{N}-dimensional (@var{N} > 3) alguns objetos
 incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transforma@,{c}@~{o}es sobre objetos
@@ -2894,7 +2894,7 @@ elementos). A primeira coluna da matriz A (a coluna com @'{i}ndice zero) @'{e} t
 
 @comment ----------------------------------------------------------------
 @node Formato binario, Referencias, Matrizes de transformacao ND, Convencoes
-@subsection Formato binario
+@subsection Formato bin@'{a}rio
 
 Muitos objetos OOGL aceitam formatos o formato de arquivo bin@'{a}rio bem como o formato de arquivo ASCII.
 Esses arquivos come@,{c}am com a indica@,{c}@~{a}o usual (e.g. @code{CQUAD})
@@ -2938,7 +2938,7 @@ dados bin@'{a}rios.
 
 @comment ----------------------------------------------------------------
 @node Referencias, Aparencias, Formato binario, Convencoes
-@subsection Embedded objects and external-object references
+@subsection Refer@^{e}ncias a Objetos Embutidos e a Objetos Externos
 
 Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem refer@^{e}ncias a outros
 objetos OOGL, que podem aparecer literalmente no fluxo de dados, serem chamados
@@ -3004,7 +3004,7 @@ podem aparecer em qualquer lugar.
 
 @comment ----------------------------------------------------------------
 @node Aparencias, Mapeamento de Textura, Referencias, Convencoes
-@subsection Aparencias
+@subsection Apar@^{e}ncias
 
 Objetos geom@'{e}tricos podem ter informa@,{c}@~{o}es de apar@^{e}ncia associada,
 especificando tonalidade, brilho, cor, visualiza@,{c}@~{a}o wire-frame vs.
@@ -3299,30 +3299,32 @@ image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Objetos de imagem}) @}
 file      nomearquivo
 alphafile nomearquivo
   @emph{Isso @'{e} considerado obsoleto, e somente mantido por compatibilidade,
-  o moderno caminho @'{e} usar o novo objeto imagem OOGL. Veja @ref{image, Objetos de imagem}.
-  O material documentado aqui pode ainda trabalhar apesar disso}
+  o moderno caminho @'{e} usar o novo objeto imagem OOGL. Veja 
+  @ref{image, Objetos de imagem}.  O material documentado aqui pode
+  ainda funcionar apesar disso}
 
   Especifica arquivo(s0 de imagem contendo a textura.
        
-  A palavra chave @emph{file} especifica um arquivo com informa@,{c}@~{o}es de cor ou de brilho;
-  @emph{alphafile} se presente, especifica uma m@'{a}scara de transpar@^{e}ncia ("alpha");
-  onde a m@'{a}xcara for zero, pixels simplesmente n@~{a}o s@~{a}o desenhados.
-  Muitos formatos formatos de arquivo de imagem est@~{a}o dispon@'{i}veis; o tipo de arquivo deve ser
-  indicado pelos @'{u}ltmos poucos caracteres do nome do arquivo:
+  A palavra chave @emph{file} especifica um arquivo com informa@,{c}@~{o}es de cor
+  ou de brilho; @emph{alphafile} se presente, especifica uma m@'{a}scara de
+  transpar@^{e}ncia ("alpha"); onde a m@'{a}scara for zero, pixels simplesmente
+  n@~{a}o s@~{a}o desenhados.  Muitos formatos de arquivo de imagem est@~{a}o
+  dispon@'{i}veis; o tipo de arquivo deve ser indicado pelos @'{u}ltmos poucos
+  caracteres do nome do arquivo:
     .ppm ou .ppm.Z ou .ppm.gz  24-bit 3-color imagem no formato PPM
     .pgm ou .pgm.Z ou .pgm.gz  8-bit tons de cinza imagem no formato PGM
     .sgi ou .sgi.Z ou .sgi.gz  8-bit, 24-bit, ou 32-bit imagem SGI
     .tiff                      8-bit ou 24-bit imagem TIFF
     .gif                       imagem GIF
-  Para ese recurso trabalhar, algunns programas devem estar dispon@'{i}veis no
-  caminho de busca do geomview:
+  Para esse recurso trabalhar, alguns programas devem estar dispon@'{i}veis
+  no caminho de busca do geomview:
     zcat  para arquivo .Z
     gzip  para arquivos .gz
     tifftopnm para arquivos .tiff
     giftoppm para arquivos .gif
 
-  Se uma imagem @code{alphafile} for fornecida, essa imagem deve ser do mesmo tamanho
-  que a imagem @code{file}.
+  Se uma imagem @code{alphafile} for fornecida, essa imagem deve ser do mesmo
+  tamanho que a imagem @code{file}.
 
   @emph{Obejetos imagem fornecem um caminho mais flex@'{i}vel para especificar dados de
   textura. Veja @ref{image, Objetos de imagem}.}
@@ -3389,7 +3391,7 @@ transform @code{matriz-de-transforma@,{c}@~{a}o}
 
 @comment ----------------------------------------------------------------
 @node QUAD, MESH, Formatos de Arquivo de Objeto, Formatos de Arquivo de Objeto
-@subsection QUAD: collection of quadrilaterals
+@subsection QUAD: cole@,{c}@~{a}o de quadril@'{a}teros
 
 O sufixo convencional para um arquivo @code{QUAD} @'{e} @file{.quad}.
 
@@ -3426,7 +3428,7 @@ arranjados apenas como no formato ASCII.
 
 @comment ----------------------------------------------------------------
 @node MESH, BBOX, QUAD, Formatos de Arquivo de Objeto
-@subsection MESH: rectangularly-connected mesh
+@subsection MESH: Malha retangularmente conectada
 
 O sufixo convencional para um arquivo @code{MESH} @'{e} @file{.mesh}.
 
@@ -3434,8 +3436,9 @@ A sintaxe do arquivo @'{e}
 
 @example
 [U][C][N][Z][4][u][v][n]MESH # Palavra chave
-[@var{Ndim}]                 # Dimens@~{a}o do espa@,{c}o, presente somente se nMESH
-@var{Nu} @var{Nv}            # dimens@~{o}es da grade da malha
+[@var{Ndim}]                       # Dimens@~{a}o do espa@,{c}o, presente
+                              # somente se nMESH
+@var{Nu} @var{Nv}                        # dimens@~{o}es da grade da malha
                              # @var{Nu}*@var{Nv} v@'{e}rtices, no formato especificado
                              # pela palavra chave inicial
 @var{v@'{e}rtice}(u=0,v=0)  @var{v@'{e}rtice}(1,0)  @dots{} @var{v@'{e}rtice}(@var{Nu}-1,0)
@@ -3501,7 +3504,7 @@ s@~{a}o n@'{u}meros em ponto flutuante de 32-bit.
 
 @comment ----------------------------------------------------------------
 @node BBOX, BBP and BEZ, MESH, Formatos de Arquivo de Objeto
-@subsection BBOX: simple bounding boxes
+@subsection BBOX: Caixas associada simples
 
 Esse @'{e} um objeto-brinquedo muito simples: Toma 2 v@'{e}rtices e desenha um
 (hiper-) cubo que @'{e} a caixa associada dos dois v@'{e}rtices.
@@ -3551,7 +3554,7 @@ divisor homog@^{e}neo pode ser @code{w} -- a terceira -- componente).
 
 @comment ----------------------------------------------------------------
 @node BBP and BEZ, OFF, BBOX, Formatos de Arquivo de Objeto
-@subsection Bezier Surfaces
+@subsection Superf@'{i}cies de Bezier
 
 O sufixo de arquivo convencional para arquivos de superf@'{i}cie de Bezier @'{e} @file{.bbp}
 ou @file{.bez}.  A arquivo com qualquer dos dois sufixos pode conter qualquer dos dois tipos de
@@ -3641,7 +3644,7 @@ incorporado em uma refer@^{e}ncia de objeto.
 
 @comment ----------------------------------------------------------------
 @node OFF, VECT, BBP and BEZ, Formatos de Arquivo de Objeto
-@subsection OFF Files
+@subsection Arquivos do Tipo OFF
 
 O sufixo convencional para arquivos @code{OFF} @'{e} @file{.off}.
 
@@ -3758,7 +3761,7 @@ int int int int int float float float float
 
 @comment ----------------------------------------------------------------
 @node VECT, SKEL, OFF, Formatos de Arquivo de Objeto
-@subsection VECT Files
+@subsection Arquivos do Tipo VECT
 
 O sufixo convencional para arquivos @code{VECT} @'{e} @file{.vect}.
 
@@ -3836,10 +3839,10 @@ Big-Endian.
 
 @comment ----------------------------------------------------------------
 @node SKEL, SPHERE, VECT, Formatos de Arquivo de Objeto
-@subsection SKEL Files
+@subsection Arquivos do Tipo SKEL
 
-@code{SKEL} files represent collections of points and linhas poligonais, with
-shared v@'{e}rtices.
+Arquivos do Tipo @code{SKEL} representam cole@,{c}@~{o}es de pontos e linhas poligonais, com
+v@'{e}rtices compartilhados.
 O sufixo convencional para arquivos @code{SKEL} @'{e} @file{.skel}.
 
 Sintaxe:
