@@ -2002,7 +2002,7 @@ This button dismisses the @emph{Materials} panel.
 @node Lighting Panel,  , Materials Panel, Appearance
 @subsection The Lighting Panel
 
-The @emph{Lighting} panel controls the number, position, and color of
+The @emph{Lights} panel controls the number, position, and color of
 the light sources used in shading.
 @float
 @image{figs/light}
