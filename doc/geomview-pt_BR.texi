@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.65/Mon Jul 28 07:12:21 2008//
+@c based on /geomview.texi/1.70/Sun Jul 25 08:07:54 2010//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -30,7 +30,7 @@
 @sp 14
 @center Tradutor para o Portugu@^es do Brasil
 @center Jorge Barros de Abreu
-@center http://usr.solar.com.br/~ficmatin
+@center http://sites.google.com/site/ficmatinf
 @sp 2
 @vskip 0pt plus 1filll
 @center Copyright @copyright{} 1992-1998 The Geometry Center
@@ -730,7 +730,7 @@ MinneView.  Muitas pessoas comtribuiram para a OOGL e o MinneView,
 incluindo Stuart Levy, Mark Meuer, Tamara Munzner, Steve
 Anderson, Mario Lopez, Todd Kaplan.
 
-Em 1991 o staff do Geometry Center come@,{c}ou o trabalho sobre uma nva e melhorada
+Em 1991 o staff do Geometry Center come@,{c}ou o trabalho sobre uma nova e melhorada
 vers@~{a}o da OOGL, e um novo e melhorado programa de visualiza@,{c}@~{a}o, o qual eles
 chamaram Geomview.  Naquele tempo essencialmente o @'{u}nico jogo no comercio para
 gr@'{a}ficos interativos em tr@^{e}s dimens@~{o}es era Silicon Graphics (SGI), de forma que Geomview foi
@@ -741,7 +741,7 @@ Centro (isso ocorreu antes do advento da web) pessoas em outras institui@,{c}@~{
 a usar essa primeira vers@~{a}o tamb@'{e}m.
 
 Adicionalmente a esta@,{c}@~{o}es de trabalho SGI o Geometry Center tinha
-algumas esta@,{c}@~{o}es NeXT completas, de forma que ap@'{o}s Geomview estar sendo executado
+algumas poucas esta@,{c}@~{o}es NeXT completas, de forma que ap@'{o}s Geomview estar sendo executado
 em m@'{a}quinas SGIs a equipe desenvolveu uma vers@~{a}o para NeXTStep tamb@'{e}m.
 Nessa @'{e}poca ouveram muitos milhares de pessoas usando Geomview
 ao redor do mundo.
@@ -752,12 +752,12 @@ caminho.
 
 Nessa miss@~{a}o de incentivar a comunica@,{c}@~{a}o entre pesquisadores e educadores,
 o Geometry Center desenvolveu um web site, www.geom.umn.edu, mais tarde
-em 1993.  esse foi um dos primeiros 300 web sites que existiram no mundo.  Uma parte desse
-web site era certamente devotado ao Geomview, e ajudou a propagar o
+em 1993.  Esse foi um dos primeiros 300 s@'{i}tios na web que existiram no mundo.  Uma parte desse
+s@'{i}tio web era certamente devotado ao Geomview, e ajudou a propagar o
 trabalho durante sua exist@^{e}ncia.
 
 O Geometry Center fechou suas facilidades de "tijolos e cimento" em Agosto
-de 1998 (NSF cortou suas verbas), mas o web site continuou a exixtir, e
+de 1998 (NSF cortou suas verbas), mas o s@'{i}tio web continuou a existir, e o
 Geomview continuou a ser popular ao redor do mundo.  Em Dezembro de
 1999 algum membro da equipe original do Geometry Center configurou
 @uref{http://www.geomview.org} como casa permanente na web para o
@@ -1538,7 +1538,7 @@ centro de movimento como sendo o centro do objeto atual da caixa
 associada. Uma vez modificado o centro da caixa geom@'{e}trica ativa associada ir@'{a} tornar-se
 o centro do movimento, se voc@^{e} selecionar outro objeto, ent@~{a}o o centro do
 movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nada modifica@,{c}@~{a}o
-ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado, voc@^{e} tem que
+ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado; voc@^{e} tem que
 digitar a palavra @code{target} no campo @emph{Center} para retornar ao
 valor padr@~{a}o.
 
@@ -8381,23 +8381,24 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 @findex transform
 @table @code
 @item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
-Apply a movimento (rotation, translation, scaling) to objeto @code{objectID};
-that is, construct and concatenate a matriz de transforma@,{c}@~{a}o with
-objectID's transform  The 3 IDs involved are the objeto
-that moves, the center of movimento, and the frame of reference
-in which to apply the movimento.  The center is easiest understood
-for rotations: if centerID is the same as objectID then it will
-spin around its own axes; otherwise the moving objeto will orbit
-the objeto do centro.  Normally frameID, in whose coordinate system
-the (mouse) movimentos are interpreted, is @code{focus}, the current camera.
-Translations can be scaled proportional to the
-distance between the target and the center. Support for
-spherical and hyperbolic as well as Euclidean space is
-built-in: use the @code{space} command to change spaces.  With type
-@code{rotate} x, y, and z are floats specifying angles in RADIANS.
-For types @code{translate} and @code{translate-scaled} x, y, and z are
-floats specifying distances in the coordinate system do
-objeto do centro.
+Apply a motion (rotation, translation, scaling) to object
+@code{objectID}; that is, construct and concatenate a transformation
+matrix with objectID's transform The 3 IDs involved are the object that
+moves, the center of motion, and the frame of reference in which to
+apply the motion.  The center is easiest understood for rotations: if
+centerID is the same as objectID then it will spin around its own axes;
+otherwise the moving object will orbit the center object. There is the
+special keyword @code{bbox-center} which may be used for
+@code{centerID}. As a result the motion will be relative to the center
+of the bounding box of @code{objectID}. Normally frameID, in whose
+coordinate system the (mouse) motions are interpreted, is @code{focus},
+the current camera.  Translations can be scaled proportional to the
+distance between the target and the center. Support for spherical and
+hyperbolic as well as Euclidean space is built-in: use the @code{space}
+command to change spaces.  With type @code{rotate} x, y, and z are
+floats specifying angles in RADIANS.  For types @code{translate} and
+@code{translate-scaled} x, y, and z are floats specifying distances in
+the coordinate system of the center object.
 
 The next field is optional and may consist da keyword
 @code{bbox-center} ou the keyword @code{origin} and modifies the
@@ -8699,7 +8700,7 @@ use.
 @subsection write
 @findex write
 @table @code
-@item (write @{command|geometry|camera|transform|ntransform|window@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
+@item (write @{command|geometry|camera|transform|ntransform|window|bbox@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
 write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the objeto, no transforma@,{c}@~{a}o ou apar@^{e}ncia (objeto geom@'{e}trico only)
