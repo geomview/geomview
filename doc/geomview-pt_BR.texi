@@ -4178,7 +4178,7 @@ uma vez que o intervalo das coordenadas ndc de X e Y estejam de -1 a +1).
 @end example
 @comment ----------------------------------------------------------------
 @node LIST, TLIST, INST, Formatos de Arquivo de Objeto
-@subsection LIST Files
+@subsection Arquivos do Tipo LIST
 
 O sufixo convencional para um arquivo @code{LIST} @'{e} @file{.list}.
 
@@ -4214,7 +4214,7 @@ defini@,{c}@~{a}o de s@'{i}mbolo voc@^{e} pode escrever
 
 @comment ----------------------------------------------------------------
 @node TLIST, GROUP, LIST, Formatos de Arquivo de Objeto
-@subsection TLIST Files
+@subsection Arquivos do Tipo TLIST
 
 
 O sufixo convencional para um arquivo @code{TLIST} @'{e} @file{.grp} ("grupo")
@@ -4281,7 +4281,7 @@ elementos da matriz matrix @'{e} o mesmo do formato ASCII.
 
 @comment ----------------------------------------------------------------
 @node GROUP, DISCGRP, TLIST, Formatos de Arquivo de Objeto
-@subsection GROUP Files
+@subsection Arquivos do Tipo GROUP
 
 Esse formato @'{e} obsoleto, mas ainda @'{e} aceito.  It combined the
 functions of @code{INST} and @code{TLIST}, taking a series of
@@ -4302,7 +4302,7 @@ INST
 
 @comment ----------------------------------------------------------------
 @node DISCGRP, COMMENT, GROUP, Formatos de Arquivo de Objeto
-@subsection DISCGRP Files
+@subsection Arquivos do Tipo DISCGRP
 
 Esse formato @'{e} para grupos discretos, tais como aparecem na teoria dos
 coletores (manifolds) ou em modelos de simetria.  Esse formato tem sua pr@'{o}pria p@'{a}gina de manual.
@@ -4310,7 +4310,7 @@ Veja discgrp(5).
 
 @comment ----------------------------------------------------------------
 @node COMMENT,  , DISCGRP, Formatos de Arquivo de Objeto
-@subsection COMMENT Objects
+@subsection Objetos do Tipo COMMENT
 
 O objeto COMMENT @'{e} um mecanismo para codificar dados arbitr@'{a}rios dentro de um
 objeto OOGL. O objeto COMMENT pode ser usado para manter trilhas de dados ou para passagem de dados de retorno e
@@ -4384,13 +4384,13 @@ outras se@,{c}@~{o}es manuseado detalhes de
 apar@^{e}ncia. Veja @ref{Aparencias}.
 
 @node image, transform, Objetos de aparencia, Objetos nao-geometricos
-@subsection Image Objects
+@subsection Objetos de imagem
 
-Objetos de imagem s@`{a}o usados para especificar dados de pixmap ou para texturas
+Objetos de imagem s@~{a}o usados para especificar dados de pixmap ou para texturas
 (Veja @ref{Mapeamento de Textura}), ou para imagens de fundo de c@^{a}meras
-(Veja @ref{camera, Camera objects}).
+(Veja @ref{camera, Objetos de camera}).
 
-ao mesmo tempo em que imagens s@~{a}o escritas elas s@~{a}o tamb@'{e}m comprimidas de 1 a 4 canais, um
+Ao mesmo tempo em que imagens s@~{a}o escritas elas s@~{a}o tamb@'{e}m comprimidas de 1 a 4 canais, um
 canal fornece um n@'{u}mero simples no intervalo que vai de 0 a @code{maxval}
 para cada ponto de imagem (pixel); e @code{maxval} @'{e} colocado em 255. A interpreta@,{c}@~{a}o dos dados de imagem dependente do n@'{u}mero de canais @'{e} como segue:
 
@@ -4511,13 +4511,13 @@ Geomview conhece as seguintes constantes simb@'{o}licas, que podem ser usadas
 em lugar de especificar o campo-bit @samp{MASCDEST} numericamente:
 @table @code
 @item LUMINANCE
-same as @samp{1}, @samp{0x1}, @samp{\01}
+o mesmo que @samp{1}, @samp{0x1}, @samp{\01}
 @item LUMINANCE_ALPHA
-same as @samp{3}, @samp{0x3}, @samp{\03}
+o mesmo que @samp{3}, @samp{0x3}, @samp{\03}
 @item RGB
-same as @samp{7}, @samp{0x7}, @samp{\07}
+o mesmo que @samp{7}, @samp{0x7}, @samp{\07}
 @item RGBA
-same as @samp{15}, @samp{0xf}, @samp{\017}
+o mesmo que @samp{15}, @samp{0xf}, @samp{\017}
 @item ALPHA
 dependendo do contexto: o n@'{u}mero absoluto de canais deve obrigatoriamente ser conhecido;
 i.e. @samp{data ALPHA @dots{}} deve obrigatoriamente ser colocado antes de alguma coisa de forma a determinar
@@ -4646,7 +4646,7 @@ inicializado para @code{maxval}, i.e. omitindo os dados do canal alfa para
 uma imagem RGBA @'{e} apenas o mesmo que definir uma imagem RGB.
 
 @node transform, ntransform, image, Objetos nao-geometricos
-@subsection Transform Objects
+@subsection Objetos de Transforma@,{c}@~{a}o
 
 Onde uma matriz simples 4x4 @'{e} esperada -- como no campo de @code{transform}
 @code{INST}, a transforma@,{c}@~{a}o da c@^{a}mera @code{camtoworld} e os
@@ -4725,7 +4725,7 @@ Alguns exemplos, em contextos onde eles podem ser usados:
 
 @comment ----------------------------------------------------------------
 @node ntransform, Objeto camera, transform, Objetos nao-geometricos
-@subsection ND-Transform Objects
+@subsection Objetos ND-Transform
 
 Onde -- no contexto de visualiza@,{c}@~{a}o NDimensional -- uma matriz simples (N+1)x(N+1) @'{e}
 esperada -- como no campo @code{INST} @code{ntransform}, ou a
@@ -4822,7 +4822,7 @@ Alguns exemplos, em contextos onde eles possivelmente podem ser usados:
 
 @comment ----------------------------------------------------------------
 @node Objeto camera, window, ntransform, Objetos nao-geometricos
-@subsection cameras
+@subsection c@^{a}mera
 
 Um objeto c@^{a}mera especifica as seguintes propriedades de uma c@^{a}mera:
 
@@ -4947,7 +4947,7 @@ A sintaxe para uma c@^{a}mera @'{e}:
 
 @comment ----------------------------------------------------------------
 @node window,  , Objeto camera, Objetos nao-geometricos
-@subsection window
+@subsection Janela
 
 Um objeto janela especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es
 relacionadas ao sistema de janelas sobre uma janela de forma que essas informa@,{c}@~{o}es sejam independentes do dispositivo.
@@ -5074,11 +5074,11 @@ a capacidade do Geomview em si mesmo.
 @end menu
 
 @node Interface, Example1, Modulos, Modulos
-@section How External Modules Interface with Geomview
+@section Como M@'{o}dulos Externos Interagem com o Geomview
 
 M@'{o}dulos externos aparecem no navegador de M@'{o}dulos (@emph{Modules}) no painel
 principal (@emph{Main}) do Geomview.  Para executar um m@'{o}dulo, clique no bot@~{a}o esquerdo do mouse sobre
-a entrada do m@'{o}dulo no nvaegador.  Enquanto o m@'{o}dulo estiver sendo executado, uma
+a entrada do m@'{o}dulo no navegador.  Enquanto o m@'{o}dulo estiver sendo executado, uma
 linha adicional para aquele m@'{o}dulo ir@'{a} aparecer no navegador.
 Essa linha inicia-se com um n@'{u}mero entre colch@^{e}tes, que indica o
 n@'{u}mero de @emph{inst@^{a}ncia} do m@'{o}dulo.  (Para alguns m@'{o}dulos isso faz sentido
@@ -5109,7 +5109,7 @@ controle de nele pr@'{o}prio ou em caso contr@'{a}rio atrav@'{e}s de respostas a
 como sa@'{i}da vinda do Geomview.
 
 @node Example1, Example2, Interface, Modulos
-@section Example 1: Simple External Module
+@section Exemplo 1: M@'{o}dulo Externo Simples
 
 Essa se@,{c}@~{a}o fornece um m@'{o}dulo externo extremamente simples que mostra uma
 malha oscilando.  Para experimentar esse exemplo, fa@,{c}a uma c@'{o}pia do arquivo
@@ -5322,7 +5322,7 @@ comando que o m@'{o}dulo mostra como sa@'{i}da.  Voc@^{e} ir@'{a} ter que encerr
 
 @comment ================================================================
 @node Example2, XForms, Example1, Modulos
-@section Example 2: Simple External Module with FORMS Control Panel
+@section Exemplo 2: M@'{o}dulo Externo Simples Usando o Painel de Controle FORMS
 
 Nota de tradu@,{c}@~{a}o: Este exemplo @'{e} muito antigo e n@~{a}o compila
 nas m@'{a}quinas atuais. At@'{e} o momento de digita@,{c}@~{a}o destas linhas de tradu@,{c}@~{a}o
@@ -5498,68 +5498,68 @@ UpdateMesh(xmin, xmax, ymin, ymax, xdim, ydim, t)
 @comment #end include
 @end example
 
-The code begins by including some header files needed for the event loop
-and the FORMS library.  It then declares global variables for holding a
-pointer to the bot@~{a}o deslizante FORMS objeto and the velocity @code{dt}.  These
-are global because they are needed in the bot@~{a}o deslizante callback procedure
-@code{SetVelocity}, which forms calls every time the user moves the
-bot@~{a}o deslizante bar. @code{SetVelocity} sets @code{dt} to be the new value do
+O C@'{o}digo inicia-se pela inclus@~{a}o de alguns arquivos de cabe@,{c}alho necass@'{a}rios para o evento c@'{i}clico
+e para a biblioteca FORMS.  O c@'{o}digo ent@~{a}o declara vari@'{a}veis globais para manter um
+ponteiro para o objeto FORMS do tipo bot@~{a}o deslizante e a velocidade @code{dt}.  Essas duas vari@'{a}veis
+s@~{a}o do tipo global porque elas s@~{a}o necess@'{a}rias no procedimento de retorno do bot@~{a}o deslizante
+chamado @code{SetVelocity}, que faz todas as chamadas a cada vez que o usu@'{a}rio move a
+barra do bot@~{a}o deslizante. @code{SetVelocity} atualiza o valor da vari@'{a}vel @code{dt} com o novo valor do
 bot@~{a}o deslizante.
 
-@code{Quit} is the callback procedure for the @emph{Quit} bot@~{a}o;
-it provides a graceful way for the user to terminate the program.
+@code{Quit} @'{e} o procedimento de chamada de retorno para o bot@~{a}o @emph{Quit};
+esse bot@~{a}o fornece um caminho elegante para o usu@'{a}rio encerrar o programa.
 
-The procedure @code{create_panel} calls a bunch of FORMS library
-procedures to set up the control panel with bot@~{a}o deslizante and bot@~{a}o.  For more
-information on using FORMS to create interface panels see the FORMS
-documentation.  In particular, FORMS comes with a graphical panel
-designer that lets you design your panels interactively and generates
-code like that in @code{create_panel}.
+O procedimento @code{create_panel} chama um conjunto de procedimentos da biblioteca
+FORMS para ajustar o painel de controle com o bot@~{a}o deslizante e o bot@~{a}o simples.  Para mais
+informa@,{c}@~{a}o sobre o uso de FORMS para criar pain@'{e}is de interface veja a documenta@,{c}@~{a}o de
+FORMS.  Em particular, FORMS vem com um desenhista de painel gr@'{a}fico
+que conduz voc@^{e} a desenhar seus pain@'{e}is de forma interativa e a gerar
+c@'{o}digos como o c@'{o}digo em @code{create_panel}.
 
-This example's main program is similar to the previous example, but
-includes extra code to deal with setting up and managing the FORMS
-panel.  
+Esse programa principal exemplo @'{e} similar ao exemplo anterior, mas
+inclui codifica@,{c}@~{a}o extra para lidar com ajustes e gerenciamento o painel
+FORMS.  
 
-To set up the panel we call the GL procedure @code{foreground} to cause
-the process to run in the foreground.  By default GL programs run in the
-background, and for various reasons external modules that use FORMS
-(which is based on GL) need to run in the foreground.  We then call
-@code{create_panel} to create the panel and @code{fl_set_slider_value}
-to set the initial value do bot@~{a}o deslizante.  The call to @code{fl_show_form}
-causes the panel to appear on the screen.
+Para ajustar o painel chamamos o procedimento GL @code{foreground} para fazer com que
+o processo execute em primeiro plano.  Por padr@~{a}o programas GL executam em
+segundo plano, e por v@'{a}rias raz@~{o}es m@'{o}dulos externos que usam FORMS
+(que @'{e} baseado em GL) precisa executar em primeiro plano.  Chamamos ent@~{a}o
+@code{create_panel} para criar o painel e @code{fl_set_slider_value}
+para ajustar o valor inicial do bot@~{a}o deslizante.  A chamada a @code{fl_show_form}
+faz com que o painel apare@,{c}a na tela.
 
-The first three lines do main loop, starting with 
+As primeiras tr@^{e}s linhas do ciclo principal, iniciam-se com 
 @example
 fdmask = (1 << fileno(stdin)) | (1 << qgetfd());
 @end example
 @noindent
-check for and deal with events in the panel.  The call to @code{select}
-imposes a delay on each pass through the main loop.  This call returns
-either after a delay of 1/5 second ou when the next GL event occurs, or
-when data appears on standard input, whichever comes first.  The
-@code{timeout} variable especifica the amount of time to wait on this
-call; the first member (0 in this example) gives the number of seconds,
-and the second member (200000 in this example) gives the number of
-microseconds.  Finally, @code{fl_check_forms()} checks for and processes
-any FORMS events that have happened; in this case this means calling
-@code{SetVelocity} if the user has moved the bot@~{a}o deslizante ou calling
-@code{Quit} if the user has clicado on the @emph{Quit} bot@~{a}o.
+monitora e conduz os eventos no painel.  A chamada a @code{select}
+imp@~{o}e uma espera a cada passagem pelo ciclo principal.  Essa chamada retorna
+ou ap@'{o}s uma espera de 1/5 de segundo ou quando o evento GL seguinte ocorrer, ou
+quando dados aparecerem na entrada padr@~{a}o, o que acontecer primeiro.  A
+vari@'{a}vel @code{timeout} especifica a quantidade de tempo a esperar nessa
+chamada; o primeiro n@'{u}mero (0 nesse exemplo) fornece o n@'{u}mero de segundos,
+e o segundo n@'{u}mero (200000 nesse exemplo) fornece o n@'{u}mero de
+microsegundos.  Finalmente, @code{fl_check_forms()} procura e executa
+quaisquer eventos FORMS que tenham ocorridos; nesse caso isso significa uma chamada a
+@code{SetVelocity} se o usu@'{a}rio iver movido o bot@~{a}o deslizante ou uma chamada a
+@code{Quit} se o usu@'{a}rio tiver clicado no bot@~{a}o @emph{Quit}.
 
-The purpose da delay in the loop is to keep the program from using
-excessive amounts of CPU time running around its main loop when there
-are no events to be processed.  This is not so crucial in this example,
-and in fact may actually slow down the animation somewhat, but in
-general with external modules that have event loops it is important to
+O prop@'{o}sito da espera no ciclo @'{e} para prevenir que o programa use
+excessivamente o tempo da CPU executando seu ciclo pincipal quando n@~{a}o
+hoverem eventos a serem processados.  Isso n@~{a}o @'{e} t@~{a}o crucial nesse exemplo,
+e de fato pode tornar a anima@,{c}@~{a}o mais lenta at@'{e} certo ponto, mas em
+geral com m@'{o}dulos extrnos que possuirem eventos c@'{i}clicos essa espera @'{e} importante para
 do something like this because otherwise the module will needlessly take
-CPU cycles away from other running programs (such as Geomview!)  even
-when it isn't doing anything.
+que os ciplos da CPU sigam adiante para outros programamas que estejam sendo executados (tais como Geomview!) mesmo
+quando estes n@~{a}o estiverem fazendo nada.
 
-The last line do main loop in this example, the call to
-@code{UpdateMesh}, is the same as in the previous example.
+A @'{u}ltima linha do ciclo principal ensse exemplo, a chamada a
+@code{UpdateMesh}, @'{e} a mesma que no exemplo anterior.
 
 @comment ================================================================
 @node XForms, Example3, Example2, Modulos
-@section The XForms Library
+@section A Biblioteca XForms
 
 XForms @'{e} uma interface de usu@'{a}rio ou conjunto de ferramentas muito f@'{a}cil de encontrar e relativamente simples para X11.
 Muitos m@'{o}dulos externos do Geomview, incluindo os exemplos nesse manual,
@@ -5568,14 +5568,13 @@ usam XForms para criar e gerenciar pain@'{e}is de controle. XForms is available 
 you may use any other interface toolkit instead of XForms in an external
 module.  We chose FORMS because it is free and relatively simple.
 
-There is a complete autoconf'ed package @samp{gvemod-xforms-example}
-available from Geomview's
-@uref{http://geomview.sourceforge.net, Sourceforge.NET}
-page.
+Existe um pacote completo baseado na ferramenta autoconf @samp{gvemod-xforms-example}
+dispon@'{i}vel no s@'{i}tio do Geomview
+@uref{http://geomview.sourceforge.net, Sourceforge.NET}.
 
 @comment ================================================================
 @node Example3, Example4, XForms, Modulos
-@section Example 3: External Module with Bi-Directional Communication
+@section Exemplo 3: M@'{o}dulo Externo com Comunica@,{c}@~{a}o Bi-Direcional
 
 The previous two example modules simply send commands to Geomview and do
 not receive anything from Geomview.  This section describes a module
@@ -6299,7 +6298,7 @@ seq@"{u}@^{e}ncias de caractere; o primeiro @'{e} o nome que ir@'{a} aparecer no
 m@'{o}dulos (@emph{Modules}).  O segundo @'{e} o comando de shell para executar o m@'{o}dulo; esse nome de shell
 pode incluir argumentos (veja @ref{emodule-define,@code{(emodule-define @dots{})}}).
 Geomview executa esse comando em um subshell quando voc@^{e} d@'{a} um clique sobre a
-entrada do m@'{o}dulo no navegador.  For exemplo
+entrada do m@'{o}dulo no navegador.  Por exemplo
 
 @example
 (emodule-define "Foo" "/u/home/modules/foo -x")
@@ -6309,7 +6308,7 @@ entrada do m@'{o}dulo no navegador.  For exemplo
 adiciona uma linha rotulada "Foo" ao navegador de m@'{o}dulos (@emph{Modules}) o qual
 faz com que o comando "/u/home/modules/foo -x" seja executado quando selecionado.
 
-Voc@^{e} pode colocr comandos @code{emodule-define} no seu arquivo
+Voc@^{e} pode colocar comandos @code{emodule-define} no seu arquivo
 @file{~/.geomview} para providenciar que certos m@'{o}dulos estejam dispon@'{i}veis sempre que voc@^{e} execute
 Geomview; veja @ref{Customizacao}.  voc@^{e} pode tamb@'{e}m executar
 comandos @code{emodule-define} a partir do painel de comandos (@emph{Commands})
