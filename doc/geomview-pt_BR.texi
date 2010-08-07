@@ -5563,10 +5563,10 @@ A @'{u}ltima linha do ciclo principal ensse exemplo, a chamada a
 
 XForms @'{e} uma interface de usu@'{a}rio ou conjunto de ferramentas muito f@'{a}cil de encontrar e relativamente simples para X11.
 Muitos m@'{o}dulos externos do Geomview, incluindo os exemplos nesse manual,
-usam XForms para criar e gerenciar pain@'{e}is de controle. XForms is available from
-@uref{http://www.nongnu.org/xforms/}. XForms is free-ware.  If you wish
-you may use any other interface toolkit instead of XForms in an external
-module.  We chose FORMS because it is free and relatively simple.
+usam XForms para criar e gerenciar pain@'{e}is de controle. XForms está disponível no sítio
+@uref{http://www.nongnu.org/xforms/}. XForms é free-ware.  Se você quiser
+pode usar qualquer outro conjunto de ferramentas como interface ao invés de XForms em um módulo
+externo.  Escolhemos FORMS pelo fato de omesmo ser livre e relativamente simples.
 
 Existe um pacote completo baseado na ferramenta autoconf @samp{gvemod-xforms-example}
 dispon@'{i}vel no s@'{i}tio do Geomview
@@ -5576,60 +5576,60 @@ dispon@'{i}vel no s@'{i}tio do Geomview
 @node Example3, Example4, XForms, Modulos
 @section Exemplo 3: M@'{o}dulo Externo com Comunica@,{c}@~{a}o Bi-Direcional
 
-The previous two example modules simply send commands to Geomview and do
-not receive anything from Geomview.  This section describes a module
-that communicates in both directions.  There are two types of
-communication that can go from Geomview to an external module.  This
-example shows @emph{asynchronous} communication --- the module needs to
-be able to respond at any moment to expressions that Geomview may emit
-which inform the module of some change of state within Geomview.
+Os dois módulos exemplo anteriores simplesmente enviam comandos ao Geomview sem
+receber nada de volta do Geomview.  Esta seção descreve um módulo
+que se comuica em ambas as direções.  Existe dois tipos de
+comunicação que podem ir do Geomview para um módulo externo.  Esse
+exemplo mostra comunicação @emph{sem sincronismo} --- o módulo precisa estar
+apto a responder a qualquer momento a expressões que o Geomview possa emitir
+as quais informam ao módulo de alguma modificação de estado dentro do Geomview.
 
-(The other type of communication is @emph{synchronous}, where a module
-sends a request to Geomview for some piece of information and waits for
-a response to come back before doing anything else.  The main GCL
-command for requesting information of this type is
-@ref{write,@code{(write @dots{})}}.  This module does not do any synchronous
-communication.)
+(O outro tipo de comunicação é @emph{com sincronismo}, onde um módulo
+envia uma requisição ao Geomview sobre alguma peça de informação e espera por
+uma resposta venha de volta antes de fazer qualquer coisa a mais.  O principal comando
+GCL para requisitar informação desse tipo é
+@ref{write,@code{(write @dots{})}}.  Esse módulo exemplo não faz nada com comunicação
+sincronizada.)
 
-In ansynchronous communication, Geomview sends expressions that are
-essentially echoes of GCL commands.  The external module sends
-Geomview a command expressing interest in a certain command, and then
-every time Geomview executes that command, the module receives a copy of
-it.  This happens regardless of who sent the command to Geomview; it can
-be the result do user doing something with a Geomview panel, or
-it may have come from another module ou from a file that Geomview reads.
-This is how a module can find out about and act on things that happen in
+Na comnicação sem sincronismo, Geomview envia expressões que são
+essencialmente ecos de comandos GCL.  O módulo externo envia ao
+Geomview um comando expressando interesse em um certo comando, e então
+toda vez que Geomview executar o referido comando, o módulo recebe uma cópia
+dele.  O envio de informação ocorre independentemente de que envia o comando ao Geomview; a requisição pode
+ser resultado do usuário fazendo alguma coisa com o painel do Geomview, ou
+pode vir de outro módulo ou de um arquivo que o Geomview leu.
+É dessa forma que um módulo descobre informações e age sobre coisas que ocorrem no
 Geomview.
 
-This example uses the OOGL lisp library to parse and act on the
-expressions that Geomview writes to the module's standard input.  This
-library is actually part of Geomview itself --- we wrote the library in
-the process of implementing GCL.  It is also convenient to use it in
-external modules that must understand a of subset of GCL ---
-specifically, those commands that the module has expressed interest in.
+Esse exemplo usa a biblioteca em lisp da OOGL para analisar e agir sobre as
+expressões que Geomview escreve para a entrada padrão do módulo.  Essa
+biblioteca faz atualmente parte do Geomview propriamente dito --- escrevemos a biblioteca no
+processo de implementação da GCL.  Essa biblioteca lisp da OOGL também é conveniente para ser usada em
+módulos externos que devem entender um subconjunto da GCL ---
+especificamente, aqueles comandos que o módulo tem interesse expresso.
 
-This example shows how a module can receive user pick events, i.e.
-when the user cliques the bot@~{a}o direito do mouse with the cursor over a geom
-in a Geomview janela de c@^{a}mera.  When this happens Geomview generates an
-internal call to a procedure called @code{pick}; the arguments to the
-procedure give information about the pick, such as what objeto was
-picked, the coordenadas do picked point, etc.  If an external module
-has expressed interest in calls to @code{pick}, then whenever
-@code{pick} is called Geomview will echo the call to the module's
-standard input.  The module can then do whatever it wants with the pick
-information.
+Esse exemplo mostra como um módulo pode receber eventos de seleção de usuário, i.e.
+quando o usuário clicar  com o bot@~{a}o direito do mouse com o cursor sobre um geom
+em uma janela de c@^{a}mera do Geomview.  Quando isso ocorrer Geomview gera uma
+chamada interna a um procedimento chamado @code{pick}; o argumento para o
+procedimento fornece informação sobre a seleção, tal como o objeto que foi
+selecionado, as coordenadas co ponto selecionado, etc.  Se um módulo externo
+tiver expressado  interesse em chamadas ao procdimento @code{pick}, então sempre que
+o procedimento @code{pick} for chamado Geomview irá ecoar a chamada à entrada padrão do
+módulo que manifestou o interesse.  O módulo que recebe o echo pode então fazer o que desejar caom a informação
+do procedimento pick.
 
-This module is the same as the @emph{Nose} module that comes with
-Geomview.  Its purpose is to illustrate picking.  Whenever you pick on a
-geom by clicando the bot@~{a}o direito do mouse on it, the module draws a little
-box at the spot where you clicado.  Usually the box is yellow.  If you
-pick a v@'{e}rtice, the box is colored magenta.  If you pick a point on an
-edge of an objeto, the module will also highlight the edge by drawing
-cyan boxes at its endpoints and drawing a yellow line along the edge.
+Esse módlo é o mesmo que o módulo @emph{Nose} que vem com o
+Geomview.  Seu propósito é ilustrar processos de seleção.  Qualquer coisa que você selecionar sobre um
+geom por meio de um clique do bot@~{a}o direito do mouse sobre esse geom, o módulo desenha uma pequena
+caixa na localização onde você tiver clicado.  De forma geral a caixa é amarela.  Caso você
+selecione um v@'{e}rtice, a caixa é da cor magenta.  Se você selecionar um ponto sobre uma
+aresta de um objeto, o módulo irá também ressaltar a aresta desenhando
+caixas da cor ciano em suas extremidades e desenhar uma linha amarela ao lonfo da aresta.
 
-Note that in order for this module to actually do anything you must have
-a geom loaded into Geomview and you must clique the bot@~{a}o direito do mouse
-with the cursor over a part do geom.
+Note que para esse módulo fazer alguma coisa você deve ter
+um geom carregado no Geomview e você deve cicar com o bot@~{a}o direito do mouse
+com o cursor sobre uma parte do geom.
 
 @example
 @comment #include "example3.c"
@@ -5892,7 +5892,7 @@ sends the command
 @noindent
 which tells Geomview to notify us when a pick event happens.
 
-The syntax of this @code{interest} statement merits some explanation.
+The syntax of this @code{interest} statement merece some explanation.
 In general @code{interest} takes one argument which is a (parenthesized)
 expression representing a Geomview function call.  It especifica a type
 of call that the module is interested in knowing about.  The arguments
