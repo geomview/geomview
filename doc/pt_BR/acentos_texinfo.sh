@@ -2,6 +2,7 @@
 #powered by Jorge Barros de Abreu under GPL
 #ficmatin01 at solar dot com dot br
 # this script needs "sed" and "mktemp" command
+#adjust iso8859-1 characters to texinfo 
 ARQ_TMP='mkstemp'
 if [ $# = 0 ] #testa se nao existe parametro
  then
