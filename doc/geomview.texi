@@ -5857,7 +5857,7 @@ DEFPICKFUNC(@var{helpstr}, @var{coordsys}, @var{id},
   @var{body}, @var{NDbody})
 @end example
 @code{DEFPICKFUNC} can be used as well as @code{PICKFUNC}, there is no
-functional differene with the exception that the name of the C-function
+functional difference with the exception that the name of the C-function
 is tied to @code{Lpick} when using @code{DEFPICKFUNC} and that the
 @code{(help pick)} GCL-command (@pxref{help, @code{(help @dots{})}})
 would respond with echoing @var{helpstr}.
