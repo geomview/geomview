@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.70/Sun Jul 25 08:07:54 2010//
+@c based on /geomview.texi/1.72/Tue Sep  7 08:01:22 2010//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -8401,14 +8401,6 @@ command to change spaces.  With type @code{rotate} x, y, and z are
 floats specifying angles in RADIANS.  For types @code{translate} and
 @code{translate-scaled} x, y, and z are floats specifying distances in
 the coordinate system of the center object.
-
-The next field is optional and may consist da keyword
-@code{bbox-center} ou the keyword @code{origin} and modifies the
-location da origin of @var{objectID}'s co-ordinate frame:
-@code{bbox-center} temporarily translates @var{objectID}'s co-ordinate
-frame to the center of @var{objectID}'s bounding box. @code{origin} is
-the default (and means not to modify @var{objectID}'s co-ordinate frame)
-and @code{bbox-center} is only valid in Euclidean space.
 
 The optional @code{dt} field allows a simple form of
 animation; if present, the objeto moves by just that amount during
