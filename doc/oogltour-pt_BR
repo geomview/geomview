@@ -1,21 +1,21 @@
-Tradução usando a versão 1.1.1.1 do cvs em inglês.
-Tutorial: Os Formatos Geométricos de Arquivo OOGL 
-		(e do Geomview conseqüêntemente)
+TraduÃ§Ã£o usando a versÃ£o 1.4 do cvs em inglÃªs.
+Tutorial: Os Formatos GeomÃ©tricos de Arquivo OOGL 
+		(e do Geomview consequÃªntemente)
 
-OOGL é a abreviatura de Object Oriented Graphics Library (Biblioteca Gráfica Orientada a Objetos.  Um objeto OOGL é
-chamado um Geom. Existe um formato de arquivo texto  para cada tipo de Geom. Você
-pode chamar um arquivo texto em qualquer progama que usa o formato OOGL. Geomview é um
-visualizador interativo de objetos tridimensionais construído sobre o topo do OOGL. (Geomview executa sobre
+OOGL Ã© a abreviatura de Object Oriented Graphics Library (Biblioteca GrÃ¡fica Orientada a Objetos.  Um objeto OOGL Ã©
+chamado um Geom. Existe um formato de arquivo texto  para cada tipo de Geom. VocÃª
+pode chamar um arquivo texto em qualquer progama que usa o formato OOGL. Geomview Ã© um
+visualizador interativo de objetos tridimensionais construÃ­do sobre o topo do OOGL. (Geomview executa sobre
 as palntaformas Silicon Graphics, NextStep, e X-Windows.) Existem
-notas do Geomview entre colchêtes ao longo deste guia dizendo a
-você o que fazer no Geomview para ver do que estamos falando. Posteriormente
-notas assumem que você tenha ambos know how para fazer e tenha realizado o que as notas anteriores
-disseram para você fazer. Todos os arquivos referenciados nesse documento estão no
-diretório de exemplos de arquivos OOGL que acompanham o Geomview.
+notas do Geomview entre colchÃªtes ao longo deste guia dizendo a
+vocÃª o que fazer no Geomview para ver do que estamos falando. Posteriormente
+notas assumem que vocÃª tenha ambos know how para fazer e tenha realizado o que as notas anteriores
+disseram para vocÃª fazer. Todos os arquivos referenciados nesse documento estÃ£o no
+diretÃ³rio de exemplos de arquivos OOGL que acompanham o Geomview.
 
-A seção Os formatos de arquivo OOGL do manual do Geomview é uma referência
-completa para a sintaxe dos formatos de arquivo. Esse tutorial é uma tentativa
-de levar você mais gentilmente ao mundo dos formatos de arquivos OOGL.
+A seÃ§Ã£o Os formatos de arquivo OOGL do manual do Geomview Ã© uma referÃªncia
+completa para a sintaxe dos formatos de arquivo. Esse tutorial Ã© uma tentativa
+de levar vocÃª mais gentilmente ao mundo dos formatos de arquivos OOGL.
 
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
@@ -23,7 +23,7 @@ de levar você mais gentilmente ao mundo dos formatos de arquivos OOGL.
 				QUAD
 
 Iniciamos um um objeto muito simples: um quadrado. Especificamente, o quadrado
-unitário no plano xy em z=0.
+unitÃ¡rio no plano xy em z=0.
 ----------------------------------------------------------------------
 "square.quad":
 
@@ -33,20 +33,20 @@ QUAD
 1 1 0
 -1 1 0
 ----------------------------------------------------------------------
-O cabeçalho "QUAD" identifica o tipo de arquivo.  (Você pode tambémusar o
-cabeçalho "POLY" para este tipo por razZões históricas.)  Um arquivo QUAD é uma
-lista de 4*n vertices onde n é o número de quadriláteros. Esse
-arquivo contém somente um quadrilátero.  Você também pode usar esse formato
-para especificar triângulos: apenas use um quadrilátero degenerado onde dois
-dos quatro vértices são identicos.  Os vértices nesse arquivo são
+O cabeÃ§alho "QUAD" identifica o tipo de arquivo.  (VocÃª pode tambÃ©musar o
+cabeÃ§alho "POLY" para este tipo por razZÃµes histÃ³ricas.)  Um arquivo QUAD Ã© uma
+lista de 4*n vertices onde n Ã© o nÃºmero de quadrilÃ¡teros. Esse
+arquivo contÃ©m somente um quadrilÃ¡tero.  VocÃª tambÃ©m pode usar esse formato
+para especificar triÃ¢ngulos: apenas use um quadrilÃ¡tero degenerado onde dois
+dos quatro vÃ©rtices sÃ£o identicos.  Os vÃ©rtices nesse arquivo sÃ£o
 simples: apenas as coordenadas x,y, e z do ponto.
 
 [GEOMVIEW: Digite "geomview square.quad" de uma janela de shell sobre um
-Silicon Graphics Iris. Gire o quadrado em torno de si mesmo com o botão esquerdo do mouse
-após geomview Tê-lo carregado. Sinta-se livre para brincar com geomview por um tempo se
-a imaginação atingir você durante esse tutorial.  ]
+Silicon Graphics Iris. Gire o quadrado em torno de si mesmo com o botÃ£o esquerdo do mouse
+apÃ³s geomview TÃª-lo carregado. Sinta-se livre para brincar com geomview por um tempo se
+a imaginaÃ§Ã£o atingir vocÃª durante esse tutorial.  ]
 
-O arquivo seguinte tem vértices mais complexos por incluirem uma cor com as coordenadas do ponto. 
+O arquivo seguinte tem vÃ©rtices mais complexos por incluirem uma cor com as coordenadas do ponto. 
 ----------------------------------------------------------------------
 "csquare.quad":
 
@@ -58,38 +58,38 @@ CQUAD
 ----------------------------------------------------------------------
 
 Esses foram os mesmos pontos do quadrado anterior, mas com dois cantos vermelhos e
-dois cantos verdes. O cabeçalho é agora "CQUAD" para indicar que seus
-vértices possuem informações de cores além das informações de ponto.
-Cores são especificadas pelas quádruplas (r,g,b,a) de números em ponto flutuante
+dois cantos verdes. O cabeÃ§alho Ã© agora "CQUAD" para indicar que seus
+vÃ©rtices possuem informaÃ§Ãµes de cores alÃ©m das informaÃ§Ãµes de ponto.
+Cores sÃ£o especificadas pelas quÃ¡druplas (r,g,b,a) de nÃºmeros em ponto flutuante
 entre 0 e 1. Qualquer cor que pode ser mostrada na tela de um computador
-pode ser codificada por alguma combinação de vermelho (r), verde (g) e azul (b). A quarta
-componente, alfa, representa a opacidade: 0 é transparente e 1 é
-opaco. As plantaformas X-Window, NextStep, e some SGI ignoram a informação 
-alfa inteiramente, mas um instantâneo Renderman irá usar a informação
-alfa se a transparência estiver habilitada. Algumas plantaformas SGI utilizam a
-informação alfa, mas a figura é garantidamente incorreta.
+pode ser codificada por alguma combinaÃ§Ã£o de vermelho (r), verde (g) e azul (b). A quarta
+componente, alfa, representa a opacidade: 0 Ã© transparente e 1 Ã©
+opaco. As plantaformas X-Window, NextStep, e some SGI ignoram a informaÃ§Ã£o 
+alfa inteiramente, mas um instantÃ¢neo Renderman irÃ¡ usar a informaÃ§Ã£o
+alfa se a transparÃªncia estiver habilitada. Algumas plantaformas SGI utilizam a
+informaÃ§Ã£o alfa, mas a figura Ã© garantidamente incorreta.
 
 
-[geomview: Apague o objeto atual pressionando o botão Delete.  Para
-chamar csquare.quad, pressione File/Open/segunda linha do navegador de diretórios 
-e localize o "csquare.quad" na lista dos arquivos (pressione o botão OK
+[geomview: Apague o objeto atual pressionando o botÃ£o Delete.  Para
+chamar csquare.quad, pressione File/Open/segunda linha do navegador de diretÃ³rios 
+e localize o "csquare.quad" na lista dos arquivos (pressione o botÃ£o OK
 quando tiver terminado) dentro da caixa que aparece.
 
-Você está provavelmente surpreso porque esse quadrado está todo com uma cor somente.  O modo de tonalidade de cor 
-padrão é o tipo plano, onde cada polígono ou face poligonal é da mesma
-cor. Os outros dois modos de tonalidade de cor, constante e liso, irão ambos
-mostrar faces multicoloridas onde as cores são lisamente interpoladas
-entre os vértices. Tonalidade de cor constante ignora todas as informações de iluminação,
-enquanto tonalidade de cor lisa interpola iluminação e também coloração entre
-os vértices.
+VocÃª estÃ¡ provavelmente surpreso porque esse quadrado estÃ¡ todo com uma cor somente.  O modo de tonalidade de cor 
+padrÃ£o Ã© o tipo plano, onde cada polÃ­gono ou face poligonal Ã© da mesma
+cor. Os outros dois modos de tonalidade de cor, constante e liso, irÃ£o ambos
+mostrar faces multicoloridas onde as cores sÃ£o lisamente interpoladas
+entre os vÃ©rtices. Tonalidade de cor constante ignora todas as informaÃ§Ãµes de iluminaÃ§Ã£o,
+enquanto tonalidade de cor lisa interpola iluminaÃ§Ã£o e tambÃ©m coloraÃ§Ã£o entre
+os vÃ©rtices.
 
-Para mudar o modo de sombreamento, primeiro chame o painel de aparência clicando
-sobre a linha Aparência no navegador principal de painéis.  Agora alterne de
+Para mudar o modo de sombreamento, primeiro chame o painel de aparÃªncia clicando
+sobre a linha AparÃªncia no navegador principal de painÃ©is.  Agora alterne de
 modo em modo clicando em diferentes linhas no navegador de @emph{Shading}.
 ]
 
 
-É hora de ir na direção de coisas maiores e melhores. 
+Ã‰ hora de ir na direÃ§Ã£o de coisas maiores e melhores. 
 
 "dodec.quad":
 
@@ -107,15 +107,15 @@ QUAD
 
 
 Agora pegamos um objeto mais interessante: um dodecaedro.  Uma vez que
-dodecaedro tem faces de 5 lados, cada uma de suas 12 faces é atualmente feita
-de 5 quadriláteros de um total de 20 quadriláteros nesse objeto do tipo Quad.
+dodecaedro tem faces de 5 lados, cada uma de suas 12 faces Ã© atualmente feita
+de 5 quadrilÃ¡teros de um total de 20 quadrilÃ¡teros nesse objeto do tipo Quad.
 
 [geomview: 
 Apague o quadrado e chame o arquivo "dodec.quad". Uma vez que os 5
-quadriláteros que formam cada face todos se ajustam perfeitamente uns aos outros, o fato de que
-existe realmente muitos deles em cada face é somente aparente quando as
-bordas são desenhadas. Para habilitar o desenho das bordas, aperte o botão "Edges" no
-painel de aparência.
+quadrilÃ¡teros que formam cada face todos se ajustam perfeitamente uns aos outros, o fato de que
+existe realmente muitos deles em cada face Ã© somente aparente quando as
+bordas sÃ£o desenhadas. Para habilitar o desenho das bordas, aperte o botÃ£o "Edges" no
+painel de aparÃªncia.
 ]
 
 
@@ -160,56 +160,56 @@ OFF
 	5 19 14 9 13 18
 	5 19 18 17 16 15
 
-O cabeçalho "OFF" nos diz que o arquivo dodec.off é um arquivo do tipo "polylist". A segunda linha no
-arquivo nos diz que existem 20 vértices, 12 faces, e 30 arestas.
-(As bibliotecas OOGL atualmente não utilizam os valores de arestas, de forma que você
-pode apenas usar 0 se acontecer de não saber o número de arestas.)  As próximas 20 seguintes
-linhas fornecem uma lista de vértices. TAs últimas 12 linhas especificam as faces:
-o primeiro numero é o número de vértices naquela face. Uma vez que nosso
-poliedro é regular, todas as faces possuem o mesmo número de
-vértices (nesse caso, 5).  Os números restantes na linha são
-indices dentro da lista de vértices acima.
+O cabeÃ§alho "OFF" nos diz que o arquivo dodec.off Ã© um arquivo do tipo "polylist". A segunda linha no
+arquivo nos diz que existem 20 vÃ©rtices, 12 faces, e 30 arestas.
+(As bibliotecas OOGL atualmente nÃ£o utilizam os valores de arestas, de forma que vocÃª
+pode apenas usar 0 se acontecer de nÃ£o saber o nÃºmero de arestas.)  As prÃ³ximas 20 seguintes
+linhas fornecem uma lista de vÃ©rtices. TAs Ãºltimas 12 linhas especificam as faces:
+o primeiro numero Ã© o nÃºmero de vÃ©rtices naquela face. Uma vez que nosso
+poliedro Ã© regular, todas as faces possuem o mesmo nÃºmero de
+vÃ©rtices (nesse caso, 5).  Os nÃºmeros restantes na linha sÃ£o
+indices dentro da lista de vÃ©rtices acima.
 
 Juntamente com o fato de loge mais compacto, o formato de arquivo do tipo "Polylist" incorpora
-informação de conectividade no Geom (Objeto OOGL).  OOGL não tem formas de conhecer
-se quaisquer dois quadriláteros em um bojeto Quad estão conectados.  Mas
+informaÃ§Ã£o de conectividade no Geom (Objeto OOGL).  OOGL nÃ£o tem formas de conhecer
+se quaisquer dois quadrilÃ¡teros em um bojeto Quad estÃ£o conectados.  Mas
 com uma "Polylist", OOGL pode interpolar retas normais ao longo das faces conectadas.
-As retas normais de um objeto são usadas para calcular a informação de tonalidade de cor.
+As retas normais de um objeto sÃ£o usadas para calcular a informaÃ§Ã£o de tonalidade de cor.
 Interpolated normals make an object look smooth instead of faceted.
-Isso é muitas vezes desejável se você estiver tentando aproximar uma superfície
-curva por meio da quebra da mesma em peças pequenas.
+Isso Ã© muitas vezes desejÃ¡vel se vocÃª estiver tentando aproximar uma superfÃ­cie
+curva por meio da quebra da mesma em peÃ§as pequenas.
 
 [geomview: 
-Vá adiante e chame "dodec.off" sem deletar o oddec.quad.  Agora
-você tem dois Geoms no seu mundo.  A maioria das ações aplicam-se aos
-objetos atualmente selecionados. Quando você inicia o geomview, os objetos
-atualmente selecionados é o mundo todo. Você pode independentemente controlar qualquer
-objeto no mundo selecionando esse objeto como alvo e suas ações.
-Duplo clicando o botão direito do mouse quando o mouse está sobre um
-objeto faz com que ele seja selecionado: duplo clicando o botão direito do mouse sobre o espaço vazio
-seleciona o mundo completo. Você pode também selecionar objetos clicando sobre a
+VÃ¡ adiante e chame "dodec.off" sem deletar o oddec.quad.  Agora
+vocÃª tem dois Geoms no seu mundo.  A maioria das aÃ§Ãµes aplicam-se aos
+objetos atualmente selecionados. Quando vocÃª inicia o geomview, os objetos
+atualmente selecionados Ã© o mundo todo. VocÃª pode independentemente controlar qualquer
+objeto no mundo selecionando esse objeto como alvo e suas aÃ§Ãµes.
+Duplo clicando o botÃ£o direito do mouse quando o mouse estÃ¡ sobre um
+objeto faz com que ele seja selecionado: duplo clicando o botÃ£o direito do mouse sobre o espaÃ§o vazio
+seleciona o mundo completo. VocÃª pode tambÃ©m selecionar objetos clicando sobre a
 linha apropriada no navegador de objetos.
 
-Os dois dodecaedros estão provavelmente sobrepostos.  Selecione um deles como
+Os dois dodecaedros estÃ£o provavelmente sobrepostos.  Selecione um deles como
 seu alvo, clique sobre a linha "Translate" no navegador de movimentos, e
-mova o objeto selecionado afastando-se do centro do mundo com o botão esquerdo
+mova o objeto selecionado afastando-se do centro do mundo com o botÃ£o esquerdo
 do mouse.  (Para retornar ao modo "Rotate", clique na linha apropriada no
 navegador de movimento.)
  
 Agora selecione o mundo completo novamente e desenhe as normais pressionando o
-botão "Normals" no painel de aparência. Alterne entre os modos de sombreamento
+botÃ£o "Normals" no painel de aparÃªncia. Alterne entre os modos de sombreamento
 "Flat" e "Smooth" (clicando no navegador de tonalidades) e note
-que a "Polylist" modifica-se mas o "Quad" não se modifica.  
+que a "Polylist" modifica-se mas o "Quad" nÃ£o se modifica.  
 
-Algumas vezes usando o mouse para clicar no navegador de linhas e botões é
-incômodo. Os caracteres colchêtes mostram nos painéis de controle os
+Algumas vezes usando o mouse para clicar no navegador de linhas e botÃµes Ã©
+incÃ´modo. Os caracteres colchÃªtes mostram nos painÃ©is de controle os
 atalhos de teclado que reproduzem o efeito de usar o mouse para
-clicar sobre aquela linha ou butão. Por exemplo, "an" (o "a" representa
+clicar sobre aquela linha ou butÃ£o. Por exemplo, "an" (o "a" representa
 "appearance") muda o desenho de normais e "t" uda o movimento para
-translação.  Como tecla de atalho adicional, você pode usar o prefixo de um
-objeto ("g" ou "c" seguido de um número, como mostrado nos parêtesis no
-navegador de objetos) antes da maioria dos comandos para simultâneamente selecionar um objeto
-e fazer alguma ação para esse objeto. Pr exemplo, "g0r" permite a você imediatamente
+translaÃ§Ã£o.  Como tecla de atalho adicional, vocÃª pode usar o prefixo de um
+objeto ("g" ou "c" seguido de um nÃºmero, como mostrado nos parÃªtesis no
+navegador de objetos) antes da maioria dos comandos para simultÃ¢neamente selecionar um objeto
+e fazer alguma aÃ§Ã£o para esse objeto. Pr exemplo, "g0r" permite a vocÃª imediatamente
 rotacionar o mundo.
 
 ]
@@ -257,37 +257,37 @@ COFF
      4 0 1 5 4  
      4 2 6 7 3  
 
-Tudo seguindo o caractere "#" é um comentário para humanos ler e é
-ignorado por OOGL. O cabeçalho para uma "Polylist" plana é opcional, mas
-se você tiver qualquer coisa ao lado de pontos em um vértice você precisará fazer um cabeçalho
-apropriado.  O objeto é um cubo unitário, qu tem 8 vértices, 6 faces,
-e 12 arestas.  O primeiro coloração por face e o segundo tem
-coloração pro vértice.
+Tudo seguindo o caractere "#" Ã© um comentÃ¡rio para humanos ler e Ã©
+ignorado por OOGL. O cabeÃ§alho para uma "Polylist" plana Ã© opcional, mas
+se vocÃª tiver qualquer coisa ao lado de pontos em um vÃ©rtice vocÃª precisarÃ¡ fazer um cabeÃ§alho
+apropriado.  O objeto Ã© um cubo unitÃ¡rio, qu tem 8 vÃ©rtices, 6 faces,
+e 12 arestas.  O primeiro coloraÃ§Ã£o por face e o segundo tem
+coloraÃ§Ã£o pro vÃ©rtice.
 
-Um ponto sutil: o cabeçalho para vertcube.off é "COFF" como você pode
-esperar mas o cabeçalho para facecube.off é apenas "OFF" por que o
-cabeçalho refere-se somente àestrutura dos vértices, não ao arquvo
+Um ponto sutil: o cabeÃ§alho para vertcube.off Ã© "COFF" como vocÃª pode
+esperar mas o cabeÃ§alho para facecube.off Ã© apenas "OFF" por que o
+cabeÃ§alho refere-se somente Ã estrutura dos vÃ©rtices, nÃ£o ao arquvo
 como um todo.
 
 [geomview: 
-Apague tudo selecionando o mundo como alvo e clicando o botão
+Apague tudo selecionando o mundo como alvo e clicando o botÃ£o
 delete. Agora chae "facecube.off" e "vertcube.off". Translacione um
-deles para adiante de centro de forma que você possa ver o que você está fazendo.
+deles para adiante de centro de forma que vocÃª possa ver o que vocÃª estÃ¡ fazendo.
 Alterne ambas as "Polylists" entre os modos de tonalidade "Constant",
 "Flat", e "Smooth".
 
-Tonalidade é realizada conforme a fonte de luz que você controla.
+Tonalidade Ã© realizada conforme a fonte de luz que vocÃª controla.
 Para brincar com luzes, abra o painel "Light" clicando na linha
-"Light" no navegador de "Inspect". Quando você pressionar o botão "Show Lights",
-você irá ver raios luminosos que você pode arrastar ao redor para mover as luzes.
-Você também pode adicionar "add", apagar "delete", modificar a intensidade da, e modificar a
+"Light" no navegador de "Inspect". Quando vocÃª pressionar o botÃ£o "Show Lights",
+vocÃª irÃ¡ ver raios luminosos que vocÃª pode arrastar ao redor para mover as luzes.
+VocÃª tambÃ©m pode adicionar "add", apagar "delete", modificar a intensidade da, e modificar a
 cor das luzes.
 ]
 
 
 				MESH
 
-Os vértices de um arquivo de Malha(Mesh) são conectados em uma grade retangular.
+Os vÃ©rtices de um arquivo de Malha(Mesh) sÃ£o conectados em uma grade retangular.
 
 tent.mesh:
 CMESH
@@ -296,13 +296,13 @@ CMESH
 0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
 0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
 
-O cabeçalho "CMESH" nos diz que esse é um arquivo de Malha e cada vértice
-contém ambos ponto e informação de cor.  A segunda linha significa que
-ambas as dimensões u e v da malha são 3, então existirão 3*3 =
-9 vértices. Cada vértice que não está sobre uma aresta externa está conectado a
+O cabeÃ§alho "CMESH" nos diz que esse Ã© um arquivo de Malha e cada vÃ©rtice
+contÃ©m ambos ponto e informaÃ§Ã£o de cor.  A segunda linha significa que
+ambas as dimensÃµes u e v da malha sÃ£o 3, entÃ£o existirÃ£o 3*3 =
+9 vÃ©rtices. Cada vÃ©rtice que nÃ£o estÃ¡ sobre uma aresta externa estÃ¡ conectado a
 seus 4 vizinhos por uma aresta. Em "tent.mesh", somente o
-ponto (1,1,1) é um ponto interno. Os 9 vértices, quando chamados (u,v),
-são especificados na ordem crescente de v, apenas como um array em C:
+ponto (1,1,1) Ã© um ponto interno. Os 9 vÃ©rtices, quando chamados (u,v),
+sÃ£o especificados na ordem crescente de v, apenas como um array em C:
 
 (0,0)---(1,0)---(2,0)   
   |	  |	  |
@@ -312,12 +312,12 @@ são especificados na ordem crescente de v, apenas como um array em C:
 
 [geomview:
 Apague tudo e chame "tent.mesh". Entre no modo de tonalidade "Smooth" (Inspect/Appearence/Shading) para
-ver cada vértice com sua própia cor de forma que seja óbvio como os pontos no
+ver cada vÃ©rtice com sua prÃ³pia cor de forma que seja Ã³bvio como os pontos no
 arquivo correspondem com a imagem no visualizador.
 ]
 
-Se você desejar a malha seja fechada ao longo das ou (ou ambas) arestas 
-u ou v, insira ou um "u" ou um "v" no cabeçalho apenas antes de
+Se vocÃª desejar a malha seja fechada ao longo das ou (ou ambas) arestas 
+u ou v, insira ou um "u" ou um "v" no cabeÃ§alho apenas antes de
 "MESH".
 	
 "wraptent.mesh" 
@@ -329,7 +329,7 @@ CuMESH
 
 [geomview: 
 Chame "wraptent.mesh" e compare as duas malhas, transladando-as
-separadamente se necessário.
+separadamente se necessÃ¡rio.
 ]
 
 Existe uma forma extremamente eficiente de descrever uma malha quando as coordenadas
@@ -342,22 +342,22 @@ ZMESH
 0 1 0
 0 1 0
 
-"ztent.mesh" é exatamente a mesma aparência que "tent.mesh", embora seus
-vértices não tenham quaisquer cores. O cabeçalho "ZMESH" significa que somente
-as coordenadas do eixo z de cada ponto é especificada e as coordenadas
-x e y de cada ponto são escolhidas para serem iguais à sua posição (u,v) na
+"ztent.mesh" Ã© exatamente a mesma aparÃªncia que "tent.mesh", embora seus
+vÃ©rtices nÃ£o tenham quaisquer cores. O cabeÃ§alho "ZMESH" significa que somente
+as coordenadas do eixo z de cada ponto Ã© especificada e as coordenadas
+x e y de cada ponto sÃ£o escolhidas para serem iguais Ã  sua posiÃ§Ã£o (u,v) na
 grade.
 
 [geomview:
-Chame "ztent.mesh" para verificar que esse arquivo realmente tem a mesma aparência que "tent.mesh"
+Chame "ztent.mesh" para verificar que esse arquivo realmente tem a mesma aparÃªncia que "tent.mesh"
 ]
 
 
 
 				VECT
 
-Um vetor é uma coleção de "polylines", que são linhas com um ou mais
-vértices. Aqui está um arquivo especificando um "X" e o eixo x em vermelho, um "Y"
+Um vetor Ã© uma coleÃ§Ã£o de "polylines", que sÃ£o linhas com um ou mais
+vÃ©rtices. Aqui estÃ¡ um arquivo especificando um "X" e o eixo x em vermelho, um "Y"
 e o eixo y em verde, e um "Z" e o eixo z em azul.
 
 "xyz.vect":
@@ -381,38 +381,38 @@ VECT
 0 1 0 1
 0 .6 1 1
 
-O cabeçalho é sempre "VECT": nenhuma letra pode ser pregada na frente.
+O cabeÃ§alho Ã© sempre "VECT": nenhuma letra pode ser pregada na frente.
 A segunda linha significa que existem 8 "polylines", que possuem um total
-de 19 vértices e 3 cores. Não existe indexação dentro de uma lista de
-vértices como uma "polylist": todo vértice simples deve ser especificado
-separadamente. A terceira linha lista o número de vértices em cada
-"polyline". Em "xyz.vect", somente "polylines" com mais que 2 vértices
-são a parte superior do "Y", que tem 3, e o "Z", que tem 4.
-A quarta linha lista o número de cores em cada "polyline".  Quando uma
-"polyline" não possui cores essa "polyline"herda a cor previamente escolhida.  A seguir
-vem os 19 vértices: somente pontos são permitidos. Finalmente, as 3 cores
-são fornecidas nas últimas três linhas.
+de 19 vÃ©rtices e 3 cores. NÃ£o existe indexaÃ§Ã£o dentro de uma lista de
+vÃ©rtices como uma "polylist": todo vÃ©rtice simples deve ser especificado
+separadamente. A terceira linha lista o nÃºmero de vÃ©rtices em cada
+"polyline". Em "xyz.vect", somente "polylines" com mais que 2 vÃ©rtices
+sÃ£o a parte superior do "Y", que tem 3, e o "Z", que tem 4.
+A quarta linha lista o nÃºmero de cores em cada "polyline".  Quando uma
+"polyline" nÃ£o possui cores essa "polyline"herda a cor previamente escolhida.  A seguir
+vem os 19 vÃ©rtices: somente pontos sÃ£o permitidos. Finalmente, as 3 cores
+sÃ£o fornecidas nas Ãºltimas trÃªs linhas.
 
 [geomview: 
-Apague tudo, chame e olhe "xyz.vect". Faça a mesma coisa para
+Apague tudo, chame e olhe "xyz.vect". FaÃ§a a mesma coisa para
 todos os exemplos restantes.
 ]
 
 				BEZ
 
-Para aqueles que já entenderam como criar ajustes em superfície
-paramétrica, a sintaxe do ajuste da superfície de Bezier é descrito página de
-manual da OOGL. A arte de construir superfícies paramétricas não é facilmente
-explicável: dessa forma, superfícies paramétricas estão dentro da abrangência deste tutorial
-discutí-las.
+Para aqueles que jÃ¡ entenderam como criar ajustes em superfÃ­cie
+paramÃ©trica, a sintaxe do ajuste da superfÃ­cie de Bezier Ã© descrito pÃ¡gina de
+manual da OOGL. A arte de construir superfÃ­cies paramÃ©tricas nÃ£o Ã© facilmente
+explicÃ¡vel: dessa forma, superfÃ­cies paramÃ©tricas estÃ£o dentro da abrangÃªncia deste tutorial
+discutÃ­-las.
 
 
-"Lists" e "Insts" são Geoms complexos que podem ser usados para criar uma
-árvore hierárquica de objetos. 
+"Lists" e "Insts" sÃ£o Geoms complexos que podem ser usados para criar uma
+Ã¡rvore hierÃ¡rquica de objetos. 
 
 				LIST
 
-Uma "List" é apenas uma coleção de outros Geoms.
+Uma "List" Ã© apenas uma coleÃ§Ã£o de outros Geoms.
 
 "ref.list":
 LIST
@@ -421,31 +421,31 @@ LIST
 { = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
 
 
-O cabeçalho é sempre exatamente "LIST". Os primeiros dois subgeoms referem-se a
+O cabeÃ§alho Ã© sempre exatamente "LIST". Os primeiros dois subgeoms referem-se a
 outros arquivos, usando a sintaxe " < nomearquivo ". Omitimos as
-chaves opcionais.  O terceiro é um objeto literal,
+chaves opcionais.  O terceiro Ã© um objeto literal,
 ou in-line. Embora essa sintaxe em particular possa ainda trabalhar se esquecermos
-as chaves e o sinal de igual, sintaxe muito similar não
-pode então seguimos a regra "quando tiver dúvida, use as chaves".
+as chaves e o sinal de igual, sintaxe muito similar nÃ£o
+pode entÃ£o seguimos a regra "quando tiver dÃºvida, use as chaves".
 
 [geomview:
-Geomview procura por nomes de arquivos no diretório atual, o camino de nomes na
-variável de ambiente GEOMDATA, e no mesmo diretório que o arquivo
-que está atualmente sendo lido pelo geomview. 
+Geomview procura por nomes de arquivos no diretÃ³rio atual, o camino de nomes na
+variÃ¡vel de ambiente GEOMDATA, e no mesmo diretÃ³rio que o arquivo
+que estÃ¡ atualmente sendo lido pelo geomview. 
 ]
 
 				INST
 
-Um "Inst"é uma ou mais transformações 4x4 aplicada a outro Geom.  Essas
-matrizes podem representar todas as transformações em 3D tais como rotação,
-translação, homotetia, redução e perspectiva.  Usamos matrizes 4x4
-em lugar de matrizes 3x3 de forma que podemos usar coordenadas homogêneas e
-concatenar todas as transformações sem tratar translações como
-casos especiais que requerem adições em lugar de multiplicações.  Matrizes
-4x4 podem também serem usadas para operações tais como rotações em 4D
-ou transformações projetivas hiperbólicas. Um livro texto de álgebra linear
-ou um livro texto de computação gráfica são bons lugares para iniciar seus estudos se você não está familiarizado com
-essas idéias.
+Um "Inst"Ã© uma ou mais transformaÃ§Ãµes 4x4 aplicada a outro Geom.  Essas
+matrizes podem representar todas as transformaÃ§Ãµes em 3D tais como rotaÃ§Ã£o,
+translaÃ§Ã£o, homotetia, reduÃ§Ã£o e perspectiva.  Usamos matrizes 4x4
+em lugar de matrizes 3x3 de forma que podemos usar coordenadas homogÃªneas e
+concatenar todas as transformaÃ§Ãµes sem tratar translaÃ§Ãµes como
+casos especiais que requerem adiÃ§Ãµes em lugar de multiplicaÃ§Ãµes.  Matrizes
+4x4 podem tambÃ©m serem usadas para operaÃ§Ãµes tais como rotaÃ§Ãµes em 4D
+ou transformaÃ§Ãµes projetivas hiperbÃ³licas. Um livro texto de Ã¡lgebra linear
+ou um livro texto de computaÃ§Ã£o grÃ¡fica sÃ£o bons lugares para iniciar seus estudos se vocÃª nÃ£o estÃ¡ familiarizado com
+essas idÃ©ias.
 
 "ref.inst":
 INST
@@ -473,29 +473,29 @@ TLIST
  0 0 0 1
 }
 
-O cabeçalho é sempre exatamente "INST". O valor seguindo a palavra chave
-"geom" é uma referência de nome de arquivo "ref.list", que é a "List" que
-mostramos acima.  Isso também pode ser um  Geom in-line ou um manipulador. Cercamos
+O cabeÃ§alho Ã© sempre exatamente "INST". O valor seguindo a palavra chave
+"geom" Ã© uma referÃªncia de nome de arquivo "ref.list", que Ã© a "List" que
+mostramos acima.  Isso tambÃ©m pode ser um  Geom in-line ou um manipulador. Cercamos
 o valor com chaves para evitar ambiguidade.
 
-O valor da palavra chave "transforms" é uma "TList" in-line. Isso também
-pode ser uma referência a um nome de arquivo ou um manpulador. (Veja a seção Os Formatos
-de Arquivo do OOGL do manual do Geomview para especificidades.) Uma "TList" é atualmente um
-Geom completametne fugidio, mas nós não temos mesmo que chamar um arquivo como "foo.tlist" dentro
-do visualizador porque "TLists" são apenas uma coleção de transformações sem
-subgeom associado, de forma que não há nada para ver.
+O valor da palavra chave "transforms" Ã© uma "TList" in-line. Isso tambÃ©m
+pode ser uma referÃªncia a um nome de arquivo ou um manpulador. (Veja a seÃ§Ã£o Os Formatos
+de Arquivo do OOGL do manual do Geomview para especificidades.) Uma "TList" Ã© atualmente um
+Geom completametne fugidio, mas nÃ³s nÃ£o temos mesmo que chamar um arquivo como "foo.tlist" dentro
+do visualizador porque "TLists" sÃ£o apenas uma coleÃ§Ã£o de transformaÃ§Ãµes sem
+subgeom associado, de forma que nÃ£o hÃ¡ nada para ver.
 
-Uma transformação é exatamente 16 números. Os primeiros três são translações:
-2 unidade nas direções x, y e z, respectivamente. O último é apenas
-a identidade. O comprimeto da "TList" é o número de instanciações
+Uma transformaÃ§Ã£o Ã© exatamente 16 nÃºmeros. Os primeiros trÃªs sÃ£o translaÃ§Ãµes:
+2 unidade nas direÃ§Ãµes x, y e z, respectivamente. O Ãºltimo Ã© apenas
+a identidade. O comprimeto da "TList" Ã© o nÃºmero de instanciaÃ§Ãµes
 da unidade: nesse caso, 4.
 
-Se não pudermos usar instanciação, teremos que calcular 4
-Geoms inteiramente novos, uma vez que os atuais pontos no espaço de um objeto são
-diferentes se você movê-lo. Uma vez que a unidade de um "Inst" pode ser outro
-"Inst", você pode construir uma hierarquía complexa. Por exemplo, para construi um
-sistema solar você só precisa gerar uma esfera. Tdos os planetes pode ser
-instanciações de homotetias e translações da que simples Geom.
+Se nÃ£o pudermos usar instanciaÃ§Ã£o, teremos que calcular 4
+Geoms inteiramente novos, uma vez que os atuais pontos no espaÃ§o de um objeto sÃ£o
+diferentes se vocÃª movÃª-lo. Uma vez que a unidade de um "Inst" pode ser outro
+"Inst", vocÃª pode construir uma hierarquÃ­a complexa. Por exemplo, para construi um
+sistema solar vocÃª sÃ³ precisa gerar uma esfera. Tdos os planetes pode ser
+instanciaÃ§Ãµes de homotetias e translaÃ§Ãµes da que simples Geom.
 
 
 "warp.inst":
@@ -508,12 +508,12 @@ transform {
 }
 geom { < dodec.off }
 
-Esse "Inst" tem uma transformação simples em lugar de uma lista deles. Dessa forma
-usamos a palavra chave "transform" em lugar da palavra chave "transforms". Um "transform" não
-é um Geom, de forma que não existe cabeçalho antes dos 16. Podemos também
-ter um manipulador aqui.  (Manipuladores estão documentados na seção Formatos de Arquivo
+Esse "Inst" tem uma transformaÃ§Ã£o simples em lugar de uma lista deles. Dessa forma
+usamos a palavra chave "transform" em lugar da palavra chave "transforms". Um "transform" nÃ£o
+Ã© um Geom, de forma que nÃ£o existe cabeÃ§alho antes dos 16. Podemos tambÃ©m
+ter um manipulador aqui.  (Manipuladores estÃ£o documentados na seÃ§Ã£o Formatos de Arquivo
 do OOGL do manual do Geomview.) Finalmente, temos "dodec.off" como nossa
-unidade.  A ordem do geom e das "transform/transforms" é
+unidade.  A ordem do geom e das "transform/transforms" Ã©
 irrelevante.
 
 
@@ -521,22 +521,22 @@ Postscripts:
 
 OOGL:
 
-Esse tutorial não documenta arquivos binários ou aparências de objetos.
-Veja a seção Formatos de Arquivo do OOGL do manual do Geomview para detalhes. 
+Esse tutorial nÃ£o documenta arquivos binÃ¡rios ou aparÃªncias de objetos.
+Veja a seÃ§Ã£o Formatos de Arquivo do OOGL do manual do Geomview para detalhes. 
 
-Espaços em branco em arquivos OOGL ocorrem para facilitar a vida dos leitores humanos.
-"ZMESH 3 3 0 1 0 0 1 0 0 1 0" é um arquivo OOGL válido.  A única
-excessão é que não pode haver um fim de linha entre o último índice de
-vértice para uma face tipo "OFF" e os 4 números em ponto flutuante representativos de cor.
+EspaÃ§os em branco em arquivos OOGL ocorrem para facilitar a vida dos leitores humanos.
+"ZMESH 3 3 0 1 0 0 1 0 0 1 0" Ã© um arquivo OOGL vÃ¡lido.  A Ãºnica
+excessÃ£o Ã© que nÃ£o pode haver um fim de linha entre o Ãºltimo Ã­ndice de
+vÃ©rtice para uma face tipo "OFF" e os 4 nÃºmeros em ponto flutuante representativos de cor.
 
 Geomview: 
 
-Quando um Geom é chamado, ele automaticamente normalizado ajustar dentro de um
-cubo unitário centrado em torno da origem. O ponto de visualização padrào da câmera é
-em {0,0,-3} olhando na direção da oríge. Para ver a posição e o tamanho
+Quando um Geom Ã© chamado, ele automaticamente normalizado ajustar dentro de um
+cubo unitÃ¡rio centrado em torno da origem. O ponto de visualizaÃ§Ã£o padrÃ o da cÃ¢mera Ã©
+em {0,0,-3} olhando na direÃ§Ã£o da orÃ­ge. Para ver a posiÃ§Ã£o e o tamanho
 inalterado de um objeto, seleciona a linah "None" no navegador "Normalization"
-Em "Inspect/Appearence". Em geral não importa o que o intervalo de
-coordenadas é enquanto o arquivo inteiro for consistente: {0,1},
-{-1,1}, {0,100}, {-1000,-500}, {17,36} são todos intervalos válidos.
+Em "Inspect/Appearence". Em geral nÃ£o importa o que o intervalo de
+coordenadas Ã© enquanto o arquivo inteiro for consistente: {0,1},
+{-1,1}, {0,100}, {-1000,-500}, {17,36} sÃ£o todos intervalos vÃ¡lidos.
 
 
