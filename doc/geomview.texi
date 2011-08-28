@@ -6889,7 +6889,7 @@ the value will be reset to the default.
 Define a named lambda-expression, that is: define @var{NAME} to evaluate
 to the lambda-expression @code{(lambda (ARG1 @dots{}) (EXPR1 @dots{}))}
 when called as a function. Also, install @var{DOCSTRING} as response to
-the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Not that
+the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Note that
 @var{DOCSTRING} need not contain the command-synopsis, it is generated
 automatically.  @var{EXPR1} cannot be a string if @code{DOCSTRING} is
 omitted; it would be interpreted as the doc-string. The return value of
