@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.72/Tue Sep  7 08:01:22 2010//
+@c based on /geomview.texi/1.73/Sun Aug 28 20:23:59 2011//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -5295,7 +5295,7 @@ Subseq@"{u}entemente comandos @code{(geometry example @dots{})} podem fazer com 
 Geomview substitua a geometria do geom @code{example} com os novos
 dados da @code{MESH}.  Se realizado dessa forma pode n@~{a}o ser necess@'{a}rio enviar
 o comando inicial @code{(geometry example @{ : foo @})} como dito acima.  A
-t@'{e}cnica do manipuladro @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode ser usada em situa@,{c}@~{o}es
+t@'{e}cnica do manipulador @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode ser usada em situa@,{c}@~{o}es
 mais gerais onde um manipulador representa somente parte de um complexo
 geom, permitindo a um m@'{o}dulo externo substituir somente aquela parte sem
 ter que retransmitir o geom completo.  Para mais informa@,{c}@~{o}es sobre manipuladores,
@@ -6737,7 +6737,7 @@ ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}nc
 @findex *
 @table @code
 @item (* EXPR1 EXPR2)
-Multiplies @var{EXPR1} and @var{EXPR2} and returns the result.
+Multiplica @var{EXPR1} por @var{EXPR2} e retorna o resultado.
 @end table
 
 @node div, add, mul, GCL Reference
@@ -6745,7 +6745,7 @@ Multiplies @var{EXPR1} and @var{EXPR2} and returns the result.
 @findex /
 @table @code
 @item (/ EXPR1 EXPR2)
-Divides @var{EXPR1} by @var{EXPR2} and returns the result.
+Divide @var{EXPR1} por @var{EXPR2} e retorna o resultado.
 @end table
 
 @node add, sub, div, GCL Reference
@@ -6753,7 +6753,7 @@ Divides @var{EXPR1} by @var{EXPR2} and returns the result.
 @findex +
 @table @code
 @item (+ EXPR1 EXPR2)
-Adds @var{EXPR1} and @var{EXPR2} and returns the result.
+Adiciona @var{EXPR1} a @var{EXPR2} e retorna o resultado.
 @end table
 
 @node sub, help, add, GCL Reference
@@ -6761,28 +6761,28 @@ Adds @var{EXPR1} and @var{EXPR2} and returns the result.
 @findex -
 @table @code
 @item (- EXPR1 EXPR2)
-Substracts @var{EXPR2} from @var{EXPR1} and returns the result.
+Subtrai @var{EXPR2} da @var{EXPR1} e retorna o resultado.
 @end table
 
 @node help, morehelp, sub, GCL Reference
 @subsection ?
 @findex ?
 @table @code
-@item (?  [command])
-Gives one-line usage summary for @code{command}.  Command may include
-@code{*}s as wildcards; see also @ref{morehelp, @code{(?? @dots{})}}.
-One-line command help; lists names only if multiple commands match.
-@code{?} is a synonym for @ref{help, @code{(help @dots{})}}
+@item (?  [comando])
+Fornece sum@'{a}rio de uso em uma linha para @code{comando}.  Comando pode incluir
+@code{*}s como caracteres coringa; veja tamb@'{e}m @ref{morehelp, @code{(?? @dots{})}}.
+Ajuda de comando em uma linha; lista nomes somente se multiplos comandos coincidirem.
+@code{?} @'{e} um sin@^{o}nimo para @ref{help, @code{(help @dots{})}}
 @end table
 
 @node morehelp, emodule-run, help, GCL Reference
 @subsection ??
 @findex ??
 @table @code
-@item (?? command)
-@code{command} may include @code{*} wildcards.
-Prints more info than @code{(? command)}. @code{??} is a synonym
-for @ref{morehelp, @code{morehelp}}.
+@item (?? comando)
+@code{comando} pode incluir coringas @code{*}.
+Mostra mais informa@,{c}@~{a}o que @code{(? comando)}. @code{??} @'{e} um sin@^{o}nimo
+para @ref{morehelp, @code{morehelp}}.
 @end table
 
 @node emodule-run, all, morehelp, GCL Reference
@@ -6791,7 +6791,7 @@ for @ref{morehelp, @code{morehelp}}.
 @findex emodule-run, |
 @table @code
 @item |
-@code{|} is a synonym for @code{emodule-run}.
+@code{|} @'{e}m um sin@^{o}nimo para @code{emodule-run}.
 @end table
 
 @node all, and, emodule-run, GCL Reference
@@ -6800,17 +6800,17 @@ for @ref{morehelp, @code{morehelp}}.
 @table @code
 @findex all geometry
 @item (all geometry)
-returns a list of names of all geometry objetos. Use e.g.
-@samp{(echo (all geometry))} to print such a list.
+retorna uma lista de nomes de todos os objetos geometry. Use e.g.
+@samp{(echo (all geometry))} para mostrar tal lista.
 @findex all camera
 @item (all camera)
-returns a list of names of all c@^{a}meras.
+retorna uma lista de nomes de todas as c@^{a}meras.
 @findex all emodule defined
 @item (all emodule defined)
-returns a list of all defined external modules.
+retorna uma lista de todos os m@'{o}dulos externos definidos.
 @findex all emodule running
 @item (all emodule running)
-returns a list of all running external modules.
+retorna uma lista de todos m@'{o}dulos externos em execu@,{c}@~{a}o.
 @end table
 
 @node and, ap-override, all, GCL Reference
@@ -6818,8 +6818,8 @@ returns a list of all running external modules.
 @findex and
 @table @code
 @item (and EXPR1 EXPR2)
-Evaluate @code{EXPR1} and @code{EXPR2} and return @code{t} if both
-return non-@code{nil}, otherwise return @code{nil}.
+Avalia @code{EXPR1} e @code{EXPR2} e retorna @code{t} se ambas
+retornarem n@~{a}o-@code{nil}, de outra forma retorna @code{nil}.
 @end table
 
 @node ap-override, backcolor, and, GCL Reference
@@ -6827,8 +6827,8 @@ return non-@code{nil}, otherwise return @code{nil}.
 @findex ap-override
 @table @code
 @item (ap-override [on|off])
-Selects se apar@^{e}ncia controls should override objetos' own
-settings.  On by default.  With no arguments, returns current setting.
+Seleciona se controles de apar@^{e}ncia devem sobrescrever ajustres dos pr@'{o}prios
+objetos.  Habilitado por padr@~{a}o. Sem argumentos, retorna o ajuste atual.
 @end table
 
 @node backcolor, background-image, ap-override, GCL Reference
@@ -6836,8 +6836,8 @@ settings.  On by default.  With no arguments, returns current setting.
 @findex backcolor
 @table @code
 @item (backcolor CAM-ID R G B)
-Set the background color of CAM-ID; R G B are numbers
-between 0 and 1.
+Ajusta a cor de fundo da CAM-ID; R G B s@~{a}o n@'{u}meros
+entre 0 e 1.
 @end table
 
 @node background-image, bbox-color, backcolor, GCL Reference
@@ -6845,12 +6845,12 @@ between 0 and 1.
 @findex background-image
 @table @code
 @item (background-image CAM-ID [NOMEDOARQUIVO])
-Use the given image as the background of camera CAM-ID (which must be a
-real camera, not @code{default} ou @code{allcams}). Centers the image on
-the janela area.  Works only with GL and OpenGL graphics.
-Use "" for filename to remove background.  With no filename argument,
-returns name of that janela's current background image, ou "".  
-Any file type acceptable as a texture is allowed, e.g. .ppm.gz, .sgi, etc.
+Use a imagem fornecida como fundo da c@^{a}mera CAM-ID (a qual deve ser uma
+c@^{a}mera real, n@~{a}o pode ser ou @code{default} ou @code{allcams}). A imagem @'{e} centralizada na
+@'{a}rea da janela.  Trabalha somente com gr@'{a}ficos GL e OpenGL.
+Use "" como nome de arquivo para remover o fundo.  Sem argumentos,
+retorna o nome da imagem que @'{e} usada atualmente como fundo da janela, ou "".  
+Qualquer tipo de arquivo aceit@'{a}vel como textura @'{e} permitido, e.g. .ppm.gz, .sgi, etc.
 @end table
 
 @node bbox-color, bbox-draw, background-image, GCL Reference
@@ -6858,8 +6858,8 @@ Any file type acceptable as a texture is allowed, e.g. .ppm.gz, .sgi, etc.
 @findex bbox-color
 @table @code
 @item (bbox-color GEOM-ID R G B)
-Set the bounding-box color of GEOM-ID; R G B are numbers
-between 0 and 1.
+Ajusta a cor da caixa associada do GEOM-ID; R G B s@~{a}o n@'{u}meros
+entre 0 e 1.
 @end table
 
 @node bbox-draw, camera, bbox-color, GCL Reference
@@ -6867,8 +6867,8 @@ between 0 and 1.
 @findex bbox-draw
 @table @code
 @item (bbox-draw GEOM-ID [yes|no])
-Say se GEOM-ID's bounding-box should be drawn; defaults to
-@code{yes} if second argument is omitted.
+Diz se GEOM-IDcaixa associada do GEOM-ID deve ser desenhada; a escolha padr@~{a}o @'{e}
+@code{yes} se o segundo argumento for omitido.
 @end table
 
 @node camera, camera-draw, bbox-draw, GCL Reference
@@ -6876,10 +6876,10 @@ Say se GEOM-ID's bounding-box should be drawn; defaults to
 @findex camera
 @table @code
 @item (camera CAM-ID [CAMERA])
-Specify data for @var{CAM-ID}; @var{CAMERA} is a sequ@^{e}ncia de caracteres giving an OOGL
-c@^{a}mera specification.  If no camera @var{CAM-ID} exists, it is created;
-in this case, the second argument is optional, and if omitted, a default
-c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
+Especifica dados para @var{CAM-ID}; @var{CAMERA} @'{e} uma sequ@^{e}ncia de caracteres fornecendo uma especifica@,{c}@~{a}o de
+c@^{a}mera OOGL.  Se nenhuma @var{CAM-ID} de c@^{a}mera existir, essa @var{CAM-ID} @'{e} criada;
+nesse caso, o segundo argumento @'{e} opcional,e se omitido, uma c@^{a}mera
+padr@~{a}o @'{e} usada.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @end table
 
 @node camera-draw, camera-prop, camera, GCL Reference
@@ -6887,7 +6887,7 @@ c@^{a}mera is used.  @xref{new-camera, @code{(new-camera @dots{})}}.
 @findex camera-draw
 @table @code
 @item (camera-draw CAM-ID [yes|no])
-Say se ou not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
+Diz se c@^{a}meras devem ou n@~{a}o serem desenhadas em CAM-ID; @code{yes} se omitido.
 @end table
 
 @node camera-prop, camera-reset, camera-draw, GCL Reference
@@ -6895,13 +6895,13 @@ Say se ou not c@^{a}meras should be drawn in CAM-ID; @code{yes} if omitted.
 @findex camera-prop
 @table @code
 @item (camera-prop @{ geometry object @} [projective])
-Specify the objeto to be shown when drawing other c@^{a}meras.
-By default, this objeto is drawn with its origin at the camera,
-and with the c@^{a}mera looking toward the objeto's -Z axis.
-With the @code{projective} keyword, the camera's viewing projection is
-also applied to the objeto; this places the objeto's Z=-1 and Z=+1 at
-near and far clipping planes, with the viewing area -1<=@{X,Y@}<=+1.
-Example:  (camera-prop @{ < cube @} projective)
+Especifica o objeto a ser mostrado quando desenhando outras c@^{a}meras.
+Por padr@~{a}o, esse objeto @'{e} desenhado com sua or@'{i}gem na camera,
+e com a c@^{a}mera olhando adiante do eixo -Z do objeto.
+Com a palavra chave @code{projective}, a proje@,{c}@~{a}o da vis@~{a}o da c@^{a}mera @'{e}
+tamb@'{e}m aplicada ao objeto; isso coloca o Z=-1 e o Z=+1 do objeto
+perto e distante dos planos de corte, com a @'{a}rea de vis@~{a}o -1<=@{X,Y@}<=+1.
+Exemplo:  (camera-prop @{ < cube @} projective)
 @end table
 
 @node camera-reset, car, camera-prop, GCL Reference
@@ -6909,23 +6909,23 @@ Example:  (camera-prop @{ < cube @} projective)
 @findex camera-reset
 @table @code
 @item (camera-reset CAM-ID)
-Reset CAM-ID to its default value.
+Ajusta CAM-ID para seu valor padr@~{a}o.
 @end table
 
 @node car, cdr, camera-reset, GCL Reference
 @subsection car
 @findex car
 @table @code
-@item (car LIST)
-returns the first element of LIST.
+@item (car LISTA)
+retorna o primeiro elemento de LISTA.
 @end table
 
 @node cdr, clock, car, GCL Reference
 @subsection cdr
 @findex cdr
 @table @code
-@item (cdr LIST)
-returns the list obtained by removing the first element of LIST.
+@item (cdr LISTA)
+retorna a lista obtida removendo o primeiro elemento de LISTA.
 @end table
 
 @node clock, command, cdr, GCL Reference
@@ -6933,7 +6933,7 @@ returns the list obtained by removing the first element of LIST.
 @findex clock
 @table @code
 @item (clock)
-Returns the current time, in seconds, as shown by this stream's clock.
+Retorna a hora atual, em segundos, como mostrado por esse rel@'{o}gio do fluxo.
 @xref{set-clock, @code{(set-clock @dots{})}}. @xref{sleep-until,
 @code{(sleep-until @dots{})}}.
 @end table
@@ -6942,29 +6942,29 @@ Returns the current time, in seconds, as shown by this stream's clock.
 @subsection command
 @findex command
 @table @code
-@item (command INFILE [OUTFILE])
-Read commands from INFILE; send corresponding responses
-(e.g. anything written to filename @code{-}) to OUTFILE, stdout
-by default.
+@item (command ARQUIVOENTRADA [ARQUIVOSAIDA])
+L@^{e} comandos de ARQUIVOENTRADA; envia respostas correspondentes
+(e.g. qualquer coisa escrita para nome de arquivo @code{-}) para ARQUIVOSAIDA, stdout
+por padr@~{a}o.
 @end table
 
 @node cons, copy, command, GCL Reference
 @subsection cons
 @findex cons
 @table @code
-@item (cons EXPR LIST)
-Returns the list obtained by adding @var{EXPR} as first element of
-@var{LIST}. Note that the second argument has to be a list.
+@item (cons EXPR LISTA)
+Retorna a lista obtida adicionando @var{EXPR} como primeiro elemento da
+@var{LISTA}. Note que o segundo argumento tem de ser uma lista.
 @end table
 
 @node copy, cursor-still, cons, GCL Reference
 @subsection copy
 @findex copy
 @table @code
-@item (copy [ID] [name])
-Copies an objeto ou camera.  If ID is not specified, it 
-is assumed to be targetgeom.  If name is not specified, it 
-is assumed to be the same as the name of ID.
+@item (copy [ID] [nome])
+Copia um objeto ou c@^{a}mera.  Se ID n@~{a}o for especificado, esse ID
+@'{e} assumido como sendo targetgeom.  If nome n@~{a}o for especificado, esse nome
+@'{e} assumido como sendo o mesmo nome de ID.
 @end table
 
 @node cursor-still, cursor-twitch, copy, GCL Reference
@@ -6972,9 +6972,9 @@ is assumed to be the same as the name of ID.
 @findex cursor-still
 @table @code
 @item (cursor-still [INT])
-Sets the number of microseconds for which the cursor must not
-move to register as holding still.  If INT is not specified,
-the value will be reset to the default.
+Ajusta o n@'{u}mero de microssegundos para os quais o cursor n@~{a}o deve
+mover-se para registrar como fixo.  Se INT n@~{a}o for especificado,
+o valor ir@'{a} ser ajustado para o valor padr@~{a}o.
 @end table
 
 @node cursor-twitch, defun, cursor-still, GCL Reference
@@ -6982,30 +6982,30 @@ the value will be reset to the default.
 @findex cursor-twitch
 @table @code
 @item (cursor-twitch [INT])
-Sets the distance which the cursor must not move (in x or
-y) to register as holding still.  If INT is not specified,
-the value will be reset to the default.
+Ajusta a dist@^{a}ncia na qual o cursos n@~{a}o deve mover-se (em x ou
+y) para registrar como fixo.  Se INT n@~{a}o for especificado,
+o valor ir@'{a} ser ajustado para o valor padr@~{a}o.
 @end table
 
 @node defun, delete, cursor-twitch, GCL Reference
 @subsection defun
 @findex defun
 @table @code
-@item (defun NAME (ARG1 @dots{}) [DOCSTRING] EXPR1 @dots{})
-Define a named lambda-expression, that is: define @var{NAME} to evaluate
-to the lambda-expression @code{(lambda (ARG1 @dots{}) (EXPR1 @dots{}))}
-when called as a function. Also, install @var{DOCSTRING} as response to
-the commands @code{(help NAME)} and @code{(morehelp NAME)}.  Not that
-@var{DOCSTRING} need not contain the command-synopsis, it is generated
-automatically.  @var{EXPR1} cannot be a sequ@^{e}ncia de caracteres if @code{DOCSTRING} is
-omitted; it would be interpreted as the doc-string. The return value of
-@code{(defun @dots{})} is the function name. Functions can be recursive
-and self-modifying. It is possible to redefine builtin-functions, in
-this case the old definition is still available under the name
-@code{-builtin-OLDNAME-}. Argument values may be altered by @code{setq};
-the new binding is discarded after evaluation of the surrounding@code{defun}-body. The special keywords @code{&optional} and
-@code{&rest} have the same meaning as for anonymous lambda-expression,
-see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
+@item (defun NOME (ARG1 @dots{}) [DOCSTRING] EXPR1 @dots{})
+Define uma chamada express@~{a}o lambda, isto @'{e}: define @var{NOME} para avaliar
+para a express@~{a}o lambda @code{(lambda (ARG1 @dots{}) (EXPR1 @dots{}))}
+quando chamada como uma fun@,{c}@~{a}o. Tamb@'{e}m, instala @var{DOCSTRING} como resposta para
+os comandos @code{(help NOME)} e @code{(morehelp NOME)}.  Note que
+@var{DOCSTRING} n@~{a}o precisa conter a sinopse do comando, essa sinopse @'{e} gerada
+automaticamente.  @var{EXPR1} n@~{a}o pode ser uma sequ@^{e}ncia de caracteres se @code{DOCSTRING} for
+omitida; @var{EXPR1} deve ser interpretada como a sequ@^{e}ncia de caracteres documento. O valor de retorno da
+@code{(defun @dots{})} @'{e} o nome da fun@,{c}@~{a}o. Fun@,{c}@~{o}es podem ser recursivas
+e podem modificar a si mesmas. @'{e} pos@'{i}vel redefinir fun@,{c}@~{o}es internas, nesse
+caso a defini@,{c}@~{a}o antiga est@'{a} ainda dispon@'{i}vel so o nome
+@code{-builtin-OLDNAME-}. Valores de argumento podem ser alterados por @code{setq};
+a nova associa@,{c}@~{a}o @'{e} descartada ap@'{o}s avalia@,{c}@~{a}o de  surrounding@code{defun}-body. As palavras especiais @code{&optional} e
+@code{&rest} possuem o mesmo significado que a express@~{a}o lambda anonymous,
+veja nas refer@^{e}ncia adiante. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
 @code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
 @end table
 
@@ -7014,7 +7014,7 @@ see there. @xref{lambda, @code{(lambda @dots{})}}.  @xref{setq,
 @findex delete
 @table @code
 @item (delete ID)
-Delete objeto ou c@^{a}mera ID.
+Apaga objeto ou c@^{a}mera especificado em ID.
 @end table
 
 @node dice, dimension, delete, GCL Reference
@@ -7022,9 +7022,9 @@ Delete objeto ou c@^{a}mera ID.
 @findex dice
 @table @code
 @item (dice GEOM-ID N)
-Dice any Bezier patches within @var{GEOM-ID} into NxN meshes; default
-10. See also the apar@^{e}ncia attribute @ref{Aparencias, @code{patchdice}},
-which makes this command obsolete.
+Divide qualquer ajustes Bezier dentro de @var{GEOM-ID} em malhas de medida NxN; o padr@~{a}o para N @'{e}
+10. Veja tamb@'{e}m o atributo de apar@^{e}ncia @ref{Aparencias, @code{patchdice}},
+o qual torna esse comando obsoleto.
 @end table
 
 @node dimension, dither, dice, GCL Reference
@@ -7032,10 +7032,10 @@ which makes this command obsolete.
 @findex dimension
 @table @code
 @item (dimension [N])
-Sets ou reads the space dimension for N-dimensional viewing.
+Ajusta ou l@^{e} the space dimension for N-dimensional viewing.
 (Since calculations are done using homogeneous coordenadas,
 this means matrices are (N+1)x(N+1).)
-With no arguments, returns the current dimension, ou 0 if
+With no arguments, retorna a current dimension, ou 0 if
 N-dimensional viewing has not been enabled.
 @end table
 
@@ -7101,7 +7101,7 @@ command which invokes the module.  See @ref{emodule-run,
 @findex emodule-defined
 @table @code
 @item (emodule-defined @code{modulename})
-If the given external-module name is known, returns the name of
+If the given external-module name is known, retorna o name of
 the program invoked when it's run as a quoted sequ@^{e}ncia de caracteres; otherwise
 returns nil.  @code{(echo (emodule-defined @code{name}))} prints the sequ@^{e}ncia de caracteres.
 @end table
@@ -7251,7 +7251,7 @@ Turn picking on ou off.
 @table @code
 @item (evert GEOM-ID [yes|no])
 Set the normal eversion state of GEOM-ID.  If the second argument
-is omitted, toggle the eversion state.
+for omitido, toggle the eversion state.
 @end table
 
 @node exit, ezoom, evert, GCL Reference
@@ -7288,7 +7288,7 @@ which time drawing resumes as normal.
 Specify the geometry for GEOM-ID.  GEOMETRY is a sequ@^{e}ncia de caracteres
 giving an OOGL objeto geom@'{e}trico specification.  If no objeto
 called GEOM-ID exists, it is created; in this case the
-GEOMETRY argument is optional, and if omitted, the new
+GEOMETRY argumento is optional, and se omitido, the new
 objeto GEOM-ID is given an empty objeto geom@'{e}trico.
 @end table
 
@@ -7332,7 +7332,7 @@ but once those objetos are gone, the handle will also automatically go
 away. The objeto the handle referes to (if any) will only be deleted if
 there are no other references to that objeto.
 
-If the optional first argument is omitted, then the first handle
+If the optional first argumento for omitido, then the first handle
 matching @var{name} will be deleted, regardless do type de
 objeto it is attached to. It is not an error to call this function with
 a non-existent handle, but it @'{e} uma error to call this funcion with the
@@ -7368,7 +7368,7 @@ this camera. @xref{space, @code{(space @dots{})}}.
 @item (hsphere-draw CAMID [yes|no])
 Say se to draw a unit sphere: the sphere at infinity in
 hyperbolic space, and a reference sphere in Euclidean and spherical
-spaces.  If the second argument is omitted, @code{yes} is assumed.
+spaces.  If the segundo argumento for omitido, @code{yes} is assumed.
 @end table
 
 @node if, inhibit-warning, hsphere-draw, GCL Reference
@@ -7376,8 +7376,8 @@ spaces.  If the second argument is omitted, @code{yes} is assumed.
 @findex if
 @table @code
 @item (if TEST EXPR1 [EXPR2])
-Evaluates TEST; if TEST returns a non-nil value, returns the
-value of EXPR1.  If TEST returns nil, returns the value of
+Evaluates TEST; if TEST returns a non-nil value, retorna o
+value of EXPR1.  If TEST returns nil, retorna o value of
 EXPR2 if EXPR2 is present, otherwise returns nil.
 @end table
 
@@ -7419,13 +7419,13 @@ from which the interest command came. @var{COMMAND} can be any command.
 Args specify restrictions on the values dos arguments; if args are
 present in the interest command, geomview will only echo calls to the
 command in which the arguments match those given in the interest
-command.  Two special argument values may appear in the argument list.
+command.  Two special argumento values may appear in the argumento list.
 @code{*} matches any value. @code{nil} matches any value but supresses
 the reporting of that value; its value is reported as @code{nil}.
 
 The purpose do interest command is to allow external
 modules to find out about things happening inside geomview.
-For example, a module interested in knowing when a geom called
+For exemplo, a module interested in knowing when a geom called
 @code{foo} is deleted could say @code{(interest (delete foo))} and would
 receive the sequ@^{e}ncia de caracteres @code{(delete foo)} when foo is deleted.
 
@@ -7443,13 +7443,13 @@ every time a pick event (right mouse double clique).  See the @ref{pick,
 @item (lambda (ARG1 @dots{}) EXPR1 @dots{} EXPRN)
 A lambda expression is like a function. To ``call'' a lambda expression,
 it has to be evoked like a function: @code{((lambda (arg) (+ 1 arg))
-2)}. In this example, the value of the entire expression would be 3.  In
+2)}. In this exemplo, the value of the entire expression would be 3.  In
 general, the value of the call will be the value of @var{EXPRN}. The
 first list serves to define formal parameters. The lambda expression
 itself is just a list, starting with the key-word lambda, followed by
 several quoted lists.  @xref{defun, @code{(defun @dots{})}}.
 @xref{setq, @code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
-Note the argument list may contain the special keywords
+Note the argumento list may contain the special keywords
 @table @code
 @item &optional
 giving values to the following identifiers is optional,
@@ -7470,7 +7470,7 @@ The output would be @code{(a b c d)}.
 @table @code
 @item (let ARGUMENTS EXPR1 @dots{} EXPRN)
 Generate a lambda expression from @var{EXRP1} @dots{} @var{EXPRN}, with
-the argument bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
+the argumento bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
 list of symbols (bound to @code{nil} by default) ou lists of the form
 @code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
 @var{VALUE} @'{e} uma S-expression which is first evaluated, then its value
@@ -7506,7 +7506,7 @@ planes.  This feature is a kludge, but can be helpful.
 Loads the given file into geomview.  The optional second argument
 especifica the type of data it contains, which may be @code{command}
 (geomview commands), @code{geometry} (OOGL geometric data), or
-@code{camera} (OOGL c@^{a}mera definition).  If omitted, attempts to guess
+@code{camera} (OOGL c@^{a}mera definition).  se omitido, attempts to guess
 about the file's contents.
 Loading geometric data creates a new visible objeto; loading a camera
 opens a new janela; loading a command file executes those commands.
@@ -7643,7 +7643,7 @@ Lighting is typically included in the base apar@^{e}ncia.
 @findex mod
 @table @code
 @item (mod EXPR1 EXPR2)
-Divides @var{EXPR1} by @var{EXPR2} and returns the remainder.
+Divides @var{EXPR1} by @var{EXPR2} and retorna o remainder.
 @end table
 
 @node morehelp, name-object, mod, GCL Reference
@@ -7661,7 +7661,7 @@ Prints more info than @ref{help, @code{(help command)}}.
 @table @code
 @item (name-object ID NAME)
 Assign a new NAME (a sequ@^{e}ncia de caracteres) to ID.  A number is appended if
-that name is in use (for example, @code{foo} -> @code{foo<2>}).  The new
+that name is in use (for exemplo, @code{foo} -> @code{foo<2>}).  The new
 name, possibly with number appended, may be used as objeto's
 id thereafter.
 @end table
@@ -7707,7 +7707,7 @@ Each coloring function is defined by a vector (in ID's coordinate system)
 [x1 @dots{} xN] and by a sequence of value (v)/color(r g b a) tuples,
 ordered by increasing v.  The inner product v = P.[x] is linearly
 interpolated in this table to give a color.
-If ID is omitted, the (xi) vector is assumed in universe coordenadas.
+If ID for omitido, the (xi) vector is assumed in universe coordenadas.
 The ND-color command especifica a list of such functions; each v@'{e}rtice
 is colored by their sum (so e.g. green intensity could indicate
 projection along one axis while red indicated another.
@@ -7764,10 +7764,10 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @item (new-alien name [GEOMETRY])
 Create a new alien (geom not in the world) with the given name (a
 sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico
-specification. If @var{GEOMETRY} is omitted, the new alien is given an
+specification. If @var{GEOMETRY} for omitido, the new alien is given an
 empty objeto geom@'{e}trico.  If an objeto with that name already exists, the new
 alien is given a unique name.  The light beams that are used to move
-around the lights are an example of aliens. They're drawn but are not
+around the lights are an exemplo of aliens. They're drawn but are not
 controllable the way ordinary objetos are: they don't appear in the
 objeto browser and the user can't move them with the normal movimento
 modes.
@@ -7780,7 +7780,7 @@ modes.
 @item (new-camera name [CAMERA])
 Create a new c@^{a}mera with the given name (a sequ@^{e}ncia de caracteres).  If a c@^{a}mera with
 that name already exists, the new objeto is given a unique name.  If
-@var{CAMERA} is omitted a default c@^{a}mera is used.
+@var{CAMERA} for omitido a default c@^{a}mera is used.
 @end table
 
 @node new-center, new-geometry, new-camera, GCL Reference
@@ -7802,7 +7802,7 @@ parallel to the z axis toward the center do world.
 @item (new-geometry name [GEOMETRY])
 Create a new geom with the given name (a sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a
 sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico specification.  If @var{GEOMETRY} is
-omitted, the new objeto is given an empty objeto geom@'{e}trico.  If an objeto with
+omitido, the new objeto is given an empty objeto geom@'{e}trico.  If an objeto with
 that name already exists, the new objeto is given a unique name.
 @end table
 
@@ -7989,7 +7989,7 @@ the control remains by the main-loop until the current input streams
 @findex progn
 @table @code
 @item (progn DECLARA@,{C}@~{A}O [ @dots{} ])
-evaluates each DECLARA@,{C}@~{A}O in order and returns the value do
+evaluates each DECLARA@,{C}@~{A}O in order and retorna o value do
 last one.  Use progn to group a collection of commands together,
 forcing them to be treated as a single command.
 @end table
@@ -8007,7 +8007,7 @@ forcing them to be treated as a single command.
 @findex quote
 @table @code
 @item (quote EXPR)
-returns the symbolic lisp expression @var{EXPR} without evaluating
+retorna a symbolic lisp expression @var{EXPR} without evaluating
 it. Note, however, that @code{quote} parses @var{EXPR} as if it should
 be evaluated. @xref{eval, @code{(eval @dots{})}}.
 @end table
@@ -8059,7 +8059,7 @@ reference syntax, e.g.
 @table @code
 @item (real-id ID)
 Returns a sequ@^{e}ncia de caracteres canonically identifying the given ID,
-or @code{nil} if the objeto does not exist.  Examples:
+or @code{nil} if the objeto does not exist.  Exemplos:
  (if (real-id fred) (delete fred))
 deletes @code{fred} if it exists but reports no error if it doesn't, and
  (if (= (real-id targetgeom) (real-id World)) () (delete targetgeom))
@@ -8302,7 +8302,7 @@ Returns the number of seconds until TIME.
 @table @code
 @item (snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])
 Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de caracteres). The
-@var{FORMAT} argument is optional; it may be "ppmscreen" (the default),
+@var{FORMAT} argumento is optional; it may be "ppmscreen" (the default),
 "ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
 libOSMesa) ou "ppmosglx". A "ppmscreen" snapshot is created by reading
 the image directly from the given janela; the janela is popped above
@@ -8317,7 +8317,7 @@ the background, ou when a screen safer is active. With "ps", dumps a
 Postscript picture representing the view from that janela;
 hidden-surface removal might be incorrect. With "ppm", dumps a
 PPM-format image produced by geomview's internal software renderer; this
-may be of arbitrary size. If the @var{NOMEDOARQUIVO} argument begins with
+may be of arbitrary size. If the @var{NOMEDOARQUIVO} argumento begins with
 "|", it's interpreted as a @code{/bin/sh} command to which the PPM ou PS
 data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
 relevant only for "ppm" formats, and render to a janela of that size (or
@@ -8352,8 +8352,8 @@ vertical: split top/bottom: bottom is eye#0, top is #1.@*
 colored: panes overlap, red is stereo eye#0, cyan is #1.
 
 A gap of @code{gapsize} pixels is left between subjanelas;
-if omitted, subjanelas are adjacent.
-If both layout and gapsize are omitted, e.g. (stereowin CAM-ID),
+se omitido, subjanelas are adjacent.
+If both layout and gapsize are omitido, e.g. (stereowin CAM-ID),
 returns current settings as a @code{(stereowin @dots{})} command list.
 This command doesn't set stereo projection; use @code{merge camera} or
 @code{camera} to set the stereyes transforms, and @code{merge window} or
@@ -8369,7 +8369,7 @@ Indicates that all interest-related messages, when separated by at
 least @code{deltatime} seconds of real time, should be preceded by
 the sequ@^{e}ncia de caracteres @code{prefix} and followed by @code{suffix}; the first message
 is preceded by @code{initial}.  All three are printf format strings,
-whose argument is the current clock time (in seconds) on that stream.
+whose argumento is the current clock time (in seconds) on that stream.
 A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 (time-interests .1 @code{(set-clock %g)} @code{(sleep-until %g)})  or@*
 (time-interests .1 @code{(set-clock %g)}
@@ -8418,7 +8418,7 @@ applied immediately.
 Apply continuing movimento: construct a matriz de transforma@,{c}@~{a}o and
 concatenate it with the current transform of objectID every
 refresh (sets objectID's incremental transform). Same syntax
-as transform.  If optional @code{dt} argument is present,
+as transform.  If optional @code{dt} argumento is present,
 the objeto is moved at each time step such that its average movimento
 equals one instance do movimento per @code{dt} seconds.  E.g.
   (transform-incr  World World World  rotate  6.28318 0 0  10.0)
@@ -8584,7 +8584,7 @@ main panel
 @item tools
 movimento controls
 @item appearance
-apar@^{e}ncia controls
+controles de apar@^{e}ncia
 @item cameras
 c@^{a}mera controls
 @item lighting
@@ -8625,7 +8625,7 @@ unset then the default is compile-time dependent.
 @table @code
 @item (ui-target ID [yes|no])
 Set the target of user actions (the selected line do objeto alvo
-browser) to ID.  The second argument especifica se to make ID the
+browser) to ID.  The segundo argumento especifica se to make ID the
 current objeto regardless of its type.  If @code{no}, then ID becomes
 the current objeto of its type (geom ou camera).  The default is
 @code{yes}.  This command may result in a change of modos de movimento based
@@ -9069,7 +9069,7 @@ from inside Mathematica is @code{WriteRIB["!render", foo]}.@refill
 objeto to OOGL format using @code{WriteOOGL} and then calls an external
 program @file{oogl2ri}b to convert OOGL to RIB format.  The
 oogl2rib program takes several options which you can specify in a
-sequ@^{e}ncia de caracteres as an optional third argument to @code{WriteRI}b.  The default
+sequ@^{e}ncia de caracteres as an optional terceiro argumento to @code{WriteRI}b.  The default
 option sequ@^{e}ncia de caracteres is @code{" -n mma.tiff "}, which indicates that the RIB
 file should generate a rendered TIFF file named @file{mma.tiff}.  A
 particularly useful option is @code{-g}, which tells oogl2rib to
@@ -9140,7 +9140,7 @@ Geomview computer without giving a password.
 
 You can also explicitly set the @code{DisplayHost} option to the
 @code{Geomview} command to a sequ@^{e}ncia de caracteres which is the desired hostname, for
-example:
+exemplo:
 @example
 In[1] := << OOGL.m
 
@@ -9169,7 +9169,7 @@ computer; it should be one das strings @code{"sgi"} or
 @code{"next"} ou @code{"x11"}.@refill
 
 You can use @code{SetOptions} to change the default @code{DisplayHost}
-and @code{MachType}.  For example,
+and @code{MachType}.  For exemplo,
 @example
 In[4] := SetOptions[Geomview, DisplayHost->"riemann", MachType->"sgi"]
 @end example
