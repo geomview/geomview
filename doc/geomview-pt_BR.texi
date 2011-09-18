@@ -735,7 +735,7 @@ vers@~{a}o da OOGL, e um novo e melhorado programa de visualiza@,{c}@~{a}o, o qu
 chamaram Geomview.  Naquele tempo essencialmente o @'{u}nico jogo no comercio para
 gr@'{a}ficos interativos em tr@^{e}s dimens@~{o}es era Silicon Graphics (SGI), de forma que Geomview foi
 desenvolvido inicialmente em esta@,{c}@~{o}es de trabalho SGI, usando a IRIS GL.  A primeira
-vers@~{a}o foi finalizada em Janeiro de 1992.  Essa primeira vers@`{a}o tornou-se muito
+vers@~{a}o foi finalizada em Janeiro de 1992.  Essa primeira vers@~{a}o tornou-se muito
 popular entre visitantes do Geometry Center, e atrav@'{e}s do ftp do
 Centro (isso ocorreu antes do advento da web) pessoas em outras institui@,{c}@~{o}es come@,{c}aram
 a usar essa primeira vers@~{a}o tamb@'{e}m.
@@ -756,7 +756,7 @@ em 1993.  Esse foi um dos primeiros 300 s@'{i}tios na web que existiram no mundo
 s@'{i}tio web era certamente devotado ao Geomview, e ajudou a propagar o
 trabalho durante sua exist@^{e}ncia.
 
-O Geometry Center fechou suas facilidades de "tijolos e cimento" em Agosto
+O Geometry Center fechou suas instala@,{c}@~{o}es de "tijolos e cimento" em Agosto
 de 1998 (NSF cortou suas verbas), mas o s@'{i}tio web continuou a existir, e o
 Geomview continuou a ser popular ao redor do mundo.  Em Dezembro de
 1999 algum membro da equipe original do Geometry Center configurou
@@ -789,8 +789,8 @@ ajuda por meio da leitura do manual e indicando nossos enganos.
 @node Plantaformas, Pronuncia, Historia, Top
 @unnumbered Plantaformas Suportadas
 
-Geomview 1.9 pode -- em princ@'{i}pio -- compilar e executarsobre qualquer claramente
-recente sistemas operacionais semelhantes ao Unix. Especificamente, Geomview executa sobre Linux e sobre
+Geomview 1.9 pode -- em princ@'{i}pio -- compilar e executar sobre quaisquer claramente
+recentes sistemas operacionais semelhantes ao Unix. Especificamente, Geomview executa sobre Linux e sobre
 Cygwin (Cygwin emula um ambiente semelhante ao SystemV Unix environment sob o Microsoft
 Windows). Desafortunadamente Geomview compila com MacOS X (Darwin), mas
 aparentemente comunica@,{c}@~{o}es com Geomview por meio de pipes e sockets
@@ -856,10 +856,10 @@ voc@^{e} pode criar seus pr@'{o}prios objetos.
 
 Voc@^{e} pode tamb@'{e}m usar Geomview para manusear os dados a serem mostrados provenientes de
 outro programa que est@'{a} sendo executado simult@^{a}neamente.  Como o outro programa
-modifica os dados, a im@'{a}gem no geomview reflete as modifica@,{c}Úes.  Programas
+modifica os dados, a imagem no Geomview reflete as modifica@,{c}@~{o}es.  Programas
 que geram objetos e utilizam o Geomview para mostr@'{a}-los s@~{a}o chamados
 @emph{m@'{o}dulos externos}.  M@'{o}dulos externos podem controlar quase todos os
-asp@'{e}ctos do Geomview.  A id@'{e}ia aqui @'{e} que muitos asp@'{e}ctos de visualiza@,{c}@~{a}o
+asp@'{e}ctos do Geomview.  A id@'{e}ia aqui @'{e} que muitos aspectos de visualiza@,{c}@~{a}o
 e partes da intera@,{c}@~{a}o de programas geom@'{e}tricos s@~{a}o independentes do
 conte@'{u}do geom@'{e}trico e podem ser coletados conjuntamente em uma pe@,{c}a simples de
 programa que pode ser usada em uma larga variedade de situa@,{c}@~{o}es.  O autor
@@ -873,8 +873,8 @@ um @dfn{software} de geometria interativa que @'{e} particularmente apropriado p
 pesquisa matem@'{a}tica e educa@,{c}@~{a}o.  Em particular, Geomview pode mostrar
 coisas no espa@,{c}o hiperb@'{o}lico e no espa@,{c}o esf@'{e}rico bem como no espa@,{c}o Euclidiano.
 
-Geomview permite m@'{u}ltiplos objetos que s@~{a}o controlados independentemente e
-c@^{a}meras.  As c@^{a}meras fornecem controle interativo para movimento, apar@^{e}ncias
+Geomview permite m@'{u}ltiplos objetos e c@^{a}meras que s@~{a}o controlados
+independentemente.  As c@^{a}meras fornecem controle interativo para movimento, apar@^{e}ncias
 (incluindo ilumina@,{c}@~{a}o, sombreamento, e materiais), selecionando um objeto,
 aresta ou n@'{i}vel de v@'{e}rtice, instant@^{a}neos em um arquivo de imagem SGI ou no formato
 Renderman RIB, a adi@,{c}@~{a}o ou apagamento de objetos @'{e} poss@'{i}vel atrav@'{e}s da manipula@,{c}@~{a}o
@@ -895,8 +895,8 @@ Geomview pode mostrar sa@'{i}das gr@'{a}ficas tridimensionais provenientes do Ma
 @chapter Tutorial
 
 Esse cap@'{i}tulo conduzir@'{a} voc@^{e} atrav@'{e}s de alguns usos elementares do Geomview.
-Trabalhando do come@,{c}o ao fim desse cap@'{i}tulo de frente a um computador onde voc@^{e} pode tentar
-acompanhar os exemplos fornecidos aqui voc@^{e} pegar@'{a} um pouco do que voc@^{e} pode fazer com
+Traba-lhando do come@,{c}o ao fim desse cap@'{i}tulo de frente a um computador onde voc@^{e} pode tentar
+acompanhar os exemplos fornecidos aqui voc@^{e} receber@'{a} um pouco do que pode ser feito com
 Geomview.
 
 Para iniciar o Geomview, coloque seu usu@'{a}rio e sua senha no computador e abra uma janela de shell.  Uma
@@ -909,7 +909,7 @@ significa pressione a tecla "Enter"):
 geomview tetra dodec @key{Enter}
 @end example
 
-Esse comando inicia o geomview e chama dois objetos exemplo, um
+Esse comando inicia o Geomview e chama dois objetos exemplo, um
 tetraedro e um dodecaedro.  Ap@'{o}s poucos segundos tr@^{e}s janelas
 ir@~{a}o aparecer; @pxref{figinitial, Figure}.
 
@@ -922,10 +922,10 @@ O painel @`{a} esquerda @'{e} o painel de controle principal do Geomview; Esse p
 de painel @emph{Main} (principal).  O painel menor ao centro @'{e} o
 painel @emph{Tools} (de ferramentas) e serve para selecionar diferentes tipos de movimentos.
 A janela do lado direito @'{e} a janela de c@^{a}mera e nessa janela voc@^{e} v@^{e} um
-tetraedro largo e um dodecaedro que est@'{a} parcialmente obscurecido
+tetraedro rande e um dodecaedro que est@'{a} parcialmente obscurecido
 pelo tetraedro.
 
-Geomview tem alguns pain@'{e}is mais por padr@~{a}o ele mostra somente esses tr@^{e}s.
+Geomview tem alguns pain@'{e}is mas por padr@~{a}o ele mostra somente esses tr@^{e}s.
 iremos descrever alguns asp@'{e}ctos desses tr@^{e}s e alguns dos outros nesse
 tutorial.  Voc@^{e} pode ler mais sobre esses e outros pain@'{e}is nos cap@'{i}tulos
 adiante neste manual.
@@ -935,7 +935,7 @@ bot@~{a}o esquerdo do mouse.  Agora, enquanto mant@'{e}m pressionado o bot@~{a}o
 mouse com movimentos pequenos.  Voc@^{e} ver@'{a} a figura rotacionar na dire@,{c}@~{a}o na qual voc@^{e}
 mover o mouse.    Se voc@^{e} liberar o bot@~{a}o do mouse enquanto move o
 mesmo, a figura continua girando.  Para parar o movimento de rota@,{c}@~{a}o, mantenha o mouse sobre a
-figura e pressione rapdamente o bot@~{a}o esquerdo do mesmo.
+figura e pressione rapidamente o bot@~{a}o esquerdo do mesmo.
 
 Geomview utiliza o modelo da @emph{esfera de vidro} para os movimentos iniciados atrav@'{e}s do mouse.  Isso
 significa que voc@^{e} est@'{a} supondo o objeto como estando dentro de uma
@@ -965,13 +965,13 @@ porque esse @'{e} o modo de modo de movimento selecionado no painel de ferrament
 Agora quando voc@^{e} mover o mouse na janela de c@^{a}mera enquanto mant@'{e}m pressionado o
 bot@~{a}o esquerdo, o tetraedro (que deve ser ainda o objeto alvo
 de antes) ir@'{a} ser transladado na dire@,{c}@~{a}o que voc@^{e} move o mouse.  Note
-que voc@^{e} pode transladas o tetraedro na dire@,{c}@~{a}o da borda da janela enquanto voc@^{e}
+que voc@^{e} pode transladar o tetraedro na dire@,{c}@~{a}o da borda da janela enquanto voc@^{e}
 mant@'{e}m pressionado o bot@~{a}o esquerdo do mouse.  Se voc@^{e} liberar o bot@~{a}o do
 mouse enquanto move o mesmo, o tetraedro ir@'{a} continuar o movimento sozinho.  O tetraedro
 mover-se-@'{a} ao contr@'{a}rio do que ocorria antes muito rapidamente de forma que @'{e} muito f@'{a}cil perder o rastro de onde ele se encontra.
 
 Se voc@^{e} acidentalmente perder o tetraedro atrav@'{e}s de transla@,{c}@~{a}o para muito longe
-da vis@~{a}o da janela, voc@^{e} pode peg@'{a}-lo de vlta atrav@'{e}s de um clique sobre o
+da janela de vis@~{a}o, voc@^{e} pode peg@'{a}-lo de volta atrav@'{e}s de um clique sobre o
 bot@~{a}o Centro (@emph{Center}) no painel de ferramentas (@emph{Tools}).  Isso far@'{a} com que o tetraedro
 retorne para a sua posi@,{c}@~{a}o inicial.
 
@@ -1012,7 +1012,7 @@ do meio do mouse pressionado.
 O painel Apar@^{e}ncia (@emph{Appearance}) permite a voc@^{e} controlar v@'{a}rias coisas sobre a
 maneira como o Geomview desenha objetos.  Note os bot@~{o}es rotulados com @emph{[af] Faces} e
 @emph{[ae] Edges} (arestas).  Clique sobre o @emph{[ae] Edges} uma vez, e note
-que Geomview est@'{a} agora ressalta/destaca as arestas do dodecaedro.  Clique sobre o @emph{[ae] Edges}
+que Geomview agora ressalta/destaca as arestas do dodecaedro.  Clique sobre o @emph{[ae] Edges}
 novamente e as arestas desaparecem.  Clique muitas vezes e assista as arestas
 indo e voltando.  Quando voc@^{e} tiver feito isso o suficiente, deixe as arestas habilitadas
 e clique sobre o bot@~{a}o @emph{[af] Faces}.  Essa a@,{c}@~{a}o alterna entre exibir
@@ -1039,7 +1039,7 @@ um para vermelho (@emph{red}), outro para verde (@emph{green}), e outro para azu
 Valores num@'{e}ricos para ambos os sistemas de cores RGB e HSV
 podem ser vistos ou editados na parte inferior do painel.
 @end ifclear
-A cor iinicial do dodecaedro foi especificada no arquivo
+A cor inicial do dodecaedro foi especificada no arquivo
 @file{dodec} que voc@^{e} chamou quando iniciamos o Geomview.  A cor que
 voc@^{e} especificou com o painel de
 cores sobrescreveu as cores antigas.  Voc@^{e} pode ajustar a intensidade da
@@ -1051,16 +1051,16 @@ no bot@~{a}o direito; isso seleciona "World" como objeto alvo.
 Clique no bot@~{a}o @emph{Look At} para para olhar para o mundo novamente.
 
 Note que no painel de Apar@^{e}ncia (@emph{Appearance}) as escolhas dos bot@~{o}es
-se modificavam @`{a} medida que o lado esquerdo tamb@'{e}m mudava com o dodecaedro.  Isso ocoore
+se modificavam @`{a} medida que o lado esquerdo tamb@'{e}m mudava com o dodecaedro.  Isso ocorre
 porque o painel @emph{Appearance} sempre mostra as escolhas para
 o objeto alvo, que agora @'{e} o mundo, o qual ainda tem suas
 escolhas padr@~{a}o.
 
 Clique sobre o bot@~{a}o @emph{[ab] BBox} sob a palavra @emph{Draw}.
-A caixa associada desaparece.  agora pona o cursor de volta na janela de
+A caixa associada desaparece.  agora ponha o cursor de volta na janela de
 c@^{a}mera.  No teclado, digite as teclas @kbd{a }b.  Note que a
 caixa associada aparece novamente.  @kbd{a }b @'{e} o atalho de teclado para
-o bot@~{a}o que alterna entre a exibi@,{c}@~{a}o ou n@~{a}o da caixa associada; a seq@"{u}@^{e}ncia de caracteres "[ab]" aparece sobre o
+o bot@~{a}o que alterna entre a exibi@,{c}@~{a}o ou n@~{a}o da caixa associada; a sequ@^{e}ncia de caracteres "[ab]" aparece sobre o
 bot@~{a}o para indicar isso.  A maioria dos bot@~{o}es do Geomview possuem atalhos
 de teclado que voc@^{e} pode usar se preferir.  Isso ser@'{a} @'{u}ltil quando voc@^{e}
 estiver familiarizado com o Geomview e n@~{a}o quiser ter de se mover
@@ -1076,7 +1076,7 @@ Voc@^{e} pode tamb@'{e}m chamar objetos de dentro do Geomview.  Clique sobre o m
 O painel de arquivos (@emph{Files}) ir@'{a} aparecer.
 @c
 Abaixo do meio desse painel, onde se l@^{e} @emph{Path List}, temos um navegador com tr@^{e}s linhas detro dele; a
-segunda linha @'{e} um diret@'{o}rio com montanhas de exemplos do Geomview dentro dele.
+segunda linha @'{e} um diret@'{o}rio com montanhas de exemplos do Geomview.
 Clique sobre aquela segunda linha; @pxref{figfilespanel, Figure}. Role para baixo
 na lista de arquivos at@'{e} voc@^{e} ver @file{tref.off}.  Clique sobre aquela linha,
 e ent@~{a}o clique sobre o bot@~{a}o @emph{OK}.  Um grande tubo em forma de trevo
@@ -1089,7 +1089,7 @@ ir@'{a} aparecer em sua janela.  Clique sobre o bot@~{a}o @emph{Hide} no painel
 @end float
 
 Agora clique sobre o bot@~{a}o @emph{Reset} no painel de ferramentas (@emph{Tools}).  Isso
-far@'{a} com que todas as figuras rtornem ao centro da janela de c@^{a}mera.  Voc@^{e} pode ver um
+far@'{a} com que todas as figuras retornem ao centro da janela de c@^{a}mera.  Voc@^{e} pode ver um
 dodecaedro e uma protuber@^{a}ncia do trevo (@pxref{figtrefdodec, Figure}).
 
 Brinque com a protuber@^{a}ncia do trevo e o dodecaedro.  Fa@,{c}a experi@^{e}ncias com
@@ -1240,7 +1240,7 @@ invocados mais tarde da forma usual com as teclas de atalho @kbd{Px} ou com
 comando @code{ui-panel}. Veja @ref{ui-panel, @code{(ui-panel @dots{})}}.
 
 @item -noinit
-N@~{a}o l@^{e} nenum arquivo de inicializa@,{c}@~{a}o. Por padr@~{a}o, geomview l@^{e} o arquivo
+N@~{a}o l@^{e} nenhum arquivo de inicializa@,{c}@~{a}o. Por padr@~{a}o, Geomview l@^{e} o arquivo
 @file{.geomview} do systema, seguido daqueles em @file{$@{HOME@}/.geomview} e em
 @file{./.geomview}.
 
@@ -1283,8 +1283,8 @@ navegador @emph{Targets} no painel principal (@emph{Main}) mostra uma lista de t
 os objetos dos quais Geomview atualmente abertos.  Esse navegador tem uma
 linha para cada objeto que voc@^{e} tiver chamado, adicionalmente algumas linhas para outros
 objetos.  Um desses outros objetos @'{e} chamado @code{World} e corresponde a
-a todos os objetos atualmente chamados, tratados como se eles fossem um
-objeto.  A maioria das opera@,{c}@~{o}eos que voc@^{e} pode fazer sobre um objeto, tais como
+todos os objetos atualmente chamados, tratados como se eles fossem um
+objeto.  A maioria das opera@,{c}@~{o}es que voc@^{e} pode fazer sobre um objeto, tais como
 aplicar um movimento ou mudar uma cor, pode tamb@'{e}m ser feita para o objeto
 "World".
 
@@ -1292,7 +1292,7 @@ O navegador de alvos (@emph{Targets}) tamb@'{e}m possui uma entrada para cada c@
 padr@~{a}o existe somente uma c@^{a}mera; @'{e} poss@'{i}vel adicionar mais delas atrav@'{e}s da
 entrada @emph{New Camera} do painel principal (@emph{Main}) via menu @emph{File}.
 Geomview trata c@^{a}meras na maioria das vezes como
-trata objetos geom@'{e}tricos.  Por exemplo, voc@^{e} pode mover c@^{a}meras pelas proximidades
+trata objetos geom@'{e}tricos.  Por exemplo, voc@^{e} pode mover c@^{a}meras pelas pro-ximidades
 e adicion@'{a}-las e apag@'{a}-las como objetos geom@'{e}tricos.  C@^{a}meras n@~{a}o
 s@~{a}o mostradas na tela como um objeto que voc@^{e} v@^{e}.  Cada
 c@^{a}mera tem uma janela de c@^{a}mera separada que mostra a vis@~{a}o como vista atrav@'{e}s da lente
@@ -1301,7 +1301,7 @@ geom@'{e}trica de outras c@^{a}meras.  Veja @ref{Cameras}.)
 
 Devido ao fato de Geomview tratar c@^{a}meras e objetos geom@'{e}tricos muito similarmente,
 o termo @dfn{objeto} nessa documenta@,{c}@~{a}o @'{e} usado para referir-se a qualquer dos dois
-indistintamente.  Quando precisamos disting@"{u}ir entre os dois tipos de objetos, usamos
+indistintamente.  Quando precisamos distinguir entre os dois tipos de objetos, usamos
 o termo "@dfn{geom}" para denotar um objeto geom@'{e}trico e a palavra
 @dfn{c@^{a}mera} para denotar uma c@^{a}mera.
 
@@ -1320,7 +1320,7 @@ entre colch@^{e}tes ([ ]), @'{e} um nome curto atribuido pelo Geomview quando vo
 chama o objeto.  Esse nome consiste da letra `g' para geometria e da letra `c' para
 c@^{a}meras, seguindo por um n@'{u}mero.  O segundo nome @'{e} maior e mais
 descritivo; por padr@~{a}o esse @'{e} o nome do arquivo do qual o
-objeto foi chamado.  Os dois nomes s@~{a}o equivalentes at@'{e} no que diz respeito ao
+objeto foi chamado.  Os dois nomes s@~{a}o equivalentes no que diz respeito ao
 Geomview; em qualquer ponto onde voc@^{e} precisar especificar um nome voc@^{e} pode fornecer
 qualquer dos dois.
 
@@ -1337,7 +1337,7 @@ veja @ref{Movimentos do Mouse}.
 
 O navegador de m@'{o}dulos (@emph{Modules}) lista m@'{o}dulos externos do Geomview.  Um
 m@'{o}dulo externo @'{e} um programa separado que interage com Geomview para
-extender suas funcionalidades.  Para informa@,{c}@~{o}es sobre m@'{o}dulos externos,
+extender suas funciona-lidades.  Para informa@,{c}@~{o}es sobre m@'{o}dulos externos,
 veja @ref{Modulos}.
 
 @ifset forms
@@ -1363,13 +1363,13 @@ Geometry}.
 A barra de menu no topo do painel principal oferece menus para opera@,{c}@~{o}es comuns.
 
 Para criar novas janelas, chame novos objetos, grave os objetos ou outras informa@,{c}@~{o}es,
-ou saia do geomview, veja o menu @emph{File}.  
+ou saia do Geomview, veja o menu @emph{File}.  
 
 Para copiar ou apagar objetos, veja o menu @emph{Edit}.
 
 Voc@^{e} pode chamar qualquer painel a partir do menu @emph{Inspect}.
 
-O menu @emph{Space} permite a voc@^{e} escolher se geomview trabalha
+O menu @emph{Space} permite a voc@^{e} escolher se Geomview trabalha
 no modo Euclidiano, Hiperbolico ou Esf@'{e}rico.  O modo Euclideano @'{e} usado
 por padr@~{a}o.  Para detalhes sobre a utiliza@,{c}@~{a}o do modo espa@,{c}o @emph{Hyperbolic} e do modo
 @emph{Spherical}, veja @ref{Geometrias Nao-Euclidianas}.
@@ -1377,11 +1377,11 @@ por padr@~{a}o.  Para detalhes sobre a utiliza@,{c}@~{a}o do modo espa@,{c}o @em
 
 A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possuem equivalentes
 atalhos de teclado de forma que voc@^{e} pode fazer a mesma a@,{c}@~{a}o atav@'{e}s de digita@,{c}@~{a}o de uma
-seq@"{u}@^{e}ncia de teclas no teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
+sequ@^{e}ncia de teclas no teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
 est@~{a}o familiarizados com as capacidades do Geomview e querem trabalhar rapidamente
 sem ter montanhas de pain@'{e}is amontoando-se na tela.
 Atalhos de teclado s@~{a}o usualmente indicados ente colch@^{e}tes ([ ]) pr@'{o}ximo
-ao item correspondente em um apinel.  Por exemplo, o atalho de teclado
+ao item correspondente em um painel.  Por exemplo, o atalho de teclado
 para o modo @emph{Rotate} @'{e} 'r'; isso @'{e} indicado par "[r]" que aparece
 antes da palavra "Rotate" no navegador @emph{MOTION MODE}.  Para
 usar esse atalaho de teclado, apenas pressione a tecla @kbd{r} enquanto o cursor do
@@ -1437,15 +1437,15 @@ dentro da caixa de texto na parte inferior do navegador e pressione a tecla @key
 @refill
 
 Se o arquivo selecionado contiver dados geom@'{e}tricos OOGL, esse arquivo ir@'{a} ser adicionado ao
-navegador de alvos (@emph{Targets}) do geomview.  Se esse arquivo contiver comandos GCL em lugar de conter dados geom@'{e}tricos OOGL,
+navegador de alvos (@emph{Targets}) do Geomview.  Se esse arquivo contiver comandos GCL em lugar de conter dados geom@'{e}tricos OOGL,
 o arquivo ser@'{a} interpretado. Veja @ref{GCL}.
 
 Quando o apinel de arquivos (@emph{Files}) aparecer pela primeira vez, o diret@'{o}rio selecionado no
 navegador de diret@'{o}rios @'{e} o diret@'{o}rio atual --- que corresponde ao diret@'{o}rio a partir do qual voc@^{e}
 chamou o Geomview.  O navegador de arquivos mostra @emph{todos} os arquivos nesse
 diret@'{o}rio, incluindo os que n@~{a}o s@~{a}o arquivos do Geomview.  Se voc@^{e} tentar
-chamar u arquivo que n@~{a}o contenha nem um objeto OOGL nem comandos do
-Geomview, o Geomview ir@'{a} mostrar uma mensagem de errp.
+chamar um arquivo que n@~{a}o contenha um objeto OOGL e tamb@'{e}m n@~{a}o contenha comandos do
+Geomview, o Geomview ir@'{a} mostrar uma mensagem de erro.
 
 O navegador de diret@'{o}rios tamb@'{e}m lista um segundo e um terceiro diret@'{o}rios
 adicionalmente al@'{e}m do diret@'{o}rio atual.  O segundo, que termina em
@@ -1456,16 +1456,16 @@ subdiret@'{o}rio @file{spherical} possuem amostras de objetos hiperb@'{o}licos
 e esf@'{e}ricos, respectivamente.  Entradas no navegador de diret@'{o}rios s@~{a}o vistas apenas como
 entradas de arquivos; para visualizar um subdiret@'{o}rio, clique sobre o nome do referido diret@'{o}rio.
 
-O terceiro diret@'{o}rio mostrado mostrado no navegador de diret@'{o}rio, que termina em
+O terceiro diret@'{o}rio mostrado no navegador de diret@'{o}rio, que termina em
 @file{geom}, cont@'{e}m muitos subdiret@'{o}rios com outros arquivos do Geomview
-dentro deles.  Esses arquivos s@~{a}o usados menos freq@"{u}@^{e}ntemente que os outros no
+dentro deles.  Esses arquivos s@~{a}o usados menos frequ@^{e}ntemente que os outros no
 diret@'{o}rio @file{data/geom}.
 
-Voc@^{e} pode mudar a lista de diret@'{o}rios mostra no navegador de diret@'{o}rios
+Voc@^{e} pode mudar a lista de diret@'{o}rios mostrada no navegador de diret@'{o}rios
 do painel de arquivos (@emph{Files}) usando o comando @code{set-load-path};
 Veja @ref{set-load-path, @code{(set-load-path @dots{})}}.
 
-@item a tecla de atalho @kbd{<}:
+@item A tecla de atalho @kbd{<}:
 Se voc@^{e} digitar @kbd{<} em qualquer janela do Geomview, o painel @emph{Load} ir@'{a}
 aparecer.  Esse painel @'{e} uma pequena vers@~{a}o do painel de arquivos (@emph{Files}); o painel @emph{Load} cont@'{e}m
 um campo de texto no qual voc@^{e} o nome de um arquivo a ser chamado (ou um
@@ -1480,7 +1480,7 @@ ap@'{o}s tudo, pressione o bot@~{a}o @emph{File Browser}.
 @caption{O Painel de Chamar Arquivos.}
 @end float
 
-@item comandos para chamar objetos geom@'{e}tricos:
+@item Comandos para chamar objetos geom@'{e}tricos:
 Os comandos GCL @code{load}, @code{geometry}, @code{new-geometry},
 e @code{read} permitem a voc@^{e} chamar um objeto dentro do Geomview;
 veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
@@ -1511,7 +1511,7 @@ veja @ref{Comandos}.
 
 Cada um dos modos de movimento usa um paradigma comum para como o movimento @'{e}
 aplicado.  Em particular, cada modo de movimento depende do objeto alvo (@emph{target})
-atual e do atual objeto do centro (@emph{center}.  O obejto alvo atual e o atual objeto do centro s@~{a}o explicados
+atual e do atual objeto do centro (@emph{center}).  O objeto alvo atual e o atual objeto do centro s@~{a}o explicados
 nos par@'{a}grafos seguintes.
 
 O objeto alvo atual @'{e} mostrado no campo @emph{Target} no
@@ -1524,9 +1524,9 @@ o objeto.
 
 O atual objeto do centro @'{e} mostrado no campo @emph{Center} no
 painel de ferramentas(@emph{Tools}).  Seu valor padr@~{a}o @'{e} a palavra especial "target",
-que significa que o odbjeto do centro @'{e} o objeto que estiver designado como objeto alvo.
+que significa que o objeto do centro @'{e} o objeto que estiver designado como objeto alvo.
 Voc@^{e} pode mudar o objeto atual do centro para qualquer objeto digitando seu nome no campo
-@emph{Center}.  A or@'{i}gem do objeto do centro @'{e} mantido fixo no modo rota@,{c}@~{a}o @emph{Rotate} e
+@emph{Center}.  A or@'{i}gem do objeto do centro @'{e} mantida fixa no modo rota@,{c}@~{a}o @emph{Rotate} e
 no modo @emph{Orbit}.  Normalmente o objeto do centro @'{e} um dos objetos geom@'{e}tricos
 (geoms) existentes listados no navegador de alvos (@emph{Targets}), o centro atual das
 rota@,{c}@~{o}es @'{e} a or@'{i}gem daquele sistema de coordenadas daquele objeto.
@@ -1537,7 +1537,7 @@ Isso tamb@'{e}m @'{e} poss@'{i}vel mudando o bot@~{a}o @emph{BBox Center} para e
 centro de movimento como sendo o centro do objeto atual da caixa
 associada. Uma vez modificado o centro da caixa geom@'{e}trica ativa associada ir@'{a} tornar-se
 o centro do movimento, se voc@^{e} selecionar outro objeto, ent@~{a}o o centro do
-movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nada modifica@,{c}@~{a}o
+movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nenhuma modifica@,{c}@~{a}o
 ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado; voc@^{e} tem que
 digitar a palavra @code{target} no campo @emph{Center} para retornar ao
 valor padr@~{a}o.
@@ -1549,12 +1549,12 @@ bot@~{a}o enquanto move o mouse, o movimento ir@'{a} continuar.  Para imaginar a
 @'{u}til imaginar o cursor do mouse como sendo uma al@,{c}a; quando voc@^{e} pressiona um
 bot@~{a}o do mouse para baixo, o mouse agarra firmemente no objeto alvo e voc@^{e} pode mover esse objeto.  Quando
 voc@^{e} libera o bot@~{a}o do mouse, a al@,{c}a libera o objeto.
-Liberando o bot@~{a}o do mouse enquanto move o mesmo @'{e} como abandonar
+Liberando o bot@~{a}o do mouse enquanto move o mesmo funciona como abandonar
 o objeto --- o objeto continua movendo-se independentemente do mouse.
 In@'{e}rcia pode ser desligada; veja o menu de movimento (@emph{Motion}) no painel principal (@emph{Main}),
 descrito abaixo.
 
-Generally, the bot@~{a}o esquerdo do mouse controla movimento no plano da tela,
+Geralmente, o bot@~{a}o esquerdo do mouse controla movimento no plano da tela,
 enquanto o bot@~{a}o m@'{e}dio do mouse controla movimento ao longo ou em torno da dire@,{c}@~{a}o de avan@,{c}o.
 
 Pressionando o tecla "shift" enquanto arrasta com o bot@~{a}o esquerdo ou m@'{e}dio do mouse
@@ -1604,7 +1604,7 @@ esquerdo para pilotar.
 ignora o objeto alvo e o objeto do centro.
 
 @item Cam Orbit
-O modo ”rbita de C@^{a}mera (@emph{Cam Orbit}) permite a voc@^{e} rotacionar a c@^{a}mera atual c@^{a}mera em torno do
+O modo @'{o}rbita de C@^{a}mera (@emph{Cam Orbit}) permite a voc@^{e} rotacionar a c@^{a}mera atual em torno do
 centro atual. O bot@~{a}o esquerdo do mouse faz essa rota@,{c}@~{a}o.  O bot@~{a}o do
 do meio do mouse no modo @emph{Cam Orbit} atua da mesma forma que no
 modo @emph{Cam Fly}: O bot@~{a}o do do meio do mouse move a c@^{a}mera para adiante e para tr@'{a}s.
@@ -1629,7 +1629,7 @@ homotetiza-se o objeto ou ampliando ou reduzindo o mesmo, dependendo da dire@,{c
 movimento do mouse.  o centro da transforma@,{c}@~{a}o homot@'{e}tica aplicada @'{e} o
 objeto do centro.
 
-Homotetia possui significado somente no espa@,{c}o Euclideano; tentativas do palicar homotetia s@`{a}o
+Homotetia possui significado somente no espa@,{c}o Euclideano; tentativas do palicar homotetia s@~{a}o
 ignoradas em outros espa@,{c}os.
 
 O modo @emph{Geom Scale} n@~{a}o possui in@'{e}rcia.
@@ -1659,7 +1659,7 @@ que o objeto alvo mais ou menos ajuste-se @`{a} janela.
 O comando @emph{Look At} n@~{a}o funciona perfeitamente em espa@,{c}os n@~{a}o Euclideanos.
 
 @item Center
-O bot@~{a}o @emph{Center} desfaz transforma@,{c}@`{a}o do objeto alvo,
+O bot@~{a}o @emph{Center} desfaz transforma@,{c}@~{a}o do objeto alvo,
 movendo o objeto alvo de volta @`{a} sua posi@,{c}@~{a}o inicial padr@~{a}o, que @'{e} onde ele estava quando voc@^{e}
 originalmente o chamou a partir do Geomview.
 
@@ -1670,7 +1670,7 @@ movidos de vota @`{a}s suas posi@,{c}@~{o}es iniciais padr@~{a}o.
 @end table
 
 O painel de ferramentas (@emph{Tools}) possui um bot@~{a}o @emph{Main}, para invocar o
-painel principal no caso de esse painel tiver sido dispensado ou sepultado, e um bot@~{a}o @emph{Done}
+painel principal no caso de esse painel ter sido dispensado ou sepultado, e um bot@~{a}o @emph{Done}
 para fechar o painel de ferramentas @emph{Tools}.
 
 O painel principal do menu de movimento (@emph{Motion}) tem controles especiais
@@ -1683,7 +1683,7 @@ acess@'{i}veis atrav@'{e}s de comandos GCL. @xref{ui-motion, @code{(ui-motion
 @item [ui] Inertia
 Normalmente, ao mover objetos tem-se in@'{e}rcia: se o mouse estiver ainda se movendo
 quando o bot@~{a}o for liberado, o objeto selecionado continua a mover-se.
-Quando a in@'{e}rcia (@emph{Inertia}) for desabilitada, objetos cessam se movimento no momento em que voc@^{e} libera
+Quando a in@'{e}rcia (@emph{Inertia}) for desabilitada, objetos cessam seu movimento no momento em que voc@^{e} libera
 o mouse.
 
 @item [uc] Constrain Motion
@@ -1699,7 +1699,7 @@ n@~{a}o necess@'{a}riamente no sistema de coordenadas do objeto.
 @'{E} necess@'{a}rio algumas vezes ter ao alcance da m@~{a}o o movimento de objetos objetos com rela@,{c}@~{a}o ao sistema de coordenadas
 onde o referido objeto foi definido, em lugar de com rela@,{c}@~{a}o ao sistema de coordenadas da c@^{a}mera atrav@'{e}s da qual esse objeto est@'{a} sendo visto.  Enquanto
 @emph{Own Coordinates} estiver selecionado, todos os movimentos s@~{a}o interpretados da forma citada nesse item:
-arrastando o mouse para a diretia no modo transla@,{c}@~{a}o corresponde a mover o objeto em sua pr@'{o}pria dire@,{c}@~{a}o
+arrastando o mouse para a direita no modo transla@,{c}@~{a}o corresponde a mover o objeto em sua pr@'{o}pria dire@,{c}@~{a}o
 +X, e assim por diante.  Pode ser especialmente @'{u}til conjuntamente com
 o bot@~{a}o Restringir Movimento (@emph{Constrain Motion}).
 
@@ -1714,14 +1714,14 @@ o bot@~{a}o Restringir Movimento (@emph{Constrain Motion}).
 @subsection Selecionando um Ponto de Interesse
 
 @'{E} algumas vezes @'{u}til especificar um ponto em particular sobre algum objeto em uma
-janela do window como o ponto de centro para movimentos do mouse.  Voc@^{e} pode fazer isso
+janela do Geomview como o ponto de centro para movimentos do mouse.  Voc@^{e} pode fazer isso
 segurando a tecla shift e clicando o bot@~{a}o direito do mouse (i.e. clique no bot@~{a}o direito uma vez
 enquanto mant@'{e}m pressionada a tecla shift do teclado) com o cursor sobre
 o ponto desejado.  Esse ponto torna-se ent@~{a}o o @emph{ponto de
 interesse}.  O ponto de interesse deve estar sobre um objeto existente.
 
 Selecionado um ponto de interesse simplifica o exame de uma pequena por@,{c}@~{a}o de um
-grande objeto.  Mantendo a tecla shift pressionada e clicando sobre o ponto de interesse com o bot@`{a}o direito do mouse, e seleccionando
+grande objeto.  Mantendo a tecla shift pressionada e clicando sobre o ponto de interesse com o bot@~{a}o direito do mouse, e selecionando
 o modo @'{o}rbita (@emph{Orbit}).  Use o bot@~{a} do meio do mouse para aproximar, e o
 esquerdo para orbitar o ponto, examinando a regi@~{a}o de diferentes
 dire@,{c}@~{o}es.
@@ -1732,7 +1732,7 @@ localizado no ponto de interesse.  Adicionalmente, movimentos de mouse para a
 janela na qual voc@^{e} fez a sele@,{c}@~{a}o s@~{a}o ajustados de forma que o ponto de
 interesse acompanhe o mouse.
 
-Voc@^{e} pode mudar o ponto de interesse a qualqeur momento selecionando um novo ponto de interesse
+Voc@^{e} pode mudar o ponto de interesse a qualquer momento selecionando um novo ponto de interesse
 shift-clicando o bot@~{a}o direito do mouse novamente.  Voc@^{e} pode cancelar
 o ponto de interesse completamente shift-clicando o bot@~{a}o
 direito do mouse com o cursor no plano de fundo (i.e. n@~{a}o sobre qualquer objeto).
@@ -1741,20 +1741,20 @@ Isso modifica o objeto do centro de volta a seu valor padr@~{a}o, "target".
 O objeto que possui o nome de "CENTER", que serve como um objeto do centro para o
 ponto de interesse, @'{e} um tipo especial de geom chamado "alien".  Esse "Alien"
 n@~{a}o aparece no navegador de alvos (@emph{Targets}).  Por padr@~{a}o esse objeto "Alien" n@~{a}o tem geometria
-associada e concequ@"{u}@^{e}ntemente @'{e} invis@'{i}vel.  Voc@^{e} pode, Todavia, explicitamente
+associada e concequ@^{e}ntemente @'{e} invis@'{i}vel.  Voc@^{e} pode, Todavia, explicitamente
 fornecer ao Alien alguma geometria usando um comando GCL, fazendo com que o Alien aparece no navegador de alvos.  Use
 o comando @code{geometry} para fazer isso: @code{(geometry CENTER
 @var{geometry})}, onde @var{geometry} @'{e} qualquer geometria v@'{a}lida.  Por
 exemplo, @code{(geometry CENTER @{ < xyz.vect @})} faz com que o arquivo
 @file{xyz.vect}, que @'{e} um dos arquivos de exemplo padronizados distribu@'{i}dos
-com geomview, seja usado na geometria para CENTER. Veja @ref{geometry,
+com Geomview, seja usado na geometria para CENTER. Veja @ref{geometry,
 @code{(geometry @dots{})}}.
 
 
 O que acontece internamente quando voc@^{e} seleciona um ponto de interesse @'{e}
-que o contro @'{e} escolhido par o objeto chamado CENTER, e aquele objeto @'{e}
-posicionado no ponto de interesse.  Adicionalmente, com o ovjetivo de para movimentos de
-mouse rastreiem o ponto de interesse, o atual comprimento focal da
+que o centro @'{e} ajustado para o objeto chamado CENTER, e aquele objeto @'{e}
+posicionado no ponto de interesse.  Adicionalmente, para que movimentos de
+mouse acompanhem o ponto de interesse, o atual comprimento focal da
 c@^{a}mera @'{e} escolhido para ser a dist@^{a}ncia da c@^{a}mera at@'{e} o ponto de
 interesse.  Voc@^{e} pode realizar isso via GCL com os seguintes comandos:
 @example
@@ -1771,7 +1771,7 @@ atual c@^{a}mera, @var{cam-id}.  O primeiro comando acima cria o
 
 @comment ================================================================
 @node Aparencia, Cameras, Movimentos do Mouse, Interacao
-@section Changing the Way Things Look
+@section Modificando a Forma de Ver as Coisas
 
 Geomview utiliza uma hierarquia de apar@^{e}ncias para controlar o caminho atrav@'{e}s do qual olha-se coisas.
 Uma apar@^{e}ncia (@dfn{appearance}) @'{e} uma especifica@,{c}@~{a}o de informa@,{c}@~{a}o sobre como
@@ -1786,11 +1786,11 @@ preced@^{e}ncia a menos que a hierarquia superior n@~{a}o for escolhida para sob
 Todo geom no Geomview tem uma apa@^{e}ncia associada.  Existe
 tamb@'{e}m uma apar@^{e}ncia associada ao geom do tipo "World", que comporta-se como
 hierarquia superior a cada apar@^{e}ncia individual de qualquer geom.  Finalmente, existe uma
-apa@^{e}ncia b@'{a}sica global, que @'{e} a hierarquia superior da apar@^{e}ncia "World".
+apar@^{e}ncia b@'{a}sica global, que @'{e} a hierarquia superior da apar@^{e}ncia "World".
 
 A apar@^{e}ncia b@'{a}sica especifica valores razo@'{a}veis para toda informa@,{c}@~{a}o de
 apar@^{e}ncia, e por padr@~{a}o nenhuma outra apar@^{e}ncia especifica
-qualquer coisa, o que significa que as apar@^{e}ncias erdam seus valores a apartir da apar@^{e}ncia
+qualquer coisa, o que significa que as apar@^{e}ncias erdam seus valores a a partir da apar@^{e}ncia
 b@'{a}sica.  Isso significa que por padr@~{a}o todos os objetos s@~{a}o desenhados usando a
 apar@^{e}ncia b@'{a}sica.
 
@@ -1810,7 +1810,7 @@ Geomview possui tr@^{e}s pain@'{e}is que levam voc@^{e} a modificar apar@^{e}nci
 @node Painel de Aparencia, Painel de Materiais, Aparencia, Aparencia
 @subsection The Appearance Panel
 
-O painel de Apar@^{e}ncia (@emph{Appearance}) leva voc@^{e} a modificar os mais comuns propriedades de
+O painel de Apar@^{e}ncia (@emph{Appearance}) leva voc@^{e} a modificar as mais comuns propriedades de
 apar@^{e}ncia do objeto alvo.
 @float Figure,figap
 @image{figs/ap}
@@ -1821,7 +1821,7 @@ painel de apar@^{e}ncias aplicam-se a apar@^{e}ncia daquele objeto geom@'{e}tric
 "World", ent@~{a}o as modifica@,{c}@~{o}es no painel de apar@^{e}ncias aplicam-se @`{a} apar@^{e}nca do objeto atual
 @emph{e} a apar@^{e}ncia de todos os outros objetos individuais.  (Usu@'{a}rios acham que
 esse comportamento @'{e} mais desej@'{a}vel que ter as modifica@,{c}@~{o}es somente aplicadas a apar@^{e}ncia do
-"World"e.)  Se o alvo for uma c@^{a}mera, ent@~{a}o as modifica@,{c}@~{o}es do painel de apar@^{e}ncia
+"World".)  Se o alvo for uma c@^{a}mera, ent@~{a}o as modifica@,{c}@~{o}es do painel de apar@^{e}ncia
 aplica-se ao geom que ocupou mais recentemente a posi@,{c}@~{a}o de alvo.
 
 Os cinco bot@~{o}es pr@'{o}ximos ao canto superior esquerdo sob a palavra
@@ -1833,7 +1833,7 @@ Os cinco bot@~{o}es pr@'{o}ximos ao canto superior esquerdo sob a palavra
 Esse bot@~{a}o especifica se faces s@~{a}o desenhadas.
 
 @item Edges
-Esse bot@~{a}o especifica se arestass s@~{a}o desenhadas.
+Esse bot@~{a}o especifica se arestas s@~{a}o desenhadas.
 
 @item Normals
 Esse bot@~{a}o especifica se vetores normais @`{a} superf@'{i}cie s@~{a}o desenhados.
@@ -1871,7 +1871,7 @@ Pressionado o bot@~{a}o @emph{RGB} ou o bot@~{a}o @emph{HSV} ao centro do topo d
 os bot@~{o}es deslizantes para outro sistema de cores.  Voc@^{e} pode ajustar cores ou atrav@'{e}s dos
 bot@~{o}es deslizantes, ou atrav@'{e}s de digita@,{c}@~{a}o nas caixas de texto RGB ou HSV.
 
-Clique @emph{OK} para aceitar as cores que voc6e tiver escolhido, ou
+Clique @emph{OK} para aceitar as cores que voc@^{e} tiver escolhido, ou
 @emph{Cancel} para reter as escolhas anteriores de cor.
 
 
@@ -1890,7 +1890,7 @@ cores por v@'{e}rtice, cada face @'{e} pintada usando a cor de seu primeiro
 v@'{e}rtice.
 
 @item Flat
-Cada face do objeto @'{e} desenhadacom uma cor que depende da
+Cada face do objeto @'{e} desenhada com uma cor que depende da
 localiza@,{c}@~{a}o relaiva da face, da c@^{a}mera, e das fontes de luz.
 A cor @'{e} constante ao longo da face mas pode mudar conforme muda a face,
 a c@^{a}mera, ou o movimento das luzes.
@@ -1904,9 +1904,9 @@ sobre as arestas e entre as faces.
 
 @item CSmooth
 Cada face do objeto @'{e} desenhada com as cores exatamente especificada(s),
-independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e porpriedades de material.  Se o
+independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e propriedades de material.  Se o
 objeto for definido com cores por v@'{e}rtice, as cores ser@~{a}o interpoladas
-lisamente ao longo da face; de outra forma o efieto @'{e} o mesmo que ocorre no
+lisamente ao longo da face; de outra forma o efeito @'{e} o mesmo que ocorre no
 estilo de tonalidade "Constant".
 
 @item VCflat
@@ -1917,17 +1917,17 @@ fontes de luz, a c@^{a}mera e a superf@'{i}cie normal da face.
 @end table
 
 O bot@~{a}o @emph{Facing Normals} no painel de apar@^{e}ncia (@emph{Appearance})
-indica se indicates se Geomview pode arranjar aqueles vetores normais ou se n@~{a}o pode
+indica se Geomview pode arranjar aqueles vetores normais ou se n@~{a}o pode
 sempre conforme a visualiza@,{c}@~{a}o.  Se um vetor normal direciona-se afastando-se do visualizador
 a cor da face correspondente ou v@'{e}rtice correspondente usualmente @'{e} mais forte do que @'{e}
 desejado.  Geomview pode evitar isso atrav@'{e}s do uso da normal oposta em
-c@'{a}lculos de tonalidade.  Esse comportametno @'{e} o padr@~{a}o.  Usando @emph{Facing Normals}
+c@'{a}lculos de tonalidade.  Esse comportamento @'{e} o padr@~{a}o.  Usando @emph{Facing Normals}
 podemos fornecer estranha suavidade pesada ou estranhos efeitos de tonalidade de luz, embora, proximo
 ao horizonte de um objet distantemente liso facetado.
 Pressione esse bot@~{a}o para usar as normais fornecidas com o objeto.
 
 
-Os tr@^{e}s campos no canto inferior esquerdo no canto inferior esquerdo do painel de apar@^{e}ncia
+Os tr@^{e}s campos no canto inferior esquerdo do painel de apar@^{e}ncia
 (@emph{Appearance}) s@~{a}o:
 
 @table @emph
@@ -1942,7 +1942,7 @@ n@'{u}mero.
 
 @item Patch Dicing
 Geomview desenha retalhos de Bezier primeiro convertendo-so em malhas.  Esse
-par6ametro especifica a resolu@,{c}@~{a}o da malha: se @emph{Patch Dicing}
+par@^{a}metro especifica a resolu@,{c}@~{a}o da malha: se @emph{Patch Dicing}
 for @var{n}, ent@~{a}o uma malha @var{n} por @var{n} @'{e} usada para desenhar cada retalho de
 Bezier.  Se @emph{Patch Dicing} for 1, a resolu@,{c}@~{a}o reverte-se para um
 valor padr@~{a}o interno.
@@ -1983,7 +1983,7 @@ suporta tr@^{e}s diferentes formas da capacidade de ser transl@'{u}cido (translu
 @table @emph
 @item Alpha-blending com BSP-tree depth-sorting
 Esse @'{e} o n@'{i}vel mais acurado de prefer@^{e}ncia de visualiza@,{c}@~{a}o imediata, mas consome vastos
-montantess de tempo de computa@,{c}@~{a}o e mem@'{o}ria. No modo simples de transluc@^{e}ncia
+montantes de tempo de computa@,{c}@~{a}o e mem@'{o}ria. No modo simples de transluc@^{e}ncia
 objetos s@~{a}o mostrados corretamente em rela@,{c}@~{a}o a si mesmos; todavia
 multiplos objetos transl@'{u}cidos podem aparecer na ordem inadequada na
 tela. A no@,{c}@~{a}o @emph{objeto} significa aqui: geometria de n@'{i}vel mais alto como
@@ -2001,7 +2001,7 @@ r@'{a}pida, mas os resultados s@~{a}o completamente incorretos.
 @end table
 
 Quando a transpar@^{e}ncia estiver habilitada, um instant@^{a}neo RenderMan ir@'{a} conter a
-informa@,{c}@~{a}o alfa, um renderizador obediente de pode ent@~{a}o gerar
+informa@,{c}@~{a}o alfa, um renderizador obediente pode ent@~{a}o gerar
 figuras de alta qualidade, incluindo a transluc@^{e}ncia correta.
 
 @item Alpha
@@ -2084,10 +2084,10 @@ Esse bot@~{a}o dispensa o painel de ilumina@,{c}@~{a}o (@emph{Lighting}).
 
 Os pain@'{e}is do Geomview @emph{Appearance}, @emph{Materials}, e
 @emph{Lighting} s@~{a}o constru@'{i}dos para permitir a voc@^{e} fazer facilmente a maioria das coisas
-relacionadas a apar@^{e}ncia que voc@^{e} pode querer fazer.  A hierarquia de apar@^{e}ncia
+relacionadas a apar@^{e}ncia que voc@^{e} pode querer fazer.  A hierarquia de apar@^{e}ncia que
 Geomview suporta internamente, todavia, @'{e} muito complexa e existem
 certas opera@,{c}@~{o}es que voc@^{e} n@~{a}o pode fazer com os pain@'{e}is.  A linguagem de comandos
-co geomview (GCL) fornece suporte completo a opera@,{c}@~{o}es sobre
+do Geomview (GCL) fornece suporte completo a opera@,{c}@~{o}es sobre
 apar@^{e}ncia.  Em particular, o comando @code{merge-baseap} pode ser usado
 para modificar a apar@^{e}ncia de base (a qual, exceto para ilumina@,{c}@~{a}o, n@~{a}o pode ser
 modificada atrav@'{e}s de pain@'{e}is do Geomview).  O comando @code{merge-ap} pode ser usado
@@ -2124,17 +2124,17 @@ ou veja o menu arquivo (@emph{File}) no painel principal (@emph{Main}).
 @table @emph
 
 @item Single-Buffering
-Normalmente, janelas do geomview s@~{a}o armazenadas em @'{a}reas de mem@'{o}ria duplas (@emph{double-buffered}): geomview desenha a
+Normalmente, janelas do Geomview s@~{a}o armazenadas em @'{a}reas de mem@'{o}ria duplas (@emph{double-buffered}): Geomview desenha a
 figura seguinte em uma janela escondida, ent@~{a}o alterna as @'{a}reas de mem@'{o}ria para fazer
 essa janela completamente vis@'{i}vel em algum momento.  Sobre muitos sistemas operacionais, a mem@'{o}ria para a @'{a}rea de mem@'{o}ria escondida
 vem da apropria@,{c}@~{a}o indevida de metade dos bits de cada pixel de tela, reduzindo a resolu@,{c}@~{a}o de
 cor.  Quando a op@,{c}@~{a}o @'{a}rea de mem@'{o}ria simples (single-buffering) for habilitada, as pel@'{i}culas de tela de cada
 cena est@'{a} sendo desenhada, mas voc@^{e} pode pegar imagens planas com redu@,{c}@~{a}o de granularidade
 estremecendo artefatos.  @'{A}rea de mem@'{o}ria simples @'{e} poss@'{i}vel se Geomview for compilado com
-GL ou com OpenGL, mas n@~{a}o com gr@'{a}ficos desennhados com recursos @'{u}nicos e exclusivos do X.
+GL ou com OpenGL, mas n@~{a}o com gr@'{a}ficos desenhados com recursos @'{u}nicos e exclusivos do X.
 
 @item Dither
-Muitos monitores oferecem menos que 24 bits por pixel (8 bits apra cada vermelho, verde,
+Muitos monitores oferecem menos que 24 bits por pixel (8 bits para cada vermelho, verde,
 e azul) convencionalmente suficiente para mostrar grada@,{c}@~{o}es de cor simplesmente.  
 Quando tenta mostrar uma cor n@~{a}o acuradamente dispon@'{i}vel no monitor,
 Geomview normalmente estremece (@emph{dithers}), modificando as cores do pixel para algumas vezes mais brilhante,
@@ -2146,7 +2146,7 @@ fornece menor granularidade, mas a precis@~{a}o de cores @'{e} menor, das imagen
 
 @item Software Shading
 Esse bot@~{a}o controla se Geomview faz c@'{a}lculos de tonalidade via software.
-O padr@~{a}o @'{e} permitir que o hardware manseie esses c@'{a}lculos, e no espa@,{c}o Euclideano
+O padr@~{a}o @'{e} permitir que o hardware manuseie esses c@'{a}lculos, e no espa@,{c}o Euclideano
 esse caminho @'{e} o melhor sempre porque @'{e} o caminho mais r@'{a}pido.  No espa@,{c}o hiperb@'{o}lico e
 tamb@'{e}m no espa@,{c}o esf@'{e}rico, todavia, os c@'{a}lculos de tonalidade que o hardware
 faz s@~{a}o incorretos.  Clique sobre esse bot@~{a}o para habilitar a forma correta mas lenta
@@ -2185,15 +2185,15 @@ efetuados usando o mouse.  A velocidade do movimento para adiante (nos modos tra
 no modo orbital) @'{e} proporcional @`{a} dist@^{a}ncia focal; e objetos desonestos quanto @`{a}
 dist@^{a}ncia focal da c@^{a}mera translacionam lateralmente na mesma raz@~{a}o que
 o cursor do mouse.  Finalmente, no modo de proje@,{c}@~{a}o N-Dimencional, c@^{a}meras s@~{a}o substitu@'{i}das
-de volta atrav@'{e}s da dist@^{a}ncia focal a partir da proje@,{c}@~{a}o tridimensional a partir da or@'{i}gem do objeto mundo.
+de volta atrav@'{e}s da dist@^{a}ncia focal a partir da proje@,{c}@~{a}o tridimensional da or@'{i}gem do objeto mundo.
 
 @item Lines Closer
 Esse n@'{u}mero tem a ver com o caminho pelo qual as linhas s@~{a}o desenhadas.  Normalmente a @'{a}rea de armazenamento tempor@'{a}rio do algor@'{i}tmo que controla as
-coordenadas do eixo z do podem confundir-se na hora de desenhar linhas que localizam-se
+coordenadas do eixo z podem confundir-se na hora de desenhar linhas que localizam-se
 exatamente sobre superf@'{i}cies (tais como as arestas de um objeto); devido a erros de arredondamento
-de m@'{a}quina, algumas vezes as linhas parecem estarem em frente @`{a}
-superf@'{i}cie e algumas vezes elas parecem estarem por detr@'{a}s da superf@'{i}cie.  O valor
-@emph{Lines Closer} @'{e} um fator de corre@,{c}@~{a}o --- Geomview modifica sutilmente todas as linhas que o algor@'{i}tm da @'{a}rea de armazanamento tempor@'{a}ria desenha
+de m@'{a}quina, algumas vezes as linhas parecem estar em frente @`{a}
+superf@'{i}cie e algumas vezes elas parecem estar por detr@'{a}s da superf@'{i}cie.  O valor
+@emph{Lines Closer} @'{e} um fator de corre@,{c}@~{a}o --- Geomview modifica sutilmente todas as linhas que o algor@'{i}tmo da @'{a}rea de armazanamento tempor@'{a}ria desenha
 fechando para a c@^{a}mera atrav@'{e}s desse fator.  O n@'{u}mero deve ser um inteiro
 pequeno; tente 5 ou 10.  O valor zero (0) desabilita esse recurso completamente.  Escolhendo
 valores grandes tornar@'{a} as linhas vis@'{i}veis mesmo quando elas devam ser
@@ -2206,7 +2206,7 @@ navegador se voc@^{e} permanecer no espa@,{c}o Euclideano.  Para mais informa@,{
 esses modelos, veja @ref{Geometrias Nao-Euclidianas}.
 @table @emph
 @item Virtual
-Esse @'{e} o modelo padr@~{a}o e representa a visializa@,{c}@~{a}o natural de dentro
+Esse @'{e} o modelo padr@~{a}o e representa a visualiza@,{c}@~{a}o natural de dentro
 do espa@,{c}o.
 
 @item Projective
@@ -2255,8 +2255,8 @@ sobre o bot@~{a}o @emph{OK}.  Quando o arquivo tiver sido gravado no local desej
 @emph{Save} desaparecer@'{a}.  Caso voc@^{e} queira dispensar o painel @emph{Save} sem
 gravar um arquivo, clique no bot@~{a}o @emph{Cancel}.
 
-Caso voc@^{e} especifique @file{-} como nome de arquivo, Geomview mostrar gravar o arquivo
-a sa@'{i}da padr@~{a}o, i.e. na janela de shell a partir da qual voc@^{e} invocou o
+Caso voc@^{e} especifique @file{-} como nome de arquivo, Geomview mostra o arquivo
+na sa@'{i}da padr@~{a}o, i.e. na janela de shell a partir da qual voc@^{e} invocou o
 Geomview.
 
 Os poss@'{i}veis formatos s@~{a}o fornecidos abaixo.  O tipo de objeto que pode
@@ -2271,7 +2271,7 @@ todas as outras informa@,{c}@~{o}es sobre o referido objeto, tais como apar@^{e}
 etc.
 
 @item Geometry alone @asis{(geom)}
-A op@,{c}@~{a}o "Geometry alone" escreve um arquivo OOGL contendo apenas a geometria do objeto.
+A op@,{c}@~{a}o "Geometry alone" escreve um arquivo OOGL contendo apenas a geo-metria do objeto.
 
 @item Geometry [in world] @asis{(geom)}
 A op@,{c}@~{a}o "Geometry [in world]" escreve um arquivo OOGL contendo a geometria do objeto,
@@ -2285,12 +2285,12 @@ transformado sob transforma@,{c}@~{o}es sofridas pelo objeto e tamb@'{e}m sob tr
 pelo mundo.
 
 @item RMan [->tiff] @asis{(camera)}
-A op@,{c}@~{a}o "RMan [->tiff]" escreve um arquivo que quando for renderizado cria uma im@'{a}gem
+A op@,{c}@~{a}o "RMan [->tiff]" escreve um arquivo que quando for renderizado cria uma imagem
 tiff. Transpar@^{e}ncia e textura (a mais recente somente at@'{e} certo ponto) estar@'{a}
 dispon@'{i}vel.
 
 @item RMan [->frame] @asis{(camera)}
-A op@,{c}@~{a}o "RMan [->frame]" escreve um arquivo RenderMan que quando for rederizado faz com que uma imagem apare@,{c}a em
+A op@,{c}@~{a}o "RMan [->frame]" escreve um arquivo RenderMan que quando for rede-rizado faz com que uma imagem apare@,{c}a em
 uma janela na tela. Transpar@^{e}ncia e textura (a mais recente somente at@'{e}
 certo ponto) estar@'{a} dispon@'{i}vel.
 
@@ -2303,21 +2303,21 @@ Renderiza uma cena completa novamente dentro da mem@'{o}ria off-screen; GLX forn
 meios para usar um Pixmap como @'{a}rea de renderiza@,{c}@~{a}o. A vantagem de renderizar dentro
 da mem@'{o}ria @emph{off}-screen em rela@,{c}@~{a}o a pegar um instant@^{a}neo de tela @'{e} que a janela
 de c@^{a}mera n@~{a}o precisa ser mapeada e tamb@'{e}m n@~{a}o precisa aparece na hora do intant@^{a}neo @'{e}
-realizado. De forma que com o intant@^{a}neo off-screen se pode seguramente colocar a janela de c@^{a}mera don formato
+realizado. De forma que com o intant@^{a}neo off-screen se pode seguramente colocar a janela de c@^{a}mera no formato
 de @'{i}cone (mas n@~{a}o fech@'{a}-la!), ativar a prote@,{c}@~{a}o de tela e ir dormir
 enquanto algum script avan@,{c}a as cenas e grava os instant@^{a}neos.
 
 @item PPM Screen snapshot @asis{(camera)}
 Grava os instant@^{a}neos a partir da janela fornecida e grava no formato de imagem PPM.
-Se voc@^{e} especificar uma seq@"{u}@^{e}ncia de caracteres come@,{c}ando com um barra vertical (@kbd{|})
-como nome de arquivo, isso @'{e} interpretado com um ocmando de redirecionmento do shell
+Se voc@^{e} especificar uma sequ@^{e}ncia de caracteres come@,{c}ando com um barra vertical (@kbd{|})
+como nome de arquivo, isso @'{e} interpretado com um comando de redirecionamento do shell
 para o qual os dados do PPM dever@~{a}o ser canalizados, como em
 @samp{| pnmtotiff > snap.tiff} ou em @samp{| convert -geometry 50% ppm:- snap.gif}.
 
 Instant@^{a}neos de tela PPM est@~{a}o somente dispon@'{i}veis com GL e open GL, n@~{a}o com gr@'{a}ficos 
 X somente.  A janela pode ocupar inteiramente tela.  Geomview ir@'{a}
-garantir que n@~{a}o aja outras janelas seja copiada enquanto o instant@^{a}neo @'{e} gravado. Esse comportamento @'{e}
-provavelmente o melhor usar instant@^{a}neos GLX-@emph{off-screen}, como
+garantir que n@~{a}o haja outras janelas reproduzindo-a enquanto o instant@^{a}neo @'{e} gravado. @'{E}
+provavelmente melhor usar instant@^{a}neos GLX-@emph{off-screen}, como
 acima exposto.
 
 @item PPM software snapshot @asis{(camera)}
@@ -2331,7 +2331,7 @@ tais como mapeamento de textura.
 
 @item Postscript snapshot @asis{(camera)}
 Escreve um instant@^{a}neo Postscript da vis@~{a}o da c@^{a}mera.  O instant@^{a}neo @'{e} feito atrav@'{e}s
-decompondo a cena em linhas e pol@'{i}gonos, ordenando por intensidade, e
+da decomposi√ß√£o da cena em linhas e pol@'{i}gonos, ordenando por intensidade, e
 gerando linhas no formato Postscript e pol@'{i}gonos para cada uma.  Vantagens desse processo sobre
 o processo baseado em pixes do instant@^{a}neo de imagens: a resolu@,{c}@~{a}o @'{e} muito alta, de forma que arestas
 parecem na posi@,{c}@~{a}o correta mesmo em impressoras de alta resolu@,{c}@~{a}o, ou imagens de resolu@,{c}@~{a}o compar@'{a}vel
@@ -2431,7 +2431,7 @@ esse mesmo objeto ao campo de vis@~{a}o.
 
 A maioria das a@,{c}@~{o}es que voc@^{e} pode fazer atrav@'{e}s dos pain@'{e}is do Geomview possui as equivalentes
 teclas de atalho de forma que voc@^{e} pode fazer a mesma a@,{c}@~{a}o digitando uma
-seq@"{u}@^{e}ncia de teclas usando o teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
+sequ@^{e}ncia de teclas usando o teclado.  Isso @'{e} @'{u}til para usu@'{a}rios avan@,{c}ados que
 forem familiarizados com as capacidades do Geomview e que queiram trabalhar rapidamente
 sem ter montes de pain@'{e}is confundindo a tela.
 Teclas de atalho comumente s@~{a}o indicadas entre colch@^{e}tes ([ ]) pr@'{o}ximo
@@ -2957,7 +2957,7 @@ A sintaxe gen@'{e}rica @'{e}
 	[ "@}" ]
 @end example
 
-onde os itens entre aspas duplas s@~{a}o seq@"{u}@^{e}ncias de caracteres literais (que aparecem sem as
+onde os itens entre aspas duplas s@~{a}o sequ@^{e}ncias de caracteres literais (que aparecem sem as
 aspas), os itens entre colch@^{e}tes ([]) s@~{a}o opcionais, e a barra vertical (|) denotes alternatives.
 Chaves, quando estiverem presentes, apenas indicam coincid@^{e}ncia; o par mais externo de
 chaves @'{e} geralmente requerido quando o objeto estiver em um contexto maior,
@@ -3035,7 +3035,7 @@ Existe uma se@,{c}@~{a}o separada com rela@,{c}@~{a}o a defini@,{c}@~{a}o de tex
 
 @item Transparency
 Objetos de renderiza@,{c}@~{a}o transl@'{u}cida n@~{a}o s@~{a}o suportados por todos os desenhadores
-que funcionam no geomview. O renderizador OpenGL tem suporte limitado para isso: objetos de n@'{i}vel mais alto
+que funcionam no Geomview. O renderizador OpenGL tem suporte limitado para isso: objetos de n@'{i}vel mais alto
 (i.e. aqueles que aparecem no navegador de objetos do painel principal
 (veja @ref{Interacao Basica, O Painel Principal}) s@~{a}o renderizados corretamente por
 meio de alpha-blending). Tamb@'{e}m, os instant@^{a}neos do RenderMan ir@~{a}o incluir
@@ -3317,7 +3317,7 @@ alphafile nomearquivo
     .tiff                      8-bit ou 24-bit imagem TIFF
     .gif                       imagem GIF
   Para esse recurso trabalhar, alguns programas devem estar dispon@'{i}veis
-  no caminho de busca do geomview:
+  no caminho de busca do Geomview:
     zcat  para arquivo .Z
     gzip  para arquivos .gz
     tifftopnm para arquivos .tiff
@@ -3488,7 +3488,7 @@ Seguindo o cabe@,{c}alho da malha est@~{a}o os inteiros @var{Nu} e @var{Nv},
 as simens@~{o}es da malha.
 
 Ent@~{a}o segue-se @var{Nu}*@var{Nv} v@'{e}rtices, cada um desses v@'{e}rtices na forma fornecida atrav@'{e}s do cabe@,{c}alho.
-Eles aparecem na seq@"{u}@^{e}ncia v-maior, i.e. se chamarmos cada v@'{e}rtice de (u,v)
+Eles aparecem na sequ@^{e}ncia v-maior, i.e. se chamarmos cada v@'{e}rtice de (u,v)
 ent@~{a}o os v@'{e}rtices aparecer@~{a}o na ordem
 
 @example
@@ -3786,7 +3786,7 @@ Sintaxe:
                                            # flutuante, RGBA)
 @end example
 
-Objetos do tipo @code{VECT} representam listas de linhas poligonais (seq@"{u}@^{e}ncia de caacteres que representam
+Objetos do tipo @code{VECT} representam listas de linhas poligonais (sequ@^{e}ncia de caacteres que representam
 segmentos de reta, possivelmente fechados).  Uma linha poligonal degenerada pode ser usada para
 representar um ponto.
 
@@ -3877,7 +3877,7 @@ Sintaxe:
 @end example
 
 A sintaxe @'{e} semelhante @`{a} sintaxe dos arquivos @code{OFF}, com uma tabela de v@'{e}rtices
-seguidos de uma seq@"{u}@^{e}ncia de descri@,{c}@~{o}es de linhas poligonais, cada descri@,{c}@~{a}o referindo-se a v@'{e}rtices
+seguidos de uma sequ@^{e}ncia de descri@,{c}@~{o}es de linhas poligonais, cada descri@,{c}@~{a}o referindo-se a v@'{e}rtices
 atrav@'{e}s de @'{i}ndices na tabela.  Cada linha poligonal tem uma cor opcional.
 
 Para objetos @code{nSKEL}, cada v@'{e}rtice tem @var{NDim} componentes.
@@ -4060,7 +4060,7 @@ o campo @code{location} permite colocar um objeto em qualquer lugar.
 @itemize @bullet
 @item
 @code{location global} anexa o objeto ao ambiente do sistema de coordenadas global
-(tamb@'{e}m conhecido como "universe") -- o mesmo dos objetos mundo do geomview's,
+(tamb@'{e}m conhecido como "universe") -- o mesmo dos objetos mundo do Geomview,
 das geometrias alien@'{i}genas, e c@^{a}meras s@~{a}o colocados.
 @item
 @code{location camera} coloca os parentes do objeto como sendo uma c@^{a}mera.
@@ -5291,7 +5291,7 @@ MESH
 @noindent
 Nesse primeiro tempo Geomview recebe um comando e dessa forma pode criar
 um geom chamado @code{example} com os dados fornecidos da @code{MESH}.
-Subseq@"{u}entemente comandos @code{(geometry example @dots{})} podem fazer com que
+Subsequentemente comandos @code{(geometry example @dots{})} podem fazer com que
 Geomview substitua a geometria do geom @code{example} com os novos
 dados da @code{MESH}.  Se realizado dessa forma pode n@~{a}o ser necess@'{a}rio enviar
 o comando inicial @code{(geometry example @{ : foo @})} como dito acima.  A
@@ -5344,7 +5344,7 @@ cc -I/u/gcg/ngrap/include -o example2 example2.c \
 @end example
 
 Voc@^{e} pode
-substituir a seq@"{u}@^{e}ncia de caracteres @file{/u/gcg/ngrap} acima com o nome do caminho do
+substituir a sequ@^{e}ncia de caracteres @file{/u/gcg/ngrap} acima com o nome do caminho do
 diret@'{o}rio de distribui@,{c}@~{a}o do Geomview em seu sistema.  (A biblioteca forms @'{e}
 distribu@'{i}da com Geomview e as op@,{c}@~{o}es @code{-I} e @code{-L} acima
 dizem ao compilador onde encontr@'{a}-las.)
@@ -6294,7 +6294,7 @@ executarem o Geomview.
 
 O comando @code{emodule-define} providencia que um m@'{o}dulo apare@,{c}a no
 navegador de m@'{o}dulos (@emph{Modules}) do Geomview. O comando recebe dois arumentos que s@~{a}o
-seq@"{u}@^{e}ncias de caractere; o primeiro @'{e} o nome que ir@'{a} aparecer no navegador de
+sequ@^{e}ncias de caractere; o primeiro @'{e} o nome que ir@'{a} aparecer no navegador de
 m@'{o}dulos (@emph{Modules}).  O segundo @'{e} o comando de shell para executar o m@'{o}dulo; esse nome de shell
 pode incluir argumentos (veja @ref{emodule-define,@code{(emodule-define @dots{})}}).
 Geomview executa esse comando em um subshell quando voc@^{e} d@'{a} um clique sobre a
@@ -6711,7 +6711,7 @@ arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
 @table @code
 @item (< EXPR1 EXPR2)
 Retorna t se EXPR1 for menor que EXPR2.  EXPR1 e EXPR2 devem
-ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas sequ@^{e}ncias de caractere.
 @end table
 
 @node eq, gt, lt, GCL Reference
@@ -6720,7 +6720,7 @@ ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}nc
 @table @code
 @item (= EXPR1 EXPR2)
 Retorna t se EXPR1 for igual a EXPR2.  EXPR1 e EXPR2 devem
-ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas sequ@^{e}ncias de caractere.
 @end table
 
 @node gt, mul, eq, GCL Reference
@@ -6729,7 +6729,7 @@ ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}nc
 @table @code
 @item (> EXPR1 EXPR2)
 Retorna t se EXPR1 for maior que EXPR2.  EXPR1 e EXPR2 devem
-ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas seq@"{u}@^{e}ncias de caractere.
+ser ou ambas inteiras ou n@'{u}mero em ponto flutuante, ou ambas sequ@^{e}ncias de caractere.
 @end table
 
 @node mul, div, gt, GCL Reference
@@ -6867,7 +6867,7 @@ entre 0 e 1.
 @findex bbox-draw
 @table @code
 @item (bbox-draw GEOM-ID [yes|no])
-Diz se GEOM-IDcaixa associada do GEOM-ID deve ser desenhada; a escolha padr@~{a}o @'{e}
+Diz se a caixa associada do GEOM-ID deve ser desenhada; a escolha padr@~{a}o @'{e}
 @code{yes} se o segundo argumento for omitido.
 @end table
 
@@ -7032,11 +7032,11 @@ o qual torna esse comando obsoleto.
 @findex dimension
 @table @code
 @item (dimension [N])
-Ajusta ou l@^{e} the space dimension for N-dimensional viewing.
-(Since calculations are done using homogeneous coordenadas,
-this means matrices are (N+1)x(N+1).)
-With no arguments, retorna a current dimension, ou 0 if
-N-dimensional viewing has not been enabled.
+Ajusta ou l@^{e} a dimens@~{a}o do espa@,{c}o para vis@~{a}o N-dimensional.
+(Uma vez que c@'{a}lculos forem conclu@'{i}dos usando coordenadas homog@^{e}neas,
+isso significa que matrizes s@~{a}o (N+1)x(N+1).)
+Sem argumentos, retorna a dimens@~{a}o atual, ou 0 se
+a visualiza@,{c}@~{a}o N-dimensional n@~{a}o puder ser habilitada.
 @end table
 
 @node dither, draw, dimension, GCL Reference
@@ -7061,8 +7061,8 @@ Draw the view in CAM-ID, if it needs redrawing. @xref{redraw,
 @findex dump-handles
 @table @code
 @item (dump-handles)
-Dump the list of currently active handles to stdout. This function is
-intended for internal debugging use only.
+Descarrega a lista dos manipuladores ativos atualmente para a sa@'{i}da padr@~{a}o. Essa fun@,{c}@~{a}o @'{e}
+pensada para uso em depura@,{c}@~{a}o interna somente.
 @end table
 
 @node echo, emodule-clear, dump-handles, GCL Reference
@@ -7070,11 +7070,11 @@ intended for internal debugging use only.
 @findex echo
 @table @code
 @item (echo @dots{})
-Write the given data to the special file @code{-}.  Strings are written
-literally; lisp expressions are evaluated and their values written.
-If received from an external program, @code{echo} sends to the program's
-input.  Otherwise writes to geomview's own standard output
-(typically the terminal).
+Escreve os dados fornecidos para o arquivo especial @code{-}.  Sequ@^{e}ncias de caracteres s@~{a}o escritas
+literalmente; express@~{o}es em lisp s@~{a}o avaliadas e seus valores escritos.
+Se recebido de um programa externo, @code{echo} envia para a entrada do
+programa.  De outra forma escreve para a pr@'{o}pria sa@'{i}da padr@~{a}o do Geomview
+(tipicamente o terminal).
 @end table
 
 @node emodule-clear, emodule-define, echo, GCL Reference
@@ -7082,39 +7082,39 @@ input.  Otherwise writes to geomview's own standard output
 @findex emodule-clear
 @table @code
 @item (emodule-clear)
-Clears the geomview application (external module) browser.
+Limpa o navegador de aplica@,{c}@~{a}o do Geomview (m@'{o}dulo externo).
 @end table
 
 @node emodule-define, emodule-defined, emodule-clear, GCL Reference
 @subsection emodule-define
 @findex emodule-define
 @table @code
-@item (emodule-define NAME SHELL-COMMAND @dots{})
-Define an external module called NAME, which then appears in the
-external-module browser.  The SHELL-COMMAND sequ@^{e}ncia de caracteres is a UNIX shell
-command which invokes the module.  See @ref{emodule-run,
-@code{(emodule-run @dots{})}} for discussion of external modules.
+@item (emodule-define NOME COMANDO-SHELL @dots{})
+Define um m@'{o}dulo externo chamado NOME, o qual ent@~{a}o aparece no
+navegador de m@'{o}dulos externos.  A sequ@^{e}ncia de caracteres COMANDO-SHELL @'{e} um comando shell
+UNIX que chama o m@'{o}dulo.  Veja @ref{emodule-run,
+@code{(emodule-run @dots{})}} para discurss@~{a}o sobre m@'{o}dulos externos.
 @end table
 
 @node emodule-defined, emodule-isrunning, emodule-define, GCL Reference
 @subsection emodule-defined
 @findex emodule-defined
 @table @code
-@item (emodule-defined @code{modulename})
-If the given external-module name is known, retorna o name of
-the program invoked when it's run as a quoted sequ@^{e}ncia de caracteres; otherwise
-returns nil.  @code{(echo (emodule-defined @code{name}))} prints the sequ@^{e}ncia de caracteres.
+@item (emodule-defined @code{nomemodulo})
+Se o nome do m@'{o}dulo externo for conhecido, retorna o nome do
+programa chamado quando nomemodulo est@'{a} executando como sequ@^{e}ncia de caracteres entre aspas duplas; de outra forma
+retorna nil.  @code{(echo (emodule-defined @code{nome}))} mostra na tela a sequ@^{e}ncia de caracteres.
 @end table
 
 @node emodule-isrunning, emodule-path, emodule-defined, GCL Reference
 @subsection emodule-isrunning
 @findex emodule-isrunning
 @table @code
-@item (emodule-isrunning NAME)
-Returns Lt if the emodule NAME is running, ou Lnil
-if it is not running.  NAME is searched for in the
-names as they appear in the browser and in the shell commands
-used to execute the external modules (not including arguments).
+@item (emodule-isrunning NOME)
+Retorna Lt se o m@'{o}dulo externo NOME estiver rodando, ou Lnil
+se o m@'{o}dulo externo n@~{a}o estiver rodando.  NOME @'{e} pesquisado nos
+nomes como eles aparecem no navegador de m@'{o}dulos e nos comandos de shell
+usados para executar o m@'{o}dulo externo (n@~{a}o incluindo os argumentos).
 @end table
 
 @node emodule-path, emodule-run, emodule-isrunning, GCL Reference
@@ -7122,9 +7122,9 @@ used to execute the external modules (not including arguments).
 @findex emodule-path
 @table @code
 @item (emodule-path)
-Returns the current search path for external modules.
-Note: to actually see the value returned by this function
-you should wrap it in a call to echo: @code{(echo (emodule-path))}.
+Retorna o caminho de busca atual para m@'{o}dulos externos.
+Nota: para ver agora o valor retornado por essa fun@,{c}@~{a}o
+voc@^{e} deve envolver emodule-path em uma chamada ao comando shell echo: @code{(echo (emodule-path))}.
 @xref{set-emodule-path, @code{(set-emodule-path @dots{})}}.
 @end table
 
@@ -7447,7 +7447,7 @@ it has to be evoked like a function: @code{((lambda (arg) (+ 1 arg))
 general, the value of the call will be the value of @var{EXPRN}. The
 first list serves to define formal parameters. The lambda expression
 itself is just a list, starting with the key-word lambda, followed by
-several quoted lists.  @xref{defun, @code{(defun @dots{})}}.
+several aspas duplas lists.  @xref{defun, @code{(defun @dots{})}}.
 @xref{setq, @code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
 Note the argumento list may contain the special keywords
 @table @code
@@ -8200,7 +8200,7 @@ so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
 @table @code
 @item (set-load-path (PATH1 @dots{} PATHN))
 Sets search path for command, objeto geom@'{e}trico, etc. files.  The PATHi
-are strings giving the pathnames of directories to be searched.
+are sequ@^{e}ncias de caracteres giving the pathnames of directories to be searched.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-load-path (mydir +)) prepends mydir to the path.
 @end table
@@ -8236,7 +8236,7 @@ and to processes it creates, e.g. external modules.
 @table @code
 @item (setq SYM EXPR)
 Bind the symbold @var{SYM} to the value of @var{EXPR}. @var{SYM} must be
-an unqualified symbol, i.e. not quoted, and literal: @code{(setq "foo"
+an unqualified symbol, i.e. not aspas duplas, and literal: @code{(setq "foo"
 bar)} will not work. Likewise @code{(setq (bar STUFF) foo)} will also
 not work, even if @code{(bar @dots{})} would evaluate to an unqualified
 symbol: varible names must be literals.  Note that calling @code{(setq
@@ -9165,7 +9165,7 @@ da CPU variable that corresponds to the machine;
 By default, @code{Geomview} assumes that it is the same kind of
 computer as the one you are running Mathematica on.  The @code{MachType}
 option lets you explicitly specify the type do @code{DisplayHost}
-computer; it should be one das strings @code{"sgi"} or
+computer; it should be one das sequ@^{e}ncias de caracteres @code{"sgi"} or
 @code{"next"} ou @code{"x11"}.@refill
 
 You can use @code{SetOptions} to change the default @code{DisplayHost}
