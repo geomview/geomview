@@ -7111,7 +7111,7 @@ Turn keyboard events on or off to enable/disable keyboard shortcuts.
 @subsection event-mode
 @findex event-mode
 @table @code
-@item (event-mode MODESTRING)w
+@item (event-mode MODESTRING)
 Set the mouse event (motion) mode; MODESTRING should be one of
 the following strings:
 @enumerate
