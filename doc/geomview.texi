@@ -7074,7 +7074,7 @@ to clicking on the corresponding module-browser entry.
 Places LIST into external module NAME's standard input.  NAME is
 searched for in the names of the modules as they appear in the
 External Modules browser and then in the shell commands used to
-execute the external modules.  Does nothing if modname is not
+execute the external modules.  Does nothing if the module NAME is not
 running.
 @end table
 
