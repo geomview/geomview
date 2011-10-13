@@ -160,8 +160,8 @@ mgrib_ctxcreate(int a1, ...)
   /* Default RIB1.0 structure info */
   sprintf(_mgribc->ribscene, "Generic RIB file");
   sprintf(_mgribc->ribcreator, "mgrib driver");
-  strcpy(_mgribc->ribfor, "%s", getenv("USER"));
-  strcpy(_mgribc->ribdate, "%s", ctime(&timedate));
+  strcpy(_mgribc->ribfor, getenv("USER"));
+  strcpy(_mgribc->ribdate, ctime(&timedate));
   _mgribc->ribdate[24] = '\0'; /* remove the line feed */
   _mgribc->world = 0;
 
