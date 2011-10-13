@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.73/Sun Aug 28 20:23:59 2011//
+@c based on /geomview.texi/1.75/Thu Sep 29 06:50:25 2011//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -2331,7 +2331,7 @@ tais como mapeamento de textura.
 
 @item Postscript snapshot @asis{(camera)}
 Escreve um instant@^{a}neo Postscript da vis@~{a}o da c@^{a}mera.  O instant@^{a}neo @'{e} feito atrav@'{e}s
-da decomposição da cena em linhas e pol@'{i}gonos, ordenando por intensidade, e
+da decomposi@,{c}@~{a}o da cena em linhas e pol@'{i}gonos, ordenando por intensidade, e
 gerando linhas no formato Postscript e pol@'{i}gonos para cada uma.  Vantagens desse processo sobre
 o processo baseado em pixes do instant@^{a}neo de imagens: a resolu@,{c}@~{a}o @'{e} muito alta, de forma que arestas
 parecem na posi@,{c}@~{a}o correta mesmo em impressoras de alta resolu@,{c}@~{a}o, ou imagens de resolu@,{c}@~{a}o compar@'{a}vel
@@ -6696,6 +6696,8 @@ arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
 * zoom::                        @code{(zoom CAM-ID FATOR)}
 @end menu
 
+Nota do tradutor: os termos ``express@~{a}o lambda" e ``express@~{a}o S" s@~{a}o espec@'{i}ficos da linguagem de programa@,{c}@~{a}o Lisp.
+
 @node shell, lt, GCL Reference, GCL Reference
 @subsection !
 @findex !, shell
@@ -7044,7 +7046,7 @@ a visualiza@,{c}@~{a}o N-dimensional n@~{a}o puder ser habilitada.
 @findex dither
 @table @code
 @item (dither CAM-ID @{on|off|toggle@})
-Turn dithering on ou off in that camera.
+Alterna entre estremecimento ligado e desligado em CAM-ID.
 @end table
 
 @node draw, dump-handles, dither, GCL Reference
@@ -7052,7 +7054,7 @@ Turn dithering on ou off in that camera.
 @findex draw
 @table @code
 @item (draw CAM-ID)
-Draw the view in CAM-ID, if it needs redrawing. @xref{redraw,
+Desenha a visão em CAM-ID, se a visão precisar ser redesenhada. @xref{redraw,
 @code{(redraw @dots{})}}.
 @end table
 
@@ -7133,24 +7135,24 @@ voc@^{e} deve envolver emodule-path em uma chamada ao comando shell echo: @code{
 @findex emodule-run, |
 @findex |, emodule-run
 @table @code
-@item (emodule-run SHELL-COMMAND ARGS@dots{})
-Runs the given SHELL-COMMAND (a sequ@^{e}ncia de caracteres containing a UNIX shell
-command) as an external module.  The module's standard output
-is taken as geomview commands; responses (written to filename
-@code{-}) are sent to the module's standard input.  The shell
-command is interpreted by /bin/sh, so e.g. I/O redirection may
-be used; a program which prompts the user for input from the
-terminal could be run with:
+@item (emodule-run COMANDO-SHELL ARGS@dots{})
+Executa o COMANDO-SHELL fornecido (uma sequ@^{e}ncia de caracteres contendo um comando shell
+UNIX) como um m@'{o}dulo externo.  A sa@'{i}da padr@~{a}o do m@'{o}dulo
+@'{e} interpretado como comandos do geomview; respostas (escrita para nomearquivo
+@code{-}) s@~{a}o enviadas para a entrada padr@~{a}o do m@'{o}dulo.  O comando
+shell @'{e} interpretado por /bin/sh, de forma que redirecionamento de E/S pode
+ser usada: um programa que pergunta ao usu@'{a}rio por entradas a partir do
+terminal poder@'{a} vir a ser executado com:
 @example
-  (emodule-run  yourprogram  <&2)
+  (emodule-run  seuprograma  <&2)
 @end example
-If not already set, the environment variable $MACHTYPE is set to the
-name do machine type.  Input and output connections to geomview are
-dropped when the shell command terminates.  Clicando on a running
-program's module-browser entry sends the signal SIGHUP to the program.
-For this to work, programs should avoid running in the background; those
-using FORMS ou GL should call foreground() before the first FORMS or
-winopen() call.  @xref{emodule-define, @code{(emodule-define
+Caso j@'{a} n@~{a}o tenha sido ajustada, a vari@'{a}vel de ambiente $MACHTYPE @'{e} ajustada para o
+nome do tipo da m@'{a}quina.  Conec@,{c}@~{o}es de entrada e sa@'{i}da para o geomview s@~{a}o
+liberadas automaticamente quando o comando shell encerra.  Clicando sobre um prorama
+que est@'{a} sendo executado na entrada do navegador de m@'{o}dulos envia o sinal SIGHUP ao programa.
+Para que esse recurso funcione, programas devem evitar executar em segundo plano; os programas
+usando as bibliotecas FORMS ou GL devem chamar a fun@,{c}@~{a}o foreground() antes da primeira chamada a
+FORMS ou winopen().  @xref{emodule-define, @code{(emodule-define
 @dots{})}}. @xref{emodule-start, @code{(emodule-start @dots{})}}.
 @end table
 
@@ -7159,28 +7161,28 @@ winopen() call.  @xref{emodule-define, @code{(emodule-define
 @findex emodule-sort
 @table @code
 @item (emodule-sort)
-Sorts the modules in the application browser alphabetically.
+Ordena os m@'{o}dulos alfab@'{e}ticamente no navegador de aplica@,{c}@~{a}o.
 @end table
 
 @node emodule-start, emodule-transmit, emodule-sort, GCL Reference
 @subsection emodule-start
 @findex emodule-start
 @table @code
-@item (emodule-start  NAME)
-Starts the external module NAME, defined by emodule-define. Equivalent
-to clicando on the corresponding module-browser entry.
+@item (emodule-start  NOME)
+Inicia o m@'{o}dulo externo NOME, definido por emodule-define. Equivalente
+a clicar na entrada correspondente no navegador de m@'{o}dulos.
 @end table
 
 @node emodule-transmit, escale, emodule-start, GCL Reference
 @subsection emodule-transmit
 @findex emodule-transmit
 @table @code
-@item (emodule-transmit NAME LIST)
-Places LIST into external module NAME's standard input.  NAME is
-searched for in the names dos modules as they appear in the
-External Modules browser and then in the shell commands used to
-execute the external modules.  Does nothing if modname is not
-running.
+@item (emodule-transmit NOME LISTA)
+Coloca LISTA na entrada padr@~{a}o do m@'{o}dulo externo NOME.  NOME @'{e}
+pesquisado nos nomes dos m@'{o}dulos na forma em que esses nomes aparecem no
+navegador de M@'{o}dulos Externos e a seguir nos comandos shell usados para
+executar os m@'{o}dulos externos.  N@~{a}o faz nada se o m@'{o}dulo NOME n@~{o} estiver sendo
+executado.
 @end table
 
 @node escale, eval, emodule-transmit, GCL Reference
@@ -7188,7 +7190,7 @@ running.
 @findex escale
 @table @code
 @item (escale GEOM-ID FACTOR)
-Same as scale but multiplies by exp(scale).  Obsolete.
+O mesmo que scale mas multiplicado por exp(scale).  Obsoleto.
 @end table
 
 @node eval, event-keys, escale, GCL Reference
@@ -7196,10 +7198,10 @@ Same as scale but multiplies by exp(scale).  Obsolete.
 @findex eval
 @table @code
 @item (eval EXPR)
-Evaluate a lisp expression. If @var{EXPR} @'{e} uma unevaluated S-expression
-as returned by the @code{(quote @dots{})} command then the effect will
-be as if calling the un-quoted expression directly. It is also possible
-to evaluate S-expression constructed via @code{car}, @code{cdr} and
+Avalia uma express@~{a}o lisp. Se @var{EXPR} @'{e} uma express@~{a}o-S n@~{a}o avaliada
+como retornado pelo comando @code{(ap@'{o}strofo @dots{})} ent@~{a}o o efeito ir@'{a} ser
+ser como se tivesse chamado a express@~{a}o sem ap@'{o}strofo diretamente. A eval tamb@'{e}m torna poss@'{i}vel
+avaliar express@~{o}es-S constru@'{i}das via @code{car}, @code{cdr} e
 @code{cons}. @xref{car, @code{(car @dots{})}}.  @xref{cdr, @code{(cdr
 @dots{})}}. @xref{cons, @code{(cons @dots{})}}.
 @end table
@@ -7209,16 +7211,16 @@ to evaluate S-expression constructed via @code{car}, @code{cdr} and
 @findex event-keys
 @table @code
 @item (event-keys @{on|off@})
-Turn keyboard events on ou off to enable/disable teclas de atalho.
+Alterna entre eventos de teclado on ou off para habilitar/desabilitar teclas de atalho.
 @end table
 
 @node event-mode, event-pick, event-keys, GCL Reference
 @subsection event-mode
 @findex event-mode
 @table @code
-@item (event-mode MODESTRING)w
-Set o mouse event (movimento) mode; MODESTRING should be one of
-the following strings:
+@item (event-mode SEQ_CARAC_MODOS)
+Ajusta o modo de um evento do mouse (movimento); SEQ_CARAC_MODOS deve ser um entre
+as seguintes sequ@^{e}ncias de caractere:
 @enumerate
 @item
 @code{"[r] Rotate"}
@@ -7235,6 +7237,29 @@ the following strings:
 @item
 @code{"[le] Edit Lights"}
 @end enumerate
+
+In@'{i}cio de nota do tradutor:
+
+Alguns termos n@~{a}o s@~{a}o de significado t@~{a}o @'{o}bvio.
+
+@enumerate
+@item
+@code{"[r] Rotate"} Rota@,{c}@~{a}o
+@item
+@code{"[t] Translate"} Transla@,{c}@~{a}o
+@item
+@code{"[z] Cam Zoom"} Aproxima@,{c}@~{a}o ou afastamento de c@^{a}mera
+@item
+@code{"[s] Geom Scale"} Homotetia
+@item
+@code{"[f] Cam Fly"} Voo de c@^{a}mera
+@item
+@code{"[o] Cam Orbit"} Órbita de c@^{a}mera
+@item
+@code{"[le] Edit Lights"} Editar luzes
+@end enumerate
+
+Fim de nota do tradutor.
 @end table
 
 @node event-pick, evert, event-mode, GCL Reference
@@ -7242,7 +7267,7 @@ the following strings:
 @findex event-pick
 @table @code
 @item (event-pick @{on|off@})
-Turn picking on ou off.
+Alterna entre selecionar on ou off.
 @end table
 
 @node evert, exit, event-pick, GCL Reference
@@ -7250,8 +7275,10 @@ Turn picking on ou off.
 @findex evert
 @table @code
 @item (evert GEOM-ID [yes|no])
-Set the normal eversion state of GEOM-ID.  If the second argument
-for omitido, toggle the eversion state.
+Ajusta o estado normal de evers@~{a}o (nota do tradutor: ver do outro
+lado de alguma superf@'{i}cie sobre a dire@,{c}@~{a}o do vetor normal @`{a} mesma
+superf@'{i}cie) de GEOM-ID.  Se o segundo argumento
+for omitido, inverte o estado de evers@~{a}o.
 @end table
 
 @node exit, ezoom, evert, GCL Reference
@@ -7259,15 +7286,15 @@ for omitido, toggle the eversion state.
 @findex exit
 @table @code
 @item (exit)
-Terminates geomview.
+Encerra o geomview.
 @end table
 
 @node ezoom, freeze, exit, GCL Reference
 @subsection ezoom
 @findex ezoom
 @table @code
-@item (ezoom GEOM-ID FACTOR)
-Same as zoom but multiplies by exp(zoom).  Obsolete.
+@item (ezoom GEOM-ID FATOR)
+O mesmo que zoom mas multiplica por exp(zoom).  Obsoleto.
 @end table
 
 @node freeze, geometry, ezoom, GCL Reference
@@ -7275,21 +7302,21 @@ Same as zoom but multiplies by exp(zoom).  Obsolete.
 @findex freeze
 @table @code
 @item (freeze CAM-ID)
-Freeze CAM-ID; drawing in this camera's janela is turned off
-until it is explicitly redrawn with @code{(redraw CAM-ID)}, after
-which time drawing resumes as normal.
+Congela CAM-ID; desenho nessa janela de camera @'{e} desligado
+at@'{e} que a imagem dessa c@^{a}mera seja redesenhada com @code{(redraw CAM-ID)}, ap@'{o}s o redesenho da
+imagem da c@^{a}mera altera@,{c}@~{o}es na imagem voltam a ser permitidas.
 @end table
 
 @node geometry, geomview-version, freeze, GCL Reference
 @subsection geometry
 @findex geometry
 @table @code
-@item (geometry GEOM-ID [GEOMETRY])
-Specify the geometry for GEOM-ID.  GEOMETRY is a sequ@^{e}ncia de caracteres
-giving an OOGL objeto geom@'{e}trico specification.  If no objeto
-called GEOM-ID exists, it is created; in this case the
-GEOMETRY argumento is optional, and se omitido, the new
-objeto GEOM-ID is given an empty objeto geom@'{e}trico.
+@item (geometry GEOM-ID [GEOMETRIA])
+Especifica a geometria para GEOM-ID.  GEOMETRIA @'{e} uma sequ@^{e}ncia de caracteres
+fornecendo a especifica@,{c}@~{a}o de um objeto geom@'{e}trico OOGL.  Se nenhum objeto
+chamado GEOM-ID existir, esse objeto inesistente ser@'{a} criado; nesse caso o
+argumento GEOMETRIA @'{e} opcional, e se omitido, o novo
+objeto chamado GEOM-ID @'{e} retornado sendo um objeto geom@'{e}trico vazio.
 @end table
 
 @node geomview-version, hdefine, geometry, GCL Reference
@@ -7297,27 +7324,27 @@ objeto GEOM-ID is given an empty objeto geom@'{e}trico.
 @findex geomview-version
 @table @code
 @item (geomview-version)
-Returns a sequ@^{e}ncia de caracteres representing the version of geomview that is
-running.
+Retorna uma sequ@^{e}ncia de caracteres representado a vers@~{a}o do geomview que est@'{a}
+executando.
 @end table
 
 @node hdefine, hdelete, geomview-version, GCL Reference
 @subsection hdefine
 @findex hdefine
 @table @code
-@item (hdefine @code{geometry}|@code{camera}|@code{window}|@code{apar@^{e}ncia}|@code{image}|@code{transform}|@code{ntransform} name value)
-Sets the value of a handle of a given type.
+@item (hdefine @code{geometria}|@code{camera}|@code{janela}|@code{apar@^{e}ncia}|@code{imagem}|@code{transforma@,{c}@~{a}o}|@code{ntransform} nome valor)
+Ajusta o valor de um manipulador de tipo fornecido.
 @example
-  (hdefine  <type>  <name>  <value>)
+  (hdefine  <tipo>  <nome>  <valor>)
 @end example
 is generally equivalent to
 @example
-  (read <type>  @{ define <name> <value> @})
+  (read <tipo>  @{ define <nome> <valor> @})
 @end example
-except that the assignment is done when hdefine is executed, (possibly
-not at all if inside a conditional declara@,{c}@~{a}o), while the @code{read
-@dots{} define} performs assignment as soon as the text is
-read. @xref{Referencias}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
+exeto que a atribui@,{c}@~{a}o @'{e} desfeita ao final da execu@,{c}@~{a}o de hdefine, (possivelmente
+n@~{a}o em todos os lugares se dentro de uma declara@,{c}@~{a}o condicional), enquanto oe @code{read
+@dots{} define} realiza a atribui@,{c}@~{a}o t@~{a}o rapidamente quanto o texto @'{e}
+lido. @xref{Referencias}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @code{(hdelete @dots{})}}.
 @end table
 
@@ -7325,18 +7352,18 @@ read. @xref{Referencias}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @subsection hdelete
 @findex hdelete
 @table @code
-@item (hdelete [@code{geometry}|@code{camera}|@code{window}|@code{apar@^{e}ncia}|@code{image}|@code{transform}|@code{ntransform}] name)
-Deletes the given handle. Note that the handle will not actually be
-deleted in case there are still other objetos referring to the handle,
-but once those objetos are gone, the handle will also automatically go
-away. The objeto the handle referes to (if any) will only be deleted if
-there are no other references to that objeto.
+@item (hdelete [@code{geometria}|@code{camera}|@code{janela}|@code{apar@^{e}ncia}|@code{imagem}|@code{transform}|@code{ntransform}] nome)
+Apaga o manipulador fornecido. Note que o manipulador n@~{a}o ir@'{a} atualmente ser
+apagado no caso de existir ainda outros objetos fazendo refer@^{e}ncia ao manipulador,
+mas uma vez que os objetos que fazem refer@^{e}ncia ao maipulador apagado forem fechados, o manipulador ir@'{a} tamb@'{e}m ser automaticamente
+mandado embora. O objeto que faz refer@^{e}ncia ao manipulador (se existir algum) ir@'{a} somente ser deletado se
+n@~{a}o existirem outras refer@^{e}ncias para esse objeto.
 
-If the optional first argumento for omitido, then the first handle
-matching @var{name} will be deleted, regardless do type de
-objeto it is attached to. It is not an error to call this function with
-a non-existent handle, but it @'{e} uma error to call this funcion with the
-name of a non-global handle, i.e. one that was not created by
+Se o opcional primeiro argumento for omitido, ent@~{a}o o primeiro manipulador
+que coincidir com @var{nome} ir@'{a} ser apagado, independentemente do tipo de
+objeto ao qual esse manipulador estiver anexado. N@~{a}o @'{e} um erro chamar essa fun@,{c}@~{a}o com
+um manipulador inexistente, mas @'{e} uma erro chamar essa fun@,{c}@~{a}o com o
+nome de um manipulador n@~{a}o global, i.e. um que n@~{a}o tenha sido criado por
 @code{(hdefine @dots{})} ou @code{(read @dots{} @{ define
 @dots{}@})}. @xref{Referencias}.  @xref{read,@code{(read
 @dots{})}}. @xref{hdefine,@code{(hdefine @dots{})}}.
@@ -7346,10 +7373,10 @@ name of a non-global handle, i.e. one that was not created by
 @subsection help
 @findex help
 @table @code
-@item (help [command])
-Command may include @code{*}s as wildcards; see also @ref{help,
-@code{(?? @dots{})}}  One-line command help; lists names only if multiple
-commands match.
+@item (help [comando])
+O comando pode incluir @code{*}s como caracteres coringa; veja tamb@'{e}m @ref{help,
+@code{(?? @dots{})}}  Ajuda de comando em uma linha; lista nomes somente se multiplos
+comandos coincidirem.
 @end table
 
 @node hmodel, hsphere-draw, help, GCL Reference
@@ -7357,8 +7384,8 @@ commands match.
 @findex hmodel
 @table @code
 @item (hmodel CAMID @{virtual|projective|conformal@})
-Set the model used to display objeto geom@'{e}trico in
-this camera. @xref{space, @code{(space @dots{})}}.
+Ajusta o modelo usado para mostrar o objeto geom@'{e}trico
+nessa c@^{a}mera. @xref{space, @code{(space @dots{})}}.
 @end table
 
 @node hsphere-draw, if, hmodel, GCL Reference
@@ -7366,9 +7393,9 @@ this camera. @xref{space, @code{(space @dots{})}}.
 @findex hsphere-draw
 @table @code
 @item (hsphere-draw CAMID [yes|no])
-Say se to draw a unit sphere: the sphere at infinity in
-hyperbolic space, and a reference sphere in Euclidean and spherical
-spaces.  If the segundo argumento for omitido, @code{yes} is assumed.
+Informa se @'{e} para desenhar ou n@~{a}o a esfera unit@'{a}ria: a esfera no infinito no
+espa@,{c}o hiperb@'{o}lico, e uma esfera de refer@^{e}ncia nos espa@,{c}os Euclidiano
+esf@'{e}rico.  Se o segundo argumento for omitido, @code{yes} @'{e} assumido.
 @end table
 
 @node if, inhibit-warning, hsphere-draw, GCL Reference
@@ -7376,9 +7403,9 @@ spaces.  If the segundo argumento for omitido, @code{yes} is assumed.
 @findex if
 @table @code
 @item (if TEST EXPR1 [EXPR2])
-Evaluates TEST; if TEST returns a non-nil value, retorna o
-value of EXPR1.  If TEST returns nil, retorna o value of
-EXPR2 if EXPR2 is present, otherwise returns nil.
+Avalia TEST; se TEST retornar um valor n@~{a}o-nil (nota do tradutor:n@~{a}o nulo), retorna o
+valor de EXPR1.  Se TEST retornar nil, retorna o value de
+EXPR2 se EXPR2 estiver presente, de outra forma retorna nil.
 @end table
 
 @node inhibit-warning, input-translator, if, GCL Reference
@@ -7386,23 +7413,23 @@ EXPR2 if EXPR2 is present, otherwise returns nil.
 @findex inhibit-warning
 @table @code
 @item (inhibit-warning STRING)
-Inhibit warning inhbits geomview from displaying a
-particular warning message determined by STRING.
-At present there are no warning messages that this
-applies to, so this command is rather useless.
+Inibe alertas de inibi@,{c}@~{a}o do geomview de mostrar uma
+mensagem de alerta determinada por STRING.
+Atualmente n@~{a}o existe mensgenns de alerta na qual o comando inhibit-warning
+seja aplicado, de forma que esse comando @'{e} pouco @'{u}til.
 @end table
 
 @node input-translator, interest, inhibit-warning, GCL Reference
 @subsection input-translator
 @findex input-translator
 @table @code
-@item (input-translator "#prefix_string" "Bourne-shell-command")
-Defines an external translation program for special input types.
-When asked to read a file which begins with the specified sequ@^{e}ncia de caracteres,
-geomview invokes that program with standard input coming from the given file.
-The program is expected to emit OOGL geometric data to its standard output.
-In this implementation, only prefixes beginning with # are recognized.
-Useful as in
+@item (input-translator "#prefix_string" "comando-shell")
+Define um programa externo de tradu@,{c}@~{a}o para tipos especiais de entrada.
+Quando perguntado se @'{e} para l@^{e} um arquivo especial que come@,{c}a com a sequ@^{e}ncia de caracteres especificada,
+geomview chama comando-shell com entrada padr@~{a}o obtida a partir do arquivo especificado.
+@'{E} esperado que comando-shell emita dados geom@'{e}tricos na linguagem OOGL para sua sa@'{i}da padr@~{a}o.
+Nessa implementa@,{c}@~{a}o, somente prefixos iniciando com # s@~{a}o reconhecidos.
+Muito @'{u}til em situa@,{c}@~{o}es como
 @example
   (input-translator "#VRML" "vrml2oogl")
 @end example
@@ -7412,28 +7439,28 @@ Useful as in
 @subsection interest
 @findex interest
 @table @code
-@item (interest (COMMAND [args]))
-Allows you to express interest in a command.  When geomview executes
-that command in the future it will echo it to the communication pool
-from which the interest command came. @var{COMMAND} can be any command.
-Args specify restrictions on the values dos arguments; if args are
-present in the interest command, geomview will only echo calls to the
-command in which the arguments match those given in the interest
-command.  Two special argumento values may appear in the argumento list.
-@code{*} matches any value. @code{nil} matches any value but supresses
-the reporting of that value; its value is reported as @code{nil}.
+@item (interest (COMANDO [args]))
+Permite a voc@^{e} expressar interesse em um comando.  Quando geomview vier a executar
+o comando de interesse futuramente o comando de interesse ser@'{a} ecoado para o sistema de comunica@,{c}@~{a}o
+do qual o comando interest for origin@'{a}rio. @var{COMANDO} pode ser qualquer comando.
+Args especifica restri@,{c}@~{o}es sobre os valores dos argumentos; se args estiver
+presente no comando interest, geomview ir@'{a} somente ecoar chamadas para o
+comando no qual os argumentos coincidirem com aquele fornecido no comando
+interest.  Dois valores especiais de argumento podem aparecer na lista de argumentos.
+@code{*} que coincide com qualquer valor. @code{nil} que coincide com qualquer valor mas suprime
+o retorno daquele valor; seus valores s@~{a}o reportados como @code{nil}.
 
-The purpose do interest command is to allow external
-modules to find out about things happening inside geomview.
-For exemplo, a module interested in knowing when a geom called
-@code{foo} is deleted could say @code{(interest (delete foo))} and would
-receive the sequ@^{e}ncia de caracteres @code{(delete foo)} when foo is deleted.
+O prop@'{o}sito do comando interest @'{e} permitir a m@'{o}dulos
+externos encontrar coisas acontecendo dentro do geomview.
+Por exemplo, um m@'{o}dulo interessado em saber quando um geom chamado
+@code{foo} @'{e} apagado pode usar o comando interest da seguinte forma @code{(interest (delete foo))} e iria
+receber a sequ@^{e}ncia de caracteres @code{(delete foo)} quando foo fosse apagado.
 
-Picking is a special case of this.  For most modules interested in pick
-events the command @code{(interest (pick world))} is sufficient.  This
-causes geomview to send a sequ@^{e}ncia de caracteres da form @code{(pick world @dots{})} 
-every time a pick event (right mouse double clique).  See the @ref{pick,
-@code{(pick @dots{})}} command for details.
+Destacando um caso especial do uso do comando interest.  Para a maioria dos m@'{o}dulos interessados em selecionar
+eventos o comando @code{(interest (pick world))} @'{e} suficiente. O comando @code{(interest (pick world))}
+faz com que geomview envie uma sequ@^{e}ncia de caracteres da forma @code{(pick world @dots{})} 
+toda vez que um evento de sele@,{c}@~{a}o (duplo clique bot@~{a}o direito do mounse).  Veja o comando
+@ref{pick,@code{(pick @dots{})}} para detalhes.
 @end table
 
 @node lambda, let, interest, GCL Reference
@@ -7441,26 +7468,26 @@ every time a pick event (right mouse double clique).  See the @ref{pick,
 @findex lambda
 @table @code
 @item (lambda (ARG1 @dots{}) EXPR1 @dots{} EXPRN)
-A lambda expression is like a function. To ``call'' a lambda expression,
-it has to be evoked like a function: @code{((lambda (arg) (+ 1 arg))
-2)}. In this exemplo, the value of the entire expression would be 3.  In
-general, the value of the call will be the value of @var{EXPRN}. The
-first list serves to define formal parameters. The lambda expression
-itself is just a list, starting with the key-word lambda, followed by
-several aspas duplas lists.  @xref{defun, @code{(defun @dots{})}}.
+Uma express@~{a}o lambda @'{e} como uma fun@,{c}@~{a}o. Para ``chamar'' uma express@~{a}o lambda,
+a express@~{a}o lambda tem de ser chamada como uma fun@,{c}@~{a}o: @code{((lambda (arg) (+ 1 arg))
+2)}. Nesse exemplo, o valor completo da express@~{a}o deve ser 3.  Em
+geral, o valor da chamada ir@'{a} ser o valor de @var{EXPRN}. A
+primeira lista serve para definir os par@^{a}metros formais. A express@~{a}o lambda
+propriamente dita @'{e} apenas uma lista, iniciando-se com a palavra chava lambda, seguida por
+muitas listas entre aspas duplas.  @xref{defun, @code{(defun @dots{})}}.
 @xref{setq, @code{(setq @dots{})}}.  @xref{let, @code{(let @dots{})}}.
-Note the argumento list may contain the special keywords
+Note que a lista argumento pode conter as palavras chaves especiais
 @table @code
 @item &optional
-giving values to the following identifiers is optional,
-their default value will be @code{nil}
+fornecimento de valores aos identificadores seguintes @'{e} opcional,
+seus valores padr@~{a}o ir@~{a}o ser @code{nil}
 @item &rest
-all excess arguments will be collected in a list, and that list will be
-assigned to the following argument, like so:
+todos os argumentos excedentes ir@~{a}o ser coletados em uma lista, e essa lista ir@'{a} ser
+atribu@'{i}da ao argumento seginte, da seguinte forma:
 @example
 ((lambda (&rest rest) (echo rest)) a b c d)
 @end example
-The output would be @code{(a b c d)}.
+A sa@'{i}da ir@'{a} ser @code{(a b c d)}.
 @end table
 @end table
 
@@ -7469,15 +7496,15 @@ The output would be @code{(a b c d)}.
 @findex let
 @table @code
 @item (let ARGUMENTS EXPR1 @dots{} EXPRN)
-Generate a lambda expression from @var{EXRP1} @dots{} @var{EXPRN}, with
-the argumento bindings described by @var{ARGUMENTS}. @var{ARGUMENTS} is a
-list of symbols (bound to @code{nil} by default) ou lists of the form
-@code{(ARG VALUE)} where @var{ARG} is a symbol and not evaluated and
-@var{VALUE} @'{e} uma S-expression which is first evaluated, then its value
-is bound to @var{ARG}. The entire expression evaluates to the value of
-@var{EXPRN}, the last expression in the body of the declara@,{c}@~{a}o. The
-argument list must be present, but can be empty; in the latter case the
-@code{(let () @dots{})} declara@,{c}@~{a}o is equivalent to a @code{(progn
+Gera uma express@~{a}o lambda a partir de @var{EXRP1} @dots{} @var{EXPRN}, com
+a associa@,{c}@~{a}o de argumento descrita por @var{ARGUMENTS}. @var{ARGUMENTS} corresponde a uma
+lista de s@'{i}mbolos (associada a @code{nil} por padr@~{a}o) ou a listas da forma
+@code{(ARG VALUE)} onde @var{ARG} @'{e} um s@'{i}mbolo e n@~{a}o avaliado e
+@var{VALUE} @'{e} uma express@~{a}o-S que @'{e} primeiramente avaliada, a seguir seu valor
+@'{e} associa a @var{ARG}. A express@~{a}o completa avalia para o valor de
+@var{EXPRN}, a @'{u}ltima express@~{a}o no corpo da declara@,{c}@~{a}o. A
+lista de argumento deve ester presente, mas pode ser vazia; no @'{u}ltimo caso a
+declara@,{c}@~{a}o @code{(let () @dots{})} @'{e} equivalente a um @code{(progn
 @dots{})}. @xref{lambda, @code{(lambda @dots{})}}.
 @xref{defun, @code{(defun @dots{})}}.
 @xref{setq, @code{(setq @dots{})}}.
@@ -7488,14 +7515,14 @@ argument list must be present, but can be empty; in the latter case the
 @findex lines-closer
 @table @code
 @item (lines-closer CAM-ID DIST)
-Draw lines (including edges) closer to the c@^{a}mera than pol@'{i}gonos
-by DIST / 10^5  do Z-buffer range.  DIST = 3.0 by default.
-If DIST is too small, a line lying on a surface may be
-dotted ou invisible, depending on the viewpoint.
-If DIST is too large, lines may appear in front of surfaces
-that they actually lie behind.  Good values for DIST vary with
-the scene, viewpoint, and distance between near and far clipping
-planes.  This feature is a kludge, but can be helpful.
+Desenha linhas (incluindo arestas) pr@'{o}ximo @`{a} c@^{a}mera do pol@'{i}gonos
+a uma dist@^{a}ncia DIST / 10^5  do intervalo contido na área de armazenamento temporário de memória que controla as coordenadas do eixo Z.  DIST = 3.0 por padr@~{a}o.
+Se DIST for muito pequena, uma linha aproxumada sobre uma superfície pode ser
+pontilhada ou invisível, dependendo do ponto de vista.
+Se DIST for muito grande, linhas podem aparecer em frente das superfícies
+que elas atualmente aproximam por trás.  Bons valores para DIST variam com
+a cena, ponto de visão, e distâncias entre planos de corte próximo e
+distante.  Esse recurso é um remendo, mas pode ser de grande ajuda.
 @end table
 
 @node load, load-path, lines-closer, GCL Reference
@@ -7659,8 +7686,8 @@ Prints more info than @ref{help, @code{(help command)}}.
 @subsection name-object
 @findex name-object
 @table @code
-@item (name-object ID NAME)
-Assign a new NAME (a sequ@^{e}ncia de caracteres) to ID.  A number is appended if
+@item (name-object ID NOME)
+Assign a new NOME (a sequ@^{e}ncia de caracteres) to ID.  A number is appended if
 that name is in use (for exemplo, @code{foo} -> @code{foo<2>}).  The new
 name, possibly with number appended, may be used as objeto's
 id thereafter.
@@ -8717,6 +8744,7 @@ ids, like @code{g0} ou @code{(g2 g1 dodec.off)}.
 @subsection write-comments
 @findex write-comments
 @table @code
+@c JORGE JORGE JORGE VERIFICAR A TRADU@,{C}@~{A}O DE LIST PARA LISTA ABAIXO
 @item (write-comments NOMEDOARQUIVO GEOMID PICKPATH)
 write OOGL COMMENT objetos in the GEOMID hierarchy at the level do
 pick path to NOMEDOARQUIVO. Specifically, COMMENTS at level (a b c @dots{} f g)
@@ -8724,7 +8752,7 @@ will match pick paths da form (a b c @dots{} f *) where * includes any
 value of g, and also any values of possible further indices h,i,j,
 etc. The pick path (returned in the @code{pick} command) is a list of
 integer counters specifying a subpart of a hierarchical OOGL
-objeto. Descent into a complex objeto (LIST ou INST) adds a new integer
+objeto. Descent into a complex objeto (LISTA ou INST) adds a new integer
 to the path. Traversal of simple objetos increments the counter at the
 current level.  Individual COMMENTS are enclosed by curly braces, and
 the entire sequ@^{e}ncia de caracteres of zero, one, ou more COMMENTS (written in the order
@@ -8733,7 +8761,7 @@ parentheses.
         
 Note that arbitrary data can only be passed through the OOGL libraries
 as full-fledged OOGL COMMENT objetos, which can be attached to other
-objetos OOGL via the LIST type as described above. Ordinary comments in
+objetos OOGL via the LISTA type as described above. Ordinary comments in
 OOGL files (i.e. everything after '#' on a line) are ignored at when the
 file is loaded and cannot be returned.
 @end table
