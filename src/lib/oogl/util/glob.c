@@ -74,7 +74,7 @@ char **ooglglob(char *s)
   void (*oldsigchld)() = signal(SIGCHLD, SIG_DFL);
 #endif
 
-  sprintf(cmd, GLOB_SHELL"\"echo %s\" 2>&-", s);
+  sprintf(cmd, GLOB_SHELL"\"echo %s\" 2>&1", s);
   fp = popen(cmd, POPEN_RB);
   
   if (fp == NULL) {
