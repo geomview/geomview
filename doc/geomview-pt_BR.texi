@@ -953,8 +953,8 @@ que @'{e} mostrada de forma que voc@^{e} tenha uma id@'{e}ia de o quanto grande 
 
 Note que quando voc@^{e} move o mouse em torno do tetraedro e do
 dodecaedro eles se movem como se fossem uma @'{u}nica figura.  Isso ocorre porque por padr@~{a}o o que voc@^{e} est@'{a}
-movendo atualmente @'{e} o "World" (mundo).  Para mover um dos objetos individualmente em lugar de
-o mundo como um todo, mova o cursor do mouse para o navegador de alvos (@emph{Targets}) no
+movendo atualmente @'{e} o "World" (objeto mundo).  Para mover um dos objetos individualmente em lugar de
+o objeto mundo como um todo, mova o cursor do mouse para o navegador de alvos (@emph{Targets}) no
 painel principal (@emph{Main}).  Clique (qualquer bot@~{a}o) sobre a palavra @emph{tetra}.
 Isso faz com que o tetraedro seja o "objeto alvo".  Agora mova o cursor
 de volta @`{a} janela de c@^{a}mera e voc@^{e} poder@'{a} rotacionar apenas o tetraedro.
@@ -979,18 +979,18 @@ Clique sobre o bot@~{a}o Centro (@emph{Center}) para trazer o tetraedro ao centr
 ent@~{a}o coloque-o em uma posi@,{c}@~{a}o de forma que voc@^{e} possa ver completamente o
 dodecaedro.
 
-Seu mundo agora tem dois objetos que est@~{a}o um ao lado do outro.  Voc@^{e}
+Seu objeto mundo agora tem dois objetos que est@~{a}o um ao lado do outro.  Voc@^{e}
 pode ver o dodecaedro no meio da janela de c@^{a}mera e pode ver parte
 do tetraedro parcialmente fora da janela de c@^{a}mera.  Volte para o navegador de alvos
 (@emph{Targets}) no painel principal (@emph{Main}) e clique sobre o "World" para selecionar o
-referido mundo novamente.  Agora clique sobre o bot@~{a}o "Olhar Para" (@emph{Look At}) no
+referido objeto mundo novamente.  Agora clique sobre o bot@~{a}o "Olhar Para" (@emph{Look At}) no
 painel de ferramentas (@emph{Tools}). Voc@^{e} pode ver o dodecaedro e o tetraedro
 ajustando-se ao meio da janela (figura
 @pxref{figlookatworld}).  O bot@~{a}o "Olhar Para" (@emph{Look At}) posiciona a c@^{a}mera em uma posi@,{c}@~{a}o tal
 que o objeto alvo fique centrado na janela.
 @float Figure,figlookatworld
 @image{figs/fig2}
-@caption{Olhando para o Mundo.}
+@caption{Olhando para o Objeto Mundo.}
 @end float
 Agora coloque o cursor sobre o meio do dodecaedro e d@^{e} sobre ele um duplo clique com
 o bot@~{a}o direito do mouse.  Isso significa clicar no mouse para baixo e para cima duas vezes em
@@ -1048,12 +1048,12 @@ voc@^{e} gosta, clique sobre o bot@~{a}o @emph{Done}.
 
 Agora coloque o cursor do mouse em algum lugar sobre sobre o fundo cinza da janela de c@^{a}mera e duplo-clique
 no bot@~{a}o direito; isso seleciona "World" como objeto alvo.
-Clique no bot@~{a}o @emph{Look At} para para olhar para o mundo novamente.
+Clique no bot@~{a}o @emph{Look At} para para olhar para o objeto mundo novamente.
 
 Note que no painel de Apar@^{e}ncia (@emph{Appearance}) as escolhas dos bot@~{o}es
 se modificavam @`{a} medida que o lado esquerdo tamb@'{e}m mudava com o dodecaedro.  Isso ocorre
 porque o painel @emph{Appearance} sempre mostra as escolhas para
-o objeto alvo, que agora @'{e} o mundo, o qual ainda tem suas
+o objeto alvo, que agora @'{e} o objeto mundo, o qual ainda tem suas
 escolhas padr@~{a}o.
 
 Clique sobre o bot@~{a}o @emph{[ab] BBox} sob a palavra @emph{Draw}.
@@ -1538,7 +1538,7 @@ centro de movimento como sendo o centro do objeto atual da caixa
 associada. Uma vez modificado o centro da caixa geom@'{e}trica ativa associada ir@'{a} tornar-se
 o centro do movimento, se voc@^{e} selecionar outro objeto, ent@~{a}o o centro do
 movimento ir@'{a} tornar-se o centro da caixa associada @`{a} aquele objeto. Nenhuma modifica@,{c}@~{a}o
-ocorrer@'{a} quando uma c@^{a}mera ou o mundo (@emph{World}) for selecionado; voc@^{e} tem que
+ocorrer@'{a} quando uma c@^{a}mera ou o objeto mundo (@emph{World}) for selecionado; voc@^{e} tem que
 digitar a palavra @code{target} no campo @emph{Center} para retornar ao
 valor padr@~{a}o.
 
@@ -2161,11 +2161,11 @@ Esse navegador permite a voc@^{e} selecionar entre proje@,{c}@~{a}o perspectiva 
 para essa c@^{a}mera.
 
 @item Near clip
-Essa caixa de texto determina a dist@^{a}ncia nas coordenadas do mundo do pr@'{o}ximo plano de
+Essa caixa de texto determina a dist@^{a}ncia nas coordenadas do objeto mundo do pr@'{o}ximo plano de
 corte a partir do ponto de vis@~{a}o.  Deve ser um n@'{u}mero positivo.
 
 @item Far clip
-Essa caixa de texto determina a dist@^{a}ncia nas coordenadas do mundo do plano de corte
+Essa caixa de texto determina a dist@^{a}ncia nas coordenadas do objeto mundo do plano de corte
 mais distante a partir do ponto de vis@~{a}o.  Deve ser um n@'{u}mero positivo e em geral
 deve ser maior que o valor de @emph{Near clip}.
 
@@ -2200,7 +2200,7 @@ valores grandes tornar@'{a} as linhas vis@'{i}veis mesmo quando elas devam ser
 escondidas.
 
 @item SPACE MODEL
-Essa op@,{c}@~{a}o determina o modelo usado para desenhar o mundo.  @'{E} mais @'{u}til em
+Essa op@,{c}@~{a}o determina o modelo usado para desenhar o objeto mundo.  @'{E} mais @'{u}til em
 espa@,{c}os hiperb@'{o}licos e esf@'{e}ricos.  Voc@^{e} provavelmente n@~{a}o necessitar@'{a} tocar esse
 navegador se voc@^{e} permanecer no espa@,{c}o Euclideano.  Para mais informa@,{c}@~{a}o sobre
 esses modelos, veja @ref{Geometrias Nao-Euclidianas}.
@@ -2277,12 +2277,12 @@ A op@,{c}@~{a}o "Geometry alone" escreve um arquivo OOGL contendo apenas a geo-m
 A op@,{c}@~{a}o "Geometry [in world]" escreve um arquivo OOGL contendo a geometria do objeto,
 transformado sob a transforma@,{c}@~{a}o atual do Geomview para esse objeto.
 Use a op@,{c}@~{a}o "Geometry [in world]" caso voc@^{e} tenha movido o objeto de sua posi@,{c}@~{a}o inicial e queira
-a nova posi@,{c}@~{a}o em rela@,{c}@~{a}o ao mundo.
+a nova posi@,{c}@~{a}o em rela@,{c}@~{a}o ao objeto mundo.
 
 @item Geometry [in universe] @asis{(geom)}
 A op@,{c}@~{a}o "Geometry [in universe]" grava um arquivo OOGL contendo apenas a geometria do geom,
 transformado sob transforma@,{c}@~{o}es sofridas pelo objeto e tamb@'{e}m sob transforma@,{c}@~{o}es sofridas
-pelo mundo.
+pelo objeto mundo.
 
 @item RMan [->tiff] @asis{(camera)}
 A op@,{c}@~{a}o "RMan [->tiff]" escreve um arquivo que quando for renderizado cria uma imagem
@@ -2349,7 +2349,7 @@ Escreve um arquivo de transforma@,{c}@~{a}o OOGL fornecendo transforma@,{c}@~{a}
 @item Transform [to universe] @asis{(qualquerobjeto)}
 Escreve um arquivo de transforma@,{c}@~{a}o OOGL fornecendo uma transforma@,{c}@~{a}o que @'{e} a
 composi@,{c}@~{a}o de transforma@,{c}@~{a}o do Geomview para o objeto e a transforma@,{c}@~{a}o sofrida
-pelo mundo.
+pelo objeto mundo.
 
 @item Window @asis{(camera)}
 Escreve um arquivo de janela OOGL para uma c@^{a}mera.
@@ -3196,7 +3196,7 @@ appearance @{
                               # esse exemplo coloca a luz
                               # .5 unidade atr@'{a}s do olho.)
           # Poss@'{i}vel palavra chave de localiza@,{c}@~{a}o ("location"):
-          #  global   posi@,{c}@~{a}o da luz global em coordenadas de mundo
+          #  global   posi@,{c}@~{a}o da luz global em coordenadas de objeto mundo
           #             (bem, universo). Esse @'{e} o padr@~{a}o se nenhuma
           #             localiza@,{c}@~{a}o for especificada.
           #  camera   posi@,{c}@~{a}o da c@^{a}mera em coordenadas do sistemade
@@ -4072,7 +4072,7 @@ Quando uma c@^{a}mera @'{e} colocada de volta @`{a} sua posi@,{c}@~{a}o inicial,
 @item
 @code{location ndc} coloca os parentes do objeto no cubo unit@'{a}rio
 normalizado no qual a proje@,{c}@~{a}o da c@^{a}mera (perspectiva ou ortogr@'{a}fica)
-mapeia o mundo vis@'{i}vel.  X, Y, e Z est@~{a}o no intervalo de -1 a +1,
+mapeia o objeto mundo vis@'{i}vel.  X, Y, e Z est@~{a}o no intervalo de -1 a +1,
 com Z = -1 estando mais pr@'{o}ximo e Z = +1 ao longe do plano de corte, e X e Y
 nas dire@,{c}@~{o}es @`{a} direita e adiante e acima e adiante respectivamente.
 Dessa forma alguma coisa como
@@ -4828,7 +4828,7 @@ Um objeto c@^{a}mera especifica as seguintes propriedades de uma c@^{a}mera:
 
 @table @asis
 @item posi@,{c}@~{a}o e orienta@,{c}@~{a}o
-especificada por ou uma transforma@,{c}@~{a}o camera para o mundo ou uma transforma@,{c}@~{a}o mundo para a c@^{a}mera;
+especificada por ou uma transforma@,{c}@~{a}o camera para o objeto mundo ou uma transforma@,{c}@~{a}o de objeto mundo para a c@^{a}mera;
 essa transforma@,{c}@~{a}o n@~{a}o inclui a proje@,{c}@~{a}o, de forma que essa transforma@,{c}@~{a}o @'{e} tipicamente
 apenas uma composi@,{c}@~{a}o de transla@,{c}@~{a}o e rota@,{c}@~{a}o.  Especificado como um
 objeto transform, tipicamente uma matriz 4x4.
@@ -4853,7 +4853,7 @@ Especificado em uma das duas formas a seguir.
 @'{e} o campo de vis@~{a}o -- em graus se perpectivo, ou dist@^{a}ncia
 linear se ortogr@'{a}fico -- na @emph{menor} dire@,{c}@~{a}o.
   @item halfyfield 
-@'{e} metade do campo projetado no eixo Y, em coordenadas do mundo (n@~{a}o angulo!),
+@'{e} metade do campo projetado no eixo Y, em coordenadas do objeto mundo (n@~{a}o angulo!),
 em unidades de dist@^{a}ncia a partir da c@^{a}mera.  Para uma c@^{a}mera em perpectiva, halfyfield
 @'{e} relacionado ao campo angular:
 
@@ -6483,10 +6483,10 @@ e.g. em comandos @code{pick} e @code{write}:
 @table @code
 
 @item @code{World, world, worldgeom, g0}
-o mundo, dentro do qual todos os objetos geom@'{e}tricos vivem.
+o objeto mundo, dentro do qual todos os objetos geom@'{e}tricos vivem.
 
 @item universe 
-o universo, no qual o no qual o Mundo, as luzes e as c@^{a}meras vivem.  Transforma@,{c}@~{o}es
+o universo, no qual o no qual o objeto mundo, as luzes e as c@^{a}meras vivem.  Transforma@,{c}@~{o}es
 world2cam das c@^{a}meras podem melhor serem chamadas universe2cam, etc.
 
 @item self
@@ -6601,7 +6601,7 @@ arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
 * lines-closer::                @code{(lines-closer CAM-ID DIST)}
 * load::                        @code{(load nomearquivo [command|geometry|camera])}
 * load-path::                   @code{(load-path)}
-* look::                        @code{(look [objectID] [camID])}
+* look::                        @code{(look [objetoID] [camID])}
 * look-encompass::              @code{(look-encompass [objID] [camID])}
 * look-encompass-size::         @code{(look-encompass-size [view clip near far])}
 * look-recenter::               @code{(look-recenter [objID] [camID])}
@@ -6630,8 +6630,8 @@ arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
 * pick::                        @code{(pick COORDSYS GEOMID G V E F P VI EI FI)}
 * pick-invisible::              @code{(pick-invisible [yes|no])}
 * pickable::                    @code{(pickable GEOM-ID @{yes|no@})}
-* position::                    @code{(position objectID otherID)}
-* position-at::                 @code{(position-at objectID otherID [center | origin])}
+* position::                    @code{(position objetoID otherID)}
+* position-at::                 @code{(position-at objetoID otherID [center | origin])}
 * position-toward::             @code{(position-toward objID othID [center|origin])}
 * process-events::              @code{(process-events)}
 * progn::                       @code{(progn DECLARA@,{C}@~{A}O [ @dots{} ])}
@@ -6665,9 +6665,9 @@ arg2 @dots{} )}, onde @code{func} @'{e} o nome da fun@,{c}@`{a}o e @code{arg1},
 * space::                       @code{(space @{euclidean|hyperbolic|spherical@})}
 * stereowin::                   @code{(stereowin CAM-ID [no|horizontal|@dots{}] [gap])}
 * time-interests::              @code{(time-interests delta initial prefix [suffix])}
-* transform::                   @code{(transform objectID centerID frameID [rotate|@dots{}] @dots{})}
-* transform-incr::              @code{(transform-incr objectID centerID frameID @dots{})}
-* transform-set::               @code{(transform-set objectID centerID frameID @dots{})}
+* transform::                   @code{(transform objetoID centerID frameID [rotate|@dots{}] @dots{})}
+* transform-incr::              @code{(transform-incr objetoID centerID frameID @dots{})}
+* transform-set::               @code{(transform-set objetoID centerID frameID @dots{})}
 * truncate::                    @code{(truncate N@'{U}MERO)}
 * ui-cam-focus::                @code{(ui-cam-focus @{focus-change|mouse-cross@})}
 * ui-center::                   @code{(ui-center ID)}
@@ -7054,7 +7054,7 @@ Alterna entre estremecimento ligado e desligado em CAM-ID.
 @findex draw
 @table @code
 @item (draw CAM-ID)
-Desenha a visão em CAM-ID, se a visão precisar ser redesenhada. @xref{redraw,
+Desenha a vis@~{a}o em CAM-ID, se a vis@~{a}o precisar ser redesenhada. @xref{redraw,
 @code{(redraw @dots{})}}.
 @end table
 
@@ -7516,13 +7516,13 @@ declara@,{c}@~{a}o @code{(let () @dots{})} @'{e} equivalente a um @code{(progn
 @table @code
 @item (lines-closer CAM-ID DIST)
 Desenha linhas (incluindo arestas) pr@'{o}ximo @`{a} c@^{a}mera do pol@'{i}gonos
-a uma dist@^{a}ncia DIST / 10^5  do intervalo contido na área de armazenamento temporário de memória que controla as coordenadas do eixo Z.  DIST = 3.0 por padr@~{a}o.
-Se DIST for muito pequena, uma linha aproxumada sobre uma superfície pode ser
-pontilhada ou invisível, dependendo do ponto de vista.
-Se DIST for muito grande, linhas podem aparecer em frente das superfícies
-que elas atualmente aproximam por trás.  Bons valores para DIST variam com
-a cena, ponto de visão, e distâncias entre planos de corte próximo e
-distante.  Esse recurso é um remendo, mas pode ser de grande ajuda.
+a uma dist@^{a}ncia DIST / 10^5  do intervalo contido na @'{a}rea de armazenamento tempor@'{a}rio de mem@'{o}ria que controla as coordenadas do eixo Z.  DIST = 3.0 por padr@~{a}o.
+Se DIST for muito pequena, uma linha aproxumada sobre uma superf@'{i}cie pode ser
+pontilhada ou invis@'{i}vel, dependendo do ponto de vista.
+Se DIST for muito grande, linhas podem aparecer em frente das superf@'{i}cies
+que elas atualmente aproximam por tr@'{a}s.  Bons valores para DIST variam com
+a cena, ponto de vis@~{a}o, e dist@^{a}ncias entre planos de corte pr@'{o}ximo e
+distante.  Esse recurso @'{e} um remendo, mas pode ser de grande ajuda.
 @end table
 
 @node load, load-path, lines-closer, GCL Reference
@@ -7530,13 +7530,13 @@ distante.  Esse recurso é um remendo, mas pode ser de grande ajuda.
 @findex load
 @table @code
 @item (load filename [command|geometry|camera])
-Loads the given file into geomview.  The optional second argument
-especifica the type of data it contains, which may be @code{command}
-(geomview commands), @code{geometry} (OOGL geometric data), or
-@code{camera} (OOGL c@^{a}mera definition).  se omitido, attempts to guess
-about the file's contents.
-Loading geometric data creates a new visible objeto; loading a camera
-opens a new janela; loading a command file executes those commands.
+Chama o arquivo fornecido dentro do geomview.  O segundo argumento opcional
+especifica o tipo de dado que o referido arquivo chamado cont@'{e}m, o qual pode ser ou @code{command}
+(comandos do geomview), @code{geometry} (dados geom@'{e}trico no formato OOGL), ou
+@code{camera} (defini@,{c}@~{a}o de c@^{a}mera no formato OOGL).  se omitido, @'{e} tentado deduzir
+o tipo de conte@'{u}do do arquivo.
+Carregando dados geom@'{e}tricos cria um novo objeto vis@'{i}vel; carregando uma c@^{a}mera
+abre uma nova janela; chamado um arquivo contendo comando executa o referido comando.
 @end table
 
 @node load-path, look, load, GCL Reference
@@ -7544,9 +7544,9 @@ opens a new janela; loading a command file executes those commands.
 @findex load-path
 @table @code
 @item (load-path)
-Returns the current search path for command, objeto geom@'{e}trico, etc. files.
-Note: to actually see the value returned by this function
-you should wrap it in a call to echo: @code{(echo (load-path))}.
+Retorna o atual caminho de busca para arquivos contendo comandos, objetos geom@'{e}tricos, etc.
+Nota: para ver o atual valor retornado por essa fun@,{c}@~{a}o
+voc@^{e} deve empacotar esse comando em uma chamada a echo: @code{(echo (load-path))}.
 @xref{set-load-path, @code{(set-load-path @dots{})}}.
 @end table
 
@@ -7554,31 +7554,31 @@ you should wrap it in a call to echo: @code{(echo (load-path))}.
 @subsection look
 @findex look
 @table @code
-@item (look [objectID] [cameraID])
-Rotates the named c@^{a}mera to point toward the center da 
-bounding box do named objeto (or the origin in hyperbolic ou 
-spherical space).  In Euclidean space, moves the c@^{a}mera 
-forward ou backward until the objeto appears as large 
-as possible while still being entirely visible.  Equivalent to 
+@item (look [objetoID] [cameraID])
+Rotaciona a referida c@^{a}mera - cameraID - de forma que aponte em dire@,{c}@~{a}o ao centro da
+caixa associada ao referido objeto - objetoID (ou a origem nos espa@,{c}os hiperbolico ou 
+esf@'{e}rico).  No espa@,{c}o Eucidiano, move a c@^{a}mera 
+para al@'{e}m ou para tr@'{a}s at@'{e} que o objeto apare@,{c}a t@~{a}o grande
+quanto poss@'{i}vel enquanto sendo inteiramente vis@'{i}vel.  Equivalente a
 @example
 progn ( 
-	(look-toward [objectID] [cameraID] @{center | origin@})
-	[(look-encompass [objectID] [cameraID])] 
+	(look-toward [objetoID] [cameraID] @{center | origin@})
+	[(look-encompass [objetoID] [cameraID])] 
 ) 
 @end example
-If objectID is not specified, it is assumed to be World.  If 
-cameraID is not specified, it is assumed to be targetcam.
+Se objetoID n@~{a}o for especificado, esse objeto @'{a} assumido como sendo o objeto mundo.  Se
+cameraID n@~{a}o for especificado, essa c@^{a}mera @'{e} assumido como sendo a targetcam.
 @end table
 
 @node look-encompass, look-encompass-size, look, GCL Reference
 @subsection look-encompass
 @findex look-encompass
 @table @code
-@item (look-encompass [objectID] [cameraID])
-Moves cameraID backwards ou forwards until its field of view
-surrounds objectID. This routine works only in Euclidean space.  
-If objectID is not specified, it is assumed to be the world.  
-If cameraID is not specified, it is assumed to be the targetcam.  
+@item (look-encompass [objetoID] [cameraID])
+Move cameraID para tr@'{a}s ou para adiante at@'{e} que seu campo de vis@~{a}o
+alcance objetoID. Essa rotina trabalha somente no espa@,{c}o Euclidiano.  
+Se objetoID n@~{a}o for especificado, esse objeto @'{a} assumido como sendo o objeto mundo.  
+Se cameraID n@~{a}o for especificado, essa c@^{a}mera @'{e} assumido como sendo a targetcam.  
 @xref{look-encompass-size, @code{(look-encompass-size @dots{})}}.
 @end table
 
@@ -7586,41 +7586,41 @@ If cameraID is not specified, it is assumed to be the targetcam.
 @subsection look-encompass-size
 @findex look-encompass-size
 @table @code
-@item (look-encompass-size [view-fraction  clip-ratio  near-margin far-margin])
-Sets/returns parameters used by (look-encompass).
-view-fraction is the portion da janela de c@^{a}mera filled by the objeto,
-clip-ratio is the max allowed ratio of near-to-far clipping planes.
-The near clipping plane is 1/near-margin times closer than the near
-edge do objeto, and the far clipping plane is far-margin times
-further away.  Returns the list of current values.
-Defaults: .75  100  0.1  4.0
+@item (look-encompass-size [ver-fra@,{c}@~{a}o  raz@~{a}o-corte  margem-proxima margem-distante])
+Ajusta/retorna par@^{a}metros usados por (look-encompass).
+ver-fra@,{c}@~{a}o @'{e} a por@,{c}@~{a}o da janela de c@^{a}mera preenchida pelo objeto,
+raz@~{a}o-corte @'{e} a raz@~{a}o m@'{a}xima permitida entre os planos de corte pr@'{o}ximo e afastado.
+O plano de corte pr@'{o}ximo @'{e} 1/magem-proxima vezes mais perto que a aresta
+mais pr@'{o}xima do objeto, e o plano de corte distante @'{e} margem-distante vezes
+mais adiante.  Retorna a lista dos valores atuais.
+Valores padronizados: .75  100  0.1  4.0
 @end table
 
 @node look-recenter, look-toward, look-encompass-size, GCL Reference
 @subsection look-recenter
 @findex look-recenter
 @table @code
-@item (look-recenter [objectID] [cameraID])
-Translates and rotates the c@^{a}mera so that it is looking in the 
--z direction (in objectID's coordinate system) at the center of 
-objectID's bounding box (or the origin do coordinate system 
-in non-Eudlidean space).  In Euclidean space, the c@^{a}mera is also 
-moved as close as possible to the objeto while allowing the 
-entire objeto to be visible.  Also makes sure that the y-axes of 
-objectID and cameraID are parallel.
+@item (look-recenter [objetoID] [cameraID])
+Translada e rotaciona a c@^{a}mera de forma que essa c@^{a}mera esteja olhando na
+dire@,{c}@~{a}o-z (no sistema de coordenadas de objetoID) no centro da
+caixa associada a objetoID (ou a origem do sistema de coordenadas
+no espa@,{c}o n@~{a}o Euclidiano).  No espa@,{c}o Euclidiano, a c@^{a}mera @'{e} tamb@'{e}m 
+movida para t@~{a}o perto quanto poss@'{i}vel do objeto de forma a permitir que o
+objeto seja inteiramente vis@'{i}vel.  Tamb@'{e}m garante que o eixos y do
+objetoID e de cameraID sejam paralelos.
 @end table
 
 @node look-toward, merge, look-recenter, GCL Reference
 @subsection look-toward
 @findex look-toward
 @table @code
-@item (look-toward [objectID] [cameraID] [origin | center])
-Rotates the named c@^{a}mera to point toward the origin do
-objeto's coordinate system, ou the center do objeto's
-bounding box (in non-Euclidean space, the origin will be used 
-automatically).  Default objectID is the world, default camera
-is targetcam, default location to point towards is the center
-do bounding box.
+@item (look-toward [objetoID] [cameraID] [origin | center])
+Rotaciona a c@^{a}mera especificada de forma a apontar para adiante da or@'{i}gem do
+sistema de coordenadas do objeto, ou do centro da caixa associada ao
+objeto (no espa@,{c}o n@~{a}o Euclidiano, a or@'{i}gem ir@'{a} ser usada
+automaticamente).  O objetoID padr@~{a}o @'{e} o objeto mundo, a c@^{a}mera padr@~{a}o
+@'{e} targetcam, a localiza@,{c}@~{a}o padr@~{a}o @'{e} para a qual @'{e} apontada a c@^{a}mera @'{e} adiante do centro
+da caixa associada a objetoID.
 @end table
 
 @node merge, merge-ap, look-toward, GCL Reference
@@ -7628,41 +7628,41 @@ do bounding box.
 @findex merge
 @table @code
 @item (merge @{window|camera@} CAM-ID  @{ WINDOW ou CAMERA @dots{} @})
-Modify the given janela ou camera, changing just those properties
-specified in the last argument.  E.g.
+Modifica a janela ou a c@^{a}mera fornecido, mudando apenas a propriedade
+especificada no @'{u}ltimo argumento.  E.g.
 @example
 	(merge camera @code{Camera} @{ far 20 @})
 @end example
-sets Camera's far clipping plane to 20 while leaving
-other attributes untouched.
+ajusta o plano de corte afastado para 20 permanecendo
+os outros atributos inalterados.
 @end table
 
 @node merge-ap, merge-base-ap, merge, GCL Reference
 @subsection merge-ap
 @findex merge-ap
 @table @code
-@item (merge-ap GEOM-ID APPEARANCE)
-Merge in some apar@^{e}ncia characteristics to GEOM-ID.
-Appearance parameters include surface and line color, shading
-style, line width, and lighting.
+@item (merge-ap GEOM-ID APAR@^{E}NCIA)
+Mescla em algumas caracter@'{i}sticas de apar@^{e}ncia para GEOM-ID.
+Par@^{a}metros de apar@^{e}ncia incluem cor de linha e de superf@'{i}cie, estilo de
+sombreamento, espe@,{c}ura de linha, e ilumina@,{c}@~{a}o.
 @end table
 
 @node merge-base-ap, merge-baseap, merge-ap, GCL Reference
 @subsection merge-base-ap
 @findex merge-base-ap
 @table @code
-@item (merge-base-ap APPEARANCE)
-@code{merge-base-ap} is a synonym for @ref{merge-baseap, @code{merge-baseap}}.
+@item (merge-base-ap APAR@^{E}NCIA)
+@code{merge-base-ap} @'{e} um sin@^{o}nimo para @ref{merge-baseap, @code{merge-baseap}}.
 @end table
 
 @node merge-baseap, mod, merge-base-ap, GCL Reference
 @subsection merge-baseap
 @findex merge-baseap
 @table @code
-@item (merge-baseap APPEARANCE)
-Merge in some apar@^{e}ncia characteristics to the base default
-apar@^{e}ncia (applied to every geom before its own apperance).
-Lighting is typically included in the base apar@^{e}ncia.
+@item (merge-baseap APAR@^{E}NCIA)
+Mescla em algumas caracter@'{i}sticas de apar@^{e}ncia para a base pad@~{a}o de
+apar@^{e}ncia (aplicada a todo geom antes de sua pr@'{o}pria apar@^{e}ncia).
+Ilumina@,{c}@~{a}o est@'{a} tipicamente inclu@'{i}da na base de apar@^{e}ncia.
 @end table
 
 @node mod, morehelp, merge-baseap, GCL Reference
@@ -7670,16 +7670,16 @@ Lighting is typically included in the base apar@^{e}ncia.
 @findex mod
 @table @code
 @item (mod EXPR1 EXPR2)
-Divides @var{EXPR1} by @var{EXPR2} and retorna o remainder.
+Divide @var{EXPR1} por @var{EXPR2} e retorna o resto.
 @end table
 
 @node morehelp, name-object, mod, GCL Reference
 @subsection morehelp
 @findex morehelp
 @table @code
-@item (morehelp command)
-@code{command} may include @code{*} wildcards.
-Prints more info than @ref{help, @code{(help command)}}.
+@item (morehelp comando)
+@code{comando} pode incluir coringas @code{*}.
+Mostra na tela mais informa@,{c}@~{a}o que @ref{help, @code{(help command)}}.
 @end table
 
 @node name-object, ND-axes, morehelp, GCL Reference
@@ -7687,38 +7687,38 @@ Prints more info than @ref{help, @code{(help command)}}.
 @findex name-object
 @table @code
 @item (name-object ID NOME)
-Assign a new NOME (a sequ@^{e}ncia de caracteres) to ID.  A number is appended if
-that name is in use (for exemplo, @code{foo} -> @code{foo<2>}).  The new
-name, possibly with number appended, may be used as objeto's
-id thereafter.
+Atribui um novo NOME (uma sequ@^{e}ncia de caracteres) a ID.  Um n@'{u}mero @'{e} adicionado no final se
+NOME j@'{a} estiver sendo usado (por exemplo, @code{foo} -> @code{foo<2>}).  O novo
+nome, possivelmente com n@'{u}mero anexado no final, pode ser usado como id de
+objeto posteriormente.
 @end table
 
 @node ND-axes, ND-color, name-object, GCL Reference
 @subsection ND-axes
 @findex ND-axes
 @table @code
-@item (ND-axes CAMID [CLUSTERNAME [Xindex Yindex Zindex [Windex]]])
-In our model for N-D viewing (enabled by (dimension)), objetos in
-N-space are viewed by N-dimensional @emph{camera clusters}.
-Each real janela de c@^{a}mera belongs to some cluster, and shows &
-manipulates a 3-D axis-aligned projected subspace do N-space seen
-by its cluster.  Moving one c@^{a}mera in a cluster affects its siblings.
+@item (ND-axes CAMID [NOMEGRUPO [Xindex Yindex Zindex [Windex]]])
+No nosso modelo para visualiza@,{c}@~{a}o N-Dimensional (habilitado por (dimension)), objetos no
+espa@,{c}o N-dimensional s@~{a}o visualizados por N-dimensional @emph{grupos de c@^{a}mera}.
+Cada janela real de c@^{a}mera pertence a algum grupo de c@^{a}meras, e mostra &
+manipula um subspa@,{c}o projetado eixo-alinhado 3-D do espa@,{c}o N-dimensional visto
+pelo seu grupo.  Movendo uma c@^{a}mera em um grupo afeta todos os outros membros do grupo.
 
-The ND-axes command configures all this.  It especifica a camera's
-cluster membership, and the set of N-space axes which become the 3-D
-camera's X, Y, and Z axes.  Axes are specified by their indices, from 1
-to N for an N-dimensional space.  Cluster CLUSTERNAME is implicitly
-created if not previously known. 
+O comando ND-axes configura tudo isso.  O comando ND-axes especifica uma associa@,{c}@~{a}o
+de c@^{a}mera a um grupo, e o ajuste dos eixos do espa@,{c}o N-dimensional os quais tornam-se os eixos
+X, Y, e Z da c@^{a}mera.  Eixos s@~{a}o especificados por seus @'{i}ndices, de 1
+a N para um espa@,{c}o N-dimensional.  O grupo NOMEGRUPO @'{e} implicitamente
+criado se n@~{a}o for previamente conhecido. 
 
-In principle it is possible to map the homogeneous component of a
-conformal 4 point to some other index; this would be done by specifying
-0 for one of @code{Xindex}, @code{Yindex} ou @code{Zindex} and giving
-@code{Windex} some positive value. This is probably not useful because
-Geomview does not support non-Euclidean geometries for in higher
-dimensions.
+Em princ@'{i}pio @'{e} poss@'{i}vel mapear a componente homog@^{e}nea de uma
+conforma@,{c}@~{a}o de 4 pontos para algum outro @'{i}ndice; isso poderia ser realizado especificando
+0 para um dos @code{Xindex}, @code{Yindex} ou @code{Zindex} e fornecendo a
+@code{Windex} algum valor positivo. Isso provavelmente n@~{a}o @'{e} @'{u}til pelo fato de
+Geomview n@~{a}o suportar geometria n@~{a}o-Euclidianas para dimens@~{o}es
+mais altas.
 
-To read a camera's configuration, use @code{(echo (ND-axes CAMID))}.
-The return value @'{e} uma array of 4 integers, the last one should 0.
+Para ler uma configura@,{c}@~{a}o de c@^{a}meras, use @code{(echo (ND-axes CAMID))}.
+O valor de retorno @'{e} uma vetor fixo de 4 inteiros, o @'{u}ltimo dos quais deve ser 0.
 @end table
 
 @node ND-color, ND-xform, ND-axes, GCL Reference
@@ -7728,21 +7728,21 @@ The return value @'{e} uma array of 4 integers, the last one should 0.
 @item (ND-color CAMID
 	[ (( [ID] (x1 x2 @dots{} xN) v r g b a   v r g b a  @dots{} )
 	   ((x1 @dots{} xN)  v r g b a  v r g b a @dots{}) @dots{})] )
-Specifies a function, applied to each N-D v@'{e}rtice, which determines the
-colors of N-dimensional objetos as shown in camera CAMID.
-Each coloring function is defined by a vector (in ID's coordinate system)
-[x1 @dots{} xN] and by a sequence of value (v)/color(r g b a) tuples,
-ordered by increasing v.  The inner product v = P.[x] is linearly
-interpolated in this table to give a color.
-If ID for omitido, the (xi) vector is assumed in universe coordenadas.
-The ND-color command especifica a list of such functions; each v@'{e}rtice
-is colored by their sum (so e.g. green intensity could indicate
-projection along one axis while red indicated another.
-An empty list, as in (ND-color CAMID ()), suppresses coloring.
-With no second argument, (ND-color CAMID) returns that camera's
-color-function list.
-Even when coloring is enabled, objetos tagged with the @code{keepcolor}
-apar@^{e}ncia attribute are shown in their natural colors.
+Especifica uma fun@,{c}@~{a}o, aplicada a cada v@'{e}rtice N-dimencional, o qual determina as
+cores dos objetos N-dimensionais como mostrado na c@^{a}mera CAMID.
+Cada fun@,{c}@~{a}o de cor @'{e} definida por um vetor (no sistema de coordenadas do objeto geom@'{e}trico ID)
+[x1 @dots{} xN] e por uma sequ@^{e}ncia de qu@'{i}ntuplas valor (v)/cor(r g b a),
+ordenados por ordem crescente de v.  O produto interno v = P.[x] @'{e} linearmente
+interpolado nessa tabela para fornecer uma cor.
+Se ID for omitido, o vetor (xi) @'{e} assumido em coordenadas de universo.
+O comando ND-color especifica uma lista de tais fun@,{c}@~{o}es; cada v@'{e}rtice
+@'{e} colorido por seu somat@'{o}rio (ent@~{a}o e.g. intensidade verde pode indicar
+proje@,{c}@~{a}o ao longo de um eixoenquanto vermelho indica outro eixo.
+Uma lista vazia, como em (ND-color CAMID ()), suprime o colorido.
+Sem segundo argumento, (ND-color CAMID) retorna a lista de
+cor-fun@,{c}@~{a}o de colora@,{c}@~{a}o.
+Mesmo quando colora@,{c}@~{a}o est@'{a} habilitada, objetos acompanhados com o atributo de
+apar@^{e}ncia @code{keepcolor} s@~{a}o mostrados em suas cores naturais.
 @end table
 
 @node ND-xform, ND-xform-get, ND-color, GCL Reference
@@ -7750,11 +7750,11 @@ apar@^{e}ncia attribute are shown in their natural colors.
 @findex ND-xform
 @table @code
 @item (ND-xform OBJID [ntransform @{ idim odim  @dots{} @}])
-Concatenate the given ND-transform with the current ND-transform do
-objeto (apply the ND-transform to objeto ID, as opposed to simply
-setting its ND-transform). Note that ND-transforms have their
-homogeneous coordinate at index 0, while 3D transform have it at index
-3.
+Concatena a fornecida transforma@,{c}@~{a}o-ND com a atual transforma@,{c}@~{a}o-ND do
+objeto (aplica a transforma@,{c}@~{a}o-ND para objeto ID, como oposi@,{c}a@~{o} a simplesmente
+ajustar sua transforma@,{c}@~{a}o-ND). Note que ND-transforms possuem suas
+coordenadas homog@^{e}neas iniciando-se no @'{i}ndice 0, enquanto transforma@,{c}@~{o}es 3D possuem seu in@'{i}cio no
+@'{i}ndice 3.
 @end table
 
 @node ND-xform-get, ND-xform-set, ND-xform, GCL Reference
@@ -7762,12 +7762,12 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @findex ND-xform-get
 @table @code
 @item (ND-xform-get ID [from-ID])
-Returns the N-D transform do given objeto in the coordinate system
-of from-ID (default @code{universe}), in the sense
-  <point-in-ID-coords> * Transform = <point-in-from-ID-coords>.
-Note that ND-transforms have their
-homogeneous coordinate at index 0, while 3D transform have it at index
-3.
+Retorna a transforma@,{c}@~{a}o N-D do objeto fornecido no sistema de coordenadas
+do from-ID (o padr@~{a}o @'{e} @code{universe}), no sentido
+  <ponto-em-ID-coords> * Transform = <ponto-em-from-ID-coords>.
+Note que ND-transforms possuem suas
+coordenadas homog@^{e}neas iniciando-se no @'{i}ndice 0, enquanto transforma@,{c}@~{o}es 3D possuem seu in@'{i}cio no
+@'{i}ndice 3.
 @end table
 
 @node ND-xform-set, new-alien, ND-xform-get, GCL Reference
@@ -7775,29 +7775,28 @@ homogeneous coordinate at index 0, while 3D transform have it at index
 @findex ND-xform-set
 @table @code
 @item (ND-xform-set OBJID [ntransform @{ idim odim  @dots{} @}])
-Sets the N-D transform do given objeto.
-In dimension N, this @'{e} uma (N+1)x(N+1) matrix, so in that case
-idim and odim are expected to be both equal to (N+1). Note that
-all c@^{a}meras in a camera-cluster have the same N-D transform.
-Note that ND-transforms have their
-homogeneous coordinate at index 0, while 3D transform have it at index
-3.
+Ajusta a transforma@,{c}@~{a}o N-D do objeto fornecido.
+Na dimens@~{a}o N, a transforma@,{c}@~{a}o @'{e} uma matriz (N+1)x(N+1), de forma que naquele caso
+idim e odim s@~{a}o esperados serem ambos iguais a (N+1). Note que
+todas as c@^{a}meras em um camera-grupo possuem a mesma transforma@,{c}@~{a}o N-D.
+Note que ND-transforms possuem suas
+coordenadas homog@^{e}neas iniciando-se no @'{i}ndice 0, enquanto transforma@,{c}@~{o}es 3D possuem seu in@'{i}cio no
+@'{i}ndice 3.
 @end table
 
 @node new-alien, new-camera, ND-xform-set, GCL Reference
 @subsection new-alien
 @findex new-alien
 @table @code
-@item (new-alien name [GEOMETRY])
-Create a new alien (geom not in the world) with the given name (a
-sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico
-specification. If @var{GEOMETRY} for omitido, the new alien is given an
-empty objeto geom@'{e}trico.  If an objeto with that name already exists, the new
-alien is given a unique name.  The light beams that are used to move
-around the lights are an exemplo of aliens. They're drawn but are not
-controllable the way ordinary objetos are: they don't appear in the
-objeto browser and the user can't move them with the normal movimento
-modes.
+@item (new-alien name [GEOMETRIA])
+Cria um novo alien (objeto geom@'{e}trico fora de "objeto mundo") com o nome fornecido (uma
+sequ@^{e}ncia de caracteres). @var{GEOMETRIA} @'{e} uma sequ@^{e}ncia de caracteres fornecendo um especifica@,{c}@~{a}o de objeto
+geom@'{e}trico OOGL. Se @var{GEOMETRIA} for omitido, o novo alien @'{e} fornecido como sendo um
+objeto geom@'{e}trico vazio.  Se um objeto como o nome fornecido j@'{a} existir, ao novo
+alien @'{e} dado um novo nome.  Os feixes luminosos que s@~{a}o usados para mover
+em volta das luzes s@~{a}o um exemplo de aliens. Eles s@~{a}o desenhados mas n@~{a}o
+control@'{a}veis pelo caminho normal que os objetos comuns s@~{a}o: eles n@~{a}o aparecem no
+navegador de objetos e o usu@'{a}rio n@~{a}o pode mov@^{e}-lo com o modo de movimento normal.
 @end table
 
 @node new-camera, new-center, new-alien, GCL Reference
@@ -7805,9 +7804,9 @@ modes.
 @findex new-camera
 @table @code
 @item (new-camera name [CAMERA])
-Create a new c@^{a}mera with the given name (a sequ@^{e}ncia de caracteres).  If a c@^{a}mera with
-that name already exists, the new objeto is given a unique name.  If
-@var{CAMERA} for omitido a default c@^{a}mera is used.
+Cria uma nova c@^{a}mera com o nome fornecido (uma sequ@^{e}ncia de caracteres).  Se uma c@^{a}mera com
+o nome fornecido j@'{a} existir, ao novo objeto @'{e} fornecido um nome @'{u}nico.  Se
+@var{CAMERA} for omitido uma c@^{a}mera padr@~{a}o @'{e} usada.
 @end table
 
 @node new-center, new-geometry, new-camera, GCL Reference
@@ -7815,11 +7814,11 @@ that name already exists, the new objeto is given a unique name.  If
 @findex new-center
 @table @code
 @item (new-center [id])
-Stop id, then set id's transform to the identity.  Default id 
-is target.  Also, if the id is a camera, calls 
-(look-recenter World id).  The main function da call to 
-(look-recenter) is to place the c@^{a}mera so that it is pointing 
-parallel to the z axis toward the center do world.
+Cessa o movimento de id, a seguir ajusta a transforma@,{c}@~{a}o de id para a identidade.  O id padr@~{a}o
+@'{e} target.  Tamb@'{e}m, se o id for uma c@^{a}mera, chama 
+(look-recenter World id).  A fun@,{c}@~{a}o principal da chamada a 
+(look-recenter) @'{e} colocar a c@^{a}mera de forma que esteja apontando 
+paralelamente ao eixo z na dire@,{c}@~{a}o do centro do objeto mundo.
 @end table
 
 @node new-geometry, new-reset, new-center, GCL Reference
@@ -7827,10 +7826,10 @@ parallel to the z axis toward the center do world.
 @findex new-geometry
 @table @code
 @item (new-geometry name [GEOMETRY])
-Create a new geom with the given name (a sequ@^{e}ncia de caracteres). @var{GEOMETRY} is a
-sequ@^{e}ncia de caracteres giving an OOGL objeto geom@'{e}trico specification.  If @var{GEOMETRY} is
-omitido, the new objeto is given an empty objeto geom@'{e}trico.  If an objeto with
-that name already exists, the new objeto is given a unique name.
+Cria um novo geom com o nome fornecido (uma sequ@^{e}ncia de caracteres). @var{GEOMETRY} @'{e} uma
+sequ@^{e}ncia de caracteres fornecendo a especifica@,{c}@~{a}o de um objeto geom@'{e}trico OOGL.  Se @var{GEOMETRY} for
+omitido, o novo objeto @'{e} fornecido como sendo um objeto geom@'{e}trico vazio.  Se um objeto com
+o nome fornecido j@'{a} existir, ao novo objeto @'{e} fornecido um nome @'{u}nico.
 @end table
 
 @node new-reset, NeXT, new-geometry, GCL Reference
@@ -7838,7 +7837,7 @@ that name already exists, the new objeto is given a unique name.
 @findex new-reset
 @table @code
 @item (new-reset)
-Equivalent to @code{(progn (new-center ALLGEOMS)(new-center ALLCAMS))}.
+Equivalente a @code{(progn (new-center ALLGEOMS)(new-center ALLCAMS))}.
 @end table
 
 @node NeXT, normalization, new-reset, GCL Reference
@@ -7846,8 +7845,8 @@ Equivalent to @code{(progn (new-center ALLGEOMS)(new-center ALLCAMS))}.
 @findex NeXT
 @table @code
 @item (NeXT)
-Returns @code{t} if running on a NeXT, @code{nil} if not. A relict from
-ancient work-station year.
+Retorna @code{t} se executando sobre um NeXT, @code{nil} se n@~{a}o estiver rodando sobre um NeXT. Uma rel@'{i}quia de
+do ano da esta@,{c}@~{a}o de trabalho NeXT.
 @end table
 
 @node normalization, not, NeXT, GCL Reference
@@ -7855,27 +7854,27 @@ ancient work-station year.
 @findex normalization
 @table @code
 @item (normalization GEOM-ID @{each|none|all|keep@})
-Set the normalization status of GEOM-ID.
+Ajusta a situa@,{c}@~{a}o atual da normaliza@,{c}@~{a}o de GEOM-ID.
 @table @code
 @item none
-suppresses all normalization.
+suprime toda normaliza@,{c}@~{a}o.
 @item each
-normalizes the objeto's bounding box to fit into the unit
-sphere, with the center of its bounding box translated
-to the origin.  The box is scaled such that its long diagonal,
-sqrt((xmax-xmin)^2 + (ymax-ymin)^2 + (zmax-zmin)^2), is 2.
+normaliza a caixa associada ao objeto para ajustar-se dentro da esfera
+unit@'{a}ria, com o centro de sua caixa associada transladado
+para a or@'{i}gem.  A caixa @'{e} alterada proprocionalmente de forma que sua diagonal maior,
+sqrt((xmax-xmin)^2 + (ymax-ymin)^2 + (zmax-zmin)^2), seja 2.
 @item all
-resembles @code{each}, except when an objeto is changing
-(e.g. when its objeto geom@'{e}trico is being changed by an external program).
-Then, @code{each} tightly fits the bounding box around the
-objeto whenever it changes and normalizes accordingly,
-while @code{all} normalizes the union of all variants do objeto
-and normalizes accordingly.
+assemelha-se a @code{each}, exceto quando um objeto est@'{a} mudando
+(e.g. quando seu objeto geom@'{e}trico est@'{a} sendo modificado por um programa externo).
+Ent@~{a}o, @code{each} precisamente ajusta a caixa associada em torno do
+objeto quando esse objeto muda e faz as normaliza@,{c}@~{o}es de acordo com as mudan@,{c}as,
+enquanto @code{all} normaliza a uni@~{a}o de todas as variantes do objeto
+e normaliza conforme essa uni@~{a}o.
 @item keep
-leaves the current normalization transform unchanged
-when the objeto changes.  It may be useful to apply @code{each} or
-@code{all} normalization apply to the first version of a changing
-objeto to bring it in view, then switch to @code{keep}.
+mant@'{e}m a transforma@,{c}@~{a}o de normaliza@,{c}@~{a}o atual intocada
+quando o objeto muda.  Essa intocabilidade pode ser @'{u}til para aplicar a normaliza@,{c}@~{a}o
+@code{each} ou @code{all} @`{a} primeira vers@~{a}o de um ojeto que est@'{a}
+mudando de forma a trazer esse objeto para o campo de vis@~{a}o, a seguir alternar para @code{keep}.
 @end table
 @end table
 
@@ -7884,8 +7883,8 @@ objeto to bring it in view, then switch to @code{keep}.
 @findex not
 @table @code
 @item (not EXPR)
-Evaluates @code{EXPR}; if @code{EXPR} returns a non-@code{nil} value,
-returns nil, if @code{EXPR} returns @code{nil}, return @code{t}.
+Avalia @code{EXPR}; se @code{EXPR} retornar um valor n@~{a}o-@code{nil},
+o valor de retorno do comando @'{e} nil, se @code{EXPR} retornar @code{nil}, o valor de retorno do comando @'{e} @code{t}.
 @end table
 
 @node or, pick, not, GCL Reference
@@ -7893,9 +7892,9 @@ returns nil, if @code{EXPR} returns @code{nil}, return @code{t}.
 @findex or
 @table @code
 @item (or EXPR1 EXPR2)
-Evaluates @code{EXPR1}; if @code{EXPR1} returns non-@code{nil}, return
-its value, if @code{EXPR1} returns @code{nil}, evaluate @code{EXPR2} and
-return its value.
+Avalia @code{EXPR1}; se @code{EXPR1} retorna n@~{a}o-@code{nil}, o valor de retorno do comando @'{e} o valor de
+@code{EXPR1}, se @code{EXPR1} retornar @code{nil}, a @code{EXPR2} @'{e} avaliada e
+o valor de @code{EXPR2} @'{e} retornado.
 @end table
 
 @node pick, pick-invisible, or, GCL Reference
@@ -7903,50 +7902,50 @@ return its value.
 @findex pick
 @table @code
 @item (pick COORDSYS GEOMID G V E F P VI EI FI)
-The pick command is executed internally in response to pick
-events (right mouse double clique).
+O comando pick @'{e} executado internamente em resposta a eventos
+de sele@,{c}@~{a}o (clique duplo no bot@~{a}o direito do mouse).
 
 @table @var
 @item COORDSYS
-= coordinate system in which coordenadas dos following
-arguments are specified.   This can be:
+= sistema de coordenadas no qual as coordenadas dos seguintes
+argumentos s@~{a}o especificados.  Esse sistema de coordenadas pode ser:
 @table @code
 @item world
-world coord sys
+sistema de coordenadas do objeto mundo
 @item self
-coord sys do picked geom (@var{GEOMID})
+sistema de coordenadas do geom (@var{GEOMID}) selecionado
 @item primitive
-coord sys do actual primitive within the picked geom where the pick
-occurred.
+sistema de coordenadas do primitivo atual dentro do geom selecionado onde a sele@,{c}@~{a}o
+ocorreu.
 @end table
 @item GEOMID
- = id of picked geom
+ = id do geom selecionado
 @item G
- = picked point (actual intersection of pick ray with objeto)
+ = ponto selecionado (intersec@,{c}@~{a}o atual do raio selecionado com o objeto)
 @item V
- = v@'{e}rtice selecionado, if any
+ = v@'{e}rtice selecionado, se houver algum
 @item E
- = picked edge, if any
+ = aresta selecionada, se houver alguma
 @item F
- = picked face
+ = face selecionada
 @item P
- = path to picked primitive [0 ou more]
+ = camainho para o primitivo selecionado [0 ou mais]
 @item VI
- = index of v@'{e}rtice selecionado in primitive
+ = @'{i}ndice do v@'{e}rtice selecionado no primitivo
 @item EI
- = list of indices of endpoints of picked edge, if any
+ = lista de @'{i}ndices de extremidades da aresta selecionada, se houver alguma
 @item FI
- = index of picked face
+ = @'{i}ndice da face selecionada
 @end table
 
-External modules can find out about pick events by registering
-interest in calls to @code{pick} via the @code{interest} command.
+M@'{o}dulos externos podem receber informa@,{c}@~{o}es de eventos de sele@,{c}@~{a}o por meio do registro do
+interesse em chamadas a @code{pick} por meio do comando @code{interest}.
 
-In the ND-viewing context the co-ordinates are actually ND-points. They
-correspond to the 3D points da pick relative to the sub-space
-defined by the viewport da c@^{a}mera where the pick occurred. The
-co-ordinates are then padded with zeroes and transformed back to the
-co-ordinate system defined by @var{COORDSYS}.
+No contexto de visualiza@,{c}@~{o}es de v@'{a}rias dimens@~{o}es as coordenadas s@~{a}o atualmente pontos de v@'{a}rias dimens@~{o}es. Eles
+correspondem a pontos tridimencionais da sele@,{c}@~{a}o relativa ao subespa@,{c}o
+definido pela janela de visualiza@,{c}@~{a}o da c@^{a}mera onde a sele@,{c}@~{a}o ocorreu. As
+coordenadas s@~{a}o ent@~{a}o preenchidas com zeros e transformadas de volta para o
+sistema de coordenadas definido por @var{COORDSYS}.
 @end table
 
 @node pick-invisible, pickable, pick, GCL Reference
@@ -7954,9 +7953,9 @@ co-ordinate system defined by @var{COORDSYS}.
 @findex pick-invisible
 @table @code
 @item (pick-invisible [yes|no])
-Selects se picks should be sensitive to objetos whose apar@^{e}ncia
-makes them invisible; default yes.
-With no arguments, returns current status.
+Escolhe se sele@,{c}@~{o}es devem ser sens@'{i}veis a objetos cuja apar@^{e}ncia
+faz com que fiquem invis@'{i}veis; o padr@~{a}o @'{e} yes.
+Sem argumentos, retorna a situa@,{c}@~{a}o/valor atual.
 @end table
 
 @node pickable, position, pick-invisible, GCL Reference
@@ -7964,35 +7963,35 @@ With no arguments, returns current status.
 @findex pickable
 @table @code
 @item (pickable GEOM-ID @{yes|no@})
-Say se ou not GEOM-ID is included in the pool of objetos
-that could be returned from the pick command.
+Informa se GEOM-ID est@'{a} inclu@'{i}do ou n@~{a}o no conjunto de objetos
+que podem ser retornados a partir do comando pick.
 @end table
 
 @node position, position-at, pickable, GCL Reference
 @subsection position
 @findex position
 @table @code
-@item (position objectID otherID)
-Set the transform of objectID to that of otherID.
+@item (position objetoID outroID)
+Ajusta a transforma@,{c}@~{a}o de objetoID para aquele de outroID.
 @end table
 
 @node position-at, position-toward, position, GCL Reference
 @subsection position-at
 @findex position-at
 @table @code
-@item (position-at objectID otherID [center | origin])
-Translate objectID to the center da bounding box ou the 
-origin do coordinate system of otherID (parallel translation).
-Default is center.
+@item (position-at objetoID outroID [center | origin])
+Faz a transla@,{c}@~{a}o de objetoID para o centro da caixa associada ou para
+a or@'{i}gem do sistema de coordenadas de outroID (transla@,{c}@~{a}o paralela).
+O padr@~{a}o @'{e} center.
 @end table
 
 @node position-toward, process-events, position-at, GCL Reference
 @subsection position-toward
 @findex position-toward
 @table @code
-@item (position-toward objectID otherID [center | origin])
-Rotate objectID so that the center da bounding box
-or the origin do coordinate system of the otherID
+@item (position-toward objetoID outroID [center | origin])
+Rotaciona objetoID de forma que o centro da caixa associada
+ou a or@'{i}gem do coordinate system of the outroID
 lies on the positive z-axis do first objeto.  Default is
 the center da bounding box.
 @end table
@@ -8409,17 +8408,17 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 @subsection transform
 @findex transform
 @table @code
-@item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
+@item (transform objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
 Apply a motion (rotation, translation, scaling) to object
-@code{objectID}; that is, construct and concatenate a transformation
-matrix with objectID's transform The 3 IDs involved are the object that
+@code{objetoID}; that is, construct and concatenate a transformation
+matrix with objetoID's transform The 3 IDs involved are the object that
 moves, the center of motion, and the frame of reference in which to
 apply the motion.  The center is easiest understood for rotations: if
-centerID is the same as objectID then it will spin around its own axes;
+centerID is the same as objetoID then it will spin around its own axes;
 otherwise the moving object will orbit the center object. There is the
 special keyword @code{bbox-center} which may be used for
 @code{centerID}. As a result the motion will be relative to the center
-of the bounding box of @code{objectID}. Normally frameID, in whose
+of the bounding box of @code{objetoID}. Normally frameID, in whose
 coordinate system the (mouse) motions are interpreted, is @code{focus},
 the current camera.  Translations can be scaled proportional to the
 distance between the target and the center. Support for spherical and
@@ -8441,10 +8440,10 @@ applied immediately.
 @subsection transform-incr
 @findex transform-incr
 @table @code
-@item (transform-incr objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
+@item (transform-incr objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
 Apply continuing movimento: construct a matriz de transforma@,{c}@~{a}o and
-concatenate it with the current transform of objectID every
-refresh (sets objectID's incremental transform). Same syntax
+concatenate it with the current transform of objetoID every
+refresh (sets objetoID's incremental transform). Same syntax
 as transform.  If optional @code{dt} argumento is present,
 the objeto is moved at each time step such that its average movimento
 equals one instance do movimento per @code{dt} seconds.  E.g.
@@ -8456,8 +8455,8 @@ rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
 @subsection transform-set
 @findex transform-set
 @table @code
-@item (transform-set objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])
-Set objectID's transform to the constructed transform.
+@item (transform-set objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])
+Set objetoID's transform to the constructed transform.
 Same syntax as transform.
 @end table
 
@@ -8721,14 +8720,14 @@ use.
 @subsection write
 @findex write
 @table @code
-@item (write @{command|geometry|camera|transform|ntransform|window|bbox@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|otherID])
+@item (write @{command|geometry|camera|transform|ntransform|window|bbox@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|outroID])
 write description of ID in given format to NOMEDOARQUIVO.  Last
 parameter chooses coordinate system for geometry & transform:
 self: just the objeto, no transforma@,{c}@~{a}o ou apar@^{e}ncia (objeto geom@'{e}trico only)
 world: the objeto as positioned within the World.
 universe: objeto's position in universal coordenadas;
 includes Worldtransform
-other ID: the objeto transformed to otherID's coordinate system.
+other ID: the objeto transformed to o sistema de coordenadas de outroID.
 
 A filename of @code{-} is a special case: data are written to the stream
 from which the 'write' command was read.  For external modules, the data
