@@ -1929,6 +1929,42 @@ which the objects themselves do not specify.
 By default, @emph{Override} is enabled.  This button applies to all objects,
 and to all appearance-related panels.
 
+Normalization is a kind of scaling; Geomview can scale an object so that
+it fits within a certain region.  The main point of normalization is to
+allow you to easily view all of an object without having to worry about
+how big it is.  We are gradually replacing Geomview's normalization
+feature with more robust camera positioning features.  In general, the
+best way to make sure you are seeing all of an object is to use the
+@emph{Look At} button on the @emph{Tools} panel.  Normalization may
+be completely replaced by this and other features in a future version of
+Geomview.
+
+Normalization is a property that applies to each geom separately.  The
+@emph{NORMALIZE GEOMETRY} browser affects the normalization property
+of target geom.  If the target geom is "World", it affects all geoms.
+
+@table @emph
+
+@item None
+Do no normalization.
+
+@item Individual
+Normalize this geom to fit within a unit sphere.
+
+@item Sequence
+This resembles "Individual", except when an object is changing.  Then,
+"Individual" tightly fits the bounding box around the object whenever it
+changes and normalizes accordingly, while "Sequence" normalizes the
+union of all variants of the object and normalizes accordingly.
+
+@item Keep
+This leaves the current normalization transform unchanged when the
+object changes.  It may be useful to apply "Individual" or "Sequence"
+normalization to the first version of a changing object to bring
+it in view, then switch to "Keep".
+
+@end table
+
 @comment ----------------------------------------------------------------
 @node Materials Panel, Lighting Panel, Appearance Panel, Appearance
 @subsection The Materials Panel
@@ -2356,43 +2392,6 @@ and several buttons affecting motion style.
 @caption{The Obscure Panel.}
 @end float
 @end ifset
-[Move this.]
-Normalization is a kind of scaling; Geomview can scale an object so that
-it fits within a certain region.  The main point of normalization is to
-allow you to easily view all of an object without having to worry about
-how big it is.  We are gradually replacing Geomview's normalization
-feature with more robust camera positioning features.  In general, the
-best way to make sure you are seeing all of an object is to use the
-@emph{Look At} button on the @emph{Tools} panel.  Normalization may
-be completely replaced by this and other features in a future version of
-Geomview.
-
-Normalization is a property that applies to each geom separately.  The
-@emph{NORMALIZE GEOMETRY} browser affects the normalization property
-of target geom.  If the target geom is "World", it affects all geoms.
-
-@table @emph
-
-@item None
-Do no normalization.
-
-@item Individual
-Normalize this geom to fit within a unit sphere.
-
-@item Sequence
-This resembles "Individual", except when an object is changing.  Then,
-"Individual" tightly fits the bounding box around the object whenever it
-changes and normalizes accordingly, while "Sequence" normalizes the
-union of all variants of the object and normalizes accordingly.
-
-@item Keep
-This leaves the current normalization transform unchanged when the
-object changes.  It may be useful to apply "Individual" or "Sequence"
-normalization to the first version of a changing object to bring
-it in view, then switch to "Keep".
-
-@end table
-
 @comment ================================================================
 @node Keyboard Shortcuts,  , Commands, Interaction
 @section Keyboard Shortcuts
