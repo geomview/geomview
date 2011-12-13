@@ -2392,6 +2392,7 @@ and several buttons affecting motion style.
 @caption{The Obscure Panel.}
 @end float
 @end ifset
+
 @comment ================================================================
 @node Keyboard Shortcuts,  , Commands, Interaction
 @section Keyboard Shortcuts
