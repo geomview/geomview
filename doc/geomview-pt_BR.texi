@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.75/Thu Sep 29 06:50:25 2011//
+@c based on /geomview.texi/1.77/Tue Dec 13 20:44:15 2011//
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -1961,6 +1961,42 @@ que n@~{a}o forem especificadas nos objetos em si mesmos n@~{a}o especificarem.
 Por padr@~{a}o, @emph{Override} est@'{a} habilitado.  Esse bot@~{a}o aplica-se a todos os objetos,
 e a todos os pain@'{e}is relacionados a apar@^{e}ncia.
 
+Normaliza@,{c}@~{a}o @'{e} um tipo de homotetia; Geomview pode alterar o tamanho de um objeto proporcionalmente de forma que
+esse objeto se ajuste dentro de uma certa regi@~{a}o.  O objetivo principal da normaliza@,{c}@~{a}o @'{e}
+permitir a voc@^{e} facilmente visualizar um objeto sem ter que se preocupar com
+o tamanho do mesmo.  Estamos substituindo gradualmente o recurso de normaliza@,{c}@~{a}o
+do Geomview por recursos mais robustos de posicionamento de c@^{a}mera.  Em geral, o
+melhor caminho de garantir que voc@^{e} est@'{a} vendo tudo de um objeto @'{e} usar o
+bot@~{a}o @emph{Look At} do painel de ferramentas (@emph{Tools}).  A normaliza@,{c}@~{a}o pode
+ser completamente substitu@'{i}da por esse bot@~{a}o do painel de ferramentas e por outros recursos em uma vers@~{a}o futura do
+Geomview.
+
+Normaliza@,{c}@~{a}o @'{e} uma propriedade que aplica-se a cada geom separadamente.  o
+navegador @emph{NORMALIZE GEOMETRY} afeta a propriedade de normaliza@,{c}@~{a}o
+do geom alvo.  Se o geom alvo for "World", a normaliza@,{c}@~{a}o afetar@'{a} todos os geoms.
+
+@table @emph
+
+@item None
+Sem normaliza@,{c}@~{a}o.
+
+@item Individual
+Normaliza o geom atual para ajustar-se dentro de uma esfera unit@'{a}ria.
+
+@item Sequence
+Assemelha-se a "Individual", exceto quando um objeto est@'{a} mudando.  Ent@~{a}o,
+"Individual" com muita precis@~{a}o ajusta a caixa associada em torno do objeto quando esse objeto
+modifica-se e normaliza-se adequadamente, enquanto "Sequence" normaliza a
+uni@~{a}o de todas as variantes do objeto e normaliza ade-quadamente.
+
+@item Keep
+Mantem a transforma@,{c}@~{a}o de normaliza@,{c}@~{a}o inalterada quando o
+objeto modifica-se.  @emph{Keep} pode ser @'{u}til para aplicar a normaliza@,{c}@~{a}o "Individual" ou a normaliza@,{c}@~{a}o
+"Sequence" @`{a} primeira vers@~{a}o de um objeto que se modifica para trazer
+esse mesmo objeto ao campo de vis@~{a}o.
+
+@end table
+
 @comment ----------------------------------------------------------------
 @node Painel de Materiais, Painel de Iluminacao, Painel de Aparencia, Aparencia
 @subsection O Painel de Materiais
@@ -2388,42 +2424,6 @@ e muitos bot@~{o}es que afetam estilo de movimento.
 @caption{O painel de Comandos.}
 @end float
 @end ifset
-[Move this.]
-Normaliza@,{c}@~{a}o @'{e} um tipo de homotetia; Geomview pode alterar o tamanho de um objeto proporcionalmente de forma que
-esse objeto se ajuste dentro de uma certa regi@~{a}o.  O objetivo principal da normaliza@,{c}@~{a}o @'{e}
-permitir a voc@^{e} facilmente visualizar um objeto sem ter que se preocupar com
-o tamanho do mesmo.  Estamos substituindo gradualmente o recurso de normaliza@,{c}@~{a}o
-do Geomview por recursos mais robustos de posicionamento de c@^{a}mera.  Em geral, o
-melhor caminho de garantir que voc@^{e} est@'{a} vendo tudo de um objeto @'{e} usar o
-bot@~{a}o @emph{Look At} do painel de ferramentas (@emph{Tools}).  A normaliza@,{c}@~{a}o pode
-ser completamente substitu@'{i}da por esse bot@~{a}o do painel de ferramentas e por outros recursos em uma vers@~{a}o futura do
-Geomview.
-
-Normaliza@,{c}@~{a}o @'{e} uma propriedade que aplica-se a cada geom separadamente.  o
-navegador @emph{NORMALIZE GEOMETRY} afeta a propriedade de normaliza@,{c}@~{a}o
-do geom alvo.  Se o geom alvo for "World", a normaliza@,{c}@~{a}o afetar@'{a} todos os geoms.
-
-@table @emph
-
-@item None
-Sem normaliza@,{c}@~{a}o.
-
-@item Individual
-Normaliza o geom atual para ajustar-se dentro de uma esfera unit@'{a}ria.
-
-@item Sequence
-Assemelha-se a "Individual", exceto quando um objeto est@'{a} mudando.  Ent@~{a}o,
-"Individual" com muita precis@~{a}o ajusta a caixa associada em torno do objeto quando esse objeto
-modifica-se e normaliza-se adequadamente, enquanto "Sequence" normaliza a
-uni@~{a}o de todas as variantes do objeto e normaliza ade-quadamente.
-
-@item Keep
-Mantem a transforma@,{c}@~{a}o de normaliza@,{c}@~{a}o inalterada quando o
-objeto modifica-se.  @emph{Keep} pode ser @'{u}til para aplicar a normaliza@,{c}@~{a}o "Individual" ou a normaliza@,{c}@~{a}o
-"Sequence" @`{a} primeira vers@~{a}o de um objeto que se modifica para trazer
-esse mesmo objeto ao campo de vis@~{a}o.
-
-@end table
 
 @comment ================================================================
 @node Atalhos de Teclado,  , Comandos, Interacao
