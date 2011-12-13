@@ -2378,14 +2378,14 @@ campo de texto como um comando.
 @end float
 
 @ifset forms
-O painel obscuro (@emph{Obscure}) @'{e} para coisas relativamente obscuras que n@~{a}o
+O painel Obscuro (@emph{Obscure}) @'{e} para coisas relativamente obscuras que n@~{a}o
 pertencem realmente a qualquer dos outros paine@'{e}is.  Na atual vers@~{a}o do
 Geomview, o painel obscuro (@emph{Obscure}) inclui o navegador 
 @emph{NORMALIZE GEOMETRY}, que controla o tipo de normaliza@,{c}@~{a}o de geometria que Geomview faz,
 e muitos bot@~{o}es que afetam estilo de movimento.
 @float Figure,figobscurepanel
 @image{figs/obscure}
-@caption{O painel Obscuro.}
+@caption{O painel de Comandos.}
 @end float
 @end ifset
 [Move this.]
@@ -2415,7 +2415,7 @@ Normaliza o geom atual para ajustar-se dentro de uma esfera unit@'{a}ria.
 Assemelha-se a "Individual", exceto quando um objeto est@'{a} mudando.  Ent@~{a}o,
 "Individual" com muita precis@~{a}o ajusta a caixa associada em torno do objeto quando esse objeto
 modifica-se e normaliza-se adequadamente, enquanto "Sequence" normaliza a
-uni@~{a}o de todas as variantes do objeto e normaliza adequadamente.
+uni@~{a}o de todas as variantes do objeto e normaliza ade-quadamente.
 
 @item Keep
 Mantem a transforma@,{c}@~{a}o de normaliza@,{c}@~{a}o inalterada quando o
@@ -2435,11 +2435,11 @@ sequ@^{e}ncia de teclas usando o teclado.  Isso @'{e} @'{u}til para usu@'{a}rios
 forem familiarizados com as capacidades do Geomview e que queiram trabalhar rapidamente
 sem ter montes de pain@'{e}is confundindo a tela.
 Teclas de atalho comumente s@~{a}o indicadas entre colch@^{e}tes ([ ]) pr@'{o}ximo
-ao item correspondente em um pain@'{e}l.  Por exemplo, a tecla de atalho
+ao item correspondente em um painel.  Por exemplo, a tecla de atalho
 para o modo de rota@,{c}@~{a}o (@emph{Rotate}) @'{e} 'r'; isso @'{e} indicado por "[r]" aparecendo
 antes da palavra "Rotate" no navegador @emph{MOTION MODE}.  Para
 utilizar essa tecla de atalho apenas pressione a tecla @kbd{r} enquanto o cursor do
-mouse estiver sobre qualqer janela do Geomview.  Voc@^{e} n@~{a}o precisa pressionar a tecla @kbd{@key{Enter}}
+mouse estiver sobre qualquer janela do Geomview.  Voc@^{e} n@~{a}o precisa pressionar a tecla @kbd{@key{Enter}}
 ou teclas de @kbd{@key{SPACE}}.
 
 Alguns atalhos consistem de mais que uma tecla.  Nesses casos
@@ -2451,10 +2451,10 @@ inv@'{a}lida como de atalho, por exemplo a barra de espa@,{c}o.
 Comandos de teclado aplicam-se enquanto o cursor estiver em qualquer janela de c@^{a}mera e
 na maioria dos pain@'{e}is de controle.
 
-Muitas teclas de atalho permitem argumentos num@'{e}ricos que voc@^{e} digitarcomo um
+Muitas teclas de atalho permitem argumentos num@'{e}ricos que voc@^{e} digitar como um
 prefixo a tecla(s) de comando.  Por exemplo, a tecla de atalho para
 @emph{Near clip} no painel de c@^{a}mera @'{e} @kbd{v n}.  Para escolher o pr@'{o}ximo
-plano de corte para @samp{0.5}, digite @kbd{0.5vn}.  Comandos que n@~{a}o pegam um
+plano de corte para @samp{0.5}, digite @kbd{0.5vn}.  Comandos que n@~{a}o recebem um
 prefixo num@'{e}rico modificam ou mudam para zero o valor atual.
 
 A maioria dos comando permitem um dos seguintes prefixos de sele@,{c}@~{a}o.  Se nenhum objeto for
@@ -2488,7 +2488,7 @@ mostrar o estado da tecla de atalho atual.
 
 Para adi@,{c}@~{a}o de teclas de atalho ao painel de comandos, existe
 tamb@'{e}m um atalho para selecionar um objeto alvo: digite o nome curto do
-objeto seguido por @kbd{p}.  Por exemplo, para selecionar o select objeto @emph{g3},
+objeto seguido por @kbd{p}.  Por exemplo, para selecionar o objeto @emph{g3},
 digite @kbd{g 3 p}.  Essa forma funciona somente com nomes curtos --- aqueles
 que aparecem entre colch@^{e}tes ([ ]) no navegador de alvos (@emph{Targets}) do
 painel principal @emph{Main}.
@@ -2496,7 +2496,7 @@ painel principal @emph{Main}.
 Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
 
 @table @asis
-@item Draw
+@item Desenho
     @table @kbd
     @item af
     Faces
@@ -2507,7 +2507,7 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
     @item ab
     Caixas Associadas
     @item aV
-    Vectores
+    Vetores
     @end table
 @item Tonalidade
     @table @kbd
@@ -2527,7 +2527,7 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
 @item Outro
     @table @kbd
     @item av
-    vira ass normais pelo avesso: sempre visualizador de face
+    vira as normais pelo avesso: sempre visualizador de face
     @item #aw
     Espessura da linha (em pixels)
     @item aC
@@ -2726,7 +2726,7 @@ do Geomview.
 A maioria dos formatos de arquivo de objeto OOGL s@~{a}o do formato livre ASCII --- qualquer quantidade de
 espa@,{c}os em branco (caracteres n@~{a}o imprim@'{i}veis, tabula@,{c}@~{o}es, caractere de nova linha) pode aparecer entre os sinalizadores (n@'{u}meros,
 palavras chave, etc.).  Paradas de linha s@~{a}o na maioria das vezes sempre insignificantes, com
-algumas execess@~{o}es devidamente ressaltadas.  Coment@'{a}rios come@,{c}am com # e continuam at@'{e}
+algumas excess@~{o}es devidamente ressaltadas.  Coment@'{a}rios come@,{c}am com # e continuam at@'{e}
 o fim da linha; esses coment@'{a}rios s@~{a}o permitidos em qualquer lugar onde um caractere de nova linha for permitido tamb@'{e}m.
 
 Formatos bin@'{a}rios s@~{a}o tamb@'{e}m definidos para muitos objetos; Veja @ref{Formato
@@ -2751,7 +2751,7 @@ Quando objetos OOGL s@~{a}o lidos de arquivos localizados em disco, a biblioteca
 sufixo do arquivo para supor o tipo de arquivo.
 
 Se o sufixo for desconhecido, ou estiver aus@^{e}nte (e.g. para um
-objeto sendo lido a partir da sa@'{i}da de um outro comando diretamente, ou lido diretamente de dentro de um outro objeto objeto OOGL), todos
+objeto sendo lido a partir da sa@'{i}da de um outro comando diretamente, ou lido diretamente de dentro de um outro objeto OOGL), todos
 os tipos conhecidos de objeto s@~{a}o tentados por sua vez at@'{e} que se aceite os dados como
 v@'{a}lidos.
 
@@ -2798,8 +2798,8 @@ opcionalmente seguida por
 
 (duas ou tr@^{e}s valores coordenados de textura).
 
-Valores s@~{a}o separados por espa@,{c}os em branco, e paradas de linha
-s@~{a}o inmateriais.
+Valores s@~{a}o separados por espa@,{c}os em branco, e quebras de linha
+s@~{a}o imateriais.
 
 Letras na palavra chave de cabe@,{c}alho do objeto devem aparecer numa ordem espec@'{i}fica;
 isto @'{e} a ordem reversa na qual os dados s@~{a}o fornecidos para cada v@'{e}rtice.
@@ -2858,14 +2858,14 @@ est@'{a} na dire@,{c}@~{a}o dP/du multiplicado vetorialmente por dP/dv.
 
 @comment ----------------------------------------------------------------
 @node Matrizes de transformacao, Matrizes de transformacao ND, Direcoes de superficies normais, Convencoes
-@subsection Matrizes de transforma@'{c}@~{a}o
+@subsection Matrizes de transforma@,{c}@~{a}o
 
 Alguns objetos incorporam matrizes quadradas reais de ordem 4 para transforma@,{c}@~{o}es sobre
 objetos homog@^{e}neos.  Essas matrizes atuam atrav@'{e}s de multiplica@,{c}@~{a}o @`{a} direita de
 vetores.  Dessa forma, se p for um vetor linha de 4 elementos representando coordenadas
 homog@^{e}neas de um ponto no objeto OOGL, e A for a matrix 4x4, ent@~{a}o
-o ponto resultante da transforma@,{c}@~{a}o @'{e} p' = p A.  Essaconven@,{c}@~{a}o matricial @'{e} comum em
-computa@,{c}@~{a}o gr@'{a}fica; it's the transpose daquela muitas vezes usada em matem@'{a}tica,
+o ponto resultante da transforma@,{c}@~{a}o @'{e} p' = p A.  Essa conven@,{c}@~{a}o matricial @'{e} comum em
+computa@,{c}@~{a}o gr@'{a}fica; @'{e} a matriz transposta daquela muitas vezes usada em matem@'{a}tica,
 onde pontos s@~{a}o vetores coluna multiplicados @`{a} direita pelas matrizes.
 
 
@@ -2875,7 +2875,7 @@ d@'{e}cimo segundo e d@'{e}cimo sexto elementos) s@~{a}o tipicamente 0, 0, 0, e 
 
 @comment ----------------------------------------------------------------
 @node Matrizes de transformacao ND, Formato binario, Matrizes de transformacao, Convencoes
-@subsection Matrizes de transforma@'{c}@~{a}o ND
+@subsection Matrizes de transforma@,{c}@~{a}o ND
 
 No contexto do espa@,{c}o @var{N}-dimensional (@var{N} > 3) alguns objetos
 incorporam @var{(N+1)}x@var{(N+1)} matrizes reais para transforma@,{c}@~{o}es sobre objetos
@@ -2912,7 +2912,7 @@ o formato nativo para tipos de dado int e tipos de dado float em sistemas do tip
 Irises, al@'{e}m de muitos outros sistemas.
 
 Formatos de dados bin@'{a}rios assemelham-se aos formatos correspondentes em ASCII, com tipos de dado "int"
-e tipos de dado "float" nos lugares que voc@^{e} est@'{a} acostumado a encontrar.  Existe alumas excess@~{o}es
+e tipos de dado "float" nos lugares que voc@^{e} est@'{a} acostumado a encontrar.  Existe algumas excess@~{o}es
 todavia, especificamente dos formatos d arquivo @code{QUAD}, @code{OFF} e
 @code{COMMENT}.  Detalhes s@~{a}o fornecidos no arquivo individual das descri@,{c}@~{o}es do
 formato espec@'{i}fico.  Veja em @ref{QUAD}, @ref{OFF}, e em @xref{COMMENT}.
@@ -2932,7 +2932,7 @@ LIST
 Note que dados ASCII continuam seguindo imediatamente o @'{u}ltimo byte dos
 dados bin@'{a}rios.
 
-Naturalmente, @'{e} imposs@'{i}vel incluit coment@'{a}rios dentro de um objeto em formato
+Naturalmente, @'{e} imposs@'{i}vel incluir coment@'{a}rios dentro de um objeto em formato
 bin@'{a}rio OOGL, todavia coment@'{a}rios podem aparecer no cabe@,{c}alho antes do in@'{i}cio dos
 dados bin@'{a}rios.
 
@@ -2942,8 +2942,8 @@ dados bin@'{a}rios.
 
 Alguns tipos de objeto OOGL (@code{LIST}, @code{INST}) permitem refer@^{e}ncias a outros
 objetos OOGL, que podem aparecer literalmente no fluxo de dados, serem chamados
-a partir de arquivos em disco, ou serem comunicados a aprtir de outro lugar via objetos
-nomeados.  Comandos GCL tamb;em aceitam objetos geom@'{e}tricos atrav@'{e}s desses meios citados.
+a partir de arquivos em disco, ou serem comunicados a partir de outro lugar via objetos
+nomeados.  Comandos GCL tamb@'{e}m aceitam objetos geom@'{e}tricos atrav@'{e}s desses meios citados.
 
 A sintaxe gen@'{e}rica @'{e}
 
@@ -2958,10 +2958,10 @@ A sintaxe gen@'{e}rica @'{e}
 @end example
 
 onde os itens entre aspas duplas s@~{a}o sequ@^{e}ncias de caracteres literais (que aparecem sem as
-aspas), os itens entre colch@^{e}tes ([]) s@~{a}o opcionais, e a barra vertical (|) denotes alternatives.
+aspas), os itens entre colch@^{e}tes ([]) s@~{a}o opcionais, e a barra vertical (|) denota alternativas.
 Chaves, quando estiverem presentes, apenas indicam coincid@^{e}ncia; o par mais externo de
 chaves @'{e} geralmente requerido quando o objeto estiver em um contexto maior,
-e.g. quando for aprte de um objeto maior ou inclu@'{i}do em um fluxo de comando do
+e.g. quando for parte de um objeto maior ou inclu@'{i}do em um fluxo de comando do
 Geomview.
 
 Por exemplo, cada uma das tr@^{e}s linhas seguintes:
@@ -2976,7 +2976,7 @@ Por exemplo, cada uma das tr@^{e}s linhas seguintes:
 @end example
 @noindent
 @'{e} um bojeto OOGL v@'{a}lido.  O @'{u}ltimo exemplo @'{e} v@'{a}lido somente quando estiver
-delimitado de forma clara como residindo de forma clara no seu pr@'{o}prio arquivo em disco.
+delimitado precisamente e residindo precisamente no seu pr@'{o}prio arquivo em disco.
 
 A constru@,{c}@~{a}o com ":" permite refer@^{e}ncia a s@'{i}mbolos, criados com
 @code{define}. Um valor inicial de um s@'{i}mbolo @'{e} um objeto nulo.  Quando um
@@ -3066,7 +3066,7 @@ appearance @{
                       # n@~{a}o (necessariamente) resulta em cores corretas
                       # no Geomview, mas os valores de alfa s@~{a}o usados
                       # em instant@^{a}neos RenderMan.
-                      # As papavras chave permitidas s@~{a}o ``screendoor'' 
+                      # As palavras chave permitidas s@~{a}o ``screendoor'' 
                       # (mascarando pixels de sa@'{i}da por meio de um
                       # modelo de ponteamento), ``blending'' para
                       # alpha-blending ( harmoniza@,{c}@~{a}o de alfa)
@@ -3231,7 +3231,7 @@ valores padr@~{a}o para a maioria dos par@^{a}metros; seu painel de controle ins
 apar@^{e}ncias que fornecem novos valores para uns poucos atributos; a geometria
 fornecida pelo usu@'{a}rio pode tamb@'{e}m conter apar@^{e}ncias.
 
-A regra geral @'{e} que the child's appearance (aquelas fechadas para as
+A regra geral @'{e} que a apar@^{e}ncia dos filhos (aquelas fechadas para as
 primitivas geom@'{e}tricas) vencem.  Adicionalmente, controles de apar@^{e}ncia com
 situa@,{c}@~{a}o atual em sobrescrever ("override") (e.g. @code{*+face ou material @{ *diffuse 1 1 0 @}})
 vencem sobre as outras que estiverem sem o atributo de sobrescrever.
@@ -3290,7 +3290,7 @@ image @{ <especifica@,{c}@~{a}o de imagem> (@ref{image, Objetos de imagem}) @}
   Veja @ref{image, Objetos de imagem}, para a defini@,{c}@~{a}o atual de
   objetos de imagem. O canal usado por alfa @'{e} somente interpretado
   como m@'{a}scara: onde a m@'{a}cara @'{e} zero, pixels s@~{a}o simplesmente
-  n@~{a}o desenhados. Uma exce@,{c}@~{a}o @'{e} o caso onde @emph{apply}
+  omitidos. Uma exce@,{c}@~{a}o @'{e} o caso onde @emph{apply}
   @'{e} igual a @emph{modulate} e a transluc@^{e}ncia est@'{a} habilitada:
   nesse caso o valor de alfa resultante @'{e} o resultado da
   multiplica@,{c}@~{a}o da cor da superf@'{i}cie pelo valor de alfa do
@@ -3303,12 +3303,12 @@ alphafile nomearquivo
   @ref{image, Objetos de imagem}.  O material documentado aqui pode
   ainda funcionar apesar disso}
 
-  Especifica arquivo(s0 de imagem contendo a textura.
+  Especifica arquivos de imagem contendo a textura.
        
   A palavra chave @emph{file} especifica um arquivo com informa@,{c}@~{o}es de cor
   ou de brilho; @emph{alphafile} se presente, especifica uma m@'{a}scara de
   transpar@^{e}ncia ("alpha"); onde a m@'{a}scara for zero, pixels simplesmente
-  n@~{a}o s@~{a}o desenhados.  Muitos formatos de arquivo de imagem est@~{a}o
+  s@~{a}o omitidos.  Muitos formatos de arquivo de imagem est@~{a}o
   dispon@'{i}veis; o tipo de arquivo deve ser indicado pelos @'{u}ltmos poucos
   caracteres do nome do arquivo:
     .ppm ou .ppm.Z ou .ppm.gz  24-bit 3-color imagem no formato PPM
@@ -3326,7 +3326,7 @@ alphafile nomearquivo
   Se uma imagem @code{alphafile} for fornecida, essa imagem deve ser do mesmo
   tamanho que a imagem @code{file}.
 
-  @emph{Obejetos imagem fornecem um caminho mais flex@'{i}vel para especificar dados de
+  @emph{Objetos imagem fornecem um caminho mais flex@'{i}vel para especificar dados de
   textura. Veja @ref{image, Objetos de imagem}.}
 
 apply   modulate  -ou-  blend  -ou-  decal
@@ -3335,7 +3335,7 @@ apply   modulate  -ou-  blend  -ou-  decal
   superf@'{i}cie pode ter   na aus@^{e}ncia de mapeamento de textura.
 
   Com @code{modulate}, o padr@~{a}o, a cor de textura (ou ilumina@,{c}@~{a}o,
-  se texturado por meio de uma imagem de escala de cinza) @'{e} multiplicada
+  se texturizado por meio de uma imagem de escala de cinza) @'{e} multiplicada
   pela cor da superf@'{i}cie.
 
   Com @code{blend}, textura harmoniza-se entre cor de fundo (@code{background})
@@ -3458,7 +3458,7 @@ As primeiras duas componentes s@~{a}o par@^{a}metros usuais de textura @code{S} 
 @item C
 Cada v@'{e}rtice (veja Vertices acima) inclui uma cor de quatro componentes.
 @item N
-Cada v@'{e}rtice inclui um vetr normal @`{a} superf@'{i}cie.
+Cada v@'{e}rtice inclui um vetor normal @`{a} superf@'{i}cie.
 @item Z
 Dos valores dos 3 eixos coordenados (x , y e z) de v@'{e}rtice somente a componente Z est@'{a} presente; X e
 Y s@~{a}o omitidos, e assumidos ambos como sendo iguais @`{a}s coordenadas de malha (u,v) de forma que X
@@ -3468,7 +3468,7 @@ de malha -- veja acima.
 V@'{e}rtices s@~{a}o quadridimensionais, cada v@'{e}rtice consiste em 4 valores em ponto flutuante.  @code{Z} e
 @code{4} n@~{a}o podem ambos estarem presentes ao mesmo tempo.
 @item u
-A mallha @'{e} ajustada na dire@,{c}@~{a}o u, de forma que o 
+A malha @'{e} ajustada na dire@,{c}@~{a}o u, de forma que o 
 (0,v)'@'{e}simo v@'{e}rtice est@'{a} conectado ao (@var{Nu}-1,v)'@'{e}simo para todo v.
 @item v
 A malha @'{e} ajustada na dire@,{c}@~{a}o v, de forma que o (u,0)'´esimo v@'{e}rtice est@'{a}
@@ -3488,7 +3488,7 @@ Seguindo o cabe@,{c}alho da malha est@~{a}o os inteiros @var{Nu} e @var{Nv},
 as simens@~{o}es da malha.
 
 Ent@~{a}o segue-se @var{Nu}*@var{Nv} v@'{e}rtices, cada um desses v@'{e}rtices na forma fornecida atrav@'{e}s do cabe@,{c}alho.
-Eles aparecem na sequ@^{e}ncia v-maior, i.e. se chamarmos cada v@'{e}rtice de (u,v)
+Eles aparecem na sequ@^{e}ncia v-crescente, i.e. se chamarmos cada v@'{e}rtice de (u,v)
 ent@~{a}o os v@'{e}rtices aparecer@~{a}o na ordem
 
 @example
@@ -3557,7 +3557,7 @@ divisor homog@^{e}neo pode ser @code{w} -- a terceira -- componente).
 @subsection Superf@'{i}cies de Bezier
 
 O sufixo de arquivo convencional para arquivos de superf@'{i}cie de Bezier @'{e} @file{.bbp}
-ou @file{.bez}.  A arquivo com qualquer dos dois sufixos pode conter qualquer dos dois tipos de
+ou @file{.bez}.  O arquivo com qualquer dos dois sufixos pode conter qualquer dos dois tipos de
 parte de superf@'{i}cie de Bezier.
 
 Sintaxe:
@@ -3597,7 +3597,7 @@ A palavra chave de cabe@,{c}alho pode assumir as formas @code{[ST]BBP} ou
 s@~{a}o parte da palara chave.
 
 O prefixo @code{ST} sobre @code{BBP}, ou o sufixo @code{_ST} sobre
-@code{BEZuvn}, indicam que cada peda@,{c}o de sperf@'{i}cie inclui quatro pares de
+@code{BEZuvn}, indicam que cada peda@,{c}o de superf@'{i}cie inclui quatro pares de
 pontos com coordenadas em ponto flutuante no espa@,{c}o de textura, um em cada canto do
 peda@,{c}o.
 
@@ -3605,11 +3605,11 @@ O prefixo @code{C} sobre @code{BEZuvn} indica um peda@,{c}o colorido,
 incluindo quatro conjuntos de quatro componentes com os n@'{u}meros que especificam as cores em ponto flutuante (vermelho, verde,
 azul, e alfa) no intervalo 0..1, uma cor para cada canto.
 
-@var{Nu} E @var{Nv}, cada um @'{e} um simples d@'{i}gito no intervalo 1..6, s@~{a}o os
+@var{Nu} e @var{Nv}, cada um @'{e} um simples d@'{i}gito no intervalo 1..6, s@~{a}o os
 graus do polin@^{o}mio do peda@,{c}o nas dire@,{c}@~{o}es u e v respectivamente. 
 
 @var{Nd} @'{e} o n@'{u}mero de componentes no v@'{e}rtice de cada peda@,{c}o, e deve ser
-ou @code{3} oara 3-D ou @code{4} para coordenadas homog@^{e}neas, isto
+ou @code{3} para 3-D ou @code{4} para coordenadas homog@^{e}neas, isto
 @'{e}, peda@,{c}os racionais.
 
 Peda@,{c}os @code{BBP} s@~{a}o peda@,{c}os bic@'{u}bicos com v@'{e}rtices tridimensionais, de forma que @code{BBP}
@@ -3619,7 +3619,7 @@ Qualquer n@'{u}mero de peda@,{c}os segue o cabe@,{c}alho.  Cada peda@,{c}o compr
 de v@'{e}rtices do peda@,{c}o, seguido por coordenadas opcionais de textura (s,t),
 seguidas por cores opcionais no formato (r,g,b,a).
 
-Cada peda@,{c}o tem (@var{Nu}+1)*(@var{Nv}+1) v@'{e}rtices na ordem v-maior, de forma que se
+Cada peda@,{c}o tem (@var{Nu}+1)*(@var{Nv}+1) v@'{e}rtices na ordem v-crescente, de forma que se
 designarmos um v@'{e}rtice atrav@'{e}s de seus @'{i}ndices (u, v) de controle de ponto a ordem @'{e}
 @example
      (0,0) (1,0) (2,0) @dots{}  (@var{Nu},0)
@@ -3632,7 +3632,7 @@ com cada v@'{e}rtice contendo ou 3 ou 4 n@'{u}meros em ponto flutuantes
 como especificado pelo cabe@,{c}alho.
    
 Se o cabe@,{c}alho chama por coordenadas ST, quatro pares de n@'{u}meros em
-ponto flutuante seguem: o espa@,{c}o de coordenadas de testura para (0,0),
+ponto flutuante seguem: o espa@,{c}o de coordenadas de textura para (0,0),
 (@var{Nu},0), (0,@var{Nv}), e os cantos (@var{Nu},@var{Nv}) do
 peda@,{c}o, respectivamente.
 
@@ -3654,7 +3654,7 @@ Sintaxe:
 [ST][C][N][4][n]OFF	# Palavra chave do cabe@,{c}alho
 [@var{Ndim}]		# Dimens@~{a}o do espa@,{c}o dos v@'{e}rtices, presente somente se nOFF
 			# estiver tamb@'{e}m presente
-@var{NV@'{e}rtices}  @var{NFaces}  @var{NArestas}   # NEdges n@~{a}o @'{e} usado nem checado
+@var{NV@'{e}rtices}  @var{NFaces}  @var{NArestas}   # NArestas n@~{a}o @'{e} usado nem checado
 
 @var{x}[0]  @var{y}[0]  @var{z}[0]	# V@'{e}rtices, possivelmente com normais,
 			# cores, e/ou coordenadas de textura, nessa ordem,
@@ -3692,7 +3692,7 @@ recomendado mas tamb@'{e}m @'{e} opcional, muitos arquivos existentes precisam d
 
 Tr@^{e}s inteiros ASCII seguem a palavra chave @code{OFF}: @var{NV@'{e}rtices}, @var{NFaces}, e
 @var{NArestas}.  Esses s@~{a}o o n@'{u}mero de v@'{e}rtices, faces, e arestas,
-respectivamente.  Atualmente o software n@~{a}o utiliza nem verificak @var{NArestas}; ele
+respectivamente.  Atualmente o software n@~{a}o utiliza nem verifica @var{NArestas}; ele
 n@~{a}o precisa ser correto mas deve estar presente.
 
 As coordenadas do v@'{e}rtice seguem: dimens@~{a}o * @var{Nv@'{e}rtices}
@@ -3742,7 +3742,7 @@ retas normais se algum dos formatos
 @code{COFF}/@code{NOFF}/@code{CNOFF}/@code{STCNOFF}/etc. estiver presente).
 
 Exce@,{c}@~{a}o: cada um dos @'{i}ndices de face do v@'{e}rtice s@~{a}o seguidos por um inteiro
-indicando quantas componentes de cor o acompanhamt.  Componentes de
+indicando quantas componentes de cor o acompanham.  Componentes de
 cor de face devem ser n@'{u}meros em ponto flutuante, n@~{a}o valores inteiros.  Dessa forma uma face triangular
  pouco colorida pode ser representada como
 
@@ -3786,7 +3786,7 @@ Sintaxe:
                                            # flutuante, RGBA)
 @end example
 
-Objetos do tipo @code{VECT} representam listas de linhas poligonais (sequ@^{e}ncia de caacteres que representam
+Objetos do tipo @code{VECT} representam listas de linhas poligonais (sequ@^{e}ncia de caracteres que representam
 segmentos de reta, possivelmente fechados).  Uma linha poligonal degenerada pode ser usada para
 representar um ponto.
 
@@ -3804,7 +3804,7 @@ fornecendo o n@'{u}mero de v@'{e}rtices em cada linha poligonal.  Um n@'{u}mero 
 indica uma linha poligonal fechada; 1 denota ponto composto por um pixel simples.  O somat@'{o}rio
 (dos valores absolutos) de @var{Nv[i]} deve ser igual a @var{NV@'{e}rtices}.
 
-A seguir vem @var{NLinhas} qua s@~{a}o formadas por inteiros de @b{16-bit} @var{Nc[i]}: o n@'{u}mero
+A seguir vem @var{NLinhas} que s@~{a}o formadas por inteiros de @b{16-bit} @var{Nc[i]}: o n@'{u}mero
 de cores em cada linha poligonal. Normalmente um dos tr@^{e}s valores abaixo:
 
 @table @asis
@@ -3833,7 +3833,7 @@ Um formato @var{VECT BINARY} @'{e} aceito; veja @ref{Formato binario}.  O
 formato bin@'{a}rio segue exatamente o formato ASCII, com inteiros de 32-bit
 Big-Endian onde aparecem os n@'{u}meros inteiros comuns, e com inteiros de
 @b{16-bit} Big-Endian onde aparecem inteiros de 16-bit; n@'{u}meros em ponto flutuante de 
-32-bit Big-Endian onde aparecem os valores reais.  @b{BIG FAT NOTE:} Os contadores de v@'{e}rtice
+32-bit Big-Endian onde aparecem os valores reais.  @b{NOTA REALMENTE GRANDE:} Os contadores de v@'{e}rtice
 @var{Nv[i]} e os contadores de cor @var{Nc[i]} s@~{a}o inteiros de @b{16-bit}
 Big-Endian.
 
@@ -3964,13 +3964,13 @@ vis@~{a}o ortogr@'{a}fica extendida do hemisf@'{e}rio @code{+y} sobre ambos, esp
 
 @comment ----------------------------------------------------------------
 @node INST, LIST, SPHERE, Formatos de Arquivo de Objeto
-@subsection INST Files
+@subsection Arquivos do Tipo INST 
 
 O sufixo convencional para um arquivo @code{INST} @'{e} @file{.inst}.
 
 N@~{a}o existe formato INST BINARY.
 
-Um @code{INST} aplica uma transofrma@,{c}@~{a}o 4x4 (ou @var{(N+1)}x@var{(N+1)} no contexto de
+Um @code{INST} aplica uma transforma@,{c}@~{a}o 4x4 (ou @var{(N+1)}x@var{(N+1)} no contexto de
 ND-viewing) a outro objeto OOGL.  Um arquivo do tipo @code{INST} inicia-se com
 @code{INST} seguido de as se@,{c}@~{o}es mostradas adiante que podem vir em qualquer ordem:
 @example
@@ -3999,13 +3999,13 @@ Outra forma de especificar a transforma@,{c}@~{a}o @'{e}
 transforms
     @var{objeto-oogl}
 @end example
-The @var{objeto-oogl} deve ser um objeto @code{TLIST} (lista de
+O @var{objeto-oogl} deve ser um objeto @code{TLIST} (lista de
 transforma@,{c}@~{o}es), ou uma @code{LIST} cujos membros dessa lista s@~{a}o objetos
 @code{TLIST} mais recentes.  Com efeito, a palavra chave @code{transforms} toma uma
 cole@,{c}@~{a}o de matrizes 4x4 e replica o objeto @code{geom}, fazendo
 uma c@'{o}pia para cada matriz 4x4.
 
-Se nem a palavra chave @code{transform} nem a palavra chave @code{transforms} aparecerem, nenhuma
+Se nem a palavra chave @code{transform} nem a palavra chave @code{transforms} aparecerem, ne-nhuma
 transforma@,{c}@~{a}o @'{e} aplicada (atualmente a identidade @'{e} aplicada).  Voc@^{e} pode
 usar isso para, e.g., empacotar uma apar@^{e}ncia em torno de um objeto externo
 fornecido, atrav@'{e}s de uma LIST de membros simples pode-se fazer isso mais eficientemente.
@@ -4022,7 +4022,7 @@ txtransforms
 @end example
 O n@'{u}mero de transoforma@,{c}@~{o}es de textura deve coincidir com o n@'{u}mero de transforma@,{c}@~{o}es
 geom@'{e}tricas. O objeto @code{SPHERE} (Veja @ref{SPHERE, Sphere
-Objects}) utiliza essa t@'{e}cnica para gerar um esfera completaente texturizada fora
+Objects}) utiliza essa t@'{e}cnica para gerar um esfera completamente texturizada fora
 de alguma fra@,{c}@~{a}o de uma esfera (usualmente um octante).
 
 Uma transforma@,{c}@~{a}o @var{(N+1)}-dimensional pode ser especificada por
@@ -4055,7 +4055,7 @@ material @code{location} possa trabalhar (ou n@~{a}o).
 @example
 location [global ou camera ou ndc ou screen ou local]
 @end example
-Normalmente um INST especifica uma posi@,{c}@~{a}o relativa a seu objeto genitores;
+Normalmente um INST especifica uma posi@,{c}@~{a}o relativa a seu objeto pai;
 o campo @code{location} permite colocar um objeto em qualquer lugar.
 @itemize @bullet
 @item
@@ -4063,7 +4063,7 @@ o campo @code{location} permite colocar um objeto em qualquer lugar.
 (tamb@'{e}m conhecido como "universe") -- o mesmo dos objetos mundo do Geomview,
 das geometrias alien@'{i}genas, e c@^{a}meras s@~{a}o colocados.
 @item
-@code{location camera} coloca os parentes do objeto como sendo uma c@^{a}mera.
+@code{location camera} coloca o pai do objeto como sendo uma c@^{a}mera.
 (Dessa forma se houverem multiplas visualiza@,{c}@~{o}es, essas visualiza@,{c}@~{o}es podem aparecer em uma diferente
 posi@,{c}@~{a}o espacial em cada visualiza@,{c}@~{a}o.)  O centro de vis@~{a}o da camera
 est@'{a} em volta da parte negativa do seu eixo z; X positivo est@'{a} @`{a} direita e adiante, Y positivo est@'{a} acima e adiante.
@@ -4073,7 +4073,7 @@ Quando uma c@^{a}mera @'{e} colocada de volta @`{a} sua posi@,{c}@~{a}o inicial,
 @code{location ndc} coloca os parentes do objeto no cubo unit@'{a}rio
 normalizado no qual a proje@,{c}@~{a}o da c@^{a}mera (perspectiva ou ortogr@'{a}fica)
 mapeia o objeto mundo vis@'{i}vel.  X, Y, e Z est@~{a}o no intervalo de -1 a +1,
-com Z = -1 estando mais pr@'{o}ximo e Z = +1 ao longe do plano de corte, e X e Y
+com Z = -1 estando mais pr@'{o}ximo e Z = +1 adiante do plano de corte, e X e Y
 nas dire@,{c}@~{o}es @`{a} direita e adiante e acima e adiante respectivamente.
 Dessa forma alguma coisa como
 @example
@@ -4116,7 +4116,7 @@ Ent@~{a}o por exemplo
 @}
 @end example
 
-coloca a or@'{i}gem de xyz.vect's no centro da janela, apenas transformando o
+coloca a or@'{i}gem de xyz.vect no centro da janela, apenas transformando o
 plano de corte mais pr@'{o}ximo.  O comprimento da unidade das arestas X e Y s@~{a}o ajustados proporcionalmente para ter o comprimento de apenas 100
 unidades de tela -- pixels -- , independentemente do tamanho da janela.
 
@@ -4246,7 +4246,7 @@ eficiente.
 
 @code{TLIST}s podem ser aninhadas: efetivamente isto significa que todas as
 transforma@,{c}@~{o}es em cada objeto @code{TLIST} aninhado s@~{a}o multiplicadas (@`{a}
-esquerda) atrav@'{e}s das trnasforma@,{c}@~{o}es no objeto @code{TLIST} mais externo.
+esquerda) atrav@'{e}s das transforma@,{c}@~{o}es no objeto @code{TLIST} mais externo.
 
 Esteja informado de que uma @code{TLIST} @'{e} um tipo de geom, distinto de um 
 objeto @code{transform}.  Alguns contextos esperam um geom,
@@ -4276,7 +4276,7 @@ enquanto em
 O formato @code{TLIST BINARY} @'{e} aceito.  Dados bin@'{a}rios iniciam-se com um
 inteiro de 32-bit fornecendo o n@'{u}meros de transforma@,{c}@~{o}es, seguido por aquele
 n@'{u}mero de matrizes 4x4 no formato em n@'{u}mero de ponto flutuante de 32-bit.  A ordena@,{c}@~{a}o dos
-elementos da matriz matrix @'{e} o mesmo do formato ASCII.
+elementos da matriz @'{e} a mesma do formato ASCII.
 
 
 @comment ----------------------------------------------------------------
@@ -4325,8 +4325,8 @@ COMMENT                 # palavra chave
 @{ @dots{} @}             # dados arbitr@'{a}rios
 @end example
 
-Os dados, que devem ser sontidos dentro de chaves, podem incluir qualquer coisa
-exceto chaves n@~{a}o balanceadas (aberta mas sem o fechamento correspondente ou fechada mas sem a abertura correspondente).  O campo @var{type} pode ser usado para
+Os dados, que devem ser contidos dentro de chaves, podem incluir qualquer coisa
+exceto chaves n@~{a}o balanceadas (aberta mas sem o fechamento correspondente ou fechada mas sem a abertura correspondente).  O campo @var{tipo} pode ser usado para
 identificar dados de interesse de um programa em particular apesar de nomear
 conven@,{c}@~{o}es. 
 
@@ -4398,10 +4398,10 @@ para cada ponto de imagem (pixel); e @code{maxval} @'{e} colocado em 255. A inte
 @headitem #Canais @tab No. do Canal @tab Interpreta@,{c}@~{a}o
 @item 1
 @tab 1
-@tab escala de cinza ou dados de lumn@^{a}ncia
+@tab escala de cinza ou dados de lumin@^{a}ncia
 @item 2
 @tab 1
-@tab escala de cinza ou dados de lumn@^{a}ncia
+@tab escala de cinza ou dados de lumin@^{a}ncia
 @item @code{ }
 @tab 2
 @tab canal alfa (0: transparente, @code{maxval}: opaco)
@@ -4432,7 +4432,7 @@ Dados de imagem podem ser especificados inline (embutidos dentro do fluxo de dad
 ou via refer@^{e}ncias de arquivos; em ambos os casos os dados s@~{a}o lidos e
 interpretados ao mesmo tempo que o objeto de imagem @'{e} passado. @emph{Essa forma
 @'{e} diferente da antiga (e desatualizada) forma de especifica@,{c}@~{a}o de textura de imagem,
-onde dos dados de imagem em uma m@'{i}dia podem eventualmente serem re-lidos pelo
+onde os dados de imagem em uma m@'{i}dia podem eventualmente serem re-lidos pelo
 Geomview}.
 
 A sintaxe geral de objetos de imagem @'{e} como segue:
@@ -4474,11 +4474,11 @@ A sintaxe geral de objetos de imagem @'{e} como segue:
       "maxval"         (n@~{a}o suportado, obrigatoriamente deve ser @code{255} se
                        especificado)
 
-      "data MASCDEST [FILTRO] [@{] < NOMEDOARQUIVO [@}]"
-      "data MASCDEST [FILTRO] TAMAN_IMAGEM [@{][\n]DADOS_LIT_IMAGEM[@}]"
+      "data MASCDEST [FILTER] [@{] < NOMEDOARQUIVO [@}]"
+      "data MASCDEST [FILTER] TAMAN_IMAGEM [@{][\n]DADOS_LIT_IMAGEM[@}]"
                        (dados de imagem ou externos ou embutidos,
                        veja abaixo para uma descri@,{c}@~{a}o detalhada do
-                       significado de @emph{MASCDEST} e @emph{FILTRO}. Uma imagem
+                       significado de @emph{MASCDEST} e @emph{FILTER}. Uma imagem
                        pode -e tem, em geral- multiplas se@,{c}@~{o}es de
                        dados.)
 
@@ -4542,7 +4542,7 @@ como dados de imagem RGB. @code{AUTO} n@~{a}o pode trabalhar com dados de imagem
 @end table
 
 @item FILTER
-A especifica@,{c}@~{a}o @samp{FILTRO} @'{e} opcional. se for omtida, ent@~{a}o
+A especifica@,{c}@~{a}o @samp{FILTER} @'{e} opcional. se for omitida, ent@~{a}o
 Geomview tenta determinar o tipode imagem usando o sufixo de
 @samp{NOMEDOARQUIVO}. Se @~{a}o houver sufixo ou o sufixo for desconhecido, ou para dados
 embutidos de imagem, Geomview est@'{a} apto a auto-detectar  o formato do arquivo de imagem SGI (por
@@ -4562,7 +4562,7 @@ v@'{a}lido:
 @example
 data LUMINANCE raw.gzip @{ < arquivoemtonsdecinzagzipado @}
 @end example
-The above should be equivalent to
+A linha acima deve ser equivalente a
 @example
 data LUMINANCE raw @{ < arquivoemtonsdecinza @},
 @end example
@@ -4594,7 +4594,7 @@ Formato de imagem @code{PNG}. Somente suportado se o execut@'{a}vel
 @code{pngtopnm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item jpg
 @item jpeg
-Formato de imagem @code{JPEG} image file format. Somente suportado se o execut@'{a}vel
+Formato de imagem @code{JPEG}. Somente suportado se o execut@'{a}vel
 @code{jpegtopnm} puder ser executado no caminho de execu@,{c}@~{a}o atual.
 @item gif
 Formato de imagem @code{GIF} image file format. Somente suportado se o execut@'{a}vel
@@ -4653,18 +4653,18 @@ Onde uma matriz simples 4x4 @'{e} esperada -- como no campo de @code{transform}
 comandos do Geomview @code{xform*} -- use um objeto de transforma@,{c}@~{a}o.
 
 Note que uma transforma@,{c}@~{a}o @'{e} diferente de uma @code{TLIST}, que @'{e} um tipo
-de geometria.  @code{TLIST}s podem cnter uma ou mais transforma@,{c}@~{o}es 4x4;
-objetos "transform" devem ter exatamente uma.
+de geometria.  @code{TLIST}s podem conter uma ou mais transforma@,{c}@~{o}es 4x4;
+objetos "transform" devem ter exa-tamente uma.
 
 Por que temos ambos ("transform" e TLIST)?  Em muitos lugares -- e.g. posicionamento de c@^{a}meras -- @'{e} somente
-significativo ter uma transofrma@,{c}@~{a}o simples.  Usando um tipo separado de oobjeto
+significativo ter uma transofrma@,{c}@~{a}o simples.  Usando um tipo separado de objeto
 refor@,{c}a isso.
 
 A sintaxe para um objeto de transforma@,{c}@~{a}o "transform" @'{e}
 
 @example
 <transform> ::= 
-  [ "@{" ]             (Abertura de chave, geralmentenecess@'{a}rio para
+  [ "@{" ]             (Abertura de chave, geralmente necess@'{a}rio para
                        tornar o fim do objeto claramente explicitado.)
 
    [ "transform" ]    (palavra chave opcional; desnecess@'{a}ria se o tipo
@@ -4741,7 +4741,7 @@ um ponto @'{e} para ser transformado atrav@'{e}s de um objeto @code{ntransform} 
 dimens@~{a}o do ponto n@~{a}o coincide com o n@'{u}mero de linhas do
 objeto @code{ntransform}, ent@~{a}o ou o ponto est@'{a} implicitamente preenchido
 com zeros para coincidir com  @var{NLinhas} ou a matriz est@'{a} implicitamente preenchida com
-unidades abaixo de sua diagonal principal (e zeros em todas as outras posi@,{c}@~{o}es) de forma que isso ir@'{a}
+unidades abaixo de sua diagonal principal (e zeros em todas as outras posi@,{c}@~{o}es) de forma que a matriz ir@'{a}
 trabalhar como a matriz identidade sobre as dimens@~{o}es excedentes do ponto de entrada.
 
 A sintaxe para um objeto @code{ntransform} @'{e}
@@ -4761,7 +4761,7 @@ A sintaxe para um objeto @code{ntransform} @'{e}
 
      @var{NLinhas} @var{NColunas}
                        (n@'{u}mero de linhas e colunas da matriz,
-                       tipicamente @var{N+1} @var{N+1}, mas qualqeur dimens@~{a}o
+                       tipicamente @var{N+1} @var{N+1}, mas qualquer dimens@~{a}o
                        @'{e} poss@'{i}vel)
      <@var{NLinhas} x @var{NColunas} n@'{u}meros em ponto flutuante>
                        (interpretados como uma transforma@,{c}@~{a}o homog@^{e}nea
@@ -4878,7 +4878,7 @@ cor de fundo com suas pr@'{o}prias escolhas.
 @item imagem de fundo
 Pelas mesmas raz@~{o}es mostradas acima,somente a referida GUI n@~{a}o sobrescreve essa
 op@,{c}@~{a}o. A imagem @'{e} centralizada em "Normalized-Device-Coordinates"/NDC @code{(0,0,-1)}; a imagem
-n@~{a}o @'{e} redimensonada, apenas desenhada por tr@'{a}s de tudo mais como @'{e}. Veja @ref{image,
+n@~{a}o @'{e} redimensonada, apenas dese-nhada por tr@'{a}s de tudo mais como @'{e}. Veja @ref{image,
 Objetos de imagem}.
 
 @end table
@@ -5022,7 +5022,7 @@ pain@'{e}is do Geomview.  Para um exemplo veja o arquivo dependente do sistema
 @file{.geomview} mencionado acima.  Veja @ref{GCL}. Veja @ref{ui-panel, @code{(ui-panel
 @dots{})}}.
 
-Ë uma boa id@'{e}ia colocar juntos todos os comandos que voc@^{e} coloca em um
+Uma boa id@'{e}ia colocar juntos todos os comandos que voc@^{e} coloca em um
 arquivo @file{.geomview} em uma declara@,{c}@~{a}o @code{progn} com o objetivo de fazer com que
 Geomview execute todos de uma s@'{o} vez.  Caso voc@^{e} n@~{a}o fa@,{c}a isso Geomview possivelmente pode executar
 esses comando sequ@^{e}ncialmente sobre os primeiros poucos ciclos de atualiza@,{c}@~{a}o ap@'{o}s a incializa@,{c}@~{a}o.
@@ -5047,21 +5047,21 @@ Voc@^{e} pode colocar qualquer comando @code{GCL} v@'{a}lido nos seus arquivos
 @node Modulos, GCL, Customizacao, Top
 @chapter M@'{o}dulos Externos
 
-Um m@'{o}dulo externo @'{e} um programa que interagi com Geomview.  Um
+Um m@'{o}dulo externo @'{e} um programa que interage com Geomview.  Um
 m@'{o}dulo comunica-se com Geomview atrav@'{e}s de GCL e pode
 controlar qualquer aspecto do Geomview que voc@^{e} possa controlar atrav@'{e}s da interface
 de usu@'{a}rio do Geomview.
 
 Em muitos casos um m@'{o}dulo externo @'{e} um programa especializado que
-imprementa algum algor@'{i}tmo matem@'{a}tico que cria um bojeto
-geom@'{e}trico que modifica apar@^{a}ncia @`{a} medida que o algor@'{i}tmo progride. O m@'{o}dulo
+imprementa algum algor@'{i}tmo matem@'{a}tico que cria um objeto
+geom@'{e}trico que modifica apar@^{e}ncia @`{a} medida que o algor@'{i}tmo progride. O m@'{o}dulo
 informa ao Geomview da nova apar@^{e}ncia do objeto a cada passo, de forma que o objeto
 aparenta evoluir com o tempo na janela do Geomview.  Dessa modo
 Geomview serve como um @emph{ferramenta de exibi@,{c}@~{a}o} para o m@'{o}dulo.
 
-Um m@'{o}dulo externo pode ser interativo.  Esse m@'{o}dulo pode responder po eventos de mouse
-e por eventos de teclado que tomem lugar em uma janela do Geomview, dessa forma extendendo
-a capacidade do Geomview em si mesmo.
+Um m@'{o}dulo externo pode ser interativo.  Esse m@'{o}dulo pode responder a eventos de mouse
+e a eventos de teclado que ocorram em uma janela do Geomview, dessa forma extendendo
+a capacidade do Geomview propriamente dito.
 
 @menu
 * Interface::                   Como M@'{o}dulos Externos Interagem com Geomview.
@@ -5081,13 +5081,13 @@ principal (@emph{Main}) do Geomview.  Para executar um m@'{o}dulo, clique no bot
 a entrada do m@'{o}dulo no navegador.  Enquanto o m@'{o}dulo estiver sendo executado, uma
 linha adicional para aquele m@'{o}dulo ir@'{a} aparecer no navegador.
 Essa linha inicia-se com um n@'{u}mero entre colch@^{e}tes, que indica o
-n@'{u}mero de @emph{inst@^{a}ncia} do m@'{o}dulo.  (Para alguns m@'{o}dulos isso faz sentido
-ter mais de uma inst@^{a}ncia do m@'{o}dule sendo executado ao mesmo
+n@'{u}mero de @emph{inst@^{a}ncia} do m@'{o}dulo.  (Para alguns m@'{o}dulos faz sentido
+ter mais de uma inst@^{a}ncia do m@'{o}dulo sendo executado ao mesmo
 tempo.)  Voc@^{e} pode encerrar um m@'{o}dulo externo atrav@'{e}s de um clique sobre sua entrada
 vermelha de inst@^{a}ncia.
 
 Por padr@~{a}o quando Geomview inicia, mostra todos os m@'{o}dulos que tiverem
-sido instalados no seu sistema. 
+sido insta-lados no seu sistema. 
 
 Para instru@,{c}@~{o}es sobre intala@,{c}@~{a}o de algum m@'{o}dulo no seu sistema de forma que esse m@'{o}dulo
 apare@,{c}a no navegador de m@'{o}dulos (@emph{Modules}) toda vez que Geomview estiver sendo executado por
@@ -5096,7 +5096,7 @@ algu@'{e}m no seu sistema, veja @ref{Module Installation}.
 Quando Geomview chama um m@'{o}dulo externo, cria pipes conectados
 @`{a}s sa@'{i}das e @`{a}s entradas padr@~{a}o do modulo. (Pipes s@~{a}o como arquivos
 exceto que eles s@~{a}o usados para comunica@,{c}@~{a}o entre programas em lugar de
-armazenar coisas em um disco.)  Geomview interpreta quualquer coisa que o
+armazenar coisas em um disco.)  Geomview interpreta qualquer coisa que o
 modulo escreve em sua sa@'{i}da padr@~{a}o como um comando GCL.
 Da mesma forma, Se um m@'{o}dulo externo requisita qualquer dado do Geomview,
 Geomview escreve aquele dado para a entrada padr@~{a}o do m@'{o}dulo.  Dessa forma tudo que um
@@ -5104,8 +5104,8 @@ m@'{o}dulo tem de fazer com o objetivo de comunicar-se com Geomview @'{e} escrev
 comandos para sua sa@'{i}da padr@~{a}o e (opcionalmente) receber dados de sua entrada
 padr@~{a}o.  Note que isso significa que o m@'{o}dulo n@~{a}o pode usar a entrada padr@~{a}o e
 a sa@'{i}da padr@~{a}o para comunicar-se com o usu@'{a}rio.  Se um m@'{o}dulo precisar
-comunicar-se com o usu@'{a}rio isso pode ser feito ent@~{a}o ou atrav@'{e}s de um painel de
-controle de nele pr@'{o}prio ou em caso contr@'{a}rio atrav@'{e}s de respostas a certos eventos que esse m@'{o}dulo encontrar
+comunicar-se com o usu@'{a}rio isso pode ser feito ou atrav@'{e}s de um painel de
+controle nele pr@'{o}prio ou em caso contr@'{a}rio atrav@'{e}s de respostas a certos eventos que esse m@'{o}dulo encontrar
 como sa@'{i}da vinda do Geomview.
 
 @node Example1, Example2, Interface, Modulos
@@ -5129,7 +5129,7 @@ A seguir coloque a linha
 @noindent
 em um arquivo chamado @file{.geomview} no seu diret@'{o}rio atual.  A seguir chame o
 Geomview; @'{E} importante que voc@^{e} compile o programa exemplo, crie
-o arquivo @file{.geomview}, e chame o Geomview tudo no mesmo
+o arquivo @file{.geomview} e chame o Geomview a partir do mesmo
 diret@'{o}rio.  Voc@^{e} pode ver "Example 1" no navegador  de m@'{o}dulos (@emph{Modules})
 do painel principal (@emph{Main}) do Geomview; clique sobre essa entrada no navegador para
 iniciar o m@'{o}dulo.  Uma superf@'{i}cie deve aparecer na sua janela de c@^{a}mera e deve
@@ -5222,7 +5222,7 @@ UpdateMesh(xmin, xmax, ymin, ymax, xdim, ydim, t)
 @end example
 
 O m@'{o}dulo inicia-se definindo uma fun@,{c}@~{a}o @code{F(x,y,t)} que
-especifica uma superf@'{i}cie variando com o tempo.  O prop@'{o}sito do m@'{o}dulo @'{e}
+especifica uma superf@'{i}cie va-riando com o tempo.  O prop@'{o}sito do m@'{o}dulo @'{e}
 animar essa superf@'{i}cie com o passar do tempo.
 
 O programa principal come@,{c}a definindo algumas vari@'{a}veis que especificam
@@ -5247,7 +5247,7 @@ manipulador para o qual o objeto aponta.
 N@'{o}s ent@~{a}o fazemos @code{fflush(stdout)} para garantir que Geomview
 receba esse comando imediatamente.  Em geral, uma vez que pipes podem ser
 colocados em uma @'{a}rea de mem@'{o}ria tempor@'{a}ria de armazenamento, um m@'{o}dulo externo deve fazer isso sempre que esse m@'{o}dulo externo tenha que
-gaantir que Geomview tenha atualmente recebido tudo que tenha sido mostrado na sa@'{i}da.
+garantir que Geomview tenha atualmente recebido tudo que tenha sido mostrado na sa@'{i}da.
 
 A @'{u}ltima coisa no programa principal @'{e} um ciclo infinito que circula
 atrav@'{e}s de chamadas ao procedimento @code{UpdateMesh} com incremento dos
@@ -7991,9 +7991,9 @@ O padr@~{a}o @'{e} center.
 @table @code
 @item (position-toward objetoID outroID [center | origin])
 Rotaciona objetoID de forma que o centro da caixa associada
-ou a or@'{i}gem do coordinate system of the outroID
-lies on the positive z-axis do first objeto.  Default is
-the center da bounding box.
+ou a or@'{i}gem do sistema de coordenadas do outroID
+localize-se sobre a parte positiva do eixo z do primeiro objeto.  O padr@~{a}o @'{e}
+o centro da caixa associada.
 @end table
 
 @node process-events, progn, position-toward, GCL Reference
@@ -8001,11 +8001,11 @@ the center da bounding box.
 @findex process-events
 @table @code
 @item (process-events)
-Pass control back to the event loop of Geomview, then continue
-evaluating the current command-script. If the current input stream has
-been put to sleep by one of the @code{(sleep-@dots{})} commands, then
-the control remains by the main-loop until the current input streams
-``sleep'' is over.
+Devolve o controle ao la@,{c}o do evento do Geomview, ent@~{a}o continua
+avaliando o comando do script atual. Se o fluxo atual de entrada tiver
+sido colocado para cochilar por um dos comandos @code{(sleep-@dots{})}, ent@~{a}o
+o controle permanece no la@,{c}o principal at@'{e} que a ``cochilada'' do fluxo de entrada
+atual tenha terminado.
 @xref{sleep-until, @code{(sleep-until @dots{})}}.
 @xref{sleep-for, @code{(sleep-for @dots{})}}.
 @end table
