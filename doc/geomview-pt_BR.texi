@@ -8033,9 +8033,9 @@ forcing them to be treated as a single command.
 @findex quote
 @table @code
 @item (quote EXPR)
-retorna a symbolic lisp expression @var{EXPR} without evaluating
-it. Note, however, that @code{quote} parses @var{EXPR} as if it should
-be evaluated. @xref{eval, @code{(eval @dots{})}}.
+retorna uma express@~{a}o simb@'{o}lica em lisp @var{EXPR} sem
+avali@'{a}-la. Note, todavia, que @code{quote} analisa @var{EXPR} como se ela pudesse
+ser avaliada. @xref{eval, @code{(eval @dots{})}}.
 @end table
 
 @node rawevent, rawpick, quote, GCL Reference
@@ -8043,10 +8043,10 @@ be evaluated. @xref{eval, @code{(eval @dots{})}}.
 @findex rawevent
 @table @code
 @item (rawevent dev val x y t)
-Enter the specified raw event into the event queue.  The
-arguments directly specify the members da event structure
-used internally by geomview.  This is the lowest level event
-handler and is not intended for general use.
+Coloca o evento de linha especificado em uma fila de eventos.  Os
+argumento especificam diretamente os membros da estrutura do evento
+usada internamente pelo geomview.  Esse @'{e} o manipulador de evento de mais
+baixo n@'{i}vel e n@~{a}o foi pensado para uso geral.
 @end table
 
 @node rawpick, read, rawevent, GCL Reference
@@ -8064,9 +8064,9 @@ intended for external use.
 @findex read
 @table @code
 @item (read @{geometry|camera|apar@^{e}ncia|image|ntransform|transform|command@} @{GEOMETRY ou CAMERA ou @dots{}@})
-Read and interpret the text in @dots{} as containing the
-given type of data.  Useful for defining objetos using OOGL
-reference syntax, e.g.
+L@^{e} e interpreta o texto em @dots{} como contendo o
+tipo de dado fornecido.  @'{U}til para definir objetos usando a sintaxe
+de refer@^{e}ncia OOGL, e.g.
 @example
 (geometry  thing @{ INST  transform : T    geom : fred @})
 (read  geometry  @{ define fred
@@ -8084,12 +8084,12 @@ reference syntax, e.g.
 @findex real-id
 @table @code
 @item (real-id ID)
-Returns a sequ@^{e}ncia de caracteres canonically identifying the given ID,
-or @code{nil} if the objeto does not exist.  Exemplos:
+Retorna uma sequ@^{e}ncia de caracteres canonicamente identificando o ID fornecido,
+ou @code{nil} se o objeto n@~{a}o existe.  Exemplos:
  (if (real-id fred) (delete fred))
-deletes @code{fred} if it exists but reports no error if it doesn't, and
+apaga @code{fred} se esse arquivo existir mas retorna sem erro se esse arquivo n@~{a}o existir, e
  (if (= (real-id targetgeom) (real-id World)) () (delete targetgeom))
-deletes @code{targetgeom} if it is different from the World.
+apaga @code{targetgeom} se esse arquivo for diferente do World.
 @end table
 
 @node redraw, regtable, real-id, GCL Reference
@@ -8097,8 +8097,8 @@ deletes @code{targetgeom} if it is different from the World.
 @findex redraw
 @table @code
 @item (redraw CAM-ID)
-States that the view in CAM-ID should be redrawn on the
-next pass through the main loop ou the next invocation of @code{draw}.
+Declara que o visual em CAM-ID deve ser redesenhado na
+pr@'{o}xima passagem atrav@'{e}s do ciclo principal ou da pr@'{o}xima vez que @code{draw} for chamada.
 @end table
 
 @node regtable, rehash-emodule-path, redraw, GCL Reference
@@ -8114,12 +8114,12 @@ shows the registry table
 @findex rehash-emodule-path
 @table @code
 @item (rehash-emodule-path)
-Rebuilds the application (external module) browser by reading all
-.geomview-* files in all directories on the emodule-path.  Primarily
-intended for internal use; any applications defined by
-@code{(emodule-define @dots{})} commands outside dos .geomview-* files on
-the emodule-path will be lost.  Does not sort the entries in the
-brower. @xref{emodule-sort, @code{(emodule-sort)}}.
+Reconstr@'{o}i o navegador de (m@'{o}dulo externo) aplica@,{c}@~{a}o atrav@'{e}s da leitura de todos os
+arquivos .geomview-* em todos os diret@'{o}rios retornados pelo comando emodule-path.  Primariamente
+pensado para uso interno; quaisquer aplica@,{c}@~{o}es definidas por
+comandos @code{(emodule-define @dots{})} fora dos arquivos .geomview-* sobre o comando
+emodule-path ir@~{a}o ser perdidos.  N@~{a}o ordena as entradas no
+navegador. @xref{emodule-sort, @code{(emodule-sort)}}.
 @xref{emodule-define, @code{(emodule-define @dots{})}}.
 @end table
 
@@ -8128,7 +8128,7 @@ brower. @xref{emodule-sort, @code{(emodule-sort)}}.
 @findex replace-geometry
 @table @code
 @item (replace-geometry GEOM-ID PART-SPECIFICATION GEOMETRY)
-Replace a part da objeto geom@'{e}trico for GEOM-ID.
+Substitui uma parte do geom@'{e}trico for GEOM-ID.
 @end table
 
 @node rib-display, rib-snapshot, replace-geometry, GCL Reference
@@ -8136,25 +8136,25 @@ Replace a part da objeto geom@'{e}trico for GEOM-ID.
 @findex rib-display
 @table @code
 @item (rib-display [frame|tiff] FILEPREFIX)
-Set Renderman display to framebuffer (popup screen janela) ou a
-TIFF format disk file. FILEPREFIX is used to construct
-names da form @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
-The number is incremented on every call to @code{rib-snapshot} and
-reset to 0000 when @code{rib-display} is called. TIFF files are given
-the same prefix and number as the RIB file (i.e. foo0004.rib
-generates foo0004.tiff). The default FILEPREFIX is @code{geom} and
-the default format is TIFF. (Note that geomview just generates a
-RIB file, which must then be rendered.)
+Ajusta o display Renderman para framebuffer (janela que surge na tela) ou para
+um arquivo de disco no formato TIFF. FILEPREFIX @'{e} usado para construir
+nomes da forma @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
+O n@'{u}mero @'{e} incrementado a cada chamada a @code{rib-snapshot} e
+retorna a 0000 quando @code{rib-display} @'{e} chamado. Arquivos TIFF s@~{a}o fornecidos
+com o mesmo prefixo e n@'{u}mero que o arquivo RIB correspondente (i.e. foo0004.rib
+gera foo0004.tiff). O padr@~{a}o FILEPREFIX @'{e} @code{geom} e
+o formato padr@~{a}o @'{e} TIFF. (Note que geomview apenas gera um
+arquivo RIB, o qual deve ser processado.)
 @end table
 
 @node rib-snapshot, scale, rib-display, GCL Reference
 @subsection rib-snapshot
 @findex rib-snapshot
 @table @code
-@item (rib-snapshot CAM-ID [filename])
-Write Renderman snapshot (in RIB format) of CAM-ID to <filename>.  If no
-filename specified, see @ref{rib-display, @code{(rib-display @dots{}}} for an
-explanation do filename used.
+@item (rib-snapshot CAM-ID [nomearquivo])
+Escreve um instant@^{a}neo Renderman (no formato RIB) de CAM-ID gavando em <nomearquivo>.  Se n@~{a}o
+for especificado um nomearquivo, veja @ref{rib-display, @code{(rib-display @dots{}}} para uma
+explana@,{c}@~{a}o do nomearquivo usado.
 @end table
 
 @node scale, scene, rib-snapshot, GCL Reference
