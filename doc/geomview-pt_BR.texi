@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on /geomview.texi/1.77/Tue Dec 13 20:44:15 2011//
+@c based on 87372458b98b75edb0ae585d27bc1f3e  geomview.texi
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -12,6 +12,9 @@
 @direntry
 * Geomview: (geomview-pt_BR).         Programa interativo de visualiza@,{c}@~ao tridimensional.
 @end direntry
+
+@hyphenation{o-ri-gi-nal-men-te}
+@hyphenation{in-di-vi-dual-men-te}
 
 @titlepage
 @sp 1
@@ -913,7 +916,7 @@ Esse comando inicia o Geomview e chama dois objetos exemplo, um
 tetraedro e um dodecaedro.  Ap@'{o}s poucos segundos tr@^{e}s janelas
 ir@~{a}o aparecer; @pxref{figinitial, Figure}.
 
-@float Figure,figinitial
+@float Figura,figinitial
 @image{figs/initial}
 @caption{Tela Inicial do Geomview.}
 @end float
@@ -922,11 +925,11 @@ O painel @`{a} esquerda @'{e} o painel de controle principal do Geomview; Esse p
 de painel @emph{Main} (principal).  O painel menor ao centro @'{e} o
 painel @emph{Tools} (de ferramentas) e serve para selecionar diferentes tipos de movimentos.
 A janela do lado direito @'{e} a janela de c@^{a}mera e nessa janela voc@^{e} v@^{e} um
-tetraedro rande e um dodecaedro que est@'{a} parcialmente obscurecido
+tetraedro grande e um dodecaedro que est@'{a} parcialmente obscurecido
 pelo tetraedro.
 
 Geomview tem alguns pain@'{e}is mas por padr@~{a}o ele mostra somente esses tr@^{e}s.
-iremos descrever alguns asp@'{e}ctos desses tr@^{e}s e alguns dos outros nesse
+Iremos descrever alguns asp@'{e}ctos desses tr@^{e}s e alguns dos outros nesse
 tutorial.  Voc@^{e} pode ler mais sobre esses e outros pain@'{e}is nos cap@'{i}tulos
 adiante neste manual.
 
