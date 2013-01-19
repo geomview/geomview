@@ -1878,7 +1878,7 @@ Clique @emph{OK} para aceitar as cores que voc@^{e} tiver escolhido, ou
 @emph{Cancel} para reter as escolhas anteriores de cor.
 
 
-O navegador @emph{SHADING} permite a voc@^{e} especificar o modelo de tonalidade que
+O navegador @emph{SHADING} permite a voc@^{e} especificar o modelo de sombreamento que
 Geomview utilizar@'{a} para desenhar o geom alvo.
 
 @table @code
@@ -1901,7 +1901,7 @@ a c@^{a}mera, ou o movimento das luzes.
 @item Smooth
 Cada face do objeto @'{e} desenhada com cores lisamente interpoladas baseadas
 nos vetores normais em cada v@'{e}rtice.  Se o objeto n@~{a}o contiver
-normais por v@'{e}rtice, "Smooth" tem o mesmo efeito que o modo de tonalidade "Flat".  Se o
+normais por v@'{e}rtice, "Smooth" tem o mesmo efeito que o modo de sombreamento "Flat".  Se o
 objeto tiver normais por v@'{e}rtice raso@'{a}veis, o efeito @'{e} alisamento
 sobre as arestas e entre as faces.
 
@@ -1910,10 +1910,10 @@ Cada face do objeto @'{e} desenhada com as cores exatamente especificada(s),
 independente de ilumina@,{c}@~{a}o, orienta@,{c}@~{a}o, e propriedades de material.  Se o
 objeto for definido com cores por v@'{e}rtice, as cores ser@~{a}o interpoladas
 lisamente ao longo da face; de outra forma o efeito @'{e} o mesmo que ocorre no
-estilo de tonalidade "Constant".
+estilo de sombreamento "Constant".
 
 @item VCflat
-Uma combina@,{c}@~{a}o de @code{CSmooth} e tonalidade @code{Flat}. Dessa forma a tonalidade
+Uma combina@,{c}@~{a}o de @code{CSmooth} e sombreamento @code{Flat}. Dessa forma o sombreamento
 @'{e} constante em cada face, de acordo com a orienta@,{c}@~{a}o relativa das
 fontes de luz, a c@^{a}mera e a superf@'{i}cie normal da face.
 
@@ -1924,9 +1924,9 @@ indica se Geomview pode arranjar aqueles vetores normais ou se n@~{a}o pode
 sempre conforme a visualiza@,{c}@~{a}o.  Se um vetor normal direciona-se afastando-se do visualizador
 a cor da face correspondente ou v@'{e}rtice correspondente usualmente @'{e} mais forte do que @'{e}
 desejado.  Geomview pode evitar isso atrav@'{e}s do uso da normal oposta em
-c@'{a}lculos de tonalidade.  Esse comportamento @'{e} o padr@~{a}o.  Usando @emph{Facing Normals}
-podemos fornecer estranha suavidade pesada ou estranhos efeitos de tonalidade de luz, embora, proximo
-ao horizonte de um objet distantemente liso facetado.
+c@'{a}lculos de sombreamento.  Esse comportamento @'{e} o padr@~{a}o.  Usando @emph{Facing Normals}
+podemos fornecer estranha suavidade pesada ou estranhos efeitos de sombreamento de luz, embora, proximo
+ao horizonte de um objeto distantemente liso facetado.
 Pressione esse bot@~{a}o para usar as normais fornecidas com o objeto.
 
 
@@ -8366,7 +8366,7 @@ Seleciona se para usar o sombreamento de software ou de hardware naquela c@^{a}m
 @findex space
 @table @code
 @item (space @{euclidean|hyperbolic|spherical@})
-Set the space associated with the world.
+Escolhe o espa@,{c}o associado ao mundo.
 @end table
 
 @node stereowin, time-interests, space, GCL Reference
@@ -8374,19 +8374,19 @@ Set the space associated with the world.
 @findex stereowin
 @table @code
 @item (stereowin CAM-ID [no|horizontal|vertical|colored] [gapsize])
-Configure CAM-ID as a stereo janela.
-no: entire janela is a single pane, stereo disabled@*
-horizontal: split left/right: left is stereo eye#0, right is #1.@*
-vertical: split top/bottom: bottom is eye#0, top is #1.@*
-colored: panes overlap, red is stereo eye#0, cyan is #1.
+Configura CAM-ID como uma janela stereo.
+no: janela inteira @'{e} um painel simples, stereo desabilitado@*
+horizontal: quebra esquerda/direita: esquerda @'{e} olho stereo #0, direita @'{e} #1.@*
+vertical: quebra topo/base: base @'{e} olho#0, topo @'{e} #1.@*
+colored: sobreposi@,{c}@~{a}o de pain@'{e}is, vermelho @'{e} olho#0 stereo, ciano @'{e} #1.
 
-A gap of @code{gapsize} pixels is left between subjanelas;
-se omitido, subjanelas are adjacent.
-If both layout and gapsize are omitido, e.g. (stereowin CAM-ID),
-returns current settings as a @code{(stereowin @dots{})} command list.
-This command doesn't set stereo projection; use @code{merge camera} or
-@code{camera} to set the stereyes transforms, and @code{merge window} or
-@code{window} to set the pixel aspect ratio & janela position if needed.
+Uma brecha do tamanho de @code{gapsize} pixels @'{e} deixada entre subjanelas;
+se omitido, subjanelas s@~{a}o vizinhas.
+Se ambos layout e gapsize forem omitidos, e.g. (stereowin CAM-ID),
+retorna ajustes atuais como uma lista de comandos @code{(stereowin @dots{})}.
+Esse comando n@~{a}o ajusta proje@,{c}@~{a}o stereo; use @code{merge camera} ou
+@code{camera} para ajustar as transforma@,{c}@~{o}es stereyes, e @code{merge window} ou
+@code{window} para ajustar a raz@~{a}o de aspecto de pixel & posi@,{c}@~{a}o da janela se necess@'{a}rio.
 @end table
 
 @node time-interests, transform, stereowin, GCL Reference
