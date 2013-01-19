@@ -8297,8 +8297,8 @@ rel@'{i}quia dos velhos anos nas esta@,{c}@~{o}es de trabalho antigas.
 @table @code
 @item (shell COMANDO-SHEL)
 Executa o solicitadoCOMANDO-SHELL UNIX ussndo /bin/sh.  Geomview
-espera pela execução do comando e ficará em silêncio até que a execução se complete.
-Um sinônimo é @code{!}.
+espera pela execu@,{c}@~{a}o do comando e ficar@'{a} em sil@^{e}ncio at@'{e} que a execu@,{c}@~{a}o se complete.
+Um sin@^{o}nimo @'{e} @code{!}.
 @end table
 
 @node sleep-for, sleep-until, shell, GCL Reference
