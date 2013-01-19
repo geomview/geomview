@@ -8213,14 +8213,14 @@ determina se arestas interiores no refinamento s@~{a}o desenhadas.
 @findex set-emodule-path
 @table @code
 @item (set-emodule-path (PATH1 @dots{} PATHN))
-Sets the search path for external modules.  The PATHi should
-be pathnames of directories containing, for each module, the
-module's executable file and a .geomview-<modulename> file
-which contains an (emodule-define @dots{}) command for that
-module.  This command implicitly calls (rehash-emodule-path)
-to rebuild the application brower from the new path setting.
-The special directory name @code{+} is replaced by the existing path,
-so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
+Ajusta o caminho de busca por m@'{o}dulos externos.  Os PATHi devem
+ser nomes de caminho de diret@'{o}rios contendo, para cada m@'{o}dulo, o
+arquivo execut@'{a}vel do m@'{o}dulo e um arquivo .geomview-<modulename>
+que cont@'{e}m um comando (emodule-define @dots{}) para aquele
+m@'{o}dulo.  Esse comando implicitamente chama (rehash-emodule-path)
+para reconstruir o navegador de aplica@,{c}@~{o}es a partir do novo caminho ajustado.
+O nome especial de diret@'{o}rio @code{+} @'{e} substitu@'{i}do pelo caminho atual,
+ent@~{a}o e.g. (set-emodule-path (meudir +)) anexa meudir no in@'{i}cio do caminho.
 @end table
 
 @node set-load-path, set-motionscale, set-emodule-path, GCL Reference
