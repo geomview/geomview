@@ -8253,29 +8253,29 @@ Scaleof(frame) mede o tamanho do objeto frame.
 @subsection setenv
 @findex setenv
 @table @code
-@item (setenv name string)
-sets the environment variable @code{name} to the value @var{string};
-the name is visible to geomview (as in pathnames containing @code{$name})
-and to processes it creates, e.g. external modules.
+@item (setenv nome string)
+ajusta a vari@'{a}vel de ambiente @code{nome} para o valor @var{string};
+o nome @'{e} vis@'{i}vel para o geomview (como em nomes de caminho contendo @code{$nome})
+e para processos cria-se, e.g. m@'{o}dulos externos.
 @end table
 
 @node setq, sgi, setenv, GCL Reference
 @subsection setq
 @findex setq
 @table @code
-@item (setq SYM EXPR)
-Bind the symbold @var{SYM} to the value of @var{EXPR}. @var{SYM} must be
-an unqualified symbol, i.e. not aspas duplas, and literal: @code{(setq "foo"
-bar)} will not work. Likewise @code{(setq (bar STUFF) foo)} will also
-not work, even if @code{(bar @dots{})} would evaluate to an unqualified
-symbol: varible names must be literals.  Note that calling @code{(setq
-SYM @dots{})} will alter the value of @var{SYM} within the current
-name-space: if @var{SYM}, e.g., is bound as local variable by a lambda,
-let ou defun expression, then @code{(setq SYM @dots{})} will change the
-value of the local variable, the global binding will remain unchanged.
-It is NOT possible to un-bind a symbol. However, subsequent @code{(setq
-SYM @dots{})} invocations will re-bind @var{SYM} to another value and free
-the lisp-object previously bound to @var{SYM}.
+@item (setq SIM EXPR)
+Associa o s@'{i}mbolo @var{SIM} ao valor de @var{EXPR}. @var{SIM} deve ser
+um s@'{i}mbolo n@~{a}o qualificado, i.e. sem aspas duplas, e literal: @code{(setq "algumacoisa"
+outracoisa)} n@~{a}o ir@'{a} funcionar. Da mesma forma @code{(setq (outracoisa STUFF) algumacoisa)} tamb@'{e}m n@~{a}o
+ir@'{a} funcionar, mesmo se @code{(outracoisa @dots{})} puder avaliar para um s@'{i}mbolo n@~{a}o
+qualificado: nomes de vari@'{a}veis devem ser literais.  Note que chamando @code{(setq
+SIM @dots{})} ir@'{a} alterar o valor de @var{SIM} dentro do atual
+name-space: se @var{SIM}, e.g., estiver associado a uma vari@'{a}vel local atrav@'{e}s de um lambda,
+uma express@~{a}o let ou uma express@~{a}o defun, ent@~{a}o @code{(setq SIM @dots{})} ir@'{a} mudar o
+valor da vari@'{a}vel local, a associa@,{c}@~{a}o global ir@'{a} permanecer inalterada.
+N@~{A}O @'{e} poss@'{i}vel desassociar o s@'{i}mbolo. Todavia, posteriores invoca@,{c}@~{o}es
+@code{(setq SIM @dots{})} irem reassociar @var{SIM} a outro valor e liberar
+o objeto do lisp previamente associado a @var{SIM}.
 @xref{lambda, @code{(lambda @dots{})}}.
 @xref{defun, @code{(defun @dots{})}}.
 @xref{let, @code{(let @dots{})}}.
