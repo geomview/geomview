@@ -8286,8 +8286,8 @@ o objeto do lisp previamente associado a @var{SIM}.
 @findex sgi
 @table @code
 @item (sgi)
-Returns @code{t} if running on an sgi machine, @code{nil} if not. A
-relict from the old work-station years.
+Retorna @code{t} se estiver executando em uma m@'{a}quina sgi, @code{nil} se n@`{a}o estiver. Uma
+rel@'{i}quia dos velhos anos nas esta@,{c}@~{o}es de trabalho antigas.
 @end table
 
 @node shell, sleep-for, sgi, GCL Reference
@@ -8295,10 +8295,10 @@ relict from the old work-station years.
 @findex !, shell
 @findex shell, !
 @table @code
-@item (shell SHELL-COMMAND)
-Execute the given UNIX SHELL-COMMAND using /bin/sh.  Geomview
-waits for it to complete and will be unresponsive until it does.
-A synonym is @code{!}.
+@item (shell COMANDO-SHEL)
+Executa o solicitadoCOMANDO-SHELL UNIX ussndo /bin/sh.  Geomview
+espera pela execução do comando e ficará em silêncio até que a execução se complete.
+Um sinônimo é @code{!}.
 @end table
 
 @node sleep-for, sleep-until, shell, GCL Reference
