@@ -8393,16 +8393,16 @@ Esse comando n@~{a}o ajusta proje@,{c}@~{a}o stereo; use @code{merge camera} ou
 @subsection time-interests
 @findex time-interests
 @table @code
-@item (time-interests deltatime initial prefix [suffix])
-Indicates that all interest-related messages, when separated by at
-least @code{deltatime} seconds of real time, should be preceded by
-the sequ@^{e}ncia de caracteres @code{prefix} and followed by @code{suffix}; the first message
-is preceded by @code{initial}.  All three are printf format strings,
-whose argumento is the current clock time (in seconds) on that stream.
-A @code{deltatime} of zero timestamps every message.  Typical usage:@*
-(time-interests .1 @code{(set-clock %g)} @code{(sleep-until %g)})  or@*
+@item (time-interests deltatempo inicial prefixo [sufixo])
+Indica que todas as mensagens de interesse ou relacionadas, quando separadas por
+pelo menos @code{deltatempo} segundos de tempo real, deve ser precedida pela
+sequ@^{e}ncia de caracteres @code{prefixo} e seguida pelo @code{sufixo}; a primeira mensagem
+@'{e} precedida por @code{inicial}.  Todos os tr@^{e}s s@~{a}o sequ@^{e}ncias de caracteres de formato da printf,
+cujo argumento @'{e} o tempo atual de rel@'{o}gio (em segundos) naquele fluxo.
+Um @code{deltatempo} de zero mostra o r@'{o}tulo de tempo de todas as mensagens.  Uso t@'{i}pico:@*
+(time-interests .1 @code{(set-clock %g)} @code{(sleep-until %g)})  ou@*
 (time-interests .1 @code{(set-clock %g)}
-	"(sleep-until %g) (progn (set-clock %g)" ")")    or@*
+	"(sleep-until %g) (progn (set-clock %g)" ")")    ou@*
 (time-interests .1 "(set-clock %g)"
 		   "(if (> 0 (sleep-until %g)) (" "))".
 @end table
