@@ -7412,7 +7412,7 @@ opens a new window; loading a command file executes those commands.
 @findex load-path
 @table @code
 @item (load-path)
-Returns the current search path for command, geometry, etc. files.
+Returns the current search path for command, geometry, files, etc.
 Note: to actually see the value returned by this function
 you should wrap it in a call to echo: @code{(echo (load-path))}.
 @xref{set-load-path, @code{(set-load-path @dots{})}}.
@@ -8084,7 +8084,7 @@ be pathnames of directories containing, for each module, the
 module's executable file and a .geomview-<modulename> file
 which contains an (emodule-define @dots{}) command for that
 module.  This command implicitly calls (rehash-emodule-path)
-to rebuild the application brower from the new path setting.
+to rebuild the application browser from the new path setting.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
 @end table
@@ -8094,7 +8094,7 @@ so e.g. (set-emodule-path (mydir +)) prepends mydir to the path.
 @findex set-load-path
 @table @code
 @item (set-load-path (PATH1 @dots{} PATHN))
-Sets search path for command, geometry, etc. files.  The PATHi
+Sets search path for command, geometry, files, etc.  The PATHi
 are strings giving the pathnames of directories to be searched.
 The special directory name @code{+} is replaced by the existing path,
 so e.g. (set-load-path (mydir +)) prepends mydir to the path.
@@ -8130,7 +8130,7 @@ and to processes it creates, e.g. external modules.
 @findex setq
 @table @code
 @item (setq SYM EXPR)
-Bind the symbold @var{SYM} to the value of @var{EXPR}. @var{SYM} must be
+Bind the symbol @var{SYM} to the value of @var{EXPR}. @var{SYM} must be
 an unqualified symbol, i.e. not quoted, and literal: @code{(setq "foo"
 bar)} will not work. Likewise @code{(setq (bar STUFF) foo)} will also
 not work, even if @code{(bar @dots{})} would evaluate to an unqualified
@@ -8208,7 +8208,7 @@ into a GLX Pixmap buffer, which is also off-screen but may or may not
 reside in video RAM.  Rendering may or may not be accelerated. The
 problem with on-screen snapshots is that the window must be mapped and
 not obscured by other windows. So on-screen snapshots will not work in
-the background, or when a screen safer is active. With "ps", dumps a
+the background, or when a screen saver is active. With "ps", dumps a
 Postscript picture representing the view from that window;
 hidden-surface removal might be incorrect. With "ppm", dumps a
 PPM-format image produced by geomview's internal software renderer; this
