@@ -8228,10 +8228,10 @@ ent@~{a}o e.g. (set-emodule-path (meudir +)) anexa meudir no in@'{i}cio do camin
 @findex set-load-path
 @table @code
 @item (set-load-path (PATH1 @dots{} PATHN))
-Sets search path for command, objeto geom@'{e}trico, etc. files.  The PATHi
-are sequ@^{e}ncias de caracteres giving the pathnames of directories to be searched.
-The special directory name @code{+} is replaced by the existing path,
-so e.g. (set-load-path (mydir +)) prepends mydir to the path.
+Ajusta o caminho de busca para comando, objeto geom@'{e}trico, arquivos, etc. Os PATHi
+s@~{a}o sequ@^{e}ncias de caracteres fornecendo os nomesmde caminho de diret@'{o}rios a serem buscados.
+O nome especial de diret@'{o}rios @code{+} @'{e} substitu@'{i}do pelo caminho atual,
+ent@~{a}o e.g. (set-load-path (meudir +)) anexa meudir no in@'{i}cio do caminho.
 @end table
 
 @node set-motionscale, setenv, set-load-path, GCL Reference
@@ -8239,14 +8239,14 @@ so e.g. (set-load-path (mydir +)) prepends mydir to the path.
 @findex set-motionscale
 @table @code
 @item (set-motionscale X)
-Set the movimento scale factor to X (default value 0.5).  These
-commands scale their movimento by an amount which depends on the
-distance from the frame to the center and on the size da
-frame.  Specifically, they scale by
+Ajusta o fator de proporcionalidade do movimento para X (o valor padr@~{a}o @'{e} 0.5).  Esses
+comandos ajustam proporcionalmente seu movimento por uma quantidade que depende da
+dist@^{a}ncia do quadro ao centro e do tamanho do
+quadro.  Especificamente, ele ajusta de forma proporcional
         dist + scaleof(frame) * motionscale
-where dist is the distance from the center to the frame and
-motionscale is the movimento scale factor set by this function.
-Scaleof(frame) measures the size do frame objeto.
+onde dist @'{e} a dit@^{a}ncia a partir do centro ao quadro e
+motionscale @'{e} o fator de ajuste proporcional do movimento ajustado por essa fun@,{c}@~{a}o.
+Scaleof(frame) mede o tamanho do objeto frame.
 @end table
 
 @node setenv, setq, set-motionscale, GCL Reference
