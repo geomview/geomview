@@ -951,7 +951,7 @@ mouse.
 
 Adicionalmente para os dois s@'{o}lidos que est@~{a}o atualmente na tela voc@^{e} pode tamb@'{e}m ver duas molduras de fios
 em forma de caixa na janela de c@^{a}mera.  Essas s@~{a}o as "caixas associadas" dos dois
-objetos.  Por padr@~{a}o Geomview coloca uma caisa associada em torno de cada objeto
+objetos.  Por padr@~{a}o Geomview coloca uma caixa associada em torno de cada objeto
 que @'{e} mostrada de forma que voc@^{e} tenha uma id@'{e}ia de o quanto grande o objeto @'{e}.
 
 Note que quando voc@^{e} move o mouse em torno do tetraedro e do
@@ -991,7 +991,7 @@ painel de ferramentas (@emph{Tools}). Voc@^{e} pode ver o dodecaedro e o tetraed
 ajustando-se ao meio da janela (figura
 @pxref{figlookatworld}).  O bot@~{a}o "Olhar Para" (@emph{Look At}) posiciona a c@^{a}mera em uma posi@,{c}@~{a}o tal
 que o objeto alvo fique centrado na janela.
-@float Figure,figlookatworld
+@float Figura,figlookatworld
 @image{figs/fig2}
 @caption{Olhando para o Objeto Mundo.}
 @end float
@@ -1002,7 +1002,7 @@ alvo; voc@^{e} pode ver isso no navegador de alvos (@emph{Targets})
 do painel principal (@emph{Main}).  Um duplo clique no bot@~{a}o direito do mouse sobre um objeto
 @'{e} outra forma de fazer esse objeto tornar-se o objeto alvo.
 
-@float Figure,figappearance
+@float Figura,figappearance
 @image{figs/ap}
 @caption{A Painel Apar@^{e}ncia.}
 @end float
@@ -1023,7 +1023,7 @@ ou n@~{a}o as faces.  Clique sobre o bot@~{a}o novamente para de forma que a exi
 
 Agora clique sobre o bot@~{a}o @emph{[Cf] Faces} sob a palavra @emph{COLOR}. Um
 painel de escolha de cores aparecer@'{a} (@pxref{figcolorchooser, Figure}).
-@float Figure,figcolorchooser
+@float Figura,figcolorchooser
 @image{figs/color}
 @caption{Painel de Escolha de Cores.}
 @end float
@@ -1086,7 +1086,7 @@ e ent@~{a}o clique sobre o bot@~{a}o @emph{OK}.  Um grande tubo em forma de trev
 ir@'{a} aparecer em sua janela.  Clique sobre o bot@~{a}o @emph{Hide} no painel
 @emph{Files} para dispensar o painel.
 
-@float Figure,figfilespanel
+@float Figura,figfilespanel
 @image{figs/secondlinelist}
 @caption{O Painel de Arquivos.}
 @end float
@@ -1103,7 +1103,7 @@ Para um tutorial sobre criar seus pr@'{o}prios objetos para cham@'{a}-los dentro
 veja @file{doc/oogltour} distribuido com Geomview.  As coisas
 naquele arquivo ir@~{a}o ser incorporadas em futuras vers@~{o}es desse manual.
 
-@float Figure,figtrefdodec
+@float Figura,figtrefdodec
 @image{figs/trefdodecinter}
 @caption{Trevo e Dodecaedro.}
 @end float
@@ -1276,7 +1276,7 @@ tr@^{e}s de forma que por padr@~{a}o as outras n@~{a}o aparecem.  Essa se@,{c}@~
 manual introduz alguns conceitos b@'{a}sicos que s@~{a}o usados nas se@,{c}@~{o}es restantes
 do manual e descreve o painel principal (@emph{Main}).
 @c
-@float Figure,figmainpanel
+@float Figura,figmainpanel
 @image{figs/main}
 @caption{O Painel Principal}
 @end float
@@ -1425,7 +1425,7 @@ Existem muitos caminhos para chamar um objeto dentro do Geomview.
 Se voc@^{e} clicar no bot@~{a}o @emph{Load} no painel principal do Geomview (@emph{Main}),
 o painel de arquivos (@emph{Files}) ir@'{a} aparecer. 
 
-@float Figure,figmyfilelist
+@float Figura,figmyfilelist
 @image{figs/myfilelist}
 @caption{O Painel de Arquivos.}
 @end float
@@ -1478,7 +1478,7 @@ chamar o arquivo como se voc@^{e} o tivesse chamado com o bot@~{a}o @emph{Add} n
 painel de arquivos (@emph{Files}).  Se, ap@'{o}s fazer surgir o pequeno painel @emph{Load}
 com @kbd{<}, voc@^{e} decidir que quer usar o grande painel de arquivos (@emph{Files})
 ap@'{o}s tudo, pressione o bot@~{a}o @emph{File Browser}.
-@float Figure,figloadpanel
+@float Figura,figloadpanel
 @image{figs/load}
 @caption{O Painel de Chamar Arquivos.}
 @end float
@@ -1507,7 +1507,7 @@ painel principal (@emph{Main}).@refill
 Essa se@,{c}@~{a}o descreve a intera@,{c}@~{a}o b@'{a}sica com o mouse.  Para detalhes,
 veja @ref{Comandos}.
 
-@float Figure,figtools
+@float Figura,figtools
 @image{figs/tools}
 @caption{O Painel de Ferramentas.}
 @end float
@@ -1815,7 +1815,7 @@ Geomview possui tr@^{e}s pain@'{e}is que levam voc@^{e} a modificar apar@^{e}nci
 
 O painel de Apar@^{e}ncia (@emph{Appearance}) leva voc@^{e} a modificar as mais comuns propriedades de
 apar@^{e}ncia do objeto alvo.
-@float Figure,figap
+@float Figura,figap
 @image{figs/ap}
 @caption{O Painel de Apar@^{e}ncia.}
 @end float
@@ -1856,7 +1856,7 @@ Os quatro bot@~{o}es sob @emph{Color} rotulados @emph{Faces}, Arestas (@emph{Edg
 Normais (@emph{Normals}), e @emph{BBox} permitem a voc@^{e} especificar a cor do
 aspecto correspondente de um geom alvo.  Clicando sobre um
 deles faz com que apare@,{c}a um painel de escolha de cores.
-@float Figure,figcolorchooserpanel
+@float Figura,figcolorchooserpanel
 @image{figs/color}
 @caption{Painel de Escolha de Cor.}
 @end float
@@ -2007,7 +2007,7 @@ esse mesmo objeto ao campo de vis@~{a}o.
 O painel de materiais (@emph{Materials}) controla as propriedades materiais das surperf@'{i}cies.
 O painel de materiais trabalha com o objeto alvo da mesma forma que o
 painel de apar@^{e}ncia (@emph{Appearance}) faz.
-@float Figure,figmatpanel
+@float Figura,figmatpanel
 @image{figs/mat}
 @caption{O Painel de Materiais.}
 @end float
@@ -2144,7 +2144,7 @@ Uma c@^{a}mera no Geomview @'{e} o objeto que corresponde a uma janela de c@^{a}
 Por padr@~{a}o existe somente uma c@^{a}mera, mas @'{e} poss@'{i}vel ter tantas quantas
 voc@^{e} quiser.  Voc@^{e} pode controlar certos aspectos do objeto vis@'{i}vel atualmente na janela de c@^{a}mera
 arrastando em cada janela de c@^{a}mera via o painel @emph{Cameras}.
-@float Figure,figcamerapanel
+@float Figura,figcamerapanel
 @image{figs/cam}
 @caption{O Painel de C@^{a}mera.}
 @end float
@@ -2281,7 +2281,7 @@ Esse bot@~{a}o dispensa o painel de @emph{Cameras}.
 O painel @emph{Save} do Geomview permite a voc@^{e} armazenar objetos do Geomview e outra
 informa@,{c}@~{a}o em arquivos que voc@^{e} pode recuperar dentro do Geomview ou a partir de outros
 programas.
-@float Figure,figsavepanel
+@float Figura,figsavepanel
 @image{figs/save}
 @caption{O Painel Gravar.}
 @end float
@@ -2411,7 +2411,7 @@ texto e pressionar @kbd{@key{Enter}} tantas vezes quantas voc@^{e} quiser, em ge
 mesmo que voc@^{e} pressione (@kbd{@key{Enter}}) com o cursor no painel de
 comandos ( @emph{Commands}), Geomview tenta interpretar se aquele texto que voc@^{e} tiver digitado no
 campo de texto como um comando.
-@float Figure,figcommandpanel
+@float Figura,figcommandpanel
 @image{figs/command}
 @caption{O Painel de Comandos.}
 @end float
@@ -2422,7 +2422,7 @@ pertencem realmente a qualquer dos outros paine@'{e}is.  Na atual vers@~{a}o do
 Geomview, o painel obscuro (@emph{Obscure}) inclui o navegador 
 @emph{NORMALIZE GEOMETRY}, que controla o tipo de normaliza@,{c}@~{a}o de geometria que Geomview faz,
 e muitos bot@~{o}es que afetam estilo de movimento.
-@float Figure,figobscurepanel
+@float Figura,figobscurepanel
 @image{figs/obscure}
 @caption{O painel de Comandos.}
 @end float
@@ -9715,7 +9715,7 @@ Thank you.
 
 @node Lista de Figuras,  , Indice de Funcoes, Top
 @unnumbered Lista de Figuras
-@listoffloats Figure
+@listoffloats Figura
 
 @bye
 
