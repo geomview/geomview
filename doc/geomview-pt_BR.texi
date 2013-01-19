@@ -1078,7 +1078,7 @@ Voc@^{e} pode tamb@'{e}m chamar objetos de dentro do Geomview.  Clique sobre o m
 @emph{File} no painel principal (@emph{Main}) e escolha abrir (@emph{Open}).
 O painel de arquivos (@emph{Files}) ir@'{a} aparecer.
 @c
-Abaixo do meio desse painel, onde se l@^{e} @emph{Path List}, temos um navegador com tr@^{e}s linhas detro dele; a
+Abaixo do meio desse painel, onde se l@^{e} @emph{Path List}, temos um navegador com tr@^{e}s linhas dentro dele; a
 segunda linha @'{e} um diret@'{o}rio com montanhas de exemplos do Geomview.
 Clique sobre aquela segunda linha; @pxref{figfilespanel, Figure}. Role para baixo
 na lista de arquivos at@'{e} voc@^{e} ver @file{tref.off}.  Clique sobre aquela linha,
@@ -1159,7 +1159,7 @@ Escolhe a cor de fundo da janela de c@^{a}mera para valores fornecidos de
 @c -b 0.5 0.5 0.5 - cinza
 @item -c @var{arquivo}
 Interpreta os comandos GCL em @var{arquivo}, que pode ser o s@'{i}mbolo
-especial @file{-} para a entrada padr@~{a}o.  Paa uma descri@,{c}@~{a}o de GCL,
+especial @file{-} para a entrada padr@~{a}o.  Para uma descri@,{c}@~{a}o de GCL,
 veja @ref{GCL}.
 
 @item -c @var{comando}
@@ -1244,7 +1244,7 @@ comando @code{ui-panel}. Veja @ref{ui-panel, @code{(ui-panel @dots{})}}.
 
 @item -noinit
 N@~{a}o l@^{e} nenhum arquivo de inicializa@,{c}@~{a}o. Por padr@~{a}o, Geomview l@^{e} o arquivo
-@file{.geomview} do systema, seguido daqueles em @file{$@{HOME@}/.geomview} e em
+@file{.geomview} do sistema, seguido daqueles em @file{$@{HOME@}/.geomview} e em
 @file{./.geomview}.
 
 @item -e @var{modulo}
@@ -1299,7 +1299,7 @@ trata objetos geom@'{e}tricos.  Por exemplo, voc@^{e} pode mover c@^{a}meras pel
 e adicion@'{a}-las e apag@'{a}-las como objetos geom@'{e}tricos.  C@^{a}meras n@~{a}o
 s@~{a}o mostradas na tela como um objeto que voc@^{e} v@^{e}.  Cada
 c@^{a}mera tem uma janela de c@^{a}mera separada que mostra a vis@~{a}o como vista atrav@'{e}s da lente
-daquela c@^{a}mera.  (@'{E} pass@'{i}vel para cada c@^{a}mera mostrar uma representa@,{c}@~{a}o
+daquela c@^{a}mera.  (@'{E} poss@'{i}vel para cada c@^{a}mera mostrar uma representa@,{c}@~{a}o
 geom@'{e}trica de outras c@^{a}meras.  Veja @ref{Cameras}.)
 
 Devido ao fato de Geomview tratar c@^{a}meras e objetos geom@'{e}tricos muito similarmente,
@@ -1334,7 +1334,7 @@ movendo o mouse.  Existem muitos modos de movimento diferentes, cada modo de mov
 aplicando um diferente tipo de movimento.  O navegador de modos de movimento (@emph{MOTION MODE})
 no painel principal indica o modo de movimento atual.  O
 padr@~{a}o @'{e} a rota@,{c}@~{a}o ("Rotate").  Voc@^{e} pode mudar o modo corrente de movimento
-selecionando um no modo de movimento no navegador de modos de movimento (@emph{MOTION MODE}), ou usando o
+selecionando um novo modo de movimento no navegador de modos de movimento (@emph{MOTION MODE}), ou usando o
 painel de ferramentas (@emph{Tools}).  Para maiores informa@,{c}@~{o}es sobre modos de movimento,
 veja @ref{Movimentos do Mouse}.
 
@@ -8164,16 +8164,16 @@ explana@,{c}@~{a}o do nomearquivo usado.
 @subsection scale
 @findex scale
 @table @code
-@item (scale GEOM-ID FACTOR [FACTORY FACTORZ])
-Scale GEOM-ID, multiplying its size by FACTOR.  The factors 
-should be positive numbers.  If FACTORY and FACTORZ are 
-present and non-zero, the objeto is scaled by FACTOR in x, by 
-FACTORY in y, and by FACTORZ in z.  If only FACTOR is present, 
-the objeto is scaled by FACTOR in x, y, and z.  Scaling only 
-really makes sense in Euclidean space.  Mouse-driven scaling in 
-other spaces is not allowed;  the scale command may be issued 
-in other spaces but should be used with caution because it may 
-cause the data to extend beyond the limits do space.
+@item (scale GEOM-ID FATOR [FATORY FATORZ])
+Ajusta proporcionalmente GEOM-ID, multiplicando seu tamanho por FATOR.  Os fatores 
+devem ser n@'{u}meros positivos.  Se FATORY e FATORZ estiverem 
+presentes e forem n@~{a}o nulos, o objeto @'{e} ajustado proporcionalmente por FATOR na dire@,{c}@~{a}o x, por 
+FATORY na dire@,{c}@~{a}o y, e por FATORZ na dire@,{c}@~{a}o z.  Se somente FATOR estiver presente, 
+o objeto @'{e} justado proporcionalmente por FACTOR nas tr@^{e}s dire@,{c}@~{o}es x, y, e z.  Ajustes proporcionais somente
+fazem sentido realmente no espa@,{c}o de Euclides.  Ajustes proporcionais usando o mouse nos 
+outros espa@,{c}o n@~{a}o @'{e} permitido;  o comando scale pode ser emitido 
+em outros espa@,{c}os mas deve ser usado com cuidado pelo fato de poder 
+fazer com que dados extendam-se para al@'{e}m dos limites do espa@,{c}o.
 @end table
 
 @node scene, set-clock, scale, GCL Reference
