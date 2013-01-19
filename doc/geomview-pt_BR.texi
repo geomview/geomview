@@ -1500,8 +1500,8 @@ Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
 diferentes modos de movimento do mouse: rota@,{c}@~{a}o (@emph{Rotate}), transla@,{c}@~{a}o (@emph{Translate}),
 v@^{o}o da c@^{a}mera (@emph{Cam Fly}), zoom da c@^{a}mera (@emph{Cam Zoom}), homotetia de um objeto geom@'{e}trico (@emph{Geom Scale}), e
 @'{o}rbita de c@^{a}mera (@emph{Cam Orbit}).  O painel de ferramentas tem um bot@~{a}o para cada um desses
-modos; para tracar os modos, clique sobre o bot@~{a}o correspondente.  voc@^{e} pode tamb@'{e}m
-selecionar um modo atrav@'{e}s do navegador de modos de movimento (@emph{Motion Mode}) no
+modos; para trocar os modos, clique sobre o bot@~{a}o correspondente.  Voc@^{e} pode tamb@'{e}m
+selecionar um novo modo atrav@'{e}s do navegador de modos de movimento (@emph{Motion Mode}) no
 painel principal (@emph{Main}).@refill
 
 Essa se@,{c}@~{a}o descreve a intera@,{c}@~{a}o b@'{a}sica com o mouse.  Para detalhes,
@@ -6313,7 +6313,7 @@ faz com que o comando "/u/home/modules/foo -x" seja executado quando selecionado
 
 Voc@^{e} pode colocar comandos @code{emodule-define} no seu arquivo
 @file{~/.geomview} para providenciar que certos m@'{o}dulos estejam dispon@'{i}veis sempre que voc@^{e} execute
-Geomview; veja @ref{Customizacao}.  voc@^{e} pode tamb@'{e}m executar
+Geomview; veja @ref{Customizacao}.  Voc@^{e} pode tamb@'{e}m executar
 comandos @code{emodule-define} a partir do painel de comandos (@emph{Commands})
 para adicionar um m@'{o}dulo a uma c@'{o}pia do Geomview que j@'{a} esteja sendo executada.
 
@@ -8188,9 +8188,9 @@ Make CAM-ID look at GEOMETRY instead of at the universe.
 @subsection set-clock
 @findex set-clock
 @table @code
-@item (set-clock TIME)
-Adjusts the clock for this command stream to read @var{TIME} (in
-seconds) as do moment the command is received. @xref{sleep-until,
+@item (set-clock TEMPO)
+Ajusta o rel@'{o}gio para esse fluxo de comando para ler @var{TIME} (em
+segundos) a partir do momento que o comando @'{e} recebido. @xref{sleep-until,
 @code{(sleep-until @dots{})}}. @xref{clock, @code{(clock @dots{})}}.
 @end table
 
@@ -8199,13 +8199,13 @@ seconds) as do moment the command is received. @xref{sleep-until,
 @findex set-conformal-refine
 @table @code
 @item (set-conformal-refine CMX [N [SHOWEDGES]])
-Sets the parameters for the refinement algorithm used in drawing
-in the conformal model.  CMX is the cosine do maximum angle
-an edge can bend before it is refined.  Its value should be between
--1 and 1; the default is 0.95; decreasing its value will cause less
-refinement.  N is the maximum number of iterations of refining;
-the default is 6.  SHOWEDGES, which should be @code{no} ou @code{yes},
-determines se interior edges in the refinement are drawn.
+Ajusta os par@^{a}metros para o algor@'{i}tmos de refinamento usado no desenho
+no modelo conformacional.  CMX @'{e} o cosseno do maior @^{a}ngulo
+e arestas podem entortar antes de serem refinadas.  Seus valores devem estar entre
+-1 e 1; o padr@~{a}o @'{e} 0.95; deminuindo seu valor ir@'{a} fazer causar menos
+refinamento.  N @'{e} o n@'{u}meo m@'{a}ximo de itera@,{c}@~{o}es de refinamento;
+o padr@~{a}o @'{e} 6.  SHOWEDGES, que pode ser @code{no} ou @code{yes},
+determina se arestas interiores no refinamento s@~{a}o desenhadas.
 @end table
 
 @node set-emodule-path, set-load-path, set-conformal-refine, GCL Reference
