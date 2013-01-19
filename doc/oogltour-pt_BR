@@ -170,7 +170,7 @@ poliedro é regular, todas as faces possuem o mesmo número de
 vértices (nesse caso, 5).  Os números restantes na linha são
 indices dentro da lista de vértices acima.
 
-Juntamente com o fato de loge mais compacto, o formato de arquivo do tipo "Polylist" incorpora
+Juntamente com o fato de longe mais compacto, o formato de arquivo do tipo "Polylist" incorpora
 informação de conectividade no Geom (Objeto OOGL).  OOGL não tem formas de conhecer
 se quaisquer dois quadriláteros em um bojeto Quad estão conectados.  Mas
 com uma "Polylist", OOGL pode interpolar retas normais ao longo das faces conectadas.
