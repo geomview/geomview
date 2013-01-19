@@ -8330,27 +8330,27 @@ Retorna o n@'{u}mero de segundos que faltam para chegar at@'{e} TEMPO.
 @findex snapshot
 @table @code
 @item (snapshot CAM-ID NOMEDOARQUIVO [FORMAT [XSIZE [YSIZE]]])
-Save a snapshot of @var{CAM-ID} in the @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de caracteres). The
-@var{FORMAT} argumento is optional; it may be "ppmscreen" (the default),
-"ps", "ppm", "sgi" (on SGI machines), "ppmosmesa" (if built with
-libOSMesa) ou "ppmosglx". A "ppmscreen" snapshot is created by reading
-the image directly from the given janela; the janela is popped above
-other janelas and redrawn first, then its contents are written as a PPM
-format image. A "ppmosmesa" snapshot is drawn by Mesa's software
-renderer into a memory buffer in RAM. A "ppmosglx" snapshot is rendered
-into a GLX Pixmap buffer, which is also off-screen but may ou may not
-reside in video RAM.  Rendering may ou may not be accelerated. The
-problem with on-screen snapshots is that the janela must be mapped and
-not obscured by other janelas. So on-screen snapshots will not work in
-the background, ou when a screen safer is active. With "ps", dumps a
-Postscript picture representing the view from that janela;
-hidden-surface removal might be incorrect. With "ppm", dumps a
-PPM-format image produced by geomview's internal software renderer; this
-may be of arbitrary size. If the @var{NOMEDOARQUIVO} argumento begins with
-"|", it's interpreted as a @code{/bin/sh} command to which the PPM ou PS
-data should be piped. Optional @var{XSIZE} and @var{YSIZE} values are
-relevant only for "ppm" formats, and render to a janela of that size (or
-scaled to that size, with aspect fixed, if only @var{XSIZE} is given)
+Grava um instant@^{a}neo de @var{CAM-ID} em @var{NOMEDOARQUIVO} (a sequ@^{e}ncia de caracteres). O
+argumento @var{FORMAT} @'{e} opcional; pode ser "ppmscreen" (o padr@~{a}o),
+"ps", "ppm", "sgi" (em m@'{a}quinas SGI), "ppmosmesa" (se o geomview for compilado com
+libOSMesa) ou "ppmosglx". Um instant@^{a}neo "ppmscreen" @'{e} criado lendo
+a imagem diretamente da janela fornecida; a janela @'{e} colocada em primeiro plano acima
+de outras janelas e redesenhada/atualizada primeiramente, ent@~{a}o seu conte@'{u}do @'{e} escrito como uma imagem
+no formato PPM. Um instant@^{a}neo "ppmosmesa" @'{e} desenhado pelo software do Mesa
+redenrizado em um espa@,{c}o tempor@'{a}rio de armazenamento na RAM. Um instant@^{a}neo "ppmosglx" @'{e} renderizado
+dentro de um espa@,{c}o tempor@'{a}rio de armazenamento de Pixmap da GLX, que tamb@'{e}m n@~{a}o aparece na tela mas pode ou n@~{a}o
+localiza-ser na RAM de v@'{i}deo.  Renderiza@,{c}@~{a}o pode ou n@~{a}o ser acelerada. O
+problema com instant@^{a}neos em tela @'{e} que a janela deve ser mapeada e
+n@~{a}o obscurecida por outras janelas. De forma que instant@^{a}neos em tela n@~{a}o ir@~{a}o funcionar em
+segundo plano, ou quando uma prote@,{c}@~{a}o de tela estiver ativa. Com "ps", cria-se uma
+imagem Postscript representado a vis@~{a}o daquela janela;
+remo@,{c}@~{a}o de superf@'{i}cie escondida pode ser incorreta. Com "ppm", cria-se uma
+imagem no formato PPM produzido pelo software rederizador interno do geomview; essa
+imagem pode ter tamanho arbitr@'{a}rio. Se o argumento @var{NOMEDOARQUIVO} iniciar-se com
+"|", @'{e} interpretado como um comando @code{/bin/sh} para o qual os dados PPM ou PS
+devam ser direcionados a um pipe. Valores opcionais @var{XSIZE} e @var{YSIZE} s@~{a}o
+relevantes somente para formatos "ppm", e renderizados para uma janela daquele tamanho (ou
+ajustadas proporcionalment para aquele tamanho, com aspecto fixo, se somente @var{XSIZE} for fornecido)
 @end table
 
 @node soft-shader, space, snapshot, GCL Reference
