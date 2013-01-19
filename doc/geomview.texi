@@ -8152,7 +8152,8 @@ the lisp-object previously bound to @var{SYM}.
 @findex sgi
 @table @code
 @item (sgi)
-Returns @code{t} if running on an sgi machine, @code{nil} if not. A
+Returns @code{t} if running 
+on a sgi machine, @code{nil} if not. A
 relict from the old work-station years.
 @end table
 
