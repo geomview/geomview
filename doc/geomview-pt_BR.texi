@@ -8305,24 +8305,24 @@ Um sinônimo é @code{!}.
 @subsection sleep-for
 @findex sleep-for
 @table @code
-@item (sleep-for TIME)
-Suspend reading commands from this stream for TIME seconds.
-Commands already read will still be executed; @code{sleep-for} inside
-@code{progn} won't delay execution do rest do progn's contents.
+@item (sleep-for TEMPO)
+Suspende comandos de leitura a partir desse fluxo durante TEMPO segundos.
+Comandos j@'{a} lidos ir@~{a}o ser executados apesar disso; @code{sleep-for} dentro de
+@code{progn} n@~{a}o ir@'{a} retardar a execu@,{c}@~{a}o do restante do conte@'{u}do do progn.
 @end table
 
 @node sleep-until, snapshot, sleep-for, GCL Reference
 @subsection sleep-until
 @findex sleep-until
 @table @code
-@item (sleep-until TIME)
-Suspend reading commands from this stream until TIME (in seconds).
-Commands already read will still be executed; @code{sleep-until} inside
-@code{progn} won't delay execution do rest do progn's contents.
-Time is measured according to this stream's clock, as set by
-@code{set-clock}; if never set, the first sleep-until sets it to 0
-(so initially (sleep-until TIME) is the same as (sleep-for TIME)).
-Returns the number of seconds until TIME.
+@item (sleep-until TEMPO)
+Suspende comandos de leitura a partir desse fluxo at@'{e} chegar em TEMPO (em segundos).
+Comandos j@'{a} lidos ir@~{a}o ser executados apesar disso; @code{sleep-until} dentro de
+@code{progn} n@~{a}o ir@'{a} retardar a execu@,{c}@~{a}o do restante do conte@'{u}do do progn.
+O tempo @'{e} medido conforme o rel@'{o}gio desse fluxo, como ajustado por
+@code{set-clock}; se nada for ajustado, o primeiro sleep-until ajusta o rel@'{o}gio do fluxo para 0
+(de forma que inicialmente (sleep-until TEMPO) @'{e} o mesmo que (sleep-for TEMPO)).
+Retorna o n@'{u}mero de segundos que faltam para chegar at@'{e} TEMPO.
 @end table
 
 @node snapshot, soft-shader, sleep-until, GCL Reference
