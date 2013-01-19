@@ -2184,12 +2184,12 @@ Esse compartamento n@~{a}o @'{e} sempre desej@'{a}vel, todavia.  Desabilitando @
 fornece menor granularidade, mas a precis@~{a}o de cores @'{e} menor, das imagens.
 
 @item Software Shading
-Esse bot@~{a}o controla se Geomview faz c@'{a}lculos de tonalidade via software.
+Esse bot@~{a}o controla se Geomview faz c@'{a}lculos de sombreamento via software.
 O padr@~{a}o @'{e} permitir que o hardware manuseie esses c@'{a}lculos, e no espa@,{c}o Euclideano
 esse caminho @'{e} o melhor sempre porque @'{e} o caminho mais r@'{a}pido.  No espa@,{c}o hiperb@'{o}lico e
-tamb@'{e}m no espa@,{c}o esf@'{e}rico, todavia, os c@'{a}lculos de tonalidade que o hardware
+tamb@'{e}m no espa@,{c}o esf@'{e}rico, todavia, os c@'{a}lculos de sombreamento que o hardware
 faz s@~{a}o incorretos.  Clique sobre esse bot@~{a}o para habilitar a forma correta mas lenta
-do c@'{a}lculo de tonalidade via software.
+do c@'{a}lculo de sombreamento via software.
 
 @item Background Color
 Esse bot@~{a}o faz surgir um modificador de cores que voc@^{e} pode usar para escolher a
@@ -2512,7 +2512,7 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
     @item aV
     Vetores
     @end table
-@item Tonalidade
+@item Sombreamento
     @table @kbd
     @item 0as
     Constante
@@ -2601,7 +2601,7 @@ Abaixo encontra-se um sum@'{a}rio de todas as teclas de atalho.
     @item #vl
     dist@^{a}ncia focal
     @item  v~
-    Tonalidade feita via software ligada/desligada
+    Sombreamento feito via software ligada/desligada
     @end table
 @item Pain@'{e}is
     @table @kbd
@@ -3010,7 +3010,7 @@ podem aparecer em qualquer lugar.
 @subsection Apar@^{e}ncias
 
 Objetos geom@'{e}tricos podem ter informa@,{c}@~{o}es de apar@^{e}ncia associada,
-especificando tonalidade, brilho, cor, visualiza@,{c}@~{a}o wire-frame vs.
+especificando sombreamento, brilho, cor, visualiza@,{c}@~{a}o wire-frame vs.
 shaded-surface, e assim por diante.  Apar@^{e}ncias s@~{a}o erdadas atrav@'{e}s de hierarqu@'{i}as de
 objetos, e.g. anexando uma apar@^{e}ncia a uma lista (@code{LIST}) significa que a
 apar@^{e}ncia @'{e} aplicada a todos os membros de @code{LIST}.
@@ -3105,7 +3105,7 @@ appearance @{
   -concave            # (N@~{a}o faz) presun@,{c}@~{a}o e manuseio de pol@'{i}-
                       # gonos c@^{o}ncavos
 
-  -shadelines	      # (N@~{a}o faz) linhas de tonalidade como se elas esti-
+  -shadelines	      # (N@~{a}o faz) linhas de sombreamento como se elas esti-
                       # vessem iluminando cilindros
                       # Esses quatro (mipinterp, backcull, concave,
                       # shadelines) s@~{a}o somente efetivos onde o
@@ -3121,9 +3121,9 @@ appearance @{
 
   shading smooth      # ou ``shading constant'' ou ``shading flat'' ou
                       # ou ``shading csmooth'' ou ``shading vcflat''.
-                      # smooth = tonalidade de Gouraud, flat = facetado,
+                      # smooth = sombreamento de Gouraud, flat = facetado,
                       # csmooth = linearmente interpolado mas n@~{a}o 
-                      # iluminado, vcflat = tonalidade mon@'{o}tona, mas
+                      # iluminado, vcflat = sombreamento mon@'{o}tono, mas
                       # cores linearmente interpoladas.
 
   linewidth 1         # linhas, pontos, e arestas s@~{a}o da largura de
@@ -3144,7 +3144,7 @@ appearance @{
 
       kd  0.8         # coeficiente de reflex@~{a}o difusa.
       diffuse .9 1 .4 # cor difusa.
-                        # (No modo ``shading constant'' (tonalidade
+                        # (No modo ``shading constant'' (sombreamento
                         # constante), a superf@'{i}cie
                         # @'{e} colorida com a cor difusa.)
 
@@ -3156,8 +3156,8 @@ appearance @{
       backdiffuse .7 .5 0 # cor da face de tr@'{a}s para superf@'{i}cies com
                       # dois lados. Se definido, esse campo determina
                       # a cor difusa para o lado de tr@'{a}s de uma super-
-                      # f@'{i}cie. @'{E} implementada atrav@'{e}s de tonalidade
-                      # via software, e por tonalidade via hardware
+                      # f@'{i}cie. @'{E} implementada atrav@'{e}s de sombreamento
+                      # via software, e por sombreamento via hardware
                       # sob sistemas GL que suportam ilumina@,{c}@~{a}o de
                       # dois lados, e sob Open GL.
 
@@ -8358,7 +8358,7 @@ ajustadas proporcionalment para aquele tamanho, com aspecto fixo, se somente @va
 @findex soft-shader
 @table @code
 @item (soft-shader CAM-ID @{on|off|toggle@})
-Select se to use software ou hardware shading in that camera.
+Seleciona se para usar o sombreamento de software ou de hardware naquela c@^{a}mera.
 @end table
 
 @node space, stereowin, soft-shader, GCL Reference
