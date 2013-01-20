@@ -8229,7 +8229,7 @@ ent@~{a}o e.g. (set-emodule-path (meudir +)) anexa meudir no in@'{i}cio do camin
 @table @code
 @item (set-load-path (PATH1 @dots{} PATHN))
 Ajusta o caminho de busca para comando, objeto geom@'{e}trico, arquivos, etc. Os PATHi
-s@~{a}o sequ@^{e}ncias de caracteres fornecendo os nomesmde caminho de diret@'{o}rios a serem buscados.
+s@~{a}o sequ@^{e}ncias de caracteres fornecendo os nomes de caminho de diret@'{o}rios a serem buscados.
 O nome especial de diret@'{o}rios @code{+} @'{e} substitu@'{i}do pelo caminho atual,
 ent@~{a}o e.g. (set-load-path (meudir +)) anexa meudir no in@'{i}cio do caminho.
 @end table
@@ -8468,7 +8468,7 @@ A mesma sintaxe que transform.
 @findex truncate
 @table @code
 @item (truncate EXPR)
-Rounds @var{EXPR} towards zero.
+Arredonda @var{EXPR} desprezando as casas decimais.
 @end table
 
 @node ui-cam-focus, ui-center, truncate, GCL Reference
@@ -8476,17 +8476,17 @@ Rounds @var{EXPR} towards zero.
 @findex ui-cam-focus
 @table @code
 @item (ui-cam-focus [focus-change|mouse-cross])
-Set the focus policy for the janelas de c@^{a}mera. The default is
-@code{mouse-cross}: a c@^{a}mera is made the active c@^{a}mera (for interactive
-mouse events) when o cursor do mouse crosses the janela. Because this
-means it can become complicated to activate a specific c@^{a}mera (in the
-context of multiple janelas de c@^{a}mera) there is also the option to only
-change the c@^{a}mera focus when the janela-manager decides to give it the
-focus for input events. So, after specifying @code{focus-change} it
-depends on the focus-change configuration of your janela-manager when a
-c@^{a}mera becomes the active c@^{a}mera for mouse-interaction. To change this
-behaviour permanently you could, e.g., place the following line in your
-@file{$@{HOME@}/.geomview} file (Veja @ref{Customizacao}):
+Ajusta a pol@'{i}tica de focaliza@,{c}@~{a}o para as janelas de c@^{a}mera. O padr@~{a}o @'{e}
+@code{mouse-cross}: a c@^{a}mera @'{e} tornada ativa (por meio de eventos
+interativos de mouse) quando o cursor do mouse cruza a janela. Devido a esse
+comportamento pode tornar-se complicado ativar uma c@^{a}mera espec@'{i}fica (no
+contexto de m@'{u}ltiplas janelas de c@^{a}mera) existe tamb@'{e}m a op@,{c}@~{a}o para somente
+mudar o foco da c@^{a}mera quando o gerenciador de janelas decidir dar a essa c@^{a}mera o
+foco para eventos de entrada. Dessa forma, ap@'{o}s especificar @code{focus-change} essa mudan@,{c}a
+depende da configura@,{c}@~{a}o de mudan@,{c}a de foco de seu gerenciador de janelas quando uma
+c@^{a}mera tornar-se a c@^{a}mera ativa por meio de intera@,{c}@~{a}o com o mouse. Para mudar esse
+comportamento permanentemente voc@^{e} poder@'{a} vir a, e.g., colocar a seguinte linha no seu
+arquivo @file{$@{HOME@}/.geomview} (Veja @ref{Customizacao}):
 
 @example
 (progn
