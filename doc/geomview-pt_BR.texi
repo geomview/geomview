@@ -8527,8 +8527,8 @@ selecionado.
 @findex ui-emotion-program
 @table @code
 @item (ui-emotion-program PROGRAM)
-This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-define,
-@code{emodule-define}} instead.
+@'{E} um comando obsoleto.  Use seu novo equivalente @ref{emodule-define,
+@code{emodule-define}} ao inv@'{e}s dele.
 @end table
 
 @node ui-emotion-run, ui-freeze, ui-emotion-program, GCL Reference
@@ -8536,8 +8536,8 @@ This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-define,
 @findex ui-emotion-run
 @table @code
 @item (ui-emotion-run EMODULE)
-This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-start,
-@code{emodule_start}} instead.
+@'{E} um comando obsoleto.  Use seu novo equivalente @ref{emodule-start,
+@code{emodule_start}} ao inv@'{e}s dele.
 @end table
 
 @node ui-freeze, ui-html-browser, ui-emotion-run, GCL Reference
@@ -8545,7 +8545,7 @@ This @'{e} uma obsolete command.  Use its new eqivalent @ref{emodule-start,
 @findex ui-freeze
 @table @code
 @item (ui-freeze @{on|off@})
-Toggle updating user interface panels. Off by default.
+Habilita pain@'{e}s de atualiza@,{c}@~{a}o de usu@'{a}rio. Off por padr@~{a}o.
 @end table
 
 @node ui-html-browser, ui-motion, ui-freeze, GCL Reference
@@ -8553,12 +8553,12 @@ Toggle updating user interface panels. Off by default.
 @findex ui-html-browser
 @table @code
 @item (ui-html-browser BROWSER)
-Use @var{BROWSER} for viewing the @var{HTML}-version do manual when
-the @samp{Manual (HTML)} menu item is selected in the @samp{Help}-menu.
-If the @code{(ui-html-browser @dots{})} command was never executed, then the
-default is to use the browser stored in the @code{WEBBROWSER}
-environment variable. If the environment variable is unset then the
-default is compile-time dependent.
+Use @var{BROWSER} para visualizar a ves@~{a}o @var{HTML}n do manual quando
+o item de menu @samp{Manual (HTML)} for selecionado no menu @samp{Help}.
+Se o comando @code{(ui-html-browser @dots{})} nunca for executado, ent@~{a}o o
+padr@~{a}o @'{e} usar o navegador armazenado na vari@'{a}vel de
+ambiente @code{WEBBROWSER}. Se a vari@'{a}vel de ambiente estiver vazia ent@~{a}o o
+padr@~{a}o @'{e} dependente da forma como a c@'{o}pia local do geomview foi compilada.
 @end table
 
 @node ui-motion, ui-panel, ui-html-browser, GCL Reference
