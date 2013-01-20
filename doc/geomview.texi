@@ -8281,7 +8281,7 @@ A @code{deltatime} of zero timestamps every message.  Typical usage:@*
 @item (transform objectID centerID frameID [rotate|translate|translate-scaled|scale] x y z [dt [@code{smooth}]])
 Apply a motion (rotation, translation, scaling) to object
 @code{objectID}; that is, construct and concatenate a transformation
-matrix with objectID's transform The 3 IDs involved are the object that
+matrix with objectID's transform. The 3 IDs involved are the object that
 moves, the center of motion, and the frame of reference in which to
 apply the motion.  The center is easiest understood for rotations: if
 centerID is the same as objectID then it will spin around its own axes;
