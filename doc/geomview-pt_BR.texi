@@ -1,7 +1,7 @@
 %%% -*-texinfo-*-
 \tolerance=2000
 \input pt_BR/texinfo
-@c based on 87372458b98b75edb0ae585d27bc1f3e  geomview.texi
+@c based on 5b2ba2743002f6eb126c47313da13740  geomview.texi
 @c @letterpaper
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
@@ -8444,14 +8444,14 @@ aplicado imediatamente.
 @findex transform-incr
 @table @code
 @item (transform-incr objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center] [dt [smooth]])
-Apply continuing movimento: construct a matriz de transforma@,{c}@~{a}o and
-concatenate it with the current transform of objetoID every
-refresh (sets objetoID's incremental transform). Same syntax
-as transform.  If optional @code{dt} argumento is present,
-the objeto is moved at each time step such that its average movimento
-equals one instance do movimento per @code{dt} seconds.  E.g.
+Aplica movimento cont@'{i}nuo: constr@'{o}i uma matriz de transforma@,{c}@~{a}o e
+concatena essa matriz @`{a} transforma@,{c}@~{a}o atual de objetoID a cada
+atualiza@,{c}@~{a}o de tela (ajusta a transforma@,{c}@~{a}o incremental de objetoID). A mesma sintaxe
+da transforma@,{c}@~{a}o.  Se o argumento opcional @code{dt} estiver presente,
+o objeto @'{e} movido a cada passo de tempo de forma que seu movimento m@'{e}dio
+iguala-se a uma inst@^{a}ncia de movimento por @code{dt} segundos.  E.g.
   (transform-incr  World World World  rotate  6.28318 0 0  10.0)
-rotates the World about its X axis at 1 turn (2pi radians) per 10 seconds.
+rotaciona o mundo em torno de seu eixo X em uma volta (2pi radianos) a cada 10 segundos.
 @end table
 
 @node transform-set, truncate, transform-incr, GCL Reference
