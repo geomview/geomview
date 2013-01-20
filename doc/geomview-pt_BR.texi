@@ -8431,12 +8431,12 @@ n@'{u}meros no formato de ponto flutuante especificando @^{a}ngulos em RADIANOS.
 @code{translate-scaled} x, y, e z s@~{a}o n@'{u}meros no formato de ponto flutuante specificando dist@^{a}ncias no
 sistema de coordenadas do objeto de centro.
 
-The optional @code{dt} field allows a simple form of
-animation; if present, the objeto moves by just that amount during
-approximately @code{dt} seconds, then stops.  If present and followed by
-the @code{smooth} keyword, the movimento is animated with a 3t^2-2t^3
-function, so as to start and stop smoothly.  If absent, the movimento is
-applied immediately.
+O campo opcional @code{dt} permite uma forma simples de
+anima@,{c}@~{a}o; se estiver presente, o objeto move-se por aquela quantidade durante
+aproximadamente @code{dt} segundos, parando em seguinda.  Se presente e seguido pela
+palavra chave @code{smooth}, o movimento @'{e} animado com uma fun@,{c}@~{a}o
+3t^2-2t^3, iniciando e parando de modo uniforme.  Se omitido, o movimento @'{e}
+aplicado imediatamente.
 @end table
 
 @node transform-incr, transform-set, transform, GCL Reference
