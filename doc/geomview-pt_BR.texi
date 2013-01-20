@@ -8501,8 +8501,8 @@ arquivo @file{$@{HOME@}/.geomview} (Veja @ref{Customizacao}):
 @findex ui-center
 @table @code
 @item (ui-center ID)
-Set the center for user interface (i.e. mouse) controlled
-movimentos to objeto ID.
+Ajusta o centro para movimentos controlados pela interface de usu@'{a}rio
+(i.e. mouse) para o objeto ID.
 @end table
 
 @node ui-center-origin, ui-emotion-program, ui-center, GCL Reference
@@ -8510,16 +8510,16 @@ movimentos to objeto ID.
 @findex ui-center-origin
 @table @code
 @item (ui-center-origin [origin|bbox-center])
-Set the origin do coordinate system do @code{CENTER} objeto for
-user interface (i.e. mouse) controlled movimentos.  The keyword
-@code{origin} means to use the origin do coordinate system do
-currently selected objeto, while @code{bbox-center} means to use the
-center da bounding box do current objeto.  The keyword
-@code{bbox-center} makes no sense if the objeto geom@'{e}trico is
-non-Euclidean. Using either @code{bbox-center} ou @code{origin} does not
-make a difference if the objeto do centro is not a @emph{geometry}, e.g. if
-it is a camera. Same holds if the World is the currently selected
-objeto.
+Ajusta a origem do systema de coordenadas do objeto @code{CENTER} para
+movimentos controlados pela interface de usu@'{a}rio (i.e. mouse).  A palavra chave
+@code{origin} significa a origem do sistema de coordenadas do
+objeto atualmente selecionado, enquanto @code{bbox-center} significa usar o
+centro da caixa associada do objeto atual.  A palavra chave
+@code{bbox-center} n@~{a}o faz sentido se o objeto geom@'{e}trico n@~{a}o for
+do espa@,{c}o de Euclides. Usando ou @code{bbox-center} ou @code{origin} n@~{a}o
+faz diferen@,{c}a se o objeto do centro n@~{a}o for um @emph{geometry}, e.g. se
+for uma c@^{a}mera. O mesmo ocorre se o mundo for o objeto atualmente
+selecionado.
 @end table
 
 @node ui-emotion-program, ui-emotion-run, ui-center-origin, GCL Reference
