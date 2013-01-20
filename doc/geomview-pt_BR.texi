@@ -8418,18 +8418,18 @@ transforma@,{c}@~{a}o com transforma@,{c}@~{o}es de objetoID. Os 3 IDs envolvido
 se move, o centro do movimento, e o quadro em rela@,{c}@~{a}o ao qual o movimento
 vai ser aplicado.  O centro @'{e} facilmente entendido para rota@,{c}@~{o}es: se
 centerID for o mesmo que objetoID ent@~{a}o o objeto ir@'{a} girar em torno de seu pr@'{o}prio eixo;
-de outra forma o objeto em movimento ir@'{a} orbitar o centro do objeto. There is the
-special keyword @code{bbox-center} which may be used for
-@code{centerID}. As a result the motion will be relative to the center
-of the bounding box of @code{objetoID}. Normally frameID, in whose
-coordinate system the (mouse) motions are interpreted, is @code{focus},
-the current camera.  Translations can be scaled proportional to the
-distance between the target and the center. Support for spherical and
-hyperbolic as well as Euclidean space is built-in: use the @code{space}
-command to change spaces.  With type @code{rotate} x, y, and z are
-floats specifying angles in RADIANS.  For types @code{translate} and
-@code{translate-scaled} x, y, and z are floats specifying distances in
-the coordinate system of the center object.
+de outra forma o objeto em movimento ir@'{a} orbitar o centro do objeto. Existe a
+palavra chave especial @code{bbox-center} que pode ser usada para
+@code{centerID}. Como resultado o movimento ir@'{a} ser relativamente ao centro
+da caixa associada de @code{objetoID}. Normalmente frameID, em cujo
+sistema de coordenadas os movimentos (de mouse) s@~{a}o interpretados, @'{e} @code{focus},
+a c@^{a}mera atual.  Transla@,{c}@~{o}es podem ser ajustadas proporcionalmente @`{a}s
+dist@^{a}ncias entre o alvo e o centro. Suporte ao espa@,{c}o esf@'{e}rico e ao espa@,{c}o
+hiperb@'{o}lico bem como ao espa@,{c}o eucidiano @'{e} embutido no geomview: use o comando
+@code{space} para mudar de um espa@,{c}o para outro.  Como tipo @code{rotate} x, y, e z s@~{a}o
+n@'{u}meros no formato de ponto flutuante especificando @^{a}ngulos em RADIANOS.  Para tipos @code{translate} e
+@code{translate-scaled} x, y, e z s@~{a}o n@'{u}meros no formato de ponto flutuante specificando dist@^{a}ncias no
+sistema de coordenadas do objeto de centro.
 
 The optional @code{dt} field allows a simple form of
 animation; if present, the objeto moves by just that amount during
