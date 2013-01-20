@@ -8459,8 +8459,8 @@ rotaciona o mundo em torno de seu eixo X em uma volta (2pi radianos) a cada 10 s
 @findex transform-set
 @table @code
 @item (transform-set objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [origin|bbox-center])
-Set objetoID's transform to the constructed transform.
-Same syntax as transform.
+Ajusta a transforma@,{c}@~{a}o de objetoID's para a transforma@,{c}@~{a}o constru@'{i}da.
+A mesma sintaxe que transform.
 @end table
 
 @node truncate, ui-cam-focus, transform-set, GCL Reference
