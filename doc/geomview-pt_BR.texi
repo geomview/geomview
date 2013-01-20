@@ -8412,13 +8412,13 @@ Um @code{deltatempo} de zero mostra o r@'{o}tulo de tempo de todas as mensagens.
 @findex transform
 @table @code
 @item (transform objetoID centerID frameID [rotate|translate|translate-scaled|scale] x y z [bbox-center|origin] [dt [@code{smooth}]])
-Apply a motion (rotation, translation, scaling) to object
-@code{objetoID}; that is, construct and concatenate a transformation
-matrix with objetoID's transform The 3 IDs involved are the object that
-moves, the center of motion, and the frame of reference in which to
-apply the motion.  The center is easiest understood for rotations: if
-centerID is the same as objetoID then it will spin around its own axes;
-otherwise the moving object will orbit the center object. There is the
+Aplica um movimento (rota@,{c}@~{a}o, transla@,{c}@~{a}o, ajuste proporcional) ao objeto
+@code{objetoID}; isto @'{e}, constr@'{o}i e concatena uma matriz de
+transforma@,{c}@~{a}o com transforma@,{c}@~{o}es de objetoID. Os 3 IDs envolvidos s@~{a}o o objeto que
+se move, o centro do movimento, e o quadro em rela@,{c}@~{a}o ao qual o movimento
+vai ser aplicado.  O centro @'{e} facilmente entendido para rota@,{c}@~{o}es: se
+centerID for o mesmo que objetoID ent@~{a}o o objeto ir@'{a} girar em torno de seu pr@'{o}prio eixo;
+de outra forma o objeto em movimento ir@'{a} orbitar o centro do objeto. There is the
 special keyword @code{bbox-center} which may be used for
 @code{centerID}. As a result the motion will be relative to the center
 of the bounding box of @code{objetoID}. Normally frameID, in whose
