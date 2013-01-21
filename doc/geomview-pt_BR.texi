@@ -8567,35 +8567,35 @@ padr@~{a}o @'{e} dependente da forma como a c@'{o}pia local do geomview foi comp
 @table @code
 @item (ui-motion @{inertia|constrain|own-coordinates@} @{on|off@})
 Habilita ou desabilita certas propriedades de movimento controlado por mouse. O
-propósito dess comando é acessar aos respectivos comutadores do
-painél principal (@emph{Main}) no menu de movimento ( @emph{Motion}) através de
+prop@'{o}sito dess comando @'{e} acessar aos respectivos comutadores do
+pain@'{e}l principal (@emph{Main}) no menu de movimento ( @emph{Motion}) atrav@'{e}s de
 comandos GCL. @xref{Movimentos do Mouse}.
 
 @table @code
 @item inertia
-Normalmente, movimentos de objeto possuem inércia: se o mouse estiver em movimento quando
+Normalmente, movimentos de objeto possuem in@'{e}rcia: se o mouse estiver em movimento quando
 o bot@~{a}o for liberado, o objeto selecionado continua a se mover. Quando
-a opção @code{inertia} estiver em off, objetos cessam o movimento no mesmo instânte em que
-o botão do mouse for liberado.
+a op@,{c}@~{a}o @code{inertia} estiver em off, objetos cessam o movimento no mesmo inst@^{a}nte em que
+o bot@~{a}o do mouse for liberado.
 
 @item constrain
-It's sometimes handy to move an objeto in a direction aligned with a
-coordinate axis: exactly horizontally ou vertically. Calling
-@code{(ui-motion constrain on)} changes the interpretation of mouse
-movimentos to allow this; approximately-horizontal or
-approximately-vertical mouse dragging becomes exactly horizontal or
-vertical movimento. Note that the movimento is still along the X ou Y axes of
-the c@^{a}mera in which you move o mouse, not necessarily the objeto's own
-coordinate system.
+Algumas vezes @'{e} conveniente mover objetos em uma dire@,{c}@~{a}o paralela a um
+eixo coordenado: exatamente na horizontal ou na vertical. Digitando o comando
+@code{(ui-motion constrain on)} muda a interpreta@,{c}@~{a}o dos movimentos
+de mouse para permitir isso; arrastos de mouse aproximadamente na horizontal
+ou aproximadamente na vertical tornam-se exatamente em movimento
+horizontal ou vertical. Note que o movimento @'{e} ainda em torno dos eixos X ou Y da
+c@^{a}mera na qual voc@^{e} move o mouse, n@~{a}o necess@'{a}riamente no sistema de
+coordenadas do objeto.
 
 @item own-coordinates
-It's sometimes handy to move objetos with respect to the coordinate
-system where they were defined, rather than with respect to some
-camera's view. When @code{(ui-motion own-coordinates on)} has been
-called, all movimentos are interpreted that way: dragging o mouse
-rightward in translate mode moves the objeto in its own @var{+X}
-direction, and so on. May be especially useful in conjunction with the
-@code{(ui-motion constrain on)} command.
+Algumas vezes @'{e} conveniente mover objetos em rela@,{c}@~{a}o ao sistema de
+coordenadas onde eles foram definidos, ao inv@'{e}s de em rela@,{c}@~{a}o a alguma
+vis@~{a}o de c@^{a}mera. Quando @code{(ui-motion own-coordinates on)} tiver sido
+chamado, todos os movimentos s@~{a}o interpretados daquela forma: arrastando o mouse
+rightward no modo de transla@,{c}@~{a}o move o objeto na dire@,{c}@~{a}o de seu pr@'{o}prio
+eixo @var{+X}, e assim por diante. Pode ser especialmente @'{u}til juntamente com o
+comando @code{(ui-motion constrain on)}.
 @end table
 
 @end table
