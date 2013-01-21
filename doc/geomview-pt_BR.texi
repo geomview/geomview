@@ -8818,39 +8818,39 @@ objeto ID's transform to TRANSFORM).
 @table @code
 @item (zoom CAM-ID FACTOR)
 Zoom CAM-ID, multiplying its field of view by FACTOR.
-FACTOR should be a positive number.
+FATOR deve ser um n@'{u}mero positivo.
 @end table
 
 @comment ****************************************************************
 @node Geometrias Nao-Euclidianas, Mathematica, GCL, Top
 @chapter Geometrias N@~{a}o-Euclidianas
 
-Geomview supports hyperbolic and spherical objeto geom@'{e}trico as well as
-Euclidean objeto geom@'{e}trico.  The three bot@~{o}es at the bottom do @emph{Main}
-panel are for setting the current objeto geom@'{e}trico type.
+Geomview suporta objetos geom@'{e}tricos hiperb@'{o}licos e esf@'{e}ricos bem como
+objetos geom@'{e}tricos de Euclides.  Os tr@^{e}s bot@~{o}es parte inferior do painel
+@emph{Main} s@~{a}o para ajustar o tipo do boeto geom@'{e}trico geom@'{e}trico atual.
 
-In each das three geometries, three models are supported:
-@emph{Virtual}, @emph{Projective}, and @emph{Conformal}.  You can
-change the current model with the @emph{Model} browser on the
-@emph{Camera} panel.  Each Geomview c@^{a}mera has its own model setting.
+Em cada uma das tr@^{e}s geometrias, tr@^{e}s odelos s@~{a}o suportados:
+@emph{Virtual}, @emph{Projective}, e @emph{Conformal}.  Voc@^{e} pode
+mudar o modelo atual com o navegador @emph{Model} no
+painel de @emph{Camera}.  Cada c@^{a}mera do Geomview tem seu pr@'{o}prio ajuste de modelo.
 
-The default model is all three spaces is @emph{Virtual}.  This
-corresponds to the c@^{a}mera being in the same space as, and moving under
-the same set of transformations as, the objeto geom@'{e}trico itself.
+O modelo padr@~{a}o @'{e} que todos os tr@^{e}s espa@,{c}os sejam @emph{Virtual}.  Isso
+corresponde @`{a} c@^{a}mera estando no mesmo espaco que, e movendo-se sob
+o mesmo conjunto de transforma@,{c}@~{o}es que, o objeto geom@'{e}trico em si mesmo.
 
-In Euclidean space @emph{Virtual} is the most useful model.
-The other models were implemented for hyperbolic and spherical
-spaces and just happen to work in Eucldiean space as well:
-@emph{Projective} is the same as @emph{Virtual} but by default
-displays the unit sphere, and @emph{Conformal} displays everything
-inverted in the unit sphere.
+No espaco de Euclides @emph{Virtual} @'{e} o modelo mais @'{u}til.
+Os outros modelos foram implementados para espa@,{c}os hiperb@'{o}licos e
+esf@'{e}ricos e ocorrem apenas para trabalhar no espa@,{c}o de Euclides tamb@'{e}m:
+@emph{Projective} @'{e} o mesmo que @emph{Virtual} mas o padr@~{a}o
+mostra a esfera unit@'{a}ria, e @emph{Conformal} mostra tudo
+invertido na esfera unit@'{a}ria.
 
-In hyperbolic space, the @emph{Projective} model setting gives a view
-do projective ball model of hyperbolic 3-space imbedded in Euclidean
-space.  The c@^{a}mera is initially outside the unit ball.  In this model,
-the c@^{a}mera moves by Euclidean movimentos and objeto geom@'{e}trico moves by hyperbolic
-movimentos.  @emph{Conformal} model is similar but shows the conformal
-ball model instead. 
+No espa@,{c}o hiperb@'{o}lico, o modelo @emph{Projective} ajusta as informa@,{c}@~{o}es fornecidas a uma vis@~{a}o
+do modelo de bola projetiva do espa@,{c}o tridimensional hiperb@'{o}lico embutido no espa@,{c}o de
+Euclides.  A c@^{a}mera est@'{a} inicialmente fora da bola unit@'{a}ria.  Nesse modelo,
+a c@^{a}mera move-se atrav@'{e}s de movimentos de Euclides e o objeto geom@'{e}trico move-se atrav@'{e}s de movimentos
+hiperb@'{o}licos.  O modelo @emph{Conformal} @'{e} parecido mas mostra o
+modelo de bola conformal. 
 
 No espa@,{c}o esf@'{e}rico, o modelo @emph{Projective} fornece uma vis@~{a}o de metade
 da esfera tridimensional embutida no espa@,{c}o de Euclides tridimensional.  Movimentos esf@'{e}ricos fornecem
