@@ -8713,9 +8713,9 @@ especifica propiedades de janelas futuras (criadas por @ref{camera,
 @findex winenter
 @table @code
 @item (winenter CAM-ID)
-Tell geomview that o cursor do mouse is in the janela of CAM-ID.  This
-function is for development purposes and is not intended for general
-use.
+Diz ao geomview que o cursor do mouse est@'{a} na janela de CAM-ID.  Essa
+fun@,{c}@~{a}o tem prop@'{o}sitos de desenvolvimento e n@~{a}o foi pensada para uso
+geral.
 @end table
 
 @node write, write-comments, winenter, GCL Reference
@@ -8723,22 +8723,22 @@ use.
 @findex write
 @table @code
 @item (write @{command|geometry|camera|transform|ntransform|window|bbox@} NOMEDOARQUIVO [ID|(ID @dots{})] [self|world|universe|outroID])
-write description of ID in given format to NOMEDOARQUIVO.  Last
-parameter chooses coordinate system for geometry & transform:
-self: just the objeto, no transforma@,{c}@~{a}o ou apar@^{e}ncia (objeto geom@'{e}trico only)
-world: the objeto as positioned within the World.
-universe: objeto's position in universal coordenadas;
-includes Worldtransform
-other ID: the objeto transformed to o sistema de coordenadas de outroID.
+escreve uma descri@,{c}@~{a}o de ID no formato especificado para NOMEDOARQUIVO.  O @'{u}ltimo
+par@^{a}metro escolhe o sistema de coordenadas para geometry & transform:
+self: apenas o objeto, nenhuma transforma@,{c}@~{a}o ou apar@^{e}ncia (objeto geom@'{e}trico somente)
+world: o objeto como posicionado dentro do Mundo.
+universe: posi@,{c}@~{a}o do objeto em coordenadas universais;
+inclue Worldtransform
+outroID: o objeto transformedo para o sistema de coordenadas de outroID.
 
-A filename of @code{-} is a special case: data are written to the stream
-from which the 'write' command was read.  For external modules, the data
-are sent to the module's standard input.  For commands not read from an
-external program, @code{-} means geomview's standard output
+Um nome de arquivo @code{-} @'{e} um caso especial: dados s@~{a}o escritos para o fluxo
+a partir do qual o comando 'write' foi lido.  Para m@'{o}dulos externos, os dados
+s@~{a}o enviados para a entrada padr@~{a}o do m@'{o}dulo.  Para comandos n@~{a}o lidos a partir de um
+programa externo, @code{-} significa a sa@'{i}da padr@~{a}o do geomview
 (@pxref{command, @code{(command @dots{})}}).
 
-The ID can either be a single id ou a parenthesized list of
-ids, like @code{g0} ou @code{(g2 g1 dodec.off)}.
+O ID pode ou se um simples id ou uma lista entre par@^{e}ntesis de
+ids, como @code{g0} ou @code{(g2 g1 dodec.off)}.
 @end table
 
 @node write-comments, write-handle, write, GCL Reference
