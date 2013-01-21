@@ -8604,35 +8604,35 @@ comando @code{(ui-motion constrain on)}.
 @subsection ui-panel
 @findex ui-panel
 @table @code
-@item (ui-panel PANELNAME @{on|off@} [WINDOW])
-Do ou don't display the given user-interface panel.
-Case is ignored in panel names. Current @var{PANELNAMEs} are:
+@item (ui-panel NOMEPAINEL @{on|off@} [JANELA])
+Mostrar ou n@~{a}o mostrar o dado painel de interface de usu@'{a}rio.
+A caixa alta ou baixa @'{e} ignorada em nomes de pain@'{e}l. Atualmente @var{NOMEPAINEL} pode ser:
 @table @asis
 @item geomview
-main panel
+painel principal
 @item tools
-movimento controls
+controles de movimento
 @item appearance
 controles de apar@^{e}ncia
 @item cameras
-c@^{a}mera controls
+controles de c@^{a}mera
 @item lighting
-lighting controls
+controles de ilumina@,{c}@~{a}o
 @item obscure
-obscure controls (doesn't seem to exist any more)
+controles obscuros (parece n@~{a}o existir mais)
 @item materials
-material properties controls
+controles de propriedades de materiais
 @item command
-command entry box
+caixa de entrada de comandos
 @item credits
-geomview credits
+cr@'{e}ditos do geomview
 @end table
-By default, the @code{geomview} and @code{tools} panels appear when
-geomview starts.  If the optional Window is supplied, a @code{position}
-clause (e.g. (ui-panel obscure on @{ position xmin xmax ymin ymax @})
-sets the panel's default position.  (Only xmin and ymin values are
-actually used.)  A present but empty Window, e.g.  @code{(ui-panel
-obscure on @{})@} causes interactive positioning.
+Por padr@~{a}o, os pain@'{e}is @code{geomview} e @code{tools} aparecem quando
+o geomview inicia.  Se a janela opcional for fornecida, uma cl@'{a}usula
+@code{position} (e.g. (ui-panel obscure on @{ position xmin xmax ymin ymax @})
+ajusta a posi@,{c}@~{a}o padr@~{a}o do painel.  (Somente os valores de xmin e de ymin s@~{a}o
+atualmente usados.)  Uma janela presente mas vazia, e.g.  @code{(ui-panel
+obscure on @{})@} faz com que o posicionamento seja interativo.
 @end table
 
 @node ui-pdf-viewer, ui-target, ui-panel, GCL Reference
