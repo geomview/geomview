@@ -8745,26 +8745,25 @@ ids, como @code{g0} ou @code{(g2 g1 dodec.off)}.
 @subsection write-comments
 @findex write-comments
 @table @code
-@c JORGE JORGE JORGE VERIFICAR A TRADU@,{C}@~{A}O DE LIST PARA LISTA ABAIXO
 @item (write-comments NOMEDOARQUIVO GEOMID PICKPATH)
-write OOGL COMMENT objetos in the GEOMID hierarchy at the level do
-pick path to NOMEDOARQUIVO. Specifically, COMMENTS at level (a b c @dots{} f g)
-will match pick paths da form (a b c @dots{} f *) where * includes any
-value of g, and also any values of possible further indices h,i,j,
-etc. The pick path (returned in the @code{pick} command) is a list of
-integer counters specifying a subpart of a hierarchical OOGL
-objeto. Descent into a complex objeto (LISTA ou INST) adds a new integer
-to the path. Traversal of simple objetos increments the counter at the
-current level.  Individual COMMENTS are enclosed by curly braces, and
-the entire sequ@^{e}ncia de caracteres of zero, one, ou more COMMENTS (written in the order
-in which they are encountered during hierarchy traversal) is enclosed by
-parentheses.
+escreve objetos COMMENT da OOGL na hierarquia do GEOMID no n@'{i}vel do
+caminho selecionado para NOMEDOARQUIVO. Especificamente, COMMENTS no n@'{i}vel (a b c @dots{} f g)
+ir@~{a}o coincidir caminhos selecionados da forma (a b c @dots{} f *) onde * inclui qualquer
+valor de g, e tamb@'{e}m quaisquer valores de poss@'{i}veis @'{i}ndices adicionais h,i,j,
+etc. O caminho selecionado (retornado pelo comando @code{pick}) @'{e} uma lista de
+contadores inteiros especificando uma subparte de um objeto OOGL
+hier@'{a}rquico. Descendo dentro de um objeto complexo (LIST ou INST) adiciona um novo inteiro
+ao caminho. Traversal de objetos simples incrementa o contador no
+n@'{i}vel atual.  Individual COMMENTS s@~{a}o colocados entre chaves, e
+A completa sequ@^{e}ncia de caracteres de zero, um, ou mais COMMENTS (escritos na ordem
+em que forem encontrados durante a hierarquia transversal) @'{e} colocada entre
+par@^{e}ntesis.
         
-Note that arbitrary data can only be passed through the OOGL libraries
-as full-fledged OOGL COMMENT objetos, which can be attached to other
-objetos OOGL via the LISTA type as described above. Ordinary comments in
-OOGL files (i.e. everything after '#' on a line) are ignored at when the
-file is loaded and cannot be returned.
+Note que dados arbitr@'{a}rios podem somente ser informados atrav@'{e}s das bibliotecas OOGL
+como objetos OOGL COMMENT completamente fugidios, que podem serem anexados a outros
+objetos OOGL atrav@'{e}s do tipo LIST como descrito acima. Coment@'{a}rios comuns em
+arquivos OOGL (i.e. tudo ap@'{o}s '#' sobre uma linha) s@~{a}o ignorados quando o
+aruivo @'{e} carregado e n@~{a}o pode ser retornado.
 @end table
 
 @node write-handle, write-sexpr, write-comments, GCL Reference
