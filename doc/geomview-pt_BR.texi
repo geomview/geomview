@@ -8763,7 +8763,7 @@ Note que dados arbitr@'{a}rios podem somente ser informados atrav@'{e}s das bibl
 como objetos OOGL COMMENT completamente fugidios, que podem serem anexados a outros
 objetos OOGL atrav@'{e}s do tipo LIST como descrito acima. Coment@'{a}rios comuns em
 arquivos OOGL (i.e. tudo ap@'{o}s '#' sobre uma linha) s@~{a}o ignorados quando o
-aruivo @'{e} carregado e n@~{a}o pode ser retornado.
+arquivo @'{e} carregado e n@~{a}o pode ser retornado.
 @end table
 
 @node write-handle, write-sexpr, write-comments, GCL Reference
@@ -8771,8 +8771,8 @@ aruivo @'{e} carregado e n@~{a}o pode ser retornado.
 @findex write-handle
 @table @code
 @item (write-handle PREFIX NOMEDOARQUIVO HANDLE)
-Writes the objeto underlying the given handle to @var{NOMEDOARQUIVO}. This
-function is intended for internal debugging use only.
+Escreve o objeto com o respecitivo identificador para @var{NOMEDOARQUIVO}. Essa
+fun@,{c}@~{a}o foi pensada para depura@,{c}@~{a}o interna somente.
 @end table
 
 @node write-sexpr, xform, write-handle, GCL Reference
@@ -8816,8 +8816,8 @@ a transforma@,{c}@~{a}o do objeto ID para TRANSFORM).
 @subsection zoom
 @findex zoom
 @table @code
-@item (zoom CAM-ID FACTOR)
-Zoom CAM-ID, multiplying its field of view by FACTOR.
+@item (zoom CAM-ID FATOR)
+Zoom CAM-ID, multiplicando seu campo de vis@~{a}o por FATOR.
 FATOR deve ser um n@'{u}mero positivo.
 @end table
 
@@ -8873,10 +8873,10 @@ para fazerem-nos parecerem curvados.  Os par@^{a}metros que determinam essa
 subdivis@~{a}o podem ser ajustados com o comando GCL
 @code{set-conformal-refine}. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
 
-There are several sample hyperbolic space objetos in the
-@file{data/geom/hyperbolic} subdirectory do Geomview directory.
-Likewise, the subdirectory @file{data/geom/spherical}
-contains several sample spherical space objetos.
+Existem muitos exemplos de objetos no espaço hiperbólico no
+subdiretório @file{data/geom/hyperbolic} do diretórios Geomview.
+Da mesma forma, o subdiretório @file{data/geom/spherical}
+contém muitos exemplos de objetos no espaço esférico.
 
 @comment ****************************************************************
 @node Mathematica, Instalacao, Geometrias Nao-Euclidianas, Top
