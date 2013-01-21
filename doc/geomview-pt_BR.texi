@@ -8665,10 +8665,9 @@ on target choice.
 @subsection uninterest
 @findex uninterest
 @table @code
-@item (uninterest (COMMAND [args]))
-Undoes the effect of an @code{interest} command.  (COMMAND [args]) must
-be identical to those used in the @ref{interest, @code{interest}}
-command.
+@item (uninterest (COMANDO [args]))
+Desfaz o efeito de um comando @code{interest}.  (COMANDO [args]) deve
+ser id@^{e}ntico @`{a}quele usado no comando @ref{interest, @code{interest}}.
 @end table
 
 @node update, update-draw, uninterest, GCL Reference
@@ -8676,8 +8675,8 @@ command.
 @findex update
 @table @code
 @item (update [timestep_in_seconds])
-Apply each incremental movimento once.  Uses timestep if it's present and
-nonzero; otherwise movimentos are proportional to elapsed real time.
+Aplica cada movimento incremental uma @'{u}nica vez.  Usa timestep se esse tempo de passo estiver presente e
+n@~{a}o for nulo; de outra forma os movimentos s@~{a}o proporcionais ao intervalo de tempo decorido real.
 @end table
 
 @node update-draw, while, update, GCL Reference
@@ -8685,28 +8684,28 @@ nonzero; otherwise movimentos are proportional to elapsed real time.
 @findex update-draw
 @table @code
 @item (update-draw CAM-ID  [timestep_in_seconds])
-Apply each incremental movimento once and then draw CAM-ID.
-Applies @code{timestep} seconds' worth of movimento, ou uses elapsed real
-time if @code{timestep} is absent ou zero.
+Aplica cada movimento incremental uma @'{u}nica vez e ent@~{a}o desenha CAM-ID.
+Aplica segundos de @code{timestep} no valor do movimento, ou usa tempo decorrido
+real se @code{timestep} estiver ausente ou for nulo.
 @end table
 
 @node while, window, update-draw, GCL Reference
 @subsection while
 @findex while
 @table @code
-@item (while TEST BODY)
-Iterate: @emph{evaluate @var{TEST}, if non nil, evaluate @var{BODY}}.
+@item (while TESTE CORPO)
+Itera@,{c}@~{a}o: @emph{avalia @var{TESTE}, se encontrar alguma coisa, avalia @var{CORPO}}.
 @end table
 
 @node window, winenter, while, GCL Reference
 @subsection window
 @findex window
 @table @code
-@item (window CAM-ID WINDOW)
-Specify attributes for the janela of CAM-ID, e.g. its size ou initial
-position, in the OOGL Window syntax.  The special CAM-ID @code{default}
-especifica properties of future janelas (created by @ref{camera,
-@code{camera}} ou @ref{new-camera, @code{new-camera}}).
+@item (window CAM-ID JANELA)
+Especifica atributos para a janela de CAM-ID, e.g. seu tamanho ou sua posi@,{c}@~{a}o
+inicial, na sintaxe de janela da OOGL.  A identifica@,{c}@~{a}o especial de c@^{a}mera @code{default}
+especifica propiedades de janelas futuras (criadas por @ref{camera,
+@code{camera}} ou por @ref{new-camera, @code{new-camera}}).
 @end table
 
 @node winenter, write, window, GCL Reference
