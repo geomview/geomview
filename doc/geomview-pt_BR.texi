@@ -8780,8 +8780,8 @@ function is intended for internal debugging use only.
 @findex write-sexpr
 @table @code
 @item (write-sexpr NOMEDOARQUIVO LISPOBJECT)
-Writes the given LISPOBJECT to NOMEDOARQUIVO. This function is intended
-for internal debugging use only.
+Escreve o dado LISPOBJECT para NOMEDOARQUIVO. Essa fun@,{c}@~{a}o @'{e} pensada
+para depura@,{c}@~{a}o inerna somente.
 @end table
 
 @node xform, xform-incr, write-sexpr, GCL Reference
@@ -8789,8 +8789,8 @@ for internal debugging use only.
 @findex xform
 @table @code
 @item (xform ID TRANSFORM)
-Concatenate TRANSFORM with the current transform do objeto
-(apply TRANSFORM to objeto ID).
+Concatena TRANSFORM @`{a} transoforma@,{c}@~{a}o atual do objeto
+(aplica TRANSFORM ao objeto ID).
 @end table
 
 @node xform-incr, xform-set, xform, GCL Reference
