@@ -8750,7 +8750,7 @@ contains several sample spherical space objects.
 @node Mathematica, Installation, Non-Euclidean Geometry, Top
 @chapter Mathematica Graphics in Geomview or RenderMan
 
-Geomview comes with some Mathematica packages that let you use use
+Geomview comes with some Mathematica packages that let you use
 Geomview to display Mathematica graphics.  Mathematica is a commercial
 mathematical software system available from Wolfram Research, Inc.
 
