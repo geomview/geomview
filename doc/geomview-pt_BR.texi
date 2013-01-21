@@ -8873,18 +8873,18 @@ para fazerem-nos parecerem curvados.  Os par@^{a}metros que determinam essa
 subdivis@~{a}o podem ser ajustados com o comando GCL
 @code{set-conformal-refine}. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
 
-Existem muitos exemplos de objetos no espaço hiperbólico no
-subdiretório @file{data/geom/hyperbolic} do diretórios Geomview.
-Da mesma forma, o subdiretório @file{data/geom/spherical}
-contém muitos exemplos de objetos no espaço esférico.
+Existem muitos exemplos de objetos no espa@,{c}o hiperb@'{o}lico no
+subdiret@'{o}rio @file{data/geom/hyperbolic} do diret@'{o}rios Geomview.
+Da mesma forma, o subdiret@'{o}rio @file{data/geom/spherical}
+cont@'{e}m muitos exemplos de objetos no espa@,{c}o esf@'{e}rico.
 
 @comment ****************************************************************
 @node Mathematica, Instalacao, Geometrias Nao-Euclidianas, Top
 @chapter Gr@'{a}ficos do Mathematica no Geomview ou no RenderMan
 
-Geomview vem com alguns pacotes do Mathematica que permitem a você usar
-Geomview para mostrar gráficos do Mathematica.  Mathematica é um sistema
-de software matemático comercial disponivel a partir de Wolfram Research, Inc.
+Geomview vem com alguns pacotes do Mathematica que permitem a voc@^{e} usar
+Geomview para mostrar gr@'{a}ficos do Mathematica.  Mathematica @'{e} um sistema
+de software matem@'{a}tico comercial disponivel a partir de Wolfram Research, Inc.
 
 There are two ways to do this.
 @enumerate
