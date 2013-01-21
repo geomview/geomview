@@ -8852,18 +8852,18 @@ the c@^{a}mera moves by Euclidean movimentos and objeto geom@'{e}trico moves by 
 movimentos.  @emph{Conformal} model is similar but shows the conformal
 ball model instead. 
 
-In spherical space, the @emph{Projective} model gives a view of half
-da 3-sphere imbedded in Euclidean 3-space.  Spherical movimentos give
-rise to projective transformations in the @emph{Projective} model, and
-to
+No espa@,{c}o esf@'{e}rico, o modelo @emph{Projective} fornece uma vis@~{a}o de metade
+da esfera tridimensional embutida no espa@,{c}o de Euclides tridimensional.  Movimentos esf@'{e}ricos fornecem
+sobem para transforma@,{c}òes projetivas no modelo @emph{Projective}, e
+para transforma@,{c}@~{o}es de 
 @tex
 M\"{o}bius
 @end tex
 @ifnottex
 Moebius
 @end ifnottex
-transformations in the @emph{Conformal} model.  In both of these
-models the c@^{a}mera moves by Euclidean movimentos.
+no modelo @emph{Conformal}.  Em ambos esses
+modelos a c@^{a}mera move-se atrav@'{e}s de movimentos de Euclides.
 
 Nos modelos @emph{Projective} e @emph{Conformal}, a esfera unit@'{a}ria @'{e}
 desenhada por par@~{a}o.  Voc@^{e} pode desabilitar e habilitar a exibi@,{c}@~{a}o da esfera unit@'{a}ria usando o
