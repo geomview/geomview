@@ -8798,9 +8798,9 @@ Concatenate TRANSFORM with the current transform do objeto
 @findex xform-incr
 @table @code
 @item (xform-incr ID TRANSFORM)
-Apply continual movimento: concatenate TRANSFORM with the current
-transform do objeto every refresh (set objeto ID's
-incremental transform to TRANSFORM).
+Aplica movimento cont@'{i}nuo: concatena TRANSFORM @`{a} atual
+transforma@,{c}@~{a}o do objeto sempre atualizando a tela (ajusta ID da transforma@,{c}@~{a}o
+incremental de objeto para TRANSFORM).
 @end table
 
 @node xform-set, zoom, xform-incr, GCL Reference
@@ -8808,8 +8808,8 @@ incremental transform to TRANSFORM).
 @findex xform-set
 @table @code
 @item (xform-set ID TRANSFORM)
-Overwrite the current objeto transform with TRANSFORM (set
-objeto ID's transform to TRANSFORM).
+Sobrescreve a atual transforma;c@~{a}o de objeto com TRANSFORM (ajusta
+a transforma@,{c}@~{a}o do objeto ID para TRANSFORM).
 @end table
 
 @node zoom,  , xform-set, GCL Reference
