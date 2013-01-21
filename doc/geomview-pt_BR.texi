@@ -8884,25 +8884,25 @@ cont@'{e}m muitos exemplos de objetos no espa@,{c}o esf@'{e}rico.
 
 Geomview vem com alguns pacotes do Mathematica que permitem a voc@^{e} usar
 Geomview para mostrar gr@'{a}ficos do Mathematica.  Mathematica @'{e} um sistema
-de software matem@'{a}tico comercial disponivel a partir de Wolfram Research, Inc.
+de software matem@'{a}tico comercial dispon@'{i}vel a partir de Wolfram Research, Inc.
 
-There are two ways to do this.
+Existem duas formas de mostrar um gr@'{a}fico do Mathematica no Geomview.
 @enumerate
 @item
-Use Mathematica to write a graphics objeto to a file in OOGL format
-or in RIB format.
+Use Mathematica para escrever um objeto gr@'{a}fico em um arquivo no formato OOGL
+ou no formato RIB.
 @item
-Use Geomview as the default display for all 3D graphics output in
+Use Geomview como o visualizador padr@~{a}o para todos as sa@'{i}das de gr@'{a}ficos 3D no
 Mathematica.
 @end enumerate
-You can also use these packages to save Mathematica graphics in
-RenderMan (RIB) format.
+Voc@^{e} tamb@'{e}m pode usar esses pacotes para gravar gr@'{a}ficos do Mathematica no
+formato RenderMan (RIB).
 
-Since the format of Mathematica graphics objetos is different from the
-OOGL formats, both of these methods involve translating Mathematica
-graphics to OOGL format.  Geomview is distributed with a Mathematica
-package which does this translation.  Before doing either dos
-above you must install this package.
+Uma vez que o formato dos objetos gr@'{a}ficos do Mathematica @'{e} diferente dos
+formatos OOGL, ambos esses m@'{e}todos envolvem traduzir gr@'{a}ficos do
+Mathematica para o formato OOGL.  Geomview @'{e} distribu@'{i}do com um pacote do
+Mathematica que faz essa tradu@,{c}@~{a}o.  Anes de usar qualquer dos dois m@'{e}todos
+acima voc@^{e} deve instalar esse pacote.
 
 @menu
 * OOGL.m::                      Generating OOGL files in Mathematica.
