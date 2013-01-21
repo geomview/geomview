@@ -8566,17 +8566,17 @@ padr@~{a}o @'{e} dependente da forma como a c@'{o}pia local do geomview foi comp
 @findex ui-motion
 @table @code
 @item (ui-motion @{inertia|constrain|own-coordinates@} @{on|off@})
-Enable ou disable certain properties of mouse-controlled movimento. The
-purpose of this command is to give access to the respective toggles of
-the @emph{Main} panel's @emph{Motion} menu through GCL
-commands. @xref{Movimentos do Mouse}.
+Habilita ou desabilita certas propriedades de movimento controlado por mouse. O
+propósito dess comando é acessar aos respectivos comutadores do
+painél principal (@emph{Main}) no menu de movimento ( @emph{Motion}) através de
+comandos GCL. @xref{Movimentos do Mouse}.
 
 @table @code
 @item inertia
-Normally, moving objetos have inertia: if o mouse is still moving when
-the bot@~{a}o is released, the selected objeto continues to move. When
-@code{inertia} is off, objetos cease to move as soon as you release the
-mouse.
+Normalmente, movimentos de objeto possuem inércia: se o mouse estiver em movimento quando
+o bot@~{a}o for liberado, o objeto selecionado continua a se mover. Quando
+a opção @code{inertia} estiver em off, objetos cessam o movimento no mesmo instânte em que
+o botão do mouse for liberado.
 
 @item constrain
 It's sometimes handy to move an objeto in a direction aligned with a
