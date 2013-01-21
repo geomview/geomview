@@ -8640,12 +8640,12 @@ obscure on @{})@} faz com que o posicionamento seja interativo.
 @findex ui-pdf-viewer
 @table @code
 @item (ui-pdf-viewer VIEWER)
-Use the executable @var{VIEWER} for viewing the @var{PDF}-version do
-manual when the @samp{Manual (PDF)} menu-item is selected in the
-@samp{Help}-menu.  If the @code{(ui-pdf-viewer @dots{})} command was
-never executed, then the default is to use the browser stored in the
-@code{PDFVIEWER} environment variable. If the environment variable is
-unset then the default is compile-time dependent.
+Usa o execut@'{a}vel armazenado na vari@'{a}vel @var{VIEWER} para visualizar a vers@~{a}o em @var{PDF} do
+manual quando o item de menu @samp{Manual (PDF)} estiver selecionado no
+menu @samp{Help}.  Se o comando @code{(ui-pdf-viewer @dots{})} nunca tiver
+sido executado, ent@~{a}o o padr@~{a}o @'{e} usar o navegador armazenado na
+vari@'{a}vel de ambiente @code{PDFVIEWER}. se a vari@'{a}vel de ambiente estiver
+vazia ent@~{a}o o padr@~{a}o @'{e} determinado pela forma como a c@'{o}pia local do geomview foi compilada.
 @end table
 
 @node ui-target, uninterest, ui-pdf-viewer, GCL Reference
