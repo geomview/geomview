@@ -8865,13 +8865,13 @@ Moebius
 transformations in the @emph{Conformal} model.  In both of these
 models the c@^{a}mera moves by Euclidean movimentos.
 
-In @emph{Projective} and @emph{Conformal} models, the unit sphere is
-drawn by default.  You can turn it off and on at will using the
-@emph{Draw Sphere} bot@~{a}o in the @emph{Camera} panel.  In the
-@emph{Conformal} model, pol@'{i}gonos and edges are subdivided as necessary
-to make them look curved.  The parameters which determine this
-subdivision can be set with the @code{set-conformal-refine} GCL
-command. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
+Nos modelos @emph{Projective} e @emph{Conformal}, a esfera unit@'{a}ria @'{e}
+desenhada por par@~{a}o.  Voc@^{e} pode desabilitar e habilitar a exibi@,{c}@~{a}o da esfera unit@'{a}ria usando o
+bot@~{a}o @emph{Draw Sphere} no painel de @emph{Camera}.  No
+modelo @emph{Conformal}, pol@'{i}gonos e arestas s@~{a}o sibdivididos se for necess@'{a}rio
+para fazerem-nos parecerem curvados.  Os par@^{a}metros que determinam essa
+subdivis@~{a}o podem ser ajustados com o comando GCL
+@code{set-conformal-refine}. @xref{set-conformal-refine,@code{(set-conformal-refine @dots{})}}.
 
 There are several sample hyperbolic space objetos in the
 @file{data/geom/hyperbolic} subdirectory do Geomview directory.
