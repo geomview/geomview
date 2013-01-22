@@ -9230,29 +9230,29 @@ In[2]:= Plot3D[ Sin[x + Sin[y]], @{x,-2,2@}, @{y,-2,2@} ]
 
 Out[2]= -SurfaceGraphics-
 
-In[3]:= WriteChunk["mychunk",%2]
+In[3]:= WriteChunk["minhaparte",%2]
 @end example
 @noindent
-This writes the file @file{mychunk} which contains a description
-do graphics objeto.  You can then transfer this file to a system
-with Geomview and type
+Escreve o arquivo @file{minhaparte} que cont@'{e}m uma descri@,{c}@~{a}o
+do objeto gr@'{a}fico.  Voc@^{e} pode ent@~{a}o transferir esse arquivo para um sistema
+com Geomview e digitar
 @example
-math2oogl < mychunk > mma.oogl
+math2oogl < minhaparte > mma.oogl
 @end example
 @noindent
-to convert it to the OOGL file @file{mma.oogl} which you can then view
-using Geomview. This is the equivalent do @code{WriteOOGL} command. 
+para converter o minhaparte no arquivo OOGL @file{mma.oogl} que voc@^{e} pode ent@~{a}o visualizar
+usando o Geomview. @'{E} equivalente ao comando @code{WriteOOGL}. 
 
-For a result equivalent to the @code{Geomview} ou @code{Show}
-commands, type
+Para um resultado equivalente aos comando @code{Geomview}
+ou @code{Show} do Mathem@'{a}tica, digite
 @example
-math2oogl -togeomview Mathematica geomview < mychunk
+math2oogl -togeomview Mathematica geomview < minhaparte
 @end example
 @noindent
 
-The @code{WriteRI}b command can be emulated from the shell as
+O comando @code{WriteRI}b pode ser emulado a partir do shell como
 @example
-math2oogl < mychunk | oogl2rib -n mma.tiff
+math2oogl < minhaparte | oogl2rib -n mma.tiff
 @end example
 @noindent
 
@@ -9261,27 +9261,27 @@ math2oogl < mychunk | oogl2rib -n mma.tiff
 
 @comment ================================================================
 @node Package Details, Package Installation, Remote Display, Mathematica
-@section Details of the Mathematica->Geomview Package
+@section Detalhes do Pacote Mathematica->Geomview
 
-The @file{OOGL.m} package uses the external program @file{math2oogl} to
-convert @code{Graphics3D} objetos to OOGL format, because a compiled
-external program is able to do this conversion many times faster than
+O pacote @file{OOGL.m} usa o programa externo @file{math2oogl} para
+converter objetos @code{Graphics3D} para o formato OOGL, pelo fato de um programa
+extero compilado etar apto a fazer essa convers@~{a}o muitas vezes mais r@'{a}pido que o
 Mathematica.
 
-The converter will sometimes handle colored SurfaceGraphics objetos
-correctly that Mathematica does not handle correctly, which means that
-Geomview[objeto] sometimes works where Show[objeto] will give errors.
+O conversor ir@'{a} muitas vezes controlar objetos SurfaceGraphics coloridos
+corretamente os quais o Mathematica n@~{a}o controla corretamente, o que significa que
+Geomview[objeto] algumas vezes trabalha onde Show[objeto] mostra erros.
 
-The converter supports the @code{Polygon}, @code{Line}, and @code{Point}
-graphics primitives, @code{RGBColor Graphics3D} directives, and
-@code{SurfaceGraphics} objetos with ou without @code{RGBColor}
-directives, and lists of any combination of these. It silently ignores
-all other directives.
+O conversor suporta as primitivas gr@'{a}ficas @code{Polygon}, @code{Line},
+e @code{Point}, as diretivas @code{RGBColor Graphics3D}, e
+objetos @code{SurfaceGraphics} com ou sem diretivas
+@code{RGBColor}, e grande quantidade de quaisquer combina@,{c}@~{o}es destes. Silenciosamente igonora
+todas as outras diretivas.
 
-The Mathematica to RenderMan conversion is actually a two-step process:
-Mathematica->OOGL (math2oogl), and OOGL->RenderMan (oogl2rib).
+A convers@~{a}o do Mathematica para o RenderMan @'{e} atualmente um processo em dois passos:
+Mathematica->OOGL (math2oogl), e OOGL->RenderMan (oogl2rib).
 
-In the @code{WriteOOGL} and @code{WriteRI}b commands, filename can
+Nos comandos @code{WriteOOGL} e @code{WriteRI}b, filename can
 either be a sequ@^{e}ncia de caracteres containing a filename, an @code{OutputStream} objeto,
 or a sequ@^{e}ncia de caracteres starting with a @code{!} to send the output to a command.
 Objeto can be a @code{Graphics3D} objeto, a @code{SurfaceGraphics}
