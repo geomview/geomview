@@ -8139,7 +8139,7 @@ Substitui uma parte do geom@'{e}trico for GEOM-ID.
 @findex rib-display
 @table @code
 @item (rib-display [frame|tiff] FILEPREFIX)
-Ajusta o display Renderman para framebuffer (janela que surge na tela) ou para
+Ajusta o display Renderman para janela tempor@'{a}ria (janela que surge na tela) ou para
 um arquivo de disco no formato TIFF. FILEPREFIX @'{e} usado para construir
 nomes da forma @code{prefixNNNN.suffix}. (i.e. foo0000.rib)
 O n@'{u}mero @'{e} incrementado a cada chamada a @code{rib-snapshot} e
@@ -9116,18 +9116,18 @@ usar stdin/stdout.  As op@,{c}@~{o}es s@~{a}o:
 @table @code
 
 @item -n @var{nome}
-Use @var{nome} para o nome do arquivo TIFF rnderizado (o padr@~{a}o @'{e}
-"geom.tiff") ou para a janela de framebuffer (padr@~{a}o "geom.rib").
+Use @var{nome} para o nome do arquivo TIFF renderizado (o padr@~{a}o @'{e}
+"geom.tiff") ou para a janela tempor@'{a}ria (padr@~{a}o "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
 Use cor de fundo (@var{r},@var{g},@var{}b).  Cada intervalo de componente
 vai de 0 a 1. Padr@~{a}o: nenhum.
 
-@item -w @var{width} -h @var{height}
-Rendered frame will be @var{width} by @var{height} pixels.
+@item -w @var{largura} -h @var{altura}
+O quadro Renderizado ir@'{a} ter @var{largura} por @var{altura} pixels.
 
 @item -f
-RIB file renders to on-screen framebuffer instead of TIFF file.
+O arquivo RIB renderiza para uma janela tempor@'{a}ria na tela ao inv@'{e}s de para o arquivo TIFF.
 
 @item -g
 Output only the objeto geom@'{e}trico in RIB format.
