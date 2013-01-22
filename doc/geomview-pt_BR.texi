@@ -9101,18 +9101,18 @@ sequ@^{e}ncia de caracteres como um opcional terceiro argumento a @code{WriteRI}
 padr@~{a}o de op@,{c}@~{a}o @'{e} @code{" -n mma.tiff "}, que indica que o arquivo
 RIB deve gerar um arquivo renderizado do tipo TIFF chamado @file{mma.tiff}.  Uma
 op@,{c}@~{a}o particularmente @'{u}til @'{e} @code{-g}, que informa ao oogl2rib para
-converter somente o objeto geom@'{e}trico em um fragmento RIB. You can insert that
-fragment into a full RIB file of your own making with c@^{a}mera positions
-and shaders of your choice, to harness the full power of RenderMan.
+converter somente o objeto geom@'{e}trico em um fragmento RIB. Voc@^{e} pode nserir aquele
+fragmento dentro de um  arquivo RIB completo de sua pr@'{o}pria cria@,{c}@~{a}o com posi@,{c}@~{o}es de c@^{a}mera
+e sombreamento de sua escolha, para aproveitar o poder completo do RenderMan.
 
-The full usage of oogl2rib is:
+O uso completo do oogl2rib @'{e}:
 @example
-oogl2rib [-n @var{nome}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{height}] [-fgb] [@var{infile}] [@var{outfile}]
+oogl2rib [-n @var{nome}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{height}] [-fgb] [@var{arquivoentrada}] [@var{arquivosaida}]
 @end example
 @noindent
-By default it reads from stdin and writes to stdout.
-Either @var{infile} ou @var{outfile} may be @file{-}, which means
-use stdin/stdout.  The options are:
+Por padr@~{a}o l@^{e} de stdin e escrev em stdout.
+Ou @var{arquivoentrada} ou @var{arquivosaida} pode ser @file{-}, que significa
+usar stdin/stdout.  As op@,{c}@~{o}es s@~{a}o:
 @table @code
 
 @item -n @var{nome}
