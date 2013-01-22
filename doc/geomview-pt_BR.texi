@@ -8931,16 +8931,16 @@ o mesmo Geomview.  Existem dois caminhos para usar esse comando @code{Geomview}.
 
 @table @code
 @item Geomview[@var{nomegrafico}]
-Sends the 3D graphics objeto @var{nomegrafico} to Geomview as a geom named
-@code{Mathematica}.  Subsequent usage of @code{Geomview[@var{nomegrafico}]}
-replaces the @code{Mathematica} objeto in Geomview with the new
+Envia o objeto gr@'{a}fico 3D @var{nomegrafico} para o Geomview como um geom chamado
+@code{Mathematica}.  Subsequentes usos de @code{Geomview[@var{nomegrafico}]}
+substitui o objeto @code{Mathematica} no Geomview com o novo
 @var{nomegrafico}.
 
 @item @code{Geomview[@var{nome},@var{nomegrafico}]}
-Sends the 3D graphics objeto @var{nomegrafico} to Geomview as a geom named
-@var{nome}.  You can use multiple calls of this form with different
-names to cause Geomview to display several Mathematica objetos at once
-and allow independent control over them.
+Envia o objeto gr@'{a}fico 3D @var{nomegrafico} para o Geomview como um geom chamado
+@var{nome}.  Voc@^{e} pode usar m@'{u}ltiplas chamadas dessa forma com diferentes
+nomes para fazer com que o Geomview mostre muitos objetos Mathematica de uma s@'{o} vez
+e permita o controle deles de forma independente.
 @end table
 @example
 % math
