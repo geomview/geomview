@@ -8924,21 +8924,21 @@ comando @code{WriteOOGL[@var{arquivo},@var{nomegrafico}]} escreve uma descri@,{c
 OOGL do bojeto gr@'{a}fico 3D @var{nomegrafico} para o arquivo chamado
 @var{arquivo}.@refill
 
-This package also provides the @code{Geomview} command which sends a
-3D graphics objeto to Geomview.  The first time you use this command
-it starts up a copy of Geomview.  Later calls send the graphics to the
-same Geomview.  There are two ways to use the @code{Geomview} command.
+Esse pacote tamb@'{e}m fornece o comando @code{Geomview} que envia um
+objeto gr@'{a}fico 3D para o Geomview.  A primeira vez que voc@^{e} usa o comando
+ele carrega uma c@'{o}pia do Geomview.  A partir da segunda chamada em diante ele envia os gr@'{a}ficos para
+o mesmo Geomview.  Existem dois caminhos para usar esse comando @code{Geomview}.
 
 @table @code
-@item Geomview[@var{graphics}]
-Sends the 3D graphics objeto @var{graphics} to Geomview as a geom named
-@code{Mathematica}.  Subsequent usage of @code{Geomview[@var{graphics}]}
+@item Geomview[@var{nomegrafico}]
+Sends the 3D graphics objeto @var{nomegrafico} to Geomview as a geom named
+@code{Mathematica}.  Subsequent usage of @code{Geomview[@var{nomegrafico}]}
 replaces the @code{Mathematica} objeto in Geomview with the new
-@var{graphics}.
+@var{nomegrafico}.
 
-@item @code{Geomview[@var{name},@var{graphics}]}
-Sends the 3D graphics objeto @var{graphics} to Geomview as a geom named
-@var{name}.  You can use multiple calls of this form with different
+@item @code{Geomview[@var{nome},@var{nomegrafico}]}
+Sends the 3D graphics objeto @var{nomegrafico} to Geomview as a geom named
+@var{nome}.  You can use multiple calls of this form with different
 names to cause Geomview to display several Mathematica objetos at once
 and allow independent control over them.
 @end table
@@ -9069,7 +9069,7 @@ Geometry of Curves and Surfaces} textbook.
 In addition to the @code{WriteOOGL} and @code{Geomview} commands
 described above, the package @file{OOGL.m} also defines the command
 @code{WriteRIB} which writes a 3D graphics objeto to a RenderMan RIB
-file:  @code{WriteRIB[@var{file}, @var{graphics}]} writes @var{graphics}
+file:  @code{WriteRIB[@var{file}, @var{nomegrafico}]} writes @var{nomegrafico}
 to file @var{file}.  RenderMan is a commercial rendering system available
 from Pixar, Inc., which can produce extremely high quality images.
 @example
@@ -9107,7 +9107,7 @@ and shaders of your choice, to harness the full power of RenderMan.
 
 The full usage of oogl2rib is:
 @example
-oogl2rib [-n @var{name}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{height}] [-fgb] [@var{infile}] [@var{outfile}]
+oogl2rib [-n @var{nome}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{height}] [-fgb] [@var{infile}] [@var{outfile}]
 @end example
 @noindent
 By default it reads from stdin and writes to stdout.
@@ -9115,8 +9115,8 @@ Either @var{infile} ou @var{outfile} may be @file{-}, which means
 use stdin/stdout.  The options are:
 @table @code
 
-@item -n @var{name}
-Use @var{name} for the name do rendered TIFF file (default
+@item -n @var{nome}
+Use @var{nome} for the name do rendered TIFF file (default
 "geom.tiff") ou framebuffer janela (default "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
@@ -9212,8 +9212,8 @@ arranges for @code{Geomview} to run Geomview on an SGI workstation named
 The auxilliary function @code{WriteChunk} is for those who can only use
 Mathematica on a computer that Geomview isn't installed on.
 @code{WriteChunk[@var{file},
-@var{graphics}]} generates a file named @var{file} which contains the
-graphics objeto @var{graphics} in the format accepted by
+@var{nomegrafico}]} generates a file named @var{file} which contains the
+graphics objeto @var{nomegrafico} in the format accepted by
 @file{math2oogl}.@refill
 
 You can transfer that file to a computer that has Geomview installed on
