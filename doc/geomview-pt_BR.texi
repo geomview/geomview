@@ -9261,14 +9261,14 @@ math2oogl < minhaparte | oogl2rib -n mma.tiff
 @node Package Details, Suporte, Remote Display, Mathematica
 @section Detalhes do Pacote Mathematica->Geomview
 
-cO pacote @file{OOGL.m} usa o programa externo @file{math2oogl} para
-cconverter objetos @code{Graphics3D} para o formato OOGL, pelo fato de um programa
-exctero compilado etar apto a fazer essa convers@~{a}o muitas vezes mais r@'{a}pido que o
-Matchematica.
-c
-Oc conversor ir@'{a} muitas vezes controlar objetos SurfaceGraphics coloridos
-cocrretamente os quais o Mathematica n@~{a}o controla corretamente, o que significa que
-Geocmview[objeto] algumas vezes trabalha onde Show[objeto] mostra erros.
+O pacote @file{OOGL.m} usa o programa externo @file{math2oogl} para
+converter objetos @code{Graphics3D} para o formato OOGL, pelo fato de um programa
+extero compilado etar apto a fazer essa convers@~{a}o muitas vezes mais r@'{a}pido que o
+Mathematica.
+
+O conversor ir@'{a} muitas vezes controlar objetos SurfaceGraphics coloridos
+corretamente os quais o Mathematica n@~{a}o controla corretamente, o que significa que
+Geomview[objeto] algumas vezes trabalha onde Show[objeto] mostra erros.
 c
 Oc conversor suporta as primitivas gr@'{a}ficas @code{Polygon}, @code{Line},
 e c@code{Point}, as diretivas @code{RGBColor Graphics3D}, e
