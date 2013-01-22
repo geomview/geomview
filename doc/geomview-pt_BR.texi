@@ -9150,21 +9150,21 @@ Mathematica que voc@^{e} transfere para o computdor do Geomview e ent@~{a}o
 traduz para o formato OOGL para mostrar no Geomview.
 
 @menu
-* Networked Geomview::          Using a networked Geomview host.
-* Chunks::                      Transporting Mathematica files to Geomview by Hand.
+* Networked Geomview::          Usando um host Geomview na mesma rede.
+* Chunks::                      Transportando arquivos do Mathematica para o Geomview Manualmente.
 @end menu
 
 @comment ----------------------------------------------------------------
 @node Networked Geomview, Chunks, Remote Display, Remote Display
-@subsection Using a Networked Geomview Host
+@subsection Usando um host Geomview na mesma rede
 
-The @code{Geomview} command looks at the @code{DISPLAY} or
-@code{REMOTEHOST} environment variables to try to determine if you are
-logged in from another computer.  If either of these indicates that you
-are, @code{Geomview} will attempt to run Geomview on that
-computer.  In order for this to work, your network must be configured
-such that the Mathematica computer can successfully @code{rsh} to the
-Geomview computer without giving a password.
+O comando @code{Geomview} procura elas vari@'{a}veis de ambiente
+@code{DISPLAY} ou @code{REMOTEHOST} para tentar determinar se voc@^{e} est@'{a}
+logado a partir de outro computador.  Se qualquer uma dessas vari@'{a}veis de ambiente indicar que voc@^{e}
+est@'{a}, @code{Geomview} ir@'{a} tentar executar Geomview no computador
+onde voc@^{e} se encontra.  Com o objeto de fazer funcionar, sua rede deve ser configurada
+de forma que o computador com o Mathematica possa fazer um @code{rsh} com sucesso para o
+computador Geomview sem fornecer uma senha.
 
 You can also explicitly set the @code{DisplayHost} option to the
 @code{Geomview} command to a sequ@^{e}ncia de caracteres which is the desired hostname, for
