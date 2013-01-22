@@ -9093,15 +9093,15 @@ cube.ri}b paa gerar o arquivo de imagem @file{mma.tiff}. Certamente, voc@^{e}
 precisa ter o RenderMan instalado para o comando funcionar. Um atalho para renderizar
 a partir de dentro do Mathematica @'{e} @code{WriteRIB["!render", algumacoisa]}.@refill
 
-@code{WriteRI}b works by first converting the Mathematica graphics
-objeto to OOGL format using @code{WriteOOGL} and then calls an external
-program @file{oogl2ri}b to convert OOGL to RIB format.  The
-oogl2rib program takes several options which you can specify in a
-sequ@^{e}ncia de caracteres as an optional terceiro argumento to @code{WriteRI}b.  The default
-option sequ@^{e}ncia de caracteres is @code{" -n mma.tiff "}, which indicates that the RIB
-file should generate a rendered TIFF file named @file{mma.tiff}.  A
-particularly useful option is @code{-g}, which tells oogl2rib to
-convert only the objeto geom@'{e}trico into a RIB fragment. You can insert that
+@code{WriteRI}b trabalha primeiramente convertendo o objeto gr@'{a}fico do
+Mathematicao para o formato OOGL usando @code{WriteOOGL} e ent@~{a}o chamando um o programa
+externo @file{oogl2ri}b para converter o formato OOGL para o formato RIB.  O
+programa oogl2rib recebe muitas op@,{c}@~{o}es que voc@^{e} pode especificar em uma
+sequ@^{e}ncia de caracteres como um opcional terceiro argumento a @code{WriteRI}b.  A sequ@^{e}ncia de caracteres
+padr@~{a}o de op@,{c}@~{a}o @'{e} @code{" -n mma.tiff "}, que indica que o arquivo
+RIB deve gerar um arquivo renderizado do tipo TIFF chamado @file{mma.tiff}.  Uma
+op@,{c}@~{a}o particularmente @'{u}til @'{e} @code{-g}, que informa ao oogl2rib para
+converter somente o objeto geom@'{e}trico em um fragmento RIB. You can insert that
 fragment into a full RIB file of your own making with c@^{a}mera positions
 and shaders of your choice, to harness the full power of RenderMan.
 
