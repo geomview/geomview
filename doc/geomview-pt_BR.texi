@@ -9058,20 +9058,20 @@ In[11] := ParametricPlot3D[
 
 Out[11] := -Graphics3D-
 @end example
-This last plot is Kuen's surface, a surface of constant negative
-curvature.  Parametrization from Alfred Gray's @emph{Modern Differential
-Geometry of Curves and Surfaces} textbook.
+O @'{u}ltimo gr@'{a}fico @'{e} de uma superf@'{i}cie de Kuen, uma superf@'{i}cie de curvatura negativa
+constante.  Parametriza@,{c}@~{a}o retirada do livro texto de Alfred Gray @emph{Modern Differential
+Geometry of Curves and Surfaces}.
 
 @comment ================================================================
 @node RenderMan, Remote Display, Geomview.m, Mathematica
-@section Using Mathematica to generate RenderMan files
+@section Usando Mathematica para gerar arquivos do RenderMan
 
-In addition to the @code{WriteOOGL} and @code{Geomview} commands
-described above, the package @file{OOGL.m} also defines the command
-@code{WriteRIB} which writes a 3D graphics objeto to a RenderMan RIB
-file:  @code{WriteRIB[@var{file}, @var{nomegrafico}]} writes @var{nomegrafico}
-to file @var{file}.  RenderMan is a commercial rendering system available
-from Pixar, Inc., which can produce extremely high quality images.
+Adicionalmente aos comandos @code{WriteOOGL} e @code{Geomview}
+descritos acima, o pacote @file{OOGL.m} tamb@'{e}m define o comando
+@code{WriteRIB} que escreve um objeto gr@'{a}fico 3D para um arquivo
+RenderMan RIB:  @code{WriteRIB[@var{arquivo}, @var{nomegrafico}]} escreve @var{nomegrafico}
+para o arquivo chamado @var{aquivo}.  RenderMan @'{e} um sistema de renderiza@,{c}@~{a}o comercial dispon@'{i}vel
+a partir da Pixar, Inc., que pode produzir imagens de extremamente alta qualidade.
 @example
 In[1] := <<OOGL.m
 
