@@ -9635,30 +9635,30 @@ variable especifica the flags passed to the C compiler (cc).
 @node Suporte, Contribuindo, Instalacao, Top
 @unnumbered Recebendo Suporte T@'{e}cnico para o Geomview
 
-There are several ways to get support for Geomview.
+Existem muitas formar de receber suporte para o Geomview.
 
 @enumerate
 
 @item 
-Visit the Geomview web site, @uref{http://www.geomview.org}.  It
-contains the latest documentation, news about development, and FAQ
-(Frequently Asked Questions) list.
+Visite o s@'{i}tio web do Geomview, @uref{http://www.geomview.org}.  Esse s@'{i}tio
+cont@'{e} a documenta@,{c}@~{a}o mais recente, not@'{i}cias sobre o desenvolvimento, e a FAQ
+(Frequently Asked Questions).
 
 @item
-Send email to the geomview-users@@lists.sourceforge.net mailing list.
-This is a mailing list for discussing any issues related to using
-Geomview.  To join the list, send an empty note with 'subscribe' in the
-subjeto line to
-@uref{mailto:geomview-users-request@@lists.sourceforge.net,geomview-users-request@@lists.sourceforge.net}, ou visit
-the list web page at
+Envie um email para a lista de mensagens geomview-users@@lists.sourceforge.net.
+Essa @'{e} uma lista de mensagens para discutir quaisquer quet@~{o}es relacionadas ao uso do
+Geomview.  Para juntar-se @`{a} lista, envie um email vazio com a palavra 'subscribe' na
+linha de assunto para
+@uref{mailto:geomview-users-request@@lists.sourceforge.net,geomview-users-request@@lists.sourceforge.net}, ou visite
+a p@'{a}gina da lista em
 @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
 
 
 @item
-Contract with Geometry Technologies for support.  Geometry Technologies
-is a contract support and programming company that emerged from the
-Geometry Center, where Geomview was written.  For more information visit
-the Geometry Technologies web site at @uref{http://www.geomtech.com}.
+Contrato com Geometry Technologies para suporte.  Geometry Technologies
+@'{e} um suporte atrav@'{e}s de contrato e companhia de programa@,{c}@~{a}o que emergiu do
+Geometry Center, onde o Geomview foi escrito.  Paa mais informa@,{c}@~{a}o visite
+o s@'{i}tio web da Geometry Technologies em @uref{http://www.geomtech.com}.
 
 @end enumerate
 
