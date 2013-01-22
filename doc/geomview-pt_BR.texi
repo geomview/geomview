@@ -9219,6 +9219,7 @@ nele e ent@~{a}o usar os programas @file{math2oogl}, @file{oogl2ri}b, e
 no subdiret@'{o}rio @file{bin/<CPU>}
 do diret@'{o}rio do Geomview, e podem ter sido instalados de forma que
 eles estejam no seu caminho de busca @code{path}. 
+
 @example
 In[1]:= <<OOGL.m
 
