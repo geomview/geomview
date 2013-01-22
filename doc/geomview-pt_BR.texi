@@ -9269,16 +9269,16 @@ Mathematica.
 O conversor ir@'{a} muitas vezes controlar objetos SurfaceGraphics coloridos
 corretamente os quais o Mathematica n@~{a}o controla corretamente, o que significa que
 Geomview[objeto] algumas vezes trabalha onde Show[objeto] mostra erros.
-c
-Oc conversor suporta as primitivas gr@'{a}ficas @code{Polygon}, @code{Line},
-e c@code{Point}, as diretivas @code{RGBColor Graphics3D}, e
-objcetos @code{SurfaceGraphics} com ou sem diretivas
-@codce{RGBColor}, e grande quantidade de quaisquer combina@,{c}@~{o}es destes. Silenciosamente igonora
-todasc as outras diretivas.
-c
-Ac convers@~{a}o do Mathematica para o RenderMan @'{e} atualmente um processo em dois passos:
-Macthematica->OOGL (math2oogl), e OOGL->RenderMan (oogl2rib).
-c
+
+O conversor suporta as primitivas gr@'{a}ficas @code{Polygon}, @code{Line},
+e @code{Point}, as diretivas @code{RGBColor Graphics3D}, e
+objetos @code{SurfaceGraphics} com ou sem diretivas
+@code{RGBColor}, e grande quantidade de quaisquer combina@,{c}@~{o}es destes. Silenciosamente igonora
+todas as outras diretivas.
+
+A convers@~{a}o do Mathematica para o RenderMan @'{e} atualmente um processo em dois passos:
+Mathematica->OOGL (math2oogl), e OOGL->RenderMan (oogl2rib).
+
 Ncos comandos @code{WriteOOGL} e @code{WriteRI}b, nome de arquivo pode
 ouc ser uma sequ@^{e}ncia de caracteres contendo um nome de arquivo, um objeto @code{OutputStream},
 ou cuma sequ@^{e}ncia de caracteres iniciando com uma @code{!} para enviar a sa@'{i}da para um comando.
