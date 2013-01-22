@@ -9166,8 +9166,8 @@ onde voc@^{e} se encontra.  Com o objeto de fazer funcionar, sua rede deve ser c
 de forma que o computador com o Mathematica possa fazer um @code{rsh} com sucesso para o
 computador Geomview sem fornecer uma senha.
 
-You can also explicitly set the @code{DisplayHost} option to the
-@code{Geomview} command to a sequ@^{e}ncia de caracteres which is the desired hostname, for
+Voc@^{e} pode tamb@'{e}m explicitament ajustar a op@,{c}@~{a}o @code{DisplayHost} para o
+comando @code{Geomview} para uma sequ@^{e}ncia de caracteres que @'{e} o hostname desejado, por
 exemplo:
 @example
 In[1] := << OOGL.m
@@ -9179,16 +9179,16 @@ Out[2] := -Graphics3D-
 In[3] := Geomview[%3, DisplayHost->"riemann"]
 @end example
 @noindent
-This displays the graphics @code{%3} on the remote host named
+O comando acima mostra o gr@'{a}fico @code{%3} no computador remoto chamado
 @code{riemann}.@refill
 
-@code{Geomview} recognizes the sequ@^{e}ncia de caracteres @code{"local"} as a value for
-@code{$DisplayHost}; it forces the graphics to be displayed on the local
-machine.@refill
+@code{Geomview} reconhece a sequ@^{e}ncia de caracteres @code{"local"} como um valor para
+@code{$DisplayHost}; faz com que os gr@'{a}ficos sejam mostrados na m@'{a}quina
+local.@refill
 
-In addition to knowing the name da machine you want to run Geomview
-on, @code{Geomview} needs to know the type of that machine (the setting
-da CPU variable that corresponds to the machine;
+Al@'{e}m do nome da m@'{a}quina que voc@^{e} pode deseja executar Geomview
+, @code{Geomview} precisa saber o tipo daquela m@'{a}quina (o ajuste
+da vari@'{a}vel CPU que corresponde @`{a} m@'{a}quina;
 @pxref{Source Code Installation}).
 By default, @code{Geomview} assumes that it is the same kind of
 computer as the one you are running Mathematica on.  The @code{MachType}
