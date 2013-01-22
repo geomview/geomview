@@ -9014,35 +9014,35 @@ In[4] := Geomview[@{%2,%3@}]
 Out[4] := @{-SurfaceGraphics-, -SurfaceGraphics-@}
 @end example
 @noindent
-Mostra ambos os objetos de uma s@'{o} vez.  You also can have more than one
-Mathematica objeto at a time on display in Geomview, and have separate
-control over them, by using the @code{Geomview} command with a name,
+Mostra ambos os objetos de uma s@'{o} vez.  Voc@^{e} tamb@'{e}m pode ter mais de um
+objeto do Mathematica de uma s@'{o} vez mostrados no Geomview, e ter controle
+separado deles, usando o comando do @code{Geomview} com um nome,
 @xref{OOGL.m}.
 @example
 In[5] := Graphics3D[ @{RGBColor[1,0,0], Line[@{ @{2,2,2@},@{1,1,1@} @}] @}]
 
 Out[5] := -Graphics3D-
 
-In[6] := Geomview["myline", %5]
+In[6] := Geomview["minhalinha", %5]
 @end example
 @noindent
-This addes the @code{Line} specified in @code{In[5]} to the existing
-Geomview display.  It can be controlled independently do
-"Mathematica" objeto, which is currently the list of two plots.
+Isso adiciona a @code{Linha} especificada em @code{In[5]} ao visualizador
+Geomview j@'{a} existente.  A @code{Linha} especificada em @code{In[5]} pode ser controlada independentemente do
+objeto do "Mathematica", que atualmente @'{e} uma lista de dois gr@'{a}ficos.
 @example
 In[7] := <<GL.m
 @end example
 @noindent
-If you're on an SGI, loading @code{GL.m} returns Mathematica to its
-usual 3D graphics display.  The following
-plot will appear in a normal static Mathematica janela.
+Se voc@^{e} estiver em um SGI, chamando @code{GL.m} retorna o Mathematica a seu
+usual visualizador de gr@'{a}ficos 3D.  O seguinte
+plot ir@'{a} aparecer em uma janela est@'{a}tica normal do Mathematica.
 @example
 In[8] := ParametricPlot3D[@{Sin[x],Sin[y],Sin[x]*Cos[y]@}, @{x,0,Pi@},@{y,0,Pi@}]
 
 Out[8] := -Graphics3D-
 @end example
 @noindent
-We can return to Geomview graphics at any time by reloading @file{Geomview.m}.
+Podemos retornar ao gr@'{a}fico do Geomview a qualquer tempo chamando @file{Geomview.m}.
 @example
 In[9] := <<Geomview.m
 
