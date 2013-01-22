@@ -9110,18 +9110,18 @@ O uso completo do oogl2rib @'{e}:
 oogl2rib [-n @var{nome}] [-B @var{r},@var{g},@var{}b] [-w @var{width}] [-h @var{height}] [-fgb] [@var{arquivoentrada}] [@var{arquivosaida}]
 @end example
 @noindent
-Por padr@~{a}o l@^{e} de stdin e escrev em stdout.
+Por padr@~{a}o l@^{e} de stdin e escreve em stdout.
 Ou @var{arquivoentrada} ou @var{arquivosaida} pode ser @file{-}, que significa
 usar stdin/stdout.  As op@,{c}@~{o}es s@~{a}o:
 @table @code
 
 @item -n @var{nome}
-Use @var{nome} for the name do rendered TIFF file (default
-"geom.tiff") ou framebuffer janela (default "geom.rib").
+Use @var{nome} para o nome do arquivo TIFF rnderizado (o padr@~{a}o @'{e}
+"geom.tiff") ou para a janela de framebuffer (padr@~{a}o "geom.rib").
 
 @item -B @var{r},@var{g},@var{}b
-Use background color (@var{r},@var{g},@var{}b).  Each component ranges
-from 0 to 1. Default: none.
+Use cor de fundo (@var{r},@var{g},@var{}b).  Cada intervalo de componente
+vai de 0 a 1. Padr@~{a}o: nenhum.
 
 @item -w @var{width} -h @var{height}
 Rendered frame will be @var{width} by @var{height} pixels.
