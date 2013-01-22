@@ -9190,38 +9190,38 @@ Al@'{e}m do nome da m@'{a}quina que voc@^{e} pode deseja executar Geomview
 , @code{Geomview} precisa saber o tipo daquela m@'{a}quina (o ajuste
 da vari@'{a}vel CPU que corresponde @`{a} m@'{a}quina;
 @pxref{Source Code Installation}).
-By default, @code{Geomview} assumes that it is the same kind of
-computer as the one you are running Mathematica on.  The @code{MachType}
-option lets you explicitly specify the type do @code{DisplayHost}
-computer; it should be one das sequ@^{e}ncias de caracteres @code{"sgi"} or
+Por padr@~{a}o, @code{Geomview} assume que @'{e} do mesmo tipo de
+computador que voc@^{e} est@'{a} executando o Mathematica.  A op@,{c}@~{a}o
+@code{MachType} permite a voc@^{e} explicitamente especificar o tipo do computador
+@code{DisplayHost}; deve ser um entre as sequ@^{e}ncias de caracteres @code{"sgi"} ou
 @code{"next"} ou @code{"x11"}.@refill
 
-You can use @code{SetOptions} to change the default @code{DisplayHost}
-and @code{MachType}.  For exemplo,
+Voc@^{e} pode usar @code{SetOptions} para mudar o @code{DisplayHost} padr@~{a}o
+e a @code{MachType} padr@~{a}o.  Por exemplo,
 @example
 In[4] := SetOptions[Geomview, DisplayHost->"riemann", MachType->"sgi"]
 @end example
 @noindent
-arranges for @code{Geomview} to run Geomview on an SGI workstation named
+faz com que @code{Geomview} execute o Geomview em uma esta@,{c}@~{a}o de trabalho SGI chamada
 @code{riemann}.@refill
 
 @comment ----------------------------------------------------------------
 @node Chunks,  , Networked Geomview, Remote Display
-@subsection Transporting Mathematica Files to Geomview by Hand
+@subsection Transportando arquivos do Mathematica para o Geomview Manualmente
 
-The auxilliary function @code{WriteChunk} is for those who can only use
-Mathematica on a computer that Geomview isn't installed on.
-@code{WriteChunk[@var{file},
-@var{nomegrafico}]} generates a file named @var{file} which contains the
-graphics objeto @var{nomegrafico} in the format accepted by
+A fun@,{c}@~{a}o auxiliar @code{WriteChunk} @'{e} para aqueles que somente usar o
+Mathematica em um computador que n@~{a}o tem Geomview instalado.
+@code{WriteChunk[@var{nomearquivo},
+@var{nomegrafico}]} gera um arquivo chamado @var{nomearquivo} que cont@'{e}m o
+objeto gr@'{a}fico @var{nomegrafico} no formato aceito pelo
 @file{math2oogl}.@refill
 
-You can transfer that file to a computer that has Geomview installed on
-it and then use the programs @file{math2oogl}, @file{oogl2ri}b, and
-@file{geomview} directly from the shell.  These programs are distributed
-in the @file{bin/<CPU>}
-subdirectory do Geomview directory, and may have been installed so
-that they are on your @code{path}. 
+Voc@^{e} pode transferir aquele arquivo para um computador que tem Geomview instalado
+nele e ent@~{a}o usar os programas @file{math2oogl}, @file{oogl2ri}b, e
+@file{geomview} diretamente a partir do shell.  Esses programas s@~{a}o distribu@'{i}dos
+no subdiret@'{o}rio @file{bin/<CPU>}
+do diret@'{o}rio do Geomview, e podem ter sido instalados de forma que
+eles estejam no seu caminho de busca @code{path}. 
 
 @example
 In[1]:= <<OOGL.m
