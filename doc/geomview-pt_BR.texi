@@ -9666,38 +9666,38 @@ o s@'{i}tio web da Geometry Technologies em @uref{http://www.geomtech.com}.
 @node Contribuindo, Indice de Funcoes, Suporte, Top
 @unnumbered Contribuindo para o Desenvolvimento do Geomview
 
-If you are interested in contributing to the development of Geomview,
-there are several things you can do:
+Se voc@^{e} est@'{a} interessado em contribuir para o desenvolvimento do Geomview,
+existe muitas coisas que voc@^{e} pode fazer:
 
 @enumerate
 
-@item @strong{Volunteer programming work}.
+@item @strong{Trabalho volunt@'{a}rio de programa@,{c}@~{a}o}.
 
-If you are a programmer and make an improvement to Geomview, contact
-the other geomview authors by sending a note to the
-@file{geomview-users} mailing list (see
+Se voc@^{e} @'{e} um programador e fez um melhoramento para o Geomview, contacte
+os outros autores do geomview enviando uma mensagem para a
+lista de mesagens @file{geomview-users} (veja
 @uref{http://lists.sourceforge.net/mailman/listinfo/geomview-users}).
 
-@item @strong{Contract with Geometry Technologies}.
+@item @strong{Contrato com a Geometry Technologies}.
 
-Geometry Technologies, Inc. is a consulting firm that provides contract
-technical support and custom programming services in the area of 3D
-graphics.  This includes a wide range of services related to 3D
-graphics, included but not limited to applications involving Geomview.
-To the extent that resources allow, Geometry Technologies supports the
-developement of Geomview; in particular it hosts the
-@uref{http://www.geomview.org} web site, and its staff make ongoing
-improvements to Geomview itself.  If you are in a position to pay for
-technical support ou custom programming work, contracting with Geometry
-Technologies indirectly supports Geomview.  You can also contract with
-with Geometry Technologies to have particular features that you want
-added to Geomview, ou to port Geomview to a new platform.  For more
-information see Geometry Technologies web site at
+Geometry Technologies, Inc. @'{e} uma firma de consultoria que fornece contrato
+de suporte t@'{e}cnico e servi@,{c}os de personaliza@,{c}@~{a}o de programas na @'{a}rea de gr@'{a}ficos
+em 3D.  Inclui um largo intervalo de servi@,{c}os relacionados a gr@'{a}ficos
+em 3D, incluindo mas n@~{a}o limitado a aplica@,{c}@~{o}es envolvendo Geomview.
+Para extender aqueles recursos permite, Geometry Technologies suporta o
+desenvolvimento do Geomview; em particular hospeda o
+s@'{i}tio web @uref{http://www.geomview.org}, e seu staff faz constantes
+melhoramentos no Geomview em si mesmo.  Se voc@^{e} est@'{a} em uma posi@,{c}@~{a}o de pagar por
+suporte t@'{e}cnico ou trabalho personalizado de programa@,{c}@~{a}o, contratand com Geometry
+Technologies indiretamente suporte para o Geomview.  Voc@^{e} pode tamb@'{e}mcontratar
+com a Geometry Technologies para ter recursos particulares que voc@^{e} deseja
+adicionar ao Geomview, ou portar o Geomview para uma nova plataforma.  Para mais
+informa@,{c}@~{a}o veja o s@'{i}tio web da Geometry Technologies em
 @uref{http://www.geomtech.com}.
 
 @end enumerate
 
-Thank you.
+Obrigado.
 
 
 
