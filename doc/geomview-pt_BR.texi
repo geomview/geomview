@@ -8905,24 +8905,24 @@ Mathematica que faz essa tradu@,{c}@~{a}o.  Anes de usar qualquer dos dois m@'{e
 acima voc@^{e} deve instalar esse pacote.
 
 @menu
-* OOGL.m::                      Generating OOGL files in Mathematica.
-* Geomview.m::                  Geomview as Mathematica's Default 3D Display.
-* RenderMan::                   Generating RenderMan files in Mathematica.
-* Remote Display::              Using Geomview and Mathematica on different computers.
-* Package Details::             Some details about the packages.
-* Package Installation::        Installing the Mathematica->Geomview package.
+* OOGL.m::                      Generando arquivos OOGL no Mathematica.
+* Geomview.m::                  Geomview como Visualizador Padr@~{a}o 3D do Mathematica.
+* RenderMan::                   Gerando arquivos RenderMan no Mathematica.
+* Remote Display::              Usando Geomview e Mathematica a partir de diferentes computadores.
+* Package Details::             Alguns detalhes sobre os pacotes.
+* Package Installation::        Instalando o pacote Mathematica->Geomview.
 @end menu
 
 @comment ================================================================
 @node OOGL.m, Geomview.m, Mathematica, Mathematica
-@section Using Mathematica to generate OOGL files
+@section Usando Mathematica para gerar arquivos OOGL
 
-The package @file{OOGL.m} allows Mathematica to write graphics objetos
-in OOGL format.  To use it, give the command @code{<< OOGL.m} to
-Mathematica to load the package.  The
-@code{WriteOOGL[@var{file},@var{graphics}]} command writes an OOGL
-description do 3D graphics objeto @var{graphics} to the file named
-@var{file}.@refill
+O pacote @file{OOGL.m} permite ao Mathematica escrever objetos gr@'{a}ficos
+no formato OOGL.  Para us@'{a}-lo, digite o comando @code{<< OOGL.m} para
+Mathematica carregar o pacote.  O
+comando @code{WriteOOGL[@var{arquivo},@var{nomegrafico}]} escreve uma descri@,{c}@~{a}o
+OOGL do bojeto gr@'{a}fico 3D @var{nomegrafico} para o arquivo chamado
+@var{arquivo}.@refill
 
 This package also provides the @code{Geomview} command which sends a
 3D graphics objeto to Geomview.  The first time you use this command
