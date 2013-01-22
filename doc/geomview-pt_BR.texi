@@ -8955,17 +8955,17 @@ In[2] := Plot3D[Sin[x + Sin[y]], @{x,-2,2@},@{y,-2,2@}]
 Out[2] := -Graphics3D-
 @end example
 @noindent
-This displays graphics in the usual Mathematica way here.
+O exemplo acima mostra gr@'{a}fico no caminho usual do Mathematica aqui.
 @example
 In[3] := WriteOOGL["math.oogl", %2]
 
 Out[3] := -Graphics3D-
 @end example
 @noindent
-This displays nothing new but writes the file @file{math.oogl}.
-You can now load that file into Geomview on any computer.  Alternately,
-you can use the @code{Geomview} command to start up a copy of Geomview
-from within Mathematica.
+O exemplo acima n@~{a}o mostra nada novo mas escreve o arquivo @file{math.oogl}.
+Voc@^{e} pode agora carregar o arquivo @file{math.oogl} dentro do Geomview a partir de qualquer computador.  Alternativamente,
+voc@^{e} pode usar o comando @code{Geomview} para iniciar uma c@'{o}pia do Geomview
+a partir de dentro do Mathematica.
 @example
 In[5] := Geomview[%2]
 
@@ -8975,17 +8975,17 @@ Out[5] := -Graphics3D-
 
 @comment ================================================================
 @node Geomview.m, RenderMan, OOGL.m, Mathematica
-@section Using Geomview as Mathematica's Default 3D Display
+@section Usando Geomview como Visualizador Padr@~{a}o 3D do Mathematica
 
-The package @file{Geomview.m} arranges for Geomview to be the
-default display program for 3D graphics in Mathematica.  To
-load it, give the command @code{<< Geomview.m} to Mathematica.
-Thereafter, whenever you display 3D graphics with @code{Plot3D}
-or @code{Show}, Mathematica will send the graphics to Geomview.
+O pacote @file{Geomview.m} faz com que o Geomview seja o
+programa visualizador padr@~{a}o para gr@'{a}ficos 3D no Mathematica.  Para
+carregar o pacote @file{Geomview.m}, digite o comando @code{<< Geomview.m} para o Mathematica.
+De agora em diante, sempre que voc@^{e} mostrar gr@'{a}ficos 3D com o comando @code{Plot3D}
+ou @code{Show}, Mathematica ir@'{a} enviar o gr@'{e}fico para o Geomview.
 
-Loading @file{Geomview.m} implicitly loads @file{OOGL.m} as well, so you
-can use the @code{Geomview} and @code{WriteOOGL} as described above
-after loading @file{Geomview.m}.  You do not have to separately load
+Carregando @file{Geomview.m} implicitamene carrega @file{OOGL.m} tamb@'{e}m, de forma que voc@^{e}
+pode usar o @code{Geomview} e @code{WriteOOGL} como descrito acima
+ap@'{o}s carregar @file{Geomview.m}.  Voc@^{e} n@~{a}o tem que carregar separadamente o pacote
 @file{OOGL.m}.
 @example
 % math
@@ -9000,21 +9000,21 @@ In[2] := Plot3D[x^2 + y^2, @{x, -2, 2@}, @{y, -2, 2@}]
 Out[2] := -SurfaceGraphics-
 @end example
 @noindent
-This invokes geomivew and loads the graphics objeto into it.
+O comando acima chama o geomivew e carrega o objeto gr@'{a}fico dentro dele.
 @example
 In[3] := Plot3D[@{x*y + 6, RGBColor[0,x,y]@}, @{x,0,1@}, @{y,0,1@}]
 
 Out[3] := -SurfaceGraphics-
 @end example
 @noindent
-This replaces the previous objeto do Geomview by the new objeto. 
+O comando imediatamente acima substitui o objeto anterior do Geomview pelo novo objeto. 
 @example
 In[4] := Geomview[@{%2,%3@}]
 
 Out[4] := @{-SurfaceGraphics-, -SurfaceGraphics-@}
 @end example
 @noindent
-This displays both objetos at once.  You also can have more than one
+Mostra ambos os objetos de uma s@'{o} vez.  You also can have more than one
 Mathematica objeto at a time on display in Geomview, and have separate
 control over them, by using the @code{Geomview} command with a name,
 @xref{OOGL.m}.
