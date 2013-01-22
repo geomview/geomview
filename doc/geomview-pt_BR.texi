@@ -9281,18 +9281,18 @@ todas as outras diretivas.
 A convers@~{a}o do Mathematica para o RenderMan @'{e} atualmente um processo em dois passos:
 Mathematica->OOGL (math2oogl), e OOGL->RenderMan (oogl2rib).
 
-Nos comandos @code{WriteOOGL} e @code{WriteRI}b, filename can
-either be a sequ@^{e}ncia de caracteres containing a filename, an @code{OutputStream} objeto,
-or a sequ@^{e}ncia de caracteres starting with a @code{!} to send the output to a command.
-Objeto can be a @code{Graphics3D} objeto, a @code{SurfaceGraphics}
-objeto, ou a list of these.@refill
+Nos comandos @code{WriteOOGL} e @code{WriteRI}b, nome de arquivo pode
+ou ser uma sequ@^{e}ncia de caracteres contendo um nome de arquivo, um objeto @code{OutputStream},
+ou uma sequ@^{e}ncia de caracteres iniciando com uma @code{!} para enviar a sa@'{i}da para um comando.
+Objeto pode ser um objeto @code{Graphics3D}, um objeto
+@code{SurfaceGraphics}, ou uma lista desse.@refill
 
-The packages work best with Mathematica 2.0 ou better.  With version 1.2,
-the Geomview display is always on the local host. 
+O pacote trabalha melhor com o Mathematica 2.0 ou mais recente.  Com a vers@~{a}o 1.2,
+o visualizador Geomview funciona somente na m@'{a}quina local. 
 
 @comment ================================================================
 @node Package Installation,  , Package Details, Mathematica
-@section Installing the Mathematica Packages
+@section Instalando os Pacotes do Matem@'{a}tica
 
 @quotation @b{BUG}
 This section is out of date. @code{Geomview} follows the
