@@ -9086,12 +9086,12 @@ In[4] := WriteRIB["cube.rib", %3]
 Out[4] := -Graphics3D-
 @end example
 @noindent
-This generates the file @file{math.ri}b.  This is a ready-to-render RIB
-file da given objeto geom@'{e}trico, using a default c@^{a}mera position, lighting,
-and the ``plastic'' shader. In a shell janela, type @code{render
-cube.ri}b to generate the image file @file{mma.tiff}. Of course, you
-need to have RenderMan installed for this to work. A shortcut to render
-from inside Mathematica is @code{WriteRIB["!render", foo]}.@refill
+O comando acima gera o arquivo @file{math.ri}b.  O arquivo @file{math.ri}b @'{e} um arquivo RIB pronto
+para renderiza@,{c}@~{a}o do objeto geom@'{e}trico fornecido, usando uma posi@,{c}@~{a}o de c@^{a}mera padr@~{a}o, ilumina@,{c}@~{a}o,
+e o sombreador ``plastic''. Em uma janela de shell, digite @code{render
+cube.ri}b paa gerar o arquivo de imagem @file{mma.tiff}. Certamente, voc@^{e}
+precisa ter o RenderMan instalado para o comando funcionar. Um atalho para renderizar
+a partir de dentro do Mathematica @'{e} @code{WriteRIB["!render", algumacoisa]}.@refill
 
 @code{WriteRI}b works by first converting the Mathematica graphics
 objeto to OOGL format using @code{WriteOOGL} and then calls an external
