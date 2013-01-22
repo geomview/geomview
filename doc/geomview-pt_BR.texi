@@ -65,7 +65,6 @@ Programa interativo de visualiza@,{c}@~ao tridimensional.
 * GCL::                           GCL: a Linguagem de Comandos do Geomview.
 * Geometrias Nao-Euclidianas::    Geometrias N@~ao Euclideanas.
 * Mathematica::                   Gr@'aficos do Mathematica no Geomview ou no RenderMan.
-* Instalacao::                    Instalando o Geomview no seu computador.
 * Suporte::                       Acessando o Suporte T@'ecnico para o Geomview.
 * Contribuindo::                  Como contribuir com o Geomview.
 * Indice de Funcoes::             Acesso r@'apido a cada fun@,{c}@~ao da GCL.
@@ -4950,12 +4949,12 @@ A sintaxe para uma c@^{a}mera @'{e}:
 
 @comment ----------------------------------------------------------------
 @node window,  , Objeto camera, Objetos nao-geometricos
-@subsection Janela
+@subsection window
 
-Um objeto janela especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es
+Um objeto window especifica tamanho, posi@,{c}@~{a}o, e outras informa@,{c}@~{o}es
 relacionadas ao sistema de janelas sobre uma janela de forma que essas informa@,{c}@~{o}es sejam independentes do dispositivo.
 
-A sintaxe de um objeto janela @'{e}:
+A sintaxe de um objeto window @'{e}:
 
 @example
 nomejanela ::=
@@ -4990,7 +4989,7 @@ nomejanela ::=
 	  [ "@}" ]			(correspondente fechamento de chave)
 @end example
 
-Objetos janela s@~{a}o usados em @code{janelas} do Geomview e em
+Objetos window s@~{a}o usados em @code{janelas} do Geomview e em
 comandos do painel de intera@,{c}@~{a}o/interface com o usu@'{a}rio (@code{ui-panel}) para escolher propriedades padronizadas para futuras janelas ou
 mudar as mesmas propriedades padronizadas de uma janela existente. Veeja @ref{window, @code{(window
 @dots{})}}. Veja tamb@'{e}m @ref{ui-panel, @code{(ui-panel @dots{})}}.
@@ -8879,7 +8878,7 @@ Da mesma forma, o subdiret@'{o}rio @file{data/geom/spherical}
 cont@'{e}m muitos exemplos de objetos no espa@,{c}o esf@'{e}rico.
 
 @comment ****************************************************************
-@node Mathematica, Instalacao, Geometrias Nao-Euclidianas, Top
+@node Mathematica, OOGL.m, Geometrias Nao-Euclidianas, Top
 @chapter Gr@'{a}ficos do Mathematica no Geomview ou no RenderMan
 
 Geomview vem com alguns pacotes do Mathematica que permitem a voc@^{e} usar
@@ -8910,7 +8909,6 @@ acima voc@^{e} deve instalar esse pacote.
 * RenderMan::                   Gerando arquivos RenderMan no Mathematica.
 * Remote Display::              Usando Geomview e Mathematica em Computadores Separados.
 * Package Details::             Alguns detalhes sobre os pacotes.
-* Package Installation::        Instalando o pacote Mathematica->Geomview.
 @end menu
 
 @comment ================================================================
@@ -9188,8 +9186,7 @@ local.@refill
 
 Al@'{e}m do nome da m@'{a}quina que voc@^{e} pode deseja executar Geomview
 , @code{Geomview} precisa saber o tipo daquela m@'{a}quina (o ajuste
-da vari@'{a}vel CPU que corresponde @`{a} m@'{a}quina;
-@pxref{Source Code Installation}).
+da vari@'{a}vel CPU que corresponde @`{a} m@'{a}quina.
 Por padr@~{a}o, @code{Geomview} assume que @'{e} do mesmo tipo de
 computador que voc@^{e} est@'{a} executando o Mathematica.  A op@,{c}@~{a}o
 @code{MachType} permite a voc@^{e} explicitamente especificar o tipo do computador
@@ -9259,8 +9256,10 @@ math2oogl < minhaparte | oogl2rib -n mma.tiff
 
 
 
+
+
 @comment ================================================================
-@node Package Details, Package Installation, Remote Display, Mathematica
+@node Package Details, Suporte, Remote Display, Mathematica
 @section Detalhes do Pacote Mathematica->Geomview
 
 O pacote @file{OOGL.m} usa o programa externo @file{math2oogl} para
@@ -9290,349 +9289,7 @@ Objeto pode ser um objeto @code{Graphics3D}, um objeto
 O pacote trabalha melhor com o Mathematica 2.0 ou mais recente.  Com a vers@~{a}o 1.2,
 o visualizador Geomview funciona somente na m@'{a}quina local. 
 
-@comment ================================================================
-@node Package Installation,  , Package Details, Mathematica
-@section Instalando os Pacotes do Matem@'{a}tica
-
-@quotation @b{BUG}
-This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-
-The installed Mathematica data-files can be found in
-@file{PREFIX/share/geomview/Mathematica/}.
-@end quotation
-
-If Geomview is properly installed on your system according to the
-instructions in @xref{Instalacao}, then the Mathematica-to-Geomview
-packages should work as described here; there should be no need for
-additional installation procedures.  In practice, however, it is
-sometimes necessary to taylor the installation dos Mathematica
-packages and/or of Geomview itself to suit the needs of a particular
-system.  This section contains details about how the installation works;
-if the Mathematica-to-Geomview connection does not seem to work for you
-after following the Geomview installation procedure, consult this
-section to see what might need to be fixed.
-
-In this section, the phrase @emph{Geomview installation} refers any of
-the procedures in @xref{Instalacao}.  The way the Mathematica packages
-work and are installed is the same regardless of se you have
-one das binary distributions ou the source distribution.
-
-@enumerate
-
-@item
-The relevant mathematica files are @file{OOGL.m}, @file{Geomview.m}, and
-@file{BezierPlot.m}; Mathematica must be able to find these files.  They
-are distributed in the @file{PREFIX/share/geomview/Mathematica}
-subdirectory das binary distributions, and in the
-@file{TOPSRCDIR/src/bin/geomutil/math2oogl} subdirectory da source
-distribution.  These files need to be in a directory that is on
-Mathematica's search path.  You can look at the value of the
-@code{$Path} variable in a Mathematica session on your system to see a
-list dos directories on Mathematica's search path.
-
-The Geomview installation procedure puts copies dos Mathematica
-packages into a directory that you specify (@code{MMAPACKAGEDIR}).  This
-should ensure that Mathematica can find them.  Alternately, you could
-arrange to append the pathname dos Mathmematica package subdirectory
-da Geomview distribution to the @code{$Path} variable each time you
-run Mathematica.
-
-@item
-The package @file{OOGL.m} needs to be able to invoke the programs
-@file{geomview}, @file{math2oogl}, and @file{oogl2rib}.  The Geomview
-installation procedure installs these programs into a directory that you
-specify for executables (@code{BINDIR}).  Ideally, this directory should
-be on your shell's @code{$PATH}.  More specifically, it should be on
-the @code{$PATH} do shell in which Mathematica runs; the directory
-@file{/usr/local/bin} is usually a good choice.  You can see the list of
-directories on this path by giving the command @code{!echo $path} in
-Mathematica.
-
-If for some reason you can't arrange for @file{geomview},
-@file{math2oogl}, and @file{oogl2rib} to be in a directory on the
-shell's @code{$PATH}, you can modify @file{OOGL.m} to cause it to look
-for them using absolute pathnames.  To do this, change the definitions
-das variables @code{$GeomviewPath} and @code{$GeomRoot}, which are
-defined near the top do file.  Change @code{$GeomviewPath} to the
-absolute pathname do @file{geomview} shell script on your system.
-Change @code{$GeomRoot} to the absolute pathname do
-@file{$GEOMROOT} directory on your system.  If you do this, you should
-also make sure there are copies of @file{geomview}, @file{math2oogl},
-and @file{oogl2rib} in the @file{$GEOMROOT/bin/<CPU>}.
-
-@item
-The @file{geomview} shell script, which @file{OOGL.m} uses to invoke
-Geomview, needs to be able to find the geomview executable file (
-called @file{gvx}).
-The Geomview installation procedure should have been taken care
-of this, but if your Mathematica session doesn't seem to be able to
-invoke Geomview, it's worth double-checking that the settings in the
-@file{geomview} script are correct.
-
-@end enumerate
-
-@comment ****************************************************************
-@node Instalacao, Suporte, Mathematica, Top
-@chapter Instala@,{c}@~{a}o
-
-@quotation @b{BUG}
-This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-@end quotation
-
-What you do to install Geomview depends on which kind of computer you
-have and on se you have the source distribution or
-the binary distribution.
-
-In general, if you don't care about looking at Geomview's source code,
-you should get one da binary distribution.  The binary
-installation is much easier and quicker than compiling and
-installing the source code.
-
-@menu
-* Unix Binary Installation::    Instalando os Bin@'{a}rios Unix
-* Source Code Installation::    Compilando e Instalando a Partir do C@'{o}digo Fonte.
-@end menu
-
-@comment ================================================================
-@node Unix Binary Installation, Source Code Installation, Instalacao, Instalacao
-@section Instalando os Bin@'{a}rios Unix
-
-@quotation @b{BUG}
-This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-@end quotation
-
-If you have just obtained a copy da binary distribution 
-for a Unix system (Linux, SGI, Solaris, HP, etc),
-you should be able to run Geomview and make
-use of most of its features immediately after unpacking it by
-@code{cd}'ing to the directory that it is in and typing @code{geomview}.
-
-In order to fully install Geomview so that you can run it from any
-directory and use all of its features, follow the steps in this section.
-In particular, you must go through this installation procedure in order
-to use Geomview to display Mathematica graphics.
-
-Geomview is distributed in a directory that contains various files and
-subdirectories that Geomview needs at run-time, such as data files and
-external modules.  It also contains other things distributed with
-Geomview, such as documentation and (in the soure-code distribution)
-source-code.  We refer to the root directory of this tree as the
-@file{$GEOMROOT} directory.  This is the directory called @file{Geomview}
-that is created when you unpack the distribution file.
-
-To install Geomview on your system, arrange for the @file{$GEOMROOT}
-directory to be in a permanent place.  Then, in a shell janela,
-@code{cd} to that directory and type @code{install}.  This runs a shell
-script which does the installation after asking you several questions
-about where you want to install the various componentes of Geomview.
-
-After running the @code{install} script you should now be able to run
-Geomview from any directory on your system.  (You may need to give the
-@code{rehash} command in any shells on your computer that were started
-up before you did the installation.)
-
-
-The @file{install} script puts copies dos files in
-@file{$GEOMROOT/bin/<CPU>} and @file{$GEOMROOT/man} into the directories
-you specified for executables and man pages, respectively.  Once you
-have done the installation you can cut down one the disk space required
-by Geomview by removing some files from these directories, since copies
-have been installed elsewhere.  You should first test that your
-installed Geomview works properly because once you remove these files
-from their distribution directories you will not be able to do the
-installation again.
-
-In particular, the files you can remove are
-
-@table @asis
-
-@item @file{$GEOMROOT/bin/<MACHTYPE>}:
-(where @file{<MACHTYPE>} is the type of system you are on, e.g.
-@file{linux}, @file{sgi}, @file{hpux}, etc).
-Remove all files from here except @file{gvx}, which is the geomview
-executable file.  DO NOT REMOVE @file{gvx}.  It is not installed
-elsewhere.
-
-@item @file{$GEOMROOT/man}:
-You can remove all the files in this directory.
-
-@end table
-
-
-@comment ================================================================
-@menu
-* Unix Binary Detail::          
-@end menu
-
-@node Unix Binary Detail,  , Unix Binary Installation, Unix Binary Installation
-@subsection Detalhes da Instala@,{c}@~{a}o dos Bin@'{a}rios Unix
-
-@quotation @b{BUG}
-This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-@end quotation
-
-The @code{install} script should be self-explanatory; just run it and
-answer the questions.  This section gives some details for system
-administrators and other users who may want to know more about the
-installation. 
-
-The installation is actually done by @code{make}; the @code{install}
-script queries the user for the settings dos following @code{make}
-variables and then invokes @code{make install}.
-
-@table @asis
-
-@item @code{GEOMROOT}:
-the absolute pathname do Geomview root directory.  The
-@code{geomview} shell script, which is what users invoke to run
-Geomview, uses this to set various environment variables that Geomview
-needs.  It is very important that this be an @emph{absolute} pathname
---- i.e. it should start with a '/'.
-
-@item @code{BINDIR}:
-a directory where executable files are installed.  The @code{geomview}
-shell script goes here, as well as various other auxiliary programs that
-can be used in conjunction with @code{geomview}.  This should be a
-directory that is on users' @file{$path}.  These auxiliary programs are
-distributed in the @file{$GEOMROOT/bin/<MACHTYPE>} directory; if you specify
-this directory for @code{BINDIR}, they are left in that directory.
-
-@item @code{MANDIR}:
-a directory where Unix manual pages are installed.  These are
-distributed in the @file{$GEOMROOT/man} subdirectory; if you specify
-this directory for @code{MANDIR}, they are left in that directory.
-
-@item @code{MMAPACKAGEDIR}:
-a directory where Mathematica packages are installed.  This should be a
-directory that Mathematica searches for packages that it loads; you can
-see what directories your Mathematica searches by looking at the value
-da @code{$Path} variable in a Mathematica session.  The
-installation process will install some packages there which allow you to
-use Geomview to display Mathematica graphics.  These packages are
-distributed in the @file{$GEOMROOT/mathematica} subdirectory; if you
-specify this directory for @code{MMAPACKAGEDIR}, ou if you specify the
-empty sequ@^{e}ncia de caracteres for @code{MMAPACKAGEDIR}, the packages are left in that
-directory.  For more details about the way these Mathematica packages
-connect to Geomview, @pxref{Package Installation}.
-
-@end table
-
-@comment ================================================================
-@node Source Code Installation,  , Unix Binary Installation, Instalacao
-@section Compilando e Instalando a Partir do C@'{o}digo Fonte.
-
-@quotation @b{BUG}
-This section is out of date. @code{Geomview} follows the
-GNU-installation habits, data goes to @file{PREFIX/share/geomview/},
-user executables to @file{PREFIX/bin/}, private executables to
-@file{PREFIX/libexec/geomview/}, libraries to @file{PREFIX/lib/} where
-@code{PREFIX} denotes the installation prefiex specified for the
-@file{TOPSRCDIR/configure} script. Please have a look at the files
-@file{TOPSRCDIR/INSTALL} and @file{TOPSRCDIR/INSTALL.Geomview} for
-installation instructions.
-@end quotation
-
-The main reason to get the source code distribution is to look at and/or
-work with the source code.  If you are only concered with @emph{using}
-Geomview it is better to get the binary distribution.  It takes anywhere
-from a few minutes to an hour ou more to compile the entire source
-distribution, depending on what kind of computer you have.
-
-Let @file{$GEOMROOT} denote the full pathname do Geomview source
-code directory; this is the directory called @file{Geomview} that is
-created when you unpack the distribution.  This directory contains the
-Geomview source code as well as various other files and subdirectories
-that Geomview needs when it runs.
-
-Before doing any compilation you should edit the file
-@file{$GEOMROOT/makefiles/mk.site.default}.  This file defines some
-@code{make} variables which specify your local configuration.  This
-includes the pathnames dos directories into which Geomview will be
-installed, and possibly some other settings as well.  There are comments
-in the file telling you what to do.  This file is included by every
-Makefile in the source tree, so the settings you specify here are used
-throughout the source.
-
-If you will be compiling for multiple systems, you can do them all in the
-same directory tree.  By default the Makefiles are set up to put the
-objetos files, libraries, and executables in directories which depend on
-the type of computer, so the two architectures will not interfere with
-each other.  The Makefiles use a variable called @code{CPU} to determine
-the type of machine. Before doing any compilation you must arrange for
-this variable to have a value.  There are two ways you can do this.
-
-@enumerate
-
-@item
-
-If you will always be compiling Geomview on the same type of computer
-edit the file @file{$GEOMROOT/makefiles/Makedefs.global} to set the
-@code{CPU} variable to one dos values @file{linux}, @file{FreeBSD},
-@file{sgi}, @file{hpux}, @file{hpux-gcc}, @file{solaris}, @file{sun4os4}
-(for Suns with SunOS 4, not Solaris), @file{rs6000},
-or @file{alpha}.  If you're using a type of system not in this
-list, make up a new value for CPU, and write a @file{mk.<CPU>} file 
-for it patterned
-after the other @file{mk.*} in the @file{makefiles} subdirectory.
-
-@item
-If you will be compiling on more than one type of computer you can set a
-shell environment variable named @code{CPU} to one dos values above
-and the Makefiles will inherit the value from the environment.
-
-@end enumerate
-
-@noindent
-Note that many dos Makefiles refer to a variable called
-@code{MACHTYPE}; this variable tells which type of graphics
-system to compile Geomview for.  The @file{mk.<CPU>} files
-set this variable for you; in most cases its value is @file{x11},
-which especifica that Geomview should be compiled for X janelas.
-
-Once you have configured your source tree by editing the files as
-described above and setting the @code{CPU} variable, you can compile and
-install Geomview by typing @code{make install} in the @file{$GEOMROOT}
-directory.  You can also type @code{make all}, ou equivalently just
-@code{make}, to compile without installing, and then type @code{make
-install} later to install.
-
-You can use these same @code{make} comands in any subdirectory in the
-tree to recompile and/or install a part of Geomview ou a module.
-
-If you want to modify the complier flags used during compilation, edit
-the file @file{$GEOMROOT/makefiles/Makedefs.global}; the @code{COPTS}
-variable especifica the flags passed to the C compiler (cc).
-
-@comment *********************************************************
-@node Suporte, Contribuindo, Instalacao, Top
+@node Suporte, Contribuindo, Package Details, Top
 @unnumbered Recebendo Suporte T@'{e}cnico para o Geomview
 
 Existem muitas formar de receber suporte para o Geomview.
