@@ -861,12 +861,12 @@ outro programa que est@'{a} sendo executado simult@^{a}neamente.  Como o outro p
 modifica os dados, a imagem no Geomview reflete as modifica@,{c}@~{o}es.  Programas
 que geram objetos e utilizam o Geomview para mostr@'{a}-los s@~{a}o chamados
 @emph{m@'{o}dulos externos}.  M@'{o}dulos externos podem controlar quase todos os
-asp@'{e}ctos do Geomview.  A id@'{e}ia aqui @'{e} que muitos aspectos de visualiza@,{c}@~{a}o
+aspectos do Geomview.  A id@'{e}ia aqui @'{e} que muitos aspectos de visualiza@,{c}@~{a}o
 e partes da intera@,{c}@~{a}o de programas geom@'{e}tricos s@~{a}o independentes do
 conte@'{u}do geom@'{e}trico e podem ser coletados conjuntamente em uma pe@,{c}a simples de
 programa que pode ser usada em uma larga variedade de situa@,{c}@~{o}es.  O autor
 de um m@'{o}dulo externo pode concentrar-se sobre a implementa@,{c}@~{a}o dos algor@'{i}tmos
-desejados e deixar os asp@'{e}ctos de visualiza@,{c}@~{a}o ao Geomview.  Geomview @'{e} acompanhado
+desejados e deixar os aspectos de visualiza@,{c}@~{a}o ao Geomview.  Geomview @'{e} acompanhado
 por uma cole@,{c}@~{a}o de m@'{o}dulos externos a t@'{i}tulo de exemplo, e esse manual descreve
 como escrever seu pr@'{o}prio @emph{m@'{o}dulo externo}.
 
@@ -928,7 +928,7 @@ tetraedro grande e um dodecaedro que est@'{a} parcialmente obscurecido
 pelo tetraedro.
 
 Geomview tem alguns pain@'{e}is mas por padr@~{a}o ele mostra somente esses tr@^{e}s.
-Iremos descrever alguns asp@'{e}ctos desses tr@^{e}s e alguns dos outros nesse
+Iremos descrever alguns aspectos desses tr@^{e}s e alguns dos outros nesse
 tutorial.  Voc@^{e} pode ler mais sobre esses e outros pain@'{e}is nos cap@'{i}tulos
 adiante neste manual.
 
@@ -9339,14 +9339,14 @@ lista de mesagens @file{geomview-users} (veja
 
 Geometry Technologies, Inc. @'{e} uma firma de consultoria que fornece contrato
 de suporte t@'{e}cnico e servi@,{c}os de personaliza@,{c}@~{a}o de programas na @'{a}rea de gr@'{a}ficos
-em 3D.  Inclui um largo intervalo de servi@,{c}os relacionados a gr@'{a}ficos
+em 3D.  Inclui um amplo leque de servi@,{c}os relacionados a gr@'{a}ficos
 em 3D, incluindo mas n@~{a}o limitado a aplica@,{c}@~{o}es envolvendo Geomview.
-Para extender aqueles recursos permite, Geometry Technologies suporta o
+Para extender os recursos, Geometry Technologies suporta o
 desenvolvimento do Geomview; em particular hospeda o
 s@'{i}tio web @uref{http://www.geomview.org}, e seu staff faz constantes
 melhoramentos no Geomview em si mesmo.  Se voc@^{e} est@'{a} em uma posi@,{c}@~{a}o de pagar por
-suporte t@'{e}cnico ou trabalho personalizado de programa@,{c}@~{a}o, contratand com Geometry
-Technologies indiretamente suporte para o Geomview.  Voc@^{e} pode tamb@'{e}mcontratar
+suporte t@'{e}cnico ou trabalho personalizado de programa@,{c}@~{a}o, contratando com a Geometry
+Technologies indiretamente suporte para o Geomview.  Voc@^{e} pode tamb@'{e}m contratar
 com a Geometry Technologies para ter recursos particulares que voc@^{e} deseja
 adicionar ao Geomview, ou portar o Geomview para uma nova plataforma.  Para mais
 informa@,{c}@~{a}o veja o s@'{i}tio web da Geometry Technologies em
