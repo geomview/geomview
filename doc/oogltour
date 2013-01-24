@@ -84,7 +84,7 @@ while smooth shading interpolates lighting as well as coloring between
 the vertices.
 
 To change shading mode, first open up the Appearance panel by clicking
-on the Appearance line in the More Panels browser.  Now switch from
+on the Appearance line in the Inspect menu.  Now switch from
 mode to mode by clicking on different lines in the Shading browser.
 ]
 
