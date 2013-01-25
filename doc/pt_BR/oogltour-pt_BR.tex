@@ -32,3 +32,38 @@ diretório de arquivos exemplos da OOGL que acompanha o Geomview.
 A seção Formatos de Arquivo da OOGL do manual do Geomview é uma referência
 completa para a sintaxe de formatos de arquivo. Esse tutorial é uma tentativa
 de conduzir você mais gentilmente no mundo da OOGL.
+
+\chapter{QUAD}
+
+Iniciamos com um objeto muito simples: um quadrado. Especificamente, o quadrado
+unitário no plano xy e com z=0. O nome do arquivo no diretório do Geomview é ``square.quad'':
+
+\begin{verbatim}
+QUAD
+-1 -1 0 #vertice 0
+1 -1 0  #vertice 1
+1 1 0   #vertice 2
+-1 1 0  #vertice 3
+\end{verbatim}
+
+O cabeçalho ``QUAD'' identifica o tipo de arquivo.  (Você pode também usar o
+cabeçalho ``POLY'' para esse tipo por razões históricas.)  Um arquivo QUAD é uma
+lista de 4*n vertices onde n é o número de quadriláteros. Esse
+arquivo somente contém um quadrilátero.  Você pode também usar esse formato para
+especificar triângulos: apenas use um quadrilátero degenerado onde dois dos
+quatro vértices são identicos.  Os vértices nesse arquivo são
+simples: apenas as coordenadas x,y, e z do ponto.
+
+\section{GEOMVIEW}
+
+Digite ``geomview square.quad'' a partir de uma janela de shell.
+Gire o quadrado com o botão esquerdo do mouse
+após o geomview carregar o quadrado. Sinta-se livre para brincar com o geomview por um momento se
+a imaginação atingir você durante esse tutorial.
+\footnote{Nota do tradutor: veja a seção \ref{adc00} para mais informação.}
+
+\section{Colorindo}
+
+O arquivo seguinte tem vértices mais complexos que incluem uma cor no ponto. 
+O nome do arquivo no diretório do Geomview é ``csquare.quad'':
+
