@@ -16,7 +16,9 @@ Os Formatos de Arquivo da OOGL\\
 \normalsize
 \vspace*{5cm}
 \newpage
-\chapter{Introduction}
+\tableofcontents
+
+\chapter{Introdução}
 
 OOGL significa Object Oriented Graphics Library.  Um objeto OOGL é
 chamado um Geom. Existe um formato de arquivo texto para cada tipo de Geom. Você
@@ -112,6 +114,7 @@ Hora de ir para coisas maiores e melhores.
 
 \section{DODEC.QUAD}
 
+\tiny
 \begin{verbatim}
 "dodec.quad":
 
@@ -127,6 +130,7 @@ QUAD
 	.
  < 53 lines of numbers deleted>
 \end{verbatim}
+\normalsize
 
 Agora encontramos um objeto mais interessante: umdodecaedro.  Uma vez que
 dodecaedros possuem faces de 5 lados, cada uma dessas 12 faces é atualmente feita
@@ -282,7 +286,7 @@ COFF
      4 2 6 7 3  
 \end{verbatim}
 
-Tudo seguindo uma ``#'' (cerquilha) é um comentário para humanos lerem e é
+Tudo seguindo uma ``\#'' (cerquilha) é um comentário para humanos lerem e é
 ignorado pela OOGL. o cabeçalho para arquivo de Polilista puro é opcional, mas
 se você tem qualquer coisa além de pontos em um vértice você torna necessário um apropriado
 cabeçalho.  O obeto é o cubo unitário, que tem 8 vértices, 6 faces,
@@ -571,3 +575,4 @@ ambos inalterados de um objeto, selecione a linha None no navegador Normalize
 no menu Inspect/Appearence pull-down. Em geral não importa qual o intervalo de
 coordenadas de um objeto é desde que o objeto completo seja consistente: {0,1},
 {-1,1}, {0,100}, {-1000,-500}, {17,36} são todos intervalos válidos.
+\end{document}
