@@ -18,27 +18,27 @@ Os Formatos de Arquivo da OOGL\\
 \newpage
 \tableofcontents
 
-\chapter{Introdução}
+\chapter{Introdu\c{c}\~ao}
 
-OOGL significa Object Oriented Graphics Library.  Um objeto OOGL é
-chamado um Geom. Existe um formato de arquivo texto para cada tipo de Geom. Você
-pode chamar um arquivo texto dentro de qualquer programa que usa a OOGL. Geomview é um
-visualizadodr interativo de objetos em 3D construído no topo da OOGL. (Geomview executa nas
+OOGL significa Object Oriented Graphics Library.  Um objeto OOGL \'e
+chamado um Geom. Existe um formato de arquivo texto para cada tipo de Geom. Voc\^e
+pode chamar um arquivo texto dentro de qualquer programa que usa a OOGL. Geomview \'e um
+visualizadodr interativo de objetos em 3D constru\'ido no topo da OOGL. (Geomview executa nas
 plantaformas Silicon Graphics, NextStep, e X-Windows.) Existe
-notas do GEOMVIEW em seções específicas distribuídas por esse guia dizendo
-a você o que fazer no Geomview para ver sobre o que estamos falando. As seções do GEOMVIEW
-subsequêntes assumem que você sabe como fazer e concluiu o que as notas do GEOMVIEW anteriores
-disseram sobre Geomview e os formatos de arquivo da OOGL. Todos os arquivos mencionados nesse documento estão no
-diretório de arquivos exemplos da OOGL que acompanha o Geomview.
+notas do GEOMVIEW em se\c{c}\~oes espec\'ificas distribu\'idas por esse guia dizendo
+a voc\^e o que fazer no Geomview para ver sobre o que estamos falando. As se\c{c}\~oes do GEOMVIEW
+subsequ\^entes assumem que voc\^e sabe como fazer e concluiu o que as notas do GEOMVIEW anteriores
+disseram sobre Geomview e os formatos de arquivo da OOGL. Todos os arquivos mencionados nesse documento est\~ao no
+diret\'{o}rio de arquivos exemplos da OOGL que acompanha o Geomview.
 
-A seção Formatos de Arquivo da OOGL do manual do Geomview é uma referência
-completa para a sintaxe de formatos de arquivo. Esse tutorial é uma tentativa
-de conduzir você mais gentilmente no mundo da OOGL.
+A se\c{c}\~ao Formatos de Arquivo da OOGL do manual do Geomview \'e uma refer\^encia
+completa para a sintaxe de formatos de arquivo. Esse tutorial \'e uma tentativa
+de conduzir voc\^e mais gentilmente no mundo da OOGL.
 
 \chapter{QUAD}
 
 Iniciamos com um objeto muito simples: um quadrado. Especificamente, o quadrado
-unitário no plano xy e com z=0. O nome do arquivo no diretório do Geomview é ``square.quad'':
+unit\'ario no plano xy e com z=0. O nome do arquivo no diret\'{o}rio do Geomview \'e ``square.quad'':
 
 \begin{verbatim}
 QUAD
@@ -48,26 +48,26 @@ QUAD
 -1 1 0  #vertice 3
 \end{verbatim}
 
-O cabeçalho ``QUAD'' identifica o tipo de arquivo.  (Você pode também usar o
-cabeçalho ``POLY'' para esse tipo por razões históricas.)  Um arquivo QUAD é uma
-lista de 4*n vertices onde n é o número de quadriláteros. Esse
-arquivo somente contém um quadrilátero.  Você pode também usar esse formato para
-especificar triângulos: apenas use um quadrilátero degenerado onde dois dos
-quatro vértices são identicos.  Os vértices nesse arquivo são
+O cabe\c{c}alho ``QUAD'' identifica o tipo de arquivo.  (Voc\^e pode tamb\'em usar o
+cabe\c{c}alho ``POLY'' para esse tipo por raz\~oes hist\'{o}ricas.)  Um arquivo QUAD \'e uma
+lista de 4*n vertices onde n \'e o n\'umero de quadril\'ateros. Esse
+arquivo somente cont\'em um quadril\'atero.  Voc\^e pode tamb\'em usar esse formato para
+especificar tri\^angulos: apenas use um quadril\'atero degenerado onde dois dos
+quatro v\'ertices s\~ao identicos.  Os v\'ertices nesse arquivo s\~ao
 simples: apenas as coordenadas x,y, e z do ponto.
 
 \section{GEOMVIEW}
 
 Digite ``geomview square.quad'' a partir de uma janela de shell.
-Gire o quadrado com o botão esquerdo do mouse
-após o geomview carregar o quadrado. Sinta-se livre para brincar com o geomview por um momento se
-a imaginação atingir você durante esse tutorial.
-\footnote{Nota do tradutor: veja a seção \ref{adc00} para mais informação.}
+Gire o quadrado com o bot\~ao esquerdo do mouse
+ap\'{o}s o geomview carregar o quadrado. Sinta-se livre para brincar com o geomview por um momento se
+a imagina\c{c}\~ao atingir voc\^e durante esse tutorial.
+\footnote{Nota do tradutor: veja a se\c{c}\~ao \ref{adc00} para mais informa\c{c}\~ao.}
 
 \section{Colorindo}
 
-O arquivo seguinte tem vértices mais complexos que incluem uma cor no ponto. 
-O nome do arquivo no diretório do Geomview é ``csquare.quad'':
+O arquivo seguinte tem v\'ertices mais complexos que incluem uma cor no ponto. 
+O nome do arquivo no diret\'{o}rio do Geomview \'e ``csquare.quad'':
 
 \begin{verbatim}
 CQUAD
@@ -78,26 +78,26 @@ CQUAD
 \end{verbatim}
 
 O csquare.quad pegou os mesmos pontos do quadrado anterior, mas com dois cantos vermelhos e
-dois cantos verdes. O cabeçalho é agora ``CQUAD'' para indicar que seus
-vértices possuem informação de cor além das informações do ponto.
-Cores são especificadas por quádruplas (r,g,b,a) de números em ponto flutuante
+dois cantos verdes. O cabe\c{c}alho \'e agora ``CQUAD'' para indicar que seus
+v\'ertices possuem informa\c{c}\~ao de cor al\'em das informa\c{c}\~oes do ponto.
+Cores s\~ao especificadas por qu\'adruplas (r,g,b,a) de n\'umeros em ponto flutuante
 entre 0 e 1. Qualquer cor que que puder ser mostrada na tela de um computador
-pode ser codificada por alguma combinação de vermelho (\textit{red}), verde (\textit{green}) e azul (\textit{blue}). O quarto
-componente, alfa, representa opacidade: 0 é transparente e 1 é
-opaco. As plantaformas X, NextStep, e algumas plantaformas SGI ignoram a informação
-alfa inteiramente, mas um instantâneo Renderman irá usar a informação
-alfa se a transparência estiver habilitada. Algumas plantaformas SGI usan a
-informação alfa, mas a figura é garantidamente incorreta.
+pode ser codificada por alguma combina\c{c}\~ao de vermelho (\textit{red}), verde (\textit{green}) e azul (\textit{blue}). O quarto
+componente, alfa, representa opacidade: 0 \'e transparente e 1 \'e
+opaco. As plantaformas X, NextStep, e algumas plantaformas SGI ignoram a informa\c{c}\~ao
+alfa inteiramente, mas um instant\^aneo Renderman ir\'a usar a informa\c{c}\~ao
+alfa se a transpar\^encia estiver habilitada. Algumas plantaformas SGI usan a
+informa\c{c}\~ao alfa, mas a figura \'e garantidamente incorreta.
 
 \section{GEOMVIEW}
 
-Apague o objeto atual pressionando o Botão Delete.  Para
-chamar csquare.quad, pressione o Botão Load e digite ``csquare.quad'' (pressione
-Enter quando você tiver terminado a digitação) dentro da janela que aparece. (Se
-você está procurando e não tem certeza no nome dos arquivos, você pode usar o
-Botão File Browser (navegador de arquivos) para olhar em um diretório.)
+Apague o objeto atual pressionando o Bot\~ao Delete.  Para
+chamar csquare.quad, pressione o Bot\~ao Load e digite ``csquare.quad'' (pressione
+Enter quando voc\^e tiver terminado a digita\c{c}\~ao) dentro da janela que aparece. (Se
+voc\^e est\'a procurando e n\~ao tem certeza no nome dos arquivos, voc\^e pode usar o
+Bot\~ao File Browser (navegador de arquivos) para olhar em um diret\'{o}rio.)
 
-Você está provavelmente maravilhado porque está tudo em uma cor.  O modo de sombreamento
+Voc\^e est\'a provavelmente maravilhado porque est\'a tudo em uma cor.  O modo de sombreamento
 padrão é monótono, onde cada polígono ou face poligonal é da mesma
 cor. Os outros dois modos de sombreamento, constante e suave, irão ambos
 mostrar faces multicoloridas onde as cores suavemente interpolada
