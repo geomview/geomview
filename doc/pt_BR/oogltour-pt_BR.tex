@@ -448,7 +448,7 @@ Lists e Insts s\~ao complexos Geoms que podem ser usados para criar uma
 
 \chapter{LIST}
 
-Uma List é apenas uma coleção de outros Geoms.
+Uma List \'e apenas uma cole\c{c}\~ao de outros Geoms.
 
 \begin{verbatim}
 "ref.list":
@@ -458,30 +458,30 @@ LIST
 { = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
 \end{verbatim}
 
-O cabeçalho é sempre e exatamente ``LIST''. Os primeiros dois subgeoms referem-se a
+O cabe\c{c}alho \'e sempre e exatamente ``LIST''. Os primeiros dois subgeoms referem-se a
 outroa arquivos, usando a sintaxe `` < nomearquivo ''. Omitimos as
-opcionais chaves marcando o início e o fim do arquivo.  O erceiro é um objeto literal,
+opcionais chaves marcando o in\'icio e o fim do arquivo.  O erceiro \'e um objeto literal,
 ou in-line. Embora essa sintaxe em particular possa ainda funcionar se abandonarmos
 as chaves delimitando e o sinal de igual, sintaxe muito similar pode
-não funcionar então seguimos a regra ``na dúvida, use as chaves''.
+n\~ao funcionar ent\~ao seguimos a regra ``na d\'uvida, use as chaves''.
 
 \section{GEOMVIEW}
-Geomview procura por nomes de arquivos no diretório atual, no come do caminho na
-variável de ambiente GEOMDATA, e o mesmo diretório que o arquivo
-que está atualmente sendo aberto. 
+Geomview procura por nomes de arquivos no diret\'{o}rio atual, no come do caminho na
+vari\'avel de ambiente GEOMDATA, e o mesmo diret\'{o}rio que o arquivo
+que est\'a atualmente sendo aberto. 
 
 \chapter{INST}
 
-Um Inst é uma ou mais transformações 4x4 aplicada(s) a outro Geom.  Essas
-matrizes podem representar todas as transformações 3D tais como rotação,
-translação, homotetia, redução e perspectiva.  Usamos matrizes 4x4
-ao invés de matrizes 3x3 de forma que possamos usr coordenadas homogêneas e
-concatenar todas as transformações sem tratar translações como
-casos especiais que requerem adiçòes ao invés de multiplicações.  Matrizes
-4x4 podem também serem usadas para cada operações tais como rotação 4D ou
-transformações hiperbólicas projetivas. Um livro texto de álgebra linear ou um livro texto de
-computação gráfica são bons lugares para iniciar se você tem pouca familiaridade com
-essas idéias.
+Um Inst \'e uma ou mais transforma\c{c}\~oes 4x4 aplicada(s) a outro Geom.  Essas
+matrizes podem representar todas as transforma\c{c}\~oes 3D tais como rota\c{c}\~ao,
+transla\c{c}\~ao, homotetia, redu\c{c}\~ao e perspectiva.  Usamos matrizes 4x4
+ao inv\'es de matrizes 3x3 de forma que possamos usr coordenadas homog\^eneas e
+concatenar todas as transforma\c{c}\~oes sem tratar transla\c{c}\~oes como
+casos especiais que requerem adi\c{c}òes ao inv\'es de multiplica\c{c}\~oes.  Matrizes
+4x4 podem tamb\'em serem usadas para cada opera\c{c}\~oes tais como rota\c{c}\~ao 4D ou
+transforma\c{c}\~oes hiperb\'{o}licas projetivas. Um livro texto de \'algebra linear ou um livro texto de
+computa\c{c}\~ao gr\'afica s\~ao bons lugares para iniciar se voc\^e tem pouca familiaridade com
+essas id\'eias.
 \begin{verbatim}
 "ref.inst":
 INST
@@ -510,28 +510,28 @@ TLIST
 }
 \end{verbatim}
 
-O cabeçalho é sempre e exatamente ``INST''. O valor seguindo a palavra chave
-``geom'' é um nome de arquivo referindo-se a ``ref.list'', que é o List que
-mostramos acima.  Pode também ser um Geom in-line ou um controlador. Cercamos
+O cabe\c{c}alho \'e sempre e exatamente ``INST''. O valor seguindo a palavra chave
+``geom'' \'e um nome de arquivo referindo-se a ``ref.list'', que \'e o List que
+mostramos acima.  Pode tamb\'em ser um Geom in-line ou um controlador. Cercamos
 o valor com chaves para evitar ambiguidade.
 
-O valor da palavra chave ``transforms'' é uma TList in-line. Pode
-também ser uma referência a nomearquivo ou um controlador. (Veja a seção Os formatos de
-Arquivo da OOGL do manual do Geomview para informações mais específicas.) TList é atualmente um
+O valor da palavra chave ``transforms'' \'e uma TList in-line. Pode
+tamb\'em ser uma refer\^encia a nomearquivo ou um controlador. (Veja a se\c{c}\~ao Os formatos de
+Arquivo da OOGL do manual do Geomview para informa\c{c}\~oes mais espec\'ificas.) TList \'e atualmente um
 Geom completamente fugidio, mas nem mesmo chamamos um arquivo como ``algumacoisa.tlist'' no
-visualizador pelo fato de TLists serem apenas uma coleção de transformações sem nenhum
-subgeom associado, de forma que não existe nada para ver.
+visualizador pelo fato de TLists serem apenas uma cole\c{c}\~ao de transforma\c{c}\~oes sem nenhum
+subgeom associado, de forma que n\~ao existe nada para ver.
 
-Uma transformação é exatamente 16. Os primeiros três conjuntos de 16 números são translações:
-2 unidades na direção x, y e z, respectivamente. O último conjunto de 16 números é apenas
-a identidade. O comprimento da TList é o número de instanciações da unidade: nesse caso, 4.
+Uma transforma\c{c}\~ao \'e exatamente 16. Os primeiros tr\^es conjuntos de 16 n\'umeros s\~ao transla\c{c}\~oes:
+2 unidades na dire\c{c}\~ao x, y e z, respectivamente. O \'ultimo conjunto de 16 n\'umeros \'e apenas
+a identidade. O comprimento da TList \'e o n\'umero de instancia\c{c}\~oes da unidade: nesse caso, 4.
 
-Se não quisermos usar instanciação, teremos que calcular 4
-Geoms inteiramente novos, uma vez que os pontos atuais no espaço de um objeto são
-diferentes se você movê-lo. Uma vez que a unidade de um Inst pode ser outro
-Inst, você pode construir uma complexa hierarquia. Por exemplo, para construir um
-sistema solar você somente precisa gerar uma esfera. Todos os planetas podem ser
-conseguidos ajustando proporcionalmente e transladandos instanciações daque Geom simples inicial.
+Se n\~ao quisermos usar instancia\c{c}\~ao, teremos que calcular 4
+Geoms inteiramente novos, uma vez que os pontos atuais no espa\c{c}o de um objeto s\~ao
+diferentes se voc\^e mov\^e-lo. Uma vez que a unidade de um Inst pode ser outro
+Inst, voc\^e pode construir uma complexa hierarquia. Por exemplo, para construir um
+sistema solar voc\^e somente precisa gerar uma esfera. Todos os planetas podem ser
+conseguidos ajustando proporcionalmente e transladandos instancia\c{c}\~oes daque Geom simples inicial.
 
 \begin{verbatim}
 "warp.inst":
@@ -545,12 +545,12 @@ transform {
 geom { < dodec.off }
 \end{verbatim}
 
-Esse Inst tem uma transformação simples ao invés de uma lista delas . Dessa forma
-usamos a palavra chave ``transform'' ao invés de ``transforms''. Um transform não
-é um Geom, de forma que não existe cabeçalho antes dos 16 números. Podemos também
-ter um controlador aqui.  (Controladores estão documentados na seção Formatos de Arquivo da
+Esse Inst tem uma transforma\c{c}\~ao simples ao inv\'es de uma lista delas . Dessa forma
+usamos a palavra chave ``transform'' ao inv\'es de ``transforms''. Um transform n\~ao
+\'e um Geom, de forma que n\~ao existe cabe\c{c}alho antes dos 16 n\'umeros. Podemos tamb\'em
+ter um controlador aqui.  (Controladores est\~ao documentados na se\c{c}\~ao Formatos de Arquivo da
 OOGL no manual do Geomview.) Finalmente, temos ``dodec.off'' como nossa
-unidade.  A ordem entre o Geom e a(s) transform/transforms é
+unidade.  A ordem entre o Geom e a(s) transform/transforms \'e
 irrelevante.
 
 
@@ -558,21 +558,21 @@ irrelevante.
 
 \section{OOGL}
 
-Esse tutorial não documenta arquivos binários ou objetos de aparência.
-Veja a seção Formatos de Arquivo da OOGL do manual do Geomview para detalhes. 
+Esse tutorial n\~ao documenta arquivos bin\'arios ou objetos de apar\^encia.
+Veja a se\c{c}\~ao Formatos de Arquivo da OOGL do manual do Geomview para detalhes. 
 
-Espaços em branco em arquivos OOGL é na maioria das vezes para o benefíco de letores humanos.
-``ZMESH 3 3 0 1 0 0 1 0 0 1 0'' é um arquivo legal da OOGL.  A única
-excessão é que não pode ter uma quabra de linha entre o último índice de
-vértice para uma face OFF e as seguintes 4 cores em números com ponto flutuante.
+Espa\c{c}os em branco em arquivos OOGL \'e na maioria das vezes para o benef\'ico de letores humanos.
+``ZMESH 3 3 0 1 0 0 1 0 0 1 0'' \'e um arquivo legal da OOGL.  A \'unica
+excess\~ao \'e que n\~ao pode ter uma quabra de linha entre o \'ultimo \'indice de
+v\'ertice para uma face OFF e as seguintes 4 cores em n\'umeros com ponto flutuante.
 
 \section{GEOMVIEW}
 
-Quando um Geom é chamado, é automaticamente normalizado para ajustar-se dentro de um
-cubo unitário centrado na orígem. O ponto de visão da câmera padrão localiza-se em
-{0,0,-3} olhando na direção da orígem. Para ver com tamanho e posição
+Quando um Geom \'e chamado, \'e automaticamente normalizado para ajustar-se dentro de um
+cubo unit\'ario centrado na or\'igem. O ponto de vis\~ao da c\^amera padr\~ao localiza-se em
+{0,0,-3} olhando na dire\c{c}\~ao da or\'igem. Para ver com tamanho e posi\c{c}\~ao
 ambos inalterados de um objeto, selecione a linha None no navegador Normalize
-no menu Inspect/Appearence pull-down. Em geral não importa qual o intervalo de
-coordenadas de um objeto é desde que o objeto completo seja consistente: {0,1},
-{-1,1}, {0,100}, {-1000,-500}, {17,36} são todos intervalos válidos.
+no menu Inspect/Appearence pull-down. Em geral n\~ao importa qual o intervalo de
+coordenadas de um objeto \'e desde que o objeto completo seja consistente: {0,1},
+{-1,1}, {0,100}, {-1000,-500}, {17,36} s\~ao todos intervalos v\'alidos.
 \end{document}
