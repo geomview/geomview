@@ -298,24 +298,23 @@ esperar mas o cabe\c{c}alho para facecube.off \'e apenas ``OFF'' pelo fato de o
 cabe\c{c}alho referir-se somente \`a estrutura dos v\'ertices, n\~ao ao arquivo
 como um todo.
 
-
 \section{GEOMVIEW}
-Apague tudo selecionado o mundo e pressionado o botão Delete
+Apague tudo selecionado o mundo e pressionado o bot\~ao Delete
 Object. Agora chame ``facecube.off'' e ``vertcube.off''. Translade um
-deles para além do centro de forma que você possa ver o que você está fazendo.
+deles para al\'em do centro de forma que voc\^e possa ver o que voc\^e est\'a fazendo.
 Alterne ambas as Polilistas entre os modos de sombreamento Constant, Flat, e
 Smooth.
 
-Sombreamento é feito conforme as fontes de luz que você controla.
+Sombreamento \'e feito conforme as fontes de luz que voc\^e controla.
 Para brincar com luzes, abra o painel Light clicando sobre a linha
-Light no menu Inspect pull-down. Quando você pressiona o botão Show Lights,
-você irá ver fontes de luzes que você pode arrastar por aí para mover as luzes.
-Você pode também adicionar, apagar, mudar a intensidade, e mudar a
+Light no menu Inspect pull-down. Quando voc\^e pressiona o bot\~ao Show Lights,
+voc\^e ir\'a ver fontes de luzes que voc\^e pode arrastar por a\'i para mover as luzes.
+Voc\^e pode tamb\'em adicionar, apagar, mudar a intensidade, e mudar a
 cor da luzes.
 
 \chapter{MESH}
 
-Os vértices de um arquivo Mesh são conectados em uma grade retangular.
+Os v\'ertices de um arquivo Mesh s\~ao conectados em uma grade retangular.
 
 \begin{verbatim}
 tent.mesh:
@@ -326,13 +325,13 @@ CMESH
 0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
 \end{verbatim}
 
-O cabeçalho ``CMESH'' nos diz que é um arquivo Mesh e que cada vértice
-contém ambas as informações de ponto e cor.  A segunda linha significa que
-ambas as dimensões u e v da malha é 3, de forma que existirá 3*3 =
-9 vértices. Cada vértice que não for uma aresta externa está conectado a
-seus 4 vizinhos mais próximos por uma aresta. Em ``tent.mesh'', somente o
-ponto (1,1,1) é um ponto interno. Os 9 vértices, quando nomeados (u,v),
-são especificados na ordem crescente do valor de v, da mesma forma que vetores estáticos em C:
+O cabe\c{c}alho ``CMESH'' nos diz que \'e um arquivo Mesh e que cada v\'ertice
+cont\'em ambas as informa\c{c}\~oes de ponto e cor.  A segunda linha significa que
+ambas as dimens\~oes u e v da malha \'e 3, de forma que existir\'a 3*3 =
+9 v\'ertices. Cada v\'ertice que n\~ao for uma aresta externa est\'a conectado a
+seus 4 vizinhos mais pr\'{o}ximos por uma aresta. Em ``tent.mesh'', somente o
+ponto (1,1,1) \'e um ponto interno. Os 9 v\'ertices, quando nomeados (u,v),
+s\~ao especificados na ordem crescente do valor de v, da mesma forma que vetores est\'aticos em C:
 
 \begin{verbatim}
 (0,0)---(1,0)---(2,0)   
@@ -344,14 +343,14 @@ são especificados na ordem crescente do valor de v, da mesma forma que vetores 
 
 \section{GEOMVIEW}
 
-Apague tudo e chame ``tent.mesh''. Vé para o modo de sombreamento Smooth para
-ver cada vértice com sua prórpira cor de forma que seja óbvio como os pontos no
+Apague tudo e chame ``tent.mesh''. V\'e para o modo de sombreamento Smooth para
+ver cada v\'ertice com sua pr\'{o}rpira cor de forma que seja \'{o}bvio como os pontos no
 arquivo correspondem-se coma imagem no visualizador.
 
 \section{Grade Fechada}
 
-Se você deseja que a grade seja fechada ao longo ou de um ou de outro (ou de ambas) as areatas
-u ou v, insira ou um ``u'' ou um ``v'' no cabeçalho antes de
+Se voc\^e deseja que a grade seja fechada ao longo ou de um ou de outro (ou de ambas) as areatas
+u ou v, insira ou um ``u'' ou um ``v'' no cabe\c{c}alho antes de
 ``MESH''.
 \begin{verbatim}
 "wraptent.mesh" 
@@ -365,9 +364,9 @@ CuMESH
 \section{GEOMVIEW}
 
 Chame ``wraptent.mesh'' e compare as duas malhas, transladando-as
-separadamente da outra quando necessário.
+separadamente da outra quando necess\'ario.
 
-\section{Eficiência}
+\section{Efici\^encia}
 
 Existe um caminho extremamente eficiente para descrever uma malha quando as coordenadas
 x e o y coincidem com as coordenadas de u e de v de todos os pontos.
@@ -381,20 +380,20 @@ ZMESH
 0 1 0
 \end{verbatim}
 
-O arquivo ``ztent.mesh'' tem exatamente a mesma aparência que ``tent.mesh'', embora seus
-vértices não tenham cores. O cabeçalho ``ZMESH'' significa que somente
-acoordenada z-coordinate de cada ponto é especificada e as coordenadas
-x e y de cada ponto são ajustadas para serem iguais às coordenadas de sua posição (u,v) na
+O arquivo ``ztent.mesh'' tem exatamente a mesma apar\^encia que ``tent.mesh'', embora seus
+v\'ertices n\~ao tenham cores. O cabe\c{c}alho ``ZMESH'' significa que somente
+acoordenada z-coordinate de cada ponto \'e especificada e as coordenadas
+x e y de cada ponto s\~ao ajustadas para serem iguais \`as coordenadas de sua posi\c{c}\~ao (u,v) na
 grade.
 
 \section{GEOMVIEW}
 
-Chame ``ztent.mesh'' para verificar que ela tem realmente a mesma aparência que ``tent.mesh''.
+Chame ``ztent.mesh'' para verificar que ela tem realmente a mesma apar\^encia que ``tent.mesh''.
 
 \chapter{VECT}
 
-Um Vect é uma coleção de polilinhas, que são linhas com 1 ou mais
-vértices. Aqui está um arquivo especificando um ``X'' e o eixo x em vermelho, um ``Y''
+Um Vect \'e uma cole\c{c}\~ao de polilinhas, que s\~ao linhas com 1 ou mais
+v\'ertices. Aqui est\'a um arquivo especificando um ``X'' e o eixo x em vermelho, um ``Y''
 e o eixo y em verde, e um ``Z'' e o eixo z em azul.
 
 \begin{verbatim}
@@ -420,32 +419,32 @@ VECT
 0 .6 1 1
 \end{verbatim}
 
-O cabeçalho é sempre ``VECT'': nenhuma letra pode ser pregada na frente.
+O cabe\c{c}alho \'e sempre ``VECT'': nenhuma letra pode ser pregada na frente.
 A segunda linha significa que existem 8 polilinhas, que possuem um total
-de 19 vértices e 3 cores. Não existe indexação em uma lista de
-vértices como existe na polilista: todo vértice simples deve ser especificado
-separadamente. A terceira linha lista o número de vértices em cada
-polilinha. Em ``xyz.vect'', as únicas polilinhas com mais que 2 vértices
-são a parte alta do ``Y'', que tem 3, e o ``Z'', que tem 4.
-A quarta linha lista o número de cores em cada polilinha.  Quando uma
-polilinha não tem cores ela herda o conjunto de cores ajustado anteriormente.  A seguir
-vem os 19 vértices: somente pontos são permitidos. Finalmente, as 3 cores
-são dadas nas últimas três linhas.
+de 19 v\'ertices e 3 cores. N\~ao existe indexa\c{c}\~ao em uma lista de
+v\'ertices como existe na polilista: todo v\'ertice simples deve ser especificado
+separadamente. A terceira linha lista o n\'umero de v\'ertices em cada
+polilinha. Em ``xyz.vect'', as \'unicas polilinhas com mais que 2 v\'ertices
+s\~ao a parte alta do ``Y'', que tem 3, e o ``Z'', que tem 4.
+A quarta linha lista o n\'umero de cores em cada polilinha.  Quando uma
+polilinha n\~ao tem cores ela herda o conjunto de cores ajustado anteriormente.  A seguir
+vem os 19 v\'ertices: somente pontos s\~ao permitidos. Finalmente, as 3 cores
+s\~ao dadas nas \'ultimas tr\^es linhas.
 
 \section{GEOMVIEW} 
 
-Apague tudo, chame e olhe para ``xyz.vect''. Faça a mesma coisa para
+Apague tudo, chame e olhe para ``xyz.vect''. Fa\c{c}a a mesma coisa para
 todos os exemplos restantes.
 
 \chapter{BEZ}
 
-Para aqueles que já entendem como criarretalhos de superfícies
-paramétricas, a sintaxe de retalhos de superfícies de Bezier é descrito na página de manual
-da OOGL.  A arte de constuir superfícies paramétricas não é facilmente
-explicada: dessa forma, está além do escopo desse tutorial discutí-las.
+Para aqueles que j\'a entendem como criarretalhos de superf\'icies
+param\'etricas, a sintaxe de retalhos de superf\'icies de Bezier \'e descrito na p\'agina de manual
+da OOGL.  A arte de constuir superf\'icies param\'etricas n\~ao \'e facilmente
+explicada: dessa forma, est\'a al\'em do escopo desse tutorial discut\'i-las.
 
-Lists e Insts são complexos Geoms que podem ser usados para criar uma
-árvore hierárquica de objetos. 
+Lists e Insts s\~ao complexos Geoms que podem ser usados para criar uma
+\'arvore hier\'arquica de objetos. 
 
 \chapter{LIST}
 
