@@ -237,3 +237,59 @@ e fazer alguma ação sobre esse objeto selecionado. Por exemplo, ``g0r'' conduz
 a rotacionar o mundo.
 
 \section{Colorindo Polilista}
+
+Vamos comparar duas formas de colorir Polilista.
+
+\begin{verbatim}
+facecube.off:
+
+# off file with per face color
+OFF
+8 6 12
+     1.0 1.0 1.0 
+     1.0 1.0 -1.0 
+     1.0 -1.0 1.0 
+     1.0 -1.0 -1.0 
+     -1.0 1.0 1.0 
+     -1.0 1.0 -1.0 
+     -1.0 -1.0 1.0 
+     -1.0 -1.0 -1.0 
+     4 0 2 3 1  .05 .8 .1 .75
+     4 4 5 7 6  .2 .05 .8 .75
+     4 0 4 6 2  .9 .9 .02 .75
+     4 1 3 7 5  .0 .7 .4 .75
+     4 0 1 5 4  .1 .4 .7 .75
+     4 2 6 7 3  .7 .7 0 .75
+
+vertcube.off:
+
+# off file with per vertex colors
+COFF
+8 6 12
+     1.0 1.0 1.0 	.05 .8 .1 .75
+     1.0 1.0 -1.0	.2 .05 .8 .75 
+     1.0 -1.0 1.0	.9 .9 .02 .75 
+     1.0 -1.0 -1.0 	.0 .7 .4 .75
+     -1.0 1.0 1.0 	.1 .4 .7 .75
+     -1.0 1.0 -1.0 	.7 .7 0 .75
+     -1.0 -1.0 1.0 	0. 0. 0. .75
+     -1.0 -1.0 -1.0 	1. 1. 1. .75	
+     4 0 2 3 1  
+     4 4 5 7 6  
+     4 0 4 6 2  
+     4 1 3 7 5  
+     4 0 1 5 4  
+     4 2 6 7 3  
+\end{verbatim}
+
+Tudo seguindo uma ``#'' (cerquilha) é um comentário para humanos lerem e é
+ignorado pela OOGL. o cabeçalho para arquivo de Polilista puro é opcional, mas
+se você tem qualquer coisa além de pontos em um vértice você torna necessário um apropriado
+cabeçalho.  O obeto é o cubo unitário, que tem 8 vértices, 6 faces,
+e 12 arestas.  O primeiro tem coloração por face d o segundo tem
+coloração por vértice.
+
+Um ponto inusitado: o cabeçalho para vertcube.off é ``COFF'' como você poderia
+esperar mas o cabeçalho para facecube.off é apenas ``OFF'' pelo fato de o
+cabeçalho referir-se somente à estrutura dos vértices, não ao arquivo
+como um todo.
