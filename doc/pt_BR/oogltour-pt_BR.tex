@@ -468,3 +468,13 @@ que está atualmente sendo aberto.
 
 \chapter{INST}
 
+Um Inst é uma ou mais transformações 4x4 aplicada(s) a outro Geom.  Essas
+matrizes podem representar todas as transformações 3D tais como rotação,
+translação, homotetia, redução e perspectiva.  Usamos matrizes 4x4
+ao invés de matrizes 3x3 de forma que possamos usr coordenadas homogêneas e
+concatenar todas as transformações sem tratar translações como
+casos especiais que requerem adiçòes ao invés de multiplicações.  Matrizes
+4x4 podem também serem usadas para cada operações tais como rotação 4D ou
+transformações hiperbólicas projetivas. Um livro texto de álgebra linear ou um livro texto de
+computação gráfica são bons lugares para iniciar se você tem pouca familiaridade com
+essas idéias.
