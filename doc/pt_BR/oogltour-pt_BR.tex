@@ -67,3 +67,33 @@ a imaginação atingir você durante esse tutorial.
 O arquivo seguinte tem vértices mais complexos que incluem uma cor no ponto. 
 O nome do arquivo no diretório do Geomview é ``csquare.quad'':
 
+\begin{verbatim}
+CQUAD
+-1 -1 0		1 0 0 1
+1 -1 0		0 1 0 1
+1 1 0		0 1 0 1
+-1 1 0		1 0 0 1
+\end{verbatim}
+
+O csquare.quad pegou os mesmos pontos do quadrado anterior, mas com dois cantos vermelhos e
+dois cantos verdes. O cabeçalho é agora ``CQUAD'' para indicar que seus
+vértices possuem informação de cor além das informações do ponto.
+Cores são especificadas por quádruplas (r,g,b,a) de números em ponto flutuante
+entre 0 e 1. Qualquer cor que que puder ser mostrada na tela de um computador
+pode ser codificada por alguma combinação de vermelho (\textit{red}), verde (\textit{green}) e azul (\textit{blue}). O quarto
+componente, alfa, representa opacidade: 0 é transparente e 1 é
+opaco. As plantaformas X, NextStep, e algumas plantaformas SGI ignoram a informação
+alfa inteiramente, mas um instantâneo Renderman irá usar a informação
+alfa se a transparência estiver habilitada. Algumas plantaformas SGI usan a
+informação alfa, mas a figura é garantidamente incorreta.
+
+\section{GEOMVIEW}
+
+Apague o objeto atual pressionando o Botão Delete.  Para
+chamar csquare.quad, pressione o Botão Load e digite ``csquare.quad'' (pressione
+Enter quando você tiver terminado a digitação) dentro da janela que aparece. (Se
+você está procurando e não tem certeza no nome dos arquivos, você pode usar o
+Botão File Browser (navegador de arquivos) para olhar em um diretório.)
+
+Você está provavelmente maravilhado porque está tudo em uma cor.  O modo de sombreamento
+padrão é monótono, onde cada polígono ou face poligonal é da mesma
