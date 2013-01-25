@@ -505,3 +505,15 @@ TLIST
  0 0 0 1
 }
 \end{verbatim}
+
+O cabeçalho é sempre e exatamente ``INST''. O valor seguindo a palavra chave
+``geom'' é um nome de arquivo referindo-se a ``ref.list'', que é o List que
+mostramos acima.  Pode também ser um Geom in-line ou um controlador. Cercamos
+o valor com chaves para evitar ambiguidade.
+
+O valor da palavra chave ``transforms'' é uma TList in-line. Pode
+também ser uma referência a nomearquivo ou um controlador. (Veja a seção Os formatos de
+Arquivo da OOGL do manual do Geomview para informações mais específicas.) TList é atualmente um
+Geom completamente fugidio, mas nem mesmo chamamos um arquivo como ``algumacoisa.tlist'' no
+visualizador pelo fato de TLists serem apenas uma coleção de transformações sem nenhum
+subgeom associado, de forma que não existe nada para ver.
