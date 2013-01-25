@@ -557,3 +557,17 @@ irrelevante.
 Esse tutorial não documenta arquivos binários ou objetos de aparência.
 Veja a seção Formatos de Arquivo da OOGL do manual do Geomview para detalhes. 
 
+Espaços em branco em arquivos OOGL é na maioria das vezes para o benefíco de letores humanos.
+``ZMESH 3 3 0 1 0 0 1 0 0 1 0'' é um arquivo legal da OOGL.  A única
+excessão é que não pode ter uma quabra de linha entre o último índice de
+vértice para uma face OFF e as seguintes 4 cores em números com ponto flutuante.
+
+\section{GEOMVIEW}
+
+Quando um Geom é chamado, é automaticamente normalizado para ajustar-se dentro de um
+cubo unitário centrado na orígem. O ponto de visão da câmera padrão localiza-se em
+{0,0,-3} olhando na direção da orígem. Para ver com tamanho e posição
+ambos inalterados de um objeto, selecione a linha None no navegador Normalize
+no menu Inspect/Appearence pull-down. Em geral não importa qual o intervalo de
+coordenadas de um objeto é desde que o objeto completo seja consistente: {0,1},
+{-1,1}, {0,100}, {-1000,-500}, {17,36} são todos intervalos válidos.
