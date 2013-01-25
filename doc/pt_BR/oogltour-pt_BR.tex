@@ -338,3 +338,23 @@ são especificados na ordem crescente do valor de v, da mesma forma que vetores 
 \end{verbatim}
 
 \section{GEOMVIEW}
+
+Apague tudo e chame ``tent.mesh''. Vé para o modo de sombreamento Smooth para
+ver cada vértice com sua prórpira cor de forma que seja óbvio como os pontos no
+arquivo correspondem-se coma imagem no visualizador.
+
+\section{Grade Fechada}
+
+Se você deseja que a grade seja fechada ao longo ou de um ou de outro (ou de ambas) as areatas
+u ou v, insira ou um ``u'' ou um ``v'' no cabeçalho antes de
+``MESH''.
+\begin{verbatim}
+"wraptent.mesh" 
+CuMESH
+3 3
+0 0 0  1 0 0 1	   1 0 1  0 1 0 1	    2 0 0  0 0 1 1
+0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
+0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
+\end{verbatim}
+
+\section{GEOMVIEW}
