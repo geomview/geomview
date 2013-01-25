@@ -415,3 +415,17 @@ VECT
 0 .6 1 1
 \end{verbatim}
 
+O cabeçalho é sempre ``VECT'': nenhuma letra pode ser pregada na frente.
+A segunda linha significa que existem 8 polilinhas, que possuem um total
+de 19 vértices e 3 cores. Não existe indexação em uma lista de
+vértices como existe na polilista: todo vértice simples deve ser especificado
+separadamente. A terceira linha lista o número de vértices em cada
+polilinha. Em ``xyz.vect'', as únicas polilinhas com mais que 2 vértices
+são a parte alta do ``Y'', que tem 3, e o ``Z'', que tem 4.
+A quarta linha lista o número de cores em cada polilinha.  Quando uma
+polilinha não tem cores ela herda o conjunto de cores ajustado anteriormente.  A seguir
+vem os 19 vértices: somente pontos são permitidos. Finalmente, as 3 cores
+são dadas nas últimas três linhas.
+
+\section{GEOMVIEW} 
+
