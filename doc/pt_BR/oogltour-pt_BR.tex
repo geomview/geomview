@@ -184,4 +184,24 @@ OFF
 \end{verbatim}
 
 O cabeçalho ``OFF'' nos diz que é um arquivo polilista (lista de polígonos). A segunda linha no
-arquivo nos diz que existem 20 vértices, 12 faces, e 30 arestas.
+arquivo nos diz que existem 20 vértices, 12 faces, and 30 arestas.
+(As biliotecas OOGL atualmente não usa ao valores de aresta, de forma que você pode
+usar 0 se você não souber o número de arestas.)  As seguintes 20
+linhas fornecem uma lista dos vértices. As últimas 12 linha especificam as faces:
+o primeiro número é o número de vértices naquela face. Uma vez que nosso
+poliedro é regular, todas as faces posuem o mesmo número de
+vértices (nesse caso, 5).  Os restantes números na linha são
+índices dentro da lista de vértices acima.
+
+Além de ser de longe mais compacto, o formato de arquivo Polilista incorpora
+informação de conectividade no Geom.  OOGL não tem como saber
+se quaisquer dois quadriláteros em um objeto Quad estão conectadas.  Mas
+com Polilista, OOGL pode interpolar normais através de faces conectadas.
+Os normais de um objeto são usadas para calcular informação de sombreamento.
+Normais interpoladas fazem um objeto parecer-ser suave ao invés de facetado.
+Esse comportamento é muitas vezes desejável se você está tentando aproximar uma superfície
+curvada quebando-a em pequenas peças.
+
+\section{GEOMVIEW}
+
+Vá adiante e chame ``dodec.off'' sem apagar o dodec.quad .  Agora
