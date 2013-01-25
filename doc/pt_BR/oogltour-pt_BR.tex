@@ -429,3 +429,28 @@ são dadas nas últimas três linhas.
 
 \section{GEOMVIEW} 
 
+Apague tudo, chame e olhe para ``xyz.vect''. Faça a mesma coisa para
+todos os exemplos restantes.
+
+\chapter{BEZ}
+
+Para aqueles que já entendem como criarretalhos de superfícies
+paramétricas, a sintaxe de retalhos de superfícies de Bezier é descrito na página de manual
+da OOGL.  A arte de constuir superfícies paramétricas não é facilmente
+explicada: dessa forma, está além do escopo desse tutorial discutí-las.
+
+Lists e Insts são complexos Geoms que podem ser usados para criar uma
+árvore hierárquica de objetos. 
+
+\chapter{LIST}
+
+Uma List é apenas uma coleção de outros Geoms.
+
+\begin{verbatim}
+"ref.list":
+LIST
+< xyz.vect
+< dodec.quad
+{ = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
+\end{verbatim}
+
