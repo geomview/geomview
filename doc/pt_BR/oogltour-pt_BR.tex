@@ -517,3 +517,8 @@ Arquivo da OOGL do manual do Geomview para informações mais específicas.) TLi
 Geom completamente fugidio, mas nem mesmo chamamos um arquivo como ``algumacoisa.tlist'' no
 visualizador pelo fato de TLists serem apenas uma coleção de transformações sem nenhum
 subgeom associado, de forma que não existe nada para ver.
+
+Uma transformação é exatamente 16. Os primeiros três conjuntos de 16 números são translações:
+2 unidades na direção x, y e z, respectivamente. O último conjunto de 16 números é apenas
+a identidade. O comprimento da TList é o número de instanciações da unidade: nesse caso, 4.
+
