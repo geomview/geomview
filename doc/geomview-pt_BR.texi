@@ -74,7 +74,7 @@ Programa interativo de visualiza@,{c}@~ao tridimensional.
 @node Intro, Distrib, Top, Top
 @unnumbered Introdu@,{c}@~{a}o ao Geomview
 
-Geomview @'{e} um programa interativo para visualizar e manipular
+Geomview @'{e} um programa interativo para visualizar e controlar
 objetos geom@'{e}tricos, originalmente escrito pelos membros do estado maior do Geometry
 Center na Universidade de Minesota (EUA), come@,{c}ando em 1991.  O Geomview pode ser usado
 como um visualizador independente para objetos est@'{a}ticos ou como um mecanismo de visualiza@,{c}@~{a}o para
@@ -852,7 +852,7 @@ manusear qualquer n@'{u}mero de objetos e permite controle coletivo ou
 separado sobre eles.
 
 A maneira mais simples de usar Geomview @'{e} como um visualizador independente para ver
-e manipular objetos.  Geomview pode mostrar objetos descritos em uma variedade
+e controlar objetos.  Geomview pode mostrar objetos descritos em uma variedade
 de formatos de arquivo.  Geomview @'{e} acompanhado com uma larga variedade de objetos como exemplo, e
 voc@^{e} pode criar seus pr@'{o}prios objetos.
 
@@ -879,8 +879,8 @@ Geomview permite m@'{u}ltiplos objetos e c@^{a}meras que s@~{a}o controlados
 independentemente.  As c@^{a}meras fornecem controle interativo para movimento, apar@^{e}ncias
 (incluindo ilumina@,{c}@~{a}o, sombreamento, e materiais), selecionando um objeto,
 aresta ou n@'{i}vel de v@'{e}rtice, instant@^{a}neos em um arquivo de imagem SGI ou no formato
-Renderman RIB, a adi@,{c}@~{a}o ou apagamento de objetos @'{e} poss@'{i}vel atrav@'{e}s da manipula@,{c}@~{a}o
-direta do mouse, pain@'{e}is de controle, e teclas de atalho via teclado.
+Renderman RIB, a adi@,{c}@~{a}o ou apagamento de objetos @'{e} poss@'{i}vel atrav@'{e}s do controle
+direto do mouse, pain@'{e}is de controle, e teclas de atalho via teclado.
 
 Geomview suporta os seguintes tipos de dados simples: poliedros com
 v@'{e}rtices compartilhados (.off), quadril@'{a}teros, malhas retangulares, vetores,
@@ -1119,7 +1119,7 @@ mouse e do teclado.
 * Opcoes de Linha de Comando::  Op@,{c}@~{o}es de Linha de Comando.
 * Interacao Basica::            Intera@,{c}@~{o}es B@'{a}sicas: O Painel Principal.
 * Chamando::                    Chamando Objetos Dentro do Geomview.
-* Movimentos do Mouse::         Usando o Mouse para Manipular Objetos.
+* Movimentos do Mouse::         Usando o Mouse para Controlar Objetos.
 * Aparencia::                   Modificando a Forma de Ver as Coisas.
 * Cameras::                     C@^{a}meras.
 * Gravando::                    Gravando seu Trabalho.
@@ -1326,7 +1326,7 @@ objeto foi chamado.  Os dois nomes s@~{a}o equivalentes no que diz respeito ao
 Geomview; em qualquer ponto onde voc@^{e} precisar especificar um nome voc@^{e} pode fornecer
 qualquer dos dois.
 
-Para manipular um objeto, esteja certo de que aquele objeto que voc@^{e} quer mover seja o
+Para controlar um objeto, garanta que aquele objeto que voc@^{e} quer mover seja o
 objeto alvo, e coloque o cursor do mouse em uma janela de c@^{a}mera.  Movimentos s@~{a}o
 aplicados pressionando ou o bot@~{a}o esquerdo ou o bot@~{a}o do meio do mouse e
 movendo o mouse.  Existem muitos modos de movimento diferentes, cada modo de movimento
@@ -1493,9 +1493,9 @@ veja @ref{GCL}. Veja @ref{load, @code{(load @dots{})}}. Veja @ref{new-geometry,
 
 @comment ================================================================
 @node Movimentos do Mouse, Aparencia, Chamando, Interacao
-@section Usando o Mouse para  Manipular Objetos
+@section Usando o Mouse para  Controlar Objetos
 
-Geomview permite a voc@^{e} manipular objetos com o mouse.  Existem seis
+Geomview permite a voc@^{e} controlar objetos com o mouse.  Existem seis
 diferentes modos de movimento do mouse: rota@,{c}@~{a}o (@emph{Rotate}), transla@,{c}@~{a}o (@emph{Translate}),
 v@^{o}o da c@^{a}mera (@emph{Cam Fly}), zoom da c@^{a}mera (@emph{Cam Zoom}), homotetia de um objeto geom@'{e}trico (@emph{Geom Scale}), e
 @'{o}rbita de c@^{a}mera (@emph{Cam Orbit}).  O painel de ferramentas tem um bot@~{a}o para cada um desses
@@ -4232,10 +4232,10 @@ TLIST			# palavra chave
 <matriz 4x4 (16 n@'{u}meros em ponto flutuante)>
 @dots{}				# qualquer n@'{u}mero de matrizes 4x4
 transform @{             # refer@^{e}ncia a um objeto de transforma@,{c}@~{a}o
-<objeto de transforma@,{c}@~{a}o (pode ser um manipulador)>
+<objeto de transforma@,{c}@~{a}o (pode ser um controlador)>
 @}
 tlist @{                 # TLIST aninhada
-<objeto TLIST OOGL (pode ser um manipulador)>
+<objeto TLIST OOGL (pode ser um controlador)>
 @}
 @end example
 
@@ -5234,17 +5234,17 @@ O pr@'{o}ximo peda@,{c}o de c@'{o}digo no programa principal envia a seguinte
 linha para a sa@'{i}da padr@~{a}o
 
 @example
-(geometry example @{ : foo @})
+(geometry example @{ : algumacoisa @})
 @end example
 
 Isso diz ao Geomview para criar um geom chamado @code{example} que @'{e} uma
-inst@^{a}ncia do manipulador @code{foo}.  @emph{Manipuladores} s@~{a}o uma parte do
+inst@^{a}ncia do controlador @code{algumacoisa}.  @emph{Controladores} s@~{a}o uma parte do
 formato de arquivo OOGL que permite a voc@^{e} nomear uma pe@,{c}a do objeto geom@'{e}trico cujo valor
 pode ser especificado em seu lugar (e nesse caso atualizado muitas vezes); para
-maiores informa@,{c}@~{o}es sobre manipuladores, veja @ref{Formatos dos Arquivos da OOGL}. Nesse caso,
+maiores informa@,{c}@~{o}es sobre controladores, veja @ref{Formatos dos Arquivos da OOGL}. Nesse caso,
 @code{example} @'{e} o t@'{i}tulo atrav@'{e}s do qual o usu@'{a}rio ir@'{a} ver o objeto no
 navegador de objeto do Geomview, e @code{foo} @'{e} o nome interno do
-manipulador para o qual o objeto aponta.
+controlador para o qual o objeto aponta.
 
 N@'{o}s ent@~{a}o fazemos @code{fflush(stdout)} para garantir que Geomview
 receba esse comando imediatamente.  Em geral, uma vez que pipes podem ser
@@ -5257,7 +5257,7 @@ valores de @code{t}.  @code{UpdateMesh} envia ao Geomview um comando
 da forma
 
 @example
-(read geometry @{ define foo 
+(read geometry @{ define algumacoisa 
 MESH
 24 24
 @dots{}
@@ -5266,7 +5266,7 @@ MESH
 
 @noindent
 onde @code{@dots{}} @'{e} uma longa lista de n@'{u}meros.  Esse comando diz ao Geomview
-fazer os valores do manipulador @code{foo} ser a malha especificada.  T@~{a}o
+fazer os valores do controlador @code{algumacoisa} ser a malha especificada.  T@~{a}o
 breve quanto Geomview receba esse comando, o geom sendo mostrado
 muda para refletir o novo objeto geom@'{e}trico.
 
@@ -5279,7 +5279,7 @@ com "@code{@})}" nesse formato que termina o "@code{@{}" que iniciou a
 declara@,{c}@~{a}o @code{define} e o "@code{(}" que iniciou o comando.  Para
 mais detalhes sobre o formato de dados MESH, veja @ref{MESH}.
 
-Esse m@'{o}dulo pode ser escrito sem o uso de manipuladores
+Esse m@'{o}dulo pode ser escrito sem o uso de controladores
 escrevendo comandos da forma
 
 @example
@@ -5297,10 +5297,10 @@ Subsequentemente comandos @code{(geometry example @dots{})} podem fazer com que
 Geomview substitua a geometria do geom @code{example} com os novos
 dados da @code{MESH}.  Se realizado dessa forma pode n@~{a}o ser necess@'{a}rio enviar
 o comando inicial @code{(geometry example @{ : foo @})} como dito acima.  A
-t@'{e}cnica do manipulador @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode ser usada em situa@,{c}@~{o}es
-mais gerais onde um manipulador representa somente parte de um complexo
+t@'{e}cnica do controlador @'{e} @'{u}til, todavia, porque essa t@'{e}cnica pode ser usada em situa@,{c}@~{o}es
+mais gerais onde um controlador representa somente parte de um complexo
 geom, permitindo a um m@'{o}dulo externo substituir somente aquela parte sem
-ter que retransmitir o geom completo.  Para mais informa@,{c}@~{o}es sobre manipuladores,
+ter que retransmitir o geom completo.  Para mais informa@,{c}@~{o}es sobre controladores,
 veja @ref{GCL}. Veja @ref{Referencias}. Veja @ref{hdefine,@code{(hdefine
 @dots{})}}. Veja @ref{read,@code{(read @dots{})}}.
 
@@ -7065,7 +7065,7 @@ Desenha a vis@~{a}o em CAM-ID, se a vis@~{a}o precisar ser redesenhada. @xref{re
 @findex dump-handles
 @table @code
 @item (dump-handles)
-Descarrega a lista dos manipuladores ativos atualmente para a sa@'{i}da padr@~{a}o. Essa fun@,{c}@~{a}o @'{e}
+Descarrega a lista dos controladores ativos atualmente para a sa@'{i}da padr@~{a}o. Essa fun@,{c}@~{a}o @'{e}
 pensada para uso em depura@,{c}@~{a}o interna somente.
 @end table
 
@@ -7335,7 +7335,7 @@ executando.
 @findex hdefine
 @table @code
 @item (hdefine @code{geometria}|@code{camera}|@code{janela}|@code{apar@^{e}ncia}|@code{imagem}|@code{transforma@,{c}@~{a}o}|@code{ntransform} nome valor)
-Ajusta o valor de um manipulador de tipo fornecido.
+Ajusta o valor de um controlador de tipo fornecido.
 @example
   (hdefine  <tipo>  <nome>  <valor>)
 @end example
@@ -7355,17 +7355,17 @@ lido. @xref{Referencias}. @xref{read, @code{(read @dots{})}}. @xref{hdelete,
 @findex hdelete
 @table @code
 @item (hdelete [@code{geometria}|@code{camera}|@code{janela}|@code{apar@^{e}ncia}|@code{imagem}|@code{transform}|@code{ntransform}] nome)
-Apaga o manipulador fornecido. Note que o manipulador n@~{a}o ir@'{a} atualmente ser
-apagado no caso de existir ainda outros objetos fazendo refer@^{e}ncia ao manipulador,
-mas uma vez que os objetos que fazem refer@^{e}ncia ao maipulador apagado forem fechados, o manipulador ir@'{a} tamb@'{e}m ser automaticamente
-mandado embora. O objeto que faz refer@^{e}ncia ao manipulador (se existir algum) ir@'{a} somente ser deletado se
+Apaga o controlador fornecido. Note que o controlador n@~{a}o ir@'{a} atualmente ser
+apagado no caso de existir ainda outros objetos fazendo refer@^{e}ncia ao controlador,
+mas uma vez que os objetos que fazem refer@^{e}ncia ao maipulador apagado forem fechados, o controlador ir@'{a} tamb@'{e}m ser automaticamente
+mandado embora. O objeto que faz refer@^{e}ncia ao controlador (se existir algum) ir@'{a} somente ser deletado se
 n@~{a}o existirem outras refer@^{e}ncias para esse objeto.
 
-Se o opcional primeiro argumento for omitido, ent@~{a}o o primeiro manipulador
+Se o opcional primeiro argumento for omitido, ent@~{a}o o primeiro controlador
 que coincidir com @var{nome} ir@'{a} ser apagado, independentemente do tipo de
-objeto ao qual esse manipulador estiver anexado. N@~{a}o @'{e} um erro chamar essa fun@,{c}@~{a}o com
-um manipulador inexistente, mas @'{e} uma erro chamar essa fun@,{c}@~{a}o com o
-nome de um manipulador n@~{a}o global, i.e. um que n@~{a}o tenha sido criado por
+objeto ao qual esse controlador estiver anexado. N@~{a}o @'{e} um erro chamar essa fun@,{c}@~{a}o com
+um controlador inexistente, mas @'{e} uma erro chamar essa fun@,{c}@~{a}o com o
+nome de um controlador n@~{a}o global, i.e. um que n@~{a}o tenha sido criado por
 @code{(hdefine @dots{})} ou @code{(read @dots{} @{ define
 @dots{}@})}. @xref{Referencias}.  @xref{read,@code{(read
 @dots{})}}. @xref{hdefine,@code{(hdefine @dots{})}}.
@@ -7703,7 +7703,7 @@ objeto posteriormente.
 No nosso modelo para visualiza@,{c}@~{a}o N-Dimensional (habilitado por (dimension)), objetos no
 espa@,{c}o N-dimensional s@~{a}o visualizados por N-dimensional @emph{grupos de c@^{a}mera}.
 Cada janela real de c@^{a}mera pertence a algum grupo de c@^{a}meras, e mostra &
-manipula um subspa@,{c}o projetado eixo-alinhado 3-D do espa@,{c}o N-dimensional visto
+controla um subspa@,{c}o projetado eixo-alinhado 3-D do espa@,{c}o N-dimensional visto
 pelo seu grupo.  Movendo uma c@^{a}mera em um grupo afeta todos os outros membros do grupo.
 
 O comando ND-axes configura tudo isso.  O comando ND-axes especifica uma associa@,{c}@~{a}o
@@ -8047,7 +8047,7 @@ ser avaliada. @xref{eval, @code{(eval @dots{})}}.
 @item (rawevent dev val x y t)
 Coloca o evento de linha especificado em uma fila de eventos.  Os
 argumento especificam diretamente os membros da estrutura do evento
-usada internamente pelo geomview.  Esse @'{e} o manipulador de evento de mais
+usada internamente pelo geomview.  Esse @'{e} o controlador de evento de mais
 baixo n@'{i}vel e n@~{a}o foi pensado para uso geral.
 @end table
 
