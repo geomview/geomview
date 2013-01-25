@@ -98,17 +98,17 @@ voc\^e est\'a procurando e n\~ao tem certeza no nome dos arquivos, voc\^e pode u
 Bot\~ao File Browser (navegador de arquivos) para olhar em um diret\'{o}rio.)
 
 Voc\^e est\'a provavelmente maravilhado porque est\'a tudo em uma cor.  O modo de sombreamento
-padrão é monótono, onde cada polígono ou face poligonal é da mesma
-cor. Os outros dois modos de sombreamento, constante e suave, irão ambos
+padr\~ao \'e mon\'{o}tono, onde cada pol\'igono ou face poligonal \'e da mesma
+cor. Os outros dois modos de sombreamento, constante e suave, ir\~ao ambos
 mostrar faces multicoloridas onde as cores suavemente interpolada
-entre os vértices. Sombreamento Constant ignora todas as informações de iluminação,
-enquanto sombreamento smooth (suave) interpola iluminação bem como cores entre
-os vértices.
+entre os v\'ertices. Sombreamento Constant ignora todas as informa\c{c}\~oes de ilumina\c{c}\~ao,
+enquanto sombreamento smooth (suave) interpola ilumina\c{c}\~ao bem como cores entre
+os v\'ertices.
 
 Para mudar o modo de sombreamento, primeiro abra o painel Appearance clicando
 na linha Appearance no menu Inspect.  Agora alterne de
 modo para modo clicando sobre diferentes linhas no navegador de sombreamento.
-\footnote{Nota do tradutor: CSmooth - suave com mais brilho, VCflat - monótono com menos brilho}
+\footnote{Nota do tradutor: CSmooth - suave com mais brilho, VCflat - mon\'{o}tono com menos brilho}
 
 Hora de ir para coisas maiores e melhores. 
 
@@ -133,15 +133,15 @@ QUAD
 \normalsize
 
 Agora encontramos um objeto mais interessante: umdodecaedro.  Uma vez que
-dodecaedros possuem faces de 5 lados, cada uma dessas 12 faces é atualmente feita
-de 5 quadriláteros formando ao todo 20 quadriláteros nesse objeto Quad.
+dodecaedros possuem faces de 5 lados, cada uma dessas 12 faces \'e atualmente feita
+de 5 quadril\'ateros formando ao todo 20 quadril\'ateros nesse objeto Quad.
 
 \section{GEOMVIEW}
 
 Apague o quadrado e chame ``dodec.quad''. Uma vez que os 5
-quadriláteros de cada face todos se ajustam juntos perfeitamente, o fato de
-existirem certamente muitos deles em cada face é somente notado quando as
-arestas são desenhadas. Para habilitar o desenho das arestas, pressione o botão Edges no
+quadril\'ateros de cada face todos se ajustam juntos perfeitamente, o fato de
+existirem certamente muitos deles em cada face \'e somente notado quando as
+arestas s\~ao desenhadas. Para habilitar o desenho das arestas, pressione o bot\~ao Edges no
 painel Appearance.
 
 \chapter{OFF}
@@ -187,57 +187,57 @@ OFF
 	5 19 18 17 16 15
 \end{verbatim}
 
-O cabeçalho ``OFF'' nos diz que é um arquivo polilista (lista de polígonos). A segunda linha no
-arquivo nos diz que existem 20 vértices, 12 faces, and 30 arestas.
-(As biliotecas OOGL atualmente não usa ao valores de aresta, de forma que você pode
-usar 0 se você não souber o número de arestas.)  As seguintes 20
-linhas fornecem uma lista dos vértices. As últimas 12 linha especificam as faces:
-o primeiro número é o número de vértices naquela face. Uma vez que nosso
-poliedro é regular, todas as faces posuem o mesmo número de
-vértices (nesse caso, 5).  Os restantes números na linha são
-índices dentro da lista de vértices acima.
+O cabe\c{c}alho ``OFF'' nos diz que \'e um arquivo polilista (lista de pol\'igonos). A segunda linha no
+arquivo nos diz que existem 20 v\'ertices, 12 faces, and 30 arestas.
+(As biliotecas OOGL atualmente n\~ao usa ao valores de aresta, de forma que voc\^e pode
+usar 0 se voc\^e n\~ao souber o n\'umero de arestas.)  As seguintes 20
+linhas fornecem uma lista dos v\'ertices. As \'ultimas 12 linha especificam as faces:
+o primeiro n\'umero \'e o n\'umero de v\'ertices naquela face. Uma vez que nosso
+poliedro \'e regular, todas as faces posuem o mesmo n\'umero de
+v\'ertices (nesse caso, 5).  Os restantes n\'umeros na linha s\~ao
+\'indices dentro da lista de v\'ertices acima.
 
-Além de ser de longe mais compacto, o formato de arquivo Polilista incorpora
-informação de conectividade no Geom.  OOGL não tem como saber
-se quaisquer dois quadriláteros em um objeto Quad estão conectadas.  Mas
-com Polilista, OOGL pode interpolar normais através de faces conectadas.
-Os normais de um objeto são usadas para calcular informação de sombreamento.
-Normais interpoladas fazem um objeto parecer-ser suave ao invés de facetado.
-Esse comportamento é muitas vezes desejável se você está tentando aproximar uma superfície
-curvada quebando-a em pequenas peças.
+Al\'em de ser de longe mais compacto, o formato de arquivo Polilista incorpora
+informa\c{c}\~ao de conectividade no Geom.  OOGL n\~ao tem como saber
+se quaisquer dois quadril\'ateros em um objeto Quad est\~ao conectadas.  Mas
+com Polilista, OOGL pode interpolar normais atrav\'es de faces conectadas.
+Os normais de um objeto s\~ao usadas para calcular informa\c{c}\~ao de sombreamento.
+Normais interpoladas fazem um objeto parecer-ser suave ao inv\'es de facetado.
+Esse comportamento \'e muitas vezes desej\'avel se voc\^e est\'a tentando aproximar uma superf\'icie
+curvada quebando-a em pequenas pe\c{c}as.
 
 \section{GEOMVIEW}
 
-Vá adiante e chame ``dodec.off'' sem apagar o dodec.quad .  Agora
-você tem dois Geoms no seu mundo.  A maioria das ações aplicam-se ao
-objeto atualmente selecionado. Quando você inicia o geomview, o objeto
-atualmente selecionado é o mundo todo. Você pode independentemente controlar qualquer
-objeto no mundo selecionado-o como o alvo de suas ações.
-Um duplo clique com o botão direito do mouse quando o mouse estiver sobre um
-objeto seleciona-o: dar um duplo clique com o botão direito do mouse sobre o espaço vazio
-seleciona o mundo todo. Você pode também selecionar objetos clicando sobre a
+V\'a adiante e chame ``dodec.off'' sem apagar o dodec.quad .  Agora
+voc\^e tem dois Geoms no seu mundo.  A maioria das a\c{c}\~oes aplicam-se ao
+objeto atualmente selecionado. Quando voc\^e inicia o geomview, o objeto
+atualmente selecionado \'e o mundo todo. Voc\^e pode independentemente controlar qualquer
+objeto no mundo selecionado-o como o alvo de suas a\c{c}\~oes.
+Um duplo clique com o bot\~ao direito do mouse quando o mouse estiver sobre um
+objeto seleciona-o: dar um duplo clique com o bot\~ao direito do mouse sobre o espa\c{c}o vazio
+seleciona o mundo todo. Voc\^e pode tamb\'em selecionar objetos clicando sobre a
 linha apropriada no navegador Object.
 
-Os dois dodecaedros estão provavelmente sobrepostos.  Selecione um deles como
+Os dois dodecaedros est\~ao provavelmente sobrepostos.  Selecione um deles como
 seu alvo, clique na linha ``Translate'' (transladar) no navegador de movimentos, e
-mova a objeto selecionado paa adiante do centro do mundo com o botão esquerdo
-do mouse.  (Para retornar para o modo ``Rotate'' (rotação), clique na linha apropriada no
+mova a objeto selecionado paa adiante do centro do mundo com o bot\~ao esquerdo
+do mouse.  (Para retornar para o modo ``Rotate'' (rota\c{c}\~ao), clique na linha apropriada no
 navegador de movimento.)
  
 Agora selecione o mundo todo novamente e desenhe as normais pressionando o
-botão ``Normals'' (normais) no painel Appearance. Mude entre os modos de sombreamento
+bot\~ao ``Normals'' (normais) no painel Appearance. Mude entre os modos de sombreamento
 Flat e Smooth (clicando no navegador Shading) e verifique
-que a Polilista muda mas o Quad não.  
+que a Polilista muda mas o Quad n\~ao.  
 
-Algumas vezes usando o mouse para clicar nas linhas e botões do navegador é
-incômodo. Os caracteres entre os colchêtes mostrados nos painéis de controle são
+Algumas vezes usando o mouse para clicar nas linhas e bot\~oes do navegador \'e
+inc\^omodo. Os caracteres entre os colch\^etes mostrados nos pain\'eis de controle s\~ao
 atalhos de teclado que copiam o efeito de usar o mouse para
-clicar naquela linha ou botão. Por exemplo, ``an'' (the ``a'' significa
+clicar naquela linha ou bot\~ao. Por exemplo, ``an'' (the ``a'' significa
 ``appearance'') alterna o desenho das normais e ``t'' aterna o movimento para
-translatção.  Adicionalmente a teclas de atalho, você pode usar o prefixo de umn
-objeto (``g'' or ``c'' seguido por um número, como mostrado nos colchêtes no
-navegador Object) antes da maioria dos comandos para simultâneamente selecionar um objeto
-e fazer alguma ação sobre esse objeto selecionado. Por exemplo, ``g0r'' conduz você imediatamente
+translat\c{c}\~ao.  Adicionalmente a teclas de atalho, voc\^e pode usar o prefixo de umn
+objeto (``g'' or ``c'' seguido por um n\'umero, como mostrado nos colch\^etes no
+navegador Object) antes da maioria dos comandos para simult\^aneamente selecionar um objeto
+e fazer alguma a\c{c}\~ao sobre esse objeto selecionado. Por exemplo, ``g0r'' conduz voc\^e imediatamente
 a rotacionar o mundo.
 
 \section{Colorindo Polilista}
@@ -286,17 +286,18 @@ COFF
      4 2 6 7 3  
 \end{verbatim}
 
-Tudo seguindo uma ``\#'' (cerquilha) é um comentário para humanos lerem e é
-ignorado pela OOGL. o cabeçalho para arquivo de Polilista puro é opcional, mas
-se você tem qualquer coisa além de pontos em um vértice você torna necessário um apropriado
-cabeçalho.  O obeto é o cubo unitário, que tem 8 vértices, 6 faces,
-e 12 arestas.  O primeiro tem coloração por face d o segundo tem
-coloração por vértice.
+Tudo seguindo uma ``\#'' (cerquilha) \'e um coment\'ario para humanos lerem e \'e
+ignorado pela OOGL. o cabe\c{c}alho para arquivo de Polilista puro \'e opcional, mas
+se voc\^e tem qualquer coisa al\'em de pontos em um v\'ertice voc\^e torna necess\'ario um apropriado
+cabe\c{c}alho.  O obeto \'e o cubo unit\'ario, que tem 8 v\'ertices, 6 faces,
+e 12 arestas.  O primeiro tem colora\c{c}\~ao por face d o segundo tem
+colora\c{c}\~ao por v\'ertice.
 
-Um ponto inusitado: o cabeçalho para vertcube.off é ``COFF'' como você poderia
-esperar mas o cabeçalho para facecube.off é apenas ``OFF'' pelo fato de o
-cabeçalho referir-se somente à estrutura dos vértices, não ao arquivo
+Um ponto inusitado: o cabe\c{c}alho para vertcube.off \'e ``COFF'' como voc\^e poderia
+esperar mas o cabe\c{c}alho para facecube.off \'e apenas ``OFF'' pelo fato de o
+cabe\c{c}alho referir-se somente \`a estrutura dos v\'ertices, n\~ao ao arquivo
 como um todo.
+
 
 \section{GEOMVIEW}
 Apague tudo selecionado o mundo e pressionado o botão Delete
