@@ -454,3 +454,17 @@ LIST
 { = QUAD -1 -1 0   1 -1 0  1 1 0  -1 1 0}
 \end{verbatim}
 
+O cabeçalho é sempre e exatamente ``LIST''. Os primeiros dois subgeoms referem-se a
+outroa arquivos, usando a sintaxe `` < nomearquivo ''. Omitimos as
+opcionais chaves marcando o início e o fim do arquivo.  O erceiro é um objeto literal,
+ou in-line. Embora essa sintaxe em particular possa ainda funcionar se abandonarmos
+as chaves delimitando e o sinal de igual, sintaxe muito similar pode
+não funcionar então seguimos a regra ``na dúvida, use as chaves''.
+
+\section{GEOMVIEW}
+Geomview procura por nomes de arquivos no diretório atual, no come do caminho na
+variável de ambiente GEOMDATA, e o mesmo diretório que o arquivo
+que está atualmente sendo aberto. 
+
+\chapter{INST}
+
