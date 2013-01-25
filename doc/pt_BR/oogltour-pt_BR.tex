@@ -310,3 +310,31 @@ cor da luzes.
 
 \chapter{MESH}
 
+Os vértices de um arquivo Mesh são conectados em uma grade retangular.
+
+\begin{verbatim}
+tent.mesh:
+CMESH
+3 3
+0 0 0  1 0 0 1	   1 0 1  0 1 0 1	    2 0 0  0 0 1 1
+0 1 0  1 0 0 1	   1 1 1  0 1 0 1	    2 1 0  0 0 1 1
+0 2 0  1 0 0 1	   1 2 1  0 1 0 1	    2 2 0  0 0 1 1
+\end{verbatim}
+
+O cabeçalho ``CMESH'' nos diz que é um arquivo Mesh e que cada vértice
+contém ambas as informações de ponto e cor.  A segunda linha significa que
+ambas as dimensões u e v da malha é 3, de forma que existirá 3*3 =
+9 vértices. Cada vértice que não for uma aresta externa está conectado a
+seus 4 vizinhos mais próximos por uma aresta. Em ``tent.mesh'', somente o
+ponto (1,1,1) é um ponto interno. Os 9 vértices, quando nomeados (u,v),
+são especificados na ordem crescente do valor de v, da mesma forma que vetores estáticos em C:
+
+\begin{verbatim}
+(0,0)---(1,0)---(2,0)   
+  |	  |	  |
+(0,1)---(1,1)---(2,1)
+  |	  |	  |
+(0,2}---(1,2)---(2,2)
+\end{verbatim}
+
+\section{GEOMVIEW}
