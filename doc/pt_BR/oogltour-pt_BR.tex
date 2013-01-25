@@ -358,3 +358,22 @@ CuMESH
 \end{verbatim}
 
 \section{GEOMVIEW}
+
+Chame ``wraptent.mesh'' e compare as duas malhas, transladando-as
+separadamente da outra quando necessário.
+
+\section{Eficiência}
+
+Existe um caminho extremamente eficiente para descrever uma malha quando as coordenadas
+x e o y coincidem com as coordenadas de u e de v de todos os pontos.
+
+\begin{verbatim}
+"ztent.mesh":
+ZMESH
+3 3
+0 1 0
+0 1 0
+0 1 0
+\end{verbatim}
+
+O arquivo ``ztent.mesh'' tem exatamente a mesma aparência que ``tent.mesh'', embora seus
