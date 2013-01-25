@@ -522,3 +522,22 @@ Uma transformação é exatamente 16. Os primeiros três conjuntos de 16 número
 2 unidades na direção x, y e z, respectivamente. O último conjunto de 16 números é apenas
 a identidade. O comprimento da TList é o número de instanciações da unidade: nesse caso, 4.
 
+Se não quisermos usar instanciação, teremos que calcular 4
+Geoms inteiramente novos, uma vez que os pontos atuais no espaço de um objeto são
+diferentes se você movê-lo. Uma vez que a unidade de um Inst pode ser outro
+Inst, você pode construir uma complexa hierarquia. Por exemplo, para construir um
+sistema solar você somente precisa gerar uma esfera. Todos os planetas podem ser
+conseguidos ajustando proporcionalmente e transladandos instanciações daque Geom simples inicial.
+
+\begin{verbatim}
+"warp.inst":
+INST
+transform {
+		1 0 0 0
+		0 9 0 0
+		0 0 3 0
+		0 0 0 1
+}
+geom { < dodec.off }
+\end{verbatim}
+
