@@ -1,6 +1,6 @@
 #!/bin/bash
 #powered by Jorge Barros de Abreu under GPL
-#ficmatin01 at solar dot com dot br
+#ficmatin01 at gmail dot com
 # this script needs "sed" and "mktemp" command
 #adjust iso8859-1 characters to texinfo 
 ARQ_TMP='mkstemp'
