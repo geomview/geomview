@@ -6,7 +6,7 @@
 @setfilename geomview-pt_BR
 @settitle Manual do Geomview
 
-@include version-pt_BR.texi
+@include pt_BR/version-pt_BR.texi
 
 @dircategory Graphics Applications
 @direntry
