@@ -2167,15 +2167,15 @@ figura seguinte em uma janela escondida, ent@~{a}o alterna as @'{a}reas de mem@'
 essa janela completamente vis@'{i}vel em algum momento.  Sobre muitos sistemas operacionais, a mem@'{o}ria para a @'{a}rea de mem@'{o}ria escondida
 vem da apropria@,{c}@~{a}o indevida de metade dos bits de cada pixel de tela, reduzindo a resolu@,{c}@~{a}o de
 cor.  Quando a op@,{c}@~{a}o @'{a}rea de mem@'{o}ria simples (single-buffering) for habilitada, as pel@'{i}culas de tela de cada
-cena est@'{a} sendo desenhada, mas voc@^{e} pode pegar imagens planas com redu@,{c}@~{a}o de granularidade
-estremecendo artefatos.  @'{A}rea de mem@'{o}ria simples @'{e} poss@'{i}vel se Geomview for compilado com
+cena est@'{a} sendo desenhada, mas voc@^{e} pode pegar imagens suaves com redu@,{c}@~{a}o de granularidade
+ em artefatos para mistrura de cores.  @'{A}rea de mem@'{o}ria simples @'{e} poss@'{i}vel se Geomview for compilado com
 GL ou com OpenGL, mas n@~{a}o com gr@'{a}ficos desenhados com recursos @'{u}nicos e exclusivos do X.
 
 @item Dither
 Muitos monitores oferecem menos que 24 bits por pixel (8 bits para cada vermelho, verde,
 e azul) convencionalmente suficiente para mostrar grada@,{c}@~{o}es de cor simplesmente.  
 Quando tenta mostrar uma cor n@~{a}o acuradamente dispon@'{i}vel no monitor,
-Geomview normalmente estremece (@emph{dithers}), modificando as cores do pixel para algumas vezes mais brilhante,
+Geomview normalmente mistura cores (@emph{dithers}), modificando as cores do pixel para algumas vezes mais brilhante,
 algumas vezes mais escuro que o valor desejado, de forma que a cor dispon@'{i}vel sobre uma @'{a}rea
 @'{e} uma melhor aproxima@,{c}@~{a}o para a cor verdadeira que um pixel simples pode ter.
 Efetivamente perdas de resolu@,{c}@~{a}o espacial s@~{a}o para ganhar resolu@,{c}@~{a}o de cor.
@@ -7048,7 +7048,7 @@ a visualiza@,{c}@~{a}o N-dimensional n@~{a}o puder ser habilitada.
 @findex dither
 @table @code
 @item (dither CAM-ID @{on|off|toggle@})
-Alterna entre estremecimento ligado e desligado em CAM-ID.
+Alterna entre mistura de cores ligada e desligada em CAM-ID.
 @end table
 
 @node draw, dump-handles, dither, GCL Reference
