@@ -1,0 +1,717 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[linktocpage]{hyperref}
+\hyphenation{for-ne-ce}
+\renewcommand{\contentsname}{\'Indice}
+\begin{document}
+\vspace*{6cm}
+\huge
+\begin{center}
+FAQ
+Geomview
+\end{center}
+\normalsize
+\newpage
+\tableofcontents
+\newpage
+
+\section{Quest\~oes Gerais}
+
+    \subsection{O Que \'e Geomview?}
+
+        Um programa visualizador de prop\'{o}sito geral e interativo para Unix. \'E usado
+        na maioria das vezes para gr\'aficos tridimensionais mas pode mostrar dados em 2D e 4D tamb\'em. Veja
+        a vis\~ao geral  \url{http://www.geomview.org/overview} para coment\'arios mais
+        gerais sobre o Geomview.
+
+    \subsection{Como fa\c{c}o para ter o arquivo de instala\c{c}\~ao do Geomview?}
+
+        Geomview est\'a dispon\'ivel livremente a partir de  \url{http://www.geomview.org/download}.
+        Existem distribui\c{c}\~oes no formato bin\'ario para m\'aquinas Linux, FreeBSD, SGI, Sun SPARC,
+        HP-UX, IBM RS/6000, DEC Alpha, e NeXT, bem como uma distribui\c{c}\~ao na forma de
+        c\'{o}digo fonte.
+
+        Voc\^e pode tamb\'em ter o arquivo de instala\c{c}\~ao por ftp an\^onimo a partir de \url{ftp://ftp.geomview.org/pub}.
+
+        Geomview \'e um software livre, mas gostar\'iamos saber das pessoas que o utilizam.
+        Por favor envie-nos um email para register@geomview.org nos dizendo o que
+        voc\^e est\'a fazendo com o Geomview.
+
+    \subsection{Qual a documenta\c{c}\~ao para o Geomview que est\'a dispon\'ivel?}
+
+        See the Documentation \url{http://www.geomview.org/docs} part of this web site.
+
+    \subsection{Como eu posso interagir com outro usu\'arios do Geomview?}
+
+        Existe a lista de mensagens ``geomview-users'' para pessoas usando geomview que
+        pode ser usada para comunica\c{c}\~ao entre usu\'arios sobre problemas do geomview,
+        quet\~oes, experi\^encias, etc. Os autores do geomview s\~ao tamb\'em uma parte dessa
+        lista e ir\~ao responder a quest\~oes postadas. Tamb\'em usamos essa
+        lista para fazer an\'uncios sobre novas vers\~oes e outras coisas do
+        interesse dos usu\'arios. Para usar essa lista, envie um email vazio com 'subscribe'
+        na linha de assunto para geomview-users-request@lists.sourceforge.net, ou visite a p\'agina
+        da lista em:
+        \url{http://lists.sourceforge.net/mailman/listinfo/geomview-users}.
+	
+        Veja tamb\'em a lista de outros software e projetos:
+        \url{http://www.geomview.org/thirdparty}.
+
+\section{Configuration/Installation/ Execution Problems}
+
+    \subsection{As caixas de verifica\c{c}\~ao e certos outros recursos da interface gr\'afica de usu\'ario est\~ao ou 
+    ausentes dos pain\'eis do Geomview, ou n\~ao trabalham quando eu compilo 
+    a \'ultima vers\~ao. O que est\'a acontecendo?}
+
+        Esses problemas parecem estarem associados com vers\~oes mais recentes da Lesstif
+        (e.g. 0.91.x), pelo menos no GNU/Linux. N\~ao sei se isso \'e um problema
+        com o Lesstif propriamente dito, ou se alguma coisa est\'a errada com o caminho que o Geomview usa
+        Lesstif. Enquanto isso, se voc\^e experiencia esse problema, sugiro
+        compilar Geomview com a Open Motif ao inv\'es da Lesstif. Existe um
+        arquivo leve de distribui\c{c}\~ao no formato bin\'ario da Open Motif 2.1.30 dispon\'ivel na
+        pagina de download do Geomview  \url{http://www.geomview.org/download}, com
+        instru\c{c}\~oes para us\'a-lo com o Geomview. Ou, voc\^e pode pegar a arquivo completo de distribui\c{c}\~ao da
+        Open Motif (fonte ou bin\'ario) a partir de \url{http://www.opengroup.org/motif}
+        ou de \url{http://www.openmotif.com}.
+
+        Se voc\^e est\'a familiarizado com Lesstif e conhece o que pode causar ese problema
+        (e especialmente se voc\^e sabe como consertar isso!), por favor me mand um email
+        (mbp at geomtech.com).
+
+    \subsection{O configure alega n\~ao poder encontrar a OpenGl no meu sistema, mas tenho certeza que ela est\'a instalada}
+    \label{aswer:OpenGl}
+        \begin{itemize}
+          \item Garanta que voc\^e informou o argumento ``$--$with-opengl=DIR'' ao configure,
+            onde DIR \'e o diret\'{o}rio contendo sua instala\c{c}\~ao da OpenGL. DIR
+            deve ser o caminho absoluto para um diret\'{o}rio contendo subdiret\'{o}rios
+            chamados ``include'' e ``lib''. O subdiret\'{o}rio ``include'' deve por sua vez
+            incluir um subdiret\'{o}rio chamado ``GL'' que tem o arquivo de cabe\c{c}alho ``gl.h'' (bem
+            como outros arqwuivos de cabe\c{c}alho) dentro dele. O diret\'{o}rio ``lib'' deve
+            conter os arquivos (.so) da biblioteca GL.
+
+          \item Algumas vezes 'configure' ir\'a incorretamente reportar que a OpenGl est\'a faltando
+            quando de OpenGl estiver presente, mas o teste para detectar a presen\c{c}a da OpenGL falhou por alguma
+            outra raz\~ao, tal como algum arquivo de cabe\c{c}alho ou biblioteca dependente faltando.
+            Por exemplo, se sua instala\c{c}\~ao do X window est\'a danificada ou
+            incompleta, isso pode confundir os testes que 'configure' faz para
+            OpenGl. Existem dois lugares para olhar para colher ind\'icios a respeito disso:
+              \begin{itemize}
+              \item A saida do 'configure' propriamente dito --- olhe para as linhas relacionadas
+                \`a verifica\c{c}\~ao para X window, em particular. Se o X n\~ao for encontrado, ou
+                o Geomview n\~ao puder ser linkado com suporte ao X, ent\~ao esse \'e provavelmente o problema.
+
+              \item O arquivo 'config.log' queno 'configure' escreve enquanto \'e executado. Esse
+                arquivo cont\'em todos os detalhes terr\'ivies sobre os testes que
+                'configure' est\'a fazendo. O 'config.log' ir\'a ter mensagens de erro que podem
+                indicar por que certos testes falham. IMPORTANTE nota sobre a leitura do
+                'config.log': muitos dos testes do configure envolvem la\c{c}os que tentam
+                muitas possibilidades --- por exemplo muitas localiza\c{c}\~oes poss\'iveis
+                para um arquivo de cabe\c{c}alho. O 'configure' ir\'a escrever um pequeno programa e
+                tentar compl\'a-lo uma vez para cada uma dessas localiza\c{c}\~oes, at\'e enconrar
+                encontrar uma que trabalhe. Paa cada uma que n\~ao funcionou, ir\~ao existir
+                mensagens de erro no arquivo 'config.log'. Quando for ler o
+                'config.log', garanta olhar para todos esses testes, n\~ao apenas o
+                primeiro deles, durante a tentativa de decidor por que um teste est\'a falhando.
+             \end{itemize}
+          \item se a sa\'ida do 'configure', ou o conte\'udo do 'config.log',
+            sugerem que alguma parte do X n\~ao pode ser encontrada (por exemplo se n\~ao puder
+            encontrar certos cabe\c{c}alhos do X, como o ``X11/X.h'' ou o $----$\newline ``X11/Intrinsic.h''),
+            ent\~ao o problema pode ser que voc\^e n\~ao tenha instalado o pacote
+            de desenvolvimento do X window para o seu sistema. Alguma distribui\c{c}\~ao
+            GNU/Linux inclue o pacote com os execut\'aveis mas n\~ao o(s) pacote(s) de
+            desenvolvimento. Garanta ter instalado quaisquer pacotes que forem
+            necess\'arios para trabalho de desenvolvimento do X bem como o(s) pacote(s) com o(s) execut\'avei(s) do X.
+
+          \item Se 'configure' reclama que n\~ao pode linkar com -lGL (ou -lGLU) mas
+            voc\^e tem certeza que eles est\~ao a\'i, encontre os diret\'{o}rios contendo seus
+            arquivos libGL.so.* e libGLU.so.*; chame esse diret\'{o}rio de DIR. DIR ir\'a
+            provavelmente conter um ou mais arquivos com nomes como libGL.so.VERS\~AO
+            e libGLU.so.VERS\~AO, onde VERS\~AO is some version number,
+            such as ``1.2.0'' or ``1.2.030200''. Tamb\'em deve conter entradas
+            chamadas simplesmente libGL.so e libGLU.so, sem sfixo de VERS\~AO; esses
+            s\~ao comumente links simb\'{o}licos aos arquivos correspondentes com sufixos de
+            vers\~ao. Por exemplo, no meu sistema tenho
+	    \begin{verbatim}
+            libGL.so -> libGL.so.1.2.030200
+            libGLU.so -> libGLU.so.1.2.030200
+	    \end{verbatim}
+            Se os links (ou arquivos) libGL.so e libGLU.so n\~ao estiverem presentes,
+            crie-os fazendoos apontar para os arquivos correspondentes com
+            o n\'umero mais alto de vers\~ao.
+
+            N\~ao entendo por que esses links podem n\~ao serem criados em alguma
+            instala\c{c}\~ao da OpenGL, pelo fato de ser do meu entendimento que eles
+            terem de estarem a\'i para que os programas possam us\'a-la propriamente. Admito todavia que
+            n\~ao entendo todo o stuff .so e .so.VERS\~AO, de forma que pode ser
+            que esses links n\~ao sejam realmente necess\'arios e que alguma modifica\c{c}\~ao no
+            script 'configure'do Geomview ou nos arquivos Makefiles possam eliminar a necessidade
+            deles. Se voc\^e sabe uma forma de fazer isso, por favor me diga
+            (mbp@geomtech.com).
+     \end{itemize}
+
+    \subsection{O configure alega n\~ao poder encontrar a Motif (ou o Lesstif ou o OpenMotif) no meu sistema, mas tenh certeza que ele est\'a instalado}
+
+        Leia todas as sugest\~oes acima na resposta da quet\~ao an\'aloga
+        sobre a OpenGL na se\c{c}\~ao \ref{aswer:OpenGl}; elas todas se aplicam igualmente \`a
+        Motif. (O arquivo de cabe\c{c}alho principal a procurar no diret\'{o}rio ``include'' \'e o
+        ``Xm/Xm.h'').
+
+\section{Platforms}
+
+    \subsection{Quais plataformas possuem bin\'arios dispon\'iveis \newline para download?}
+
+        SGI Irix, Linux, FreeBSD, Solaris, SunOS, HP, IBM RS/6000, DEC Alpha
+
+    \subsection{N\~ao existe um bin\'ario para minha esta\c{c}\~ao de trabalho. H\'a esperan\c{c}a?}
+
+        Certamente. Se sua esta\c{c}\~ao de trabalho tem um X Window System, OpenGL, Motif,
+        e um compilador ANSI (ISO) C, voc\^e pode compilar o geomview a partir da distribui\c{c}\~ao no
+        formato de c\'{o}digo fonte em 
+        \url{http://www.geomview.org/download}.
+
+        Note que existe uma vers\~ao livre da OpenGL chamada Mesa.
+        (\url{http://www.mesa3d.org})
+        que executa em programas na maioria dos Unixes livres.
+        Veja aquela p\'agina para detalhes sobre os cont\'inuos esfor\c{c}os para incorporar
+        suporte a hardwares para algumas das placas gr\'aficas populares.
+
+        Note tamb\'em que existe uma vers\~ao livre da Motif chamada lesstif 
+        \url{http://www.lesstif.org/}.
+
+        O arquivo INSTALL \url{http://www.geomview.org/docs/INSTALL} tem instru\c{c}\~oes
+        sobre como portar a lesstif para novas arquiteturas. Se voc\^e tiver problemas, envie um email para
+        software@geomview.org. Se voc\^e tiver sucesso,
+        apreciaremos receber uma c\'{o}pia do seu ``makefile/mk.oquefor'' e
+        apender que modifica\c{c}òes de c\'{o}digo fonte foram necess\'arias. Gostar\'iamos tamb\'em
+        de incluir seus bin\'arios na nossa lista de distribui\c{c}\~oes pr\'e-compildas.
+
+    \subsection{Por que n\~ao existe uma vers\~ao para Windows?}
+
+        N\~ao existe uma vers\~ao nativa do Geomview para o Microsoft Windows. A
+        principal raz\~ao para isso \'e que na \'epoca que o Geomview foi escrito,
+        cmputadores pessoais n\~ao eram r\'apidos o suficiente para construir gr\'aficos tridimensionais interativos
+        pr\'aticos de forma que focamos nossos esfor\c{c}os em esta\c{c}òes de trabalho Unix. Com o tempo
+        PCs r\'apidos o sficiente chegaram, o Geometry Center, onde Geomview foi
+        desenvolvido, estava em processo de fechamento. A equipe iniciou o trabalho sobre uma
+        vers\~ao para Windows mas n\~ao teve tempo de termin\'a-la antes do Centro
+        fechar.
+
+        Geomview pode executar sob Cygwin \url{http://www.cygwin.com}, que fornece
+        ao Windows um ambiente semelhante ao Unix. Veja ``Geomview para Windows?''
+        \url{http://www.geomview.org/windows/} para maiores informa\c{c}\~oes.
+
+        Se voc\^e gostaria de ver uma vers\~ao do Geomview para Windows, voc\^e pode
+        contrbuir para seu desenvolvimento de muitas maneiras. Veja contribuindo para o
+        Geomview \url{http://www.geomview.org/contributing} para detalhes.
+
+    \subsection{Tenho acesso a um X11 e a uma esta\c{c}\~ao de trabalho SGI. Qual vers\~ao devo usar?}
+
+        A vers\~ao SGI ir\'a na maioria das vezes sempre ser significantemente mais r\'apida, devido ao
+        suporte a hardware para gr\'aficos tridimensionais. Por exemplo, Um Sun Sparcstation 10 \'e
+        mais lento que um Indy (antiga entrada de SGI a n\'ivel de m\'aquina). No futuro pode
+        ser que exista suporte a hardware para certas placas gr\'aficas OpenGL dispon\'iveis para
+        alguns PC Unixes.
+
+    \subsection{O que ocorreu \`a vers\~ao NeXT Quick Renderman?}
+
+        N\~ao mais distribuimos a vers\~ao NeXTStep/OpenStep do Geomview, que
+        usou a biblioteca gr\'afica Quick Renderman. Fizemos isso apenas para simplificar
+        a manutens\~ao doc\'{o}digo b\'asico ap\'{o}s a vers\~ao 1.5.0. Bin\'arios grandes para as arquiteturas
+        Motorola, Intel e HP-PA para a vers\~ao 1.5.0 est\~ao ainda dispon\'iveis em:
+        \url{http://www.geomview.org/download/dist/geomview-1.5.0-next.tar}.
+
+    \subsection{What modules are shipped for which platforms with the current release?}
+
+        Liberamos a maioria de todos os m\'{o}dulos para todas as plataformas. A lista de
+        m\'{o}dulos distribu\'idos est\'a no arquivo README inclu\'idos nas distribui\c{c}\~oes.
+        Se o m\'{o}dulo que voc\^e deseja est\'a naquela lista mas n\~ao aparece na lista de
+        m\'{o}dulos no painel principal, Geomview provavelmente n\~ao est\'a instalado de forma correta. Note
+        que existem m\'{o}dulos adicionais escritos por terceiros
+        \url{http://www.geomview.org/thirdparty} que n\~ao s\~ao parte da distribui\c{c}\~ao
+        principal. Os m\'{o}dulos suportados na mais recente vers\~ao para GNU/Linux do
+        Geomview (1.9.4) s\~ao:
+        \begin{center}
+        \begin{tabular}{|l|p{8cm}|}
+        \\ \hline
+        M\'ODULO & DESCRI\c{C}\~AO  \\ \hline
+        Animator & percorre uma sequ\^encia de objetos  \\ \hline
+        Antiprism models & Cria, transforma, analisa, e visualiza poliedros \\ \hline
+        StageTools & CenterStage, StageManager, StageStills, StageHand - permite criar objetos do Geomview suando f\'{o}rmulas matem\'aticas  \\ \hline
+        Clipboard & grava um \'unico objeto OOGL para uma \'area de transfer\^encia  \\ \hline
+        Clock & Mostra um rel\'{o}gio anal\'{o}gico na tela  \\ \hline
+        Draw Boundary &  \\ \hline
+        Nose & depura\c{c}\~ao/exemplo para sele\c{c}\~ao (veja o manual do Geomview)  \\ \hline
+        Orrery & Visualiza\c{c}\~ao do Sistema Solar  \\ \hline
+        \end{tabular}
+	\end{center}
+        Os seguintes m\'{o}dulos usam tcl/tk:
+        \begin{center}
+        \begin{tabular}{|l|p{8cm}|}
+        \\ \hline
+        M\'ODULO & DESCRI\c{C}\~AO  \\ \hline
+        StageTools & CenterStage, StageManager, StageStills, StageHand - permite criar objetos do Geomview suando f\'{o}rmulas matem\'aticas  \\ \hline
+        \end{tabular}
+	\end{center}
+        Os seguintes programas utilit\'arios s\~ao tamb\'em inclu\'idos na distribui\c{c}\~ao
+        \footnote{Nota do tradutor: para obter informa\c{c}\~oes adicionais sobre os utilit\'arios abaixo digite
+        ``man utilitario'' em uma janela de shell ou ``utilitario $--$help''.}:
+	
+        \begin{center}
+        \begin{tabular}{|l|p{8cm}|}
+        \\ \hline
+        UTILIT\'ARIO & DESCRI\c{C}\~AO  \\ \hline
+        anytooff & convert one or many OOGL files into a single OFF file  \\ \hline
+        anytoucd & convert an OOGL file to UCD (AVS) format  \\ \hline
+        bdy & compute boundary of an object (helper for drawbdy)  \\ \hline
+        bez2mesh & dice BEZ file to list of MESHes  \\ \hline
+        clip & clip objects against plane/sphere/cylinder (helper for ginsu)  \\ \hline
+        fd2ps & xforms  \\ \hline
+        fdesign & xforms  \\ \hline
+        hvectext & generate vector text object  \\ \hline
+        math2oogl & convert Mathematica graphics to OOGL (helper for OOGL.m)  \\ \hline
+        offconsol & polylist vertex consolidator  \\ \hline
+        oogl2rib & convert OOGL to Renderman RIB format  \\ \hline
+        oogl2vrml & convert OOGL to VRML 1.0  \\ \hline
+        oogl2vrml2 &   \\ \hline
+        polymerge & merge degenerate OFF vertices/edges/faces (to Evolver or OFF)  \\ \hline
+        remotegv &  remotegv $--$help  \\ \hline
+        togeomview & send commands to geomview  \\ \hline
+        ucdtooff & convert UCD (AVS) format to OFF format  \\ \hline
+        vrml2oogl & convert VRML 1.0 to OOGL  \\ \hline
+        \end{tabular}
+	\end{center}
+
+\section{Usando o Geomview}
+
+    \subsection{Por que os objetos n\~ao aparecem nos lugares corretos?}
+
+        Quando objetos n\~ao aparece onde voc\^e pensa que eles deveriam estar, \'e provavelmente
+        devido \`a normaliza\c{c}\~ao habilitada por padr\~ao. Normaliza\c{c}\~ao simplesmente ajusta proporcionalmente um
+        a caixa associada de um objeto para ser cotida dentro de uma esfera unit\'aria, com o centro da
+        caixa associada transladado para a or\'igem. Esse ajuste \'e \'util quando examinamos um
+        objeto simples, e faz voc\^e visualizar o objeto completo sem ter de se
+        preocupar com o quanto grande esse objeto \'e. Todavia, isso tamb\'em pode significar que se voc\^e estiver chamando
+        m\'ultiplos objetos que s\~ao supostamente pertencentes ao mesmo sistema de
+        coordenadas, todos os objetos ir\~ao ser ajustados proporcionalmente e colocados na or\'igem. Para desabilitar
+        a normaliza\c{c}\~ao, exponha o painel de apar\^encia. Os controles da
+        normaliza\c{c}\~ao est\~ao no quadrante inferior direito do painel. Selecione a op\c{c}\~ao
+        ``None''. A tecla de atalho alternativa \'e '0N'\footnote{Nota do tradutor: testei aqui [oO0]N e todas funcionaram.}.
+
+        Para desabilitar a normaliza\c{c}\~ao sempre, personalize o Geomview
+        como mostrado em \url{http://www.geomview.org/docs/html/Customization.html}
+        inserindo a linha (normalization allgeoms
+        none) no arquivo chamado .geomview no seu diret\'{o}rio pessoal de usu\'ario.
+
+        Quando voc\^e desabilitar a normaliza\c{c}\~ao seus objetos podem desaparece. Isso ocorre
+        pelo fato do objeto n\~ao normalizado n\~ao cair no cone de visualiza\c{c}\`ao da
+        c\^amera. A maneira mais f\'acil de ver tudo \'e escolher o objeto mundo ``World''
+        no navegador de objetos, ent\~ao clicar em olhar para ``Look At'' no painel de ferramentas.
+
+    \subsection{Por que est\'a tudo centralizado e/ou uns por cima dos outros?}
+
+        Veja a resposta anterior.
+
+    \subsection{Como posso mostrar uma cole\c{c}\~ao de pontos?}
+
+        A forma mais eficiente de mostrar pontos no Geomview \'e usar o formato de
+        arquivo VECT. Esse formato de arquivo \'e principalmente usado para contruir figuras compostas
+        por segmentos mas podemos tamb\'em usar esse formato de arquivo para especificar segmentos que possuem somente
+        um v\'ertice (i.e. pontos). Vamos dar uma olhada em um arquivo VECT exemplo que
+        descreve 3 pontos coloridos em vermelho, verde e azul:
+	\tiny
+        \begin{verbatim}
+        VECT
+        3 3 3      # n\'umero de linhas poligonais,
+                   # n\'umero de v\'ertices,
+                   # n\'umero de cores.
+
+        1 1 1      # a poligonal n\'umero 1 tem 1 v\'ertice,
+                   # a poligonal n\'umero 2 tem 1 v\'ertice,
+                   # a poligonal n\'umero 3 tem 1 v\'ertice,
+                   # nesse caso somente um por estarmos fazendo pontos.
+
+        1 1 1      # a poligonal n\'umero 1 tem 1 cor
+                   # a poligonal n\'umero 2 tem 1 cor
+                   # a poligonal n\'umero 3 tem 1 cor
+
+        -1 -.2 0   # As coordenadas do \'unico v\'ertice da poligonal 1.
+         1 -.2 0   # As coordenadas do \'unico v\'ertice da poligonal 2.
+         0  .9 0   # As coordenadas do \'unico v\'ertice da poligonal 3.
+
+        1 0 0 1    # A cor da poligonal 1 no formato RGBA.
+        0 1 0 1    # A cor da poligonal 2 no formato RGBA.
+        0 0 1 1    # A cor da poligonal 3 no formato RGBA.
+        \end{verbatim}
+        \normalsize
+        Quando chamarmos esse arquivo no Geomview, voc\^e ir\'a provavelmente precisar desabilitar
+        a caixa associada (via painel de apar\^encia), caso contr\'ario voc\^e pode n\~ao
+        estar apto a ver os pontos.
+
+    \subsection{Como posso tornar os pontos mais facilmente \newline vis\'iveis?}
+
+        Por padr\~ao, a espessura de linhas e pontos no Geomview \'e 1. Essa espessura pode
+        estar ok para a maioria das linhas, mas faz com que cada ponto ocupe somente uma
+        pixel na tela do computador. Voc\^e pode mudar a espessura das linhas e dos pontos
+        adicionando um r\'{o}tulo de apar\^encia no topo de seu arquivo geom\'etrico que se parece
+        com isso:
+
+        appearance {
+            linewidth 4.
+        }
+
+        Nesse caso, temos aumentado nosso tamanho de linha/ponto para 4 e quaisquer pontos
+        que tivermos em nosso arquivo ir\'a agora aparecer como pequenos discos. Voc\^e pode tamb\'em mudar
+        a largura da linha usando o painel Appearance. O que Geomview faz atualmente
+        \'e tratar cada ponto como um pol\'igono de muitos lados que aproxima-se de um disco.
+
+        Se voc\^e deseja que os pontos como objetos s\'{o}lidos tridimensionais, tais como
+        pequenas esferas, voc\^e pode usar um m\'etodo completamente diferente para represent\'a-
+        los: um objeto INST com m\'ultiplas transforma\c{c}\~oes. Isso permite a voc\^e especificar uma
+        apar\^encia geom\'etrica arbitr\'aria para ser usada para representar pontos. Por
+        exemplo, o seginte arquivo representa os tr\^es pontos (1.5, 2.0, 0.1),
+        (1.0, 0.5, 0.2), e (0.5, 0.3, 0.2) usando pequenos cubos:
+        \begin{verbatim}
+        INST
+        geom {
+          OFF
+          8 6 12              # VFA
+          -0.05 -0.05 -0.05   # V0
+           0.05 -0.05 -0.05   # V1
+           0.05  0.05 -0.05   # V2
+          -0.05  0.05 -0.05   # V3
+          -0.05 -0.05  0.05   # V4
+           0.05 -0.05  0.05   # V5
+           0.05  0.05  0.05   # V6
+          -0.05  0.05  0.05   # V7
+          4 0 1 2 3           # F0
+          4 4 5 6 7           # F1
+          4 2 3 7 6           # F2
+          4 0 1 5 4           # F3
+          4 0 4 7 3           # F4
+          4 1 2 6 5           # F5
+        }
+        transforms
+        1 0 0 0  0 1 0 0  0 0 1 0  1.5 2.0 0.1 1
+        1 0 0 0  0 1 0 0  0 0 1 0  1.0 0.5 0.2 1
+        1 0 0 0  0 1 0 0  0 0 1 0  0.5 0.3 0.2 1
+        #
+        # these are the matrices:
+        #
+        # 1   0   0   0     1   0   0   0     1   0   0   0
+        # 0   1   0   0     0   1   0   0     0   1   0   0
+        # 0   0   1   0     0   0   1   0     0   0   1   0
+        # 1.5 2.0 0.1 1     1.0 0.5 0.2 1     0.5 0.3 0.2 1
+        \end{verbatim}
+        O objeto OFF entre ``geom \{'' e ``\}'' \'e o cubo. As tr\^es linhas
+        ap\'{o}s a palavra ``transforms'' are 4x4 transforms, one for each point. Note
+        that you can use any valid OOGL expression for the geometry; for
+        example, if you want to use small dodecahedra to represent points, you
+        could repace the above OFF object with the following, which references
+        the dodecahedron object in the file dodec.off (distributed with
+        Geomview), scaling it by 0.05:
+        \begin{verbatim}
+        INST
+        geom {
+          INST
+          geom { < dodec.off }
+          transform
+            .05   0   0   0
+              0 .05   0   0
+              0   0 .05   0
+              0   0   0   1
+        }
+        transforms
+        1 0 0 0 0 1 0 0 0 0 1 0    1.5 2.0 0.1  1
+        1 0 0 0 0 1 0 0 0 0 1 0    1.0 0.5 0.7  1
+        1 0 0 0 0 1 0 0 0 0 1 0    0.5 0.3 0.2  1
+        \end{verbatim}
+
+        Esteja ciente de que quanto mais complicada geometria voc\^e usa para seus pontos,
+        mais tempo ir\'a demorar o Geomview para atualizar a janela. Isso pode ser
+        importante se voc\^e est\'a pensando em trabalhar com um grande n\'umero de pontos, nesse caso
+        voc\^e deve conduzir-se na dire\c{c}\~ao de apar\^encias de ponto muito simples o usar o m\'etodo de
+        mostrar pontos no formato VECT.
+
+    \subsection{Como posso colocar texto em uma cena?}
+
+        Voc\^e tem duas op\c{c}\~oes:
+          \begin{itemize}
+          \item Voc\^e pode usar o m\'{o}dulo externo Labeler (rotulador-vers\~ao SGI), que fornece a voc\^e uma GUI para
+            digitar texto e selecionar fonte: ou vetor ou uma vers\~ao
+            poligonalizada de uma fonte instalada. Todavia, voc\^e precisa posicionar o texto em uma cena
+            tridimensional, ou manualmente ou com algum outro m\'{o}dulo como o m\'{o}dulo
+            Transformer (SGI).
+          \item Voc\^e pode usar o programa utilit\'ario de linha de comando hvectext de fones vetoriais de
+            Hershey, que permite a voc\^e especificar uma posi\c{c}\~ao para o texto.
+            Feito isso voc\^e deve chamar o arquivo resultante no Geomview.
+          \end{itemize}
+        Se voc\^e n\~ao precisa que o texto seja um objeto tridimensional na cena, voc\^e pode
+        criar uma imagem \footnote{\url{http://www.geomview.org/FAQ/answers.shtml\#images}.}
+        ou um arquivo postscript \footnote{\url{http://www.geomview.org/FAQ/answers.shtml\#ps}}
+        da cena e ent\~ao usar um editor de imagens como o ''Illustrator",
+        Showcase, ou o XPaint\footnote{Nota do tradutor: temos tamb\'em o gimp e o xfig.} para colocar o texto.
+
+    \subsection{O Geomview faz visualiza\c{c}\~ao de volume?}
+
+        N\~ao, Geomview \'e pensado para fazer visualiza\c{c}\~ao de superf\'icies. Voc\^e pode ou
+        criar uma isosuperf\'icie e ent\~ao v\^e-la usando o Geomview, ou usar umpacote de
+        visualiza\c{c}\~ao de volume. O toolkit vtk livre \url{http://www.vtk.org/}
+        de visualiza\c{c}\~ao tem suporte extensivo para visualiza\c{c}\~ao de volume, como faz tamb\'em
+        os pacotes comerciais como AVS \url{http://www.avs.com}, Iris Explorer
+        \url{http://www.nag.co.uk/Welcome\_IEC.html}, or IBM Data Explorer
+        . \url{http://pic.dhe.ibm.com/infocenter/dataexpl/v8r2/index.jsp}. \,\,\,\,\,\,\,\,O Volvis
+        \url{http://labs.cs.sunysb.edu/labs/vislab/volvis/} \'e um software livre especificamente para
+        visualiza\c{c}\~ao de volume.
+
+    \subsection{Pode o geomview fazer mapas de textura?}
+
+        Sim, no release 1.6 e mais novos, mas somente na vers\~ao OpenGL, n\~ao na
+        vers\~ao X11.
+
+    \subsection{Por que Geomview n\~ao l\^e meu arquivo OFF?}
+
+        Isso \'e devido provavelmente um interpreta\c{c}\~ao diferente de como um OFF deve
+        ser escrito. Geomview indexa v\'ertices iniciando em zero, enquanto alguns outros
+        programas comprovadamente iniciam em um. O seguinte programa na linguagem C ir\'a converter
+        um arquivo OFF no formato texto puro indexado a partir da unidade em um arquivo OFF indexado a partir do zero.
+        \footnote{Nota do tradutor: digamos que voc\^e compile o programa com o comando
+        ``gcc 01.c -o 01''. Para usar o programa acima em um shell fa\c{c}a ``01 $<$ arquivo1.off $>$ arquivo0.off''.}
+        \begin{verbatim}
+        #include <stdio.h>
+        #include <string.h>
+        #include <stdlib.h>
+        int main(void) {
+            char s[256];
+            int v, f, i, n, t;
+            gets(s);
+            if (strcmp(s, "OFF")) {
+                fprintf(stderr, "not an OFF\n");
+                exit(1);
+            }
+            puts(s); gets(s); puts(s);
+            sscanf(s, "%d %d %d", &v, &f, &i);
+            for (i=0; i!=v; ) {
+                gets(s);
+                if (strlen(s)) {
+                    puts(s); i++;
+                }
+            }
+            for (i=0; i!=f; i++) {
+                scanf("%d", &n);
+                printf("\n%d", n);
+                for (v=0; v!=n; v++) {
+                    scanf("%d", &t);
+                    printf(" %d", t-1);
+                }
+            }
+            printf("\n");
+            return 0;
+        }
+        \end{verbatim}
+
+    \subsection{Como posso colocar movimento em uma sequ\^encia de arquivos do Geomview/OOGL?}
+
+        Voc\^e pode tentar usando o Animator, um m\'{o}dulo externo que \'e distribu\'ido
+        com todas as vers\~oes do Geomview. Com Animator, voc\^e pode dizer ao Geomview para
+        ler uma sequ\^encia de arquivos OOGL e ent\~ao exibir essa sequ\^encia
+        avan\c{c}ando, voltando e tamb\'em em passo de quadro usando interfaces semelhantes ao
+        VCR\footnote{Nota do tradutor: o VCR virou avifile \url{http://avifile.sourceforge.net/}.
+        Temos tamb\'em o kino e o muan.}.
+
+        Para usar o Animator clique na entrada Animator no navegador de m\'{o}dulos externos
+        do Geomview. Se o Animator n\~ao aparecer no navegador, ent\~ao o Geomview
+        provavelmente n\~ao foi instalado adequadamente. Para mais informa\c{c}\~ao sobre
+        Animator leia o painel info dispon\'ivel atrav\'es do programa ou a
+        p\'agina de manual (digitando ``man animate'').
+
+\section{Sa\'ida}
+
+    \subsection{Como posso criar uma anima\c{c}\~ao de v\'ideo (MPEG/ QuickTime/animated GIF)?}
+
+Existem muitas variantes dessa quet\~ao:
+
+        \begin{itemize}
+
+        \item primeira variante 
+    	    \tiny
+    	    \begin{verbatim}
+            > Gostaria de gravar uma sequ\^encia de arquivos instant\^aneso no formato ppm de um \'unico
+            > objeto no formato off enquanto esse objeto est\'a sendo rotacionado para converter a sequ\^encia
+            > em um filme. O \'unico m\'etodo que conhe\c{c}o \'e rotacionar o objeto
+            > lentamente com o mouse, parar omovimento, e gravar cada quadro
+            > individualmente. Existe um m\'etodo mais r\'apido e autom\'atico, tal como
+            > um acript de comandos. Se existe, voc\^e tem um exemplo de script de comando que possa
+            > ser modificado?
+	    \end{verbatim}
+	    \normalsize
+            Duas op\c{c}\~oes:
+              \begin{itemize}
+              \item Se o movimento \'e alinhado a algum eixo, \'e bastante f\'acil usar os
+              comandos rotate e snapshot da GCL juntos:
+\begin{verbatim}
+(snapshot targetcam /tmp/foo\%03d.rgb)
+(transform world world world rotate .1 0 0)
+(snapshot targetcam /tmp/foo\%03d.rgb)
+(transform world world world rotate .1 0 0)
+\end{verbatim}
+                e assim por diante. O comando snapshot auto-incrementa o nome do arquivo.
+
+              \item Mas para um movimento mais complexo que a simples rota\c{c}\~ao em torno
+                do eixo x que mostrei acima, considere usar StageTools, que
+                \'e um conjunto de ferramentas pensado para ajudar pessoas a fazerem facilmente
+                anima\c{c}\~oes a partir do Geomview. StageTools est\'a inclu\'ido como um m\'{o}dulo nas
+                vers\~oes recentes, mas se voc\^e precisar copi\'a-lo ele est\'a dispon\'ivel
+                em  \url{http://www.geom.umn.edu/software/StageTools/}.
+              \end{itemize}
+
+        \item segunda variante 
+    	    \tiny
+	    \begin{verbatim}
+            > Tenho usado Geomview para ver filmes com ferramentas de anima\c{c}\~ao. como posso
+            > converter aquele filme para ooutro formato de anima\c{c}\~ao (e.g. um GIF
+            > animado) de forma que possa coloc\'a-lo em uma web page, vis\'ivel para
+            > algu\'em sem Geomview?
+	    \end{verbatim}
+	    \normalsize
+	    
+            \'E verdade que StageTools ir\'a fazer isso e muito mais tamb\'em. Mas
+            existe tamb\'em um caminho muito f\'acil de fazer isso diretamente dentro do m\'{o}dulo
+            Animator: a fun\c{c}\~ao Command ir\'a executar um comando GCL ap\'{o}s
+            cada quadro. Ent\~ao para pegar automaticamente instant\^aneos a cada quadro, voc\^e dever\'a
+            pressionar o bot\~ao Command e digitar alguma coisa como
+\begin{verbatim}
+(snapshot c0 /tmp/foo\%03d.rgb)
+\end{verbatim}
+            no campo de texto. Ent\~ao quando voc\^e pressionar play voc\^e ir\'a ver que agora
+            agita\c{c}\~ao uma vez que o Animator \'est\'a gravando uma imagem offf para o disco de cada vez. Voc\^e pode
+            desejar habilitar o bot\~ao de r\'adio ``Once'' de forma que o Animator pare ap\'{o}s
+            executar cada quadro uma \'unica vez. Ent\~ao voc\^e pode usar seu programa
+            escolhido para criar um gif animado ou filme do quicktime a partir desso pacote
+            de arquivos de imagem. Por exemplo, nos SGIs voc\^e pode fazer isso com o
+            ``mediaconvert''.\footnote{Nota do tradutor: temos tamb\'em o recordmydesktop e o kino em GNU/Linux.}
+        \end{itemize}
+
+    \subsection{Como posso gravar uma figura de exatamente o que vejo em uma janela de c\^amera?}
+
+        Garanta que a janela de c\^amera que voc\^e deseja seja a janela ativa no momento da foto, ent\~ao selecione
+        o item ``Save'' do menu ``File'' no painel principal (ou use a tecla de atalho
+        ``$>$''). No painel que aparece, existe uma caixa de eop\c{c}\~ao que \'e ajustada para
+        Command por padr\~ao. Selecione uma das op\c{c}\~oes de instant\^aneo, insira o
+        nome do arquivo na entrada Selection, e clique ``OK''.
+
+        Na vers\~ao SGI, voc\^e tem tr\^es escolhas de instant\^aneo de imagem: SGI screen,
+        PPM screen, e PPM software. Ambas as op\c{c}\~oes screen literalmente gravam os
+        os pixels de tela em um arquivo, ou no formato SGI (tamb\'em chamado RGB) ou em formato PPM. A
+        op\c{c}\~ao PPM software ir\'a reler a imagem em um espa\c{c}o tempor\'ario de armazenagem fora da tela
+        usando o software de releitura a partir da vers\~ao X vanilla do Geomview.
+        Dessa forma, pode n\~ao ser id\^entica pixel a pixel a imagem gravada em rela\c{c}\~ao \`a imagem que voc\^e v\^e.
+
+        Na vers\~ao X11, voc\^e tem somente as op\c{c}\~oes PPM.
+
+    \subsection{Como posso fazer um verdadeiro arquivo PostScript que seja bom em m\'ultiplas resolu\c{c}\~oes ao inv\'es de apenas converter um bitmap em um PostScript?}
+
+        Garanta que a janela de c\^amera que voc\^e deseja seja a janela ativa no momento da foto, ent\~ao selecione
+        o item ``Save'' do menu ``File'' no painel principal (ou use a tecla de atalho
+        ``$>$''). No painel que aparece, existe uma caixa de eop\c{c}\~ao que \'e ajustada para
+        Command por padr\~ao. Selecione a op\c{c}\~ao PostScript snapshot, insira o
+        nome de arquivo na entrada Selection, e clique ``OK''.
+
+        Esse m\'etodo tem vantagens e desvantagens, comparado ao m\'etodo de gravar um
+        bitmap de imagem. A vantagem \'e que o resultado \'e independente da resolu\c{c}\~ao
+        -- voc\^e pode imprimir em uma impressora de alta resolu\c{c}\~ao e n\~ao ver qualquer aresta
+        quadriculada. As desvantagens s\~ao que nosso releitor PostScript n\~ao pode fazer
+        sombreamento suave e usa o algor\'itmo de painter para remo\c{c}\~ao de superf\'icies
+        escondidas. Essa \'ultima observa\c{c}\~ao significa que objetos que se interseptam e algumas outras
+        cenas de condicionamento host\'il ir\~ao ser desenhadas incorretamente, ou mesmo que objetos
+        pr\'{o}ximos ir\~ao ser desenhados atr\'as de objetos distantes. Muitas vezes funciona, mas n\~ao
+        sempre.
+
+    \subsection{Por que meu instant\^aneo PostScript est\'a p\'essimo?}
+
+        Veja a resposta anterior.
+
+    \subsection{Como fazer uma imagem de alta qualidade com RenderMan?}
+
+        Se voc\^e tem o Photorealistic Renderman (um prodto comercial da Pixar), ou
+        o BMRT (Blue Moon Rendering Toolkit, uma implementa\c{c}\~ao de dom\'inio p\'ublico), voc\^e
+        pode criar imagens de alta qualidade com transpar\^encia e ilumina\c{c}\~ao
+        mais precisa nas vers\~oes SGI e X11. Paa fazer isso, traga o painel Save
+        e selecione ``RMan [->tiff]'' a partir das op\c{c}\~oes de gravar. Insira um nome de arquivo
+        e clique  ``Ok''. Aparecer\'a um janela de shell e mude o diret\'{o}rio para onde
+        voc\^e gravou o arquivo. Digite ``render /nomearquivo/'' (onde /nomearquivo/ \'e o nome
+        do arquivo que voc\^e gravou). Quando terminar, voc\^e ir\'a ter uma imagem de alta qualidade
+        em ``/nomearquivo/.tiff''. Para criar uma imagm de alta resolu\c{c}\~ao (para
+        reduzir arestas quadriculadas), edite o arquivo que voc\^e gravou. Deve existir uma linha
+        adiante das quinze linhas a partir do topo que inicia-se com ``Format'', i.e.
+        ``Format 450 450 1''. Os primeiros dois n\'umeros s\~ao a resolu\c{c}\~ao da
+        imagem criada. Modifique esses dois n\'umeros para aqueles que voc\^e gostaria (voc\^e deve manter a raz\~ao
+        enre os n\'umeros originais para evitar distor\c{c}\~ao), ent\~ao reler o arquivo novamente.
+
+\section{Quest\~oes espec\'ificas do X}
+
+    \subsection{Como posso aumentar a velocidade da vers\~ao X11?}
+
+        Veja a discurs\~ao de op\c{c}\~oes de renderiza\c{c}\~ao na quest\~ao seguinte.
+
+    \subsection{O que fazem os controles Z-Buffer e Dithering no painel de c\^ameras?}
+
+        Esses controles permitem a voc\^e mudar como a vers\~ao para X11 redesenha objetos.
+        A caixa de verifica\c{c}\~ao dithering, que somente aparece quando executando em um display de
+        oito bits, permite a voc\^e habilitar ou n\~ao a mistura de cores. Dithering \'e o
+        m\'etodo pelo qual Geomview utiliza umpequeno conjunto de cores (abaixo de 217) para
+        mostrar qualquer cor que voc\^e desejar. Isso \'e feito pela coloca\c{c}\~ao de pixels de pequenas quantidades
+        de cores diferentes pr\'{o}ximas umas das outras permitindo que seus olhos harmonize-as
+        juntas. Desafortunadamente, isso tem um custo computacional para ser feito.
+        Desligando a mistura de cores ir\'a aumantar a velocidade de processamento de imagens, mas as cores usadas n\~ao ir\~ao
+        se exatamente o que voc\^e deseja. Dependendo de sua cena, pode ser uma
+        pre\c{c}o a pagar aceit\'avel.
+
+        O menu Z-Buffer que aparece permite a voc\^e selecionar entre tr\^es diferentes
+        m\'etodos esconder linhas e remover superf\'icie: z-buffering, depth sort, e
+        none. Z-buffering is the most accurate and enables the near and far
+        clipping planes. Depth sort uses less computing, but will be inaccurate
+        if objects intersect (polygons will pop in front when they should be
+        partially obscured) and in certain other circumstances (long, narrow
+        polygons close to other polygons are one example). Depending on your
+        scene, using this method could look just the same as z-buffering but be
+        much faster. The ``None'' option turns off all hidden line/surface
+        removal. This is only recommended for a scene which consists of just
+        lines in one color.
+
+    \subsection{What does ``Not enough colors available. Using private colormap'' mean?}
+
+        This happens when using the X11 version on an eight bit display
+        (currently common on workstations). An eight bit display can only show
+        256 colors simultaneously. These colors are shared by all the programs
+        running. Once a colorcell has been allocated by an application, its
+        color is fixed. Geomview tries to grab many colors when it starts. If it
+        fails to get them, it prints this message and uses a private colormap. A
+        private colormap means that Geomview now has access to all 256
+        colorcells. Unfortunately, these colors will only be displayed when the
+        cursor is inside one of Geomview's windows. The switching of colormaps
+        when the cursor enters and leaves the windows will give a technicolor
+        look to the rest of the display.
+
+        If you don't like the technicolor effect, you will have to quit the
+        programs which are using up colormap space. Examples of programs which
+        use lots of colormap space are background pictures, image viewers,
+        visualization software, and WWW browsers.
+
+    \subsection{What does ``Shared memory unavailable, using fallback display method'' mean?}
+
+        The X11 version of Geomview uses the shared memory extension to move
+        images quickly between the program and the X server. However, this
+        method of communicating with the X server only works when running
+        Geomview on the same machine as the display. If Geomview can't use
+        shared memory, it prints this message and goes back to using standard X
+        calls. Everything will work the same, it will just run much slower,
+        especially if you're running over the network.
+
+    \subsection{Why do I get compiler errors about including files Xm/*.h?}
+
+        You're trying to compile the X11 version and the compiler can't find the
+        Motif header files. If you have Motif but the headers are in a
+        nonstandard place, change the ``SYSCOPTS'' in your
+        makefiles/mk.\${MACHTYPE} file. If you don't have Motif, you won't be
+        able to compile Geomview. In this case, use one of the binary
+        distributions, if you can.
+
+\end{document}

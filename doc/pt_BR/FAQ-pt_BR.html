@@ -1,0 +1,1030 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+           "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<meta name="GENERATOR" content="TtH 4.03">
+ <style type="text/css"> div.p { margin-top: 7pt;}</style>
+ <style type="text/css"><!--
+ td div.comp { margin-top: -0.6ex; margin-bottom: -1ex;}
+ td div.comb { margin-top: -0.6ex; margin-bottom: -.6ex;}
+ td div.hrcomp { line-height: 0.9; margin-top: -0.8ex; margin-bottom: -1ex;}
+ td div.norm {line-height:normal;}
+ span.roman {font-family: serif; font-style: normal; font-weight: normal;} 
+ span.overacc2 {position: relative;  left: .8em; top: -1.2ex;}
+ span.overacc1 {position: relative;  left: .6em; top: -1.2ex;} --></style>
+ <style type="text/css"><!--
+ .tiny {font-size:30%;}
+ .scriptsize {font-size:xx-small;}
+ .footnotesize {font-size:x-small;}
+ .smaller {font-size:smaller;}
+ .small {font-size:small;}
+ .normalsize {font-size:medium;}
+ .large {font-size:large;}
+ .larger {font-size:x-large;}
+ .largerstill {font-size:xx-large;}
+ .huge {font-size:300%;}
+ --></style>
+
+   <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><div class="huge">
+<title>No Title</title>
+
+
+<div style="text-align:center">FAQ
+Geomview
+</div>
+<span class="normalsize">
+
+
+<h1>&#205;ndice </h1><a href="#tth_sEc1"
+>1&nbsp; Quest&#245;es Gerais</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc1.1"
+>1.1&nbsp; O Que &#233; Geomview?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc1.2"
+>1.2&nbsp; Como fa&#231;o para ter o arquivo de instala&#231;&#227;o do Geomview?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc1.3"
+>1.3&nbsp; Qual a documenta&#231;&#227;o para o Geomview que est&#225; dispon&#237;vel?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc1.4"
+>1.4&nbsp; Como eu posso interagir com outro usu&#225;rios do Geomview?</a><br />
+<a href="#tth_sEc2"
+>2&nbsp; Configuration/Installation/ Execution Problems</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc2.1"
+>2.1&nbsp; As caixas de verifica&#231;&#227;o e certos outros recursos da interface gr&#225;fica de usu&#225;rio est&#227;o ou ausentes dos pain&#233;is do Geomview, ou n&#227;o trabalham quando eu compilo a &#250;ltima vers&#227;o. O que est&#225; acontecendo?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc2.2"
+>2.2&nbsp; O configure alega n&#227;o poder encontrar a OpenGl no meu sistema, mas tenho certeza que ela est&#225; instalada</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc2.3"
+>2.3&nbsp; O configure alega n&#227;o poder encontrar a Motif (ou o Lesstif ou o OpenMotif) no meu sistema, mas tenh certeza que ele est&#225; instalado</a><br />
+<a href="#tth_sEc3"
+>3&nbsp; Platforms</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.1"
+>3.1&nbsp; Quais plataformas possuem bin&#225;rios dispon&#237;veis 
+<div class="p"><!----></div>
+ para download?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.2"
+>3.2&nbsp; N&#227;o existe um bin&#225;rio para minha esta&#231;&#227;o de trabalho. H&#225; esperan&#231;a?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.3"
+>3.3&nbsp; Por que n&#227;o existe uma vers&#227;o para Windows?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.4"
+>3.4&nbsp; Tenho acesso a um X11 e a uma esta&#231;&#227;o de trabalho SGI. Qual vers&#227;o devo usar?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.5"
+>3.5&nbsp; O que ocorreu &#224; vers&#227;o NeXT Quick Renderman?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc3.6"
+>3.6&nbsp; What modules are shipped for which platforms with the current release?</a><br />
+<a href="#tth_sEc4"
+>4&nbsp; Usando o Geomview</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.1"
+>4.1&nbsp; Por que os objetos n&#227;o aparecem nos lugares corretos?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.2"
+>4.2&nbsp; Por que est&#225; tudo centralizado e/ou uns por cima dos outros?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.3"
+>4.3&nbsp; Como posso mostrar uma cole&#231;&#227;o de pontos?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.4"
+>4.4&nbsp; Como posso tornar os pontos mais facilmente 
+<div class="p"><!----></div>
+ vis&#237;veis?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.5"
+>4.5&nbsp; Como posso colocar texto em uma cena?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.6"
+>4.6&nbsp; O Geomview faz visualiza&#231;&#227;o de volume?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.7"
+>4.7&nbsp; Pode o geomview fazer mapas de textura?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.8"
+>4.8&nbsp; Por que Geomview n&#227;o l&#234; meu arquivo OFF?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc4.9"
+>4.9&nbsp; Como posso colocar movimento em uma sequ&#234;ncia de arquivos do Geomview/OOGL?</a><br />
+<a href="#tth_sEc5"
+>5&nbsp; Sa&#237;da</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc5.1"
+>5.1&nbsp; Como posso criar uma anima&#231;&#227;o de v&#237;deo (MPEG/ QuickTime/animated GIF)?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc5.2"
+>5.2&nbsp; Como posso gravar uma figura de exatamente o que vejo em uma janela de c&#226;mera?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc5.3"
+>5.3&nbsp; Como posso fazer um verdadeiro arquivo PostScript que seja bom em m&#250;ltiplas resolu&#231;&#245;es ao inv&#233;s de apenas converter um bitmap em um PostScript?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc5.4"
+>5.4&nbsp; Por que meu instant&#226;neo PostScript est&#225; p&#233;ssimo?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc5.5"
+>5.5&nbsp; Como fazer uma imagem de alta qualidade com RenderMan?</a><br />
+<a href="#tth_sEc6"
+>6&nbsp; Quest&#245;es espec&#237;ficas do X</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.1"
+>6.1&nbsp; Como posso aumentar a velocidade da vers&#227;o X11?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.2"
+>6.2&nbsp; O que fazem os controles Z-Buffer e Dithering no painel de c&#226;meras?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.3"
+>6.3&nbsp; What does "Not enough colors available. Using private colormap" mean?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.4"
+>6.4&nbsp; What does "Shared memory unavailable, using fallback display method" mean?</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tth_sEc6.5"
+>6.5&nbsp; Why do I get compiler errors about including files Xm/*.h?</a><br />
+
+
+
+<div class="p"><!----></div>
+ <a id="tth_sEc1"></a><h2>
+1&nbsp;&nbsp;Quest&#245;es Gerais</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc1.1"></a><h3>
+1.1&nbsp;&nbsp;O Que &#233; Geomview?</h3>
+
+<div class="p"><!----></div>
+        Um programa visualizador de prop&#243;sito geral e interativo para Unix. &#201; usado
+        na maioria das vezes para gr&#225;ficos tridimensionais mas pode mostrar dados em 2D e 4D tamb&#233;m. Veja
+        a vis&#227;o geral  <a href="http://www.geomview.org/overview"><tt>http://www.geomview.org/overview</tt></a> para coment&#225;rios mais
+        gerais sobre o Geomview.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc1.2"></a><h3>
+1.2&nbsp;&nbsp;Como fa&#231;o para ter o arquivo de instala&#231;&#227;o do Geomview?</h3>
+
+<div class="p"><!----></div>
+        Geomview est&#225; dispon&#237;vel livremente a partir de  <a href="http://www.geomview.org/download"><tt>http://www.geomview.org/download</tt></a>.
+        Existem distribui&#231;&#245;es no formato bin&#225;rio para m&#225;quinas Linux, FreeBSD, SGI, Sun SPARC,
+        HP-UX, IBM RS/6000, DEC Alpha, e NeXT, bem como uma distribui&#231;&#227;o na forma de
+        c&#243;digo fonte.
+
+<div class="p"><!----></div>
+        Voc&#234; pode tamb&#233;m ter o arquivo de instala&#231;&#227;o por ftp an&#244;nimo a partir de <a href="ftp://ftp.geomview.org/pub"><tt>ftp://ftp.geomview.org/pub</tt></a>.
+
+<div class="p"><!----></div>
+        Geomview &#233; um software livre, mas gostar&#237;amos saber das pessoas que o utilizam.
+        Por favor envie-nos um email para register@geomview.org nos dizendo o que
+        voc&#234; est&#225; fazendo com o Geomview.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc1.3"></a><h3>
+1.3&nbsp;&nbsp;Qual a documenta&#231;&#227;o para o Geomview que est&#225; dispon&#237;vel?</h3>
+
+<div class="p"><!----></div>
+        See the Documentation <a href="http://www.geomview.org/docs"><tt>http://www.geomview.org/docs</tt></a> part of this web site.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc1.4"></a><h3>
+1.4&nbsp;&nbsp;Como eu posso interagir com outro usu&#225;rios do Geomview?</h3>
+
+<div class="p"><!----></div>
+        Existe a lista de mensagens "geomview-users" para pessoas usando geomview que
+        pode ser usada para comunica&#231;&#227;o entre usu&#225;rios sobre problemas do geomview,
+        quet&#245;es, experi&#234;ncias, etc. Os autores do geomview s&#227;o tamb&#233;m uma parte dessa
+        lista e ir&#227;o responder a quest&#245;es postadas. Tamb&#233;m usamos essa
+        lista para fazer an&#250;ncios sobre novas vers&#245;es e outras coisas do
+        interesse dos usu&#225;rios. Para usar essa lista, envie um email vazio com 'subscribe'
+        na linha de assunto para geomview-users-request@lists.sourceforge.net, ou visite a p&#225;gina
+        da lista em:
+        <a href="http://lists.sourceforge.net/mailman/listinfo/geomview-users"><tt>http://lists.sourceforge.net/mailman/listinfo/geomview-users</tt></a>.
+
+<div class="p"><!----></div>
+        Veja tamb&#233;m a lista de outros software e projetos:
+        <a href="http://www.geomview.org/thirdparty"><tt>http://www.geomview.org/thirdparty</tt></a>.
+
+<div class="p"><!----></div>
+ <a id="tth_sEc2"></a><h2>
+2&nbsp;&nbsp;Configuration/Installation/ Execution Problems</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc2.1"></a><h3>
+2.1&nbsp;&nbsp;As caixas de verifica&#231;&#227;o e certos outros recursos da interface gr&#225;fica de usu&#225;rio est&#227;o ou 
+    ausentes dos pain&#233;is do Geomview, ou n&#227;o trabalham quando eu compilo 
+    a &#250;ltima vers&#227;o. O que est&#225; acontecendo?</h3>
+
+<div class="p"><!----></div>
+        Esses problemas parecem estarem associados com vers&#245;es mais recentes da Lesstif
+        (e.g. 0.91.x), pelo menos no GNU/Linux. N&#227;o sei se isso &#233; um problema
+        com o Lesstif propriamente dito, ou se alguma coisa est&#225; errada com o caminho que o Geomview usa
+        Lesstif. Enquanto isso, se voc&#234; experiencia esse problema, sugiro
+        compilar Geomview com a Open Motif ao inv&#233;s da Lesstif. Existe um
+        arquivo leve de distribui&#231;&#227;o no formato bin&#225;rio da Open Motif 2.1.30 dispon&#237;vel na
+        pagina de download do Geomview  <a href="http://www.geomview.org/download"><tt>http://www.geomview.org/download</tt></a>, com
+        instru&#231;&#245;es para us&#225;-lo com o Geomview. Ou, voc&#234; pode pegar a arquivo completo de distribui&#231;&#227;o da
+        Open Motif (fonte ou bin&#225;rio) a partir de <a href="http://www.opengroup.org/motif"><tt>http://www.opengroup.org/motif</tt></a>
+        ou de <a href="http://www.openmotif.com"><tt>http://www.openmotif.com</tt></a>.
+
+<div class="p"><!----></div>
+        Se voc&#234; est&#225; familiarizado com Lesstif e conhece o que pode causar ese problema
+        (e especialmente se voc&#234; sabe como consertar isso!), por favor me mand um email
+        (mbp at geomtech.com).
+
+<div class="p"><!----></div>
+         <a id="tth_sEc2.2"></a><h3>
+2.2&nbsp;&nbsp;O configure alega n&#227;o poder encontrar a OpenGl no meu sistema, mas tenho certeza que ela est&#225; instalada</h3>
+    <a id="aswer:OpenGl">
+</a>
+        
+<ul>
+<li> Garanta que voc&#234; informou o argumento "-with-opengl=DIR" ao configure,
+            onde DIR &#233; o diret&#243;rio contendo sua instala&#231;&#227;o da OpenGL. DIR
+            deve ser o caminho absoluto para um diret&#243;rio contendo subdiret&#243;rios
+            chamados "include" e "lib". O subdiret&#243;rio "include" deve por sua vez
+            incluir um subdiret&#243;rio chamado "GL" que tem o arquivo de cabe&#231;alho "gl.h" (bem
+            como outros arqwuivos de cabe&#231;alho) dentro dele. O diret&#243;rio "lib" deve
+            conter os arquivos (.so) da biblioteca GL.
+<div class="p"><!----></div>
+</li>
+
+<li> Algumas vezes 'configure' ir&#225; incorretamente reportar que a OpenGl est&#225; faltando
+            quando de OpenGl estiver presente, mas o teste para detectar a presen&#231;a da OpenGL falhou por alguma
+            outra raz&#227;o, tal como algum arquivo de cabe&#231;alho ou biblioteca dependente faltando.
+            Por exemplo, se sua instala&#231;&#227;o do X window est&#225; danificada ou
+            incompleta, isso pode confundir os testes que 'configure' faz para
+            OpenGl. Existem dois lugares para olhar para colher ind&#237;cios a respeito disso:
+              
+<ul>
+<li> A saida do 'configure' propriamente dito - olhe para as linhas relacionadas
+                &#224; verifica&#231;&#227;o para X window, em particular. Se o X n&#227;o for encontrado, ou
+                o Geomview n&#227;o puder ser linkado com suporte ao X, ent&#227;o esse &#233; provavelmente o problema.
+<div class="p"><!----></div>
+</li>
+
+<li> O arquivo 'config.log' queno 'configure' escreve enquanto &#233; executado. Esse
+                arquivo cont&#233;m todos os detalhes terr&#237;vies sobre os testes que
+                'configure' est&#225; fazendo. O 'config.log' ir&#225; ter mensagens de erro que podem
+                indicar por que certos testes falham. IMPORTANTE nota sobre a leitura do
+                'config.log': muitos dos testes do configure envolvem la&#231;os que tentam
+                muitas possibilidades - por exemplo muitas localiza&#231;&#245;es poss&#237;veis
+                para um arquivo de cabe&#231;alho. O 'configure' ir&#225; escrever um pequeno programa e
+                tentar compl&#225;-lo uma vez para cada uma dessas localiza&#231;&#245;es, at&#233; enconrar
+                encontrar uma que trabalhe. Paa cada uma que n&#227;o funcionou, ir&#227;o existir
+                mensagens de erro no arquivo 'config.log'. Quando for ler o
+                'config.log', garanta olhar para todos esses testes, n&#227;o apenas o
+                primeiro deles, durante a tentativa de decidor por que um teste est&#225; falhando.
+<div class="p"><!----></div>
+</li>
+</ul>
+<div class="p"><!----></div>
+</li>
+
+<li> se a sa&#237;da do 'configure', ou o conte&#250;do do 'config.log',
+            sugerem que alguma parte do X n&#227;o pode ser encontrada (por exemplo se n&#227;o puder
+            encontrar certos cabe&#231;alhos do X, como o "X11/X.h" ou o -&#8722;
+<div class="p"><!----></div>
+ "X11/Intrinsic.h"),
+            ent&#227;o o problema pode ser que voc&#234; n&#227;o tenha instalado o pacote
+            de desenvolvimento do X window para o seu sistema. Alguma distribui&#231;&#227;o
+            GNU/Linux inclue o pacote com os execut&#225;veis mas n&#227;o o(s) pacote(s) de
+            desenvolvimento. Garanta ter instalado quaisquer pacotes que forem
+            necess&#225;rios para trabalho de desenvolvimento do X bem como o(s) pacote(s) com o(s) execut&#225;vei(s) do X.
+<div class="p"><!----></div>
+</li>
+
+<li> Se 'configure' reclama que n&#227;o pode linkar com -lGL (ou -lGLU) mas
+            voc&#234; tem certeza que eles est&#227;o a&#237;, encontre os diret&#243;rios contendo seus
+            arquivos libGL.so.* e libGLU.so.*; chame esse diret&#243;rio de DIR. DIR ir&#225;
+            provavelmente conter um ou mais arquivos com nomes como libGL.so.VERS&#195;O
+            e libGLU.so.VERS&#195;O, onde VERS&#195;O is some version number,
+            such as "1.2.0" or "1.2.030200". Tamb&#233;m deve conter entradas
+            chamadas simplesmente libGL.so e libGLU.so, sem sfixo de VERS&#195;O; esses
+            s&#227;o comumente links simb&#243;licos aos arquivos correspondentes com sufixos de
+            vers&#227;o. Por exemplo, no meu sistema tenho
+	    
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;libGL.so&nbsp;-&#62;&nbsp;libGL.so.1.2.030200
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;libGLU.so&nbsp;-&#62;&nbsp;libGLU.so.1.2.030200
+	&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+            Se os links (ou arquivos) libGL.so e libGLU.so n&#227;o estiverem presentes,
+            crie-os fazendoos apontar para os arquivos correspondentes com
+            o n&#250;mero mais alto de vers&#227;o.
+
+<div class="p"><!----></div>
+            N&#227;o entendo por que esses links podem n&#227;o serem criados em alguma
+            instala&#231;&#227;o da OpenGL, pelo fato de ser do meu entendimento que eles
+            terem de estarem a&#237; para que os programas possam us&#225;-la propriamente. Admito todavia que
+            n&#227;o entendo todo o stuff .so e .so.VERS&#195;O, de forma que pode ser
+            que esses links n&#227;o sejam realmente necess&#225;rios e que alguma modifica&#231;&#227;o no
+            script 'configure'do Geomview ou nos arquivos Makefiles possam eliminar a necessidade
+            deles. Se voc&#234; sabe uma forma de fazer isso, por favor me diga
+            (mbp@geomtech.com).
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc2.3"></a><h3>
+2.3&nbsp;&nbsp;O configure alega n&#227;o poder encontrar a Motif (ou o Lesstif ou o OpenMotif) no meu sistema, mas tenh certeza que ele est&#225; instalado</h3>
+
+<div class="p"><!----></div>
+        Leia todas as sugest&#245;es acima na resposta da quet&#227;o an&#225;loga
+        sobre a OpenGL na se&#231;&#227;o <a href="#aswer:OpenGl">2.2</a>; elas todas se aplicam igualmente &#224;
+        Motif. (O arquivo de cabe&#231;alho principal a procurar no diret&#243;rio "include" &#233; o
+        "Xm/Xm.h").
+
+<div class="p"><!----></div>
+ <a id="tth_sEc3"></a><h2>
+3&nbsp;&nbsp;Platforms</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.1"></a><h3>
+3.1&nbsp;&nbsp;Quais plataformas possuem bin&#225;rios dispon&#237;veis 
+<div class="p"><!----></div>
+ para download?</h3>
+
+<div class="p"><!----></div>
+        SGI Irix, Linux, FreeBSD, Solaris, SunOS, HP, IBM RS/6000, DEC Alpha
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.2"></a><h3>
+3.2&nbsp;&nbsp;N&#227;o existe um bin&#225;rio para minha esta&#231;&#227;o de trabalho. H&#225; esperan&#231;a?</h3>
+
+<div class="p"><!----></div>
+        Certamente. Se sua esta&#231;&#227;o de trabalho tem um X Window System, OpenGL, Motif,
+        e um compilador ANSI (ISO) C, voc&#234; pode compilar o geomview a partir da distribui&#231;&#227;o no
+        formato de c&#243;digo fonte em 
+        <a href="http://www.geomview.org/download"><tt>http://www.geomview.org/download</tt></a>.
+
+<div class="p"><!----></div>
+        Note que existe uma vers&#227;o livre da OpenGL chamada Mesa.
+        (<a href="http://www.mesa3d.org"><tt>http://www.mesa3d.org</tt></a>)
+        que executa em programas na maioria dos Unixes livres.
+        Veja aquela p&#225;gina para detalhes sobre os cont&#237;nuos esfor&#231;os para incorporar
+        suporte a hardwares para algumas das placas gr&#225;ficas populares.
+
+<div class="p"><!----></div>
+        Note tamb&#233;m que existe uma vers&#227;o livre da Motif chamada lesstif 
+        <a href="http://www.lesstif.org/"><tt>http://www.lesstif.org/</tt></a>.
+
+<div class="p"><!----></div>
+        O arquivo INSTALL <a href="http://www.geomview.org/docs/INSTALL"><tt>http://www.geomview.org/docs/INSTALL</tt></a> tem instru&#231;&#245;es
+        sobre como portar a lesstif para novas arquiteturas. Se voc&#234; tiver problemas, envie um email para
+        software@geomview.org. Se voc&#234; tiver sucesso,
+        apreciaremos receber uma c&#243;pia do seu "makefile/mk.oquefor" e
+        apender que modifica&#231;òes de c&#243;digo fonte foram necess&#225;rias. Gostar&#237;amos tamb&#233;m
+        de incluir seus bin&#225;rios na nossa lista de distribui&#231;&#245;es pr&#233;-compildas.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.3"></a><h3>
+3.3&nbsp;&nbsp;Por que n&#227;o existe uma vers&#227;o para Windows?</h3>
+
+<div class="p"><!----></div>
+        N&#227;o existe uma vers&#227;o nativa do Geomview para o Microsoft Windows. A
+        principal raz&#227;o para isso &#233; que na &#233;poca que o Geomview foi escrito,
+        cmputadores pessoais n&#227;o eram r&#225;pidos o suficiente para construir gr&#225;ficos tridimensionais interativos
+        pr&#225;ticos de forma que focamos nossos esfor&#231;os em esta&#231;òes de trabalho Unix. Com o tempo
+        PCs r&#225;pidos o sficiente chegaram, o Geometry Center, onde Geomview foi
+        desenvolvido, estava em processo de fechamento. A equipe iniciou o trabalho sobre uma
+        vers&#227;o para Windows mas n&#227;o teve tempo de termin&#225;-la antes do Centro
+        fechar.
+
+<div class="p"><!----></div>
+        Geomview pode executar sob Cygwin <a href="http://www.cygwin.com"><tt>http://www.cygwin.com</tt></a>, que fornece
+        ao Windows um ambiente semelhante ao Unix. Veja "Geomview para Windows?"
+        <a href="http://www.geomview.org/windows/"><tt>http://www.geomview.org/windows/</tt></a> para maiores informa&#231;&#245;es.
+
+<div class="p"><!----></div>
+        Se voc&#234; gostaria de ver uma vers&#227;o do Geomview para Windows, voc&#234; pode
+        contrbuir para seu desenvolvimento de muitas maneiras. Veja contribuindo para o
+        Geomview <a href="http://www.geomview.org/contributing"><tt>http://www.geomview.org/contributing</tt></a> para detalhes.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.4"></a><h3>
+3.4&nbsp;&nbsp;Tenho acesso a um X11 e a uma esta&#231;&#227;o de trabalho SGI. Qual vers&#227;o devo usar?</h3>
+
+<div class="p"><!----></div>
+        A vers&#227;o SGI ir&#225; na maioria das vezes sempre ser significantemente mais r&#225;pida, devido ao
+        suporte a hardware para gr&#225;ficos tridimensionais. Por exemplo, Um Sun Sparcstation 10 &#233;
+        mais lento que um Indy (antiga entrada de SGI a n&#237;vel de m&#225;quina). No futuro pode
+        ser que exista suporte a hardware para certas placas gr&#225;ficas OpenGL dispon&#237;veis para
+        alguns PC Unixes.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.5"></a><h3>
+3.5&nbsp;&nbsp;O que ocorreu &#224; vers&#227;o NeXT Quick Renderman?</h3>
+
+<div class="p"><!----></div>
+        N&#227;o mais distribuimos a vers&#227;o NeXTStep/OpenStep do Geomview, que
+        usou a biblioteca gr&#225;fica Quick Renderman. Fizemos isso apenas para simplificar
+        a manutens&#227;o doc&#243;digo b&#225;sico ap&#243;s a vers&#227;o 1.5.0. Bin&#225;rios grandes para as arquiteturas
+        Motorola, Intel e HP-PA para a vers&#227;o 1.5.0 est&#227;o ainda dispon&#237;veis em:
+        <a href="http://www.geomview.org/download/dist/geomview-1.5.0-next.tar"><tt>http://www.geomview.org/download/dist/geomview-1.5.0-next.tar</tt></a>.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc3.6"></a><h3>
+3.6&nbsp;&nbsp;What modules are shipped for which platforms with the current release?</h3>
+
+<div class="p"><!----></div>
+        Liberamos a maioria de todos os m&#243;dulos para todas as plataformas. A lista de
+        m&#243;dulos distribu&#237;dos est&#225; no arquivo README inclu&#237;dos nas distribui&#231;&#245;es.
+        Se o m&#243;dulo que voc&#234; deseja est&#225; naquela lista mas n&#227;o aparece na lista de
+        m&#243;dulos no painel principal, Geomview provavelmente n&#227;o est&#225; instalado de forma correta. Note
+        que existem m&#243;dulos adicionais escritos por terceiros
+        <a href="http://www.geomview.org/thirdparty"><tt>http://www.geomview.org/thirdparty</tt></a> que n&#227;o s&#227;o parte da distribui&#231;&#227;o
+        principal. Os m&#243;dulos suportados na mais recente vers&#227;o para GNU/Linux do
+        Geomview (1.9.4) s&#227;o:
+        
+<div style="text-align:center">
+        
+<table border="1">
+<tr><td align="left"></td></tr>
+<tr><td align="left">M&#211;DULO </td><td width="316">DESCRI&#199;&#195;O  </td></tr>
+<tr><td align="left">Animator </td><td width="316">percorre uma sequ&#234;ncia de objetos  </td></tr>
+<tr><td align="left">Antiprism models </td><td width="316">Cria, transforma, analisa, e visualiza poliedros </td></tr>
+<tr><td align="left">StageTools </td><td width="316">CenterStage, StageManager, StageStills, StageHand - permite criar objetos do Geomview suando f&#243;rmulas matem&#225;ticas  </td></tr>
+<tr><td align="left">Clipboard </td><td width="316">grava um &#250;nico objeto OOGL para uma &#225;rea de transfer&#234;ncia  </td></tr>
+<tr><td align="left">Clock </td><td width="316">Mostra um rel&#243;gio anal&#243;gico na tela  </td></tr>
+<tr><td align="left">Draw Boundary </td><td width="316"></td></tr>
+<tr><td align="left">Nose </td><td width="316">depura&#231;&#227;o/exemplo para sele&#231;&#227;o (veja o manual do Geomview)  </td></tr>
+<tr><td align="left">Orrery </td><td width="316">Visualiza&#231;&#227;o do Sistema Solar  </td></tr></table>
+
+	</div>
+        Os seguintes m&#243;dulos usam tcl/tk:
+        
+<div style="text-align:center">
+        
+<table border="1">
+<tr><td align="left"></td></tr>
+<tr><td align="left">M&#211;DULO </td><td width="316">DESCRI&#199;&#195;O  </td></tr>
+<tr><td align="left">StageTools </td><td width="316">CenterStage, StageManager, StageStills, StageHand - permite criar objetos do Geomview suando f&#243;rmulas matem&#225;ticas  </td></tr></table>
+
+	</div>
+        Os seguintes programas utilit&#225;rios s&#227;o tamb&#233;m inclu&#237;dos na distribui&#231;&#227;o
+        <a href="#tthFtNtAAB" id="tthFrefAAB"><sup>1</sup></a>:
+
+<div class="p"><!----></div>
+        
+<div style="text-align:center">        
+<table border="1">
+<tr><td align="left"></td></tr>
+<tr><td align="left">UTILIT&#193;RIO </td><td width="316">DESCRI&#199;&#195;O  </td></tr>
+<tr><td align="left">anytooff </td><td width="316">convert one or many OOGL files into a single OFF file  </td></tr>
+<tr><td align="left">anytoucd </td><td width="316">convert an OOGL file to UCD (AVS) format  </td></tr>
+<tr><td align="left">bdy </td><td width="316">compute boundary of an object (helper for drawbdy)  </td></tr>
+<tr><td align="left">bez2mesh </td><td width="316">dice BEZ file to list of MESHes  </td></tr>
+<tr><td align="left">clip </td><td width="316">clip objects against plane/sphere/cylinder (helper for ginsu)  </td></tr>
+<tr><td align="left">fd2ps </td><td width="316">xforms  </td></tr>
+<tr><td align="left">fdesign </td><td width="316">xforms  </td></tr>
+<tr><td align="left">hvectext </td><td width="316">generate vector text object  </td></tr>
+<tr><td align="left">math2oogl </td><td width="316">convert Mathematica graphics to OOGL (helper for OOGL.m)  </td></tr>
+<tr><td align="left">offconsol </td><td width="316">polylist vertex consolidator  </td></tr>
+<tr><td align="left">oogl2rib </td><td width="316">convert OOGL to Renderman RIB format  </td></tr>
+<tr><td align="left">oogl2vrml </td><td width="316">convert OOGL to VRML 1.0  </td></tr>
+<tr><td align="left">oogl2vrml2 </td><td width="316"></td></tr>
+<tr><td align="left">polymerge </td><td width="316">merge degenerate OFF vertices/edges/faces (to Evolver or OFF)  </td></tr>
+<tr><td align="left">remotegv </td><td width="316">remotegv -help  </td></tr>
+<tr><td align="left">togeomview </td><td width="316">send commands to geomview  </td></tr>
+<tr><td align="left">ucdtooff </td><td width="316">convert UCD (AVS) format to OFF format  </td></tr>
+<tr><td align="left">vrml2oogl </td><td width="316">convert VRML 1.0 to OOGL  </td></tr></table>
+
+	</div>
+
+<div class="p"><!----></div>
+ <a id="tth_sEc4"></a><h2>
+4&nbsp;&nbsp;Usando o Geomview</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.1"></a><h3>
+4.1&nbsp;&nbsp;Por que os objetos n&#227;o aparecem nos lugares corretos?</h3>
+
+<div class="p"><!----></div>
+        Quando objetos n&#227;o aparece onde voc&#234; pensa que eles deveriam estar, &#233; provavelmente
+        devido &#224; normaliza&#231;&#227;o habilitada por padr&#227;o. Normaliza&#231;&#227;o simplesmente ajusta proporcionalmente um
+        a caixa associada de um objeto para ser cotida dentro de uma esfera unit&#225;ria, com o centro da
+        caixa associada transladado para a or&#237;gem. Esse ajuste &#233; &#250;til quando examinamos um
+        objeto simples, e faz voc&#234; visualizar o objeto completo sem ter de se
+        preocupar com o quanto grande esse objeto &#233;. Todavia, isso tamb&#233;m pode significar que se voc&#234; estiver chamando
+        m&#250;ltiplos objetos que s&#227;o supostamente pertencentes ao mesmo sistema de
+        coordenadas, todos os objetos ir&#227;o ser ajustados proporcionalmente e colocados na or&#237;gem. Para desabilitar
+        a normaliza&#231;&#227;o, exponha o painel de apar&#234;ncia. Os controles da
+        normaliza&#231;&#227;o est&#227;o no quadrante inferior direito do painel. Selecione a op&#231;&#227;o
+        "None". A tecla de atalho alternativa &#233; '0N'<a href="#tthFtNtAAC" id="tthFrefAAC"><sup>2</sup></a>.
+
+<div class="p"><!----></div>
+        Para desabilitar a normaliza&#231;&#227;o sempre, personalize o Geomview
+        como mostrado em <a href="http://www.geomview.org/docs/html/Customization.html"><tt>http://www.geomview.org/docs/html/Customization.html</tt></a>
+        inserindo a linha (normalization allgeoms
+        none) no arquivo chamado .geomview no seu diret&#243;rio pessoal de usu&#225;rio.
+
+<div class="p"><!----></div>
+        Quando voc&#234; desabilitar a normaliza&#231;&#227;o seus objetos podem desaparece. Isso ocorre
+        pelo fato do objeto n&#227;o normalizado n&#227;o cair no cone de visualiza&#231;&#224;o da
+        c&#226;mera. A maneira mais f&#225;cil de ver tudo &#233; escolher o objeto mundo "World"
+        no navegador de objetos, ent&#227;o clicar em olhar para "Look At" no painel de ferramentas.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.2"></a><h3>
+4.2&nbsp;&nbsp;Por que est&#225; tudo centralizado e/ou uns por cima dos outros?</h3>
+
+<div class="p"><!----></div>
+        Veja a resposta anterior.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.3"></a><h3>
+4.3&nbsp;&nbsp;Como posso mostrar uma cole&#231;&#227;o de pontos?</h3>
+
+<div class="p"><!----></div>
+        A forma mais eficiente de mostrar pontos no Geomview &#233; usar o formato de
+        arquivo VECT. Esse formato de arquivo &#233; principalmente usado para contruir figuras compostas
+        por segmentos mas podemos tamb&#233;m usar esse formato de arquivo para especificar segmentos que possuem somente
+        um v&#233;rtice (i.e. pontos). Vamos dar uma olhada em um arquivo VECT exemplo que
+        descreve 3 pontos coloridos em vermelho, verde e azul:
+	        
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VECT
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3&nbsp;3&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;n\'umero&nbsp;de&nbsp;linhas&nbsp;poligonais,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;n\'umero&nbsp;de&nbsp;v\'ertices,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;n\'umero&nbsp;de&nbsp;cores.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;1&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;1&nbsp;tem&nbsp;1&nbsp;v\'ertice,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;2&nbsp;tem&nbsp;1&nbsp;v\'ertice,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;3&nbsp;tem&nbsp;1&nbsp;v\'ertice,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;nesse&nbsp;caso&nbsp;somente&nbsp;um&nbsp;por&nbsp;estarmos&nbsp;fazendo&nbsp;pontos.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;1&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;1&nbsp;tem&nbsp;1&nbsp;cor
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;2&nbsp;tem&nbsp;1&nbsp;cor
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;a&nbsp;poligonal&nbsp;n\'umero&nbsp;3&nbsp;tem&nbsp;1&nbsp;cor
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;-.2&nbsp;0&nbsp;&nbsp;&nbsp;#&nbsp;As&nbsp;coordenadas&nbsp;do&nbsp;\'unico&nbsp;v\'ertice&nbsp;da&nbsp;poligonal&nbsp;1.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;-.2&nbsp;0&nbsp;&nbsp;&nbsp;#&nbsp;As&nbsp;coordenadas&nbsp;do&nbsp;\'unico&nbsp;v\'ertice&nbsp;da&nbsp;poligonal&nbsp;2.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;.9&nbsp;0&nbsp;&nbsp;&nbsp;#&nbsp;As&nbsp;coordenadas&nbsp;do&nbsp;\'unico&nbsp;v\'ertice&nbsp;da&nbsp;poligonal&nbsp;3.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;A&nbsp;cor&nbsp;da&nbsp;poligonal&nbsp;1&nbsp;no&nbsp;formato&nbsp;RGBA.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;1&nbsp;0&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;A&nbsp;cor&nbsp;da&nbsp;poligonal&nbsp;2&nbsp;no&nbsp;formato&nbsp;RGBA.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;A&nbsp;cor&nbsp;da&nbsp;poligonal&nbsp;3&nbsp;no&nbsp;formato&nbsp;RGBA.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+                Quando chamarmos esse arquivo no Geomview, voc&#234; ir&#225; provavelmente precisar desabilitar
+        a caixa associada (via painel de apar&#234;ncia), caso contr&#225;rio voc&#234; pode n&#227;o
+        estar apto a ver os pontos.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.4"></a><h3>
+4.4&nbsp;&nbsp;Como posso tornar os pontos mais facilmente 
+<div class="p"><!----></div>
+ vis&#237;veis?</h3>
+
+<div class="p"><!----></div>
+        Por padr&#227;o, a espessura de linhas e pontos no Geomview &#233; 1. Essa espessura pode
+        estar ok para a maioria das linhas, mas faz com que cada ponto ocupe somente uma
+        pixel na tela do computador. Voc&#234; pode mudar a espessura das linhas e dos pontos
+        adicionando um r&#243;tulo de apar&#234;ncia no topo de seu arquivo geom&#233;trico que se parece
+        com isso:
+
+<div class="p"><!----></div>
+        appearance 
+            linewidth 4.
+        
+
+<div class="p"><!----></div>
+        Nesse caso, temos aumentado nosso tamanho de linha/ponto para 4 e quaisquer pontos
+        que tivermos em nosso arquivo ir&#225; agora aparecer como pequenos discos. Voc&#234; pode tamb&#233;m mudar
+        a largura da linha usando o painel Appearance. O que Geomview faz atualmente
+        &#233; tratar cada ponto como um pol&#237;gono de muitos lados que aproxima-se de um disco.
+
+<div class="p"><!----></div>
+        Se voc&#234; deseja que os pontos como objetos s&#243;lidos tridimensionais, tais como
+        pequenas esferas, voc&#234; pode usar um m&#233;todo completamente diferente para represent&#225;-
+        los: um objeto INST com m&#250;ltiplas transforma&#231;&#245;es. Isso permite a voc&#234; especificar uma
+        apar&#234;ncia geom&#233;trica arbitr&#225;ria para ser usada para representar pontos. Por
+        exemplo, o seginte arquivo representa os tr&#234;s pontos (1.5, 2.0, 0.1),
+        (1.0, 0.5, 0.2), e (0.5, 0.3, 0.2) usando pequenos cubos:
+        
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INST
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OFF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8&nbsp;6&nbsp;12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;VFA
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.05&nbsp;-0.05&nbsp;-0.05&nbsp;&nbsp;&nbsp;#&nbsp;V0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.05&nbsp;-0.05&nbsp;-0.05&nbsp;&nbsp;&nbsp;#&nbsp;V1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.05&nbsp;&nbsp;0.05&nbsp;-0.05&nbsp;&nbsp;&nbsp;#&nbsp;V2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.05&nbsp;&nbsp;0.05&nbsp;-0.05&nbsp;&nbsp;&nbsp;#&nbsp;V3
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.05&nbsp;-0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;&nbsp;#&nbsp;V4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.05&nbsp;-0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;&nbsp;#&nbsp;V5
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;&nbsp;#&nbsp;V6
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;0.05&nbsp;&nbsp;&nbsp;#&nbsp;V7
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;0&nbsp;1&nbsp;2&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;4&nbsp;5&nbsp;6&nbsp;7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;2&nbsp;3&nbsp;7&nbsp;6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;0&nbsp;1&nbsp;5&nbsp;4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F3
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;0&nbsp;4&nbsp;7&nbsp;3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F4
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4&nbsp;1&nbsp;2&nbsp;6&nbsp;5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;F5
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transforms
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;1.5&nbsp;2.0&nbsp;0.1&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;1.0&nbsp;0.5&nbsp;0.2&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;0.5&nbsp;0.3&nbsp;0.2&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;these&nbsp;are&nbsp;the&nbsp;matrices:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;1.5&nbsp;2.0&nbsp;0.1&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.0&nbsp;0.5&nbsp;0.2&nbsp;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.5&nbsp;0.3&nbsp;0.2&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+        O objeto OFF entre "geom {" e "}" &#233; o cubo. As tr&#234;s linhas
+        ap&#243;s a palavra "transforms" are 4x4 transforms, one for each point. Note
+        that you can use any valid OOGL expression for the geometry; for
+        example, if you want to use small dodecahedra to represent points, you
+        could repace the above OFF object with the following, which references
+        the dodecahedron object in the file dodec.off (distributed with
+        Geomview), scaling it by 0.05:
+        
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INST
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INST
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;geom&nbsp;{&nbsp;&lt;&nbsp;dodec.off&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transform
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.05&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;.05&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;.05&nbsp;&nbsp;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transforms
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1.5&nbsp;2.0&nbsp;0.1&nbsp;&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1.0&nbsp;0.5&nbsp;0.7&nbsp;&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;0.5&nbsp;0.3&nbsp;0.2&nbsp;&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+
+<div class="p"><!----></div>
+        Esteja ciente de que quanto mais complicada geometria voc&#234; usa para seus pontos,
+        mais tempo ir&#225; demorar o Geomview para atualizar a janela. Isso pode ser
+        importante se voc&#234; est&#225; pensando em trabalhar com um grande n&#250;mero de pontos, nesse caso
+        voc&#234; deve conduzir-se na dire&#231;&#227;o de apar&#234;ncias de ponto muito simples o usar o m&#233;todo de
+        mostrar pontos no formato VECT.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.5"></a><h3>
+4.5&nbsp;&nbsp;Como posso colocar texto em uma cena?</h3>
+
+<div class="p"><!----></div>
+        Voc&#234; tem duas op&#231;&#245;es:
+          
+<ul>
+<li> Voc&#234; pode usar o m&#243;dulo externo Labeler (rotulador-vers&#227;o SGI), que fornece a voc&#234; uma GUI para
+            digitar texto e selecionar fonte: ou vetor ou uma vers&#227;o
+            poligonalizada de uma fonte instalada. Todavia, voc&#234; precisa posicionar o texto em uma cena
+            tridimensional, ou manualmente ou com algum outro m&#243;dulo como o m&#243;dulo
+            Transformer (SGI).
+<div class="p"><!----></div>
+</li>
+
+<li> Voc&#234; pode usar o programa utilit&#225;rio de linha de comando hvectext de fones vetoriais de
+            Hershey, que permite a voc&#234; especificar uma posi&#231;&#227;o para o texto.
+            Feito isso voc&#234; deve chamar o arquivo resultante no Geomview.
+<div class="p"><!----></div>
+</li>
+</ul>
+        Se voc&#234; n&#227;o precisa que o texto seja um objeto tridimensional na cena, voc&#234; pode
+        criar uma imagem <a href="#tthFtNtAAD" id="tthFrefAAD"><sup>3</sup></a>
+        ou um arquivo postscript <a href="#tthFtNtAAE" id="tthFrefAAE"><sup>4</sup></a>
+        da cena e ent&#227;o usar um editor de imagens como o "Illustrator",
+        Showcase, ou o XPaint<a href="#tthFtNtAAF" id="tthFrefAAF"><sup>5</sup></a> para colocar o texto.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.6"></a><h3>
+4.6&nbsp;&nbsp;O Geomview faz visualiza&#231;&#227;o de volume?</h3>
+
+<div class="p"><!----></div>
+        N&#227;o, Geomview &#233; pensado para fazer visualiza&#231;&#227;o de superf&#237;cies. Voc&#234; pode ou
+        criar uma isosuperf&#237;cie e ent&#227;o v&#234;-la usando o Geomview, ou usar umpacote de
+        visualiza&#231;&#227;o de volume. O toolkit vtk livre <a href="http://www.vtk.org/"><tt>http://www.vtk.org/</tt></a>
+        de visualiza&#231;&#227;o tem suporte extensivo para visualiza&#231;&#227;o de volume, como faz tamb&#233;m
+        os pacotes comerciais como AVS <a href="http://www.avs.com"><tt>http://www.avs.com</tt></a>, Iris Explorer
+        <a href="http://www.nag.co.uk/Welcome\_IEC.html"><tt>http://www.nag.co.uk/Welcome\_IEC.html</tt></a>, or IBM Data Explorer
+        . <a href="http://pic.dhe.ibm.com/infocenter/dataexpl/v8r2/index.jsp"><tt>http://pic.dhe.ibm.com/infocenter/dataexpl/v8r2/index.jsp</tt></a>. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;O Volvis
+        <a href="http://labs.cs.sunysb.edu/labs/vislab/volvis/"><tt>http://labs.cs.sunysb.edu/labs/vislab/volvis/</tt></a> &#233; um software livre especificamente para
+        visualiza&#231;&#227;o de volume.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.7"></a><h3>
+4.7&nbsp;&nbsp;Pode o geomview fazer mapas de textura?</h3>
+
+<div class="p"><!----></div>
+        Sim, no release 1.6 e mais novos, mas somente na vers&#227;o OpenGL, n&#227;o na
+        vers&#227;o X11.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.8"></a><h3>
+4.8&nbsp;&nbsp;Por que Geomview n&#227;o l&#234; meu arquivo OFF?</h3>
+
+<div class="p"><!----></div>
+        Isso &#233; devido provavelmente um interpreta&#231;&#227;o diferente de como um OFF deve
+        ser escrito. Geomview indexa v&#233;rtices iniciando em zero, enquanto alguns outros
+        programas comprovadamente iniciam em um. O seguinte programa na linguagem C ir&#225; converter
+        um arquivo OFF no formato texto puro indexado a partir da unidade em um arquivo OFF indexado a partir do zero.
+        <a href="#tthFtNtAAG" id="tthFrefAAG"><sup>6</sup></a>
+        
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#include&nbsp;&lt;stdio.h&#62;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#include&nbsp;&lt;string.h&#62;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#include&nbsp;&lt;stdlib.h&#62;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;main(void)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char&nbsp;s[256];
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;v,&nbsp;f,&nbsp;i,&nbsp;n,&nbsp;t;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gets(s);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(strcmp(s,&nbsp;"OFF"))&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,&nbsp;"not&nbsp;an&nbsp;OFF\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;puts(s);&nbsp;gets(s);&nbsp;puts(s);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sscanf(s,&nbsp;"%d&nbsp;%d&nbsp;%d",&nbsp;&amp;v,&nbsp;&amp;f,&nbsp;&amp;i);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i=0;&nbsp;i!=v;&nbsp;)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gets(s);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(strlen(s))&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;puts(s);&nbsp;i++;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(i=0;&nbsp;i!=f;&nbsp;i++)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d",&nbsp;&amp;n);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("\n%d",&nbsp;n);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(v=0;&nbsp;v!=n;&nbsp;v++)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scanf("%d",&nbsp;&amp;t);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("&nbsp;%d",&nbsp;t-1);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("\n");
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;0;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc4.9"></a><h3>
+4.9&nbsp;&nbsp;Como posso colocar movimento em uma sequ&#234;ncia de arquivos do Geomview/OOGL?</h3>
+
+<div class="p"><!----></div>
+        Voc&#234; pode tentar usando o Animator, um m&#243;dulo externo que &#233; distribu&#237;do
+        com todas as vers&#245;es do Geomview. Com Animator, voc&#234; pode dizer ao Geomview para
+        ler uma sequ&#234;ncia de arquivos OOGL e ent&#227;o exibir essa sequ&#234;ncia
+        avan&#231;ando, voltando e tamb&#233;m em passo de quadro usando interfaces semelhantes ao
+        VCR<a href="#tthFtNtAAH" id="tthFrefAAH"><sup>7</sup></a>.
+
+<div class="p"><!----></div>
+        Para usar o Animator clique na entrada Animator no navegador de m&#243;dulos externos
+        do Geomview. Se o Animator n&#227;o aparecer no navegador, ent&#227;o o Geomview
+        provavelmente n&#227;o foi instalado adequadamente. Para mais informa&#231;&#227;o sobre
+        Animator leia o painel info dispon&#237;vel atrav&#233;s do programa ou a
+        p&#225;gina de manual (digitando "man animate").
+
+<div class="p"><!----></div>
+ <a id="tth_sEc5"></a><h2>
+5&nbsp;&nbsp;Sa&#237;da</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc5.1"></a><h3>
+5.1&nbsp;&nbsp;Como posso criar uma anima&#231;&#227;o de v&#237;deo (MPEG/ QuickTime/animated GIF)?</h3>
+
+<div class="p"><!----></div>
+Existem muitas variantes dessa quet&#227;o:
+
+<div class="p"><!----></div>
+        
+<ul>
+<li> primeira variante 
+    	        	    
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;Gostaria&nbsp;de&nbsp;gravar&nbsp;uma&nbsp;sequ\^encia&nbsp;de&nbsp;arquivos&nbsp;instant\^aneso&nbsp;no&nbsp;formato&nbsp;ppm&nbsp;de&nbsp;um&nbsp;\'unico
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;objeto&nbsp;no&nbsp;formato&nbsp;off&nbsp;enquanto&nbsp;esse&nbsp;objeto&nbsp;est\'a&nbsp;sendo&nbsp;rotacionado&nbsp;para&nbsp;converter&nbsp;a&nbsp;sequ\^encia
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;em&nbsp;um&nbsp;filme.&nbsp;O&nbsp;\'unico&nbsp;m\'etodo&nbsp;que&nbsp;conhe\c{c}o&nbsp;\'e&nbsp;rotacionar&nbsp;o&nbsp;objeto
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;lentamente&nbsp;com&nbsp;o&nbsp;mouse,&nbsp;parar&nbsp;omovimento,&nbsp;e&nbsp;gravar&nbsp;cada&nbsp;quadro
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;individualmente.&nbsp;Existe&nbsp;um&nbsp;m\'etodo&nbsp;mais&nbsp;r\'apido&nbsp;e&nbsp;autom\'atico,&nbsp;tal&nbsp;como
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;um&nbsp;acript&nbsp;de&nbsp;comandos.&nbsp;Se&nbsp;existe,&nbsp;voc\^e&nbsp;tem&nbsp;um&nbsp;exemplo&nbsp;de&nbsp;script&nbsp;de&nbsp;comando&nbsp;que&nbsp;possa
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;ser&nbsp;modificado?
+	&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+	                Duas op&#231;&#245;es:
+              
+<ul>
+<li> Se o movimento &#233; alinhado a algum eixo, &#233; bastante f&#225;cil usar os
+              comandos rotate e snapshot da GCL juntos:
+
+<pre>
+(snapshot&nbsp;targetcam&nbsp;/tmp/foo\%03d.rgb)
+(transform&nbsp;world&nbsp;world&nbsp;world&nbsp;rotate&nbsp;.1&nbsp;0&nbsp;0)
+(snapshot&nbsp;targetcam&nbsp;/tmp/foo\%03d.rgb)
+(transform&nbsp;world&nbsp;world&nbsp;world&nbsp;rotate&nbsp;.1&nbsp;0&nbsp;0)
+
+</pre>
+                e assim por diante. O comando snapshot auto-incrementa o nome do arquivo.
+<div class="p"><!----></div>
+</li>
+
+<li> Mas para um movimento mais complexo que a simples rota&#231;&#227;o em torno
+                do eixo x que mostrei acima, considere usar StageTools, que
+                &#233; um conjunto de ferramentas pensado para ajudar pessoas a fazerem facilmente
+                anima&#231;&#245;es a partir do Geomview. StageTools est&#225; inclu&#237;do como um m&#243;dulo nas
+                vers&#245;es recentes, mas se voc&#234; precisar copi&#225;-lo ele est&#225; dispon&#237;vel
+                em  <a href="http://www.geom.umn.edu/software/StageTools/"><tt>http://www.geom.umn.edu/software/StageTools/</tt></a>.
+<div class="p"><!----></div>
+</li>
+</ul>
+<div class="p"><!----></div>
+</li>
+
+<li> segunda variante 
+    	    	    
+<pre>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;Tenho&nbsp;usado&nbsp;Geomview&nbsp;para&nbsp;ver&nbsp;filmes&nbsp;com&nbsp;ferramentas&nbsp;de&nbsp;anima\c{c}\~ao.&nbsp;como&nbsp;posso
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;converter&nbsp;aquele&nbsp;filme&nbsp;para&nbsp;ooutro&nbsp;formato&nbsp;de&nbsp;anima\c{c}\~ao&nbsp;(e.g.&nbsp;um&nbsp;GIF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;animado)&nbsp;de&nbsp;forma&nbsp;que&nbsp;possa&nbsp;coloc\'a-lo&nbsp;em&nbsp;uma&nbsp;web&nbsp;page,&nbsp;vis\'ivel&nbsp;para
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#62;&nbsp;algu\'em&nbsp;sem&nbsp;Geomview?
+	&nbsp;&nbsp;&nbsp;&nbsp;
+</pre>
+	    
+<div class="p"><!----></div>
+            &#201; verdade que StageTools ir&#225; fazer isso e muito mais tamb&#233;m. Mas
+            existe tamb&#233;m um caminho muito f&#225;cil de fazer isso diretamente dentro do m&#243;dulo
+            Animator: a fun&#231;&#227;o Command ir&#225; executar um comando GCL ap&#243;s
+            cada quadro. Ent&#227;o para pegar automaticamente instant&#226;neos a cada quadro, voc&#234; dever&#225;
+            pressionar o bot&#227;o Command e digitar alguma coisa como
+
+<pre>
+(snapshot&nbsp;c0&nbsp;/tmp/foo\%03d.rgb)
+
+</pre>
+            no campo de texto. Ent&#227;o quando voc&#234; pressionar play voc&#234; ir&#225; ver que agora
+            agita&#231;&#227;o uma vez que o Animator &#233;st&#225; gravando uma imagem offf para o disco de cada vez. Voc&#234; pode
+            desejar habilitar o bot&#227;o de r&#225;dio "Once" de forma que o Animator pare ap&#243;s
+            executar cada quadro uma &#250;nica vez. Ent&#227;o voc&#234; pode usar seu programa
+            escolhido para criar um gif animado ou filme do quicktime a partir desso pacote
+            de arquivos de imagem. Por exemplo, nos SGIs voc&#234; pode fazer isso com o
+            "mediaconvert".<a href="#tthFtNtAAI" id="tthFrefAAI"><sup>8</sup></a>
+<div class="p"><!----></div>
+</li>
+</ul>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc5.2"></a><h3>
+5.2&nbsp;&nbsp;Como posso gravar uma figura de exatamente o que vejo em uma janela de c&#226;mera?</h3>
+
+<div class="p"><!----></div>
+        Garanta que a janela de c&#226;mera que voc&#234; deseja seja a janela ativa no momento da foto, ent&#227;o selecione
+        o item "Save" do menu "File" no painel principal (ou use a tecla de atalho
+        " &gt; "). No painel que aparece, existe uma caixa de eop&#231;&#227;o que &#233; ajustada para
+        Command por padr&#227;o. Selecione uma das op&#231;&#245;es de instant&#226;neo, insira o
+        nome do arquivo na entrada Selection, e clique "OK".
+
+<div class="p"><!----></div>
+        Na vers&#227;o SGI, voc&#234; tem tr&#234;s escolhas de instant&#226;neo de imagem: SGI screen,
+        PPM screen, e PPM software. Ambas as op&#231;&#245;es screen literalmente gravam os
+        os pixels de tela em um arquivo, ou no formato SGI (tamb&#233;m chamado RGB) ou em formato PPM. A
+        op&#231;&#227;o PPM software ir&#225; reler a imagem em um espa&#231;o tempor&#225;rio de armazenagem fora da tela
+        usando o software de releitura a partir da vers&#227;o X vanilla do Geomview.
+        Dessa forma, pode n&#227;o ser id&#234;ntica pixel a pixel a imagem gravada em rela&#231;&#227;o &#224; imagem que voc&#234; v&#234;.
+
+<div class="p"><!----></div>
+        Na vers&#227;o X11, voc&#234; tem somente as op&#231;&#245;es PPM.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc5.3"></a><h3>
+5.3&nbsp;&nbsp;Como posso fazer um verdadeiro arquivo PostScript que seja bom em m&#250;ltiplas resolu&#231;&#245;es ao inv&#233;s de apenas converter um bitmap em um PostScript?</h3>
+
+<div class="p"><!----></div>
+        Garanta que a janela de c&#226;mera que voc&#234; deseja seja a janela ativa no momento da foto, ent&#227;o selecione
+        o item "Save" do menu "File" no painel principal (ou use a tecla de atalho
+        " &gt; "). No painel que aparece, existe uma caixa de eop&#231;&#227;o que &#233; ajustada para
+        Command por padr&#227;o. Selecione a op&#231;&#227;o PostScript snapshot, insira o
+        nome de arquivo na entrada Selection, e clique "OK".
+
+<div class="p"><!----></div>
+        Esse m&#233;todo tem vantagens e desvantagens, comparado ao m&#233;todo de gravar um
+        bitmap de imagem. A vantagem &#233; que o resultado &#233; independente da resolu&#231;&#227;o
+        - voc&#234; pode imprimir em uma impressora de alta resolu&#231;&#227;o e n&#227;o ver qualquer aresta
+        quadriculada. As desvantagens s&#227;o que nosso releitor PostScript n&#227;o pode fazer
+        sombreamento suave e usa o algor&#237;tmo de painter para remo&#231;&#227;o de superf&#237;cies
+        escondidas. Essa &#250;ltima observa&#231;&#227;o significa que objetos que se interseptam e algumas outras
+        cenas de condicionamento host&#237;l ir&#227;o ser desenhadas incorretamente, ou mesmo que objetos
+        pr&#243;ximos ir&#227;o ser desenhados atr&#225;s de objetos distantes. Muitas vezes funciona, mas n&#227;o
+        sempre.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc5.4"></a><h3>
+5.4&nbsp;&nbsp;Por que meu instant&#226;neo PostScript est&#225; p&#233;ssimo?</h3>
+
+<div class="p"><!----></div>
+        Veja a resposta anterior.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc5.5"></a><h3>
+5.5&nbsp;&nbsp;Como fazer uma imagem de alta qualidade com RenderMan?</h3>
+
+<div class="p"><!----></div>
+        Se voc&#234; tem o Photorealistic Renderman (um prodto comercial da Pixar), ou
+        o BMRT (Blue Moon Rendering Toolkit, uma implementa&#231;&#227;o de dom&#237;nio p&#250;blico), voc&#234;
+        pode criar imagens de alta qualidade com transpar&#234;ncia e ilumina&#231;&#227;o
+        mais precisa nas vers&#245;es SGI e X11. Paa fazer isso, traga o painel Save
+        e selecione "RMan [-&#62;tiff]" a partir das op&#231;&#245;es de gravar. Insira um nome de arquivo
+        e clique  "Ok". Aparecer&#225; um janela de shell e mude o diret&#243;rio para onde
+        voc&#234; gravou o arquivo. Digite "render /nomearquivo/" (onde /nomearquivo/ &#233; o nome
+        do arquivo que voc&#234; gravou). Quando terminar, voc&#234; ir&#225; ter uma imagem de alta qualidade
+        em "/nomearquivo/.tiff". Para criar uma imagm de alta resolu&#231;&#227;o (para
+        reduzir arestas quadriculadas), edite o arquivo que voc&#234; gravou. Deve existir uma linha
+        adiante das quinze linhas a partir do topo que inicia-se com "Format", i.e.
+        "Format 450 450 1". Os primeiros dois n&#250;meros s&#227;o a resolu&#231;&#227;o da
+        imagem criada. Modifique esses dois n&#250;meros para aqueles que voc&#234; gostaria (voc&#234; deve manter a raz&#227;o
+        enre os n&#250;meros originais para evitar distor&#231;&#227;o), ent&#227;o reler o arquivo novamente.
+
+<div class="p"><!----></div>
+ <a id="tth_sEc6"></a><h2>
+6&nbsp;&nbsp;Quest&#245;es espec&#237;ficas do X</h2>
+
+<div class="p"><!----></div>
+         <a id="tth_sEc6.1"></a><h3>
+6.1&nbsp;&nbsp;Como posso aumentar a velocidade da vers&#227;o X11?</h3>
+
+<div class="p"><!----></div>
+        Veja a discurs&#227;o de op&#231;&#245;es de renderiza&#231;&#227;o na quest&#227;o seguinte.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc6.2"></a><h3>
+6.2&nbsp;&nbsp;O que fazem os controles Z-Buffer e Dithering no painel de c&#226;meras?</h3>
+
+<div class="p"><!----></div>
+        Esses controles permitem a voc&#234; mudar como a vers&#227;o para X11 redesenha objetos.
+        A caixa de verifica&#231;&#227;o dithering, que somente aparece quando executando em um display de
+        oito bits, permite a voc&#234; habilitar ou n&#227;o a mistura de cores. Dithering &#233; o
+        m&#233;todo pelo qual Geomview utiliza umpequeno conjunto de cores (abaixo de 217) para
+        mostrar qualquer cor que voc&#234; desejar. Isso &#233; feito pela coloca&#231;&#227;o de pixels de pequenas quantidades
+        de cores diferentes pr&#243;ximas umas das outras permitindo que seus olhos harmonize-as
+        juntas. Desafortunadamente, isso tem um custo computacional para ser feito.
+        Desligando a mistura de cores ir&#225; aumantar a velocidade de processamento de imagens, mas as cores usadas n&#227;o ir&#227;o
+        se exatamente o que voc&#234; deseja. Dependendo de sua cena, pode ser uma
+        pre&#231;o a pagar aceit&#225;vel.
+
+<div class="p"><!----></div>
+        O menu Z-Buffer que aparece permite a voc&#234; selecionar entre tr&#234;s diferentes
+        m&#233;todos esconder linhas e remover superf&#237;cie: z-buffering, depth sort, e
+        none. Z-buffering is the most accurate and enables the near and far
+        clipping planes. Depth sort uses less computing, but will be inaccurate
+        if objects intersect (polygons will pop in front when they should be
+        partially obscured) and in certain other circumstances (long, narrow
+        polygons close to other polygons are one example). Depending on your
+        scene, using this method could look just the same as z-buffering but be
+        much faster. The "None" option turns off all hidden line/surface
+        removal. This is only recommended for a scene which consists of just
+        lines in one color.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc6.3"></a><h3>
+6.3&nbsp;&nbsp;What does "Not enough colors available. Using private colormap" mean?</h3>
+
+<div class="p"><!----></div>
+        This happens when using the X11 version on an eight bit display
+        (currently common on workstations). An eight bit display can only show
+        256 colors simultaneously. These colors are shared by all the programs
+        running. Once a colorcell has been allocated by an application, its
+        color is fixed. Geomview tries to grab many colors when it starts. If it
+        fails to get them, it prints this message and uses a private colormap. A
+        private colormap means that Geomview now has access to all 256
+        colorcells. Unfortunately, these colors will only be displayed when the
+        cursor is inside one of Geomview's windows. The switching of colormaps
+        when the cursor enters and leaves the windows will give a technicolor
+        look to the rest of the display.
+
+<div class="p"><!----></div>
+        If you don't like the technicolor effect, you will have to quit the
+        programs which are using up colormap space. Examples of programs which
+        use lots of colormap space are background pictures, image viewers,
+        visualization software, and WWW browsers.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc6.4"></a><h3>
+6.4&nbsp;&nbsp;What does "Shared memory unavailable, using fallback display method" mean?</h3>
+
+<div class="p"><!----></div>
+        The X11 version of Geomview uses the shared memory extension to move
+        images quickly between the program and the X server. However, this
+        method of communicating with the X server only works when running
+        Geomview on the same machine as the display. If Geomview can't use
+        shared memory, it prints this message and goes back to using standard X
+        calls. Everything will work the same, it will just run much slower,
+        especially if you're running over the network.
+
+<div class="p"><!----></div>
+         <a id="tth_sEc6.5"></a><h3>
+6.5&nbsp;&nbsp;Why do I get compiler errors about including files Xm/*.h?</h3>
+
+<div class="p"><!----></div>
+        You're trying to compile the X11 version and the compiler can't find the
+        Motif header files. If you have Motif but the headers are in a
+        nonstandard place, change the "SYSCOPTS" in your
+        makefiles/mk.$MACHTYPE file. If you don't have Motif, you won't be
+        able to compile Geomview. In this case, use one of the binary
+        distributions, if you can.
+
+<div class="p"><!----></div>
+</span></div><hr /><h3>Footnotes:</h3>
+
+<div class="p"><!----></div>
+<a id="tthFtNtAAB"></a><a href="#tthFrefAAB"><sup>1</sup></a>Nota do tradutor: para obter informa&#231;&#245;es adicionais sobre os utilit&#225;rios abaixo digite
+        "man utilitario" em uma janela de shell ou "utilitario -help".
+<div class="p"><!----></div>
+<a id="tthFtNtAAC"></a><a href="#tthFrefAAC"><sup>2</sup></a>Nota do tradutor: testei aqui [oO0]N e todas funcionaram.
+<div class="p"><!----></div>
+<a id="tthFtNtAAD"></a><a href="#tthFrefAAD"><sup>3</sup></a><a href="http://www.geomview.org/FAQ/answers.shtml#images"><tt>http://www.geomview.org/FAQ/answers.shtml\#images</tt></a>.
+<div class="p"><!----></div>
+<a id="tthFtNtAAE"></a><a href="#tthFrefAAE"><sup>4</sup></a><a href="http://www.geomview.org/FAQ/answers.shtml#ps"><tt>http://www.geomview.org/FAQ/answers.shtml\#ps</tt></a>
+<div class="p"><!----></div>
+<a id="tthFtNtAAF"></a><a href="#tthFrefAAF"><sup>5</sup></a>Nota do tradutor: temos tamb&#233;m o gimp e o xfig.
+<div class="p"><!----></div>
+<a id="tthFtNtAAG"></a><a href="#tthFrefAAG"><sup>6</sup></a>Nota do tradutor: digamos que voc&#234; compile o programa com o comando
+        "gcc 01.c -o 01". Para usar o programa acima em um shell fa&#231;a "01  &lt;  arquivo1.off  &gt;  arquivo0.off".
+<div class="p"><!----></div>
+<a id="tthFtNtAAH"></a><a href="#tthFrefAAH"><sup>7</sup></a>Nota do tradutor: o VCR virou avifile <a href="http://avifile.sourceforge.net/"><tt>http://avifile.sourceforge.net/</tt></a>.
+        Temos tamb&#233;m o kino e o muan.
+<div class="p"><!----></div>
+<a id="tthFtNtAAI"></a><a href="#tthFrefAAI"><sup>8</sup></a>Nota do tradutor: temos tamb&#233;m o recordmydesktop e o kino em GNU/Linux.
+<br /><br /><hr /><small>File translated from
+T<sub><span class="small">E</span></sub>X
+by <a href="http://hutchinson.belmont.ma.us/tth/">
+T<sub><span class="small">T</span></sub>H</a>,
+version 4.03.<br />On 11 Aug 2013, 09:37.</small>
+</html>
