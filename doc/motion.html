@@ -1,0 +1,111 @@
+<html>
+<head>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+</head>
+<body>
+
+
+<center>
+<h2>
+Mathematical Formulas for Geomview's Motion Model
+<br/>
+Mark Phillips &amp; Nathaniel Thurston
+</h2>
+
+<h3>
+Originally written sometime around late 1992
+<br/>
+Updated in March 2001
+</h3>
+</center>
+
+
+<p>
+The model that Geomview uses for object motions involves 3 objects
+for each motion: a <i>moving</i> object, a <i>center</i> object,
+and a <i>frame</i> object.  As the name suggests, the <i>moving</i>
+object is the one that actually moves.  The motion happens in
+an imaginary coordinate system obtained by (parallel) translating
+the coordinate system of the <i>frame</i> object to the origin
+of the <i>center</i> object coordinate system.
+</p>
+
+<p>
+To compute and apply a motion, we think of it as happening in
+this imaginary coordinate system (e.g. a ``rotation of 10 degrees around
+the X axis'').  But we want to apply it to the <i>moving</i> object,
+which we have in its own coordinate system.  This note explains
+how to do this.
+</p>
+
+<p>
+First, some notation.
+Think of a Geomview world as a copy of \(\mathbb{R}^3\)
+with many different coordinate system representations.  If \(S\) is a
+coordinate system and \(x \in \mathbb{R}^3\) is a point, we write \([x]_S\)
+to denote the coordinates of \(x\) in \(S\).  Also, if \(V: \mathbb{R}^3
+\rightarrow \mathbb{R}^3\) is a projective transformation of \(\mathbb{R}^3\),
+write \([V]_S\) to denote the (\(4 \times 4\)) matrix that represents
+\(V\) in \(S\).  Let
+</p>
+
+<ul>
+<li>\(m\)  = coord sys of moving object
+<li>\(c\)  = coord sys of center object
+<li>\(f\)  = coord sys of frame object
+<li>\(f'\) = \(f\) translated to origin of \(c\)
+<li>\(U\)  = universal coord sys
+</ul>
+
+<p>
+With this notation we can now precisely state the problem: If \(V\) is a
+transformation, express \([V]_m\) in terms of \([V]_{f'}\).  (We know
+\([V]_{f'}\) and need to compute \([V]_m\).)
+</p>
+
+<p>
+To do the computation we will need several change-of-coordinate
+matrices.  If \(S\) is a coordinate system, let \(T_S\) be the matrix
+which changes \(S\) coordinates into \(U\) (universal) coordinates.  So:
+</p>
+
+<ul>
+<li>\([x]_U = [x]_m    \cdot T_m\)
+<li>\([x]_U = [x]_c    \cdot T_c\)
+<li>\([x]_U = [x]_f    \cdot T_f\)
+<li>\([x]_U = [x]_{f'} \cdot T_{f'}\)
+</ul>
+
+<p>
+\(T_m\), \(T_c\), and \(T_f\) can easily be computed from the position
+of \(m\), \(c\), and \(f\) in the world heirarchy.  \(T_{f'}\) can
+be computed as follows.
+Let \(p\) be the origin of \(c\); so \([p]_c = [0, 0, 0, 1]\).
+The coordinates of \(p\) in \(f\) are
+</p>
+
+$$
+[p]_f = [p]_c \cdot T_c \cdot T_{f}^{-1} = [0, 0, 0, 1] \cdot T_c \cdot T_{f}^{-1}
+$$
+
+<p>
+If \(P\) is the translation that takes the origin of \(f\) to \(p\), then
+\([P]_f\) is the matrix whose bottom row is \([p]_f\).  Then \(T_{f'} =
+[P]_f \cdot T_f\).  (Another way to think of this is that \([P]_f\) is
+the matrix which changes \(f'\) coordinates into \(f\) coordinates.)
+\([V]_m\) can now be computed in terms of \([V]_{f'}\) as follows:
+</p>
+
+$$
+[V]_m = T_m \cdot T_{f'}^{-1} \cdot [V]_{f'} \cdot T_{f'}          \cdot T_m^{-1}
+$$
+
+$$
+[V]_m = T_m \cdot T_f^{-1} \cdot {[P]_f}^{-1} \cdot [V]_{f'} \cdot [P]_f \cdot T_f \cdot T_m^{-1}
+$$
+
+
+</body>
+</html>
