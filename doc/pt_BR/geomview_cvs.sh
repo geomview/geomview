@@ -2,7 +2,7 @@
 #texi2dvi needs two excutions for index and links creation
 #created on a slackware 12 under GPL by
 #Jorge Barros de Abreu
-pdflatex oogltour.tex           #generate oogltour pdf
+pdflatex oogltour-pt_BR.tex           #generate oogltour pdf
 pdflatex FAQ-pt_BR.tex          #generate FAQ pdf
 cd ../figs
 eps2pdf1.sh
