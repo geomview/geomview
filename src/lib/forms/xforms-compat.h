@@ -61,7 +61,7 @@
 	fl_initialize(&argc, argv, argv[0], 0, 0);	\
     }
 
-extern inline void flx_end_form() {
+static inline void flx_end_form() {
   FL_OBJECT *obj = NULL;
   if(fl_current_form)
     obj = fl_current_form->first;
